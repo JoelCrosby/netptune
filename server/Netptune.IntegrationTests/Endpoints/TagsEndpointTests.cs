@@ -35,6 +35,51 @@ public sealed class TagsEndpointTests
     }
 
     [Fact]
+    public async Task GetPage_ShouldReturnAPagedEnvelope_WhenInputValid()
+    {
+        var response = await Client.GetAsync("api/tags/page?page=1&pageSize=2");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<TagViewModel>>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Page.Should().Be(1);
+        result.Payload.PageSize.Should().Be(2);
+        result.Payload.Items.Should().HaveCountLessThanOrEqualTo(2);
+        result.Payload.TotalCount.Should().BeGreaterThan(0);
+    }
+
+    [Fact]
+    public async Task GetPage_ShouldOnlyMatchTheSearchTerm_WhenSearchProvided()
+    {
+        var tags = await Client.GetFromJsonAsync<List<TagViewModel>>("api/tags/workspace");
+        var existing = tags!.First();
+
+        var response = await Client.GetAsync($"api/tags/page?search={Uri.EscapeDataString(existing.Name)}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<TagViewModel>>>();
+
+        result.Payload!.Items.Should().NotBeEmpty();
+        result.Payload.Items.Should().OnlyContain(tag => tag.Name.Contains(existing.Name, StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public async Task GetPage_ShouldSortByName_WhenSortRequested()
+    {
+        var response = await Client.GetAsync("api/tags/page?sortBy=name&sortDirection=desc&pageSize=100");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<TagViewModel>>>();
+        var names = result.Payload!.Items.Select(tag => tag.Name).ToList();
+
+        names.Should().BeInDescendingOrder(StringComparer.Ordinal);
+    }
+
+    [Fact]
     public async Task GetByTask_ShouldReturnCorrectly_WhenInputValid()
     {
         var response = await Client.GetAsync("api/tags/task/neo-1");

@@ -14,12 +14,14 @@ public static class RelationTypesEndpoints
         var group = builder.MapGroup("relation-types");
 
         group.MapGet("/", HandleGet).RequireAuthorization(NetptunePermissions.RelationTypes.Read);
+        group.MapGet("/page", HandleGetPage).RequireAuthorization(NetptunePermissions.RelationTypes.Read);
         group.MapGet("/{id:int}/usage", HandleGetUsage).RequireAuthorization(NetptunePermissions.RelationTypes.Read);
         group.MapGet("/{id:int}/relations", HandleGetRelations).RequireAuthorization(NetptunePermissions.RelationTypes.Read);
         group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.RelationTypes.Manage);
         group.MapPut("/", HandlePut).RequireAuthorization(NetptunePermissions.RelationTypes.Manage);
         group.MapDelete("/{id:int}", HandleDelete).RequireAuthorization(NetptunePermissions.RelationTypes.Manage);
         group.MapPost("/reorder", HandleReorder).RequireAuthorization(NetptunePermissions.RelationTypes.Manage);
+        group.MapPost("/move", HandleMove).RequireAuthorization(NetptunePermissions.RelationTypes.Manage);
 
         return builder;
     }
@@ -31,6 +33,16 @@ public static class RelationTypesEndpoints
         var result = await mediator.Send(new GetRelationTypesQuery(), cancellationToken);
 
         return result is null ? Results.NotFound() : Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleGetPage(
+        IMediator mediator,
+        [AsParameters] RelationTypeFilter filter,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetRelationTypesPageQuery(filter), cancellationToken);
+
+        return Results.Ok(result);
     }
 
     private static async Task<IResult> HandleGetUsage(
@@ -96,6 +108,18 @@ public static class RelationTypesEndpoints
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new ReorderRelationTypesCommand(request), cancellationToken);
+
+        if (result.IsNotFound) return Results.NotFound(result);
+
+        return Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleMove(
+        IMediator mediator,
+        MoveRelationTypeRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new MoveRelationTypeCommand(request), cancellationToken);
 
         if (result.IsNotFound) return Results.NotFound(result);
 

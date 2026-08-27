@@ -127,6 +127,117 @@ public sealed class StatusesEndpointTests
     }
 
     [Fact]
+    public async Task GetPage_ShouldReturnAPagedEnvelope_WhenInputValid()
+    {
+        var response = await Client.GetAsync("api/statuses/page?entityType=Task&page=1&pageSize=2");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<StatusViewModel>>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Page.Should().Be(1);
+        result.Payload.PageSize.Should().Be(2);
+        result.Payload.Items.Should().HaveCountLessThanOrEqualTo(2);
+        result.Payload.Items.Should().OnlyContain(status => status.EntityType == EntityType.Task);
+        result.Payload.TotalCount.Should().BeGreaterThan(0);
+    }
+
+    [Fact]
+    public async Task GetPage_ShouldDefaultToSortOrder_WhenNoSortRequested()
+    {
+        var response = await Client.GetAsync("api/statuses/page?entityType=Task&pageSize=100");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<StatusViewModel>>>();
+        var sortOrders = result.Payload!.Items.Select(status => status.SortOrder).ToList();
+
+        sortOrders.Should().BeInAscendingOrder();
+    }
+
+    [Fact]
+    public async Task GetPage_ShouldOnlyMatchTheSearchTerm_WhenSearchProvided()
+    {
+        var status = await CreateStatus();
+
+        var response = await Client.GetAsync($"api/statuses/page?entityType=Task&search={status.Name}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<StatusViewModel>>>();
+
+        result.Payload!.Items.Should().ContainSingle(match => match.Id == status.Id);
+    }
+
+    [Fact]
+    public async Task GetPage_ShouldCountTasks_WhenStatusIsUsed()
+    {
+        var response = await Client.GetAsync("api/statuses/page?entityType=Task&pageSize=100");
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<StatusViewModel>>>();
+
+        result.Payload!.Items.Should().Contain(status => status.TaskCount > 0);
+    }
+
+    [Fact]
+    public async Task Move_ShouldSwapWithTheNeighbour_WhenMovingUp()
+    {
+        await CreateStatus();
+
+        var before = await GetOrderedIds();
+        var moving = before[^1];
+        var expected = before.ToList();
+        (expected[^2], expected[^1]) = (expected[^1], expected[^2]);
+
+        var response = await Client.PostAsJsonAsync("api/statuses/move", new MoveStatusRequest
+        {
+            Id = moving,
+            Direction = SortMoveDirection.Up,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
+
+        result.IsSuccess.Should().BeTrue();
+
+        var after = await GetOrderedIds();
+
+        after.Should().Equal(expected);
+    }
+
+    [Fact]
+    public async Task Move_ShouldLeaveTheOrderUnchanged_WhenAlreadyAtTheTop()
+    {
+        var before = await GetOrderedIds();
+
+        var response = await Client.PostAsJsonAsync("api/statuses/move", new MoveStatusRequest
+        {
+            Id = before[0],
+            Direction = SortMoveDirection.Up,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var after = await GetOrderedIds();
+
+        after.Should().Equal(before);
+    }
+
+    [Fact]
+    public async Task Move_ShouldReturnNotFound_WhenStatusDoesNotExist()
+    {
+        var response = await Client.PostAsJsonAsync("api/statuses/move", new MoveStatusRequest
+        {
+            Id = int.MaxValue,
+            Direction = SortMoveDirection.Down,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
     public async Task Delete_ShouldReturnCorrectly_WhenStatusUnused()
     {
         var status = await CreateStatus();
@@ -193,6 +304,17 @@ public sealed class StatusesEndpointTests
         var response = await Client.GetAsync("api/statuses/999999/usage");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    private async Task<List<int>> GetOrderedIds()
+    {
+        var statuses = await Client.GetFromJsonAsync<List<StatusViewModel>>("api/statuses?entityType=Task");
+
+        return statuses!
+            .OrderBy(status => status.SortOrder)
+            .ThenBy(status => status.Id)
+            .Select(status => status.Id)
+            .ToList();
     }
 
     private async Task<StatusViewModel> CreateStatus()

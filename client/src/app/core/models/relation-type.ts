@@ -1,3 +1,5 @@
+import { SortMoveDirection } from './sort-move-direction';
+
 export enum RelationCategory {
   hierarchy = 0,
   dependency = 1,
@@ -65,4 +67,9 @@ export interface UpdateRelationTypeRequest {
 
 export interface ReorderRelationTypesRequest {
   relationTypeIds: number[];
+}
+
+export interface MoveRelationTypeRequest {
+  id: number;
+  direction: SortMoveDirection;
 }

@@ -4,6 +4,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Tags;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
@@ -110,6 +111,61 @@ public class TagRepository : NamedWorkspaceEntityRepository<DataContext, Tag, in
         }
 
         return tags;
+    }
+
+    public async Task<PagedResponse<TagViewModel>> GetPageForWorkspace(int workspaceId, TagFilter filter, CancellationToken cancellationToken = default)
+    {
+        var query = Entities.Where(tag => !tag.IsDeleted && tag.WorkspaceId == workspaceId);
+
+        if (!string.IsNullOrWhiteSpace(filter.Search))
+        {
+            var search = filter.Search.Trim();
+
+            query = query.Where(tag => EF.Functions.ILike(tag.Name, $"%{search}%"));
+        }
+
+        var totalCount = await query.CountAsync(cancellationToken);
+        var pagination = filter.GetPagination();
+        var items = await SortTags(Project(query), filter)
+            .Skip(pagination.Skip)
+            .Take(pagination.PageSize)
+            .ToListAsync(cancellationToken);
+
+        return new PagedResponse<TagViewModel>(items, pagination.Page, pagination.PageSize, totalCount);
+    }
+
+    private static IQueryable<TagViewModel> Project(IQueryable<Tag> query)
+    {
+        return query
+            .AsNoTracking()
+            .Select(tag => new TagViewModel
+            {
+                Id = tag.Id,
+                Name = tag.Name,
+                OwnerId = tag.OwnerId!,
+                OwnerName = string.IsNullOrEmpty(tag.Owner!.Firstname) && string.IsNullOrEmpty(tag.Owner.Lastname)
+                    ? tag.Owner.UserName!
+                    : tag.Owner.Firstname + " " + tag.Owner.Lastname,
+                TaskCount = tag.ProjectTaskTags.Count(taskTag => !taskTag.ProjectTask!.IsDeleted),
+            });
+    }
+
+    private static IQueryable<TagViewModel> SortTags(IQueryable<TagViewModel> query, TagFilter filter)
+    {
+        var isDescending = string.Equals(filter.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+
+        return filter.SortBy?.ToLowerInvariant() switch
+        {
+            "taskcount" => isDescending
+                ? query.OrderByDescending(tag => tag.TaskCount).ThenBy(tag => tag.Name)
+                : query.OrderBy(tag => tag.TaskCount).ThenBy(tag => tag.Name),
+            "ownername" => isDescending
+                ? query.OrderByDescending(tag => tag.OwnerName).ThenBy(tag => tag.Name)
+                : query.OrderBy(tag => tag.OwnerName).ThenBy(tag => tag.Name),
+            _ => isDescending
+                ? query.OrderByDescending(tag => tag.Name).ThenBy(tag => tag.Id)
+                : query.OrderBy(tag => tag.Name).ThenBy(tag => tag.Id),
+        };
     }
 
     public Task<Dictionary<int, int>> GetTaskCounts(int workspaceId, CancellationToken cancellationToken = default)

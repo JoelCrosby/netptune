@@ -9,6 +9,13 @@ public sealed record StatusFilter
     public EntityType EntityType { get; init; } = EntityType.Task;
 }
 
+public sealed class StatusPageFilter : PageRequest
+{
+    public EntityType EntityType { get; init; } = EntityType.Task;
+
+    public string? Search { get; init; }
+}
+
 public sealed record CreateStatusRequest
 {
     public EntityType EntityType { get; init; } = EntityType.Task;
@@ -48,4 +55,11 @@ public sealed record ReorderStatusesRequest
     public EntityType EntityType { get; init; } = EntityType.Task;
 
     public IReadOnlyList<int> StatusIds { get; init; } = [];
+}
+
+public sealed record MoveStatusRequest
+{
+    public int Id { get; init; }
+
+    public SortMoveDirection Direction { get; init; }
 }

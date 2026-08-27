@@ -46,6 +46,7 @@ export interface DatatableMenuItem<T = unknown> {
   label: string;
   icon: Type<unknown>;
   onClick: (row: T) => void;
+  disabled?: (row: T) => boolean;
 }
 
 export interface DatatableLoadSort extends DatatableSort {

@@ -7,7 +7,7 @@ using Netptune.Core.ViewModels.Statuses;
 
 namespace Netptune.Core.Entities;
 
-public record Status : WorkspaceEntity<int>
+public record Status : WorkspaceEntity<int>, ISortOrderedEntity
 {
     private string? _color;
 

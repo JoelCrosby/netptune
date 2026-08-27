@@ -8,7 +8,7 @@ using Netptune.Core.ViewModels.RelationTypes;
 
 namespace Netptune.Core.Entities;
 
-public record RelationType : WorkspaceEntity<int>
+public record RelationType : WorkspaceEntity<int>, ISortOrderedEntity
 {
     private string? _color;
 

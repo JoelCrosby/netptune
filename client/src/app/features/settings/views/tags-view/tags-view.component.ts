@@ -1,7 +1,16 @@
-import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { Params, RouterLink } from '@angular/router';
 import { DialogService } from '@core/services/dialog.service';
 import { TagCommandsService } from '@core/services/tag-commands.service';
+import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import {
   CreateTagDialogComponent,
   CreateTagDialogResult,
@@ -10,39 +19,35 @@ import {
   EditTagDialogComponent,
   EditTagDialogResult,
 } from '@entry/dialogs/edit-tag-dialog/edit-tag-dialog.component';
-import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
+import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
+import { DatatableEmptyDirective } from '@static/components/datatable/datatable-empty.directive';
+import { DatatableComponent } from '@static/components/datatable/datatable.component';
+import {
+  DatatableDataSource,
+  DatatableMenuItem,
+  DatatableSort,
+} from '@static/components/datatable/datatable.types';
+import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
-import { IconButtonComponent } from '@static/components/button/icon-button.component';
-import {
-  TableComponent,
-  TableEmptyCellDirective,
-  TableHeaderRowDirective,
-  TableHeadDirective,
-  TableRowDirective,
-} from '@static/components/table/table.component';
-import { TooltipDirective } from '@app/static/directives/tooltip.directive';
+import { SearchInputComponent } from '@static/components/search-input/search-input.component';
 import { Tag } from '@core/models/tag';
-import { LucideSettings2, LucideX } from '@lucide/angular';
+import { LucideSettings2, LucideTags, LucideX } from '@lucide/angular';
+import { debounceTime } from 'rxjs/operators';
 import { first } from 'rxjs';
-import { tagResource } from '@app/core/resources/tag.resource';
 
 @Component({
   selector: 'app-tags-view',
   imports: [
-    IconButtonComponent,
     RouterLink,
-    TooltipDirective,
-    LucideSettings2,
-    LucideX,
-    ErrorStateComponent,
+    DatatableCellTemplateDirective,
+    DatatableComponent,
+    DatatableEmptyDirective,
+    EmptyStateComponent,
+    LucideTags,
     PageContainerComponent,
     PageHeaderComponent,
-    TableComponent,
-    TableEmptyCellDirective,
-    TableHeaderRowDirective,
-    TableHeadDirective,
-    TableRowDirective,
+    SearchInputComponent,
   ],
   template: `
     <app-page-container [centerPage]="true" [marginBottom]="true">
@@ -53,89 +58,124 @@ import { tagResource } from '@app/core/resources/tag.resource';
         actionTitle="Create tag"
         (actionClick)="openCreateDialog()" />
 
-      @if (tags.error()) {
-        <app-error-state
-          compact
-          i18n-title="Shown when the tag list fails to load"
-          title="Tags could not be loaded"
-          i18n-description="Advice shown when a list fails to load"
-          description="Check your connection and try again."
-          (retry)="tags.reload()" />
-      } @else {
-        <app-table containerClass=" overflow-hidden" tableClass="table-fixed">
-          <thead appTableHead>
-            <tr appTableHeaderRow>
-              <th class="px-4 py-3" i18n="Column heading for the name">Name</th>
-              <th
-                class="w-24 px-4 py-3"
-                i18n="Column heading for the number of tasks using a row">
-                Tasks
-              </th>
-              <th class="w-24 px-2 py-3"></th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (tag of tags.value(); track tag.id) {
-              <tr appTableRow class="group">
-                <td class="px-4 py-2 align-middle">
-                  <a
-                    class="block w-full truncate text-left font-medium hover:underline"
-                    [routerLink]="[tag.id]">
-                    {{ tag.name }}
-                  </a>
-                </td>
-                <td class="text-muted px-4 py-2 align-middle">
-                  {{ tag.taskCount }}
-                </td>
-                <td class="px-2 py-2 align-middle">
-                  <div class="flex gap-1">
-                    <button
-                      app-icon-button
-                      i18n-appTooltip="Tooltip on the button that edits a tag"
-                      appTooltip="Edit tag"
-                      type="button"
-                      i18n-aria-label="
-                        Accessible label for the button that edits a tag
-                      "
-                      aria-label="Edit tag"
-                      (click)="openEditDialog(tag)">
-                      <svg lucideSettings2 class="h-4 w-4"></svg>
-                    </button>
-                    <button
-                      app-icon-button
-                      i18n-appTooltip="Tooltip on the button that deletes a tag"
-                      appTooltip="Delete tag"
-                      type="button"
-                      i18n-aria-label="
-                        Accessible label for the button that deletes a tag
-                      "
-                      aria-label="Delete tag"
-                      (click)="onDeleteClicked(tag)">
-                      <svg lucideX class="h-4 w-4"></svg>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            } @empty {
-              <tr>
-                <td appTableEmptyCell colspan="3">
-                  <span i18n="Empty state for the tag list">
-                    No tags yet. Create one to group tasks across projects.
-                  </span>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </app-table>
-      }
+      <div class="mb-3 flex flex-row items-center gap-2">
+        <app-search-input
+          [term]="searchInput()"
+          (searchChange)="searchInput.set($event ?? '')" />
+      </div>
+
+      <app-datatable
+        tableClass="table-fixed"
+        i18n-errorMessage="Shown when the tag list fails to load"
+        errorMessage="Tags could not be loaded."
+        i18n-itemLabel="Plural noun for tags, used in the row summary"
+        itemLabel="tags"
+        [data]="data"
+        [(sort)]="sort">
+        <ng-template appDatatableCell="name" let-tag>
+          <a
+            class="block w-full truncate text-left font-medium hover:underline"
+            [routerLink]="[tag.id]">
+            {{ tag.name }}
+          </a>
+        </ng-template>
+
+        <ng-template appDatatableEmpty>
+          @if (search()) {
+            <app-empty-state
+              compact
+              i18n-title="Heading shown when a search matches nothing"
+              title="No tags match your search."
+              i18n-description="Advice shown when a search matches nothing"
+              description="Try a different term.">
+              <svg emptyStateIcon size="38" lucideTags></svg>
+            </app-empty-state>
+          } @else {
+            <app-empty-state
+              compact
+              i18n-title="Heading of an empty tag list"
+              title="No tags yet."
+              i18n-description="Explains what tags are for"
+              description="Create one to group tasks across projects.">
+              <svg emptyStateIcon size="38" lucideTags></svg>
+            </app-empty-state>
+          }
+        </ng-template>
+      </app-datatable>
     </app-page-container>
   `,
 })
 export class TagsViewComponent {
-  private tagCommands = inject(TagCommandsService);
-  private dialog = inject(DialogService);
+  private readonly tagCommands = inject(TagCommandsService);
+  private readonly dialog = inject(DialogService);
+  private readonly workspaceRefresh = inject(WorkspaceRefreshService);
 
-  tags = tagResource();
+  readonly searchInput = signal('');
+  readonly sort = signal<DatatableSort | null>(null);
+
+  readonly search = toSignal(
+    toObservable(this.searchInput).pipe(debounceTime(250)),
+    { initialValue: '' }
+  );
+
+  private readonly datatable = viewChild(DatatableComponent<Tag>);
+
+  private readonly resourceParams = computed<Params>(() => {
+    const search = this.search().trim();
+
+    return search ? { search } : {};
+  });
+
+  private readonly menu: DatatableMenuItem<Tag>[] = [
+    {
+      label: $localize`:Row action that edits a tag:Edit tag`,
+      icon: LucideSettings2,
+      onClick: (tag) => this.openEditDialog(tag),
+    },
+    {
+      label: $localize`:Row action that deletes a tag:Delete tag`,
+      icon: LucideX,
+      onClick: (tag) => this.onDeleteClicked(tag),
+    },
+  ];
+
+  readonly data: DatatableDataSource<Tag> = {
+    key: 'workspace-tags',
+    columns: [
+      {
+        id: 'name',
+        header: $localize`:Column heading for the name:Name`,
+        accessor: 'name',
+        sortable: true,
+      },
+      {
+        id: 'taskCount',
+        header: $localize`:Column heading for the number of tasks using a row:Tasks`,
+        accessor: 'taskCount',
+        sortable: true,
+        widthClass: 'w-24',
+        cellClass: 'text-muted',
+      },
+    ],
+    resource: { url: 'api/tags/page', params: this.resourceParams },
+    rows: (response) => response?.payload?.items ?? [],
+    trackBy: (_: number, tag: Tag) => tag.id,
+    menu: this.menu,
+    reloadSignal: this.workspaceRefresh.version('tags'),
+  };
+
+  constructor() {
+    let previousSearch = this.search();
+
+    effect(() => {
+      const search = this.search();
+
+      if (search === previousSearch) return;
+
+      previousSearch = search;
+      this.datatable()?.goToPage(1);
+    });
+  }
 
   openCreateDialog() {
     const dialogRef = this.dialog.open<CreateTagDialogResult>(

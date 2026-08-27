@@ -4,6 +4,7 @@ import { ClientResponse } from '@core/models/client-response';
 import { EntityType } from '@core/models/entity-type';
 import {
   CreateStatusRequest,
+  MoveStatusRequest,
   ReorderStatusesRequest,
   Status,
   UpdateStatusRequest,
@@ -33,5 +34,9 @@ export class StatusesService {
 
   reorder(request: ReorderStatusesRequest) {
     return this.http.post<ClientResponse>('api/statuses/reorder', request);
+  }
+
+  move(request: MoveStatusRequest) {
+    return this.http.post<ClientResponse>('api/statuses/move', request);
   }
 }

@@ -7,6 +7,8 @@ using Netptune.Core.Models.Usage;
 using Netptune.Core.Onboarding.Templates;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Statuses;
 using Netptune.Core.ViewModels.Statuses;
 using Netptune.Entities.Contexts;
@@ -51,6 +53,71 @@ public sealed class StatusRepository : WorkspaceEntityRepository<DataContext, St
         var taskCounts = await GetTaskCounts(workspaceId, cancellationToken);
 
         return statuses.ConvertAll(status => status with { TaskCount = taskCounts.GetValueOrDefault(status.Id) });
+    }
+
+    public async Task<PagedResponse<StatusViewModel>> GetPageForWorkspace(int workspaceId, StatusPageFilter filter, CancellationToken cancellationToken = default)
+    {
+        var query = Entities.Where(status =>
+            status.WorkspaceId == workspaceId &&
+            status.EntityType == filter.EntityType &&
+            !status.IsDeleted);
+
+        if (!string.IsNullOrWhiteSpace(filter.Search))
+        {
+            var search = filter.Search.Trim();
+
+            query = query.Where(status => EF.Functions.ILike(status.Name, $"%{search}%"));
+        }
+
+        var totalCount = await query.CountAsync(cancellationToken);
+        var pagination = filter.GetPagination();
+        var items = await SortStatuses(Project(query), filter)
+            .Skip(pagination.Skip)
+            .Take(pagination.PageSize)
+            .ToListAsync(cancellationToken);
+
+        return new PagedResponse<StatusViewModel>(items, pagination.Page, pagination.PageSize, totalCount);
+    }
+
+    private IQueryable<StatusViewModel> Project(IQueryable<Status> query)
+    {
+        return query
+            .AsNoTracking()
+            .Select(status => new StatusViewModel
+            {
+                Id = status.Id,
+                WorkspaceId = status.WorkspaceId,
+                EntityType = status.EntityType,
+                Name = status.Name,
+                Key = status.Key,
+                Description = status.Description,
+                Color = status.Color,
+                SortOrder = status.SortOrder,
+                Category = status.Category,
+                IsSystem = status.IsSystem,
+                TaskCount = Context.ProjectTasks.Count(task => task.StatusId == status.Id && !task.IsDeleted),
+            });
+    }
+
+    private static IQueryable<StatusViewModel> SortStatuses(IQueryable<StatusViewModel> query, StatusPageFilter filter)
+    {
+        var isDescending = string.Equals(filter.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+
+        return filter.SortBy?.ToLowerInvariant() switch
+        {
+            "name" => isDescending
+                ? query.OrderByDescending(status => status.Name).ThenBy(status => status.Id)
+                : query.OrderBy(status => status.Name).ThenBy(status => status.Id),
+            "category" => isDescending
+                ? query.OrderByDescending(status => status.Category).ThenBy(status => status.SortOrder)
+                : query.OrderBy(status => status.Category).ThenBy(status => status.SortOrder),
+            "taskcount" => isDescending
+                ? query.OrderByDescending(status => status.TaskCount).ThenBy(status => status.SortOrder)
+                : query.OrderBy(status => status.TaskCount).ThenBy(status => status.SortOrder),
+            _ => isDescending
+                ? query.OrderByDescending(status => status.SortOrder).ThenByDescending(status => status.Id)
+                : query.OrderBy(status => status.SortOrder).ThenBy(status => status.Id),
+        };
     }
 
     public Task<Dictionary<int, int>> GetTaskCounts(int workspaceId, CancellationToken cancellationToken = default)

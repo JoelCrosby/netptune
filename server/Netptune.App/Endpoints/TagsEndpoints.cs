@@ -21,6 +21,7 @@ public static class TagsEndpoints
         group.MapPost("/task", HandlePostTaskTag).RequireAuthorization(NetptunePermissions.Tags.Assign);
         group.MapGet("/task/{systemId}", HandleGetTagsForTask).RequireAuthorization(NetptunePermissions.Tags.Read);
         group.MapGet("/workspace", HandleGetTagsForWorkspace).RequireAuthorization(NetptunePermissions.Tags.Read);
+        group.MapGet("/page", HandleGetTagsPage).RequireAuthorization(NetptunePermissions.Tags.Read);
         group.MapGet("/{id:int}/usage", HandleGetTagUsage).RequireAuthorization(NetptunePermissions.Tags.Read);
         group.MapDelete("/", HandleDelete).RequireAuthorization(NetptunePermissions.Tags.Delete);
         group.MapDelete("/task", HandleDeleteFromTask).RequireAuthorization(NetptunePermissions.Tags.Assign);
@@ -77,6 +78,16 @@ public static class TagsEndpoints
         var result = await mediator.Send(new GetTagsForWorkspaceQuery(page), cancellationToken);
 
         if (result is null) return Results.NotFound();
+
+        return Results.Ok(result);
+    }
+
+    public static async Task<IResult> HandleGetTagsPage(
+        IMediator mediator,
+        [AsParameters] TagFilter filter,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetTagsPageQuery(filter), cancellationToken);
 
         return Results.Ok(result);
     }

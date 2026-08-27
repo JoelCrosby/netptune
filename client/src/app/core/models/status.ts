@@ -1,4 +1,5 @@
 import { EntityType } from './entity-type';
+import { SortMoveDirection } from './sort-move-direction';
 
 export enum StatusCategory {
   new = 0,
@@ -56,4 +57,9 @@ export interface UpdateStatusRequest extends CreateStatusRequest {
 export interface ReorderStatusesRequest {
   entityType: EntityType;
   statusIds: number[];
+}
+
+export interface MoveStatusRequest {
+  id: number;
+  direction: SortMoveDirection;
 }

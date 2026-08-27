@@ -14,11 +14,13 @@ public static class StatusesEndpoints
         var group = builder.MapGroup("statuses");
 
         group.MapGet("/", HandleGet).RequireAuthorization(NetptunePermissions.Statuses.Read);
+        group.MapGet("/page", HandleGetPage).RequireAuthorization(NetptunePermissions.Statuses.Read);
         group.MapGet("/{id:int}/usage", HandleGetUsage).RequireAuthorization(NetptunePermissions.Statuses.Read);
         group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.Statuses.Manage);
         group.MapPut("/", HandlePut).RequireAuthorization(NetptunePermissions.Statuses.Manage);
         group.MapDelete("/{id:int}", HandleDelete).RequireAuthorization(NetptunePermissions.Statuses.Manage);
         group.MapPost("/reorder", HandleReorder).RequireAuthorization(NetptunePermissions.Statuses.Manage);
+        group.MapPost("/move", HandleMove).RequireAuthorization(NetptunePermissions.Statuses.Manage);
 
         return builder;
     }
@@ -31,6 +33,16 @@ public static class StatusesEndpoints
         var result = await mediator.Send(new GetStatusesQuery(filter), cancellationToken);
 
         return result is null ? Results.NotFound() : Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleGetPage(
+        IMediator mediator,
+        [AsParameters] StatusPageFilter filter,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetStatusesPageQuery(filter), cancellationToken);
+
+        return Results.Ok(result);
     }
 
     private static async Task<IResult> HandleGetUsage(
@@ -85,6 +97,18 @@ public static class StatusesEndpoints
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new ReorderStatusesCommand(request), cancellationToken);
+
+        if (result.IsNotFound) return Results.NotFound(result);
+
+        return Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleMove(
+        IMediator mediator,
+        MoveStatusRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new MoveStatusCommand(request), cancellationToken);
 
         if (result.IsNotFound) return Results.NotFound(result);
 

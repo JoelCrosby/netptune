@@ -1,5 +1,7 @@
 using Netptune.Core.Entities;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.RelationTypes;
 
 namespace Netptune.Core.Repositories;
@@ -7,6 +9,8 @@ namespace Netptune.Core.Repositories;
 public interface IRelationTypeRepository : IWorkspaceEntityRepository<RelationType, int>
 {
     Task<List<RelationTypeViewModel>> GetViewModelsForWorkspace(int workspaceId, CancellationToken cancellationToken = default);
+
+    Task<PagedResponse<RelationTypeViewModel>> GetPageForWorkspace(int workspaceId, RelationTypeFilter filter, CancellationToken cancellationToken = default);
 
     Task<RelationTypeViewModel?> GetViewModel(int id, CancellationToken cancellationToken = default);
 

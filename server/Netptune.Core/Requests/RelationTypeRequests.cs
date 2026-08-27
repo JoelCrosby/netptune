@@ -44,3 +44,15 @@ public sealed record ReorderRelationTypesRequest
 {
     public IReadOnlyList<int> RelationTypeIds { get; init; } = [];
 }
+
+public sealed record MoveRelationTypeRequest
+{
+    public int Id { get; init; }
+
+    public SortMoveDirection Direction { get; init; }
+}
+
+public sealed class RelationTypeFilter : PageRequest
+{
+    public string? Search { get; init; }
+}

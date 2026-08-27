@@ -43,6 +43,97 @@ public sealed class RelationTypesEndpointTests
     }
 
     [Fact]
+    public async Task GetPage_ShouldReturnAPagedEnvelope_WhenInputValid()
+    {
+        var client = await CreateClient();
+
+        var response = await client.GetAsync("api/relation-types/page?page=1&pageSize=2");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<RelationTypeViewModel>>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Page.Should().Be(1);
+        result.Payload.PageSize.Should().Be(2);
+        result.Payload.Items.Should().HaveCountLessThanOrEqualTo(2);
+        result.Payload.TotalCount.Should().BeGreaterThan(0);
+    }
+
+    [Fact]
+    public async Task GetPage_ShouldDefaultToSortOrder_WhenNoSortRequested()
+    {
+        var client = await CreateClient();
+
+        var response = await client.GetAsync("api/relation-types/page?pageSize=100");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<RelationTypeViewModel>>>();
+        var sortOrders = result.Payload!.Items.Select(relationType => relationType.SortOrder).ToList();
+
+        sortOrders.Should().BeInAscendingOrder();
+    }
+
+    [Fact]
+    public async Task GetPage_ShouldMatchTheInverseName_WhenSearchProvided()
+    {
+        var client = await CreateClient();
+        var relationType = await CreateRelationType();
+
+        var response = await client.GetAsync($"api/relation-types/page?search={relationType.InverseName}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<RelationTypeViewModel>>>();
+
+        result.Payload!.Items.Should().ContainSingle(match => match.Id == relationType.Id);
+    }
+
+    [Fact]
+    public async Task Move_ShouldSwapWithTheNeighbour_WhenMovingUp()
+    {
+        var client = await CreateClient();
+
+        await CreateRelationType();
+
+        var before = await GetOrderedIds();
+        var moving = before[^1];
+        var expected = before.ToList();
+        (expected[^2], expected[^1]) = (expected[^1], expected[^2]);
+
+        var response = await client.PostAsJsonAsync("api/relation-types/move", new MoveRelationTypeRequest
+        {
+            Id = moving,
+            Direction = SortMoveDirection.Up,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
+
+        result.IsSuccess.Should().BeTrue();
+
+        var after = await GetOrderedIds();
+
+        after.Should().Equal(expected);
+    }
+
+    [Fact]
+    public async Task Move_ShouldReturnNotFound_WhenRelationTypeDoesNotExist()
+    {
+        var client = await CreateClient();
+
+        var response = await client.PostAsJsonAsync("api/relation-types/move", new MoveRelationTypeRequest
+        {
+            Id = int.MaxValue,
+            Direction = SortMoveDirection.Down,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
     public async Task Create_ShouldReturnCorrectly_WhenInputValid()
     {
         var client = await CreateClient();
@@ -293,6 +384,18 @@ public sealed class RelationTypesEndpointTests
         response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
 
         return slug;
+    }
+
+    private async Task<List<int>> GetOrderedIds()
+    {
+        var client = await CreateClient();
+        var relationTypes = await client.GetFromJsonAsync<List<RelationTypeViewModel>>("api/relation-types");
+
+        return relationTypes!
+            .OrderBy(relationType => relationType.SortOrder)
+            .ThenBy(relationType => relationType.Id)
+            .Select(relationType => relationType.Id)
+            .ToList();
     }
 
     private async Task<RelationTypeViewModel> CreateRelationType()

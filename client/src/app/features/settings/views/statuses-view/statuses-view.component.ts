@@ -1,6 +1,15 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { Params, RouterLink } from '@angular/router';
 import { EntityType } from '@core/models/entity-type';
+import { SortMoveDirection } from '@core/models/sort-move-direction';
 import {
   Status,
   StatusCategory,
@@ -19,43 +28,47 @@ import {
 import {
   LucideArrowDown,
   LucideArrowUp,
+  LucideCircleDashed,
   LucideSettings2,
   LucideTrash2,
 } from '@lucide/angular';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { ColorSwatchComponent } from '@static/components/color-swatch/color-swatch.component';
+import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
+import { DatatableEmptyDirective } from '@static/components/datatable/datatable-empty.directive';
+import { DatatableComponent } from '@static/components/datatable/datatable.component';
+import {
+  DatatableDataSource,
+  DatatableMenuItem,
+  DatatableSort,
+} from '@static/components/datatable/datatable.types';
+import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
-import {
-  TableComponent,
-  TableEmptyCellDirective,
-  TableHeaderRowDirective,
-  TableHeadDirective,
-  TableRowDirective,
-} from '@static/components/table/table.component';
+import { SearchInputComponent } from '@static/components/search-input/search-input.component';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
+import { debounceTime } from 'rxjs/operators';
 import { finalize, first } from 'rxjs';
 
 @Component({
   selector: 'app-statuses-view',
   imports: [
-    ErrorStateComponent,
     ColorSwatchComponent,
-    PageContainerComponent,
-    PageHeaderComponent,
+    DatatableCellTemplateDirective,
+    DatatableComponent,
+    DatatableEmptyDirective,
+    EmptyStateComponent,
+    ErrorStateComponent,
     IconButtonComponent,
-    TableComponent,
-    TableEmptyCellDirective,
-    TableHeaderRowDirective,
-    TableHeadDirective,
-    TableRowDirective,
-    TooltipDirective,
-    RouterLink,
     LucideArrowDown,
     LucideArrowUp,
-    LucideSettings2,
-    LucideTrash2,
+    LucideCircleDashed,
+    PageContainerComponent,
+    PageHeaderComponent,
+    RouterLink,
+    SearchInputComponent,
+    TooltipDirective,
   ],
   template: `
     <app-page-container [centerPage]="true" [marginBottom]="true">
@@ -69,138 +82,87 @@ import { finalize, first } from 'rxjs';
       @if (error()) {
         <app-error-state
           compact
-          i18n-title="Shown when the status list fails to load"
-          title="Statuses could not be loaded"
+          i18n-title="Shown when a change to a status could not be saved"
+          title="That change could not be saved"
           [description]="error() ?? ''"
-          (retry)="load()" />
-      } @else {
-        <app-table tableClass="min-w-[720px] table-fixed">
-          <thead appTableHead>
-            <tr appTableHeaderRow>
-              <th class="w-16 px-4 py-3">
-                <span i18n="Column heading for the colour swatch">Color</span>
-              </th>
-              <th class="px-4 py-3">
-                <span i18n="Column heading for the name">Name</span>
-              </th>
-              <th class="w-44 px-4 py-3">
-                <span i18n="Column heading for the status category">
-                  Category
-                </span>
-              </th>
-              <th class="w-24 px-4 py-3">
-                <span i18n="Column heading for the number of tasks using a row">
-                  Tasks
-                </span>
-              </th>
-              <th class="w-28 px-4 py-3">
-                <span i18n="Column heading for the sort order">Order</span>
-              </th>
-              <th class="w-28 px-4 py-3">
-                <span i18n="Column heading for the row action buttons">
-                  Actions
-                </span>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (
-              status of orderedStatuses();
-              track status.id;
-              let i = $index
-            ) {
-              <tr appTableRow>
-                <td class="px-4 py-2 align-middle">
-                  <app-color-swatch variant="swatch" [color]="status.color" />
-                </td>
-                <td class="px-4 py-2 align-middle">
-                  <a
-                    class="block w-full truncate text-left font-medium hover:underline"
-                    [routerLink]="[status.id]">
-                    {{ status.name }}
-                  </a>
-                </td>
-                <td class="px-4 py-2 align-middle">
-                  {{ categoryLabel(status.category) }}
-                </td>
-                <td class="text-muted px-4 py-2 align-middle">
-                  {{ status.taskCount }}
-                </td>
-                <td class="px-4 py-2 align-middle">
-                  <div class="flex gap-1">
-                    <button
-                      app-icon-button
-                      i18n-appTooltip="
-                        Tooltip on the button that moves a row up
-                      "
-                      appTooltip="Move up"
-                      i18n-aria-label="
-                        Accessible label for the button that moves a status up
-                      "
-                      aria-label="Move status up"
-                      [disabled]="i === 0 || loading()"
-                      (click)="move(status.id, -1)">
-                      <svg lucideArrowUp class="h-4 w-4"></svg>
-                    </button>
-                    <button
-                      app-icon-button
-                      i18n-appTooltip="
-                        Tooltip on the button that moves a row down
-                      "
-                      appTooltip="Move down"
-                      i18n-aria-label="
-                        Accessible label for the button that moves a status down
-                      "
-                      aria-label="Move status down"
-                      [disabled]="
-                        i === orderedStatuses().length - 1 || loading()
-                      "
-                      (click)="move(status.id, 1)">
-                      <svg lucideArrowDown class="h-4 w-4"></svg>
-                    </button>
-                  </div>
-                </td>
-                <td class="px-4 py-2 align-middle">
-                  <div class="flex gap-1">
-                    <button
-                      app-icon-button
-                      i18n-appTooltip="Tooltip on the button that edits a row"
-                      appTooltip="Edit"
-                      i18n-aria-label="
-                        Accessible label for the button that edits a status
-                      "
-                      aria-label="Edit status"
-                      [disabled]="loading()"
-                      (click)="openEditDialog(status)">
-                      <svg lucideSettings2 class="h-4 w-4"></svg>
-                    </button>
-                    <button
-                      app-icon-button
-                      i18n-appTooltip="Tooltip on the button that deletes a row"
-                      appTooltip="Delete"
-                      i18n-aria-label="
-                        Accessible label for the button that deletes a status
-                      "
-                      aria-label="Delete status"
-                      [disabled]="status.isSystem || loading()"
-                      (click)="delete(status)">
-                      <svg lucideTrash2 class="h-4 w-4"></svg>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            } @empty {
-              <tr>
-                <td appTableEmptyCell colspan="6">
-                  <span i18n="Empty state for the status list">
-                    No statuses yet. Create one to describe your workflow.
-                  </span>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </app-table>
+          (retry)="reload()" />
       }
+
+      <div class="mb-3 flex flex-row items-center gap-2">
+        <app-search-input
+          [term]="searchInput()"
+          (searchChange)="searchInput.set($event ?? '')" />
+      </div>
+
+      <app-datatable
+        tableClass="min-w-[720px] table-fixed"
+        i18n-errorMessage="Shown when the status list fails to load"
+        errorMessage="Statuses could not be loaded."
+        i18n-itemLabel="Plural noun for statuses, used in the row summary"
+        itemLabel="statuses"
+        [data]="data"
+        [(sort)]="sort">
+        <ng-template appDatatableCell="color" let-status>
+          <app-color-swatch variant="swatch" [color]="status.color" />
+        </ng-template>
+
+        <ng-template appDatatableCell="name" let-status>
+          <a
+            class="block w-full truncate text-left font-medium hover:underline"
+            [routerLink]="[status.id]">
+            {{ status.name }}
+          </a>
+        </ng-template>
+
+        <ng-template appDatatableCell="sortOrder" let-status let-i="rowIndex">
+          <div class="flex gap-1">
+            <button
+              app-icon-button
+              [appTooltip]="moveTooltip(moveUpLabel)"
+              i18n-aria-label="
+                Accessible label for the button that moves a status up
+              "
+              aria-label="Move status up"
+              [disabled]="!canMoveUp(i)"
+              (click)="move(status.id, SortMoveDirection.up)">
+              <svg lucideArrowUp class="h-4 w-4"></svg>
+            </button>
+            <button
+              app-icon-button
+              [appTooltip]="moveTooltip(moveDownLabel)"
+              i18n-aria-label="
+                Accessible label for the button that moves a status down
+              "
+              aria-label="Move status down"
+              [disabled]="!canMoveDown(i)"
+              (click)="move(status.id, SortMoveDirection.down)">
+              <svg lucideArrowDown class="h-4 w-4"></svg>
+            </button>
+          </div>
+        </ng-template>
+
+        <ng-template appDatatableEmpty>
+          @if (search()) {
+            <app-empty-state
+              compact
+              i18n-title="Heading shown when a search matches nothing"
+              title="No statuses match your search."
+              i18n-description="Advice shown when a search matches nothing"
+              description="Try a different term.">
+              <svg emptyStateIcon size="38" lucideCircleDashed></svg>
+            </app-empty-state>
+          } @else {
+            <app-empty-state
+              compact
+              i18n-title="Heading of an empty status list"
+              title="No statuses yet."
+              i18n-description="Explains what statuses are for"
+              description="Create one to describe your workflow.">
+              <svg emptyStateIcon size="38" lucideCircleDashed></svg>
+            </app-empty-state>
+          }
+        </ng-template>
+      </app-datatable>
     </app-page-container>
   `,
 })
@@ -208,32 +170,142 @@ export class StatusesViewComponent {
   private readonly statusesService = inject(StatusesService);
   private readonly dialog = inject(DialogService);
 
-  readonly statuses = signal<Status[]>([]);
-  readonly loading = signal(false);
+  readonly SortMoveDirection = SortMoveDirection;
+  readonly moveUpLabel = $localize`:Tooltip on the button that moves a row up:Move up`;
+  readonly moveDownLabel = $localize`:Tooltip on the button that moves a row down:Move down`;
+  readonly manualOrderOnlyLabel = $localize`:Explains that manual reordering needs the default, unfiltered view:Clear the search and sort by Order to reorder`;
+
+  readonly saving = signal(false);
   readonly error = signal<string | null>(null);
-  readonly orderedStatuses = computed(() =>
-    [...this.statuses()].sort(
-      (a, b) => a.sortOrder - b.sortOrder || a.id - b.id
-    )
+  readonly searchInput = signal('');
+  readonly sort = signal<DatatableSort | null>(null);
+  private readonly reloadToken = signal(0);
+
+  readonly search = toSignal(
+    toObservable(this.searchInput).pipe(debounceTime(250)),
+    { initialValue: '' }
   );
 
+  private readonly datatable = viewChild(DatatableComponent<Status>);
+
+  // Rows only sit next to their sort-order neighbours in the default, unfiltered view,
+  // so that is the only view where moving a row up or down means anything.
+  readonly manualOrderActive = computed(() => {
+    const sort = this.sort();
+    const sortedByOrder = sort === null || sort.sortBy === 'sortOrder';
+
+    return sortedByOrder && !this.search().trim();
+  });
+
+  private readonly resourceParams = computed<Params>(() => {
+    const search = this.search().trim();
+
+    return {
+      entityType: EntityType.task,
+      ...(search ? { search } : {}),
+    };
+  });
+
+  private readonly menu: DatatableMenuItem<Status>[] = [
+    {
+      label: $localize`:Row action that edits a status:Edit`,
+      icon: LucideSettings2,
+      onClick: (status) => this.openEditDialog(status),
+      disabled: () => this.saving(),
+    },
+    {
+      label: $localize`:Row action that deletes a status:Delete`,
+      icon: LucideTrash2,
+      onClick: (status) => this.delete(status),
+      disabled: (status) => status.isSystem || this.saving(),
+    },
+  ];
+
+  readonly data: DatatableDataSource<Status> = {
+    key: 'workspace-statuses',
+    columns: [
+      {
+        id: 'color',
+        header: $localize`:Column heading for the colour swatch:Color`,
+        widthClass: 'w-16',
+      },
+      {
+        id: 'name',
+        header: $localize`:Column heading for the name:Name`,
+        accessor: 'name',
+        sortable: true,
+      },
+      {
+        id: 'category',
+        header: $localize`:Column heading for the status category:Category`,
+        accessor: (status) => this.categoryLabel(status.category),
+        sortable: true,
+        widthClass: 'w-44',
+      },
+      {
+        id: 'taskCount',
+        header: $localize`:Column heading for the number of tasks using a row:Tasks`,
+        accessor: 'taskCount',
+        sortable: true,
+        widthClass: 'w-24',
+        cellClass: 'text-muted',
+      },
+      {
+        id: 'sortOrder',
+        header: $localize`:Column heading for the sort order:Order`,
+        sortable: true,
+        widthClass: 'w-28',
+      },
+    ],
+    resource: { url: 'api/statuses/page', params: this.resourceParams },
+    rows: (response) => response?.payload?.items ?? [],
+    trackBy: (_: number, status: Status) => status.id,
+    menu: this.menu,
+    reloadSignal: this.reloadToken,
+  };
+
   constructor() {
-    this.load();
+    let previousSearch = this.search();
+
+    effect(() => {
+      const search = this.search();
+
+      if (search === previousSearch) return;
+
+      previousSearch = search;
+      this.datatable()?.goToPage(1);
+    });
   }
 
-  load() {
-    this.loading.set(true);
+  reload() {
     this.error.set(null);
+    this.reloadToken.update((token) => token + 1);
+  }
 
-    this.statusesService
-      .get(EntityType.task)
-      .pipe(finalize(() => this.loading.set(false)))
-      .subscribe({
-        next: (statuses) => {
-          this.statuses.set(statuses);
-        },
-        error: () => this.error.set('Statuses could not be loaded.'),
-      });
+  moveTooltip(label: string) {
+    return this.manualOrderActive() ? label : this.manualOrderOnlyLabel;
+  }
+
+  canMoveUp(rowIndex: number) {
+    const isFirstOverall = this.globalIndex(rowIndex) === 0;
+
+    return this.manualOrderActive() && !this.saving() && !isFirstOverall;
+  }
+
+  canMoveDown(rowIndex: number) {
+    const table = this.datatable();
+    const isLastOverall =
+      this.globalIndex(rowIndex) === (table?.totalCount() ?? 0) - 1;
+
+    return this.manualOrderActive() && !this.saving() && !isLastOverall;
+  }
+
+  private globalIndex(rowIndex: number) {
+    const table = this.datatable();
+
+    if (!table) return rowIndex;
+
+    return (table.currentPage() - 1) * table.pageSize() + rowIndex;
   }
 
   openCreateDialog() {
@@ -257,7 +329,7 @@ export class StatusesViewComponent {
     const name = result.name.trim();
     if (!name) return;
 
-    this.loading.set(true);
+    this.saving.set(true);
     this.error.set(null);
 
     this.statusesService
@@ -267,7 +339,7 @@ export class StatusesViewComponent {
         category: result.category,
         color: result.color,
       })
-      .pipe(finalize(() => this.loading.set(false)))
+      .pipe(finalize(() => this.saving.set(false)))
       .subscribe({
         next: (response) => {
           if (!response.isSuccess || !response.payload) {
@@ -275,7 +347,7 @@ export class StatusesViewComponent {
             return;
           }
 
-          this.load();
+          this.reload();
         },
         error: () => this.error.set('Status could not be created.'),
       });
@@ -303,7 +375,7 @@ export class StatusesViewComponent {
     const name = result.name.trim();
     if (!name) return;
 
-    this.loading.set(true);
+    this.saving.set(true);
     this.error.set(null);
 
     this.statusesService
@@ -315,7 +387,7 @@ export class StatusesViewComponent {
         color: result.color,
         category: result.category,
       })
-      .pipe(finalize(() => this.loading.set(false)))
+      .pipe(finalize(() => this.saving.set(false)))
       .subscribe({
         next: (response) => {
           if (!response.isSuccess) {
@@ -323,7 +395,7 @@ export class StatusesViewComponent {
             return;
           }
 
-          this.load();
+          this.reload();
         },
         error: () => this.error.set('Status could not be saved.'),
       });
@@ -332,12 +404,12 @@ export class StatusesViewComponent {
   delete(status: Status) {
     if (status.isSystem) return;
 
-    this.loading.set(true);
+    this.saving.set(true);
     this.error.set(null);
 
     this.statusesService
       .delete(status.id)
-      .pipe(finalize(() => this.loading.set(false)))
+      .pipe(finalize(() => this.saving.set(false)))
       .subscribe({
         next: (response) => {
           if (!response.isSuccess) {
@@ -345,52 +417,31 @@ export class StatusesViewComponent {
             return;
           }
 
-          this.load();
+          this.reload();
         },
         error: () => this.error.set('Status could not be deleted.'),
       });
   }
 
-  move(statusId: number, direction: -1 | 1) {
-    const ordered = this.orderedStatuses();
-    const currentIndex = ordered.findIndex((status) => status.id === statusId);
-    const nextIndex = currentIndex + direction;
-
-    if (currentIndex < 0 || nextIndex < 0 || nextIndex >= ordered.length) {
-      return;
-    }
-
-    const next = [...ordered];
-    [next[currentIndex], next[nextIndex]] = [
-      next[nextIndex],
-      next[currentIndex],
-    ];
-
-    this.statuses.set(
-      next.map((status, index) => ({ ...status, sortOrder: index }))
-    );
-    this.loading.set(true);
+  move(statusId: number, direction: SortMoveDirection) {
+    this.saving.set(true);
     this.error.set(null);
 
     this.statusesService
-      .reorder({
-        entityType: EntityType.task,
-        statusIds: next.map((status) => status.id),
-      })
-      .pipe(finalize(() => this.loading.set(false)))
+      .move({ id: statusId, direction })
+      .pipe(finalize(() => this.saving.set(false)))
       .subscribe({
         next: (response) => {
           if (!response.isSuccess) {
             this.error.set(
               response.message ?? 'Statuses could not be reordered.'
             );
-            this.load();
+            return;
           }
+
+          this.reload();
         },
-        error: () => {
-          this.error.set('Statuses could not be reordered.');
-          this.load();
-        },
+        error: () => this.error.set('Statuses could not be reordered.'),
       });
   }
 

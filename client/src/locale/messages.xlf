@@ -1213,6 +1213,15 @@
         <source><ph id="0" equiv="name" disp="name"/> and its file are removed for good.</source>
       </segment>
     </unit>
+    <unit id="7347080707073106397">
+      <notes>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:185,186</note>
+        <note category="description">Heading of an empty relation type list</note>
+      </notes>
+      <segment>
+        <source>No relation types yet.</source>
+      </segment>
+    </unit>
     <unit id="734924568623984342">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:520</note>
@@ -1561,9 +1570,10 @@
         <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:185</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:205</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:488</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:241</note>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:559</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:461</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:181,182</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:217</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:363</note>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:281</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:202</note>
@@ -1760,7 +1770,7 @@
     </unit>
     <unit id="7956270323623390717">
       <notes>
-        <note category="location">src/app/features/workspaces/components/workspace-list-item.component.ts:243</note>
+        <note category="location">src/app/features/workspaces/components/workspace-list-item.component.ts:240</note>
         <note category="description">Button that removes a workspace from the top of the list</note>
       </notes>
       <segment>
@@ -2322,7 +2332,7 @@
     </unit>
     <unit id="960978123005616777">
       <notes>
-        <note category="location">src/app/features/workspaces/components/workspace-list-item.component.ts:244</note>
+        <note category="location">src/app/features/workspaces/components/workspace-list-item.component.ts:241</note>
         <note category="description">Button that pins a workspace to the top of the list</note>
       </notes>
       <segment>
@@ -3239,6 +3249,15 @@
         <source> Share example values with the assistant </source>
       </segment>
     </unit>
+    <unit id="8853912163904514010">
+      <notes>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:158,159</note>
+        <note category="description">Heading of an empty status list</note>
+      </notes>
+      <segment>
+        <source>No statuses yet.</source>
+      </segment>
+    </unit>
     <unit id="8855483263700906757">
       <notes>
         <note category="location">src/app/core/services/pin-commands.service.ts:85</note>
@@ -3256,7 +3275,7 @@
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:86,97</note>
         <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:25,33</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:71,77</note>
-        <note category="location">src/app/features/workspaces/components/workspace-list-item.component.ts:151,152</note>
+        <note category="location">src/app/features/workspaces/components/workspace-list-item.component.ts:148,149</note>
         <note category="description">Button that applies the bulk edit to the selected tasks</note>
       </notes>
       <segment>
@@ -3313,7 +3332,9 @@
         <note category="location">src/app/entry/dialogs/create-relation-type-dialog/create-relation-type-dialog.component.ts:56,57</note>
         <note category="location">src/app/entry/dialogs/create-status-dialog/create-status-dialog.component.ts:68,69</note>
         <note category="location">src/app/entry/dialogs/edit-status-dialog/edit-status-dialog.component.ts:69,70</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:270</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:152,153</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:240</note>
         <note category="description">Label of the relation category field</note>
       </notes>
       <segment>
@@ -3373,13 +3394,13 @@
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:151</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:145</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:371</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:96,98</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:258</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:136</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:343</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:84,86</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:234</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:104</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:268</note>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:68,70</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:147</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:59,60</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:133</note>
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:42,43</note>
@@ -3774,9 +3795,9 @@
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:78,80</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:104,107</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:174,177</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:93,95</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:253</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:147,150</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:81,83</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:229</note>
         <note category="description">Label of the colour picker field</note>
       </notes>
       <segment>
@@ -4374,8 +4395,6 @@
     <unit id="4360239040231802726">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-actions.component.ts:17,20</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:122,124</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:101,103</note>
         <note category="location">src/app/shell/command-palette/command-palette.component.ts:142,145</note>
         <note category="location">src/app/static/components/datatable/datatable.component.ts:114,117</note>
         <note category="description">Section heading for actions available on a task</note>
@@ -4523,6 +4542,15 @@
         <source>Delete file</source>
       </segment>
     </unit>
+    <unit id="669379202478188871">
+      <notes>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:97,98</note>
+        <note category="description">Heading of an empty tag list</note>
+      </notes>
+      <segment>
+        <source>No tags yet.</source>
+      </segment>
+    </unit>
     <unit id="8598917078690004028">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:136,139</note>
@@ -4607,7 +4635,8 @@
     <unit id="3915858391862498397">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:48,51</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:65,66</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:78,79</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:277</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:342</note>
         <note category="description">Section heading for links between tasks</note>
       </notes>
@@ -4672,7 +4701,7 @@
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:125</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:52</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:83,84</note>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:52</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:57</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:36</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:85</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:326</note>
@@ -5313,6 +5342,15 @@
         <source>Action</source>
       </segment>
     </unit>
+    <unit id="9222501301114320323">
+      <notes>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:114,117</note>
+        <note category="description">Plural noun for relation types, used in the row summary</note>
+      </notes>
+      <segment>
+        <source>relations</source>
+      </segment>
+    </unit>
     <unit id="683980015107026060">
       <notes>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:172</note>
@@ -5330,6 +5368,15 @@
       </notes>
       <segment>
         <source>Type</source>
+      </segment>
+    </unit>
+    <unit id="8657732847549897278">
+      <notes>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:176,177</note>
+        <note category="description">Heading shown when a search matches nothing</note>
+      </notes>
+      <segment>
+        <source>No relation types match your search.</source>
       </segment>
     </unit>
     <unit id="3742728431516357098">
@@ -5549,7 +5596,7 @@
     </unit>
     <unit id="6317506174396184653">
       <notes>
-        <note category="location">src/app/features/workspaces/components/workspace-list-item.component.ts:166,170</note>
+        <note category="location">src/app/features/workspaces/components/workspace-list-item.component.ts:163,167</note>
         <note category="description">When a workspace last changed. TIME is a relative time such as &apos;2 days ago&apos;</note>
       </notes>
       <segment>
@@ -6541,7 +6588,7 @@
     </unit>
     <unit id="6958524390934268837">
       <notes>
-        <note category="location">src/app/features/workspaces/components/workspace-list-item.component.ts:151,152</note>
+        <note category="location">src/app/features/workspaces/components/workspace-list-item.component.ts:148,149</note>
       </notes>
       <segment>
         <source>{VAR_PLURAL, plural, =1 {member} other {members}}</source>
@@ -7008,6 +7055,15 @@
         <source> Flags the task as &quot;<ph id="0" equiv="FLAG" disp="{{ action.flagName // i18n(ph=&quot;FLAG&quot;) }}"/>&quot; </source>
       </segment>
     </unit>
+    <unit id="2722007343461219050">
+      <notes>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:149,150</note>
+        <note category="description">Heading shown when a search matches nothing</note>
+      </notes>
+      <segment>
+        <source>No statuses match your search.</source>
+      </segment>
+    </unit>
     <unit id="7173402739881764085">
       <notes>
         <note category="location">src/app/features/automations/components/automation-dry-run-effects.component.ts:75,79</note>
@@ -7414,6 +7470,16 @@
       </notes>
       <segment>
         <source> Highlighted values come from variables — the rule fills them in when it runs. </source>
+      </segment>
+    </unit>
+    <unit id="128217720924796263">
+      <notes>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:203</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:176</note>
+        <note category="description">Explains that manual reordering needs the default, unfiltered view</note>
+      </notes>
+      <segment>
+        <source>Clear the search and sort by Order to reorder</source>
       </segment>
     </unit>
     <unit id="1283895920974679461">
@@ -8292,8 +8358,9 @@
     </unit>
     <unit id="4975748273657042999">
       <notes>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:73,75</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:124</note>
-        <note category="description">Plural of the entity a digest row counts, mid sentence</note>
+        <note category="description">Plural noun for tags, used in the row summary</note>
       </notes>
       <segment>
         <source>tags</source>
@@ -9533,6 +9600,15 @@
         <source>Task owner</source>
       </segment>
     </unit>
+    <unit id="562989914370292616">
+      <notes>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:88,89</note>
+        <note category="description">Heading shown when a search matches nothing</note>
+      </notes>
+      <segment>
+        <source>No tags match your search.</source>
+      </segment>
+    </unit>
     <unit id="7662132277229664786">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:97</note>
@@ -10319,6 +10395,16 @@
         <source>Workspace Data</source>
       </segment>
     </unit>
+    <unit id="8804757855962270298">
+      <notes>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:98,100</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:86,88</note>
+        <note category="description">Shown when a change to a relation type could not be saved</note>
+      </notes>
+      <segment>
+        <source>That change could not be saved</source>
+      </segment>
+    </unit>
     <unit id="5151267613413369127">
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-what-step.component.ts:65,66</note>
@@ -10602,8 +10688,8 @@
     <unit id="7585826646011739428">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:94,97</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:207,208</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:169,170</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:235</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:211</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:197</note>
         <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:101,104</note>
         <note category="description">Button that edits the automation</note>
@@ -10649,7 +10735,6 @@
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:101,103</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:107,109</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:88,90</note>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:62,64</note>
         <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:58,60</note>
         <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:68,70</note>
         <note category="description">Advice shown when a page fails to load</note>
@@ -11348,6 +11433,8 @@
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:33,34</note>
         <note category="location">src/app/features/reporting/components/workload-report.component.ts:73,75</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:119,120</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:247</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:153</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:78</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:152</note>
         <note category="location">src/app/workspace.routes.ts:36</note>
@@ -13329,6 +13416,15 @@
         <source>No sprints yet.</source>
       </segment>
     </unit>
+    <unit id="5656132246732086102">
+      <notes>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:160,161</note>
+        <note category="description">Explains what statuses are for</note>
+      </notes>
+      <segment>
+        <source>Create one to describe your workflow.</source>
+      </segment>
+    </unit>
     <unit id="5657006843165020544">
       <notes>
         <note category="location">src/app/features/reporting/components/charts/flow-cycle-time-chart.component.ts:16,19</note>
@@ -15121,16 +15217,6 @@
         <source>Account details</source>
       </segment>
     </unit>
-    <unit id="5356677481738441703">
-      <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:93,96</note>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:72,74</note>
-        <note category="description">Column heading for the number of tasks using a row</note>
-      </notes>
-      <segment>
-        <source> Tasks </source>
-      </segment>
-    </unit>
     <unit id="7793498748790553680">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:78,80</note>
@@ -15842,8 +15928,9 @@
     </unit>
     <unit id="1354313797361897990">
       <notes>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:102,105</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:122</note>
-        <note category="description">Plural of the entity a digest row counts, mid sentence</note>
+        <note category="description">Plural noun for statuses, used in the row summary</note>
       </notes>
       <segment>
         <source>statuses</source>
@@ -15885,9 +15972,20 @@
         <source>Workspace Service Accounts</source>
       </segment>
     </unit>
+    <unit id="15321371811334707">
+      <notes>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:178,179</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:151,152</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:90,91</note>
+        <note category="description">Advice shown when a search matches nothing</note>
+      </notes>
+      <segment>
+        <source>Try a different term.</source>
+      </segment>
+    </unit>
     <unit id="1534534589646989824">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:76,84</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:89,97</note>
         <note category="description">Explains how relation direction works. The quoted example names are the default relation type and its inverse</note>
       </notes>
       <segment>
@@ -15896,20 +15994,20 @@
     </unit>
     <unit id="5397887234065885154">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:67,71</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:80,84</note>
         <note category="description">Button that opens the create-relation-type dialog</note>
       </notes>
       <segment>
         <source>Create relation type</source>
       </segment>
     </unit>
-    <unit id="4214893019895420902">
+    <unit id="400343125846819376">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:85,87</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:112,113</note>
         <note category="description">Shown when the relation type list fails to load</note>
       </notes>
       <segment>
-        <source>Relation types could not be loaded</source>
+        <source>Relation types could not be loaded.</source>
       </segment>
     </unit>
     <unit id="5000711107816438890">
@@ -15931,13 +16029,13 @@
         <source>These changes were discarded.</source>
       </segment>
     </unit>
-    <unit id="5001684404115804456">
+    <unit id="7118117366674423373">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:101,104</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:264</note>
         <note category="description">Column heading for the reverse direction of a relation</note>
       </notes>
       <segment>
-        <source> Inverse </source>
+        <source>Inverse</source>
       </segment>
     </unit>
     <unit id="5183297199669717683">
@@ -15947,16 +16045,6 @@
       </notes>
       <segment>
         <source>The invite(s) could not be sent. Please try again.</source>
-      </segment>
-    </unit>
-    <unit id="5186038954367142316">
-      <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:106,108</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:88,90</note>
-        <note category="description">Column heading for the relation category</note>
-      </notes>
-      <segment>
-        <source> Category </source>
       </segment>
     </unit>
     <unit id="5186531450031488551">
@@ -15988,8 +16076,8 @@
     </unit>
     <unit id="220550782947016929">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:118,120</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:97,99</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:285</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:255</note>
         <note category="description">Column heading for the sort order</note>
       </notes>
       <segment>
@@ -16026,7 +16114,7 @@
     <unit id="6830953190149975920">
       <notes>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:153,155</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:153,155</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:134,137</note>
         <note category="description">Shown when a relation reads the same in both directions</note>
       </notes>
       <segment>
@@ -16035,8 +16123,8 @@
     </unit>
     <unit id="8502065112576581103">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:173,174</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:137,138</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:201</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:174</note>
         <note category="description">Tooltip on the button that moves a row up</note>
       </notes>
       <segment>
@@ -16045,7 +16133,7 @@
     </unit>
     <unit id="6781548721931982858">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:177,179</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:152,154</note>
         <note category="description">Accessible label for the button that moves a relation type up</note>
       </notes>
       <segment>
@@ -16054,8 +16142,8 @@
     </unit>
     <unit id="2207764482815871800">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:187,189</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:150,152</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:202</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:175</note>
         <note category="description">Tooltip on the button that moves a row down</note>
       </notes>
       <segment>
@@ -16073,38 +16161,11 @@
     </unit>
     <unit id="2412502577182752913">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:192,194</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:163,165</note>
         <note category="description">Accessible label for the button that moves a relation type down</note>
       </notes>
       <segment>
         <source>Move relation type down</source>
-      </segment>
-    </unit>
-    <unit id="5330600284704866706">
-      <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:211,213</note>
-        <note category="description">Accessible label for the button that edits a relation type</note>
-      </notes>
-      <segment>
-        <source>Edit relation type</source>
-      </segment>
-    </unit>
-    <unit id="647102058621947189">
-      <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:227,229</note>
-        <note category="description">Accessible label for the button that deletes a relation type</note>
-      </notes>
-      <segment>
-        <source>Delete relation type</source>
-      </segment>
-    </unit>
-    <unit id="7814690822724984647">
-      <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:239,241</note>
-        <note category="description">Empty state for the relation type list</note>
-      </notes>
-      <segment>
-        <source> No relation types yet. Create one to link related tasks. </source>
       </segment>
     </unit>
     <unit id="517565553858035199">
@@ -16511,7 +16572,6 @@
     <unit id="6986361998419496765">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:276,278</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:114,117</note>
         <note category="description">Section heading for links between tasks</note>
       </notes>
       <segment>
@@ -16722,7 +16782,7 @@
     </unit>
     <unit id="1712651257674193219">
       <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:66,69</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:79,82</note>
         <note category="description">Button that opens the create-status dialog</note>
       </notes>
       <segment>
@@ -16738,18 +16798,18 @@
         <source><ph id="0" equiv="APPLIED" disp="applied"/> of <ph id="1" equiv="TOTAL" disp="total"/> applied. <ph id="2" equiv="FAILED" disp="failed"/> failed.</source>
       </segment>
     </unit>
-    <unit id="6921212790296305179">
+    <unit id="7431603051236116456">
       <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:73,75</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:100,101</note>
         <note category="description">Shown when the status list fails to load</note>
       </notes>
       <segment>
-        <source>Statuses could not be loaded</source>
+        <source>Statuses could not be loaded.</source>
       </segment>
     </unit>
     <unit id="1708099605109308306">
       <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:140,142</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:125,127</note>
         <note category="description">Accessible label for the button that moves a status up</note>
       </notes>
       <segment>
@@ -16758,63 +16818,35 @@
     </unit>
     <unit id="4091516827227305622">
       <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:154,156</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:136,138</note>
         <note category="description">Accessible label for the button that moves a status down</note>
       </notes>
       <segment>
         <source>Move status down</source>
       </segment>
     </unit>
-    <unit id="1089483749452026915">
-      <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:172,174</note>
-        <note category="description">Accessible label for the button that edits a status</note>
-      </notes>
-      <segment>
-        <source>Edit status</source>
-      </segment>
-    </unit>
-    <unit id="7610567889677077342">
-      <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:184,186</note>
-        <note category="description">Accessible label for the button that deletes a status</note>
-      </notes>
-      <segment>
-        <source>Delete status</source>
-      </segment>
-    </unit>
-    <unit id="5787941146389836768">
-      <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:196,197</note>
-        <note category="description">Empty state for the status list</note>
-      </notes>
-      <segment>
-        <source> No statuses yet. Create one to describe your workflow. </source>
-      </segment>
-    </unit>
     <unit id="9066599393258396757">
       <notes>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:53,56</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:58,61</note>
         <note category="description">Button that opens the create-tag dialog</note>
       </notes>
       <segment>
         <source>Create tag</source>
       </segment>
     </unit>
-    <unit id="7065760978924019495">
+    <unit id="8928884946811045532">
       <notes>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:60,61</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:70,71</note>
         <note category="description">Shown when the tag list fails to load</note>
       </notes>
       <segment>
-        <source>Tags could not be loaded</source>
+        <source>Tags could not be loaded.</source>
       </segment>
     </unit>
     <unit id="5872175735754226507">
       <notes>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:95,97</note>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:100,102</note>
-        <note category="description">Tooltip on the button that edits a tag</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:131</note>
+        <note category="description">Row action that edits a tag</note>
       </notes>
       <segment>
         <source>Edit tag</source>
@@ -16823,21 +16855,11 @@
     <unit id="108935827638897170">
       <notes>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:125,127</note>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:107,109</note>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:112,114</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:136</note>
         <note category="description">Button that deletes a tag</note>
       </notes>
       <segment>
         <source>Delete tag</source>
-      </segment>
-    </unit>
-    <unit id="2723715945767972460">
-      <notes>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:123,124</note>
-        <note category="description">Empty state for the tag list</note>
-      </notes>
-      <segment>
-        <source> No tags yet. Create one to group tasks across projects. </source>
       </segment>
     </unit>
     <unit id="3468129479435447499">
@@ -18047,7 +18069,7 @@
     </unit>
     <unit id="4574741116548118675">
       <notes>
-        <note category="location">src/app/features/workspaces/components/workspace-list-item.component.ts:119,122</note>
+        <note category="location">src/app/features/workspaces/components/workspace-list-item.component.ts:116,119</note>
         <note category="description">Label marking the workspace the user last opened</note>
       </notes>
       <segment>
@@ -18878,7 +18900,7 @@
     <unit id="5168008278809915722">
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:72,74</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:64,65</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:77,78</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:83</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:334</note>
         <note category="description">Filter heading for statuses</note>
@@ -19036,6 +19058,15 @@
         <source>Dismiss</source>
       </segment>
     </unit>
+    <unit id="7164517351150345210">
+      <notes>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:187,188</note>
+        <note category="description">Explains what relation types are for</note>
+      </notes>
+      <segment>
+        <source>Create one to link related tasks.</source>
+      </segment>
+    </unit>
     <unit id="7168661353164587099">
       <notes>
         <note category="location">src/app/static/components/build-number/build-number.component.ts:25,29</note>
@@ -19043,6 +19074,15 @@
       </notes>
       <segment>
         <source> BUILD <ph id="0" equiv="NUMBER" disp="{{ buildInfo.buildNumber // i18n(ph=&quot;NUMBER&quot;) }}"/> </source>
+      </segment>
+    </unit>
+    <unit id="9189135908472220946">
+      <notes>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:99,100</note>
+        <note category="description">Explains what tags are for</note>
+      </notes>
+      <segment>
+        <source>Create one to group tasks across projects.</source>
       </segment>
     </unit>
     <unit id="9189194414277205023">
@@ -19254,7 +19294,7 @@
     </unit>
     <unit id="4505486805842266349">
       <notes>
-        <note category="location">src/app/static/components/datatable/datatable.component.ts:262,265</note>
+        <note category="location">src/app/static/components/datatable/datatable.component.ts:263,266</note>
         <note category="description">Screen-reader label for the checkbox that selects one table row</note>
       </notes>
       <segment>

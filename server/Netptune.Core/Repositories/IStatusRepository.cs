@@ -2,6 +2,8 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Usage;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Statuses;
 
 namespace Netptune.Core.Repositories;
@@ -9,6 +11,8 @@ namespace Netptune.Core.Repositories;
 public interface IStatusRepository : IWorkspaceEntityRepository<Status, int>
 {
     Task<List<StatusViewModel>> GetViewModelsForWorkspace(int workspaceId, EntityType entityType, CancellationToken cancellationToken = default);
+
+    Task<PagedResponse<StatusViewModel>> GetPageForWorkspace(int workspaceId, StatusPageFilter filter, CancellationToken cancellationToken = default);
 
     Task<StatusViewModel?> GetViewModel(int id, CancellationToken cancellationToken = default);
 

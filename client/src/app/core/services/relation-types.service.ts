@@ -3,6 +3,7 @@ import { Service, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import {
   CreateRelationTypeRequest,
+  MoveRelationTypeRequest,
   RelationType,
   ReorderRelationTypesRequest,
   UpdateRelationTypeRequest,
@@ -39,5 +40,9 @@ export class RelationTypesService {
       'api/relation-types/reorder',
       request
     );
+  }
+
+  move(request: MoveRelationTypeRequest) {
+    return this.http.post<ClientResponse>('api/relation-types/move', request);
   }
 }

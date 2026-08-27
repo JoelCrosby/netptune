@@ -5,6 +5,8 @@ using Netptune.Core.Entities;
 using Netptune.Core.Relations;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.RelationTypes;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
@@ -46,6 +48,73 @@ public sealed class RelationTypeRepository : WorkspaceEntityRepository<DataConte
         {
             RelationCount = relationCounts.GetValueOrDefault(relationType.Id),
         });
+    }
+
+    public async Task<PagedResponse<RelationTypeViewModel>> GetPageForWorkspace(int workspaceId, RelationTypeFilter filter, CancellationToken cancellationToken = default)
+    {
+        var query = Entities.Where(relationType => relationType.WorkspaceId == workspaceId && !relationType.IsDeleted);
+
+        if (!string.IsNullOrWhiteSpace(filter.Search))
+        {
+            var search = filter.Search.Trim();
+
+            query = query.Where(relationType =>
+                EF.Functions.ILike(relationType.Name, $"%{search}%") ||
+                EF.Functions.ILike(relationType.InverseName, $"%{search}%"));
+        }
+
+        var totalCount = await query.CountAsync(cancellationToken);
+        var pagination = filter.GetPagination();
+        var items = await SortRelationTypes(Project(query), filter)
+            .Skip(pagination.Skip)
+            .Take(pagination.PageSize)
+            .ToListAsync(cancellationToken);
+
+        return new PagedResponse<RelationTypeViewModel>(items, pagination.Page, pagination.PageSize, totalCount);
+    }
+
+    private static IQueryable<RelationTypeViewModel> Project(IQueryable<RelationType> query)
+    {
+        return query
+            .AsNoTracking()
+            .Select(relationType => new RelationTypeViewModel
+            {
+                Id = relationType.Id,
+                WorkspaceId = relationType.WorkspaceId,
+                Name = relationType.Name,
+                InverseName = relationType.InverseName,
+                Key = relationType.Key,
+                Description = relationType.Description,
+                Color = relationType.Color,
+                SortOrder = relationType.SortOrder,
+                Category = relationType.Category,
+                IsSystem = relationType.IsSystem,
+                RelationCount = relationType.ProjectTaskRelations.Count(),
+            });
+    }
+
+    private static IQueryable<RelationTypeViewModel> SortRelationTypes(IQueryable<RelationTypeViewModel> query, RelationTypeFilter filter)
+    {
+        var isDescending = string.Equals(filter.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+
+        return filter.SortBy?.ToLowerInvariant() switch
+        {
+            "name" => isDescending
+                ? query.OrderByDescending(relationType => relationType.Name).ThenBy(relationType => relationType.Id)
+                : query.OrderBy(relationType => relationType.Name).ThenBy(relationType => relationType.Id),
+            "inversename" => isDescending
+                ? query.OrderByDescending(relationType => relationType.InverseName).ThenBy(relationType => relationType.Name)
+                : query.OrderBy(relationType => relationType.InverseName).ThenBy(relationType => relationType.Name),
+            "category" => isDescending
+                ? query.OrderByDescending(relationType => relationType.Category).ThenBy(relationType => relationType.SortOrder)
+                : query.OrderBy(relationType => relationType.Category).ThenBy(relationType => relationType.SortOrder),
+            "relationcount" => isDescending
+                ? query.OrderByDescending(relationType => relationType.RelationCount).ThenBy(relationType => relationType.SortOrder)
+                : query.OrderBy(relationType => relationType.RelationCount).ThenBy(relationType => relationType.SortOrder),
+            _ => isDescending
+                ? query.OrderByDescending(relationType => relationType.SortOrder).ThenByDescending(relationType => relationType.Id)
+                : query.OrderBy(relationType => relationType.SortOrder).ThenBy(relationType => relationType.Id),
+        };
     }
 
     public Task<Dictionary<int, int>> GetRelationCounts(int workspaceId, CancellationToken cancellationToken = default)
