@@ -50,6 +50,7 @@
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:63</note>
         <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:122</note>
+        <note category="location">src/app/shell/workspace-select/workspace-select.component.ts:366</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1519,7 +1520,7 @@
     </unit>
     <unit id="4683971466135928572">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:58,59</note>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:107,108</note>
         <note category="description">Shown when a saved view cannot be found</note>
       </notes>
       <segment>
@@ -2168,7 +2169,7 @@
     <unit id="4140474966837806672">
       <notes>
         <note category="location">src/app/features/task-views/components/task-view-card.component.ts:126,128</note>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:115,117</note>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:120,122</note>
         <note category="description">Eyebrow above the plain-language query summary</note>
       </notes>
       <segment>
@@ -2595,7 +2596,7 @@
     </unit>
     <unit id="5958306903625377545">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:126,127</note>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:131,132</note>
         <note category="description">Heading shown when a saved view no longer compiles</note>
       </notes>
       <segment>
@@ -5351,8 +5352,8 @@
     </unit>
     <unit id="6143795228406387052">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:71,75</note>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:95,99</note>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:65,69</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:98,102</note>
         <note category="description">Button that copies a shareable link to a view</note>
       </notes>
       <segment>
@@ -8856,7 +8857,7 @@
     </unit>
     <unit id="862193009858945810">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:309</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:315</note>
         <note category="description">Shown when a query is too large to share as a link</note>
       </notes>
       <segment>
@@ -8865,7 +8866,7 @@
     </unit>
     <unit id="862315084299301566">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:60,62</note>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:109,111</note>
         <note category="description">Advice shown when a saved view is missing</note>
       </notes>
       <segment>
@@ -9111,6 +9112,15 @@
         <source>Task is unassigned</source>
       </segment>
     </unit>
+    <unit id="712051323912137813">
+      <notes>
+        <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:98,100</note>
+        <note category="description">Heading above the recently visited workspaces in the workspace switcher</note>
+      </notes>
+      <segment>
+        <source> RECENT </source>
+      </segment>
+    </unit>
     <unit id="7121843089440055505">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:29</note>
@@ -9351,8 +9361,8 @@
     </unit>
     <unit id="5234544449365538384">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:259</note>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:331</note>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:266</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:337</note>
         <note category="description">Shown when a shareable view link could not be copied</note>
       </notes>
       <segment>
@@ -9757,7 +9767,7 @@
     </unit>
     <unit id="4493603856796380932">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:363</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:369</note>
         <note category="description">Confirmation that a view was saved</note>
       </notes>
       <segment>
@@ -9793,7 +9803,7 @@
     </unit>
     <unit id="8733170707271532124">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:108,110</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:111,113</note>
         <note category="description">Button that saves a view</note>
       </notes>
       <segment>
@@ -10727,7 +10737,7 @@
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:242</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:224</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:202</note>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:101,104</note>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:95,98</note>
         <note category="description">Button that edits the automation</note>
       </notes>
       <segment>
@@ -10799,7 +10809,7 @@
     </unit>
     <unit id="253720644207702428">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:140,142</note>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:145,147</note>
         <note category="description">Shown when a saved view matches no tasks</note>
       </notes>
       <segment>
@@ -11125,6 +11135,15 @@
         <source>Create Automation</source>
       </segment>
     </unit>
+    <unit id="8916539952966500695">
+      <notes>
+        <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:68,70</note>
+        <note category="description">Placeholder in the workspace search box</note>
+      </notes>
+      <segment>
+        <source>Search workspaces</source>
+      </segment>
+    </unit>
     <unit id="6054707091375835376">
       <notes>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:77,78</note>
@@ -11418,7 +11437,7 @@
     </unit>
     <unit id="6839573905580765842">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:377</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:383</note>
         <note category="description">Default name for a copy of somebody else&apos;s view</note>
       </notes>
       <segment>
@@ -12065,9 +12084,9 @@
       <notes>
         <note category="location">src/app/features/calendar/components/calendar-selected-day-table/calendar-selected-day-table.component.ts:34,35</note>
         <note category="location">src/app/features/roadmap/components/roadmap-unscheduled.component.ts:44,45</note>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:139</note>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:144</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:117</note>
-        <note category="location">src/app/static/components/task-table.component.ts:90</note>
+        <note category="location">src/app/static/components/task-table.component.ts:97</note>
         <note category="description">Plural noun for tasks, used in the selection summary</note>
       </notes>
       <segment>
@@ -12612,7 +12631,7 @@
     </unit>
     <unit id="3874723711759777451">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:197</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:203</note>
         <note category="description">Default name of a new saved task view</note>
       </notes>
       <segment>
@@ -12633,7 +12652,7 @@
     <unit id="235558583662639798">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-status-breakdown-card.component.ts:36,38</note>
-        <note category="location">src/app/static/components/task-table.component.ts:84</note>
+        <note category="location">src/app/static/components/task-table.component.ts:91</note>
         <note category="description">Empty state for the status breakdown card</note>
       </notes>
       <segment>
@@ -13219,7 +13238,7 @@
         <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:46,49</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:242,243</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:183,184</note>
-        <note category="location">src/app/static/components/task-table.component.ts:87</note>
+        <note category="location">src/app/static/components/task-table.component.ts:94</note>
         <note category="description">Shown when the task list fails to load</note>
       </notes>
       <segment>
@@ -14431,6 +14450,7 @@
     <unit id="8778336716895792712">
       <notes>
         <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:56,59</note>
+        <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:144,146</note>
         <note category="description">Button that opens the create-workspace dialog</note>
       </notes>
       <segment>
@@ -14444,6 +14464,15 @@
       </notes>
       <segment>
         <source>Daily</source>
+      </segment>
+    </unit>
+    <unit id="928009341755063873">
+      <notes>
+        <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:221</note>
+        <note category="description">Keyboard key that closes the workspace menu, shown as a hint</note>
+      </notes>
+      <segment>
+        <source>esc</source>
       </segment>
     </unit>
     <unit id="928541574822142523">
@@ -15708,6 +15737,15 @@
         <source>Changing the identifier changes the workspace URL and will break existing shared links.</source>
       </segment>
     </unit>
+    <unit id="3893998607473657304">
+      <notes>
+        <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:116,118</note>
+        <note category="description">Heading above the remaining workspaces in the workspace switcher</note>
+      </notes>
+      <segment>
+        <source> ALL WORKSPACES </source>
+      </segment>
+    </unit>
     <unit id="3894039560161506093">
       <notes>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:109,111</note>
@@ -15728,8 +15766,8 @@
     </unit>
     <unit id="892073694820881630">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:254</note>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:326</note>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:261</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:332</note>
         <note category="description">Confirmation that a shareable view link was copied</note>
       </notes>
       <segment>
@@ -16706,7 +16744,7 @@
     </unit>
     <unit id="8991032674812724530">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:150,152</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:155,157</note>
         <note category="description">Shown when a query preview matches no tasks</note>
       </notes>
       <segment>
@@ -17095,7 +17133,7 @@
     </unit>
     <unit id="5028777105388019087">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:82,86</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:85,89</note>
         <note category="description">Button that opens the view details drawer</note>
       </notes>
       <segment>
@@ -17485,7 +17523,7 @@
     <unit id="4475093671158329161">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-dialog.component.ts:224</note>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:89,93</note>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:83,87</note>
         <note category="description">Label on the control that pins a task</note>
       </notes>
       <segment>
@@ -18141,7 +18179,7 @@
     </unit>
     <unit id="3323062521847000288">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:131,133</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:136,138</note>
         <note category="description">Prefix of the plain-language query summary</note>
       </notes>
       <segment>
@@ -18483,6 +18521,15 @@
         <source>Delete &quot;<ph id="0" equiv="NAME" disp="relationType.name"/>&quot;? This cannot be undone.</source>
       </segment>
     </unit>
+    <unit id="6286679527857008397">
+      <notes>
+        <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:162,164</note>
+        <note category="description">Workspace menu action that opens the workspace picker</note>
+      </notes>
+      <segment>
+        <source> Manage workspaces </source>
+      </segment>
+    </unit>
     <unit id="8283092071761639431">
       <notes>
         <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:68,72</note>
@@ -18767,7 +18814,7 @@
     </unit>
     <unit id="5797079666713956753">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:85,87</note>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:79,81</note>
         <note category="description">Button that removes a view from the sidebar</note>
       </notes>
       <segment>
@@ -18886,7 +18933,7 @@
     </unit>
     <unit id="2614607010577950577">
       <notes>
-        <note category="location">src/app/shell/shell-menu-link.component.ts:138</note>
+        <note category="location">src/app/shell/shell-menu-link.component.ts:148</note>
         <note category="description">Sub-menu entry linking to the parent section&apos;s own page</note>
       </notes>
       <segment>
@@ -18895,7 +18942,7 @@
     </unit>
     <unit id="3503113826175140473">
       <notes>
-        <note category="location">src/app/shell/shell-menu-link.component.ts:156</note>
+        <note category="location">src/app/shell/shell-menu-link.component.ts:166</note>
         <note category="description">Accessible label for the control that collapses a sidebar sub-menu. SECTION is the section name, e.g. Sprints</note>
       </notes>
       <segment>
@@ -18904,7 +18951,7 @@
     </unit>
     <unit id="5787827157889164686">
       <notes>
-        <note category="location">src/app/shell/shell-menu-link.component.ts:157</note>
+        <note category="location">src/app/shell/shell-menu-link.component.ts:167</note>
         <note category="description">Accessible label for the control that expands a sidebar sub-menu. SECTION is the section name, e.g. Sprints</note>
       </notes>
       <segment>
@@ -18984,7 +19031,7 @@
     </unit>
     <unit id="6480721176754917879">
       <notes>
-        <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:40,43</note>
+        <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:51,56</note>
         <note category="description">Shown when no workspace matches the search term</note>
       </notes>
       <segment>
@@ -19047,9 +19094,8 @@
     </unit>
     <unit id="4192963686165639179">
       <notes>
-        <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:50,52</note>
         <note category="location">src/app/static/components/user-select/user-select.component.ts:95,97</note>
-        <note category="description">Placeholder in the workspace search box</note>
+        <note category="description">Placeholder in the box for searching workspace members</note>
       </notes>
       <segment>
         <source>Search..</source>
@@ -19058,20 +19104,19 @@
     <unit id="3451492603028845941">
       <notes>
         <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:34,36</note>
-        <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:80,83</note>
         <note category="description">Page title for the workspace picker</note>
       </notes>
       <segment>
         <source> Workspaces </source>
       </segment>
     </unit>
-    <unit id="7504940227782988572">
+    <unit id="4250467317941972098">
       <notes>
-        <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:89,92</note>
+        <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:178,181</note>
         <note category="description">Workspace menu action that signs the user out</note>
       </notes>
       <segment>
-        <source> Logout </source>
+        <source> Log out </source>
       </segment>
     </unit>
     <unit id="3407663988318466862">

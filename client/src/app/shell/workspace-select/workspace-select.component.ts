@@ -14,7 +14,10 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { SessionService } from '@core/services/session.service';
+import { DialogService } from '@core/services/dialog.service';
+import { LastWorkspaceService } from '@core/services/last-workspace.service';
 import { WorkspaceListService } from '@core/services/workspace-list.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { debounce, form } from '@angular/forms/signals';
@@ -24,9 +27,18 @@ import { brandingImageUrl } from '@core/util/branding';
 import { filterObjectArray } from '@core/util/arrays';
 import { AuthCommandsService } from '@core/services/auth-commands.service';
 import { KeyboardService } from '@static/services/keyboard.service';
+import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
 import { WorkspaceBadgeComponent } from './workspace-badge.component';
+import { animatedPresence } from '@core/util/animated-presence';
+import { menuExitMs } from '@static/components/popover-surface/popover-surface.component';
 import { WorkspaceSelectMenuComponent } from './workspace-select-menu.component';
 import { LucideChevronsUpDown } from '@lucide/angular';
+
+/** Width of the open menu, wider than the trigger it hangs off. */
+const menuWidth = 264;
+
+/** How many rows the RECENT group shows, the current workspace included. */
+const maxRecentWorkspaces = 3;
 
 @Component({
   selector: 'app-workspace-select',
@@ -67,12 +79,17 @@ import { LucideChevronsUpDown } from '@lucide/angular';
     <ng-template #menuTemplate>
       <app-workspace-select-menu
         [isOpen]="true"
+        [leaving]="presence.isLeaving()"
         [filteredOptions]="filteredOptions()"
-        [workspaces]="workspaces()"
+        [recentOptions]="recentWorkspaces()"
+        [otherOptions]="otherWorkspaces()"
         [selected]="selected()"
         [current]="currentWorkspace()"
         [searchField]="searchForm.term"
+        [searchTerm]="searchForm.term().value()"
         (optionSelect)="select($event)"
+        (createWorkspace)="onCreateWorkspaceClicked()"
+        (manage)="close()"
         (logout)="onlogOutClicked()" />
     </ng-template>
   `,
@@ -84,8 +101,11 @@ import { LucideChevronsUpDown } from '@lucide/angular';
 })
 export class WorkspaceSelectComponent implements OnDestroy {
   private authCommands = inject(AuthCommandsService);
+  private dialog = inject(DialogService);
   private keyboard = inject(KeyboardService);
+  private lastWorkspace = inject(LastWorkspaceService);
   private overlay = inject(Overlay);
+  private router = inject(Router);
   private vcr = inject(ViewContainerRef);
 
   shell = inject(ShellService);
@@ -111,6 +131,49 @@ export class WorkspaceSelectComponent implements OnDestroy {
     return brandingImageUrl(workspace?.slug, workspace?.metaInfo?.logoFileId);
   });
 
+  /**
+   * The current workspace, then the most recently visited ones behind it. The
+   * stored history already leads with the current workspace once it has been
+   * written, but it lags a fresh switch and is empty on a first visit.
+   */
+  readonly recentWorkspaces = computed(() => {
+    const workspaces = this.workspaces();
+    const current = this.currentWorkspace();
+
+    const remembered = this.lastWorkspace
+      .recentIds()
+      .map((id) => workspaces.find((workspace) => workspace.id === id))
+      .filter((workspace): workspace is Workspace => !!workspace);
+
+    const ordered = current
+      ? [
+          current,
+          ...remembered.filter((workspace) => workspace.id !== current.id),
+        ]
+      : remembered;
+
+    return ordered.slice(0, maxRecentWorkspaces);
+  });
+
+  readonly otherWorkspaces = computed(() => {
+    const recentIds = new Set(
+      this.recentWorkspaces().map((workspace) => workspace.id)
+    );
+
+    return this.workspaces().filter(
+      (workspace) => !recentIds.has(workspace.id)
+    );
+  });
+
+  /** Arrow keys walk the rows in the order they are rendered. */
+  readonly navigationOptions = computed(() => {
+    if (this.searchForm.term().value()) {
+      return this.filteredOptions();
+    }
+
+    return [...this.recentWorkspaces(), ...this.otherWorkspaces()];
+  });
+
   filteredOptions = computed(() => {
     const options = this.workspaces();
     const term = this.searchForm.term().value();
@@ -130,6 +193,9 @@ export class WorkspaceSelectComponent implements OnDestroy {
 
   isOpen = signal(false);
   selected = signal<Workspace | null>(null);
+
+  /** Keeps the overlay attached while the exit animation plays. */
+  protected readonly presence = animatedPresence(this.isOpen, menuExitMs);
 
   constructor() {
     effect(() => {
@@ -151,9 +217,29 @@ export class WorkspaceSelectComponent implements OnDestroy {
         this.selectNextOptiom();
       }
     });
+
+    effect(() => {
+      if (this.presence.isPresent()) return;
+
+      // Resetting the query here rather than in close() keeps the list from
+      // repopulating behind the fade.
+      untracked(() => {
+        this.overlayRef?.detach();
+        this.searchForm.term().value.set('');
+      });
+    });
   }
 
   handleKeyDown(event: KeyboardEvent) {
+    // The search field is focused while the menu is open, so the letter
+    // shortcuts only fire when there is nothing to type them into. Modifiers
+    // are left to the browser — ctrl+n and ctrl+shift+w are its own.
+    const blocked =
+      !!this.searchForm.term().value() ||
+      event.ctrlKey ||
+      event.metaKey ||
+      event.altKey;
+
     switch (event.key) {
       case 'ArrowUp':
         this.selectPreviousOption();
@@ -164,11 +250,23 @@ export class WorkspaceSelectComponent implements OnDestroy {
       case 'Enter':
         this.select();
         break;
+      case 'Escape':
+        this.close();
+        break;
+      case 'n':
+      case 'N':
+        if (blocked) break;
+        this.onCreateWorkspaceClicked();
+        break;
+      case 'W':
+        if (blocked || !event.shiftKey) break;
+        this.onManageWorkspacesClicked();
+        break;
     }
   }
 
   selectNextOptiom() {
-    const options = this.filteredOptions();
+    const options = this.navigationOptions();
 
     if (!this.selected()) {
       this.selected.set(options[0]);
@@ -186,7 +284,7 @@ export class WorkspaceSelectComponent implements OnDestroy {
   }
 
   selectPreviousOption() {
-    const options = this.filteredOptions();
+    const options = this.navigationOptions();
     const selected = this.selected();
 
     if (!options) return;
@@ -205,14 +303,20 @@ export class WorkspaceSelectComponent implements OnDestroy {
   }
 
   toggleMenu() {
-    if (this.overlayRef?.hasAttached()) {
+    if (this.isOpen()) {
       this.close();
-    } else {
-      this.openMenu();
+
+      return;
     }
+
+    this.openMenu();
   }
 
   private openMenu() {
+    // A menu still playing its exit gets a fresh overlay rather than being
+    // revived: its backdrop has already been dropped and cannot be re-armed.
+    this.overlayRef?.dispose();
+
     const originEl = this.originRef().nativeElement;
     const collapsed = this.shell.sideNavCollapsed();
 
@@ -248,7 +352,7 @@ export class WorkspaceSelectComponent implements OnDestroy {
       hasBackdrop: true,
       backdropClass: 'cdk-overlay-transparent-backdrop',
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
-      width: collapsed ? 200 : originEl.offsetWidth,
+      width: menuWidth,
     });
 
     this.overlayRef.attach(new TemplatePortal(this.menuTemplate(), this.vcr));
@@ -257,10 +361,13 @@ export class WorkspaceSelectComponent implements OnDestroy {
   }
 
   close() {
+    if (!this.isOpen()) return;
+
     this.closed.emit();
-    this.overlayRef?.detach();
     this.isOpen.set(false);
-    this.searchForm.term().value.set('');
+
+    // The backdrop would otherwise swallow clicks for the length of the fade.
+    this.overlayRef?.detachBackdrop();
   }
 
   select(option: Workspace | null = null) {
@@ -281,6 +388,21 @@ export class WorkspaceSelectComponent implements OnDestroy {
       return false;
     }
     return option.id === this.selected()?.id;
+  }
+
+  onCreateWorkspaceClicked() {
+    this.close();
+
+    this.dialog.openWizard(WorkspaceDialogComponent, {
+      title: $localize`:Title of a dialog or section:Create Workspace`,
+      data: null,
+      width: '720px',
+    });
+  }
+
+  onManageWorkspacesClicked() {
+    this.close();
+    void this.router.navigate(['/workspaces']);
   }
 
   onlogOutClicked() {

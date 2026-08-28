@@ -143,6 +143,20 @@ public sealed class PreferenceDefinitionRegistry : IPreferenceDefinitionRegistry
         },
         new()
         {
+            Key = PreferenceKeys.WorkspaceRecentIds,
+            GroupKey = "workspace",
+            Label = "Recent workspaces",
+            ControlType = "hidden",
+            // Ids of the workspaces the user visited most recently, newest first.
+            // Drives the RECENT group in the sidebar workspace switcher.
+            ValueType = "number-array",
+            DefaultValue = JsonSerializer.SerializeToElement(Array.Empty<int>()),
+            AllowedScopes = [PreferenceScopes.Global],
+            Internal = true,
+            Order = 15,
+        },
+        new()
+        {
             Key = PreferenceKeys.WorkspaceLastVisited,
             GroupKey = "workspace",
             Label = "Last visited workspace",

@@ -1,6 +1,9 @@
-import { Component, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 
-export type PopoverSurfaceSize = 'compact' | 'wide';
+export type PopoverSurfaceSize = 'compact' | 'sheet' | 'wide';
+
+/** How long `.menu-scale-out` in `styles/menu.css` runs for. */
+export const menuExitMs = 120;
 export type PopoverSurfaceEnterFrom =
   | 'none'
   | 'top'
@@ -61,13 +64,9 @@ export type PopoverSurfaceEnterFrom =
   `,
   template: `
     <div
-      class="menu-scale-in custom-scroll border-border bg-background flex flex-col overflow-x-hidden border text-left shadow-xl dark:shadow-black/60"
+      class="custom-scroll border-border bg-background flex flex-col overflow-x-hidden border text-left shadow-xl dark:shadow-black/60"
       [attr.data-enter-from]="enterFrom()"
-      [class]="
-        size() === 'compact'
-          ? 'h-full w-61.5 rounded-sm'
-          : 'max-h-[80vh] max-w-120 min-w-100 overflow-y-auto rounded'
-      ">
+      [class]="surfaceClass()">
       <ng-content />
     </div>
   `,
@@ -75,4 +74,29 @@ export type PopoverSurfaceEnterFrom =
 export class PopoverSurfaceComponent {
   readonly size = input<PopoverSurfaceSize>('wide');
   readonly enterFrom = input<PopoverSurfaceEnterFrom>('none');
+
+  /**
+   * Plays the exit animation. The owner of the overlay is responsible for
+   * detaching it once the animation has had `menuExitMs` to run.
+   */
+  readonly leaving = input(false);
+
+  protected readonly surfaceClass = computed(() => {
+    const animation = this.leaving() ? 'menu-scale-out' : 'menu-scale-in';
+
+    return `${animation} ${this.sizeClass()}`;
+  });
+
+  private readonly sizeClass = computed(() => {
+    switch (this.size()) {
+      case 'compact':
+        return 'h-full w-61.5 rounded-sm';
+      // Takes its width from the overlay and clips its own corners, so the
+      // rows flush to the edges stay inside the radius.
+      case 'sheet':
+        return 'h-full w-full overflow-y-hidden rounded';
+      default:
+        return 'max-h-[80vh] max-w-120 min-w-100 overflow-y-auto rounded';
+    }
+  });
 }

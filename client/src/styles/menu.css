@@ -17,9 +17,39 @@
   }
 }
 
+@keyframes menu-scale-out {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(
+        var(--menu-enter-translate-x, 0),
+        var(--menu-enter-translate-y, 0)
+      )
+      scale(0.94);
+  }
+}
+
 .menu-scale-in {
   animation-duration: .14s;
   animation-fill-mode: both;
   animation-timing-function: ease-out;
   animation-name: menu-scale-in;
+}
+
+.menu-scale-out {
+  animation-duration: .12s;
+  animation-fill-mode: both;
+  animation-timing-function: ease-in;
+  animation-name: menu-scale-out;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-scale-in,
+  .menu-scale-out {
+    animation: none;
+  }
 }
