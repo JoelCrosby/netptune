@@ -36,7 +36,7 @@ export interface ShellMenuLink {
   template: `
     @if (link(); as link) {
       <div
-        class="hover:bg-side-bar-active/60 my-px flex w-full items-center overflow-hidden rounded text-sm font-medium text-white/70 transition-colors select-none"
+        class="outline-foreground focus-visible:ring-2:focus-visible ring-foreground hover:bg-side-bar-active/60 my-px flex w-full items-center rounded text-sm font-medium text-white/70 transition-colors select-none"
         routerLinkActive="bg-side-bar-active text-white!"
         [routerLinkActiveOptions]="activeOptions">
         @if (expandable()) {
