@@ -28,6 +28,7 @@ import {
   DatatableSort,
 } from '@static/components/datatable/datatable.types';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
+import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SearchInputComponent } from '@static/components/search-input/search-input.component';
@@ -45,63 +46,73 @@ import { first } from 'rxjs';
     DatatableEmptyDirective,
     EmptyStateComponent,
     LucideTags,
+    PageBodyComponent,
     PageContainerComponent,
     PageHeaderComponent,
     SearchInputComponent,
   ],
   template: `
-    <app-page-container [centerPage]="true" [marginBottom]="true">
+    <app-page-container layout="list">
       <app-page-header
+        toolbar
         i18n-title="Page title for workspace tags"
         title="Tags"
         i18n-actionTitle="Button that opens the create-tag dialog"
         actionTitle="Create tag"
-        (actionClick)="openCreateDialog()" />
+        i18n-filtersLabel="Accessible name of the tag list filter row"
+        filtersLabel="Filter tags"
+        [count]="count()"
+        (actionClick)="openCreateDialog()">
+        <div pageHeaderFilters class="flex flex-row items-center gap-2.5">
+          <app-search-input
+            [term]="searchInput()"
+            (searchChange)="searchInput.set($event ?? '')" />
+        </div>
+      </app-page-header>
 
-      <div class="mb-3 flex flex-row items-center gap-2">
-        <app-search-input
-          [term]="searchInput()"
-          (searchChange)="searchInput.set($event ?? '')" />
-      </div>
+      <app-page-body>
+        <app-datatable
+          autoFill
+          stickyHeader
+          tableClass="table-fixed"
+          i18n-errorMessage="Shown when the tag list fails to load"
+          errorMessage="Tags could not be loaded."
+          i18n-itemLabel="Plural noun for tags, used in the row summary"
+          itemLabel="tags"
+          [data]="data"
+          [(sort)]="sort"
+          (loaded)="count.set($event.hasValue ? $event.totalCount : null)">
+          <ng-template appDatatableCell="name" let-tag>
+            <a
+              class="block w-full truncate text-left font-medium hover:underline"
+              [routerLink]="[tag.id]">
+              {{ tag.name }}
+            </a>
+          </ng-template>
 
-      <app-datatable
-        tableClass="table-fixed"
-        i18n-errorMessage="Shown when the tag list fails to load"
-        errorMessage="Tags could not be loaded."
-        i18n-itemLabel="Plural noun for tags, used in the row summary"
-        itemLabel="tags"
-        [data]="data"
-        [(sort)]="sort">
-        <ng-template appDatatableCell="name" let-tag>
-          <a
-            class="block w-full truncate text-left font-medium hover:underline"
-            [routerLink]="[tag.id]">
-            {{ tag.name }}
-          </a>
-        </ng-template>
-
-        <ng-template appDatatableEmpty>
-          @if (search()) {
-            <app-empty-state
-              compact
-              i18n-title="Heading shown when a search matches nothing"
-              title="No tags match your search."
-              i18n-description="Advice shown when a search matches nothing"
-              description="Try a different term.">
-              <svg emptyStateIcon size="38" lucideTags></svg>
-            </app-empty-state>
-          } @else {
-            <app-empty-state
-              compact
-              i18n-title="Heading of an empty tag list"
-              title="No tags yet."
-              i18n-description="Explains what tags are for"
-              description="Create one to group tasks across projects.">
-              <svg emptyStateIcon size="38" lucideTags></svg>
-            </app-empty-state>
-          }
-        </ng-template>
-      </app-datatable>
+          <ng-template appDatatableEmpty>
+            @if (search()) {
+              <app-empty-state
+                compact
+                i18n-title="Heading shown when a search matches nothing"
+                title="No tags match your search."
+                i18n-description="Advice shown when a search matches nothing"
+                description="Try a different term.">
+                <svg emptyStateIcon size="38" lucideTags></svg>
+              </app-empty-state>
+            } @else {
+              <app-empty-state
+                compact
+                i18n-title="Heading of an empty tag list"
+                title="No tags yet."
+                i18n-description="Explains what tags are for"
+                description="Create one to group tasks across projects.">
+                <svg emptyStateIcon size="38" lucideTags></svg>
+              </app-empty-state>
+            }
+          </ng-template>
+        </app-datatable>
+      </app-page-body>
     </app-page-container>
   `,
 })
@@ -110,6 +121,7 @@ export class TagsViewComponent {
   private readonly dialog = inject(DialogService);
   private readonly workspaceRefresh = inject(WorkspaceRefreshService);
 
+  readonly count = signal<number | null>(null);
   readonly searchInput = signal('');
   readonly sort = signal<DatatableSort | null>(null);
 

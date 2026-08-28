@@ -115,8 +115,8 @@ export default defineConfig([
             'maxHeightClass', 'rowClass', 'tableClass',
             // fixed-vocabulary inputs (enum-like), not prose
             'align', 'appearance', 'appTooltipPosition', 'cdkDropListOrientation',
-            'colWrap', 'density', 'focusMode', 'preserveAspectRatio', 'rowWrap',
-            'entityType',
+            'colWrap', 'density', 'focusMode', 'layout', 'preserveAspectRatio',
+            'rowWrap', 'entityType',
             'enterFrom', 'enterTo', 'leaveFrom', 'leaveTo', 'mode', 'provider',
             'shape', 'size', 'variant', 'xPosition', 'yPosition',
             // ARIA wiring and element references, not user-visible text

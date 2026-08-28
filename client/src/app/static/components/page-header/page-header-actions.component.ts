@@ -1,4 +1,10 @@
-import { Component, input, output } from '@angular/core';
+import {
+  Component,
+  booleanAttribute,
+  computed,
+  input,
+  output,
+} from '@angular/core';
 import { HeaderAction } from '@core/types/header-action';
 import { LucideDynamicIcon, LucideEllipsis } from '@lucide/angular';
 import { FlatButtonComponent } from '../button/flat-button.component';
@@ -9,7 +15,7 @@ import { StrokedButtonComponent } from '../button/stroked-button.component';
 @Component({
   selector: 'app-page-header-actions',
   template: `
-    <div class="flex flex-row flex-wrap items-center gap-4">
+    <div [class]="containerClass()">
       @for (action of secondaryActions(); track action) {
         <button
           app-flat-button
@@ -21,6 +27,7 @@ import { StrokedButtonComponent } from '../button/stroked-button.component';
       @if (overflowActions().length) {
         <button
           app-stroked-button
+          [class]="overflowButtonClass()"
           i18n-aria-label="
             Accessible label for the button that opens the page action menu
           "
@@ -46,7 +53,10 @@ import { StrokedButtonComponent } from '../button/stroked-button.component';
       }
 
       @if (actionTitle()) {
-        <button app-flat-button (click)="actionClick.emit()">
+        <button
+          app-flat-button
+          [class]="primaryButtonClass()"
+          (click)="actionClick.emit()">
           {{ actionTitle() }}
         </button>
       }
@@ -68,5 +78,25 @@ export class PageHeaderActionsComponent {
   readonly secondaryActions = input<HeaderAction[]>([]);
   readonly overflowActions = input<HeaderAction[]>([]);
 
+  readonly compact = input(false, { transform: booleanAttribute });
+
   readonly actionClick = output();
+
+  protected readonly containerClass = computed(() => {
+    const base = 'flex flex-row flex-wrap items-center';
+
+    return this.compact() ? `${base} gap-2` : `${base} gap-4`;
+  });
+
+  protected readonly overflowButtonClass = computed(() => {
+    if (!this.compact()) return '';
+
+    return 'h-[34px] w-[34px] min-w-0 rounded px-0 text-foreground/75';
+  });
+
+  protected readonly primaryButtonClass = computed(() => {
+    if (!this.compact()) return '';
+
+    return 'h-[34px] min-w-0 rounded px-4 text-[13.5px] tracking-[0.02em]';
+  });
 }

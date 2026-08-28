@@ -120,7 +120,7 @@ import { AutomationEnabledBadgeComponent } from './automation-enabled-badge.comp
     <app-datatable
       i18n-errorMessage="Shown when the automation list fails to load"
       errorMessage="Automation rules could not be loaded."
-      containerClass="max-h-[calc(100vh-420px)] min-h-80 overflow-auto"
+      stickyHeader
       tableClass="min-w-[900px]"
       [data]="data()"
       [stickyHeader]="true">

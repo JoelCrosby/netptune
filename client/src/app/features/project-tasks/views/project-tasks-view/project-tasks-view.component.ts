@@ -9,32 +9,52 @@ import { HeaderAction } from '@core/types/header-action';
 import { CreateTaskDialogComponent } from '@entry/dialogs/create-task-dialog/create-task-dialog.component';
 import { LucideFolderDown } from '@lucide/angular';
 import { TaskListComponent } from '@project-tasks/components/task-list/task-list.component';
+import { TaskListFiltersComponent } from '@project-tasks/components/task-list/task-list-filters.component';
+import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 
 @Component({
   selector: 'app-project-tasks-view',
-  imports: [PageContainerComponent, PageHeaderComponent, TaskListComponent],
+  imports: [
+    PageBodyComponent,
+    PageContainerComponent,
+    PageHeaderComponent,
+    TaskListComponent,
+    TaskListFiltersComponent,
+  ],
   template: `
-    <app-page-container>
+    <app-page-container layout="list">
       @if (canCreateTasks()) {
         <app-page-header
+          toolbar
           i18n-title="Page title for the task list"
           title="Tasks"
           i18n-actionTitle="Button that opens the create-task dialog"
           actionTitle="Create Task"
+          i18n-filtersLabel="Accessible name of the task list filter row"
+          filtersLabel="Filter tasks"
           (actionClick)="showAddModal()"
           [count]="count()"
-          [overflowActions]="secondaryActions()" />
+          [overflowActions]="secondaryActions()">
+          <app-task-list-filters pageHeaderFilters />
+        </app-page-header>
       } @else {
         <app-page-header
+          toolbar
           i18n-title="Page title for the task list"
           title="Tasks"
+          i18n-filtersLabel="Accessible name of the task list filter row"
+          filtersLabel="Filter tasks"
           [count]="count()"
-          [overflowActions]="secondaryActions()" />
+          [overflowActions]="secondaryActions()">
+          <app-task-list-filters pageHeaderFilters />
+        </app-page-header>
       }
 
-      <app-task-list (countChange)="count.set($event)" />
+      <app-page-body>
+        <app-task-list (countChange)="count.set($event)" />
+      </app-page-body>
     </app-page-container>
   `,
 })

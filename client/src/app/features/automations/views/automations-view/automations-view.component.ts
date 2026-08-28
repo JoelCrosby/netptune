@@ -11,6 +11,7 @@ import { LucidePlus, LucideWorkflow } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
+import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
@@ -37,6 +38,7 @@ import { AutomationsService } from '../../services/automations.service';
   imports: [
     ErrorStateComponent,
     RouterLink,
+    PageBodyComponent,
     PageContainerComponent,
     PageHeaderComponent,
     PageLoadingComponent,
@@ -48,9 +50,10 @@ import { AutomationsService } from '../../services/automations.service';
     LucideWorkflow,
   ],
   template: `
-    <app-page-container [centerPage]="true" [marginBottom]="true">
+    <app-page-container layout="list">
       @if (canManage()) {
         <app-page-header
+          toolbar
           i18n-title="Page title for the automation list"
           title="Automations"
           i18n-actionTitle="Button that opens the create-automation form"
@@ -59,57 +62,60 @@ import { AutomationsService } from '../../services/automations.service';
           (actionClick)="onCreate()" />
       } @else {
         <app-page-header
+          toolbar
           i18n-title="Page title for the automation list"
           title="Automations"
           [count]="count()" />
       }
 
-      @if (loading()) {
-        <app-page-loading />
-      } @else if (error()) {
-        <app-error-state
-          i18n-title="Shown when the automation list fails to load"
-          title="Automations could not be loaded"
-          i18n-description="Advice shown when a page fails to load"
-          description="Check your connection and try again."
-          (retry)="load()" />
-      } @else if (summary()?.ruleCount) {
-        <div class="flex flex-col gap-4">
-          <app-automation-stat-grid [stats]="stats()" />
-          <app-automation-rules-table
-            [canManage]="canManage()"
-            [statuses]="statuses()"
-            [reloadSignal]="reloadToken"
-            (toggleRule)="onToggle($event)"
-            (editRule)="onEdit($event)"
-            (cloneRule)="onClone($event)"
-            (deleteRule)="onDelete($event)" />
-        </div>
-      } @else {
-        <div class="border-border bg-card rounded border">
-          <app-empty-state
-            i18n-title="Heading of the empty automation list"
-            title="No automations yet"
-            i18n-description="
-              Explains what workspace automations do, on the empty state
-            "
-            description="Workspace automations can watch task workflow events and apply the same follow-up every time.">
-            <svg emptyStateIcon lucideWorkflow class="h-8 w-8"></svg>
-            @if (canManage()) {
-              <a
-                emptyStateAction
-                app-flat-button
-                color="primary"
-                [routerLink]="['new']">
-                <svg lucidePlus class="h-4 w-4"></svg>
-                <span i18n="Button that opens the create-automation form">
-                  Create Automation
-                </span>
-              </a>
-            }
-          </app-empty-state>
-        </div>
-      }
+      <app-page-body scroll>
+        @if (loading()) {
+          <app-page-loading />
+        } @else if (error()) {
+          <app-error-state
+            i18n-title="Shown when the automation list fails to load"
+            title="Automations could not be loaded"
+            i18n-description="Advice shown when a page fails to load"
+            description="Check your connection and try again."
+            (retry)="load()" />
+        } @else if (summary()?.ruleCount) {
+          <div class="flex flex-col gap-4">
+            <app-automation-stat-grid [stats]="stats()" />
+            <app-automation-rules-table
+              [canManage]="canManage()"
+              [statuses]="statuses()"
+              [reloadSignal]="reloadToken"
+              (toggleRule)="onToggle($event)"
+              (editRule)="onEdit($event)"
+              (cloneRule)="onClone($event)"
+              (deleteRule)="onDelete($event)" />
+          </div>
+        } @else {
+          <div class="border-border bg-card rounded border">
+            <app-empty-state
+              i18n-title="Heading of the empty automation list"
+              title="No automations yet"
+              i18n-description="
+                Explains what workspace automations do, on the empty state
+              "
+              description="Workspace automations can watch task workflow events and apply the same follow-up every time.">
+              <svg emptyStateIcon lucideWorkflow class="h-8 w-8"></svg>
+              @if (canManage()) {
+                <a
+                  emptyStateAction
+                  app-flat-button
+                  color="primary"
+                  [routerLink]="['new']">
+                  <svg lucidePlus class="h-4 w-4"></svg>
+                  <span i18n="Button that opens the create-automation form">
+                    Create Automation
+                  </span>
+                </a>
+              }
+            </app-empty-state>
+          </div>
+        }
+      </app-page-body>
     </app-page-container>
   `,
 })

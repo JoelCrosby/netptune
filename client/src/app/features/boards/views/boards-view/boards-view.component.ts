@@ -5,6 +5,7 @@ import { CreateBoardComponent } from '@boards/components/create-board/create-boa
 import { workspaceBoardsResource } from '@core/resources/board.resource';
 import { DialogService } from '@core/services/dialog.service';
 import { delayedLoading } from '@core/util/delayed-loading';
+import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { SkeletonCardGridComponent } from '@static/components/skeleton/skeleton-card-grid.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
@@ -17,6 +18,7 @@ import { EmptyStateComponent } from '@static/components/empty-state/empty-state.
   selector: 'app-boards-view',
   imports: [
     SkeletonCardGridComponent,
+    PageBodyComponent,
     PageContainerComponent,
     PageHeaderComponent,
     BoardsGridComponent,
@@ -26,13 +28,10 @@ import { EmptyStateComponent } from '@static/components/empty-state/empty-state.
     LucidePlus,
   ],
   template: `
-    <app-page-container
-      [verticalPadding]="false"
-      [fullHeight]="true"
-      [centerPage]="true"
-      [marginBottom]="true">
+    <app-page-container layout="list">
       @if (canCreateBoards()) {
         <app-page-header
+          toolbar
           i18n-title="Page title for the board list"
           title="Boards"
           i18n-actionTitle="Button that opens the create-board dialog"
@@ -41,41 +40,44 @@ import { EmptyStateComponent } from '@static/components/empty-state/empty-state.
           (actionClick)="onCreateBoardClicked()" />
       } @else {
         <app-page-header
+          toolbar
           i18n-title="Page title for the board list"
           title="Boards"
           [count]="count()" />
       }
 
-      @if (loading()) {
-        @if (showSkeleton()) {
-          <app-skeleton-card-grid [cards]="6" />
-        }
-      } @else if (boards().length === 0) {
-        <app-empty-state
-          i18n-title="Heading of the empty board list"
-          title="There are currently no boards."
-          i18n-description="
-            Explains what a board is for, on the empty board list
-          "
-          description="Create your first board to organise and track work for a project.">
-          <svg emptyStateIcon size="38" lucideKanban></svg>
-
-          @if (canCreateBoards()) {
-            <button
-              emptyStateAction
-              app-flat-button
-              type="button"
-              (click)="onCreateBoardClicked()">
-              <svg size="20" lucidePlus></svg>
-              <span i18n="Button that opens the create-board dialog">
-                Create Board
-              </span>
-            </button>
+      <app-page-body scroll>
+        @if (loading()) {
+          @if (showSkeleton()) {
+            <app-skeleton-card-grid [cards]="6" />
           }
-        </app-empty-state>
-      } @else {
-        <app-boards-grid [groups]="boards()" />
-      }
+        } @else if (boards().length === 0) {
+          <app-empty-state
+            i18n-title="Heading of the empty board list"
+            title="There are currently no boards."
+            i18n-description="
+              Explains what a board is for, on the empty board list
+            "
+            description="Create your first board to organise and track work for a project.">
+            <svg emptyStateIcon size="38" lucideKanban></svg>
+
+            @if (canCreateBoards()) {
+              <button
+                emptyStateAction
+                app-flat-button
+                type="button"
+                (click)="onCreateBoardClicked()">
+                <svg size="20" lucidePlus></svg>
+                <span i18n="Button that opens the create-board dialog">
+                  Create Board
+                </span>
+              </button>
+            }
+          </app-empty-state>
+        } @else {
+          <app-boards-grid [groups]="boards()" />
+        }
+      </app-page-body>
     </app-page-container>
   `,
 })

@@ -7,6 +7,7 @@ import { LucideListFilter, LucidePlus } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
+import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SkeletonCardGridComponent } from '@static/components/skeleton/skeleton-card-grid.component';
@@ -25,6 +26,7 @@ import { EMPTY, switchMap } from 'rxjs';
   selector: 'app-task-views-view',
   imports: [
     RouterLink,
+    PageBodyComponent,
     PageContainerComponent,
     PageHeaderComponent,
     ErrorStateComponent,
@@ -36,64 +38,67 @@ import { EMPTY, switchMap } from 'rxjs';
     LucideListFilter,
   ],
   template: `
-    <app-page-container [centerPage]="true" [marginBottom]="true">
+    <app-page-container layout="list">
       <app-page-header
+        toolbar
         i18n-title="Page title for the saved task view list"
         title="Views"
         [actionTitle]="createLabel()"
         [count]="count()"
         (actionClick)="onCreate()" />
 
-      @if (loading()) {
-        <app-skeleton-card-grid
-          [cards]="6"
-          [gridClass]="gridClass"
-          i18n-label="Accessible label while the saved view list loads"
-          label="Loading views" />
-      } @else if (error()) {
-        <app-error-state
-          i18n-title="Shown when the saved view list fails to load"
-          title="Views could not be loaded"
-          i18n-description="Advice shown when a page fails to load"
-          description="Check your connection and try again."
-          (retry)="reload()" />
-      } @else if (views().length) {
-        <ul [class]="gridClass">
-          @for (view of views(); track view.id) {
-            <li class="min-w-0">
-              <app-task-view-card
-                [view]="view"
-                [catalog]="catalog()"
-                [pinned]="isPinned(view.id)"
-                [canDelete]="canDelete()"
-                (pinToggled)="onTogglePin(view)"
-                (deleted)="onDelete(view)" />
-            </li>
-          }
-        </ul>
-      } @else {
-        <app-empty-state
-          i18n-title="Heading of the empty saved view list"
-          title="No views yet"
-          i18n-description="
-            Explains what saved task views do, on the empty state
-          "
-          description="A view pairs a saved query with the columns and sort you want to read it in, and can be kept private or shared with the workspace.">
-          <svg emptyStateIcon lucideListFilter class="h-8 w-8"></svg>
-          @if (canCreate()) {
-            <a
-              emptyStateAction
-              app-flat-button
-              color="primary"
-              [routerLink]="['new']">
-              <svg lucidePlus class="h-4 w-4"></svg>
-              <span i18n="Button that opens the create-view form">
-                Create View
-              </span>
-            </a>
-          }
-        </app-empty-state>
-      }
+      <app-page-body scroll>
+        @if (loading()) {
+          <app-skeleton-card-grid
+            [cards]="6"
+            [gridClass]="gridClass"
+            i18n-label="Accessible label while the saved view list loads"
+            label="Loading views" />
+        } @else if (error()) {
+          <app-error-state
+            i18n-title="Shown when the saved view list fails to load"
+            title="Views could not be loaded"
+            i18n-description="Advice shown when a page fails to load"
+            description="Check your connection and try again."
+            (retry)="reload()" />
+        } @else if (views().length) {
+          <ul [class]="gridClass">
+            @for (view of views(); track view.id) {
+              <li class="min-w-0">
+                <app-task-view-card
+                  [view]="view"
+                  [catalog]="catalog()"
+                  [pinned]="isPinned(view.id)"
+                  [canDelete]="canDelete()"
+                  (pinToggled)="onTogglePin(view)"
+                  (deleted)="onDelete(view)" />
+              </li>
+            }
+          </ul>
+        } @else {
+          <app-empty-state
+            i18n-title="Heading of the empty saved view list"
+            title="No views yet"
+            i18n-description="
+              Explains what saved task views do, on the empty state
+            "
+            description="A view pairs a saved query with the columns and sort you want to read it in, and can be kept private or shared with the workspace.">
+            <svg emptyStateIcon lucideListFilter class="h-8 w-8"></svg>
+            @if (canCreate()) {
+              <a
+                emptyStateAction
+                app-flat-button
+                color="primary"
+                [routerLink]="['new']">
+                <svg lucidePlus class="h-4 w-4"></svg>
+                <span i18n="Button that opens the create-view form">
+                  Create View
+                </span>
+              </a>
+            }
+          </app-empty-state>
+        }
+      </app-page-body>
     </app-page-container>
   `,
 })

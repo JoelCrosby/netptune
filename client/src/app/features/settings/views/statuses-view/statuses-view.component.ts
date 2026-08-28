@@ -44,6 +44,7 @@ import {
 } from '@static/components/datatable/datatable.types';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
+import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SearchInputComponent } from '@static/components/search-input/search-input.component';
@@ -64,6 +65,7 @@ import { finalize, first } from 'rxjs';
     LucideArrowDown,
     LucideArrowUp,
     LucideCircleDashed,
+    PageBodyComponent,
     PageContainerComponent,
     PageHeaderComponent,
     RouterLink,
@@ -71,98 +73,108 @@ import { finalize, first } from 'rxjs';
     TooltipDirective,
   ],
   template: `
-    <app-page-container [centerPage]="true" [marginBottom]="true">
+    <app-page-container layout="list">
       <app-page-header
+        toolbar
         i18n-title="Page title for workspace task statuses"
         title="Statuses"
         i18n-actionTitle="Button that opens the create-status dialog"
         actionTitle="Create status"
-        (actionClick)="openCreateDialog()" />
+        i18n-filtersLabel="Accessible name of the status list filter row"
+        filtersLabel="Filter statuses"
+        [count]="count()"
+        (actionClick)="openCreateDialog()">
+        <div pageHeaderFilters class="flex flex-row items-center gap-2.5">
+          <app-search-input
+            [term]="searchInput()"
+            (searchChange)="searchInput.set($event ?? '')" />
+        </div>
+      </app-page-header>
 
-      @if (error()) {
-        <app-error-state
-          compact
-          i18n-title="Shown when a change to a status could not be saved"
-          title="That change could not be saved"
-          [description]="error() ?? ''"
-          (retry)="reload()" />
-      }
+      <app-page-body>
+        @if (error()) {
+          <app-error-state
+            compact
+            class="mb-3 shrink-0"
+            i18n-title="Shown when a change to a status could not be saved"
+            title="That change could not be saved"
+            [description]="error() ?? ''"
+            (retry)="reload()" />
+        }
 
-      <div class="mb-3 flex flex-row items-center gap-2">
-        <app-search-input
-          [term]="searchInput()"
-          (searchChange)="searchInput.set($event ?? '')" />
-      </div>
+        <app-datatable
+          autoFill
+          stickyHeader
+          tableClass="min-w-[720px] table-fixed"
+          i18n-errorMessage="Shown when the status list fails to load"
+          errorMessage="Statuses could not be loaded."
+          i18n-itemLabel="Plural noun for statuses, used in the row summary"
+          itemLabel="statuses"
+          [data]="data"
+          [(sort)]="sort"
+          (loaded)="count.set($event.hasValue ? $event.totalCount : null)">
+          <ng-template appDatatableCell="color" let-status>
+            <app-color-swatch variant="swatch" [color]="status.color" />
+          </ng-template>
 
-      <app-datatable
-        tableClass="min-w-[720px] table-fixed"
-        i18n-errorMessage="Shown when the status list fails to load"
-        errorMessage="Statuses could not be loaded."
-        i18n-itemLabel="Plural noun for statuses, used in the row summary"
-        itemLabel="statuses"
-        [data]="data"
-        [(sort)]="sort">
-        <ng-template appDatatableCell="color" let-status>
-          <app-color-swatch variant="swatch" [color]="status.color" />
-        </ng-template>
+          <ng-template appDatatableCell="name" let-status>
+            <a
+              class="block w-full truncate text-left font-medium hover:underline"
+              [routerLink]="[status.id]">
+              {{ status.name }}
+            </a>
+          </ng-template>
 
-        <ng-template appDatatableCell="name" let-status>
-          <a
-            class="block w-full truncate text-left font-medium hover:underline"
-            [routerLink]="[status.id]">
-            {{ status.name }}
-          </a>
-        </ng-template>
+          <ng-template appDatatableCell="sortOrder" let-status let-i="rowIndex">
+            <div class="flex gap-1">
+              <button
+                app-icon-button
+                [appTooltip]="moveTooltip(moveUpLabel)"
+                i18n-aria-label="
+                  Accessible label for the button that moves a status up
+                "
+                aria-label="Move status up"
+                [disabled]="!canMoveUp(i)"
+                (click)="move(status.id, SortMoveDirection.up)">
+                <svg lucideArrowUp class="h-4 w-4"></svg>
+              </button>
+              <button
+                app-icon-button
+                [appTooltip]="moveTooltip(moveDownLabel)"
+                i18n-aria-label="
+                  Accessible label for the button that moves a status down
+                "
+                aria-label="Move status down"
+                [disabled]="!canMoveDown(i)"
+                (click)="move(status.id, SortMoveDirection.down)">
+                <svg lucideArrowDown class="h-4 w-4"></svg>
+              </button>
+            </div>
+          </ng-template>
 
-        <ng-template appDatatableCell="sortOrder" let-status let-i="rowIndex">
-          <div class="flex gap-1">
-            <button
-              app-icon-button
-              [appTooltip]="moveTooltip(moveUpLabel)"
-              i18n-aria-label="
-                Accessible label for the button that moves a status up
-              "
-              aria-label="Move status up"
-              [disabled]="!canMoveUp(i)"
-              (click)="move(status.id, SortMoveDirection.up)">
-              <svg lucideArrowUp class="h-4 w-4"></svg>
-            </button>
-            <button
-              app-icon-button
-              [appTooltip]="moveTooltip(moveDownLabel)"
-              i18n-aria-label="
-                Accessible label for the button that moves a status down
-              "
-              aria-label="Move status down"
-              [disabled]="!canMoveDown(i)"
-              (click)="move(status.id, SortMoveDirection.down)">
-              <svg lucideArrowDown class="h-4 w-4"></svg>
-            </button>
-          </div>
-        </ng-template>
-
-        <ng-template appDatatableEmpty>
-          @if (search()) {
-            <app-empty-state
-              compact
-              i18n-title="Heading shown when a search matches nothing"
-              title="No statuses match your search."
-              i18n-description="Advice shown when a search matches nothing"
-              description="Try a different term.">
-              <svg emptyStateIcon size="38" lucideCircleDashed></svg>
-            </app-empty-state>
-          } @else {
-            <app-empty-state
-              compact
-              i18n-title="Heading of an empty status list"
-              title="No statuses yet."
-              i18n-description="Explains what statuses are for"
-              description="Create one to describe your workflow.">
-              <svg emptyStateIcon size="38" lucideCircleDashed></svg>
-            </app-empty-state>
-          }
-        </ng-template>
-      </app-datatable>
+          <ng-template appDatatableEmpty>
+            @if (search()) {
+              <app-empty-state
+                compact
+                i18n-title="Heading shown when a search matches nothing"
+                title="No statuses match your search."
+                i18n-description="Advice shown when a search matches nothing"
+                description="Try a different term.">
+                <svg emptyStateIcon size="38" lucideCircleDashed></svg>
+              </app-empty-state>
+            } @else {
+              <app-empty-state
+                compact
+                i18n-title="Heading of an empty status list"
+                title="No statuses yet."
+                i18n-description="Explains what statuses are for"
+                description="Create one to describe your workflow.">
+                <svg emptyStateIcon size="38" lucideCircleDashed></svg>
+              </app-empty-state>
+            }
+          </ng-template>
+        </app-datatable>
+      </app-page-body>
     </app-page-container>
   `,
 })
@@ -175,6 +187,7 @@ export class StatusesViewComponent {
   readonly moveDownLabel = $localize`:Tooltip on the button that moves a row down:Move down`;
   readonly manualOrderOnlyLabel = $localize`:Explains that manual reordering needs the default, unfiltered view:Clear the search and sort by Order to reorder`;
 
+  readonly count = signal<number | null>(null);
   readonly saving = signal(false);
   readonly error = signal<string | null>(null);
   readonly searchInput = signal('');

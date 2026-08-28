@@ -22,8 +22,9 @@ import { PERMISSIONS } from '@app/core/auth/permissions';
     TaskListStatusComponent,
     TagFilterContainerComponent,
   ],
+  host: { class: 'block w-full' },
   template: `
-    <div class="mb-3 flex flex-row items-center gap-3">
+    <div class="flex flex-row flex-wrap items-center gap-3">
       <app-task-list-search />
       <app-task-list-filter-separator />
       <app-task-list-assignees [assigneeOptions]="assigneeOptions()" />

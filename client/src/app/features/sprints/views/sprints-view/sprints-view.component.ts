@@ -17,6 +17,7 @@ import {
   DatatableDataSource,
   DatatableMenuItem,
 } from '@static/components/datatable/datatable.types';
+import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import {
@@ -41,6 +42,7 @@ const emptyMessages: Record<SprintStatus, string> = {
   selector: 'app-sprints-view',
   imports: [
     RouterLink,
+    PageBodyComponent,
     PageContainerComponent,
     PageHeaderComponent,
     DatePipe,
@@ -51,25 +53,28 @@ const emptyMessages: Record<SprintStatus, string> = {
     SprintDaysBadgeComponent,
   ],
   template: `
-    <app-page-container [centerPage]="true">
+    <app-page-container layout="list">
       <app-page-header
+        toolbar
         i18n-title="Page title for the sprint list"
         title="Sprints"
+        i18n-filtersLabel="Accessible name of the sprint list filter row"
+        filtersLabel="Filter sprints"
         [count]="count()"
         [actionTitle]="createActionTitle()"
         (actionClick)="onOpenCreateDialog()">
-      </app-page-header>
-
-      <div class="flex flex-col gap-6">
         <app-tab-group
+          pageHeaderFilters
           [tabs]="statusTabs()"
           [value]="selectedStatus()"
           (changed)="onStatusChanged($event)" />
+      </app-page-header>
 
+      <app-page-body>
         <app-datatable
-          containerClass="h-[calc(100vh-314px)] min-h-160 overflow-auto rounded-lg shadow-sm"
+          autoFill
+          stickyHeader
           tableClass="min-w-[720px]"
-          headerClass="bg-card-header text-muted uppercase"
           i18n-itemLabel="Plural noun for sprints, used in the row summary"
           itemLabel="sprints"
           [data]="data()"
@@ -106,7 +111,7 @@ const emptyMessages: Record<SprintStatus, string> = {
             }
           </ng-template>
         </app-datatable>
-      </div>
+      </app-page-body>
     </app-page-container>
   `,
 })

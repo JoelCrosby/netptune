@@ -27,7 +27,7 @@ const emptyParams: Signal<Params> = computed(() => ({}));
 @Component({
   selector: 'app-task-table',
   imports: [DatatableComponent],
-  host: { class: 'flex min-h-0 flex-col', '[class.flex-1]': 'fill()' },
+  host: { class: 'flex min-h-0 flex-col', '[class.flex-1]': 'filling()' },
   template: `
     <app-datatable
       [data]="data()"
@@ -35,6 +35,7 @@ const emptyParams: Signal<Params> = computed(() => ({}));
       [customizableColumns]="customizableColumns()"
       [stickyHeader]="stickyHeader()"
       [fill]="fill()"
+      [autoFill]="autoFill()"
       [rounded]="rounded()"
       [containerClass]="containerClass()"
       [tableClass]="tableClass()"
@@ -53,7 +54,17 @@ const emptyParams: Signal<Params> = computed(() => ({}));
 export class TaskTableComponent<T extends TaskColumnRow> {
   private readonly hub = inject(ProjectTasksHubService);
 
-  private readonly datatable = viewChild.required(DatatableComponent<T>);
+  private readonly datatable = viewChild(DatatableComponent<T>);
+
+  protected readonly filling = computed(() => {
+    const datatable = this.datatable();
+
+    if (!datatable) {
+      return this.fill() || this.autoFill();
+    }
+
+    return datatable.filling();
+  });
 
   readonly key = input.required<string>();
   readonly columns = input.required<readonly DatatableColumn<T>[]>();
@@ -70,6 +81,7 @@ export class TaskTableComponent<T extends TaskColumnRow> {
   readonly customizableColumns = input(false, { transform: booleanAttribute });
   readonly stickyHeader = input(false, { transform: booleanAttribute });
   readonly fill = input(false, { transform: booleanAttribute });
+  readonly autoFill = input(false, { transform: booleanAttribute });
   readonly rounded = input(true, { transform: booleanAttribute });
   readonly containerClass = input('');
   readonly tableClass = input('');
@@ -126,10 +138,10 @@ export class TaskTableComponent<T extends TaskColumnRow> {
   });
 
   clearSelection() {
-    this.datatable().clearSelection();
+    this.datatable()?.clearSelection();
   }
 
   reload() {
-    this.datatable().reload();
+    this.datatable()?.reload();
   }
 }

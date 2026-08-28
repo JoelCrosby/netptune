@@ -36,6 +36,7 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
+import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
@@ -71,14 +72,16 @@ import { permissionLabel } from '@settings/components/service-accounts/service-a
     StrokedButtonComponent,
     EmptyStateComponent,
     PageLoadingComponent,
+    PageBodyComponent,
     PageContainerComponent,
     PageHeaderComponent,
     TooltipDirective,
   ],
   template: `
-    <app-page-container [centerPage]="true" [marginBottom]="true">
+    <app-page-container layout="list">
       @if (canCreate()) {
         <app-page-header
+          toolbar
           i18n-title="Page title for workspace service accounts"
           title="Service accounts"
           i18n-actionTitle="Button that opens the create-service-account dialog"
@@ -86,271 +89,282 @@ import { permissionLabel } from '@settings/components/service-accounts/service-a
           (actionClick)="openCreateAccount()" />
       } @else {
         <app-page-header
+          toolbar
           i18n-title="Page title for workspace service accounts"
           title="Service accounts" />
       }
 
-      <p
-        class="text-muted mb-4 max-w-3xl text-sm"
-        i18n="Explains what service accounts are for">
-        Create workspace identities for agents and integrations without sharing
-        a user login.
-      </p>
+      <app-page-body scroll>
+        <p
+          class="text-muted mb-4 max-w-3xl text-sm"
+          i18n="Explains what service accounts are for">
+          Create workspace identities for agents and integrations without
+          sharing a user login.
+        </p>
 
-      @if (loading()) {
-        <app-page-loading
-          class="min-h-48"
-          i18n-label="Shown while service accounts are loading"
-          label="Loading service accounts" />
-      } @else if (loadError()) {
-        <app-error-state
-          compact
-          i18n-title="Shown when the service account list fails to load"
-          title="Service accounts could not be loaded"
-          [description]="loadError() ?? ''"
-          (retry)="load()" />
-      } @else {
-        <div class="flex flex-col gap-4">
-          @for (account of sortedAccounts(); track account.id) {
-            <article class="border-border bg-card rounded border shadow-sm">
-              <header
-                class="border-border flex flex-wrap items-start justify-between gap-4 border-b px-5 py-4">
-                <div class="flex min-w-0 items-start gap-3">
-                  <app-icon-tile size="large" [icon]="accountIcon" />
-                  <div class="min-w-0">
-                    <div class="flex flex-wrap items-center gap-2">
-                      <h3 class="font-overpass text-lg font-medium">
-                        {{ account.name }}
-                      </h3>
-                      @if (account.disabledAt) {
-                        <app-badge
-                          color="warn"
-                          i18n="Badge marking a disabled service account">
-                          Disabled
-                        </app-badge>
-                      } @else {
-                        <app-badge
-                          color="success"
-                          i18n="Badge marking an enabled service account">
-                          Active
-                        </app-badge>
-                      }
-                    </div>
-                    @if (account.description) {
-                      <p class="text-muted mt-1 text-sm">
-                        {{ account.description }}
-                      </p>
-                    }
-                  </div>
-                </div>
-
-                @if (!account.disabledAt) {
-                  <div class="flex items-center gap-2">
-                    @if (canManageCredentials()) {
-                      <button
-                        app-stroked-button
-                        type="button"
-                        [disabled]="busy()"
-                        (click)="openCreateCredential(account)">
-                        <svg lucideKeyRound class="h-4 w-4"></svg>
-                        <span
-                          i18n="
-                            Button that issues a new credential for a service
-                            account
-                          ">
-                          Create credential
-                        </span>
-                      </button>
-                    }
-
-                    @if (canUpdate()) {
-                      <button
-                        app-icon-button
-                        type="button"
-                        i18n-appTooltip="
-                          Tooltip on the button that edits a service account
-                        "
-                        appTooltip="Edit service account"
-                        [attr.aria-label]="editAccountLabel(account.name)"
-                        [disabled]="busy()"
-                        (click)="openEditAccount(account)">
-                        <svg lucideSettings2 class="h-4 w-4"></svg>
-                      </button>
-                    }
-
-                    @if (canDelete()) {
-                      <button
-                        app-icon-button
-                        color="warn"
-                        type="button"
-                        i18n-appTooltip="
-                          Tooltip on the button that deletes a service account
-                        "
-                        appTooltip="Delete service account"
-                        [attr.aria-label]="deleteAccountLabel(account.name)"
-                        [disabled]="busy()"
-                        (click)="deleteAccount(account)">
-                        <svg lucideX class="h-4 w-4"></svg>
-                      </button>
-                    }
-                  </div>
-                }
-              </header>
-
-              <div
-                class="grid gap-6 px-5 py-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
-                <div>
-                  <h4 class="mb-3 flex items-center gap-2 text-sm font-medium">
-                    <svg lucideShieldCheck class="h-4 w-4"></svg>
-                    <span
-                      i18n="
-                        Heading above the permissions granted to a service
-                        account
-                      ">
-                      Account permissions
-                    </span>
-                  </h4>
-                  <div class="flex flex-wrap gap-2">
-                    @for (permission of account.permissions; track permission) {
-                      <app-badge shape="rounded">
-                        {{ getPermissionLabel(permission) }}
-                      </app-badge>
-                    } @empty {
-                      <span class="text-muted text-sm">
-                        <span
-                          i18n="
-                            Shown when a service account has no permissions
-                          ">
-                          No permissions granted
-                        </span>
-                      </span>
-                    }
-                  </div>
-                </div>
-
-                <div>
-                  <h4 class="mb-3 flex items-center gap-2 text-sm font-medium">
-                    <svg lucideKeyRound class="h-4 w-4"></svg>
-                    <span i18n="Heading above a service account's credentials">
-                      Credentials
-                    </span>
-                  </h4>
-                  <div
-                    class="border-border divide-border divide-y rounded border">
-                    @for (
-                      credential of account.credentials;
-                      track credential.id
-                    ) {
-                      <div class="flex items-center gap-3 px-3 py-3">
-                        <div class="min-w-0 flex-1">
-                          <div class="flex flex-wrap items-center gap-4">
-                            <span class="truncate text-sm font-medium">
-                              {{ credential.name }}
-                            </span>
-                            <code class="text-muted text-xs">
-                              {{ credential.tokenPrefix }}…
-                            </code>
-                            <app-badge [color]="credentialColor(credential)">
-                              {{ credentialStatusLabel(credential) }}
-                            </app-badge>
-                          </div>
-                          <p class="text-muted mt-2 text-xs">
-                            <span
-                              i18n="
-                                Credential expiry. DATE is a formatted date and
-                                time
-                              ">
-                              Expires
-                              {{
-                                formatDate(credential.expiresAt) // i18n(ph="DATE")
-                              }}
-                            </span>
-                            @if (credential.lastUsedAt) {
-                              <span
-                                i18n="
-                                  When a credential was last used, shown after
-                                  the expiry. Keep the leading separator. DATE
-                                  is a formatted date and time
-                                ">
-                                · Last used
-                                {{
-                                  formatDate(credential.lastUsedAt) // i18n(ph="DATE")
-                                }}
-                              </span>
-                            } @else {
-                              <span
-                                i18n="
-                                  Shown after the expiry when a credential has
-                                  never been used. Keep the leading separator
-                                ">
-                                · Never used
-                              </span>
-                            }
-                          </p>
-                        </div>
-
-                        @if (canManageCredentials() && !credential.revokedAt) {
-                          <button
-                            app-icon-button
+        @if (loading()) {
+          <app-page-loading
+            class="min-h-48"
+            i18n-label="Shown while service accounts are loading"
+            label="Loading service accounts" />
+        } @else if (loadError()) {
+          <app-error-state
+            compact
+            i18n-title="Shown when the service account list fails to load"
+            title="Service accounts could not be loaded"
+            [description]="loadError() ?? ''"
+            (retry)="load()" />
+        } @else {
+          <div class="flex flex-col gap-4">
+            @for (account of sortedAccounts(); track account.id) {
+              <article class="border-border bg-card rounded border shadow-sm">
+                <header
+                  class="border-border flex flex-wrap items-start justify-between gap-4 border-b px-5 py-4">
+                  <div class="flex min-w-0 items-start gap-3">
+                    <app-icon-tile size="large" [icon]="accountIcon" />
+                    <div class="min-w-0">
+                      <div class="flex flex-wrap items-center gap-2">
+                        <h3 class="font-overpass text-lg font-medium">
+                          {{ account.name }}
+                        </h3>
+                        @if (account.disabledAt) {
+                          <app-badge
                             color="warn"
-                            type="button"
-                            i18n-appTooltip="
-                              Tooltip on the button that revokes a credential
-                            "
-                            appTooltip="Revoke credential"
-                            [attr.aria-label]="
-                              revokeCredentialLabel(credential.name)
-                            "
-                            [disabled]="busy()"
-                            (click)="revokeCredential(account, credential)">
-                            <svg lucideTrash class="h-4 w-4"></svg>
-                          </button>
+                            i18n="Badge marking a disabled service account">
+                            Disabled
+                          </app-badge>
+                        } @else {
+                          <app-badge
+                            color="success"
+                            i18n="Badge marking an enabled service account">
+                            Active
+                          </app-badge>
                         }
                       </div>
-                    } @empty {
-                      <p class="text-muted px-3 py-4 text-sm">
-                        <span
-                          i18n="
-                            Shown when a service account has no credentials
-                          ">
-                          No credentials have been created.
+                      @if (account.description) {
+                        <p class="text-muted mt-1 text-sm">
+                          {{ account.description }}
+                        </p>
+                      }
+                    </div>
+                  </div>
+
+                  @if (!account.disabledAt) {
+                    <div class="flex items-center gap-2">
+                      @if (canManageCredentials()) {
+                        <button
+                          app-stroked-button
+                          type="button"
+                          [disabled]="busy()"
+                          (click)="openCreateCredential(account)">
+                          <svg lucideKeyRound class="h-4 w-4"></svg>
+                          <span
+                            i18n="
+                              Button that issues a new credential for a service
+                              account
+                            ">
+                            Create credential
+                          </span>
+                        </button>
+                      }
+
+                      @if (canUpdate()) {
+                        <button
+                          app-icon-button
+                          type="button"
+                          i18n-appTooltip="
+                            Tooltip on the button that edits a service account
+                          "
+                          appTooltip="Edit service account"
+                          [attr.aria-label]="editAccountLabel(account.name)"
+                          [disabled]="busy()"
+                          (click)="openEditAccount(account)">
+                          <svg lucideSettings2 class="h-4 w-4"></svg>
+                        </button>
+                      }
+
+                      @if (canDelete()) {
+                        <button
+                          app-icon-button
+                          color="warn"
+                          type="button"
+                          i18n-appTooltip="
+                            Tooltip on the button that deletes a service account
+                          "
+                          appTooltip="Delete service account"
+                          [attr.aria-label]="deleteAccountLabel(account.name)"
+                          [disabled]="busy()"
+                          (click)="deleteAccount(account)">
+                          <svg lucideX class="h-4 w-4"></svg>
+                        </button>
+                      }
+                    </div>
+                  }
+                </header>
+
+                <div
+                  class="grid gap-6 px-5 py-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
+                  <div>
+                    <h4
+                      class="mb-3 flex items-center gap-2 text-sm font-medium">
+                      <svg lucideShieldCheck class="h-4 w-4"></svg>
+                      <span
+                        i18n="
+                          Heading above the permissions granted to a service
+                          account
+                        ">
+                        Account permissions
+                      </span>
+                    </h4>
+                    <div class="flex flex-wrap gap-2">
+                      @for (
+                        permission of account.permissions;
+                        track permission
+                      ) {
+                        <app-badge shape="rounded">
+                          {{ getPermissionLabel(permission) }}
+                        </app-badge>
+                      } @empty {
+                        <span class="text-muted text-sm">
+                          <span
+                            i18n="
+                              Shown when a service account has no permissions
+                            ">
+                            No permissions granted
+                          </span>
                         </span>
-                      </p>
-                    }
+                      }
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4
+                      class="mb-3 flex items-center gap-2 text-sm font-medium">
+                      <svg lucideKeyRound class="h-4 w-4"></svg>
+                      <span
+                        i18n="Heading above a service account's credentials">
+                        Credentials
+                      </span>
+                    </h4>
+                    <div
+                      class="border-border divide-border divide-y rounded border">
+                      @for (
+                        credential of account.credentials;
+                        track credential.id
+                      ) {
+                        <div class="flex items-center gap-3 px-3 py-3">
+                          <div class="min-w-0 flex-1">
+                            <div class="flex flex-wrap items-center gap-4">
+                              <span class="truncate text-sm font-medium">
+                                {{ credential.name }}
+                              </span>
+                              <code class="text-muted text-xs">
+                                {{ credential.tokenPrefix }}…
+                              </code>
+                              <app-badge [color]="credentialColor(credential)">
+                                {{ credentialStatusLabel(credential) }}
+                              </app-badge>
+                            </div>
+                            <p class="text-muted mt-2 text-xs">
+                              <span
+                                i18n="
+                                  Credential expiry. DATE is a formatted date
+                                  and time
+                                ">
+                                Expires
+                                {{
+                                  formatDate(credential.expiresAt) // i18n(ph="DATE")
+                                }}
+                              </span>
+                              @if (credential.lastUsedAt) {
+                                <span
+                                  i18n="
+                                    When a credential was last used, shown after
+                                    the expiry. Keep the leading separator. DATE
+                                    is a formatted date and time
+                                  ">
+                                  · Last used
+                                  {{
+                                    formatDate(credential.lastUsedAt) // i18n(ph="DATE")
+                                  }}
+                                </span>
+                              } @else {
+                                <span
+                                  i18n="
+                                    Shown after the expiry when a credential has
+                                    never been used. Keep the leading separator
+                                  ">
+                                  · Never used
+                                </span>
+                              }
+                            </p>
+                          </div>
+
+                          @if (
+                            canManageCredentials() && !credential.revokedAt
+                          ) {
+                            <button
+                              app-icon-button
+                              color="warn"
+                              type="button"
+                              i18n-appTooltip="
+                                Tooltip on the button that revokes a credential
+                              "
+                              appTooltip="Revoke credential"
+                              [attr.aria-label]="
+                                revokeCredentialLabel(credential.name)
+                              "
+                              [disabled]="busy()"
+                              (click)="revokeCredential(account, credential)">
+                              <svg lucideTrash class="h-4 w-4"></svg>
+                            </button>
+                          }
+                        </div>
+                      } @empty {
+                        <p class="text-muted px-3 py-4 text-sm">
+                          <span
+                            i18n="
+                              Shown when a service account has no credentials
+                            ">
+                            No credentials have been created.
+                          </span>
+                        </p>
+                      }
+                    </div>
                   </div>
                 </div>
+              </article>
+            } @empty {
+              <div class="border-border bg-card rounded border">
+                <app-empty-state
+                  i18n-title="Heading of the empty service account list"
+                  title="No service accounts"
+                  i18n-description="
+                    Explains what to do on the empty service account list
+                  "
+                  description="Create an identity for Codex or another integration, then issue a scoped credential.">
+                  <svg emptyStateIcon lucideBot class="h-8 w-8"></svg>
+                  @if (canCreate()) {
+                    <button
+                      emptyStateAction
+                      app-flat-button
+                      type="button"
+                      (click)="openCreateAccount()">
+                      <svg lucidePlus class="h-4 w-4"></svg>
+                      <span
+                        i18n="
+                          Button that opens the create-service-account dialog
+                        ">
+                        Create service account
+                      </span>
+                    </button>
+                  }
+                </app-empty-state>
               </div>
-            </article>
-          } @empty {
-            <div class="border-border bg-card rounded border">
-              <app-empty-state
-                i18n-title="Heading of the empty service account list"
-                title="No service accounts"
-                i18n-description="
-                  Explains what to do on the empty service account list
-                "
-                description="Create an identity for Codex or another integration, then issue a scoped credential.">
-                <svg emptyStateIcon lucideBot class="h-8 w-8"></svg>
-                @if (canCreate()) {
-                  <button
-                    emptyStateAction
-                    app-flat-button
-                    type="button"
-                    (click)="openCreateAccount()">
-                    <svg lucidePlus class="h-4 w-4"></svg>
-                    <span
-                      i18n="
-                        Button that opens the create-service-account dialog
-                      ">
-                      Create service account
-                    </span>
-                  </button>
-                }
-              </app-empty-state>
-            </div>
-          }
-        </div>
-      }
+            }
+          </div>
+        }
+      </app-page-body>
     </app-page-container>
   `,
 })

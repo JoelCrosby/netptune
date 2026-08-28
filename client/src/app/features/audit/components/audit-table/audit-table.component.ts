@@ -36,7 +36,7 @@ import { AuditLogDetailDialogComponent } from '../../dialogs/audit-log-detail-di
     <app-datatable
       i18n-errorMessage="Shown when the audit log fails to load"
       errorMessage="Audit events could not be loaded."
-      containerClass="h-[calc(100vh-42rem)] overflow-auto rounded-lg shadow-sm"
+      stickyHeader
       headerClass="bg-card-header text-muted uppercase"
       tableClass="min-w-180 table-fixed"
       i18n-emptyMessage="Empty state for the audit log"

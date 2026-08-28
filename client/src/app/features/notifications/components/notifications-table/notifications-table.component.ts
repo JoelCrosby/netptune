@@ -28,6 +28,7 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
 
 @Component({
   selector: 'app-notifications-table',
+  host: { class: 'flex min-h-0 flex-1 flex-col' },
   imports: [
     DatePipe,
     AvatarComponent,
@@ -39,9 +40,9 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
   ],
   template: `
     <app-datatable
+      autoFill
       i18n-errorMessage="Shown when the notification list fails to load"
       errorMessage="Notifications could not be loaded."
-      containerClass="h-[calc(100vh-338px)] min-h-80 overflow-auto"
       tableClass="min-w-[720px] table-fixed"
       [data]="data"
       [stickyHeader]="true"

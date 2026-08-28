@@ -26,7 +26,6 @@ import { taskColumns, taskNameCell } from '@core/tasks/task-columns';
 import { CreateTaskDialogComponent } from '@entry/dialogs/create-task-dialog/create-task-dialog.component';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
 import { LucideListChecks, LucidePlus, LucideTrash2 } from '@lucide/angular';
-import { TaskListFiltersComponent } from './task-list-filters.component';
 import { taskFilterRoute } from '@core/router/task-filter-route';
 
 @Component({
@@ -37,13 +36,10 @@ import { taskFilterRoute } from '@core/router/task-filter-route';
     LucidePlus,
     DatatableEmptyDirective,
     EmptyStateComponent,
-    TaskListFiltersComponent,
     TaskTableComponent,
   ],
   host: { class: 'flex min-h-0 flex-1 flex-col' },
   template: `
-    <app-task-list-filters class="shrink-0" />
-
     <app-task-table
       #table
       i18n-errorMessage="Shown when the task list fails to load"
@@ -51,7 +47,7 @@ import { taskFilterRoute } from '@core/router/task-filter-route';
       key="task-list"
       url="api/tasks"
       tableClass="min-w-[760px] table-fixed"
-      [fill]="true"
+      [autoFill]="true"
       [columns]="columns()"
       [params]="taskRequestParams"
       [menu]="menu()"

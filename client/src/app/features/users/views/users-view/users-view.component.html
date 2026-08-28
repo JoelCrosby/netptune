@@ -1,12 +1,14 @@
-<app-page-container>
+<app-page-container layout="list">
   <app-page-header
+    toolbar
     i18n-title="Page title for the workspace member list"
     title="Users"
     i18n-actionTitle="Button that opens the invite dialog"
     actionTitle="Invite Users"
     [count]="count()"
-    (actionClick)="onInviteUsers()"
-    />
+    (actionClick)="onInviteUsers()" />
 
-  <app-user-list (countChange)="count.set($event)" />
+  <app-page-body>
+    <app-user-list (countChange)="count.set($event)" />
+  </app-page-body>
 </app-page-container>

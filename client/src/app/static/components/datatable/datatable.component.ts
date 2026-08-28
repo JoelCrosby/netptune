@@ -75,7 +75,7 @@ import {
     MenuItemComponent,
     TablePaginationComponent,
   ],
-  host: { class: 'flex min-h-0 flex-col', '[class.flex-1]': 'fill()' },
+  host: { class: 'flex min-h-0 flex-col', '[class.flex-1]': 'filling()' },
   template: `
     <div [class]="mergedContainerClass()">
       <table [class]="mergedTableClass()">
@@ -305,6 +305,7 @@ import {
 
     @if (showPagination()) {
       <app-table-pagination
+        class="shrink-0"
         [itemLabel]="itemLabel()"
         [page]="currentPage()"
         [pageSize]="pageSize()"
@@ -324,6 +325,9 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   customizableColumns = input(false, { transform: booleanAttribute });
   containerClass = input('');
   fill = input(false, { transform: booleanAttribute });
+  // Fill the remaining height only while paginated, so a single-page list hugs
+  // its rows and the pager follows the last one.
+  autoFill = input(false, { transform: booleanAttribute });
   rounded = input(true, { transform: booleanAttribute });
   tableClass = input('');
   headerClass = input('');
@@ -334,7 +338,7 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   errorDescription = input('Check your connection and try again.');
   itemLabel = input('tasks');
   skeletonRows = input(8);
-  stickyHeader = input(false);
+  stickyHeader = input(false, { transform: booleanAttribute });
   sort = model<DatatableSort | null>(null);
   selectionChanged = output<T[]>();
   loaded = output<{ totalCount: number; hasValue: boolean }>();
@@ -390,9 +394,22 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
     );
   });
 
+  filling = computed(() => {
+    if (this.fill()) return true;
+    if (!this.autoFill()) return false;
+
+    // No page count until the first load resolves.
+    const awaitingFirstLoad =
+      this.lastResolvedRows().length === 0 && this.resourceLoading();
+
+    if (awaitingFirstLoad) return true;
+
+    return this.totalPages() > 1;
+  });
+
   mergedContainerClass = computed(() => {
     const corners = this.rounded() ? '' : 'rounded-none';
-    const fill = this.fill() ? 'min-h-0 flex-1 overflow-auto' : '';
+    const fill = this.resolveFillClass();
 
     return twMerge(classes.container, corners, fill, this.containerClass());
   });
@@ -588,6 +605,12 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
 
   ngOnDestroy() {
     this.resourceRef?.destroy();
+  }
+
+  private resolveFillClass(): string {
+    if (this.filling()) return 'min-h-0 flex-1 overflow-auto';
+
+    return this.autoFill() ? 'overflow-auto' : '';
   }
 
   goToPage(page: number) {

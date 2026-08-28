@@ -26,6 +26,7 @@ import {
 } from '@static/components/datatable/datatable.types';
 import { DatatableEmptyDirective } from '@static/components/datatable/datatable-empty.directive';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
+import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 
@@ -34,6 +35,7 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
   imports: [
     DatePipe,
     RouterLink,
+    PageBodyComponent,
     PageContainerComponent,
     PageHeaderComponent,
     AvatarComponent,
@@ -46,9 +48,10 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
     LucidePlus,
   ],
   template: `
-    <app-page-container [centerPage]="true" [marginBottom]="true">
+    <app-page-container layout="list">
       @if (canCreateProjects()) {
         <app-page-header
+          toolbar
           i18n-title="Page title for the project list"
           title="Projects"
           i18n-actionTitle="Button that opens the create-project dialog"
@@ -57,110 +60,113 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
           (actionClick)="showAddModal()" />
       } @else {
         <app-page-header
+          toolbar
           i18n-title="Page title for the project list"
           title="Projects"
           [count]="count()" />
       }
 
-      <app-datatable
-        i18n-errorMessage="Shown when the project list fails to load"
-        errorMessage="Projects could not be loaded."
-        i18n-itemLabel="
-          Plural noun for the rows of the project table, shown beside counts
-        "
-        itemLabel="projects"
-        containerClass="h-[calc(100vh-253px)] min-h-80 overflow-auto"
-        tableClass="min-w-[900px] table-fixed"
-        [data]="data()"
-        [customizableColumns]="true"
-        [stickyHeader]="true">
-        <ng-template appDatatableCell="name" let-project>
-          @let link = projectLink(project);
+      <app-page-body>
+        <app-datatable
+          autoFill
+          i18n-errorMessage="Shown when the project list fails to load"
+          errorMessage="Projects could not be loaded."
+          i18n-itemLabel="
+            Plural noun for the rows of the project table, shown beside counts
+          "
+          itemLabel="projects"
+          tableClass="min-w-[900px] table-fixed"
+          [data]="data()"
+          [customizableColumns]="true"
+          [stickyHeader]="true">
+          <ng-template appDatatableCell="name" let-project>
+            @let link = projectLink(project);
 
-          <a
-            class="block truncate font-medium hover:underline"
-            [routerLink]="link"
-            [class.pointer-events-none]="!link">
-            {{ project.name }}
-          </a>
-        </ng-template>
-
-        <ng-template appDatatableCell="key" let-project>
-          <span
-            class="bg-foreground/5 rounded px-1.5 py-0.5 font-mono text-xs uppercase">
-            {{ project.key }}
-          </span>
-        </ng-template>
-
-        <ng-template appDatatableCell="description" let-project>
-          @if (project.description) {
-            <span class="block truncate text-sm">{{
-              project.description
-            }}</span>
-          } @else {
-            <span class="text-muted text-sm">&mdash;</span>
-          }
-        </ng-template>
-
-        <ng-template appDatatableCell="owner" let-project>
-          <div class="flex min-w-0 items-center gap-2">
-            <app-avatar
-              class="flex-none"
-              size="sm"
-              [name]="project.ownerDisplayName"
-              [imageUrl]="project.ownerPictureUrl" />
-            <span class="min-w-0 truncate text-sm">
-              {{ project.ownerDisplayName }}
-            </span>
-          </div>
-        </ng-template>
-
-        <ng-template appDatatableCell="repositoryUrl" let-project>
-          @if (project.repositoryUrl) {
             <a
-              class="block truncate text-sm underline"
-              target="_blank"
-              rel="noreferrer noopener"
-              [href]="project.repositoryUrl">
-              {{ project.repositoryUrl }}
+              class="block truncate font-medium hover:underline"
+              [routerLink]="link"
+              [class.pointer-events-none]="!link">
+              {{ project.name }}
             </a>
-          } @else {
-            <span class="text-muted text-sm">&mdash;</span>
-          }
-        </ng-template>
+          </ng-template>
 
-        <ng-template appDatatableCell="updatedAt" let-project>
-          <span class="text-muted text-sm whitespace-nowrap">
-            {{ project.updatedAt ?? project.createdAt | date: 'mediumDate' }}
-          </span>
-        </ng-template>
+          <ng-template appDatatableCell="key" let-project>
+            <span
+              class="bg-foreground/5 rounded px-1.5 py-0.5 font-mono text-xs uppercase">
+              {{ project.key }}
+            </span>
+          </ng-template>
 
-        <ng-template appDatatableEmpty>
-          <app-empty-state
-            compact
-            i18n-title="Heading of the empty project list"
-            title="There are currently no projects."
-            i18n-description="
-              Explains what a project is for, on the empty project list
-            "
-            description="Create your first project to organise related boards and tasks.">
-            <svg emptyStateIcon size="38" lucideFolderOpen></svg>
-
-            @if (canCreateProjects()) {
-              <button
-                emptyStateAction
-                app-flat-button
-                type="button"
-                (click)="showAddModal()">
-                <svg size="20" lucidePlus></svg>
-                <span i18n="Button that opens the create-project dialog">
-                  Create Project
-                </span>
-              </button>
+          <ng-template appDatatableCell="description" let-project>
+            @if (project.description) {
+              <span class="block truncate text-sm">{{
+                project.description
+              }}</span>
+            } @else {
+              <span class="text-muted text-sm">&mdash;</span>
             }
-          </app-empty-state>
-        </ng-template>
-      </app-datatable>
+          </ng-template>
+
+          <ng-template appDatatableCell="owner" let-project>
+            <div class="flex min-w-0 items-center gap-2">
+              <app-avatar
+                class="flex-none"
+                size="sm"
+                [name]="project.ownerDisplayName"
+                [imageUrl]="project.ownerPictureUrl" />
+              <span class="min-w-0 truncate text-sm">
+                {{ project.ownerDisplayName }}
+              </span>
+            </div>
+          </ng-template>
+
+          <ng-template appDatatableCell="repositoryUrl" let-project>
+            @if (project.repositoryUrl) {
+              <a
+                class="block truncate text-sm underline"
+                target="_blank"
+                rel="noreferrer noopener"
+                [href]="project.repositoryUrl">
+                {{ project.repositoryUrl }}
+              </a>
+            } @else {
+              <span class="text-muted text-sm">&mdash;</span>
+            }
+          </ng-template>
+
+          <ng-template appDatatableCell="updatedAt" let-project>
+            <span class="text-muted text-sm whitespace-nowrap">
+              {{ project.updatedAt ?? project.createdAt | date: 'mediumDate' }}
+            </span>
+          </ng-template>
+
+          <ng-template appDatatableEmpty>
+            <app-empty-state
+              compact
+              i18n-title="Heading of the empty project list"
+              title="There are currently no projects."
+              i18n-description="
+                Explains what a project is for, on the empty project list
+              "
+              description="Create your first project to organise related boards and tasks.">
+              <svg emptyStateIcon size="38" lucideFolderOpen></svg>
+
+              @if (canCreateProjects()) {
+                <button
+                  emptyStateAction
+                  app-flat-button
+                  type="button"
+                  (click)="showAddModal()">
+                  <svg size="20" lucidePlus></svg>
+                  <span i18n="Button that opens the create-project dialog">
+                    Create Project
+                  </span>
+                </button>
+              }
+            </app-empty-state>
+          </ng-template>
+        </app-datatable>
+      </app-page-body>
     </app-page-container>
   `,
 })

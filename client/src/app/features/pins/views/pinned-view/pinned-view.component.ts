@@ -20,6 +20,7 @@ import {
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { IconCircleComponent } from '@static/components/icon-circle.component';
+import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { PanelComponent } from '@static/components/panel.component';
@@ -47,74 +48,82 @@ interface PinGroup {
     IconCircleComponent,
     LucideLock,
     LucidePinOff,
+    PageBodyComponent,
     PageContainerComponent,
     PageHeaderComponent,
     PanelComponent,
     TaskCompactRowComponent,
   ],
   template: `
-    <app-page-container [centerPage]="true" [marginBottom]="true">
+    <app-page-container layout="list">
       <app-page-header
+        toolbar
         i18n-title="Page title for the pinned task list"
         title="Pinned"
         [count]="count()" />
 
-      @if (groups().length) {
-        <app-panel>
-          @for (group of groups(); track group.key; let first = $first) {
-            <div
-              class="border-border bg-foreground/3 flex flex-wrap items-center justify-between gap-3 border-b px-4 py-2.5"
-              [class.border-t]="!first">
-              <span class="flex items-center gap-2.5">
-                <app-icon-circle size="small" [icon]="group.icon" />
-                <span class="text-[13px] font-medium">{{ group.name }}</span>
-                @if (group.kind) {
-                  <app-badge>{{ group.kind }}</app-badge>
-                }
-                <span class="text-foreground/35 text-xs tabular-nums">
-                  {{ group.rows.length }}
-                </span>
-              </span>
-              <span class="text-muted text-xs">{{ group.note }}</span>
-            </div>
-
-            @for (row of group.rows; track row.pin.id; let firstRow = $first) {
+      <app-page-body scroll>
+        @if (groups().length) {
+          <app-panel>
+            @for (group of groups(); track group.key; let first = $first) {
               <div
-                class="hover:bg-foreground/3 flex items-center gap-3 pr-4 transition-colors"
-                [class.border-t]="!firstRow"
-                [class.border-border]="!firstRow">
-                <app-task-compact-row
-                  class="min-w-0 flex-1 cursor-pointer"
-                  [task]="row.task"
-                  (click)="onTaskClicked(row.task)" />
-
-                @if (row.pin.canUnpin) {
-                  <button
-                    type="button"
-                    class="text-foreground/35 hover:bg-foreground/8 hover:text-foreground flex h-7 w-7 flex-none cursor-pointer items-center justify-center rounded-full transition-colors"
-                    [title]="unpinLabel"
-                    [attr.aria-label]="unpinLabel"
-                    (click)="onUnpinClicked(row.pin)">
-                    <svg lucidePinOff class="h-3.75 w-3.75"></svg>
-                  </button>
-                } @else {
-                  <span
-                    class="text-foreground/20 flex h-7 w-7 flex-none items-center justify-center"
-                    [title]="lockedLabel">
-                    <svg lucideLock class="h-3.5 w-3.5"></svg>
+                class="border-border bg-foreground/3 flex flex-wrap items-center justify-between gap-3 border-b px-4 py-2.5"
+                [class.border-t]="!first">
+                <span class="flex items-center gap-2.5">
+                  <app-icon-circle size="small" [icon]="group.icon" />
+                  <span class="text-[13px] font-medium">{{ group.name }}</span>
+                  @if (group.kind) {
+                    <app-badge>{{ group.kind }}</app-badge>
+                  }
+                  <span class="text-foreground/35 text-xs tabular-nums">
+                    {{ group.rows.length }}
                   </span>
-                }
+                </span>
+                <span class="text-muted text-xs">{{ group.note }}</span>
               </div>
+
+              @for (
+                row of group.rows;
+                track row.pin.id;
+                let firstRow = $first
+              ) {
+                <div
+                  class="hover:bg-foreground/3 flex items-center gap-3 pr-4 transition-colors"
+                  [class.border-t]="!firstRow"
+                  [class.border-border]="!firstRow">
+                  <app-task-compact-row
+                    class="min-w-0 flex-1 cursor-pointer"
+                    [task]="row.task"
+                    (click)="onTaskClicked(row.task)" />
+
+                  @if (row.pin.canUnpin) {
+                    <button
+                      type="button"
+                      class="text-foreground/35 hover:bg-foreground/8 hover:text-foreground flex h-7 w-7 flex-none cursor-pointer items-center justify-center rounded-full transition-colors"
+                      [title]="unpinLabel"
+                      [attr.aria-label]="unpinLabel"
+                      (click)="onUnpinClicked(row.pin)">
+                      <svg lucidePinOff class="h-3.75 w-3.75"></svg>
+                    </button>
+                  } @else {
+                    <span
+                      class="text-foreground/20 flex h-7 w-7 flex-none items-center justify-center"
+                      [title]="lockedLabel">
+                      <svg lucideLock class="h-3.5 w-3.5"></svg>
+                    </span>
+                  }
+                </div>
+              }
             }
-          }
-        </app-panel>
-      } @else if (!loading()) {
-        <app-empty-state
-          i18n-title="Empty state title for the pinned task list"
-          title="Nothing pinned"
-          i18n-description="Empty state message for the pinned task list"
-          description="Pin a task from a board or its detail view to keep it in reach." />
-      }
+          </app-panel>
+        } @else if (!loading()) {
+          <app-empty-state
+            i18n-title="Empty state title for the pinned task list"
+            title="Nothing pinned"
+            i18n-description="Empty state message for the pinned task list"
+            description="Pin a task from a board or its detail view to keep it in reach." />
+        }
+      </app-page-body>
     </app-page-container>
   `,
 })

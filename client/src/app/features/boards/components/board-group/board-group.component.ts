@@ -76,11 +76,11 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
       [class.translucent]="hasBoardBackground()">
       <ng-content />
 
-      <div #container class="h-full flex-1">
+      <div #container class="min-h-0 flex-1">
         <div
           cdkDropList
           appScrollShadowVertical
-          class="custom-scroll board-task-list flex h-[calc(100vh-267px)] flex-col overflow-y-auto p-[.6rem]"
+          class="custom-scroll board-task-list flex h-full flex-col overflow-y-auto p-[.6rem]"
           [id]="dragListId()"
           [cdkDropListConnectedTo]="siblingIds()"
           (cdkDropListDropped)="drop($event)"

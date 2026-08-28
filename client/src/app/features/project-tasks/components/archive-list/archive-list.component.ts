@@ -34,8 +34,8 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
   ],
   host: { class: 'flex min-h-0 flex-1 flex-col' },
   template: `
-    <div class="mb-4 flex h-10 shrink-0 items-center">
-      @if (selectedCount() > 0) {
+    @if (selectedCount() > 0) {
+      <div class="mb-3 flex h-10 shrink-0 items-center">
         <div class="ml-auto flex flex-row items-center gap-4">
           <span class="text-muted px-2 text-sm">
             <span
@@ -56,8 +56,8 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
             </span>
           </button>
         </div>
-      }
-    </div>
+      </div>
+    }
 
     <app-task-table
       #table
@@ -66,7 +66,7 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
       key="task-archive"
       url="api/tasks/archive"
       tableClass="min-w-[760px] table-fixed"
-      [fill]="true"
+      [autoFill]="true"
       [columns]="columns"
       [menu]="menu"
       [reloadSignal]="reloadVersion"

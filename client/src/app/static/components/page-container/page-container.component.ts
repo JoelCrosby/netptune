@@ -1,34 +1,23 @@
-import { Component, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { map, of, switchMap, timer } from 'rxjs';
 import { ProgressBarComponent } from '../progress-bar/progress-bar.component';
 
 const progressRevealDelayMs = 200;
 
+export type PageContainerLayout = 'default' | 'list';
+
 @Component({
   selector: 'app-page-container',
   imports: [ProgressBarComponent],
   template: `
-    <div
-      class="flex flex-col"
-      [class.mx-auto]="centerPage()"
-      [class.w-full]="centerPage()"
-      [class.max-w-[1360px]]="centerPage()"
-      [attr.aria-busy]="showProgress()"
-      [class.h-full]="fullHeight() && !marginBottom()"
-      [class.pb-[20vh]]="marginBottom()">
+    <div [class]="rootClass()" [attr.aria-busy]="showProgress()">
       <div
-        class="h-3 shrink-0"
-        [class.invisible]="!progressVisible()"
+        [class]="progressClass()"
         [attr.aria-hidden]="progressVisible() ? null : 'true'">
         <app-progress-bar mode="indeterminate" />
       </div>
-      <div
-        class="flex flex-1 flex-col"
-        [class.px-8]="horizontalPadding()"
-        [class.max-[600px]:px-3]="horizontalPadding()"
-        [class.py-16]="verticalPadding()"
-        [class.h-[calc(100vh-76px)]]="fullHeight()">
+      <div [class]="contentClass()">
         <ng-content />
       </div>
     </div>
@@ -42,6 +31,8 @@ export class PageContainerComponent {
   readonly fullHeight = input<boolean | null>(true);
   readonly centerPage = input<boolean | null>(true);
 
+  readonly layout = input<PageContainerLayout>('default');
+
   readonly progressVisible = toSignal(
     toObservable(this.showProgress).pipe(
       switchMap((showProgress) =>
@@ -52,4 +43,51 @@ export class PageContainerComponent {
     ),
     { initialValue: false }
   );
+
+  private readonly isList = computed(() => this.layout() === 'list');
+
+  // Read by PageHeaderComponent and PageBodyComponent through the element
+  // injector, so the band and the body can run edge to edge while what sits
+  // inside them keeps the centred max width.
+  readonly constrainListContent = computed(() => {
+    return this.isList() && this.centerPage() !== false;
+  });
+
+  protected readonly rootClass = computed(() => {
+    if (this.isList()) {
+      return 'relative flex h-[calc(100vh-60px)] flex-col';
+    }
+
+    const classes = ['flex flex-col'];
+
+    if (this.centerPage()) classes.push('mx-auto w-full max-w-[1360px]');
+    if (this.fullHeight() && !this.marginBottom()) classes.push('h-full');
+    if (this.marginBottom()) classes.push('pb-[20vh]');
+
+    return classes.join(' ');
+  });
+
+  protected readonly progressClass = computed(() => {
+    const hidden = this.progressVisible() ? '' : 'invisible';
+
+    if (this.isList()) {
+      return `pointer-events-none absolute inset-x-0 top-0 z-20 ${hidden}`;
+    }
+
+    return `h-3 shrink-0 ${hidden}`;
+  });
+
+  protected readonly contentClass = computed(() => {
+    if (this.isList()) {
+      return 'flex min-h-0 flex-1 flex-col';
+    }
+
+    const classes = ['flex flex-1 flex-col'];
+
+    if (this.horizontalPadding()) classes.push('px-8 max-[600px]:px-3');
+    if (this.verticalPadding()) classes.push('py-16');
+    if (this.fullHeight()) classes.push('h-[calc(100vh-76px)]');
+
+    return classes.join(' ');
+  });
 }

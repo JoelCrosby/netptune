@@ -19,6 +19,7 @@ import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/tas
 import { delayedLoading } from '@core/util/delayed-loading';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { SkeletonCalendarMonthComponent } from '@static/components/skeleton/skeleton-calendar-month.component';
+import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { TaskViewFiltersComponent } from '@shared/components/task-view-filters/task-view-filters.component';
@@ -39,83 +40,87 @@ import {
     SkeletonCalendarMonthComponent,
     CalendarPlanningMonthComponent,
     CalendarToolbarComponent,
+    PageBodyComponent,
     PageContainerComponent,
     PageHeaderComponent,
     TaskViewFiltersComponent,
   ],
   template: `
     <app-page-container
+      layout="list"
       [centerPage]="false"
-      [fullHeight]="true"
       [showProgress]="calendar.isLoading()">
       <app-page-header
+        toolbar
         i18n-title="Page title for the calendar"
         title="Calendar" />
 
-      <section
-        class="border-border bg-card flex h-[calc(100vh-180px)] min-h-0 flex-none flex-col overflow-hidden rounded-lg border shadow-sm max-[600px]:h-[calc(100vh-154px)]">
-        <app-calendar-toolbar
-          [monthLabel]="range().label"
-          [projectId]="projectId()"
-          [projects]="projects()"
-          [sprintId]="sprintId()"
-          [sprints]="sprints()"
-          (projectChanged)="setProject($event)"
-          (sprintChanged)="setSprint($event)"
-          (monthNavigationRequested)="navigateMonth($event)"
-          (todayRequested)="showToday()"
-          (refreshRequested)="refresh()" />
-
-        <app-task-view-filters
-          [search]="taskFilters().term ?? undefined"
-          [assigneeIds]="taskFilters().users ?? []"
-          [tagNames]="taskFilters().tags ?? []"
-          [statusIds]="taskFilters().statuses ?? []"
-          (searchChanged)="filterRoute.set('term', $event)"
-          (assigneeIdsChanged)="filterRoute.set('users', $event)"
-          (tagNamesChanged)="filterRoute.set('tags', $event)"
-          (statusIdsChanged)="filterRoute.set('statusIds', $event)"
-          (cleared)="filterRoute.clear()" />
-
-        @if (showSkeleton()) {
-          <app-skeleton-calendar-month />
-        } @else if (calendar.error()) {
-          <app-error-state
-            compact
-            i18n-title="Shown when the calendar fails to load"
-            title="The calendar could not be loaded"
-            i18n-description="Advice when the calendar fails to load"
-            description="Check the selected filters and try again."
-            (retry)="calendar.reload()" />
-        } @else if (calendar.value(); as view) {
-          @if (view.truncated) {
-            <div class="border-border border-b bg-amber-500/10 p-3 text-sm">
-              <span
-                i18n="
-                  Warning that the calendar result was truncated. The 2,000
-                  limit is fixed by the server
-                ">
-                This calendar contains more than 2,000 scheduled tasks. Narrow
-                the project or sprint filter to see the complete result.
-              </span>
-            </div>
-          }
-
-          <app-calendar-planning-month
-            [view]="view"
-            [days]="range().days"
-            [(selectedDate)]="selectedDate"
-            [canUpdateTasks]="canUpdateTasks()"
+      <app-page-body>
+        <section
+          class="border-border bg-card flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border shadow-sm">
+          <app-calendar-toolbar
+            [monthLabel]="range().label"
             [projectId]="projectId()"
+            [projects]="projects()"
             [sprintId]="sprintId()"
+            [sprints]="sprints()"
+            (projectChanged)="setProject($event)"
+            (sprintChanged)="setSprint($event)"
+            (monthNavigationRequested)="navigateMonth($event)"
+            (todayRequested)="showToday()"
+            (refreshRequested)="refresh()" />
+
+          <app-task-view-filters
             [search]="taskFilters().term ?? undefined"
             [assigneeIds]="taskFilters().users ?? []"
             [tagNames]="taskFilters().tags ?? []"
             [statusIds]="taskFilters().statuses ?? []"
-            (refreshRequested)="refreshCalendar()"
-            (taskSelected)="openTask($event)" />
-        }
-      </section>
+            (searchChanged)="filterRoute.set('term', $event)"
+            (assigneeIdsChanged)="filterRoute.set('users', $event)"
+            (tagNamesChanged)="filterRoute.set('tags', $event)"
+            (statusIdsChanged)="filterRoute.set('statusIds', $event)"
+            (cleared)="filterRoute.clear()" />
+
+          @if (showSkeleton()) {
+            <app-skeleton-calendar-month />
+          } @else if (calendar.error()) {
+            <app-error-state
+              compact
+              i18n-title="Shown when the calendar fails to load"
+              title="The calendar could not be loaded"
+              i18n-description="Advice when the calendar fails to load"
+              description="Check the selected filters and try again."
+              (retry)="calendar.reload()" />
+          } @else if (calendar.value(); as view) {
+            @if (view.truncated) {
+              <div class="border-border border-b bg-amber-500/10 p-3 text-sm">
+                <span
+                  i18n="
+                    Warning that the calendar result was truncated. The 2,000
+                    limit is fixed by the server
+                  ">
+                  This calendar contains more than 2,000 scheduled tasks. Narrow
+                  the project or sprint filter to see the complete result.
+                </span>
+              </div>
+            }
+
+            <app-calendar-planning-month
+              [view]="view"
+              [days]="range().days"
+              [(selectedDate)]="selectedDate"
+              [canUpdateTasks]="canUpdateTasks()"
+              [projectId]="projectId()"
+              [sprintId]="sprintId()"
+              [search]="taskFilters().term ?? undefined"
+              [assigneeIds]="taskFilters().users ?? []"
+              [tagNames]="taskFilters().tags ?? []"
+              [statusIds]="taskFilters().statuses ?? []"
+              (refreshRequested)="refreshCalendar()"
+              (taskSelected)="openTask($event)" />
+          }
+        </section>
+      </app-page-body>
     </app-page-container>
   `,
   styles: ``,

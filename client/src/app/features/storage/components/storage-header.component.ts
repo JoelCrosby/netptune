@@ -6,7 +6,6 @@ import {
   BadgeComponent,
 } from '@static/components/badge/badge.component';
 import { IconTileComponent } from '@static/components/icon-tile.component';
-import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import {
   ProgressBarColor,
   ProgressBarComponent,
@@ -28,16 +27,11 @@ const nearLimitThreshold = 80;
     BadgeComponent,
     FileSizePipe,
     IconTileComponent,
-    PageHeaderComponent,
     ProgressBarComponent,
     SkeletonComponent,
     StatStripComponent,
   ],
   template: `
-    <app-page-header
-      i18n-title="Page title for workspace file storage"
-      title="Storage" />
-
     @if (usage(); as usage) {
       <section
         class="border-border bg-card mb-6 overflow-hidden rounded-lg border shadow-sm">

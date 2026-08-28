@@ -15,6 +15,7 @@ import { WorkspaceRole, workspaceRoleLabels } from '@core/enums/workspace-role';
 
 @Component({
   selector: 'app-user-list',
+  host: { class: 'flex min-h-0 flex-1 flex-col' },
   imports: [
     RouterLink,
     AvatarComponent,
@@ -25,9 +26,9 @@ import { WorkspaceRole, workspaceRoleLabels } from '@core/enums/workspace-role';
   ],
   template: `
     <app-datatable
+      autoFill
       i18n-errorMessage="Shown when the member list fails to load"
       errorMessage="Members could not be loaded."
-      containerClass="h-[calc(100vh-253px)] min-h-80 overflow-auto"
       tableClass="min-w-[720px] table-fixed"
       [data]="userData"
       [customizableColumns]="true"

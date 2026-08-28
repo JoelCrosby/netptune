@@ -24,8 +24,9 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
     LucideTrash2,
     LucideX,
   ],
+  host: { class: 'block w-full' },
   template: `
-    <div class="mb-3 flex h-18 flex-wrap items-center gap-3 py-2">
+    <div class="flex flex-wrap items-center gap-3">
       <app-search-input
         [term]="searchTerm()"
         (searchChange)="searchChange.emit($event)" />

@@ -6,6 +6,7 @@ import {
   UserSelectValue,
 } from '@core/models/view-models/user-select-option';
 import { NotificationCommandsService } from '@core/services/notification-commands.service';
+import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { NotificationsFiltersComponent } from '../../components/notifications-filters/notifications-filters.component';
@@ -14,39 +15,48 @@ import { NotificationsTableComponent } from '../../components/notifications-tabl
 @Component({
   selector: 'app-notifications-view',
   imports: [
+    PageBodyComponent,
     PageContainerComponent,
     PageHeaderComponent,
     NotificationsFiltersComponent,
     NotificationsTableComponent,
   ],
   template: `
-    <app-page-container>
+    <app-page-container layout="list">
       <app-page-header
+        toolbar
         i18n-title="Page title for the notification list"
         title="Notifications"
+        i18n-filtersLabel="Accessible name of the notification list filter row"
+        filtersLabel="Filter notifications"
         [count]="count()"
-        [actionTitle]="count() ? 'Mark all as read' : null"
-        (actionClick)="onMarkAllAsRead()" />
+        [actionTitle]="count() ? markAllAsReadLabel : null"
+        (actionClick)="onMarkAllAsRead()">
+        <app-notifications-filters
+          pageHeaderFilters
+          [searchTerm]="searchTerm()"
+          [selectedUsers]="selectedUsers()"
+          [selectedCount]="selected().length"
+          (searchChange)="onSearch($event)"
+          (userFilter)="onUserFilter($event)"
+          (clearUserFilter)="onClearUserFilter()"
+          (markSelectedAsRead)="onMarkSelectedAsRead()"
+          (deleteSelected)="onDeleteSelected()" />
+      </app-page-header>
 
-      <app-notifications-filters
-        [searchTerm]="searchTerm()"
-        [selectedUsers]="selectedUsers()"
-        [selectedCount]="selected().length"
-        (searchChange)="onSearch($event)"
-        (userFilter)="onUserFilter($event)"
-        (clearUserFilter)="onClearUserFilter()"
-        (markSelectedAsRead)="onMarkSelectedAsRead()"
-        (deleteSelected)="onDeleteSelected()" />
-
-      <app-notifications-table
-        [params]="resourceParams()"
-        (selectionChanged)="selected.set($event)"
-        (loaded)="onLoaded($event)" />
+      <app-page-body>
+        <app-notifications-table
+          [params]="resourceParams()"
+          (selectionChanged)="selected.set($event)"
+          (loaded)="onLoaded($event)" />
+      </app-page-body>
     </app-page-container>
   `,
 })
 export class NotificationsViewComponent {
   private readonly notificationCommands = inject(NotificationCommandsService);
+
+  readonly markAllAsReadLabel = $localize`:Button that marks every notification as read:Mark all as read`;
 
   readonly count = signal<number | null>(null);
   readonly selected = signal<NotificationViewModel[]>([]);

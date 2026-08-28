@@ -175,7 +175,7 @@
     </unit>
     <unit id="3818167647859760292">
       <notes>
-        <note category="location">src/app/features/storage/components/storage-header.component.ts:83,87</note>
+        <note category="location">src/app/features/storage/components/storage-header.component.ts:77,81</note>
         <note category="description">Storage limit shown next to the used total. LIMIT is a formatted byte count</note>
       </notes>
       <segment state="translated">
@@ -589,7 +589,7 @@
     <unit id="2145525847134662630">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:223</note>
-        <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:58</note>
+        <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:78</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -600,7 +600,7 @@
     <unit id="7884294193521928458">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:228</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:328</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:329</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -671,7 +671,7 @@
     </unit>
     <unit id="3955868613858648955">
       <notes>
-        <note category="location">src/app/features/storage/components/storage-header.component.ts:144</note>
+        <note category="location">src/app/features/storage/components/storage-header.component.ts:138</note>
         <note category="description">Label for the remaining storage figure</note>
       </notes>
       <segment state="translated">
@@ -761,7 +761,7 @@
     </unit>
     <unit id="8821114980467455667">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:305,307</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:313,315</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:27,30</note>
         <note category="description">Counts tokens a conversation has cost</note>
       </notes>
@@ -782,7 +782,7 @@
     </unit>
     <unit id="8824506098366714045">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:175,177</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:180,181</note>
         <note category="description">Toggle that shares example values with the assistant</note>
       </notes>
       <segment>
@@ -844,7 +844,7 @@
     </unit>
     <unit id="814220969588557104">
       <notes>
-        <note category="location">src/app/features/storage/components/storage-header.component.ts:161</note>
+        <note category="location">src/app/features/storage/components/storage-header.component.ts:155</note>
         <note category="description">Share of the storage limit currently in use</note>
       </notes>
       <segment state="translated">
@@ -1115,7 +1115,7 @@
     </unit>
     <unit id="2123659921722214537">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:43,44</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:46,47</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:221</note>
         <note category="location">src/app/workspace.routes.ts:42</note>
         <note category="description">Page title for the saved task view list</note>
@@ -1208,7 +1208,7 @@
     </unit>
     <unit id="162110177014271319">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:36</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:37</note>
         <note category="description">Shown when no sprint has been completed</note>
       </notes>
       <segment state="translated">
@@ -1298,7 +1298,7 @@
     </unit>
     <unit id="8605077135608842345">
       <notes>
-        <note category="location">src/app/features/pins/views/pinned-view/pinned-view.component.ts:114,115</note>
+        <note category="location">src/app/features/pins/views/pinned-view/pinned-view.component.ts:122,123</note>
         <note category="description">Empty state title for the pinned task list</note>
       </notes>
       <segment state="translated">
@@ -1348,7 +1348,7 @@
     </unit>
     <unit id="7347080707073106397">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:185,186</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:190,191</note>
         <note category="description">Heading of an empty relation type list</note>
       </notes>
       <segment state="translated">
@@ -1511,7 +1511,7 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:179</note>
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:80,82</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:304</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:277</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:283</note>
         <note category="location">src/app/features/boards/components/move-tasks-dialog/move-tasks-dialog.component.ts:76,79</note>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:62,65</note>
         <note category="location">src/app/features/calendar/dialogs/calendar-move-task-dialog.component.ts:61,64</note>
@@ -1525,8 +1525,8 @@
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:163,166</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:276</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:489</note>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:560</note>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:604</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:574</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:618</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:462</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:364</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:86,89</note>
@@ -1534,7 +1534,7 @@
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:62,65</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:164,167</note>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:282</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:250</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:255</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:39,41</note>
         <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:85,87</note>
         <note category="description">Dismisses a dialog without acting</note>
@@ -1727,23 +1727,23 @@
         <note category="location">src/app/core/services/task-commands.service.ts:217</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:178</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:303</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:276</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:282</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:780</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:803</note>
-        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:173</note>
+        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:174</note>
         <note category="location">src/app/features/project-tasks/components/task-list/task-list-selection-actions.component.ts:32,34</note>
-        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:185</note>
-        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:205</note>
+        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:181</note>
+        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:211</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:488</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:241</note>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:559</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:248</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:573</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:461</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:217</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:230</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:363</note>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:281</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:202</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:249</note>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:150</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:207</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:254</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:155</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:32</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
@@ -1775,7 +1775,7 @@
     <unit id="8878271828886295802">
       <notes>
         <note category="location">src/app/core/services/board-commands.service.ts:67</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:343</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:344</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -1977,7 +1977,7 @@
     <unit id="311004371875198775">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:111</note>
-        <note category="location">src/app/features/pins/views/pinned-view/pinned-view.component.ts:128</note>
+        <note category="location">src/app/features/pins/views/pinned-view/pinned-view.component.ts:137</note>
         <note category="description">Tooltip on a pin the caller is not allowed to remove</note>
       </notes>
       <segment state="translated">
@@ -2920,6 +2920,16 @@
         <target>No hay actividad</target>
       </segment>
     </unit>
+    <unit id="2333314224059826550">
+      <notes>
+        <note category="location">src/app/features/notifications/views/notifications-view/notifications-view.component.ts:59</note>
+        <note category="description">Button that marks every notification as read</note>
+      </notes>
+      <segment state="translated">
+        <source>Mark all as read</source>
+        <target>Marcar todo como leído</target>
+      </segment>
+    </unit>
     <unit id="2335067641977437350">
       <notes>
         <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:100,101</note>
@@ -2955,7 +2965,7 @@
         <note category="location">src/app/entry/components/notification-bell/notification-bell.component.ts:48,49</note>
         <note category="location">src/app/entry/components/notification-bell/notification-bell.component.ts:50,52</note>
         <note category="location">src/app/features/notifications/notifications.routes.ts:12</note>
-        <note category="location">src/app/features/notifications/views/notifications-view/notifications-view.component.ts:26,28</note>
+        <note category="location">src/app/features/notifications/views/notifications-view/notifications-view.component.ts:29,30</note>
         <note category="location">src/app/features/settings/views/personal-notification-settings-view/personal-notification-settings-view.component.ts:20,22</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:401</note>
         <note category="location">src/app/workspace.routes.ts:96</note>
@@ -3400,7 +3410,7 @@
     </unit>
     <unit id="2042627893306275814">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:74,76</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:78,80</note>
         <note category="description">Accessible label for the button that leaves a conversation</note>
       </notes>
       <segment state="translated">
@@ -3580,7 +3590,7 @@
     </unit>
     <unit id="885182347182627513">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:156,158</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:161,163</note>
         <note category="description">Heading of the assistant data sampling setting</note>
       </notes>
       <segment>
@@ -3590,7 +3600,7 @@
     </unit>
     <unit id="8853912163904514010">
       <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:158,159</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:169,170</note>
         <note category="description">Heading of an empty status list</note>
       </notes>
       <segment state="translated">
@@ -3622,6 +3632,16 @@
       <segment state="translated">
         <source> <ph id="0" equiv="ICU" disp="{taskCount(), plural, =1 {Apply to 1 task} other {Apply to {{ taskCount() }} tasks} }" subFlows="521755271628896810"/> </source>
         <target> <ph id="0" equiv="ICU" disp="{taskCount(), plural, =1 {Apply to 1 task} other {Apply to {{ taskCount() }} tasks} }" subFlows="521755271628896810"/> </target>
+      </segment>
+    </unit>
+    <unit id="7001227209911602786">
+      <notes>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:63,65</note>
+        <note category="description">Accessible name of the tag list filter row</note>
+      </notes>
+      <segment state="translated">
+        <source>Filter tags</source>
+        <target>Filtrar etiquetas</target>
       </segment>
     </unit>
     <unit id="7004360657413921611">
@@ -3679,9 +3699,9 @@
         <note category="location">src/app/entry/dialogs/create-relation-type-dialog/create-relation-type-dialog.component.ts:56,57</note>
         <note category="location">src/app/entry/dialogs/create-status-dialog/create-status-dialog.component.ts:68,69</note>
         <note category="location">src/app/entry/dialogs/edit-status-dialog/edit-status-dialog.component.ts:69,70</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:270</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:277</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:152,153</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:240</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:253</note>
         <note category="description">Label of the relation category field</note>
       </notes>
       <segment state="translated">
@@ -3744,13 +3764,13 @@
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:151</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:145</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:371</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:258</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:265</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:136</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:343</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:234</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:247</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:104</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:268</note>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:147</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:159</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:59,60</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:133</note>
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:42,43</note>
@@ -3879,7 +3899,7 @@
     <unit id="3836000317327860441">
       <notes>
         <note category="location">src/app/core/util/ai-client-context.ts:25</note>
-        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:71,73</note>
+        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:77,80</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:118</note>
         <note category="description">Names the screen the user is on</note>
       </notes>
@@ -3901,7 +3921,7 @@
     <unit id="6164296601931172481">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:133,135</note>
-        <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:25,27</note>
+        <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:34,35</note>
         <note category="location">src/app/shell/global-commands.service.ts:180</note>
         <note category="description">Title of the create-task dialog</note>
       </notes>
@@ -4184,9 +4204,9 @@
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:78,80</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:104,107</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:174,177</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:253</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:260</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:147,150</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:229</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:242</note>
         <note category="description">Label of the colour picker field</note>
       </notes>
       <segment state="translated">
@@ -4835,8 +4855,8 @@
     <unit id="2489114267038713519">
       <notes>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:124,127</note>
-        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:55,57</note>
-        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:234</note>
+        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:58,60</note>
+        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:240</note>
         <note category="description">Button that creates the project</note>
       </notes>
       <segment state="translated">
@@ -4899,7 +4919,7 @@
     </unit>
     <unit id="7249772516873565478">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:34</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:35</note>
         <note category="description">Shown when no sprint is currently running</note>
       </notes>
       <segment state="translated">
@@ -5012,7 +5032,7 @@
     </unit>
     <unit id="669379202478188871">
       <notes>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:97,98</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:107,108</note>
         <note category="description">Heading of an empty tag list</note>
       </notes>
       <segment state="translated">
@@ -5062,7 +5082,7 @@
     </unit>
     <unit id="1225327047686807431">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:163,166</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:168,171</note>
         <note category="description">Explains what turning off assistant data sampling does</note>
       </notes>
       <segment>
@@ -5113,8 +5133,8 @@
     <unit id="3915858391862498397">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:48,51</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:78,79</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:277</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:81,82</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:284</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:342</note>
         <note category="description">Section heading for links between tasks</note>
       </notes>
@@ -5185,7 +5205,7 @@
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:125</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:52</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:83,84</note>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:57</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:60</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:36</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:85</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:326</note>
@@ -5307,7 +5327,7 @@
     </unit>
     <unit id="6779219464246705631">
       <notes>
-        <note category="location">src/app/features/storage/components/storage-header.component.ts:148</note>
+        <note category="location">src/app/features/storage/components/storage-header.component.ts:142</note>
         <note category="description">Label for the number of files counted towards storage</note>
       </notes>
       <segment state="translated">
@@ -5521,7 +5541,7 @@
     </unit>
     <unit id="7690634761514161231">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:38,39</note>
+        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:38,40</note>
         <note category="description">Shown when the audit log fails to load</note>
       </notes>
       <segment state="translated">
@@ -5693,7 +5713,7 @@
     </unit>
     <unit id="9127774736608435783">
       <notes>
-        <note category="location">src/app/features/pins/views/pinned-view/pinned-view.component.ts:116,121</note>
+        <note category="location">src/app/features/pins/views/pinned-view/pinned-view.component.ts:124,127</note>
         <note category="description">Empty state message for the pinned task list</note>
       </notes>
       <segment state="translated">
@@ -5769,6 +5789,16 @@
       <segment state="translated">
         <source>Event ID</source>
         <target>ID del evento</target>
+      </segment>
+    </unit>
+    <unit id="176582944453303482">
+      <notes>
+        <note category="location">src/app/features/audit/views/audit-view/audit-view.component.ts:28,30</note>
+        <note category="description">Accessible name of the audit log filter row</note>
+      </notes>
+      <segment state="translated">
+        <source>Filter the audit log</source>
+        <target>Filtrar el registro de auditoría</target>
       </segment>
     </unit>
     <unit id="1510127051184371993">
@@ -5896,7 +5926,7 @@
     </unit>
     <unit id="9222501301114320323">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:114,117</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:117,120</note>
         <note category="description">Plural noun for relation types, used in the row summary</note>
       </notes>
       <segment state="translated">
@@ -5927,7 +5957,7 @@
     </unit>
     <unit id="8657732847549897278">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:176,177</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:181,182</note>
         <note category="description">Heading shown when a search matches nothing</note>
       </notes>
       <segment state="translated">
@@ -6101,7 +6131,7 @@
     </unit>
     <unit id="1678559204833619774">
       <notes>
-        <note category="location">src/app/features/audit/views/audit-view/audit-view.component.ts:23,25</note>
+        <note category="location">src/app/features/audit/views/audit-view/audit-view.component.ts:26,27</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:382</note>
         <note category="location">src/app/workspace.routes.ts:108</note>
         <note category="description">Page title for the workspace audit log</note>
@@ -6340,7 +6370,7 @@
     </unit>
     <unit id="348464760083521708">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:186,190</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:191,193</note>
         <note category="description">Section heading for the shared workspace API keys</note>
       </notes>
       <segment state="translated">
@@ -6828,7 +6858,7 @@
     </unit>
     <unit id="4101852533995361725">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:301,303</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:309,311</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:25,27</note>
         <note category="description">Counts messages in a stored conversation</note>
       </notes>
@@ -7014,7 +7044,7 @@
     </unit>
     <unit id="686613347719255569">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:37</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:38</note>
         <note category="description">Shown when no sprint has been cancelled</note>
       </notes>
       <segment state="translated">
@@ -7190,7 +7220,7 @@
     </unit>
     <unit id="4827228128561377686">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:77,79</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:81,83</note>
         <note category="description">Heading of the empty saved view list</note>
       </notes>
       <segment state="translated">
@@ -7230,7 +7260,7 @@
     </unit>
     <unit id="1616102757855967475">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:166</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:171</note>
         <note category="location">src/app/shared/components/query-builder/query-builder.models.ts:72</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:491</note>
         <note category="description">Filter showing sprints in any state</note>
@@ -7682,7 +7712,7 @@
         <note category="location">src/app/features/automations/components/automation-detail-stats.component.ts:14,15</note>
         <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:149</note>
         <note category="location">src/app/shell/command-palette/command-palette.component.ts:136,138</note>
-        <note category="location">src/app/static/components/page-header/page-header-actions.component.ts:28,29</note>
+        <note category="location">src/app/static/components/page-header/page-header-actions.component.ts:35,36</note>
         <note category="description">Stat label for how many actions a rule has</note>
       </notes>
       <segment state="translated">
@@ -7792,7 +7822,7 @@
     </unit>
     <unit id="2722007343461219050">
       <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:149,150</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:160,161</note>
         <note category="description">Heading shown when a search matches nothing</note>
       </notes>
       <segment state="translated">
@@ -7834,7 +7864,7 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-enabled-badge.component.ts:17</note>
         <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:88,91</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:147</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:153</note>
         <note category="description">Badge marking an automation that is switched on</note>
       </notes>
       <segment state="translated">
@@ -8100,7 +8130,7 @@
     <unit id="4555457172864212828">
       <notes>
         <note category="location">src/app/features/automations/components/automation-notify-editor.component.ts:45</note>
-        <note category="location">src/app/features/users/views/users-view/users-view.component.html:5</note>
+        <note category="location">src/app/features/users/views/users-view/users-view.component.html:6</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:242</note>
         <note category="location">src/app/workspace.routes.ts:102</note>
         <note category="description">Label of the users field</note>
@@ -8112,7 +8142,7 @@
     </unit>
     <unit id="8171377612720992766">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:170</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:175</note>
         <note category="description">Shown when a view could not be deleted</note>
       </notes>
       <segment state="translated">
@@ -8143,7 +8173,7 @@
     </unit>
     <unit id="4941019389369938795">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:52,55</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:56,58</note>
         <note category="description">Accessible label while the saved view list loads</note>
       </notes>
       <segment state="translated">
@@ -8254,8 +8284,8 @@
     </unit>
     <unit id="128217720924796263">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:203</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:176</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:209</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:188</note>
         <note category="description">Explains that manual reordering needs the default, unfiltered view</note>
       </notes>
       <segment state="translated">
@@ -8486,7 +8516,7 @@
     </unit>
     <unit id="691562233899087793">
       <notes>
-        <note category="location">src/app/features/storage/components/storage-header.component.ts:103,105</note>
+        <note category="location">src/app/features/storage/components/storage-header.component.ts:97,99</note>
         <note category="description">Accessible label while the storage summary loads</note>
       </notes>
       <segment state="translated">
@@ -8609,7 +8639,7 @@
     </unit>
     <unit id="8097029888794362295">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:122,123</note>
+        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:122,125</note>
         <note category="description">Shown when the automation list fails to load</note>
       </notes>
       <segment state="translated">
@@ -8740,7 +8770,7 @@
     </unit>
     <unit id="4548722462586549001">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:442</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:453</note>
         <note category="description">Label for the number of tokens the assistant has used</note>
       </notes>
       <segment state="translated">
@@ -8760,7 +8790,7 @@
     </unit>
     <unit id="7284407085760520822">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:246,248</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:253,255</note>
         <note category="description">Heading of the assistant conversation list</note>
       </notes>
       <segment state="translated">
@@ -8882,7 +8912,7 @@
     </unit>
     <unit id="180305693599254202">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:60,64</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:63,66</note>
         <note category="description">Page title for the workspace assistant conversations</note>
       </notes>
       <segment state="translated">
@@ -9235,7 +9265,7 @@
     </unit>
     <unit id="4975748273657042999">
       <notes>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:73,75</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:82,84</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:124</note>
         <note category="description">Plural noun for tags, used in the row summary</note>
       </notes>
@@ -9344,6 +9374,16 @@
         <target> Días naturales relativos </target>
       </segment>
     </unit>
+    <unit id="6298879458119153413">
+      <notes>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:84,86</note>
+        <note category="description">Accessible name of the status list filter row</note>
+      </notes>
+      <segment state="translated">
+        <source>Filter statuses</source>
+        <target>Filtrar estados</target>
+      </segment>
+    </unit>
     <unit id="519136026111560472">
       <notes>
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:360,362</note>
@@ -9376,7 +9416,7 @@
     </unit>
     <unit id="6542150205027637766">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:85,87</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:88,90</note>
         <note category="description">Button that opens the create-service-account dialog</note>
       </notes>
       <segment state="translated">
@@ -9521,7 +9561,7 @@
     <unit id="7128285372981708185">
       <notes>
         <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:111,114</note>
-        <note category="location">src/app/features/notifications/components/notifications-filters/notifications-filters.component.ts:59,62</note>
+        <note category="location">src/app/features/notifications/components/notifications-filters/notifications-filters.component.ts:60,63</note>
         <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:46,49</note>
         <note category="location">src/app/features/project-tasks/components/task-list/task-list-selection-actions.component.ts:20,23</note>
         <note category="description">How many watched fields are selected. COUNT is that number</note>
@@ -9992,7 +10032,7 @@
     </unit>
     <unit id="446504275054335484">
       <notes>
-        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:67,69</note>
+        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:73,75</note>
         <note category="description">Shown when the project list fails to load</note>
       </notes>
       <segment state="translated">
@@ -10387,7 +10427,7 @@
     </unit>
     <unit id="249911539328381860">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:148</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:153</note>
         <note category="description">Title of the delete-view confirmation</note>
       </notes>
       <segment state="translated">
@@ -10614,7 +10654,7 @@
     </unit>
     <unit id="562989914370292616">
       <notes>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:88,89</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:98,99</note>
         <note category="description">Heading shown when a search matches nothing</note>
       </notes>
       <segment state="translated">
@@ -11496,8 +11536,8 @@
     </unit>
     <unit id="8804757855962270298">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:98,100</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:86,88</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:103,105</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:100,102</note>
         <note category="description">Shown when a change to a relation type could not be saved</note>
       </notes>
       <segment state="translated">
@@ -11668,7 +11708,7 @@
     </unit>
     <unit id="7382738738639707814">
       <notes>
-        <note category="location">src/app/features/storage/components/storage-header.component.ts:53,55</note>
+        <note category="location">src/app/features/storage/components/storage-header.component.ts:47,49</note>
         <note category="description">Heading of the storage usage summary</note>
       </notes>
       <segment state="translated">
@@ -11819,9 +11859,9 @@
     <unit id="7585826646011739428">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:94,97</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:235</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:211</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:197</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:242</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:224</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:202</note>
         <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:101,104</note>
         <note category="description">Button that edits the automation</note>
       </notes>
@@ -11864,13 +11904,13 @@
     <unit id="3660632916771561809">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:106,108</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:74,76</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:79,81</note>
         <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:39,42</note>
         <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:56,58</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:101,103</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:107,109</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:88,90</note>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:58,60</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:62,64</note>
         <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:68,70</note>
         <note category="description">Advice shown when a page fails to load</note>
       </notes>
@@ -12011,6 +12051,16 @@
         <target><ph id="0" equiv="AMOUNT" disp="amount"/> restantes</target>
       </segment>
     </unit>
+    <unit id="111405044359500675">
+      <notes>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:85,87</note>
+        <note category="description">Accessible name of the relation type list filter row</note>
+      </notes>
+      <segment state="translated">
+        <source>Filter relation types</source>
+        <target>Filtrar tipos de relación</target>
+      </segment>
+    </unit>
     <unit id="7397230302063222654">
       <notes>
         <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:84,85</note>
@@ -12043,7 +12093,7 @@
     <unit id="976634642400414372">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:293</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:222</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:228</note>
         <note category="description">Error after failing to update an automation</note>
       </notes>
       <segment state="translated">
@@ -12054,7 +12104,7 @@
     <unit id="7223592009379733387">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:301</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:274</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:280</note>
         <note category="description">Title of the confirmation dialog for deleting an automation</note>
       </notes>
       <segment state="translated">
@@ -12065,7 +12115,7 @@
     <unit id="2841737509665294845">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:320</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:295</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:301</note>
         <note category="description">Confirmation after deleting an automation</note>
       </notes>
       <segment state="translated">
@@ -12096,7 +12146,7 @@
     <unit id="3476741388176301769">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:326</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:301</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:307</note>
         <note category="description">Error after failing to delete an automation</note>
       </notes>
       <segment state="translated">
@@ -12129,7 +12179,7 @@
     </unit>
     <unit id="2330979404051267952">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:129</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:134</note>
         <note category="description">Button that opens the create-view form</note>
       </notes>
       <segment state="translated">
@@ -12221,8 +12271,8 @@
     </unit>
     <unit id="6112696339048270378">
       <notes>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:55,56</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:63,67</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:58,59</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:67,71</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:250</note>
         <note category="location">src/app/workspace.routes.ts:54</note>
         <note category="description">Page title for the automation list</note>
@@ -12244,7 +12294,7 @@
     </unit>
     <unit id="8913974798870595154">
       <notes>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:57,59</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:60,62</note>
         <note category="description">Button that opens the create-automation form</note>
       </notes>
       <segment state="translated">
@@ -12254,7 +12304,7 @@
     </unit>
     <unit id="6054707091375835376">
       <notes>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:72,73</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:77,78</note>
         <note category="description">Shown when the automation list fails to load</note>
       </notes>
       <segment state="translated">
@@ -12304,7 +12354,7 @@
     </unit>
     <unit id="9063742557685234950">
       <notes>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:92,94</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:97,99</note>
         <note category="description">Heading of the empty automation list</note>
       </notes>
       <segment state="translated">
@@ -12314,7 +12364,7 @@
     </unit>
     <unit id="7327883206054172578">
       <notes>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:96,97</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:101,102</note>
         <note category="description">Explains what workspace automations do, on the empty state</note>
       </notes>
       <segment state="translated">
@@ -12324,7 +12374,7 @@
     </unit>
     <unit id="7329865395750709453">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:134,136</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:139,141</note>
         <note category="description">Explains what turning the assistant off does</note>
       </notes>
       <segment state="translated">
@@ -12334,7 +12384,7 @@
     </unit>
     <unit id="378048253639190257">
       <notes>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:106,108</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:111,113</note>
         <note category="description">Button that opens the create-automation form</note>
       </notes>
       <segment state="translated">
@@ -12344,7 +12394,7 @@
     </unit>
     <unit id="4645345687322304891">
       <notes>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:143</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:149</note>
         <note category="description">Stat label for how many automation rules exist</note>
       </notes>
       <segment state="translated">
@@ -12364,7 +12414,7 @@
     </unit>
     <unit id="3036804340853319197">
       <notes>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:151</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:157</note>
         <note category="description">Stat label for recent failed automation runs</note>
       </notes>
       <segment state="translated">
@@ -12384,7 +12434,7 @@
     </unit>
     <unit id="6473284394312594965">
       <notes>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:262</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:268</note>
         <note category="description">Error after failing to clone an automation</note>
       </notes>
       <segment state="translated">
@@ -12527,7 +12577,7 @@
     </unit>
     <unit id="662925928705970482">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:226,228</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:233,235</note>
         <note category="description">Explains how assistant cost is worked out</note>
       </notes>
       <segment state="translated">
@@ -12567,7 +12617,7 @@
     </unit>
     <unit id="6838555747958902386">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:129</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:134</note>
         <note category="description">Button that opens the create-sprint dialog</note>
       </notes>
       <segment state="translated">
@@ -12639,12 +12689,12 @@
     <unit id="6904866445262015585">
       <notes>
         <note category="location">src/app/features/boards/components/boards-grid/boards-grid-card.component.ts:79</note>
-        <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:24</note>
-        <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:33,34</note>
+        <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:33</note>
+        <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:47</note>
         <note category="location">src/app/features/reporting/components/workload-report.component.ts:73,75</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:119,120</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:247</note>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:153</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:260</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:165</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:78</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:152</note>
         <note category="location">src/app/workspace.routes.ts:36</note>
@@ -12708,7 +12758,7 @@
     <unit id="5810814854864452102">
       <notes>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:130</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:315</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:316</note>
         <note category="description">Title of the edit-board dialog</note>
       </notes>
       <segment state="translated">
@@ -12740,7 +12790,7 @@
       <notes>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:131</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:137</note>
-        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:39,41</note>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:38,40</note>
         <note category="description">Title of the create-board dialog</note>
       </notes>
       <segment state="translated">
@@ -12781,7 +12831,7 @@
     </unit>
     <unit id="3689382754703918674">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:35</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:36</note>
         <note category="description">Shown when no sprint is being planned</note>
       </notes>
       <segment state="translated">
@@ -12823,7 +12873,7 @@
     </unit>
     <unit id="8222816683597787340">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:221,224</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:228,231</note>
         <note category="description">Section heading for what the assistant has cost the workspace</note>
       </notes>
       <segment state="translated">
@@ -13102,7 +13152,7 @@
     </unit>
     <unit id="1779801045860441380">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:320</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:321</note>
         <note category="description">Overflow action that opens the manage-groups dialog</note>
       </notes>
       <segment state="translated">
@@ -13112,7 +13162,7 @@
     </unit>
     <unit id="6413760592493508393">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:336</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:337</note>
         <note category="description">Overflow action that downloads the board tasks as CSV</note>
       </notes>
       <segment state="translated">
@@ -13132,7 +13182,7 @@
     </unit>
     <unit id="7107218117130409950">
       <notes>
-        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:38</note>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:37</note>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:46,49</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:63,64</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:81</note>
@@ -13147,7 +13197,7 @@
     </unit>
     <unit id="1274285614133216742">
       <notes>
-        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:56,58</note>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:57,59</note>
         <note category="description">Heading of the empty board list</note>
       </notes>
       <segment state="translated">
@@ -13167,7 +13217,7 @@
     </unit>
     <unit id="7864156617362454936">
       <notes>
-        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:60,63</note>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:61,64</note>
         <note category="description">Explains what a board is for, on the empty board list</note>
       </notes>
       <segment state="translated">
@@ -13177,7 +13227,7 @@
     </unit>
     <unit id="8077962914491228902">
       <notes>
-        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:71,73</note>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:72,74</note>
         <note category="description">Button that opens the create-board dialog</note>
       </notes>
       <segment state="translated">
@@ -13294,7 +13344,7 @@
         <note category="location">src/app/features/roadmap/components/roadmap-unscheduled.component.ts:44,45</note>
         <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:139</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:117</note>
-        <note category="location">src/app/static/components/task-table.component.ts:85</note>
+        <note category="location">src/app/static/components/task-table.component.ts:90</note>
         <note category="description">Plural noun for tasks, used in the selection summary</note>
       </notes>
       <segment state="translated">
@@ -13415,7 +13465,7 @@
     </unit>
     <unit id="214787083175103202">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:199,203</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:206,208</note>
         <note category="description">Section heading for the workspace web search provider</note>
       </notes>
       <segment state="translated">
@@ -13625,7 +13675,7 @@
     </unit>
     <unit id="3825802286872185103">
       <notes>
-        <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:53,56</note>
+        <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:56,59</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:208</note>
         <note category="location">src/app/workspace.routes.ts:84</note>
         <note category="description">Page title for the calendar</note>
@@ -13637,7 +13687,7 @@
     </unit>
     <unit id="6500565621649261493">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:146,147</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:151,152</note>
         <note category="description">Toggle that enables the assistant for a workspace</note>
       </notes>
       <segment state="translated">
@@ -13647,7 +13697,7 @@
     </unit>
     <unit id="8302075849472999986">
       <notes>
-        <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:86,87</note>
+        <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:90,91</note>
         <note category="description">Shown when the calendar fails to load</note>
       </notes>
       <segment state="translated">
@@ -13657,7 +13707,7 @@
     </unit>
     <unit id="6412136724540655924">
       <notes>
-        <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:88,90</note>
+        <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:92,94</note>
         <note category="description">Advice when the calendar fails to load</note>
       </notes>
       <segment state="translated">
@@ -13667,7 +13717,7 @@
     </unit>
     <unit id="396253146311252179">
       <notes>
-        <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:98,104</note>
+        <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:102,108</note>
         <note category="description">Warning that the calendar result was truncated. The 2,000 limit is fixed by the server</note>
       </notes>
       <segment state="translated">
@@ -13807,7 +13857,7 @@
         <note category="location">src/app/features/reporting/components/flow-report.component.ts:197</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:269</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:212</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:161</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:166</note>
         <note category="description">Series name for tasks finished each day</note>
       </notes>
       <segment state="translated">
@@ -13857,7 +13907,7 @@
     </unit>
     <unit id="3313172740302558016">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:99,101</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:104,106</note>
         <note category="description">Counts tokens written to the provider prompt cache</note>
       </notes>
       <segment state="translated">
@@ -13920,7 +13970,7 @@
     <unit id="235558583662639798">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-status-breakdown-card.component.ts:36,38</note>
-        <note category="location">src/app/static/components/task-table.component.ts:79</note>
+        <note category="location">src/app/static/components/task-table.component.ts:84</note>
         <note category="description">Empty state for the status breakdown card</note>
       </notes>
       <segment state="translated">
@@ -13942,7 +13992,7 @@
     </unit>
     <unit id="8156602685712437139">
       <notes>
-        <note category="location">src/app/features/notifications/components/notifications-filters/notifications-filters.component.ts:37,38</note>
+        <note category="location">src/app/features/notifications/components/notifications-filters/notifications-filters.component.ts:38,39</note>
         <note category="description">Filter option including every member</note>
       </notes>
       <segment state="translated">
@@ -13952,8 +14002,8 @@
     </unit>
     <unit id="8619019435015178930">
       <notes>
-        <note category="location">src/app/features/notifications/components/notifications-filters/notifications-filters.component.ts:47,48</note>
-        <note category="location">src/app/features/notifications/components/notifications-filters/notifications-filters.component.ts:49,51</note>
+        <note category="location">src/app/features/notifications/components/notifications-filters/notifications-filters.component.ts:48,49</note>
+        <note category="location">src/app/features/notifications/components/notifications-filters/notifications-filters.component.ts:50,52</note>
         <note category="description">Accessible label for the button that clears the member filter</note>
       </notes>
       <segment state="translated">
@@ -13963,7 +14013,7 @@
     </unit>
     <unit id="6173403717413698596">
       <notes>
-        <note category="location">src/app/features/notifications/components/notifications-filters/notifications-filters.component.ts:71,74</note>
+        <note category="location">src/app/features/notifications/components/notifications-filters/notifications-filters.component.ts:72,75</note>
         <note category="description">Button that marks the selected notifications as read</note>
       </notes>
       <segment state="translated">
@@ -13973,7 +14023,7 @@
     </unit>
     <unit id="6660925946511264619">
       <notes>
-        <note category="location">src/app/features/notifications/components/notifications-filters/notifications-filters.component.ts:81,84</note>
+        <note category="location">src/app/features/notifications/components/notifications-filters/notifications-filters.component.ts:82,85</note>
         <note category="description">Button that deletes the selected notifications</note>
       </notes>
       <segment state="translated">
@@ -13983,7 +14033,7 @@
     </unit>
     <unit id="4951986255869916102">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:149</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:154</note>
         <note category="description">Body of the delete-view confirmation</note>
       </notes>
       <segment state="translated">
@@ -13993,7 +14043,7 @@
     </unit>
     <unit id="4953883075448493084">
       <notes>
-        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:43,44</note>
+        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:45,47</note>
         <note category="description">Shown when the notification list fails to load</note>
       </notes>
       <segment state="translated">
@@ -14003,7 +14053,7 @@
     </unit>
     <unit id="2014313920164588286">
       <notes>
-        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:101,104</note>
+        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:102,105</note>
         <note category="description">Badge marking a notification that has been read</note>
       </notes>
       <segment state="translated">
@@ -14013,7 +14063,7 @@
     </unit>
     <unit id="7795403436492031020">
       <notes>
-        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:108,111</note>
+        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:109,112</note>
         <note category="description">Badge marking an unread notification</note>
       </notes>
       <segment state="translated">
@@ -14053,7 +14103,7 @@
     </unit>
     <unit id="3512672071226814404">
       <notes>
-        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:117,118</note>
+        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:118,119</note>
         <note category="description">Empty state when there are no notifications</note>
       </notes>
       <segment state="translated">
@@ -14063,7 +14113,7 @@
     </unit>
     <unit id="3408295258641264159">
       <notes>
-        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:119,124</note>
+        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:120,125</note>
         <note category="description">Explains what the notification list will contain</note>
       </notes>
       <segment state="translated">
@@ -14073,7 +14123,7 @@
     </unit>
     <unit id="1616968388083998795">
       <notes>
-        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:163</note>
+        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:164</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment state="translated">
@@ -14083,7 +14133,7 @@
     </unit>
     <unit id="7593555694782789615">
       <notes>
-        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:168</note>
+        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:169</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment state="translated">
@@ -14467,7 +14517,7 @@
     </unit>
     <unit id="2510741784888393227">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:446</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:457</note>
         <note category="description">Label for what the assistant has cost, priced from published model rates</note>
       </notes>
       <segment state="translated">
@@ -14567,10 +14617,10 @@
     </unit>
     <unit id="8762534944604959180">
       <notes>
-        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:50,53</note>
+        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:46,49</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:242,243</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:183,184</note>
-        <note category="location">src/app/static/components/task-table.component.ts:82</note>
+        <note category="location">src/app/static/components/task-table.component.ts:87</note>
         <note category="description">Shown when the task list fails to load</note>
       </notes>
       <segment state="translated">
@@ -14580,7 +14630,7 @@
     </unit>
     <unit id="2630272244920413702">
       <notes>
-        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:85,87</note>
+        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:81,83</note>
         <note category="description">Button that opens the create-task dialog</note>
       </notes>
       <segment state="translated">
@@ -14592,7 +14642,7 @@
       <notes>
         <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:65</note>
         <note category="location">src/app/features/project-tasks/project-tasks.routes.ts:13</note>
-        <note category="location">src/app/features/project-tasks/views/archive-view/archive-view.component.ts:14,16</note>
+        <note category="location">src/app/features/project-tasks/views/archive-view/archive-view.component.ts:21,23</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:158</note>
         <note category="description">Heading of the archive file panel</note>
       </notes>
@@ -14609,6 +14659,16 @@
       <segment state="translated">
         <source>The backlog is empty — all tasks are assigned to sprints.</source>
         <target>El backlog está vacío: todas las tareas están asignadas a sprints.</target>
+      </segment>
+    </unit>
+    <unit id="1064244852425040817">
+      <notes>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:62,64</note>
+        <note category="description">Accessible name of the sprint list filter row</note>
+      </notes>
+      <segment state="translated">
+        <source>Filter sprints</source>
+        <target>Filtrar sprints</target>
       </segment>
     </unit>
     <unit id="2386184427978292327">
@@ -14704,7 +14764,7 @@
     </unit>
     <unit id="429530728708175872">
       <notes>
-        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:199</note>
+        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:205</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment state="translated">
@@ -14744,7 +14804,7 @@
     </unit>
     <unit id="4435645098786961170">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:91,92</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:95,96</note>
         <note category="description">Counts tokens returned by the model</note>
       </notes>
       <segment state="translated">
@@ -14775,8 +14835,8 @@
     <unit id="7091571651222742304">
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:52,54</note>
-        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:53,54</note>
-        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:61,65</note>
+        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:56,57</note>
+        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:65,69</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:79</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:198</note>
         <note category="location">src/app/workspace.routes.ts:30</note>
@@ -14789,7 +14849,7 @@
     </unit>
     <unit id="2364747842302328591">
       <notes>
-        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:142,144</note>
+        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:147,149</note>
         <note category="description">Heading of the empty project list</note>
       </notes>
       <segment state="translated">
@@ -14799,7 +14859,7 @@
     </unit>
     <unit id="6574109356050640128">
       <notes>
-        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:146,149</note>
+        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:151,152</note>
         <note category="description">Explains what a project is for, on the empty project list</note>
       </notes>
       <segment state="translated">
@@ -14809,7 +14869,7 @@
     </unit>
     <unit id="4921087619298848078">
       <notes>
-        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:157,159</note>
+        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:162,164</note>
         <note category="description">Button that opens the create-project dialog</note>
       </notes>
       <segment state="translated">
@@ -14830,7 +14890,7 @@
     </unit>
     <unit id="5654547208168525627">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:142</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:147</note>
         <note category="description">Shown when the workspace has no sprints at all</note>
       </notes>
       <segment state="translated">
@@ -14840,7 +14900,7 @@
     </unit>
     <unit id="5656132246732086102">
       <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:160,161</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:171,172</note>
         <note category="description">Explains what statuses are for</note>
       </notes>
       <segment state="translated">
@@ -15133,7 +15193,7 @@
     </unit>
     <unit id="4105895757984243460">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:165</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:170</note>
         <note category="description">Confirmation that a view was deleted</note>
       </notes>
       <segment state="translated">
@@ -15528,7 +15588,7 @@
     </unit>
     <unit id="2107380426080326188">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:438</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:449</note>
         <note category="description">Label for the number of assistant conversations</note>
       </notes>
       <segment state="translated">
@@ -16246,7 +16306,7 @@
     </unit>
     <unit id="6215048040341403789">
       <notes>
-        <note category="location">src/app/features/roadmap/views/roadmap-view.component.ts:54,57</note>
+        <note category="location">src/app/features/roadmap/views/roadmap-view.component.ts:57,60</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:203</note>
         <note category="location">src/app/workspace.routes.ts:78</note>
         <note category="description">Page title for the roadmap</note>
@@ -16258,7 +16318,7 @@
     </unit>
     <unit id="1734549338855999467">
       <notes>
-        <note category="location">src/app/features/roadmap/views/roadmap-view.component.ts:100,101</note>
+        <note category="location">src/app/features/roadmap/views/roadmap-view.component.ts:104,105</note>
         <note category="description">Shown when the roadmap fails to load</note>
       </notes>
       <segment state="translated">
@@ -16268,7 +16328,7 @@
     </unit>
     <unit id="1125626855616757413">
       <notes>
-        <note category="location">src/app/features/roadmap/views/roadmap-view.component.ts:102,104</note>
+        <note category="location">src/app/features/roadmap/views/roadmap-view.component.ts:106,108</note>
         <note category="description">Advice when the roadmap fails to load</note>
       </notes>
       <segment state="translated">
@@ -16278,7 +16338,7 @@
     </unit>
     <unit id="5243494589614712043">
       <notes>
-        <note category="location">src/app/features/roadmap/views/roadmap-view.component.ts:112,118</note>
+        <note category="location">src/app/features/roadmap/views/roadmap-view.component.ts:116,122</note>
         <note category="description">Warning that the roadmap result was truncated. The 2,000 limit is fixed by the server</note>
       </notes>
       <segment state="translated">
@@ -16392,7 +16452,7 @@
     </unit>
     <unit id="4797214229335185452">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:94,97</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:98,101</note>
         <note category="description">Counts tokens read from the provider prompt cache</note>
       </notes>
       <segment state="translated">
@@ -16579,7 +16639,7 @@
     </unit>
     <unit id="436231775780502366">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:81,82</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:85,86</note>
         <note category="description">Explains what saved task views do, on the empty state</note>
       </notes>
       <segment state="translated">
@@ -17123,7 +17183,7 @@
     <unit id="8105573015424494856">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:281,284</note>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:210,213</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:216,219</note>
         <note category="description">Heading above the permissions granted to a service account</note>
       </notes>
       <segment state="translated">
@@ -17184,7 +17244,7 @@
     </unit>
     <unit id="3108472352698480006">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:321,323</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:331,333</note>
         <note category="description">Heading when no assistant conversations exist</note>
       </notes>
       <segment state="translated">
@@ -17622,7 +17682,7 @@
     </unit>
     <unit id="1354313797361897990">
       <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:102,105</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:112,115</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:122</note>
         <note category="description">Plural noun for statuses, used in the row summary</note>
       </notes>
@@ -17673,9 +17733,9 @@
     </unit>
     <unit id="15321371811334707">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:178,179</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:151,152</note>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:90,91</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:183,184</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:162,163</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:100,101</note>
         <note category="description">Advice shown when a search matches nothing</note>
       </notes>
       <segment state="translated">
@@ -17683,19 +17743,9 @@
         <target>Prueba con otro término.</target>
       </segment>
     </unit>
-    <unit id="1534534589646989824">
-      <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:89,97</note>
-        <note category="description">Explains how relation direction works. The quoted example names are the default relation type and its inverse</note>
-      </notes>
-      <segment state="translated">
-        <source> How tasks can be linked to one another. A relation reads one way from the source task and the other way from the target — &quot;Blocks&quot; one way, &quot;Is Blocked By&quot; the other. </source>
-        <target> Cómo se pueden vincular las tareas entre sí. Una relación se lee en un sentido desde la tarea de origen y en el otro desde la de destino: &quot;Bloquea&quot; por un lado, &quot;Está bloqueada por&quot; por el otro. </target>
-      </segment>
-    </unit>
     <unit id="5397887234065885154">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:80,84</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:83,84</note>
         <note category="description">Button that opens the create-relation-type dialog</note>
       </notes>
       <segment state="translated">
@@ -17705,7 +17755,7 @@
     </unit>
     <unit id="400343125846819376">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:112,113</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:113,115</note>
         <note category="description">Shown when the relation type list fails to load</note>
       </notes>
       <segment state="initial">
@@ -17736,7 +17786,7 @@
     </unit>
     <unit id="7118117366674423373">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:264</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:271</note>
         <note category="description">Column heading for the reverse direction of a relation</note>
       </notes>
       <segment state="translated">
@@ -17786,8 +17836,8 @@
     </unit>
     <unit id="220550782947016929">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:285</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:255</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:292</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:268</note>
         <note category="description">Column heading for the sort order</note>
       </notes>
       <segment state="translated">
@@ -17828,7 +17878,7 @@
     <unit id="6830953190149975920">
       <notes>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:153,155</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:134,137</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:138,141</note>
         <note category="description">Shown when a relation reads the same in both directions</note>
       </notes>
       <segment state="translated">
@@ -17838,8 +17888,8 @@
     </unit>
     <unit id="8502065112576581103">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:201</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:174</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:207</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:186</note>
         <note category="description">Tooltip on the button that moves a row up</note>
       </notes>
       <segment state="translated">
@@ -17849,7 +17899,7 @@
     </unit>
     <unit id="6781548721931982858">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:152,154</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:156,158</note>
         <note category="description">Accessible label for the button that moves a relation type up</note>
       </notes>
       <segment state="translated">
@@ -17859,8 +17909,8 @@
     </unit>
     <unit id="2207764482815871800">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:202</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:175</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:208</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:187</note>
         <note category="description">Tooltip on the button that moves a row down</note>
       </notes>
       <segment state="translated">
@@ -17880,7 +17930,7 @@
     </unit>
     <unit id="2412502577182752913">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:163,165</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:168,170</note>
         <note category="description">Accessible label for the button that moves a relation type down</note>
       </notes>
       <segment state="translated">
@@ -17890,8 +17940,8 @@
     </unit>
     <unit id="517565553858035199">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:83,84</note>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:90,94</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:86,87</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:94,99</note>
         <note category="description">Page title for workspace service accounts</note>
       </notes>
       <segment state="translated">
@@ -17901,7 +17951,7 @@
     </unit>
     <unit id="1930837065550961764">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:96,100</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:101,105</note>
         <note category="description">Explains what service accounts are for</note>
       </notes>
       <segment state="translated">
@@ -17942,7 +17992,7 @@
     </unit>
     <unit id="4022991066353475675">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:345,347</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:358,360</note>
         <note category="description">Button that opens the create-service-account dialog</note>
       </notes>
       <segment state="translated">
@@ -17962,7 +18012,7 @@
     </unit>
     <unit id="4026751160851308362">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:254,258</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:261,265</note>
         <note category="description">Explains what an admin sees on the assistant conversations page</note>
       </notes>
       <segment state="translated">
@@ -17972,7 +18022,7 @@
     </unit>
     <unit id="7357824854550266974">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:104,106</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:109,111</note>
         <note category="description">Shown while service accounts are loading</note>
       </notes>
       <segment state="translated">
@@ -18002,7 +18052,7 @@
     </unit>
     <unit id="5949868576384453504">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:109,111</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:114,116</note>
         <note category="description">Shown when the service account list fails to load</note>
       </notes>
       <segment state="translated">
@@ -18022,7 +18072,7 @@
     </unit>
     <unit id="6197665339164385071">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:129,130</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:134,135</note>
         <note category="description">Badge marking a disabled service account</note>
       </notes>
       <segment state="translated">
@@ -18032,7 +18082,7 @@
     </unit>
     <unit id="2453142225616430507">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:135,136</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:140,141</note>
         <note category="description">Badge marking an enabled service account</note>
       </notes>
       <segment state="translated">
@@ -18052,7 +18102,7 @@
     </unit>
     <unit id="8673416323370089865">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:161,164</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:166,169</note>
         <note category="description">Button that issues a new credential for a service account</note>
       </notes>
       <segment state="translated">
@@ -18072,7 +18122,7 @@
     </unit>
     <unit id="1967521248845505958">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:173,174</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:178,179</note>
         <note category="description">Tooltip on the button that edits a service account</note>
       </notes>
       <segment state="translated">
@@ -18112,7 +18162,7 @@
     </unit>
     <unit id="7279697022989713952">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:189,190</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:194,195</note>
         <note category="description">Tooltip on the button that deletes a service account</note>
       </notes>
       <segment state="translated">
@@ -18122,7 +18172,7 @@
     </unit>
     <unit id="5606751605449364227">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:224,226</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:233,234</note>
         <note category="description">Shown when a service account has no permissions</note>
       </notes>
       <segment state="translated">
@@ -18155,7 +18205,7 @@
     </unit>
     <unit id="328621173789640026">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:235,237</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:246,248</note>
         <note category="description">Heading above a service account&apos;s credentials</note>
       </notes>
       <segment state="translated">
@@ -18165,7 +18215,7 @@
     </unit>
     <unit id="1093298112453582456">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:263,267</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:274,278</note>
         <note category="description">Credential expiry. DATE is a formatted date and time</note>
       </notes>
       <segment state="translated">
@@ -18175,7 +18225,7 @@
     </unit>
     <unit id="500706082319652388">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:275,279</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:286,290</note>
         <note category="description">When a credential was last used, shown after the expiry. Keep the leading separator. DATE is a formatted date and time</note>
       </notes>
       <segment state="translated">
@@ -18185,7 +18235,7 @@
     </unit>
     <unit id="1017176843140426408">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:286,290</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:297,300</note>
         <note category="description">Shown after the expiry when a credential has never been used. Keep the leading separator</note>
       </notes>
       <segment state="translated">
@@ -18195,7 +18245,7 @@
     </unit>
     <unit id="4100161296614821905">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:300,302</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:313,315</note>
         <note category="description">Tooltip on the button that revokes a credential</note>
       </notes>
       <segment state="translated">
@@ -18205,7 +18255,7 @@
     </unit>
     <unit id="3805624567600550690">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:316,318</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:329,330</note>
         <note category="description">Shown when a service account has no credentials</note>
       </notes>
       <segment state="translated">
@@ -18215,7 +18265,7 @@
     </unit>
     <unit id="4727914465322020260">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:328,330</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:341,343</note>
         <note category="description">Heading of the empty service account list</note>
       </notes>
       <segment state="translated">
@@ -18225,7 +18275,7 @@
     </unit>
     <unit id="5969171311226450326">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:332,333</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:345,346</note>
         <note category="description">Explains what to do on the empty service account list</note>
       </notes>
       <segment state="translated">
@@ -18235,7 +18285,7 @@
     </unit>
     <unit id="5123157349160155784">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:430</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:444</note>
         <note category="description">Confirmation after updating a service account</note>
       </notes>
       <segment state="translated">
@@ -18245,7 +18295,7 @@
     </unit>
     <unit id="2461866678085650489">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:436</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:450</note>
         <note category="description">Error after failing to update a service account</note>
       </notes>
       <segment state="translated">
@@ -18265,7 +18315,7 @@
     </unit>
     <unit id="294017637034538270">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:445</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:459</note>
         <note category="description">Title of the create-service-account dialog</note>
       </notes>
       <segment state="translated">
@@ -18305,7 +18355,7 @@
     </unit>
     <unit id="7889477161949511803">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:513</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:527</note>
         <note category="description">Error after failing to create a service account</note>
       </notes>
       <segment state="translated">
@@ -18315,7 +18365,7 @@
     </unit>
     <unit id="5367814144868464481">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:542</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:556</note>
         <note category="description">Confirmation after creating an API credential</note>
       </notes>
       <segment state="translated">
@@ -18325,7 +18375,7 @@
     </unit>
     <unit id="2324466341727176555">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:549</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:563</note>
         <note category="description">Error after failing to create a credential</note>
       </notes>
       <segment state="translated">
@@ -18345,7 +18395,7 @@
     </unit>
     <unit id="6987126257530896673">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:557</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:571</note>
         <note category="description">Title of the confirmation dialog for deleting a service account</note>
       </notes>
       <segment state="translated">
@@ -18355,7 +18405,7 @@
     </unit>
     <unit id="427261400160913038">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:558</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:572</note>
         <note category="description">Confirmation body for deleting a service account. NAME is the account name</note>
       </notes>
       <segment state="translated">
@@ -18385,7 +18435,7 @@
     </unit>
     <unit id="8601029512667360957">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:576</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:590</note>
         <note category="description">Confirmation after deleting a service account</note>
       </notes>
       <segment state="translated">
@@ -18395,7 +18445,7 @@
     </unit>
     <unit id="3516071416582225023">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:582</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:596</note>
         <note category="description">Error after failing to delete a service account</note>
       </notes>
       <segment state="translated">
@@ -18405,7 +18455,7 @@
     </unit>
     <unit id="2821548213457034230">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:601</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:615</note>
         <note category="description">Title of the confirmation dialog for revoking a credential</note>
       </notes>
       <segment state="translated">
@@ -18415,7 +18465,7 @@
     </unit>
     <unit id="3180558417601739827">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:602</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:616</note>
         <note category="description">Confirmation body for revoking a credential. NAME is the credential name</note>
       </notes>
       <segment state="translated">
@@ -18425,7 +18475,7 @@
     </unit>
     <unit id="135077277733987408">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:603</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:617</note>
         <note category="description">Confirms revoking a credential</note>
       </notes>
       <segment state="translated">
@@ -18445,7 +18495,7 @@
     </unit>
     <unit id="2819197521571556241">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:620</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:634</note>
         <note category="description">Confirmation after revoking a credential</note>
       </notes>
       <segment state="translated">
@@ -18455,7 +18505,7 @@
     </unit>
     <unit id="3779512077059821091">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:626</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:640</note>
         <note category="description">Error after failing to revoke a credential</note>
       </notes>
       <segment state="translated">
@@ -18475,7 +18525,7 @@
     </unit>
     <unit id="7096440230985171865">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:647</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:661</note>
         <note category="description">Badge on a credential that has been revoked</note>
       </notes>
       <segment state="translated">
@@ -18486,7 +18536,7 @@
     <unit id="464749780222721589">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:621</note>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:651</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:665</note>
         <note category="description">An export whose file has been removed</note>
       </notes>
       <segment state="translated">
@@ -18496,8 +18546,8 @@
     </unit>
     <unit id="8204176479746810612">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:654</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:151</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:668</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:156</note>
         <note category="description">Badge on a credential that is currently usable</note>
       </notes>
       <segment state="translated">
@@ -18539,7 +18589,7 @@
     </unit>
     <unit id="851501460099408919">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:666</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:680</note>
         <note category="description">Accessible label for the button that edits a service account. NAME is the account name</note>
       </notes>
       <segment state="translated">
@@ -18549,7 +18599,7 @@
     </unit>
     <unit id="7335218886954930171">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:670</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:684</note>
         <note category="description">Accessible label for the button that deletes a service account. NAME is the account name</note>
       </notes>
       <segment state="translated">
@@ -18559,7 +18609,7 @@
     </unit>
     <unit id="3866373356324045807">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:674</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:688</note>
         <note category="description">Accessible label for the button that revokes a credential. NAME is the credential name</note>
       </notes>
       <segment state="translated">
@@ -18569,7 +18619,7 @@
     </unit>
     <unit id="1712651257674193219">
       <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:79,82</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:82,83</note>
         <note category="description">Button that opens the create-status dialog</note>
       </notes>
       <segment state="translated">
@@ -18589,7 +18639,7 @@
     </unit>
     <unit id="7431603051236116456">
       <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:100,101</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:110,111</note>
         <note category="description">Shown when the status list fails to load</note>
       </notes>
       <segment state="initial">
@@ -18599,7 +18649,7 @@
     </unit>
     <unit id="1708099605109308306">
       <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:125,127</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:136,138</note>
         <note category="description">Accessible label for the button that moves a status up</note>
       </notes>
       <segment state="translated">
@@ -18609,7 +18659,7 @@
     </unit>
     <unit id="4091516827227305622">
       <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:136,138</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:147,149</note>
         <note category="description">Accessible label for the button that moves a status down</note>
       </notes>
       <segment state="translated">
@@ -18619,7 +18669,7 @@
     </unit>
     <unit id="9066599393258396757">
       <notes>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:58,61</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:61,62</note>
         <note category="description">Button that opens the create-tag dialog</note>
       </notes>
       <segment state="translated">
@@ -18629,7 +18679,7 @@
     </unit>
     <unit id="8928884946811045532">
       <notes>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:70,71</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:79,80</note>
         <note category="description">Shown when the tag list fails to load</note>
       </notes>
       <segment state="initial">
@@ -18639,7 +18689,7 @@
     </unit>
     <unit id="5872175735754226507">
       <notes>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:131</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:143</note>
         <note category="description">Row action that edits a tag</note>
       </notes>
       <segment state="translated">
@@ -18650,7 +18700,7 @@
     <unit id="108935827638897170">
       <notes>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:125,127</note>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:136</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:148</note>
         <note category="description">Button that deletes a tag</note>
       </notes>
       <segment state="translated">
@@ -18753,7 +18803,7 @@
     </unit>
     <unit id="8211774880361154235">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:91,93</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:95,97</note>
         <note category="description">Button that opens the create-view form</note>
       </notes>
       <segment state="translated">
@@ -19245,6 +19295,16 @@
         <target>Fecha de fin</target>
       </segment>
     </unit>
+    <unit id="7033221291943996044">
+      <notes>
+        <note category="location">src/app/features/notifications/views/notifications-view/notifications-view.component.ts:31,33</note>
+        <note category="description">Accessible name of the notification list filter row</note>
+      </notes>
+      <segment state="translated">
+        <source>Filter notifications</source>
+        <target>Filtrar notificaciones</target>
+      </segment>
+    </unit>
     <unit id="7036284206110282007">
       <notes>
         <note category="location">src/app/features/task-views/models/task-query-builder.ts:56</note>
@@ -19372,7 +19432,7 @@
     <unit id="8123881768100361598">
       <notes>
         <note category="location">src/app/core/util/ai-client-context.ts:23</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:75,76</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:80,81</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:119</note>
         <note category="description">Names the screen the user is on</note>
       </notes>
@@ -19535,7 +19595,7 @@
     <unit id="1152778269115350205">
       <notes>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:279</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:247</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:252</note>
         <note category="description">Title of the confirmation dialog for deleting a sprint</note>
       </notes>
       <segment state="translated">
@@ -19555,7 +19615,7 @@
     </unit>
     <unit id="4347094825344030699">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:58,59</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:61</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:80</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:182</note>
         <note category="location">src/app/workspace.routes.ts:66</note>
@@ -19568,7 +19628,7 @@
     </unit>
     <unit id="6668584344316209309">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:156</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:161</note>
         <note category="description">Filter showing sprints not started yet</note>
       </notes>
       <segment state="translated">
@@ -19689,7 +19749,7 @@
     </unit>
     <unit id="57403663622654391">
       <notes>
-        <note category="location">src/app/features/storage/components/storage-header.component.ts:39,42</note>
+        <note category="location">src/app/features/storage/views/storage-view.component.ts:22,25</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:374</note>
         <note category="location">src/app/workspace.routes.ts:114</note>
         <note category="description">Page title for workspace file storage</note>
@@ -19703,7 +19763,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-dialog.component.ts:221</note>
         <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:46,47</note>
-        <note category="location">src/app/features/pins/views/pinned-view/pinned-view.component.ts:60,62</note>
+        <note category="location">src/app/features/pins/views/pinned-view/pinned-view.component.ts:63,65</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:232</note>
         <note category="location">src/app/workspace.routes.ts:48</note>
         <note category="description">Label on the pin control when the task is already pinned</note>
@@ -19715,7 +19775,7 @@
     </unit>
     <unit id="5547904534300795196">
       <notes>
-        <note category="location">src/app/features/storage/components/storage-header.component.ts:58,61</note>
+        <note category="location">src/app/features/storage/components/storage-header.component.ts:52,55</note>
         <note category="description">Explains what is excluded from the storage total</note>
       </notes>
       <segment state="translated">
@@ -19815,7 +19875,7 @@
     </unit>
     <unit id="8263303804952657732">
       <notes>
-        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:29,30</note>
+        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:31,33</note>
         <note category="description">Shown when the member list fails to load</note>
       </notes>
       <segment state="translated">
@@ -19835,7 +19895,7 @@
     </unit>
     <unit id="3458528087553681046">
       <notes>
-        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:68,70</note>
+        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:69,71</note>
         <note category="description">Badge marking an invited member who has not joined</note>
       </notes>
       <segment state="translated">
@@ -19855,7 +19915,7 @@
     </unit>
     <unit id="9193001935256028830">
       <notes>
-        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:75,77</note>
+        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:76,78</note>
         <note category="description">Badge marking the workspace owner</note>
       </notes>
       <segment state="translated">
@@ -19875,7 +19935,7 @@
     </unit>
     <unit id="2993974933777113616">
       <notes>
-        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:86,87</note>
+        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:87,88</note>
         <note category="description">Empty state for the member list</note>
       </notes>
       <segment state="translated">
@@ -19885,7 +19945,7 @@
     </unit>
     <unit id="2654431555310940196">
       <notes>
-        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:88,90</note>
+        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:89,91</note>
         <note category="description">Advice on the empty member list</note>
       </notes>
       <segment state="translated">
@@ -19905,7 +19965,7 @@
     </unit>
     <unit id="6381762701019694219">
       <notes>
-        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:116</note>
+        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:117</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment state="translated">
@@ -19935,7 +19995,7 @@
     </unit>
     <unit id="2285158653699607527">
       <notes>
-        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:121</note>
+        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:122</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment state="translated">
@@ -19975,7 +20035,7 @@
     </unit>
     <unit id="1974103468162219781">
       <notes>
-        <note category="location">src/app/features/users/views/users-view/users-view.component.html:6,8</note>
+        <note category="location">src/app/features/users/views/users-view/users-view.component.html:7,9</note>
         <note category="description">Button that opens the invite dialog</note>
       </notes>
       <segment state="translated">
@@ -20448,7 +20508,7 @@
     </unit>
     <unit id="7634806463979024086">
       <notes>
-        <note category="location">src/app/features/storage/components/storage-header.component.ts:152</note>
+        <note category="location">src/app/features/storage/components/storage-header.component.ts:146</note>
         <note category="description">Label for the mean size of the tracked files</note>
       </notes>
       <segment state="translated">
@@ -20650,7 +20710,7 @@
     </unit>
     <unit id="6601864657708472888">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:129,131</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:134,135</note>
         <note category="description">Heading of the assistant access card</note>
       </notes>
       <segment state="translated">
@@ -20917,7 +20977,7 @@
     <unit id="5168008278809915722">
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:72,74</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:77,78</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:80,81</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:83</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:334</note>
         <note category="description">Filter heading for statuses</note>
@@ -21000,7 +21060,7 @@
     </unit>
     <unit id="6499828313169795693">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:56,57</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:60,61</note>
         <note category="description">Shown when the saved view list fails to load</note>
       </notes>
       <segment state="translated">
@@ -21072,7 +21132,7 @@
     </unit>
     <unit id="7136018875175606726">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:89,90</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:93,94</note>
         <note category="description">Counts tokens sent to the model</note>
       </notes>
       <segment state="translated">
@@ -21094,7 +21154,7 @@
     </unit>
     <unit id="7164517351150345210">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:187,188</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:192,193</note>
         <note category="description">Explains what relation types are for</note>
       </notes>
       <segment state="translated">
@@ -21114,7 +21174,7 @@
     </unit>
     <unit id="9189135908472220946">
       <notes>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:99,100</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:109,110</note>
         <note category="description">Explains what tags are for</note>
       </notes>
       <segment state="translated">
@@ -21550,7 +21610,7 @@
     </unit>
     <unit id="8105546289218525943">
       <notes>
-        <note category="location">src/app/static/components/page-header/page-header-title.component.ts:26,31</note>
+        <note category="location">src/app/static/components/page-header/page-header-title.component.ts:31,36</note>
         <note category="description">Accessible label for the badge showing how many items the page lists</note>
       </notes>
       <segment state="translated">
@@ -21560,7 +21620,7 @@
     </unit>
     <unit id="2652512399456369728">
       <notes>
-        <note category="location">src/app/static/components/page-header/page-header.component.ts:30,34</note>
+        <note category="location">src/app/static/components/page-header/page-header.component.ts:36,40</note>
         <note category="description">Accessible label for the button that opens the sidebar on small screens</note>
       </notes>
       <segment state="translated">
@@ -21685,7 +21745,7 @@
       <notes>
         <note category="location">src/app/features/boards/components/board-pinned-banner/board-pinned-banner.component.ts:157</note>
         <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:110</note>
-        <note category="location">src/app/features/pins/views/pinned-view/pinned-view.component.ts:127</note>
+        <note category="location">src/app/features/pins/views/pinned-view/pinned-view.component.ts:136</note>
         <note category="description">Tooltip on the control that removes a pin</note>
       </notes>
       <segment state="translated">
@@ -21705,7 +21765,7 @@
     </unit>
     <unit id="622130541512871637">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:266,267</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:273,274</note>
         <note category="description">Accessible label while conversations load</note>
       </notes>
       <segment state="translated">
@@ -21894,6 +21954,17 @@
         <target>Sin sprint</target>
       </segment>
     </unit>
+    <unit id="6104781088222522802">
+      <notes>
+        <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:36,38</note>
+        <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:48,50</note>
+        <note category="description">Accessible name of the task list filter row</note>
+      </notes>
+      <segment state="translated">
+        <source>Filter tasks</source>
+        <target>Filtrar tareas</target>
+      </segment>
+    </unit>
     <unit id="203971007584568092">
       <notes>
         <note category="location">src/app/features/projects/components/project-branding/project-branding.component.ts:22,25</note>
@@ -21936,7 +22007,7 @@
     </unit>
     <unit id="1978378776147370036">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:325,327</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:335,337</note>
         <note category="description">Explains why the assistant conversation list is empty</note>
       </notes>
       <segment state="translated">
