@@ -18,6 +18,7 @@ import { CalloutComponent } from '@static/components/callout/callout.component';
 import { DatatableColumn } from '@static/components/datatable/datatable.types';
 import { TaskTableComponent } from '@static/components/task-table.component';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
+import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
@@ -35,6 +36,7 @@ import { findStaleReferences } from '../../util/stale-references';
   selector: 'app-task-view-detail-view',
   imports: [
     RouterLink,
+    PageBodyComponent,
     PageContainerComponent,
     PageHeaderComponent,
     PageLoadingComponent,
@@ -49,17 +51,9 @@ import { findStaleReferences } from '../../util/stale-references';
     LucidePinOff,
   ],
   template: `
-    <app-page-container [centerPage]="true" [marginBottom]="true">
-      @if (loading()) {
-        <app-page-loading />
-      } @else if (notFound()) {
-        <app-error-state
-          i18n-title="Shown when a saved view cannot be found"
-          title="This view could not be found"
-          i18n-description="Advice shown when a saved view is missing"
-          description="It may have been deleted, or it may be private to somebody else." />
-      } @else if (view(); as view) {
-        <app-page-header [title]="view.name" [count]="totalCount()">
+    <app-page-container layout="list">
+      @if (view(); as view) {
+        <app-page-header toolbar [title]="view.name" [count]="totalCount()">
           <button
             pageHeaderActions
             app-stroked-button
@@ -102,38 +96,49 @@ import { findStaleReferences } from '../../util/stale-references';
             </a>
           }
         </app-page-header>
+      }
 
-        <div class="flex flex-col gap-4">
-          @if (view.description) {
-            <p class="text-foreground/60 text-sm">{{ view.description }}</p>
-          }
+      <app-page-body>
+        @if (loading()) {
+          <app-page-loading />
+        } @else if (notFound()) {
+          <app-error-state
+            i18n-title="Shown when a saved view cannot be found"
+            title="This view could not be found"
+            i18n-description="Advice shown when a saved view is missing"
+            description="It may have been deleted, or it may be private to somebody else." />
+        } @else if (view(); as view) {
+          <div class="mb-4 flex shrink-0 flex-col gap-2">
+            @if (view.description) {
+              <p class="text-foreground/60 text-sm">{{ view.description }}</p>
+            }
 
-          <p class="text-foreground/50 text-sm">
-            <span
-              class="font-medium"
-              i18n="Prefix of the plain-language query summary">
-              Shows tasks where
-            </span>
-            {{ summary() }}
-          </p>
+            <p class="text-foreground/50 text-sm">
+              <span
+                class="font-medium"
+                i18n="Prefix of the plain-language query summary">
+                Shows tasks where
+              </span>
+              {{ summary() }}
+            </p>
 
-          @if (errors().length) {
-            <app-callout
-              color="warn"
-              role="alert"
-              [icon]="warningIcon"
-              i18n-title="Heading shown when a saved view no longer compiles"
-              title="This view needs attention">
-              <ul class="text-foreground/70 mt-1 list-disc pl-4">
-                @for (error of errors(); track error.path) {
-                  <li>{{ error.message }}</li>
-                }
-              </ul>
-            </app-callout>
-          }
+            @if (errors().length) {
+              <app-callout
+                color="warn"
+                role="alert"
+                [icon]="warningIcon"
+                i18n-title="Heading shown when a saved view no longer compiles"
+                title="This view needs attention">
+                <ul class="text-foreground/70 mt-1 list-disc pl-4">
+                  @for (error of errors(); track error.path) {
+                    <li>{{ error.message }}</li>
+                  }
+                </ul>
+              </app-callout>
+            }
+          </div>
 
           <app-task-table
-            containerClass="overflow-auto rounded-lg shadow-sm"
             i18n-itemLabel="Plural noun for tasks, used in the row summary"
             itemLabel="tasks"
             i18n-emptyMessage="Shown when a saved view matches no tasks"
@@ -143,10 +148,12 @@ import { findStaleReferences } from '../../util/stale-references';
             [url]="tableUrl()"
             [params]="params"
             [columns]="columns()"
+            [autoFill]="true"
+            [stickyHeader]="true"
             [customizableColumns]="true"
             (loaded)="onLoaded($event)" />
-        </div>
-      }
+        }
+      </app-page-body>
     </app-page-container>
   `,
 })

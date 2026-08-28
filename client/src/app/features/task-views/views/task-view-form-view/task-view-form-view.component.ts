@@ -10,6 +10,7 @@ import { LucideLink, LucideSave, LucideSettings2 } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DatatableColumnPreference } from '@static/components/datatable/datatable.types';
+import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
@@ -51,6 +52,7 @@ import { TaskViewPreviewToolbarComponent } from '../../components/task-view-prev
 @Component({
   selector: 'app-task-view-form-view',
   imports: [
+    PageBodyComponent,
     PageContainerComponent,
     PageHeaderComponent,
     PageLoadingComponent,
@@ -65,8 +67,9 @@ import { TaskViewPreviewToolbarComponent } from '../../components/task-view-prev
     LucideSettings2,
   ],
   template: `
-    <app-page-container [centerPage]="false" [fullHeight]="true">
+    <app-page-container layout="list" [centerPage]="false">
       <app-page-header
+        toolbar
         [title]="name()"
         [titleEditable]="true"
         (titleSubmitted)="name.set($event)">
@@ -109,51 +112,54 @@ import { TaskViewPreviewToolbarComponent } from '../../components/task-view-prev
         </button>
       </app-page-header>
 
-      @if (loading()) {
-        <app-page-loading />
-      } @else {
-        @if (detailsOpen()) {
-          <app-task-view-details-drawer
-            [(description)]="description"
-            [(isShared)]="isShared"
-            [canManageShared]="canManageShared()"
-            [savesAsCopy]="savesAsCopy()"
-            (closed)="detailsOpen.set(false)" />
+      <app-page-body>
+        @if (loading()) {
+          <app-page-loading />
+        } @else {
+          @if (detailsOpen()) {
+            <app-task-view-details-drawer
+              class="shrink-0"
+              [(description)]="description"
+              [(isShared)]="isShared"
+              [canManageShared]="canManageShared()"
+              [savesAsCopy]="savesAsCopy()"
+              (closed)="detailsOpen.set(false)" />
+          }
+
+          <div
+            class="border-border bg-card shrink-0 rounded-t-xl border border-b-0 px-4 py-3.5">
+            <app-query-chip-bar
+              [group]="builderQuery()"
+              [catalog]="builderCatalog()"
+              [errors]="previewErrors()"
+              i18n-summaryPrefix="Prefix of the plain-language query summary"
+              summaryPrefix="Shows tasks where"
+              [emptySummary]="emptySummary"
+              (groupChange)="setQuery($event)" />
+          </div>
+
+          <app-task-view-preview-toolbar
+            [loading]="previewLoading()"
+            [count]="previewCount()"
+            [availableColumns]="availableColumns"
+            [sortableFields]="sortableFields()"
+            [(preferences)]="columns"
+            [(sortBy)]="sortBy"
+            [(sortDirection)]="sortDirection" />
+
+          <app-task-table
+            class="mb-6"
+            containerClass="rounded-t-none rounded-b-xl"
+            key="task-view-preview"
+            i18n-emptyMessage="Shown when a query preview matches no tasks"
+            emptyMessage="No tasks match this query yet."
+            [fill]="true"
+            [columns]="previewColumns()"
+            [items]="previewRows"
+            [loading]="previewLoading"
+            [stickyHeader]="true" />
         }
-
-        <div
-          class="border-border bg-card shrink-0 rounded-t-xl border border-b-0 px-4 py-3.5">
-          <app-query-chip-bar
-            [group]="builderQuery()"
-            [catalog]="builderCatalog()"
-            [errors]="previewErrors()"
-            i18n-summaryPrefix="Prefix of the plain-language query summary"
-            summaryPrefix="Shows tasks where"
-            [emptySummary]="emptySummary"
-            (groupChange)="setQuery($event)" />
-        </div>
-
-        <app-task-view-preview-toolbar
-          [loading]="previewLoading()"
-          [count]="previewCount()"
-          [availableColumns]="availableColumns"
-          [sortableFields]="sortableFields()"
-          [(preferences)]="columns"
-          [(sortBy)]="sortBy"
-          [(sortDirection)]="sortDirection" />
-
-        <app-task-table
-          class="mb-6"
-          containerClass="rounded-t-none rounded-b-xl"
-          key="task-view-preview"
-          i18n-emptyMessage="Shown when a query preview matches no tasks"
-          emptyMessage="No tasks match this query yet."
-          [fill]="true"
-          [columns]="previewColumns()"
-          [items]="previewRows"
-          [loading]="previewLoading"
-          [stickyHeader]="true" />
-      }
+      </app-page-body>
     </app-page-container>
   `,
 })
