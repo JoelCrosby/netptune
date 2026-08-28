@@ -138,6 +138,8 @@
   --foreground-rgb: 0, 0, 0;
   --foreground: rgba(var(--foreground-rgb), 0.87);
 
+  --scroll-shadow: rgba(0, 0, 0, 0.06);
+
   --muted: rgba(var(--foreground-rgb), 0.6);
 
   --form-field-background: rgba(255, 255, 255, 1);
@@ -204,7 +206,9 @@
   --background-rgb: 0, 0, 0;
   --background: rgba(var(--background-rgb));
   --foreground-rgb: 255, 255, 255;
-  --foreground: rgba(var(--foreground-rgb), 0.8);
+  --foreground: rgba(var(--foreground-rgb), 0.6);
+
+  --scroll-shadow: rgba(0, 0, 0, 0.8);
 
   --muted: rgba(var(--foreground-rgb), 0.68);
 

@@ -12,8 +12,8 @@
   display: block;
   position: absolute;
   width: 12px;
-  height: calc(100% - 198px);
-  box-shadow: inset 6px 0 6px 0 rgba(0, 0, 0, 0.06) !important;
+  height: calc(100% - 112px);
+  box-shadow: inset 6px 0 6px 0 var(--scroll-shadow);
   animation: fadein .4s;
   border-radius: 4px;
   z-index: 32;
@@ -25,8 +25,8 @@
   position: absolute;
   right: 32px;
   width: 12px;
-  height: calc(100% - 198px);
-  box-shadow: inset -6px 0 6px 0 rgba(0, 0, 0, 0.06) !important;
+  height: calc(100% - 112px);
+  box-shadow: inset -6px 0 6px 0 var(--scroll-shadow);
   animation: fadein .4s;
   border-radius: 4px;
   z-index: 32;
