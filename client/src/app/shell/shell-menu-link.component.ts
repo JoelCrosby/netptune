@@ -5,7 +5,11 @@ import {
   LucideIconInput,
   LucideLayoutGrid,
 } from '@lucide/angular';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import {
+  IsActiveMatchOptions,
+  RouterLink,
+  RouterLinkActive,
+} from '@angular/router';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
 import { ShellService } from './shell.service';
 
@@ -34,7 +38,7 @@ export interface ShellMenuLink {
       <div
         class="hover:bg-side-bar-active/60 my-px flex w-full items-center overflow-hidden rounded text-sm font-medium text-white/70 transition-colors select-none"
         routerLinkActive="bg-side-bar-active text-white!"
-        [routerLinkActiveOptions]="{ exact: true }">
+        [routerLinkActiveOptions]="activeOptions">
         @if (expandable()) {
           <button
             type="button"
@@ -121,7 +125,13 @@ export class ShellMenuLinkComponent {
   lucideLayoutGrid = LucideLayoutGrid;
   readonly subMenuExpanded = signal(false);
 
-  /** The parent link plus an "Overview" entry pointing at the parent route. */
+  protected readonly activeOptions: IsActiveMatchOptions = {
+    paths: 'exact',
+    queryParams: 'ignored',
+    fragment: 'ignored',
+    matrixParams: 'ignored',
+  };
+
   readonly childLinks = computed<ShellMenuLink[]>(() => {
     const link = this.link();
     const children = link.children;
