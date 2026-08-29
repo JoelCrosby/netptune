@@ -25,6 +25,7 @@ import {
 } from '@core/services/ai-stream.service';
 import { AiTranscriptService } from '@core/services/ai-transcript.service';
 import { AiTurnProgressService } from '@core/services/ai-turn-progress.service';
+import { AiTypewriterService } from '@core/services/ai-typewriter.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 
 /** Matches the server's turn timeout — a reply cannot arrive after it. */
@@ -40,6 +41,7 @@ export class AiAssistantService {
   private readonly changeSets = inject(AiChangeSetService);
   private readonly catalog = inject(AiModelCatalogService);
   private readonly effort = inject(AiEffortService);
+  private readonly typewriter = inject(AiTypewriterService);
   private readonly drafts = inject(AiDraftService);
   private readonly sessions = inject(AiSessionService);
   private readonly stream = inject(AiStreamService);
@@ -292,6 +294,7 @@ export class AiAssistantService {
     }
 
     this.isStopping = true;
+    this.typewriter.flush();
 
     const conversationId = this.conversationId();
 
@@ -347,6 +350,7 @@ export class AiAssistantService {
     const startedAt = Date.now();
 
     this.drafts.clearCurrent();
+    this.typewriter.discard();
     this.transcript.append({
       role: 'user',
       text: question,
@@ -431,6 +435,7 @@ export class AiAssistantService {
   }
 
   private failTurn() {
+    this.typewriter.discard();
     this.transcript.failLast(
       $localize`:Shown when the assistant request fails:The assistant could not be reached.`
     );
@@ -458,7 +463,7 @@ export class AiAssistantService {
 
     if (event.type === AiStreamEventType.textDelta && event.text) {
       this.isThinking.set(false);
-      this.transcript.appendText(event.text);
+      this.typewriter.push(event.text);
 
       return;
     }
@@ -484,6 +489,7 @@ export class AiAssistantService {
 
     if (event.type === AiStreamEventType.replyReset) {
       this.isThinking.set(true);
+      this.typewriter.discard();
       this.transcript.resetLast();
 
       return;
@@ -602,6 +608,7 @@ export class AiAssistantService {
   }
 
   private clearConversation() {
+    this.typewriter.discard();
     this.transcript.bumpVersion();
     this.conversation.clear();
     this.panel.clearUnreadReply();
@@ -619,6 +626,7 @@ export class AiAssistantService {
     }
 
     this.stream.cancel();
+    this.typewriter.discard();
     this.isStreaming.set(false);
     this.isThinking.set(false);
     this.pendingTurnAt.set(null);
