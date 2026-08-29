@@ -1,4 +1,11 @@
-import { computed, effect, inject, Injectable, signal } from '@angular/core';
+import {
+  computed,
+  DestroyRef,
+  effect,
+  inject,
+  Injectable,
+  signal,
+} from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UpdateProjectTaskRequest } from '@app/core/models/requests/update-project-task-request';
 import { taskDetailResource } from '@core/resources/task.resource';
@@ -33,6 +40,16 @@ export class TaskDetailService {
   constructor() {
     /* The assistant asks what the user is looking at, from outside this view. */
     effect(() => this.currentTask.set(this.task()));
+
+    inject(DestroyRef).onDestroy(() => this.clearCurrentTask());
+  }
+
+  private clearCurrentTask() {
+    const task = this.task();
+
+    if (!task) return;
+
+    this.currentTask.clearIfCurrent(task.systemId);
   }
 
   show(systemId: string) {

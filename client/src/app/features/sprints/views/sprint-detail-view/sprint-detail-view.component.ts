@@ -1,5 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,6 +15,7 @@ import { PERMISSIONS } from '@core/auth/permissions';
 import { SprintStatus } from '@core/enums/sprint-status';
 import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-view-model';
 import { ConfirmationService } from '@core/services/confirmation.service';
+import { CurrentSprintService } from '@core/services/current-sprint.service';
 import { DialogService } from '@core/services/dialog.service';
 import { sprintDetailResource } from '@core/resources/sprint.resource';
 import { SprintCommandsService } from '@core/services/sprint-commands.service';
@@ -205,6 +213,7 @@ export class SprintDetailViewComponent {
   readonly sprintStatus = SprintStatus;
   readonly sprintId = signal<number | null>(null);
   private readonly sprintCommands = inject(SprintCommandsService);
+  private readonly currentSprint = inject(CurrentSprintService);
   private readonly sprintResourceRef = sprintDetailResource(
     computed(() => this.sprintId() ?? undefined)
   );
@@ -230,6 +239,18 @@ export class SprintDetailViewComponent {
           this.sprintId.set(sprintId);
         }
       });
+
+    effect(() => this.currentSprint.set(this.sprint()));
+
+    inject(DestroyRef).onDestroy(() => this.clearCurrentSprint());
+  }
+
+  private clearCurrentSprint() {
+    const sprint = this.sprint();
+
+    if (!sprint) return;
+
+    this.currentSprint.clearIfCurrent(sprint.id);
   }
 
   reload() {

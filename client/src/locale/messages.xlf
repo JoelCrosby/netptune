@@ -104,7 +104,7 @@
     </unit>
     <unit id="3563415301877713192">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:106,111</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:108,113</note>
         <note category="description">Shown when older messages were left out of what the assistant can see</note>
       </notes>
       <segment>
@@ -1255,7 +1255,7 @@
     </unit>
     <unit id="7731815178951959340">
       <notes>
-        <note category="location">src/app/core/util/ai-client-context.ts:22</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:14</note>
         <note category="description">Names the screen the user is on</note>
       </notes>
       <segment>
@@ -1390,7 +1390,7 @@
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:69,72</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:62,65</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:164,167</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:282</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:304</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:255</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:42,44</note>
         <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:85,87</note>
@@ -1485,7 +1485,7 @@
     </unit>
     <unit id="6590475405017990661">
       <notes>
-        <note category="location">src/app/core/util/ai-client-context.ts:26</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:18</note>
         <note category="description">Names the screen the user is on</note>
       </notes>
       <segment>
@@ -1579,7 +1579,7 @@
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:461</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:230</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:363</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:281</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:303</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:207</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:254</note>
         <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:155</note>
@@ -1948,7 +1948,7 @@
     <unit id="5256927257860771053">
       <notes>
         <note category="location">src/app/core/services/sprint-commands.service.ts:176</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail.service.ts:73</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail.service.ts:90</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -1976,7 +1976,7 @@
     <unit id="9054551961119650411">
       <notes>
         <note category="location">src/app/core/services/sprint-commands.service.ts:191</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail.service.ts:93</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail.service.ts:110</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -2350,6 +2350,15 @@
       </notes>
       <segment>
         <source>Pin workspace</source>
+      </segment>
+    </unit>
+    <unit id="966839412220262853">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-context.component.ts:90</note>
+        <note category="description">Accessible label for the button that drops one thing from what is sent with a message</note>
+      </notes>
+      <segment>
+        <source>Remove <ph id="0" equiv="KIND" disp="chip.label"/> <ph id="1" equiv="NAME" disp="chip.name"/></source>
       </segment>
     </unit>
     <unit id="8871304628791267226">
@@ -2849,6 +2858,7 @@
     <unit id="8117668572148231876">
       <notes>
         <note category="location">src/app/core/tasks/task-columns.ts:79</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:27</note>
         <note category="location">src/app/core/util/pin-scope.ts:80</note>
         <note category="location">src/app/entry/components/setup-creation-summary/setup-creation-summary.component.ts:59</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:112,113</note>
@@ -3182,12 +3192,13 @@
     <unit id="8508552938611649591">
       <notes>
         <note category="location">src/app/core/tasks/task-columns.ts:88</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:29</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:132</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:187,188</note>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:114</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:54</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:148</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:60,63</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:68,71</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:19</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:38</note>
         <note category="location">src/app/static/components/task-properties/task-properties.component.ts:155,157</note>
@@ -3374,7 +3385,7 @@
     </unit>
     <unit id="5520127934627226585">
       <notes>
-        <note category="location">src/app/core/util/ai-client-context.ts:21</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:13</note>
         <note category="description">Names the screen the user is on</note>
       </notes>
       <segment>
@@ -3547,7 +3558,7 @@
     </unit>
     <unit id="3836000317327860441">
       <notes>
-        <note category="location">src/app/core/util/ai-client-context.ts:25</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:17</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:77,80</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:124</note>
         <note category="description">Names the screen the user is on</note>
@@ -5529,12 +5540,13 @@
     </unit>
     <unit id="467515590191938529">
       <notes>
+        <note category="location">src/app/core/util/ai-client-context.ts:28</note>
         <note category="location">src/app/core/util/pin-scope.ts:78</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:228</note>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:98</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:20</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:40</note>
-        <note category="description">Badge naming the kind of thing a group of pins belongs to</note>
+        <note category="description">Names the kind of thing a context chip points at</note>
       </notes>
       <segment>
         <source>Board</source>
@@ -5991,7 +6003,7 @@
     </unit>
     <unit id="3160376611740224455">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:257</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:272</note>
         <note category="description">Seeds the assistant composer with a question about a sprint</note>
       </notes>
       <segment>
@@ -8145,7 +8157,7 @@
     </unit>
     <unit id="1802075020846609586">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:247</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:256</note>
         <note category="description">Assistant subtitle above the conversation</note>
       </notes>
       <segment>
@@ -8925,7 +8937,7 @@
     </unit>
     <unit id="6189233648220583946">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:440</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:455</note>
         <note category="description">Shown when the assistant request fails</note>
       </notes>
       <segment>
@@ -9575,7 +9587,7 @@
     </unit>
     <unit id="7151632936989469818">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:239</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:248</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:51,53</note>
         <note category="description">Header of a conversation that has not started yet</note>
       </notes>
@@ -11418,7 +11430,7 @@
     </unit>
     <unit id="3132998863898047908">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:251</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:266</note>
         <note category="description">Seeds the assistant composer with a question about a task</note>
       </notes>
       <segment>
@@ -12312,7 +12324,7 @@
     </unit>
     <unit id="8190317540244065621">
       <notes>
-        <note category="location">src/app/core/util/ai-client-context.ts:28</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:20</note>
         <note category="description">Names the screen the user is on</note>
       </notes>
       <segment>
@@ -12603,8 +12615,8 @@
     </unit>
     <unit id="3154294923374510663">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:557</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:748</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:572</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:763</note>
         <note category="description">Shown when the assistant reports a failure</note>
       </notes>
       <segment>
@@ -12889,7 +12901,7 @@
     </unit>
     <unit id="3512180719745660914">
       <notes>
-        <note category="location">src/app/core/util/ai-client-context.ts:27</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:19</note>
         <note category="description">Names the screen the user is on</note>
       </notes>
       <segment>
@@ -13154,7 +13166,7 @@
     </unit>
     <unit id="4917333568122703029">
       <notes>
-        <note category="location">src/app/core/util/ai-client-context.ts:29</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:21</note>
         <note category="description">Names the screen the user is on</note>
       </notes>
       <segment>
@@ -13191,6 +13203,7 @@
     <unit id="3565945316550033944">
       <notes>
         <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:55,58</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-context.component.ts:66,69</note>
         <note category="description">Button that restores the selected archived tasks</note>
       </notes>
       <segment>
@@ -13208,7 +13221,7 @@
     </unit>
     <unit id="1258729180612470994">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:98,100</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:106,108</note>
         <note category="description">Tooltip on the button that asks the assistant about this sprint</note>
       </notes>
       <segment>
@@ -13277,6 +13290,15 @@
       </notes>
       <segment>
         <source>Upload image</source>
+      </segment>
+    </unit>
+    <unit id="2509141182388535183">
+      <notes>
+        <note category="location">src/app/core/util/ai-client-context.ts:26</note>
+        <note category="description">Names the kind of thing a context chip points at</note>
+      </notes>
+      <segment>
+        <source>View</source>
       </segment>
     </unit>
     <unit id="2510741784888393227">
@@ -14193,7 +14215,7 @@
     </unit>
     <unit id="4717491147966397069">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:81,83</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:83,85</note>
         <note category="description">Accessible name of the assistant transcript</note>
       </notes>
       <segment>
@@ -14848,6 +14870,7 @@
     <unit id="4578192247039196794">
       <notes>
         <note category="location">src/app/core/tasks/task-columns.ts:67</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:30</note>
         <note category="location">src/app/features/roadmap/components/roadmap-timeline.component.ts:71,72</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:372</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:294</note>
@@ -16772,7 +16795,7 @@
     </unit>
     <unit id="2946988289493771337">
       <notes>
-        <note category="location">src/app/core/util/ai-client-context.ts:24</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:16</note>
         <note category="description">Names the screen the user is on</note>
       </notes>
       <segment>
@@ -16981,7 +17004,7 @@
     </unit>
     <unit id="8208675890777914624">
       <notes>
-        <note category="location">src/app/core/util/ai-client-context.ts:30</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:22</note>
         <note category="description">Names the screen the user is on</note>
       </notes>
       <segment>
@@ -17494,7 +17517,7 @@
     <unit id="763816024488593537">
       <notes>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:59,61</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:180,181</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:188,189</note>
         <note category="description">Title of the dialog for completing a sprint</note>
       </notes>
       <segment>
@@ -17583,7 +17606,7 @@
     </unit>
     <unit id="3259201493560941662">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:145,147</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:147,149</note>
         <note category="description">Accessible label for the button that scrolls to the newest message</note>
       </notes>
       <segment>
@@ -17761,7 +17784,7 @@
     </unit>
     <unit id="8123881768100361598">
       <notes>
-        <note category="location">src/app/core/util/ai-client-context.ts:23</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:15</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:80,81</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:125</note>
         <note category="description">Names the screen the user is on</note>
@@ -17772,7 +17795,7 @@
     </unit>
     <unit id="8124076252558546675">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:109,111</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:117,119</note>
         <note category="description">Tooltip on the button that edits the sprint</note>
       </notes>
       <segment>
@@ -17790,7 +17813,7 @@
     </unit>
     <unit id="6222783490221982219">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:117,119</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:125,127</note>
         <note category="description">Tooltip on the button that deletes the sprint</note>
       </notes>
       <segment>
@@ -17799,7 +17822,7 @@
     </unit>
     <unit id="1183305546671848577">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:133,135</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:141,143</note>
         <note category="description">Tooltip on the button that adds existing tasks to the sprint</note>
       </notes>
       <segment>
@@ -17827,7 +17850,7 @@
     </unit>
     <unit id="7609408325154938991">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:141,145</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:149,153</note>
         <note category="description">Button that opens the dialog for adding existing tasks to the sprint</note>
       </notes>
       <segment>
@@ -17845,7 +17868,7 @@
     </unit>
     <unit id="2465583616985358329">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:151,153</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:159,161</note>
         <note category="description">Tooltip on the button that creates a task in the sprint</note>
       </notes>
       <segment>
@@ -17863,7 +17886,7 @@
     </unit>
     <unit id="4007569097635901294">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:244</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:253</note>
         <note category="description">Assistant subtitle while a reply is streaming</note>
       </notes>
       <segment>
@@ -17881,7 +17904,7 @@
     </unit>
     <unit id="4013607694293243242">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:155,157</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:163,165</note>
         <note category="description">Button that creates a new task in the sprint</note>
       </notes>
       <segment>
@@ -17890,7 +17913,7 @@
     </unit>
     <unit id="4741538562127389826">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:167,169</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:175,177</note>
         <note category="description">Button that starts the sprint</note>
       </notes>
       <segment>
@@ -17908,7 +17931,7 @@
     </unit>
     <unit id="1152778269115350205">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:279</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:301</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:252</note>
         <note category="description">Title of the confirmation dialog for deleting a sprint</note>
       </notes>
@@ -18480,7 +18503,7 @@
     </unit>
     <unit id="8426796922329733141">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:54,56</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:56,58</note>
         <note category="description">Accessible name of the AI assistant panel</note>
       </notes>
       <segment>
@@ -18593,6 +18616,15 @@
       </notes>
       <segment>
         <source>No results found.</source>
+      </segment>
+    </unit>
+    <unit id="2715386106202657177">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-context.component.ts:57,62</note>
+        <note category="description">Shown when nothing about the screen is sent with a message</note>
+      </notes>
+      <segment>
+        <source> No context </source>
       </segment>
     </unit>
     <unit id="2718977986022591344">
@@ -18839,6 +18871,15 @@
       </notes>
       <segment>
         <source> New notification </source>
+      </segment>
+    </unit>
+    <unit id="2557989910244598975">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-context.component.ts:20,23</note>
+        <note category="description">Accessible name of the row showing what the assistant is told about the screen</note>
+      </notes>
+      <segment>
+        <source>Sent with your message</source>
       </segment>
     </unit>
     <unit id="5123189455675344637">

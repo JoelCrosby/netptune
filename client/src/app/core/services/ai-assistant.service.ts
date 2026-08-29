@@ -9,6 +9,8 @@ import {
 } from '@core/models/ai-conversation';
 import { AiApiService, AiChangeFieldEdit } from '@core/services/ai-api.service';
 import { AiChangeSetService } from '@core/services/ai-change-set.service';
+import { AiContextChip } from '@core/models/ai-context';
+import { AiContextService } from '@core/services/ai-context.service';
 import { AiConversationService } from '@core/services/ai-conversation.service';
 import { AiDraftService } from '@core/services/ai-draft.service';
 import { AiEffort } from '@core/models/ai-effort';
@@ -46,6 +48,7 @@ export class AiAssistantService {
   private readonly sessions = inject(AiSessionService);
   private readonly stream = inject(AiStreamService);
   private readonly progress = inject(AiTurnProgressService);
+  private readonly context = inject(AiContextService);
   private readonly workspaceId = inject(CurrentWorkspaceService).slug;
 
   readonly workspaceKey = computed(() => this.workspaceId() ?? null);
@@ -80,6 +83,9 @@ export class AiAssistantService {
   readonly supportsEffort = this.catalog.supportsEffort;
 
   readonly draft = this.drafts.text;
+
+  readonly contextChips = this.context.chips;
+  readonly hasRemovedContext = this.context.hasRemoved;
 
   readonly turnUsage = this.progress.usage;
   readonly turnElapsedMs = this.progress.elapsedMs;
@@ -240,6 +246,15 @@ export class AiAssistantService {
     this.drafts.clearNew();
     this.conversation.startNew();
     this.progress.reset();
+    this.context.restore();
+  }
+
+  removeContext(chip: AiContextChip) {
+    this.context.remove(chip);
+  }
+
+  restoreContext() {
+    this.context.restore();
   }
 
   /**

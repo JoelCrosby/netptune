@@ -13,7 +13,11 @@ public sealed record AiClientContext
 
     public int? BoardId { get; init; }
 
+    public string? BoardName { get; init; }
+
     public int? SprintId { get; init; }
+
+    public string? SprintName { get; init; }
 
     public string? TaskSystemId { get; init; }
 

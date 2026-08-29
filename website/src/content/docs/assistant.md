@@ -47,7 +47,7 @@ Reporting is the one worth calling out. The assistant reads the same flow, workl
 
 ## Working with it
 
-- **Ask about what you are looking at.** The assistant knows which task, project or sprint is on your screen, so "who is this assigned to" works without naming it.
+- **Ask about what you are looking at.** The assistant knows which task, project or sprint is on your screen, so "who is this assigned to" works without naming it. Chips above the message box name what is going with your question, and any of them can be dropped before you ask.
 - **Start from a task.** The task detail view has a button that opens the assistant with that task in context.
 - **Steer mid-answer.** Stop a reply that is heading the wrong way, reword your question, or ask for another attempt.
 - **Pick a model.** Switch models in the composer at any point. The conversation moves with you.

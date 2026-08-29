@@ -1,12 +1,9 @@
 import { Service, LOCALE_ID, inject } from '@angular/core';
-import { Router } from '@angular/router';
 import { AiQuestionAnswer, AiStreamEvent } from '@core/models/ai-conversation';
 import { AiEffort } from '@core/models/ai-effort';
-import { CurrentProjectService } from '@core/services/current-project.service';
-import { CurrentTaskService } from '@core/services/current-task.service';
+import { AiContextService } from '@core/services/ai-context.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { WorkspaceService } from '@core/services/workspace.service';
-import { buildClientContext } from '@core/util/ai-client-context';
 import { environment } from '@env/environment';
 
 export interface AiReviseTarget {
@@ -28,11 +25,9 @@ const STREAM_PREFIX = 'data: ';
 
 @Service()
 export class AiStreamService {
-  private readonly router = inject(Router);
   private readonly workspace = inject(WorkspaceService);
   private readonly workspaceId = inject(CurrentWorkspaceService).slug;
-  private readonly currentProject = inject(CurrentProjectService).current;
-  private readonly selectedTask = inject(CurrentTaskService).task;
+  private readonly context = inject(AiContextService);
   private readonly locale = inject(LOCALE_ID);
 
   private abort: AbortController | null = null;
@@ -132,11 +127,7 @@ export class AiStreamService {
       retry: request.retry,
       answer: request.answer,
       revise: request.revise,
-      context: buildClientContext({
-        url: this.router.url,
-        project: this.currentProject(),
-        task: this.selectedTask(),
-      }),
+      context: this.context.context(),
     };
   }
 

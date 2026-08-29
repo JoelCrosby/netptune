@@ -13,6 +13,7 @@ import { Selected } from '@core/models/selected';
 import { Status } from '@core/models/status';
 import { boardViewResource } from '@core/resources/board-view.resource';
 import { buildTaskFilterRouteParams } from '@core/router/task-filter-route-params';
+import { CurrentBoardService } from '@core/services/current-board.service';
 import { TaskFilterService } from '@core/services/task-filter.service';
 import { ProjectTasksHubService } from '@core/services/tasks-hub.service';
 import { moveTaskInGroups, sortBySortOrder } from '@core/util/board-groups';
@@ -22,6 +23,7 @@ export class BoardViewService {
   private readonly router = inject(Router);
   private readonly filters = inject(TaskFilterService);
   private readonly hub = inject(ProjectTasksHubService);
+  private readonly currentBoard = inject(CurrentBoardService);
 
   private readonly openIdentifier = signal<string | undefined>(undefined);
 
@@ -78,6 +80,9 @@ export class BoardViewService {
 
   constructor() {
     this.leaveOnLoadFailure();
+
+    /* The assistant asks what the user is looking at, from outside this view. */
+    effect(() => this.currentBoard.set(this.board()));
   }
 
   open(identifier: string) {

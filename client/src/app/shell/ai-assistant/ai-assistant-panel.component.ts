@@ -18,6 +18,7 @@ import { AiAssistantService } from '@core/services/ai-assistant.service';
 import { AiPanelService } from '@core/services/ai-panel.service';
 import { AiAssistantChangeSetComponent } from './components/ai-assistant-change-set.component';
 import { AiAssistantComposerComponent } from './components/ai-assistant-composer.component';
+import { AiAssistantContextComponent } from './components/ai-assistant-context.component';
 import { AiAssistantEmptyStateComponent } from './components/ai-assistant-empty-state.component';
 import { AiAssistantHeaderComponent } from './components/ai-assistant-header.component';
 import { AiAssistantHistoryComponent } from './components/ai-assistant-history.component';
@@ -37,6 +38,7 @@ import { AiAssistantUsageComponent } from './components/ai-assistant-usage.compo
     MessageScrollerItemDirective,
     AiAssistantChangeSetComponent,
     AiAssistantComposerComponent,
+    AiAssistantContextComponent,
     AiAssistantEmptyStateComponent,
     AiAssistantHeaderComponent,
     AiAssistantHistoryComponent,
@@ -168,6 +170,13 @@ import { AiAssistantUsageComponent } from './components/ai-assistant-usage.compo
           [usage]="usage"
           [contentWidth]="contentWidth()" />
       }
+
+      <app-ai-assistant-context
+        [chips]="assistant.contextChips()"
+        [hasRemoved]="assistant.hasRemovedContext()"
+        [contentWidth]="contentWidth()"
+        (removed)="assistant.removeContext($event)"
+        (restored)="assistant.restoreContext()" />
 
       <app-ai-assistant-composer
         [disabled]="isMissingKey()"

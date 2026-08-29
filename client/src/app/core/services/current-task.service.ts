@@ -10,4 +10,10 @@ export class CurrentTaskService {
   set(task: TaskViewModel | undefined) {
     this.open.set(task);
   }
+
+  clearIfCurrent(systemId: string) {
+    this.open.update((current) => {
+      return current?.systemId === systemId ? undefined : current;
+    });
+  }
 }

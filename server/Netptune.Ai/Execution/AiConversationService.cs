@@ -477,8 +477,8 @@ public sealed class AiConversationService : IAiConversationService
 
         AddContextLine(lines, "view", clientContext.View);
         AddContextLine(lines, "project", Describe(clientContext.ProjectName, clientContext.ProjectId));
-        AddContextLine(lines, "board", clientContext.BoardId?.ToString());
-        AddContextLine(lines, "sprint", clientContext.SprintId?.ToString());
+        AddContextLine(lines, "board", Describe(clientContext.BoardName, clientContext.BoardId));
+        AddContextLine(lines, "sprint", Describe(clientContext.SprintName, clientContext.SprintId));
         AddContextLine(lines, "task", Describe(clientContext.TaskName, clientContext.TaskSystemId));
 
         if (lines.Count == 0)
