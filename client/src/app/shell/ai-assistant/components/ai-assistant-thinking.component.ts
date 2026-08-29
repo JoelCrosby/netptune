@@ -33,7 +33,7 @@ const ELAPSED_FLOOR = 1000;
     >
 
     @if (progress(); as progress) {
-      <span class="text-muted/80 text-xs tabular-nums">{{ progress }}</span>
+      <span class="text-muted text-xs tabular-nums">{{ progress }}</span>
     }
   `,
 })

@@ -86,7 +86,7 @@ const INLINE_ROW_LIMIT = 3;
                     >{{ row.trail }}</span
                   >
                   @if (row.scope; as scope) {
-                    <span class="text-muted/40 shrink-0 text-[11.5px]">
+                    <span class="text-muted shrink-0 text-[11.5px]">
                       {{ scope }}
                     </span>
                   }
@@ -96,7 +96,7 @@ const INLINE_ROW_LIMIT = 3;
           } @else {
             @for (group of inlineGroups(); track group.key) {
               <div
-                class="text-muted/40 px-3 pt-2.25 pb-1 text-[11px] tracking-[.04em] uppercase">
+                class="text-muted px-3 pt-2.25 pb-1 text-[11px] tracking-[.04em] uppercase">
                 {{ group.heading }}
               </div>
 

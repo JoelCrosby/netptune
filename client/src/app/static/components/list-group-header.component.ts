@@ -9,7 +9,7 @@ import { Component, input } from '@angular/core';
   template: `
     {{ label() }}
     @if (count() !== null) {
-      <span class="text-muted/70">·&nbsp;{{ count() }}</span>
+      <span>·&nbsp;{{ count() }}</span>
     }
   `,
 })

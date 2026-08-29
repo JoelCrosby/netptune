@@ -65,7 +65,7 @@ const MINIMUM_REPORTED_DURATION = 1000;
             class="bg-hover flex items-center gap-1 rounded px-1.5 py-0.5 font-mono text-[0.7rem]">
             {{ tool.name }}
             @if (tool.count > 1) {
-              <span class="text-muted/80">×{{ tool.count }}</span>
+              <span class="text-muted">×{{ tool.count }}</span>
             }
           </span>
         }

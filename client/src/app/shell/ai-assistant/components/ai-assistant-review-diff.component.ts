@@ -128,7 +128,7 @@ import {
                     [class.bg-diff-del]="row.beforeKind === 'removed'"
                     [class.bg-hover]="row.beforeKind === null">
                     <span
-                      class="text-muted/50 w-7 shrink-0 text-right select-none">
+                      class="text-muted w-7 shrink-0 text-right select-none">
                       {{ row.beforeNumber }}
                     </span>
                     <span class="text-muted min-w-0">{{ row.before }}</span>
@@ -150,7 +150,7 @@ import {
                     [class.bg-diff-add]="row.afterKind === 'added'"
                     [class.bg-hover]="row.afterKind === null">
                     <span
-                      class="text-muted/50 w-6 shrink-0 text-right select-none">
+                      class="text-muted w-6 shrink-0 text-right select-none">
                       {{ row.afterNumber }}
                     </span>
                     <span class="min-w-0">{{ row.after }}</span>
