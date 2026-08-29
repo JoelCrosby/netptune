@@ -24,7 +24,7 @@ spec:
           extensionRef:
             group: traefik.io
             kind: Middleware
-            name: security-headers
+            name: api-security-headers
         - type: ExtensionRef
           extensionRef:
             group: traefik.io

@@ -18,6 +18,23 @@ spec:
       Content-Security-Policy-Report-Only: "{{ $csp }}"
 {{- end }}
 ---
+# The API host serves the generated Scalar docs page, whose inline bootstrap script carries a
+# per-request nonce. Only the API can know that value, so it sets Content-Security-Policy itself
+# and this middleware carries the remaining headers.
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: api-security-headers
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "api"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+spec:
+  headers:
+    customResponseHeaders:
+      Strict-Transport-Security: "max-age=31536000; includeSubDomains"
+      Permissions-Policy: "camera=(), microphone=(), geolocation=()"
+---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:

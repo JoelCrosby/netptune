@@ -75,6 +75,7 @@ var app = builder.Build();
 
 app.UseNetptuneRequestDefaults();
 app.UseForwardedHeaders();
+app.UseMiddleware<ContentSecurityPolicyMiddleware>();
 app.UseMiddleware<PreAuthenticationRateLimiterMiddleware>();
 app.UseAuthentication();
 app.UseRateLimiter();
@@ -90,6 +91,7 @@ app.MapOpenApi().AllowAnonymous();
 app.MapScalarApiReference("/docs", options => options
     .WithTitle("Netptune API")
     .AddPreferredSecuritySchemes(ApiOpenApi.SecuritySchemeName)
+    .WithNonce()
     .DisableDefaultFonts()
     .DisableAgent())
     .AllowAnonymous();
