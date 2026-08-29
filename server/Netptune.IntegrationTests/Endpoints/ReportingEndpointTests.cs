@@ -188,6 +188,170 @@ public sealed class ReportingEndpointTests(NetptuneFixture fixture)
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
+    [Fact]
+    public async Task Velocity_ShouldCountCompletedTask_WhenItIsArchivedBeforeTheSprintCompletes()
+    {
+        var project = await CreateProject();
+        var sprint = await CreateSprint(project.Id);
+        var doneStatus = await GetStatus("complete");
+        var task = await CreateTask(project.Id, sprint.Id);
+        (await Client.PostAsync($"api/sprints/{sprint.Id}/start", null)).EnsureSuccessStatusCode();
+
+        await CompleteTask(task.Id, doneStatus.Id);
+        await ArchiveTask(task.Id);
+        (await Client.PostAsync($"api/sprints/{sprint.Id}/complete", null)).EnsureSuccessStatusCode();
+
+        var response = await Client.GetAsync($"api/reports/velocity?projectId={project.Id}&unit=Tasks&take=20");
+        var report = await response.Content.ReadFromJsonAsync<VelocityReport>();
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        report.Should().NotBeNull();
+        var point = report.Sprints.Single(item => item.SprintId == sprint.Id);
+        point.Committed.Should().Be(1);
+        point.Completed.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task Velocity_ShouldNotChange_WhenACompletedTaskIsArchivedAfterTheSprint()
+    {
+        var project = await CreateProject();
+        var sprint = await CreateSprint(project.Id);
+        var doneStatus = await GetStatus("complete");
+        var task = await CreateTask(project.Id, sprint.Id);
+        (await Client.PostAsync($"api/sprints/{sprint.Id}/start", null)).EnsureSuccessStatusCode();
+        await CompleteTask(task.Id, doneStatus.Id);
+        (await Client.PostAsync($"api/sprints/{sprint.Id}/complete", null)).EnsureSuccessStatusCode();
+
+        var before = await GetVelocity(project.Id);
+        await ArchiveTask(task.Id);
+        var after = await GetVelocity(project.Id);
+
+        before.Sprints.Single(item => item.SprintId == sprint.Id).Completed.Should().Be(1);
+        after.Should().BeEquivalentTo(before);
+    }
+
+    [Fact]
+    public async Task Burndown_ShouldNotChange_WhenAFinishedTaskIsArchived()
+    {
+        var project = await CreateProject();
+        var sprint = await CreateSprint(project.Id);
+        var doneStatus = await GetStatus("complete");
+        var task = await CreateTask(project.Id, sprint.Id);
+        (await Client.PostAsync($"api/sprints/{sprint.Id}/start", null)).EnsureSuccessStatusCode();
+        await CompleteTask(task.Id, doneStatus.Id);
+
+        var before = await GetBurndown(sprint.Id);
+        await ArchiveTask(task.Id);
+        var after = await GetBurndown(sprint.Id);
+
+        before.CommittedCount.Should().Be(1);
+        before.CompletedCount.Should().Be(1);
+        after.Should().BeEquivalentTo(before);
+    }
+
+    [Fact]
+    public async Task Flow_ShouldKeepACompletedTask_WhenItIsArchived()
+    {
+        var project = await CreateProject();
+        var doneStatus = await GetStatus("complete");
+        var task = await CreateTask(project.Id, sprintId: null);
+        await CompleteTask(task.Id, doneStatus.Id);
+
+        var before = await GetFlow(project.Id);
+        await ArchiveTask(task.Id);
+        var after = await GetFlow(project.Id);
+
+        before.Throughput.Should().Be(1);
+        after.Should().BeEquivalentTo(before);
+    }
+
+    [Fact]
+    public async Task Workload_ShouldExcludeArchivedTasks()
+    {
+        var project = await CreateProject();
+        var task = await CreateTask(project.Id, sprintId: null);
+
+        var before = await GetWorkload(project.Id);
+        await ArchiveTask(task.Id);
+        var after = await GetWorkload(project.Id);
+
+        before.UniqueTaskCount.Should().Be(1);
+        after.UniqueTaskCount.Should().Be(0);
+    }
+
+    [Fact]
+    public async Task Flow_ShouldExcludeArchivedTasksFromTheOpenTaskCount()
+    {
+        var project = await CreateProject();
+        var task = await CreateTask(project.Id, sprintId: null);
+
+        var before = await GetFlow(project.Id);
+        await ArchiveTask(task.Id);
+        var after = await GetFlow(project.Id);
+
+        before.CurrentOpenTaskCount.Should().Be(1);
+        after.CurrentOpenTaskCount.Should().Be(0);
+    }
+
+    private async Task<FlowReport> GetFlow(int projectId)
+    {
+        var response = await Client.GetAsync(
+            $"api/reports/flow?from=2026-01-01&to=2026-12-31&timeZone=UTC&unit=Tasks&projectId={projectId}");
+        response.EnsureSuccessStatusCode();
+
+        var report = await response.Content.ReadFromJsonAsync<FlowReport>();
+
+        return report!;
+    }
+
+    private async Task<WorkloadReport> GetWorkload(int projectId)
+    {
+        var response = await Client.GetAsync($"api/reports/workload?unit=Tasks&projectId={projectId}");
+        response.EnsureSuccessStatusCode();
+
+        var report = await response.Content.ReadFromJsonAsync<WorkloadReport>();
+
+        return report!;
+    }
+
+    private async Task<VelocityReport> GetVelocity(int projectId)
+    {
+        var response = await Client.GetAsync($"api/reports/velocity?projectId={projectId}&unit=Tasks&take=20");
+        response.EnsureSuccessStatusCode();
+
+        var report = await response.Content.ReadFromJsonAsync<VelocityReport>();
+
+        return report!;
+    }
+
+    private async Task<SprintBurndownReport> GetBurndown(int sprintId)
+    {
+        var response = await Client.GetAsync($"api/reports/sprints/{sprintId}/burndown?unit=Tasks&timeZone=UTC");
+        response.EnsureSuccessStatusCode();
+
+        var report = await response.Content.ReadFromJsonAsync<SprintBurndownReport>();
+
+        return report!;
+    }
+
+    private async Task CompleteTask(int taskId, int doneStatusId)
+    {
+        var response = await Client.PutAsJsonAsync("api/tasks", new UpdateProjectTaskRequest
+        {
+            Id = taskId,
+            StatusId = doneStatusId,
+        });
+
+        response.EnsureSuccessStatusCode();
+    }
+
+    private async Task ArchiveTask(int taskId)
+    {
+        var response = await Client.DeleteAsync($"api/tasks/{taskId}");
+
+        response.EnsureSuccessStatusCode();
+    }
+
     private HttpClient CreateClientForWorkspace(string slug)
     {
         var client = fixture.CreateNetptuneClient();
@@ -244,7 +408,7 @@ public sealed class ReportingEndpointTests(NetptuneFixture fixture)
 
     private async Task<TaskViewModel> CreateTask(
         int projectId,
-        int sprintId,
+        int? sprintId,
         int? statusId = null)
     {
         var response = await Client.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest

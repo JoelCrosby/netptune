@@ -236,42 +236,16 @@ public sealed class ReportingRepository : IReportingRepository
             foreach (var record in records.Where(record => record.OccurredAt <= boundary && !processed.Contains(record.Id)))
             {
                 processed.Add(record.Id);
-                var isScopeMembershipChange = record.EventKey == EventKeys.ScopeMemberChanged;
-                var isMemberAttributeChange = record.EventKey == EventKeys.ScopeMemberAttributeChanged;
-                var isTaskStatusChange = record.SubjectType == "task" &&
-                    ReadString(record.Payload, "field") == "status";
 
-                if (isScopeMembershipChange)
+                var change = ApplyMemberEvent(record, members);
+
+                if (change == ScopeMemberChange.Added)
                 {
-                    var taskId = ReadString(record.Payload, "memberId");
-
-                    if (taskId is null)
-                    {
-                        continue;
-                    }
-
-                    var change = ReadString(record.Payload, "change");
-                    var memberWasAdded = change == "added";
-                    var memberWasRemoved = change == "removed";
-
-                    if (memberWasAdded)
-                    {
-                        members[taskId] = ReadMember(record.Payload);
-                        added++;
-                    }
-                    else if (memberWasRemoved)
-                    {
-                        members.Remove(taskId);
-                        removed++;
-                    }
+                    added++;
                 }
-                else if (isMemberAttributeChange)
+                else if (change == ScopeMemberChange.Removed)
                 {
-                    ApplyMemberAttributeChange(record, members);
-                }
-                else if (isTaskStatusChange)
-                {
-                    ApplyTaskStatusChange(record, members);
+                    removed++;
                 }
             }
 
@@ -354,12 +328,12 @@ public sealed class ReportingRepository : IReportingRepository
             var sprintStartedAt = started!.OccurredAt;
             var sprintCompletedAt = completed!.OccurredAt;
             var commitment = ReadCommitment(started.Payload);
-            var completion = ReadCommitment(completed.Payload);
+            var finalMembers = BuildFinalMembers(started, completed, lifecycle);
             var completedTaskIds = lifecycle
                 .Where(record => IsTaskCompletionWithinSprint(record, sprintStartedAt, sprintCompletedAt))
                 .Select(record => record.SubjectId!)
                 .ToHashSet();
-            var finalCompletedMembers = completion
+            var finalCompletedMembers = finalMembers
                 .Where(pair => completedTaskIds.Contains(pair.Key))
                 .Select(pair => pair.Value)
                 .ToList();
@@ -395,6 +369,29 @@ public sealed class ReportingRepository : IReportingRepository
             ExcludedSprintCount = excluded,
             Coverage = new ReportingCoverage(coverage, excluded > 0),
         };
+    }
+
+    private static Dictionary<string, Member> BuildFinalMembers(
+        EventRecord started,
+        EventRecord completed,
+        List<EventRecord> lifecycle)
+    {
+        var members = ReadCommitment(started.Payload);
+        var replayed = lifecycle.Where(record =>
+            record.OccurredAt >= started.OccurredAt &&
+            record.OccurredAt <= completed.OccurredAt);
+
+        foreach (var record in replayed)
+        {
+            ApplyMemberEvent(record, members);
+        }
+
+        foreach (var (taskId, member) in ReadCommitment(completed.Payload))
+        {
+            members[taskId] = member;
+        }
+
+        return members;
     }
 
     private async Task<List<EventRecord>> QueryEvents(
@@ -436,6 +433,62 @@ public sealed class ReportingRepository : IReportingRepository
         var coverageStart = await query.MinAsync(record => (DateTime?)record.OccurredAt, token);
 
         return coverageStart;
+    }
+
+    // Replays one ledger event onto a sprint's member set, shared by the burndown timeline and the
+    // velocity roll-up so both agree on who was in the sprint and what state they ended in.
+    private static ScopeMemberChange ApplyMemberEvent(EventRecord record, Dictionary<string, Member> members)
+    {
+        var isScopeMembershipChange = record.EventKey == EventKeys.ScopeMemberChanged;
+        var isMemberAttributeChange = record.EventKey == EventKeys.ScopeMemberAttributeChanged;
+        var isTaskStatusChange = record.SubjectType == "task" &&
+            ReadString(record.Payload, "field") == "status";
+
+        if (isMemberAttributeChange)
+        {
+            ApplyMemberAttributeChange(record, members);
+
+            return ScopeMemberChange.None;
+        }
+
+        if (isTaskStatusChange)
+        {
+            ApplyTaskStatusChange(record, members);
+
+            return ScopeMemberChange.None;
+        }
+
+        if (!isScopeMembershipChange)
+        {
+            return ScopeMemberChange.None;
+        }
+
+        var taskId = ReadString(record.Payload, "memberId");
+
+        if (taskId is null)
+        {
+            return ScopeMemberChange.None;
+        }
+
+        var change = ReadString(record.Payload, "change");
+        var memberWasAdded = change == "added";
+        var memberWasRemoved = change == "removed";
+
+        if (memberWasAdded)
+        {
+            members[taskId] = ReadMember(record.Payload);
+
+            return ScopeMemberChange.Added;
+        }
+
+        if (memberWasRemoved)
+        {
+            members.Remove(taskId);
+
+            return ScopeMemberChange.Removed;
+        }
+
+        return ScopeMemberChange.None;
     }
 
     private static void ApplyMemberAttributeChange(
@@ -601,4 +654,11 @@ public sealed class ReportingRepository : IReportingRepository
     }
 
     private sealed record Member(string? Unit, decimal? Value, bool Done);
+
+    private enum ScopeMemberChange
+    {
+        None,
+        Added,
+        Removed,
+    }
 }

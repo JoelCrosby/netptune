@@ -75,8 +75,7 @@ public sealed class CompleteSprintCommandHandler : IRequestHandler<CompleteSprin
                     PlannedEnd = sprint.EndDate,
                     ActualStart = sprint.StartedAt,
                     CompletedAt = completedAt,
-                    Commitment = sprint.ProjectTasks
-                        .Where(task => !task.IsDeleted)
+                    Commitment = GetSprintMembers(sprint)
                         .Select(task => new SprintCommitmentMember
                         {
                             TaskId = task.Id,
@@ -129,5 +128,13 @@ public sealed class CompleteSprintCommandHandler : IRequestHandler<CompleteSprin
         return result is null
             ? ClientResponse<SprintViewModel>.NotFound
             : ClientResponse<SprintViewModel>.Success(result);
+    }
+
+    private static List<ProjectTask> GetSprintMembers(Sprint sprint)
+    {
+        return sprint.ProjectTasks
+            .GroupBy(task => task.Id)
+            .Select(group => group.First())
+            .ToList();
     }
 }
