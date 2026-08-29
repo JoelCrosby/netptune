@@ -21,6 +21,7 @@ const ENTITY_LABELS: Record<string, string> = {
   boardGroup: $localize`:Entity a proposed change targets:Board group`,
   status: $localize`:Entity a proposed change targets:Status`,
   comment: $localize`:Entity a proposed change targets:Comment`,
+  relationType: $localize`:Entity a proposed change targets:Relation type`,
 };
 
 const FIELD_LABELS: Record<string, string> = {

@@ -83,6 +83,7 @@ const ENTITY_PLURALS: Record<string, string> = {
   status: $localize`:Plural of the entity a proposed change targets:Statuses`,
   comment: $localize`:Plural of the entity a proposed change targets:Comments`,
   tag: $localize`:Plural of the entity a proposed change targets:Tags`,
+  relationType: $localize`:Plural of the entity a proposed change targets:Relation types`,
 };
 
 /**
@@ -122,6 +123,7 @@ const ENTITY_COUNTS: Record<string, string> = {
   status: $localize`:Plural of the entity a digest row counts, mid sentence:statuses`,
   comment: $localize`:Plural of the entity a digest row counts, mid sentence:comments`,
   tag: $localize`:Plural of the entity a digest row counts, mid sentence:tags`,
+  relationType: $localize`:Plural of the entity a digest row counts, mid sentence:relation types`,
 };
 
 /** The only fields that name a place every change in a row could share. */

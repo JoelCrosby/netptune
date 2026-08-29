@@ -24,15 +24,19 @@ public sealed class LinkTasksChangeHandler : IAiChangeHandler
         CancellationToken cancellationToken)
     {
         var change = context.Change;
-        var payload = change.Payload.RootElement;
         var sourceSystemId = await ResolveSystemId(context, "sourceSystemId", "sourceRef", cancellationToken);
         var targetSystemId = await ResolveSystemId(context, "targetSystemId", "targetRef", cancellationToken);
-        var relationTypeId = AiChangePayload.ReadInt(payload, "relationTypeId");
+        var relationTypeId = ResolveRelationTypeId(context);
         var hasTasks = !string.IsNullOrWhiteSpace(sourceSystemId) && !string.IsNullOrWhiteSpace(targetSystemId);
 
-        if (!hasTasks || !relationTypeId.HasValue)
+        if (!hasTasks)
         {
             return AiChangePayload.Failure(change, "The tasks this link refers to could not be resolved.");
+        }
+
+        if (!relationTypeId.HasValue)
+        {
+            return AiChangePayload.Failure(change, "The relation type this link refers to could not be resolved.");
         }
 
         var request = new CreateTaskRelationRequest
@@ -50,6 +54,18 @@ public sealed class LinkTasksChangeHandler : IAiChangeHandler
         }
 
         return AiChangePayload.Applied(change, change.EntityId);
+    }
+
+    private static int? ResolveRelationTypeId(AiChangeApplyContext context)
+    {
+        var relationTypeId = AiChangePayload.ReadInt(context.Change.Payload.RootElement, "relationTypeId");
+
+        if (relationTypeId.HasValue)
+        {
+            return relationTypeId;
+        }
+
+        return AiChangePayload.ResolveReference(context, "relationTypeRef");
     }
 
     private async Task<string?> ResolveSystemId(
