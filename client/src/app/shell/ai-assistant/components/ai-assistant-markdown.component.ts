@@ -58,39 +58,40 @@ import { referenceKey, referenceRoute } from '@core/util/ai-references';
             </blockquote>
           }
           @case ('table') {
-            <div class="overflow-x-auto">
-              <table
-                class="border-border my-4 block w-full overflow-hidden rounded border text-left text-xs">
-                <thead class="text-muted border-border border-b">
-                  <tr>
-                    @for (cell of block.head; track $index) {
-                      <th class="px-3 py-2 font-medium">
-                        <ng-container
-                          *ngTemplateOutlet="
-                            inlineList;
-                            context: { $implicit: cell }
-                          " />
-                      </th>
-                    }
-                  </tr>
-                </thead>
-                <tbody>
-                  @for (row of block.rows; track $index) {
-                    <tr
-                      class="border-border/60 bg-background border-b last:rounded-b last:border-0">
-                      @for (cell of row; track $index) {
-                        <td class="px-3 py-2">
+            <div class="border-border my-4 overflow-hidden rounded border">
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                  <thead class="text-muted border-border border-b">
+                    <tr>
+                      @for (cell of block.head; track $index) {
+                        <th class="px-3 py-2 font-medium">
                           <ng-container
                             *ngTemplateOutlet="
                               inlineList;
                               context: { $implicit: cell }
                             " />
-                        </td>
+                        </th>
                       }
                     </tr>
-                  }
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    @for (row of block.rows; track $index) {
+                      <tr
+                        class="border-border/60 bg-background border-b last:border-0">
+                        @for (cell of row; track $index) {
+                          <td class="px-3 py-2">
+                            <ng-container
+                              *ngTemplateOutlet="
+                                inlineList;
+                                context: { $implicit: cell }
+                              " />
+                          </td>
+                        }
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
             </div>
           }
           @case ('rule') {
