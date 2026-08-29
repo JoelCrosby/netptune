@@ -77,11 +77,14 @@ public sealed class ArchiveRoundTripTests
         var archives = scope.ServiceProvider.GetRequiredService<IArchiveRepository>();
         var placements = await Count(archives.ReadTaskPlacements(result.WorkspaceId));
         var assignees = await Count(archives.ReadTaskAssignees(result.WorkspaceId));
-        var sourcePlacements = await Count(archives.ReadTaskPlacements(1));
-        var sourceAssignees = await Count(archives.ReadTaskAssignees(1));
 
-        placements.Should().Be(sourcePlacements);
-        assignees.Should().Be(sourceAssignees);
+        // Counted from the archive rather than from workspace 1 as it stands now, for the reason
+        // the round trip above compares two archives: a concurrent test adding a task to the source
+        // moves the live count out from under a clone that was built before it.
+        var source = await RefsByType(archive);
+
+        placements.Should().Be(source[TransferRecordTypes.TaskPlacement].Count);
+        assignees.Should().Be(source[TransferRecordTypes.TaskAssignee].Count);
     }
 
     [Fact]

@@ -10,6 +10,7 @@ using Netptune.Core.Constants;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Repositories;
+using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.ProjectTasks;
@@ -473,7 +474,24 @@ public sealed class TaskViewsEndpointTests
 
     private async Task<PagedResponse<TaskViewModel>> GetAllTasks()
     {
-        var response = await Client.GetAsync("api/tasks?pageSize=100", TestContext.Current.CancellationToken);
+        var page = 1;
+        var latest = await GetTaskPage(page);
+        var items = new List<TaskViewModel>(latest.Items);
+
+        while (page < latest.TotalPages)
+        {
+            page++;
+            latest = await GetTaskPage(page);
+            items.AddRange(latest.Items);
+        }
+
+        return latest with { Items = items };
+    }
+
+    private async Task<PagedResponse<TaskViewModel>> GetTaskPage(int page)
+    {
+        var url = $"api/tasks?page={page}&pageSize={PaginationDefaults.MaxPageSize}";
+        var response = await Client.GetAsync(url, TestContext.Current.CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
