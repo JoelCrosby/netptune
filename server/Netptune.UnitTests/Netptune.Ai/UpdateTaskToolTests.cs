@@ -147,6 +147,24 @@ public class UpdateTaskToolTests
         ChangeSet.Changes.Should().BeEmpty();
     }
 
+    [Fact]
+    public async Task Execute_ShouldReadTheStoredDescriptionAsMarkdown_SoBothSidesOfTheDiffAreProse()
+    {
+        var stored = """{"blocks":[{"type":"header","data":{"text":"Steps","level":2}}]}""";
+
+        GivenTask(CreateTask() with { Description = stored });
+
+        var result = await Execute($$"""{"taskId":{{TaskId}},"description":"## Steps\n\nAnd a line."}""");
+
+        result.IsError.Should().BeFalse();
+
+        var field = ChangeSet.Changes.Single().Fields.Single();
+
+        field.Name.Should().Be("description");
+        field.Before.Should().Be("## Steps");
+        field.After.Should().Be("## Steps\n\nAnd a line.");
+    }
+
     private async Task<AiToolExecution> Execute(string arguments)
     {
         var tool = new UpdateTaskTool(Mediator, ChangeSet);

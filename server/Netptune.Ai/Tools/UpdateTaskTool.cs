@@ -6,6 +6,7 @@ using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
+using Netptune.Core.Utilities;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Handlers.Statuses.Queries;
 using Netptune.Handlers.Tasks.Queries;
@@ -97,9 +98,11 @@ public sealed class UpdateTaskTool : IAiTool
         }
 
         var fields = new List<AiChangeField>();
+        var description = EditorDocumentReader.ToMarkdown(task.Description);
+        var proposedDescription = AiToolSchema.GetString(arguments, "description");
 
         AddChangedField(fields, "name", task.Name, AiToolSchema.GetString(arguments, "name"));
-        AddChangedField(fields, "description", task.Description, AiToolSchema.GetString(arguments, "description"));
+        AddChangedField(fields, "description", description, proposedDescription);
 
         var dateMessage = AddDateFields(fields, task, arguments, cleared);
 

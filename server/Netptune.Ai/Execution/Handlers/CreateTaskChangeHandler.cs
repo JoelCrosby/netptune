@@ -7,6 +7,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
+using Netptune.Core.Utilities;
 using Netptune.Handlers.Tasks.Commands;
 
 namespace Netptune.Ai.Execution.Handlers;
@@ -28,10 +29,11 @@ public sealed class CreateTaskChangeHandler : IAiChangeHandler, IAiChangeUndoHan
     {
         var change = context.Change;
         var payload = change.Payload.RootElement;
+        var description = AiChangePayload.ReadString(payload, "description");
         var request = new AddProjectTaskRequest
         {
             Name = AiChangePayload.ReadString(payload, "name") ?? string.Empty,
-            Description = AiChangePayload.ReadString(payload, "description") ?? string.Empty,
+            Description = EditorDocumentWriter.FromMarkdown(description) ?? string.Empty,
             ProjectId = AiChangePayload.ReadInt(payload, "projectId"),
             StatusId = AiChangePayload.ReadInt(payload, "statusId"),
             AssigneeId = AiChangePayload.ReadString(payload, "assigneeId"),

@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Services.Ai;
+using Netptune.Core.Utilities;
 using Netptune.Handlers.Tasks.Queries;
 
 namespace Netptune.Ai.Tools;
@@ -52,12 +53,13 @@ public sealed class GetTaskTool : IAiTool
             return AiToolExecution.Failed($"Task {systemId} was not found in this workspace.");
         }
 
+        var description = EditorDocumentReader.ToMarkdown(task.Description);
         var content = JsonSerializer.Serialize(new
         {
             id = task.Id,
             systemId = task.SystemId,
             name = task.Name,
-            description = task.Description,
+            description,
             status = task.StatusName,
             statusId = task.StatusId,
             statusCategory = task.StatusCategory.ToString(),

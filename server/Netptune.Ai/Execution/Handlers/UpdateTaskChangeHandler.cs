@@ -7,6 +7,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
+using Netptune.Core.Utilities;
 using Netptune.Handlers.Tasks.Commands;
 
 namespace Netptune.Ai.Execution.Handlers;
@@ -35,11 +36,12 @@ public sealed class UpdateTaskChangeHandler : IAiChangeHandler, IAiChangeUndoHan
         }
 
         var payload = change.Payload.RootElement;
+        var description = AiChangePayload.ReadString(payload, "description");
         var request = new UpdateProjectTaskRequest
         {
             Id = taskId.Value,
             Name = AiChangePayload.ReadString(payload, "name"),
-            Description = AiChangePayload.ReadString(payload, "description"),
+            Description = EditorDocumentWriter.FromMarkdown(description),
             StatusId = AiChangePayload.ReadInt(payload, "statusId"),
             Priority = ReadPriority(payload),
             EstimateType = ReadEstimateType(payload),
