@@ -24,6 +24,8 @@ public sealed record AiRunContext
 
     public required string Model { get; init; }
 
+    public AiEffort? Effort { get; init; }
+
     public required string ApiKey { get; init; }
 
     public required string SystemPrompt { get; init; }

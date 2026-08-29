@@ -1,3 +1,4 @@
+using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
 
 namespace Netptune.Ai.Configuration;
@@ -9,6 +10,8 @@ public sealed class AiOptions
     public string AnthropicModel { get; set; } = AiModels.AnthropicDefault;
 
     public string OpenAiModel { get; set; } = AiModels.OpenAiDefault;
+
+    public AiEffort DefaultEffort { get; set; } = AiEffort.Medium;
 
     public bool GenerateTitles { get; set; } = true;
 

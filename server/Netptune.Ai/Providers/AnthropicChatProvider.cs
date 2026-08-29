@@ -168,6 +168,29 @@ public sealed class AnthropicChatProvider : IAiChatProvider
             Tools = request.Tools.Select(CreateTool).ToList(),
             Messages = request.Messages.Select(CreateMessage).ToList(),
             CacheControl = new CacheControlEphemeral(),
+            OutputConfig = CreateOutputConfig(request.Effort),
+        };
+    }
+
+    private static OutputConfig? CreateOutputConfig(AiEffort? effort)
+    {
+        if (!effort.HasValue)
+        {
+            return null;
+        }
+
+        return new OutputConfig { Effort = CreateEffort(effort.Value) };
+    }
+
+    private static Effort CreateEffort(AiEffort effort)
+    {
+        return effort switch
+        {
+            AiEffort.Low => Effort.Low,
+            AiEffort.Medium => Effort.Medium,
+            AiEffort.XHigh => Effort.Xhigh,
+            AiEffort.Max => Effort.Max,
+            _ => Effort.High,
         };
     }
 

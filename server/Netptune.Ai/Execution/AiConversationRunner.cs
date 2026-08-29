@@ -55,6 +55,7 @@ public sealed class AiConversationRunner : IAiConversationRunner
                 Messages = messages,
                 Tools = definitions,
                 MaxOutputTokens = Options.MaxOutputTokens,
+                Effort = context.Effort,
             };
 
             AiChatTurn? turn = null;

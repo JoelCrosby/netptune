@@ -1,7 +1,9 @@
 import { Component, computed, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AiEffort, AiEffortOption } from '@core/models/ai-effort';
 import { AiModelOption } from '@core/models/ai-model';
 import { LucideArrowUp, LucideSquare } from '@lucide/angular';
+import { AiAssistantEffortMenuComponent } from './ai-assistant-effort-menu.component';
 import { AiAssistantModelMenuComponent } from './ai-assistant-model-menu.component';
 
 @Component({
@@ -12,6 +14,7 @@ import { AiAssistantModelMenuComponent } from './ai-assistant-model-menu.compone
     LucideArrowUp,
     LucideSquare,
     AiAssistantModelMenuComponent,
+    AiAssistantEffortMenuComponent,
   ],
   template: `
     <div class="mx-auto w-full" [class]="contentWidth()">
@@ -43,11 +46,21 @@ import { AiAssistantModelMenuComponent } from './ai-assistant-model-menu.compone
 
         <div class="flex items-center justify-between gap-2 pt-1">
           @if (models().length > 0) {
-            <app-ai-assistant-model-menu
-              [models]="models()"
-              [selectedModel]="selectedModel()"
-              [label]="modelLabel()"
-              (selected)="modelSelected.emit($event)" />
+            <div class="flex min-w-0 items-center gap-2">
+              <app-ai-assistant-model-menu
+                [models]="models()"
+                [selectedModel]="selectedModel()"
+                [label]="modelLabel()"
+                (selected)="modelSelected.emit($event)" />
+
+              @if (supportsEffort()) {
+                <app-ai-assistant-effort-menu
+                  [efforts]="efforts()"
+                  [selectedEffort]="selectedEffort()"
+                  [label]="effortLabel()"
+                  (selected)="effortSelected.emit($event)" />
+              }
+            </div>
           } @else {
             <span></span>
           }
@@ -85,6 +98,10 @@ export class AiAssistantComposerComponent {
   readonly models = input.required<AiModelOption[]>();
   readonly selectedModel = input.required<string | null>();
   readonly modelLabel = input.required<string>();
+  readonly efforts = input.required<AiEffortOption[]>();
+  readonly selectedEffort = input.required<AiEffort | null>();
+  readonly effortLabel = input.required<string>();
+  readonly supportsEffort = input(false);
   readonly isStreaming = input(false);
   readonly isReplacing = input(false);
   readonly isAnswering = input(false);
@@ -94,6 +111,7 @@ export class AiAssistantComposerComponent {
 
   readonly messageSent = output<string>();
   readonly modelSelected = output<string | null>();
+  readonly effortSelected = output<AiEffort | null>();
   readonly draftChanged = output<string>();
   readonly stopped = output();
   readonly editCancelled = output();

@@ -31,6 +31,19 @@ export class AiModelCatalogService {
     return $localize`:Model option that lets the server choose:Automatic`;
   });
 
+  /** Automatic resolves to a default model that supports effort, so it keeps the control visible. */
+  readonly supportsEffort = computed(() => {
+    const selected = this.selectedModel();
+
+    if (selected === null) {
+      return true;
+    }
+
+    const model = this.models().find((option) => option.id === selected);
+
+    return model?.supportsEffort ?? false;
+  });
+
   async load() {
     const hasModels = this.models().length > 0;
 

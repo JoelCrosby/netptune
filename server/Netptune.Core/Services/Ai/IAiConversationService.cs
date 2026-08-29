@@ -50,6 +50,8 @@ public sealed record AiSendMessageRequest
 
     public string? Model { get; init; }
 
+    public AiEffort? Effort { get; init; }
+
     public AiClientContext? Context { get; init; }
 
     public string? Locale { get; init; }

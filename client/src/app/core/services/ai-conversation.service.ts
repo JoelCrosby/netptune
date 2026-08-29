@@ -7,6 +7,7 @@ import {
 } from '@core/models/ai-conversation';
 import { AiApiService } from '@core/services/ai-api.service';
 import { AiChangeSetService } from '@core/services/ai-change-set.service';
+import { AiEffortService } from '@core/services/ai-effort.service';
 import { AiModelCatalogService } from '@core/services/ai-model-catalog.service';
 import { AiTranscriptService } from '@core/services/ai-transcript.service';
 
@@ -16,6 +17,7 @@ export class AiConversationService {
   private readonly transcript = inject(AiTranscriptService);
   private readonly changeSets = inject(AiChangeSetService);
   private readonly catalog = inject(AiModelCatalogService);
+  private readonly effort = inject(AiEffortService);
 
   readonly id = signal<string | null>(null);
   readonly title = signal<string | null>(null);
@@ -69,6 +71,7 @@ export class AiConversationService {
     );
 
     this.catalog.use(detail.conversation.requestedModel ?? null);
+    this.effort.use(detail.conversation.requestedEffort ?? null);
     this.transcript.setEntries(toChatEntries(messages));
     this.transcript.addReferences(
       messages.flatMap((message) => message.references)
@@ -99,6 +102,7 @@ export class AiConversationService {
   startNew() {
     this.reset();
     this.catalog.resetToPreference();
+    this.effort.resetToPreference();
   }
 
   /** A chat from the workspace being left must not follow the user into the next one. */

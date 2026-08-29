@@ -49,6 +49,7 @@ public sealed class GetAiConversationsQueryHandler
             Provider = conversation.Provider,
             Model = conversation.Model,
             RequestedModel = conversation.RequestedModel,
+            RequestedEffort = conversation.RequestedEffort,
             LastMessageAt = conversation.LastMessageAt,
             MessageCount = conversation.MessageCount,
             Usage = usage.WithCost(conversation.Model),

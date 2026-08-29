@@ -1,6 +1,7 @@
 import { Service, LOCALE_ID, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AiQuestionAnswer, AiStreamEvent } from '@core/models/ai-conversation';
+import { AiEffort } from '@core/models/ai-effort';
 import { CurrentProjectService } from '@core/services/current-project.service';
 import { CurrentTaskService } from '@core/services/current-task.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
@@ -17,6 +18,7 @@ export interface AiTurnRequest {
   conversationId: string | null;
   text: string;
   model: string | null;
+  effort: AiEffort | null;
   retry: boolean;
   answer: AiQuestionAnswer | null;
   revise: AiReviseTarget | null;
@@ -125,6 +127,7 @@ export class AiStreamService {
       conversationId: request.conversationId,
       text: request.text,
       model: request.model,
+      effort: request.effort,
       locale: this.locale,
       retry: request.retry,
       answer: request.answer,

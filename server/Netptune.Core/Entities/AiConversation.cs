@@ -17,6 +17,8 @@ public sealed record AiConversation : WorkspaceEntity<Guid>
 
     public string? RequestedModel { get; set; }
 
+    public AiEffort? RequestedEffort { get; set; }
+
     public DateTime LastMessageAt { get; set; }
 
     public int MessageCount { get; set; }

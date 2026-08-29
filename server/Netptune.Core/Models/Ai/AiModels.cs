@@ -11,6 +11,8 @@ public sealed record AiModelOption
     public required string Label { get; init; }
 
     public bool IsDefault { get; init; }
+
+    public bool SupportsEffort { get; init; }
 }
 
 public static class AiModels
@@ -29,12 +31,14 @@ public static class AiModels
             Id = AnthropicDefault,
             Label = "Claude Opus 5",
             IsDefault = true,
+            SupportsEffort = true,
         },
         new()
         {
             Provider = AiProvider.Anthropic,
             Id = "claude-sonnet-5",
             Label = "Claude Sonnet 5",
+            SupportsEffort = true,
         },
         new()
         {
@@ -48,18 +52,21 @@ public static class AiModels
             Id = OpenAiDefault,
             Label = "GPT-5.6 Sol",
             IsDefault = true,
+            SupportsEffort = true,
         },
         new()
         {
             Provider = AiProvider.OpenAi,
             Id = "gpt-5.6-terra",
             Label = "GPT-5.6 Terra",
+            SupportsEffort = true,
         },
         new()
         {
             Provider = AiProvider.OpenAi,
             Id = OpenAiTitleModel,
             Label = "GPT-5.6 Luna",
+            SupportsEffort = true,
         },
     ];
 
@@ -80,6 +87,18 @@ public static class AiModels
         }
 
         return Catalog.Any(option => option.Provider == provider && option.Id == model);
+    }
+
+    public static bool SupportsEffort(string? model)
+    {
+        if (string.IsNullOrWhiteSpace(model))
+        {
+            return false;
+        }
+
+        var option = Catalog.FirstOrDefault(item => item.Id == model);
+
+        return option?.SupportsEffort ?? false;
     }
 
     public static AiProvider? ProviderFor(string? model)

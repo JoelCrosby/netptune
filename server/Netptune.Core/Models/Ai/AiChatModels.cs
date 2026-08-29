@@ -84,6 +84,8 @@ public sealed record AiChatRequest
     public required IReadOnlyList<AiToolDefinition> Tools { get; init; }
 
     public int MaxOutputTokens { get; init; } = 16000;
+
+    public AiEffort? Effort { get; init; }
 }
 
 public sealed record AiChatTurn

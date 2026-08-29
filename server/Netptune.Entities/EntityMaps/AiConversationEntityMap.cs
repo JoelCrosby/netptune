@@ -32,6 +32,10 @@ public sealed class AiConversationEntityMap : WorkspaceEntityMap<AiConversation,
             .IsRequired();
 
         builder
+            .Property(conversation => conversation.RequestedEffort)
+            .HasConversion<int?>();
+
+        builder
             .Property(conversation => conversation.LastMessageAt)
             .IsRequired();
 

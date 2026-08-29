@@ -143,6 +143,9 @@ public sealed class AiConversationService : IAiConversationService
         }
 
         conversation.RequestedModel = requestedModel;
+        conversation.RequestedEffort = request.Effort;
+
+        var effort = ResolveEffort(conversation.Model, request.Effort);
 
         yield return AiStreamEvent.ConversationStarted(conversation.Id);
 
@@ -220,6 +223,7 @@ public sealed class AiConversationService : IAiConversationService
         {
             Provider = conversation.Provider,
             Model = conversation.Model,
+            Effort = effort,
             ApiKey = apiKey,
             SystemPrompt = systemPrompt,
             History = history,
@@ -565,6 +569,18 @@ public sealed class AiConversationService : IAiConversationService
         var hasAnthropic = credentials.Any(credential => credential.Provider == AiProvider.Anthropic);
 
         return hasAnthropic ? AiProvider.Anthropic : credentials[0].Provider;
+    }
+
+    private AiEffort? ResolveEffort(string model, AiEffort? requested)
+    {
+        var supportsEffort = AiModels.SupportsEffort(model);
+
+        if (!supportsEffort)
+        {
+            return null;
+        }
+
+        return requested ?? Options.DefaultEffort;
     }
 
     private async Task<AiTitleResult> TryCreateTitle(

@@ -1,4 +1,5 @@
 import { AiProvider } from './ai-credential';
+import { AiEffort } from './ai-effort';
 
 export enum AiMessageRole {
   user = 0,
@@ -69,6 +70,7 @@ export interface AiConversation {
   provider: AiProvider;
   model: string;
   requestedModel?: string | null;
+  requestedEffort?: AiEffort | null;
   lastMessageAt: string;
   messageCount: number;
   usage: AiTokenUsage;

@@ -154,6 +154,13 @@ public sealed class OpenAiChatProvider : IAiChatProvider
             MaxOutputTokenCount = request.MaxOutputTokens,
         };
 
+        if (request.Effort.HasValue)
+        {
+#pragma warning disable OPENAI001
+            options.ReasoningEffortLevel = CreateEffort(request.Effort.Value);
+#pragma warning restore OPENAI001
+        }
+
         foreach (var tool in request.Tools)
         {
             options.Tools.Add(ChatTool.CreateFunctionTool(
@@ -164,6 +171,19 @@ public sealed class OpenAiChatProvider : IAiChatProvider
 
         return options;
     }
+
+#pragma warning disable OPENAI001
+    // The OpenAI levels stop at high, so the two Anthropic levels above it collapse onto it.
+    private static ChatReasoningEffortLevel CreateEffort(AiEffort effort)
+    {
+        return effort switch
+        {
+            AiEffort.Low => ChatReasoningEffortLevel.Low,
+            AiEffort.Medium => ChatReasoningEffortLevel.Medium,
+            _ => ChatReasoningEffortLevel.High,
+        };
+    }
+#pragma warning restore OPENAI001
 
     private static List<ChatMessage> CreateMessages(AiChatRequest request)
     {

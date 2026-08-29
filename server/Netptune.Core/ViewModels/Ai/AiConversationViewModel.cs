@@ -50,6 +50,8 @@ public sealed record AiConversationViewModel
 
     public string? RequestedModel { get; init; }
 
+    public AiEffort? RequestedEffort { get; init; }
+
     public DateTime LastMessageAt { get; init; }
 
     public int MessageCount { get; init; }

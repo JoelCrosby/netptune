@@ -11,13 +11,18 @@ import { AiApiService, AiChangeFieldEdit } from '@core/services/ai-api.service';
 import { AiChangeSetService } from '@core/services/ai-change-set.service';
 import { AiConversationService } from '@core/services/ai-conversation.service';
 import { AiDraftService } from '@core/services/ai-draft.service';
+import { AiEffort } from '@core/models/ai-effort';
+import { AiEffortService } from '@core/services/ai-effort.service';
 import { AiModelCatalogService } from '@core/services/ai-model-catalog.service';
 import { AiPanelService } from '@core/services/ai-panel.service';
 import {
   AiSessionService,
   AiWorkspaceSession,
 } from '@core/services/ai-session.service';
-import { AiReviseTarget, AiStreamService } from '@core/services/ai-stream.service';
+import {
+  AiReviseTarget,
+  AiStreamService,
+} from '@core/services/ai-stream.service';
 import { AiTranscriptService } from '@core/services/ai-transcript.service';
 import { AiTurnProgressService } from '@core/services/ai-turn-progress.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
@@ -34,6 +39,7 @@ export class AiAssistantService {
   private readonly transcript = inject(AiTranscriptService);
   private readonly changeSets = inject(AiChangeSetService);
   private readonly catalog = inject(AiModelCatalogService);
+  private readonly effort = inject(AiEffortService);
   private readonly drafts = inject(AiDraftService);
   private readonly sessions = inject(AiSessionService);
   private readonly stream = inject(AiStreamService);
@@ -65,6 +71,11 @@ export class AiAssistantService {
   readonly selectedModel = this.catalog.selectedModel;
   readonly selectedModelLabel = this.catalog.selectedModelLabel;
   readonly hasCredentials = this.catalog.hasCredentials;
+
+  readonly efforts = this.effort.efforts;
+  readonly selectedEffort = this.effort.selectedEffort;
+  readonly selectedEffortLabel = this.effort.selectedEffortLabel;
+  readonly supportsEffort = this.catalog.supportsEffort;
 
   readonly draft = this.drafts.text;
 
@@ -137,6 +148,10 @@ export class AiAssistantService {
 
   selectModel(modelId: string | null) {
     this.catalog.select(modelId);
+  }
+
+  selectEffort(effort: AiEffort | null) {
+    this.effort.select(effort);
   }
 
   setDraft(text: string) {
@@ -356,6 +371,7 @@ export class AiAssistantService {
           conversationId: this.conversationId(),
           text: question,
           model: this.selectedModel(),
+          effort: this.selectedEffort(),
           retry: isRetry,
           answer,
           revise,

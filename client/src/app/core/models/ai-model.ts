@@ -5,4 +5,5 @@ export interface AiModelOption {
   id: string;
   label: string;
   isDefault: boolean;
+  supportsEffort: boolean;
 }

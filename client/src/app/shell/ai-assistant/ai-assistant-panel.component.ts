@@ -173,6 +173,10 @@ import { AiAssistantUsageComponent } from './components/ai-assistant-usage.compo
         [models]="assistant.models()"
         [selectedModel]="assistant.selectedModel()"
         [modelLabel]="assistant.selectedModelLabel()"
+        [efforts]="assistant.efforts"
+        [selectedEffort]="assistant.selectedEffort()"
+        [effortLabel]="assistant.selectedEffortLabel()"
+        [supportsEffort]="assistant.supportsEffort()"
         [isStreaming]="assistant.isStreaming()"
         [isAnswering]="assistant.pendingQuestion() !== null"
         [contentWidth]="contentWidth()"
@@ -182,7 +186,8 @@ import { AiAssistantUsageComponent } from './components/ai-assistant-usage.compo
         (draftChanged)="assistant.setDraft($event)"
         (stopped)="assistant.stopTurn()"
         (editCancelled)="assistant.cancelEdit()"
-        (modelSelected)="assistant.selectModel($event)" />
+        (modelSelected)="assistant.selectModel($event)"
+        (effortSelected)="assistant.selectEffort($event)" />
     </div>
   `,
 })
