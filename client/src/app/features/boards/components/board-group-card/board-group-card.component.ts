@@ -28,7 +28,6 @@ import { SprintBadgeComponent } from '@static/components/sprint-badge.component'
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 import { TaskFlagBadgeComponent } from '@static/components/task-flag-badge.component';
 import { SelectionCheckboxComponent } from '@static/components/checkbox/selection-checkbox.component';
-import { IconCircleComponent } from '@static/components/icon-circle.component';
 
 @Component({
   selector: 'app-board-group-card',
@@ -69,7 +68,7 @@ import { IconCircleComponent } from '@static/components/icon-circle.component';
     SprintBadgeComponent,
     TaskFlagBadgeComponent,
     SelectionCheckboxComponent,
-    IconCircleComponent,
+    LucidePin,
   ],
   template: `
     <div
@@ -94,15 +93,15 @@ import { IconCircleComponent } from '@static/components/icon-circle.component';
       }
 
       @if (pinned() && !selectionActive()) {
-        <app-icon-circle
-          class="bg-primary/16 absolute top-1.5 right-1.5 z-10 h-5.5 w-5.5"
-          size="small"
-          [icon]="pinIcon"
-          [filled]="true"
-          [label]="pinLabel()" />
+        <svg
+          lucidePin
+          class="text-primary absolute top-2 right-2 z-10 h-3.5 w-3.5 fill-current"
+          role="img"
+          [attr.aria-label]="pinLabel()"
+          [appTooltip]="pinLabel()"></svg>
       }
 
-      <div class="mb-0 leading-[1.4rem] select-none" [class.pr-7]="pinned()">
+      <div class="mb-0 leading-[1.4rem] select-none" [class.pr-6]="pinned()">
         {{ task().name }}
       </div>
 
@@ -204,7 +203,6 @@ export class BoardGroupCardComponent {
   readonly statusCategory = StatusCategory;
   readonly priority = computed(() => this.task().priority);
   readonly readFlags = hasPermission(PERMISSIONS.flags.read);
-  readonly pinIcon = LucidePin;
   readonly pinned = computed(() => this.task().pinnedScopes.length > 0);
 
   readonly onMultipleBoards = computed(() => this.task().boardCount > 1);
