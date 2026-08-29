@@ -1,5 +1,10 @@
-import { AiChangeField, AiProposedChange } from '@core/models/ai-conversation';
 import {
+  AiChangeApplyStatus,
+  AiChangeField,
+  AiProposedChange,
+} from '@core/models/ai-conversation';
+import {
+  changeRoute,
   entityLabel,
   fieldLabel,
   isProseField,
@@ -554,4 +559,95 @@ export const inlineHeading = (
   }
 
   return `${label} · ${reference}`;
+};
+
+export interface AiAppliedRow {
+  change: AiProposedChange;
+  letter: AiChangeLetter;
+  lead: string;
+  emphasis: string;
+  label: string;
+  route: string[] | null;
+  status: string | null;
+  isFailed: boolean;
+  message: string | null;
+}
+
+/** What became of one change, for the rows that report an applied set rather than propose one. */
+const appliedStatus = (change: AiProposedChange): string | null => {
+  if (change.undoneAt) {
+    return $localize`:Marks a change that was applied and then taken back:Undone`;
+  }
+
+  if (change.applyStatus === AiChangeApplyStatus.failed) {
+    return $localize`:Marks a change that could not be applied:Failed`;
+  }
+
+  if (change.applyStatus === AiChangeApplyStatus.applied) {
+    return null;
+  }
+
+  return $localize`:Marks a change that was left out of an applied set:Skipped`;
+};
+
+const appliedMessage = (change: AiProposedChange): string | null => {
+  const hasFailed = change.applyStatus === AiChangeApplyStatus.failed;
+
+  if (!hasFailed) {
+    return null;
+  }
+
+  return (
+    change.applyError ??
+    $localize`:Shown on a change that failed without saying why:This change could not be applied.`
+  );
+};
+
+/**
+ * An undone change points at an entity that no longer holds what the row describes, and a
+ * created one may not exist at all, so only what still stands is worth linking.
+ */
+const appliedRoute = (
+  change: AiProposedChange,
+  workspace: string | null
+): string[] | null => {
+  if (change.undoneAt) {
+    return null;
+  }
+
+  return changeRoute(change, workspace);
+};
+
+const appliedRow = (
+  change: AiProposedChange,
+  workspace: string | null
+): AiAppliedRow => {
+  const summary = changeSummary(change);
+  const emphasis = summary.target ?? '';
+  const lead = named(summary.target, summary.detail, change.summary);
+
+  return {
+    change,
+    letter: changeLetter(change),
+    lead: lead.length > 0 && emphasis.length > 0 ? `${lead} ` : lead,
+    emphasis,
+    label: change.summary,
+    route: appliedRoute(change, workspace),
+    status: appliedStatus(change),
+    isFailed: change.applyStatus === AiChangeApplyStatus.failed,
+    message: appliedMessage(change),
+  };
+};
+
+/**
+ * Every change in the set, in the order it was proposed: an applied set is a record of what
+ * happened, so the ones that failed or were left out belong in it beside the ones that landed.
+ */
+export const appliedRows = (
+  changes: readonly AiProposedChange[],
+  workspace: string | null
+): AiAppliedRow[] => {
+  return [...changes]
+    .sort((left, right) => left.sequence - right.sequence)
+    .map((change) => appliedRow(change, workspace));
 };

@@ -4,13 +4,16 @@ import {
   AiChangeSet,
   AiChangeSetStatus,
 } from '@core/models/ai-conversation';
+import { AiChangeSetService } from '@core/services/ai-change-set.service';
 import { DialogService } from '@core/services/dialog.service';
 import {
   LucideCheck,
+  LucideChevronDown,
   LucideLoaderCircle,
   LucideTriangleAlert,
 } from '@lucide/angular';
 import { SelectionCheckboxComponent } from '@static/components/checkbox/selection-checkbox.component';
+import { AiAssistantAppliedChangesComponent } from './ai-assistant-applied-changes.component';
 import { groupChanges, isApplied, isValid } from './ai-assistant-change-group';
 import {
   AiDigestRowView,
@@ -19,6 +22,7 @@ import {
   inlineHeading,
   inlineRow,
 } from './ai-assistant-change-summary';
+import { letterColour } from './ai-assistant-diff';
 import {
   AiAssistantReviewDialogComponent,
   AiReviewData,
@@ -32,9 +36,11 @@ const INLINE_ROW_LIMIT = 3;
   host: { class: 'block' },
   imports: [
     LucideCheck,
+    LucideChevronDown,
     LucideLoaderCircle,
     LucideTriangleAlert,
     SelectionCheckboxComponent,
+    AiAssistantAppliedChangesComponent,
   ],
   template: `
     <div class="mx-auto w-full px-4 py-3" [class]="contentWidth()">
@@ -227,18 +233,29 @@ const INLINE_ROW_LIMIT = 3;
             @if (isDiscarded()) {
               <span class="text-muted">{{ outcome() }}</span>
             } @else {
-              @if (failedCount() > 0) {
+              <button
+                type="button"
+                class="hover:text-foreground flex min-w-0 flex-1 items-center gap-2 text-left"
+                [attr.aria-expanded]="isExpanded()"
+                [attr.aria-label]="expandLabel()"
+                (click)="toggleExpanded()">
                 <svg
-                  lucideTriangleAlert
-                  class="text-change-removed h-3.5 w-3.5 shrink-0"></svg>
-              } @else {
-                <svg
-                  lucideCheck
-                  class="text-change-added h-3.5 w-3.5 shrink-0"></svg>
-              }
-              <span class="text-muted min-w-0 flex-1 truncate">
-                {{ outcome() }}
-              </span>
+                  lucideChevronDown
+                  class="text-muted h-3.5 w-3.5 shrink-0 transition-transform"
+                  [class.-rotate-90]="!isExpanded()"></svg>
+                @if (failedCount() > 0) {
+                  <svg
+                    lucideTriangleAlert
+                    class="text-change-removed h-3.5 w-3.5 shrink-0"></svg>
+                } @else {
+                  <svg
+                    lucideCheck
+                    class="text-change-added h-3.5 w-3.5 shrink-0"></svg>
+                }
+                <span class="text-muted min-w-0 flex-1 truncate">
+                  {{ outcome() }}
+                </span>
+              </button>
 
               @if (failedCount() > 0) {
                 <button
@@ -253,6 +270,17 @@ const INLINE_ROW_LIMIT = 3;
                 </button>
               }
 
+              <button
+                type="button"
+                class="text-primary shrink-0 text-xs hover:underline"
+                (click)="reviewAll()"
+                i18n="
+                  Button that opens the full screen review of the changes that
+                  were applied
+                ">
+                Review changes
+              </button>
+
               @if (canUndo()) {
                 <button
                   type="button"
@@ -265,6 +293,14 @@ const INLINE_ROW_LIMIT = 3;
               }
             }
           </div>
+
+          @if (isExpanded() && !isDiscarded()) {
+            <!-- The block sits above the composer, so a long set scrolls rather than taking the panel. -->
+            <app-ai-assistant-applied-changes
+              class="border-border custom-scroll max-h-60 overflow-y-auto border-t"
+              [changeSet]="changeSet()"
+              [workspace]="workspace()" />
+          }
         }
       </section>
     </div>
@@ -275,6 +311,7 @@ export class AiAssistantChangeSetComponent {
   readonly excludedChangeIds = input.required<Set<number>>();
   readonly isApplying = input(false);
   readonly contentWidth = input('');
+  readonly workspace = input<string | null>(null);
 
   readonly toggled = output<number>();
   readonly applied = output();
@@ -283,6 +320,7 @@ export class AiAssistantChangeSetComponent {
   readonly selectionChanged = output<number[]>();
 
   private readonly dialog = inject(DialogService);
+  private readonly changeSets = inject(AiChangeSetService);
 
   protected readonly blockLabel = $localize`:Accessible label of the block holding the proposed changes:Proposed changes`;
 
@@ -417,16 +455,22 @@ export class AiAssistantChangeSetComponent {
     return $localize`:Shown after changes were applied:${applied}:APPLIED: changes applied`;
   });
 
-  protected letterColour(letter: string | null): string {
-    if (letter === 'A') {
-      return 'text-change-added';
+  protected readonly letterColour = letterColour;
+
+  protected readonly isExpanded = computed(() => {
+    return this.changeSets.isExpanded(this.changeSet().id);
+  });
+
+  protected readonly expandLabel = computed(() => {
+    if (this.isExpanded()) {
+      return $localize`:Accessible label of the control that hides what an applied set did:Hide the changes that were applied`;
     }
 
-    if (letter === 'D') {
-      return 'text-change-removed';
-    }
+    return $localize`:Accessible label of the control that shows what an applied set did:Show the changes that were applied`;
+  });
 
-    return 'text-change-modified';
+  protected toggleExpanded() {
+    this.changeSets.toggleExpanded(this.changeSet().id);
   }
 
   protected markColour(isAdded: boolean): string {

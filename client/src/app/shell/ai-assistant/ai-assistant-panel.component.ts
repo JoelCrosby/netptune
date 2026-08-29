@@ -155,6 +155,7 @@ import { AiAssistantUsageComponent } from './components/ai-assistant-usage.compo
           [excludedChangeIds]="assistant.excludedChangeIds()"
           [isApplying]="assistant.isApplying()"
           [contentWidth]="contentWidth()"
+          [workspace]="assistant.workspaceKey()"
           (toggled)="assistant.toggleChange($event)"
           (selectionChanged)="assistant.toggleChanges($event)"
           (applied)="apply()"

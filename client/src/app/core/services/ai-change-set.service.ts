@@ -1,4 +1,5 @@
 import { Service, inject, signal } from '@angular/core';
+import { LocalStorageService } from '@core/local-storage/local-storage.service';
 import {
   AiChangeSet,
   AiChangeSetStatus,
@@ -15,15 +16,45 @@ import {
   refreshScopesForChanges,
 } from '@core/util/ai-refresh-scopes';
 
+const EXPANDED_STORAGE_KEY = 'ai-assistant.applied-changes-expanded';
+
 @Service()
 export class AiChangeSetService {
   private readonly api = inject(AiApiService);
+  private readonly storage = inject(LocalStorageService);
   private readonly workspaceRefresh = inject(WorkspaceRefreshService);
 
   readonly changeSet = signal<AiChangeSet | null>(null);
   readonly excludedChangeIds = signal<Set<number>>(new Set());
   readonly isApplying = signal(false);
   readonly isEditing = signal(false);
+
+  /**
+   * Applying collapses the review into a one line summary, so what landed stays behind an
+   * expander. Each set keeps its own state, which is what lets an earlier one further up the
+   * conversation stay open, and the last choice becomes the default for the sets after it.
+   */
+  private readonly expandedByDefault = signal(
+    this.storage.getItem<boolean>(EXPANDED_STORAGE_KEY) ?? false
+  );
+  private readonly expandedById = signal<ReadonlyMap<string, boolean>>(
+    new Map()
+  );
+
+  isExpanded(changeSetId: string): boolean {
+    return this.expandedById().get(changeSetId) ?? this.expandedByDefault();
+  }
+
+  toggleExpanded(changeSetId: string) {
+    const isExpanded = !this.isExpanded(changeSetId);
+
+    this.expandedById.update((current) => {
+      return new Map(current).set(changeSetId, isExpanded);
+    });
+
+    this.expandedByDefault.set(isExpanded);
+    this.storage.setItem(EXPANDED_STORAGE_KEY, isExpanded);
+  }
 
   set(changeSet: AiChangeSet | null) {
     this.changeSet.set(changeSet);
