@@ -309,6 +309,45 @@ public sealed class SprintsEndpointTests
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
+    [Fact]
+    public async Task Get_ShouldCountArchivedTasksSeparately_WhenSprintTaskIsArchived()
+    {
+        var project = await CreateProject();
+        var sprint = await CreateSprint(project.Id);
+        var task = await CreateTask(project.Id);
+        await Client.PostAsJsonAsync(
+            $"api/sprints/{sprint.Id}/tasks",
+            new AddTasksToSprintRequest { TaskIds = [task.Id] });
+
+        (await Client.DeleteAsync($"api/tasks/{task.Id}")).EnsureSuccessStatusCode();
+
+        var detail = await Client.GetFromJsonAsync<ClientResponse<SprintDetailViewModel>>($"api/sprints/{sprint.Id}");
+
+        detail.Payload!.TaskCount.Should().Be(0);
+        detail.Payload.ArchivedTaskCount.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task GetSprintTasks_ShouldKeepArchivedTasks_WhenIncludeArchivedRequested()
+    {
+        var project = await CreateProject();
+        var sprint = await CreateSprint(project.Id);
+        var task = await CreateTask(project.Id);
+        await Client.PostAsJsonAsync(
+            $"api/sprints/{sprint.Id}/tasks",
+            new AddTasksToSprintRequest { TaskIds = [task.Id] });
+
+        (await Client.DeleteAsync($"api/tasks/{task.Id}")).EnsureSuccessStatusCode();
+
+        var listed = await Client.GetFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>(
+            $"api/tasks?sprintId={sprint.Id}&pageSize=100&includeArchived=true");
+        var withoutArchived = await Client.GetFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>(
+            $"api/tasks?sprintId={sprint.Id}&pageSize=100");
+
+        listed.Payload!.Items.Should().ContainSingle(item => item.Id == task.Id && item.IsArchived);
+        withoutArchived.Payload!.Items.Should().BeEmpty();
+    }
+
     private async Task<ProjectViewModel> CreateProject()
     {
         var request = new AddProjectRequest

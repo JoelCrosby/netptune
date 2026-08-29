@@ -31,4 +31,6 @@ public class TaskFilter : PageRequest
     public bool? HasTags { get; init; }
 
     public bool? HasAssignee { get; init; }
+
+    public bool? IncludeArchived { get; init; }
 }

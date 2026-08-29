@@ -3,6 +3,7 @@ import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { LucideMessageSquareText } from '@lucide/angular';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
+import { BadgeComponent } from './badge/badge.component';
 import { TaskFlagBadgeComponent } from './task-flag-badge.component';
 
 @Component({
@@ -11,6 +12,7 @@ import { TaskFlagBadgeComponent } from './task-flag-badge.component';
     NgTemplateOutlet,
     RouterLink,
     LucideMessageSquareText,
+    BadgeComponent,
     TaskFlagBadgeComponent,
     TooltipDirective,
   ],
@@ -36,6 +38,14 @@ import { TaskFlagBadgeComponent } from './task-flag-badge.component';
 
     <ng-template #content>
       <span class="truncate">{{ name() }}</span>
+      @if (archived()) {
+        <app-badge
+          class="shrink-0"
+          shape="rounded"
+          i18n="Marks a deleted task">
+          Archived
+        </app-badge>
+      }
       @if (hasComments()) {
         <svg
           lucideMessageSquareText
@@ -60,5 +70,6 @@ export class TaskNameComponent {
   readonly link = input<unknown[] | null>(null);
   readonly action = input<(() => void) | null>(null);
   readonly hasComments = input(false);
+  readonly archived = input(false);
   readonly flagNames = input<readonly string[]>([]);
 }

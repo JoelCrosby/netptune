@@ -55,6 +55,8 @@ public sealed class TaskViewRowMap
 
     public string Workspace_Key { get; init; } = null!;
 
+    public bool Task_Is_Archived { get; init; }
+
     public DateTime Task_Created_At { get; init; }
 
     public DateTime? Task_Updated_At { get; init; }

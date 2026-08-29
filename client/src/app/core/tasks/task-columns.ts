@@ -183,10 +183,13 @@ const defaultColumnIds: TaskColumnId[] = [
 ];
 
 export interface TaskNameCellOptions<T extends TaskColumnRow> {
-  link?: (task: T) => unknown[];
+  // Returning null leaves the row unlinked, which is how archived rows read: their
+  // detail page is gone, so the name stays plain text next to the archived badge.
+  link?: (task: T) => unknown[] | null;
   action?: (task: T) => void;
   showComments?: boolean;
   flagNames?: (task: T) => readonly string[];
+  archived?: (task: T) => boolean;
 }
 
 // The name column is the one cell every surface renders differently, because
@@ -195,7 +198,7 @@ export interface TaskNameCellOptions<T extends TaskColumnRow> {
 export function taskNameCell<T extends TaskColumnRow>(
   options: TaskNameCellOptions<T> = {}
 ): Partial<DatatableColumn<T>> {
-  const { link, action, showComments, flagNames } = options;
+  const { link, action, showComments, flagNames, archived } = options;
 
   return {
     cell: {
@@ -206,6 +209,7 @@ export function taskNameCell<T extends TaskColumnRow>(
         action: action ? () => action(task) : null,
         hasComments: showComments ? (task.hasComments ?? false) : false,
         flagNames: flagNames ? flagNames(task) : [],
+        archived: archived ? archived(task) : false,
       }),
     },
   };

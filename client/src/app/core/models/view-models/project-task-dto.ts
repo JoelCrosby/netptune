@@ -16,6 +16,7 @@ export interface TaskViewModel extends ProjectTask {
   ownerUsername: string;
   ownerPictureUrl?: string | null;
   ownerIsServiceAccount?: boolean;
+  isArchived?: boolean;
   deletedByUsername?: string | null;
   deletedByPictureUrl?: string | null;
   deletedByIsServiceAccount?: boolean;

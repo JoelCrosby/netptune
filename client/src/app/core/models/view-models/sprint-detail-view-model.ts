@@ -6,6 +6,7 @@ export interface SprintDetailViewModel extends SprintViewModel {
   newTaskCount: number;
   activeTaskCount: number;
   doneTaskCount: number;
+  archivedTaskCount: number;
   totalEstimateValue?: number | null;
   estimateType?: EstimateType | null;
   tasks: TaskViewModel[];

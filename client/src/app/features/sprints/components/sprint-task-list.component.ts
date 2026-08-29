@@ -28,17 +28,19 @@ import { TaskTableComponent } from '@static/components/task-table.component';
       [params]="params"
       [stickyHeader]="true">
       <ng-template appDatatableCell="actions" let-task>
-        <button
-          app-stroked-button
-          color="primary"
-          type="button"
-          class="h-6 text-xs"
-          [disabled]="updateLoading()"
-          (click)="onRemoveTask(task.id)">
-          <span i18n="Button that removes the task from the sprint">
-            Remove
-          </span>
-        </button>
+        @if (!task.isArchived) {
+          <button
+            app-stroked-button
+            color="primary"
+            type="button"
+            class="h-6 text-xs"
+            [disabled]="updateLoading()"
+            (click)="onRemoveTask(task.id)">
+            <span i18n="Button that removes the task from the sprint">
+              Remove
+            </span>
+          </button>
+        }
       </ng-template>
     </app-task-table>
   `,
@@ -55,14 +57,21 @@ export class SprintTaskListComponent {
     return this.canManage() && this.sprint().status !== SprintStatus.completed;
   });
 
-  readonly params = computed(() => ({ sprintId: this.sprint().id }));
+  // Archived tasks stay in the list: the sprint is a record of the work it held, and dropping them
+  // on archive would silently rewrite its history. They are badged and cannot be acted on.
+  readonly params = computed(() => ({
+    sprintId: this.sprint().id,
+    includeArchived: true,
+  }));
 
   private readonly baseColumns = taskColumns<TaskViewModel>(
     ['systemId', 'name', 'project', 'status', 'priority'],
     {
       overrides: {
         name: taskNameCell<TaskViewModel>({
-          link: (task) => ['../../tasks', task.systemId],
+          link: (task) =>
+            task.isArchived ? null : ['../../tasks', task.systemId],
+          archived: (task) => task.isArchived ?? false,
         }),
         project: { widthClass: 'w-48' },
       },

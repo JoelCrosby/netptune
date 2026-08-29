@@ -822,6 +822,43 @@ public sealed class TasksEndpointTests
         result.IsSuccess.Should().BeTrue();
     }
 
+    [Fact]
+    public async Task Get_ShouldIncludeArchivedTasks_WhenIncludeArchivedRequested()
+    {
+        var task = await CreateDeletableTask();
+        (await Client.DeleteAsync($"api/tasks/{task.Id}")).EnsureSuccessStatusCode();
+
+        var tasks = await GetTaskPage("api/tasks?pageSize=100&includeArchived=true");
+
+        var archived = tasks.Should().ContainSingle(item => item.Id == task.Id).Subject;
+        archived.IsArchived.Should().BeTrue();
+        tasks.Should().Contain(item => !item.IsArchived);
+    }
+
+    [Fact]
+    public async Task Get_ShouldExcludeArchivedTasks_ByDefault()
+    {
+        var task = await CreateDeletableTask();
+        (await Client.DeleteAsync($"api/tasks/{task.Id}")).EnsureSuccessStatusCode();
+
+        var tasks = await GetTasks();
+
+        tasks.Should().NotContain(item => item.Id == task.Id);
+        tasks.Should().OnlyContain(item => !item.IsArchived);
+    }
+
+    [Fact]
+    public async Task GetArchived_ShouldStayArchivedOnly_WhenIncludeArchivedRequested()
+    {
+        var task = await CreateDeletableTask();
+        (await Client.DeleteAsync($"api/tasks/{task.Id}")).EnsureSuccessStatusCode();
+
+        var tasks = await GetTaskPage("api/tasks/archive?pageSize=100&includeArchived=true");
+
+        tasks.Should().Contain(item => item.Id == task.Id);
+        tasks.Should().OnlyContain(item => item.IsArchived);
+    }
+
     private Task<IReadOnlyList<TaskViewModel>> GetTasks()
     {
         return GetTaskPage("api/tasks?pageSize=100");

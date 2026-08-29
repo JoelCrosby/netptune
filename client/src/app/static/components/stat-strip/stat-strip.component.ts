@@ -13,6 +13,7 @@ const columnClasses: Record<number, string> = {
   2: 'sm:grid-cols-2 sm:divide-x sm:divide-y-0',
   3: 'sm:grid-cols-3 sm:divide-x sm:divide-y-0',
   4: 'sm:grid-cols-4 sm:divide-x sm:divide-y-0',
+  5: 'sm:grid-cols-5 sm:divide-x sm:divide-y-0',
 };
 
 @Component({

@@ -26,6 +26,15 @@ export class SprintStatsComponent {
 }
 
 function taskCountStats(sprint: SprintDetailViewModel): StatStripItem[] {
+  const archived: StatStripItem[] = sprint.archivedTaskCount
+    ? [
+        {
+          label: $localize`:Stat label for archived tasks in a sprint:Archived`,
+          value: sprint.archivedTaskCount,
+        },
+      ]
+    : [];
+
   return [
     {
       label: $localize`:Stat label for the total number of tasks in a sprint:Total`,
@@ -43,5 +52,6 @@ function taskCountStats(sprint: SprintDetailViewModel): StatStripItem[] {
       label: $localize`:Stat label for finished tasks:Complete`,
       value: sprint.doneTaskCount,
     },
+    ...archived,
   ];
 }

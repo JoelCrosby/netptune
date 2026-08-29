@@ -2041,7 +2041,7 @@
     </unit>
     <unit id="7182192298964223312">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:72,77</note>
+        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:74,79</note>
         <note category="description">Precedes the assistant that made a change on the user&apos;s behalf</note>
       </notes>
       <segment>
@@ -5063,7 +5063,7 @@
     </unit>
     <unit id="7690634761514161231">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:38,40</note>
+        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:40,42</note>
         <note category="description">Shown when the audit log fails to load</note>
       </notes>
       <segment>
@@ -5090,7 +5090,7 @@
     </unit>
     <unit id="2373398189346663368">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:43,45</note>
+        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:45,47</note>
         <note category="description">Empty state for the audit log</note>
       </notes>
       <segment>
@@ -5108,7 +5108,7 @@
     </unit>
     <unit id="9037534911513149290">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:48,50</note>
+        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:50,52</note>
         <note category="description">Plural noun for audit entries, used in the selection summary</note>
       </notes>
       <segment>
@@ -5117,7 +5117,7 @@
     </unit>
     <unit id="2648970074984732218">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:112,114</note>
+        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:114,116</note>
         <note category="description">Accessible label for the button that opens an audit entry</note>
       </notes>
       <segment>
@@ -7971,6 +7971,7 @@
       <notes>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:269,270</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:294,295</note>
+        <note category="location">src/app/static/components/task-name.component.ts:46,48</note>
         <note category="description">Marks a deleted task</note>
       </notes>
       <segment>
@@ -9788,7 +9789,7 @@
     <unit id="1780950485960518731">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:118</note>
-        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:39</note>
+        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:48</note>
         <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:116</note>
         <note category="description">Example value shown in the notification preview</note>
       </notes>
@@ -11368,8 +11369,8 @@
       <notes>
         <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:135,137</note>
         <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:139,143</note>
-        <note category="location">src/app/static/components/task-name.component.ts:46,47</note>
-        <note category="location">src/app/static/components/task-name.component.ts:48,51</note>
+        <note category="location">src/app/static/components/task-name.component.ts:56,57</note>
+        <note category="location">src/app/static/components/task-name.component.ts:58,61</note>
         <note category="description">Accessible label for the icon marking a task that has comments</note>
       </notes>
       <segment>
@@ -12736,7 +12737,7 @@
     <unit id="3448462145758383019">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-status-breakdown-card.component.ts:35</note>
-        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:31</note>
+        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:40</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:221</note>
         <note category="description">Centre label showing the total task count</note>
       </notes>
@@ -12935,6 +12936,15 @@
       </notes>
       <segment>
         <source> Password </source>
+      </segment>
+    </unit>
+    <unit id="1562584780596394495">
+      <notes>
+        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:32</note>
+        <note category="description">Stat label for archived tasks in a sprint</note>
+      </notes>
+      <segment>
+        <source>Archived</source>
       </segment>
     </unit>
     <unit id="5390644233266949395">
@@ -17079,7 +17089,7 @@
     <unit id="5280218112746407598">
       <notes>
         <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:99</note>
-        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:35</note>
+        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:44</note>
         <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:112</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:496</note>
         <note category="description">Heading above the newly created tasks leaving a sprint</note>
@@ -17090,7 +17100,7 @@
     </unit>
     <unit id="8384225360105280028">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:43</note>
+        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:52</note>
         <note category="description">Stat label for finished tasks</note>
       </notes>
       <segment>
@@ -17153,7 +17163,7 @@
     </unit>
     <unit id="8212177249756365917">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:39,42</note>
+        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:40,43</note>
         <note category="description">Button that removes the task from the sprint</note>
       </notes>
       <segment>

@@ -11,6 +11,8 @@ public record SprintDetailViewModel : SprintViewModel
 
     public int DoneTaskCount { get; init; }
 
+    public int ArchivedTaskCount { get; init; }
+
     public decimal? TotalEstimateValue { get; init; }
 
     public EstimateType? EstimateType { get; init; }

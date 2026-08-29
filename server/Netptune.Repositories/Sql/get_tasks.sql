@@ -37,6 +37,7 @@ WITH filtered_tasks AS (
                LIMIT 1
            ), 0) AS task_sort_order
          , pt.workspace_id
+         , pt.is_deleted
          , pt.created_at
          , pt.updated_at
          , w.slug AS workspace_key
@@ -80,7 +81,7 @@ WITH filtered_tasks AS (
              LEFT JOIN users o ON pt.owner_id = o.id
              LEFT JOIN users d ON pt.deleted_by_user_id = d.id
     WHERE w.slug = @workspaceKey
-      AND pt.is_deleted = @deleted
+      AND (@includeArchived OR pt.is_deleted = @deleted)
       AND {queryPredicate}
       AND (@projectId IS NULL OR pt.project_id = @projectId)
       AND (@sprintId IS NULL OR pt.sprint_id = @sprintId)
@@ -182,6 +183,7 @@ SELECT ft.total_count
      , ft.sprint_status
      , ft.workspace_id
      , ft.workspace_key
+     , ft.is_deleted AS task_is_archived
      , ft.created_at AS task_created_at
      , ft.updated_at AS task_updated_at
      , ft.owner_username

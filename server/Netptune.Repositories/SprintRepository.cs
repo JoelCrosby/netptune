@@ -222,6 +222,7 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
             NewTaskCount = sprint.ProjectTasks.Count(task => !task.IsDeleted && task.Status!.Category == StatusCategory.Todo),
             ActiveTaskCount = sprint.ProjectTasks.Count(task => !task.IsDeleted && task.Status!.Category == StatusCategory.Active),
             DoneTaskCount = sprint.ProjectTasks.Count(task => !task.IsDeleted && task.Status!.Category == StatusCategory.Done),
+            ArchivedTaskCount = sprint.ProjectTasks.Count(task => task.IsDeleted),
             EstimateType = sprint.ProjectTasks
                 .Where(task => !task.IsDeleted && task.EstimateType.HasValue)
                 .Select(task => task.EstimateType)

@@ -74,6 +74,8 @@ public record TaskViewModel
 
     public bool OwnerIsServiceAccount { get; set; }
 
+    public bool IsArchived { get; set; }
+
     public string? DeletedByUsername { get; set; }
 
     public string? DeletedByPictureUrl { get; set; }
