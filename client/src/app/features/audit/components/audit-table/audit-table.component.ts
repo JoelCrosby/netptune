@@ -20,6 +20,7 @@ import { AuditLogDetailDialogComponent } from '../../dialogs/audit-log-detail-di
 
 @Component({
   selector: 'app-audit-table',
+  host: { class: 'flex min-h-0 flex-1 flex-col' },
   imports: [
     ActivityTypePipe,
     AvatarComponent,
@@ -34,6 +35,7 @@ import { AuditLogDetailDialogComponent } from '../../dialogs/audit-log-detail-di
   ],
   template: `
     <app-datatable
+      autoFill
       i18n-errorMessage="Shown when the audit log fails to load"
       errorMessage="Audit events could not be loaded."
       stickyHeader

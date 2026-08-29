@@ -2059,6 +2059,16 @@
         <target> Modification </target>
       </segment>
     </unit>
+    <unit id="8843675020571469043">
+      <notes>
+        <note category="location">src/app/features/audit/components/audit-filters/audit-date-range.component.ts:37,39</note>
+        <note category="description">Accessible label for the audit log end date</note>
+      </notes>
+      <segment state="initial">
+        <source>Audit log end date</source>
+        <target>Date de fin du journal d&apos;audit</target>
+      </segment>
+    </unit>
     <unit id="8847265383518864339">
       <notes>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:268</note>
@@ -5094,6 +5104,16 @@
         <target> Lorsque l&apos;assistant améliore une correspondance d&apos;import, quelques valeurs réelles sont envoyées avec les noms de colonnes. Désactivez pour n&apos;envoyer que les noms et types de colonnes. </target>
       </segment>
     </unit>
+    <unit id="1227860913873409112">
+      <notes>
+        <note category="location">src/app/features/audit/components/audit-filters/audit-date-range.component.ts:27,29</note>
+        <note category="description">Accessible label for the button that clears the start-date filter</note>
+      </notes>
+      <segment state="initial">
+        <source>Clear start date</source>
+        <target>Effacer la date de début</target>
+      </segment>
+    </unit>
     <unit id="425305352567912856">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-flags.component.ts:74,75</note>
@@ -5228,6 +5248,16 @@
       <segment state="translated">
         <source>Using the default</source>
         <target>Valeur par défaut utilisée</target>
+      </segment>
+    </unit>
+    <unit id="2362836049756518530">
+      <notes>
+        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:62,64</note>
+        <note category="description">Label on the control that filters the audit log by action</note>
+      </notes>
+      <segment state="initial">
+        <source>Filter by Action</source>
+        <target>Filtrer par action</target>
       </segment>
     </unit>
     <unit id="2363693543054040821">
@@ -5455,7 +5485,7 @@
     </unit>
     <unit id="5203279511751768967">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:28,30</note>
+        <note category="location">src/app/features/audit/components/audit-filters/audit-date-range.component.ts:14</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:99,100</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:43</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:393</note>
@@ -5489,7 +5519,7 @@
     </unit>
     <unit id="1640609344969975994">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:34,36</note>
+        <note category="location">src/app/features/audit/components/audit-filters/audit-date-range.component.ts:36</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:107,108</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:52</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:403</note>
@@ -5503,10 +5533,9 @@
     </unit>
     <unit id="8829497237648100098">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:37,39</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:24</note>
         <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:91,92</note>
-        <note category="description">Button that applies the filters</note>
+        <note category="description">Heading of the export filter step</note>
       </notes>
       <segment state="translated">
         <source>Filter</source>
@@ -5525,9 +5554,8 @@
     </unit>
     <unit id="7808756054397155068">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:40,43</note>
         <note category="location">src/app/features/storage/components/storage-filters.component.ts:76,78</note>
-        <note category="description">Button that clears the filters</note>
+        <note category="description">Button that clears every active file filter</note>
       </notes>
       <segment state="translated">
         <source>Reset</source>
@@ -5536,7 +5564,7 @@
     </unit>
     <unit id="2014694668412418346">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:51,54</note>
+        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:98,101</note>
         <note category="description">Button that downloads the audit log as CSV</note>
       </notes>
       <segment state="translated">
@@ -7264,6 +7292,16 @@
         <target>Supprimer la condition</target>
       </segment>
     </unit>
+    <unit id="793706597961722102">
+      <notes>
+        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:52,54</note>
+        <note category="description">Filter option including every entity type</note>
+      </notes>
+      <segment state="initial">
+        <source>All entities</source>
+        <target>Toutes les entités</target>
+      </segment>
+    </unit>
     <unit id="7937380552660364144">
       <notes>
         <note category="location">src/app/features/task-views/components/task-view-card.component.ts:194</note>
@@ -8661,6 +8699,16 @@
       <segment state="translated">
         <source>Filter by Trigger</source>
         <target>Filtrer par déclencheur</target>
+      </segment>
+    </unit>
+    <unit id="5228433645010844899">
+      <notes>
+        <note category="location">src/app/features/audit/components/audit-filters/audit-date-range.component.ts:49,51</note>
+        <note category="description">Accessible label for the button that clears the end-date filter</note>
+      </notes>
+      <segment state="initial">
+        <source>Clear end date</source>
+        <target>Effacer la date de fin</target>
       </segment>
     </unit>
     <unit id="8097029888794362295">
@@ -17769,6 +17817,16 @@
         <target> Réessayer </target>
       </segment>
     </unit>
+    <unit id="6650698736829983956">
+      <notes>
+        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:64,66</note>
+        <note category="description">Filter option including every action</note>
+      </notes>
+      <segment state="initial">
+        <source>All actions</source>
+        <target>Toutes les actions</target>
+      </segment>
+    </unit>
     <unit id="6654135033505153591">
       <notes>
         <note category="location">src/app/features/settings/settings.routes.ts:60</note>
@@ -18560,6 +18618,16 @@
       <segment state="translated">
         <source>Revoke API Credential</source>
         <target>Révoquer l&apos;identifiant d&apos;API</target>
+      </segment>
+    </unit>
+    <unit id="2822754888444435279">
+      <notes>
+        <note category="location">src/app/features/audit/components/audit-filters/audit-date-range.component.ts:15,17</note>
+        <note category="description">Accessible label for the audit log start date</note>
+      </notes>
+      <segment state="initial">
+        <source>Audit log start date</source>
+        <target>Date de début du journal d&apos;audit</target>
       </segment>
     </unit>
     <unit id="3180558417601739827">
@@ -19983,6 +20051,16 @@
         <target>Utilisateur introuvable</target>
       </segment>
     </unit>
+    <unit id="5251035268253687718">
+      <notes>
+        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:50,52</note>
+        <note category="description">Label on the control that filters the audit log by entity</note>
+      </notes>
+      <segment state="initial">
+        <source>Filter by Entity</source>
+        <target>Filtrer par entité</target>
+      </segment>
+    </unit>
     <unit id="8263303804952657732">
       <notes>
         <note category="location">src/app/features/users/components/user-list/user-list.component.ts:31,33</note>
@@ -20245,6 +20323,7 @@
     </unit>
     <unit id="3348547714642337740">
       <notes>
+        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:42,44</note>
         <note category="location">src/app/shared/components/task-view-filters/task-view-filters.component.ts:34,36</note>
         <note category="description">Shown when there are no members to filter by</note>
       </notes>
@@ -20275,6 +20354,7 @@
     </unit>
     <unit id="6634790566400449864">
       <notes>
+        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:85,87</note>
         <note category="location">src/app/shared/components/task-view-filters/task-view-filters.component.ts:66,69</note>
         <note category="description">Button that clears every active filter</note>
       </notes>

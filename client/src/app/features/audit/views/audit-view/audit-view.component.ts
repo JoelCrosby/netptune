@@ -31,9 +31,9 @@ import { AuditFilterService } from '@audit/audit-filter.service';
           (filterChange)="auditTable.goToFirstPage()" />
       </app-page-header>
 
-      <app-page-body scroll>
-        <div class="flex flex-col gap-6 pb-4">
-          <app-audit-activity-chart />
+      <app-page-body>
+        <div class="flex min-h-0 flex-1 flex-col gap-6 pb-4">
+          <app-audit-activity-chart class="shrink-0" />
           <app-audit-table #auditTable />
         </div>
       </app-page-body>
