@@ -6573,7 +6573,7 @@
     </unit>
     <unit id="3160376611740224455">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:252</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:257</note>
         <note category="description">Seeds the assistant composer with a question about a sprint</note>
       </notes>
       <segment state="translated">
@@ -9793,7 +9793,7 @@
     </unit>
     <unit id="6189233648220583946">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:432</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:440</note>
         <note category="description">Shown when the assistant request fails</note>
       </notes>
       <segment state="translated">
@@ -12544,7 +12544,7 @@
     </unit>
     <unit id="3132998863898047908">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:246</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:251</note>
         <note category="description">Seeds the assistant composer with a question about a task</note>
       </notes>
       <segment state="translated">
@@ -13855,8 +13855,8 @@
     </unit>
     <unit id="3154294923374510663">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:548</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:737</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:557</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:748</note>
         <note category="description">Shown when the assistant reports a failure</note>
       </notes>
       <segment state="translated">
