@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import {
   EnvironmentProviders,
   Service,
@@ -7,7 +7,7 @@ import {
   provideAppInitializer,
 } from '@angular/core';
 import { SessionService } from '@core/services/session.service';
-import { WorkspaceListService } from '@core/services/workspace-list.service';
+import { forgetSessionHint, hasSessionHint } from '@core/auth/session-hint';
 import { RegisterRequest } from '@app/core/models/register-request';
 import { catchError, firstValueFrom, of, tap } from 'rxjs';
 import { ClientResponse } from '../models/client-response';
@@ -24,20 +24,26 @@ export function provideAuthRefresh(): EnvironmentProviders {
   return provideAppInitializer(() => {
     const authService = inject(AuthService);
     const session = inject(SessionService);
-    const workspaceList = inject(WorkspaceListService);
     const location = inject(Location);
 
     if (location.path().split('?')[0] === '/auth/auth-provider-login') {
       return firstValueFrom(of(null));
     }
 
+    if (!hasSessionHint()) {
+      return firstValueFrom(of(null));
+    }
+
     return firstValueFrom(
       authService.refresh().pipe(
-        tap((user) => {
-          session.establish(user);
-          workspaceList.reload();
-        }),
-        catchError(() => of(null))
+        tap((user) => session.establish(user)),
+        catchError((err: unknown) => {
+          if (err instanceof HttpErrorResponse && err.status === 401) {
+            forgetSessionHint();
+          }
+
+          return of(null);
+        })
       )
     );
   });

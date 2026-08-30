@@ -1,5 +1,9 @@
 import { computed, inject, Service, signal } from '@angular/core';
 import { Permission } from '@core/auth/permissions';
+import {
+  forgetSessionHint,
+  rememberSessionHint,
+} from '@core/auth/session-hint';
 import { WorkspaceRole } from '@core/enums/workspace-role';
 import { LoginResponse, UserResponse } from '@core/models/session';
 import { UserPermissions } from '@core/models/user-permissions';
@@ -78,6 +82,7 @@ export class SessionService {
     this.user.set(user);
     this.signedIn.set(true);
     this.expires.set(user.expires);
+    rememberSessionHint();
   }
 
   /** A re-read of the signed-in user, which carries their permissions but no new token. */
@@ -90,6 +95,7 @@ export class SessionService {
     this.user.set(undefined);
     this.signedIn.set(false);
     this.expires.set(undefined);
+    forgetSessionHint();
   }
 
   can(permission: Permission): boolean {
