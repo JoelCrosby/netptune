@@ -1,4 +1,4 @@
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
 import {
   COMMAND_PALETTE_RECENT_ITEMS_SCOPE,
@@ -6,58 +6,64 @@ import {
   ResolvedPreferenceValue,
 } from '@core/models/user-preferences';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
-import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
-import { FormSelectComponent } from '@static/components/form-select/form-select.component';
+import {
+  SelectMenuComponent,
+  SelectMenuOption,
+} from '@static/components/select-menu/select-menu.component';
 import { RecentItemsService } from '../../../../shell/command-palette/recent-items.service';
+import {
+  preferenceScopeLabel,
+  PreferenceScopeSelection,
+  selectedScopeFor,
+  valueForScope,
+} from '../preference-scope';
+
+const scopeFieldLabel = $localize`:Label of the preference scope field:Scope`;
+
+interface PreferenceRow {
+  preference: ResolvedPreferenceValue;
+  label: string;
+  valueOptions: readonly SelectMenuOption<string>[];
+  scopeOptions: readonly SelectMenuOption<PreferenceScope>[];
+  value: string;
+  scope: PreferenceScope;
+}
 
 @Component({
   selector: 'app-preference-list',
-  imports: [
-    FormSelectComponent,
-    FormSelectOptionComponent,
-    StrokedButtonComponent,
-  ],
+  imports: [SelectMenuComponent, StrokedButtonComponent],
   host: { class: 'block' },
   template: `
     <ul class="divide-border/50 flex flex-col divide-y">
-      @for (preference of values(); track preference.definition.key) {
+      @for (row of rows(); track row.preference.definition.key) {
         <li class="flex flex-wrap items-end gap-3 px-6 py-4">
-          <app-form-select
-            class="block max-w-86 min-w-56 flex-1"
-            [noMargin]="true"
-            [label]="preference.definition.label"
-            i18n-placeholder="Placeholder in a preference value picker"
-            placeholder="Select value"
-            [value]="currentValue(preference)"
-            (changed)="updateValue(preference, $event)">
-            @for (option of preference.definition.options; track option.value) {
-              <app-form-select-option [value]="option.value">
-                {{ option.label }}
-              </app-form-select-option>
-            }
-          </app-form-select>
+          <div class="flex min-w-0 flex-col gap-1">
+            <span class="text-muted text-xs">{{ row.label }}</span>
+            <app-select-menu
+              [options]="row.valueOptions"
+              [value]="row.value"
+              [ariaLabel]="row.label"
+              buttonClass="h-9 min-w-56 justify-between"
+              (valueChange)="updateValue(row.preference, $event)" />
+          </div>
 
-          <app-form-select
-            class="block w-46"
-            [noMargin]="true"
-            i18n-label="Label of the preference scope field"
-            label="Scope"
-            i18n-placeholder="Placeholder in the preference scope picker"
-            placeholder="Select scope"
-            [value]="selectedScope(preference)"
-            (changed)="selectScope(preference, $event)">
-            @for (scope of preference.definition.allowedScopes; track scope) {
-              <app-form-select-option [value]="scope">
-                {{ scopeLabel(scope) }}
-              </app-form-select-option>
-            }
-          </app-form-select>
+          @if (row.scopeOptions.length > 1) {
+            <div class="flex flex-col gap-1">
+              <span class="text-muted text-xs">{{ scopeFieldLabel }}</span>
+              <app-select-menu
+                [options]="row.scopeOptions"
+                [value]="row.scope"
+                [ariaLabel]="scopeFieldLabel"
+                buttonClass="h-9 w-46 justify-between"
+                (valueChange)="selectScope(row.preference, $event)" />
+            </div>
+          }
 
           <button
             app-stroked-button
             type="button"
-            class="h-10 shrink-0 px-4"
-            (click)="clearValue(preference)">
+            class="h-9 shrink-0 px-4"
+            (click)="clearValue(row.preference)">
             <span i18n="Button that removes a preference override">Clear</span>
           </button>
         </li>
@@ -66,36 +72,33 @@ import { RecentItemsService } from '../../../../shell/command-palette/recent-ite
   `,
 })
 export class PreferenceListComponent {
-  /** Ternaries in a template expression cannot be marked, so build the copy here. */
-  protected scopeLabel(scope: string): string {
-    return scope === 'workspace'
-      ? $localize`:Preference scope limited to the current workspace:Workspace`
-      : $localize`:Preference scope applying everywhere:Global`;
-  }
   readonly values = input.required<ResolvedPreferenceValue[]>();
+
+  protected readonly scopeFieldLabel = scopeFieldLabel;
 
   private readonly userPreferences = inject(UserPreferencesService);
   private readonly recentItems = inject(RecentItemsService);
-  private readonly selectedScopes = signal<Record<string, PreferenceScope>>({});
+  private readonly selectedScopes = signal<PreferenceScopeSelection>({});
 
-  protected selectedScope(
-    preference: ResolvedPreferenceValue
-  ): PreferenceScope {
-    const key = preference.definition.key;
-    const selected = this.selectedScopes()[key];
+  protected readonly rows = computed<PreferenceRow[]>(() => {
+    const scopes = this.selectedScopes();
 
-    if (selected) return selected;
-    if (preference.source === 'workspace') return 'workspace';
-    if (preference.definition.allowedScopes.includes('global')) return 'global';
+    return this.values().map((preference) => {
+      const scope = selectedScopeFor(preference, scopes);
+      const value = valueForScope(preference, scope);
 
-    return preference.definition.allowedScopes[0];
-  }
-
-  protected currentValue(preference: ResolvedPreferenceValue): string {
-    const value = this.valueForSelectedScope(preference);
-
-    return typeof value === 'string' ? value : '';
-  }
+      return {
+        preference,
+        label: preference.definition.label,
+        valueOptions: preference.definition.options,
+        scopeOptions: preference.definition.allowedScopes.map((allowed) => {
+          return { value: allowed, label: preferenceScopeLabel(allowed) };
+        }),
+        value: typeof value === 'string' ? value : '',
+        scope,
+      };
+    });
+  });
 
   protected selectScope(
     preference: ResolvedPreferenceValue,
@@ -123,15 +126,13 @@ export class PreferenceListComponent {
       .subscribe(() => this.invalidateDependentClientState(preference));
   }
 
+  private selectedScope(preference: ResolvedPreferenceValue): PreferenceScope {
+    return selectedScopeFor(preference, this.selectedScopes());
+  }
+
   private invalidateDependentClientState(preference: ResolvedPreferenceValue) {
     if (preference.definition.key === COMMAND_PALETTE_RECENT_ITEMS_SCOPE) {
       this.recentItems.invalidate();
     }
-  }
-
-  private valueForSelectedScope(preference: ResolvedPreferenceValue): unknown {
-    return this.selectedScope(preference) === 'workspace'
-      ? (preference.workspaceValue ?? preference.effectiveValue)
-      : (preference.globalValue ?? preference.effectiveValue);
   }
 }

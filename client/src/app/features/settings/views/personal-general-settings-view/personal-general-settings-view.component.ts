@@ -1,6 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
 import { LucideSettings2 } from '@lucide/angular';
+import { AppearancePreferencesComponent } from '@settings/components/appearance-preferences/appearance-preferences.component';
 import { PreferenceListComponent } from '@settings/components/preference-list/preference-list.component';
 import { IconTileComponent } from '@static/components/icon-tile.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
@@ -8,10 +9,12 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
 import { SkeletonComponent } from '@static/components/skeleton/skeleton.component';
 
 const NOTIFICATION_GROUP = 'notifications';
+const APPEARANCE_GROUP = 'appearance';
 
 @Component({
   selector: 'app-personal-general-settings-view',
   imports: [
+    AppearancePreferencesComponent,
     IconTileComponent,
     PageContainerComponent,
     PageHeaderComponent,
@@ -56,7 +59,11 @@ const NOTIFICATION_GROUP = 'notifications';
                 </div>
               </header>
 
-              <app-preference-list [values]="group.preferences" />
+              @if (group.key === appearanceGroup) {
+                <app-appearance-preferences [values]="group.preferences" />
+              } @else {
+                <app-preference-list [values]="group.preferences" />
+              }
             </section>
           }
         </div>
@@ -67,6 +74,7 @@ const NOTIFICATION_GROUP = 'notifications';
 export class PersonalGeneralSettingsViewComponent {
   private readonly preferences = inject(UserPreferencesService);
 
+  protected readonly appearanceGroup = APPEARANCE_GROUP;
   protected readonly groupIcon = LucideSettings2;
   protected readonly skeletonRows = Array.from({ length: 3 });
 

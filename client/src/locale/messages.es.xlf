@@ -429,7 +429,7 @@
     </unit>
     <unit id="5322873861888163184">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:101,103</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:103,105</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:52,55</note>
         <note category="description">Button that puts this task on another board</note>
       </notes>
@@ -1423,7 +1423,7 @@
     </unit>
     <unit id="7735505964227370595">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:335</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:334</note>
         <note category="description">Accordion summary counting a task&apos;s attachments. COUNT is how many</note>
       </notes>
       <segment state="initial">
@@ -2629,6 +2629,16 @@
         <target>Fijar el espacio de trabajo</target>
       </segment>
     </unit>
+    <unit id="962282029591799382">
+      <notes>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:41</note>
+        <note category="description">Caption describing the cockpit task detail layout</note>
+      </notes>
+      <segment state="initial">
+        <source>Editable chip row under the title, comments docked beside the description.</source>
+        <target>Fila de etiquetas editables bajo el título y comentarios anclados junto a la descripción.</target>
+      </segment>
+    </unit>
     <unit id="966839412220262853">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-context.component.ts:90</note>
@@ -2803,8 +2813,8 @@
     </unit>
     <unit id="6746571899700014633">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:74,76</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:83,85</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:77,79</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:86,88</note>
         <note category="description">Opens the full list of a task&apos;s fields</note>
       </notes>
       <segment state="initial">
@@ -3191,7 +3201,7 @@
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:220</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:918</note>
         <note category="location">src/app/features/pins/components/pin-scope-menu.component.ts:155</note>
-        <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:72</note>
+        <note category="location">src/app/features/settings/components/preference-scope.ts:36</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:431</note>
         <note category="description">Badge on a task pinned for the whole workspace</note>
       </notes>
@@ -4047,7 +4057,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:176,179</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:66,67</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:202</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:204</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:104,107</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:153,156</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:48,50</note>
@@ -4361,6 +4371,16 @@
       <segment state="translated">
         <source>On track</source>
         <target>Según lo previsto</target>
+      </segment>
+    </unit>
+    <unit id="5635155408622268188">
+      <notes>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:28</note>
+        <note category="description">Description of the task detail layout preference</note>
+      </notes>
+      <segment state="initial">
+        <source>How a task opens in the dialog and on its own page.</source>
+        <target>Cómo se abre una tarea en el diálogo y en su propia página.</target>
       </segment>
     </unit>
     <unit id="5635707779811339571">
@@ -4909,7 +4929,7 @@
     </unit>
     <unit id="3807699453257291879">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:193</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:196</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:89</note>
         <note category="description">Section heading for a task&apos;s comments</note>
       </notes>
@@ -4991,9 +5011,9 @@
     <unit id="4116911651502837995">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:192,195</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:216</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:194</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:268</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:218</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:197</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:267</note>
         <note category="description">Heading for a task&apos;s files</note>
       </notes>
       <segment state="translated">
@@ -5503,8 +5523,8 @@
     </unit>
     <unit id="5200831341853054486">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:146,148</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:159,161</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:148,150</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:158,160</note>
         <note category="description">Section heading for a task&apos;s comments</note>
       </notes>
       <segment state="initial">
@@ -7137,7 +7157,7 @@
     </unit>
     <unit id="7575041808886442392">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:320</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:319</note>
         <note category="description">Accordion summary when a task links to one other</note>
       </notes>
       <segment state="initial">
@@ -8286,7 +8306,7 @@
     </unit>
     <unit id="5973718738996433339">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:140,141</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:139,140</note>
         <note category="description">Button that opens the file picker</note>
       </notes>
       <segment state="initial">
@@ -8682,6 +8702,16 @@
         <target><ph id="0" equiv="name" disp="session.originalName"/> se elimina y esta importación ya no se podrá deshacer.</target>
       </segment>
     </unit>
+    <unit id="1527635909232386822">
+      <notes>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:42</note>
+        <note category="description">Caption describing the document task detail layout</note>
+      </notes>
+      <segment state="initial">
+        <source>One centred reading column; every field lives behind “All fields”.</source>
+        <target>Una única columna de lectura centrada; todos los campos están detrás de «Todos los campos».</target>
+      </segment>
+    </unit>
     <unit id="4094558053839852233">
       <notes>
         <note category="location">src/app/features/automations/components/automation-relation-editor.component.ts:88,89</note>
@@ -8826,7 +8856,7 @@
     </unit>
     <unit id="5550975895729371495">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:316</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:315</note>
         <note category="description">Accordion summary when a task links to nothing</note>
       </notes>
       <segment state="initial">
@@ -9181,7 +9211,8 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:65</note>
         <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:195</note>
-        <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:45</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:96</note>
+        <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:21</note>
         <note category="description">Label of the scope field</note>
       </notes>
       <segment state="translated">
@@ -9577,7 +9608,7 @@
     </unit>
     <unit id="4987947040082180128">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:332</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:331</note>
         <note category="description">Accordion summary when a task has one attachment</note>
       </notes>
       <segment state="initial">
@@ -10527,7 +10558,7 @@
     </unit>
     <unit id="8805582001022257690">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:99,101</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:102,104</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:128,130</note>
         <note category="description">Button that asks the assistant about this task</note>
       </notes>
@@ -10754,7 +10785,7 @@
     </unit>
     <unit id="4510676848705799339">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:240,242</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:239,241</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:138,140</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:63</note>
         <note category="description">Accessible label for the button that deletes the task</note>
@@ -11145,8 +11176,8 @@
     </unit>
     <unit id="7565716024468232322">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:215</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:195</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:217</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:198</note>
         <note category="description">Tab listing the tasks this one links to</note>
       </notes>
       <segment state="initial">
@@ -13401,7 +13432,7 @@
     </unit>
     <unit id="6381140642359438701">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:175,177</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:174,176</note>
         <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:71,73</note>
         <note category="description">Expands the comment list over the task body</note>
       </notes>
@@ -13671,9 +13702,9 @@
     </unit>
     <unit id="7107218117130409950">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:214</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:196</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:266</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:216</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:199</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:265</note>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:37</note>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:46,49</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:63,64</note>
@@ -14135,6 +14166,16 @@
         <target> Elige a dónde mover <ph id="0" equiv="TASK_NAME" disp="{{ data.task.name // i18n(ph=&quot;TASK_NAME&quot;) }}"/>. Se conservará su duración. </target>
       </segment>
     </unit>
+    <unit id="8630022383790162651">
+      <notes>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:27</note>
+        <note category="description">Description of the theme preference</note>
+      </notes>
+      <segment state="initial">
+        <source>Applies everywhere you sign in.</source>
+        <target>Se aplica en todos los sitios donde inicies sesión.</target>
+      </segment>
+    </unit>
     <unit id="8633968067722072928">
       <notes>
         <note category="location">src/app/features/calendar/dialogs/calendar-move-task-dialog.component.ts:56,57</note>
@@ -14321,7 +14362,7 @@
     </unit>
     <unit id="4563489865947095174">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:286</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:285</note>
         <note category="description">Accordion summary when a task is not on any board</note>
       </notes>
       <segment state="initial">
@@ -15937,6 +15978,16 @@
         <target>y se ha asignado automáticamente.</target>
       </segment>
     </unit>
+    <unit id="137009466692838782">
+      <notes>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:34</note>
+        <note category="description">Button that drops the theme choice so the app follows the operating system</note>
+      </notes>
+      <segment state="initial">
+        <source>Use system theme</source>
+        <target>Usar el tema del sistema</target>
+      </segment>
+    </unit>
     <unit id="8611492333162495855">
       <notes>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:73,75</note>
@@ -16549,7 +16600,7 @@
     </unit>
     <unit id="8770284726358486659">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:328</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:327</note>
         <note category="description">Prompt on the collapsed files section</note>
       </notes>
       <segment state="initial">
@@ -17140,7 +17191,7 @@
     </unit>
     <unit id="3437679369074503203">
       <notes>
-        <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:73</note>
+        <note category="location">src/app/features/settings/components/preference-scope.ts:37</note>
         <note category="description">Preference scope applying everywhere</note>
       </notes>
       <segment state="translated">
@@ -17156,16 +17207,6 @@
       <segment state="translated">
         <source> Board columns </source>
         <target>Columnas del tablero</target>
-      </segment>
-    </unit>
-    <unit id="3855456680169888833">
-      <notes>
-        <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:30,32</note>
-        <note category="description">Placeholder in a preference value picker</note>
-      </notes>
-      <segment state="translated">
-        <source>Select value</source>
-        <target>Seleccionar un valor</target>
       </segment>
     </unit>
     <unit id="9080564422139929268">
@@ -17190,7 +17231,7 @@
     </unit>
     <unit id="9082027484739685780">
       <notes>
-        <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:46,48</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:97,99</note>
         <note category="description">Placeholder in the preference scope picker</note>
       </notes>
       <segment state="translated">
@@ -18004,7 +18045,7 @@
     <unit id="8700121026680200191">
       <notes>
         <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:107,108</note>
-        <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:61,65</note>
+        <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:67,71</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:113,116</note>
         <note category="location">src/app/features/settings/components/service-accounts/permission-grid.component.ts:46,51</note>
         <note category="location">src/app/static/components/filter-facet/filter-facet.component.ts:67,70</note>
@@ -18359,7 +18400,7 @@
     </unit>
     <unit id="5713343516682617780">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:229,231</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:228,230</note>
         <note category="description">Button that asks the assistant about this task</note>
       </notes>
       <segment state="initial">
@@ -19052,7 +19093,7 @@
     </unit>
     <unit id="2919237623258423230">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:157,159</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:159,161</note>
         <note category="description">Tab showing what has happened to a task</note>
       </notes>
       <segment state="initial">
@@ -20166,7 +20207,7 @@
     </unit>
     <unit id="186236568870281953">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:197</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:200</note>
         <note category="description">Tab showing what has happened to a task</note>
       </notes>
       <segment state="initial">
@@ -20383,8 +20424,8 @@
     </unit>
     <unit id="2467702290618186989">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:111,113</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:118,120</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:113,115</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:117,119</note>
         <note category="description">Button that links this task to another</note>
       </notes>
       <segment state="initial">
@@ -20714,6 +20755,16 @@
         <target>Ningún archivo coincide con los filtros actuales.</target>
       </segment>
     </unit>
+    <unit id="2637348081917147948">
+      <notes>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:40</note>
+        <note category="description">Caption describing the summary rail task detail layout</note>
+      </notes>
+      <segment state="initial">
+        <source>Fields as a scannable summary on the right, sections collapsed to one line.</source>
+        <target>Los campos como un resumen fácil de ojear a la derecha, con las secciones contraídas en una línea.</target>
+      </segment>
+    </unit>
     <unit id="2637409888010075708">
       <notes>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:459</note>
@@ -20836,7 +20887,7 @@
     </unit>
     <unit id="2997922512329830488">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:323</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:322</note>
         <note category="description">Accordion summary counting the tasks this one links to. COUNT is how many</note>
       </notes>
       <segment state="initial">
@@ -21268,7 +21319,7 @@
     </unit>
     <unit id="4911319983039735103">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:267</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:266</note>
         <note category="description">Section heading for links between tasks</note>
       </notes>
       <segment state="initial">
@@ -21560,7 +21611,7 @@
     </unit>
     <unit id="5086267064675007910">
       <notes>
-        <note category="location">src/app/features/settings/views/personal-general-settings-view/personal-general-settings-view.component.ts:32,35</note>
+        <note category="location">src/app/features/settings/views/personal-general-settings-view/personal-general-settings-view.component.ts:35,38</note>
         <note category="description">Accessible label while personal settings load</note>
       </notes>
       <segment state="translated">
@@ -21854,7 +21905,7 @@
     </unit>
     <unit id="2049913543296309259">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:171,172</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:170,171</note>
         <note category="description">Collapses the expanded comment list</note>
       </notes>
       <segment state="initial">
@@ -21945,7 +21996,7 @@
     </unit>
     <unit id="6439365426343089851">
       <notes>
-        <note category="location">src/app/features/settings/views/personal-general-settings-view/personal-general-settings-view.component.ts:25,29</note>
+        <note category="location">src/app/features/settings/views/personal-general-settings-view/personal-general-settings-view.component.ts:28,32</note>
         <note category="location">src/app/features/settings/views/workspace-general-settings-view/workspace-general-settings-view.component.ts:21,24</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:318</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:396</note>
@@ -21999,6 +22050,16 @@
       <segment state="translated">
         <source> No results found... </source>
         <target>No se han encontrado resultados...</target>
+      </segment>
+    </unit>
+    <unit id="648306878592239743">
+      <notes>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:31</note>
+        <note category="description">Button that returns a preference to its default value</note>
+      </notes>
+      <segment state="initial">
+        <source>Reset to default</source>
+        <target>Restablecer el valor predeterminado</target>
       </segment>
     </unit>
     <unit id="6483401023416572043">
@@ -22436,8 +22497,9 @@
     </unit>
     <unit id="9041444200911417888">
       <notes>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:37</note>
         <note category="location">src/app/static/components/date-picker/calendar.component.ts:295</note>
-        <note category="description">Marks the chosen date in a date picker, read out after the date itself</note>
+        <note category="description">Badge on the chosen option tile</note>
       </notes>
       <segment state="translated">
         <source>Selected</source>
