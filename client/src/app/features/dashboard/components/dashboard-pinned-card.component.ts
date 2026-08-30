@@ -173,8 +173,9 @@ export class DashboardPinnedCardComponent {
   protected onTaskClicked(pinned: PinnedTask) {
     this.dialog.open(TaskDetailDialogComponent, {
       width: TaskDetailDialogComponent.width,
+      height: TaskDetailDialogComponent.height,
       data: { systemId: pinned.task.systemId },
-      panelClass: 'app-modal-class',
+      panelClass: TaskDetailDialogComponent.panelClass,
       autoFocus: false,
     });
   }

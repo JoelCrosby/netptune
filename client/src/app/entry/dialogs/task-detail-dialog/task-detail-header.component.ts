@@ -1,4 +1,11 @@
-import { Component, computed, effect, inject, model } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  model,
+} from '@angular/core';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { hasPermission } from '@core/auth/has-permission';
 import { InlineEditHeadingComponent } from '@app/static/components/inline-edit-heading/inline-edit-heading.component';
@@ -8,6 +15,7 @@ import { TaskDetailService } from './task-detail.service';
   selector: 'app-task-detail-header',
   template: `
     <app-inline-edit-heading
+      [textClass]="textClass()"
       (submitted)="updateTask(this.name())"
       [(value)]="name"
       [isReadonly]="isReadOnly()" />
@@ -15,6 +23,10 @@ import { TaskDetailService } from './task-detail.service';
   imports: [InlineEditHeadingComponent],
 })
 export class TaskDetailHeaderComponent {
+  readonly textClass = input(
+    '-mx-2 px-2 py-1 text-[28px]/[36px] font-semibold tracking-[-0.012em]'
+  );
+
   private readonly taskDetail = inject(TaskDetailService);
 
   task = this.taskDetail.task;

@@ -3,6 +3,7 @@ import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { WorkspaceFileViewModel } from '@core/models/view-models/workspace-file-view-model';
 import { taskFilesResource } from '@core/resources/workspace-file.resource';
+import { TaskDetailService } from './task-detail.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import {
   TaskFileUploadItem,
@@ -32,11 +33,15 @@ import { FileSizePipe } from '@static/pipes/file-size.pipe';
   ],
   providers: [TaskFileUploadService],
   template: `
-    <section class="mt-6" aria-labelledby="task-files-heading">
+    <section [class.mt-6]="showHeading()" aria-labelledby="task-files-heading">
       <div class="mb-2 flex items-center justify-between">
-        <h3 id="task-files-heading" class="font-medium">
-          <span i18n="Section heading for files attached to a task">Files</span>
-        </h3>
+        @if (showHeading()) {
+          <h3 id="task-files-heading" class="font-medium">
+            <span i18n="Section heading for files attached to a task">
+              Files
+            </span>
+          </h3>
+        }
         @if (uploading()) {
           <button
             type="button"
@@ -130,7 +135,7 @@ import { FileSizePipe } from '@static/pipes/file-size.pipe';
             }
           </div>
         } @empty {
-          @if (!loading()) {
+          @if (!loading() && showHeading()) {
             <p class="text-muted py-3 text-sm">
               <span i18n="Empty state when a task has no attached files">
                 No files have been added to this task.
@@ -146,7 +151,12 @@ import { FileSizePipe } from '@static/pipes/file-size.pipe';
   `,
 })
 export class TaskDetailFilesComponent {
-  readonly systemId = input.required<string>();
+  readonly showHeading = input(false);
+
+  private readonly taskDetail = inject(TaskDetailService);
+
+  readonly systemId = computed(() => this.taskDetail.task()?.systemId);
+
   private readonly filesResource = taskFilesResource(this.systemId);
   private readonly uploadService = inject(TaskFileUploadService);
   private readonly service = inject(WorkspaceFilesService);
@@ -181,12 +191,22 @@ export class TaskDetailFilesComponent {
 
   readonly canUpload = hasPermission(PERMISSIONS.files.upload);
 
+  readonly count = computed(() => this.files().length);
+
   upload(files: File[]) {
-    this.uploadService.upload(this.systemId(), files);
+    const systemId = this.systemId();
+
+    if (!systemId) return;
+
+    this.uploadService.upload(systemId, files);
   }
 
   retry(upload: TaskFileUploadItem) {
-    this.uploadService.retry(this.systemId(), upload);
+    const systemId = this.systemId();
+
+    if (!systemId) return;
+
+    this.uploadService.retry(systemId, upload);
   }
 
   cancelUploads() {
@@ -194,10 +214,14 @@ export class TaskDetailFilesComponent {
   }
 
   async remove(file: WorkspaceFileViewModel) {
+    const systemId = this.systemId();
+
+    if (!systemId) return;
+
     this.mutationError.set('');
 
     try {
-      await this.service.deleteTaskFile(this.systemId(), file.id);
+      await this.service.deleteTaskFile(systemId, file.id);
       this.uploadService.removeCompletedFile(file.id);
       this.filesResource.value.update((response) => {
         if (!response) {

@@ -1,5 +1,12 @@
 import { httpResource } from '@angular/common/http';
-import { Component, ElementRef, computed, inject } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  computed,
+  inject,
+  input,
+  viewChild,
+} from '@angular/core';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { hasPermission } from '@core/auth/has-permission';
 import { MAX_PAGE_SIZE } from '@core/models/pagination';
@@ -27,25 +34,27 @@ import { TaskDetailService } from './task-detail.service';
     LucideX,
   ],
   template: `
-    <div class="mt-4 mb-2 flex items-center justify-between">
-      <h4 class="font-sm font-semibold">
-        <span i18n="Section heading for the boards a task appears on">
-          Boards
-        </span>
-      </h4>
-      @if (canMove() && availableBoards().length) {
-        <button
-          app-stroked-button
-          type="button"
-          size="sm"
-          (click)="menu.toggle(el.nativeElement)">
-          <svg lucidePlus class="h-4 w-4"></svg>
-          <span i18n="Button that puts this task on another board">
-            Add to board
+    @if (showHeading()) {
+      <div class="mt-4 mb-2 flex items-center justify-between">
+        <h4 class="font-sm font-semibold">
+          <span i18n="Section heading for the boards a task appears on">
+            Boards
           </span>
-        </button>
-      }
-    </div>
+        </h4>
+        @if (canAdd()) {
+          <button
+            app-stroked-button
+            type="button"
+            size="sm"
+            (click)="openAddMenu(el.nativeElement)">
+            <svg lucidePlus class="h-4 w-4"></svg>
+            <span i18n="Button that puts this task on another board">
+              Add to board
+            </span>
+          </button>
+        }
+      </div>
+    }
 
     <app-dropdown-menu #menu>
       <div class="min-w-52">
@@ -61,12 +70,14 @@ import { TaskDetailService } from './task-detail.service';
     <ul class="flex flex-col gap-1">
       @for (placement of placements(); track placement.boardId) {
         <li
-          class="border-border bg-card flex items-center gap-3 rounded border px-3 py-2">
-          <svg lucideKanban class="text-muted h-4 w-4 shrink-0"></svg>
+          class="border-foreground/8 bg-foreground/[0.02] flex h-10 items-center gap-3 rounded-lg border px-3">
+          <svg lucideKanban class="text-foreground/40 h-4 w-4 shrink-0"></svg>
 
-          <span class="flex-1 truncate text-sm">{{ placement.boardName }}</span>
+          <span class="flex-1 truncate text-[13px] font-medium">
+            {{ placement.boardName }}
+          </span>
 
-          <span class="text-muted shrink-0 text-xs">
+          <span class="text-foreground/40 shrink-0 text-xs">
             {{ placement.boardGroupName }}
           </span>
 
@@ -98,7 +109,11 @@ import { TaskDetailService } from './task-detail.service';
   `,
 })
 export class TaskDetailBoardsComponent {
+  readonly showHeading = input(false);
+
   readonly el = inject(ElementRef);
+
+  private readonly menu = viewChild.required(DropdownMenuComponent);
 
   private readonly taskDetail = inject(TaskDetailService);
   private readonly taskCommands = inject(TaskCommandsService);
@@ -130,8 +145,16 @@ export class TaskDetailBoardsComponent {
     return this.boards.value().filter((board) => !placedBoardIds.has(board.id));
   });
 
+  readonly canAdd = computed(
+    () => this.canMove() && this.availableBoards().length > 0
+  );
+
   constructor() {
     reloadOnRefresh(this.boards, ['boards']);
+  }
+
+  openAddMenu(origin: HTMLElement) {
+    this.menu().toggle(origin);
   }
 
   addToBoard(boardId: number) {

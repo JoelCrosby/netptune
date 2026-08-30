@@ -3,8 +3,12 @@ import { Signal } from '@angular/core';
 import { ClientResponse } from '../models/client-response';
 import { WorkspaceFileViewModel } from '../models/view-models/workspace-file-view-model';
 
-export const taskFilesResource = (systemId: Signal<string>) => {
+export const taskFilesResource = (systemId: Signal<string | undefined>) => {
   return httpResource<ClientResponse<WorkspaceFileViewModel[]>>(() => {
-    return `api/tasks/${encodeURIComponent(systemId())}/files`;
+    const id = systemId();
+
+    if (!id) return undefined;
+
+    return `api/tasks/${encodeURIComponent(id)}/files`;
   });
 };

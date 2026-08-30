@@ -171,8 +171,9 @@ export class PinnedViewComponent {
   protected onTaskClicked(task: TaskViewModel) {
     this.dialog.open(TaskDetailDialogComponent, {
       width: TaskDetailDialogComponent.width,
+      height: TaskDetailDialogComponent.height,
       data: { systemId: task.systemId },
-      panelClass: 'app-modal-class',
+      panelClass: TaskDetailDialogComponent.panelClass,
       autoFocus: false,
     });
   }

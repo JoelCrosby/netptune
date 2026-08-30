@@ -1,6 +1,12 @@
 import { DialogRef } from '@angular/cdk/dialog';
 import { httpResource } from '@angular/common/http';
-import { Component, computed, inject, linkedSignal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  input,
+  linkedSignal,
+} from '@angular/core';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { hasPermission } from '@core/auth/has-permission';
 import { Router } from '@angular/router';
@@ -44,21 +50,23 @@ interface RelationGroup {
     LucideX,
   ],
   template: `
-    <div class="mt-4 mb-2 flex items-center justify-between">
-      <h4 class="font-sm font-semibold">
-        <span i18n="Section heading for links between tasks">Relations</span>
-      </h4>
-      @if (canUpdate()) {
-        <button
-          app-stroked-button
-          type="button"
-          size="sm"
-          (click)="openLinkDialog()">
-          <svg lucidePlus class="h-4 w-4"></svg>
-          <span i18n="Button that links this task to another">Link task</span>
-        </button>
-      }
-    </div>
+    @if (showHeading()) {
+      <div class="mt-4 mb-2 flex items-center justify-between">
+        <h4 class="font-sm font-semibold">
+          <span i18n="Section heading for links between tasks">Relations</span>
+        </h4>
+        @if (canUpdate()) {
+          <button
+            app-stroked-button
+            type="button"
+            size="sm"
+            (click)="openLinkDialog()">
+            <svg lucidePlus class="h-4 w-4"></svg>
+            <span i18n="Button that links this task to another">Link task</span>
+          </button>
+        }
+      </div>
+    }
 
     @if (error()) {
       <div class="text-danger mb-2 text-sm">{{ error() }}</div>
@@ -74,7 +82,7 @@ interface RelationGroup {
         <ul class="flex flex-col gap-1">
           @for (relation of group.relations; track relation.id) {
             <li
-              class="border-border bg-card flex items-center gap-3 rounded border px-3 py-2">
+              class="border-foreground/8 bg-foreground/[0.02] flex items-center gap-3 rounded-lg border px-3 py-2">
               <app-color-swatch
                 size="sm"
                 [color]="relation.relatedTask.statusColor" />
@@ -123,6 +131,8 @@ interface RelationGroup {
   `,
 })
 export class TaskDetailRelationsComponent {
+  readonly showHeading = input(false);
+
   private readonly relationsService = inject(TaskRelationsService);
   private readonly dialog = inject(DialogService);
   private readonly snackbar = inject(SnackbarService);
@@ -158,6 +168,8 @@ export class TaskDetailRelationsComponent {
   );
 
   private readonly displayedRelations = retainWhileLoading(this.relations);
+
+  readonly count = computed(() => this.displayedRelations().length);
 
   // Relations arrive ordered by relation type and direction, so consecutive rows sharing a label
   // belong together. Grouping by label rather than by type id is deliberate: one type produces two

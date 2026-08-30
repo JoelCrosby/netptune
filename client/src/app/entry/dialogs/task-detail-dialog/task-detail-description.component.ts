@@ -1,35 +1,53 @@
-import { Component, computed, effect, inject, model } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  model,
+} from '@angular/core';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { hasPermission } from '@core/auth/has-permission';
 import { TaskViewModel } from '@app/core/models/view-models/project-task-dto';
-import { EditorComponent } from '@static/components/editor/editor.component';
+import {
+  EditorAppearance,
+  EditorComponent,
+} from '@static/components/editor/editor.component';
+import { EYEBROW } from './task-detail-styles';
 import { TaskDetailService } from './task-detail.service';
 
 @Component({
   selector: 'app-task-detail-description',
   template: `
-    <label class="font-sm font-semibold" for="description">
-      <span i18n="Label of the task description editor">Description</span>
-    </label>
+    @if (label(); as label) {
+      <div [class]="eyebrowClass" [id]="labelId">{{ label }}</div>
+    }
 
     <app-editor
-      aria-labelledby="description"
+      [attr.aria-labelledby]="label() ? labelId : null"
       i18n-placeholder="Placeholder in the empty task description editor"
       placeholder="Add a Description..."
+      [appearance]="appearance()"
+      [hostClass]="textClass()"
       (saved)="updateTask($event)"
       [finalSave]="finalSave()"
       [(value)]="description"
-      [isReadOnly]="isReadOnly()"
-      class="@xl:px-16"></app-editor>
+      [isReadOnly]="isReadOnly()"></app-editor>
   `,
-  host: { class: '@container' },
   imports: [EditorComponent],
 })
 export class TaskDetailDescriptionComponent {
+  readonly appearance = input<EditorAppearance>('flat');
+  readonly textClass = input('text-[15px]/[26px]');
+  readonly label = input<string | null>(null);
+
   private readonly taskDetail = inject(TaskDetailService);
 
-  task = this.taskDetail.task;
+  readonly task = this.taskDetail.task;
   private readonly canUpdate = hasPermission(PERMISSIONS.tasks.update);
+
+  readonly eyebrowClass = `${EYEBROW} mb-2.5`;
+  readonly labelId = 'task-detail-description-label';
 
   isReadOnly = computed(() => !this.canUpdate());
   description = model(this.task()?.description ?? '');

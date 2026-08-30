@@ -8,6 +8,12 @@ import {
 } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UpdateProjectTaskRequest } from '@app/core/models/requests/update-project-task-request';
+import { TaskPriority } from '@core/enums/task-priority';
+import {
+  UserSelectOption,
+  UserSelectValue,
+} from '@core/models/view-models/user-select-option';
+import { TaskEstimate } from '@static/components/task-properties/task-estimate-select.component';
 import { taskDetailResource } from '@core/resources/task.resource';
 import { SprintsService } from '@core/services/sprints.service';
 import { CurrentTaskService } from '@core/services/current-task.service';
@@ -31,6 +37,7 @@ export class TaskDetailService {
 
   readonly task = this.resource.value;
   readonly loading = this.resource.isLoading;
+  readonly isEditing = this.taskCommands.isEditing;
 
   /* The view separates a task that is gone from a request that failed. */
   readonly loadError = computed(
@@ -66,6 +73,59 @@ export class TaskDetailService {
     if (!task) return;
 
     this.taskCommands.update({ ...task, ...update });
+  }
+
+  setStatus(statusId: number | null) {
+    if (statusId === null) return;
+
+    this.updateTask({ statusId });
+  }
+
+  setPriority(priority: TaskPriority | null) {
+    this.updateTask({ priority });
+  }
+
+  setEstimate({ estimateType, estimateValue }: TaskEstimate) {
+    this.updateTask({ estimateType, estimateValue });
+  }
+
+  setStartDate(startDate: string) {
+    this.updateTask({ startDate: startDate || null });
+  }
+
+  setDueDate(dueDate: string) {
+    this.updateTask({ dueDate: dueDate || null });
+  }
+
+  setProject(projectId: number | null) {
+    if (projectId === null) return;
+
+    this.updateTask({ projectId });
+  }
+
+  setSprint(sprintId: number | null) {
+    if (sprintId === null) {
+      this.clearSprint();
+
+      return;
+    }
+
+    this.assignSprint(sprintId);
+  }
+
+  setAssignees(assignees: UserSelectValue[]) {
+    this.updateTask({ assigneeIds: assignees.map((assignee) => assignee.id) });
+  }
+
+  toggleAssignee(user: UserSelectOption) {
+    const assignees = this.task()?.assignees ?? [];
+    const selected = assignees.some((assignee) => assignee.id === user.id);
+
+    this.setAssignees(
+      selected
+        ? assignees.filter((assignee) => assignee.id !== user.id)
+        : [...assignees, user]
+    );
   }
 
   deleteTask(onDeleted?: () => void) {

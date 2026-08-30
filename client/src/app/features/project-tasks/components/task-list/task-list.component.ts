@@ -210,9 +210,10 @@ export class TaskListComponent {
   titleClicked(task: TaskViewModel) {
     this.dialog.open(TaskDetailDialogComponent, {
       width: TaskDetailDialogComponent.width,
+      height: TaskDetailDialogComponent.height,
       data: task,
       autoFocus: false,
-      panelClass: 'app-modal-class',
+      panelClass: TaskDetailDialogComponent.panelClass,
     });
   }
 

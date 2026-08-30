@@ -318,9 +318,10 @@ export class RoadmapViewComponent {
   openTask(task: RoadmapTask): void {
     const dialogRef = this.dialog.open(TaskDetailDialogComponent, {
       width: TaskDetailDialogComponent.width,
+      height: TaskDetailDialogComponent.height,
       data: task,
       autoFocus: false,
-      panelClass: 'app-modal-class',
+      panelClass: TaskDetailDialogComponent.panelClass,
     });
 
     dialogRef.closed.subscribe(() => {

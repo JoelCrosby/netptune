@@ -260,8 +260,9 @@ export class BoardGroupComponent implements OnDestroy, AfterViewInit {
     } else {
       this.dialog.open(TaskDetailDialogComponent, {
         width: TaskDetailDialogComponent.width,
+        height: TaskDetailDialogComponent.height,
         data: task,
-        panelClass: 'app-modal-class',
+        panelClass: TaskDetailDialogComponent.panelClass,
         autoFocus: false,
       });
     }

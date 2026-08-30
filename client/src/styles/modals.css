@@ -29,3 +29,39 @@
   height: 100%;
   overflow: hidden;
 }
+
+.app-task-detail-dialog {
+  height: 740px;
+  max-height: 92vh;
+}
+
+.app-task-detail-dialog app-dialog-container {
+  padding: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, .5);
+}
+
+.app-task-detail-dialog app-dialog-container .dialog-inner {
+  padding-right: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+@media only screen and (max-width: 1200px) {
+  .app-task-detail-dialog {
+    max-width: calc(100vw - 32px);
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .app-task-detail-dialog {
+    height: 100vh !important;
+    max-height: 100vh;
+    max-width: 100vw !important;
+  }
+
+  .app-task-detail-dialog app-dialog-container {
+    border-radius: 0;
+  }
+}
