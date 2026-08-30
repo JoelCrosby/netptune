@@ -55,7 +55,7 @@ public class GetUserPreferenceValuesQueryHandlerTests
         var appearance = result.Groups
             .Single(group => group.Key == "appearance")
             .Preferences
-            .Single();
+            .Single(preference => preference.Definition.Key == PreferenceKeys.AppearanceTheme);
         appearance.Source.Should().Be(PreferenceScopes.Global);
         appearance.EffectiveValue.GetString().Should().Be("dark");
 

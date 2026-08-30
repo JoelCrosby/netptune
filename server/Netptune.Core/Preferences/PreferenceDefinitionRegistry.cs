@@ -73,6 +73,23 @@ public sealed class PreferenceDefinitionRegistry : IPreferenceDefinitionRegistry
         },
         new()
         {
+            Key = PreferenceKeys.AppearanceTaskDetailLayout,
+            GroupKey = "appearance",
+            Label = "Task detail layout",
+            ControlType = "select",
+            ValueType = "string",
+            DefaultValue = JsonSerializer.SerializeToElement("summary-rail"),
+            AllowedScopes = [PreferenceScopes.Global],
+            Options =
+            [
+                new() { Value = "summary-rail", Label = "Summary rail" },
+                new() { Value = "cockpit", Label = "Cockpit" },
+                new() { Value = "document", Label = "Document" },
+            ],
+            Order = 20,
+        },
+        new()
+        {
             Key = PreferenceKeys.CommandPaletteRecentItemsScope,
             GroupKey = "commandPalette",
             Label = "Recent items scope",

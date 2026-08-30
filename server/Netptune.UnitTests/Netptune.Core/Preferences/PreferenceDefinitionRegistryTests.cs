@@ -33,13 +33,27 @@ public class PreferenceDefinitionRegistryTests
     {
         var group = Registry.GetGroups().Single(group => group.Key == "appearance");
 
-        var preference = group.Preferences.Should().ContainSingle().Subject;
+        var preference = group.Preferences.Single(item => item.Key == PreferenceKeys.AppearanceTheme);
 
-        preference.Key.Should().Be(PreferenceKeys.AppearanceTheme);
         preference.ControlType.Should().Be("select");
         preference.DefaultValue.GetString().Should().Be("light");
         preference.AllowedScopes.Should().Equal(PreferenceScopes.Global);
         preference.Options.Select(option => option.Value).Should().Equal("light", "dark");
+    }
+
+    [Fact]
+    public void GetGroups_ReturnsTaskDetailLayoutSelectDefinition()
+    {
+        var group = Registry.GetGroups().Single(group => group.Key == "appearance");
+
+        var preference = group.Preferences.Single(item =>
+            item.Key == PreferenceKeys.AppearanceTaskDetailLayout);
+
+        preference.ControlType.Should().Be("select");
+        preference.DefaultValue.GetString().Should().Be("summary-rail");
+        preference.AllowedScopes.Should().Equal(PreferenceScopes.Global);
+        preference.Options.Select(option => option.Value)
+            .Should().Equal("summary-rail", "cockpit", "document");
     }
 
     [Fact]

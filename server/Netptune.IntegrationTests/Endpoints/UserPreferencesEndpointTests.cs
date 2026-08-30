@@ -59,6 +59,26 @@ public sealed class UserPreferencesEndpointTests
     }
 
     [Fact]
+    public async Task Definitions_ShouldReturnTaskDetailLayoutAsGlobalSelectPreference()
+    {
+        var response = await Client.GetAsync("api/user-preferences/definitions");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<PreferenceDefinitionsResponse>();
+        var preference = result!.Groups
+            .Single(group => group.Key == "appearance")
+            .Preferences
+            .Single(item => item.Key == PreferenceKeys.AppearanceTaskDetailLayout);
+
+        preference.ControlType.Should().Be("select");
+        preference.AllowedScopes.Should().Equal("global");
+        preference.DefaultValue.GetString().Should().Be("summary-rail");
+        preference.Options.Select(option => option.Value)
+            .Should().Equal("summary-rail", "cockpit", "document");
+    }
+
+    [Fact]
     public async Task Values_ShouldResolveMissingValuesToDefaults()
     {
         await ClearPreference("workspace");
