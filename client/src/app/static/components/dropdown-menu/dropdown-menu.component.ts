@@ -1,8 +1,10 @@
 import { Overlay, OverlayRef, OverlayConfig } from '@angular/cdk/overlay';
 import { CdkPortal } from '@angular/cdk/portal';
+import { cn } from '../button/button.variants';
 import {
   Component,
   HostListener,
+  computed,
   inject,
   input,
   OnDestroy,
@@ -17,9 +19,7 @@ export type DropdownMenuXPosition = 'before' | 'after';
   selector: 'app-dropdown-menu',
   template: `
     <ng-template cdkPortal>
-      <div
-        class="dropdown-menu min-w-40 rounded-md border border-neutral-200 bg-white p-1 shadow-lg dark:border-neutral-700 dark:bg-neutral-900"
-        [attr.role]="panelRole()">
+      <div [class]="className()" [attr.role]="panelRole()">
         <ng-content />
       </div>
     </ng-template>
@@ -50,6 +50,15 @@ export class DropdownMenuComponent implements OnDestroy {
 
   readonly xPosition = input<DropdownMenuXPosition>('after');
   readonly panelRole = input('menu');
+  /** Padding of the panel itself, dropped by content that draws its own edges. */
+  readonly panelClass = input('p-1');
+
+  protected readonly className = computed(() => {
+    return cn(
+      'dropdown-menu min-w-40 rounded-md border border-neutral-200 bg-white shadow-lg dark:border-neutral-700 dark:bg-neutral-900',
+      this.panelClass()
+    );
+  });
 
   readonly closed = output();
 
@@ -72,7 +81,23 @@ export class DropdownMenuComponent implements OnDestroy {
     this.overlayRef = this.overlay.create(this.getOverlayConfig(origin));
     this.overlayRef.attach(this.portal());
     this.overlayRef.backdropClick().subscribe(() => this.close());
+    this.overlayRef.keydownEvents().subscribe((event) => {
+      if (event.key !== 'Escape') return;
+
+      event.preventDefault();
+      this.closeAndFocusTrigger();
+    });
     this.showing.set(true);
+  }
+
+  closeAndFocusTrigger() {
+    const origin = this.origin;
+
+    this.close();
+
+    if (!origin) return;
+
+    focusTrigger(origin);
   }
 
   close() {
@@ -132,4 +157,13 @@ export class DropdownMenuComponent implements OnDestroy {
       backdropClass: 'cdk-overlay-transparent-backdrop',
     });
   }
+}
+
+function focusTrigger(origin: HTMLElement) {
+  const trigger =
+    origin instanceof HTMLButtonElement
+      ? origin
+      : origin.querySelector('button');
+
+  trigger?.focus();
 }

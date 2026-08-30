@@ -1390,7 +1390,7 @@
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:69,72</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:62,65</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:164,167</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:304</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:303</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:255</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:42,44</note>
         <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:85,87</note>
@@ -1579,7 +1579,7 @@
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:461</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:230</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:363</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:303</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:302</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:207</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:254</note>
         <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:155</note>
@@ -4757,6 +4757,7 @@
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:37</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:90</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:326</note>
+        <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:53,54</note>
         <note category="description">Section heading for a task&apos;s tags</note>
       </notes>
       <segment>
@@ -7883,7 +7884,7 @@
     <unit id="1341636531721064512">
       <notes>
         <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:76,78</note>
-        <note category="location">src/app/static/components/status-filter/status-filter.component.ts:18,20</note>
+        <note category="location">src/app/static/components/status-filter/status-filter.component.ts:28,30</note>
         <note category="description">Label on the control that filters automations by status</note>
       </notes>
       <segment>
@@ -8466,7 +8467,7 @@
     </unit>
     <unit id="4965562695253171955">
       <notes>
-        <note category="location">src/app/static/components/filter-input/filter-input.component.ts:33,35</note>
+        <note category="location">src/app/static/components/filter-input/filter-input.component.ts:58,60</note>
         <note category="description">Accessible label for the button that clears a filter</note>
       </notes>
       <segment>
@@ -8851,6 +8852,15 @@
       </notes>
       <segment>
         <source><ph id="0" equiv="FIELD" disp="label"/> cleared</source>
+      </segment>
+    </unit>
+    <unit id="4705684969760487201">
+      <notes>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:176</note>
+        <note category="description">Shown when a filter has no options at all</note>
+      </notes>
+      <segment>
+        <source>No options</source>
       </segment>
     </unit>
     <unit id="8305060666501284978">
@@ -11398,6 +11408,15 @@
         <source>Back to Boards</source>
       </segment>
     </unit>
+    <unit id="1411404971171105228">
+      <notes>
+        <note category="location">src/app/static/components/status-filter/status-filter.component.ts:44,46</note>
+        <note category="description">Shown when there are no statuses to filter by</note>
+      </notes>
+      <segment>
+        <source>No statuses</source>
+      </segment>
+    </unit>
     <unit id="2700504957203898501">
       <notes>
         <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:135,137</note>
@@ -12370,6 +12389,16 @@
         <source>Estimates changed</source>
       </segment>
     </unit>
+    <unit id="6044719097380241880">
+      <notes>
+        <note category="location">src/app/static/components/filter-facet/filter-facet.component.ts:192</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:296</note>
+        <note category="description">Button that renders the next page of a filter&apos;s options. COUNT is how many options remain</note>
+      </notes>
+      <segment>
+        <source>Show more (<ph id="0" equiv="COUNT" disp="hidden"/> remaining)</source>
+      </segment>
+    </unit>
     <unit id="6048892649018070225">
       <notes>
         <note category="location">src/app/features/calendar/components/calendar-toolbar/calendar-toolbar.component.ts:124,127</note>
@@ -12774,6 +12803,15 @@
       </notes>
       <segment>
         <source>Untitled view</source>
+      </segment>
+    </unit>
+    <unit id="3445720584036648434">
+      <notes>
+        <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:50,51</note>
+        <note category="description">Placeholder in the box that searches tags</note>
+      </notes>
+      <segment>
+        <source>Search tags</source>
       </segment>
     </unit>
     <unit id="3448462145758383019">
@@ -14627,6 +14665,7 @@
     <unit id="928009341755063873">
       <notes>
         <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:222</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:187</note>
         <note category="description">Keyboard key that closes the workspace menu, shown as a hint</note>
       </notes>
       <segment>
@@ -15504,6 +15543,15 @@
         <source>Tracks implementation work in Netptune</source>
       </segment>
     </unit>
+    <unit id="7306729995560326678">
+      <notes>
+        <note category="location">src/app/static/components/filter-facet/filter-facet.component.ts:151</note>
+        <note category="description">Accessible name of the box that narrows one filter group&apos;s options. GROUP is the group&apos;s heading</note>
+      </notes>
+      <segment>
+        <source>Search <ph id="0" equiv="GROUP" disp="this.label()"/></source>
+      </segment>
+    </unit>
     <unit id="7307617403046327210">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-mode-menu.component.ts:48,50</note>
@@ -15853,7 +15901,7 @@
         <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:61,65</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:113,116</note>
         <note category="location">src/app/features/settings/components/service-accounts/permission-grid.component.ts:46,51</note>
-        <note category="location">src/app/static/components/filter-facet/filter-facet.component.ts:57,60</note>
+        <note category="location">src/app/static/components/filter-facet/filter-facet.component.ts:67,70</note>
         <note category="description">Button that clears the task selection</note>
       </notes>
       <segment>
@@ -16114,13 +16162,13 @@
         <source> Visibility and access </source>
       </segment>
     </unit>
-    <unit id="3500565826089528548">
+    <unit id="2057462794608190902">
       <notes>
-        <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:41,46</note>
+        <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:94</note>
         <note category="description">Filters the list down to tasks that carry no tags</note>
       </notes>
       <segment>
-        <source> Untagged </source>
+        <source>Untagged</source>
       </segment>
     </unit>
     <unit id="7068860286643870184">
@@ -16764,6 +16812,16 @@
       </notes>
       <segment>
         <source>overdue</source>
+      </segment>
+    </unit>
+    <unit id="2933395362711398504">
+      <notes>
+        <note category="location">src/app/static/components/filter-facet/filter-facet.component.ts:136</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:179</note>
+        <note category="description">Shown when a filter&apos;s search term matches no options</note>
+      </notes>
+      <segment>
+        <source>No matches</source>
       </segment>
     </unit>
     <unit id="294017637034538270">
@@ -17470,6 +17528,15 @@
         <source> Add Tasks to Sprint </source>
       </segment>
     </unit>
+    <unit id="8182205560072943152">
+      <notes>
+        <note category="location">src/app/static/components/status-filter/status-filter.component.ts:40,41</note>
+        <note category="description">Placeholder in the box that searches statuses</note>
+      </notes>
+      <segment>
+        <source>Search statuses</source>
+      </segment>
+    </unit>
     <unit id="8185120639208275754">
       <notes>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:52,55</note>
@@ -17931,7 +17998,7 @@
     </unit>
     <unit id="1152778269115350205">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:301</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:300</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:252</note>
         <note category="description">Title of the confirmation dialog for deleting a sprint</note>
       </notes>
@@ -19247,6 +19314,7 @@
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:80,81</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:88</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:334</note>
+        <note category="location">src/app/static/components/status-filter/status-filter.component.ts:42,43</note>
         <note category="description">Filter heading for statuses</note>
       </notes>
       <segment>
@@ -19832,7 +19900,10 @@
     <unit id="4580988005648117665">
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:44</note>
+        <note category="location">src/app/static/components/filter-facet/filter-facet.component.ts:133</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:171</note>
         <note category="location">src/app/static/components/search-input/search-input.component.ts:39</note>
+        <note category="location">src/app/static/components/select-filter/select-filter.component.ts:70</note>
         <note category="description">Label of the export search filter</note>
       </notes>
       <segment>
@@ -19980,7 +20051,7 @@
     </unit>
     <unit id="3980757604750257396">
       <notes>
-        <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:29,31</note>
+        <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:37,39</note>
         <note category="description">Label on the control that filters tasks by tag</note>
       </notes>
       <segment>
@@ -19989,7 +20060,7 @@
     </unit>
     <unit id="6447840555676789898">
       <notes>
-        <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:65,67</note>
+        <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:62,64</note>
         <note category="description">Heading of the empty state in the tag filter</note>
       </notes>
       <segment>
@@ -20007,7 +20078,7 @@
     </unit>
     <unit id="4447140464620115564">
       <notes>
-        <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:69,71</note>
+        <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:66,69</note>
         <note category="description">Explains why the tag filter is empty</note>
       </notes>
       <segment>
