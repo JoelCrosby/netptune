@@ -35,6 +35,8 @@ import {
   MentionSubmitEvent,
 } from '../mention-input/mention-input.component';
 
+export type CommentsListDensity = 'comfortable' | 'compact';
+
 export interface CommentSubmitEvent {
   text: string;
   mentions: string[];
@@ -74,7 +76,7 @@ interface CommentReactions {
   ],
   template: `
     <div>
-      @if (canCreate() && user(); as user) {
+      @if (showComposer() && canCreate() && user(); as user) {
         <div class="my-4 flex flex-row items-center gap-4">
           <app-avatar
             size="lg"
@@ -87,20 +89,31 @@ interface CommentReactions {
             [icon]="lucideMessageSquare"></app-mention-input>
         </div>
       }
-      <div class="mb-4 flex flex-col" [class.ml-12]="canCreate()">
+      <div
+        class="flex flex-col"
+        [class.mb-4]="!compact()"
+        [class.gap-2]="compact()"
+        [class.ml-12]="showComposer() && canCreate()">
         @for (comment of comments(); track comment.id) {
           <div
-            class="group mb-1 flex min-h-12 flex-row items-center gap-4 rounded-md p-2 hover:bg-neutral-50 dark:hover:bg-neutral-800">
+            class="group flex flex-row rounded-md hover:bg-neutral-50 dark:hover:bg-neutral-800"
+            [class]="
+              compact()
+                ? 'items-start gap-2.5 p-1.5'
+                : 'mb-1 min-h-12 items-center gap-4 p-2'
+            ">
             <app-avatar
-              size="md"
+              [size]="compact() ? 'sm' : 'md'"
               [name]="comment.userDisplayName"
               [imageUrl]="comment.userDisplayImage"
               [isServiceAccount]="
                 comment.userIsServiceAccount ?? false
               "></app-avatar>
 
-            <div class="flex flex-1 flex-col">
-              <span class="mb-1 flex flex-row items-center font-medium">
+            <div class="flex min-w-0 flex-1 flex-col">
+              <span
+                class="flex flex-row items-center font-semibold"
+                [class]="compact() ? 'text-[13px]' : 'mb-1 font-medium'">
                 {{ comment.userDisplayName }}
                 <small class="ml-[0.6rem] flex-1 opacity-60">
                   {{ comment.createdAt | fromNow }}
@@ -151,7 +164,8 @@ interface CommentReactions {
                 </app-mention-input>
               } @else {
                 <span
-                  class="text-sm font-normal"
+                  class="font-normal"
+                  [class]="compact() ? 'text-[13px]/[20px]' : 'text-sm'"
                   [innerHTML]="renderBody(comment.body)"></span>
               }
 
@@ -238,6 +252,11 @@ export class CommentsListComponent {
   readonly canCreate = input<boolean>(false);
   readonly canEdit = input<boolean>(false);
   readonly canReact = input<boolean>(false);
+
+  readonly showComposer = input<boolean>(true);
+  readonly density = input<CommentsListDensity>('comfortable');
+
+  protected readonly compact = computed(() => this.density() === 'compact');
 
   readonly deleteComment = output<CommentViewModel>();
   readonly commentSubmit = output<CommentSubmitEvent>();

@@ -17,6 +17,7 @@ export type DropdownMenuXPosition = 'before' | 'after';
 
 @Component({
   selector: 'app-dropdown-menu',
+  host: { class: 'contents' },
   template: `
     <ng-template cdkPortal>
       <div [class]="className()" [attr.role]="panelRole()">

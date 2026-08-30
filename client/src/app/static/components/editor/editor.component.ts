@@ -1,6 +1,7 @@
 import {
   afterNextRender,
   Component,
+  computed,
   effect,
   ElementRef,
   inject,
@@ -30,15 +31,18 @@ import { environment } from '@env/environment';
 import { firstValueFrom, Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { AbstractFormValueControl } from '../abstract-form-value-control';
+import { cn } from '../button/button.variants';
 
 const saveDebounceMs = 750;
+
+export type EditorAppearance = 'boxed' | 'flat';
 
 @Component({
   selector: 'app-editor',
   template: ` <div class="editor w-full rounded" #editorJs></div> `,
   host: {
-    class:
-      'bg-form-field-background mb-4 border-foreground/30 mt-2 flex rounded-sm border-2 px-4 py-1 overflow-y-auto max-h-[600px]',
+    class: 'flex overflow-y-auto max-h-[600px]',
+    '[class]': 'appearanceClass()',
     '(focusout)': 'onFocusOut($event)',
   },
 })
@@ -52,6 +56,24 @@ export class EditorComponent
 
   readonly placeholder = input('');
   readonly isReadOnly = input(false);
+
+  readonly appearance = input<EditorAppearance>('boxed');
+
+  readonly hostClass = input('');
+
+  protected readonly appearanceClass = computed(() => {
+    if (this.appearance() !== 'flat') {
+      return cn(
+        'bg-form-field-background mb-4 border-foreground/30 mt-2 rounded-sm border-2 px-4 py-1',
+        this.hostClass()
+      );
+    }
+
+    const hover = this.isReadOnly() ? '' : 'hover:bg-hover transition-colors';
+
+    return cn('-mx-1 rounded-lg px-1', hover, this.hostClass());
+  });
+
   readonly loaded = output();
   readonly saved = output<string>();
 

@@ -48,13 +48,17 @@ export type DatePickerAppearance = 'field' | 'flat' | 'bare';
       [attr.aria-required]="required()"
       aria-haspopup="dialog"
       (click)="toggle()">
-      <svg lucideCalendarDays class="h-4 w-4 shrink-0 opacity-70"></svg>
+      @if (showLeadingIcon()) {
+        <svg lucideCalendarDays class="h-4 w-4 shrink-0 opacity-70"></svg>
+      }
       <span
         class="min-w-0 flex-1 truncate text-left"
         [class.text-muted-foreground]="!value()">
         {{ displayText() }}
       </span>
-      <svg lucideChevronDown class="h-4 w-4 shrink-0 opacity-70"></svg>
+      @if (showChevron()) {
+        <svg lucideChevronDown class="h-4 w-4 shrink-0 opacity-70"></svg>
+      }
     </button>
 
     <ng-template cdkPortal>
@@ -88,6 +92,8 @@ export class DatePickerComponent implements OnDestroy {
   readonly appearance = input<DatePickerAppearance>('field');
   readonly color = input<FlatButtonColor>('neutral');
   readonly buttonClass = input('');
+  readonly showLeadingIcon = input(true);
+  readonly showChevron = input(true);
   readonly touched = output();
   readonly open = signal(false);
 

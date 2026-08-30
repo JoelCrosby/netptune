@@ -1,12 +1,15 @@
 import {
   Component,
+  computed,
   effect,
   ElementRef,
+  input,
   output,
   signal,
   viewChild,
 } from '@angular/core';
 import { AbstractFormValueControl } from '../abstract-form-value-control';
+import { cn } from '../button/button.variants';
 
 @Component({
   selector: 'app-inline-edit-heading',
@@ -15,7 +18,7 @@ import { AbstractFormValueControl } from '../abstract-form-value-control';
     <div
       #editable
       tabindex="0"
-      class="font-overpass w-full rounded px-4 py-4 text-2xl transition-colors outline-none"
+      [class]="headingClass()"
       [attr.contenteditable]="isEditing() ? 'plaintext-only' : null"
       [class.cursor-text]="!disabled() && !isReadonly()"
       [class.hover:bg-black/5]="!disabled() && !isReadonly()"
@@ -31,6 +34,15 @@ import { AbstractFormValueControl } from '../abstract-form-value-control';
 export class InlineEditHeadingComponent extends AbstractFormValueControl {
   readonly submitted = output<string>();
   readonly cancelled = output();
+
+  readonly textClass = input('px-4 py-4 text-2xl');
+
+  protected readonly headingClass = computed(() => {
+    return cn(
+      'font-overpass w-full rounded transition-colors outline-none',
+      this.textClass()
+    );
+  });
 
   readonly editableRef = viewChild<ElementRef>('editable');
 

@@ -23,6 +23,7 @@ import {
 } from '@core/resources/user-select.resource';
 import { LucideSearch } from '@lucide/angular';
 import { AvatarComponent } from '../avatar/avatar.component';
+import { cn } from '../button/button.variants';
 import { DropdownMenuComponent } from '../dropdown-menu/dropdown-menu.component';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import {
@@ -43,33 +44,35 @@ import {
   template: `
     <button
       type="button"
-      class="text-foreground hover:bg-hover flex w-full cursor-pointer flex-row flex-wrap items-center justify-start gap-2 rounded border-0 bg-transparent p-2 text-left text-sm transition-colors focus:outline-none disabled:cursor-default disabled:hover:bg-transparent"
+      [class]="triggerClass()"
       aria-haspopup="listbox"
       [attr.aria-expanded]="menu.showing()"
       [class.flex-col]="compact()"
       [disabled]="disabled()"
       #origin
       (click)="toggle(origin)">
-      @for (user of value(); track user.id) {
-        <div
-          class="flex flex-row items-center gap-1.5 rounded transition-colors">
-          <app-avatar
-            [imageUrl]="user.pictureUrl"
-            [name]="user.displayName"
-            [isServiceAccount]="user.isServiceAccount ?? false"
-            size="sm" />
-          @if (!compact()) {
-            <small class="text-sm font-medium tracking-tight">
-              {{ user.displayName }}
-            </small>
-          }
-        </div>
-      }
-      @if (!value().length) {
-        <span class="truncate text-sm font-medium tracking-tight">
-          {{ label() }}
-        </span>
-      }
+      <ng-content>
+        @for (user of value(); track user.id) {
+          <div
+            class="flex flex-row items-center gap-1.5 rounded transition-colors">
+            <app-avatar
+              [imageUrl]="user.pictureUrl"
+              [name]="user.displayName"
+              [isServiceAccount]="user.isServiceAccount ?? false"
+              size="sm" />
+            @if (!compact()) {
+              <small class="text-sm font-medium tracking-tight">
+                {{ user.displayName }}
+              </small>
+            }
+          </div>
+        }
+        @if (!value().length) {
+          <span class="truncate text-sm font-medium tracking-tight">
+            {{ label() }}
+          </span>
+        }
+      </ng-content>
     </button>
 
     <app-dropdown-menu #menu panelRole="none" (closed)="onClosed()">
@@ -132,6 +135,15 @@ export class UserSelectComponent {
   readonly disabled = input(false);
   readonly label = input('Select Users');
   readonly noResults = input('No results found...');
+
+  readonly buttonClass = input('');
+
+  protected readonly triggerClass = computed(() => {
+    return cn(
+      'text-foreground hover:bg-hover flex w-full cursor-pointer flex-row flex-wrap items-center justify-start gap-2 rounded border-0 bg-transparent p-2 text-left text-sm transition-colors focus:outline-none disabled:cursor-default disabled:hover:bg-transparent',
+      this.buttonClass()
+    );
+  });
 
   readonly selectChange = output<UserSelectOption>();
   readonly closed = output();

@@ -17,6 +17,7 @@ import { AbstractFormValueControl } from '../abstract-form-value-control';
 import { AvatarComponent } from '../avatar/avatar.component';
 import { FormControlFieldComponent } from '../form-control/form-control-field.component';
 import {
+  FormControlDensity,
   FormControlHintDirective,
   FormControlInputDirective,
   FormControlLabelDirective,
@@ -51,6 +52,8 @@ export interface MentionSubmitEvent {
       }
 
       <app-form-control-field
+        [density]="density()"
+        [class]="fieldClass()"
         [invalid]="touched() && invalid()"
         [active]="pending()">
         @if (prefix()) {
@@ -147,6 +150,9 @@ export class MentionInputComponent
   readonly pending = input(false);
   readonly initialMentionIds = input<readonly string[]>([]);
   readonly clearOnSubmit = input(true);
+
+  readonly density = input<FormControlDensity>('default');
+  readonly fieldClass = input('');
 
   readonly users = input<AppUser[] | null>([]);
 

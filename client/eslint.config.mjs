@@ -111,8 +111,9 @@ export default defineConfig([
             'd', 'points', 'vector-effect', 'orient', 'markerUnits',
             'marker-end', 'marker-start',
             // CSS class inputs on this repo's design-system components
-            'buttonClass', 'containerClass', 'emptyCellClass', 'headerClass',
-            'maxHeightClass', 'rowClass', 'tableClass',
+            'buttonClass', 'containerClass', 'emptyCellClass', 'fieldClass',
+            'headerClass', 'hostClass', 'labelWidth', 'maxHeightClass',
+            'panelClass', 'rowClass', 'tableClass', 'textClass',
             // fixed-vocabulary inputs (enum-like), not prose
             'align', 'appearance', 'appTooltipPosition', 'cdkDropListOrientation',
             'colWrap', 'density', 'focusMode', 'layout', 'preserveAspectRatio',
