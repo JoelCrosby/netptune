@@ -11,7 +11,8 @@ import { hasPermission } from '@core/auth/has-permission';
 import { EntityType } from '@core/models/entity-type';
 import { StatusCategory } from '@core/models/status';
 import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-menu.component';
-import { LucideCheck, LucidePin } from '@lucide/angular';
+import { RouterLink } from '@angular/router';
+import { LucideCheck, LucideExternalLink, LucidePin } from '@lucide/angular';
 import { TaskPin, TaskPinScope } from '@core/models/task-pin';
 import { pinnedTasksResource } from '@core/resources/task-pin.resource';
 import { BoardViewService } from '@core/services/board-view.service';
@@ -20,12 +21,14 @@ import {
   PinScopeMenuComponent,
   PinScopeTarget,
 } from '@app/features/pins/components/pin-scope-menu.component';
+import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { SplitButtonComponent } from '@static/components/button/split-button.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
 import { TaskDates } from '@static/components/task-dates/task-dates.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
+import { TooltipDirective } from '@static/directives/tooltip.directive';
 import { TaskDetailActionsComponent } from './task-detail-actions.component';
 import { TaskDetailCommentsComponent } from './task-detail-comments.component';
 import { TaskDetailDescriptionComponent } from './task-detail-description.component';
@@ -83,6 +86,21 @@ export interface TaskDetailDialogData {
                 [entityType]="entityType"
                 [entityId]="task.id" />
             }
+            <a
+              app-flat-button
+              color="ghost"
+              [routerLink]="['/', task.workspaceKey, 'tasks', task.systemId]"
+              (click)="openFullPage($event)"
+              i18n-appTooltip="
+                Tooltip on the link that opens the task's own page
+              "
+              appTooltip="Open in full page"
+              i18n-aria-label="
+                Accessible label for the link that opens the task's own page
+              "
+              aria-label="Open in full page">
+              <svg lucideExternalLink class="h-6 w-6" aria-hidden="true"></svg>
+            </a>
           </div>
         </div>
 
@@ -122,7 +140,11 @@ export interface TaskDetailDialogData {
   `,
   imports: [
     LucideCheck,
+    LucideExternalLink,
+    RouterLink,
     ActivityMenuComponent,
+    FlatButtonComponent,
+    TooltipDirective,
     PinScopeMenuComponent,
     SplitButtonComponent,
     DialogActionsDirective,
@@ -167,6 +189,16 @@ export class TaskDetailDialogComponent {
   readFlags = hasPermission(PERMISSIONS.flags.read);
 
   readComments = hasPermission(PERMISSIONS.comments.read);
+
+  /* A modified click is the browser's to handle: it opens a tab of its own and
+     the dialog stays put. Only a plain click hands the task over to its page. */
+  openFullPage(event: MouseEvent) {
+    if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
+      return;
+    }
+
+    this.dialogRef.close();
+  }
 
   onPinScopeToggled(scope: TaskPinScope) {
     const taskId = this.task()?.id;
