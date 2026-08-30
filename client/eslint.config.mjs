@@ -118,7 +118,7 @@ export default defineConfig([
             'colWrap', 'density', 'focusMode', 'layout', 'preserveAspectRatio',
             'rowWrap', 'entityType',
             'enterFrom', 'enterTo', 'leaveFrom', 'leaveTo', 'mode', 'provider',
-            'shape', 'size', 'variant', 'xPosition', 'yPosition',
+            'shape', 'size', 'tone', 'variant', 'xPosition', 'yPosition',
             // ARIA wiring and element references, not user-visible text
             'accept', 'aria-autocomplete', 'aria-controls', 'aria-describedby',
             'aria-haspopup', 'aria-labelledby', 'aria-live', 'aria-orientation',

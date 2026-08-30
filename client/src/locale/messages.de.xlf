@@ -1496,9 +1496,9 @@
       <notes>
         <note category="location">src/app/core/services/auth-commands.service.ts:196</note>
         <note category="location">src/app/core/services/board-commands.service.ts:65</note>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:281</note>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:288</note>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:295</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:308</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:315</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:322</note>
         <note category="location">src/app/core/services/confirmation.service.ts:12</note>
         <note category="location">src/app/core/services/notification-commands.service.ts:75</note>
         <note category="location">src/app/core/services/project-commands.service.ts:69</note>
@@ -1511,7 +1511,6 @@
         <note category="location">src/app/core/services/workspace-commands.service.ts:235</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:189,191</note>
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:108,111</note>
-        <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:112,115</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:179</note>
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:80,82</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:304</note>
@@ -1725,7 +1724,7 @@
     <unit id="7022070615528435141">
       <notes>
         <note category="location">src/app/core/services/board-commands.service.ts:64</note>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:280</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:307</note>
         <note category="location">src/app/core/services/notification-commands.service.ts:74</note>
         <note category="location">src/app/core/services/task-commands.service.ts:209</note>
         <note category="location">src/app/core/services/task-commands.service.ts:217</note>
@@ -1789,7 +1788,7 @@
     </unit>
     <unit id="5887960889618527515">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:102</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:104</note>
         <note category="location">src/app/core/services/task-commands.service.ts:49</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
@@ -1800,7 +1799,7 @@
     </unit>
     <unit id="993746193567776624">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:83</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:85</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -1820,7 +1819,7 @@
     </unit>
     <unit id="2856093664313447266">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:229</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:231</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -1830,7 +1829,7 @@
     </unit>
     <unit id="4885517637912217945">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:164</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:166</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -1840,7 +1839,7 @@
     </unit>
     <unit id="4076698465756278873">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:143</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:145</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -1850,7 +1849,7 @@
     </unit>
     <unit id="171368812856780023">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:282</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:309</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -1860,7 +1859,7 @@
     </unit>
     <unit id="3596210590059423029">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:283</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:310</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -1870,7 +1869,7 @@
     </unit>
     <unit id="8634240575353261228">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:294</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:321</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
@@ -1900,7 +1899,7 @@
     </unit>
     <unit id="1935533427606827690">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:296</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:323</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -1910,7 +1909,7 @@
     </unit>
     <unit id="5480361778944446991">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:297</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:324</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -3371,7 +3370,7 @@
         <note category="location">src/app/entry/dialogs/create-relation-type-dialog/create-relation-type-dialog.component.ts:102,104</note>
         <note category="location">src/app/entry/dialogs/create-status-dialog/create-status-dialog.component.ts:79,81</note>
         <note category="location">src/app/entry/dialogs/create-tag-dialog/create-tag-dialog.component.ts:42,44</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:390,393</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:389,392</note>
         <note category="location">src/app/entry/dialogs/edit-relation-type-dialog/edit-relation-type-dialog.component.ts:89,91</note>
         <note category="location">src/app/entry/dialogs/edit-status-dialog/edit-status-dialog.component.ts:80,82</note>
         <note category="location">src/app/entry/dialogs/edit-tag-dialog/edit-tag-dialog.component.ts:43,45</note>
@@ -3647,7 +3646,10 @@
     <unit id="8856905278208146821">
       <notes>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:194,199</note>
-        <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:124,129</note>
+        <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:59,65</note>
+        <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:153,160</note>
+        <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:168,173</note>
+        <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:238,243</note>
         <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:84,86</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:86,97</note>
         <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:25,33</note>
@@ -3864,7 +3866,7 @@
     </unit>
     <unit id="5335611991466155594">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:289</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:316</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -3946,7 +3948,7 @@
     </unit>
     <unit id="6164296601931172481">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:133,135</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:134,136</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:34,35</note>
         <note category="location">src/app/shell/global-commands.service.ts:180</note>
         <note category="description">Title of the create-task dialog</note>
@@ -3980,7 +3982,7 @@
     </unit>
     <unit id="4739818603756173797">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:148,150</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:149,151</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:84</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:176</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:52,54</note>
@@ -3993,7 +3995,7 @@
     </unit>
     <unit id="4902817035128594900">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:175,178</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:176,179</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:66,67</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-description.component.ts:12,16</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:104,107</note>
@@ -4017,7 +4019,7 @@
     </unit>
     <unit id="533409430255690539">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:181,183</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:182,184</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-description.component.ts:18,20</note>
         <note category="description">Placeholder in the empty task description editor</note>
       </notes>
@@ -4028,7 +4030,7 @@
     </unit>
     <unit id="5681661801164770412">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:371,376</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:370,375</note>
         <note category="description">Validation error when a task&apos;s start date is after its due date</note>
       </notes>
       <segment state="translated">
@@ -4038,7 +4040,7 @@
     </unit>
     <unit id="6672445733608764176">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:380,384</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:379,383</note>
         <note category="description">Validation error when no project is selected for a task</note>
       </notes>
       <segment state="translated">
@@ -4058,7 +4060,7 @@
     </unit>
     <unit id="6346359058786917733">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:397,402</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:396,401</note>
         <note category="description">Button that saves the new task</note>
       </notes>
       <segment state="translated">
@@ -4098,8 +4100,8 @@
     </unit>
     <unit id="8547576940529836596">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:522</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:534</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:519</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:531</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -4129,7 +4131,7 @@
     </unit>
     <unit id="9021131006692744653">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:541</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:538</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -4139,7 +4141,7 @@
     </unit>
     <unit id="704019817450663548">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:548</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:545</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -4149,7 +4151,7 @@
     </unit>
     <unit id="633922115206256018">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:555</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:552</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -4620,35 +4622,6 @@
         <target>Verknüpfen</target>
       </segment>
     </unit>
-    <unit id="1197108888767153289">
-      <notes>
-        <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:36,39</note>
-        <note category="description">Title of the dialog for moving tasks that share a status</note>
-      </notes>
-      <segment state="translated">
-        <source> Move matching tasks </source>
-        <target>Passende Aufgaben verschieben</target>
-      </segment>
-    </unit>
-    <unit id="7553530114490968148">
-      <notes>
-        <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:47,56</note>
-        <note category="description">Explains how many tasks share a status and asks which to move. STATUS is the current status name and GROUP is the destination board group</note>
-      </notes>
-      <segment state="translated">
-        <source> <ph id="0" equiv="ICU" disp="{data.tasks.length, plural, =1 {1 task has} other {{{ data.tasks.length }} tasks have} }" subFlows="2079767789950661502"/> the status <pc id="1" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;font-medium&quot;&gt;" dispEnd="&lt;/span &gt;"><ph id="2" equiv="INTERPOLATION_1" disp="{{ data.statusName }}"/></pc>. Choose which to move into <pc id="3" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;font-medium&quot;&gt;" dispEnd="&lt;/span &gt;"><ph id="4" equiv="INTERPOLATION_2" disp="{{ data.groupName }}"/></pc>. </source>
-        <target> <ph id="0" equiv="ICU" disp="{data.tasks.length, plural, =1 {1 task has} other {{{ data.tasks.length }} tasks have} }" subFlows="2079767789950661502"/> den Status <pc id="1" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;font-medium&quot;&gt;" dispEnd="&lt;/span &gt;"><ph id="2" equiv="INTERPOLATION_1" disp="{{ data.statusName }}"/></pc> verschoben werden sollen. Wählen Sie aus, welche nach <pc id="3" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;font-medium&quot;&gt;" dispEnd="&lt;/span &gt;"><ph id="4" equiv="INTERPOLATION_2" disp="{{ data.groupName }}"/></pc> verschoben werden sollen. </target>
-      </segment>
-    </unit>
-    <unit id="2657435156786255364">
-      <notes>
-        <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:47,49</note>
-      </notes>
-      <segment state="translated">
-        <source>{VAR_PLURAL, plural, =1 {1 task has} other {<ph id="0" equiv="INTERPOLATION"/> tasks have}}</source>
-        <target>{VAR_PLURAL, plural, =1 {1 Aufgabe hat} other {<ph id="0" equiv="INTERPOLATION"/> Aufgaben haben}}</target>
-      </segment>
-    </unit>
     <unit id="2687179756279777445">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-question.component.ts:93,97</note>
@@ -4661,7 +4634,7 @@
     </unit>
     <unit id="2689632431015509581">
       <notes>
-        <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:66,69</note>
+        <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:146,149</note>
         <note category="description">Accessible label for the checkbox that selects every listed task</note>
       </notes>
       <segment state="translated">
@@ -4679,26 +4652,6 @@
         <target>Nichts auswählen</target>
       </segment>
     </unit>
-    <unit id="5313896736024470177">
-      <notes>
-        <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:70,73</note>
-        <note category="description">Column heading for the task key</note>
-      </notes>
-      <segment state="translated">
-        <source> Key </source>
-        <target>Schlüssel</target>
-      </segment>
-    </unit>
-    <unit id="6442812322325259685">
-      <notes>
-        <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:75,78</note>
-        <note category="description">Column heading for the task name</note>
-      </notes>
-      <segment state="translated">
-        <source> Task </source>
-        <target>Aufgabe</target>
-      </segment>
-    </unit>
     <unit id="559742050509979926">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:335</note>
@@ -4707,16 +4660,6 @@
       <segment state="translated">
         <source><ph id="0" equiv="ENTITIES" disp="entities"/> created —</source>
         <target><ph id="0" equiv="ENTITIES" disp="entities"/> erstellt —</target>
-      </segment>
-    </unit>
-    <unit id="5598953039091088212">
-      <notes>
-        <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:80,84</note>
-        <note category="description">Column heading for the board group a task is currently in</note>
-      </notes>
-      <segment state="translated">
-        <source> Current group </source>
-        <target>Aktuelle Gruppe</target>
       </segment>
     </unit>
     <unit id="5599879769140477526">
@@ -4731,7 +4674,7 @@
     </unit>
     <unit id="5896243874478548703">
       <notes>
-        <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:124,126</note>
+        <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:238,240</note>
       </notes>
       <segment state="translated">
         <source>{VAR_PLURAL, plural, =1 {Move 1 task} other {Move <ph id="0" equiv="INTERPOLATION"/> tasks}}</source>
@@ -4986,7 +4929,7 @@
     </unit>
     <unit id="4116911651502837995">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:191,194</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:192,195</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:38,41</note>
         <note category="description">Heading for a task&apos;s files</note>
       </notes>
@@ -5169,7 +5112,7 @@
     </unit>
     <unit id="3915858391862498397">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:48,51</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:49,52</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:81,82</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:284</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:342</note>
@@ -5182,8 +5125,8 @@
     </unit>
     <unit id="3802104514603079488">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:286,288</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:57,62</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:287,289</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:58,63</note>
         <note category="description">Links a task to another</note>
       </notes>
       <segment state="translated">
@@ -5193,10 +5136,10 @@
     </unit>
     <unit id="1880237574877817137">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:320,322</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:325,327</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:102,104</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:106,108</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:319,321</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:324,326</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:101,103</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:105,107</note>
         <note category="description">Tooltip on the button that removes a task link</note>
       </notes>
       <segment state="translated">
@@ -5206,8 +5149,8 @@
     </unit>
     <unit id="5445703507341144559">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:338,340</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:120,126</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:337,339</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:119,125</note>
         <note category="description">Empty state when a task has no links to other tasks</note>
       </notes>
       <segment state="translated">
@@ -5227,7 +5170,7 @@
     </unit>
     <unit id="5064013424659405171">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:274</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:272</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -5237,7 +5180,7 @@
     </unit>
     <unit id="7886570921510760899">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:152,154</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:153,155</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-tags.component.ts:17,20</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:125</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:52</note>
@@ -5276,7 +5219,7 @@
     </unit>
     <unit id="2363693543054040821">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:159,161</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:160,162</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-tags.component.ts:22,24</note>
         <note category="description">Placeholder in the box for adding a tag to a task</note>
       </notes>
@@ -5806,6 +5749,16 @@
       <segment state="translated">
         <source> References </source>
         <target> Verweise </target>
+      </segment>
+    </unit>
+    <unit id="2569933643470141357">
+      <notes>
+        <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:72,74</note>
+        <note category="description">Label preceding the name of a board group</note>
+      </notes>
+      <segment state="translated">
+        <source> Board group </source>
+        <target>Board-Gruppe</target>
       </segment>
     </unit>
     <unit id="2569965950013309523">
@@ -6507,6 +6460,16 @@
       <segment state="translated">
         <source> Editing your last question — sending replaces the reply. </source>
         <target> Ihre letzte Frage wird bearbeitet — beim Senden wird die Antwort ersetzt. </target>
+      </segment>
+    </unit>
+    <unit id="3728759054958532974">
+      <notes>
+        <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:224,231</note>
+        <note category="description">Dismisses the move-matching-tasks dialog, applying the status change but leaving every task in the group it is already in</note>
+      </notes>
+      <segment state="translated">
+        <source> Leave them where they are </source>
+        <target>Dort lassen, wo sie sind</target>
       </segment>
     </unit>
     <unit id="3733378544613473393">
@@ -7831,7 +7794,7 @@
     </unit>
     <unit id="6579848493072578871">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:192</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:194</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -9203,8 +9166,8 @@
     </unit>
     <unit id="175649209422679045">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:287</note>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:290</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:314</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:317</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
@@ -9355,7 +9318,7 @@
     </unit>
     <unit id="4965562695253171955">
       <notes>
-        <note category="location">src/app/static/components/filter-input/filter-input.component.ts:58,60</note>
+        <note category="location">src/app/static/components/filter-input/filter-input.component.ts:54,56</note>
         <note category="description">Accessible label for the button that clears a filter</note>
       </notes>
       <segment state="translated">
@@ -10430,6 +10393,15 @@
       <segment state="translated">
         <source> Share with the workspace </source>
         <target> Mit dem Workspace teilen </target>
+      </segment>
+    </unit>
+    <unit id="3713881103104412144">
+      <notes>
+        <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:168,170</note>
+      </notes>
+      <segment state="translated">
+        <source>{VAR_PLURAL, plural, =1 {Across 1 group} other {Across <ph id="0" equiv="INTERPOLATION"/> groups}}</source>
+        <target>{VAR_PLURAL, plural, =1 {Über 1 Gruppe} other {Über <ph id="0" equiv="INTERPOLATION"/> Gruppen}}</target>
       </segment>
     </unit>
     <unit id="3715596725146409911">
@@ -13055,6 +13027,16 @@
         <target>Gruppen verwalten</target>
       </segment>
     </unit>
+    <unit id="1927933892461982157">
+      <notes>
+        <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:124,125</note>
+        <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:130,131</note>
+      </notes>
+      <segment state="translated">
+        <source>{VAR_PLURAL, plural, =1 {it} other {them}}</source>
+        <target>{VAR_PLURAL, plural, =1 {sie} other {sie}}</target>
+      </segment>
+    </unit>
     <unit id="348411615145697280">
       <notes>
         <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:37,42</note>
@@ -15166,6 +15148,16 @@
         <target>Abgeschlossene Aufgaben im Zeitverlauf</target>
       </segment>
     </unit>
+    <unit id="5393544322576632339">
+      <notes>
+        <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:113,135</note>
+        <note category="description">Explains that tasks elsewhere on the board already carry the group&apos;s new status, and that accepting removes them from their current groups. COUNT is the number of tasks, STATUS is the new status name and GROUP is the destination board group</note>
+      </notes>
+      <segment state="translated">
+        <source> <ph id="0" equiv="ICU" disp="{data.tasks.length, plural, =1 {1 task elsewhere on this board already has} other { {{ data.tasks.length }} tasks elsewhere on this board already have } }" subFlows="8027974138468091250"/> the status <pc id="1" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;text-foreground font-medium&quot;&gt;" dispEnd="&lt;/span&gt;"> <ph id="2" equiv="INTERPOLATION_1" disp="{{ data.status.name }}"/></pc>. Moving <ph id="3" equiv="ICU_1" disp="{data.tasks.length, plural, =1 {it} other {them}}" subFlows="1927933892461982157"/> into <pc id="4" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;text-foreground font-medium&quot;&gt;" dispEnd="&lt;/span&gt;"><ph id="5" equiv="INTERPOLATION_2" disp="{{ data.groupName }}"/></pc> takes <ph id="6" equiv="ICU_1" disp="{data.tasks.length, plural, =1 {it} other {them}}" subFlows="1927933892461982157"/> out of the <ph id="7" equiv="ICU_2" disp="{groups().length, plural, =1 {group} other {groups}}" subFlows="9083086789667289234"/> listed below. </source>
+        <target><ph id="0" equiv="ICU" disp="{data.tasks.length, plural, =1 {1 task elsewhere on this board already has} other { {{ data.tasks.length }} tasks elsewhere on this board already have } }" subFlows="8027974138468091250"/> den Status<pc id="1" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;text-foreground font-medium&quot;&gt;" dispEnd="&lt;/span&gt;"> <ph id="2" equiv="INTERPOLATION_1" disp="{{ data.status.name }}"/></pc>. Wenn Sie <ph id="3" equiv="ICU_1" disp="{data.tasks.length, plural, =1 {it} other {them}}" subFlows="1927933892461982157"/> nach <pc id="4" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;text-foreground font-medium&quot;&gt;" dispEnd="&lt;/span&gt;"><ph id="5" equiv="INTERPOLATION_2" disp="{{ data.groupName }}"/></pc> verschieben, werden <ph id="6" equiv="ICU_1" disp="{data.tasks.length, plural, =1 {it} other {them}}" subFlows="1927933892461982157"/> <ph id="7" equiv="ICU_2" disp="{groups().length, plural, =1 {group} other {groups}}" subFlows="9083086789667289234"/> entfernt.</target>
+      </segment>
+    </unit>
     <unit id="4663393004124331220">
       <notes>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:117,118</note>
@@ -15275,6 +15267,16 @@
       <segment state="translated">
         <source>Median cycle</source>
         <target>Medianer Zyklus</target>
+      </segment>
+    </unit>
+    <unit id="5909761179824611083">
+      <notes>
+        <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:95,99</note>
+        <note category="description">Label preceding the status a newly created group was given</note>
+      </notes>
+      <segment state="translated">
+        <source> created with status </source>
+        <target>erstellt mit Status</target>
       </segment>
     </unit>
     <unit id="119512492457151325">
@@ -16554,6 +16556,15 @@
         <target>Keine ungeplanten Aufgaben entsprechen den aktuellen Filtern.</target>
       </segment>
     </unit>
+    <unit id="6211708336148649092">
+      <notes>
+        <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:59,61</note>
+      </notes>
+      <segment state="translated">
+        <source>{VAR_PLURAL, plural, =1 {Move 1 task into <ph id="0" equiv="INTERPOLATION"/>?} other {Move <ph id="1" equiv="INTERPOLATION_1"/> tasks into <ph id="2" equiv="INTERPOLATION"/>?}}</source>
+        <target>{VAR_PLURAL, plural, =1 {1 Aufgabe nach <ph id="0" equiv="INTERPOLATION"/> verschieben?} other {<ph id="1" equiv="INTERPOLATION_1"/> Aufgaben nach <ph id="2" equiv="INTERPOLATION"/> verschieben?}}</target>
+      </segment>
+    </unit>
     <unit id="6215048040341403789">
       <notes>
         <note category="location">src/app/features/roadmap/views/roadmap-view.component.ts:57,60</note>
@@ -16818,6 +16829,15 @@
       <segment state="translated">
         <source>Select scope</source>
         <target>Geltungsbereich auswählen</target>
+      </segment>
+    </unit>
+    <unit id="9083086789667289234">
+      <notes>
+        <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:132,133</note>
+      </notes>
+      <segment state="translated">
+        <source>{VAR_PLURAL, plural, =1 {group} other {groups}}</source>
+        <target>{VAR_PLURAL, plural, =1 {aus der unten aufgeführten Gruppe} other {aus den unten aufgeführten Gruppen}}</target>
       </segment>
     </unit>
     <unit id="9092123752727924180">
@@ -18370,6 +18390,15 @@
         <target>Deaktiviert</target>
       </segment>
     </unit>
+    <unit id="3344606145817965576">
+      <notes>
+        <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:153,156</note>
+      </notes>
+      <segment state="translated">
+        <source>{VAR_PLURAL, plural, =0 {None selected} other {<ph id="0" equiv="INTERPOLATION"/> of <ph id="1" equiv="INTERPOLATION_1"/> selected }}</source>
+        <target>{VAR_PLURAL, plural, =0 {Keine ausgewählt} other {<ph id="0" equiv="INTERPOLATION"/> von <ph id="1" equiv="INTERPOLATION_1"/> ausgewählt }}</target>
+      </segment>
+    </unit>
     <unit id="2453142225616430507">
       <notes>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:140,141</note>
@@ -18686,7 +18715,7 @@
     </unit>
     <unit id="6986361998419496765">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:276,278</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:277,279</note>
         <note category="description">Section heading for links between tasks</note>
       </notes>
       <segment state="translated">
@@ -20365,6 +20394,15 @@
         <target>Zurück zu den Benutzern</target>
       </segment>
     </unit>
+    <unit id="1940273102394006005">
+      <notes>
+        <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:113,116</note>
+      </notes>
+      <segment state="translated">
+        <source>{VAR_PLURAL, plural, =1 {1 task elsewhere on this board already has} other {<ph id="0" equiv="INTERPOLATION"/> tasks elsewhere on this board already have }}</source>
+        <target>{VAR_PLURAL, plural, =1 {1 Aufgabe an anderer Stelle auf diesem Board hat bereits} other {<ph id="0" equiv="INTERPOLATION"/> Aufgaben an anderer Stelle auf diesem Board haben bereits }}</target>
+      </segment>
+    </unit>
     <unit id="8839963009744223515">
       <notes>
         <note category="location">src/app/features/users/views/user-detail-view/user-detail-view.component.ts:30,31</note>
@@ -20609,7 +20647,7 @@
     </unit>
     <unit id="221384062319096861">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:259,264</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:260,265</note>
         <note category="description">Shown when a new task was saved but some of its files did not upload</note>
       </notes>
       <segment state="translated">
@@ -20790,7 +20828,7 @@
     </unit>
     <unit id="6281284727431074654">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:222,225</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:223,226</note>
         <note category="description">Accessible label for the button that takes a file off a task that has not been created yet</note>
       </notes>
       <segment state="translated">
@@ -21028,6 +21066,16 @@
       <segment state="translated">
         <source>Go to Users</source>
         <target>Zu den Benutzern</target>
+      </segment>
+    </unit>
+    <unit id="2118542239392177695">
+      <notes>
+        <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:81,84</note>
+        <note category="description">Label preceding a from/to pair of status names</note>
+      </notes>
+      <segment state="translated">
+        <source> status changed </source>
+        <target>Status geändert</target>
       </segment>
     </unit>
     <unit id="7783914774924915188">

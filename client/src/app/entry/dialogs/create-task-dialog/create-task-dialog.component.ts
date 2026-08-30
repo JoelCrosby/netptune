@@ -35,9 +35,9 @@ import { DialogService } from '@core/services/dialog.service';
 import { SessionService } from '@core/services/session.service';
 import { TaskCommandsService } from '@core/services/task-commands.service';
 import { TaskFileUploadService } from '@core/services/task-file-upload.service';
-import { colorSwatchClass } from '@core/util/colors/colors';
 import { reloadOnRefresh } from '@core/util/reload-on-refresh';
 import { LucideLink2, LucidePlus, LucideX } from '@lucide/angular';
+import { ColorSwatchComponent } from '@static/components/color-swatch/color-swatch.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
@@ -105,6 +105,7 @@ const documentContentTypes = new Set([
 
 @Component({
   imports: [
+    ColorSwatchComponent,
     DialogTitleComponent,
     FormField,
     FormInputComponent,
@@ -298,11 +299,9 @@ const documentContentTypes = new Set([
                     @for (relation of group.relations; track relation.task.id) {
                       <li
                         class="border-border bg-card flex items-center gap-3 rounded border px-3 py-2">
-                        <span
-                          [class]="
-                            'h-2 w-2 shrink-0 rounded-full ' +
-                            colorSwatchClass(relation.task.statusColor)
-                          "></span>
+                        <app-color-swatch
+                          size="sm"
+                          [color]="relation.task.statusColor" />
 
                         <app-task-scope-id [id]="relation.task.systemId" />
 
@@ -401,8 +400,6 @@ const documentContentTypes = new Set([
 })
 export class CreateTaskDialogComponent {
   static readonly width = '972px';
-
-  protected readonly colorSwatchClass = colorSwatchClass;
 
   private taskCommands = inject(TaskCommandsService);
   private dialog = inject(DialogService);

@@ -6,6 +6,7 @@ import { UpdateBoardGroupRequest } from '@core/models/requests/update-board-grou
 import { Status } from '@core/models/status';
 import { BoardGroupViewModel } from '@core/models/view-models/board-group-view-model';
 import { BoardViewGroup } from '@core/models/view-models/board-view';
+import { statusResource } from '@core/resources/status.resource';
 import { BoardComposerService } from '@core/services/board-composer.service';
 import { BoardSelectionService } from '@core/services/board-selection.service';
 import { BoardViewService } from '@core/services/board-view.service';
@@ -30,6 +31,7 @@ export class BoardGroupCommandsService {
   private readonly dialog = inject(DialogService);
   private readonly snackbar = inject(SnackbarService);
   private readonly workspaceRefresh = inject(WorkspaceRefreshService);
+  private readonly statuses = statusResource();
 
   createGroup(request: AddBoardGroupRequest) {
     this.tasksApi
@@ -40,7 +42,7 @@ export class BoardGroupCommandsService {
       )
       .subscribe((boardGroup) => {
         this.refresh();
-        this.promptMoveMatchingTasks(boardGroup);
+        this.promptMoveMatchingTasks(boardGroup, null);
       });
   }
 
@@ -63,7 +65,7 @@ export class BoardGroupCommandsService {
 
         if (statusUnchanged) return;
 
-        this.promptMoveMatchingTasks(boardGroup);
+        this.promptMoveMatchingTasks(boardGroup, previousStatusId);
       });
   }
 
@@ -232,7 +234,20 @@ export class BoardGroupCommandsService {
       });
   }
 
-  private promptMoveMatchingTasks(boardGroup: BoardGroupViewModel) {
+  private findStatus(statusId: number | null) {
+    if (statusId === null) return null;
+
+    const status = this.statuses.value().find((item) => item.id === statusId);
+
+    if (!status) return null;
+
+    return { name: status.name, color: status.color };
+  }
+
+  private promptMoveMatchingTasks(
+    boardGroup: BoardGroupViewModel,
+    previousStatusId: number | null
+  ) {
     if (boardGroup.statusId === null) return;
 
     const groups = this.boardView.groups();
@@ -250,21 +265,33 @@ export class BoardGroupCommandsService {
         });
     });
 
+    // Nothing to decide — the status change stands on its own.
     if (tasks.length === 0) return;
 
-    const statusName =
-      groups
-        .flatMap((group) => group.tasks)
-        .find((task) => task.statusId === boardGroup.statusId)?.statusName ??
-      '';
+    const status = this.findStatus(boardGroup.statusId) ?? {
+      name:
+        groups
+          .flatMap((group) => group.tasks)
+          .find((task) => task.statusId === boardGroup.statusId)?.statusName ??
+        '',
+      color: null,
+    };
 
     this.dialog
       .open<number[] | undefined>(MoveMatchingTasksDialogComponent, {
         width: MoveMatchingTasksDialogComponent.width,
-        data: { groupName: boardGroup.name, statusName, tasks },
+        maxWidth: MoveMatchingTasksDialogComponent.maxWidth,
+        data: {
+          groupName: boardGroup.name,
+          status,
+          previousStatus: this.findStatus(previousStatusId),
+          tasks,
+        },
       })
       .closed.pipe(first())
       .subscribe((taskIds) => {
+        // Escape, backdrop and "Leave them where they are" all close with
+        // undefined, which leaves every task untouched.
         if (!taskIds?.length) return;
 
         this.moveMatchingTasks(boardGroup.id, taskIds);

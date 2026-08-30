@@ -11,8 +11,8 @@ import { TaskRelationsService } from '@core/services/task-relations.service';
 import { retainWhileLoading } from '@core/resources/stable.resource';
 import { reloadOnRefresh } from '@core/util/reload-on-refresh';
 import { unwrapClientResponse } from '@core/util/rxjs-operators';
-import { colorSwatchClass } from '@core/util/colors/colors';
 import { LucideLink2, LucidePlus, LucideX } from '@lucide/angular';
+import { ColorSwatchComponent } from '@static/components/color-swatch/color-swatch.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
@@ -34,6 +34,7 @@ interface RelationGroup {
 @Component({
   selector: 'app-task-detail-relations',
   imports: [
+    ColorSwatchComponent,
     IconButtonComponent,
     StrokedButtonComponent,
     TaskScopeIdComponent,
@@ -74,11 +75,9 @@ interface RelationGroup {
           @for (relation of group.relations; track relation.id) {
             <li
               class="border-border bg-card flex items-center gap-3 rounded border px-3 py-2">
-              <span
-                [class]="
-                  'h-2 w-2 shrink-0 rounded-full ' +
-                  colorSwatchClass(relation.relatedTask.statusColor)
-                "></span>
+              <app-color-swatch
+                size="sm"
+                [color]="relation.relatedTask.statusColor" />
 
               <app-task-scope-id [id]="relation.relatedTask.systemId" />
 
@@ -124,7 +123,6 @@ interface RelationGroup {
   `,
 })
 export class TaskDetailRelationsComponent {
-  readonly colorSwatchClass = colorSwatchClass;
   private readonly relationsService = inject(TaskRelationsService);
   private readonly dialog = inject(DialogService);
   private readonly snackbar = inject(SnackbarService);
