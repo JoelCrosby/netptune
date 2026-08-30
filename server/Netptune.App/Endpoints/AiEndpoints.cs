@@ -16,6 +16,8 @@ namespace Netptune.App.Endpoints;
 
 public static class AiEndpoints
 {
+    private const string EventStreamContentType = "text/event-stream";
+
     private static readonly TimeSpan TurnTimeout = TimeSpan.FromMinutes(5);
 
     private static readonly JsonSerializerOptions EventSerializerOptions = new()
@@ -88,6 +90,8 @@ public static class AiEndpoints
         group
             .MapPost("/change-sets/{changeSetId:guid}/apply", HandleApplyChangeSet)
             .RequireRateLimiting(RateLimiterConfiguration.AiPolicyName);
+
+        group.MapPost("/change-sets/{changeSetId:guid}/stop", HandleStopChangeSetApply);
 
         group
             .MapPost("/change-sets/{changeSetId:guid}/undo", HandleUndoChangeSet)
@@ -305,10 +309,72 @@ public static class AiEndpoints
         HttpContext context,
         CancellationToken cancellationToken)
     {
+        var wantsProgress = context.Request.Headers.Accept.Any(IsEventStream);
+
+        if (wantsProgress)
+        {
+            return StreamChangeSetApply(changeSetId, request, applier, boardEventService, context, cancellationToken);
+        }
+
         return RunChangeSetAction(
-            () => applier.Apply(changeSetId, request, cancellationToken),
+            () => applier.Apply(changeSetId, request, null, cancellationToken),
             boardEventService,
             context);
+    }
+
+    private static async Task<IResult> HandleStopChangeSetApply(
+        Guid changeSetId,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new StopAiChangeSetApplyCommand(changeSetId), cancellationToken);
+
+        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+    }
+
+    private static bool IsEventStream(string? accept)
+    {
+        return accept?.Contains(EventStreamContentType, StringComparison.OrdinalIgnoreCase) ?? false;
+    }
+
+    // The applier reports its first frame only once the change set has passed every check, so a
+    // refusal still reaches the client as a status code rather than as a half written stream.
+    private static async Task<IResult> StreamChangeSetApply(
+        Guid changeSetId,
+        ApplyAiChangeSetRequest request,
+        IAiChangeSetApplier applier,
+        IBoardEventService boardEventService,
+        HttpContext context,
+        CancellationToken cancellationToken)
+    {
+        var progress = new ApplyProgressWriter(context);
+
+        try
+        {
+            var result = await applier.Apply(changeSetId, request, progress.Write, cancellationToken);
+
+            if (result is null)
+            {
+                return Results.NotFound();
+            }
+
+            await BroadcastApplied(result, boardEventService, context);
+            await progress.Write(AiApplyProgress.Finished(result, result.Results.Count));
+
+            return Results.Empty;
+        }
+        catch (UnauthorizedAccessException exception)
+        {
+            return await progress.Fail(exception.Message, StatusCodes.Status403Forbidden);
+        }
+        catch (InvalidOperationException exception)
+        {
+            return await progress.Fail(exception.Message, StatusCodes.Status400BadRequest);
+        }
+        catch (OperationCanceledException)
+        {
+            return Results.Empty;
+        }
     }
 
     private static Task<IResult> HandleRetryChangeSet(
@@ -348,18 +414,7 @@ public static class AiEndpoints
                 return Results.NotFound();
             }
 
-            var applied = result.Results.Where(change => change.Status == AiChangeApplyStatus.Applied).ToList();
-
-            if (applied.Count > 0)
-            {
-                var changedScopes = applied
-                    .Select(change => change.EntityType)
-                    .OfType<string>()
-                    .Distinct(StringComparer.Ordinal)
-                    .ToArray();
-
-                await boardEventService.BroadcastRequestAsync(context, changedScopes);
-            }
+            await BroadcastApplied(result, boardEventService, context);
 
             return Results.Ok(result);
         }
@@ -373,14 +428,40 @@ public static class AiEndpoints
         }
     }
 
+    private static async Task BroadcastApplied(
+        AiApplyResult result,
+        IBoardEventService boardEventService,
+        HttpContext context)
+    {
+        var applied = result.Results.Where(change => change.Status == AiChangeApplyStatus.Applied).ToList();
+
+        if (applied.Count == 0)
+        {
+            return;
+        }
+
+        var changedScopes = applied
+            .Select(change => change.EntityType)
+            .OfType<string>()
+            .Distinct(StringComparer.Ordinal)
+            .ToArray();
+
+        await boardEventService.BroadcastRequestAsync(context, changedScopes);
+    }
+
+    private static void StartEventStream(HttpContext context)
+    {
+        context.Response.Headers.ContentType = EventStreamContentType;
+        context.Response.Headers.CacheControl = "no-cache";
+        context.Response.Headers["X-Accel-Buffering"] = "no";
+    }
+
     private static async Task HandleSendMessage(
         AiSendMessageRequest request,
         HttpContext context,
         IAiConversationService service)
     {
-        context.Response.Headers.ContentType = "text/event-stream";
-        context.Response.Headers.CacheControl = "no-cache";
-        context.Response.Headers["X-Accel-Buffering"] = "no";
+        StartEventStream(context);
 
         using var turnCancellation = new CancellationTokenSource(TurnTimeout);
         var clientConnected = true;
@@ -406,7 +487,7 @@ public static class AiEndpoints
         return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
     }
 
-    private static async Task<bool> TryWriteEvent(HttpContext context, AiStreamEvent streamEvent)
+    private static async Task<bool> TryWriteEvent<TEvent>(HttpContext context, TEvent streamEvent)
     {
         try
         {
@@ -424,6 +505,42 @@ public static class AiEndpoints
         catch (IOException)
         {
             return false;
+        }
+    }
+
+    private sealed class ApplyProgressWriter
+    {
+        private readonly HttpContext Context;
+
+        private bool HasStarted;
+
+        public ApplyProgressWriter(HttpContext context)
+        {
+            Context = context;
+        }
+
+        public async Task Write(AiApplyProgress progress)
+        {
+            if (!HasStarted)
+            {
+                HasStarted = true;
+
+                StartEventStream(Context);
+            }
+
+            await TryWriteEvent(Context, progress);
+        }
+
+        public async Task<IResult> Fail(string message, int statusCode)
+        {
+            if (!HasStarted)
+            {
+                return Results.Problem(message, statusCode: statusCode);
+            }
+
+            await Write(AiApplyProgress.Failed(message));
+
+            return Results.Empty;
         }
     }
 }

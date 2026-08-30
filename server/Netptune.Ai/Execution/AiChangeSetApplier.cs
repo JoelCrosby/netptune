@@ -16,6 +16,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
     private readonly IIdentityService Identity;
     private readonly IAiToolRegistry Tools;
     private readonly IAiExecutionContext AiExecution;
+    private readonly IAiCancellationRegistry Cancellations;
     private readonly ILogger<AiChangeSetApplier> Logger;
     private readonly Dictionary<string, IAiChangeHandler> HandlersByToolName;
 
@@ -24,6 +25,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         IIdentityService identity,
         IAiToolRegistry tools,
         IAiExecutionContext aiExecution,
+        IAiCancellationRegistry cancellations,
         ILogger<AiChangeSetApplier> logger,
         IEnumerable<IAiChangeHandler> handlers)
     {
@@ -31,6 +33,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         Identity = identity;
         Tools = tools;
         AiExecution = aiExecution;
+        Cancellations = cancellations;
         Logger = logger;
         HandlersByToolName = handlers.ToDictionary(handler => handler.ToolName, StringComparer.Ordinal);
     }
@@ -48,6 +51,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
     public async Task<AiApplyResult?> Apply(
         Guid changeSetId,
         ApplyAiChangeSetRequest request,
+        Func<AiApplyProgress, Task>? onProgress,
         CancellationToken cancellationToken)
     {
         var userId = Identity.GetCurrentUserId();
@@ -100,34 +104,36 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         var agent = await ResolveAgentName(changeSet, cancellationToken);
         var ordered = OrderByDependency(selected);
 
+        using var applyCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        using var registration = Cancellations.Register(changeSet.Id, applyCancellation);
+
+        await Report(onProgress, AiApplyProgress.Started(ordered.Count));
+
         using (AiExecution.Begin(agent, changeSet.CorrelationId))
         {
-            foreach (var change in ordered)
-            {
-                var blocker = FindUnmetReference(change, resolvedRefs);
-                var result = blocker is null
-                    ? await ApplyChange(change, resolvedRefs, cancellationToken)
-                    : SkipChange(change, blocker);
-
-                results.Add(result);
-            }
+            await ApplyEach(ordered, results, resolvedRefs, onProgress, applyCancellation.Token);
         }
 
+        StopRemaining(ordered, results);
         MarkUnselected(changes, selected);
 
         changeSet.Status = ResolveStatus(results);
         changeSet.AppliedAt = DateTime.UtcNow;
 
+        // What already landed still has to be recorded when the caller stops the run, so the
+        // bookkeeping is not tied to the token that stopped it.
+        var bookkeeping = applyCancellation.IsCancellationRequested ? CancellationToken.None : cancellationToken;
+
         try
         {
-            await RecordOutcome(changeSet, ordered, results, cancellationToken);
+            await RecordOutcome(changeSet, ordered, results, bookkeeping);
         }
         catch (Exception exception) when (exception is not OperationCanceledException)
         {
             Logger.LogWarning(exception, "The applied change set could not be recorded in the conversation");
         }
 
-        await UnitOfWork.CompleteAsync(cancellationToken);
+        await UnitOfWork.CompleteAsync(bookkeeping);
 
         return new AiApplyResult
         {
@@ -135,6 +141,88 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
             Status = changeSet.Status,
             Results = results,
         };
+    }
+
+    private async Task ApplyEach(
+        List<AiProposedChange> ordered,
+        List<AiAppliedChangeResult> results,
+        Dictionary<string, int> resolvedRefs,
+        Func<AiApplyProgress, Task>? onProgress,
+        CancellationToken cancellationToken)
+    {
+        foreach (var change in ordered)
+        {
+            var wasStopped = cancellationToken.IsCancellationRequested;
+
+            if (wasStopped)
+            {
+                return;
+            }
+
+            await Report(onProgress, AiApplyProgress.ChangeStarted(change.Id, results.Count, ordered.Count));
+
+            var result = await ApplyOrSkip(change, resolvedRefs, cancellationToken);
+
+            // A change interrupted part way through is left for StopRemaining to account for,
+            // which is the only honest thing to say about work that never finished.
+            if (result is null)
+            {
+                return;
+            }
+
+            results.Add(result);
+
+            await Report(onProgress, AiApplyProgress.ChangeCompleted(result, results.Count, ordered.Count));
+        }
+    }
+
+    private async Task<AiAppliedChangeResult?> ApplyOrSkip(
+        AiProposedChange change,
+        Dictionary<string, int> resolvedRefs,
+        CancellationToken cancellationToken)
+    {
+        var blocker = FindUnmetReference(change, resolvedRefs);
+
+        if (blocker is not null)
+        {
+            return SkipChange(change, blocker);
+        }
+
+        try
+        {
+            return await ApplyChange(change, resolvedRefs, cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            return null;
+        }
+    }
+
+    private static void StopRemaining(List<AiProposedChange> ordered, List<AiAppliedChangeResult> results)
+    {
+        const string error = "Stopped before this change was applied.";
+
+        var ran = results.Select(result => result.ChangeId).ToHashSet();
+        var remaining = ordered.Where(change => !ran.Contains(change.Id)).ToList();
+
+        foreach (var change in remaining)
+        {
+            change.ApplyStatus = AiChangeApplyStatus.Failed;
+            change.ApplyError = error;
+
+            results.Add(new AiAppliedChangeResult
+            {
+                ChangeId = change.Id,
+                EntityType = change.EntityType,
+                Status = AiChangeApplyStatus.Failed,
+                Error = error,
+            });
+        }
+    }
+
+    private static Task Report(Func<AiApplyProgress, Task>? onProgress, AiApplyProgress progress)
+    {
+        return onProgress is null ? Task.CompletedTask : onProgress(progress);
     }
 
     private async Task RecordOutcome(

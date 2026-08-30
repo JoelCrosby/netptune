@@ -160,6 +160,16 @@ export class AiApiService {
     }
   }
 
+  async stopChangeSetApply(changeSetId: string) {
+    try {
+      await firstValueFrom(
+        this.http.post(`api/ai/change-sets/${changeSetId}/stop`, {})
+      );
+    } catch {
+      /* The run ends on its own once the server notices. */
+    }
+  }
+
   async runChangeSetAction(
     changeSetId: string,
     action: AiChangeSetAction,

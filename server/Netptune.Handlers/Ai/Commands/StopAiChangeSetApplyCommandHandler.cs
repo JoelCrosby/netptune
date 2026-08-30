@@ -7,42 +7,42 @@ using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Handlers.Ai.Commands;
 
-public sealed record StopAiTurnCommand(Guid ConversationId) : IRequest<ClientResponse>;
+public sealed record StopAiChangeSetApplyCommand(Guid ChangeSetId) : IRequest<ClientResponse>;
 
-public sealed class StopAiTurnCommandHandler : IRequestHandler<StopAiTurnCommand, ClientResponse>
+public sealed class StopAiChangeSetApplyCommandHandler : IRequestHandler<StopAiChangeSetApplyCommand, ClientResponse>
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
-    private readonly IAiCancellationRegistry Turns;
+    private readonly IAiCancellationRegistry Cancellations;
 
-    public StopAiTurnCommandHandler(
+    public StopAiChangeSetApplyCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
-        IAiCancellationRegistry turns)
+        IAiCancellationRegistry cancellations)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
-        Turns = turns;
+        Cancellations = cancellations;
     }
 
     public async ValueTask<ClientResponse> Handle(
-        StopAiTurnCommand command,
+        StopAiChangeSetApplyCommand command,
         CancellationToken cancellationToken)
     {
         var userId = Identity.GetCurrentUserId();
         var workspaceId = await Identity.GetWorkspaceId();
-        var conversation = await UnitOfWork.AiConversations.GetOwned(
-            command.ConversationId,
+        var changeSet = await UnitOfWork.AiChangeSets.GetOwned(
+            command.ChangeSetId,
             userId,
             workspaceId,
             cancellationToken);
 
-        if (conversation is null)
+        if (changeSet is null)
         {
             return ClientResponse.NotFound;
         }
 
-        Turns.Stop(command.ConversationId);
+        Cancellations.Stop(command.ChangeSetId);
 
         return ClientResponse.Success;
     }

@@ -9,7 +9,7 @@ import {
   AiProposedChange,
 } from '@core/models/ai-conversation';
 import { AiAssistantService } from '@core/services/ai-assistant.service';
-import { LucideX } from '@lucide/angular';
+import { LucideLoaderCircle, LucideX } from '@lucide/angular';
 import { ButtonComponent } from '@static/components/button/button.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
@@ -17,6 +17,7 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { FilterInputComponent } from '@static/components/filter-input/filter-input.component';
 import { KeyboardKeyComponent } from '@static/components/keyboard-key/keyboard-key.component';
+import { ProgressBarComponent } from '@static/components/progress-bar/progress-bar.component';
 import {
   SegmentedControlComponent,
   SegmentedOption,
@@ -62,6 +63,7 @@ const isTextField = (field: AiChangeField): boolean => {
     '(document:keydown)': 'onKeydown($event)',
   },
   imports: [
+    LucideLoaderCircle,
     LucideX,
     ButtonComponent,
     FlatButtonComponent,
@@ -70,6 +72,7 @@ const isTextField = (field: AiChangeField): boolean => {
     EmptyStateComponent,
     FilterInputComponent,
     KeyboardKeyComponent,
+    ProgressBarComponent,
     SegmentedControlComponent,
     AiAssistantReviewDetailComponent,
     AiAssistantReviewListComponent,
@@ -95,6 +98,23 @@ const isTextField = (field: AiChangeField): boolean => {
           conversationTitle()
         }}</span>
       </div>
+
+      @if (isRunning()) {
+        <span class="flex-1"></span>
+        <span
+          class="bg-primary/12 text-primary flex shrink-0 items-center gap-2 rounded-full px-3.5 py-1.5 text-[13px] font-medium">
+          <svg lucideLoaderCircle class="h-3.5 w-3.5 animate-spin"></svg>
+          @if (isStoppingApply()) {
+            <span i18n="Shown on the review while a run is being stopped"
+              >Stopping</span
+            >
+          } @else {
+            <span i18n="Shown on the review while changes are being applied"
+              >Applying</span
+            >
+          }
+        </span>
+      }
     </header>
 
     <div class="border-border flex items-center gap-3 border-b px-4 py-2.5">
@@ -132,7 +152,7 @@ const isTextField = (field: AiChangeField): boolean => {
           <div
             class="border-border flex items-center justify-between gap-2 border-b px-4 py-2.5">
             <span class="text-muted text-sm">{{ listSummary() }}</span>
-            @if (isPending() && selectableCount() > 1) {
+            @if (isPending() && !isRunning() && selectableCount() > 1) {
               <app-button
                 color="neutral"
                 class="-my-1 h-8 px-2.5 text-sm"
@@ -157,6 +177,9 @@ const isTextField = (field: AiChangeField): boolean => {
               [collapsedKeys]="collapsedKeys()"
               [selectedChangeId]="selectedChangeId()"
               [isPending]="isPending()"
+              [isApplying]="isRunning()"
+              [applyStatuses]="assistant.applyStatuses()"
+              [applyingChangeId]="assistant.applyingChangeId()"
               (selected)="selectedChangeId.set($event)"
               (toggled)="assistant.toggleChange($event)"
               (groupToggled)="toggleGroup($event)" />
@@ -224,123 +247,163 @@ const isTextField = (field: AiChangeField): boolean => {
       </main>
     }
 
+    @if (isRunning()) {
+      <app-progress-bar
+        class="h-0.5"
+        [rounded]="false"
+        [value]="assistant.applyPercent()"
+        [mode]="
+          assistant.applyTotal() === 0 ? 'indeterminate' : 'determinate'
+        " />
+    }
+
     <footer
       class="border-border bg-card-header flex items-center gap-4 border-t px-4 py-3">
-      @if (isPending()) {
-        <div class="text-muted flex items-center gap-4 text-[13px]">
-          <span class="flex items-center gap-1.5">
-            <app-keyboard-key
-              class="min-w-6 px-2 py-1 text-[13px]"
-              i18n="
-                Keyboard key that moves down the review list. Leave the letter
-                as-is
-              ">
-              j
-            </app-keyboard-key>
-            <app-keyboard-key
-              class="min-w-6 px-2 py-1 text-[13px]"
-              i18n="
-                Keyboard key that moves up the review list. Leave the letter
-                as-is
-              ">
-              k
-            </app-keyboard-key>
-            <span i18n="Keyboard hint for moving through the review list">
-              move
-            </span>
-          </span>
-          <span class="flex items-center gap-1.5">
-            <app-keyboard-key
-              class="min-w-6 px-2 py-1 text-[13px]"
-              i18n="Name of the space bar. Translate it to its local name">
-              space
-            </app-keyboard-key>
-            <span i18n="Keyboard hint for including a change">include</span>
-          </span>
-          <span class="flex items-center gap-1.5">
-            <app-keyboard-key
-              class="min-w-6 px-2 py-1 text-[13px]"
-              i18n="
-                Keyboard key that edits the selected change. Leave the letter
-                as-is
-              ">
-              e
-            </app-keyboard-key>
-            <span i18n="Keyboard hint for editing a change">edit</span>
-          </span>
-          <span class="flex items-center gap-1.5">
-            <app-keyboard-key
-              class="min-w-6 px-2 py-1 text-[13px]"
-              i18n="Symbol for the return key. Leave the symbol as-is">
-              &#9166;
-            </app-keyboard-key>
-            <span i18n="Keyboard hint for applying the selected changes">
-              apply selected
-            </span>
-          </span>
-        </div>
-      }
-
-      <span class="flex-1"></span>
-      <p class="text-muted m-0 text-sm">{{ status() }}</p>
-
-      <div class="flex items-center gap-2">
-        @if (isPending()) {
-          <button
-            app-stroked-button
-            class="h-12"
-            type="button"
-            (click)="discard()">
-            <span i18n="Button that discards the proposed changes"
-              >Discard</span
+      @if (isRunning()) {
+        <svg
+          lucideLoaderCircle
+          class="text-primary h-4 w-4 shrink-0 animate-spin"></svg>
+        <p class="m-0 shrink-0 text-sm font-medium">{{ applyingCount() }}</p>
+        @if (applyingLabel(); as label) {
+          <p class="text-muted m-0 min-w-0 truncate text-sm" [title]="label">
+            {{ label }}
+          </p>
+        }
+        <span class="flex-1"></span>
+        <button
+          app-stroked-button
+          class="h-12"
+          type="button"
+          [disabled]="isStoppingApply()"
+          (click)="stopApplying()">
+          @if (isStoppingApply()) {
+            <span i18n="Shown on the stop button once a stop was asked for"
+              >Stopping…</span
             >
-          </button>
-          <button
-            app-flat-button
-            class="h-12"
-            type="button"
-            [disabled]="assistant.isApplying() || selectedCount() === 0"
-            (click)="apply()">
-            <span i18n="Button that applies the proposed changes">Apply</span>
-            <span>&nbsp;({{ selectedCount() }})</span>
-          </button>
-        } @else {
-          @if (failedCount() > 0 && !isReadOnly) {
-            <button
-              app-stroked-button
-              class="h-12"
-              type="button"
-              [disabled]="assistant.isApplying()"
-              (click)="retryFailed()">
-              <span i18n="Button that runs the changes that failed again">
-                Retry failed
-              </span>
-              <span>&nbsp;({{ failedCount() }})</span>
-            </button>
+          } @else {
+            <span
+              i18n="Button that stops changes part way through being applied"
+              >Stop</span
+            >
           }
-          @if (canUndo()) {
+        </button>
+      } @else {
+        @if (isPending()) {
+          <div class="text-muted flex items-center gap-4 text-[13px]">
+            <span class="flex items-center gap-1.5">
+              <app-keyboard-key
+                class="min-w-6 px-2 py-1 text-[13px]"
+                i18n="
+                  Keyboard key that moves down the review list. Leave the letter
+                  as-is
+                ">
+                j
+              </app-keyboard-key>
+              <app-keyboard-key
+                class="min-w-6 px-2 py-1 text-[13px]"
+                i18n="
+                  Keyboard key that moves up the review list. Leave the letter
+                  as-is
+                ">
+                k
+              </app-keyboard-key>
+              <span i18n="Keyboard hint for moving through the review list">
+                move
+              </span>
+            </span>
+            <span class="flex items-center gap-1.5">
+              <app-keyboard-key
+                class="min-w-6 px-2 py-1 text-[13px]"
+                i18n="Name of the space bar. Translate it to its local name">
+                space
+              </app-keyboard-key>
+              <span i18n="Keyboard hint for including a change">include</span>
+            </span>
+            <span class="flex items-center gap-1.5">
+              <app-keyboard-key
+                class="min-w-6 px-2 py-1 text-[13px]"
+                i18n="
+                  Keyboard key that edits the selected change. Leave the letter
+                  as-is
+                ">
+                e
+              </app-keyboard-key>
+              <span i18n="Keyboard hint for editing a change">edit</span>
+            </span>
+            <span class="flex items-center gap-1.5">
+              <app-keyboard-key
+                class="min-w-6 px-2 py-1 text-[13px]"
+                i18n="Symbol for the return key. Leave the symbol as-is">
+                &#9166;
+              </app-keyboard-key>
+              <span i18n="Keyboard hint for applying the selected changes">
+                apply selected
+              </span>
+            </span>
+          </div>
+        }
+
+        <span class="flex-1"></span>
+        <p class="text-muted m-0 text-sm">{{ status() }}</p>
+
+        <div class="flex items-center gap-2">
+          @if (isPending()) {
             <button
               app-stroked-button
               class="h-12"
               type="button"
-              [disabled]="assistant.isApplying()"
-              (click)="undo()">
-              <span i18n="Button that takes back an applied change set"
-                >Undo</span
+              (click)="discard()">
+              <span i18n="Button that discards the proposed changes"
+                >Discard</span
+              >
+            </button>
+            <button
+              app-flat-button
+              class="h-12"
+              type="button"
+              [disabled]="assistant.isApplying() || selectedCount() === 0"
+              (click)="apply()">
+              <span i18n="Button that applies the proposed changes">Apply</span>
+              <span>&nbsp;({{ selectedCount() }})</span>
+            </button>
+          } @else {
+            @if (failedCount() > 0 && !isReadOnly) {
+              <button
+                app-stroked-button
+                class="h-12"
+                type="button"
+                [disabled]="assistant.isApplying()"
+                (click)="retryFailed()">
+                <span i18n="Button that runs the changes that failed again">
+                  Retry failed
+                </span>
+                <span>&nbsp;({{ failedCount() }})</span>
+              </button>
+            }
+            @if (canUndo()) {
+              <button
+                app-stroked-button
+                class="h-12"
+                type="button"
+                [disabled]="assistant.isApplying()"
+                (click)="undo()">
+                <span i18n="Button that takes back an applied change set"
+                  >Undo</span
+                >
+              </button>
+            }
+            <button
+              app-stroked-button
+              class="h-12"
+              type="button"
+              (click)="close()">
+              <span i18n="Button that closes the proposed changes dialog"
+                >Close</span
               >
             </button>
           }
-          <button
-            app-stroked-button
-            class="h-12"
-            type="button"
-            (click)="close()">
-            <span i18n="Button that closes the proposed changes dialog"
-              >Close</span
-            >
-          </button>
-        }
-      </div>
+        </div>
+      }
     </footer>
   `,
 })
@@ -379,6 +442,40 @@ export class AiAssistantReviewDialogComponent {
     }
 
     return $localize`:Title of the full screen review of proposed changes:Review changes`;
+  });
+
+  protected readonly isStoppingApply = this.assistant.isStoppingApply;
+
+  /** Only the live change set is ever being applied; a set handed in is history. */
+  protected readonly isRunning = computed(() => {
+    const changeSet = this.changeSet();
+
+    return (
+      changeSet !== null &&
+      this.assistant.applyingChangeSetId() === changeSet.id
+    );
+  });
+
+  protected readonly applyingCount = computed(() => {
+    const completed = this.assistant.applyCompleted();
+    const total = this.assistant.applyTotal();
+
+    return $localize`:Counts the changes a run has applied so far:Applying ${completed}:COMPLETED: of ${total}:TOTAL:`;
+  });
+
+  protected readonly applyingLabel = computed(() => {
+    const changeId = this.assistant.applyingChangeId();
+    const change = this.changes().find(
+      (candidate) => candidate.id === changeId
+    );
+
+    if (!change) {
+      return '';
+    }
+
+    const summary = changeSummary(change);
+
+    return summary.target ?? change.summary;
   });
 
   protected readonly changeSet = computed<AiChangeSet | null>(() => {
@@ -640,6 +737,10 @@ export class AiAssistantReviewDialogComponent {
     await this.assistant.applyChangeSet();
   }
 
+  protected async stopApplying() {
+    await this.assistant.stopApplying();
+  }
+
   /** Applying one proposal is the whole set with everything else left out. */
   protected async applyOne(changeId: number) {
     const excluded = this.assistant.excludedChangeIds();
@@ -715,6 +816,10 @@ export class AiAssistantReviewDialogComponent {
   }
 
   protected onKeydown(event: KeyboardEvent) {
+    if (this.isRunning()) {
+      return;
+    }
+
     const target = event.target as HTMLElement | null;
     const isTyping =
       target?.tagName === 'INPUT' || target?.tagName === 'TEXTAREA';

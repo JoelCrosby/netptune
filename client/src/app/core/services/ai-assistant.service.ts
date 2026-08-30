@@ -8,6 +8,7 @@ import {
   AiStreamEventType,
 } from '@core/models/ai-conversation';
 import { AiApiService, AiChangeFieldEdit } from '@core/services/ai-api.service';
+import { AiApplyProgressService } from '@core/services/ai-apply-progress.service';
 import { AiChangeSetService } from '@core/services/ai-change-set.service';
 import { AiContextChip } from '@core/models/ai-context';
 import { AiContextService } from '@core/services/ai-context.service';
@@ -41,6 +42,7 @@ export class AiAssistantService {
   private readonly conversation = inject(AiConversationService);
   private readonly transcript = inject(AiTranscriptService);
   private readonly changeSets = inject(AiChangeSetService);
+  private readonly applyProgress = inject(AiApplyProgressService);
   private readonly catalog = inject(AiModelCatalogService);
   private readonly effort = inject(AiEffortService);
   private readonly typewriter = inject(AiTypewriterService);
@@ -71,6 +73,14 @@ export class AiAssistantService {
   readonly excludedChangeIds = this.changeSets.excludedChangeIds;
   readonly isApplying = this.changeSets.isApplying;
   readonly isEditingChange = this.changeSets.isEditing;
+
+  readonly applyingChangeSetId = this.applyProgress.changeSetId;
+  readonly applyTotal = this.applyProgress.total;
+  readonly applyCompleted = this.applyProgress.completed;
+  readonly applyPercent = this.applyProgress.percent;
+  readonly applyStatuses = this.applyProgress.statuses;
+  readonly applyingChangeId = this.applyProgress.activeChangeId;
+  readonly isStoppingApply = this.applyProgress.isStopping;
 
   readonly models = this.catalog.models;
   readonly selectedModel = this.catalog.selectedModel;
@@ -195,6 +205,10 @@ export class AiAssistantService {
 
   async applyChangeSet() {
     await this.changeSets.apply();
+  }
+
+  async stopApplying() {
+    await this.changeSets.stopApply();
   }
 
   async retryFailedChanges() {

@@ -10,6 +10,8 @@ import {
   AiChangeFieldEdit,
   AiChangeSetAction,
 } from '@core/services/ai-api.service';
+import { AiApplyProgressService } from '@core/services/ai-apply-progress.service';
+import { AiStreamService } from '@core/services/ai-stream.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import {
   landedChanges,
@@ -23,6 +25,8 @@ export class AiChangeSetService {
   private readonly api = inject(AiApiService);
   private readonly storage = inject(LocalStorageService);
   private readonly workspaceRefresh = inject(WorkspaceRefreshService);
+  private readonly stream = inject(AiStreamService);
+  private readonly progress = inject(AiApplyProgressService);
 
   readonly changeSet = signal<AiChangeSet | null>(null);
   readonly excludedChangeIds = signal<Set<number>>(new Set());
@@ -131,7 +135,41 @@ export class AiChangeSetService {
       return;
     }
 
-    await this.run(changeSet, 'apply', { changeIds });
+    this.isApplying.set(true);
+    this.progress.start(changeSet.id, changeIds.length);
+
+    try {
+      await this.stream.runApply(
+        { changeSetId: changeSet.id, changeIds },
+        (event) => {
+          this.progress.receive(event);
+        }
+      );
+    } catch {
+      /* A dropped stream loses the reporting, not the run; the re-read below says what landed. */
+    } finally {
+      const wasRead = await this.refresh(changeSet.id);
+
+      this.refreshAffectedViews(changeSet.changes, wasRead);
+      this.progress.reset();
+      this.isApplying.set(false);
+    }
+  }
+
+  /**
+   * The run keeps going until the server hears about the stop, so the request stays open —
+   * abandoning it here would leave the outcome of what already landed unread.
+   */
+  async stopApply() {
+    const changeSet = this.changeSet();
+
+    if (!changeSet || !this.isApplying() || this.progress.isStopping()) {
+      return;
+    }
+
+    this.progress.markStopping();
+
+    await this.api.stopChangeSetApply(changeSet.id);
   }
 
   async retryFailed() {

@@ -327,6 +327,81 @@ public sealed class AiEndpointTests
         }
     }
 
+    [Fact]
+    public async Task ApplyChangeSet_ShouldReportEachChange_WhenTheClientAsksForAnEventStream()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var taskId = await ReadTaskId();
+        var proposal = new AiProposedChangeSeed
+        {
+            ToolName = "propose_update_task",
+            EntityType = "task",
+            Summary = "Rename the task",
+            Payload = JsonDocument.Parse($$"""{"taskId":{{taskId}},"name":"Renamed while streaming"}"""),
+        };
+
+        var seed = await SeedPendingChangeSet(proposal);
+
+        using var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+
+        try
+        {
+            var reported = await StreamChangeSetApply(client, seed.ChangeSetId, cancellation.Token);
+
+            reported.Should().NotBeEmpty("the client follows a run by the frames it is sent");
+            reported[0].Type.Should().Be(AiApplyProgressType.Started);
+            reported[0].Total.Should().Be(1);
+
+            reported.Should().Contain(progress =>
+                progress.Type == AiApplyProgressType.ChangeCompleted &&
+                progress.Status == AiChangeApplyStatus.Applied);
+
+            reported[^1].Type.Should().Be(AiApplyProgressType.Completed);
+        }
+        finally
+        {
+            await cancellation.CancelAsync();
+            await RemoveSeed(seed.ConversationId);
+        }
+    }
+
+    private static async Task<List<AiApplyProgress>> StreamChangeSetApply(
+        HttpClient client,
+        Guid changeSetId,
+        CancellationToken cancellationToken)
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Post, $"api/ai/change-sets/{changeSetId}/apply");
+
+        request.Headers.Add("Accept", "text/event-stream");
+        request.Headers.Add("X-Realtime-Client", Guid.NewGuid().ToString("N"));
+        request.Content = JsonContent.Create(new { changeIds = Array.Empty<long>() });
+
+        using var response = await client.SendAsync(
+            request,
+            HttpCompletionOption.ResponseHeadersRead,
+            cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.Content.Headers.ContentType!.MediaType.Should().Be("text/event-stream");
+
+        using var reader = new StreamReader(await response.Content.ReadAsStreamAsync(cancellationToken));
+        var reported = new List<AiApplyProgress>();
+
+        while (await reader.ReadLineAsync(cancellationToken) is { } line)
+        {
+            if (!line.StartsWith("data: ", StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            var progress = JsonSerializer.Deserialize<AiApplyProgress>(line["data: ".Length..], SerializerOptions);
+
+            reported.Add(progress!);
+        }
+
+        return reported;
+    }
+
     private static async Task<AiApplyResult> ApplyChangeSet(
         HttpClient client,
         Guid changeSetId,

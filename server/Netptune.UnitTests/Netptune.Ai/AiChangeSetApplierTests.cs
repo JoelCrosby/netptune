@@ -42,6 +42,7 @@ public class AiChangeSetApplierTests
     private readonly IWorkspaceRepository Workspaces = Substitute.For<IWorkspaceRepository>();
     private readonly IAiConversationRepository Conversations = Substitute.For<IAiConversationRepository>();
     private readonly ITaskRepository Tasks = Substitute.For<ITaskRepository>();
+    private readonly AiCancellationRegistry Cancellations = new();
 
     public AiChangeSetApplierTests()
     {
@@ -97,7 +98,7 @@ public class AiChangeSetApplierTests
             }));
 
         var applier = CreateApplier();
-        var apply = () => applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), TestContext.Current.CancellationToken);
+        var apply = () => applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), null, TestContext.Current.CancellationToken);
 
         await apply.Should().ThrowAsync<InvalidOperationException>();
     }
@@ -110,7 +111,7 @@ public class AiChangeSetApplierTests
             .Returns(Task.FromResult<AiChangeSet?>(null));
 
         var applier = CreateApplier();
-        var result = await applier.Apply(Guid.NewGuid(), new ApplyAiChangeSetRequest(), TestContext.Current.CancellationToken);
+        var result = await applier.Apply(Guid.NewGuid(), new ApplyAiChangeSetRequest(), null, TestContext.Current.CancellationToken);
 
         result.Should().BeNull();
     }
@@ -125,7 +126,7 @@ public class AiChangeSetApplierTests
         GivenPermissions(NetptunePermissions.Tasks.Read);
 
         var applier = CreateApplier();
-        var apply = () => applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), TestContext.Current.CancellationToken);
+        var apply = () => applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), null, TestContext.Current.CancellationToken);
 
         await apply.Should().ThrowAsync<UnauthorizedAccessException>();
     }
@@ -141,7 +142,7 @@ public class AiChangeSetApplierTests
         GivenPermissions(NetptunePermissions.Tasks.Create);
 
         var applier = CreateApplier();
-        var apply = () => applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), TestContext.Current.CancellationToken);
+        var apply = () => applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), null, TestContext.Current.CancellationToken);
 
         await apply.Should().ThrowAsync<InvalidOperationException>();
     }
@@ -158,7 +159,7 @@ public class AiChangeSetApplierTests
 
         var applier = CreateApplier();
         var request = new ApplyAiChangeSetRequest { ChangeIds = [selected.Id] };
-        var result = await applier.Apply(changeSet.Id, request, TestContext.Current.CancellationToken);
+        var result = await applier.Apply(changeSet.Id, request, null, TestContext.Current.CancellationToken);
 
         result!.Results.Should().ContainSingle(item => item.ChangeId == selected.Id);
         unselected.ApplyStatus.Should().Be(AiChangeApplyStatus.Skipped);
@@ -176,7 +177,7 @@ public class AiChangeSetApplierTests
         GivenPermissions(NetptunePermissions.Tasks.Create);
 
         var applier = CreateApplier();
-        var result = await applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), TestContext.Current.CancellationToken);
+        var result = await applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), null, TestContext.Current.CancellationToken);
 
         result!.Results.Should().BeEmpty();
         invalid.ApplyStatus.Should().Be(AiChangeApplyStatus.Skipped);
@@ -200,10 +201,11 @@ public class AiChangeSetApplierTests
             Identity,
             tools,
             new AiExecutionContext(),
+            new AiCancellationRegistry(),
             NullLogger<AiChangeSetApplier>.Instance,
             []);
 
-        var result = await applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), TestContext.Current.CancellationToken);
+        var result = await applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), null, TestContext.Current.CancellationToken);
 
         result!.Results.Should().ContainSingle();
         result.Results[0].Status.Should().Be(AiChangeApplyStatus.Failed);
@@ -219,6 +221,7 @@ public class AiChangeSetApplierTests
             Identity,
             tools,
             new AiExecutionContext(),
+            Cancellations,
             NullLogger<AiChangeSetApplier>.Instance,
             [new CreateTaskChangeHandler(Mediator)]);
     }
@@ -281,7 +284,7 @@ public class AiChangeSetApplierTests
         GivenCreatedTask(7);
 
         var applier = CreateApplier();
-        var result = await applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), TestContext.Current.CancellationToken);
+        var result = await applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), null, TestContext.Current.CancellationToken);
 
         result!.Results.Select(item => item.ChangeId).Should().Equal(
             [prerequisite.Id, dependent.Id],
@@ -303,7 +306,7 @@ public class AiChangeSetApplierTests
         GivenCreatedTask(7);
 
         var applier = CreateApplier();
-        var result = await applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), TestContext.Current.CancellationToken);
+        var result = await applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), null, TestContext.Current.CancellationToken);
         var outcome = result!.Results.Single();
 
         outcome.Status.Should().Be(AiChangeApplyStatus.Skipped);
@@ -323,7 +326,7 @@ public class AiChangeSetApplierTests
 
         var applier = CreateApplier();
 
-        await applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), TestContext.Current.CancellationToken);
+        await applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), null, TestContext.Current.CancellationToken);
 
         await Conversations
             .Received(1)
@@ -344,6 +347,80 @@ public class AiChangeSetApplierTests
                 Title = "Chat",
                 Model = "claude-opus-5",
             }));
+    }
+
+    [Fact]
+    public async Task Apply_ShouldReportEveryChangeAsItLands()
+    {
+        var changeSet = CreateChangeSet();
+        var first = CreateChange(changeSet.Id, "propose_create_task", id: 1, refKey: "ref:1");
+        var second = CreateChange(changeSet.Id, "propose_create_task", id: 2, refKey: "ref:2");
+
+        GivenChangeSet(changeSet, [first, second]);
+        GivenPermissions(NetptunePermissions.Tasks.Create);
+        GivenCreatedTask(7);
+
+        var applier = CreateApplier();
+        var reported = new List<AiApplyProgress>();
+
+        await applier.Apply(
+            changeSet.Id,
+            new ApplyAiChangeSetRequest(),
+            progress =>
+            {
+                reported.Add(progress);
+
+                return Task.CompletedTask;
+            },
+            TestContext.Current.CancellationToken);
+
+        reported[0].Type.Should().Be(AiApplyProgressType.Started);
+        reported[0].Total.Should().Be(2);
+
+        var completions = reported
+            .Where(progress => progress.Type == AiApplyProgressType.ChangeCompleted)
+            .ToList();
+
+        completions.Select(progress => progress.ChangeId).Should().Equal(
+            [first.Id, second.Id],
+            "the client counts a run by the changes it is told about");
+
+        completions.Select(progress => progress.Completed).Should().Equal([1, 2]);
+    }
+
+    [Fact]
+    public async Task Apply_ShouldFailWhatNeverRan_WhenTheRunIsStopped()
+    {
+        var changeSet = CreateChangeSet();
+        var first = CreateChange(changeSet.Id, "propose_create_task", id: 1, refKey: "ref:1");
+        var second = CreateChange(changeSet.Id, "propose_create_task", id: 2, refKey: "ref:2");
+
+        GivenChangeSet(changeSet, [first, second]);
+        GivenPermissions(NetptunePermissions.Tasks.Create);
+
+        Mediator
+            .Send(Arg.Any<CreateTaskCommand>(), Arg.Any<CancellationToken>())
+            .Returns(_ =>
+            {
+                Cancellations.Stop(changeSet.Id);
+
+                return ClientResponse<TaskViewModel>.Success(new TaskViewModel { Id = 7 });
+            });
+
+        var applier = CreateApplier();
+        var result = await applier.Apply(
+            changeSet.Id,
+            new ApplyAiChangeSetRequest(),
+            null,
+            TestContext.Current.CancellationToken);
+
+        first.ApplyStatus.Should().Be(AiChangeApplyStatus.Applied);
+        second.ApplyStatus.Should().Be(
+            AiChangeApplyStatus.Failed,
+            "a change the run never reached is not something the workspace has");
+
+        second.ApplyError.Should().Contain("Stopped");
+        result!.Status.Should().Be(AiChangeSetStatus.PartiallyApplied);
     }
 
     private void GivenCreatedTask(int taskId)

@@ -162,7 +162,8 @@ import { AiAssistantUsageComponent } from './components/ai-assistant-usage.compo
           (selectionChanged)="assistant.toggleChanges($event)"
           (applied)="apply()"
           (discarded)="discard()"
-          (undone)="undo()" />
+          (undone)="undo()"
+          (stopped)="stopApplying()" />
       }
 
       @if (spend(); as usage) {
@@ -188,6 +189,7 @@ import { AiAssistantUsageComponent } from './components/ai-assistant-usage.compo
         [effortLabel]="assistant.selectedEffortLabel()"
         [supportsEffort]="assistant.supportsEffort()"
         [isStreaming]="assistant.isStreaming()"
+        [isApplying]="assistant.isApplying()"
         [isAnswering]="assistant.pendingQuestion() !== null"
         [contentWidth]="contentWidth()"
         [draft]="assistant.draft()"
@@ -302,6 +304,10 @@ export class AiAssistantPanelComponent {
 
   protected discard() {
     void this.assistant.discardChangeSet();
+  }
+
+  protected stopApplying() {
+    void this.assistant.stopApplying();
   }
 
   protected undo() {

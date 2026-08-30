@@ -27,7 +27,7 @@ import { AiAssistantModelMenuComponent } from './ai-assistant-model-menu.compone
           (ngModelChange)="draftChanged.emit($event)"
           (keydown)="onKeydown($event)"
           [placeholder]="placeholder()"
-          [disabled]="disabled()"></textarea>
+          [disabled]="disabled() || isApplying()"></textarea>
 
         @if (isReplacing()) {
           <div
@@ -103,6 +103,7 @@ export class AiAssistantComposerComponent {
   readonly effortLabel = input.required<string>();
   readonly supportsEffort = input(false);
   readonly isStreaming = input(false);
+  readonly isApplying = input(false);
   readonly isReplacing = input(false);
   readonly isAnswering = input(false);
   readonly disabled = input(false);
@@ -118,13 +119,18 @@ export class AiAssistantComposerComponent {
 
   protected readonly canSend = computed(() => {
     const hasDraft = this.draft().trim().length > 0;
+    const isBusy = this.isStreaming() || this.isApplying();
 
-    return hasDraft && !this.isStreaming() && !this.disabled();
+    return hasDraft && !isBusy && !this.disabled();
   });
 
   protected placeholder(): string {
     if (this.isStreaming()) {
       return $localize`:Placeholder while the assistant is replying:Waiting for the assistant…`;
+    }
+
+    if (this.isApplying()) {
+      return $localize`:Placeholder while proposed changes are being applied:Waiting for the current changes to finish…`;
     }
 
     if (this.isAnswering()) {

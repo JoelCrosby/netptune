@@ -6,6 +6,8 @@ import {
 import {
   LucideChevronDown,
   LucideCircleCheck,
+  LucideCircleDashed,
+  LucideLoaderCircle,
   LucideMinus,
   LucideTriangleAlert,
   LucideUndo2,
@@ -28,7 +30,11 @@ interface AiReviewRow {
   isIncluded: boolean;
   isSelected: boolean;
   isBlocked: boolean;
+  applyState: AiApplyState;
 }
+
+/** Where a change has got to in a run, for the marker that replaces its checkbox. */
+type AiApplyState = 'idle' | 'waiting' | 'running' | 'applied' | 'failed';
 
 interface AiReviewGroup {
   key: string;
@@ -62,6 +68,8 @@ const rowLabels = (
   imports: [
     LucideChevronDown,
     LucideCircleCheck,
+    LucideCircleDashed,
+    LucideLoaderCircle,
     LucideMinus,
     LucideTriangleAlert,
     LucideUndo2,
@@ -100,11 +108,46 @@ const rowLabels = (
                   : 'bg-background border-transparent'
               "
               [class.opacity-50]="
-                (isPending() && !row.isIncluded) || row.change.undoneAt
+                (isPending() && !isApplying() && !row.isIncluded) ||
+                row.applyState === 'waiting' ||
+                row.change.undoneAt
               "
               [attr.aria-current]="row.isSelected"
               (click)="selected.emit(row.change.id)">
-              @if (isPending()) {
+              @if (isApplying()) {
+                <span
+                  class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center">
+                  @switch (row.applyState) {
+                    @case ('applied') {
+                      <svg
+                        lucideCircleCheck
+                        class="text-change-added h-4.5 w-4.5"
+                        [attr.aria-label]="appliedLabel"></svg>
+                    }
+                    @case ('failed') {
+                      <svg
+                        lucideTriangleAlert
+                        class="text-change-removed h-4.5 w-4.5"
+                        [attr.aria-label]="failedLabel"></svg>
+                    }
+                    @case ('running') {
+                      <svg
+                        lucideLoaderCircle
+                        class="text-primary h-4.5 w-4.5 animate-spin"
+                        [attr.aria-label]="runningLabel"></svg>
+                    }
+                    @case ('waiting') {
+                      <svg
+                        lucideCircleDashed
+                        class="text-muted h-4.5 w-4.5"
+                        [attr.aria-label]="waitingLabel"></svg>
+                    }
+                    @default {
+                      <svg lucideMinus class="text-muted/60 h-4.5 w-4.5"></svg>
+                    }
+                  }
+                </span>
+              } @else if (isPending()) {
                 <span class="mt-0.5" (click)="stopPropagation($event)">
                   <app-selection-checkbox
                     [checked]="row.isIncluded"
@@ -189,12 +232,22 @@ export class AiAssistantReviewListComponent {
   readonly collapsedKeys = input.required<Set<string>>();
   readonly selectedChangeId = input<number | null>(null);
   readonly isPending = input(false);
+  readonly isApplying = input(false);
+  readonly applyStatuses = input<ReadonlyMap<number, AiChangeApplyStatus>>(
+    new Map()
+  );
+  readonly applyingChangeId = input<number | null>(null);
 
   readonly selected = output<number>();
   readonly toggled = output<number>();
   readonly groupToggled = output<string>();
 
   protected readonly applyStatus = AiChangeApplyStatus;
+
+  protected readonly appliedLabel = $localize`:Marks a change that has been applied:Applied`;
+  protected readonly failedLabel = $localize`:Marks a change that could not be applied:Failed`;
+  protected readonly runningLabel = $localize`:Marks the change being applied right now:Applying`;
+  protected readonly waitingLabel = $localize`:Marks a change waiting to be applied:Waiting`;
 
   protected readonly reviewGroups = computed<AiReviewGroup[]>(() => {
     const excluded = this.excludedChangeIds();
@@ -206,15 +259,17 @@ export class AiAssistantReviewListComponent {
 
       const rows = group.changes.map((change) => {
         const isSelectable = isValid(change);
+        const isIncluded = isSelectable && !excluded.has(change.id);
 
         return {
           change,
           letter: changeLetter(change),
           ...rowLabels(change, groupTarget),
           isSelectable,
-          isIncluded: isSelectable && !excluded.has(change.id),
+          isIncluded,
           isSelected: change.id === selectedId,
           isBlocked: !isSelectable,
+          applyState: this.applyState(change.id, isIncluded),
         };
       });
 
@@ -231,5 +286,25 @@ export class AiAssistantReviewListComponent {
 
   protected stopPropagation(event: Event) {
     event.stopPropagation();
+  }
+
+  private applyState(changeId: number, isIncluded: boolean): AiApplyState {
+    const isRunning = this.isApplying();
+
+    if (!isRunning || !isIncluded) {
+      return 'idle';
+    }
+
+    const status = this.applyStatuses().get(changeId);
+
+    if (status === AiChangeApplyStatus.applied) {
+      return 'applied';
+    }
+
+    if (status !== undefined) {
+      return 'failed';
+    }
+
+    return this.applyingChangeId() === changeId ? 'running' : 'waiting';
   }
 }

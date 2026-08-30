@@ -4,16 +4,20 @@ import {
   AiChangeSet,
   AiChangeSetStatus,
 } from '@core/models/ai-conversation';
+import { AiApplyProgressService } from '@core/services/ai-apply-progress.service';
 import { AiChangeSetService } from '@core/services/ai-change-set.service';
 import { DialogService } from '@core/services/dialog.service';
 import {
   LucideCheck,
   LucideChevronDown,
-  LucideLoaderCircle,
   LucideTriangleAlert,
 } from '@lucide/angular';
 import { SelectionCheckboxComponent } from '@static/components/checkbox/selection-checkbox.component';
 import { AiAssistantAppliedChangesComponent } from './ai-assistant-applied-changes.component';
+import {
+  AiApplyRowView,
+  AiAssistantApplyProgressComponent,
+} from './ai-assistant-apply-progress.component';
 import { groupChanges, isApplied, isValid } from './ai-assistant-change-group';
 import {
   AiDigestRowView,
@@ -37,17 +41,25 @@ const INLINE_ROW_LIMIT = 3;
   imports: [
     LucideCheck,
     LucideChevronDown,
-    LucideLoaderCircle,
     LucideTriangleAlert,
     SelectionCheckboxComponent,
     AiAssistantAppliedChangesComponent,
+    AiAssistantApplyProgressComponent,
   ],
   template: `
     <div class="mx-auto w-full px-4 py-3" [class]="contentWidth()">
       <section
         class="border-border bg-card rise-in flex flex-col overflow-hidden rounded-[10px] border"
         [attr.aria-label]="blockLabel">
-        @if (isPending()) {
+        @if (isRunning()) {
+          <app-ai-assistant-apply-progress
+            [rows]="applyRows()"
+            [completed]="applyCompleted()"
+            [total]="applyTotal()"
+            [percent]="applyPercent()"
+            [isStopping]="isStoppingApply()"
+            (stopped)="stopped.emit()" />
+        } @else if (isPending()) {
           <div
             class="border-border bg-card-header flex items-center gap-2 border-b px-3 py-2.5">
             <h3
@@ -208,9 +220,6 @@ const INLINE_ROW_LIMIT = 3;
               [disabled]="isApplying() || selectedCount() === 0"
               [attr.aria-label]="applyLabel()"
               (click)="applied.emit()">
-              @if (isApplying()) {
-                <svg lucideLoaderCircle class="h-3.5 w-3.5 animate-spin"></svg>
-              }
               <span aria-hidden="true">
                 <span i18n="Button that applies the proposed changes"
                   >Apply</span
@@ -317,10 +326,45 @@ export class AiAssistantChangeSetComponent {
   readonly applied = output();
   readonly discarded = output();
   readonly undone = output();
+  readonly stopped = output();
   readonly selectionChanged = output<number[]>();
 
   private readonly dialog = inject(DialogService);
   private readonly changeSets = inject(AiChangeSetService);
+  private readonly progress = inject(AiApplyProgressService);
+
+  protected readonly applyCompleted = this.progress.completed;
+  protected readonly applyTotal = this.progress.total;
+  protected readonly applyPercent = this.progress.percent;
+  protected readonly isStoppingApply = this.progress.isStopping;
+
+  /** Only the set a run belongs to reports it; the ones above it in the chat are history. */
+  protected readonly isRunning = computed(() => {
+    return this.progress.changeSetId() === this.changeSet().id;
+  });
+
+  protected readonly applyRows = computed<AiApplyRowView[]>(() => {
+    const statuses = this.progress.statuses();
+    const excluded = this.excludedChangeIds();
+    const selected = this.changes().filter(
+      (change) => !excluded.has(change.id)
+    );
+
+    return digestRows(selected).map((row) => {
+      const done = row.changeIds.filter((id) => statuses.has(id)).length;
+
+      return {
+        key: row.key,
+        letter: row.letter,
+        lead: row.lead,
+        emphasis: row.emphasis,
+        trail: row.trail,
+        label: row.label,
+        done,
+        total: row.changeIds.length,
+      };
+    });
+  });
 
   protected readonly blockLabel = $localize`:Accessible label of the block holding the proposed changes:Proposed changes`;
 

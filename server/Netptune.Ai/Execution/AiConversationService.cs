@@ -36,7 +36,7 @@ public sealed class AiConversationService : IAiConversationService
     private readonly IAiChangeSetBuilder ChangeSetBuilder;
     private readonly IAiQuestionSink Questions;
     private readonly IAiTitleGenerator Titles;
-    private readonly IAiTurnRegistry Turns;
+    private readonly IAiCancellationRegistry Turns;
     private readonly AiOptions Options;
 
     public AiConversationService(
@@ -49,7 +49,7 @@ public sealed class AiConversationService : IAiConversationService
         IAiChangeSetBuilder changeSetBuilder,
         IAiQuestionSink questions,
         IAiTitleGenerator titles,
-        IAiTurnRegistry turns,
+        IAiCancellationRegistry turns,
         IOptions<AiOptions> options)
     {
         ChangeSetBuilder = changeSetBuilder;
