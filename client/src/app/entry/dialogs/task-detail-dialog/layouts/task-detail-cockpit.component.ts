@@ -44,7 +44,9 @@ import { TaskDetailService } from '../task-detail.service';
   host: { class: 'flex h-full min-h-0 flex-col' },
   template: `
     @if (task(); as task) {
-      <app-task-detail-chrome class="border-foreground/8 h-[52px] border-b" />
+      <app-task-detail-chrome
+        class="border-foreground/8 h-[52px] border-b"
+        [showActivity]="false" />
 
       <div
         class="border-foreground/8 flex shrink-0 flex-col gap-3.5 border-b px-7 pt-5.5 pb-4">

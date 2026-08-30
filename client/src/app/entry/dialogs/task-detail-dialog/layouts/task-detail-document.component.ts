@@ -50,7 +50,10 @@ import { TaskDetailService } from '../task-detail.service';
   host: { class: 'flex h-full min-h-0 flex-col' },
   template: `
     @if (task(); as task) {
-      <app-task-detail-chrome class="h-12" [showBreadcrumb]="false" />
+      <app-task-detail-chrome
+        class="h-12"
+        [showBreadcrumb]="false"
+        [showActivity]="false" />
 
       <div
         class="custom-scroll flex min-h-0 flex-1 justify-center overflow-y-auto pt-2">
