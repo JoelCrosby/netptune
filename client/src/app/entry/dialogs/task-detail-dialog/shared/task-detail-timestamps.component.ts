@@ -8,7 +8,7 @@ import { TaskDetailService } from '../task-detail.service';
 @Component({
   selector: 'app-task-detail-timestamps',
   imports: [AvatarComponent, FromNowPipe, PrettyDatePipe, TooltipDirective],
-  host: { class: 'text-foreground/40 flex items-center gap-4 text-xs' },
+  host: { class: 'text-muted flex items-center gap-4 text-xs' },
   template: `
     @if (task(); as task) {
       <span [appTooltip]="task.createdAt | prettyDate">

@@ -120,7 +120,7 @@ import { TaskDetailService } from '../task-detail.service';
         }
 
         @if (readSprints()) {
-          <span class="text-foreground/40" aria-hidden="true">/</span>
+          <span class="text-muted" aria-hidden="true">/</span>
 
           <app-task-sprint-picker
             [buttonClass]="metaChip"
@@ -131,7 +131,7 @@ import { TaskDetailService } from '../task-detail.service';
             @if (task.sprintName) {
               {{ task.sprintName }}
             } @else {
-              <span class="text-foreground/40">
+              <span class="text-muted">
                 <span
                   i18n="
                     Shown in place of a sprint name when a task has no sprint

@@ -19,7 +19,7 @@ export interface TaskDetailTab {
         (click)="active.set(tab.key)">
         {{ tab.label }}
         @if (tab.count !== null && tab.count !== undefined) {
-          <span class="text-foreground/40 ml-1.5 font-medium">
+          <span class="text-muted ml-1.5 font-medium">
             {{ tab.count }}
           </span>
         }

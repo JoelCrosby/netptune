@@ -16,7 +16,7 @@ import { TaskPriorityPickerComponent } from '../pickers/task-priority-picker.com
 import { TaskProjectPickerComponent } from '../pickers/task-project-picker.component';
 import { TaskSprintPickerComponent } from '../pickers/task-sprint-picker.component';
 import { TaskStatusPickerComponent } from '../pickers/task-status-picker.component';
-import { FAINT, FIELD_LABEL, FIELD_ROW } from '../task-detail-styles';
+import { EMPTY_VALUE, FIELD_LABEL, FIELD_ROW } from '../task-detail-styles';
 import { TaskDetailService } from '../task-detail.service';
 
 export type TaskDetailField =
@@ -101,7 +101,7 @@ const ALL_FIELDS: TaskDetailField[] = [
                     <span class="truncate">{{ assigneeLabel() }}</span>
                   </span>
                 } @else {
-                  <span [class]="faint">{{ labels.unassigned }}</span>
+                  <span [class]="emptyValue">{{ labels.unassigned }}</span>
                 }
               </app-user-select>
             }
@@ -130,7 +130,7 @@ const ALL_FIELDS: TaskDetailField[] = [
               (valueChange)="taskDetail.setPriority($event)">
               <span [class]="labelClass()">{{ labels.priority }}</span>
               @if (task.priority === null) {
-                <span [class]="faint">{{ labels.notSet }}</span>
+                <span [class]="emptyValue">{{ labels.notSet }}</span>
               } @else {
                 <span
                   class="flex items-center gap-2 font-medium"
@@ -153,7 +153,7 @@ const ALL_FIELDS: TaskDetailField[] = [
               @if (estimateLabel(); as estimate) {
                 <span class="font-medium">{{ estimate }}</span>
               } @else {
-                <span [class]="faint">{{ labels.notSet }}</span>
+                <span [class]="emptyValue">{{ labels.notSet }}</span>
               }
             </app-task-estimate-picker>
           }
@@ -227,7 +227,7 @@ const ALL_FIELDS: TaskDetailField[] = [
                     task.sprintName
                   }}</span>
                 } @else {
-                  <span [class]="faint">{{ labels.noSprint }}</span>
+                  <span [class]="emptyValue">{{ labels.noSprint }}</span>
                 }
               </app-task-sprint-picker>
             }
@@ -267,7 +267,7 @@ export class TaskDetailFieldRowsComponent {
   readonly staticRowClass = `${FIELD_ROW} cursor-default hover:bg-transparent`;
   readonly dateRowClass = `${FIELD_ROW} cursor-default`;
   readonly dateButtonClass = 'h-8 w-auto gap-2 px-0 text-[13px] font-medium';
-  readonly faint = FAINT;
+  readonly emptyValue = EMPTY_VALUE;
 
   readonly canUpdate = hasPermission(PERMISSIONS.tasks.update);
   readonly readStatus = hasPermission(PERMISSIONS.statuses.read);

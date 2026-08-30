@@ -162,7 +162,7 @@ import { TaskDetailService } from '../task-detail.service';
               }
             </div>
             @if (railTab() === 'comments') {
-              <span class="text-foreground/40 ml-auto text-xs">
+              <span class="text-muted ml-auto text-xs">
                 {{ comments.count() }}
               </span>
             }

@@ -48,7 +48,7 @@ import { TaskDetailService } from '../task-detail.service';
             <span class="font-semibold">{{ activity.userUsername }}</span>
             @if (activity.agent) {
               <span
-                class="text-foreground/60 ml-1 text-xs"
+                class="text-muted ml-1 text-xs"
                 i18n="
                   Precedes the assistant that made a change on the user's behalf
                 ">

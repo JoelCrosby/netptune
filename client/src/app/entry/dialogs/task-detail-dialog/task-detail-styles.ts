@@ -1,4 +1,4 @@
-export const FAINT = 'text-foreground/40';
+export const EMPTY_VALUE = 'text-muted';
 
 export const HEADER_ICON_BUTTON =
   'text-muted hover:bg-hover hover:text-foreground inline-flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-md transition-colors';
@@ -21,4 +21,4 @@ export const FIELD_ROW =
 export const FIELD_LABEL = 'text-muted w-24 shrink-0';
 
 export const EYEBROW =
-  'font-avatar text-foreground/40 text-[10px] tracking-[0.14em] uppercase';
+  'font-avatar text-muted text-[10px] tracking-[0.14em] uppercase';

@@ -89,10 +89,9 @@ const RAIL_FIELDS: TaskDetailField[] = [
               <app-task-detail-accordion-row
                 [label]="labels.boards"
                 [summary]="boardSummary()"
-                [tone]="task.placements.length ? 'muted' : 'faint'"
                 [expanded]="isExpanded('boards')"
                 (toggled)="toggle('boards')">
-                <span class="text-foreground/40 shrink-0 pr-1 text-xs">
+                <span class="text-muted shrink-0 pr-1 text-xs">
                   {{ task.placements.length }}
                 </span>
               </app-task-detail-accordion-row>
@@ -105,7 +104,6 @@ const RAIL_FIELDS: TaskDetailField[] = [
               <app-task-detail-accordion-row
                 [label]="labels.links"
                 [summary]="linkSummary(relations.count())"
-                [tone]="relations.count() ? 'muted' : 'faint'"
                 [expanded]="isExpanded('links')"
                 (toggled)="toggle('links')">
                 @if (canUpdate()) {
@@ -127,7 +125,6 @@ const RAIL_FIELDS: TaskDetailField[] = [
                 <app-task-detail-accordion-row
                   [label]="labels.files"
                   [summary]="fileSummary(files.count())"
-                  [tone]="files.count() ? 'muted' : 'faint'"
                   [last]="true"
                   [expanded]="isExpanded('files')"
                   (toggled)="toggle('files')">
@@ -158,7 +155,7 @@ const RAIL_FIELDS: TaskDetailField[] = [
                     Comments
                   </span>
                 </span>
-                <span class="text-foreground/40 text-xs">
+                <span class="text-muted text-xs">
                   {{ comments.count() }}
                 </span>
                 <button
@@ -193,7 +190,7 @@ const RAIL_FIELDS: TaskDetailField[] = [
                     <span class="font-semibold">
                       {{ latest.userDisplayName }}
                     </span>
-                    <span class="text-foreground/40 ml-1.5 text-[11px]">
+                    <span class="text-muted ml-1.5 text-[11px]">
                       {{ latest.createdAt | fromNow }}
                     </span>
                     <div class="line-clamp-2">{{ latest.body }}</div>

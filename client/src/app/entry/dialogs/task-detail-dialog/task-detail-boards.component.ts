@@ -71,13 +71,13 @@ import { TaskDetailService } from './task-detail.service';
       @for (placement of placements(); track placement.boardId) {
         <li
           class="border-foreground/8 bg-foreground/[0.02] flex h-10 items-center gap-3 rounded-lg border px-3">
-          <svg lucideKanban class="text-foreground/40 h-4 w-4 shrink-0"></svg>
+          <svg lucideKanban class="text-muted h-4 w-4 shrink-0"></svg>
 
           <span class="flex-1 truncate text-[13px] font-medium">
             {{ placement.boardName }}
           </span>
 
-          <span class="text-foreground/40 shrink-0 text-xs">
+          <span class="text-muted shrink-0 text-xs">
             {{ placement.boardGroupName }}
           </span>
 

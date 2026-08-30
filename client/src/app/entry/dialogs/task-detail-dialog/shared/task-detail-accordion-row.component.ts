@@ -1,4 +1,4 @@
-import { Component, computed, input, output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { LucideChevronRight } from '@lucide/angular';
 
 @Component({
@@ -16,12 +16,10 @@ import { LucideChevronRight } from '@lucide/angular';
         (click)="toggled.emit()">
         <svg
           lucideChevronRight
-          class="text-foreground/40 h-3.5 w-3.5 shrink-0 transition-transform"
+          class="text-muted h-3.5 w-3.5 shrink-0 transition-transform"
           [class.rotate-90]="expanded()"></svg>
         <span class="shrink-0 text-[13px] font-semibold">{{ label() }}</span>
-        <span class="truncate text-xs" [class]="summaryClass()">
-          {{ summary() }}
-        </span>
+        <span class="text-muted truncate text-xs">{{ summary() }}</span>
       </button>
 
       <ng-content />
@@ -32,13 +30,8 @@ export class TaskDetailAccordionRowComponent {
   readonly label = input.required<string>();
   readonly summary = input('');
 
-  readonly tone = input<'muted' | 'faint'>('muted');
   readonly expanded = input(false);
   readonly last = input(false);
 
   readonly toggled = output();
-
-  protected readonly summaryClass = computed(() => {
-    return this.tone() === 'faint' ? 'text-foreground/40' : 'text-muted';
-  });
 }
