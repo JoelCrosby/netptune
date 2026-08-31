@@ -1152,7 +1152,7 @@
     <unit id="2123659921722214537">
       <notes>
         <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:46,47</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:221</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:220</note>
         <note category="location">src/app/workspace.routes.ts:42</note>
         <note category="description">Page title for the saved task view list</note>
       </notes>
@@ -1589,7 +1589,7 @@
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:69,72</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:62,65</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:164,167</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:303</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:309</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:255</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:42,44</note>
         <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:85,87</note>
@@ -1807,7 +1807,7 @@
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:461</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:230</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:363</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:302</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:308</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:207</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:254</note>
         <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:155</note>
@@ -3126,7 +3126,7 @@
         <note category="location">src/app/features/notifications/notifications.routes.ts:12</note>
         <note category="location">src/app/features/notifications/views/notifications-view/notifications-view.component.ts:29,30</note>
         <note category="location">src/app/features/settings/views/personal-notification-settings-view/personal-notification-settings-view.component.ts:20,22</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:401</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:400</note>
         <note category="location">src/app/workspace.routes.ts:96</note>
         <note category="description">Accessible label for the notifications button</note>
       </notes>
@@ -3285,7 +3285,7 @@
         <note category="location">src/app/features/automations/models/automation-copy.ts:918</note>
         <note category="location">src/app/features/pins/components/pin-scope-menu.component.ts:155</note>
         <note category="location">src/app/features/settings/components/preference-scope.ts:36</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:431</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:430</note>
         <note category="description">Badge on a task pinned for the whole workspace</note>
       </notes>
       <segment state="translated">
@@ -5314,7 +5314,7 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:56,59</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:81,82</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:284</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:342</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:341</note>
         <note category="description">Section heading for links between tasks</note>
       </notes>
       <segment state="translated">
@@ -5386,7 +5386,7 @@
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:60</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:37</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:90</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:326</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:325</note>
         <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:53,54</note>
         <note category="description">Section heading for a task&apos;s tags</note>
       </notes>
@@ -6362,7 +6362,7 @@
     <unit id="1678559204833619774">
       <notes>
         <note category="location">src/app/features/audit/views/audit-view/audit-view.component.ts:26,27</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:382</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:381</note>
         <note category="location">src/app/workspace.routes.ts:108</note>
         <note category="description">Page title for the workspace audit log</note>
       </notes>
@@ -8536,7 +8536,7 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-notify-editor.component.ts:45</note>
         <note category="location">src/app/features/users/views/users-view/users-view.component.html:6</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:242</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:241</note>
         <note category="location">src/app/workspace.routes.ts:102</note>
         <note category="description">Label of the users field</note>
       </notes>
@@ -12845,7 +12845,7 @@
     <unit id="4930506384627295710">
       <notes>
         <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:103,104</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:445</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:444</note>
         <note category="location">src/app/workspace.routes.ts:120</note>
         <note category="description">Title of the settings step</note>
       </notes>
@@ -12928,7 +12928,7 @@
       <notes>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:58,59</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:67,71</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:250</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:249</note>
         <note category="location">src/app/workspace.routes.ts:54</note>
         <note category="description">Page title for the automation list</note>
       </notes>
@@ -13396,7 +13396,7 @@
     <unit id="146442697456175258">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:103,106</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:366</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:365</note>
         <note category="description">Page title for the workspace import and export page</note>
       </notes>
       <segment>
@@ -13414,7 +13414,7 @@
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:260</note>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:165</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:83</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:152</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:151</note>
         <note category="location">src/app/workspace.routes.ts:36</note>
         <note category="description">Stat label for the number of tasks on a board</note>
       </notes>
@@ -13909,7 +13909,7 @@
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:46,49</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:63,64</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:86</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:166</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:165</note>
         <note category="location">src/app/workspace.routes.ts:60</note>
         <note category="description">Section heading for the boards a task appears on</note>
       </notes>
@@ -14450,7 +14450,7 @@
     <unit id="3825802286872185103">
       <notes>
         <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:56,59</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:208</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:207</note>
         <note category="location">src/app/workspace.routes.ts:84</note>
         <note category="description">Page title for the calendar</note>
       </notes>
@@ -14531,7 +14531,7 @@
     </unit>
     <unit id="2135927702447694694">
       <notes>
-        <note category="location">src/app/shell/current-sprint-dropdown.component.ts:66,70</note>
+        <note category="location">src/app/shell/current-sprint-dropdown.component.ts:60,64</note>
         <note category="description">Heading above the list of currently active sprints</note>
       </notes>
       <segment state="translated">
@@ -14785,7 +14785,7 @@
     <unit id="6570363013146073520">
       <notes>
         <note category="location">src/app/features/dashboard/views/dashboard-view/dashboard-view.component.ts:37,39</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:144</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:143</note>
         <note category="location">src/app/workspace.routes.ts:25</note>
         <note category="description">Page title for the dashboard</note>
       </notes>
@@ -15479,7 +15479,7 @@
         <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:65</note>
         <note category="location">src/app/features/project-tasks/project-tasks.routes.ts:13</note>
         <note category="location">src/app/features/project-tasks/views/archive-view/archive-view.component.ts:21,23</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:158</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:157</note>
         <note category="description">Heading of the archive file panel</note>
       </notes>
       <segment state="translated">
@@ -15685,7 +15685,7 @@
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:56,57</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:65,69</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:84</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:198</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:197</note>
         <note category="location">src/app/workspace.routes.ts:30</note>
         <note category="description">Filter heading for projects</note>
       </notes>
@@ -16780,7 +16780,7 @@
     <unit id="1868606282505332204">
       <notes>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:49,52</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:213</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:212</note>
         <note category="location">src/app/workspace.routes.ts:72</note>
         <note category="description">Page title for the reporting views</note>
       </notes>
@@ -17237,7 +17237,7 @@
     <unit id="6215048040341403789">
       <notes>
         <note category="location">src/app/features/roadmap/views/roadmap-view.component.ts:57,60</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:203</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:202</note>
         <note category="location">src/app/workspace.routes.ts:78</note>
         <note category="description">Page title for the roadmap</note>
       </notes>
@@ -17556,8 +17556,8 @@
         <note category="location">src/app/features/assistant/assistant.routes.ts:12</note>
         <note category="location">src/app/features/settings/views/personal-assistant-settings-view/personal-assistant-settings-view.component.ts:17,21</note>
         <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:42,45</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:358</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:414</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:357</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:413</note>
         <note category="location">src/app/workspace.routes.ts:90</note>
         <note category="description">Page title for the assistant chat page</note>
       </notes>
@@ -20583,7 +20583,7 @@
       <notes>
         <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:101</note>
         <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:41,43</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:187</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:186</note>
         <note category="description">Heading above the backlog tasks leaving a sprint</note>
       </notes>
       <segment state="translated">
@@ -20798,7 +20798,7 @@
     </unit>
     <unit id="1152778269115350205">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:300</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:306</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:252</note>
         <note category="description">Title of the confirmation dialog for deleting a sprint</note>
       </notes>
@@ -20821,7 +20821,7 @@
       <notes>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:61</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:85</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:182</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:181</note>
         <note category="location">src/app/workspace.routes.ts:66</note>
         <note category="description">Page title for the sprint list</note>
       </notes>
@@ -20965,7 +20965,7 @@
     <unit id="57403663622654391">
       <notes>
         <note category="location">src/app/features/storage/views/storage-view.component.ts:22,25</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:374</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:373</note>
         <note category="location">src/app/workspace.routes.ts:114</note>
         <note category="description">Page title for workspace file storage</note>
       </notes>
@@ -20989,7 +20989,7 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:216</note>
         <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:46,47</note>
         <note category="location">src/app/features/pins/views/pinned-view/pinned-view.component.ts:63,65</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:232</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:231</note>
         <note category="location">src/app/workspace.routes.ts:48</note>
         <note category="description">Label on the pin control when the task is already pinned</note>
       </notes>
@@ -21763,7 +21763,7 @@
     </unit>
     <unit id="8287890269428561193">
       <notes>
-        <note category="location">src/app/shell/current-sprint-dropdown.component.ts:107,111</note>
+        <note category="location">src/app/shell/current-sprint-dropdown.component.ts:101,105</note>
         <note category="description">Menu item that opens the sprint currently being filtered on. SPRINT_NAME is the sprint&apos;s name</note>
       </notes>
       <segment state="translated">
@@ -21784,7 +21784,7 @@
     </unit>
     <unit id="8781538086699105202">
       <notes>
-        <note category="location">src/app/shell/current-sprint-dropdown.component.ts:120,122</note>
+        <note category="location">src/app/shell/current-sprint-dropdown.component.ts:114,117</note>
         <note category="description">Menu item that clears the active sprint filter</note>
       </notes>
       <segment state="translated">
@@ -21824,7 +21824,7 @@
     </unit>
     <unit id="5927656988084674304">
       <notes>
-        <note category="location">src/app/shell/current-sprint-dropdown.component.ts:132,135</note>
+        <note category="location">src/app/shell/current-sprint-dropdown.component.ts:126,129</note>
         <note category="description">Menu item that navigates to the full sprint list</note>
       </notes>
       <segment state="translated">
@@ -21832,19 +21832,9 @@
         <target>Alle Sprints anzeigen</target>
       </segment>
     </unit>
-    <unit id="3483396954924290344">
-      <notes>
-        <note category="location">src/app/shell/current-sprint-dropdown.component.ts:148,155</note>
-        <note category="description">Navbar link shown when no sprint is active, opens the sprint list</note>
-      </notes>
-      <segment state="translated">
-        <source> Start Sprint </source>
-        <target>Sprint starten</target>
-      </segment>
-    </unit>
     <unit id="6803062560459336775">
       <notes>
-        <note category="location">src/app/shell/current-sprint-dropdown.component.ts:191</note>
+        <note category="location">src/app/shell/current-sprint-dropdown.component.ts:168</note>
         <note category="description">Sprint dropdown label when exactly one sprint is active</note>
       </notes>
       <segment state="translated">
@@ -21854,7 +21844,7 @@
     </unit>
     <unit id="3861424003452635517">
       <notes>
-        <note category="location">src/app/shell/current-sprint-dropdown.component.ts:192</note>
+        <note category="location">src/app/shell/current-sprint-dropdown.component.ts:169</note>
         <note category="description">Sprint dropdown label showing how many sprints are active. COUNT is never 1</note>
       </notes>
       <segment state="translated">
@@ -22331,8 +22321,8 @@
       <notes>
         <note category="location">src/app/features/settings/views/personal-general-settings-view/personal-general-settings-view.component.ts:28,32</note>
         <note category="location">src/app/features/settings/views/workspace-general-settings-view/workspace-general-settings-view.component.ts:21,24</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:318</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:396</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:317</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:395</note>
         <note category="description">Page title for general personal settings</note>
       </notes>
       <segment state="translated">
@@ -22345,7 +22335,7 @@
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:72,74</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:80,81</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:88</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:334</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:333</note>
         <note category="location">src/app/static/components/status-filter/status-filter.component.ts:42,43</note>
         <note category="description">Filter heading for statuses</note>
       </notes>
@@ -22367,7 +22357,7 @@
     </unit>
     <unit id="788903633413068121">
       <notes>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:350</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:349</note>
         <note category="description">Sidebar link to workspace service account settings</note>
       </notes>
       <segment state="translated">
@@ -23267,7 +23257,7 @@
     </unit>
     <unit id="2395695896327760676">
       <notes>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:406</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:405</note>
         <note category="description">Sidebar link to personal notification preference settings</note>
       </notes>
       <segment state="translated">

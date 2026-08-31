@@ -219,10 +219,15 @@ export class SprintDetailViewComponent {
   );
 
   readonly sprint = this.sprintResourceRef.value;
-  readonly loading = this.sprintResourceRef.isLoading;
-  readonly loadError = computed(
-    () => this.sprintResourceRef.error() as HttpErrorResponse | undefined
-  );
+
+  readonly loading = computed(() => {
+    return this.sprintResourceRef.status() === 'loading';
+  });
+
+  readonly loadError = computed(() => {
+    return this.sprintResourceRef.error() as HttpErrorResponse | undefined;
+  });
+
   readonly updateLoading = this.sprintCommands.isUpdating;
   readonly canUpdate = hasPermission(PERMISSIONS.sprints.update);
   readonly canManageTasks = hasPermission(PERMISSIONS.sprints.manageTasks);

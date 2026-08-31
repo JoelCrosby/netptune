@@ -112,7 +112,6 @@ export class ShellSidebarComponent {
   private readonly pinnedViews = inject(PinnedViewsService);
 
   currentSprints = this.currentSprintsRef.value;
-  currentSprintsLoaded = computed(() => !this.currentSprintsRef.isLoading());
 
   authenticated = inject(SessionService).isAuthenticated;
 
