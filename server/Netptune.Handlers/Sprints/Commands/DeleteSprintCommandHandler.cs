@@ -55,13 +55,7 @@ public sealed class DeleteSprintCommandHandler : IRequestHandler<DeleteSprintCom
             options.Type = ActivityType.Delete;
         });
 
-        await EventPublisher.Dispatch(new SearchIndexEvent
-        {
-            Operation = SearchIndexOperation.Delete,
-            EntityType = "sprint",
-            EntityIds = [sprint.Id],
-            WorkspaceSlug = workspaceKey,
-        });
+        await EventPublisher.RemoveSprints([sprint.Id], workspaceKey);
 
         return ClientResponse.Success;
     }

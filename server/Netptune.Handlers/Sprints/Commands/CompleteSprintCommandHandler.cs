@@ -117,13 +117,7 @@ public sealed class CompleteSprintCommandHandler : IRequestHandler<CompleteSprin
             ActorUserId = user.Id,
         });
 
-        await EventPublisher.Dispatch(new SearchIndexEvent
-        {
-            Operation = SearchIndexOperation.Index,
-            EntityType = "sprint",
-            EntityIds = [sprint.Id],
-            WorkspaceSlug = workspaceKey,
-        });
+        await EventPublisher.IndexSprints([sprint.Id], workspaceKey);
 
         return result is null
             ? ClientResponse<SprintViewModel>.NotFound

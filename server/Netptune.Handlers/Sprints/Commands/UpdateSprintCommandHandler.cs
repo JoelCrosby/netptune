@@ -72,13 +72,7 @@ public sealed class UpdateSprintCommandHandler : IRequestHandler<UpdateSprintCom
             options.Type = ActivityType.Modify;
         });
 
-        await EventPublisher.Dispatch(new SearchIndexEvent
-        {
-            Operation = SearchIndexOperation.Index,
-            EntityType = "sprint",
-            EntityIds = [sprint.Id],
-            WorkspaceSlug = workspaceKey,
-        });
+        await EventPublisher.IndexSprints([sprint.Id], workspaceKey);
 
         return result is null
             ? ClientResponse<SprintViewModel>.NotFound

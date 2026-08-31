@@ -52,13 +52,7 @@ public sealed class ReassignTasksCommandHandler : IRequestHandler<ReassignTasksC
 
         var workspaceKey = Identity.GetWorkspaceKey();
 
-        await EventPublisher.Dispatch(new SearchIndexEvent
-        {
-            Operation = SearchIndexOperation.Index,
-            EntityType = "task",
-            EntityIds = taskIds,
-            WorkspaceSlug = workspaceKey,
-        });
+        await EventPublisher.IndexTasks(taskIds, workspaceKey);
 
         return ClientResponse.Success;
     }

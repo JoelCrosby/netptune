@@ -296,13 +296,7 @@ internal sealed class ScheduledActionService
         {
             var taskIds = workspaceGroup.Select(action => action.TaskId).Distinct().ToList();
 
-            await EventPublisher.Dispatch(new SearchIndexEvent
-            {
-                Operation = SearchIndexOperation.Delete,
-                EntityType = "task",
-                EntityIds = taskIds,
-                WorkspaceSlug = workspaceGroup.Key,
-            });
+            await EventPublisher.RemoveTasks(taskIds, workspaceGroup.Key);
         }
     }
 }

@@ -72,13 +72,7 @@ public sealed class CreateSprintCommandHandler : IRequestHandler<CreateSprintCom
             options.Type = ActivityType.Create;
         });
 
-        await EventPublisher.Dispatch(new SearchIndexEvent
-        {
-            Operation = SearchIndexOperation.Index,
-            EntityType = "sprint",
-            EntityIds = [sprint.Id],
-            WorkspaceSlug = workspaceKey,
-        });
+        await EventPublisher.IndexSprints([sprint.Id], workspaceKey);
 
         return result is null
             ? ClientResponse<SprintViewModel>.Failed("Sprint was created but could not be loaded")

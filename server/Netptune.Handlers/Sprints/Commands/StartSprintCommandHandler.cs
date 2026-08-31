@@ -64,6 +64,8 @@ public sealed class StartSprintCommandHandler : IRequestHandler<StartSprintComma
 
         var committedTasks = GetUniqueSprintTasks(sprint);
 
+        var scope = new SprintScope(sprint.WorkspaceId, sprint.Id, sprint.ProjectId);
+
         await UnitOfWork.Transaction(async () =>
         {
             sprint.Status = SprintStatus.Active;
@@ -107,39 +109,18 @@ public sealed class StartSprintCommandHandler : IRequestHandler<StartSprintComma
 
             foreach (var task in committedTasks)
             {
-                await EventRecords.Append(new EventWriteRequest<ScopeMemberChangedPayload>
+                var member = new SprintMember
                 {
-                    WorkspaceId = sprint.WorkspaceId,
-                    EventKey = EventKeys.ScopeMemberChanged,
-                    SubjectType = EventEntityTypes.From(EntityType.Sprint),
-                    SubjectId = sprint.Id.ToString(),
-                    OccurredAt = startedAt,
-                    Payload = new ScopeMemberChangedPayload
-                    {
-                        Change = "committed",
-                        MemberType = EventEntityTypes.From(EntityType.Task),
-                        MemberId = task.Id.ToString(),
-                        EstimateType = task.EstimateType?.ToString(),
-                        EstimateValue = task.EstimateValue,
-                        StatusId = task.StatusId,
-                        StatusCategory = task.Status!.Category.ToString(),
-                    },
-                    References =
-                    [
-                        new EventReferenceInput
-                        {
-                            Role = EventReferenceRoles.Member,
-                            EntityType = EventEntityTypes.From(EntityType.Task),
-                            EntityId = task.Id.ToString(),
-                        },
-                        new EventReferenceInput
-                        {
-                            Role = EventReferenceRoles.Scope,
-                            EntityType = EventEntityTypes.From(EntityType.Project),
-                            EntityId = sprint.ProjectId.ToString(),
-                        },
-                    ],
-                }, cancellationToken);
+                    TaskId = task.Id,
+                    StatusId = task.StatusId,
+                    StatusCategory = task.Status!.Category.ToString(),
+                    EstimateType = task.EstimateType?.ToString(),
+                    EstimateValue = task.EstimateValue,
+                };
+
+                var committed = SprintMemberEvents.Changed(scope, member, SprintMemberChanges.Committed, startedAt);
+
+                await EventRecords.Append(committed, cancellationToken);
             }
 
             await UnitOfWork.CompleteAsync(cancellationToken);
@@ -162,13 +143,7 @@ public sealed class StartSprintCommandHandler : IRequestHandler<StartSprintComma
             ActorUserId = user.Id,
         });
 
-        await EventPublisher.Dispatch(new SearchIndexEvent
-        {
-            Operation = SearchIndexOperation.Index,
-            EntityType = "sprint",
-            EntityIds = [sprint.Id],
-            WorkspaceSlug = workspaceKey,
-        });
+        await EventPublisher.IndexSprints([sprint.Id], workspaceKey);
 
         return result is null
             ? ClientResponse<SprintViewModel>.NotFound

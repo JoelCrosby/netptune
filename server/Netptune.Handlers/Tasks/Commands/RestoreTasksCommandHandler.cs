@@ -48,13 +48,7 @@ public sealed class RestoreTasksCommandHandler : IRequestHandler<RestoreTasksCom
             options.Type = ActivityType.Restore;
         });
 
-        await EventPublisher.Dispatch(new SearchIndexEvent
-        {
-            Operation = SearchIndexOperation.Index,
-            EntityType = "task",
-            EntityIds = restoredIds,
-            WorkspaceSlug = workspaceSlug,
-        });
+        await EventPublisher.IndexTasks(restoredIds, workspaceSlug);
 
         return ClientResponse.Success;
     }

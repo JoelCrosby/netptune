@@ -2,7 +2,7 @@ using Mediator;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
-using Netptune.Core.Events;
+using Netptune.Core.Events.Sprints;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
@@ -54,6 +54,8 @@ public sealed class RemoveTaskFromSprintCommandHandler : IRequestHandler<RemoveT
             return ClientResponse<SprintDetailViewModel>.NotFound;
         }
 
+        var scope = new SprintScope(sprint.WorkspaceId, sprint.Id, sprint.ProjectId);
+
         await UnitOfWork.Transaction(async () =>
         {
             // The sprint above is tracked with its tasks included, so clearing the foreign key on a
@@ -63,38 +65,18 @@ public sealed class RemoveTaskFromSprintCommandHandler : IRequestHandler<RemoveT
 
             if (sprint.Status == SprintStatus.Active)
             {
-                await EventRecords.Append(new EventWriteRequest<ScopeMemberChangedPayload>
+                var member = new SprintMember
                 {
-                    WorkspaceId = sprint.WorkspaceId,
-                    EventKey = EventKeys.ScopeMemberChanged,
-                    SubjectType = EventEntityTypes.From(EntityType.Sprint),
-                    SubjectId = sprint.Id.ToString(),
-                    Payload = new ScopeMemberChangedPayload
-                    {
-                        Change = "removed",
-                        MemberType = EventEntityTypes.From(EntityType.Task),
-                        MemberId = task.Id.ToString(),
-                        EstimateType = task.EstimateType?.ToString(),
-                        EstimateValue = task.EstimateValue,
-                        StatusId = task.StatusId,
-                        StatusCategory = task.StatusCategory.ToString(),
-                    },
-                    References =
-                    [
-                        new EventReferenceInput
-                        {
-                            Role = EventReferenceRoles.Member,
-                            EntityType = EventEntityTypes.From(EntityType.Task),
-                            EntityId = task.Id.ToString(),
-                        },
-                        new EventReferenceInput
-                        {
-                            Role = EventReferenceRoles.Scope,
-                            EntityType = EventEntityTypes.From(EntityType.Project),
-                            EntityId = sprint.ProjectId.ToString(),
-                        },
-                    ],
-                }, cancellationToken);
+                    TaskId = task.Id,
+                    StatusId = task.StatusId,
+                    StatusCategory = task.StatusCategory.ToString(),
+                    EstimateType = task.EstimateType?.ToString(),
+                    EstimateValue = task.EstimateValue,
+                };
+
+                var removed = SprintMemberEvents.Changed(scope, member, SprintMemberChanges.Removed);
+
+                await EventRecords.Append(removed, cancellationToken);
             }
 
             await UnitOfWork.CompleteAsync(cancellationToken);

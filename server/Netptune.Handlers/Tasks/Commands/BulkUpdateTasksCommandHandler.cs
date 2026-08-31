@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Events.Sprints;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
@@ -346,13 +347,7 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
             await UnitOfWork.CompleteAsync(cancellationToken);
         });
 
-        await EventPublisher.Dispatch(new SearchIndexEvent
-        {
-            Operation = SearchIndexOperation.Index,
-            EntityType = "task",
-            EntityIds = taskIds,
-            WorkspaceSlug = workspaceKey,
-        });
+        await EventPublisher.IndexTasks(taskIds, workspaceKey);
 
         return ClientResponse.Success;
     }
@@ -369,38 +364,20 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
         int sprintId,
         string change,
         int workspaceId,
-        CancellationToken cancellationToken) => EventRecords.Append(new EventWriteRequest<ScopeMemberChangedPayload>
+        CancellationToken cancellationToken)
+    {
+        var scope = new SprintScope(workspaceId, sprintId, task.ProjectId!.Value);
+        var member = new SprintMember
         {
-            WorkspaceId = workspaceId,
-            EventKey = EventKeys.ScopeMemberChanged,
-            SubjectType = EventEntityTypes.From(EntityType.Sprint),
-            SubjectId = sprintId.ToString(),
-            Payload = new ScopeMemberChangedPayload
-            {
-                Change = change,
-                MemberType = EventEntityTypes.From(EntityType.Task),
-                MemberId = task.Id.ToString(),
-                EstimateType = task.EstimateType?.ToString(),
-                EstimateValue = task.EstimateValue,
-                StatusId = task.StatusId,
-                StatusCategory = task.Status!.Category.ToString(),
-            },
-            References =
-        [
-            new EventReferenceInput
-            {
-                Role = EventReferenceRoles.Member,
-                EntityType = EventEntityTypes.From(EntityType.Task),
-                EntityId = task.Id.ToString(),
-            },
-            new EventReferenceInput
-            {
-                Role = EventReferenceRoles.Scope,
-                EntityType = EventEntityTypes.From(EntityType.Project),
-                EntityId = task.ProjectId!.Value.ToString(),
-            },
-        ],
-        }, cancellationToken);
+            TaskId = task.Id,
+            StatusId = task.StatusId,
+            StatusCategory = task.Status!.Category.ToString(),
+            EstimateType = task.EstimateType?.ToString(),
+            EstimateValue = task.EstimateValue,
+        };
+
+        return EventRecords.Append(SprintMemberEvents.Changed(scope, member, change), cancellationToken);
+    }
 
     private static void MoveToProject(ProjectTask task, int projectId, int projectScopeId)
     {

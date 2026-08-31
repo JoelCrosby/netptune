@@ -72,13 +72,7 @@ public sealed class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectC
 
         var workspaceKey = Identity.GetWorkspaceKey();
 
-        await EventPublisher.Dispatch(new SearchIndexEvent
-        {
-            Operation = SearchIndexOperation.Index,
-            EntityType = "project",
-            EntityIds = [project.Id],
-            WorkspaceSlug = workspaceKey,
-        });
+        await EventPublisher.IndexProjects([project.Id], workspaceKey);
 
         return project.ToViewModel();
     }

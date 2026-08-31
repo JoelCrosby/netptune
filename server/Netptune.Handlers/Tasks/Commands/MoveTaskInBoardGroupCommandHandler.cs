@@ -144,13 +144,7 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
                 oldTask.StatusId,
                 boardGroup.StatusId.Value);
 
-            await EventPublisher.Dispatch(new SearchIndexEvent
-            {
-                Operation = SearchIndexOperation.Index,
-                EntityType = "task",
-                EntityIds = [oldTask.Id],
-                WorkspaceSlug = oldTask.WorkspaceKey,
-            });
+            await EventPublisher.IndexTasks([oldTask.Id], oldTask.WorkspaceKey);
         }
 
         return ClientResponse.Success;

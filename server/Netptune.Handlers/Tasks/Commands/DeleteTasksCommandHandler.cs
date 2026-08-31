@@ -43,13 +43,7 @@ public sealed class DeleteTasksCommandHandler : IRequestHandler<DeleteTasksComma
 
         if (deletedIds.Count > 0)
         {
-            await EventPublisher.Dispatch(new SearchIndexEvent
-            {
-                Operation = SearchIndexOperation.Delete,
-                EntityType = "task",
-                EntityIds = deletedIds,
-                WorkspaceSlug = workspaceSlug,
-            });
+            await EventPublisher.RemoveTasks(deletedIds, workspaceSlug);
         }
 
         return ClientResponse.Success;

@@ -375,13 +375,7 @@ internal sealed class CreateTaskHandler : IActionExecutionHandler
     {
         var execution = action.Execution;
 
-        await EventPublisher.Dispatch(new SearchIndexEvent
-        {
-            Operation = SearchIndexOperation.Index,
-            EntityType = "task",
-            EntityIds = [task.Id],
-            WorkspaceSlug = execution.Task.Workspace!.Slug,
-        });
+        await EventPublisher.IndexTasks([task.Id], execution.Task.Workspace!.Slug);
 
         await EventPublisher.Dispatch(new TaskCreatedMessage
         {

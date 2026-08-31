@@ -3,6 +3,7 @@ using Mediator;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Events.Sprints;
 using Netptune.Core.Events.Tasks;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Models.Search;
@@ -226,38 +227,19 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
 
             if (task.SprintId.HasValue && targetSprint?.Status == SprintStatus.Active)
             {
-                await EventRecords.Append(new EventWriteRequest<ScopeMemberChangedPayload>
+                var scope = new SprintScope(task.WorkspaceId, task.SprintId.Value, task.ProjectId!.Value);
+                var member = new SprintMember
                 {
-                    WorkspaceId = task.WorkspaceId,
-                    EventKey = EventKeys.ScopeMemberChanged,
-                    SubjectType = EventEntityTypes.From(EntityType.Sprint),
-                    SubjectId = task.SprintId.Value.ToString(),
-                    Payload = new ScopeMemberChangedPayload
-                    {
-                        Change = "added",
-                        MemberType = EventEntityTypes.From(EntityType.Task),
-                        MemberId = result.Id.ToString(),
-                        EstimateType = task.EstimateType?.ToString(),
-                        EstimateValue = task.EstimateValue,
-                        StatusId = task.StatusId,
-                        StatusCategory = status.Category.ToString(),
-                    },
-                    References =
-                    [
-                        new EventReferenceInput
-                        {
-                            Role = EventReferenceRoles.Member,
-                            EntityType = EventEntityTypes.From(EntityType.Task),
-                            EntityId = result.Id.ToString(),
-                        },
-                        new EventReferenceInput
-                        {
-                            Role = EventReferenceRoles.Scope,
-                            EntityType = EventEntityTypes.From(EntityType.Project),
-                            EntityId = task.ProjectId!.Value.ToString(),
-                        },
-                    ],
-                }, cancellationToken);
+                    TaskId = result.Id,
+                    StatusId = task.StatusId,
+                    StatusCategory = status.Category.ToString(),
+                    EstimateType = task.EstimateType?.ToString(),
+                    EstimateValue = task.EstimateValue,
+                };
+
+                var added = SprintMemberEvents.Changed(scope, member, SprintMemberChanges.Added);
+
+                await EventRecords.Append(added, cancellationToken);
             }
 
             await UnitOfWork.CompleteAsync(cancellationToken);
@@ -272,13 +254,7 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
             options.Type = ActivityType.Create;
         });
 
-        await EventPublisher.Dispatch(new SearchIndexEvent
-        {
-            Operation = SearchIndexOperation.Index,
-            EntityType = "task",
-            EntityIds = [result.Id],
-            WorkspaceSlug = workspaceKey,
-        });
+        await EventPublisher.IndexTasks([result.Id], workspaceKey);
 
         await EventPublisher.Dispatch(new TaskCreatedMessage
         {

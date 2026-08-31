@@ -153,13 +153,7 @@ internal sealed class RunPersistenceService
                 .Distinct()
                 .ToList();
 
-            await EventPublisher.Dispatch(new SearchIndexEvent
-            {
-                Operation = SearchIndexOperation.Delete,
-                EntityType = "task",
-                EntityIds = taskIds,
-                WorkspaceSlug = workspaceGroup.Key,
-            });
+            await EventPublisher.RemoveTasks(taskIds, workspaceGroup.Key);
         }
     }
 

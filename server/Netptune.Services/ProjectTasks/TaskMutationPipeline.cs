@@ -119,13 +119,7 @@ public sealed class TaskMutationPipeline : ITaskMutationPipeline
             return;
         }
 
-        await EventPublisher.Dispatch(new SearchIndexEvent
-        {
-            Operation = SearchIndexOperation.Index,
-            EntityType = "task",
-            EntityIds = [current.Id],
-            WorkspaceSlug = current.WorkspaceKey,
-        });
+        await EventPublisher.IndexTasks([current.Id], current.WorkspaceKey);
     }
 
     private async Task AppendReportingEvent(

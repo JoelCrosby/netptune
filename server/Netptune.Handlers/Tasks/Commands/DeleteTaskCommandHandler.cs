@@ -41,13 +41,7 @@ public sealed class DeleteTaskCommandHandler : IRequestHandler<DeleteTaskCommand
             options.Type = ActivityType.Delete;
         });
 
-        await EventPublisher.Dispatch(new SearchIndexEvent
-        {
-            Operation = SearchIndexOperation.Delete,
-            EntityType = "task",
-            EntityIds = [request.Id],
-            WorkspaceSlug = Identity.GetWorkspaceKey(),
-        });
+        await EventPublisher.RemoveTasks([request.Id], Identity.GetWorkspaceKey());
 
         return ClientResponse.Success;
     }
