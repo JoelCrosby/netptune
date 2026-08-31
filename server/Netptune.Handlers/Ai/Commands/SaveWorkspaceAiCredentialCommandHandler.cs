@@ -2,7 +2,6 @@ using Mediator;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
-using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests.Ai;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -18,9 +17,6 @@ public sealed record SaveWorkspaceAiCredentialCommand(SaveAiCredentialRequest Re
 public sealed class SaveWorkspaceAiCredentialCommandHandler
     : IRequestHandler<SaveWorkspaceAiCredentialCommand, ClientResponse<AiCredentialViewModel>>
 {
-    private const int MinimumSecretLength = 8;
-    private const int MaximumLabelLength = 128;
-
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IAiCredentialProtector Protector;
@@ -40,32 +36,11 @@ public sealed class SaveWorkspaceAiCredentialCommandHandler
         CancellationToken cancellationToken)
     {
         var request = command.Request;
-        var secret = request.Secret.Trim();
-        var label = request.Label.Trim();
-        var isKnownProvider = Enum.IsDefined(request.Provider);
+        var (validated, error) = SaveAiCredentialValidation.Validate(request);
 
-        if (!isKnownProvider)
+        if (validated is null)
         {
-            return ClientResponse<AiCredentialViewModel>.Failed("Unknown AI provider.");
-        }
-
-        if (secret.Length < MinimumSecretLength)
-        {
-            return ClientResponse<AiCredentialViewModel>.Failed("API key is not valid.");
-        }
-
-        if (label.Length is 0 or > MaximumLabelLength)
-        {
-            return ClientResponse<AiCredentialViewModel>.Failed($"Label must be between 1 and {MaximumLabelLength} characters.");
-        }
-
-        var model = request.Model?.Trim();
-        var hasModel = !string.IsNullOrWhiteSpace(model);
-        var isUnsupportedModel = hasModel && !AiModels.IsSupported(request.Provider, model);
-
-        if (isUnsupportedModel)
-        {
-            return ClientResponse<AiCredentialViewModel>.Failed("Model is not supported for this provider.");
+            return ClientResponse<AiCredentialViewModel>.Failed(error);
         }
 
         var workspaceId = await Identity.GetWorkspaceId();
@@ -76,10 +51,10 @@ public sealed class SaveWorkspaceAiCredentialCommandHandler
 
         var credential = existing ?? await CreateCredential(workspaceId, request.Provider, cancellationToken);
 
-        credential.Label = label;
-        credential.Secret = Protector.Protect(secret);
-        credential.SecretHint = Protector.CreateHint(secret);
-        credential.Model = hasModel ? model : null;
+        credential.Label = validated.Label;
+        credential.Secret = Protector.Protect(validated.Secret);
+        credential.SecretHint = Protector.CreateHint(validated.Secret);
+        credential.Model = validated.Model;
         credential.CreatedByUserId = Identity.GetCurrentUserId();
         credential.LastUsedAt = null;
 
