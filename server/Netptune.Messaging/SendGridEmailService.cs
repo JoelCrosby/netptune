@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using Netptune.Core.Messaging;
@@ -14,15 +15,18 @@ public class SendGridEmailService : IEmailService
     private readonly IEmailRenderService EmailRenderer;
     private readonly IEventPublisher EventPublisher;
     private readonly SendGridEmailOptions Options;
+    private readonly ILogger<SendGridEmailService> Logger;
 
     public SendGridEmailService(
         IOptionsMonitor<SendGridEmailOptions> options,
         IEmailRenderService emailRenderer,
-        IEventPublisher eventPublisher)
+        IEventPublisher eventPublisher,
+        ILogger<SendGridEmailService> logger)
     {
         EmailRenderer = emailRenderer;
         EventPublisher = eventPublisher;
         Options = options.CurrentValue;
+        Logger = logger;
     }
 
     public Task Send(SendEmailModel model)
@@ -47,10 +51,13 @@ public class SendGridEmailService : IEmailService
         var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
 
         var response = await client.SendEmailAsync(msg);
+        var sendFailed = (int)response.StatusCode > 399;
 
-        if ((int)response.StatusCode > 399)
+        if (sendFailed)
         {
-            // TODO: Request failed Do something...
+            var body = await response.Body.ReadAsStringAsync();
+
+            Logger.LogError("SendGrid rejected an email with {StatusCode}: {Body}", response.StatusCode, body);
         }
     }
 
@@ -107,10 +114,13 @@ public class SendGridEmailService : IEmailService
             substitutions);
 
         var response = await client.SendEmailAsync(msg);
+        var sendFailed = (int)response.StatusCode > 399;
 
-        if ((int)response.StatusCode > 399)
+        if (sendFailed)
         {
-            // TODO: Request failed Do something...
+            var body = await response.Body.ReadAsStringAsync();
+
+            Logger.LogError("SendGrid rejected an email with {StatusCode}: {Body}", response.StatusCode, body);
         }
     }
 }

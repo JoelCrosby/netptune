@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using Netptune.Core.Messaging;
@@ -18,6 +19,7 @@ public class CloudflareEmailService : IEmailService
     private readonly IEventPublisher EventPublisher;
     private readonly CloudflareEmailOptions Options;
     private readonly IHttpClientFactory HttpClientFactory;
+    private readonly ILogger<CloudflareEmailService> Logger;
 
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -28,12 +30,14 @@ public class CloudflareEmailService : IEmailService
         IOptionsMonitor<CloudflareEmailOptions> options,
         IEmailRenderService emailRenderer,
         IEventPublisher eventPublisher,
-        IHttpClientFactory httpClientFactory)
+        IHttpClientFactory httpClientFactory,
+        ILogger<CloudflareEmailService> logger)
     {
         EmailRenderer = emailRenderer;
         EventPublisher = eventPublisher;
         Options = options.CurrentValue;
         HttpClientFactory = httpClientFactory;
+        Logger = logger;
     }
 
     public Task Send(SendEmailModel model)
@@ -113,7 +117,9 @@ public class CloudflareEmailService : IEmailService
 
         if (!response.IsSuccessStatusCode)
         {
-            // TODO: handle failure
+            var body = await response.Content.ReadAsStringAsync();
+
+            Logger.LogError("Cloudflare rejected an email with {StatusCode}: {Body}", response.StatusCode, body);
         }
     }
 
