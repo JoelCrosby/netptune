@@ -53,13 +53,12 @@ public sealed class GetTaskTool : IAiTool
             return AiToolExecution.Failed($"Task {systemId} was not found in this workspace.");
         }
 
-        var description = EditorDocumentReader.ToMarkdown(task.Description);
         var content = JsonSerializer.Serialize(new
         {
             id = task.Id,
             systemId = task.SystemId,
             name = task.Name,
-            description,
+            description = task.Description,
             status = task.StatusName,
             statusId = task.StatusId,
             statusCategory = task.StatusCategory.ToString(),

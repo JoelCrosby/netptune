@@ -9,29 +9,28 @@ import {
   input,
   OnDestroy,
   output,
+  signal,
   viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { UploadResponse } from '@core/models/upload-result';
 import { StorageService } from '@core/services/storage.service';
 import { unwrapClientResponse } from '@core/util/rxjs-operators';
-import Attaches from '@editorjs/attaches';
-import Checklist from '@editorjs/checklist';
-import Code from '@editorjs/code';
-import type { LogLevels, OutputData } from '@editorjs/editorjs';
-import EditorJS from '@editorjs/editorjs';
-import Embed from '@editorjs/embed';
-import Header from '@editorjs/header';
-import ImageTool from '@editorjs/image';
-import InlineCode from '@editorjs/inline-code';
-import Link from '@editorjs/link';
-import List from '@editorjs/list';
-import Marker from '@editorjs/marker';
-import Underline from '@editorjs/underline';
-import { environment } from '@env/environment';
+import { Editor } from '@tiptap/core';
+import { BubbleMenu } from '@tiptap/extension-bubble-menu';
+import { FloatingMenu } from '@tiptap/extension-floating-menu';
+import { Image } from '@tiptap/extension-image';
+import { TaskItem, TaskList } from '@tiptap/extension-list';
+import { Placeholder } from '@tiptap/extensions';
+import type { EditorView } from '@tiptap/pm/view';
+import { StarterKit } from '@tiptap/starter-kit';
 import { firstValueFrom, Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { AbstractFormValueControl } from '../abstract-form-value-control';
 import { cn } from '../button/button.variants';
+import { EditorBubbleMenuComponent } from './editor-bubble-menu.component';
+import { documentToMarkdown, markdownToDocument } from './editor-content';
+import { EditorFloatingMenuComponent } from './editor-floating-menu.component';
 
 const saveDebounceMs = 750;
 
@@ -39,9 +38,26 @@ export type EditorAppearance = 'boxed' | 'flat';
 
 @Component({
   selector: 'app-editor',
-  template: ` <div class="editor w-full rounded" #editorJs></div> `,
+  imports: [EditorBubbleMenuComponent, EditorFloatingMenuComponent],
+  template: `
+    <div class="editor w-full rounded" #editorHost></div>
+
+    <app-editor-bubble-menu [editor]="editor()" [revision]="revision()" />
+
+    <app-editor-floating-menu
+      [editor]="editor()"
+      [revision]="revision()"
+      (fileRequested)="filePicker.click()" />
+
+    <input
+      #filePicker
+      type="file"
+      class="hidden"
+      multiple
+      (change)="onFilesPicked(filePicker)" />
+  `,
   host: {
-    class: 'flex overflow-y-auto max-h-[600px]',
+    class: 'relative flex overflow-y-auto max-h-[600px]',
     '[class]': 'appearanceClass()',
     '(focusout)': 'onFocusOut($event)',
   },
@@ -50,9 +66,15 @@ export class EditorComponent
   extends AbstractFormValueControl
   implements OnDestroy
 {
-  private storage = inject(StorageService);
+  private readonly storage = inject(StorageService);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
-  readonly el = viewChild.required<ElementRef>('editorJs');
+  readonly el = viewChild.required<ElementRef<HTMLElement>>('editorHost');
+
+  private readonly bubbleMenu = viewChild.required(EditorBubbleMenuComponent);
+  private readonly floatingMenu = viewChild.required(
+    EditorFloatingMenuComponent
+  );
 
   readonly placeholder = input('');
   readonly isReadOnly = input(false);
@@ -79,21 +101,23 @@ export class EditorComponent
 
   // receives the editor's final content while the component is torn down. this
   // cannot go through `saved`: angular removes output listeners as part of the
-  // same teardown, and reading the content back out of editorjs is asynchronous,
-  // so the emit would land after the listener is gone. for the same reason the
-  // callback must not read state that the teardown clears.
+  // same teardown. for the same reason the callback must not read state that the
+  // teardown clears.
   readonly finalSave = input<((value: string) => void) | null>(null);
 
   readonly injector = inject(Injector);
 
-  editor!: EditorJS;
+  readonly editor = signal<Editor | null>(null);
+
+  // bumped on every transaction so the menus can recompute which marks and nodes
+  // are active at the cursor
+  protected readonly revision = signal(0);
 
   private editorValue: string | null = null;
 
-  // the blocks as of the last value handed to a consumer. editorjs stamps every
-  // serialisation with a fresh `time`, so the blocks alone say whether the
-  // content actually changed.
-  private savedBlocks: string | null = null;
+  // the markdown as of the last value handed to a consumer, so a save can tell a
+  // real edit from the editor normalising the markdown it was given
+  private savedContent: string | null = null;
   private deliveredValue: string | null = null;
   private destroyed = false;
   private readonly changed = new Subject<void>();
@@ -104,9 +128,11 @@ export class EditorComponent
 
     this.changed
       .pipe(debounceTime(saveDebounceMs), takeUntilDestroyed())
-      .subscribe(() => void this.persist(this.emitSaved));
+      .subscribe(() => this.persist(this.emitSaved));
 
     afterNextRender(() => {
+      this.createEditor();
+
       effect(
         () => {
           const value = this.value();
@@ -117,51 +143,49 @@ export class EditorComponent
         },
         { injector: this.injector }
       );
+
+      effect(
+        () => {
+          const readOnly = this.isReadOnly();
+
+          this.editor()?.setEditable(!readOnly, false);
+        },
+        { injector: this.injector }
+      );
     });
   }
 
   ngOnDestroy() {
-    const editor = this.editor;
+    const editor = this.editor();
     const deliver = this.finalSave();
 
     this.destroyed = true;
 
     if (!editor) return;
 
-    if (!deliver) {
-      editor.destroy?.();
-      return;
+    if (deliver) {
+      this.persist(deliver);
     }
 
-    // the editor has to outlive this hook long enough to read its content back
-    void this.persist(deliver).finally(() => editor.destroy?.());
+    editor.destroy();
   }
 
-  // serialises what is on screen right now and hands it over when it differs
-  // from the last save. editorjs batches its own change events, so the value
-  // carried by the last change can be several hundred milliseconds behind the
-  // user and is never enough on its own.
-  private async persist(deliver: (value: string) => void) {
-    const editor = this.editor;
+  // hands the current document over when it differs from the last save
+  private persist(deliver: (value: string) => void) {
+    const editor = this.editor();
 
-    if (!editor) return;
+    if (!editor || editor.isDestroyed) return;
 
-    const data = await editor.save().catch(() => null);
+    const serialised = documentToMarkdown(editor.getJSON());
 
-    if (!data) return;
+    if (serialised === this.savedContent) return;
 
-    const blocks = JSON.stringify(data.blocks);
-
-    if (blocks === this.savedBlocks) return;
-
-    const serialised = JSON.stringify(data);
-
-    this.savedBlocks = blocks;
+    this.savedContent = serialised;
     this.deliveredValue = serialised;
     this.editorValue = serialised;
 
     // writing to the model would emit its change output, which angular has
-    // already torn down by the time a final save resolves
+    // already torn down by the time a final save runs
     if (!this.destroyed) {
       this.value.set(serialised);
     }
@@ -169,32 +193,22 @@ export class EditorComponent
     deliver(serialised);
   }
 
-  // records the editor's own serialisation of the content it was handed, so a
-  // later save can tell a real edit from editorjs normalising what it loaded
-  private async captureBaseline() {
-    const editor = this.editor;
-
-    if (!editor) return;
-
-    const data = await editor.save().catch(() => null);
-
-    if (!data) return;
-
-    this.savedBlocks = JSON.stringify(data.blocks);
-  }
-
   onFocusOut(event: FocusEvent) {
     const next = event.relatedTarget as Node | null;
-    const holder = this.el().nativeElement as HTMLElement;
+    const holder = this.host.nativeElement;
 
     if (next && holder.contains(next)) return;
 
-    void this.persist(this.emitSaved);
+    this.persist(this.emitSaved);
   }
 
   setValue(value?: string) {
+    const editor = this.editor();
+
+    if (!editor) return;
+
     // an incoming value replaces what is on screen, so hand over the latest
-    // content the editor produced before the current instance goes
+    // content the editor produced before it goes
     if (this.editorValue !== null && this.editorValue !== this.deliveredValue) {
       this.deliveredValue = this.editorValue;
       this.saved.emit(this.editorValue);
@@ -202,158 +216,180 @@ export class EditorComponent
 
     this.editorValue = value ?? null;
 
-    try {
-      const parsed = value ? JSON.parse(value) : null;
-
-      if (!parsed) throw Error('value not valid');
-
-      const intialValue = parsed as OutputData;
-
-      this.createEditor(intialValue);
-    } catch {
-      this.createEmptyEditor(value);
-    }
-  }
-
-  createEmptyEditor(value?: string) {
-    this.createEditor({
-      time: Date.now(),
-      blocks: [
-        {
-          data: {
-            text: value ?? '',
-          },
-          type: 'paragraph',
-        },
-      ],
+    editor.commands.setContent(markdownToDocument(value), {
+      emitUpdate: false,
     });
+
+    this.savedContent = documentToMarkdown(editor.getJSON());
   }
 
-  createEditor(initialValue: OutputData | null = null) {
-    if (this.editor) {
-      this.editor.destroy();
-    }
-
-    const logLevel = environment.production
-      ? ('ERROR' as LogLevels)
-      : ('WARN' as LogLevels);
-
-    this.editor = new EditorJS({
-      logLevel: logLevel,
-      placeholder: this.placeholder(),
-      holder: this.el().nativeElement,
-      minHeight: 100,
-      readOnly: this.isReadOnly(),
-      tools: {
-        header: Header,
-        list: List,
-        code: Code,
-        image: {
-          class: ImageTool,
-          config: {
-            uploader: {
-              uploadByFile: this.uploadFile.bind(this),
-              uploadByUrl: this.uploadByUrl.bind(this),
-            },
-          },
-        },
-        checklist: {
-          class: Checklist,
-          inlineToolbar: true,
-        },
-        inlineCode: {
-          class: InlineCode,
-          shortcut: 'CMD+SHIFT+C',
-        },
-        marker: {
-          class: Marker,
-          shortcut: 'CMD+SHIFT+M',
-        },
-        embed: {
-          class: Embed,
-          config: {
-            services: {
-              youtube: true,
-              coub: true,
-            },
-          },
-        },
-        underline: Underline,
-        link: {
-          class: Link,
-          config: {
-            endpoint: '/api/meta/uri-meta-info',
-          },
-        },
-        attaches: {
-          class: Attaches,
-          config: {
-            uploader: {
-              uploadByFile: this.uploadFile.bind(this),
-            },
-          },
+  private createEditor() {
+    const editor = new Editor({
+      element: this.el().nativeElement,
+      content: markdownToDocument(this.value()),
+      editable: !this.isReadOnly(),
+      extensions: this.extensions(),
+      editorProps: {
+        attributes: this.contentAttributes(),
+        handlePaste: (_view, event) => this.onPaste(event),
+        handleDrop: (view, event, _slice, moved) => {
+          return this.onDrop(view, event as DragEvent, moved);
         },
       },
-      data: initialValue || undefined,
-      onReady: () => {
-        void this.captureBaseline();
-        this.loaded.emit();
-      },
-      onChange: () => {
-        void this.editor.save().then((value) => {
-          const serialised = JSON.stringify(value);
-
-          this.editorValue = serialised;
-          this.value.set(serialised);
-          this.changed.next();
-        });
-      },
+      onCreate: () => this.loaded.emit(),
+      onUpdate: ({ editor: updated }) => this.onUpdate(updated),
+      onTransaction: () => this.revision.update((value) => value + 1),
     });
+
+    this.editorValue = this.value();
+    this.savedContent = documentToMarkdown(editor.getJSON());
+
+    this.editor.set(editor);
   }
 
-  async uploadFile(data: File) {
-    const response = await firstValueFrom(
-      this.storage.uploadMedia(data).pipe(unwrapClientResponse())
-    ).catch(() => null);
+  private extensions() {
+    return [
+      StarterKit.configure({
+        link: { openOnClick: false, autolink: true, defaultProtocol: 'https' },
+        codeBlock: { languageClassPrefix: 'language-' },
+        underline: false,
+      }),
+      TaskList,
+      TaskItem.configure({ nested: true }),
+      Image.configure({ allowBase64: false }),
+      Placeholder.configure({
+        showOnlyCurrent: false,
+        placeholder: ({ pos }) => (pos === 0 ? this.placeholder() : ''),
+      }),
+      BubbleMenu.configure({
+        element: this.bubbleMenu().el.nativeElement,
+        options: { placement: 'top', offset: 8 },
+        shouldShow: ({ editor, state, from, to }) => {
+          const selectedText = state.doc.textBetween(from, to).trim();
 
-    if (!response) {
-      return { success: 0 };
-    }
+          return editor.isEditable && selectedText.length > 0;
+        },
+      }),
+      FloatingMenu.configure({
+        element: this.floatingMenu().el.nativeElement,
+        options: { placement: 'bottom-start', offset: 8 },
+        shouldShow: ({ editor, state }) => {
+          const { $anchor, empty } = state.selection;
+          const onEmptyParagraph =
+            $anchor.parent.type.name === 'paragraph' &&
+            $anchor.parent.content.size === 0;
 
-    // TODO: have to force an on change as the attaches
-    // editorjs module does not emit an on change event
+          return (
+            editor.isEditable && editor.isFocused && empty && onEmptyParagraph
+          );
+        },
+      }),
+    ];
+  }
 
-    setTimeout(
-      () =>
-        void this.editor.save().then((value) => {
-          const serialised = JSON.stringify(value);
-
-          this.editorValue = serialised;
-          this.value.set(serialised);
-          this.changed.next();
-        }),
-      0
-    );
-
-    return {
-      success: 1,
-      file: {
-        url: response.uri,
-        name: response.name,
-        title: response.name,
-        size: response.size,
-      },
+  private contentAttributes(): Record<string, string> {
+    const minHeight =
+      this.appearance() === 'flat' ? 'min-h-6' : 'min-h-[100px]';
+    const attributes: Record<string, string> = {
+      class: `editor-content w-full outline-none ${minHeight}`,
+      role: 'textbox',
+      'aria-multiline': 'true',
     };
+
+    const labelledBy = this.host.nativeElement.getAttribute('aria-labelledby');
+
+    if (labelledBy) {
+      attributes['aria-labelledby'] = labelledBy;
+    }
+
+    return attributes;
   }
 
-  async uploadByUrl(url: string) {
-    return new Promise((res) => {
-      res({
-        success: 1,
-        file: {
-          url,
-        },
-      });
+  private onUpdate(editor: Editor) {
+    const serialised = documentToMarkdown(editor.getJSON());
+
+    this.editorValue = serialised;
+    this.value.set(serialised);
+    this.changed.next();
+  }
+
+  private onPaste(event: ClipboardEvent): boolean {
+    const files = Array.from(event.clipboardData?.files ?? []);
+
+    if (!files.length) return false;
+
+    void this.uploadFiles(files);
+
+    return true;
+  }
+
+  private onDrop(view: EditorView, event: DragEvent, moved: boolean): boolean {
+    if (moved) return false;
+
+    const files = Array.from(event.dataTransfer?.files ?? []);
+
+    if (!files.length) return false;
+
+    event.preventDefault();
+
+    const coords = view.posAtCoords({
+      left: event.clientX,
+      top: event.clientY,
     });
+
+    void this.uploadFiles(files, coords?.pos);
+
+    return true;
+  }
+
+  protected onFilesPicked(picker: HTMLInputElement) {
+    const files = Array.from(picker.files ?? []);
+
+    picker.value = '';
+
+    if (!files.length) return;
+
+    void this.uploadFiles(files);
+  }
+
+  private async uploadFiles(files: File[], position?: number) {
+    let insertAt = position;
+
+    for (const file of files) {
+      const upload = await this.uploadFile(file);
+
+      if (!upload) continue;
+
+      insertAt = this.insertUpload(upload, file, insertAt);
+    }
+  }
+
+  private async uploadFile(file: File): Promise<UploadResponse | null> {
+    return firstValueFrom(
+      this.storage.uploadMedia(file).pipe(unwrapClientResponse())
+    ).catch(() => null);
+  }
+
+  private insertUpload(
+    upload: UploadResponse,
+    file: File,
+    position?: number
+  ): number | undefined {
+    const editor = this.editor();
+
+    if (!editor || editor.isDestroyed) return position;
+
+    const at = position ?? editor.state.selection.to;
+    const content = file.type.startsWith('image/')
+      ? { type: 'image', attrs: { src: upload.uri, alt: upload.name } }
+      : {
+          type: 'text',
+          text: upload.name,
+          marks: [{ type: 'link', attrs: { href: upload.uri } }],
+        };
+
+    editor.chain().focus().insertContentAt(at, content).run();
+
+    return editor.state.selection.to;
   }
 }

@@ -37,7 +37,7 @@ public sealed class TaskSearchDocumentExtensionsTests
     }
 
     [Fact]
-    public void ToSearchDocument_ShouldIndexEditorDescriptionsAsPlainText()
+    public void ToSearchDocument_ShouldIndexMarkdownDescriptionsAsPlainText()
     {
         var task = new TaskViewModel
         {
@@ -45,15 +45,13 @@ public sealed class TaskSearchDocumentExtensionsTests
             Name = "Indexed task",
             SystemId = "ACME-7",
             StatusName = "Todo",
-            Description = """
-                {"time":1755000000000,"blocks":[{"id":"s8yaTRa7jF","type":"paragraph","data":{"text":"Rotate the&nbsp;<code>signing</code> key"}}],"version":"2.31.6"}
-                """,
+            Description = "## Keys\n\nRotate the `signing` key",
             CreatedAt = DateTimeOffset.UtcNow,
         };
 
         var document = task.ToSearchDocument("workspace");
 
-        document.Description.Should().Be("Rotate the signing key");
+        document.Description.Should().Be("Keys Rotate the signing key");
     }
 
     [Fact]

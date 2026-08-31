@@ -148,11 +148,9 @@ public class UpdateTaskToolTests
     }
 
     [Fact]
-    public async Task Execute_ShouldReadTheStoredDescriptionAsMarkdown_SoBothSidesOfTheDiffAreProse()
+    public async Task Execute_ShouldDiffTheStoredDescriptionAgainstTheProposedMarkdown()
     {
-        var stored = """{"blocks":[{"type":"header","data":{"text":"Steps","level":2}}]}""";
-
-        GivenTask(CreateTask() with { Description = stored });
+        GivenTask(CreateTask() with { Description = "## Steps" });
 
         var result = await Execute($$"""{"taskId":{{TaskId}},"description":"## Steps\n\nAnd a line."}""");
 

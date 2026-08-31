@@ -41,7 +41,7 @@ public sealed class UpdateTaskChangeHandler : IAiChangeHandler, IAiChangeUndoHan
         {
             Id = taskId.Value,
             Name = AiChangePayload.ReadString(payload, "name"),
-            Description = EditorDocumentWriter.FromMarkdown(description),
+            Description = description,
             StatusId = AiChangePayload.ReadInt(payload, "statusId"),
             Priority = ReadPriority(payload),
             EstimateType = ReadEstimateType(payload),

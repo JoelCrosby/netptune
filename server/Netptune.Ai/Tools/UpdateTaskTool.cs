@@ -98,11 +98,10 @@ public sealed class UpdateTaskTool : IAiTool
         }
 
         var fields = new List<AiChangeField>();
-        var description = EditorDocumentReader.ToMarkdown(task.Description);
         var proposedDescription = AiToolSchema.GetString(arguments, "description");
 
         AddChangedField(fields, "name", task.Name, AiToolSchema.GetString(arguments, "name"));
-        AddChangedField(fields, "description", description, proposedDescription);
+        AddChangedField(fields, "description", task.Description, proposedDescription);
 
         var dateMessage = AddDateFields(fields, task, arguments, cleared);
 

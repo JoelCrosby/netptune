@@ -19,8 +19,6 @@ using Xunit;
 
 namespace Netptune.UnitTests.Netptune.Ai;
 
-// The assistant writes markdown, the editor reads its own document format, and the handlers are
-// where the two meet: nothing between the proposal and the database converts the value.
 public class TaskDescriptionChangeHandlerTests
 {
     private const int TaskId = 42;
@@ -28,7 +26,7 @@ public class TaskDescriptionChangeHandlerTests
     private readonly IMediator Mediator = Substitute.For<IMediator>();
 
     [Fact]
-    public async Task Apply_ShouldWriteACreatedDescriptionAsAnEditorDocument()
+    public async Task Apply_ShouldWriteACreatedDescriptionAsTheMarkdownItWasProposedAs()
     {
         var payload = JsonSerializer.Serialize(new
         {
@@ -49,13 +47,11 @@ public class TaskDescriptionChangeHandlerTests
 
         var written = CapturedCreate();
 
-        written.Should().Contain("\"header\"");
-        written.Should().Contain("<b>the</b>");
-        written.Should().NotContain("##");
+        written.Should().Be("## Steps\n\nRun **the** thing.");
     }
 
     [Fact]
-    public async Task Apply_ShouldWriteAnUpdatedDescriptionAsAnEditorDocument()
+    public async Task Apply_ShouldWriteAnUpdatedDescriptionAsTheMarkdownItWasProposedAs()
     {
         var payload = JsonSerializer.Serialize(new
         {
@@ -75,8 +71,7 @@ public class TaskDescriptionChangeHandlerTests
 
         var written = CapturedUpdate();
 
-        written.Should().Contain("\"list\"");
-        written.Should().Contain("\"unordered\"");
+        written.Should().Be("- one\n- two");
     }
 
     [Fact]

@@ -33,7 +33,7 @@ public sealed class CreateTaskChangeHandler : IAiChangeHandler, IAiChangeUndoHan
         var request = new AddProjectTaskRequest
         {
             Name = AiChangePayload.ReadString(payload, "name") ?? string.Empty,
-            Description = EditorDocumentWriter.FromMarkdown(description) ?? string.Empty,
+            Description = description ?? string.Empty,
             ProjectId = AiChangePayload.ReadInt(payload, "projectId"),
             StatusId = AiChangePayload.ReadInt(payload, "statusId"),
             AssigneeId = AiChangePayload.ReadString(payload, "assigneeId"),

@@ -93,6 +93,16 @@
         <target>Inspeccionada</target>
       </segment>
     </unit>
+    <unit id="771664384252640128">
+      <notes>
+        <note category="location">src/app/static/components/editor/editor-bubble-menu.component.ts:197</note>
+        <note category="description">Accessible label for the editor&apos;s bold button</note>
+      </notes>
+      <segment state="translated">
+        <source>Bold</source>
+        <target>Negrita</target>
+      </segment>
+    </unit>
     <unit id="8576643134711566154">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:73</note>
@@ -1583,6 +1593,7 @@
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:255</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:42,44</note>
         <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:85,87</note>
+        <note category="location">src/app/static/components/editor/editor-bubble-menu.component.ts:205</note>
         <note category="description">Dismisses a dialog without acting</note>
       </notes>
       <segment state="translated">
@@ -2050,6 +2061,16 @@
         <target>Proyecto eliminado</target>
       </segment>
     </unit>
+    <unit id="7966768232784020577">
+      <notes>
+        <note category="location">src/app/static/components/editor/editor-bubble-menu.component.ts:204</note>
+        <note category="description">Accessible label for the button that removes an editor link</note>
+      </notes>
+      <segment state="translated">
+        <source>Remove Link</source>
+        <target>Quitar enlace</target>
+      </segment>
+    </unit>
     <unit id="311004371875198775">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:111</note>
@@ -2251,6 +2272,16 @@
       <segment state="translated">
         <source>Create Task Views</source>
         <target>Crear vistas de tareas</target>
+      </segment>
+    </unit>
+    <unit id="6269606295190909224">
+      <notes>
+        <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:152</note>
+        <note category="description">Accessible label for the editor&apos;s checklist button</note>
+      </notes>
+      <segment state="translated">
+        <source>Checklist</source>
+        <target>Lista de verificación</target>
       </segment>
     </unit>
     <unit id="9054551961119650411">
@@ -2770,6 +2801,16 @@
       <segment state="translated">
         <source>Fuchsia</source>
         <target>Fucsia</target>
+      </segment>
+    </unit>
+    <unit id="2953598261736389227">
+      <notes>
+        <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:150</note>
+        <note category="description">Accessible label for the editor&apos;s bulleted list button</note>
+      </notes>
+      <segment state="translated">
+        <source>Bulleted List</source>
+        <target>Lista con viñetas</target>
       </segment>
     </unit>
     <unit id="2956098160626271284">
@@ -3579,6 +3620,17 @@
       <segment state="translated">
         <source>Search provider</source>
         <target>Proveedor de búsqueda</target>
+      </segment>
+    </unit>
+    <unit id="6811068315125831753">
+      <notes>
+        <note category="location">src/app/static/components/editor/editor-bubble-menu.component.ts:195</note>
+        <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:148</note>
+        <note category="description">Accessible label for the editor&apos;s heading 1 button</note>
+      </notes>
+      <segment state="translated">
+        <source>Heading 1</source>
+        <target>Encabezado 1</target>
       </segment>
     </unit>
     <unit id="6817022269939421403">
@@ -4750,6 +4802,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:116,118</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:37</note>
+        <note category="location">src/app/static/components/editor/editor-bubble-menu.component.ts:201</note>
         <note category="description">Button that creates the task link</note>
       </notes>
       <segment state="translated">
@@ -5184,6 +5237,16 @@
       <segment state="translated">
         <source> Added by automation rule #<ph id="0" equiv="RULE_ID" disp="{{ flag.automationRuleId // i18n(ph=&quot;RULE_ID&quot;) }}"/> </source>
         <target>Añadido por la regla de automatización n.º <ph id="0" equiv="RULE_ID" disp="{{ flag.automationRuleId // i18n(ph=&quot;RULE_ID&quot;) }}"/></target>
+      </segment>
+    </unit>
+    <unit id="1224160359892670574">
+      <notes>
+        <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:151</note>
+        <note category="description">Accessible label for the editor&apos;s numbered list button</note>
+      </notes>
+      <segment state="translated">
+        <source>Numbered List</source>
+        <target>Lista numerada</target>
       </segment>
     </unit>
     <unit id="1225327047686807431">
@@ -8735,6 +8798,16 @@
         <target> La tarea desencadenante es el origen </target>
       </segment>
     </unit>
+    <unit id="6053004284706925412">
+      <notes>
+        <note category="location">src/app/static/components/editor/editor-bubble-menu.component.ts:199</note>
+        <note category="description">Accessible label for the editor&apos;s strikethrough button</note>
+      </notes>
+      <segment state="translated">
+        <source>Strikethrough</source>
+        <target>Tachado</target>
+      </segment>
+    </unit>
     <unit id="151590427979424193">
       <notes>
         <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:52,53</note>
@@ -10205,6 +10278,16 @@
         <target> Duplicar automatización </target>
       </segment>
     </unit>
+    <unit id="6952430763295454756">
+      <notes>
+        <note category="location">src/app/static/components/editor/editor-bubble-menu.component.ts:200</note>
+        <note category="description">Accessible label for the editor&apos;s inline code button</note>
+      </notes>
+      <segment state="translated">
+        <source>Inline Code</source>
+        <target>Código en línea</target>
+      </segment>
+    </unit>
     <unit id="6189233648220583946">
       <notes>
         <note category="location">src/app/core/services/ai-assistant.service.ts:469</note>
@@ -11218,6 +11301,16 @@
       <segment state="translated">
         <source>Website Redesign</source>
         <target>Rediseño del sitio web</target>
+      </segment>
+    </unit>
+    <unit id="2833217884096159616">
+      <notes>
+        <note category="location">src/app/static/components/editor/editor-bubble-menu.component.ts:203</note>
+        <note category="description">Accessible label for the button that applies an editor link</note>
+      </notes>
+      <segment state="translated">
+        <source>Apply Link</source>
+        <target>Aplicar enlace</target>
       </segment>
     </unit>
     <unit id="2833342917182821697">
@@ -12593,6 +12686,16 @@
         <target>Actualizar</target>
       </segment>
     </unit>
+    <unit id="1103299628984958400">
+      <notes>
+        <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:153</note>
+        <note category="description">Accessible label for the editor&apos;s quote button</note>
+      </notes>
+      <segment state="translated">
+        <source>Quote</source>
+        <target>Cita</target>
+      </segment>
+    </unit>
     <unit id="1113643161886640414">
       <notes>
         <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:80</note>
@@ -12872,6 +12975,16 @@
       <segment state="translated">
         <source>Automations could not be loaded</source>
         <target>No se pudieron cargar las automatizaciones</target>
+      </segment>
+    </unit>
+    <unit id="6058458826925289443">
+      <notes>
+        <note category="location">src/app/static/components/editor/editor-bubble-menu.component.ts:202</note>
+        <note category="description">Label of the box holding the address of an editor link</note>
+      </notes>
+      <segment state="translated">
+        <source>Link Address</source>
+        <target>Dirección del enlace</target>
       </segment>
     </unit>
     <unit id="6059141090474409438">
@@ -13853,6 +13966,16 @@
       <segment state="translated">
         <source> Status &amp; details… </source>
         <target>Estado y detalles…</target>
+      </segment>
+    </unit>
+    <unit id="266505507282188406">
+      <notes>
+        <note category="location">src/app/static/components/editor/editor-bubble-menu.component.ts:198</note>
+        <note category="description">Accessible label for the editor&apos;s italic button</note>
+      </notes>
+      <segment state="translated">
+        <source>Italic</source>
+        <target>Cursiva</target>
       </segment>
     </unit>
     <unit id="2667530245703435539">
@@ -15523,6 +15646,17 @@
       <segment state="translated">
         <source>out</source>
         <target>salida</target>
+      </segment>
+    </unit>
+    <unit id="3950857212526495627">
+      <notes>
+        <note category="location">src/app/static/components/editor/editor-bubble-menu.component.ts:196</note>
+        <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:149</note>
+        <note category="description">Accessible label for the editor&apos;s heading 2 button</note>
+      </notes>
+      <segment state="translated">
+        <source>Heading 2</source>
+        <target>Encabezado 2</target>
       </segment>
     </unit>
     <unit id="3953140809261219704">
@@ -17767,6 +17901,16 @@
       <segment state="initial">
         <source>Reporter</source>
         <target>Informador</target>
+      </segment>
+    </unit>
+    <unit id="7306009472583884794">
+      <notes>
+        <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:155</note>
+        <note category="description">Accessible label for the editor&apos;s divider button</note>
+      </notes>
+      <segment state="translated">
+        <source>Divider</source>
+        <target>Separador</target>
       </segment>
     </unit>
     <unit id="7306729995560326678">
@@ -22052,6 +22196,16 @@
         <target>usuario</target>
       </segment>
     </unit>
+    <unit id="1233677209404619820">
+      <notes>
+        <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:156</note>
+        <note category="description">Accessible label for the button that adds a file to the editor</note>
+      </notes>
+      <segment state="translated">
+        <source>Add File</source>
+        <target>Añadir archivo</target>
+      </segment>
+    </unit>
     <unit id="1238372923050281145">
       <notes>
         <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:343</note>
@@ -23228,6 +23382,16 @@
       <segment state="translated">
         <source>Filter tasks</source>
         <target>Filtrar tareas</target>
+      </segment>
+    </unit>
+    <unit id="2034729730694169160">
+      <notes>
+        <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:154</note>
+        <note category="description">Accessible label for the editor&apos;s code block button</note>
+      </notes>
+      <segment state="translated">
+        <source>Code Block</source>
+        <target>Bloque de código</target>
       </segment>
     </unit>
     <unit id="203971007584568092">

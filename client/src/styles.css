@@ -196,8 +196,6 @@
   --diff-del-word: rgba(200, 0, 0, 0.2);
 
   --editor-code-background: #fbfbfb;
-  --editor-link-border: #c9c9cc7a;
-  --editor-link-background: #fff;
 }
 
 .dark {
@@ -266,8 +264,6 @@
   --diff-del-word: rgba(255, 0, 0, 0.3);
 
   --editor-code-background: #060606;
-  --editor-link-border: #3e3e3e;
-  --editor-link-background: #2f2f2f;
 }
 
 html {
