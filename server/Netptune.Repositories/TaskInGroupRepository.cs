@@ -38,6 +38,28 @@ public class TaskInGroupRepository : Repository<DataContext, ProjectTaskInBoardG
             .FirstOrDefaultAsync(cancellationToken);
     }
 
+    public async Task<Dictionary<int, int>> GetPlacementGroupsOnBoard(
+        IReadOnlyCollection<int> taskIds,
+        int boardId,
+        CancellationToken cancellationToken = default)
+    {
+        if (taskIds.Count == 0)
+        {
+            return [];
+        }
+
+        var placements = await Entities
+            .AsNoTracking()
+            .Where(entity => taskIds.Contains(entity.ProjectTaskId) && entity.BoardGroup!.BoardId == boardId)
+            .OrderBy(entity => entity.SortOrder)
+            .Select(entity => new { entity.ProjectTaskId, entity.BoardGroupId })
+            .ToListAsync(cancellationToken);
+
+        return placements
+            .GroupBy(placement => placement.ProjectTaskId)
+            .ToDictionary(group => group.Key, group => group.First().BoardGroupId);
+    }
+
     public async Task<List<int>> GetAllByTaskId(IEnumerable<int> taskIds, CancellationToken cancellationToken = default)
     {
         var taskIdList = taskIds.ToList();

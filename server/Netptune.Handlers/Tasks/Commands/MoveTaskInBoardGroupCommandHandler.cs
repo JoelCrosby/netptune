@@ -125,7 +125,12 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
             options.EntityId = request.TaskId;
             options.EntityType = EntityType.Task;
             options.Type = ActivityType.Move;
-            options.Meta = new MoveTaskActivityMeta { Group = boardGroup.Name, GroupId = boardGroup.Id };
+            options.Meta = new MoveTaskActivityMeta
+            {
+                Group = boardGroup.Name,
+                GroupId = boardGroup.Id,
+                FromGroupId = request.OldGroupId,
+            };
         });
 
         if (boardGroup.StatusId.HasValue

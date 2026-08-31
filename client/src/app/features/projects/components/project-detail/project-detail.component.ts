@@ -20,6 +20,8 @@ import { ProjectBrandingComponent } from '@projects/components/project-branding/
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
+import { NotificationSubscribeComponent } from '@shared/components/notification-subscribe/notification-subscribe.component';
+import { NotificationScope } from '@core/models/notification-subscription';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
 @Component({
@@ -32,6 +34,7 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
     FlatButtonComponent,
     IconTileComponent,
     ProjectBrandingComponent,
+    NotificationSubscribeComponent,
     FormField,
   ],
   host: { class: 'block' },
@@ -39,7 +42,8 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
     <form
       class="border-border bg-card overflow-hidden rounded-lg border shadow-sm"
       (submit)="updateClicked($event)">
-      <header class="border-border border-b px-6 py-5">
+      <header
+        class="border-border flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-b px-6 py-5">
         <div class="flex min-w-0 items-center gap-3">
           <app-icon-tile [icon]="detailsIcon" />
 
@@ -57,6 +61,14 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
             </p>
           </div>
         </div>
+
+        @if (project(); as project) {
+          <app-notification-subscribe
+            class="shrink-0"
+            [scope]="notificationScope.project"
+            [scopeEntityId]="project.id"
+            [scopeName]="project.name" />
+        }
       </header>
 
       <div class="grid gap-6 px-6 py-5 lg:grid-cols-2 lg:gap-10">
@@ -124,6 +136,7 @@ export class ProjectDetailComponent {
   private projectCommands = inject(ProjectCommandsService);
 
   protected readonly detailsIcon = LucideFolderOpen;
+  protected readonly notificationScope = NotificationScope;
 
   project = input<ProjectViewModel>();
   loading = this.projectCommands.isUpdating;

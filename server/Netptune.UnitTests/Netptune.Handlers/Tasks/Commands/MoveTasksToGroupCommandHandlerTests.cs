@@ -59,6 +59,9 @@ public class MoveTasksToGroupCommandHandlerTests
                 StatusId = groupStatusId,
             });
         UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId, TestContext.Current.CancellationToken).Returns(request.TaskIds);
+        UnitOfWork.ProjectTasksInGroups
+            .GetPlacementGroupsOnBoard(Arg.Any<IReadOnlyCollection<int>>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(new Dictionary<int, int>());
         UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<IEnumerable<int>>(), true, TestContext.Current.CancellationToken)
             .Returns(request.TaskIds.Select(id => new ProjectTask
             {

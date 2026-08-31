@@ -70,6 +70,7 @@ public static class TransferRedaction
         Redacted<EventConsumerReceipt>(TransferRedactionKeys.EventInfrastructure),
         Redacted<ActivityEntry>(TransferRedactionKeys.DerivedProjections),
         Redacted<Notification>(TransferRedactionKeys.PerUserState),
+        Redacted<NotificationSubscription>(TransferRedactionKeys.PerUserState),
         Redacted<UserPreferenceValue>(TransferRedactionKeys.PerUserState),
         Redacted<CommandPaletteRecentItem>(TransferRedactionKeys.PerUserState),
         Redacted<WorkspaceInvite>(TransferRedactionKeys.PendingInvites),

@@ -1,6 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
 import { NotificationPreferencesComponent } from '@settings/components/notification-preferences/notification-preferences.component';
+import { NotificationSubscriptionsComponent } from '@settings/components/notification-subscriptions/notification-subscriptions.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 
@@ -10,6 +11,7 @@ const NOTIFICATION_GROUP = 'notifications';
   selector: 'app-personal-notification-settings-view',
   imports: [
     NotificationPreferencesComponent,
+    NotificationSubscriptionsComponent,
     PageContainerComponent,
     PageHeaderComponent,
   ],
@@ -19,7 +21,11 @@ const NOTIFICATION_GROUP = 'notifications';
         i18n-title="Page title for personal notification settings"
         title="Notifications" />
 
-      <app-notification-preferences [values]="preferences()" />
+      <div class="flex flex-col gap-6">
+        <app-notification-preferences [values]="preferences()" />
+
+        <app-notification-subscriptions />
+      </div>
     </app-page-container>
   `,
 })

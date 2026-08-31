@@ -5,6 +5,7 @@ using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Repositories.Common;
 using Netptune.Repositories.RowMaps;
+using Netptune.Repositories.Sql;
 
 namespace Netptune.Repositories;
 
@@ -169,6 +170,52 @@ public class AncestorRepository : ReadOnlyRepository, IAncestorRepository
             ProjectKey = result.Project_key,
             WorkspaceId = result.Workspace_id,
             WorkspaceKey = result.Workspace_key,
+        };
+    }
+
+    public async Task<Dictionary<int, TaskScopes>> GetTaskScopes(
+        IReadOnlyCollection<int> taskIds,
+        CancellationToken cancellationToken = default)
+    {
+        if (taskIds.Count == 0)
+        {
+            return [];
+        }
+
+        using var connection = ConnectionFactory.StartConnection();
+
+        var rows = await connection.QueryAsync<TaskScopeRow>(new CommandDefinition(
+            SqlScripts.GetTaskScopes, new { taskIds = taskIds.ToArray() }, cancellationToken: cancellationToken));
+
+        return rows
+            .GroupBy(row => row.Task_id)
+            .ToDictionary(group => group.Key, ToTaskScopes);
+    }
+
+    private static TaskScopes ToTaskScopes(IEnumerable<TaskScopeRow> rows)
+    {
+        var scopeRows = rows.ToList();
+
+        var boardIds = scopeRows
+            .Select(row => row.Board_id)
+            .Where(boardId => boardId.HasValue)
+            .Select(boardId => boardId!.Value)
+            .Distinct()
+            .ToList();
+
+        var boardGroupIds = scopeRows
+            .Select(row => row.Board_group_id)
+            .Where(boardGroupId => boardGroupId.HasValue)
+            .Select(boardGroupId => boardGroupId!.Value)
+            .Distinct()
+            .ToList();
+
+        return new TaskScopes
+        {
+            ProjectId = scopeRows[0].Project_id,
+            SprintId = scopeRows[0].Sprint_id,
+            BoardIds = boardIds,
+            BoardGroupIds = boardGroupIds,
         };
     }
 }

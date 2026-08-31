@@ -33,6 +33,8 @@ import { BoardGroupStatusDotComponent } from '@boards/components/board-group-sta
 import { BoardGroupComponent } from '@boards/components/board-group/board-group.component';
 import { CreateBoardComponent } from '@boards/components/create-board/create-board.component';
 import { CreateBoardGroupComponent } from '@boards/components/create-board-group/create-board-group.component';
+import { NotificationSubscribeComponent } from '@shared/components/notification-subscribe/notification-subscribe.component';
+import { NotificationScope } from '@core/models/notification-subscription';
 import { BoardGroupDialogComponent } from '@entry/dialogs/board-group-dialog/board-group-dialog.component';
 import { UpdateBoardGroupRequest } from '@core/models/requests/update-board-group-request';
 import { BoardViewGroup } from '@core/models/view-models/board-view';
@@ -115,6 +117,7 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
     InlineEditInputComponent,
     IconButtonComponent,
     CreateBoardGroupComponent,
+    NotificationSubscribeComponent,
   ],
   template: `
     <app-page-container layout="list" [centerPage]="false">
@@ -185,6 +188,12 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
                       </span>
                     </div>
                     @if (isAuthenticated()) {
+                      <app-notification-subscribe
+                        revealOnHover
+                        class="mx-[.2rem]"
+                        [scope]="notificationScope.boardGroup"
+                        [scopeEntityId]="group.id"
+                        [scopeName]="group.name" />
                       <button
                         app-icon-button
                         i18n-title="
@@ -239,6 +248,7 @@ export class BoardGroupsViewComponent implements OnDestroy {
   private boardBackground = inject(BoardBackgroundService);
 
   isAuthenticated = inject(SessionService).isAuthenticated;
+  readonly notificationScope = NotificationScope;
 
   boardLogoUrl = computed(() => {
     return brandingImageUrl(

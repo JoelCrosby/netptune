@@ -205,6 +205,7 @@ apiGroup.MapAiEndpoints();
 
 apiGroup.MapTaskViewEndpoints();
 apiGroup.MapPinsEndpoints();
+apiGroup.MapNotificationSubscriptionsEndpoints();
 apiGroup.MapExportEndpoints();
 apiGroup.MapImportEndpoints();
 

@@ -441,26 +441,30 @@ public sealed class ActivityHandler :
 
         var usersByWorkspace = await UnitOfWork.WorkspaceUsers.GetWorkspaceUserIdsByWorkspaceIds(workspaceIds, cancellationToken);
 
+        var notifiable = records.Where(record => !AuditOnlyTypes.Contains(record.Event.Type)).ToList();
+        var matchRequests = notifiable.Select(ToMatchRequest).ToList();
+        var fanOut = await NotificationSubscriptionFanOut.Build(UnitOfWork, matchRequests, cancellationToken);
+
         var allNotifications = new List<Notification>();
 
-        foreach (var (activity, log, _) in records)
+        foreach (var record in notifiable)
         {
-
-            if (AuditOnlyTypes.Contains(activity.Type))
-            {
-                continue;
-            }
+            var (activity, log, _) = record;
 
             if (!usersByWorkspace.TryGetValue(activity.WorkspaceId, out var allUserIds))
             {
                 continue;
             }
 
+            var subscribedUserIds = fanOut.Recipients(ToMatchRequest(record));
+            var addressedUserIds = activity.RecipientUserIds ?? [];
+            var candidateUserIds = addressedUserIds.Concat(subscribedUserIds).Distinct().ToList();
+
             var recipients = await NotificationRecipientResolver.Resolve(
                 UnitOfWork,
                 new NotificationRecipientRequest
                 {
-                    RequestedUserIds = activity.RecipientUserIds,
+                    RequestedUserIds = candidateUserIds,
                     WorkspaceUserIds = allUserIds,
                     ActorUserId = activity.UserId,
                     WorkspaceId = activity.WorkspaceId,
@@ -497,6 +501,18 @@ public sealed class ActivityHandler :
         await UnitOfWork.CompleteAsync(cancellationToken);
 
         return allNotifications;
+    }
+
+    private static NotificationSubscriptionMatchRequest ToMatchRequest(ActivityRecord record)
+    {
+        return new NotificationSubscriptionMatchRequest
+        {
+            WorkspaceId = record.WorkspaceId,
+            EntityType = record.EntityType,
+            EntityId = record.EntityId,
+            ActivityType = record.Event.Type,
+            Payload = record.Log.Payload.RootElement,
+        };
     }
 
     private static JsonDocument BuildPayload(ActivityEvent activity, ActivityAncestors ancestors)

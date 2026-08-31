@@ -159,6 +159,9 @@ public sealed class ActivityMergeWindowJob : BackgroundService
 
         var usersByWorkspace = await unitOfWork.WorkspaceUsers.GetWorkspaceUserIdsByWorkspaceIds(workspaceIds, cancellationToken);
 
+        var matchRequests = entries.Select(ToMatchRequest).ToList();
+        var fanOut = await NotificationSubscriptionFanOut.Build(unitOfWork, matchRequests, cancellationToken);
+
         foreach (var entry in entries)
         {
 
@@ -174,7 +177,9 @@ public sealed class ActivityMergeWindowJob : BackgroundService
                 continue;
             }
 
-            var requestedUserIds = ReadRecipientUserIds(entry.Meta);
+            var addressedUserIds = ReadRecipientUserIds(entry.Meta);
+            var subscribedUserIds = fanOut.Recipients(ToMatchRequest(entry));
+            var requestedUserIds = addressedUserIds.Concat(subscribedUserIds).Distinct().ToList();
             var recipients = await NotificationRecipientResolver.Resolve(
                 unitOfWork,
                 new NotificationRecipientRequest
@@ -207,6 +212,19 @@ public sealed class ActivityMergeWindowJob : BackgroundService
         }
 
         return notifications;
+    }
+
+    // No payload: a merged entry stands for a burst of field edits, which is a change within the
+    // scopes the task already sits in rather than a move between them.
+    private static NotificationSubscriptionMatchRequest ToMatchRequest(ActivityEntry entry)
+    {
+        return new NotificationSubscriptionMatchRequest
+        {
+            WorkspaceId = entry.WorkspaceId,
+            EntityType = entry.EntityType,
+            EntityId = entry.EntityId,
+            ActivityType = entry.ActivityType,
+        };
     }
 
     private static List<string> ReadRecipientUserIds(JsonDocument? meta)

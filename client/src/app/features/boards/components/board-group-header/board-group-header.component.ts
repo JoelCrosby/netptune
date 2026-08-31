@@ -8,6 +8,8 @@ import { BoardGroupHiddenNoticeComponent } from '@boards/components/board-group-
 import { ManageBoardGroupsDialogComponent } from '@boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component';
 import { hiddenGroupIdsForBoard } from '@boards/util/hidden-board-groups';
 import { TagFilterContainerComponent } from '@shared/components/tag-filter/tag-filter-container.component';
+import { NotificationSubscribeComponent } from '@shared/components/notification-subscribe/notification-subscribe.component';
+import { NotificationScope } from '@core/models/notification-subscription';
 import { BoardGroupHeaderSeperatorComponent } from './board-group-header-seperator.component';
 import { PERMISSIONS } from '@app/core/auth/permissions';
 import { BoardViewService } from '@core/services/board-view.service';
@@ -25,6 +27,7 @@ import { UserPreferencesService } from '@core/services/user-preferences.service'
     BoardGroupSortComponent,
     BoardGroupHeaderSeperatorComponent,
     BoardGroupHiddenNoticeComponent,
+    NotificationSubscribeComponent,
   ],
   template: `
     <div class="flex flex-row items-center gap-2">
@@ -45,6 +48,14 @@ import { UserPreferencesService } from '@core/services/user-preferences.service'
 
       <app-board-group-sort />
 
+      @if (board(); as board) {
+        <app-notification-subscribe
+          appearance="toolbar"
+          [scope]="notificationScope.board"
+          [scopeEntityId]="board.id"
+          [scopeName]="board.name" />
+      }
+
       <app-board-group-hidden-notice
         [count]="hiddenCount()"
         (manage)="onManageGroupsClicked()" />
@@ -55,7 +66,9 @@ export class BoardGroupHeaderComponent {
   private preferences = inject(UserPreferencesService);
   private dialog = inject(DialogService);
 
-  private board = inject(BoardViewService).board;
+  protected readonly board = inject(BoardViewService).board;
+
+  protected readonly notificationScope = NotificationScope;
 
   hiddenCount = computed(() => {
     const boardId = this.board()?.id;

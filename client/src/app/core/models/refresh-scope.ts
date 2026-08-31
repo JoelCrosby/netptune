@@ -9,6 +9,7 @@ export const allRefreshScopes = [
   'comments',
   'users',
   'notifications',
+  'notificationSubscriptions',
   'profile',
   'pins',
 ] as const;

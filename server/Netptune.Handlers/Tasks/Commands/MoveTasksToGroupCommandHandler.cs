@@ -4,6 +4,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Events.Tasks;
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
@@ -57,6 +58,13 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
         var oldTasks = boardGroup.StatusId.HasValue
             ? await UnitOfWork.Tasks.GetAllByIdAsync(taskIds, true, cancellationToken)
             : [];
+
+        // Read before the placement rows are replaced, so the columns the tasks came from survive
+        // into the activity these moves log.
+        var groupsBeforeMove = await UnitOfWork.ProjectTasksInGroups.GetPlacementGroupsOnBoard(
+            taskIds,
+            boardGroup.BoardId,
+            cancellationToken);
 
         await UnitOfWork.Transaction(async () =>
         {
@@ -116,13 +124,7 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
             await UnitOfWork.CompleteAsync(cancellationToken);
         });
 
-        Activity.LogWithMany<MoveTaskActivityMeta>(options =>
-        {
-            options.EntityIds = taskIds;
-            options.EntityType = EntityType.Task;
-            options.Type = ActivityType.Move;
-            options.Meta = new MoveTaskActivityMeta { Group = boardGroup.Name, GroupId = boardGroup.Id };
-        });
+        LogMoves(taskIds, groupsBeforeMove, boardGroup);
 
         if (boardGroup.StatusId.HasValue)
         {
@@ -147,6 +149,39 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
         }
 
         return ClientResponse.Success;
+    }
+
+    // LogWithMany shares one meta across every task it logs, so the tasks are grouped by the column
+    // they came from: one bulk move can drag cards out of several columns at once.
+    private void LogMoves(
+        List<int> taskIds,
+        Dictionary<int, int> groupsBeforeMove,
+        BoardGroupTaskTarget boardGroup)
+    {
+        var movesByOriginGroup = taskIds.GroupBy(taskId => OriginGroupId(taskId, groupsBeforeMove));
+
+        foreach (var move in movesByOriginGroup)
+        {
+            var movedTaskIds = move.ToList();
+
+            Activity.LogWithMany<MoveTaskActivityMeta>(options =>
+            {
+                options.EntityIds = movedTaskIds;
+                options.EntityType = EntityType.Task;
+                options.Type = ActivityType.Move;
+                options.Meta = new MoveTaskActivityMeta
+                {
+                    Group = boardGroup.Name,
+                    GroupId = boardGroup.Id,
+                    FromGroupId = move.Key,
+                };
+            });
+        }
+    }
+
+    private static int? OriginGroupId(int taskId, Dictionary<int, int> groupsBeforeMove)
+    {
+        return groupsBeforeMove.TryGetValue(taskId, out var groupId) ? groupId : null;
     }
 
     private Task PublishTaskChanged(

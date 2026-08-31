@@ -47,6 +47,8 @@ public interface INetptuneUnitOfWork : IUnitOfWork
 
     INotificationRepository Notifications { get; }
 
+    INotificationSubscriptionRepository NotificationSubscriptions { get; }
+
     IUserPreferenceRepository UserPreferences { get; }
 
     ICommandPaletteRecentItemRepository CommandPaletteRecentItems { get; }

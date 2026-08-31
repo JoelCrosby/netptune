@@ -75,6 +75,7 @@ public class DataContext : IdentityDbContext<AppUser>, IDataProtectionKeyContext
     public DbSet<WorkspaceSearchCredential> WorkspaceSearchCredentials { get; set; } = null!;
 
     public DbSet<Notification> Notifications { get; set; } = null!;
+    public DbSet<NotificationSubscription> NotificationSubscriptions { get; set; } = null!;
     public DbSet<UserPreferenceValue> UserPreferenceValues { get; set; } = null!;
     public DbSet<CommandPaletteRecentItem> CommandPaletteRecentItems { get; set; } = null!;
 

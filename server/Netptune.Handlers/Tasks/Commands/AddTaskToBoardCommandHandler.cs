@@ -64,6 +64,7 @@ public sealed class AddTaskToBoardCommandHandler : IRequestHandler<AddTaskToBoar
             return ClientResponse<TaskViewModel>.Failed($"Board '{board.Name}' has no group to place the task in");
         }
 
+        var currentPlacement = await UnitOfWork.ProjectTasksInGroups.GetPlacementOnBoard(task.Id, board.Id, cancellationToken);
         var placed = await Placement.Place(task.Id, target, cancellationToken);
 
         if (!placed)
@@ -73,12 +74,22 @@ public sealed class AddTaskToBoardCommandHandler : IRequestHandler<AddTaskToBoar
 
         await UnitOfWork.CompleteAsync(cancellationToken);
 
+        // A task already on the board is only changing column, so the board is reported as joined
+        // only when it had no placement there before.
+        var joinedBoardId = currentPlacement is null ? board.Id : (int?)null;
+
         Activity.LogWith<MoveTaskActivityMeta>(options =>
         {
             options.EntityId = task.Id;
             options.EntityType = EntityType.Task;
             options.Type = ActivityType.Move;
-            options.Meta = new MoveTaskActivityMeta { Group = target.Name, GroupId = target.Id };
+            options.Meta = new MoveTaskActivityMeta
+            {
+                Group = target.Name,
+                GroupId = target.Id,
+                BoardId = joinedBoardId,
+                FromGroupId = currentPlacement?.BoardGroupId,
+            };
         });
 
         var response = await UnitOfWork.Tasks.GetTaskViewModel(task.Id, cancellationToken);

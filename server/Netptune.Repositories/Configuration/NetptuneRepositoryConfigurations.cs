@@ -34,6 +34,7 @@ public static class NetptuneRepositoryConfigurations
         services.AddScoped<IExportDefinitionRepository, ExportDefinitionRepository>();
         services.AddScoped<ITaskViewRepository, TaskViewRepository>();
         services.AddScoped<ITaskPinRepository, TaskPinRepository>();
+        services.AddScoped<INotificationSubscriptionRepository, NotificationSubscriptionRepository>();
 
         services.AddScoped<ITransferRepository, TransferRepository>();
         services.AddScoped<IArchiveRepository, ArchiveRepository>();

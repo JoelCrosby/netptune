@@ -11,6 +11,8 @@ public interface ITaskInGroupRepository : IRepository<ProjectTaskInBoardGroup, i
 
     Task<ProjectTaskInBoardGroup?> GetPlacementOnBoard(int taskId, int boardId, CancellationToken cancellationToken = default);
 
+    Task<Dictionary<int, int>> GetPlacementGroupsOnBoard(IReadOnlyCollection<int> taskIds, int boardId, CancellationToken cancellationToken = default);
+
     Task<List<int>> GetAllByTaskId(IEnumerable<int> taskIds, CancellationToken cancellationToken = default);
 
     Task DeleteAllByTaskId(IEnumerable<int> taskIds, CancellationToken cancellationToken = default);

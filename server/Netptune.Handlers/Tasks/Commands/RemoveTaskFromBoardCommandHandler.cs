@@ -49,6 +49,7 @@ public sealed class RemoveTaskFromBoardCommandHandler : IRequestHandler<RemoveTa
             return ClientResponse<TaskViewModel>.NotFound;
         }
 
+        var placement = await UnitOfWork.ProjectTasksInGroups.GetPlacementOnBoard(task.Id, board.Id, cancellationToken);
         var removed = await Placement.RemoveFromBoard(task.Id, board.Id, cancellationToken);
 
         if (!removed)
@@ -63,7 +64,12 @@ public sealed class RemoveTaskFromBoardCommandHandler : IRequestHandler<RemoveTa
             options.EntityId = task.Id;
             options.EntityType = EntityType.Task;
             options.Type = ActivityType.Remove;
-            options.Meta = new RemoveTaskFromBoardActivityMeta { Board = board.Name, BoardId = board.Id };
+            options.Meta = new RemoveTaskFromBoardActivityMeta
+            {
+                Board = board.Name,
+                BoardId = board.Id,
+                GroupId = placement?.BoardGroupId,
+            };
         });
 
         var response = await UnitOfWork.Tasks.GetTaskViewModel(task.Id, cancellationToken);

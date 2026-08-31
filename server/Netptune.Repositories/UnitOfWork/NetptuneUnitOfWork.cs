@@ -29,6 +29,7 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
     public IAutomationRepository Automations { get; }
     public IFlagRepository Flags { get; }
     public INotificationRepository Notifications { get; }
+    public INotificationSubscriptionRepository NotificationSubscriptions { get; }
     public IUserPreferenceRepository UserPreferences { get; }
     public ICommandPaletteRecentItemRepository CommandPaletteRecentItems { get; }
     public IRefreshTokenRepository RefreshTokens { get; }
@@ -71,6 +72,7 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
         Automations = new AutomationRepository(context, connectionFactory);
         Flags = new FlagRepository(context, connectionFactory);
         Notifications = new NotificationRepository(context, connectionFactory);
+        NotificationSubscriptions = new NotificationSubscriptionRepository(context, connectionFactory);
         UserPreferences = new UserPreferenceRepository(context, connectionFactory);
         CommandPaletteRecentItems = new CommandPaletteRecentItemRepository(context, connectionFactory);
         RefreshTokens = new RefreshTokenRepository(context, connectionFactory);

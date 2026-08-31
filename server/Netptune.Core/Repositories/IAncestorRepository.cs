@@ -13,4 +13,6 @@ public interface IAncestorRepository
     Task<ActivityAncestors> GetProjectAncestors(int projectId, CancellationToken cancellationToken = default);
 
     Task<ActivityAncestors> GetSprintAncestors(int sprintId, CancellationToken cancellationToken = default);
+
+    Task<Dictionary<int, TaskScopes>> GetTaskScopes(IReadOnlyCollection<int> taskIds, CancellationToken cancellationToken = default);
 }

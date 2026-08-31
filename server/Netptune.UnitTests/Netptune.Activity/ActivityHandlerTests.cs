@@ -67,6 +67,10 @@ public class ActivityHandlerTests
             .GetSprintAncestors(Arg.Any<int>(), Arg.Any<CancellationToken>())
             .Returns(DefaultAncestors);
 
+        UnitOfWork.Ancestors
+            .GetTaskScopes(Arg.Any<IReadOnlyCollection<int>>(), Arg.Any<CancellationToken>())
+            .Returns(new Dictionary<int, TaskScopes>());
+
         UnitOfWork.EventRecords
             .AddAsync(Arg.Any<EventRecord>(), Arg.Any<CancellationToken>())
             .Returns(x =>

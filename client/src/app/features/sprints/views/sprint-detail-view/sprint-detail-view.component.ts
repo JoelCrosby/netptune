@@ -35,6 +35,8 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 import { distinctUntilChanged, map } from 'rxjs/operators';
+import { NotificationSubscribeComponent } from '@shared/components/notification-subscribe/notification-subscribe.component';
+import { NotificationScope } from '@core/models/notification-subscription';
 import { SprintIdentityComponent } from '@static/components/sprint-identity.component';
 import { SprintStatsComponent } from '../../components/sprint-stats.component';
 import { SprintTaskListComponent } from '../../components/sprint-task-list.component';
@@ -57,6 +59,7 @@ import { SprintCompletionDialogComponent } from '../../dialogs/sprint-completion
     LucideSparkles,
     LucideTrash2,
     LucideCheck,
+    NotificationSubscribeComponent,
     SprintIdentityComponent,
     SprintStatsComponent,
     SprintTaskListComponent,
@@ -95,6 +98,11 @@ import { SprintCompletionDialogComponent } from '../../dialogs/sprint-completion
               [sprint]="sprint" />
 
             <div class="flex shrink-0 flex-wrap items-center gap-2">
+              <app-notification-subscribe
+                [scope]="notificationScope.sprint"
+                [scopeEntityId]="sprint.id"
+                [scopeName]="sprint.name" />
+
               @if (assistant.isAvailable()) {
                 <button
                   app-icon-button
@@ -211,6 +219,7 @@ export class SprintDetailViewComponent {
   protected readonly assistant = inject(AiAssistantService);
 
   readonly sprintStatus = SprintStatus;
+  readonly notificationScope = NotificationScope;
   readonly sprintId = signal<number | null>(null);
   private readonly sprintCommands = inject(SprintCommandsService);
   private readonly currentSprint = inject(CurrentSprintService);

@@ -36,6 +36,10 @@ public class ActivityHandlerMergeTests
             .GetProjectTaskAncestors(Arg.Any<int>(), Arg.Any<CancellationToken>())
             .Returns(new ActivityAncestors { WorkspaceId = WorkspaceId, TaskId = 10, ProjectKey = "PROJ", TaskScopeId = 42 });
 
+        UnitOfWork.Ancestors
+            .GetTaskScopes(Arg.Any<IReadOnlyCollection<int>>(), Arg.Any<CancellationToken>())
+            .Returns(new Dictionary<int, TaskScopes>());
+
         UnitOfWork.EventRecords
             .AddAsync(Arg.Any<EventRecord>(), Arg.Any<CancellationToken>())
             .Returns(x =>
