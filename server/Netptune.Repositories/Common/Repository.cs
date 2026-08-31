@@ -1,4 +1,3 @@
-using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 using System.Text;
 
@@ -51,21 +50,11 @@ public abstract class Repository<TContext, TEntity, TId> : ReadOnlyRepository, I
         return Entities.IsReadonly(isReadonly).FirstOrDefaultAsync(EqualsPredicate(id), cancellationToken);
     }
 
-    public virtual Task<List<TEntity>> GetAllAsync(bool isReadonly = false, CancellationToken cancellationToken = default)
-    {
-        return Entities.ToReadonlyListAsync(isReadonly, cancellationToken);
-    }
-
     public virtual Task<List<TEntity>> GetAllByIdAsync(IEnumerable<TId> ids, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         return Entities
             .Where(entity => ids.Contains(entity.Id))
             .ToReadonlyListAsync(isReadonly, cancellationToken);
-    }
-
-    public virtual Task<IPagedResult<TEntity>> GetPagedResultsAsync(IPageQuery pageQuery, bool isReadonly = false, CancellationToken cancellationToken = default)
-    {
-        return PaginateToPagedResultAsync(Entities.IsReadonly(isReadonly), pageQuery, cancellationToken);
     }
 
     public async virtual Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default)
@@ -78,21 +67,6 @@ public abstract class Repository<TContext, TEntity, TId> : ReadOnlyRepository, I
     public virtual Task AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
     {
         return Entities.AddRangeAsync(entities, cancellationToken);
-    }
-
-    protected static async Task<IPagedResult<TEntity>> PaginateToPagedResultAsync(IQueryable<TEntity> entities, IPageQuery pageQuery, CancellationToken cancellationToken = default)
-    {
-        var result = GetPagedResult(entities, pageQuery);
-        var results = ApplyPagination(entities, pageQuery);
-
-        result.Results = await results.ToListAsync(cancellationToken);
-
-        return result;
-    }
-
-    protected static IQueryable<TEntity> PaginateResults(IQueryable<TEntity> entities, IPageQuery pageQuery)
-    {
-        return ApplyPagination(entities, pageQuery);
     }
 
     public virtual async Task<TEntity?> DeletePermanent(TId id, CancellationToken cancellationToken = default)
@@ -133,44 +107,5 @@ public abstract class Repository<TContext, TEntity, TId> : ReadOnlyRepository, I
         Entities.RemoveRange(entities);
 
         return Task.CompletedTask;
-    }
-
-    private static IPagedResult<TEntity> GetPagedResult(IQueryable<TEntity> entities, IPageQuery pageQuery)
-    {
-        return new Core.Models.Repository.PagedResult<TEntity>
-        {
-            PageCount = (entities.Count() + pageQuery.PageSize - 1) / pageQuery.PageSize,
-            CurrentPage = pageQuery.Page,
-            PageSize = pageQuery.PageSize,
-            RowCount = entities.Count(),
-        };
-    }
-
-    private static IQueryable<TEntity> ApplyPagination(IQueryable<TEntity> entities, IPageQuery pageQuery)
-    {
-        return entities
-            .ApplySearchQuery(pageQuery)
-            .ApplySortOrderQuery(pageQuery)
-            .Skip(pageQuery.Page * pageQuery.PageSize)
-            .Take(pageQuery.PageSize);
-    }
-}
-
-internal static class QueryExtensions
-{
-    internal static IQueryable<TEntity> ApplySortOrderQuery<TEntity>(this IQueryable<TEntity> results, IPageQuery pageQuery)
-    {
-        if (string.IsNullOrEmpty(pageQuery.Sort)) return results;
-
-        var order = pageQuery.SortDescending ? "desc" : "asc";
-
-        return results.OrderBy($"{pageQuery.Sort} {order}");
-    }
-
-    internal static IQueryable<TEntity> ApplySearchQuery<TEntity>(this IQueryable<TEntity> results, IPageQuery pageQuery)
-    {
-        if (string.IsNullOrWhiteSpace(pageQuery.Query)) return results;
-
-        return results.Where($"x.m == {pageQuery.Query}");
     }
 }

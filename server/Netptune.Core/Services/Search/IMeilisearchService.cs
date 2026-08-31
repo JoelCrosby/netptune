@@ -8,8 +8,6 @@ public interface IMeilisearchService
 {
     Task IndexDocumentsAsync<T>(string indexName, IEnumerable<T> docs, CancellationToken cancellationToken = default);
 
-    Task DeleteDocumentAsync(string indexName, string id, CancellationToken cancellationToken = default);
-
     Task DeleteDocumentsAsync(string indexName, IEnumerable<string> ids, CancellationToken cancellationToken = default);
 
     Task EnsureIndexSettingsAsync(CancellationToken cancellationToken = default);

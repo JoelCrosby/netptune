@@ -27,12 +27,6 @@ public sealed class MeilisearchService : IMeilisearchService
         await index.AddDocumentsAsync(docs, cancellationToken: cancellationToken);
     }
 
-    public async Task DeleteDocumentAsync(string indexName, string id, CancellationToken cancellationToken = default)
-    {
-        var index = Client.Index(indexName);
-        await index.DeleteOneDocumentAsync(id, cancellationToken);
-    }
-
     public async Task DeleteDocumentsAsync(string indexName, IEnumerable<string> ids, CancellationToken cancellationToken = default)
     {
         var documentIds = ids.ToList();

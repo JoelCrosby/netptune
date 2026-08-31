@@ -15,17 +15,6 @@ public static class RepositoryExtensions
         return query.ToListAsync(cancellationToken);
     }
 
-    public static List<TEntity> ToReadonlyList<TEntity>
-        (this IQueryable<TEntity> query, bool isReadonly) where TEntity : class
-    {
-        if (isReadonly)
-        {
-            return query.AsNoTracking().ToList();
-        }
-
-        return query.ToList();
-    }
-
     public static IQueryable<TEntity> IsReadonly<TEntity>
         (this IQueryable<TEntity> query, bool isReadonly) where TEntity : class
     {

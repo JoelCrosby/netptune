@@ -1,5 +1,4 @@
 using System.Text;
-using System.Text.RegularExpressions;
 
 using Microsoft.Extensions.Configuration;
 
@@ -7,16 +6,6 @@ namespace Netptune.Core.Extensions;
 
 public static class StringExtensions
 {
-    public static string ToSentenceCase(this string str)
-    {
-        if (string.IsNullOrEmpty(str))
-        {
-            return string.Empty;
-        }
-
-        return Regex.Replace(str, "[a-z][A-Z]", m => $"{m.Value[0]} {char.ToLower(m.Value[1])}");
-    }
-
     public static IEnumerable<string> GetLines(this string str, bool removeEmptyLines = false)
     {
         if (string.IsNullOrEmpty(str))
@@ -50,16 +39,6 @@ public static class StringExtensions
         }
 
         return output.ToString();
-    }
-
-    public static string StripNonAscii(this string input)
-    {
-        if (string.IsNullOrEmpty(input))
-        {
-            return string.Empty;
-        }
-
-        return Regex.Replace(input, @"[^\u0020-\u007E]", string.Empty);
     }
 
     public static string SanitizeFileName(this string input)

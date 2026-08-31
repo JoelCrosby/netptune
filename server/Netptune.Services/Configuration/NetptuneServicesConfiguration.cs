@@ -18,7 +18,6 @@ using Netptune.Services.ProjectTasks;
 using Netptune.Services.Relations;
 using Netptune.Services.Reporting;
 
-
 namespace Netptune.Services.Configuration;
 
 public static class NetptuneServicesConfiguration
@@ -50,7 +49,6 @@ public static class NetptuneServicesConfiguration
         services.AddScoped<ITaskStatusResolver, TaskStatusResolver>();
         services.AddTransient<ITurnstileService, TurnstileService>();
 
-        services.AddScoped<IAncestorService, AncestorService>();
         services.AddSingleton<IAiCredentialProtector, AiCredentialProtector>();
         services.AddScoped<IAiExecutionContext, AiExecutionContext>();
 

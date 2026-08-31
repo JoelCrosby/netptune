@@ -85,13 +85,6 @@ public abstract class AuditableRepository<TContext, TEntity, TId> : Repository<T
         return affectedIds;
     }
 
-    public override Task<List<TEntity>> GetAllAsync(bool isReadonly = false, CancellationToken cancellationToken = default)
-    {
-        return Entities
-            .Where(entity => !entity.IsDeleted)
-            .ToReadonlyListAsync(isReadonly, cancellationToken);
-    }
-
     public override Task<List<TEntity>> GetAllByIdAsync(IEnumerable<TId> ids, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         return Entities
