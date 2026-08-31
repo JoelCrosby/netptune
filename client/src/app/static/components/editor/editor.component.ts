@@ -91,9 +91,7 @@ export class EditorComponent
       );
     }
 
-    const hover = this.isReadOnly() ? '' : 'hover:bg-hover transition-colors';
-
-    return cn('-mx-1 rounded-lg px-1', hover, this.hostClass());
+    return cn('-mx-1 rounded-lg px-1', this.hostClass());
   });
 
   readonly loaded = output();
