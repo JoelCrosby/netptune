@@ -57,7 +57,7 @@ export type EditorAppearance = 'boxed' | 'flat';
       (change)="onFilesPicked(filePicker)" />
   `,
   host: {
-    class: 'relative flex overflow-y-auto max-h-[600px]',
+    class: 'relative flex overflow-visible max-h-[600px]',
     '[class]': 'appearanceClass()',
     '(focusout)': 'onFocusOut($event)',
   },
