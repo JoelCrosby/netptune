@@ -2,7 +2,8 @@ using Mediator;
 
 using Microsoft.AspNetCore.Mvc;
 
-using Netptune.App.Services;
+using Netptune.App.Configuration;
+using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Realtime;
@@ -18,13 +19,15 @@ public static class TagsEndpoints
         var group = builder.MapGroup("tags");
 
         group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.Tags.Create);
-        group.MapPost("/task", HandlePostTaskTag).RequireAuthorization(NetptunePermissions.Tags.Assign);
+        group.MapPost("/task", HandlePostTaskTag).RequireAuthorization(NetptunePermissions.Tags.Assign)
+            .Broadcasts(WorkspaceEventScopes.Tag, WorkspaceEventScopes.Task);
         group.MapGet("/task/{systemId}", HandleGetTagsForTask).RequireAuthorization(NetptunePermissions.Tags.Read);
         group.MapGet("/workspace", HandleGetTagsForWorkspace).RequireAuthorization(NetptunePermissions.Tags.Read);
         group.MapGet("/page", HandleGetTagsPage).RequireAuthorization(NetptunePermissions.Tags.Read);
         group.MapGet("/{id:int}/usage", HandleGetTagUsage).RequireAuthorization(NetptunePermissions.Tags.Read);
         group.MapDelete("/", HandleDelete).RequireAuthorization(NetptunePermissions.Tags.Delete);
-        group.MapDelete("/task", HandleDeleteFromTask).RequireAuthorization(NetptunePermissions.Tags.Assign);
+        group.MapDelete("/task", HandleDeleteFromTask).RequireAuthorization(NetptunePermissions.Tags.Assign)
+            .Broadcasts(WorkspaceEventScopes.Tag, WorkspaceEventScopes.Task);
         group.MapPatch("/", HandleUpdateTag).RequireAuthorization(NetptunePermissions.Tags.Update);
 
         return builder;
@@ -37,25 +40,17 @@ public static class TagsEndpoints
     {
         var result = await mediator.Send(new CreateTagCommand(request), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound();
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     public static async Task<IResult> HandlePostTaskTag(
         IMediator mediator,
-        IBoardEventService boardEventService,
-        HttpContext context,
         [FromBody] AddTagToTaskRequest request,
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new AddTagToTaskCommand(request), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound();
-
-        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Tag, WorkspaceEventScopes.Task);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     public static async Task<IResult> HandleGetTagsForTask(
@@ -116,18 +111,12 @@ public static class TagsEndpoints
 
     public static async Task<IResult> HandleDeleteFromTask(
         IMediator mediator,
-        IBoardEventService boardEventService,
-        HttpContext context,
         [FromBody] DeleteTagFromTaskRequest request,
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new DeleteTagFromTaskCommand(request), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound();
-
-        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Tag, WorkspaceEventScopes.Task);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     public static async Task<IResult> HandleUpdateTag(
@@ -137,9 +126,7 @@ public static class TagsEndpoints
     {
         var result = await mediator.Send(new UpdateTagCommand(request), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound();
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
 }

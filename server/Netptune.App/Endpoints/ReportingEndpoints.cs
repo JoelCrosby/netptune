@@ -1,8 +1,8 @@
 using Mediator;
 
+using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Models.Reporting;
-using Netptune.Core.Responses.Common;
 using Netptune.Handlers.Reporting.Queries;
 
 namespace Netptune.App.Endpoints;
@@ -93,7 +93,7 @@ public static class ReportingEndpoints
         var filter = request.ToFilter();
         var result = await mediator.Send(new GetFlowReportQuery(filter), cancellationToken);
 
-        return ToResult(result);
+        return result.ToPayloadResult();
     }
 
     private static async Task<IResult> GetWorkload(
@@ -104,7 +104,7 @@ public static class ReportingEndpoints
         var filter = request.ToFilter();
         var result = await mediator.Send(new GetWorkloadReportQuery(filter), cancellationToken);
 
-        return ToResult(result);
+        return result.ToPayloadResult();
     }
 
     private static async Task<IResult> GetBurndown(
@@ -116,7 +116,7 @@ public static class ReportingEndpoints
         var query = new GetSprintBurndownReportQuery(filter);
         var result = await mediator.Send(query, cancellationToken);
 
-        return ToResult(result);
+        return result.ToPayloadResult();
     }
 
     private static async Task<IResult> GetVelocity(
@@ -128,22 +128,6 @@ public static class ReportingEndpoints
         var query = new GetVelocityReportQuery(filter);
         var result = await mediator.Send(query, cancellationToken);
 
-        return ToResult(result);
-    }
-
-    private static IResult ToResult<T>(ClientResponse<T> result)
-    {
-
-        if (result.IsNotFound)
-        {
-            return Results.NotFound();
-        }
-
-        if (!result.IsSuccess)
-        {
-            return Results.BadRequest(new { message = result.Message });
-        }
-
-        return Results.Ok(result.Payload);
+        return result.ToPayloadResult();
     }
 }

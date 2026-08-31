@@ -35,7 +35,7 @@ public sealed class WorkspacesLeaveEndpointTests
         // The authenticated test user owns the seeded "netptune" workspace.
         var response = await Client.PostAsync("api/workspaces/netptune/leave", null);
 
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
 

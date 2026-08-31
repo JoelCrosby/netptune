@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Handlers.Users.Commands;
@@ -61,9 +62,7 @@ public static class UsersEndpoints
     {
         var result = await mediator.Send(new UpdateUserCommand(request), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound();
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     public static async Task<IResult> HandleInvite(IMediator mediator, InviteUsersRequest request,

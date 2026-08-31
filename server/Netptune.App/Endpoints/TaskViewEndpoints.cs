@@ -62,12 +62,7 @@ public static class TaskViewEndpoints
     {
         var result = await mediator.Send(new GetTaskViewQuery(slug), cancellationToken);
 
-        if (result.IsNotFound)
-        {
-            return Results.NotFound(result);
-        }
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleGetTasks(
@@ -78,12 +73,7 @@ public static class TaskViewEndpoints
     {
         var result = await mediator.Send(new GetTaskViewTasksQuery(slug, request), cancellationToken);
 
-        if (result.IsNotFound)
-        {
-            return Results.NotFound(result);
-        }
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandlePreview(
@@ -120,16 +110,6 @@ public static class TaskViewEndpoints
     {
         var result = await mediator.Send(new DeleteTaskViewCommand(slug), cancellationToken);
 
-        if (result.IsNotFound)
-        {
-            return Results.NotFound(result);
-        }
-
-        if (result.IsForbidden)
-        {
-            return Results.Forbid();
-        }
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 }

@@ -1,8 +1,8 @@
 using Mediator;
 
+using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests.ServiceAccounts;
-using Netptune.Core.Responses.Common;
 using Netptune.Handlers.ServiceAccounts.Commands;
 using Netptune.Handlers.ServiceAccounts.Queries;
 
@@ -44,7 +44,7 @@ public static class ServiceAccountsEndpoints
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new CreateServiceAccountCommand(request), cancellationToken);
-        return ToResult(result);
+        return result.ToPayloadResult();
     }
 
     private static async Task<IResult> CreateCredential(
@@ -56,7 +56,8 @@ public static class ServiceAccountsEndpoints
         var result = await mediator.Send(
             new CreateApiCredentialCommand(serviceAccountId, request),
             cancellationToken);
-        return ToResult(result);
+
+        return result.ToPayloadResult();
     }
 
     private static async Task<IResult> UpdateServiceAccount(
@@ -69,7 +70,7 @@ public static class ServiceAccountsEndpoints
             new UpdateServiceAccountCommand(serviceAccountId, request),
             cancellationToken);
 
-        return ToResult(result);
+        return result.ToPayloadResult();
     }
 
     private static async Task<IResult> DeleteServiceAccount(
@@ -80,7 +81,8 @@ public static class ServiceAccountsEndpoints
         var result = await mediator.Send(
             new DeleteServiceAccountCommand(serviceAccountId),
             cancellationToken);
-        return ToResult(result);
+
+        return result.ToNoContentResult();
     }
 
     private static async Task<IResult> RevokeCredential(
@@ -92,24 +94,7 @@ public static class ServiceAccountsEndpoints
         var result = await mediator.Send(
             new RevokeApiCredentialCommand(serviceAccountId, credentialId),
             cancellationToken);
-        return ToResult(result);
-    }
 
-    private static IResult ToResult<T>(ClientResponse<T> response)
-    {
-        if (response.IsNotFound) return Results.NotFound(response);
-        if (response.IsForbidden) return Results.Forbid();
-        if (!response.IsSuccess) return Results.BadRequest(response);
-
-        return Results.Ok(response.Payload);
-    }
-
-    private static IResult ToResult(ClientResponse response)
-    {
-        if (response.IsNotFound) return Results.NotFound(response);
-        if (response.IsForbidden) return Results.Forbid();
-        if (!response.IsSuccess) return Results.BadRequest(response);
-
-        return Results.NoContent();
+        return result.ToNoContentResult();
     }
 }

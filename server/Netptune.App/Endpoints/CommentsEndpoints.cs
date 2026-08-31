@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
@@ -41,9 +42,7 @@ public static class CommentsEndpoints
     {
         var result = await mediator.Send(new AddCommentToTaskCommand(request), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound(result);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     public static async Task<IResult> HandleDelete(IMediator mediator, int id,
@@ -51,39 +50,14 @@ public static class CommentsEndpoints
     {
         var result = await mediator.Send(new DeleteCommentCommand(id), cancellationToken);
 
-        if (result.IsNotFound)
-        {
-            return Results.NotFound(result);
-        }
-
-        if (result.IsForbidden)
-        {
-            return Results.Forbid();
-        }
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     public static async Task<IResult> HandleUpdate(IMediator mediator, int id, UpdateCommentRequest request, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new UpdateCommentCommand(id, request), cancellationToken);
 
-        if (result.IsNotFound)
-        {
-            return Results.NotFound(result);
-        }
-
-        if (result.IsForbidden)
-        {
-            return Results.Forbid();
-        }
-
-        if (!result.IsSuccess)
-        {
-            return Results.BadRequest(result);
-        }
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     public static async Task<IResult> HandleAddReaction(IMediator mediator, int id, CommentReactionRequest request,
@@ -104,16 +78,6 @@ public static class CommentsEndpoints
 
     private static IResult ToReactionResult(ClientResponse<CommentViewModel> result)
     {
-        if (result.IsNotFound)
-        {
-            return Results.NotFound(result);
-        }
-
-        if (!result.IsSuccess)
-        {
-            return Results.BadRequest(result);
-        }
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 }

@@ -1,9 +1,9 @@
 using Mediator;
 
+using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Models.Roadmap;
 using Netptune.Core.Requests;
-using Netptune.Core.Responses.Common;
 using Netptune.Handlers.Roadmap.Queries;
 
 namespace Netptune.App.Endpoints;
@@ -72,21 +72,6 @@ public static class RoadmapEndpoints
         var query = new GetRoadmapQuery(request.ToFilter());
         var result = await mediator.Send(query, cancellationToken);
 
-        return ToResult(result);
-    }
-
-    private static IResult ToResult<T>(ClientResponse<T> result)
-    {
-        if (result.IsNotFound)
-        {
-            return Results.NotFound();
-        }
-
-        if (!result.IsSuccess)
-        {
-            return Results.BadRequest(new { message = result.Message });
-        }
-
-        return Results.Ok(result.Payload);
+        return result.ToPayloadResult();
     }
 }

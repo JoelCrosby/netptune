@@ -181,7 +181,7 @@ public sealed class RelationTypesEndpointTests
             Name = existing.Name,
         });
 
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<RelationTypeViewModel>>();
 

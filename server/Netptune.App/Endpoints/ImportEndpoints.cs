@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 
 using Netptune.App.Configuration;
+using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Handlers.Transfer.Commands;
@@ -292,7 +293,7 @@ public static class ImportEndpoints
     {
         var result = await mediator.Send(new DeleteImportSessionCommand(publicId), cancellationToken);
 
-        return Respond(result.IsNotFound, result.IsSuccess, result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleGetSessionState(
@@ -302,7 +303,7 @@ public static class ImportEndpoints
     {
         var result = await mediator.Send(new GetImportSessionStateQuery(publicId), cancellationToken);
 
-        return Respond(result.IsNotFound, result.IsSuccess, result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleInspect(
@@ -313,7 +314,7 @@ public static class ImportEndpoints
     {
         var result = await mediator.Send(new InspectImportSessionCommand(publicId, request), cancellationToken);
 
-        return Respond(result.IsNotFound, result.IsSuccess, result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleSuggest(
@@ -323,7 +324,7 @@ public static class ImportEndpoints
     {
         var result = await mediator.Send(new SuggestImportMappingQuery(publicId), cancellationToken);
 
-        return Respond(result.IsNotFound, result.IsSuccess, result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleImprove(
@@ -333,7 +334,7 @@ public static class ImportEndpoints
     {
         var result = await mediator.Send(new ImproveImportMappingCommand(publicId), cancellationToken);
 
-        return Respond(result.IsNotFound, result.IsSuccess, result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleSetMapping(
@@ -344,7 +345,7 @@ public static class ImportEndpoints
     {
         var result = await mediator.Send(new SetImportMappingCommand(publicId, mapping), cancellationToken);
 
-        return Respond(result.IsNotFound, result.IsSuccess, result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandlePreview(
@@ -354,7 +355,7 @@ public static class ImportEndpoints
     {
         var result = await mediator.Send(new PreviewImportSessionCommand(publicId), cancellationToken);
 
-        return Respond(result.IsNotFound, result.IsSuccess, result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleCommit(
@@ -385,21 +386,7 @@ public static class ImportEndpoints
     {
         var result = await mediator.Send(new UndoImportSessionCommand(publicId), cancellationToken);
 
-        return Respond(result.IsNotFound, result.IsSuccess, result);
+        return result.ToResult();
     }
 
-    private static IResult Respond<TResponse>(bool isNotFound, bool isSuccess, TResponse result)
-    {
-        if (isNotFound)
-        {
-            return Results.NotFound(result);
-        }
-
-        if (!isSuccess)
-        {
-            return Results.BadRequest(result);
-        }
-
-        return Results.Ok(result);
-    }
 }

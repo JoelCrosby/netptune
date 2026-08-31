@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 
 using Netptune.App.Configuration;
 using Netptune.App.Services;
+using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
@@ -95,22 +96,7 @@ public static class ExportEndpoints
     {
         var result = await mediator.Send(new SaveExportDefinitionCommand(request), cancellationToken);
 
-        if (result.IsNotFound)
-        {
-            return Results.NotFound(result);
-        }
-
-        if (result.IsForbidden)
-        {
-            return Results.Forbid();
-        }
-
-        if (!result.IsSuccess)
-        {
-            return Results.BadRequest(result);
-        }
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleDeleteDefinition(
@@ -120,17 +106,7 @@ public static class ExportEndpoints
     {
         var result = await mediator.Send(new DeleteExportDefinitionCommand(id), cancellationToken);
 
-        if (result.IsNotFound)
-        {
-            return Results.NotFound(result);
-        }
-
-        if (result.IsForbidden)
-        {
-            return Results.Forbid();
-        }
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleCreateJob(
@@ -189,17 +165,7 @@ public static class ExportEndpoints
     {
         var result = await mediator.Send(new DeleteExportJobCommand(publicId), cancellationToken);
 
-        if (result.IsNotFound)
-        {
-            return Results.NotFound(result);
-        }
-
-        if (!result.IsSuccess)
-        {
-            return Results.BadRequest(result);
-        }
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleCancelJob(
@@ -209,17 +175,7 @@ public static class ExportEndpoints
     {
         var result = await mediator.Send(new CancelExportJobCommand(publicId), cancellationToken);
 
-        if (result.IsNotFound)
-        {
-            return Results.NotFound(result);
-        }
-
-        if (!result.IsSuccess)
-        {
-            return Results.BadRequest(result);
-        }
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     // Hands back the signed storage URL rather than redirecting to it. A redirect can only be followed
@@ -232,17 +188,7 @@ public static class ExportEndpoints
     {
         var result = await mediator.Send(new GetExportJobDownloadQuery(publicId), cancellationToken);
 
-        if (result.IsNotFound)
-        {
-            return Results.NotFound();
-        }
-
-        if (!result.IsSuccess)
-        {
-            return Results.BadRequest(result);
-        }
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandlePreviewRows(

@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Handlers.Projects.Commands;
@@ -47,9 +48,7 @@ public static class ProjectsEndpoints
     {
         var result = await mediator.Send(new UpdateProjectCommand(request), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound(result);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     public static async Task<IResult> HandlePost(IMediator mediator, AddProjectRequest request,
@@ -57,10 +56,7 @@ public static class ProjectsEndpoints
     {
         var result = await mediator.Send(new CreateProjectCommand(request), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound(result);
-        if (!result.IsSuccess) return Results.BadRequest(result);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     public static async Task<IResult> HandleDelete(IMediator mediator, int id,
@@ -68,8 +64,6 @@ public static class ProjectsEndpoints
     {
         var result = await mediator.Send(new DeleteProjectCommand(id), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound(result);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 }

@@ -1,6 +1,7 @@
 using Mediator;
 
-using Netptune.App.Services;
+using Netptune.App.Configuration;
+using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Realtime;
@@ -19,9 +20,11 @@ public static class BoardsEndpoints
         group.MapGet("/workspace", HandleGetBoardsInWorkspace).RequireAuthorization(NetptunePermissions.Boards.Read);
         group.MapGet("/project/{projectId}", HandleGetBoardsInProject).RequireAuthorization(NetptunePermissions.Boards.Read);
         group.MapGet("/view/{identifier}", HandleGetBoardView).RequireAuthorization(NetptunePermissions.Boards.Read);
-        group.MapPut("/", HandlePut).RequireAuthorization(NetptunePermissions.Boards.Update);
+        group.MapPut("/", HandlePut).RequireAuthorization(NetptunePermissions.Boards.Update)
+            .Broadcasts(WorkspaceEventScopes.Board);
         group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.Boards.Create);
-        group.MapDelete("/{id}", HandleDelete).RequireAuthorization(NetptunePermissions.Boards.Delete);
+        group.MapDelete("/{id}", HandleDelete).RequireAuthorization(NetptunePermissions.Boards.Delete)
+            .Broadcasts(WorkspaceEventScopes.Board);
         group.MapGet("/is-unique/{identifier}", HandleIsSlugUnique).RequireAuthorization(NetptunePermissions.Boards.Read);
 
         return group;
@@ -32,9 +35,7 @@ public static class BoardsEndpoints
     {
         var result = await mediator.Send(new GetBoardQuery(id), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound();
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     public static async Task<IResult> HandleGetBoardsInWorkspace(
@@ -72,28 +73,17 @@ public static class BoardsEndpoints
     {
         var result = await mediator.Send(new GetBoardViewQuery(identifier, filter), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound();
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     public static async Task<IResult> HandlePut(
         IMediator mediator,
-        IBoardEventService boardEventService,
-        HttpContext context,
         UpdateBoardRequest request,
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new UpdateBoardCommand(request), cancellationToken);
 
-        if (result.IsNotFound)
-        {
-            return Results.NotFound();
-        }
-
-        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Board);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     public static async Task<IResult> HandlePost(IMediator mediator, AddBoardRequest request,
@@ -101,29 +91,17 @@ public static class BoardsEndpoints
     {
         var result = await mediator.Send(new CreateBoardCommand(request), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound(result);
-        if (!result.IsSuccess) return Results.BadRequest(result);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     public static async Task<IResult> HandleDelete(
         IMediator mediator,
-        IBoardEventService boardEventService,
-        HttpContext context,
         int id,
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new DeleteBoardCommand(id), cancellationToken);
 
-        if (result.IsNotFound)
-        {
-            return Results.NotFound(result);
-        }
-
-        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Board);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     public static async Task<IResult> HandleIsSlugUnique(IMediator mediator, string identifier,

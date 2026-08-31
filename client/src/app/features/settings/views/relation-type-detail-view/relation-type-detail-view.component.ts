@@ -508,6 +508,7 @@ export class RelationTypeDetailViewComponent {
 
           void this.router.navigate(['..'], { relativeTo: this.route });
         },
+        error: () => this.usage.reload(),
       });
   }
 }

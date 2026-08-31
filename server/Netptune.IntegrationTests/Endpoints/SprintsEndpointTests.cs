@@ -53,7 +53,7 @@ public sealed class SprintsEndpointTests
         var secondStart = await Client.PostAsync($"api/sprints/{secondSprint.Id}/start", null);
 
         firstStart.StatusCode.Should().Be(HttpStatusCode.OK);
-        secondStart.StatusCode.Should().Be(HttpStatusCode.OK);
+        secondStart.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
         var result = await secondStart.Content.ReadFromJsonAsync<ClientResponse<SprintViewModel>>();
 

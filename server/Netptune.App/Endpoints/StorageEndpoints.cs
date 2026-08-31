@@ -60,12 +60,7 @@ public static class StorageEndpoints
         };
         var result = await mediator.Send(command, cancellationToken);
 
-        if (result.IsNotFound)
-        {
-            return Results.NotFound(result);
-        }
-
-        return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
+        return result.ToResult();
     }
 
     public static async Task<IResult> HandleUploadMedia(IMediator mediator, HttpRequest request, CancellationToken cancellationToken)
@@ -104,7 +99,7 @@ public static class StorageEndpoints
     {
         var result = await mediator.Send(new GetWorkspaceStorageUsageQuery(), cancellationToken);
 
-        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleGetFiles(IMediator mediator, [AsParameters] WorkspaceFileFilter filter, CancellationToken cancellationToken)
@@ -118,6 +113,6 @@ public static class StorageEndpoints
     {
         var result = await mediator.Send(new DeleteWorkspaceFileCommand(id), cancellationToken);
 
-        return result.IsNotFound ? Results.NotFound(result) : Results.NoContent();
+        return result.ToNoContentResult();
     }
 }

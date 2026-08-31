@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Handlers.RelationTypes.Commands;
@@ -73,9 +74,7 @@ public static class RelationTypesEndpoints
     {
         var result = await mediator.Send(new CreateRelationTypeCommand(request), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound(result);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandlePut(
@@ -85,9 +84,7 @@ public static class RelationTypesEndpoints
     {
         var result = await mediator.Send(new UpdateRelationTypeCommand(request), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound(result);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleDelete(
@@ -97,9 +94,7 @@ public static class RelationTypesEndpoints
     {
         var result = await mediator.Send(new DeleteRelationTypeCommand(id), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound(result);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleReorder(
@@ -109,9 +104,7 @@ public static class RelationTypesEndpoints
     {
         var result = await mediator.Send(new ReorderRelationTypesCommand(request), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound(result);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleMove(
@@ -121,8 +114,6 @@ public static class RelationTypesEndpoints
     {
         var result = await mediator.Send(new MoveRelationTypeCommand(request), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound(result);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 }

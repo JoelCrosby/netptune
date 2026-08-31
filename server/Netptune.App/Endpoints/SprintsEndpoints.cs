@@ -1,6 +1,7 @@
 using Mediator;
 
-using Netptune.App.Services;
+using Netptune.App.Configuration;
+using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Realtime;
@@ -24,8 +25,11 @@ public static class SprintsEndpoints
         group.MapDelete("/{id:int}", HandleDelete).RequireAuthorization(NetptunePermissions.Sprints.Delete);
         group.MapPost("/{id:int}/start", HandleStart).RequireAuthorization(NetptunePermissions.Sprints.Update);
         group.MapPost("/{id:int}/complete", HandleComplete).RequireAuthorization(NetptunePermissions.Sprints.Update);
-        group.MapPost("/{id:int}/tasks", HandleAddTasks).RequireAuthorization(NetptunePermissions.Sprints.ManageTasks);
-        group.MapDelete("/{id:int}/tasks/{taskId:int}", HandleRemoveTask).RequireAuthorization(NetptunePermissions.Sprints.ManageTasks);
+        group.MapPost("/{id:int}/tasks", HandleAddTasks).RequireAuthorization(NetptunePermissions.Sprints.ManageTasks)
+            .Broadcasts(WorkspaceEventScopes.Sprint, WorkspaceEventScopes.Task);
+        group.MapDelete("/{id:int}/tasks/{taskId:int}", HandleRemoveTask)
+            .RequireAuthorization(NetptunePermissions.Sprints.ManageTasks)
+            .Broadcasts(WorkspaceEventScopes.Sprint, WorkspaceEventScopes.Task);
 
         return group;
     }
@@ -72,9 +76,7 @@ public static class SprintsEndpoints
     {
         var result = await mediator.Send(new GetSprintQuery(id), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound(result);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     public static async Task<IResult> HandlePost(
@@ -94,9 +96,7 @@ public static class SprintsEndpoints
     {
         var result = await mediator.Send(new UpdateSprintCommand(request), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound(result);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     public static async Task<IResult> HandleDelete(
@@ -106,9 +106,7 @@ public static class SprintsEndpoints
     {
         var result = await mediator.Send(new DeleteSprintCommand(id), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound(result);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     public static async Task<IResult> HandleStart(
@@ -118,9 +116,7 @@ public static class SprintsEndpoints
     {
         var result = await mediator.Send(new StartSprintCommand(id), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound(result);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     public static async Task<IResult> HandleComplete(
@@ -130,43 +126,29 @@ public static class SprintsEndpoints
     {
         var result = await mediator.Send(new CompleteSprintCommand(id), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound(result);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     public static async Task<IResult> HandleAddTasks(
         IMediator mediator,
-        IBoardEventService boardEventService,
-        HttpContext context,
         int id,
         AddTasksToSprintRequest request,
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new AddTasksToSprintCommand(id, request), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound(result);
-
-        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Sprint, WorkspaceEventScopes.Task);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     public static async Task<IResult> HandleRemoveTask(
         IMediator mediator,
-        IBoardEventService boardEventService,
-        HttpContext context,
         int id,
         int taskId,
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new RemoveTaskFromSprintCommand(id, taskId), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound(result);
-
-        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Sprint, WorkspaceEventScopes.Task);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
 }

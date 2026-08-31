@@ -2,7 +2,8 @@ using Mediator;
 
 using Microsoft.AspNetCore.Mvc;
 
-using Netptune.App.Services;
+using Netptune.App.Configuration;
+using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Realtime;
@@ -18,8 +19,10 @@ public static class TaskRelationsEndpoints
         var group = builder.MapGroup("task-relations");
 
         group.MapGet("/{systemId}", HandleGet).RequireAuthorization(NetptunePermissions.Tasks.Read);
-        group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.Tasks.Update);
-        group.MapDelete("/{id:int}", HandleDelete).RequireAuthorization(NetptunePermissions.Tasks.Update);
+        group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.Tasks.Update)
+            .Broadcasts(WorkspaceEventScopes.Task);
+        group.MapDelete("/{id:int}", HandleDelete).RequireAuthorization(NetptunePermissions.Tasks.Update)
+            .Broadcasts(WorkspaceEventScopes.Task);
 
         return builder;
     }
@@ -36,34 +39,22 @@ public static class TaskRelationsEndpoints
 
     private static async Task<IResult> HandlePost(
         IMediator mediator,
-        IBoardEventService boardEventService,
-        HttpContext context,
         [FromBody] CreateTaskRelationRequest request,
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new CreateTaskRelationCommand(request), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound(result);
-
-        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Task);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleDelete(
         IMediator mediator,
-        IBoardEventService boardEventService,
-        HttpContext context,
         int id,
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new DeleteTaskRelationCommand(id), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound(result);
-
-        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Task);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
 }

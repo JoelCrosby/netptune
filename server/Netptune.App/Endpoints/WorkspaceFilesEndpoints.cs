@@ -3,7 +3,7 @@ using Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-using Netptune.App.Services;
+using Netptune.App.Configuration;
 using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Services.Realtime;
@@ -25,10 +25,12 @@ public static class WorkspaceFilesEndpoints
         tasks
             .MapPost("/{systemId}/files", UploadTaskFile)
             .WithMetadata(new RequestSizeLimitAttribute(UploadLimits.MaximumRequestBytes))
-            .RequireAuthorization(NetptunePermissions.Tasks.Update, NetptunePermissions.Files.Upload);
+            .RequireAuthorization(NetptunePermissions.Tasks.Update, NetptunePermissions.Files.Upload)
+            .Broadcasts(WorkspaceEventScopes.Task);
         tasks
             .MapDelete("/{systemId}/files/{fileId:int}", DeleteTaskFile)
-            .RequireAuthorization(NetptunePermissions.Tasks.Update);
+            .RequireAuthorization(NetptunePermissions.Tasks.Update)
+            .Broadcasts(WorkspaceEventScopes.Task);
 
         builder
             .MapGet("workspaces/{workspaceKey}/files/{contentId}/content", GetContent)
@@ -41,10 +43,10 @@ public static class WorkspaceFilesEndpoints
     {
         var result = await mediator.Send(new GetTaskFilesQuery(systemId), cancellationToken);
 
-        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+        return result.ToResult();
     }
 
-    private static async Task<IResult> UploadTaskFile(string systemId, HttpRequest request, IMediator mediator, IBoardEventService boardEvents, HttpContext http, CancellationToken cancellationToken)
+    private static async Task<IResult> UploadTaskFile(string systemId, HttpRequest request, IMediator mediator, CancellationToken cancellationToken)
     {
         if (!request.HasFormContentType)
         {
@@ -76,33 +78,14 @@ public static class WorkspaceFilesEndpoints
 
         var result = await mediator.Send(new UploadTaskFileCommand(systemId, upload), cancellationToken);
 
-        if (result.IsNotFound)
-        {
-            return Results.NotFound(result);
-        }
-
-        await boardEvents.BroadcastRequestAsync(http, WorkspaceEventScopes.Task);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
-    private static async Task<IResult> DeleteTaskFile(string systemId, int fileId, IMediator mediator, IBoardEventService boardEvents, HttpContext http, CancellationToken cancellationToken)
+    private static async Task<IResult> DeleteTaskFile(string systemId, int fileId, IMediator mediator, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new DeleteTaskFileCommand(systemId, fileId), cancellationToken);
 
-        if (result.IsNotFound)
-        {
-            return Results.NotFound();
-        }
-
-        if (result.IsForbidden)
-        {
-            return Results.Forbid();
-        }
-
-        await boardEvents.BroadcastRequestAsync(http, WorkspaceEventScopes.Task);
-
-        return Results.NoContent();
+        return result.ToNoContentResult();
     }
 
     private static async Task<IResult> GetContent(string workspaceKey, string contentId, string? disposition, IMediator mediator, IAuthorizationService authorization, HttpContext http, CancellationToken cancellationToken)

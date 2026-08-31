@@ -553,7 +553,7 @@ public sealed class TasksEndpointTests
         var response = await Client.PostAsJsonAsync("api/tasks", request);
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
 
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         result.IsSuccess.Should().BeFalse();
         result.Message.Should().Be("Task start date must be on or before its due date");
     }

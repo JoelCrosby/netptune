@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.App.Configuration;
 using Netptune.App.Services;
+using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
@@ -128,7 +129,7 @@ public static class AiEndpoints
     {
         var result = await mediator.Send(new DeleteAiCredentialCommand(credentialId), cancellationToken);
 
-        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleGetCredentialAvailability(
@@ -194,7 +195,7 @@ public static class AiEndpoints
     {
         var result = await mediator.Send(new DeleteWorkspaceAiCredentialCommand(credentialId), cancellationToken);
 
-        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleGetConversations(IMediator mediator, CancellationToken cancellationToken)
@@ -211,7 +212,7 @@ public static class AiEndpoints
     {
         var result = await mediator.Send(new GetAiConversationQuery(conversationId), cancellationToken);
 
-        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleDeleteConversation(
@@ -221,7 +222,7 @@ public static class AiEndpoints
     {
         var result = await mediator.Send(new DeleteAiConversationCommand(conversationId), cancellationToken);
 
-        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleGetWorkspaceConversations(
@@ -240,7 +241,7 @@ public static class AiEndpoints
     {
         var result = await mediator.Send(new GetWorkspaceAiConversationQuery(conversationId), cancellationToken);
 
-        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleGetChangeSet(
@@ -250,7 +251,7 @@ public static class AiEndpoints
     {
         var result = await mediator.Send(new GetAiChangeSetQuery(changeSetId), cancellationToken);
 
-        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleGetPendingChangeSet(
@@ -260,7 +261,7 @@ public static class AiEndpoints
     {
         var result = await mediator.Send(new GetPendingAiChangeSetQuery(conversationId), cancellationToken);
 
-        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleGetConversationChangeSets(
@@ -283,12 +284,7 @@ public static class AiEndpoints
         var command = new UpdateAiProposedChangeCommand(changeSetId, changeId, request);
         var result = await mediator.Send(command, cancellationToken);
 
-        if (result.IsNotFound)
-        {
-            return Results.NotFound(result);
-        }
-
-        return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleDiscardChangeSet(
@@ -298,7 +294,7 @@ public static class AiEndpoints
     {
         var result = await mediator.Send(new DiscardAiChangeSetCommand(changeSetId), cancellationToken);
 
-        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+        return result.ToResult();
     }
 
     private static Task<IResult> HandleApplyChangeSet(
@@ -329,7 +325,7 @@ public static class AiEndpoints
     {
         var result = await mediator.Send(new StopAiChangeSetApplyCommand(changeSetId), cancellationToken);
 
-        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+        return result.ToResult();
     }
 
     private static bool IsEventStream(string? accept)
@@ -484,7 +480,7 @@ public static class AiEndpoints
     {
         var result = await mediator.Send(new StopAiTurnCommand(conversationId), cancellationToken);
 
-        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<bool> TryWriteEvent<TEvent>(HttpContext context, TEvent streamEvent)

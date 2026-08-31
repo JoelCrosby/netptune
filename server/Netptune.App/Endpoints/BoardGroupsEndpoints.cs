@@ -1,6 +1,7 @@
 using Mediator;
 
-using Netptune.App.Services;
+using Netptune.App.Configuration;
+using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Realtime;
@@ -17,9 +18,12 @@ public static class BoardGroupsEndpoints
 
         group.MapGet("/options", HandleGetOptions).RequireAuthorization(NetptunePermissions.BoardGroups.Read);
         group.MapGet("/{id}", HandleGet).RequireAuthorization(NetptunePermissions.BoardGroups.Read);
-        group.MapPut("/", HandlePut).RequireAuthorization(NetptunePermissions.BoardGroups.Update);
-        group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.BoardGroups.Create);
-        group.MapDelete("/{id}", HandleDelete).RequireAuthorization(NetptunePermissions.BoardGroups.Delete);
+        group.MapPut("/", HandlePut).RequireAuthorization(NetptunePermissions.BoardGroups.Update)
+            .Broadcasts(WorkspaceEventScopes.Board);
+        group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.BoardGroups.Create)
+            .Broadcasts(WorkspaceEventScopes.Board);
+        group.MapDelete("/{id}", HandleDelete).RequireAuthorization(NetptunePermissions.BoardGroups.Delete)
+            .Broadcasts(WorkspaceEventScopes.Board);
 
         return group;
     }
@@ -43,48 +47,32 @@ public static class BoardGroupsEndpoints
 
     public static async Task<IResult> HandlePut(
         IMediator mediator,
-        IBoardEventService boardEventService,
-        HttpContext context,
         UpdateBoardGroupRequest request,
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new UpdateBoardGroupCommand(request), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound();
-
-        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Board);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     public static async Task<IResult> HandlePost(
         IMediator mediator,
-        IBoardEventService boardEventService,
-        HttpContext context,
         AddBoardGroupRequest request,
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new CreateBoardGroupCommand(request), cancellationToken);
 
-        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Board);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     public static async Task<IResult> HandleDelete(
         IMediator mediator,
-        IBoardEventService boardEventService,
-        HttpContext context,
         int id,
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new DeleteBoardGroupCommand(id), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound(result);
-
-        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Board);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
 }

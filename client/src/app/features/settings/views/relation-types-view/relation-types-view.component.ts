@@ -7,6 +7,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { getErrorMessage } from '@core/util/error-message';
 import { Params, RouterLink } from '@angular/router';
 import {
   RelationCategory,
@@ -388,7 +389,10 @@ export class RelationTypesViewComponent {
 
           this.reload();
         },
-        error: () => this.error.set('Relation type could not be created.'),
+        error: (error) =>
+          this.error.set(
+            getErrorMessage(error, 'Relation type could not be created.')
+          ),
       });
   }
 
@@ -437,7 +441,10 @@ export class RelationTypesViewComponent {
 
           this.reload();
         },
-        error: () => this.error.set('Relation type could not be saved.'),
+        error: (error) =>
+          this.error.set(
+            getErrorMessage(error, 'Relation type could not be saved.')
+          ),
       });
   }
 
@@ -461,7 +468,10 @@ export class RelationTypesViewComponent {
 
           this.reload();
         },
-        error: () => this.error.set('Relation type could not be deleted.'),
+        error: (error) =>
+          this.error.set(
+            getErrorMessage(error, 'Relation type could not be deleted.')
+          ),
       });
   }
 
@@ -483,7 +493,10 @@ export class RelationTypesViewComponent {
 
           this.reload();
         },
-        error: () => this.error.set('Relation types could not be reordered.'),
+        error: (error) =>
+          this.error.set(
+            getErrorMessage(error, 'Relation types could not be reordered.')
+          ),
       });
   }
 

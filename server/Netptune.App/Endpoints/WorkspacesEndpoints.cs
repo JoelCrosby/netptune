@@ -2,6 +2,7 @@ using Mediator;
 
 using Microsoft.AspNetCore.Authorization;
 
+using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Handlers.Workspaces.Commands;
@@ -71,11 +72,7 @@ public static class WorkspacesEndpoints
     {
         var result = await mediator.Send(new UpdateWorkspaceCommand(request), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound();
-
-        if (!result.IsSuccess) return Results.BadRequest(result);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     public static async Task<IResult> HandlePost(IMediator mediator, AddWorkspaceRequest request,
@@ -102,9 +99,7 @@ public static class WorkspacesEndpoints
 
         var result = await mediator.Send(new DeleteWorkspaceCommand(key), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound();
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     public static async Task<IResult> HandleLeave(
@@ -131,12 +126,7 @@ public static class WorkspacesEndpoints
 
         var result = await mediator.Send(new LeaveWorkspaceCommand(key), cancellationToken);
 
-        if (result.IsNotFound)
-        {
-            return Results.NotFound(result);
-        }
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     public static async Task<IResult> HandleDeletePermanent(
@@ -153,9 +143,7 @@ public static class WorkspacesEndpoints
 
         var result = await mediator.Send(new DeleteWorkspacePermanentCommand(key), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound();
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     public static async Task<IResult> HandleGetAllWorkspaces(

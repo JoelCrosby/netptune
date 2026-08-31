@@ -3,6 +3,7 @@ using Mediator;
 using Microsoft.AspNetCore.Mvc;
 
 using Netptune.App.Services;
+using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
@@ -67,7 +68,7 @@ public static class NotificationsEndpoints
     private static async Task<IResult> HandleMarkRead(int id, IMediator mediator, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new MarkAsReadCommand(id), cancellationToken);
-        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleMarkAllRead(IMediator mediator, CancellationToken cancellationToken)

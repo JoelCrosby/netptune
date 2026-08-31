@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Handlers.Statuses.Commands;
@@ -62,9 +63,7 @@ public static class StatusesEndpoints
     {
         var result = await mediator.Send(new CreateStatusCommand(request), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound(result);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandlePut(
@@ -74,9 +73,7 @@ public static class StatusesEndpoints
     {
         var result = await mediator.Send(new UpdateStatusCommand(request), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound(result);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleDelete(
@@ -86,9 +83,7 @@ public static class StatusesEndpoints
     {
         var result = await mediator.Send(new DeleteStatusCommand(id), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound(result);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleReorder(
@@ -98,9 +93,7 @@ public static class StatusesEndpoints
     {
         var result = await mediator.Send(new ReorderStatusesCommand(request), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound(result);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleMove(
@@ -110,8 +103,6 @@ public static class StatusesEndpoints
     {
         var result = await mediator.Send(new MoveStatusCommand(request), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound(result);
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 }

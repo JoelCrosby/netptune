@@ -1,4 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { getErrorMessage } from '@core/util/error-message';
 import { FormsModule } from '@angular/forms';
 import {
   SaveSearchCredentialRequest,
@@ -343,10 +344,13 @@ export class SearchCredentialComponent {
             $localize`:Shown after the search provider is stored:Search provider saved.`
           );
         },
-        error: () => {
+        error: (error) => {
           this.saving.set(false);
           this.snackbar.open(
-            $localize`:Shown when saving the search provider fails:The provider could not be saved.`
+            getErrorMessage(
+              error,
+              $localize`:Shown when saving the search provider fails:The provider could not be saved.`
+            )
           );
         },
       });

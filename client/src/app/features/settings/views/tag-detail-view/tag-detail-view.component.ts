@@ -384,6 +384,7 @@ export class TagDetailViewComponent {
           this.workspaceRefresh.refresh(['tags']);
           void this.router.navigate(['..'], { relativeTo: this.route });
         },
+        error: () => this.usage.reload(),
       });
   }
 }

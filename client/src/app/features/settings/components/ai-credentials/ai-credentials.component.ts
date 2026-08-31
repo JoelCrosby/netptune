@@ -1,4 +1,5 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
+import { getErrorMessage } from '@core/util/error-message';
 import { FormsModule } from '@angular/forms';
 import {
   AiCredential,
@@ -321,10 +322,13 @@ export class AiCredentialsComponent {
             $localize`:Shown after an API key is stored:Key saved.`
           );
         },
-        error: () => {
+        error: (error) => {
           this.saving.set(null);
           this.snackbar.open(
-            $localize`:Shown when saving an API key fails:The key could not be saved.`
+            getErrorMessage(
+              error,
+              $localize`:Shown when saving an API key fails:The key could not be saved.`
+            )
           );
         },
       });

@@ -57,9 +57,7 @@ public static class AuditEndpoints
     {
         var result = await mediator.Send(new GetAuditLogDetailQuery(id), cancellationToken);
 
-        return result.IsNotFound
-            ? Results.NotFound(result)
-            : Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleExport(

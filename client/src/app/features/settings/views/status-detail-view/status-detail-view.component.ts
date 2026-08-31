@@ -481,6 +481,7 @@ export class StatusDetailViewComponent {
 
           void this.router.navigate(['..'], { relativeTo: this.route });
         },
+        error: () => this.usage.reload(),
       });
   }
 }

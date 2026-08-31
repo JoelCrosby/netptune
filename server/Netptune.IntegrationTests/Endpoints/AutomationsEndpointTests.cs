@@ -203,7 +203,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
             $"api/automations/{rule.Id}/run",
             new AutomationManualRunRequestBody());
 
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<AutomationManualRunViewModel>>();
 

@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Models.Automations;
 using Netptune.Core.Requests;
@@ -50,7 +51,7 @@ public static class AutomationsEndpoints
     private static async Task<IResult> HandleGetById(int id, IMediator mediator, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new GetAutomationRuleQuery(id), cancellationToken);
-        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleGetRuns(
@@ -60,7 +61,7 @@ public static class AutomationsEndpoints
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new GetAutomationRunsQuery(id, page), cancellationToken);
-        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleGetDryRun(
@@ -70,7 +71,7 @@ public static class AutomationsEndpoints
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new GetAutomationDryRunQuery(id, taskId), cancellationToken);
-        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleRun(
@@ -81,7 +82,7 @@ public static class AutomationsEndpoints
     {
         var result = await mediator.Send(new RunAutomationRuleCommand(id, request), cancellationToken);
 
-        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleClone(
@@ -92,7 +93,7 @@ public static class AutomationsEndpoints
     {
         var result = await mediator.Send(new CloneAutomationRuleCommand(id, request), cancellationToken);
 
-        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandlePost(
@@ -112,26 +113,24 @@ public static class AutomationsEndpoints
     {
         var result = await mediator.Send(new UpdateAutomationRuleCommand(id, request), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound(result);
-
-        return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleEnable(int id, IMediator mediator, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new SetAutomationRuleEnabledCommand(id, true), cancellationToken);
-        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleDisable(int id, IMediator mediator, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new SetAutomationRuleEnabledCommand(id, false), cancellationToken);
-        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleDelete(int id, IMediator mediator, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new DeleteAutomationRuleCommand(id), cancellationToken);
-        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+        return result.ToResult();
     }
 }
