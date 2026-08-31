@@ -12,12 +12,11 @@ using Netptune.Core.Extensions;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
-using Netptune.Core.Services.Common;
 using Netptune.Core.Storage;
 
 namespace Netptune.Storage;
 
-public class S3StorageService : ServiceBase<UploadResponse>, IStorageService
+public class S3StorageService : IStorageService
 {
     private readonly ILogger<S3StorageService> Logger;
     private readonly IAmazonS3 S3Client;
@@ -60,20 +59,22 @@ public class S3StorageService : ServiceBase<UploadResponse>, IStorageService
 
             var uri = $"https://{Options.BucketName}.s3.{Region.SystemName}.{Region.PartitionDnsSuffix}/{uploadOptions.Key}";
 
-            return Success(new UploadResponse
+            var upload = new UploadResponse
             {
                 Name = uploadOptions.Name,
                 Key = uploadOptions.Key,
                 Path = uploadOptions.Key,
                 Uri = uri,
                 Size = metadata.ContentLength,
-            });
+            };
+
+            return ClientResponse<UploadResponse>.Success(upload);
         }
         catch (Exception e)
         {
             Logger.LogError(e, "Storage Service upload failed");
 
-            return Failed();
+            return ClientResponse<UploadResponse>.Failed();
         }
     }
 
