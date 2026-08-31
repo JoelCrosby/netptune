@@ -869,7 +869,7 @@
     </unit>
     <unit id="8144392295691806587">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:332,336</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:341,345</note>
         <note category="description">Notes that the dialog stores every change immediately</note>
       </notes>
       <segment state="translated">
@@ -1292,6 +1292,16 @@
         <target>Speicher des Arbeitsbereichs anzeigen</target>
       </segment>
     </unit>
+    <unit id="62403536163906103">
+      <notes>
+        <note category="location">src/app/core/services/task-commands.service.ts:220</note>
+        <note category="description">Body of a confirmation dialog</note>
+      </notes>
+      <segment state="translated">
+        <source>Take this task off <ph id="0" equiv="BOARD_NAME" disp="boardName"/>? The task itself is kept, along with its status, comments and history.</source>
+        <target>Diese Aufgabe von <ph id="0" equiv="BOARD_NAME" disp="boardName"/> entfernen? Die Aufgabe selbst bleibt erhalten, samt Status, Kommentaren und Verlauf.</target>
+      </segment>
+    </unit>
     <unit id="6247029488700953689">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:498</note>
@@ -1536,8 +1546,9 @@
         <note category="location">src/app/core/services/project-commands.service.ts:69</note>
         <note category="location">src/app/core/services/tag-commands.service.ts:78</note>
         <note category="location">src/app/core/services/task-archive.service.ts:40</note>
-        <note category="location">src/app/core/services/task-commands.service.ts:210</note>
         <note category="location">src/app/core/services/task-commands.service.ts:218</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:227</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:235</note>
         <note category="location">src/app/core/services/workspace-commands.service.ts:215</note>
         <note category="location">src/app/core/services/workspace-commands.service.ts:225</note>
         <note category="location">src/app/core/services/workspace-commands.service.ts:235</note>
@@ -1613,7 +1624,7 @@
     </unit>
     <unit id="2186845113988843958">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:116,120</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:125,129</note>
         <note category="description">Explains that hiding a board group is per-user</note>
       </notes>
       <segment state="translated">
@@ -1768,8 +1779,8 @@
         <note category="location">src/app/core/services/board-commands.service.ts:64</note>
         <note category="location">src/app/core/services/board-group-commands.service.ts:307</note>
         <note category="location">src/app/core/services/notification-commands.service.ts:74</note>
-        <note category="location">src/app/core/services/task-commands.service.ts:209</note>
-        <note category="location">src/app/core/services/task-commands.service.ts:217</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:226</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:234</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:141</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:303</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:282</note>
@@ -2369,7 +2380,7 @@
     </unit>
     <unit id="1316502449942805709">
       <notes>
-        <note category="location">src/app/core/services/task-commands.service.ts:211</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:228</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -2389,7 +2400,7 @@
     </unit>
     <unit id="1614669751334500006">
       <notes>
-        <note category="location">src/app/core/services/task-commands.service.ts:212</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:229</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -3490,7 +3501,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/board-group-dialog/board-group-dialog.component.ts:88</note>
         <note category="location">src/app/entry/dialogs/board-group-dialog/board-group-dialog.component.ts:92</note>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:324,328</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:333,337</note>
         <note category="description">Title of the dialog for creating a board group</note>
       </notes>
       <segment state="translated">
@@ -4607,7 +4618,7 @@
     </unit>
     <unit id="8390891659704343861">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:225,228</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:234,237</note>
         <note category="description">Empty state when a name filter matches no groups</note>
       </notes>
       <segment state="translated">
@@ -5624,7 +5635,7 @@
     </unit>
     <unit id="8829497237648100098">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:356</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:365</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:24</note>
         <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:91,92</note>
         <note category="description">Placeholder in the box that filters board groups by name</note>
@@ -9222,7 +9233,7 @@
     </unit>
     <unit id="1957844399823892414">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:266,269</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:275,278</note>
         <note category="description">Menu item that moves a board group to the first column</note>
       </notes>
       <segment state="translated">
@@ -9489,6 +9500,7 @@
       <notes>
         <note category="location">src/app/core/services/board-group-commands.service.ts:314</note>
         <note category="location">src/app/core/services/board-group-commands.service.ts:317</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:222</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
@@ -10861,6 +10873,7 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:236,238</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:138,140</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:63</note>
+        <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:165,168</note>
         <note category="description">Accessible label for the button that deletes the task</note>
       </notes>
       <segment state="translated">
@@ -11714,7 +11727,7 @@
     </unit>
     <unit id="5439499901242629274">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:305,309</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:314,318</note>
         <note category="description">Shown in a board group&apos;s menu when the user may only show and hide it</note>
       </notes>
       <segment state="translated">
@@ -13199,7 +13212,7 @@
     </unit>
     <unit id="6996270126255502228">
       <notes>
-        <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:118,120</note>
+        <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:129,131</note>
         <note category="description">Button that adds a task to this board group</note>
       </notes>
       <segment state="translated">
@@ -13445,7 +13458,7 @@
     </unit>
     <unit id="1927153743913680762">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:99,103</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:108,112</note>
         <note category="description">Title of the dialog for arranging board groups</note>
       </notes>
       <segment state="translated">
@@ -13475,13 +13488,13 @@
     </unit>
     <unit id="5155262602439071339">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:135,142</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:144,151</note>
         <note category="description">How many board groups the board shows. VISIBLE is the visible count and TOTAL the total number of groups</note>
       </notes>
       <segment state="translated">
         <source> <ph id="0" equiv="VISIBLE" disp="{{ visibleCount() // i18n(ph=&quot;VISIBLE&quot;) }}"/> of <ph id="1" equiv="TOTAL" disp="{{ rows().length // i18n(ph=&quot;TOTAL&quot;) }}"/> columns shown </source>
         <target><ph id="0" equiv="VISIBLE" disp="{{ visibleCount() // i18n(ph=&quot;VISIBLE&quot;) }}"/> von <ph id="1" equiv="TOTAL" disp="{{ rows().length // i18n(ph=&quot;TOTAL&quot;) }}"/> Spalten sichtbar</target>
-        </segment>
+      </segment>
     </unit>
     <unit id="5478121364779850827">
       <notes>
@@ -13506,7 +13519,7 @@
     <unit id="6381140642359438701">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:171,173</note>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:173,175</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:182,184</note>
         <note category="description">Expands the comment list over the task body</note>
       </notes>
       <segment state="translated">
@@ -13516,7 +13529,7 @@
     </unit>
     <unit id="3226712939818360194">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:183,185</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:192,194</note>
         <note category="description">Button that hides every board group</note>
       </notes>
       <segment state="translated">
@@ -13526,7 +13539,7 @@
     </unit>
     <unit id="6226411421486697394">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:193,195</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:202,204</note>
         <note category="description">Button that hides board groups containing no tasks</note>
       </notes>
       <segment state="translated">
@@ -13536,7 +13549,7 @@
     </unit>
     <unit id="8190708042508105981">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:234,238</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:243,247</note>
         <note category="description">Empty state when a board has no groups</note>
       </notes>
       <segment state="translated">
@@ -13546,7 +13559,7 @@
     </unit>
     <unit id="397098723873502323">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:337,342</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:346,351</note>
         <note category="location">src/app/features/task-views/components/task-view-details-drawer.component.ts:63,67</note>
         <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:91,93</note>
         <note category="description">Closes a dialog once the user has finished</note>
@@ -13735,7 +13748,7 @@
     </unit>
     <unit id="989480357041643523">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:293,296</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:302,305</note>
         <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:205,206</note>
         <note category="description">Menu item that deletes a board group</note>
       </notes>
@@ -13834,7 +13847,7 @@
     </unit>
     <unit id="8081187093671904449">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:253,257</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:262,266</note>
         <note category="description">Menu item that opens the dialog holding a board group&apos;s status</note>
       </notes>
       <segment state="translated">
@@ -14115,7 +14128,7 @@
     </unit>
     <unit id="6041115344061899387">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:245,247</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:254,256</note>
         <note category="description">Menu item that renames a board group</note>
       </notes>
       <segment state="translated">
@@ -18383,7 +18396,7 @@
     </unit>
     <unit id="1005445972395556557">
       <notes>
-        <note category="location">src/app/core/services/task-commands.service.ts:196</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:202</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -18965,7 +18978,7 @@
     </unit>
     <unit id="6199902092341930198">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:151,156</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:160,165</note>
         <note category="description">Notes that the list below is in the order the board draws its columns</note>
       </notes>
       <segment state="translated">
@@ -19532,7 +19545,8 @@
     <unit id="8513834699710731594">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:90,92</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:94,96</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:94,95</note>
+        <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:149,154</note>
         <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:140</note>
         <note category="description">Tooltip on the button that takes a task off a board</note>
       </notes>
@@ -19573,7 +19587,7 @@
     </unit>
     <unit id="1711227695857293625">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:276,281</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:285,290</note>
         <note category="description">Menu item that moves a board group to the last column</note>
       </notes>
       <segment state="translated">
@@ -19737,7 +19751,7 @@
     </unit>
     <unit id="3602315024130329993">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:111,115</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:120,124</note>
         <note category="description">Explains that board groups reorder and rename here, and that hiding one is per-user</note>
       </notes>
       <segment state="translated">
@@ -22118,6 +22132,16 @@
         <target>Menü <ph id="0" equiv="SECTION" disp="section"/> ausklappen</target>
       </segment>
     </unit>
+    <unit id="6662317772987702772">
+      <notes>
+        <note category="location">src/app/core/services/task-commands.service.ts:221</note>
+        <note category="description">Body of a confirmation dialog</note>
+      </notes>
+      <segment state="translated">
+        <source>Take this task off this board? The task itself is kept, along with its status, comments and history.</source>
+        <target>Diese Aufgabe von diesem Board entfernen? Die Aufgabe selbst bleibt erhalten, samt Status, Kommentaren und Verlauf.</target>
+      </segment>
+    </unit>
     <unit id="6663783128602596673">
       <notes>
         <note category="location">src/app/shell/shell-navbar.component.ts:47,54</note>
@@ -22804,13 +22828,14 @@
     </unit>
     <unit id="4814285799071780083">
       <notes>
+        <note category="location">src/app/core/services/task-commands.service.ts:217</note>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:338</note>
         <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:360</note>
         <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:82,85</note>
         <note category="location">src/app/static/components/form-select-tags/form-select-tags.component.ts:74,77</note>
         <note category="location">src/app/static/components/image-upload/image-upload.component.ts:90,93</note>
         <note category="location">src/app/static/components/task-chip.component.ts:59</note>
-        <note category="description">Confirms removing an API key</note>
+        <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
         <source>Remove</source>

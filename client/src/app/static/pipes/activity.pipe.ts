@@ -52,7 +52,12 @@ const getMeta = (value: ActivityViewModel) => {
       return meta?.emails?.join(', ') ?? '';
     }
     case ActivityType.remove: {
-      const meta = value.meta as { emails: string[] };
+      // One type covers a member leaving a workspace and a task coming off a
+      // board, so the meta it carries is what tells the two apart.
+      const meta = value.meta as { board?: string; emails?: string[] };
+
+      if (meta?.board) return `from ${meta.board}`;
+
       return meta?.emails?.join(', ') ?? '';
     }
     case ActivityType.permissionChanged: {

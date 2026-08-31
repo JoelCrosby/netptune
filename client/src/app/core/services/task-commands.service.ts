@@ -183,12 +183,18 @@ export class TaskCommandsService {
   removeFromBoard(
     taskId: number,
     boardId: number,
-    options?: { onRemoved?: () => void }
+    options?: { boardName?: string; onRemoved?: () => void }
   ) {
-    this.tasksApi
-      .removeTaskFromBoard(taskId, boardId)
+    this.confirmation
+      .open(buildRemoveFromBoardConfirmation(options?.boardName))
       .pipe(
-        unwrapClientResponse(),
+        switchMap((confirmed) => {
+          if (!confirmed) return EMPTY;
+
+          return this.tasksApi
+            .removeTaskFromBoard(taskId, boardId)
+            .pipe(unwrapClientResponse());
+        }),
         catchError(() => EMPTY)
       )
       .subscribe(() => {
@@ -204,6 +210,17 @@ export class TaskCommandsService {
     this.workspaceRefresh.refresh(['tasks']);
   }
 }
+
+const buildRemoveFromBoardConfirmation = (
+  boardName?: string
+): ConfirmDialogOptions => ({
+  acceptLabel: $localize`:Confirms the action in a dialog:Remove`,
+  cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
+  message: boardName
+    ? $localize`:Body of a confirmation dialog:Take this task off ${boardName}:BOARD_NAME:? The task itself is kept, along with its status, comments and history.`
+    : $localize`:Body of a confirmation dialog:Take this task off this board? The task itself is kept, along with its status, comments and history.`,
+  title: $localize`:Title of a confirmation dialog:Remove From Board`,
+});
 
 const DELETE_TASK_CONFIRMATION: ConfirmDialogOptions = {
   acceptLabel: $localize`:Confirms the action in a dialog:Delete`,

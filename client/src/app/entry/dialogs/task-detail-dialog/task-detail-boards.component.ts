@@ -81,7 +81,7 @@ import { TaskDetailService } from './task-detail.service';
             {{ placement.boardGroupName }}
           </span>
 
-          @if (canMove() && placements().length > 1) {
+          @if (canMove()) {
             <button
               app-icon-button
               i18n-appTooltip="
@@ -92,7 +92,7 @@ import { TaskDetailService } from './task-detail.service';
                 Accessible label for the button that takes a task off a board
               "
               aria-label="Remove from board"
-              (click)="removeFromBoard(placement.boardId)">
+              (click)="removeFromBoard(placement.boardId, placement.boardName)">
               <svg lucideX class="h-4 w-4"></svg>
             </button>
           }
@@ -169,12 +169,13 @@ export class TaskDetailBoardsComponent {
     );
   }
 
-  removeFromBoard(boardId: number) {
+  removeFromBoard(boardId: number, boardName: string) {
     const task = this.task();
 
     if (!task) return;
 
     this.taskCommands.removeFromBoard(task.id, boardId, {
+      boardName,
       onRemoved: () => this.taskDetail.reload(),
     });
   }

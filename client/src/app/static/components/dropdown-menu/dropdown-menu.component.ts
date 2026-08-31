@@ -15,6 +15,12 @@ import {
 
 export type DropdownMenuXPosition = 'before' | 'after';
 
+/**
+ * A menu hangs off a trigger element, or off a bare point when it is opened by
+ * a right click and should appear under the pointer.
+ */
+export type DropdownMenuOrigin = HTMLElement | { x: number; y: number };
+
 @Component({
   selector: 'app-dropdown-menu',
   host: { class: 'contents' },
@@ -53,6 +59,8 @@ export class DropdownMenuComponent implements OnDestroy {
   readonly panelRole = input('menu');
   /** Padding of the panel itself, dropped by content that draws its own edges. */
   readonly panelClass = input('p-1');
+  /** Nudges the panel back into view, for menus opened at an arbitrary point. */
+  readonly push = input(false);
 
   protected readonly className = computed(() => {
     return cn(
@@ -67,9 +75,9 @@ export class DropdownMenuComponent implements OnDestroy {
 
   private readonly portal = viewChild.required(CdkPortal);
   private overlayRef?: OverlayRef;
-  private origin?: HTMLElement;
+  private origin?: DropdownMenuOrigin;
 
-  toggle(origin: HTMLElement) {
+  toggle(origin: DropdownMenuOrigin) {
     if (this.overlayRef?.hasAttached()) {
       this.close();
     } else {
@@ -77,7 +85,7 @@ export class DropdownMenuComponent implements OnDestroy {
     }
   }
 
-  open(origin: HTMLElement) {
+  open(origin: DropdownMenuOrigin) {
     this.origin = origin;
     this.overlayRef = this.overlay.create(this.getOverlayConfig(origin));
     this.overlayRef.attach(this.portal());
@@ -126,13 +134,13 @@ export class DropdownMenuComponent implements OnDestroy {
     }
   }
 
-  private buildPositionStrategy(origin: HTMLElement) {
+  private buildPositionStrategy(origin: DropdownMenuOrigin) {
     const isBefore = this.xPosition() === 'before';
 
     return this.overlay
       .position()
       .flexibleConnectedTo(origin)
-      .withPush(false)
+      .withPush(this.push())
       .withPositions([
         {
           originX: isBefore ? 'end' : 'start',
@@ -151,7 +159,7 @@ export class DropdownMenuComponent implements OnDestroy {
       ]);
   }
 
-  private getOverlayConfig(origin: HTMLElement): OverlayConfig {
+  private getOverlayConfig(origin: DropdownMenuOrigin): OverlayConfig {
     return new OverlayConfig({
       positionStrategy: this.buildPositionStrategy(origin),
       hasBackdrop: true,
@@ -160,7 +168,9 @@ export class DropdownMenuComponent implements OnDestroy {
   }
 }
 
-function focusTrigger(origin: HTMLElement) {
+function focusTrigger(origin: DropdownMenuOrigin) {
+  if (!(origin instanceof HTMLElement)) return;
+
   const trigger =
     origin instanceof HTMLButtonElement
       ? origin

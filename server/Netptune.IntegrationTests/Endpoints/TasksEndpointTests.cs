@@ -1037,6 +1037,34 @@ public sealed class TasksEndpointTests
     }
 
     [Fact]
+    public async Task RemoveFromBoard_ShouldKeepTheTaskInTheProject_WhenItLeavesEveryBoard()
+    {
+        var task = await CreateTaskOnDefaultBoard();
+        var placement = task.Placements.Should().ContainSingle().Subject;
+
+        var response = await Client.DeleteAsync($"api/tasks/{task.Id}/boards/{placement.BoardId}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Placements.Should().BeEmpty();
+
+        var view = await GetBoardView(placement.BoardIdentifier);
+
+        view.Groups.SelectMany(group => group.Tasks).Should().NotContain(item => item.Id == task.Id);
+
+        var reloaded = await GetTask(task.Id);
+
+        reloaded.Id.Should().Be(task.Id);
+
+        var tasks = await GetTasks();
+
+        tasks.Should().Contain(item => item.Id == task.Id);
+    }
+
+    [Fact]
     public async Task RemoveFromBoard_ShouldReturnFailure_WhenTheTaskIsNotOnTheBoard()
     {
         var task = await CreateTaskOnDefaultBoard();

@@ -13,6 +13,9 @@ import {
 } from '@angular/core';
 import { SessionService } from '@core/services/session.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { hasPermission } from '@core/auth/has-permission';
+import { PERMISSIONS } from '@core/auth/permissions';
+import { TaskCommandsService } from '@core/services/task-commands.service';
 import { BoardGroupCommandsService } from '@core/services/board-group-commands.service';
 import { BoardBackgroundService } from '@core/services/board-background.service';
 import { BoardComposerService } from '@core/services/board-composer.service';
@@ -27,6 +30,9 @@ import {
 } from '@core/models/view-models/board-view';
 import { DialogService } from '@core/services/dialog.service';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
+import { LucideKanban, LucideTrash2 } from '@lucide/angular';
+import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
+import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
 import { ScrollShadowVericalDirective } from '@static/directives/scroll-shadow-vertical.directive';
 import { fromEvent } from 'rxjs';
 import { BoardGroupCardComponent } from '../board-group-card/board-group-card.component';
@@ -69,6 +75,10 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
     CdkDrag,
     BoardGroupTaskInlineComponent,
     StrokedButtonComponent,
+    DropdownMenuComponent,
+    MenuItemComponent,
+    LucideKanban,
+    LucideTrash2,
   ],
   template: `
     <div
@@ -96,6 +106,7 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
               [groupId]="group().id"
               (cdkDragStarted)="onDragStarted()"
               (cdkDragReleased)="onDragRelease()"
+              (contextmenu)="onTaskContextMenu($event, task)"
               (click)="
                 onTaskClicked($event, task, group().id)
               "></app-board-group-card>
@@ -125,6 +136,37 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
         </div>
       </div>
     </div>
+
+    <app-dropdown-menu #taskMenu [push]="true">
+      <div class="min-w-52">
+        @if (canMove()) {
+          <button
+            app-menu-item
+            type="button"
+            (click)="onRemoveFromBoardClicked()">
+            <svg lucideKanban class="h-4 w-4 shrink-0"></svg>
+            <span i18n="Menu item that takes a task off the board being viewed"
+              >Remove from board</span
+            >
+          </button>
+        }
+
+        @if (canDelete()) {
+          @if (canMove()) {
+            <div class="border-border/50 my-1 border-t"></div>
+          }
+
+          <button
+            app-menu-item
+            type="button"
+            class="text-warn!"
+            (click)="onDeleteTaskClicked()">
+            <svg lucideTrash2 class="h-4 w-4 shrink-0"></svg>
+            <span i18n="Menu item that deletes a task">Delete task</span>
+          </button>
+        }
+      </div>
+    </app-dropdown-menu>
   `,
 })
 export class BoardGroupComponent implements OnDestroy, AfterViewInit {
@@ -134,7 +176,11 @@ export class BoardGroupComponent implements OnDestroy, AfterViewInit {
   private boardCommands = inject(BoardGroupCommandsService);
   private dialog = inject(DialogService);
   private boardBackground = inject(BoardBackgroundService);
+  private taskCommands = inject(TaskCommandsService);
   private destroyRef = inject(DestroyRef);
+
+  readonly canMove = hasPermission(PERMISSIONS.tasks.move);
+  readonly canDelete = hasPermission(PERMISSIONS.tasks.delete);
 
   readonly hasBoardBackground = computed(() => {
     return this.boardBackground.imageUrl() !== null;
@@ -147,6 +193,10 @@ export class BoardGroupComponent implements OnDestroy, AfterViewInit {
   readonly reorderDisabled = input(false);
 
   readonly container = viewChild.required<ElementRef>('container');
+  private readonly taskMenu =
+    viewChild.required<DropdownMenuComponent>('taskMenu');
+
+  private readonly menuTask = signal<BoardViewTask | null>(null);
 
   readonly dragDisabled = computed(() => {
     return !this.isAuthenticated() || this.reorderDisabled();
@@ -235,6 +285,43 @@ export class BoardGroupComponent implements OnDestroy, AfterViewInit {
 
   trackGroupTask(_: number, task: BoardViewTask) {
     return task?.id;
+  }
+
+  // A right click acts on the card under the pointer alone; the toolbar that
+  // appears with a selection is what handles several tasks at once.
+  onTaskContextMenu(event: MouseEvent, task: BoardViewTask) {
+    if (!this.canMove() && !this.canDelete()) return;
+
+    event.preventDefault();
+
+    const menu = this.taskMenu();
+
+    menu.close();
+    this.menuTask.set(task);
+    menu.open({ x: event.clientX, y: event.clientY });
+  }
+
+  onRemoveFromBoardClicked() {
+    const task = this.menuTask();
+    const board = this.boardView.board();
+
+    this.taskMenu().close();
+
+    if (!task || !board) return;
+
+    this.taskCommands.removeFromBoard(task.id, board.id, {
+      boardName: board.name,
+    });
+  }
+
+  onDeleteTaskClicked() {
+    const task = this.menuTask();
+
+    this.taskMenu().close();
+
+    if (!task) return;
+
+    this.taskCommands.deleteMany([task.id]);
   }
 
   onTaskClicked(

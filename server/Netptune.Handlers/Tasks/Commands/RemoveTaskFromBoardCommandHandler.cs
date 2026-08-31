@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Events.Tasks;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
@@ -57,11 +58,12 @@ public sealed class RemoveTaskFromBoardCommandHandler : IRequestHandler<RemoveTa
 
         await UnitOfWork.CompleteAsync(cancellationToken);
 
-        Activity.Log(options =>
+        Activity.LogWith<RemoveTaskFromBoardActivityMeta>(options =>
         {
             options.EntityId = task.Id;
             options.EntityType = EntityType.Task;
             options.Type = ActivityType.Remove;
+            options.Meta = new RemoveTaskFromBoardActivityMeta { Board = board.Name, BoardId = board.Id };
         });
 
         var response = await UnitOfWork.Tasks.GetTaskViewModel(task.Id, cancellationToken);
