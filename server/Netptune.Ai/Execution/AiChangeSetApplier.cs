@@ -232,6 +232,16 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         CancellationToken cancellationToken)
     {
         var summary = await DescribeOutcome(applied, results, cancellationToken);
+        await AppendUserMessage(changeSet, summary, cancellationToken);
+    }
+
+    // The assistant reads its own transcript on the next turn, so what was applied or reverted has to
+    // land there as a message rather than only in the change set.
+    private async Task AppendUserMessage(
+        AiChangeSet changeSet,
+        string summary,
+        CancellationToken cancellationToken)
+    {
         var conversation = await UnitOfWork.AiConversations.GetAsync(
             changeSet.ConversationId,
             true,
@@ -532,10 +542,8 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         return found ? handler : null;
     }
 
-    /// <summary>
-    /// The prior state only exists until the change lands, so it is read first
-    /// and stored with the change. A handler that cannot be undone stores nothing.
-    /// </summary>
+    // The prior state only exists until the change lands, so it is read first and stored with the
+    // change. A handler that cannot be undone stores nothing.
     private async Task CaptureUndo(
         IAiChangeHandler handler,
         AiChangeApplyContext context,
@@ -707,39 +715,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         var tail = failed == 0 ? string.Empty : $" {failed} could not be undone and are still in place.";
         var summary = $"{AiChangeSetSummary.UndonePrefix} {undone} of {results.Count} changes were reverted.{tail}";
 
-        var conversation = await UnitOfWork.AiConversations.GetAsync(
-            changeSet.ConversationId,
-            true,
-            cancellationToken);
-
-        if (conversation is null)
-        {
-            return;
-        }
-
-        var content = AiMessageContent.FromChatMessage(new AiChatMessage
-        {
-            Role = AiMessageRole.User,
-            Text = summary,
-        });
-
-        var sequence = await UnitOfWork.AiConversations.GetNextSequence(conversation.Id, cancellationToken);
-        var record = new AiMessage
-        {
-            ConversationId = conversation.Id,
-            Sequence = sequence,
-            Role = AiMessageRole.User,
-            Content = content.ToJsonDocument(),
-            Provider = conversation.Provider,
-            Model = conversation.Model,
-            Status = AiMessageStatus.Complete,
-            CreatedAt = DateTime.UtcNow,
-        };
-
-        await UnitOfWork.AiConversations.AddMessage(record, cancellationToken);
-
-        conversation.MessageCount += 1;
-        conversation.LastMessageAt = record.CreatedAt;
+        await AppendUserMessage(changeSet, summary, cancellationToken);
     }
 
     public async Task<AiApplyResult?> RetryFailed(Guid changeSetId, CancellationToken cancellationToken)
