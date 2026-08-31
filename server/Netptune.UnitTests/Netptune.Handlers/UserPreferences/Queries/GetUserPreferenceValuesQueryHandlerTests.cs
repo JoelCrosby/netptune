@@ -6,6 +6,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Preferences;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
+using Netptune.Handlers.UserPreferences;
 using Netptune.Handlers.UserPreferences.Queries;
 
 using NSubstitute;
@@ -26,7 +27,9 @@ public class GetUserPreferenceValuesQueryHandlerTests
 
     public GetUserPreferenceValuesQueryHandlerTests()
     {
-        Handler = new(Identity, UnitOfWork, Registry);
+        var resolver = new PreferenceValueResolver(Identity, UnitOfWork, Registry);
+
+        Handler = new(Identity, Registry, resolver);
     }
 
     [Fact]

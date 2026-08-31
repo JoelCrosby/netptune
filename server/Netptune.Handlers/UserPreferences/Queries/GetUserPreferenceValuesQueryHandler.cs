@@ -2,7 +2,6 @@ using Mediator;
 
 using Netptune.Core.Preferences;
 using Netptune.Core.Services;
-using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Handlers.UserPreferences.Queries;
 
@@ -12,17 +11,17 @@ public sealed class GetUserPreferenceValuesQueryHandler
     : IRequestHandler<GetUserPreferenceValuesQuery, PreferenceValuesResponse>
 {
     private readonly IIdentityService Identity;
-    private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IPreferenceDefinitionRegistry Registry;
+    private readonly PreferenceValueResolver Resolver;
 
     public GetUserPreferenceValuesQueryHandler(
         IIdentityService identity,
-        INetptuneUnitOfWork unitOfWork,
-        IPreferenceDefinitionRegistry registry)
+        IPreferenceDefinitionRegistry registry,
+        PreferenceValueResolver resolver)
     {
         Identity = identity;
-        UnitOfWork = unitOfWork;
         Registry = registry;
+        Resolver = resolver;
     }
 
     public async ValueTask<PreferenceValuesResponse> Handle(
@@ -30,8 +29,8 @@ public sealed class GetUserPreferenceValuesQueryHandler
         CancellationToken cancellationToken)
     {
         var userId = Identity.GetCurrentUserId();
-        var workspaceId = await TryGetWorkspaceId();
-        var resolved = await ResolveAll(userId, workspaceId, cancellationToken);
+        var workspaceId = await Resolver.TryGetWorkspaceId();
+        var resolved = await Resolver.ResolveAll(userId, workspaceId, cancellationToken);
 
         var groups = Registry.GetGroups()
             .Select(group => new PreferenceValueGroup
@@ -48,57 +47,6 @@ public sealed class GetUserPreferenceValuesQueryHandler
         return new PreferenceValuesResponse
         {
             Groups = groups,
-        };
-    }
-
-    private async Task<int?> TryGetWorkspaceId()
-    {
-        return Identity.TryGetWorkspaceKey() is null ? null : await Identity.GetWorkspaceId();
-    }
-
-    private async Task<Dictionary<string, ResolvedPreferenceValue>> ResolveAll(
-        string userId,
-        int? workspaceId,
-        CancellationToken cancellationToken)
-    {
-        var result = new Dictionary<string, ResolvedPreferenceValue>(StringComparer.Ordinal);
-
-        foreach (var group in Registry.GetGroups())
-        {
-            foreach (var definition in group.Preferences)
-            {
-                result[definition.Key] = await Resolve(userId, workspaceId, definition, cancellationToken);
-            }
-        }
-
-        return result;
-    }
-
-    private async Task<ResolvedPreferenceValue> Resolve(
-        string userId,
-        int? workspaceId,
-        PreferenceDefinition definition,
-        CancellationToken cancellationToken)
-    {
-        var values = await UnitOfWork.UserPreferences.GetValues(
-            userId,
-            definition.Key,
-            workspaceId,
-            cancellationToken);
-
-        var globalValue = values.FirstOrDefault(value => value.WorkspaceId is null)?.Value.RootElement.Clone();
-        var workspaceValue = values.FirstOrDefault(value => value.WorkspaceId == workspaceId)?.Value.RootElement.Clone();
-        var source = workspaceValue is not null ? PreferenceScopes.Workspace :
-            globalValue is not null ? PreferenceScopes.Global : "default";
-        var effectiveValue = workspaceValue ?? globalValue ?? definition.DefaultValue;
-
-        return new ResolvedPreferenceValue
-        {
-            Definition = definition,
-            GlobalValue = globalValue,
-            WorkspaceValue = workspaceValue,
-            EffectiveValue = effectiveValue.Clone(),
-            Source = source,
         };
     }
 }

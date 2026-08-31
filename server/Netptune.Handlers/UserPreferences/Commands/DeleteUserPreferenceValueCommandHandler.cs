@@ -17,15 +17,18 @@ public sealed class DeleteUserPreferenceValueCommandHandler
     private readonly IIdentityService Identity;
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IPreferenceDefinitionRegistry Registry;
+    private readonly PreferenceValueResolver Resolver;
 
     public DeleteUserPreferenceValueCommandHandler(
         IIdentityService identity,
         INetptuneUnitOfWork unitOfWork,
-        IPreferenceDefinitionRegistry registry)
+        IPreferenceDefinitionRegistry registry,
+        PreferenceValueResolver resolver)
     {
         Identity = identity;
         UnitOfWork = unitOfWork;
         Registry = registry;
+        Resolver = resolver;
     }
 
     public async ValueTask<ClientResponse<ResolvedPreferenceValue>> Handle(
@@ -33,7 +36,7 @@ public sealed class DeleteUserPreferenceValueCommandHandler
         CancellationToken cancellationToken)
     {
         var userId = Identity.GetCurrentUserId();
-        var workspaceId = await TryGetWorkspaceId();
+        var workspaceId = await Resolver.TryGetWorkspaceId();
 
         var definition = Registry.Find(request.Key);
         if (definition is null || !definition.AllowedScopes.Contains(request.Scope))
@@ -59,41 +62,8 @@ public sealed class DeleteUserPreferenceValueCommandHandler
             await UnitOfWork.CompleteAsync(cancellationToken);
         }
 
-        var result = await Resolve(userId, workspaceId, definition, cancellationToken);
+        var result = await Resolver.Resolve(userId, workspaceId, definition, cancellationToken);
 
         return ClientResponse<ResolvedPreferenceValue>.Success(result);
-    }
-
-    private async Task<int?> TryGetWorkspaceId()
-    {
-        return Identity.TryGetWorkspaceKey() is null ? null : await Identity.GetWorkspaceId();
-    }
-
-    private async Task<ResolvedPreferenceValue> Resolve(
-        string userId,
-        int? workspaceId,
-        PreferenceDefinition definition,
-        CancellationToken cancellationToken)
-    {
-        var values = await UnitOfWork.UserPreferences.GetValues(
-            userId,
-            definition.Key,
-            workspaceId,
-            cancellationToken);
-
-        var globalValue = values.FirstOrDefault(value => value.WorkspaceId is null)?.Value.RootElement.Clone();
-        var workspaceValue = values.FirstOrDefault(value => value.WorkspaceId == workspaceId)?.Value.RootElement.Clone();
-        var source = workspaceValue is not null ? PreferenceScopes.Workspace :
-            globalValue is not null ? PreferenceScopes.Global : "default";
-        var effectiveValue = workspaceValue ?? globalValue ?? definition.DefaultValue;
-
-        return new ResolvedPreferenceValue
-        {
-            Definition = definition,
-            GlobalValue = globalValue,
-            WorkspaceValue = workspaceValue,
-            EffectiveValue = effectiveValue.Clone(),
-            Source = source,
-        };
     }
 }

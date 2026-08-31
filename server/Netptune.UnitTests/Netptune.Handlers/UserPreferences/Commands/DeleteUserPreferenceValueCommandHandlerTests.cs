@@ -6,6 +6,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Preferences;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
+using Netptune.Handlers.UserPreferences;
 using Netptune.Handlers.UserPreferences.Commands;
 
 using NSubstitute;
@@ -26,7 +27,9 @@ public class DeleteUserPreferenceValueCommandHandlerTests
 
     public DeleteUserPreferenceValueCommandHandlerTests()
     {
-        Handler = new(Identity, UnitOfWork, Registry);
+        var resolver = new PreferenceValueResolver(Identity, UnitOfWork, Registry);
+
+        Handler = new(Identity, UnitOfWork, Registry, resolver);
         Identity.GetCurrentUserId().Returns(UserId);
         Identity.TryGetWorkspaceKey().Returns("workspace");
         Identity.GetWorkspaceId().Returns(WorkspaceId);

@@ -1,5 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 
+using Netptune.Handlers.UserPreferences;
+
 namespace Netptune.Handlers;
 
 public static class ServiceCollectionExtensions
@@ -10,6 +12,8 @@ public static class ServiceCollectionExtensions
         {
             options.ServiceLifetime = ServiceLifetime.Transient;
         });
+
+        services.AddScoped<PreferenceValueResolver>();
 
         return services;
     }
