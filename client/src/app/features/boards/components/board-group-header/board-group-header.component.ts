@@ -73,7 +73,8 @@ export class BoardGroupHeaderComponent {
 
   onManageGroupsClicked() {
     this.dialog.open(ManageBoardGroupsDialogComponent, {
-      width: '600px',
+      width: '640px',
+      maxWidth: 'calc(100vw - 32px)',
     });
   }
 }

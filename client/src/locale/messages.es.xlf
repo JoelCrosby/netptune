@@ -867,6 +867,16 @@
         <target><ph id="0" equiv="PERCENT" disp="percentage"/> en uso</target>
       </segment>
     </unit>
+    <unit id="8144392295691806587">
+      <notes>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:332,336</note>
+        <note category="description">Notes that the dialog stores every change immediately</note>
+      </notes>
+      <segment state="translated">
+        <source> Saved as you go </source>
+        <target>Se guarda sobre la marcha</target>
+      </segment>
+    </unit>
     <unit id="8144780536536072093">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:353</note>
@@ -929,8 +939,9 @@
     </unit>
     <unit id="6120896617621566677">
       <notes>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:167</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:358</note>
-        <note category="description">Task count. COUNT is the number of tasks</note>
+        <note category="description">How many tasks a board group holds. COUNT is the number of tasks</note>
       </notes>
       <segment state="initial">
         <source><ph id="0" equiv="COUNT" disp="count"/> tasks</source>
@@ -1423,7 +1434,7 @@
     </unit>
     <unit id="7735505964227370595">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:334</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:331</note>
         <note category="description">Accordion summary counting a task&apos;s attachments. COUNT is how many</note>
       </notes>
       <segment state="initial">
@@ -1598,6 +1609,16 @@
       <segment>
         <source>Entire workspace</source>
         <target>Espacio de trabajo completo</target>
+      </segment>
+    </unit>
+    <unit id="2186845113988843958">
+      <notes>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:116,120</note>
+        <note category="description">Explains that hiding a board group is per-user</note>
+      </notes>
+      <segment state="translated">
+        <source> Hiding a column only changes your own view of this board. </source>
+        <target>Ocultar una columna solo cambia tu propia vista de este tablero.</target>
       </segment>
     </unit>
     <unit id="6402135377436796061">
@@ -1826,6 +1847,16 @@
       <segment state="translated">
         <source>Board Group Deleted</source>
         <target>Grupo del tablero eliminado</target>
+      </segment>
+    </unit>
+    <unit id="996392855508119363">
+      <notes>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:152</note>
+        <note category="description">Marks a board group hidden from the current user&apos;s board</note>
+      </notes>
+      <segment state="translated">
+        <source>Hidden</source>
+        <target>Oculta</target>
       </segment>
     </unit>
     <unit id="996642948903085680">
@@ -3459,6 +3490,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/board-group-dialog/board-group-dialog.component.ts:88</note>
         <note category="location">src/app/entry/dialogs/board-group-dialog/board-group-dialog.component.ts:92</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:324,328</note>
         <note category="description">Title of the dialog for creating a board group</note>
       </notes>
       <segment state="translated">
@@ -4573,6 +4605,16 @@
         <target>exportaciones</target>
       </segment>
     </unit>
+    <unit id="8390891659704343861">
+      <notes>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:225,228</note>
+        <note category="description">Empty state when a name filter matches no groups</note>
+      </notes>
+      <segment state="translated">
+        <source> No groups match that filter. </source>
+        <target>Ningún grupo coincide con ese filtro.</target>
+      </segment>
+    </unit>
     <unit id="8394008335792720695">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-apply-progress.component.ts:128</note>
@@ -5013,7 +5055,7 @@
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:192,195</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:218</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:197</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:267</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:264</note>
         <note category="description">Heading for a task&apos;s files</note>
       </notes>
       <segment state="translated">
@@ -5524,7 +5566,7 @@
     <unit id="5200831341853054486">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:148,150</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:158,160</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:155,157</note>
         <note category="description">Section heading for a task&apos;s comments</note>
       </notes>
       <segment state="initial">
@@ -5582,9 +5624,10 @@
     </unit>
     <unit id="8829497237648100098">
       <notes>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:356</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:24</note>
         <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:91,92</note>
-        <note category="description">Heading of the export filter step</note>
+        <note category="description">Placeholder in the box that filters board groups by name</note>
       </notes>
       <segment state="translated">
         <source>Filter</source>
@@ -6990,6 +7033,16 @@
         <target>Volver a las automatizaciones</target>
       </segment>
     </unit>
+    <unit id="8614260097416227361">
+      <notes>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:156</note>
+        <note category="description">Marks a board group that contains no tasks</note>
+      </notes>
+      <segment state="translated">
+        <source>No tasks</source>
+        <target>Sin tareas</target>
+      </segment>
+    </unit>
     <unit id="8562778474158270448">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:673</note>
@@ -7157,7 +7210,7 @@
     </unit>
     <unit id="7575041808886442392">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:319</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:316</note>
         <note category="description">Accordion summary when a task links to one other</note>
       </notes>
       <segment state="initial">
@@ -7460,6 +7513,16 @@
       <segment state="translated">
         <source><ph id="0" equiv="COUNT" disp="count"/> filters</source>
         <target><ph id="0" equiv="COUNT" disp="count"/> filtros</target>
+      </segment>
+    </unit>
+    <unit id="7943500979556068029">
+      <notes>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:181</note>
+        <note category="description">Accessible label for a board group&apos;s overflow menu. NAME is the group name</note>
+      </notes>
+      <segment state="translated">
+        <source>More actions for <ph id="0" equiv="NAME" disp="name"/></source>
+        <target>Más acciones para <ph id="0" equiv="NAME" disp="name"/></target>
       </segment>
     </unit>
     <unit id="7943935000920929978">
@@ -8306,7 +8369,7 @@
     </unit>
     <unit id="5973718738996433339">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:139,140</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:136,137</note>
         <note category="description">Button that opens the file picker</note>
       </notes>
       <segment state="initial">
@@ -8856,7 +8919,7 @@
     </unit>
     <unit id="5550975895729371495">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:315</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:312</note>
         <note category="description">Accordion summary when a task links to nothing</note>
       </notes>
       <segment state="initial">
@@ -9155,6 +9218,16 @@
       <segment state="translated">
         <source>No automation runs recorded yet.</source>
         <target>Aún no se han registrado ejecuciones de automatización.</target>
+      </segment>
+    </unit>
+    <unit id="1957844399823892414">
+      <notes>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:266,269</note>
+        <note category="description">Menu item that moves a board group to the first column</note>
+      </notes>
+      <segment state="translated">
+        <source> Move to start </source>
+        <target>Mover al principio</target>
       </segment>
     </unit>
     <unit id="1805786652044949428">
@@ -9608,7 +9681,7 @@
     </unit>
     <unit id="4987947040082180128">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:331</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:328</note>
         <note category="description">Accordion summary when a task has one attachment</note>
       </notes>
       <segment state="initial">
@@ -10785,7 +10858,7 @@
     </unit>
     <unit id="4510676848705799339">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:239,241</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:236,238</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:138,140</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:63</note>
         <note category="description">Accessible label for the button that deletes the task</note>
@@ -11637,6 +11710,16 @@
       <segment state="translated">
         <source>When a task is due in 1 day</source>
         <target>Cuando una tarea vence en 1 día</target>
+      </segment>
+    </unit>
+    <unit id="5439499901242629274">
+      <notes>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:305,309</note>
+        <note category="description">Shown in a board group&apos;s menu when the user may only show and hide it</note>
+      </notes>
+      <segment state="translated">
+        <source> You can only show or hide <ph id="0" equiv="NAME" disp="{{ row.name // i18n(ph=&quot;NAME&quot;) }}"/>. </source>
+        <target>Solo puedes mostrar u ocultar <ph id="0" equiv="NAME" disp="{{ row.name // i18n(ph=&quot;NAME&quot;) }}"/>.</target>
       </segment>
     </unit>
     <unit id="7405047836283505624">
@@ -13362,8 +13445,8 @@
     </unit>
     <unit id="1927153743913680762">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:31,35</note>
-        <note category="description">Title of the dialog for showing and hiding board groups</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:99,103</note>
+        <note category="description">Title of the dialog for arranging board groups</note>
       </notes>
       <segment state="translated">
         <source> Manage Groups </source>
@@ -13380,16 +13463,6 @@
         <target>{VAR_PLURAL, plural, =1 {esa tarea} other {esas tareas}}</target>
       </segment>
     </unit>
-    <unit id="348411615145697280">
-      <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:37,42</note>
-        <note category="description">Explains that hiding a board group is per-user</note>
-      </notes>
-      <segment state="translated">
-        <source> Uncheck a group to hide it from this board. This only affects your view. </source>
-        <target>Desmarca un grupo para ocultarlo en este tablero. Solo afecta a tu vista.</target>
-      </segment>
-    </unit>
     <unit id="8222816683597787340">
       <notes>
         <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:228,231</note>
@@ -13400,15 +13473,15 @@
         <target> Gasto del asistente </target>
       </segment>
     </unit>
-    <unit id="5477970714848105392">
+    <unit id="5155262602439071339">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:51,58</note>
-        <note category="description">How many board groups are visible. VISIBLE is the visible count and TOTAL the total number of groups</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:135,142</note>
+        <note category="description">How many board groups the board shows. VISIBLE is the visible count and TOTAL the total number of groups</note>
       </notes>
       <segment state="translated">
-        <source> <ph id="0" equiv="VISIBLE" disp="{{ visibleCount() // i18n(ph=&quot;VISIBLE&quot;) }}"/> of <ph id="1" equiv="TOTAL" disp="{{ groups().length // i18n(ph=&quot;TOTAL&quot;) }}"/> visible </source>
-        <target><ph id="0" equiv="VISIBLE" disp="{{ visibleCount() // i18n(ph=&quot;VISIBLE&quot;) }}"/> de <ph id="1" equiv="TOTAL" disp="{{ groups().length // i18n(ph=&quot;TOTAL&quot;) }}"/> visibles</target>
-      </segment>
+        <source> <ph id="0" equiv="VISIBLE" disp="{{ visibleCount() // i18n(ph=&quot;VISIBLE&quot;) }}"/> of <ph id="1" equiv="TOTAL" disp="{{ rows().length // i18n(ph=&quot;TOTAL&quot;) }}"/> columns shown </source>
+        <target><ph id="0" equiv="VISIBLE" disp="{{ visibleCount() // i18n(ph=&quot;VISIBLE&quot;) }}"/> de <ph id="1" equiv="TOTAL" disp="{{ rows().length // i18n(ph=&quot;TOTAL&quot;) }}"/> columnas visibles</target>
+        </segment>
     </unit>
     <unit id="5478121364779850827">
       <notes>
@@ -13432,8 +13505,8 @@
     </unit>
     <unit id="6381140642359438701">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:174,176</note>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:71,73</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:171,173</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:173,175</note>
         <note category="description">Expands the comment list over the task body</note>
       </notes>
       <segment state="translated">
@@ -13443,7 +13516,7 @@
     </unit>
     <unit id="3226712939818360194">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:81,83</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:183,185</note>
         <note category="description">Button that hides every board group</note>
       </notes>
       <segment state="translated">
@@ -13453,7 +13526,7 @@
     </unit>
     <unit id="6226411421486697394">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:91,94</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:193,195</note>
         <note category="description">Button that hides board groups containing no tasks</note>
       </notes>
       <segment state="translated">
@@ -13463,7 +13536,7 @@
     </unit>
     <unit id="8190708042508105981">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:131,135</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:234,238</note>
         <note category="description">Empty state when a board has no groups</note>
       </notes>
       <segment state="translated">
@@ -13473,7 +13546,7 @@
     </unit>
     <unit id="397098723873502323">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:139,144</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:337,342</note>
         <note category="location">src/app/features/task-views/components/task-view-details-drawer.component.ts:63,67</note>
         <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:91,93</note>
         <note category="description">Closes a dialog once the user has finished</note>
@@ -13662,8 +13735,9 @@
     </unit>
     <unit id="989480357041643523">
       <notes>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:293,296</note>
         <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:205,206</note>
-        <note category="description">Tooltip on the button that deletes a board group</note>
+        <note category="description">Menu item that deletes a board group</note>
       </notes>
       <segment state="translated">
         <source>Delete group</source>
@@ -13704,7 +13778,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:216</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:199</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:265</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:262</note>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:37</note>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:46,49</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:63,64</note>
@@ -13756,6 +13830,16 @@
       <segment state="translated">
         <source> Create Board </source>
         <target>Crear un tablero</target>
+      </segment>
+    </unit>
+    <unit id="8081187093671904449">
+      <notes>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:253,257</note>
+        <note category="description">Menu item that opens the dialog holding a board group&apos;s status</note>
+      </notes>
+      <segment state="translated">
+        <source> Status &amp; details… </source>
+        <target>Estado y detalles…</target>
       </segment>
     </unit>
     <unit id="2667530245703435539">
@@ -14027,6 +14111,16 @@
       <segment state="translated">
         <source>Estimates changed</source>
         <target>Estimaciones modificadas</target>
+      </segment>
+    </unit>
+    <unit id="6041115344061899387">
+      <notes>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:245,247</note>
+        <note category="description">Menu item that renames a board group</note>
+      </notes>
+      <segment state="translated">
+        <source>Rename</source>
+        <target>Cambiar el nombre</target>
       </segment>
     </unit>
     <unit id="6044719097380241880">
@@ -14362,7 +14456,7 @@
     </unit>
     <unit id="4563489865947095174">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:285</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:282</note>
         <note category="description">Accordion summary when a task is not on any board</note>
       </notes>
       <segment state="initial">
@@ -16600,7 +16694,7 @@
     </unit>
     <unit id="8770284726358486659">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:327</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:324</note>
         <note category="description">Prompt on the collapsed files section</note>
       </notes>
       <segment state="initial">
@@ -16627,6 +16721,16 @@
       <segment state="translated">
         <source> New workspace </source>
         <target> Nuevo espacio de trabajo </target>
+      </segment>
+    </unit>
+    <unit id="2987662557279760947">
+      <notes>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:174</note>
+        <note category="description">Accessible label for the button that shows a board group. NAME is the group name</note>
+      </notes>
+      <segment state="translated">
+        <source>Show <ph id="0" equiv="NAME" disp="name"/></source>
+        <target>Mostrar <ph id="0" equiv="NAME" disp="name"/></target>
       </segment>
     </unit>
     <unit id="2988589012964101797">
@@ -18400,7 +18504,7 @@
     </unit>
     <unit id="5713343516682617780">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:228,230</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:225,227</note>
         <note category="description">Button that asks the assistant about this task</note>
       </notes>
       <segment state="initial">
@@ -18857,6 +18961,16 @@
       <segment state="translated">
         <source> Disabled </source>
         <target>Desactivada</target>
+      </segment>
+    </unit>
+    <unit id="6199902092341930198">
+      <notes>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:151,156</note>
+        <note category="description">Notes that the list below is in the order the board draws its columns</note>
+      </notes>
+      <segment state="translated">
+        <source> · board order </source>
+        <target>· orden del tablero</target>
       </segment>
     </unit>
     <unit id="3344606145817965576">
@@ -19457,6 +19571,16 @@
         <target>Revocar <ph id="0" equiv="NAME" disp="name"/></target>
       </segment>
     </unit>
+    <unit id="1711227695857293625">
+      <notes>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:276,281</note>
+        <note category="description">Menu item that moves a board group to the last column</note>
+      </notes>
+      <segment state="translated">
+        <source> Move to end </source>
+        <target>Mover al final</target>
+      </segment>
+    </unit>
     <unit id="1712651257674193219">
       <notes>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:82,83</note>
@@ -19609,6 +19733,16 @@
       <segment state="translated">
         <source>Pick an option above, or answer here</source>
         <target>Elige una opción arriba o responde aquí</target>
+      </segment>
+    </unit>
+    <unit id="3602315024130329993">
+      <notes>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:111,115</note>
+        <note category="description">Explains that board groups reorder and rename here, and that hiding one is per-user</note>
+      </notes>
+      <segment state="translated">
+        <source> Drag to reorder, click a name to rename. Hiding a column only changes your own view of this board. </source>
+        <target>Arrastra para reordenar, haz clic en un nombre para cambiarlo. Ocultar una columna solo cambia tu propia vista de este tablero.</target>
       </segment>
     </unit>
     <unit id="3602788914563459016">
@@ -19776,8 +19910,9 @@
     </unit>
     <unit id="5031687880128878913">
       <notes>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:166</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:357</note>
-        <note category="description">Task count</note>
+        <note category="description">How many tasks a board group holds</note>
       </notes>
       <segment state="initial">
         <source>1 task</source>
@@ -20010,6 +20145,16 @@
       <segment state="initial">
         <source>{VAR_PLURAL, plural, =1 {<pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other">1</pc> incomplete task} other {<pc id="1" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other"><ph id="2" equiv="INTERPOLATION"/></pc> incomplete tasks }}</source>
         <target>{VAR_PLURAL, plural, =1 {<pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other">1</pc> tarea incompleta } other {<pc id="1" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other"> <ph id="2" equiv="INTERPOLATION"/> </pc> tareas incompletas }}</target>
+      </segment>
+    </unit>
+    <unit id="1310920597312036563">
+      <notes>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:175</note>
+        <note category="description">Accessible label for the button that hides a board group. NAME is the group name</note>
+      </notes>
+      <segment state="translated">
+        <source>Hide <ph id="0" equiv="NAME" disp="name"/></source>
+        <target>Ocultar <ph id="0" equiv="NAME" disp="name"/></target>
       </segment>
     </unit>
     <unit id="6526435222428086076">
@@ -20425,7 +20570,7 @@
     <unit id="2467702290618186989">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:113,115</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:117,119</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:115,117</note>
         <note category="description">Button that links this task to another</note>
       </notes>
       <segment state="initial">
@@ -20887,7 +21032,7 @@
     </unit>
     <unit id="2997922512329830488">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:322</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:319</note>
         <note category="description">Accordion summary counting the tasks this one links to. COUNT is how many</note>
       </notes>
       <segment state="initial">
@@ -21319,7 +21464,7 @@
     </unit>
     <unit id="4911319983039735103">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:266</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:263</note>
         <note category="description">Section heading for links between tasks</note>
       </notes>
       <segment state="initial">
@@ -21679,6 +21824,16 @@
         <target>Ir a las automatizaciones</target>
       </segment>
     </unit>
+    <unit id="5370787608590287385">
+      <notes>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:148</note>
+        <note category="description">Marks a board group that is both hidden and empty</note>
+      </notes>
+      <segment state="translated">
+        <source>Hidden · no tasks</source>
+        <target>Oculta · sin tareas</target>
+      </segment>
+    </unit>
     <unit id="5377078063439833222">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-message.component.ts:108,112</note>
@@ -21905,7 +22060,7 @@
     </unit>
     <unit id="2049913543296309259">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:170,171</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:167,168</note>
         <note category="description">Collapses the expanded comment list</note>
       </notes>
       <segment state="initial">
