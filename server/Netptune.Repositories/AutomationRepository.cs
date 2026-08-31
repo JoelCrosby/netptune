@@ -78,12 +78,6 @@ public class AutomationRepository : WorkspaceEntityRepository<DataContext, Autom
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public Task<bool> HasRun(string idempotencyKey, CancellationToken cancellationToken = default)
-    {
-        return Context.Set<AutomationRun>()
-            .AnyAsync(run => run.IdempotencyKey == idempotencyKey, cancellationToken);
-    }
-
     public Task<List<string>> GetExistingRunKeys(IReadOnlyCollection<string> idempotencyKeys, CancellationToken cancellationToken = default)
     {
         return Context.Set<AutomationRun>()

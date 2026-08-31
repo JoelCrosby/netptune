@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
-using Netptune.Core.Relations;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
@@ -175,24 +174,6 @@ public sealed class RelationTypeRepository : WorkspaceEntityRepository<DataConte
     public Task<bool> IsInUse(int relationTypeId, CancellationToken cancellationToken = default)
     {
         return Context.ProjectTaskRelations.AnyAsync(relation => relation.RelationTypeId == relationTypeId, cancellationToken);
-    }
-
-    public async Task EnsureDefaultRelationTypes(int workspaceId, string? ownerId, CancellationToken cancellationToken = default)
-    {
-        var existingKeys = await Entities
-            .Where(relationType => relationType.WorkspaceId == workspaceId)
-            .Select(relationType => relationType.Key)
-            .ToListAsync(cancellationToken);
-
-        var existingSet = existingKeys.ToHashSet(StringComparer.OrdinalIgnoreCase);
-        var missing = DefaultRelationTypes.All
-            .Where(definition => !existingSet.Contains(definition.Key))
-            .Select(definition => DefaultRelationTypes.Create(definition, workspaceId, ownerId))
-            .ToList();
-
-        if (missing.Count == 0) return;
-
-        await Entities.AddRangeAsync(missing, cancellationToken);
     }
 
     public static string BuildKey(string name)

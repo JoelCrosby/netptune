@@ -22,14 +22,6 @@ public class TaskInGroupRepository : Repository<DataContext, ProjectTaskInBoardG
             && entity.BoardGroupId == groupId, cancellationToken);
     }
 
-    public Task<List<ProjectTaskInBoardGroup>> GetProjectTasksInGroup(int groupId, CancellationToken cancellationToken = default)
-    {
-        return Entities
-            .Where(entity => entity.BoardGroupId == groupId)
-            .OrderBy(entity => entity.SortOrder)
-            .ToListAsync(cancellationToken);
-    }
-
     public Task<ProjectTaskInBoardGroup?> GetPlacementOnBoard(int taskId, int boardId, CancellationToken cancellationToken = default)
     {
         return Entities
@@ -60,15 +52,6 @@ public class TaskInGroupRepository : Repository<DataContext, ProjectTaskInBoardG
             .ToDictionary(group => group.Key, group => group.First().BoardGroupId);
     }
 
-    public async Task<List<int>> GetAllByTaskId(IEnumerable<int> taskIds, CancellationToken cancellationToken = default)
-    {
-        var taskIdList = taskIds.ToList();
-        return await Entities
-            .Where(entity => taskIdList.Contains(entity.ProjectTaskId))
-            .Select(entity => entity.Id)
-            .ToListAsync(cancellationToken);
-    }
-
     public async Task DeleteAllByTaskId(IEnumerable<int> taskIds, CancellationToken cancellationToken = default)
     {
         var taskIdList = taskIds.ToList();
@@ -94,13 +77,6 @@ public class TaskInGroupRepository : Repository<DataContext, ProjectTaskInBoardG
 
         await Entities
             .Where(entity => taskIdList.Contains(entity.ProjectTaskId) && entity.BoardGroup!.BoardId == boardId)
-            .ExecuteDeleteAsync(cancellationToken);
-    }
-
-    public async Task DeleteTaskFromGroup(int taskId, int groupId, CancellationToken cancellationToken = default)
-    {
-        await Entities
-            .Where(entity => entity.ProjectTaskId == taskId && entity.BoardGroupId == groupId)
             .ExecuteDeleteAsync(cancellationToken);
     }
 

@@ -25,13 +25,6 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
     {
     }
 
-    public Task<BoardGroup?> GetWithTasksInGroups(int id, CancellationToken cancellationToken = default)
-    {
-        return Entities
-            .Include(group => group.TasksInGroups)
-            .FirstOrDefaultAsync(group => group.Id == id, cancellationToken);
-    }
-
     public Task<List<BoardGroup>> GetBoardGroupsInBoard(int boardId, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         return Entities
@@ -146,15 +139,6 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
             PictureUrl = assignee.Picture_Url,
             IsServiceAccount = assignee.Is_Service_Account,
         });
-    }
-
-    public Task<List<ProjectTask>> GetTasksInGroup(int groupId, bool isReadonly = false, CancellationToken cancellationToken = default)
-    {
-        var query = Context.ProjectTaskInBoardGroups
-            .Where(item => item.BoardGroupId == groupId)
-            .Select(item => item.ProjectTask!);
-
-        return query.ToReadonlyListAsync(isReadonly, cancellationToken);
     }
 
     public Task<BoardGroupTaskTarget?> GetTaskTarget(int groupId, CancellationToken cancellationToken = default)

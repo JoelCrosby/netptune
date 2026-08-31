@@ -17,7 +17,6 @@ using Netptune.Repositories.Common;
 using Netptune.Repositories.RowMaps;
 using Netptune.Repositories.Sql;
 
-
 namespace Netptune.Repositories;
 
 public class UserRepository : Repository<DataContext, AppUser, string>, IUserRepository
@@ -184,32 +183,6 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
         };
     }
 
-    public Task<WorkspaceRole?> GetUserWorkspaceRole(string userId, string workspaceKey, CancellationToken cancellationToken = default)
-    {
-        return Context.WorkspaceAppUsers
-            .Where(x => x.UserId == userId && x.Workspace.Slug == workspaceKey)
-            .Select(x => (WorkspaceRole?)x.Role)
-            .FirstOrDefaultAsync(cancellationToken);
-    }
-
-    public async Task<WorkspaceAppUser> InviteUserToWorkspace(string userId, int workspaceId, CancellationToken cancellationToken = default)
-    {
-        if (string.IsNullOrEmpty(userId)) throw new ArgumentNullException(nameof(userId));
-
-        var invite = new WorkspaceAppUser
-        {
-            WorkspaceId = workspaceId,
-            UserId = userId,
-            Role = WorkspaceRole.Member,
-        };
-
-        var result = await Context.WorkspaceAppUsers.AddAsync(invite, cancellationToken);
-
-        await SeedDefaultPermissionsAsync(userId, workspaceId, WorkspaceRole.Member, cancellationToken);
-
-        return result.Entity;
-    }
-
     public async Task<List<WorkspaceAppUser>> InviteUsersToWorkspace(IEnumerable<string> userIds, int workspaceId, CancellationToken cancellationToken = default)
     {
         var idList = userIds.ToList();
@@ -284,19 +257,6 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
             .Where(x => values.Contains(x.NormalizedEmail))
             .IsReadonly(isReadonly)
             .ToListAsync(cancellationToken);
-    }
-
-    public Task<string?> GetUserIdByEmail(string email, bool isReadonly = false, CancellationToken cancellationToken = default)
-    {
-        if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
-
-        var match = email.Trim().IdentityNormalize();
-
-        return Entities
-            .Where(user => user.NormalizedEmail == match)
-            .Select(user => user.Id)
-            .IsReadonly(isReadonly)
-            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public Task<bool> IsUserInWorkspace(string userId, int workspaceId, CancellationToken cancellationToken = default)

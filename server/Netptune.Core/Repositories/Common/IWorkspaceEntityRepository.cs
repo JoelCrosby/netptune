@@ -11,7 +11,5 @@ public interface IWorkspaceEntityRepository<TEntity, TId> : IAuditableRepository
 
     Task<List<TId>> GetAllIdsInWorkspace(int workspaceId, bool includeDeleted = false, CancellationToken cancellationToken = default);
 
-    Task DeleteAllInWorkspace(int workspaceId, CancellationToken cancellationToken = default);
-
     Task<List<TId>> GetExistingIds(IReadOnlyCollection<TId> ids, int workspaceId, CancellationToken cancellationToken = default);
 }

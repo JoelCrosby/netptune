@@ -12,8 +12,6 @@ public interface IUserRepository : IRepository<AppUser, string>
 {
     Task<AppUser?> GetByEmail(string email, bool isReadonly = false, CancellationToken cancellationToken = default);
 
-    Task<string?> GetUserIdByEmail(string email, bool isReadonly = false, CancellationToken cancellationToken = default);
-
     Task<List<AppUser>> GetByEmailRange(IEnumerable<string> emails, bool isReadonly = false, CancellationToken cancellationToken = default);
 
     Task<List<AppUser>> GetWorkspaceUsers(string workspaceKey, bool isReadonly = false, CancellationToken cancellationToken = default);
@@ -26,10 +24,6 @@ public interface IUserRepository : IRepository<AppUser, string>
         CancellationToken cancellationToken = default);
 
     Task<IPagedResult<UserSelectOptionViewModel>> GetUserSelectOptionsPaged(int workspaceId, UserSelectFilter filter, CancellationToken cancellationToken = default);
-
-    Task<WorkspaceRole?> GetUserWorkspaceRole(string userId, string workspaceKey, CancellationToken cancellationToken = default);
-
-    Task<WorkspaceAppUser> InviteUserToWorkspace(string userId, int workspaceId, CancellationToken cancellationToken = default);
 
     Task<List<WorkspaceAppUser>> InviteUsersToWorkspace(IEnumerable<string> userIds, int workspaceId, CancellationToken cancellationToken = default);
 

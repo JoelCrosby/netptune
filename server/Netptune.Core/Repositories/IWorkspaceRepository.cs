@@ -12,8 +12,6 @@ public interface IWorkspaceRepository : IRepository<Workspace, int>
 
     Task<Workspace?> GetBySlug(string slug, bool isReadonly = false, CancellationToken cancellationToken = default);
 
-    Task<Workspace?> GetBySlugWithTasks(string slug, bool includeRelated, bool isReadonly = false, CancellationToken cancellationToken = default);
-
     Task<List<Workspace>> GetUserWorkspaces(string userId, CancellationToken cancellationToken = default, PageRequest? pageRequest = null);
 
     Task<List<Workspace>> GetWorkspaces(CancellationToken cancellationToken = default, PageRequest? pageRequest = null);
@@ -23,7 +21,6 @@ public interface IWorkspaceRepository : IRepository<Workspace, int>
     Task<bool> Exists(string slug, CancellationToken cancellationToken = default);
 
     Task DeleteWorkspacePermanent(int workspaceId, CancellationToken cancellationToken = default);
-
 
     Task<WorkspaceStorageUsageViewModel?> GetStorageUsage(int workspaceId, CancellationToken cancellationToken = default);
 

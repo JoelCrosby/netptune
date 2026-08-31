@@ -9,7 +9,6 @@ using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
-using Netptune.Core.Statuses;
 using Netptune.Core.ViewModels.Statuses;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
@@ -264,24 +263,6 @@ public sealed class StatusRepository : WorkspaceEntityRepository<DataContext, St
         if (taskUsesStatus) return true;
 
         return await Context.Projects.AnyAsync(project => project.DefaultStatusId == statusId && !project.IsDeleted, cancellationToken);
-    }
-
-    public async Task EnsureDefaultTaskStatuses(int workspaceId, string? ownerId, CancellationToken cancellationToken = default)
-    {
-        var existingKeys = await Entities
-            .Where(status => status.WorkspaceId == workspaceId && status.EntityType == EntityType.Task)
-            .Select(status => status.Key)
-            .ToListAsync(cancellationToken);
-
-        var existingSet = existingKeys.ToHashSet(StringComparer.OrdinalIgnoreCase);
-        var missing = DefaultTaskStatuses.All
-            .Where(definition => !existingSet.Contains(definition.Key))
-            .Select(definition => DefaultTaskStatuses.Create(definition, workspaceId, ownerId))
-            .ToList();
-
-        if (missing.Count == 0) return;
-
-        await Entities.AddRangeAsync(missing, cancellationToken);
     }
 
     public async Task EnsureNewTaskStatus(int workspaceId, string? ownerId, CancellationToken cancellationToken = default)

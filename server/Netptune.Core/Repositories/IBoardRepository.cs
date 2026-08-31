@@ -9,13 +9,9 @@ public interface IBoardRepository : IWorkspaceEntityRepository<Board, int>
 {
     Task<List<Board>> GetBoardsInProject(int projectId, bool isReadonly = false, bool includeGroups = false, CancellationToken cancellationToken = default, PageRequest? pageRequest = null);
 
-    Task<Board?> GetDefaultBoardInProject(int projectId, bool isReadonly = false, bool includeGroups = false, CancellationToken cancellationToken = default);
-
     Task<List<Board>> GetBoards(string slug, bool isReadonly = false, CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Boards with the given ids in a single query, with their project loaded.
-    /// </summary>
+    // Boards with the given ids in a single query, with their project loaded.
     Task<List<Board>> GetBoardsById(IEnumerable<int> boardIds, CancellationToken cancellationToken = default);
 
     Task<List<BoardsViewModel>> GetBoardViewModels(string slug, CancellationToken cancellationToken = default, PageRequest? pageRequest = null);

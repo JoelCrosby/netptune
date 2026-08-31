@@ -22,18 +22,6 @@ public class CommentRepository : WorkspaceEntityRepository<DataContext, Comment,
     {
     }
 
-    public Task<List<Comment>> GetCommentsForTask(int taskId, bool isReadonly = false, CancellationToken cancellationToken = default)
-    {
-        return Entities
-            .Where(x => !x.IsDeleted && x.EntityType == EntityType.Task && x.EntityId == taskId)
-            .OrderByDescending(x => x.CreatedAt)
-            .Include(x => x.Owner)
-            .Include(x => x.Reactions)
-            .Include(x => x.Mentions).ThenInclude(m => m.User)
-            .AsSplitQuery()
-            .ToReadonlyListAsync(isReadonly, cancellationToken);
-    }
-
     public Task<List<CommentViewModel>> GetCommentViewModelsForTask(int taskId, CancellationToken cancellationToken = default, PageRequest? pageRequest = null)
     {
         pageRequest ??= new PageRequest();

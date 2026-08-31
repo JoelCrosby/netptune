@@ -16,8 +16,6 @@ public interface IAutomationRepository : IWorkspaceEntityRepository<AutomationRu
 
     Task<AutomationRule?> GetRuleInWorkspace(int ruleId, int workspaceId, bool isReadonly = false, CancellationToken cancellationToken = default);
 
-    Task<bool> HasRun(string idempotencyKey, CancellationToken cancellationToken = default);
-
     Task<List<string>> GetExistingRunKeys(IReadOnlyCollection<string> idempotencyKeys, CancellationToken cancellationToken = default);
 
     Task AddRunsAsync(IEnumerable<AutomationRun> runs, CancellationToken cancellationToken = default);

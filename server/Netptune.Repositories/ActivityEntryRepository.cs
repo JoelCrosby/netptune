@@ -57,24 +57,6 @@ public class ActivityEntryRepository : WorkspaceEntityRepository<DataContext, Ac
             && entry.WindowExpiresAt > now;
     }
 
-    public Task<ActivityEntry?> FindMergeCandidate(
-        int workspaceId,
-        EntityType entityType,
-        int entityId,
-        string userId,
-        DateTime now,
-        CancellationToken cancellationToken = default)
-    {
-        return Entities
-            .Where(MergeCandidatePredicate(
-                workspaceId,
-                entityType,
-                entityId,
-                userId,
-                now))
-            .FirstOrDefaultAsync(cancellationToken);
-    }
-
     public Task<int> ExpireEntriesForOtherUsers(
         int workspaceId,
         EntityType entityType,

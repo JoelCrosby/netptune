@@ -7,7 +7,6 @@ namespace Netptune.Core.Repositories;
 
 public interface ICommentRepository : IWorkspaceEntityRepository<Comment, int>
 {
-    Task<List<Comment>> GetCommentsForTask(int taskId, bool isReadonly = false, CancellationToken cancellationToken = default);
 
     Task<List<CommentViewModel>> GetCommentViewModelsForTask(int taskId, CancellationToken cancellationToken = default, PageRequest? pageRequest = null);
 

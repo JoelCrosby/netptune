@@ -38,13 +38,6 @@ public abstract class WorkspaceEntityRepository<TContext, TEntity, TId>
             .ToListAsync(cancellationToken);
     }
 
-    public async Task DeleteAllInWorkspace(int workspaceId, CancellationToken cancellationToken = default)
-    {
-        var entityIds = await GetAllIdsInWorkspace(workspaceId, true, cancellationToken);
-
-        await DeletePermanent(entityIds, cancellationToken);
-    }
-
     public Task<List<TId>> GetExistingIds(
         IReadOnlyCollection<TId> ids,
         int workspaceId,

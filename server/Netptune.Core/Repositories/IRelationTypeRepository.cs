@@ -22,5 +22,4 @@ public interface IRelationTypeRepository : IWorkspaceEntityRepository<RelationTy
 
     Task<bool> IsInUse(int relationTypeId, CancellationToken cancellationToken = default);
 
-    Task EnsureDefaultRelationTypes(int workspaceId, string? ownerId, CancellationToken cancellationToken = default);
 }

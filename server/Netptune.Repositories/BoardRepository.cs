@@ -45,22 +45,6 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
         return query.Include(board => board.BoardGroups).ToListAsync(cancellationToken);
     }
 
-    public Task<Board?> GetDefaultBoardInProject(int projectId, bool isReadonly = false, bool includeGroups = false, CancellationToken cancellationToken = default)
-    {
-        var query = Entities
-            .Where(board => board.ProjectId == projectId)
-            .Where(board => !board.IsDeleted)
-            .Where(board => board.BoardType == BoardType.Default)
-            .IsReadonly(isReadonly);
-
-        if (!includeGroups) return query.FirstOrDefaultAsync(cancellationToken);
-
-        return query
-            .Include(board => board.BoardGroups)
-            .ThenInclude(group => group.TasksInGroups)
-            .FirstOrDefaultAsync(cancellationToken);
-    }
-
     public Task<List<Board>> GetBoards(string slug, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         return (from b in Entities

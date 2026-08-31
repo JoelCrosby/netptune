@@ -11,8 +11,6 @@ public interface IActivityEntryRepository : IWorkspaceEntityRepository<ActivityE
 
     Task<int> CloseStaleEntry(int workspaceId, EntityType entityType, int entityId, string userId, string agent, DateTime now, CancellationToken cancellationToken = default);
 
-    Task<ActivityEntry?> FindMergeCandidate(int workspaceId, EntityType entityType, int entityId, string userId, DateTime now, CancellationToken cancellationToken = default);
-
     Task<int> ExpireEntriesForOtherUsers(int workspaceId, EntityType entityType, int entityId, string userId, DateTime now, CancellationToken cancellationToken = default);
 
     Task<List<ActivityEntry>> ClaimExpiredEntries(int limit, CancellationToken cancellationToken = default);

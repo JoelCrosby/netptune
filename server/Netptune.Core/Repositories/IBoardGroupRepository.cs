@@ -7,13 +7,10 @@ namespace Netptune.Core.Repositories;
 
 public interface IBoardGroupRepository : IWorkspaceEntityRepository<BoardGroup, int>
 {
-    Task<BoardGroup?> GetWithTasksInGroups(int id, CancellationToken cancellationToken = default);
 
     Task<List<BoardGroup>> GetBoardGroupsInBoard(int boardId, bool isReadonly = false, CancellationToken cancellationToken = default);
 
     Task<List<BoardViewGroup>?> GetBoardViewGroups(int boardId, string currentUserId, string? searchTerm = null, int? sprintId = null, CancellationToken cancellationToken = default);
-
-    Task<List<ProjectTask>> GetTasksInGroup(int groupId, bool isReadonly = false, CancellationToken cancellationToken = default);
 
     Task<BoardGroupTaskTarget?> GetTaskTarget(int groupId, CancellationToken cancellationToken = default);
 

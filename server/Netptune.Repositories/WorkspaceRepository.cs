@@ -117,23 +117,6 @@ public class WorkspaceRepository : AuditableRepository<DataContext, Workspace, i
             .FirstOrDefaultAsync(workspace => workspace.Slug == slug && !workspace.IsDeleted, cancellationToken);
     }
 
-    public Task<Workspace?> GetBySlugWithTasks(string slug, bool includeRelated, bool isReadonly = false, CancellationToken cancellationToken = default)
-    {
-
-        if (includeRelated)
-        {
-            return Entities
-                .IsReadonly(isReadonly)
-                .Include(workspace => workspace.Projects)
-                .ThenInclude(project => project.ProjectTasks)
-                .FirstOrDefaultAsync(workspace => workspace.Slug == slug && !workspace.IsDeleted, cancellationToken);
-        }
-
-        return Entities
-            .IsReadonly(isReadonly)
-            .FirstOrDefaultAsync(workspace => workspace.Slug == slug && !workspace.IsDeleted, cancellationToken);
-    }
-
     public Task<List<Workspace>> GetUserWorkspaces(string userId, CancellationToken cancellationToken = default, PageRequest? pageRequest = null)
     {
         pageRequest ??= new PageRequest();
