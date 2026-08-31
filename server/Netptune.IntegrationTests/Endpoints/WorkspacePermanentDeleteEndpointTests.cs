@@ -16,11 +16,9 @@ using Xunit;
 
 namespace Netptune.IntegrationTests.Endpoints;
 
-/// <summary>
-/// Permanent workspace deletion has to clear every row pointing at the workspace before the
-/// workspace row itself can go — all of those foreign keys are <c>Restrict</c>. These run against
-/// real Postgres, which is the only thing that actually enforces that.
-/// </summary>
+// Permanent workspace deletion has to clear every row pointing at the workspace before the
+// workspace row itself can go — all of those foreign keys are Restrict. These run against real
+// Postgres, which is the only thing that actually enforces that.
 [Collection(WorkspaceMutationCollection.Name)]
 public sealed class WorkspacePermanentDeleteEndpointTests
 {

@@ -351,9 +351,7 @@ public sealed class TaskRelationsEndpointTests
         return relationTypes.Single(relationType => relationType.Key == key);
     }
 
-    /// <summary>
-    /// Distinct tasks to link. Each test unlinks what it created, so they don't collide.
-    /// </summary>
+    // Distinct tasks to link. Each test unlinks what it created, so they don't collide.
     private async Task<List<TaskViewModel>> GetTasks(int count)
     {
         var response = await Client.GetAsync("api/tasks?pageSize=50");

@@ -19,10 +19,8 @@ using Xunit;
 
 namespace Netptune.IntegrationTests.Endpoints;
 
-/// <summary>
-/// Login and registration are rate limited per remote address, so every test here talks to the API
-/// through its own forwarded IP and therefore its own rate limit partition.
-/// </summary>
+// Login and registration are rate limited per remote address, so every test here talks to the API
+// through its own forwarded IP and therefore its own rate limit partition.
 public sealed class AuthEndpointTests
 {
     private const string Password = "Integration-Password-1!";

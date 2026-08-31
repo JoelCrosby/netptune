@@ -7,7 +7,6 @@ using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
-using Netptune.Core.Utilities;
 using Netptune.Handlers.Tasks.Commands;
 
 namespace Netptune.Ai.Execution.Handlers;
@@ -95,7 +94,7 @@ public sealed class CreateTaskChangeHandler : IAiChangeHandler, IAiChangeUndoHan
         NetptunePermissions.Tasks.Delete,
     };
 
-    /// <summary>Nothing existed before, so the undo only needs the created task.</summary>
+    // Nothing existed before, so the undo only needs the created task.
     public Task<JsonDocument?> Capture(AiChangeApplyContext context, CancellationToken cancellationToken)
     {
         return Task.FromResult<JsonDocument?>(null);

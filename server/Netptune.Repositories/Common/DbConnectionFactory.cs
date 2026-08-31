@@ -15,10 +15,6 @@ public abstract class DbConnectionFactory : IDbConnectionFactory
         ConnectionString = connectionString;
     }
 
-    /// <summary>
-    /// Starts and open a database connection to the sql database
-    /// </summary>
-    /// <returns>Database connection to use with dapper</returns>
     public IDbConnection StartConnection()
     {
         var connection = new NpgsqlConnection(ConnectionString);

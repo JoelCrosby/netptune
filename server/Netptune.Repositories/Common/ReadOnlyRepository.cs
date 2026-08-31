@@ -4,9 +4,7 @@ using Netptune.Core.Repositories.Common;
 
 namespace Netptune.Repositories.Common;
 
-/// <summary>
-/// Basic base repository, designed to be used only with dapper or other micro ORM
-/// </summary>
+// Base for repositories that reach the database through Dapper rather than EF.
 public abstract class ReadOnlyRepository
 {
     protected readonly IDbConnectionFactory ConnectionFactory;
@@ -16,10 +14,6 @@ public abstract class ReadOnlyRepository
         ConnectionFactory = connectionFactory;
     }
 
-    /// <summary>
-    /// Starts connection to the database to execute a query
-    /// </summary>
-    /// <returns>sql connection</returns>
     protected IDbConnection StartConnection()
     {
         return ConnectionFactory.StartConnection();
