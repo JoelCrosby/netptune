@@ -62,13 +62,18 @@ const latestRunQuery: PageQuery = { page: 1, pageSize: 1 };
         i18n-title="Page title for a single automation"
         title="Automation">
         <a
+          pageHeaderActions
           app-stroked-button
           [routerLink]="['../']"
           i18n="Link back to the automation list">
           Back
         </a>
         @if (rule(); as rule) {
-          <button app-stroked-button type="button" (click)="onDryRun(rule)">
+          <button
+            pageHeaderActions
+            app-stroked-button
+            type="button"
+            (click)="onDryRun(rule)">
             <svg lucideFlaskConical class="h-4 w-4"></svg>
             <span i18n="Button that tests the automation against a task">
               Test
@@ -77,6 +82,7 @@ const latestRunQuery: PageQuery = { page: 1, pageSize: 1 };
         }
         @if (canManage() && rule(); as rule) {
           <button
+            pageHeaderActions
             app-stroked-button
             type="button"
             [disabled]="saving()"
@@ -89,7 +95,11 @@ const latestRunQuery: PageQuery = { page: 1, pageSize: 1 };
               <span i18n="Button that switches an automation on">Enable</span>
             }
           </button>
-          <a app-flat-button color="primary" [routerLink]="['edit']">
+          <a
+            pageHeaderActions
+            app-flat-button
+            color="primary"
+            [routerLink]="['edit']">
             <svg lucideSettings2 class="h-4 w-4"></svg>
             <span i18n="Button that edits the automation">Edit</span>
           </a>
