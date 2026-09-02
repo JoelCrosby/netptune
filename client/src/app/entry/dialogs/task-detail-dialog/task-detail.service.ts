@@ -8,12 +8,12 @@ import {
 } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UpdateProjectTaskRequest } from '@app/core/models/requests/update-project-task-request';
+import { TaskEstimate } from '@core/enums/estimate-type';
 import { TaskPriority } from '@core/enums/task-priority';
 import {
   UserSelectOption,
   UserSelectValue,
 } from '@core/models/view-models/user-select-option';
-import { TaskEstimate } from '@static/components/task-properties/task-estimate-select.component';
 import { taskDetailResource } from '@core/resources/task.resource';
 import { SprintsService } from '@core/services/sprints.service';
 import { CurrentTaskService } from '@core/services/current-task.service';

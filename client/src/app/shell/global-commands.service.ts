@@ -289,6 +289,8 @@ export class GlobalCommandsService implements OnDestroy {
   private createTask() {
     this.dialog.open(CreateTaskDialogComponent, {
       width: CreateTaskDialogComponent.width,
+      height: CreateTaskDialogComponent.height,
+      panelClass: CreateTaskDialogComponent.panelClass,
     });
   }
 

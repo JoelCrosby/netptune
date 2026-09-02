@@ -1,3 +1,8 @@
+export interface TaskEstimate {
+  estimateType: EstimateType | null;
+  estimateValue: number | null;
+}
+
 export enum EstimateType {
   storyPoints = 0,
   hours = 1,

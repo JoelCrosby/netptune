@@ -220,6 +220,8 @@ export class TaskListComponent {
   createTaskClicked() {
     this.dialog.open(CreateTaskDialogComponent, {
       width: CreateTaskDialogComponent.width,
+      height: CreateTaskDialogComponent.height,
+      panelClass: CreateTaskDialogComponent.panelClass,
     });
   }
 

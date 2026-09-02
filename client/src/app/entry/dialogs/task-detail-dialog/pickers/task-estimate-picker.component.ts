@@ -3,13 +3,13 @@ import {
   EstimateType,
   estimateTypeLabels,
   estimateTypeOptions,
+  TaskEstimate,
   tShirtSizes,
 } from '@core/enums/estimate-type';
 import { LucideCheck } from '@lucide/angular';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
 import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
 import { NumberInputComponent } from '@static/components/number-input/number-input.component';
-import { TaskEstimate } from '@static/components/task-properties/task-estimate-select.component';
 
 @Component({
   selector: 'app-task-estimate-picker',

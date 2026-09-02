@@ -281,6 +281,8 @@ export class SprintDetailViewComponent {
   onCreateTask(sprint: SprintDetailViewModel) {
     this.dialog.open(CreateTaskDialogComponent, {
       width: CreateTaskDialogComponent.width,
+      height: CreateTaskDialogComponent.height,
+      panelClass: CreateTaskDialogComponent.panelClass,
       data: { projectId: sprint.projectId, sprintId: sprint.id },
     });
   }
