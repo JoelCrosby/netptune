@@ -10,6 +10,7 @@ import {
   LucideDynamicIcon,
   LucideIconInput,
   LucideKanban,
+  LucideSettings2,
   LucideTrash2,
   LucideUsers,
   LucideX,
@@ -17,6 +18,7 @@ import {
 import { ToolbarButtonComponent } from '@static/components/button/toolbar-button.component';
 import { KeyboardKeyComponent } from '@static/components/keyboard-key/keyboard-key.component';
 import { KeyboardService } from '@static/services/keyboard.service';
+import { BulkEditTasksDialogComponent } from '@entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component';
 import { MoveTasksDialogComponent } from '../move-tasks-dialog/move-tasks-dialog.component';
 import { ReassignTasksDialogComponent } from '../reassign-tasks-dialog/reassign-tasks-dialog.component';
 
@@ -149,6 +151,13 @@ export class BoardGroupsSelectionComponent {
         icon: LucideUsers,
       });
     }
+    if (permissions.has(PERMISSIONS.tasks.update)) {
+      actions.push({
+        label: $localize`:Action that opens the bulk edit dialog for the selected tasks:Bulk edit`,
+        action: this.onBulkEditClicked.bind(this),
+        icon: LucideSettings2,
+      });
+    }
     if (permissions.has(PERMISSIONS.tasks.delete)) {
       actions.push({
         label: $localize`:Action that deletes the selected tasks:Delete tasks`,
@@ -210,6 +219,14 @@ export class BoardGroupsSelectionComponent {
   onMoveTasksClicked() {
     this.dialog.open(MoveTasksDialogComponent, {
       width: '600px',
+      panelClass: 'app-modal-class',
+    });
+  }
+
+  onBulkEditClicked() {
+    this.dialog.open(BulkEditTasksDialogComponent, {
+      width: BulkEditTasksDialogComponent.width,
+      data: [...this.selected()],
       panelClass: 'app-modal-class',
     });
   }

@@ -2030,6 +2030,15 @@
         <source>Upload</source>
       </segment>
     </unit>
+    <unit id="693469305296357690">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:156</note>
+        <note category="description">Action that opens the bulk edit dialog for the selected tasks</note>
+      </notes>
+      <segment>
+        <source>Bulk edit</source>
+      </segment>
+    </unit>
     <unit id="4229930832776293995">
       <notes>
         <note category="location">src/app/core/services/sprint-commands.service.ts:85</note>
@@ -3497,7 +3506,7 @@
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:153,160</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:168,173</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:238,243</note>
-        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:84,86</note>
+        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:86,88</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:86,97</note>
         <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:25,33</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:71,77</note>
@@ -9324,7 +9333,7 @@
     </unit>
     <unit id="4705684969760487201">
       <notes>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:188</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:186</note>
         <note category="description">Shown when a filter has no options at all</note>
       </notes>
       <segment>
@@ -10303,7 +10312,7 @@
     </unit>
     <unit id="6647181806898890269">
       <notes>
-        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:121</note>
+        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:123</note>
         <note category="description">Keyboard key that clears the task selection, shown as a hint</note>
       </notes>
       <segment>
@@ -10816,7 +10825,7 @@
     </unit>
     <unit id="2893417064141576408">
       <notes>
-        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:75,78</note>
+        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:77,80</note>
         <note category="description">Accessible label for the bar holding actions for the selected tasks</note>
       </notes>
       <segment>
@@ -11671,7 +11680,7 @@
     </unit>
     <unit id="7397230302063222654">
       <notes>
-        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:84,85</note>
+        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:86,87</note>
       </notes>
       <segment>
         <source>{VAR_PLURAL, plural, =1 {task selected} other {tasks selected}}</source>
@@ -12257,7 +12266,7 @@
     </unit>
     <unit id="1075015891055978279">
       <notes>
-        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:154</note>
+        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:163</note>
         <note category="description">Action that deletes the selected tasks</note>
       </notes>
       <segment>
@@ -12266,7 +12275,7 @@
     </unit>
     <unit id="2080795702464659362">
       <notes>
-        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:133</note>
+        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:135</note>
         <note category="description">Action that moves the selected tasks to another board group</note>
       </notes>
       <segment>
@@ -12275,7 +12284,7 @@
     </unit>
     <unit id="1463922540752409787">
       <notes>
-        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:147</note>
+        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:149</note>
         <note category="description">Action that reassigns the selected tasks to another person</note>
       </notes>
       <segment>
@@ -13069,7 +13078,7 @@
     <unit id="6044719097380241880">
       <notes>
         <note category="location">src/app/static/components/filter-facet/filter-facet.component.ts:192</note>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:308</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:306</note>
         <note category="description">Button that renders the next page of a filter&apos;s options. COUNT is how many options remain</note>
       </notes>
       <segment>
@@ -15480,7 +15489,7 @@
     <unit id="928009341755063873">
       <notes>
         <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:222</note>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:199</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:197</note>
         <note category="description">Keyboard key that closes the workspace menu, shown as a hint</note>
       </notes>
       <segment>
@@ -16765,7 +16774,7 @@
     </unit>
     <unit id="8700121026680200191">
       <notes>
-        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:107,108</note>
+        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:109,110</note>
         <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:67,71</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:113,116</note>
         <note category="location">src/app/features/settings/components/service-accounts/permission-grid.component.ts:46,51</note>
@@ -17740,7 +17749,7 @@
     <unit id="2933395362711398504">
       <notes>
         <note category="location">src/app/static/components/filter-facet/filter-facet.component.ts:136</note>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:191</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:189</note>
         <note category="description">Shown when a filter&apos;s search term matches no options</note>
       </notes>
       <segment>
@@ -18007,7 +18016,7 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:90,92</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:94,95</note>
         <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:149,154</note>
-        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:140</note>
+        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:142</note>
         <note category="description">Tooltip on the button that takes a task off a board</note>
       </notes>
       <segment>
@@ -21049,7 +21058,7 @@
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:44</note>
         <note category="location">src/app/static/components/filter-facet/filter-facet.component.ts:133</note>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:183</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:181</note>
         <note category="location">src/app/static/components/search-input/search-input.component.ts:39</note>
         <note category="location">src/app/static/components/select-filter/select-filter.component.ts:70</note>
         <note category="description">Label of the export search filter</note>
