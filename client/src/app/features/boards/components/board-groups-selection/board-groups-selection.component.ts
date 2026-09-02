@@ -226,8 +226,8 @@ export class BoardGroupsSelectionComponent {
   onBulkEditClicked() {
     this.dialog.open(BulkEditTasksDialogComponent, {
       width: BulkEditTasksDialogComponent.width,
-      data: [...this.selected()],
-      panelClass: 'app-modal-class',
+      data: [...this.selection.selectedTasks()],
+      panelClass: BulkEditTasksDialogComponent.panelClass,
     });
   }
 

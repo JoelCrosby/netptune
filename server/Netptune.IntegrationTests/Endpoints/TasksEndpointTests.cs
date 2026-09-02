@@ -627,6 +627,53 @@ public sealed class TasksEndpointTests
     }
 
     [Fact]
+    public async Task BulkUpdate_ShouldSetDueDateAndAddTags_WithoutDroppingExistingTags()
+    {
+        var workspaceTags = await GetWorkspaceTags(2);
+        var existingTag = workspaceTags[0];
+        var addedTag = workspaceTags[1];
+        var task = await CreateDeletableTask();
+
+        var seedResponse = await Client.PutAsJsonAsync("api/tasks", new UpdateProjectTaskRequest
+        {
+            Id = task.Id,
+            Tags = [existingTag],
+        });
+
+        seedResponse.StatusCode.Should().Be(HttpStatusCode.OK, await seedResponse.Content.ReadAsStringAsync());
+
+        var dueDate = new DateOnly(2030, 9, 12);
+        var bulkResponse = await Client.PostAsJsonAsync("api/tasks/bulk-update", new BulkUpdateTasksRequest
+        {
+            TaskIds = [task.Id],
+            DueDate = dueDate,
+            Tags = [addedTag],
+            TagMode = BulkCollectionMode.Add,
+        });
+
+        bulkResponse.StatusCode.Should().Be(HttpStatusCode.OK, await bulkResponse.Content.ReadAsStringAsync());
+
+        var tagged = await GetTask(task.Id);
+
+        tagged.DueDate.Should().Be(dueDate);
+        tagged.Tags.Should().BeEquivalentTo([existingTag, addedTag]);
+
+        var clearResponse = await Client.PostAsJsonAsync("api/tasks/bulk-update", new BulkUpdateTasksRequest
+        {
+            TaskIds = [task.Id],
+            ClearDueDate = true,
+            Tags = [addedTag],
+        });
+
+        clearResponse.StatusCode.Should().Be(HttpStatusCode.OK, await clearResponse.Content.ReadAsStringAsync());
+
+        var cleared = await GetTask(task.Id);
+
+        cleared.DueDate.Should().BeNull();
+        cleared.Tags.Should().Equal(addedTag);
+    }
+
+    [Fact]
     public async Task Create_ShouldReturnBadRequest_WhenInputNotValid()
     {
         var request = new AddProjectTaskRequest
@@ -1228,15 +1275,22 @@ public sealed class TasksEndpointTests
 
     private async Task<string> GetWorkspaceTag()
     {
+        var tags = await GetWorkspaceTags(1);
+
+        return tags[0];
+    }
+
+    private async Task<List<string>> GetWorkspaceTags(int count)
+    {
         var response = await Client.GetAsync("api/tags/workspace");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var tags = await response.Content.ReadFromJsonAsync<List<TagViewModel>>();
 
-        tags!.Should().NotBeEmpty();
+        tags!.Should().HaveCountGreaterThanOrEqualTo(count);
 
-        return tags[0].Name;
+        return tags.Take(count).Select(tag => tag.Name).ToList();
     }
 
     private async Task<TaskViewModel> CreateDeletableTask()

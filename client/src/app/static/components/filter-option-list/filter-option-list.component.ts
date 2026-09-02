@@ -10,6 +10,7 @@ import {
   linkedSignal,
   output,
   signal,
+  TemplateRef,
   untracked,
   viewChild,
   viewChildren,
@@ -44,13 +45,20 @@ const nearBottomThresholdPx = 48;
       [inputRole]="'combobox'"
       [expanded]="true"
       [controls]="listId"
-      [keyHint]="dismissKeyLabel"
+      [keyHint]="dismissKeyHint() ? dismissKeyLabel : null"
       [activeDescendant]="activeOptionId()"
       [value]="query()"
       [placeholder]="searchPlaceholder()"
       [ariaLabel]="searchAriaLabel() ?? searchPlaceholder()"
       (valueChange)="query.set($event)"
-      (keydown)="onKeydown($event)" />
+      (keydown)="onKeydown($event)">
+      <ng-container ngProjectAs="[filterPrefix]">
+        <ng-content select="[searchPrefix]" />
+      </ng-container>
+      <ng-container ngProjectAs="[filterSuffix]">
+        <ng-content select="[searchSuffix]" />
+      </ng-container>
+    </app-filter-input>
 
     @if (loading()) {
       <div class="flex justify-center p-4">
@@ -59,7 +67,7 @@ const nearBottomThresholdPx = 48;
     } @else {
       <div
         #scroller
-        class="custom-scroll max-h-72 overflow-y-auto p-1"
+        [class]="scrollerClass()"
         role="listbox"
         [id]="listId"
         [attr.aria-multiselectable]="multiple()"
@@ -83,6 +91,11 @@ const nearBottomThresholdPx = 48;
               [ngTemplateOutletContext]="{
                 $implicit: isSelected(option.value),
               }" />
+            @if (optionLeading(); as leading) {
+              <ng-container
+                [ngTemplateOutlet]="leading"
+                [ngTemplateOutletContext]="{ $implicit: option }" />
+            }
             <span class="min-w-0 flex-1 truncate">{{ option.label }}</span>
             @if (option.hint; as hint) {
               <span class="text-muted max-w-[45%] truncate text-xs">
@@ -115,6 +128,11 @@ const nearBottomThresholdPx = 48;
               [ngTemplateOutletContext]="{
                 $implicit: isSelected(option.value),
               }" />
+            @if (optionLeading(); as leading) {
+              <ng-container
+                [ngTemplateOutlet]="leading"
+                [ngTemplateOutletContext]="{ $implicit: option }" />
+            }
             <span class="min-w-0 flex-1 truncate">{{ option.label }}</span>
             @if (option.hint; as hint) {
               <span class="text-muted max-w-[45%] truncate text-xs">
@@ -172,6 +190,11 @@ export class FilterOptionListComponent<T> {
 
   readonly options = input.required<readonly FilterOption<T>[]>();
   readonly selected = input<ReadonlySet<T>>(new Set<T>());
+  /** Rendered between an option's marker and its label, for an avatar or a swatch. */
+  readonly optionLeading = input<TemplateRef<{ $implicit: FilterOption<T> }>>();
+  readonly listMaxHeightClass = input('max-h-72');
+  /** Off for a list rendered inline, where escape dismisses nothing. */
+  readonly dismissKeyHint = input(true);
   readonly multiple = input(true);
   readonly loading = input(false);
   readonly pageSize = input(50);
@@ -193,6 +216,10 @@ export class FilterOptionListComponent<T> {
   readonly dismissed = output();
 
   readonly listId = `filter-option-list-${crypto.randomUUID()}`;
+
+  protected readonly scrollerClass = computed(() => {
+    return `custom-scroll overflow-y-auto p-1 ${this.listMaxHeightClass()}`;
+  });
 
   protected readonly dismissKeyLabel = $localize`:Keyboard key that closes a filter's option list, shown as a hint:esc`;
 

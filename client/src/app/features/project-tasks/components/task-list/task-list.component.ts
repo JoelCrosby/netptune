@@ -204,7 +204,7 @@ export class TaskListComponent {
   }
 
   onSelectionChanged(tasks: TaskViewModel[]) {
-    this.taskSelection.set(tasks.map((task) => task.id));
+    this.taskSelection.set(tasks);
   }
 
   titleClicked(task: TaskViewModel) {

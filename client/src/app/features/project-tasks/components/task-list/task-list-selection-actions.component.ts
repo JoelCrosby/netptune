@@ -50,19 +50,19 @@ export class TaskListSelectionActionsComponent {
   private readonly taskCommands = inject(TaskCommandsService);
   private readonly taskSelection = inject(TaskSelectionService);
 
-  readonly selection = this.taskSelection.taskIds;
+  readonly selection = this.taskSelection.tasks;
   readonly selectedCount = computed(() => this.selection().length);
 
   bulkEditClicked() {
     this.dialog.open(BulkEditTasksDialogComponent, {
       width: BulkEditTasksDialogComponent.width,
       data: [...this.selection()],
-      panelClass: 'app-modal-class',
+      panelClass: BulkEditTasksDialogComponent.panelClass,
     });
   }
 
   deleteClicked() {
-    const ids = this.selection();
+    const ids = this.taskSelection.taskIds();
 
     if (ids.length === 0) return;
 

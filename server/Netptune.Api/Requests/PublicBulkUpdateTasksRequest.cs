@@ -19,7 +19,17 @@ public sealed record PublicBulkUpdateTasksRequest
 
     public bool ClearSprint { get; init; }
 
+    public DateOnly? DueDate { get; init; }
+
+    public bool ClearDueDate { get; init; }
+
     public List<string>? AssigneeIds { get; init; }
+
+    public BulkCollectionMode AssigneeMode { get; init; }
+
+    public List<string>? Tags { get; init; }
+
+    public BulkCollectionMode TagMode { get; init; }
 
     public int? BoardGroupId { get; init; }
 
@@ -34,7 +44,12 @@ public sealed record PublicBulkUpdateTasksRequest
             EstimateValue = EstimateValue,
             SprintId = SprintId,
             ClearSprint = ClearSprint,
+            DueDate = DueDate,
+            ClearDueDate = ClearDueDate,
             AssigneeIds = AssigneeIds,
+            AssigneeMode = AssigneeMode,
+            Tags = Tags,
+            TagMode = TagMode,
         };
     }
 }

@@ -2,8 +2,9 @@ using Netptune.Core.Enums;
 
 namespace Netptune.Core.Requests;
 
-// Each field is "set if provided, otherwise leave unchanged". Sprint has an explicit
-// ClearSprint flag so it can be removed (null can't distinguish "clear" from "keep").
+// Each field is "set if provided, otherwise leave unchanged". Sprint and due date have explicit
+// Clear flags so they can be removed (null can't distinguish "clear" from "keep"). Tags and
+// assignees carry a mode, because a bulk edit is as often "add these" as "make it exactly these".
 public class BulkUpdateTasksRequest
 {
     public List<int> TaskIds { get; init; } = [];
@@ -22,5 +23,15 @@ public class BulkUpdateTasksRequest
 
     public bool ClearSprint { get; init; }
 
+    public DateOnly? DueDate { get; init; }
+
+    public bool ClearDueDate { get; init; }
+
     public List<string>? AssigneeIds { get; init; }
+
+    public BulkCollectionMode AssigneeMode { get; init; }
+
+    public List<string>? Tags { get; init; }
+
+    public BulkCollectionMode TagMode { get; init; }
 }

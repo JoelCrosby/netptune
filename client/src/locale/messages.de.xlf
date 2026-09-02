@@ -529,6 +529,16 @@
         <target>Burndown</target>
       </segment>
     </unit>
+    <unit id="6976099455492592498">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-summary.ts:57</note>
+        <note category="description">Says what replacing tags in a bulk edit does. TOTAL is how many tasks are selected and COUNT is how many tags were picked</note>
+      </notes>
+      <segment state="initial">
+        <source>Replaces every existing tag on all <ph id="0" equiv="TOTAL" disp="tasks.length"/> tasks with these <ph id="1" equiv="COUNT" disp="selectedCount"/></source>
+        <target>Ersetzt alle vorhandenen Tags der <ph id="0" equiv="TOTAL" disp="tasks.length"/> Aufgaben durch diese <ph id="1" equiv="COUNT" disp="selectedCount"/></target>
+      </segment>
+    </unit>
     <unit id="6985320992724229617">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:193</note>
@@ -754,6 +764,15 @@
         <target>Sprint-Aufgaben verwalten</target>
       </segment>
     </unit>
+    <unit id="3387705505469073896">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:336,337</note>
+      </notes>
+      <segment state="initial">
+        <source>{VAR_PLURAL, plural, =1 {1 task} other {<ph id="0" equiv="INTERPOLATION"/> tasks}}</source>
+        <target>{VAR_PLURAL, plural, =1 {1 Aufgabe} other {<ph id="0" equiv="INTERPOLATION"/> Aufgaben}}</target>
+      </segment>
+    </unit>
     <unit id="338954840845347808">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:245,246</note>
@@ -935,6 +954,16 @@
       <segment state="translated">
         <source>View Statuses</source>
         <target>Status anzeigen</target>
+      </segment>
+    </unit>
+    <unit id="4218500950798659393">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-summary.ts:33</note>
+        <note category="description">Says how many of the selected tasks already have a due date. COUNT is how many do and TOTAL is how many are selected</note>
+      </notes>
+      <segment state="initial">
+        <source>Today: <ph id="0" equiv="COUNT" disp="scheduled"/> of <ph id="1" equiv="TOTAL" disp="tasks.length"/> have a due date</source>
+        <target>Heute: <ph id="0" equiv="COUNT" disp="scheduled"/> von <ph id="1" equiv="TOTAL" disp="tasks.length"/> haben ein Fälligkeitsdatum</target>
       </segment>
     </unit>
     <unit id="2967407594735372079">
@@ -1583,7 +1612,7 @@
         <note category="location">src/app/core/services/workspace-commands.service.ts:215</note>
         <note category="location">src/app/core/services/workspace-commands.service.ts:225</note>
         <note category="location">src/app/core/services/workspace-commands.service.ts:235</note>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:189,191</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:347,350</note>
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:108,111</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:142</note>
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:80,82</note>
@@ -1942,6 +1971,16 @@
         <target>Aufgaben verschoben</target>
       </segment>
     </unit>
+    <unit id="2859099637689974770">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-summary.ts:158</note>
+        <note category="description">Says that every selected task holds the same value, e.g. &quot;all 4 High&quot;. COUNT is how many tasks and VALUE is the value they hold</note>
+      </notes>
+      <segment state="initial">
+        <source>all <ph id="0" equiv="COUNT" disp="count"/> <ph id="1" equiv="VALUE" disp="label"/></source>
+        <target>alle <ph id="0" equiv="COUNT" disp="count"/>: <ph id="1" equiv="VALUE" disp="label"/></target>
+      </segment>
+    </unit>
     <unit id="4885517637912217945">
       <notes>
         <note category="location">src/app/core/services/board-group-commands.service.ts:166</note>
@@ -2090,6 +2129,16 @@
       <segment state="translated">
         <source>Unpin workspace</source>
         <target>Arbeitsbereich lösen</target>
+      </segment>
+    </unit>
+    <unit id="7963932149029320020">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:288,294</note>
+        <note category="description">Shown in a bulk edit dialog before any field has been added</note>
+      </notes>
+      <segment state="initial">
+        <source> Nothing will change yet. Add a field below to start. </source>
+        <target>Noch ändert sich nichts. Fügen Sie unten ein Feld hinzu, um zu beginnen.</target>
       </segment>
     </unit>
     <unit id="7965983345343883144">
@@ -3027,6 +3076,16 @@
         <target>Problem</target>
       </segment>
     </unit>
+    <unit id="2426850352402316192">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:624</note>
+        <note category="description">Says how many of the selected tasks already carry a tag or assignee. COUNT is how many do and TOTAL is how many are selected</note>
+      </notes>
+      <segment state="initial">
+        <source>on <ph id="0" equiv="COUNT" disp="count"/> of <ph id="1" equiv="TOTAL" disp="this.taskCount"/></source>
+        <target>bei <ph id="0" equiv="COUNT" disp="count"/> von <ph id="1" equiv="TOTAL" disp="this.taskCount"/></target>
+      </segment>
+    </unit>
     <unit id="2428767488933945361">
       <notes>
         <note category="location">src/app/core/util/colors/colors.ts:194</note>
@@ -3362,7 +3421,7 @@
         <note category="location">src/app/core/util/ai-client-context.ts:27</note>
         <note category="location">src/app/core/util/pin-scope.ts:80</note>
         <note category="location">src/app/entry/components/setup-creation-summary/setup-creation-summary.component.ts:59</note>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:112,113</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:69</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-field-rows.component.ts:242</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:287</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:224</note>
@@ -3441,6 +3500,16 @@
       <segment state="initial">
         <source>Records</source>
         <target>Datensätze</target>
+      </segment>
+    </unit>
+    <unit id="3431484104185901354">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:23</note>
+        <note category="description">Kind of control a bulk-edit field brings, shown beside its name</note>
+      </notes>
+      <segment state="initial">
+        <source>enum</source>
+        <target>Enum</target>
       </segment>
     </unit>
     <unit id="3435864796418567667">
@@ -3537,7 +3606,7 @@
       <notes>
         <note category="location">src/app/core/tasks/task-columns.ts:100</note>
         <note category="location">src/app/entry/dialogs/board-group-dialog/board-group-dialog.component.ts:52</note>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:77</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:34</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/pickers/task-status-segments.component.ts:24,28</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:280</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:58,59</note>
@@ -3649,31 +3718,12 @@
     </unit>
     <unit id="6899352499692995227">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:51,54</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:87,89</note>
         <note category="description">Title of the dialog for editing several tasks at once</note>
       </notes>
       <segment state="translated">
         <source> Bulk edit tasks </source>
         <target>Aufgaben sammelweise bearbeiten</target>
-      </segment>
-    </unit>
-    <unit id="3638193934601335943">
-      <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:61,68</note>
-        <note category="description">Explains how many tasks a bulk edit affects. KEEP_CURRENT is the styled name of the no-change option</note>
-      </notes>
-      <segment state="translated">
-        <source> <ph id="0" equiv="ICU" disp="{taskCount(), plural, =1 {Applying to 1 task.} other {Applying to {{ taskCount() }} tasks.} }" subFlows="6142548513247922241"/> Fields left on <pc id="1" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;font-medium&quot;&gt;" dispEnd="&lt;/span&gt;">Keep current</pc> are not changed. </source>
-        <target><ph id="0" equiv="ICU" disp="{taskCount(), plural, =1 {Applying to 1 task.} other {Applying to {{ taskCount() }} tasks.} }" subFlows="6142548513247922241"/> Felder, die auf <pc id="1" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;font-medium&quot;&gt;" dispEnd="&lt;/span&gt;">Aktuellen Wert behalten</pc> stehen, werden nicht geändert.</target>
-      </segment>
-    </unit>
-    <unit id="6752490056885072620">
-      <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:61,63</note>
-      </notes>
-      <segment state="translated">
-        <source>{VAR_PLURAL, plural, =1 {Applying to 1 task.} other {Applying to <ph id="0" equiv="INTERPOLATION"/> tasks.}}</source>
-        <target>{VAR_PLURAL, plural, =1 {Wird auf 1 Aufgabe angewendet.} other {Wird auf <ph id="0" equiv="INTERPOLATION"/> Aufgaben angewendet.}}</target>
       </segment>
     </unit>
     <unit id="6755393728505925394">
@@ -3697,24 +3747,10 @@
         <target>Überschrift 1</target>
       </segment>
     </unit>
-    <unit id="6817022269939421403">
-      <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:80,82</note>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:98,100</note>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:116,118</note>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:135,137</note>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:156,158</note>
-        <note category="description">Option that leaves a field unchanged during a bulk edit</note>
-      </notes>
-      <segment state="translated">
-        <source> Keep current </source>
-        <target>Aktuellen Wert behalten</target>
-      </segment>
-    </unit>
     <unit id="2734022681675842051">
       <notes>
         <note category="location">src/app/core/tasks/task-columns.ts:116</note>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:94,95</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:39</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-field-rows.component.ts:238</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:283</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:102,104</note>
@@ -3744,7 +3780,7 @@
       <notes>
         <note category="location">src/app/core/tasks/task-columns.ts:88</note>
         <note category="location">src/app/core/util/ai-client-context.ts:29</note>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:132</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:74</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-field-rows.component.ts:243</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:288</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:187,188</note>
@@ -3785,8 +3821,8 @@
     </unit>
     <unit id="5514074948771652820">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:139,141</note>
-        <note category="description">Option that clears the task&apos;s sprint</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-summary.ts:13</note>
+        <note category="description">Stands in for a task that belongs to no sprint</note>
       </notes>
       <segment state="translated">
         <source>No sprint</source>
@@ -3795,7 +3831,7 @@
     </unit>
     <unit id="676130444518246482">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:152,153</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:49</note>
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:240,242</note>
         <note category="description">Label of the estimate-unit field</note>
       </notes>
@@ -3806,7 +3842,7 @@
     </unit>
     <unit id="7238645691627834742">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:170,173</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:54</note>
         <note category="location">src/app/features/automations/models/automation-query-builder.ts:302</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:123,124</note>
         <note category="description">Label of the story points field</note>
@@ -3819,7 +3855,7 @@
     <unit id="4580853214337140621">
       <notes>
         <note category="location">src/app/core/tasks/task-columns.ts:128</note>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:177,178</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:64</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:106,108</note>
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:166,168</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:69</note>
@@ -3865,7 +3901,8 @@
     </unit>
     <unit id="8856905278208146821">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:194,199</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:92,97</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:356,361</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:59,65</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:153,160</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:168,173</note>
@@ -3875,11 +3912,11 @@
         <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:25,33</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:71,77</note>
         <note category="location">src/app/features/workspaces/components/workspace-list-item.component.ts:148,149</note>
-        <note category="description">Button that applies the bulk edit to the selected tasks</note>
+        <note category="description">Count of the tasks a bulk edit will be applied to</note>
       </notes>
-      <segment state="translated">
-        <source> <ph id="0" equiv="ICU" disp="{taskCount(), plural, =1 {Apply to 1 task} other {Apply to {{ taskCount() }} tasks} }" subFlows="521755271628896810"/> </source>
-        <target> <ph id="0" equiv="ICU" disp="{taskCount(), plural, =1 {Apply to 1 task} other {Apply to {{ taskCount() }} tasks} }" subFlows="521755271628896810"/> </target>
+      <segment state="initial">
+        <source> <ph id="0" equiv="ICU" disp="{taskCount, plural, =1 {1 task selected} other {{{ taskCount }} tasks selected} }" subFlows="4928623068300585072"/> </source>
+        <target> <ph id="0" equiv="ICU" disp="{taskCount, plural, =1 {1 task selected} other {{{ taskCount }} tasks selected} }" subFlows="4928623068300585072"/> </target>
       </segment>
     </unit>
     <unit id="7001227209911602786">
@@ -3892,13 +3929,13 @@
         <target>Tags filtern</target>
       </segment>
     </unit>
-    <unit id="7004360657413921611">
+    <unit id="7388001911893689588">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:194,196</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:356,358</note>
       </notes>
-      <segment state="translated">
-        <source>{VAR_PLURAL, plural, =1 {Apply to 1 task} other {Apply to <ph id="0" equiv="INTERPOLATION"/> tasks}}</source>
-        <target>{VAR_PLURAL, plural, =1 {Auf 1 Aufgabe anwenden} other {Auf <ph id="0" equiv="INTERPOLATION"/> Aufgaben anwenden}}</target>
+      <segment state="initial">
+        <source>{VAR_PLURAL, plural, =1 {Apply 1 change} other {Apply <ph id="0" equiv="INTERPOLATION"/> changes}}</source>
+        <target>{VAR_PLURAL, plural, =1 {1 Änderung anwenden} other {<ph id="0" equiv="INTERPOLATION"/> Änderungen anwenden}}</target>
       </segment>
     </unit>
     <unit id="7004542764820586045">
@@ -3909,16 +3946,6 @@
       <segment state="translated">
         <source><ph id="0" equiv="COUNT" disp="count"/> <ph id="1" equiv="ENTITIES" disp="entities"/> removed</source>
         <target><ph id="0" equiv="COUNT" disp="count"/> <ph id="1" equiv="ENTITIES" disp="entities"/> entfernt</target>
-      </segment>
-    </unit>
-    <unit id="5720456130115183258">
-      <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:243</note>
-        <note category="description">Body of a dialog or validation message</note>
-      </notes>
-      <segment state="translated">
-        <source>Enter a valid story point value.</source>
-        <target>Geben Sie einen gültigen Story-Point-Wert ein.</target>
       </segment>
     </unit>
     <unit id="8720977247725652816">
@@ -4142,6 +4169,16 @@
       <segment state="translated">
         <source>Create Status</source>
         <target>Status erstellen</target>
+      </segment>
+    </unit>
+    <unit id="4248380204989256605">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-collection-picker.component.ts:102</note>
+        <note category="description">Bulk edit mode that leaves a task&apos;s existing tags or assignees in place</note>
+      </notes>
+      <segment state="initial">
+        <source>Add to</source>
+        <target>Hinzufügen zu</target>
       </segment>
     </unit>
     <unit id="3834893796193098037">
@@ -4985,6 +5022,16 @@
         <target>Beschreiben Sie das Projekt und verknüpfen Sie optional sein Repository.</target>
       </segment>
     </unit>
+    <unit id="2585922590660438126">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:190,193</note>
+        <note category="description">Button that clears the due date instead of setting one</note>
+      </notes>
+      <segment state="initial">
+        <source> Clear instead </source>
+        <target>Stattdessen leeren</target>
+      </segment>
+    </unit>
     <unit id="3412242050628541814">
       <notes>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:60,63</note>
@@ -5463,6 +5510,7 @@
     </unit>
     <unit id="7886570921510760899">
       <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:59</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:125</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:74</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:83,84</note>
@@ -6031,6 +6079,16 @@
       <segment state="translated">
         <source> References </source>
         <target> Verweise </target>
+      </segment>
+    </unit>
+    <unit id="3967847406304427637">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-summary.ts:154</note>
+        <note category="description">One entry in a breakdown of what the selected tasks hold today, e.g. &quot;3 In Progress&quot;. COUNT is how many tasks and VALUE is the value they hold</note>
+      </notes>
+      <segment state="initial">
+        <source><ph id="0" equiv="COUNT" disp="count"/> <ph id="1" equiv="VALUE" disp="label"/></source>
+        <target><ph id="0" equiv="COUNT" disp="count"/> <ph id="1" equiv="VALUE" disp="label"/></target>
       </segment>
     </unit>
     <unit id="2569933643470141357">
@@ -6795,6 +6853,16 @@
         <target>Datumsformat</target>
       </segment>
     </unit>
+    <unit id="3739723885372225796">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:391</note>
+        <note category="description">Shown when a workspace has no tags to pick from</note>
+      </notes>
+      <segment state="initial">
+        <source>No tags</source>
+        <target>Keine Tags</target>
+      </segment>
+    </unit>
     <unit id="6330286145772999727">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/pickers/task-project-picker.component.ts:42</note>
@@ -6990,6 +7058,16 @@
       <segment state="translated">
         <source> A </source>
         <target> A </target>
+      </segment>
+    </unit>
+    <unit id="5342067349981153295">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-collection-picker.component.ts:106</note>
+        <note category="description">Bulk edit mode that swaps out a task&apos;s existing tags or assignees</note>
+      </notes>
+      <segment state="initial">
+        <source>Replace with</source>
+        <target>Ersetzen durch</target>
       </segment>
     </unit>
     <unit id="5342432350421167093">
@@ -7747,6 +7825,16 @@
         <target> Wenn </target>
       </segment>
     </unit>
+    <unit id="6956620730780387566">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:303,307</note>
+        <note category="description">Button that adds another field to a bulk edit</note>
+      </notes>
+      <segment state="initial">
+        <source> Add a field </source>
+        <target>Feld hinzufügen</target>
+      </segment>
+    </unit>
     <unit id="6957352620356064946">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/pickers/task-sprint-picker.component.ts:52</note>
@@ -7886,6 +7974,16 @@
         <target>Aufgabenname</target>
       </segment>
     </unit>
+    <unit id="6885998085930575465">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:389</note>
+        <note category="description">Accessible label for the control that chooses whether a bulk edit adds tags or replaces them</note>
+      </notes>
+      <segment state="initial">
+        <source>Tag change mode</source>
+        <target>Änderungsmodus für Tags</target>
+      </segment>
+    </unit>
     <unit id="6889380838020549066">
       <notes>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:63,65</note>
@@ -7941,6 +8039,7 @@
     </unit>
     <unit id="2413171611497962745">
       <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:44</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-field-rows.component.ts:185,190</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-field-rows.component.ts:241</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:198,200</note>
@@ -7951,7 +8050,7 @@
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:398</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:73</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:34</note>
-        <note category="description">Accessible label for the task due date picker</note>
+        <note category="description">Label of the due date field</note>
       </notes>
       <segment state="translated">
         <source>Due date</source>
@@ -8164,6 +8263,16 @@
       <segment state="translated">
         <source> · Updated <ph id="0" equiv="DATE" disp="{{ rule().updatedAt | prettyDate // i18n(ph=&quot;DATE&quot;) }}"/> </source>
         <target> · Aktualisiert am <ph id="0" equiv="DATE" disp="{{ rule().updatedAt | prettyDate // i18n(ph=&quot;DATE&quot;) }}"/> </target>
+      </segment>
+    </unit>
+    <unit id="4751957632331128817">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-summary.ts:166</note>
+        <note category="description">Stands in for a project the current user cannot see</note>
+      </notes>
+      <segment state="initial">
+        <source>Another project</source>
+        <target>Ein anderes Projekt</target>
       </segment>
     </unit>
     <unit id="4752892888616730702">
@@ -8381,6 +8490,16 @@
       <segment state="translated">
         <source>That task could not be pinned.</source>
         <target>Diese Aufgabe konnte nicht angeheftet werden.</target>
+      </segment>
+    </unit>
+    <unit id="576698621000060547">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-summary.ts:87</note>
+        <note category="description">Says that every selected task is already on one project. TOTAL is how many tasks are selected and PROJECT is the project&apos;s name</note>
+      </notes>
+      <segment state="initial">
+        <source>Today: all <ph id="0" equiv="TOTAL" disp="tasks.length"/> on <ph id="1" equiv="PROJECT" disp="name"/></source>
+        <target>Heute: alle <ph id="0" equiv="TOTAL" disp="tasks.length"/> in <ph id="1" equiv="PROJECT" disp="name"/></target>
       </segment>
     </unit>
     <unit id="5769292297914455214">
@@ -8986,6 +9105,16 @@
         <target>Aufgabe suchen</target>
       </segment>
     </unit>
+    <unit id="4098688651658195116">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:390</note>
+        <note category="description">Accessible label for the control that chooses whether a bulk edit adds assignees or replaces them</note>
+      </notes>
+      <segment state="initial">
+        <source>Assignee change mode</source>
+        <target>Änderungsmodus für Zuweisungen</target>
+      </segment>
+    </unit>
     <unit id="3807106844450450689">
       <notes>
         <note category="location">src/app/features/automations/components/automation-relation-editor.component.ts:90,92</note>
@@ -9179,6 +9308,16 @@
       <segment state="translated">
         <source>Filter by Status</source>
         <target>Nach Status filtern</target>
+      </segment>
+    </unit>
+    <unit id="1341790877187548794">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:105,109</note>
+        <note category="description">Explains that a bulk edit only touches the fields that were added</note>
+      </notes>
+      <segment state="initial">
+        <source> Only the fields you add below are written. Everything else is left alone. </source>
+        <target>Nur die unten hinzugefügten Felder werden geschrieben. Alles andere bleibt unverändert.</target>
       </segment>
     </unit>
     <unit id="5223235322022344945">
@@ -9680,6 +9819,15 @@
         <target>Leer lassen, um die aktuelle Beschreibung beizubehalten</target>
       </segment>
     </unit>
+    <unit id="1754733068810926535">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:331,333</note>
+      </notes>
+      <segment state="initial">
+        <source>{VAR_PLURAL, plural, =1 {1 field} other {<ph id="0" equiv="INTERPOLATION"/> fields}}</source>
+        <target>{VAR_PLURAL, plural, =1 {1 Feld} other {<ph id="0" equiv="INTERPOLATION"/> Felder}}</target>
+      </segment>
+    </unit>
     <unit id="175649209422679045">
       <notes>
         <note category="location">src/app/core/services/board-group-commands.service.ts:314</note>
@@ -9836,7 +9984,7 @@
     </unit>
     <unit id="4965562695253171955">
       <notes>
-        <note category="location">src/app/static/components/filter-input/filter-input.component.ts:54,56</note>
+        <note category="location">src/app/static/components/filter-input/filter-input.component.ts:56,58</note>
         <note category="description">Accessible label for the button that clears a filter</note>
       </notes>
       <segment state="translated">
@@ -9866,9 +10014,10 @@
     </unit>
     <unit id="4975748273657042999">
       <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:26</note>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:82,84</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:130</note>
-        <note category="description">Plural noun for tags, used in the row summary</note>
+        <note category="description">Kind of control a bulk-edit field brings, shown beside its name</note>
       </notes>
       <segment state="translated">
         <source>tags</source>
@@ -10226,6 +10375,16 @@
         <target> Wartezeit </target>
       </segment>
     </unit>
+    <unit id="8505625387835214066">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:25</note>
+        <note category="description">Kind of control a bulk-edit field brings, shown beside its name</note>
+      </notes>
+      <segment state="initial">
+        <source>number</source>
+        <target>Zahl</target>
+      </segment>
+    </unit>
     <unit id="7410432243549869948">
       <notes>
         <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:150,151</note>
@@ -10311,7 +10470,7 @@
     </unit>
     <unit id="4705684969760487201">
       <notes>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:186</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:209</note>
         <note category="description">Shown when a filter has no options at all</note>
       </notes>
       <segment state="translated">
@@ -11872,6 +12031,15 @@
         <target>Wenn eine Aufgabe 1 Tag lang nicht zugewiesen ist</target>
       </segment>
     </unit>
+    <unit id="5661631483849837548">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:92,94</note>
+      </notes>
+      <segment state="initial">
+        <source>{VAR_PLURAL, plural, =1 {1 task selected} other {<ph id="0" equiv="INTERPOLATION"/> tasks selected}}</source>
+        <target>{VAR_PLURAL, plural, =1 {1 Aufgabe ausgewählt} other {<ph id="0" equiv="INTERPOLATION"/> Aufgaben ausgewählt}}</target>
+      </segment>
+    </unit>
     <unit id="5667333682919111082">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:414</note>
@@ -12132,6 +12300,16 @@
         <target><ph id="0" equiv="FIELD" disp="field"/> ist leer</target>
       </segment>
     </unit>
+    <unit id="3606426868450781810">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:331,343</note>
+        <note category="description">Sums up a bulk edit: how many fields it writes, how many tasks it touches, and how many of those fields overwrite a value the tasks already hold</note>
+      </notes>
+      <segment state="initial">
+        <source> <ph id="0" equiv="ICU" disp="{addedCount(), plural, =1 {1 field} other {{{ addedCount() }} fields} }" subFlows="2348500312993431614"/> · <ph id="1" equiv="ICU_1" disp="{taskCount, plural, =1 {1 task} other {{{ taskCount }} tasks}}" subFlows="5105875162200964153"/> · <ph id="2" equiv="ICU_2" disp="{overwriteCount(), plural, =1 {1 replaces an existing value} other {{{ overwriteCount() }} replace existing values} }" subFlows="2752314674870144882"/> </source>
+        <target> <ph id="0" equiv="ICU" disp="{addedCount(), plural, =1 {1 field} other {{{ addedCount() }} fields} }" subFlows="2348500312993431614"/> · <ph id="1" equiv="ICU_1" disp="{taskCount, plural, =1 {1 task} other {{{ taskCount }} tasks}}" subFlows="5105875162200964153"/> · <ph id="2" equiv="ICU_2" disp="{overwriteCount(), plural, =1 {1 replaces an existing value} other {{{ overwriteCount() }} replace existing values} }" subFlows="2752314674870144882"/> </target>
+      </segment>
+    </unit>
     <unit id="3606812607516218575">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:502</note>
@@ -12150,6 +12328,16 @@
       <segment state="translated">
         <source><ph id="0" equiv="SUBJECT" disp="value.trim() || field"/> is added</source>
         <target><ph id="0" equiv="SUBJECT" disp="value.trim() || field"/> wird hinzugefügt</target>
+      </segment>
+    </unit>
+    <unit id="3204607760273560687">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-summary.ts:42</note>
+        <note category="description">Warns that the selected tasks do not share one estimate unit</note>
+      </notes>
+      <segment state="initial">
+        <source>Estimate type varies across the selection</source>
+        <target>Der Schätzungstyp ist in der Auswahl uneinheitlich</target>
       </segment>
     </unit>
     <unit id="3206350855592091313">
@@ -13335,6 +13523,16 @@
         <target>Enthält Kommentare</target>
       </segment>
     </unit>
+    <unit id="27049200644012542">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:543</note>
+        <note category="description">Accessible label for the button that drops a field from a bulk edit. FIELD is the field&apos;s name</note>
+      </notes>
+      <segment state="initial">
+        <source>Remove <ph id="0" equiv="FIELD" disp="label"/></source>
+        <target><ph id="0" equiv="FIELD" disp="label"/> entfernen</target>
+      </segment>
+    </unit>
     <unit id="3130959333071454929">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:510</note>
@@ -14134,6 +14332,16 @@
         <target>Beziehungstyp löschen</target>
       </segment>
     </unit>
+    <unit id="7859140891394548585">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:270,271</note>
+        <note category="description">Option that clears the task&apos;s sprint</note>
+      </notes>
+      <segment state="initial">
+        <source> No sprint </source>
+        <target>Kein Sprint</target>
+      </segment>
+    </unit>
     <unit id="7864156617362454936">
       <notes>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:61,64</note>
@@ -14458,7 +14666,7 @@
     <unit id="6044719097380241880">
       <notes>
         <note category="location">src/app/static/components/filter-facet/filter-facet.component.ts:192</note>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:306</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:333</note>
         <note category="description">Button that renders the next page of a filter&apos;s options. COUNT is how many options remain</note>
       </notes>
       <segment state="translated">
@@ -14935,8 +15143,19 @@
         <target>Unbenannte Ansicht</target>
       </segment>
     </unit>
+    <unit id="3878950936097270792">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-summary.ts:69</note>
+        <note category="description">Says that adding assignees in a bulk edit leaves the current ones in place. COUNT is how many people are assigned across the selection</note>
+      </notes>
+      <segment state="initial">
+        <source>Keeps the <ph id="0" equiv="COUNT" disp="assigned.size"/> people already assigned across the selection</source>
+        <target>Behält die <ph id="0" equiv="COUNT" disp="assigned.size"/> bereits zugewiesenen Personen in der Auswahl</target>
+      </segment>
+    </unit>
     <unit id="3445720584036648434">
       <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:387</note>
         <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:50,51</note>
         <note category="description">Placeholder in the box that searches tags</note>
       </notes>
@@ -16284,6 +16503,16 @@
         <target> Der Berichtsverlauf beginnt <ph id="0" equiv="START" disp="{{ coverageStartLabel(value) // i18n(ph=&quot;START&quot;) }}"/>. Frühere Aktivität wird nicht geschätzt. </target>
       </segment>
     </unit>
+    <unit id="4104465056226914375">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:27</note>
+        <note category="description">Kind of control a bulk-edit field brings, shown beside its name</note>
+      </notes>
+      <segment state="initial">
+        <source>people</source>
+        <target>Personen</target>
+      </segment>
+    </unit>
     <unit id="4104472617873006431">
       <notes>
         <note category="location">src/app/features/reporting/components/report-coverage-notice.component.ts:45</note>
@@ -16667,6 +16896,16 @@
       <segment state="translated">
         <source>Increase</source>
         <target>Erhöhen</target>
+      </segment>
+    </unit>
+    <unit id="3938396793871184620">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:24</note>
+        <note category="description">Kind of control a bulk-edit field brings, shown beside its name</note>
+      </notes>
+      <segment state="initial">
+        <source>date</source>
+        <target>Datum</target>
       </segment>
     </unit>
     <unit id="3938527502818260365">
@@ -17130,7 +17369,7 @@
     <unit id="928009341755063873">
       <notes>
         <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:222</note>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:197</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:224</note>
         <note category="description">Keyboard key that closes the workspace menu, shown as a hint</note>
       </notes>
       <segment state="translated">
@@ -18489,6 +18728,16 @@
         <target>Es gibt keine Unterhaltungen</target>
       </segment>
     </unit>
+    <unit id="3231851886445850180">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-summary.ts:54</note>
+        <note category="description">Says what adding tags in a bulk edit does. COUNT is how many tags were picked</note>
+      </notes>
+      <segment state="initial">
+        <source>Adds <ph id="0" equiv="COUNT" disp="selectedCount"/> tags alongside the tags already on each task</source>
+        <target>Fügt <ph id="0" equiv="COUNT" disp="selectedCount"/> Tags zu den bereits vorhandenen Tags jeder Aufgabe hinzu</target>
+      </segment>
+    </unit>
     <unit id="3234223246962552425">
       <notes>
         <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:54,57</note>
@@ -18539,6 +18788,16 @@
       <segment state="translated">
         <source> Edit Service Account </source>
         <target>Dienstkonto bearbeiten</target>
+      </segment>
+    </unit>
+    <unit id="8169241385964351300">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-summary.ts:162</note>
+        <note category="description">Prefixes a summary of what the selected tasks hold before a bulk edit is applied. DETAIL is the breakdown</note>
+      </notes>
+      <segment state="initial">
+        <source>Today: <ph id="0" equiv="DETAIL" disp="detail"/></source>
+        <target>Heute: <ph id="0" equiv="DETAIL" disp="detail"/></target>
       </segment>
     </unit>
     <unit id="8146552333316099536">
@@ -18714,6 +18973,16 @@
       <segment state="initial">
         <source>Descending ↓</source>
         <target>Absteigend</target>
+      </segment>
+    </unit>
+    <unit id="2382112744090156936">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-summary.ts:11</note>
+        <note category="description">Stands in for a task with no estimate unit set</note>
+      </notes>
+      <segment state="initial">
+        <source>No estimate type</source>
+        <target>Kein Schätzungstyp</target>
       </segment>
     </unit>
     <unit id="2385248808412253609">
@@ -19069,6 +19338,16 @@
       <segment state="translated">
         <source>Inverse</source>
         <target>Umkehrung</target>
+      </segment>
+    </unit>
+    <unit id="5181462545166104597">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-summary.ts:101</note>
+        <note category="description">Says how many of the selected tasks lose their sprint. COUNT is how many are in a sprint today</note>
+      </notes>
+      <segment state="initial">
+        <source>Clears the sprint on <ph id="0" equiv="COUNT" disp="inSprint"/> of the selected tasks</source>
+        <target>Entfernt den Sprint bei <ph id="0" equiv="COUNT" disp="inSprint"/> der ausgewählten Aufgaben</target>
       </segment>
     </unit>
     <unit id="5183297199669717683">
@@ -19634,7 +19913,7 @@
     <unit id="2933395362711398504">
       <notes>
         <note category="location">src/app/static/components/filter-facet/filter-facet.component.ts:136</note>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:189</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:212</note>
         <note category="description">Shown when a filter&apos;s search term matches no options</note>
       </notes>
       <segment state="translated">
@@ -20170,6 +20449,16 @@
       <segment state="translated">
         <source>No tasks in this sprint.</source>
         <target>Keine Aufgaben in diesem Sprint.</target>
+      </segment>
+    </unit>
+    <unit id="8211158909715788227">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:392</note>
+        <note category="description">Shown when a workspace has no people to pick from</note>
+      </notes>
+      <segment state="initial">
+        <source>No people</source>
+        <target>Keine Personen</target>
       </segment>
     </unit>
     <unit id="8211774880361154235">
@@ -20808,6 +21097,16 @@
         <target>Heute fällig</target>
       </segment>
     </unit>
+    <unit id="6509017394946635578">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-summary.ts:72</note>
+        <note category="description">Says that replacing assignees in a bulk edit removes the current ones. COUNT is how many people are assigned across the selection</note>
+      </notes>
+      <segment state="initial">
+        <source>Replaces the <ph id="0" equiv="COUNT" disp="assigned.size"/> people already assigned across the selection</source>
+        <target>Ersetzt die <ph id="0" equiv="COUNT" disp="assigned.size"/> bereits zugewiesenen Personen in der Auswahl</target>
+      </segment>
+    </unit>
     <unit id="6509537909021660545">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-empty-state.component.ts:46</note>
@@ -21159,6 +21458,16 @@
       <segment state="translated">
         <source>Loading project</source>
         <target>Projekt wird geladen</target>
+      </segment>
+    </unit>
+    <unit id="5423159811869417944">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-summary.ts:45</note>
+        <note category="description">Says which estimate unit every selected task uses. UNIT is the unit and TOTAL is how many tasks are selected</note>
+      </notes>
+      <segment state="initial">
+        <source>Estimate type is <ph id="0" equiv="UNIT" disp="unit"/> on all <ph id="1" equiv="TOTAL" disp="tasks.length"/></source>
+        <target>Der Schätzungstyp ist <ph id="0" equiv="UNIT" disp="unit"/> bei allen <ph id="1" equiv="TOTAL" disp="tasks.length"/></target>
       </segment>
     </unit>
     <unit id="5423991647761194551">
@@ -21902,6 +22211,16 @@
         <target>Ergebnisse</target>
       </segment>
     </unit>
+    <unit id="7982607155521959690">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:22</note>
+        <note category="description">Kind of control a bulk-edit field brings, shown beside its name</note>
+      </notes>
+      <segment state="initial">
+        <source>select</source>
+        <target>Auswahl</target>
+      </segment>
+    </unit>
     <unit id="7984088154288778834">
       <notes>
         <note category="location">src/app/shell/command-palette/command-palette.component.ts:220</note>
@@ -22448,6 +22767,16 @@
         <target>Suchanbieter gespeichert.</target>
       </segment>
     </unit>
+    <unit id="1238583382012712938">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-collection-picker.component.ts:75,80</note>
+        <note category="description">Button that unpicks everything in a bulk edit&apos;s tag or people picker</note>
+      </notes>
+      <segment state="initial">
+        <source> Clear </source>
+        <target>Leeren</target>
+      </segment>
+    </unit>
     <unit id="2049427639275424472">
       <notes>
         <note category="location">src/app/shell/profile-menu.component.ts:135</note>
@@ -22516,6 +22845,15 @@
       <segment state="translated">
         <source>Collapse <ph id="0" equiv="SECTION" disp="section"/> menu</source>
         <target>Menü <ph id="0" equiv="SECTION" disp="section"/> einklappen</target>
+      </segment>
+    </unit>
+    <unit id="3504813719002568781">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:338,340</note>
+      </notes>
+      <segment state="initial">
+        <source>{VAR_PLURAL, plural, =1 {1 replaces an existing value} other {<ph id="0" equiv="INTERPOLATION"/> replace existing values}}</source>
+        <target>{VAR_PLURAL, plural, =1 {1 ersetzt einen vorhandenen Wert} other {<ph id="0" equiv="INTERPOLATION"/> ersetzen vorhandene Werte}}</target>
       </segment>
     </unit>
     <unit id="5787827157889164686">
@@ -22907,6 +23245,16 @@
       <segment state="translated">
         <source> Delete Comment </source>
         <target>Kommentar löschen</target>
+      </segment>
+    </unit>
+    <unit id="7924500284044965062">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:182,185</note>
+        <note category="description">Button that goes back to picking a due date instead of clearing it</note>
+      </notes>
+      <segment state="initial">
+        <source> Pick a date instead </source>
+        <target>Stattdessen ein Datum wählen</target>
       </segment>
     </unit>
     <unit id="7885977021959823727">
@@ -23302,7 +23650,7 @@
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:44</note>
         <note category="location">src/app/static/components/filter-facet/filter-facet.component.ts:133</note>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:181</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:204</note>
         <note category="location">src/app/static/components/search-input/search-input.component.ts:39</note>
         <note category="location">src/app/static/components/select-filter/select-filter.component.ts:70</note>
         <note category="description">Label of the export search filter</note>
@@ -23321,6 +23669,16 @@
       <segment state="translated">
         <source>Clear search term</source>
         <target>Suchbegriff löschen</target>
+      </segment>
+    </unit>
+    <unit id="919084948543701932">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-collection-picker.component.ts:115</note>
+        <note category="description">How many entries are picked in a bulk edit&apos;s tag or people picker. COUNT is the number picked</note>
+      </notes>
+      <segment state="initial">
+        <source><ph id="0" equiv="COUNT" disp="count"/> selected</source>
+        <target><ph id="0" equiv="COUNT" disp="count"/> ausgewählt</target>
       </segment>
     </unit>
     <unit id="9191001255478046251">
@@ -23424,6 +23782,16 @@
       <segment state="translated">
         <source>Unpin</source>
         <target>Lösen</target>
+      </segment>
+    </unit>
+    <unit id="742574656933469666">
+      <notes>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:388</note>
+        <note category="description">Placeholder in the box that searches people</note>
+      </notes>
+      <segment state="initial">
+        <source>Search people</source>
+        <target>Personen suchen</target>
       </segment>
     </unit>
     <unit id="6221215027161505376">

@@ -67,3 +67,45 @@
     border-radius: 0;
   }
 }
+
+/* The panel grows with the fields that have been added and stops at max-height, past which
+   the rows scroll while the header, the add-a-field button and the actions stay put. Both
+   boxes between the panel and the dialog have to be shrinkable columns for that to reach
+   the scrolling rows inside.
+
+   Qualified with .cdk-overlay-pane deliberately: the CDK injects its own overlay stylesheet
+   at runtime, after this one, and its `.cdk-overlay-pane { max-height: 100% }` would
+   otherwise win the tie and leave the panel uncapped. */
+.cdk-overlay-pane.app-bulk-edit-dialog {
+  height: auto;
+  min-height: 300px;
+  max-height: min(820px, 90vh);
+}
+
+.app-bulk-edit-dialog app-dialog-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.app-bulk-edit-dialog app-dialog-container .dialog-inner {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+@media only screen and (max-width: 800px) {
+  .cdk-overlay-pane.app-bulk-edit-dialog {
+    max-width: calc(100vw - 32px);
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .cdk-overlay-pane.app-bulk-edit-dialog {
+    height: 100vh;
+    min-height: 0;
+    max-height: 100vh;
+    max-width: 100vw;
+  }
+}

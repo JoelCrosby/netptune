@@ -6,6 +6,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Events.Sprints;
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
@@ -27,6 +28,7 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
     private readonly IEventRecordWriter EventRecords;
     private readonly IEventPublisher EventPublisher;
     private readonly ITaskPlacementService Placement;
+    private readonly ITaskReferenceResolver ReferenceResolver;
 
     public BulkUpdateTasksCommandHandler(
         INetptuneUnitOfWork unitOfWork,
@@ -34,7 +36,8 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
         ILogger<BulkUpdateTasksCommandHandler> logger,
         IEventRecordWriter eventRecords,
         IEventPublisher eventPublisher,
-        ITaskPlacementService placement)
+        ITaskPlacementService placement,
+        ITaskReferenceResolver referenceResolver)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
@@ -42,6 +45,7 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
         EventRecords = eventRecords;
         EventPublisher = eventPublisher;
         Placement = placement;
+        ReferenceResolver = referenceResolver;
     }
 
     public async ValueTask<ClientResponse> Handle(BulkUpdateTasksCommand command, CancellationToken cancellationToken)
@@ -83,6 +87,19 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
             return ClientResponse.Failed("SprintId and ClearSprint cannot both be supplied");
         }
 
+        if (req.ClearDueDate && req.DueDate.HasValue)
+        {
+            return ClientResponse.Failed("DueDate and ClearDueDate cannot both be supplied");
+        }
+
+        var dueDateBreaksSchedule = req.DueDate.HasValue
+            && tasks.Any(task => !ProjectTaskSchedule.IsValid(task.StartDate, req.DueDate));
+
+        if (dueDateBreaksSchedule)
+        {
+            return ClientResponse.Failed(ProjectTaskSchedule.InvalidDateRangeMessage);
+        }
+
         if (req.SprintId.HasValue)
         {
             var sprint = await UnitOfWork.Sprints.GetTaskAssignmentTarget(
@@ -115,32 +132,18 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
             }
         }
 
-        var assigneeIds = req.AssigneeIds?
-            .Where(id => !string.IsNullOrWhiteSpace(id))
-            .Distinct(StringComparer.Ordinal)
-            .ToList();
+        var assigneeUpdate = await ReferenceResolver.ResolveAssignees(req.AssigneeIds, workspaceId, cancellationToken);
 
-        if (req.AssigneeIds is not null)
+        if (!assigneeUpdate.IsValid)
         {
-            var containsInvalidAssignee = assigneeIds!.Count != req.AssigneeIds.Count;
+            return ClientResponse.Failed(assigneeUpdate.Error);
+        }
 
-            if (containsInvalidAssignee)
-            {
-                return ClientResponse.Failed("Assignee IDs cannot be empty or duplicated");
-            }
+        var tagUpdate = await ReferenceResolver.ResolveTags(req.Tags, workspaceId, cancellationToken);
 
-            var assignees = await UnitOfWork.Users.IsUserInWorkspaceRange(
-                assigneeIds,
-                workspaceId,
-                cancellationToken);
-            var validAssigneeIds = assignees.Select(assignee => assignee.Id).ToHashSet(StringComparer.Ordinal);
-            var missingAssigneeIds = assigneeIds.Where(id => !validAssigneeIds.Contains(id)).ToList();
-
-            if (missingAssigneeIds.Count > 0)
-            {
-                return ClientResponse.Failed(
-                    $"Assignees were not found in the workspace: {string.Join(", ", missingAssigneeIds)}");
-            }
+        if (!tagUpdate.IsValid)
+        {
+            return ClientResponse.Failed(tagUpdate.Error);
         }
 
         var targetProjectId = req.ProjectId;
@@ -201,6 +204,15 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
                     task.SprintId = req.SprintId;
                 }
 
+                if (req.ClearDueDate)
+                {
+                    task.DueDate = null;
+                }
+                else if (req.DueDate.HasValue)
+                {
+                    task.DueDate = req.DueDate;
+                }
+
                 if (projectChanged)
                 {
                     MoveToProject(
@@ -210,12 +222,24 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
                     nextProjectScopeId++;
                 }
 
-                if (req.AssigneeIds is not null)
+                if (assigneeUpdate.ShouldUpdate)
                 {
+                    var targetAssigneeIds = ResolveAssigneeTargets(task, assigneeUpdate.UserIds, req.AssigneeMode);
+
                     task.ProjectTaskAppUsers = ProjectTaskAppUser.MergeUsersIds(
                         task.Id,
                         task.ProjectTaskAppUsers,
-                        assigneeIds!).ToList();
+                        targetAssigneeIds).ToList();
+                }
+
+                if (tagUpdate.ShouldUpdate)
+                {
+                    var targetTagIds = ResolveTagTargets(task, tagUpdate.Tags, req.TagMode);
+
+                    task.ProjectTaskTags = ProjectTaskTag.MergeTagIds(
+                        task.Id,
+                        task.ProjectTaskTags,
+                        targetTagIds).ToList();
                 }
 
                 // Moving a task to a different project invalidates its board-group
@@ -377,6 +401,35 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
         };
 
         return EventRecords.Append(SprintMemberEvents.Changed(scope, member, change), cancellationToken);
+    }
+
+    private static List<string> ResolveAssigneeTargets(
+        ProjectTask task,
+        IReadOnlyList<string> userIds,
+        BulkCollectionMode mode)
+    {
+        if (mode is BulkCollectionMode.Replace)
+        {
+            return userIds.ToList();
+        }
+
+        var existingUserIds = task.ProjectTaskAppUsers.Select(assignment => assignment.UserId);
+
+        return existingUserIds.Concat(userIds).Distinct(StringComparer.Ordinal).ToList();
+    }
+
+    private static List<int> ResolveTagTargets(ProjectTask task, IReadOnlyList<Tag> tags, BulkCollectionMode mode)
+    {
+        var selectedTagIds = tags.Select(tag => tag.Id);
+
+        if (mode is BulkCollectionMode.Replace)
+        {
+            return selectedTagIds.ToList();
+        }
+
+        var existingTagIds = task.ProjectTaskTags.Select(link => link.TagId);
+
+        return existingTagIds.Concat(selectedTagIds).Distinct().ToList();
     }
 
     private static void MoveToProject(ProjectTask task, int projectId, int projectScopeId)

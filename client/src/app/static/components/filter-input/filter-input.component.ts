@@ -27,6 +27,8 @@ export type FilterInputAppearance = 'field' | 'bare';
   ],
   template: `
     <ng-template #content>
+      <ng-content select="[filterPrefix]" />
+
       <svg lucideSearch [class]="iconClass()" aria-hidden="true"></svg>
 
       <input
@@ -58,6 +60,8 @@ export type FilterInputAppearance = 'field' | 'bare';
       } @else if (keyHint(); as hint) {
         <app-keyboard-key [class]="keyHintClass">{{ hint }}</app-keyboard-key>
       }
+
+      <ng-content select="[filterSuffix]" />
     </ng-template>
 
     @if (appearance() === 'bare') {

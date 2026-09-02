@@ -22,6 +22,15 @@ export class BoardSelectionService {
   readonly taskIds = this.selection.asReadonly();
   readonly count = computed(() => this.selection().length);
 
+  readonly selectedTasks = computed(() => {
+    const selected = new Set(this.taskIds());
+
+    return this.boardView
+      .groups()
+      .flatMap((group) => group.tasks)
+      .filter((task) => selected.has(task.id));
+  });
+
   readonly groups = computed<BoardViewGroupWithSelection[]>(() => {
     const selected = new Set(this.taskIds());
 

@@ -57,7 +57,9 @@ public static class TasksEndpoints
             .WithSummary("Bulk update tasks")
             .WithDescription(
                 "Updates the supplied fields on multiple tasks in the credential's workspace. "
-                + "Supply boardGroupId to move them into a board column, from GET /board-groups.")
+                + "Supply boardGroupId to move them into a board column, from GET /board-groups. "
+                + "assigneeMode and tagMode choose whether the supplied ids and tag names replace what "
+                + "each task holds or are added to it.")
             .Produces(StatusCodes.Status403Forbidden)
             .RequireAuthorization(NetptunePermissions.Tasks.Update)
             .Broadcasts(WorkspaceEventScopes.Task);

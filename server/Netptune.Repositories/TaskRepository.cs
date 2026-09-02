@@ -63,6 +63,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
 
         return Entities
             .Include(x => x.ProjectTaskAppUsers)
+            .Include(x => x.ProjectTaskTags)
             .Include(x => x.Status)
             .Where(x => idList.Contains(x.Id) && !x.IsDeleted)
             .ToListAsync(cancellationToken);

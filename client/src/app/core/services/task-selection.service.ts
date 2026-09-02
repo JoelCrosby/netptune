@@ -1,13 +1,15 @@
-import { Service, signal } from '@angular/core';
+import { computed, Service, signal } from '@angular/core';
+import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 
 @Service()
 export class TaskSelectionService {
-  private readonly selected = signal<number[]>([]);
+  private readonly selected = signal<TaskViewModel[]>([]);
 
-  readonly taskIds = this.selected.asReadonly();
+  readonly tasks = this.selected.asReadonly();
+  readonly taskIds = computed(() => this.selected().map((task) => task.id));
 
-  set(taskIds: number[]) {
-    this.selected.set(taskIds);
+  set(tasks: TaskViewModel[]) {
+    this.selected.set(tasks);
   }
 
   clear() {
