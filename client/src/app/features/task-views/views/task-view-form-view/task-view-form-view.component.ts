@@ -150,6 +150,7 @@ import { TaskViewPreviewToolbarComponent } from '../../components/task-view-prev
           <app-task-table
             class="mb-6"
             containerClass="rounded-t-none rounded-b-xl"
+            tableClass="min-w-[860px] table-fixed"
             key="task-view-preview"
             i18n-emptyMessage="Shown when a query preview matches no tasks"
             emptyMessage="No tasks match this query yet."

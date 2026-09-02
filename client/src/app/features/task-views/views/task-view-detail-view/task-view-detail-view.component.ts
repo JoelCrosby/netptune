@@ -143,7 +143,7 @@ import { findStaleReferences } from '../../util/stale-references';
             itemLabel="tasks"
             i18n-emptyMessage="Shown when a saved view matches no tasks"
             emptyMessage="No tasks match this view."
-            tableClass="min-w-[860px]"
+            tableClass="min-w-[860px] table-fixed"
             [key]="tableKey()"
             [url]="tableUrl()"
             [params]="params"
