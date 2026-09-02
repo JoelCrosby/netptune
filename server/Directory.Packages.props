@@ -5,8 +5,8 @@
 
   <ItemGroup>
     <PackageVersion Include="AWSSDK.S3" Version="4.0.102.4" />
-    <PackageVersion Include="AngleSharp" Version="1.7.1" />
-    <PackageVersion Include="Anthropic" Version="12.42.0" />
+    <PackageVersion Include="AngleSharp" Version="1.7.2" />
+    <PackageVersion Include="Anthropic" Version="12.45.0" />
     <PackageVersion Include="AspNet.Security.OAuth.GitHub" Version="10.0.0" />
     <PackageVersion Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0" />
     <PackageVersion Include="AspNetCore.HealthChecks.Redis" Version="9.0.0" />
@@ -67,7 +67,7 @@
     <PackageVersion Include="Polly" Version="8.7.0" />
     <PackageVersion Include="Polly.Contrib.WaitAndRetry" Version="1.1.1" />
     <PackageVersion Include="RazorLight" Version="2.3.1" />
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.17.1" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.17.2" />
     <PackageVersion Include="SendGrid" Version="9.29.3" />
     <PackageVersion Include="StackExchange.Redis" Version="3.1.31" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.22.0" />
