@@ -20,12 +20,9 @@ import { AiAssistantModeMenuComponent } from './ai-assistant-mode-menu.component
     <div
       class="mx-auto flex h-full w-full items-center justify-between gap-3 px-4"
       [class]="contentWidth()">
-      <div class="min-w-0">
-        <h2 class="font-overpass truncate text-[1.05rem] font-medium">
-          {{ title() }}
-        </h2>
-        <p class="text-muted truncate text-xs">{{ subtitle() }}</p>
-      </div>
+      <h2 class="font-overpass min-w-0 truncate text-[1.05rem] font-medium">
+        {{ title() }}
+      </h2>
 
       <div class="flex shrink-0 items-center gap-1">
         <button
@@ -72,7 +69,6 @@ import { AiAssistantModeMenuComponent } from './ai-assistant-mode-menu.component
 })
 export class AiAssistantHeaderComponent {
   readonly title = input.required<string>();
-  readonly subtitle = input.required<string>();
   readonly mode = input.required<AiDisplayMode>();
   readonly contentWidth = input('');
   readonly closable = input(false);

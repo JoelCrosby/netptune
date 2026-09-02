@@ -113,7 +113,7 @@
     </unit>
     <unit id="3563415301877713192">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:108,113</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:107,112</note>
         <note category="description">Shown when older messages were left out of what the assistant can see</note>
       </notes>
       <segment>
@@ -882,6 +882,15 @@
         <source>Manage Relation Types</source>
       </segment>
     </unit>
+    <unit id="5264398089164990230">
+      <notes>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:47</note>
+        <note category="description">Caption describing the full page width</note>
+      </notes>
+      <segment>
+        <source>Pages stretch edge to edge, fitting more on wide screens.</source>
+      </segment>
+    </unit>
     <unit id="5265020118967515341">
       <notes>
         <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:97,99</note>
@@ -902,7 +911,7 @@
     </unit>
     <unit id="378112044291779678">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:379</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:383</note>
         <note category="description">Shown after the search provider is removed</note>
       </notes>
       <segment>
@@ -1010,7 +1019,7 @@
     </unit>
     <unit id="7546969606032903393">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:142,144</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:143,145</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-model-menu.component.ts:15,17</note>
         <note category="description">Accessible label for the assistant model selector</note>
       </notes>
@@ -1167,7 +1176,7 @@
     </unit>
     <unit id="2254251805469944900">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:85,87</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:86,88</note>
         <note category="description">Tooltip on the button that removes the search provider</note>
       </notes>
       <segment>
@@ -1266,7 +1275,7 @@
     </unit>
     <unit id="7347080707073106397">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:190,191</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:191,192</note>
         <note category="description">Heading of an empty relation type list</note>
       </notes>
       <segment>
@@ -1431,9 +1440,9 @@
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:781</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:804</note>
         <note category="location">src/app/features/profile/components/select-profile-image-dialog/select-profile-image-dialog.component.ts:54,56</note>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:339</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:343</note>
         <note category="location">src/app/features/settings/components/delete-workspace-dialog/delete-workspace-dialog.component.ts:59,62</note>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:361</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:365</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:93,96</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:163,166</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:276</note>
@@ -1649,10 +1658,10 @@
         <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:181</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:211</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:488</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:248</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:249</note>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:573</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:461</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:230</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:231</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:363</note>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:316</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:207</note>
@@ -1913,7 +1922,7 @@
     </unit>
     <unit id="3118592863000722717">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:186,189</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:187,190</note>
         <note category="description">Button that replaces a stored API key</note>
       </notes>
       <segment>
@@ -1931,7 +1940,7 @@
     </unit>
     <unit id="3127417567733728943">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:33</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:34</note>
         <note category="description">Name of the Anthropic AI provider</note>
       </notes>
       <segment>
@@ -2199,8 +2208,8 @@
     </unit>
     <unit id="7198631316779176054">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:275</note>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:287</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:276</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:288</note>
         <note category="description">Placeholder shown when no key is stored</note>
       </notes>
       <segment>
@@ -2309,7 +2318,7 @@
     </unit>
     <unit id="4145619247688235973">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:359</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:363</note>
         <note category="description">Explains what removing the search provider does</note>
       </notes>
       <segment>
@@ -2435,8 +2444,8 @@
     </unit>
     <unit id="8768927723338869419">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:89,91</note>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:64,66</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:90,92</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:65,67</note>
         <note category="description">Label preceding the masked API key</note>
       </notes>
       <segment>
@@ -2473,7 +2482,7 @@
     </unit>
     <unit id="962282029591799382">
       <notes>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:41</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:44</note>
         <note category="description">Caption describing the cockpit task detail layout</note>
       </notes>
       <segment>
@@ -2946,7 +2955,7 @@
     </unit>
     <unit id="6707264088417972826">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:68,73</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:69,74</note>
         <note category="description">Explains why a key is needed</note>
       </notes>
       <segment>
@@ -3012,19 +3021,19 @@
         <note category="location">src/app/core/util/pin-scope.ts:80</note>
         <note category="location">src/app/entry/components/setup-creation-summary/setup-creation-summary.component.ts:59</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:112,113</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:286</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:287</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:224</note>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:82</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:66,67</note>
         <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:22,25</note>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:82</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:83</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:169</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:379</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:301</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:46</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:18</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:39</note>
-        <note category="location">src/app/static/components/task-properties/task-properties.component.ts:144,146</note>
+        <note category="location">src/app/static/components/task-properties/task-properties.component.ts:145,147</note>
         <note category="description">Column heading for the task project</note>
       </notes>
       <segment>
@@ -3150,7 +3159,7 @@
     </unit>
     <unit id="1250336210630791344">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:222</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:223</note>
         <note category="description">Hint describing the SearXNG search provider</note>
       </notes>
       <segment>
@@ -3171,7 +3180,7 @@
         <note category="location">src/app/core/tasks/task-columns.ts:100</note>
         <note category="location">src/app/entry/dialogs/board-group-dialog/board-group-dialog.component.ts:52</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:77</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:279</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:280</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-status-segments.component.ts:28,32</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:58,59</note>
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:49,50</note>
@@ -3182,7 +3191,7 @@
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:98,101</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:22</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:30</note>
-        <note category="location">src/app/static/components/task-properties/task-properties.component.ts:81,83</note>
+        <note category="location">src/app/static/components/task-properties/task-properties.component.ts:82,84</note>
         <note category="description">Column heading for the task status</note>
       </notes>
       <segment>
@@ -3214,7 +3223,7 @@
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:115,117</note>
         <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:258,263</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:98,100</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:64,65</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:61,62</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:401,405</note>
         <note category="description">Dismisses a dialog without saving</note>
       </notes>
@@ -3300,7 +3309,7 @@
     </unit>
     <unit id="6755393728505925394">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:101,103</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:102,104</note>
         <note category="description">Accessible label for the search provider selector</note>
       </notes>
       <segment>
@@ -3334,14 +3343,14 @@
       <notes>
         <note category="location">src/app/core/tasks/task-columns.ts:116</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:94,95</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:282</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:101,103</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:283</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:102,104</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:75,77</note>
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:74,76</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:49</note>
         <note category="location">src/app/features/boards/util/board-task-sort.ts:31</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:31</note>
-        <note category="location">src/app/static/components/task-properties/task-properties.component.ts:93,95</note>
+        <note category="location">src/app/static/components/task-properties/task-properties.component.ts:94,96</note>
         <note category="description">Column heading for the task priority</note>
       </notes>
       <segment>
@@ -3362,16 +3371,16 @@
         <note category="location">src/app/core/tasks/task-columns.ts:88</note>
         <note category="location">src/app/core/util/ai-client-context.ts:29</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:132</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:287</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:288</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:187,188</note>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:114</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:54</note>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:148</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:149</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:175</note>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:71,74</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:19</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:38</note>
-        <note category="location">src/app/static/components/task-properties/task-properties.component.ts:155,157</note>
+        <note category="location">src/app/static/components/task-properties/task-properties.component.ts:156,158</note>
         <note category="description">Column heading for the task sprint</note>
       </notes>
       <segment>
@@ -3380,8 +3389,8 @@
     </unit>
     <unit id="5504590309962934202">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:119,121</note>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:124,126</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:120,122</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:125,127</note>
         <note category="description">Label for the API key input</note>
       </notes>
       <segment>
@@ -3420,7 +3429,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:170,173</note>
         <note category="location">src/app/features/automations/models/automation-query-builder.ts:302</note>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:122,123</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:123,124</note>
         <note category="description">Label of the story points field</note>
       </notes>
       <segment>
@@ -3454,7 +3463,7 @@
     </unit>
     <unit id="8853912163904514010">
       <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:169,170</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:170,171</note>
         <note category="description">Heading of an empty status list</note>
       </notes>
       <segment>
@@ -3547,9 +3556,9 @@
         <note category="location">src/app/entry/dialogs/create-relation-type-dialog/create-relation-type-dialog.component.ts:56,57</note>
         <note category="location">src/app/entry/dialogs/create-status-dialog/create-status-dialog.component.ts:68,69</note>
         <note category="location">src/app/entry/dialogs/edit-status-dialog/edit-status-dialog.component.ts:69,70</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:277</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:278</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:152,153</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:253</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:254</note>
         <note category="description">Label of the relation category field</note>
       </notes>
       <segment>
@@ -3609,10 +3618,10 @@
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:151</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:145</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:371</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:265</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:266</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:136</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:343</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:247</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:248</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:104</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:268</note>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:159</note>
@@ -3909,7 +3918,7 @@
     </unit>
     <unit id="8550125178086238714">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:336</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:340</note>
         <note category="description">Title of the remove API key confirmation</note>
       </notes>
       <segment>
@@ -4019,9 +4028,9 @@
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:78,80</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:104,107</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:174,177</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:260</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:261</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:147,150</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:242</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:243</note>
         <note category="description">Label of the colour picker field</note>
       </notes>
       <segment>
@@ -4067,7 +4076,7 @@
     </unit>
     <unit id="3082475149603784059">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:154,156</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:155,157</note>
         <note category="description">Placeholder for the Google search engine id input</note>
       </notes>
       <segment>
@@ -4094,7 +4103,7 @@
     </unit>
     <unit id="5635155408622268188">
       <notes>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:28</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:30</note>
         <note category="description">Description of the task detail layout preference</note>
       </notes>
       <segment>
@@ -4565,7 +4574,7 @@
     </unit>
     <unit id="3882696472447982545">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:191,194</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:192,195</note>
         <note category="description">Button that stores the search provider</note>
       </notes>
       <segment>
@@ -4856,8 +4865,8 @@
     <unit id="3915858391862498397">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:56,59</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:81,82</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:284</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:82,83</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:285</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:341</note>
         <note category="description">Section heading for links between tasks</note>
       </notes>
@@ -5164,7 +5173,7 @@
     <unit id="5203279511751768967">
       <notes>
         <note category="location">src/app/features/audit/components/audit-filters/audit-date-range.component.ts:14</note>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:99,100</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:100,101</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:43</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:393</note>
         <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:101,102</note>
@@ -5195,7 +5204,7 @@
     <unit id="1640609344969975994">
       <notes>
         <note category="location">src/app/features/audit/components/audit-filters/audit-date-range.component.ts:36</note>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:107,108</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:108,109</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:52</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:403</note>
         <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:109,110</note>
@@ -5362,7 +5371,7 @@
     </unit>
     <unit id="5988988986257041887">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:356</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:360</note>
         <note category="description">Shown after an API key is removed</note>
       </notes>
       <segment>
@@ -5554,7 +5563,7 @@
     </unit>
     <unit id="751924494549380962">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:165,167</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:166,168</note>
         <note category="description">Label for the SearXNG base URL input</note>
       </notes>
       <segment>
@@ -5610,7 +5619,7 @@
     </unit>
     <unit id="9222501301114320323">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:117,120</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:118,121</note>
         <note category="description">Plural noun for relation types, used in the row summary</note>
       </notes>
       <segment>
@@ -5638,7 +5647,7 @@
     </unit>
     <unit id="8657732847549897278">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:181,182</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:182,183</note>
         <note category="description">Heading shown when a search matches nothing</note>
       </notes>
       <segment>
@@ -5752,7 +5761,7 @@
     </unit>
     <unit id="248355614476686779">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:378</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:379</note>
         <note category="description">Lowercase field name listed in the empty-fields summary</note>
       </notes>
       <segment>
@@ -5806,7 +5815,7 @@
     </unit>
     <unit id="1672621016685744342">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:187,190</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:188,191</note>
         <note category="description">Button that updates the stored search provider</note>
       </notes>
       <segment>
@@ -5900,7 +5909,7 @@
     </unit>
     <unit id="12871331938626366">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:348</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:349</note>
         <note category="description">Reveals the row for the one field the task has no value for. FIELD is its name</note>
       </notes>
       <segment>
@@ -6169,7 +6178,7 @@
     </unit>
     <unit id="3571377974793640030">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:380</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:381</note>
         <note category="description">Lowercase field name listed in the empty-fields summary</note>
       </notes>
       <segment>
@@ -6704,7 +6713,7 @@
     <unit id="8932917860978648376">
       <notes>
         <note category="location">src/app/features/automations/components/automation-actions-editor.component.ts:290</note>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:116,117</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:117,118</note>
         <note category="description">Label of the unit field</note>
       </notes>
       <segment>
@@ -6742,7 +6751,7 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-actions-editor.component.ts:304,305</note>
         <note category="location">src/app/features/automations/models/automation-query-builder.ts:304</note>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:125,126</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:126,127</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:363</note>
         <note category="description">Delay unit: hours</note>
       </notes>
@@ -7165,16 +7174,16 @@
     </unit>
     <unit id="2413171611497962745">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:197,199</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:285</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:152,153</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:154,156</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:198,200</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:286</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:153,154</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:155,157</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:139,141</note>
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:398</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:51</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:34</note>
-        <note category="location">src/app/static/components/task-properties/task-properties.component.ts:129,132</note>
-        <note category="location">src/app/static/components/task-properties/task-properties.component.ts:135,137</note>
+        <note category="location">src/app/static/components/task-properties/task-properties.component.ts:130,133</note>
+        <note category="location">src/app/static/components/task-properties/task-properties.component.ts:136,138</note>
         <note category="description">Accessible label for the task due date picker</note>
       </notes>
       <segment>
@@ -7228,7 +7237,7 @@
     </unit>
     <unit id="7893521235243357800">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:388</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:389</note>
         <note category="description">Lowercase field name listed in the empty-fields summary</note>
       </notes>
       <segment>
@@ -7399,8 +7408,8 @@
     </unit>
     <unit id="4756842401099167454">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:334</note>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:349</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:335</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:352</note>
         <note category="description">Shown when saving the search provider fails</note>
       </notes>
       <segment>
@@ -7511,7 +7520,7 @@
     </unit>
     <unit id="2722007343461219050">
       <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:160,161</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:161,162</note>
         <note category="description">Heading shown when a search matches nothing</note>
       </notes>
       <segment>
@@ -7946,8 +7955,8 @@
     </unit>
     <unit id="128217720924796263">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:209</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:188</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:210</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:189</note>
         <note category="description">Explains that manual reordering needs the default, unfiltered view</note>
       </notes>
       <segment>
@@ -8092,7 +8101,7 @@
     </unit>
     <unit id="1527635909232386822">
       <notes>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:42</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:45</note>
         <note category="description">Caption describing the document task detail layout</note>
       </notes>
       <segment>
@@ -8475,7 +8484,7 @@
     </unit>
     <unit id="5453569908631435089">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:139,142</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:140,143</note>
         <note category="description">Shown in place of a sprint name when a task has no sprint</note>
       </notes>
       <segment>
@@ -8558,21 +8567,12 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:65</note>
         <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:195</note>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:96</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:103</note>
         <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:21</note>
         <note category="description">Label of the scope field</note>
       </notes>
       <segment>
         <source>Scope</source>
-      </segment>
-    </unit>
-    <unit id="1802075020846609586">
-      <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:258</note>
-        <note category="description">Assistant subtitle above the conversation</note>
-      </notes>
-      <segment>
-        <source>How can I help you today?</source>
       </segment>
     </unit>
     <unit id="1802792065822468208">
@@ -8898,7 +8898,7 @@
     </unit>
     <unit id="4974625000015194391">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:214</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:215</note>
         <note category="description">Hint describing the Google search provider</note>
       </notes>
       <segment>
@@ -9035,7 +9035,7 @@
     </unit>
     <unit id="6298879458119153413">
       <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:84,86</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:85,87</note>
         <note category="description">Accessible name of the status list filter row</note>
       </notes>
       <segment>
@@ -9098,13 +9098,13 @@
     </unit>
     <unit id="888341446683346521">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:176,178</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:284</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:177,179</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:285</note>
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:397</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:53</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:32</note>
-        <note category="location">src/app/static/components/task-properties/task-properties.component.ts:115,118</note>
-        <note category="location">src/app/static/components/task-properties/task-properties.component.ts:121,123</note>
+        <note category="location">src/app/static/components/task-properties/task-properties.component.ts:116,119</note>
+        <note category="location">src/app/static/components/task-properties/task-properties.component.ts:122,124</note>
         <note category="description">Accessible label for the task start date picker</note>
       </notes>
       <segment>
@@ -9233,7 +9233,7 @@
     </unit>
     <unit id="741060543658723189">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:61,66</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:62,67</note>
         <note category="description">Explains what a workspace API key is for</note>
       </notes>
       <segment>
@@ -9499,7 +9499,7 @@
     </unit>
     <unit id="5211609068551558044">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:36,38</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:33,35</note>
         <note category="description">Tooltip on the button that lists past conversations</note>
       </notes>
       <segment>
@@ -9920,8 +9920,8 @@
     </unit>
     <unit id="1845447508284521819">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:283</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:168,170</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:284</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:169,171</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:50</note>
         <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:234</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:35</note>
@@ -10081,8 +10081,8 @@
     </unit>
     <unit id="7151632936989469818">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:250</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:51,53</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:249</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:48,50</note>
         <note category="description">Header of a conversation that has not started yet</note>
       </notes>
       <segment>
@@ -10157,7 +10157,7 @@
     </unit>
     <unit id="6168573387818230011">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:321</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:322</note>
         <note category="description">Shown after an API key is stored</note>
       </notes>
       <segment>
@@ -10223,7 +10223,7 @@
     </unit>
     <unit id="6157743857767016939">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:143,146</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:144,147</note>
         <note category="description">Label for the Google search engine id input</note>
       </notes>
       <segment>
@@ -10241,7 +10241,7 @@
     </unit>
     <unit id="5621842545023812080">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:174,176</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:175,177</note>
         <note category="description">Placeholder for the SearXNG base URL input</note>
       </notes>
       <segment>
@@ -10598,8 +10598,8 @@
     </unit>
     <unit id="8224724288725812333">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:280</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:80,84</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:281</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:81,85</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:36</note>
         <note category="description">Field heading for the people a task is assigned to</note>
       </notes>
@@ -10740,6 +10740,15 @@
       </notes>
       <segment>
         <source>When a sprint ends today, for every task in it</source>
+      </segment>
+    </unit>
+    <unit id="3038936724563079427">
+      <notes>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:31</note>
+        <note category="description">Description of the page width preference</note>
+      </notes>
+      <segment>
+        <source>How far list, dashboard and report pages stretch across the window.</source>
       </segment>
     </unit>
     <unit id="5822400241112958496">
@@ -11114,8 +11123,8 @@
     </unit>
     <unit id="8804757855962270298">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:103,105</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:100,102</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:104,106</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:101,103</note>
         <note category="description">Shown when a change to a relation type could not be saved</note>
       </notes>
       <segment>
@@ -11287,7 +11296,7 @@
     </unit>
     <unit id="7382546590159708114">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:384</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:385</note>
         <note category="description">Lowercase field name listed in the empty-fields summary</note>
       </notes>
       <segment>
@@ -11432,8 +11441,8 @@
     <unit id="7585826646011739428">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:94,97</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:242</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:224</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:243</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:225</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:202</note>
         <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:95,98</note>
         <note category="description">Button that edits the automation</note>
@@ -11617,7 +11626,7 @@
     </unit>
     <unit id="111405044359500675">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:85,87</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:86,88</note>
         <note category="description">Accessible name of the relation type list filter row</note>
       </notes>
       <segment>
@@ -11710,8 +11719,8 @@
     </unit>
     <unit id="3477141043479115606">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:272</note>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:284</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:273</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:285</note>
         <note category="description">Placeholder shown when a key is already stored</note>
       </notes>
       <segment>
@@ -12251,8 +12260,8 @@
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:33</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:47</note>
         <note category="location">src/app/features/reporting/components/workload-report.component.ts:73,75</note>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:119,120</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:260</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:120,121</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:261</note>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:165</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:83</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:151</note>
@@ -12794,8 +12803,8 @@
     </unit>
     <unit id="3423740992676752364">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:311</note>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:327</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:312</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:330</note>
         <note category="description">Shown when saving an API key fails</note>
       </notes>
       <segment>
@@ -13072,7 +13081,7 @@
     </unit>
     <unit id="6154668836448322809">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:384</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:388</note>
         <note category="description">Shown when removing the search provider fails</note>
       </notes>
       <segment>
@@ -13145,7 +13154,7 @@
     </unit>
     <unit id="8630022383790162651">
       <notes>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:27</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:29</note>
         <note category="description">Description of the theme preference</note>
       </notes>
       <segment>
@@ -13494,7 +13503,7 @@
     </unit>
     <unit id="6570363013146073520">
       <notes>
-        <note category="location">src/app/features/dashboard/views/dashboard-view/dashboard-view.component.ts:37,39</note>
+        <note category="location">src/app/features/dashboard/views/dashboard-view/dashboard-view.component.ts:40,42</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:143</note>
         <note category="location">src/app/workspace.routes.ts:25</note>
         <note category="description">Page title for the dashboard</note>
@@ -14061,7 +14070,7 @@
     </unit>
     <unit id="5572257597829131111">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:358</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:362</note>
         <note category="description">Title of the remove search provider confirmation</note>
       </notes>
       <segment>
@@ -14321,7 +14330,7 @@
     </unit>
     <unit id="395357454003185588">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:34</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:35</note>
         <note category="description">Where to find an Anthropic API key</note>
       </notes>
       <segment>
@@ -14390,7 +14399,7 @@
     </unit>
     <unit id="5656132246732086102">
       <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:171,172</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:172,173</note>
         <note category="description">Explains what statuses are for</note>
       </notes>
       <segment>
@@ -14482,7 +14491,7 @@
     </unit>
     <unit id="3959473004188974816">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:361</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:365</note>
         <note category="description">Shown when removing an API key fails</note>
       </notes>
       <segment>
@@ -14826,7 +14835,7 @@
     </unit>
     <unit id="137009466692838782">
       <notes>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:34</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:37</note>
         <note category="description">Button that drops the theme choice so the app follows the operating system</note>
       </notes>
       <segment>
@@ -14992,7 +15001,7 @@
     </unit>
     <unit id="4717491147966397069">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:83,85</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:82,84</note>
         <note category="description">Accessible name of the assistant transcript</note>
       </notes>
       <segment>
@@ -15190,10 +15199,10 @@
     </unit>
     <unit id="8406787523492971076">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:288</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:289</note>
         <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:97</note>
         <note category="location">src/app/features/reporting/components/workload-report.component.ts:123</note>
-        <note category="location">src/app/static/components/task-properties/task-properties.component.ts:51,54</note>
+        <note category="location">src/app/static/components/task-properties/task-properties.component.ts:51,53</note>
         <note category="description">Shown in the assignee picker when a task has nobody assigned</note>
       </notes>
       <segment>
@@ -15329,7 +15338,7 @@
     </unit>
     <unit id="1868606282505332204">
       <notes>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:49,52</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:50,53</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:212</note>
         <note category="location">src/app/workspace.routes.ts:72</note>
         <note category="description">Page title for the reporting views</note>
@@ -15349,7 +15358,7 @@
     </unit>
     <unit id="3030881843197844043">
       <notes>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:61,63</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:62,64</note>
         <note category="description">Heading of the report filter card</note>
       </notes>
       <segment>
@@ -15358,7 +15367,7 @@
     </unit>
     <unit id="1708810523669700746">
       <notes>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:66,69</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:67,70</note>
         <note category="description">Explains what the report filters control</note>
       </notes>
       <segment>
@@ -15367,7 +15376,7 @@
     </unit>
     <unit id="408476512549431766">
       <notes>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:77,79</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:78,80</note>
         <note category="description">Accessible name of the report filter form</note>
       </notes>
       <segment>
@@ -15376,7 +15385,7 @@
     </unit>
     <unit id="2980109580182727209">
       <notes>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:86,88</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:87,89</note>
         <note category="description">Filter option including every project</note>
       </notes>
       <segment>
@@ -15394,7 +15403,7 @@
     </unit>
     <unit id="877780134171662191">
       <notes>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:132,134</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:133,135</note>
         <note category="description">Label of the report grouping filter</note>
       </notes>
       <segment>
@@ -15422,7 +15431,7 @@
     </unit>
     <unit id="2988589012964101797">
       <notes>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:136,137</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:137,138</note>
         <note category="description">Report grouping by day</note>
       </notes>
       <segment>
@@ -15450,7 +15459,7 @@
     </unit>
     <unit id="928838138686087140">
       <notes>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:139,140</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:140,141</note>
         <note category="description">Report grouping by week</note>
       </notes>
       <segment>
@@ -15459,7 +15468,7 @@
     </unit>
     <unit id="5964335690492688166">
       <notes>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:152,154</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:153,155</note>
         <note category="description">Placeholder option in the sprint filter</note>
       </notes>
       <segment>
@@ -15707,7 +15716,7 @@
     </unit>
     <unit id="6406732480689038024">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:107,109</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:108,110</note>
         <note category="description">Tooltip on the button that removes a stored API key</note>
       </notes>
       <segment>
@@ -15964,7 +15973,7 @@
     </unit>
     <unit id="9082027484739685780">
       <notes>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:97,99</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:104,106</note>
         <note category="description">Placeholder in the preference scope picker</note>
       </notes>
       <segment>
@@ -16337,7 +16346,7 @@
     </unit>
     <unit id="730589419287534524">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:281</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:282</note>
         <note category="description">Field heading for the person who raised the task</note>
       </notes>
       <segment>
@@ -16729,7 +16738,7 @@
     </unit>
     <unit id="9109640022429823254">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:386</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:387</note>
         <note category="description">Lowercase field name listed in the empty-fields summary</note>
       </notes>
       <segment>
@@ -16820,7 +16829,7 @@
     </unit>
     <unit id="8927455770711141149">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:39</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:40</note>
         <note category="description">Where to find an OpenAI API key</note>
       </notes>
       <segment>
@@ -16829,7 +16838,7 @@
     </unit>
     <unit id="9050138848550192211">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:38</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:39</note>
         <note category="description">Name of the OpenAI provider</note>
       </notes>
       <segment>
@@ -17073,7 +17082,7 @@
     </unit>
     <unit id="1354313797361897990">
       <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:112,115</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:113,116</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:128</note>
         <note category="description">Plural noun for statuses, used in the row summary</note>
       </notes>
@@ -17119,8 +17128,8 @@
     </unit>
     <unit id="15321371811334707">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:183,184</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:162,163</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:184,185</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:163,164</note>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:100,101</note>
         <note category="description">Advice shown when a search matches nothing</note>
       </notes>
@@ -17130,7 +17139,7 @@
     </unit>
     <unit id="5397887234065885154">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:83,84</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:84,85</note>
         <note category="description">Button that opens the create-relation-type dialog</note>
       </notes>
       <segment>
@@ -17139,7 +17148,7 @@
     </unit>
     <unit id="400343125846819376">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:113,115</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:114,116</note>
         <note category="description">Shown when the relation type list fails to load</note>
       </notes>
       <segment>
@@ -17167,7 +17176,7 @@
     </unit>
     <unit id="7118117366674423373">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:271</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:272</note>
         <note category="description">Column heading for the reverse direction of a relation</note>
       </notes>
       <segment>
@@ -17212,8 +17221,8 @@
     </unit>
     <unit id="220550782947016929">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:292</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:268</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:293</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:269</note>
         <note category="description">Column heading for the sort order</note>
       </notes>
       <segment>
@@ -17260,7 +17269,7 @@
     <unit id="6830953190149975920">
       <notes>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:153,155</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:138,141</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:139,142</note>
         <note category="description">Shown when a relation reads the same in both directions</note>
       </notes>
       <segment>
@@ -17269,8 +17278,8 @@
     </unit>
     <unit id="8502065112576581103">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:207</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:186</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:208</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:187</note>
         <note category="description">Tooltip on the button that moves a row up</note>
       </notes>
       <segment>
@@ -17279,7 +17288,7 @@
     </unit>
     <unit id="6781548721931982858">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:156,158</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:157,159</note>
         <note category="description">Accessible label for the button that moves a relation type up</note>
       </notes>
       <segment>
@@ -17288,8 +17297,8 @@
     </unit>
     <unit id="2207764482815871800">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:208</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:187</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:209</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:188</note>
         <note category="description">Tooltip on the button that moves a row down</note>
       </notes>
       <segment>
@@ -17307,7 +17316,7 @@
     </unit>
     <unit id="2412502577182752913">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:168,170</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:169,171</note>
         <note category="description">Accessible label for the button that moves a relation type down</note>
       </notes>
       <segment>
@@ -17552,8 +17561,8 @@
     </unit>
     <unit id="5607669932062416162">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:156,159</note>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:255</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:157,160</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:256</note>
         <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:61,64</note>
         <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:163</note>
         <note category="description">Model option that defers to the server default</note>
@@ -18003,7 +18012,7 @@
     </unit>
     <unit id="1712651257674193219">
       <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:82,83</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:83,84</note>
         <note category="description">Button that opens the create-status dialog</note>
       </notes>
       <segment>
@@ -18021,7 +18030,7 @@
     </unit>
     <unit id="7431603051236116456">
       <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:110,111</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:111,112</note>
         <note category="description">Shown when the status list fails to load</note>
       </notes>
       <segment>
@@ -18030,7 +18039,7 @@
     </unit>
     <unit id="1708099605109308306">
       <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:136,138</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:137,139</note>
         <note category="description">Accessible label for the button that moves a status up</note>
       </notes>
       <segment>
@@ -18039,7 +18048,7 @@
     </unit>
     <unit id="4091516827227305622">
       <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:147,149</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:148,150</note>
         <note category="description">Accessible label for the button that moves a status down</note>
       </notes>
       <segment>
@@ -18452,7 +18461,7 @@
     </unit>
     <unit id="7203070746919732368">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:337</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:341</note>
         <note category="description">Explains what removing an API key does</note>
       </notes>
       <segment>
@@ -18595,7 +18604,7 @@
     </unit>
     <unit id="3259201493560941662">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:147,149</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:146,148</note>
         <note category="description">Accessible label for the button that scrolls to the newest message</note>
       </notes>
       <segment>
@@ -18613,7 +18622,7 @@
     </unit>
     <unit id="7454488038548338364">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:382</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:383</note>
         <note category="description">Lowercase field name listed in the empty-fields summary</note>
       </notes>
       <segment>
@@ -18688,7 +18697,7 @@
     </unit>
     <unit id="1860554948960397865">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:340</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:341</note>
         <note category="description">Collapses the rows for fields the task has no value for</note>
       </notes>
       <segment>
@@ -18910,15 +18919,6 @@
         <source>Filter by file type</source>
       </segment>
     </unit>
-    <unit id="4007569097635901294">
-      <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:255</note>
-        <note category="description">Assistant subtitle while a reply is streaming</note>
-      </notes>
-      <segment>
-        <source>Working on it…</source>
-      </segment>
-    </unit>
     <unit id="4008430204592584922">
       <notes>
         <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:49,52</note>
@@ -18967,7 +18967,7 @@
     </unit>
     <unit id="115639214090380471">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:206</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:207</note>
         <note category="description">Hint describing the Brave search provider</note>
       </notes>
       <segment>
@@ -19006,7 +19006,7 @@
     </unit>
     <unit id="4455504566532091550">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:46,51</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:47,52</note>
         <note category="description">Explains what the workspace search provider is for</note>
       </notes>
       <segment>
@@ -19194,7 +19194,7 @@
     </unit>
     <unit id="2637348081917147948">
       <notes>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:40</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:43</note>
         <note category="description">Caption describing the summary rail task detail layout</note>
       </notes>
       <segment>
@@ -19864,7 +19864,7 @@
     </unit>
     <unit id="8784622693944438705">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:95,97</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:96,98</note>
         <note category="description">Label for the search provider</note>
       </notes>
       <segment>
@@ -20064,7 +20064,7 @@
     </unit>
     <unit id="5388692830516022173">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:134,136</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:135,137</note>
         <note category="description">Label for the model input</note>
       </notes>
       <segment>
@@ -20228,7 +20228,7 @@
     </unit>
     <unit id="1238372923050281145">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:343</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:344</note>
         <note category="description">Shown after the search provider is stored</note>
       </notes>
       <segment>
@@ -20359,7 +20359,7 @@
     <unit id="5168008278809915722">
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:72,74</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:80,81</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:81,82</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:88</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:333</note>
         <note category="location">src/app/static/components/status-filter/status-filter.component.ts:42,43</note>
@@ -20399,7 +20399,7 @@
     </unit>
     <unit id="648306878592239743">
       <notes>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:31</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:34</note>
         <note category="description">Button that returns a preference to its default value</note>
       </notes>
       <segment>
@@ -20422,6 +20422,15 @@
       </notes>
       <segment>
         <source>Choose a file to continue.</source>
+      </segment>
+    </unit>
+    <unit id="6499083639356392647">
+      <notes>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:46</note>
+        <note category="description">Caption describing the centered page width</note>
+      </notes>
+      <segment>
+        <source>Pages sit in a centred column that stops at a comfortable reading width.</source>
       </segment>
     </unit>
     <unit id="6499330284779318893">
@@ -20527,7 +20536,7 @@
     </unit>
     <unit id="7164517351150345210">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:192,193</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:193,194</note>
         <note category="description">Explains what relation types are for</note>
       </notes>
       <segment>
@@ -20816,7 +20825,7 @@
     </unit>
     <unit id="9041444200911417888">
       <notes>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:37</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:40</note>
         <note category="location">src/app/static/components/date-picker/calendar.component.ts:295</note>
         <note category="description">Badge on the chosen option tile</note>
       </notes>
@@ -20954,8 +20963,8 @@
     <unit id="4814285799071780083">
       <notes>
         <note category="location">src/app/core/services/task-commands.service.ts:217</note>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:338</note>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:360</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:342</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:364</note>
         <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:82,85</note>
         <note category="location">src/app/static/components/form-select-tags/form-select-tags.component.ts:74,77</note>
         <note category="location">src/app/static/components/image-upload/image-upload.component.ts:90,93</note>
@@ -21165,7 +21174,7 @@
     </unit>
     <unit id="4442108733606169287">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:189,191</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:190,192</note>
         <note category="description">Button that stores an API key</note>
       </notes>
       <segment>
@@ -21240,9 +21249,9 @@
     </unit>
     <unit id="2085611136494552870">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:175</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:196</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:290</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:176</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:197</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:291</note>
         <note category="description">Shown in place of a date the task does not have</note>
       </notes>
       <segment>
@@ -21251,7 +21260,7 @@
     </unit>
     <unit id="208984258892620507">
       <notes>
-        <note category="location">src/app/static/components/task-properties/task-properties.component.ts:62,65</note>
+        <note category="location">src/app/static/components/task-properties/task-properties.component.ts:63,66</note>
         <note category="description">Field heading for the person who raised the task</note>
       </notes>
       <segment>
@@ -21260,7 +21269,7 @@
     </unit>
     <unit id="7325019526486750305">
       <notes>
-        <note category="location">src/app/static/components/task-properties/task-properties.component.ts:103,106</note>
+        <note category="location">src/app/static/components/task-properties/task-properties.component.ts:104,107</note>
         <note category="description">Field heading for the task effort estimate</note>
       </notes>
       <segment>
@@ -21288,7 +21297,7 @@
     </unit>
     <unit id="6101767777602319924">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:353</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:354</note>
         <note category="description">Reveals the rows for fields the task has no value for. COUNT is how many there are, FIELDS lists their names</note>
       </notes>
       <segment>
@@ -21298,7 +21307,7 @@
     <unit id="6102419433188590465">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/pickers/task-sprint-picker.component.ts:27,30</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:289</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:290</note>
         <note category="location">src/app/static/components/task-properties/task-sprint-select.component.ts:34,37</note>
         <note category="location">src/app/static/components/task-properties/task-sprint-select.component.ts:57</note>
         <note category="description">Option that clears the task&apos;s sprint</note>

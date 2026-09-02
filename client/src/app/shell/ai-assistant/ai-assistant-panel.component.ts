@@ -64,7 +64,6 @@ import { AiAssistantUsageComponent } from './components/ai-assistant-usage.compo
 
       <app-ai-assistant-header
         [title]="headerTitle()"
-        [subtitle]="headerSubtitle()"
         [mode]="panel.mode()"
         [contentWidth]="contentWidth()"
         [closable]="isDrawer()"
@@ -248,14 +247,6 @@ export class AiAssistantPanelComponent {
     }
 
     return $localize`:Header of a conversation that has not started yet:New chat`;
-  });
-
-  protected readonly headerSubtitle = computed(() => {
-    if (this.assistant.isStreaming()) {
-      return $localize`:Assistant subtitle while a reply is streaming:Working on it…`;
-    }
-
-    return $localize`:Assistant subtitle above the conversation:How can I help you today?`;
   });
 
   constructor() {
