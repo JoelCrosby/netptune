@@ -64,6 +64,7 @@ import { TaskDetailService } from '../task-detail.service';
         <app-user-select
           [buttonClass]="assigneeClass()"
           [disabled]="!canUpdate()"
+          [excludeServiceAccounts]="true"
           [value]="task.assignees"
           (selectChange)="taskDetail.toggleAssignee($event)">
           @if (task.assignees.length) {

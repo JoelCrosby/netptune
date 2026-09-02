@@ -138,6 +138,13 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
             .Where(workspaceUser => workspaceUser.WorkspaceId == workspaceId)
             .Select(workspaceUser => workspaceUser.User);
 
+        var excludeServiceAccounts = filter.ExcludeServiceAccounts ?? false;
+
+        if (excludeServiceAccounts)
+        {
+            query = query.Where(user => user.UserType != AppUserType.ServiceAccount);
+        }
+
         var search = filter.Search?.Trim();
         var hasSearch = !string.IsNullOrWhiteSpace(search);
 

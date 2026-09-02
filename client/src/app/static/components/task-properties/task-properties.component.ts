@@ -49,6 +49,7 @@ export interface TaskReporter {
               Shown in the assignee picker when a task has nobody assigned
             "
             label="Unassigned"
+            [excludeServiceAccounts]="true"
             [value]="assignees()"
             [disabled]="!editable()"
             (selectChange)="toggleAssignee($event)" />

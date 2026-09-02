@@ -135,6 +135,7 @@ export class UserSelectComponent {
   readonly disabled = input(false);
   readonly label = input('Select Users');
   readonly noResults = input('No results found...');
+  readonly excludeServiceAccounts = input(false);
 
   readonly buttonClass = input('');
 
@@ -164,6 +165,7 @@ export class UserSelectComponent {
   private readonly query = computed<UserSelectQuery>(() => ({
     search: this.searchForm.term().value(),
     enabled: this.hasOpened(),
+    excludeServiceAccounts: this.excludeServiceAccounts(),
   }));
 
   private readonly usersResource = userSelectResource(this.query);

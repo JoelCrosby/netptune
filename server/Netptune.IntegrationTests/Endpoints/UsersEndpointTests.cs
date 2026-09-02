@@ -10,8 +10,10 @@ using Netptune.Core.Authentication.Models;
 using Netptune.Core.Authorization;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
+using Netptune.Core.Requests.ServiceAccounts;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.ViewModels.ServiceAccounts;
 using Netptune.Core.ViewModels.Users;
 using Netptune.Entities.Contexts;
 using Netptune.TestData;
@@ -125,6 +127,43 @@ public sealed class UsersEndpointTests
 
         result.IsSuccess.Should().BeTrue();
         result.Payload!.Items.Should().NotContain(item => item.Email == inviteEmail);
+    }
+
+    [Fact]
+    public async Task GetSelectOptions_ShouldExcludeServiceAccounts_WhenRequested()
+    {
+        var accountName = $"select-agent-{Guid.NewGuid():N}";
+
+        var createResponse = await Client.PostAsJsonAsync("api/service-accounts", new CreateServiceAccountRequest
+        {
+            Name = accountName,
+            Permissions = [NetptunePermissions.Tasks.Read],
+        }, TestContext.Current.CancellationToken);
+
+        createResponse.StatusCode.Should().Be(HttpStatusCode.OK, await createResponse.Content.ReadAsStringAsync());
+
+        var account = await createResponse.Content
+            .ReadFromJsonAsync<ServiceAccountViewModel>(TestContext.Current.CancellationToken);
+
+        var includedResponse = await Client.GetAsync(
+            $"api/users/select?search={accountName}",
+            TestContext.Current.CancellationToken);
+
+        var included = await includedResponse.Content
+            .ReadFromJsonAsync<ClientResponse<PagedResponse<UserSelectOptionViewModel>>>(
+                TestContext.Current.CancellationToken);
+
+        included.Payload!.Items.Should().ContainSingle(item => item.Id == account!.UserId);
+
+        var excludedResponse = await Client.GetAsync(
+            $"api/users/select?search={accountName}&excludeServiceAccounts=true",
+            TestContext.Current.CancellationToken);
+
+        var excluded = await excludedResponse.Content
+            .ReadFromJsonAsync<ClientResponse<PagedResponse<UserSelectOptionViewModel>>>(
+                TestContext.Current.CancellationToken);
+
+        excluded.Payload!.Items.Should().BeEmpty();
     }
 
     [Fact]

@@ -83,6 +83,7 @@ const ALL_FIELDS: TaskDetailField[] = [
               <app-user-select
                 [buttonClass]="rowClass"
                 [disabled]="!canUpdate()"
+                [excludeServiceAccounts]="true"
                 [value]="task.assignees"
                 (selectChange)="taskDetail.toggleAssignee($event)">
                 <span [class]="labelClass()">{{ labels.assignee }}</span>

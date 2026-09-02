@@ -9,6 +9,7 @@ import { permissionResource } from './permission.resource';
 export interface UserSelectQuery {
   search: string;
   enabled: boolean;
+  excludeServiceAccounts: boolean;
 }
 
 export const userSelectResource = (query: Signal<UserSelectQuery>) => {
@@ -29,6 +30,7 @@ function buildRequest(query: UserSelectQuery): HttpResourceRequest | undefined {
       page: 1,
       pageSize: DEFAULT_PAGE_SIZE,
       ...(search ? { search } : {}),
+      ...(query.excludeServiceAccounts ? { excludeServiceAccounts: true } : {}),
     },
   };
 }
