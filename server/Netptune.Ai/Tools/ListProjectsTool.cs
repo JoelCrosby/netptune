@@ -19,7 +19,7 @@ public sealed class ListProjectsTool : IAiTool
 
     public string Name => "list_projects";
 
-    public string Description => "List the projects in the current workspace, with their id and name.";
+    public string Description => "List the projects in the current workspace, with their id, name and repository URL.";
 
     public AiToolKind Kind => AiToolKind.Read;
 
@@ -36,6 +36,7 @@ public sealed class ListProjectsTool : IAiTool
             id = project.Id,
             name = project.Name,
             key = project.Key,
+            repositoryUrl = project.RepositoryUrl,
         });
 
         var content = JsonSerializer.Serialize(summaries);
