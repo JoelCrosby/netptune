@@ -11,6 +11,7 @@ using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Sprints;
+using Netptune.Handlers.Projects.Queries;
 using Netptune.Handlers.Sprints.Queries;
 using Netptune.Handlers.Tasks.Queries;
 
@@ -27,6 +28,41 @@ public class SprintToolTests
 
     private readonly IMediator Mediator = Substitute.For<IMediator>();
     private readonly AiChangeSetBuilder ChangeSet = new();
+
+    [Fact]
+    public async Task CreateSprint_ShouldProposeASprint_InAProjectPendingInTheSameChangeSet()
+    {
+        Mediator
+            .Send(Arg.Any<GetProjectsQuery>(), Arg.Any<CancellationToken>())
+            .Returns([]);
+
+        var createProject = new CreateProjectTool(Mediator, ChangeSet);
+
+        await createProject.Execute(Arguments("""{"name":"Apollo"}"""), TestContext.Current.CancellationToken);
+
+        var projectRef = ChangeSet.Changes.Last().RefKey;
+        var tool = new CreateSprintTool(Mediator, ChangeSet);
+        var arguments = Arguments(
+            $$"""{"name":"Sprint 1","projectRef":"{{projectRef}}","startDate":"2026-07-01","endDate":"2026-07-14"}""");
+
+        var result = await tool.Execute(arguments, TestContext.Current.CancellationToken);
+
+        result.IsError.Should().BeFalse();
+        ChangeSet.Changes.Last().Fields.Single(field => field.Name == "project").After.Should().Be("Apollo");
+    }
+
+    [Fact]
+    public async Task CreateSprint_ShouldFail_WhenNeitherAProjectIdNorARefIsGiven()
+    {
+        var tool = new CreateSprintTool(Mediator, ChangeSet);
+        var arguments = Arguments("""{"name":"Sprint 1","startDate":"2026-07-01","endDate":"2026-07-14"}""");
+
+        var result = await tool.Execute(arguments, TestContext.Current.CancellationToken);
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("projectRef");
+        ChangeSet.Changes.Should().BeEmpty();
+    }
 
     [Fact]
     public async Task UpdateSprint_ShouldFail_WhenTheSprintIsCompleted()

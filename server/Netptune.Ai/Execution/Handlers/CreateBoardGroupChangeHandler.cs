@@ -25,7 +25,8 @@ public sealed class CreateBoardGroupChangeHandler : IAiChangeHandler
         var change = context.Change;
         var payload = change.Payload.RootElement;
         var name = AiChangePayload.ReadString(payload, "name");
-        var boardId = AiChangePayload.ReadInt(payload, "boardId");
+        var boardId = AiChangePayload.ReadInt(payload, "boardId")
+            ?? AiChangePayload.ResolveReference(context, "boardRef");
         var hasName = !string.IsNullOrWhiteSpace(name);
 
         if (!hasName || !boardId.HasValue)

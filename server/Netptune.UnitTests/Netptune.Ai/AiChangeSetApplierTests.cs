@@ -20,6 +20,8 @@ using Netptune.Core.Services;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.ProjectTasks;
+using Netptune.Core.ViewModels.Projects;
+using Netptune.Handlers.Projects.Commands;
 using Netptune.Handlers.Tasks.Commands;
 using Netptune.Services.Ai;
 
@@ -214,7 +216,10 @@ public class AiChangeSetApplierTests
 
     private AiChangeSetApplier CreateApplier()
     {
-        var tools = new AiToolRegistry([new StubWriteTool("propose_create_task", NetptunePermissions.Tasks.Create)]);
+        var tools = new AiToolRegistry([
+            new StubWriteTool("propose_create_task", NetptunePermissions.Tasks.Create),
+            new StubWriteTool("propose_create_project", NetptunePermissions.Projects.Create),
+        ]);
 
         return new AiChangeSetApplier(
             UnitOfWork,
@@ -223,7 +228,7 @@ public class AiChangeSetApplierTests
             new AiExecutionContext(),
             Cancellations,
             NullLogger<AiChangeSetApplier>.Instance,
-            [new CreateTaskChangeHandler(Mediator)]);
+            [new CreateTaskChangeHandler(Mediator), new CreateProjectChangeHandler(Mediator)]);
     }
 
     private void GivenChangeSet(AiChangeSet changeSet, List<AiProposedChange> changes)
@@ -289,6 +294,40 @@ public class AiChangeSetApplierTests
         result!.Results.Select(item => item.ChangeId).Should().Equal(
             [prerequisite.Id, dependent.Id],
             "a proposal cannot apply against an id its prerequisite has not created yet");
+    }
+
+    [Fact]
+    public async Task Apply_ShouldGiveATaskTheProjectItsPrerequisiteCreated()
+    {
+        var changeSet = CreateChangeSet();
+        var project = CreateChange(
+            changeSet.Id,
+            "propose_create_project",
+            id: 1,
+            refKey: "ref:project",
+            payload: """{"name":"Apollo"}""");
+
+        var task = CreateChange(
+            changeSet.Id,
+            "propose_create_task",
+            id: 2,
+            refKey: "ref:task",
+            payload: """{"name":"Draft the brief","projectRef":"ref:project"}""");
+
+        GivenChangeSet(changeSet, [task, project]);
+        GivenPermissions(NetptunePermissions.Tasks.Create, NetptunePermissions.Projects.Create);
+        GivenCreatedProject(55);
+        GivenCreatedTask(7);
+
+        var applier = CreateApplier();
+
+        await applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), null, TestContext.Current.CancellationToken);
+
+        await Mediator
+            .Received(1)
+            .Send(
+                Arg.Is<CreateTaskCommand>(command => command.Request.ProjectId == 55),
+                Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -428,6 +467,13 @@ public class AiChangeSetApplierTests
         Mediator
             .Send(Arg.Any<CreateTaskCommand>(), Arg.Any<CancellationToken>())
             .Returns(ClientResponse<TaskViewModel>.Success(new TaskViewModel { Id = taskId }));
+    }
+
+    private void GivenCreatedProject(int projectId)
+    {
+        Mediator
+            .Send(Arg.Any<CreateProjectCommand>(), Arg.Any<CancellationToken>())
+            .Returns(ClientResponse<ProjectViewModel>.Success(new ProjectViewModel { Id = projectId }));
     }
 
     [Fact]

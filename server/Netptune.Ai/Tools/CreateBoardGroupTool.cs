@@ -38,33 +38,30 @@ public sealed class CreateBoardGroupTool : IAiTool
         {
           "name": { "type": "string", "description": "The group name, such as In progress." },
           "boardId": { "type": "integer", "description": "The board the group belongs to, from list_boards." },
+          "boardRef": { "type": "string", "description": "Handle of a board proposed earlier in this change set, instead of boardId." },
           "statusId": { "type": "integer", "description": "Optional status tasks take when moved into this group." }
         }
         """,
-        "name",
-        "boardId");
+        "name");
 
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
         var name = AiToolSchema.GetString(arguments, "name")?.Trim();
-        var boardId = AiToolSchema.GetInt(arguments, "boardId");
         var hasName = !string.IsNullOrWhiteSpace(name);
 
-        if (!hasName || !boardId.HasValue)
+        if (!hasName)
         {
-            return AiToolExecution.Failed("A group name and boardId are required.");
+            return AiToolExecution.Failed("A group name is required.");
         }
 
-        var groups = await Mediator.Send(new GetBoardsInWorkspaceQuery(), cancellationToken);
-        var board = groups?
-            .SelectMany(group => group.Boards)
-            .FirstOrDefault(item => item.Id == boardId.Value);
+        var parent = await ResolveBoard(arguments, cancellationToken);
 
-        if (board is null)
+        if (parent.Error is not null)
         {
-            return AiToolExecution.Failed($"Board {boardId} is not in this workspace.");
+            return AiToolExecution.Failed(parent.Error);
         }
 
+        var board = parent.Parent!;
         var fields = new List<AiChangeField>
         {
             new() { Name = "name", After = name },
@@ -90,7 +87,32 @@ public sealed class CreateBoardGroupTool : IAiTool
         });
 
         return AiToolExecution.Success(
-            $"Proposed adding group \"{name}\" to {board.Name}. Nothing has been applied yet — the user must review and apply the change.");
+            $"Proposed adding group \"{name}\" to {board.Name}. "
+            + "Nothing has been applied yet — the user must review and apply the change.");
+    }
+
+    private async Task<AiParentResult> ResolveBoard(JsonElement arguments, CancellationToken cancellationToken)
+    {
+        var boardRef = AiPendingReference.Read(arguments, "boardRef");
+        var boardId = AiToolSchema.GetInt(arguments, "boardId");
+        var needsExistingBoard = boardRef is null && boardId.HasValue;
+
+        if (!needsExistingBoard)
+        {
+            return AiParentLookup.Board(ChangeSet, arguments, null, null);
+        }
+
+        var groups = await Mediator.Send(new GetBoardsInWorkspaceQuery(), cancellationToken);
+        var board = groups?
+            .SelectMany(group => group.Boards)
+            .FirstOrDefault(item => item.Id == boardId!.Value);
+
+        if (board is null)
+        {
+            return AiParentResult.Failed($"Board {boardId} is not in this workspace.");
+        }
+
+        return AiParentLookup.Board(ChangeSet, arguments, board.Id, board.Name);
     }
 
     private async Task<string?> AddStatusField(

@@ -59,6 +59,7 @@ public sealed class CreateProjectTool : IAiTool
             return AiToolExecution.Failed($"A project named \"{existing.Name}\" already exists.");
         }
 
+        var refKey = ChangeSet.CreateRefKey();
         var description = AiToolSchema.GetString(arguments, "description");
         var repositoryUrl = AiToolSchema.GetString(arguments, "repositoryUrl");
         var fields = new List<AiChangeField> { new() { Name = "name", After = name } };
@@ -70,7 +71,7 @@ public sealed class CreateProjectTool : IAiTool
         {
             ToolName = Name,
             EntityType = "project",
-            RefKey = ChangeSet.CreateRefKey(),
+            RefKey = refKey,
             Summary = $"Create project “{name}”",
             Fields = fields,
             Payload = JsonDocument.Parse(arguments.GetRawText()),
@@ -78,6 +79,7 @@ public sealed class CreateProjectTool : IAiTool
         });
 
         return AiToolExecution.Success(
-            $"Proposed creating project \"{name}\". Nothing has been applied yet — the user must review and apply the change.");
+            $"Proposed creating project \"{name}\" as {refKey}. Pass that handle as projectRef to put tasks, "
+            + "sprints or boards in it. Nothing has been applied yet — the user must review and apply the change.");
     }
 }

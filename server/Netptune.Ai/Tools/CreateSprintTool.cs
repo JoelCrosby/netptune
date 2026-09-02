@@ -35,25 +35,24 @@ public sealed class CreateSprintTool : IAiTool
         {
           "name": { "type": "string", "description": "The sprint name." },
           "projectId": { "type": "integer", "description": "The project the sprint belongs to." },
+          "projectRef": { "type": "string", "description": "Handle of a project proposed earlier in this change set, instead of projectId." },
           "startDate": { "type": "string", "description": "First day of the sprint as YYYY-MM-DD." },
           "endDate": { "type": "string", "description": "Last day of the sprint as YYYY-MM-DD." },
           "goal": { "type": "string", "description": "Optional sprint goal." }
         }
         """,
         "name",
-        "projectId",
         "startDate",
         "endDate");
 
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
         var name = AiToolSchema.GetString(arguments, "name")?.Trim();
-        var projectId = AiToolSchema.GetInt(arguments, "projectId");
         var hasName = !string.IsNullOrWhiteSpace(name);
 
-        if (!hasName || !projectId.HasValue)
+        if (!hasName)
         {
-            return AiToolExecution.Failed("A sprint name and projectId are required.");
+            return AiToolExecution.Failed("A sprint name is required.");
         }
 
         var startDate = ReadDate(arguments, "startDate");
@@ -71,13 +70,14 @@ public sealed class CreateSprintTool : IAiTool
             return AiToolExecution.Failed("The sprint end date must not fall before its start date.");
         }
 
-        var projects = await Mediator.Send(new GetProjectsQuery(), cancellationToken);
-        var project = projects.FirstOrDefault(item => item.Id == projectId.Value);
+        var parent = await AiParentLookup.Project(Mediator, ChangeSet, arguments, cancellationToken);
 
-        if (project is null)
+        if (parent.Error is not null)
         {
-            return AiToolExecution.Failed($"Project {projectId} is not in this workspace.");
+            return AiToolExecution.Failed(parent.Error);
         }
+
+        var project = parent.Parent!;
 
         var goal = AiToolSchema.GetString(arguments, "goal");
         var refKey = ChangeSet.CreateRefKey();

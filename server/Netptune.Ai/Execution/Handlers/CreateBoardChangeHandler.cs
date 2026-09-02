@@ -26,7 +26,8 @@ public sealed class CreateBoardChangeHandler : IAiChangeHandler
         var payload = change.Payload.RootElement;
         var name = AiChangePayload.ReadString(payload, "name");
         var identifier = AiChangePayload.ReadString(payload, "identifier");
-        var projectId = AiChangePayload.ReadInt(payload, "projectId");
+        var projectId = AiChangePayload.ReadInt(payload, "projectId")
+            ?? AiChangePayload.ResolveReference(context, "projectRef");
         var hasName = !string.IsNullOrWhiteSpace(name);
         var hasIdentifier = !string.IsNullOrWhiteSpace(identifier);
 

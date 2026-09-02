@@ -75,6 +75,7 @@ public sealed class CreateStatusTool : IAiTool
             return AiToolExecution.Failed($"A status named \"{existing.Name}\" already exists.");
         }
 
+        var refKey = ChangeSet.CreateRefKey();
         var fields = new List<AiChangeField>
         {
             new() { Name = "name", After = name },
@@ -88,7 +89,7 @@ public sealed class CreateStatusTool : IAiTool
         {
             ToolName = Name,
             EntityType = "status",
-            RefKey = ChangeSet.CreateRefKey(),
+            RefKey = refKey,
             Summary = $"Create status “{name}” in {category}",
             Fields = fields,
             Payload = JsonDocument.Parse(arguments.GetRawText()),
@@ -96,6 +97,6 @@ public sealed class CreateStatusTool : IAiTool
         });
 
         return AiToolExecution.Success(
-            $"Proposed creating status \"{name}\". Nothing has been applied yet — the user must review and apply the change.");
+            $"Proposed creating status \"{name}\" as {refKey}. Nothing has been applied yet — the user must review and apply the change.");
     }
 }

@@ -36,33 +36,33 @@ public sealed class CreateBoardTool : IAiTool
         {
           "name": { "type": "string", "description": "The board name." },
           "projectId": { "type": "integer", "description": "The project the board belongs to, from list_projects." },
+          "projectRef": { "type": "string", "description": "Handle of a project proposed earlier in this change set, instead of projectId." },
           "identifier": { "type": "string", "description": "Url identifier for the board, lowercase with dashes." }
         }
         """,
         "name",
-        "projectId",
         "identifier");
 
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
         var name = AiToolSchema.GetString(arguments, "name")?.Trim();
         var identifier = AiToolSchema.GetString(arguments, "identifier")?.Trim();
-        var projectId = AiToolSchema.GetInt(arguments, "projectId");
         var hasName = !string.IsNullOrWhiteSpace(name);
         var hasIdentifier = !string.IsNullOrWhiteSpace(identifier);
 
-        if (!hasName || !hasIdentifier || !projectId.HasValue)
+        if (!hasName || !hasIdentifier)
         {
-            return AiToolExecution.Failed("A board name, identifier and projectId are required.");
+            return AiToolExecution.Failed("A board name and identifier are required.");
         }
 
-        var projects = await Mediator.Send(new GetProjectsQuery(), cancellationToken);
-        var project = projects.FirstOrDefault(item => item.Id == projectId.Value);
+        var parent = await AiParentLookup.Project(Mediator, ChangeSet, arguments, cancellationToken);
 
-        if (project is null)
+        if (parent.Error is not null)
         {
-            return AiToolExecution.Failed($"Project {projectId} is not in this workspace.");
+            return AiToolExecution.Failed(parent.Error);
         }
+
+        var project = parent.Parent!;
 
         var uniqueness = await Mediator.Send(new IsBoardIdentifierUniqueQuery(identifier!), cancellationToken);
         var isTaken = uniqueness.Payload?.IsUnique == false;
@@ -79,11 +79,13 @@ public sealed class CreateBoardTool : IAiTool
             new() { Name = "project", After = project.Name },
         };
 
+        var refKey = ChangeSet.CreateRefKey();
+
         ChangeSet.Add(new AiChangeDraft
         {
             ToolName = Name,
             EntityType = "board",
-            RefKey = ChangeSet.CreateRefKey(),
+            RefKey = refKey,
             Summary = $"Create board “{name}” in {project.Name}",
             Fields = fields,
             Payload = JsonDocument.Parse(arguments.GetRawText()),
@@ -91,6 +93,6 @@ public sealed class CreateBoardTool : IAiTool
         });
 
         return AiToolExecution.Success(
-            $"Proposed creating board \"{name}\". Nothing has been applied yet — the user must review and apply the change.");
+            $"Proposed creating board \"{name}\" as {refKey}. Nothing has been applied yet — the user must review and apply the change.");
     }
 }

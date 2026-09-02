@@ -70,6 +70,52 @@ public class CreateTaskToolTests
     }
 
     [Fact]
+    public async Task Execute_ShouldProposeATask_InAProjectPendingInTheSameChangeSet()
+    {
+        var projectRef = await GivenProposedProject("Apollo");
+
+        var result = await Execute($$"""{"name":"Draft the brief","projectRef":"{{projectRef}}"}""");
+
+        result.IsError.Should().BeFalse();
+
+        var change = ChangeSet.Changes.Last();
+
+        change.Fields.Single(item => item.Name == "project").After.Should().Be("Apollo");
+    }
+
+    [Fact]
+    public async Task Execute_ShouldFail_WhenTheProjectRefIsNotInTheChangeSet()
+    {
+        var result = await Execute("""{"name":"Draft the brief","projectRef":"ref:nope"}""");
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("ref:nope");
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Execute_ShouldFail_WhenNeitherAProjectIdNorARefIsGiven()
+    {
+        var result = await Execute("""{"name":"Draft the brief"}""");
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("projectRef");
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Execute_ShouldFail_WhenAPendingProjectIsPairedWithAnExistingSprint()
+    {
+        var projectRef = await GivenProposedProject("Apollo");
+
+        var result = await Execute(
+            $$"""{"name":"Draft the brief","projectRef":"{{projectRef}}","sprintId":9}""");
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("sprintRef");
+    }
+
+    [Fact]
     public void GetRequiredPermissions_ShouldDemandTagAssignment_OnlyWhenTagsAreRequested()
     {
         var tool = new CreateTaskTool(Mediator, ChangeSet);
@@ -86,6 +132,16 @@ public class CreateTaskToolTests
         var element = JsonDocument.Parse(arguments).RootElement;
 
         return await tool.Execute(element, TestContext.Current.CancellationToken);
+    }
+
+    private async Task<string> GivenProposedProject(string name)
+    {
+        var createProject = new CreateProjectTool(Mediator, ChangeSet);
+        var arguments = JsonDocument.Parse($$"""{"name":"{{name}}"}""").RootElement;
+
+        await createProject.Execute(arguments, TestContext.Current.CancellationToken);
+
+        return ChangeSet.Changes.Last().RefKey!;
     }
 
     private void GivenProject()

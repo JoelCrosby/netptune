@@ -57,6 +57,7 @@ public sealed class CreateTaskTool : IAiTool
         {
           "name": { "type": "string", "description": "The task name." },
           "projectId": { "type": "integer", "description": "The project the task belongs to." },
+          "projectRef": { "type": "string", "description": "Handle of a project proposed earlier in this change set, instead of projectId." },
           "description": { "type": "string", "description": "Optional task description." },
           "statusId": { "type": "integer", "description": "Status id, from list_statuses. Defaults to the project's first status." },
           "assigneeId": { "type": "string", "description": "Workspace user id to assign, from list_members." },
@@ -83,28 +84,26 @@ public sealed class CreateTaskTool : IAiTool
           "dueDate": { "type": "string", "description": "Optional due date as YYYY-MM-DD." }
         }
         """,
-        "name",
-        "projectId");
+        "name");
 
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
         var name = AiToolSchema.GetString(arguments, "name")?.Trim();
-        var projectId = AiToolSchema.GetInt(arguments, "projectId");
         var hasName = !string.IsNullOrWhiteSpace(name);
 
-        if (!hasName || !projectId.HasValue)
+        if (!hasName)
         {
-            return AiToolExecution.Failed("A task name and projectId are required.");
+            return AiToolExecution.Failed("A task name is required.");
         }
 
-        var projects = await Mediator.Send(new GetProjectsQuery(), cancellationToken);
-        var project = projects.FirstOrDefault(item => item.Id == projectId.Value);
+        var parent = await AiParentLookup.Project(Mediator, ChangeSet, arguments, cancellationToken);
 
-        if (project is null)
+        if (parent.Error is not null)
         {
-            return AiToolExecution.Failed($"Project {projectId} is not in this workspace.");
+            return AiToolExecution.Failed(parent.Error);
         }
 
+        var project = parent.Parent!;
         var description = AiToolSchema.GetString(arguments, "description");
         var refKey = ChangeSet.CreateRefKey();
         var fields = new List<AiChangeField>
@@ -115,7 +114,7 @@ public sealed class CreateTaskTool : IAiTool
 
         AiToolSchema.AddOptionalField(fields, "description", description);
 
-        var placement = await ReadPlacement(project.Id, arguments, cancellationToken);
+        var placement = await ReadPlacement(project, arguments, cancellationToken);
 
         if (placement.Error is not null)
         {
@@ -191,7 +190,7 @@ public sealed class CreateTaskTool : IAiTool
     }
 
     private async Task<TaskPlacement> ReadPlacement(
-        int projectId,
+        AiParent project,
         JsonElement arguments,
         CancellationToken cancellationToken)
     {
@@ -259,6 +258,15 @@ public sealed class CreateTaskTool : IAiTool
 
         if (sprintId.HasValue)
         {
+            // An existing sprint belongs to an existing project, so it can never belong to one
+            // this change set has not created yet.
+            if (project.IsPending)
+            {
+                return TaskPlacement.Failed(
+                    "A task in a project proposed in this change set cannot join an existing sprint. "
+                    + "Propose the sprint with propose_create_sprint and pass its handle as sprintRef.");
+            }
+
             var sprint = await AiSprintLookup.Find(Mediator, sprintId.Value, cancellationToken);
 
             if (sprint is null)
@@ -266,7 +274,7 @@ public sealed class CreateTaskTool : IAiTool
                 return TaskPlacement.Failed($"Sprint {sprintId} is not in this workspace.");
             }
 
-            var belongsToProject = sprint.ProjectId == projectId;
+            var belongsToProject = sprint.ProjectId == project.Id;
 
             if (!belongsToProject)
             {
@@ -278,6 +286,16 @@ public sealed class CreateTaskTool : IAiTool
                 AiChangeValueKind.Sprint,
                 [],
                 [AiChangeFields.Sprint(sprint.Id, sprint.Name)]));
+        }
+
+        var boardGroupId = AiToolSchema.GetInt(arguments, "boardGroupId");
+        var isBoardGroupUnreachable = boardGroupId.HasValue && project.IsPending;
+
+        if (isBoardGroupUnreachable)
+        {
+            return TaskPlacement.Failed(
+                "A task in a project proposed in this change set cannot join an existing board group. "
+                + "Leave boardGroupId unset and it lands in the new project's default board.");
         }
 
         var scheduleError = AddScheduleFields(fields, arguments);

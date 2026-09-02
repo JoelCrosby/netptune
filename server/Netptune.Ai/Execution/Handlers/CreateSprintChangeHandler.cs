@@ -25,7 +25,8 @@ public sealed class CreateSprintChangeHandler : IAiChangeHandler
         var change = context.Change;
         var payload = change.Payload.RootElement;
         var name = AiChangePayload.ReadString(payload, "name");
-        var projectId = AiChangePayload.ReadInt(payload, "projectId");
+        var projectId = AiChangePayload.ReadInt(payload, "projectId")
+            ?? AiChangePayload.ResolveReference(context, "projectRef");
         var startDate = AiChangePayload.ReadDate(payload, "startDate");
         var endDate = AiChangePayload.ReadDate(payload, "endDate");
         var hasName = !string.IsNullOrWhiteSpace(name);

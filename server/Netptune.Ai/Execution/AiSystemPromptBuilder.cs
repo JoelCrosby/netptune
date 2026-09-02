@@ -46,7 +46,9 @@ public sealed class AiSystemPromptBuilder : IAiSystemPromptBuilder
         prompt.AppendLine("With none called, simply answer — never disclaim a proposal you did not make or describe the state of the change set.");
         prompt.AppendLine("Look up real ids with the read tools before proposing a change against them.");
         prompt.AppendLine("A proposal that creates something answers with a handle such as ref:1.");
-        prompt.AppendLine("Pass that handle as taskRef or sprintRef to configure an entity the same change set is still creating.");
+        prompt.AppendLine("Pass that handle as projectRef, boardRef, taskRef, sprintRef or relationTypeRef to build on an entity the same change set is still creating.");
+        prompt.AppendLine("So propose a whole tree in one turn: a project, then its sprints, boards and tasks, each pointing at the handle above it.");
+        prompt.AppendLine("Never apply a change to learn an id — nothing is applied until the user says so, and a handle stands in for the id until then.");
         prompt.AppendLine("Applying orders the changes so a handle always resolves, and skips anything whose entity failed.");
         prompt.AppendLine();
         prompt.AppendLine("ask_question puts a multiple choice question to the user.");
