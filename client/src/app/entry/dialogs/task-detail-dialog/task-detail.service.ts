@@ -35,19 +35,19 @@ export class TaskDetailService {
 
   private readonly resource = taskDetailResource(this.openSystemId);
 
-  readonly task = this.resource.value;
+  readonly task = computed(() => {
+    return this.resource.hasValue() ? this.resource.value() : undefined;
+  });
+
   readonly loading = this.resource.isLoading;
   readonly isEditing = this.taskCommands.isEditing;
 
-  /* The view separates a task that is gone from a request that failed. */
-  readonly loadError = computed(
-    () => this.resource.error() as HttpErrorResponse | undefined
-  );
+  readonly loadError = computed(() => {
+    return this.resource.error() as HttpErrorResponse | undefined;
+  });
 
   constructor() {
-    /* The assistant asks what the user is looking at, from outside this view. */
     effect(() => this.currentTask.set(this.task()));
-
     inject(DestroyRef).onDestroy(() => this.clearCurrentTask());
   }
 
