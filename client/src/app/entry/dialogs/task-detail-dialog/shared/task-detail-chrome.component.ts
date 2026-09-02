@@ -84,7 +84,10 @@ import { TaskDetailService } from '../task-detail.service';
         </app-split-button>
 
         @if (showActivity() && readActivity()) {
-          <app-activity-menu [entityType]="entityType" [entityId]="task.id" />
+          <app-activity-menu
+            [entityType]="entityType"
+            [entityId]="task.id"
+            [buttonClass]="iconButtonClass" />
         }
 
         @if (dialogRef) {

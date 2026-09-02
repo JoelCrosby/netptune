@@ -43,13 +43,14 @@ import { ActivityPipe } from '@static/pipes/activity.pipe';
   ],
   template: `
     <button
-      app-flat-button
+      type="button"
+      [class]="buttonClass()"
       i18n-appTooltip="Tooltip on the button that opens the activity feed"
       appTooltip="Show activity"
-      color="ghost"
       (click)="toggleMenu()">
       <svg
         lucideHistory
+        class="h-4 w-4"
         aria-hidden="false"
         i18n-aria-label="Accessible label for the activity feed icon"
         aria-label="Show activity"></svg>
@@ -104,7 +105,7 @@ import { ActivityPipe } from '@static/pipes/activity.pipe';
 
             @if (canLoadMore()) {
               <div class="flex justify-center px-3 pt-3">
-                <button app-ghost-button (click)="loadMore()">
+                <button app-flat-button color="ghost" (click)="loadMore()">
                   <span i18n="Button that loads the next page of activity">
                     Load more
                   </span>
@@ -127,6 +128,8 @@ export class ActivityMenuComponent implements OnDestroy {
   private el = inject(ElementRef<HTMLElement>);
 
   readonly entityType = input.required<EntityType>();
+  // The host owns the trigger's look so it can sit flush with its neighbours.
+  readonly buttonClass = input.required<string>();
   readonly entityId = input<number>();
 
   private readonly isOpen = signal(false);
