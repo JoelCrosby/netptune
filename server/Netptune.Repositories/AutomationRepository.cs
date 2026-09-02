@@ -326,16 +326,35 @@ public class AutomationRepository : WorkspaceEntityRepository<DataContext, Autom
     public async Task<PagedResponse<AutomationRunViewModel>> GetRunsPaged(
         int ruleId,
         int workspaceId,
-        PageRequest request,
+        AutomationRunFilter filter,
         CancellationToken cancellationToken = default)
     {
-        var pagination = request.GetPagination();
+        var pagination = filter.GetPagination();
         var query = Context.Set<AutomationRun>()
             .Where(run => run.AutomationRuleId == ruleId)
             .Where(run => run.AutomationRule.WorkspaceId == workspaceId);
 
+        if (!string.IsNullOrWhiteSpace(filter.Search))
+        {
+            query = query.Where(RunMessageMatches(filter.Search.Trim()));
+        }
+
+        var statuses = filter.GetStatuses();
+
+        if (statuses.Count > 0)
+        {
+            query = query.Where(run => statuses.Contains(run.Status));
+        }
+
+        var triggerTypes = filter.GetTriggerTypes();
+
+        if (triggerTypes.Count > 0)
+        {
+            query = query.Where(run => triggerTypes.Contains(run.TriggerType));
+        }
+
         var totalCount = await query.CountAsync(cancellationToken);
-        var runs = await SortRuns(query, request)
+        var runs = await SortRuns(query, filter)
             .Skip(pagination.Skip)
             .Take(pagination.PageSize)
             .Select(RunProjection)
@@ -346,11 +365,20 @@ public class AutomationRepository : WorkspaceEntityRepository<DataContext, Autom
         return new PagedResponse<AutomationRunViewModel>(runs, pagination.Page, pagination.PageSize, totalCount);
     }
 
-    private static IQueryable<AutomationRun> SortRuns(IQueryable<AutomationRun> query, PageRequest request)
+    private static Expression<Func<AutomationRun, bool>> RunMessageMatches(string search)
     {
-        var isDescending = string.Equals(request.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+        var pattern = $"%{search}%";
 
-        return request.SortBy?.ToLowerInvariant() switch
+        return run =>
+            EF.Functions.ILike(run.Message!, pattern) ||
+            run.ActionResults.Any(result => EF.Functions.ILike(result.Message!, pattern));
+    }
+
+    private static IQueryable<AutomationRun> SortRuns(IQueryable<AutomationRun> query, AutomationRunFilter filter)
+    {
+        var isDescending = string.Equals(filter.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+
+        return filter.SortBy?.ToLowerInvariant() switch
         {
             "triggertype" => isDescending
                 ? query.OrderByDescending(run => run.TriggerType).ThenByDescending(run => run.CreatedAt)

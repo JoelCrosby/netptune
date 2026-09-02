@@ -360,7 +360,8 @@ internal static class AutomationTestData
         DataContext db,
         AutomationRule rule,
         int count,
-        AutomationRunStatus status)
+        AutomationRunStatus status,
+        string? message = null)
     {
         var runs = Enumerable.Range(0, count).Select(index => new AutomationRun
         {
@@ -369,6 +370,7 @@ internal static class AutomationTestData
             Status = status,
             IdempotencyKey = $"seed:{rule.Id}:{status}:{index}:{Guid.NewGuid():N}",
             EntityType = EntityType.Task,
+            Message = message,
             OwnerId = rule.OwnerId,
             CreatedByUserId = rule.CreatedByUserId,
         });

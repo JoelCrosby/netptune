@@ -1,6 +1,7 @@
 using FluentAssertions;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Automations;
 
 using Xunit;
 
@@ -353,5 +354,91 @@ public sealed class AutomationRepositoryQueryTests
             TestContext.Current.CancellationToken);
 
         categories.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task GetRunsPaged_filters_runs_by_status()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        var rule = await AutomationTestData.CreateTaskChangedRule(scope.Db, scenario, [TaskChangeField.Status]);
+
+        await AutomationTestData.CreateRuns(scope.Db, rule, 2, AutomationRunStatus.Succeeded);
+        await AutomationTestData.CreateRuns(scope.Db, rule, 3, AutomationRunStatus.Failed);
+
+        var filter = new AutomationRunFilter { Statuses = "Failed" };
+        var runs = await scope.UnitOfWork.Automations.GetRunsPaged(
+            rule.Id,
+            scenario.Workspace.Id,
+            filter,
+            TestContext.Current.CancellationToken);
+
+        runs.TotalCount.Should().Be(3);
+        runs.Items.Should().OnlyContain(run => run.Status == AutomationRunStatus.Failed);
+    }
+
+    [Fact]
+    public async Task GetRunsPaged_filters_runs_by_trigger_type()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        var rule = await AutomationTestData.CreateTaskChangedRule(scope.Db, scenario, [TaskChangeField.Status]);
+
+        await AutomationTestData.CreateRuns(scope.Db, rule, 2, AutomationRunStatus.Succeeded);
+
+        var filter = new AutomationRunFilter { TriggerTypes = "TaskCreated" };
+        var runs = await scope.UnitOfWork.Automations.GetRunsPaged(
+            rule.Id,
+            scenario.Workspace.Id,
+            filter,
+            TestContext.Current.CancellationToken);
+
+        runs.TotalCount.Should().Be(0);
+        runs.Items.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task GetRunsPaged_matches_search_against_the_run_message()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        var rule = await AutomationTestData.CreateTaskChangedRule(scope.Db, scenario, [TaskChangeField.Status]);
+
+        await AutomationTestData.CreateRuns(scope.Db, rule, 1, AutomationRunStatus.Failed, "Status transition rejected");
+        await AutomationTestData.CreateRuns(scope.Db, rule, 2, AutomationRunStatus.Succeeded, "Flag applied");
+
+        var filter = new AutomationRunFilter { Search = "transition" };
+        var runs = await scope.UnitOfWork.Automations.GetRunsPaged(
+            rule.Id,
+            scenario.Workspace.Id,
+            filter,
+            TestContext.Current.CancellationToken);
+
+        runs.TotalCount.Should().Be(1);
+        runs.Items.Should().ContainSingle().Which.Message.Should().Be("Status transition rejected");
+    }
+
+    [Fact]
+    public async Task GetRunsPaged_pages_runs_while_reporting_the_unpaged_total()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        var rule = await AutomationTestData.CreateTaskChangedRule(scope.Db, scenario, [TaskChangeField.Status]);
+
+        await AutomationTestData.CreateRuns(scope.Db, rule, 5, AutomationRunStatus.Succeeded);
+
+        var filter = new AutomationRunFilter { Page = 2, PageSize = 2 };
+        var runs = await scope.UnitOfWork.Automations.GetRunsPaged(
+            rule.Id,
+            scenario.Workspace.Id,
+            filter,
+            TestContext.Current.CancellationToken);
+
+        runs.TotalCount.Should().Be(5);
+        runs.Items.Should().HaveCount(2);
     }
 }

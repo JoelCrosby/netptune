@@ -1,6 +1,6 @@
 using Mediator;
 
-using Netptune.Core.Requests;
+using Netptune.Core.Models.Automations;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
@@ -8,7 +8,7 @@ using Netptune.Core.ViewModels.Automations;
 
 namespace Netptune.Handlers.Automations.Queries;
 
-public sealed record GetAutomationRunsQuery(int RuleId, PageRequest Request)
+public sealed record GetAutomationRunsQuery(int RuleId, AutomationRunFilter Filter)
     : IRequest<ClientResponse<PagedResponse<AutomationRunViewModel>>>;
 
 public sealed class GetAutomationRunsQueryHandler
@@ -35,7 +35,7 @@ public sealed class GetAutomationRunsQueryHandler
         var runs = await UnitOfWork.Automations.GetRunsPaged(
             request.RuleId,
             workspaceId,
-            request.Request,
+            request.Filter,
             cancellationToken);
 
         return ClientResponse<PagedResponse<AutomationRunViewModel>>.Success(runs);

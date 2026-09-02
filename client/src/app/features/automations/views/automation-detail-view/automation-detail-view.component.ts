@@ -95,6 +95,8 @@ const latestRunQuery: PageQuery = { page: 1, pageSize: 1 };
               <span i18n="Button that switches an automation on">Enable</span>
             }
           </button>
+        }
+        @if (canManage() && rule()) {
           <a
             pageHeaderActions
             app-flat-button

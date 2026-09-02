@@ -1,9 +1,21 @@
-import { Component, computed, input, signal, Signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  input,
+  signal,
+  Signal,
+  viewChild,
+} from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { Params } from '@angular/router';
+import { debounceTime } from 'rxjs/operators';
 import {
   actionTypeLabels,
   automationActionResultStatusLabels,
+  automationRunStatuses,
   automationRunStatusLabels,
+  automationTriggerTypes,
   entityTargetLabel,
   runStatusClass,
   triggerTypeLabels,
@@ -12,24 +24,89 @@ import {
   AutomationActionResult,
   AutomationActionResultStatus,
   AutomationRun,
+  AutomationRunStatus,
+  AutomationTriggerType,
 } from '../models/automation.models';
 import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
+import { DatatableEmptyDirective } from '@static/components/datatable/datatable-empty.directive';
 import {
   DatatableDataSource,
   DatatableSort,
 } from '@static/components/datatable/datatable.types';
+import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
+import { MenuCheckboxItemComponent } from '@static/components/dropdown-menu/menu-checkbox-item.component';
+import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
+import { FilterActionButtonComponent } from '@static/components/filter-action-button/filter-action-button.component';
+import { SearchInputComponent } from '@static/components/search-input/search-input.component';
+import { LucideCircleDashed, LucideZap } from '@lucide/angular';
 
 @Component({
   selector: 'app-automation-runs-table',
-  imports: [PrettyDatePipe, DatatableComponent, DatatableCellTemplateDirective],
+  imports: [
+    PrettyDatePipe,
+    DatatableComponent,
+    DatatableCellTemplateDirective,
+    DatatableEmptyDirective,
+    DropdownMenuComponent,
+    EmptyStateComponent,
+    FilterActionButtonComponent,
+    MenuCheckboxItemComponent,
+    SearchInputComponent,
+  ],
   template: `
+    <div class="mb-3 flex flex-row flex-wrap items-center gap-2">
+      <app-search-input
+        [term]="searchInput()"
+        (searchChange)="searchInput.set($event ?? '')" />
+
+      <div #statusAnchor>
+        <app-filter-action-button
+          i18n-label="Label on the control that filters runs by outcome"
+          label="Filter by Status"
+          [icon]="lucideCircleDashed"
+          [color]="statusFilter().size ? 'primary' : undefined"
+          [count]="statusFilter().size"
+          (action)="statusMenu.toggle(statusAnchor)" />
+      </div>
+
+      <app-dropdown-menu #statusMenu>
+        @for (status of runStatuses; track status) {
+          <button
+            app-menu-checkbox-item
+            [checked]="statusFilter().has(status)"
+            (checkedChange)="toggleStatusFilter(status)">
+            {{ statusLabel(status) }}
+          </button>
+        }
+      </app-dropdown-menu>
+
+      <div #triggerAnchor>
+        <app-filter-action-button
+          i18n-label="Label on the control that filters runs by trigger"
+          label="Filter by Trigger"
+          [icon]="lucideZap"
+          [color]="triggerFilter().size ? 'primary' : undefined"
+          [count]="triggerFilter().size"
+          (action)="triggerMenu.toggle(triggerAnchor)" />
+      </div>
+
+      <app-dropdown-menu #triggerMenu>
+        @for (trigger of triggerTypes; track trigger) {
+          <button
+            app-menu-checkbox-item
+            [checked]="triggerFilter().has(trigger)"
+            (checkedChange)="toggleTriggerFilter(trigger)">
+            {{ triggerLabel(trigger) }}
+          </button>
+        }
+      </app-dropdown-menu>
+    </div>
+
     <app-datatable
       i18n-errorMessage="Shown when the automation run history fails to load"
       errorMessage="Automation runs could not be loaded."
-      i18n-emptyMessage="Empty state for the run history"
-      emptyMessage="No automation runs recorded yet."
       i18n-itemLabel="Plural noun for automation runs, used by the paginator"
       itemLabel="runs"
       containerClass="overflow-x-auto"
@@ -103,6 +180,13 @@ import {
           }
         </div>
       </ng-template>
+
+      <ng-template appDatatableEmpty>
+        <app-empty-state
+          compact
+          [title]="emptyTitle()"
+          [description]="emptyDescription()" />
+      </ng-template>
     </app-datatable>
   `,
 })
@@ -117,7 +201,58 @@ export class AutomationRunsTableComponent {
 
   statusClass = runStatusClass;
 
-  private readonly resourceParams = computed<Params>(() => ({}));
+  readonly runStatuses = automationRunStatuses;
+  readonly triggerTypes = automationTriggerTypes;
+
+  readonly lucideCircleDashed = LucideCircleDashed;
+  readonly lucideZap = LucideZap;
+
+  readonly searchInput = signal('');
+  readonly statusFilter = signal<ReadonlySet<AutomationRunStatus>>(new Set());
+  readonly triggerFilter = signal<ReadonlySet<AutomationTriggerType>>(
+    new Set()
+  );
+
+  private readonly search = toSignal(
+    toObservable(this.searchInput).pipe(debounceTime(250)),
+    { initialValue: '' }
+  );
+
+  private readonly datatable = viewChild(DatatableComponent<AutomationRun>);
+
+  readonly filtersActive = computed(() => {
+    return (
+      !!this.search().trim() ||
+      this.statusFilter().size > 0 ||
+      this.triggerFilter().size > 0
+    );
+  });
+
+  readonly emptyTitle = computed(() => {
+    if (this.filtersActive()) {
+      return $localize`:Shown when no automation runs match the active filters:No runs match these filters`;
+    }
+
+    return $localize`:Empty state for the run history:No automation runs recorded yet`;
+  });
+
+  readonly emptyDescription = computed(() => {
+    if (!this.filtersActive()) return '';
+
+    return $localize`:Advice shown when filters exclude every row:Try a different search or filter.`;
+  });
+
+  private readonly resourceParams = computed<Params>(() => {
+    const search = this.search().trim();
+    const statuses = [...this.statusFilter()];
+    const triggers = [...this.triggerFilter()];
+
+    return {
+      ...(search ? { search } : {}),
+      ...(statuses.length ? { statuses: statuses.join(',') } : {}),
+      ...(triggers.length ? { triggerTypes: triggers.join(',') } : {}),
+    };
+  });
 
   readonly data = computed<DatatableDataSource<AutomationRun>>(() => ({
     key: 'automation-runs',
@@ -141,6 +276,33 @@ export class AutomationRunsTableComponent {
     trackBy: (_: number, run: AutomationRun) => run.id,
     reloadSignal: this.reloadSignal(),
   }));
+
+  constructor() {
+    let previousSearch = this.search();
+
+    effect(() => {
+      const search = this.search();
+
+      if (search === previousSearch) return;
+
+      previousSearch = search;
+      this.goToFirstPage();
+    });
+  }
+
+  toggleStatusFilter(status: AutomationRunStatus) {
+    this.statusFilter.update((current) => toggle(current, status));
+    this.goToFirstPage();
+  }
+
+  toggleTriggerFilter(triggerType: AutomationTriggerType) {
+    this.triggerFilter.update((current) => toggle(current, triggerType));
+    this.goToFirstPage();
+  }
+
+  private goToFirstPage() {
+    this.datatable()?.goToPage(1);
+  }
 
   actionLabel(result: AutomationActionResult): string {
     return actionTypeLabels[result.actionType];
@@ -181,15 +343,25 @@ export class AutomationRunsTableComponent {
     return `${(durationMs / 1000).toFixed(1)} s`;
   }
 
-  triggerLabel(triggerType: AutomationRun['triggerType']): string {
+  triggerLabel(triggerType: AutomationTriggerType): string {
     return triggerTypeLabels[triggerType];
   }
 
-  statusLabel(status: AutomationRun['status']): string {
+  statusLabel(status: AutomationRunStatus): string {
     return automationRunStatusLabels[status];
   }
 
   targetLabel(run: AutomationRun): string {
     return entityTargetLabel(run.entityType, run.entityId);
   }
+}
+
+function toggle<T>(current: ReadonlySet<T>, value: T): ReadonlySet<T> {
+  const next = new Set(current);
+
+  if (!next.delete(value)) {
+    next.add(value);
+  }
+
+  return next;
 }

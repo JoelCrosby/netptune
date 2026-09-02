@@ -57,10 +57,10 @@ public static class AutomationsEndpoints
     private static async Task<IResult> HandleGetRuns(
         int id,
         IMediator mediator,
-        [AsParameters] PageRequest page,
+        [AsParameters] AutomationRunFilter filter,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetAutomationRunsQuery(id, page), cancellationToken);
+        var result = await mediator.Send(new GetAutomationRunsQuery(id, filter), cancellationToken);
         return result.ToResult();
     }
 

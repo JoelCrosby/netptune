@@ -40,6 +40,28 @@ export const triggerTypeLabels: Record<AutomationTriggerType, string> = {
   [AutomationTriggerType.subtasksCompleted]: $localize`:Name of an automation trigger event:All subtasks complete`,
 };
 
+export const automationTriggerTypes: readonly AutomationTriggerType[] = [
+  AutomationTriggerType.taskChanged,
+  AutomationTriggerType.taskCreated,
+  AutomationTriggerType.taskUnassignedFor,
+  AutomationTriggerType.taskDueDateApproaching,
+  AutomationTriggerType.taskOverdue,
+  AutomationTriggerType.taskHasNoDueDate,
+  AutomationTriggerType.taskInactiveFor,
+  AutomationTriggerType.taskBlocked,
+  AutomationTriggerType.taskUnblocked,
+  AutomationTriggerType.subtasksCompleted,
+  AutomationTriggerType.sprintStarted,
+  AutomationTriggerType.sprintCompleted,
+  AutomationTriggerType.sprintEndingSoon,
+];
+
+export const automationRunStatuses: readonly AutomationRunStatus[] = [
+  AutomationRunStatus.succeeded,
+  AutomationRunStatus.failed,
+  AutomationRunStatus.skipped,
+];
+
 export const taskChangeFieldLabels: Record<TaskChangeField, string> = {
   [TaskChangeField.name]: $localize`:Task field that an automation can watch for changes:Name`,
   [TaskChangeField.description]: $localize`:Task field that an automation can watch for changes:Description`,

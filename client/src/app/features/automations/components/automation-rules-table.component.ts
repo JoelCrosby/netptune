@@ -22,6 +22,7 @@ import {
 } from '@lucide/angular';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
+import { DatatableEmptyDirective } from '@static/components/datatable/datatable-empty.directive';
 import { DatatableDataSource } from '@static/components/datatable/datatable.types';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
@@ -32,6 +33,7 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
 import { debounceTime } from 'rxjs/operators';
 import {
   automationRunStatusLabels,
+  automationTriggerTypes,
   AutomationCopySegment,
   triggerTypeLabels,
   describeAutomationActionsSegments,
@@ -53,6 +55,7 @@ import { AutomationEnabledBadgeComponent } from './automation-enabled-badge.comp
     RouterLink,
     DatatableComponent,
     DatatableCellTemplateDirective,
+    DatatableEmptyDirective,
     DropdownMenuComponent,
     EmptyStateComponent,
     FilterActionButtonComponent,
@@ -180,14 +183,8 @@ import { AutomationEnabledBadgeComponent } from './automation-enabled-badge.comp
       <ng-template appDatatableEmpty>
         <app-empty-state
           compact
-          [title]="
-            filtersActive()
-              ? 'No automations match these filters'
-              : 'No automations yet'
-          "
-          [description]="
-            filtersActive() ? 'Try a different search or filter.' : ''
-          " />
+          [title]="emptyTitle()"
+          [description]="emptyDescription()" />
       </ng-template>
     </app-datatable>
   `,
@@ -203,21 +200,7 @@ export class AutomationRulesTableComponent {
   readonly deleteRule = output<AutomationRuleListItem>();
 
   readonly runStatusClass = runStatusClass;
-  readonly triggerTypes = [
-    AutomationTriggerType.taskChanged,
-    AutomationTriggerType.taskCreated,
-    AutomationTriggerType.taskUnassignedFor,
-    AutomationTriggerType.taskDueDateApproaching,
-    AutomationTriggerType.taskOverdue,
-    AutomationTriggerType.taskHasNoDueDate,
-    AutomationTriggerType.taskInactiveFor,
-    AutomationTriggerType.taskBlocked,
-    AutomationTriggerType.taskUnblocked,
-    AutomationTriggerType.subtasksCompleted,
-    AutomationTriggerType.sprintStarted,
-    AutomationTriggerType.sprintCompleted,
-    AutomationTriggerType.sprintEndingSoon,
-  ];
+  readonly triggerTypes = automationTriggerTypes;
 
   readonly lucideCircleDashed = LucideCircleDashed;
   readonly lucideZap = LucideZap;
@@ -243,6 +226,20 @@ export class AutomationRulesTableComponent {
       this.enabledFilter().size > 0 ||
       this.triggerFilter().size > 0
     );
+  });
+
+  readonly emptyTitle = computed(() => {
+    if (this.filtersActive()) {
+      return $localize`:Shown when no automations match the active filters:No automations match these filters`;
+    }
+
+    return $localize`:Heading of the empty automation list:No automations yet`;
+  });
+
+  readonly emptyDescription = computed(() => {
+    if (!this.filtersActive()) return '';
+
+    return $localize`:Advice shown when filters exclude every row:Try a different search or filter.`;
   });
 
   private readonly resourceParams = computed<Params>(() => {

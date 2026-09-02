@@ -335,7 +335,7 @@ public sealed class AutomationExecutionServiceTests
         var runHistory = await scope.UnitOfWork.Automations.GetRunsPaged(
             rule.Id,
             scenario.Workspace.Id,
-            new PageRequest(),
+            new AutomationRunFilter(),
             TestContext.Current.CancellationToken);
         var historyRun = runHistory.Items.Should().ContainSingle().Subject;
         var actionResult = historyRun.ActionResults.Should().ContainSingle().Subject;
