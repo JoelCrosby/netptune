@@ -1,5 +1,12 @@
-import { Component, computed, input } from '@angular/core';
+import {
+  booleanAttribute,
+  Component,
+  computed,
+  inject,
+  input,
+} from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { PageWidthService } from '@core/services/page-width.service';
 import { map, of, switchMap, timer } from 'rxjs';
 import { ProgressBarComponent } from '../progress-bar/progress-bar.component';
 
@@ -33,6 +40,15 @@ export class PageContainerComponent {
 
   readonly layout = input<PageContainerLayout>('default');
 
+  // Default-layout pages keep the centred cap unless they opt in, so forms and
+  // detail views stay readable while width-filling pages follow the preference.
+  // List pages always follow it.
+  readonly followsWidthPreference = input(false, {
+    transform: booleanAttribute,
+  });
+
+  private readonly pageWidth = inject(PageWidthService);
+
   readonly progressVisible = toSignal(
     toObservable(this.showProgress).pipe(
       switchMap((showProgress) =>
@@ -46,11 +62,18 @@ export class PageContainerComponent {
 
   private readonly isList = computed(() => this.layout() === 'list');
 
+  private readonly capWidth = computed(() => {
+    const followsPreference = this.isList() || this.followsWidthPreference();
+
+    return !followsPreference || this.pageWidth.centered();
+  });
+
   // Read by PageHeaderComponent and PageBodyComponent through the element
   // injector, so the band and the body can run edge to edge while what sits
-  // inside them keeps the centred max width.
+  // inside them keeps the centred max width. Off when the user asked for full
+  // width pages.
   readonly constrainListContent = computed(() => {
-    return this.isList() && this.centerPage() !== false;
+    return this.isList() && this.centerPage() !== false && this.capWidth();
   });
 
   protected readonly rootClass = computed(() => {
@@ -60,7 +83,12 @@ export class PageContainerComponent {
 
     const classes = ['flex flex-col'];
 
-    if (this.centerPage()) classes.push('mx-auto w-full max-w-[1360px]');
+    if (this.centerPage()) {
+      classes.push('mx-auto w-full');
+
+      if (this.capWidth()) classes.push('max-w-[1360px]');
+    }
+
     if (this.fullHeight() && !this.marginBottom()) classes.push('h-full');
     if (this.marginBottom()) classes.push('pb-[20vh]');
 

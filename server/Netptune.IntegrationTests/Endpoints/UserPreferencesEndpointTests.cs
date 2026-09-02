@@ -79,6 +79,25 @@ public sealed class UserPreferencesEndpointTests
     }
 
     [Fact]
+    public async Task Definitions_ShouldReturnPageWidthAsGlobalSelectPreference()
+    {
+        var response = await Client.GetAsync("api/user-preferences/definitions");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<PreferenceDefinitionsResponse>();
+        var preference = result!.Groups
+            .Single(group => group.Key == "appearance")
+            .Preferences
+            .Single(item => item.Key == PreferenceKeys.AppearancePageWidth);
+
+        preference.ControlType.Should().Be("select");
+        preference.AllowedScopes.Should().Equal("global");
+        preference.DefaultValue.GetString().Should().Be("centered");
+        preference.Options.Select(option => option.Value).Should().Equal("centered", "full");
+    }
+
+    [Fact]
     public async Task Values_ShouldResolveMissingValuesToDefaults()
     {
         await ClearPreference("workspace");

@@ -57,6 +57,20 @@ public class PreferenceDefinitionRegistryTests
     }
 
     [Fact]
+    public void GetGroups_ReturnsPageWidthSelectDefinition()
+    {
+        var group = Registry.GetGroups().Single(group => group.Key == "appearance");
+
+        var preference = group.Preferences.Single(item =>
+            item.Key == PreferenceKeys.AppearancePageWidth);
+
+        preference.ControlType.Should().Be("select");
+        preference.DefaultValue.GetString().Should().Be("centered");
+        preference.AllowedScopes.Should().Equal(PreferenceScopes.Global);
+        preference.Options.Select(option => option.Value).Should().Equal("centered", "full");
+    }
+
+    [Fact]
     public void GetGroups_ReturnsNotificationToggle_ForEachNotifiableActivityType()
     {
         var group = Registry.GetGroups().Single(group => group.Key == "notifications");

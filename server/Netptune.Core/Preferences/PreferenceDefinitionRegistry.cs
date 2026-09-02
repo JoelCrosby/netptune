@@ -90,6 +90,22 @@ public sealed class PreferenceDefinitionRegistry : IPreferenceDefinitionRegistry
         },
         new()
         {
+            Key = PreferenceKeys.AppearancePageWidth,
+            GroupKey = "appearance",
+            Label = "Page width",
+            ControlType = "select",
+            ValueType = "string",
+            DefaultValue = JsonSerializer.SerializeToElement("centered"),
+            AllowedScopes = [PreferenceScopes.Global],
+            Options =
+            [
+                new() { Value = "centered", Label = "Centered" },
+                new() { Value = "full", Label = "Full width" },
+            ],
+            Order = 30,
+        },
+        new()
+        {
             Key = PreferenceKeys.CommandPaletteRecentItemsScope,
             GroupKey = "commandPalette",
             Label = "Recent items scope",

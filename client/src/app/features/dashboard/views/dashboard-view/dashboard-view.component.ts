@@ -31,7 +31,10 @@ import { DashboardFlowService } from '../../services/dashboard-flow.service';
   ],
   providers: [DashboardFlowService],
   template: `
-    <app-page-container [centerPage]="true" [marginBottom]="true">
+    <app-page-container
+      followsWidthPreference
+      [centerPage]="true"
+      [marginBottom]="true">
       <app-page-header
         i18n-title="Page title for the dashboard"
         title="Dashboard" />

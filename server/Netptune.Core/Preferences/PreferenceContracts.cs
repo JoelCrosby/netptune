@@ -8,6 +8,7 @@ public static class PreferenceKeys
 {
     public const string AppearanceTheme = "appearance.theme";
     public const string AppearanceTaskDetailLayout = "appearance.taskDetailLayout";
+    public const string AppearancePageWidth = "appearance.pageWidth";
     public const string CommandPaletteRecentItemsScope = "commandPalette.recentItems.scope";
     public const string BoardHiddenGroupIds = "boards.hiddenGroupIds";
     public const string BoardTaskSort = "boards.taskSort";

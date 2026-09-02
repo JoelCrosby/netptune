@@ -1,5 +1,6 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
 import {
+  APPEARANCE_PAGE_WIDTH,
   APPEARANCE_TASK_DETAIL_LAYOUT,
   APPEARANCE_THEME,
   PreferenceOption,
@@ -18,6 +19,7 @@ import {
   selectedScopeFor,
   valueForScope,
 } from '../preference-scope';
+import { PageWidthPreviewComponent } from './page-width-preview.component';
 import { TaskDetailLayoutPreviewComponent } from './task-detail-layout-preview.component';
 import { ThemePreviewComponent } from './theme-preview.component';
 
@@ -26,6 +28,7 @@ const arrowKeys = ['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp'];
 const descriptions: Record<string, string> = {
   [APPEARANCE_THEME]: $localize`:Description of the theme preference:Applies everywhere you sign in.`,
   [APPEARANCE_TASK_DETAIL_LAYOUT]: $localize`:Description of the task detail layout preference:How a task opens in the dialog and on its own page.`,
+  [APPEARANCE_PAGE_WIDTH]: $localize`:Description of the page width preference:How far list, dashboard and report pages stretch across the window.`,
 };
 
 const resetLabel = $localize`:Button that returns a preference to its default value:Reset to default`;
@@ -36,15 +39,18 @@ const clearLabels: Record<string, string> = {
 
 const selectedBadge = $localize`:Badge on the chosen option tile:Selected`;
 
-const layoutCaptions: Record<string, string> = {
+const optionCaptions: Record<string, string> = {
   'summary-rail': $localize`:Caption describing the summary rail task detail layout:Fields as a scannable summary on the right, sections collapsed to one line.`,
   cockpit: $localize`:Caption describing the cockpit task detail layout:Editable chip row under the title, comments docked beside the description.`,
   document: $localize`:Caption describing the document task detail layout:One centred reading column; every field lives behind “All fields”.`,
+  centered: $localize`:Caption describing the centered page width:Pages sit in a centred column that stops at a comfortable reading width.`,
+  full: $localize`:Caption describing the full page width:Pages stretch edge to edge, fitting more on wide screens.`,
 };
 
 const tileWidths: Record<string, string> = {
   [APPEARANCE_THEME]: 'w-[232px]',
   [APPEARANCE_TASK_DETAIL_LAYOUT]: 'w-[268px]',
+  [APPEARANCE_PAGE_WIDTH]: 'w-[268px]',
 };
 
 function hasTilePreview(preference: ResolvedPreferenceValue): boolean {
@@ -58,6 +64,7 @@ function hasTilePreview(preference: ResolvedPreferenceValue): boolean {
   imports: [
     FormSelectComponent,
     FormSelectOptionComponent,
+    PageWidthPreviewComponent,
     PreferenceListComponent,
     StrokedButtonComponent,
     TaskDetailLayoutPreviewComponent,
@@ -136,10 +143,16 @@ function hasTilePreview(preference: ResolvedPreferenceValue): boolean {
               [attr.aria-label]="option.label"
               [attr.tabindex]="tabIndex(preference, option)"
               (click)="selectOption(preference, option)">
-              @if (preference.definition.key === themeKey) {
-                <app-theme-preview [theme]="option.value" />
-              } @else {
-                <app-task-detail-layout-preview [layout]="option.value" />
+              @switch (preference.definition.key) {
+                @case (themeKey) {
+                  <app-theme-preview [theme]="option.value" />
+                }
+                @case (pageWidthKey) {
+                  <app-page-width-preview [width]="option.value" />
+                }
+                @default {
+                  <app-task-detail-layout-preview [layout]="option.value" />
+                }
               }
 
               <span class="flex items-center gap-2">
@@ -198,6 +211,7 @@ export class AppearancePreferencesComponent {
   private readonly optimisticValues = signal<Record<string, string>>({});
 
   protected readonly themeKey = APPEARANCE_THEME;
+  protected readonly pageWidthKey = APPEARANCE_PAGE_WIDTH;
   protected readonly selectedBadge = selectedBadge;
 
   protected readonly tiled = computed(() =>
@@ -225,7 +239,7 @@ export class AppearancePreferencesComponent {
   }
 
   protected caption(option: PreferenceOption): string | null {
-    return layoutCaptions[option.value] ?? null;
+    return optionCaptions[option.value] ?? null;
   }
 
   protected selectedScope(

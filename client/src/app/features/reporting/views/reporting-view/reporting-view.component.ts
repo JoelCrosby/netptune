@@ -41,6 +41,7 @@ const defaultFrom = defaultRange.from;
   ],
   template: `
     <app-page-container
+      followsWidthPreference
       [centerPage]="true"
       [marginBottom]="true"
       [fullHeight]="false">
