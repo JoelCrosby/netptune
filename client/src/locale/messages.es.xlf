@@ -625,7 +625,7 @@
     <unit id="7884294193521928458">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:228</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:339</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:343</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1474,7 +1474,7 @@
     </unit>
     <unit id="7735505964227370595">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:673</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:681</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:331</note>
         <note category="description">Accordion summary counting a task&apos;s attachments. COUNT is how many</note>
       </notes>
@@ -1873,7 +1873,7 @@
     <unit id="8878271828886295802">
       <notes>
         <note category="location">src/app/core/services/board-commands.service.ts:67</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:354</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:358</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -3563,7 +3563,7 @@
         <note category="location">src/app/entry/dialogs/create-status-dialog/create-status-dialog.component.ts:79,81</note>
         <note category="location">src/app/entry/dialogs/create-tag-dialog/create-tag-dialog.component.ts:42,44</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:149,150</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:432,435</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:439,442</note>
         <note category="location">src/app/entry/dialogs/edit-relation-type-dialog/edit-relation-type-dialog.component.ts:89,91</note>
         <note category="location">src/app/entry/dialogs/edit-status-dialog/edit-status-dialog.component.ts:80,82</note>
         <note category="location">src/app/entry/dialogs/edit-tag-dialog/edit-tag-dialog.component.ts:43,45</note>
@@ -4225,7 +4225,7 @@
     </unit>
     <unit id="4902817035128594900">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:475</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:483</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:66,67</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:204</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:104,107</note>
@@ -4260,7 +4260,7 @@
     </unit>
     <unit id="5681661801164770412">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:410,414</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:417,421</note>
         <note category="description">Validation error when a task&apos;s start date is after its due date</note>
       </notes>
       <segment state="translated">
@@ -4270,7 +4270,7 @@
     </unit>
     <unit id="6672445733608764176">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:420,423</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:427,430</note>
         <note category="description">Validation error when no project is selected for a task</note>
       </notes>
       <segment state="translated">
@@ -4290,7 +4290,7 @@
     </unit>
     <unit id="6346359058786917733">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:440,443</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:447,450</note>
         <note category="description">Button that saves the new task</note>
       </notes>
       <segment state="translated">
@@ -4330,8 +4330,8 @@
     </unit>
     <unit id="8547576940529836596">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:562</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:574</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:570</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:582</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -4361,7 +4361,7 @@
     </unit>
     <unit id="9021131006692744653">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:581</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:589</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -4371,7 +4371,7 @@
     </unit>
     <unit id="704019817450663548">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:588</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:596</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -4381,7 +4381,7 @@
     </unit>
     <unit id="633922115206256018">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:595</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:603</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -5191,7 +5191,7 @@
     </unit>
     <unit id="4116911651502837995">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:477</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:485</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:218</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:197</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:264</note>
@@ -5409,8 +5409,8 @@
     </unit>
     <unit id="1880237574877817137">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:252,254</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:257,259</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:254,256</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:259,261</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:109,111</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:113,115</note>
         <note category="description">Tooltip on the button that removes a task link</note>
@@ -5422,7 +5422,7 @@
     </unit>
     <unit id="5445703507341144559">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:272,274</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:274,276</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:127,133</note>
         <note category="description">Empty state when a task has no links to other tasks</note>
       </notes>
@@ -7358,7 +7358,7 @@
     </unit>
     <unit id="7575041808886442392">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:656</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:664</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:316</note>
         <note category="description">Accordion summary when a task links to one other</note>
       </notes>
@@ -8549,7 +8549,7 @@
     </unit>
     <unit id="5973718738996433339">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:291,292</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:293,294</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:136,137</note>
         <note category="description">Button that opens the file picker</note>
       </notes>
@@ -9110,7 +9110,7 @@
     </unit>
     <unit id="5550975895729371495">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:652</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:660</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:312</note>
         <note category="description">Accordion summary when a task links to nothing</note>
       </notes>
@@ -9867,7 +9867,7 @@
     </unit>
     <unit id="4987947040082180128">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:670</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:678</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:328</note>
         <note category="description">Accordion summary when a task has one attachment</note>
       </notes>
@@ -10035,6 +10035,16 @@
       <segment state="translated">
         <source>Days from run date</source>
         <target>Días desde la fecha de ejecución</target>
+      </segment>
+    </unit>
+    <unit id="4819261854771153538">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-switcher/board-switcher.component.ts:57</note>
+        <note category="description">Placeholder in the box that narrows the list of boards</note>
+      </notes>
+      <segment state="translated">
+        <source>Search boards</source>
+        <target>Buscar tableros</target>
       </segment>
     </unit>
     <unit id="6542150205027637766">
@@ -10291,7 +10301,7 @@
     </unit>
     <unit id="4705684969760487201">
       <notes>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:176</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:188</note>
         <note category="description">Shown when a filter has no options at all</note>
       </notes>
       <segment state="translated">
@@ -13652,7 +13662,7 @@
     <unit id="5810814854864452102">
       <notes>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:130</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:326</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:330</note>
         <note category="description">Title of the edit-board dialog</note>
       </notes>
       <segment state="translated">
@@ -14017,7 +14027,7 @@
     </unit>
     <unit id="9210705833797356375">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:202,203</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:206,207</note>
         <note category="description">Tooltip on the button that edits a board group</note>
       </notes>
       <segment state="translated">
@@ -14038,7 +14048,7 @@
     <unit id="989480357041643523">
       <notes>
         <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:302,305</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:214,215</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:218,219</note>
         <note category="description">Menu item that deletes a board group</note>
       </notes>
       <segment state="translated">
@@ -14048,7 +14058,7 @@
     </unit>
     <unit id="1779801045860441380">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:331</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:335</note>
         <note category="description">Overflow action that opens the manage-groups dialog</note>
       </notes>
       <segment state="translated">
@@ -14058,7 +14068,7 @@
     </unit>
     <unit id="6413760592493508393">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:347</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:351</note>
         <note category="description">Overflow action that downloads the board tasks as CSV</note>
       </notes>
       <segment state="translated">
@@ -14438,7 +14448,7 @@
     <unit id="6044719097380241880">
       <notes>
         <note category="location">src/app/static/components/filter-facet/filter-facet.component.ts:192</note>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:296</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:308</note>
         <note category="description">Button that renders the next page of a filter&apos;s options. COUNT is how many options remain</note>
       </notes>
       <segment state="translated">
@@ -17057,7 +17067,7 @@
     </unit>
     <unit id="8770284726358486659">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:666</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:674</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:324</note>
         <note category="description">Prompt on the collapsed files section</note>
       </notes>
@@ -17110,7 +17120,7 @@
     <unit id="928009341755063873">
       <notes>
         <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:222</note>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:187</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:199</note>
         <note category="description">Keyboard key that closes the workspace menu, shown as a hint</note>
       </notes>
       <segment state="translated">
@@ -18353,6 +18363,16 @@
       <segment state="translated">
         <source>This change could not be applied.</source>
         <target>No se ha podido aplicar este cambio.</target>
+      </segment>
+    </unit>
+    <unit id="458592448093195393">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-switcher/board-switcher.component.ts:56</note>
+        <note category="description">Tooltip and accessible label for the button that switches to another board</note>
+      </notes>
+      <segment state="translated">
+        <source>Switch board</source>
+        <target>Cambiar de tablero</target>
       </segment>
     </unit>
     <unit id="4588288891937968440">
@@ -19604,7 +19624,7 @@
     <unit id="2933395362711398504">
       <notes>
         <note category="location">src/app/static/components/filter-facet/filter-facet.component.ts:136</note>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:179</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:191</note>
         <note category="description">Shown when a filter&apos;s search term matches no options</note>
       </notes>
       <segment state="translated">
@@ -20936,7 +20956,7 @@
     </unit>
     <unit id="2467702290618186989">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:211,213</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:212,213</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:113,115</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:115,117</note>
         <note category="description">Button that links this task to another</note>
@@ -21400,7 +21420,7 @@
     </unit>
     <unit id="2997922512329830488">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:659</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:667</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:319</note>
         <note category="description">Accordion summary counting the tasks this one links to. COUNT is how many</note>
       </notes>
@@ -21732,7 +21752,7 @@
     </unit>
     <unit id="221384062319096861">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:362,366</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:368,371</note>
         <note category="description">Shown when a new task was saved but some of its files did not upload</note>
       </notes>
       <segment state="translated">
@@ -21833,7 +21853,7 @@
     </unit>
     <unit id="4911319983039735103">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:476</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:484</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:263</note>
         <note category="description">Section heading for links between tasks</note>
       </notes>
@@ -21924,7 +21944,7 @@
     </unit>
     <unit id="6281284727431074654">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:325,328</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:330,333</note>
         <note category="description">Accessible label for the button that takes a file off a task that has not been created yet</note>
       </notes>
       <segment state="translated">
@@ -23272,7 +23292,7 @@
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:44</note>
         <note category="location">src/app/static/components/filter-facet/filter-facet.component.ts:133</note>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:171</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:183</note>
         <note category="location">src/app/static/components/search-input/search-input.component.ts:39</note>
         <note category="location">src/app/static/components/select-filter/select-filter.component.ts:70</note>
         <note category="description">Label of the export search filter</note>

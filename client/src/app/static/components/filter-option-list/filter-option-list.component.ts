@@ -22,7 +22,7 @@ import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 export interface FilterOption<T> {
   value: T;
   label: string;
-  /** Always rendered above the searchable options and exempt from the search term. */
+  hint?: string;
   sticky?: boolean;
 }
 
@@ -83,7 +83,12 @@ const nearBottomThresholdPx = 48;
               [ngTemplateOutletContext]="{
                 $implicit: isSelected(option.value),
               }" />
-            <span class="truncate">{{ option.label }}</span>
+            <span class="min-w-0 flex-1 truncate">{{ option.label }}</span>
+            @if (option.hint; as hint) {
+              <span class="text-muted max-w-[45%] truncate text-xs">
+                {{ hint }}
+              </span>
+            }
           </div>
         }
 
@@ -110,7 +115,12 @@ const nearBottomThresholdPx = 48;
               [ngTemplateOutletContext]="{
                 $implicit: isSelected(option.value),
               }" />
-            <span class="truncate">{{ option.label }}</span>
+            <span class="min-w-0 flex-1 truncate">{{ option.label }}</span>
+            @if (option.hint; as hint) {
+              <span class="text-muted max-w-[45%] truncate text-xs">
+                {{ hint }}
+              </span>
+            }
           </div>
         }
 
@@ -346,7 +356,9 @@ export class FilterOptionListComponent<T> {
   }
 
   private survivesQuery(option: FilterOption<T>, query: string): boolean {
-    const matches = option.label.toLowerCase().includes(query);
+    const matches =
+      option.label.toLowerCase().includes(query) ||
+      !!option.hint?.toLowerCase().includes(query);
 
     return matches || this.selected().has(option.value);
   }

@@ -48,6 +48,7 @@ import { PageHeaderTitleComponent } from './page-header-title.component';
             [count]="count()"
             [compact]="toolbar()"
             (titleSubmitted)="titleSubmitted.emit($event)">
+            <ng-content select="[titleSuffix]" ngProjectAs="[titleSuffix]" />
             <ng-content />
           </app-page-header-title>
         </div>

@@ -28,6 +28,7 @@ import {
 import { BoardViewService } from '@core/services/board-view.service';
 import { BoardGroupHeaderComponent } from '@boards/components/board-group-header/board-group-header.component';
 import { BoardGroupsSelectionComponent } from '@boards/components/board-groups-selection/board-groups-selection.component';
+import { BoardSwitcherComponent } from '@boards/components/board-switcher/board-switcher.component';
 import { BoardPinnedBannerComponent } from '@boards/components/board-pinned-banner/board-pinned-banner.component';
 import { BoardGroupStatusDotComponent } from '@boards/components/board-group-status-dot/board-group-status-dot.component';
 import { BoardGroupComponent } from '@boards/components/board-group/board-group.component';
@@ -105,6 +106,7 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
     PageHeaderComponent,
     BoardGroupHeaderComponent,
     BoardGroupsSelectionComponent,
+    BoardSwitcherComponent,
     BoardPinnedBannerComponent,
     CdkDropList,
     ScrollShadowDirective,
@@ -129,6 +131,8 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
           [titleEditable]="isAuthenticated()"
           [overflowActions]="isAuthenticated() ? secondaryActions() : []"
           (titleSubmitted)="onTitleSubmitted($event)">
+          <app-board-switcher titleSuffix />
+
           <div class="flex flex-wrap items-center gap-3">
             <app-board-group-header />
           </div>

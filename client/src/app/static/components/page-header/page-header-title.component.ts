@@ -41,6 +41,10 @@ import { InlineEditInputComponent } from '../inline-edit-input/inline-edit-input
           (submitted)="titleSubmitted.emit($event)"></app-inline-edit-input>
       }
 
+      <div [class]="suffixClass">
+        <ng-content select="[titleSuffix]" />
+      </div>
+
       <div [class]="contentClass">
         <ng-content />
       </div>
@@ -66,6 +70,9 @@ export class PageHeaderTitleComponent {
 
   protected readonly countClass =
     'bg-foreground/10 text-foreground/70 ml-3 inline-flex h-[22px] min-w-[22px] shrink-0 items-center justify-center rounded-full px-2 text-[13px] font-medium tabular-nums';
+
+  protected readonly suffixClass =
+    'flex shrink-0 flex-row items-center gap-1 empty:hidden';
 
   protected readonly contentClass = 'ml-3 flex flex-row items-center gap-3';
 }
