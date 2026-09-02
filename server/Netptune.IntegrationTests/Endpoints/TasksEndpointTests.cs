@@ -151,7 +151,7 @@ public sealed class TasksEndpointTests
             Description = "Task used to verify assignee filtering",
             StatusId = inProgressStatus.Id,
             ProjectId = 1,
-            AssigneeId = user.Id,
+            AssigneeIds = [user.Id],
         });
 
         createResponse.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -857,7 +857,7 @@ public sealed class TasksEndpointTests
         {
             TaskIds = new() { 0, 1 },
             BoardId = "neovim",
-            AssigneeId = user.Id,
+            AssigneeIds = [user.Id],
         };
 
         var response = await Client.PostAsJsonAsync("api/tasks/reassign-tasks", request);
@@ -867,6 +867,54 @@ public sealed class TasksEndpointTests
         var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
 
         result.IsSuccess.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task ReassignTasks_ShouldReplaceEveryAssignee_AndClearThemWhenNoneIsNamed()
+    {
+        var existing = SeedData.Users.Take(1).Select(user => user.Id).ToList();
+        var incoming = SeedData.Users.Skip(1).Take(2).Select(user => user.Id).ToList();
+        var createResponse = await Client.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest
+        {
+            Name = $"Reassign replacement {Guid.NewGuid():N}",
+            Description = "Task used to verify reassignment replaces rather than adds",
+            ProjectId = 1,
+            BoardGroupId = 1,
+            AssigneeIds = existing,
+        });
+
+        createResponse.StatusCode.Should().Be(HttpStatusCode.OK, await createResponse.Content.ReadAsStringAsync());
+
+        var created = await createResponse.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+        var taskId = created.Payload!.Id;
+
+        created.Payload.Assignees.Select(assignee => assignee.Id).Should().BeEquivalentTo(existing);
+
+        var reassignResponse = await Client.PostAsJsonAsync("api/tasks/reassign-tasks", new ReassignTasksRequest
+        {
+            TaskIds = [taskId],
+            BoardId = "neovim",
+            AssigneeIds = incoming,
+        });
+
+        reassignResponse.StatusCode.Should().Be(HttpStatusCode.OK, await reassignResponse.Content.ReadAsStringAsync());
+
+        var reassigned = await GetTask(taskId);
+
+        reassigned.Assignees.Select(assignee => assignee.Id).Should().BeEquivalentTo(incoming);
+
+        var unassignResponse = await Client.PostAsJsonAsync("api/tasks/reassign-tasks", new ReassignTasksRequest
+        {
+            TaskIds = [taskId],
+            BoardId = "neovim",
+            AssigneeIds = [],
+        });
+
+        unassignResponse.StatusCode.Should().Be(HttpStatusCode.OK, await unassignResponse.Content.ReadAsStringAsync());
+
+        var unassigned = await GetTask(taskId);
+
+        unassigned.Assignees.Should().BeEmpty();
     }
 
     [Fact]

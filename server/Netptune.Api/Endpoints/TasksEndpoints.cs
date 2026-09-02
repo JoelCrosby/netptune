@@ -72,7 +72,9 @@ public static class TasksEndpoints
 
         group.MapPost("/tasks/reassign", ReassignTasks)
             .WithSummary("Reassign tasks")
-            .WithDescription("Replaces the assignees on the supplied tasks with a single assignee.")
+            .WithDescription(
+                "Replaces the assignees on the supplied tasks with the supplied ones. "
+                + "Send an empty assigneeIds to clear every assignee instead.")
             .RequireAuthorization(NetptunePermissions.Tasks.Reassign)
             .Broadcasts(WorkspaceEventScopes.Task);
 

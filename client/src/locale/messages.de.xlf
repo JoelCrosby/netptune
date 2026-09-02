@@ -51,6 +51,16 @@
         <target>Angeheftet in <ph id="0" equiv="NAME" disp="scopeName"/></target>
       </segment>
     </unit>
+    <unit id="8048771922869370314">
+      <notes>
+        <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:253</note>
+        <note category="description">Says how many tasks the Unassign option clears. COUNT is how many are selected</note>
+      </notes>
+      <segment state="initial">
+        <source>clears all <ph id="0" equiv="COUNT" disp="count"/></source>
+        <target>leert alle <ph id="0" equiv="COUNT" disp="count"/></target>
+      </segment>
+    </unit>
     <unit id="8049735056636703804">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:63</note>
@@ -766,7 +776,7 @@
     </unit>
     <unit id="3387705505469073896">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:336,337</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:325,326</note>
       </notes>
       <segment state="initial">
         <source>{VAR_PLURAL, plural, =1 {1 task} other {<ph id="0" equiv="INTERPOLATION"/> tasks}}</source>
@@ -1598,9 +1608,9 @@
       <notes>
         <note category="location">src/app/core/services/auth-commands.service.ts:196</note>
         <note category="location">src/app/core/services/board-commands.service.ts:65</note>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:308</note>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:315</note>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:322</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:310</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:317</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:324</note>
         <note category="location">src/app/core/services/confirmation.service.ts:12</note>
         <note category="location">src/app/core/services/notification-commands.service.ts:75</note>
         <note category="location">src/app/core/services/project-commands.service.ts:69</note>
@@ -1612,14 +1622,14 @@
         <note category="location">src/app/core/services/workspace-commands.service.ts:215</note>
         <note category="location">src/app/core/services/workspace-commands.service.ts:225</note>
         <note category="location">src/app/core/services/workspace-commands.service.ts:235</note>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:347,350</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:336,339</note>
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:108,111</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:142</note>
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:80,82</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:316</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:283</note>
         <note category="location">src/app/features/boards/components/move-tasks-dialog/move-tasks-dialog.component.ts:76,79</note>
-        <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:62,65</note>
+        <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:102,105</note>
         <note category="location">src/app/features/calendar/dialogs/calendar-move-task-dialog.component.ts:61,64</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:781</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:804</note>
@@ -1848,7 +1858,7 @@
     <unit id="7022070615528435141">
       <notes>
         <note category="location">src/app/core/services/board-commands.service.ts:64</note>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:307</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:309</note>
         <note category="location">src/app/core/services/notification-commands.service.ts:74</note>
         <note category="location">src/app/core/services/task-commands.service.ts:226</note>
         <note category="location">src/app/core/services/task-commands.service.ts:234</note>
@@ -1963,7 +1973,7 @@
     </unit>
     <unit id="2856093664313447266">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:231</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:233</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -1983,7 +1993,7 @@
     </unit>
     <unit id="4885517637912217945">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:166</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:168</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -1993,7 +2003,7 @@
     </unit>
     <unit id="4076698465756278873">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:145</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:146</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -2003,7 +2013,7 @@
     </unit>
     <unit id="171368812856780023">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:309</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:311</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -2013,7 +2023,7 @@
     </unit>
     <unit id="3596210590059423029">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:310</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:312</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -2023,7 +2033,7 @@
     </unit>
     <unit id="8634240575353261228">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:321</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:323</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
@@ -2053,7 +2063,7 @@
     </unit>
     <unit id="1935533427606827690">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:323</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:325</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -2063,7 +2073,7 @@
     </unit>
     <unit id="5480361778944446991">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:324</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:326</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -2133,7 +2143,7 @@
     </unit>
     <unit id="7963932149029320020">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:288,294</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:280,286</note>
         <note category="description">Shown in a bulk edit dialog before any field has been added</note>
       </notes>
       <segment state="initial">
@@ -3036,6 +3046,16 @@
         <target>Cyan</target>
       </segment>
     </unit>
+    <unit id="3290193501558345471">
+      <notes>
+        <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:252</note>
+        <note category="description">Option that clears the assignees on the selected tasks</note>
+      </notes>
+      <segment state="initial">
+        <source>Unassign</source>
+        <target>Zuweisung entfernen</target>
+      </segment>
+    </unit>
     <unit id="3293831104851635065">
       <notes>
         <note category="location">src/app/core/util/colors/colors.ts:164</note>
@@ -3078,7 +3098,8 @@
     </unit>
     <unit id="2426850352402316192">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:624</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:611</note>
+        <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:260</note>
         <note category="description">Says how many of the selected tasks already carry a tag or assignee. COUNT is how many do and TOTAL is how many are selected</note>
       </notes>
       <segment state="initial">
@@ -3718,7 +3739,7 @@
     </unit>
     <unit id="6899352499692995227">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:87,89</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:86,88</note>
         <note category="description">Title of the dialog for editing several tasks at once</note>
       </notes>
       <segment state="translated">
@@ -3901,13 +3922,16 @@
     </unit>
     <unit id="8856905278208146821">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:92,97</note>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:356,361</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:90,95</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:345,350</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:59,65</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:153,160</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:168,173</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:238,243</note>
         <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:86,88</note>
+        <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:74,79</note>
+        <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:112,117</note>
+        <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:120,125</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:86,97</note>
         <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:25,33</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:71,77</note>
@@ -3931,7 +3955,7 @@
     </unit>
     <unit id="7388001911893689588">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:356,358</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:345,347</note>
       </notes>
       <segment state="initial">
         <source>{VAR_PLURAL, plural, =1 {Apply 1 change} other {Apply <ph id="0" equiv="INTERPOLATION"/> changes}}</source>
@@ -4113,7 +4137,7 @@
     </unit>
     <unit id="5335611991466155594">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:316</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:318</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -4173,7 +4197,7 @@
     </unit>
     <unit id="4248380204989256605">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-collection-picker.component.ts:102</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-collection-picker.component.ts:113</note>
         <note category="description">Bulk edit mode that leaves a task&apos;s existing tags or assignees in place</note>
       </notes>
       <segment state="initial">
@@ -5024,7 +5048,7 @@
     </unit>
     <unit id="2585922590660438126">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:190,193</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:184,186</note>
         <note category="description">Button that clears the due date instead of setting one</note>
       </notes>
       <segment state="initial">
@@ -5439,6 +5463,16 @@
       <segment state="initial">
         <source>Everyone who can export will be able to use it.</source>
         <target>Alle, die exportieren dürfen, können ihn verwenden.</target>
+      </segment>
+    </unit>
+    <unit id="3915681373731822227">
+      <notes>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:147</note>
+        <note category="description">Confirmation shown after an action succeeds</note>
+      </notes>
+      <segment state="initial">
+        <source>Tasks Unassigned</source>
+        <target>Zuweisung der Aufgaben entfernt</target>
       </segment>
     </unit>
     <unit id="3915858391862498397">
@@ -6802,6 +6836,16 @@
         <target>Aufgabenansichten löschen</target>
       </segment>
     </unit>
+    <unit id="1496852746214979643">
+      <notes>
+        <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:275</note>
+        <note category="description">One entry in a breakdown of who holds the selected tasks today, e.g. &quot;Ada on 3&quot;. NAME is the person and COUNT is how many tasks they hold</note>
+      </notes>
+      <segment state="initial">
+        <source><ph id="0" equiv="NAME" disp="displayName"/> on <ph id="1" equiv="COUNT" disp="count"/></source>
+        <target><ph id="0" equiv="NAME" disp="displayName"/> bei <ph id="1" equiv="COUNT" disp="count"/></target>
+      </segment>
+    </unit>
     <unit id="149974019994124409">
       <notes>
         <note category="location">src/app/features/auth/components/login/login.component.ts:87,91</note>
@@ -6855,7 +6899,7 @@
     </unit>
     <unit id="3739723885372225796">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:391</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:378</note>
         <note category="description">Shown when a workspace has no tags to pick from</note>
       </notes>
       <segment state="initial">
@@ -7062,7 +7106,7 @@
     </unit>
     <unit id="5342067349981153295">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-collection-picker.component.ts:106</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-collection-picker.component.ts:117</note>
         <note category="description">Bulk edit mode that swaps out a task&apos;s existing tags or assignees</note>
       </notes>
       <segment state="initial">
@@ -7827,7 +7871,7 @@
     </unit>
     <unit id="6956620730780387566">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:303,307</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:295,299</note>
         <note category="description">Button that adds another field to a bulk edit</note>
       </notes>
       <segment state="initial">
@@ -7944,6 +7988,15 @@
         <target>Nachricht senden</target>
       </segment>
     </unit>
+    <unit id="8743172272345887315">
+      <notes>
+        <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:74,76</note>
+      </notes>
+      <segment state="initial">
+        <source>{VAR_PLURAL, plural, =1 {Replaces the assignees on 1 selected task.} other {Replaces the assignees on <ph id="0" equiv="INTERPOLATION"/> selected tasks.}}</source>
+        <target>{VAR_PLURAL, plural, =1 {Ersetzt die zugewiesenen Personen bei 1 ausgewählten Aufgabe.} other {Ersetzt die zugewiesenen Personen bei <ph id="0" equiv="INTERPOLATION"/> ausgewählten Aufgaben.}}</target>
+      </segment>
+    </unit>
     <unit id="8754000074916889543">
       <notes>
         <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:52,53</note>
@@ -7974,9 +8027,18 @@
         <target>Aufgabenname</target>
       </segment>
     </unit>
+    <unit id="6885047842383777961">
+      <notes>
+        <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:112,114</note>
+      </notes>
+      <segment state="initial">
+        <source>{VAR_PLURAL, plural, =1 {Unassign 1 task} other {Unassign <ph id="0" equiv="INTERPOLATION"/> tasks}}</source>
+        <target>{VAR_PLURAL, plural, =1 {Zuweisung von 1 Aufgabe entfernen} other {Zuweisung von <ph id="0" equiv="INTERPOLATION"/> Aufgaben entfernen}}</target>
+      </segment>
+    </unit>
     <unit id="6885998085930575465">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:389</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:376</note>
         <note category="description">Accessible label for the control that chooses whether a bulk edit adds tags or replaces them</note>
       </notes>
       <segment state="initial">
@@ -8352,7 +8414,7 @@
     </unit>
     <unit id="6579848493072578871">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:194</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:196</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -8726,6 +8788,16 @@
       <segment state="translated">
         <source>Critical</source>
         <target>Kritisch</target>
+      </segment>
+    </unit>
+    <unit id="4691887509600985309">
+      <notes>
+        <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:146</note>
+        <note category="description">Accessible name of the list of people a task can be assigned to</note>
+      </notes>
+      <segment state="initial">
+        <source>Members</source>
+        <target>Mitglieder</target>
       </segment>
     </unit>
     <unit id="4696525146008503803">
@@ -9107,7 +9179,7 @@
     </unit>
     <unit id="4098688651658195116">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:390</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:377</note>
         <note category="description">Accessible label for the control that chooses whether a bulk edit adds assignees or replaces them</note>
       </notes>
       <segment state="initial">
@@ -9312,7 +9384,7 @@
     </unit>
     <unit id="1341790877187548794">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:105,109</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:101,104</note>
         <note category="description">Explains that a bulk edit only touches the fields that were added</note>
       </notes>
       <segment state="initial">
@@ -9821,7 +9893,7 @@
     </unit>
     <unit id="1754733068810926535">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:331,333</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:323,324</note>
       </notes>
       <segment state="initial">
         <source>{VAR_PLURAL, plural, =1 {1 field} other {<ph id="0" equiv="INTERPOLATION"/> fields}}</source>
@@ -9830,8 +9902,8 @@
     </unit>
     <unit id="175649209422679045">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:314</note>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:317</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:316</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:319</note>
         <note category="location">src/app/core/services/task-commands.service.ts:222</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
@@ -10134,6 +10206,16 @@
       <segment state="translated">
         <source> Keep current date </source>
         <target> Aktuelles Datum beibehalten </target>
+      </segment>
+    </unit>
+    <unit id="8044124817059226642">
+      <notes>
+        <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:145</note>
+        <note category="description">Placeholder in the box that searches workspace members</note>
+      </notes>
+      <segment state="initial">
+        <source>Search members</source>
+        <target>Mitglieder suchen</target>
       </segment>
     </unit>
     <unit id="1815539532540276970">
@@ -10470,7 +10552,7 @@
     </unit>
     <unit id="4705684969760487201">
       <notes>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:209</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:211</note>
         <note category="description">Shown when a filter has no options at all</note>
       </notes>
       <segment state="translated">
@@ -12033,7 +12115,7 @@
     </unit>
     <unit id="5661631483849837548">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:92,94</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:90,92</note>
       </notes>
       <segment state="initial">
         <source>{VAR_PLURAL, plural, =1 {1 task selected} other {<ph id="0" equiv="INTERPOLATION"/> tasks selected}}</source>
@@ -12302,12 +12384,12 @@
     </unit>
     <unit id="3606426868450781810">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:331,343</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:323,332</note>
         <note category="description">Sums up a bulk edit: how many fields it writes, how many tasks it touches, and how many of those fields overwrite a value the tasks already hold</note>
       </notes>
       <segment state="initial">
-        <source> <ph id="0" equiv="ICU" disp="{addedCount(), plural, =1 {1 field} other {{{ addedCount() }} fields} }" subFlows="2348500312993431614"/> · <ph id="1" equiv="ICU_1" disp="{taskCount, plural, =1 {1 task} other {{{ taskCount }} tasks}}" subFlows="5105875162200964153"/> · <ph id="2" equiv="ICU_2" disp="{overwriteCount(), plural, =1 {1 replaces an existing value} other {{{ overwriteCount() }} replace existing values} }" subFlows="2752314674870144882"/> </source>
-        <target> <ph id="0" equiv="ICU" disp="{addedCount(), plural, =1 {1 field} other {{{ addedCount() }} fields} }" subFlows="2348500312993431614"/> · <ph id="1" equiv="ICU_1" disp="{taskCount, plural, =1 {1 task} other {{{ taskCount }} tasks}}" subFlows="5105875162200964153"/> · <ph id="2" equiv="ICU_2" disp="{overwriteCount(), plural, =1 {1 replaces an existing value} other {{{ overwriteCount() }} replace existing values} }" subFlows="2752314674870144882"/> </target>
+        <source> <ph id="0" equiv="ICU" disp="{addedCount(), plural, =1 {1 field} other {{{ addedCount() }} fields}}" subFlows="2348500312993431614"/> · <ph id="1" equiv="ICU_1" disp="{taskCount, plural, =1 {1 task} other {{{ taskCount }} tasks}}" subFlows="5105875162200964153"/> · <ph id="2" equiv="ICU_2" disp="{overwriteCount(), plural, =1 {1 replaces an existing value} other {{{ overwriteCount() }} replace existing values} }" subFlows="2752314674870144882"/> </source>
+        <target> <ph id="0" equiv="ICU" disp="{addedCount(), plural, =1 {1 field} other {{{ addedCount() }} fields}}" subFlows="2348500312993431614"/> · <ph id="1" equiv="ICU_1" disp="{taskCount, plural, =1 {1 task} other {{{ taskCount }} tasks}}" subFlows="5105875162200964153"/> · <ph id="2" equiv="ICU_2" disp="{overwriteCount(), plural, =1 {1 replaces an existing value} other {{{ overwriteCount() }} replace existing values} }" subFlows="2752314674870144882"/> </target>
       </segment>
     </unit>
     <unit id="3606812607516218575">
@@ -13525,7 +13607,7 @@
     </unit>
     <unit id="27049200644012542">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:543</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:530</note>
         <note category="description">Accessible label for the button that drops a field from a bulk edit. FIELD is the field&apos;s name</note>
       </notes>
       <segment state="initial">
@@ -14147,25 +14229,14 @@
         <target>Aufgaben verschieben</target>
       </segment>
     </unit>
-    <unit id="3560155568345568860">
+    <unit id="6473034184907916283">
       <notes>
-        <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:25,29</note>
-        <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:70,74</note>
+        <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:68,72</note>
         <note category="description">Title of the dialog for reassigning tasks to another person</note>
       </notes>
-      <segment state="translated">
-        <source> Re-assign Tasks </source>
+      <segment state="initial">
+        <source> Re-assign tasks </source>
         <target>Aufgaben neu zuweisen</target>
-      </segment>
-    </unit>
-    <unit id="7391206710761349896">
-      <notes>
-        <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:30,34</note>
-        <note category="description">Instructions in the reassign-tasks dialog</note>
-      </notes>
-      <segment state="translated">
-        <source> Select the user you wish to assign the selected tasks to </source>
-        <target>Wählen Sie die Person, der die ausgewählten Aufgaben zugewiesen werden sollen</target>
       </segment>
     </unit>
     <unit id="2224870262790308698">
@@ -14334,7 +14405,7 @@
     </unit>
     <unit id="7859140891394548585">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:270,271</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:264,265</note>
         <note category="description">Option that clears the task&apos;s sprint</note>
       </notes>
       <segment state="initial">
@@ -14666,7 +14737,7 @@
     <unit id="6044719097380241880">
       <notes>
         <note category="location">src/app/static/components/filter-facet/filter-facet.component.ts:192</note>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:333</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:340</note>
         <note category="description">Button that renders the next page of a filter&apos;s options. COUNT is how many options remain</note>
       </notes>
       <segment state="translated">
@@ -15155,7 +15226,7 @@
     </unit>
     <unit id="3445720584036648434">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:387</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:374</note>
         <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:50,51</note>
         <note category="description">Placeholder in the box that searches tags</note>
       </notes>
@@ -17369,7 +17440,7 @@
     <unit id="928009341755063873">
       <notes>
         <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:222</note>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:224</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:226</note>
         <note category="description">Keyboard key that closes the workspace menu, shown as a hint</note>
       </notes>
       <segment state="translated">
@@ -18759,6 +18830,16 @@
         <target>Gruppe auswählen</target>
       </segment>
     </unit>
+    <unit id="4521459637935311997">
+      <notes>
+        <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:279</note>
+        <note category="description">One entry in a breakdown of who holds the selected tasks today, counting those held by nobody. COUNT is how many</note>
+      </notes>
+      <segment state="initial">
+        <source><ph id="0" equiv="COUNT" disp="count"/> unassigned</source>
+        <target><ph id="0" equiv="COUNT" disp="count"/> ohne Zuweisung</target>
+      </segment>
+    </unit>
     <unit id="4524361724085569852">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:406</note>
@@ -18793,6 +18874,7 @@
     <unit id="8169241385964351300">
       <notes>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-summary.ts:162</note>
+        <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:283</note>
         <note category="description">Prefixes a summary of what the selected tasks hold before a bulk edit is applied. DETAIL is the breakdown</note>
       </notes>
       <segment state="initial">
@@ -18882,6 +18964,16 @@
       <segment state="translated">
         <source>Changing the identifier changes the workspace URL and will break existing shared links.</source>
         <target>Das Ändern der Kennung ändert die Arbeitsbereich-URL und macht bestehende geteilte Links ungültig.</target>
+      </segment>
+    </unit>
+    <unit id="7333242838005028368">
+      <notes>
+        <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:264</note>
+        <note category="description">Marks a member that is a service account rather than a person</note>
+      </notes>
+      <segment state="initial">
+        <source>service account</source>
+        <target>Dienstkonto</target>
       </segment>
     </unit>
     <unit id="3893998607473657304">
@@ -19913,7 +20005,7 @@
     <unit id="2933395362711398504">
       <notes>
         <note category="location">src/app/static/components/filter-facet/filter-facet.component.ts:136</note>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:212</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:214</note>
         <note category="description">Shown when a filter&apos;s search term matches no options</note>
       </notes>
       <segment state="translated">
@@ -20453,7 +20545,7 @@
     </unit>
     <unit id="8211158909715788227">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:392</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:379</note>
         <note category="description">Shown when a workspace has no people to pick from</note>
       </notes>
       <segment state="initial">
@@ -21887,6 +21979,15 @@
         <target>Ihre Arbeitsbereiche konnten nicht geladen werden</target>
       </segment>
     </unit>
+    <unit id="5126898958707886611">
+      <notes>
+        <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:120,122</note>
+      </notes>
+      <segment state="initial">
+        <source>{VAR_PLURAL, plural, =1 {Re-assign 1 task} other {Re-assign <ph id="0" equiv="INTERPOLATION"/> tasks}}</source>
+        <target>{VAR_PLURAL, plural, =1 {1 Aufgabe neu zuweisen} other {<ph id="0" equiv="INTERPOLATION"/> Aufgaben neu zuweisen}}</target>
+      </segment>
+    </unit>
     <unit id="3323062521847000288">
       <notes>
         <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:136,138</note>
@@ -21950,6 +22051,7 @@
     <unit id="3348547714642337740">
       <notes>
         <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:42,44</note>
+        <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:147</note>
         <note category="location">src/app/shared/components/task-view-filters/task-view-filters.component.ts:34,36</note>
         <note category="description">Shown when there are no members to filter by</note>
       </notes>
@@ -22769,7 +22871,7 @@
     </unit>
     <unit id="1238583382012712938">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-collection-picker.component.ts:75,80</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-collection-picker.component.ts:82,87</note>
         <note category="description">Button that unpicks everything in a bulk edit&apos;s tag or people picker</note>
       </notes>
       <segment state="initial">
@@ -22849,7 +22951,7 @@
     </unit>
     <unit id="3504813719002568781">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:338,340</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:327,329</note>
       </notes>
       <segment state="initial">
         <source>{VAR_PLURAL, plural, =1 {1 replaces an existing value} other {<ph id="0" equiv="INTERPOLATION"/> replace existing values}}</source>
@@ -23167,6 +23269,16 @@
         <target> · bearbeitet</target>
       </segment>
     </unit>
+    <unit id="1146060538137839536">
+      <notes>
+        <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:273</note>
+        <note category="description">Stands in for a person the current user cannot see</note>
+      </notes>
+      <segment state="initial">
+        <source>Someone else</source>
+        <target>Jemand anderes</target>
+      </segment>
+    </unit>
     <unit id="114923036829185897">
       <notes>
         <note category="location">src/app/features/task-views/models/task-query-copy.ts:15</note>
@@ -23249,7 +23361,7 @@
     </unit>
     <unit id="7924500284044965062">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:182,185</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:177,180</note>
         <note category="description">Button that goes back to picking a due date instead of clearing it</note>
       </notes>
       <segment state="initial">
@@ -23501,7 +23613,7 @@
     </unit>
     <unit id="6398969587818603892">
       <notes>
-        <note category="location">src/app/static/components/dialog-title/dialog-title.component.ts:19,20</note>
+        <note category="location">src/app/static/components/dialog-title/dialog-title.component.ts:20,21</note>
         <note category="location">src/app/static/components/dialog-wizard/dialog-wizard.component.ts:34,35</note>
         <note category="description">Accessible label for the button that closes a dialog</note>
       </notes>
@@ -23650,7 +23762,7 @@
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:44</note>
         <note category="location">src/app/static/components/filter-facet/filter-facet.component.ts:133</note>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:204</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:206</note>
         <note category="location">src/app/static/components/search-input/search-input.component.ts:39</note>
         <note category="location">src/app/static/components/select-filter/select-filter.component.ts:70</note>
         <note category="description">Label of the export search filter</note>
@@ -23673,7 +23785,7 @@
     </unit>
     <unit id="919084948543701932">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-collection-picker.component.ts:115</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-collection-picker.component.ts:126</note>
         <note category="description">How many entries are picked in a bulk edit&apos;s tag or people picker. COUNT is the number picked</note>
       </notes>
       <segment state="initial">
@@ -23786,7 +23898,7 @@
     </unit>
     <unit id="742574656933469666">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:388</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:375</note>
         <note category="description">Placeholder in the box that searches people</note>
       </notes>
       <segment state="initial">

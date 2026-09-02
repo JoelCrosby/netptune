@@ -233,7 +233,7 @@ export class BoardGroupsSelectionComponent {
 
   onReassignTasksClicked() {
     this.dialog.open(ReassignTasksDialogComponent, {
-      width: '400px',
+      width: ReassignTasksDialogComponent.width,
       panelClass: 'app-modal-class',
     });
   }

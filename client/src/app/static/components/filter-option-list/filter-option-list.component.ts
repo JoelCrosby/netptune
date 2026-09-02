@@ -82,7 +82,7 @@ const nearBottomThresholdPx = 48;
             #optionRef
             role="option"
             [id]="optionId(index)"
-            [class]="optionClass(index)"
+            [class]="optionClass(index, option.value)"
             [attr.aria-selected]="isSelected(option.value)"
             (click)="choose(option.value)"
             (mouseenter)="activeIndex.set(index)">
@@ -119,7 +119,7 @@ const nearBottomThresholdPx = 48;
             #optionRef
             role="option"
             [id]="optionId(index + stickyOptions().length)"
-            [class]="optionClass(index + stickyOptions().length)"
+            [class]="optionClass(index + stickyOptions().length, option.value)"
             [attr.aria-selected]="isSelected(option.value)"
             (click)="choose(option.value)"
             (mouseenter)="activeIndex.set(index + stickyOptions().length)">
@@ -195,6 +195,8 @@ export class FilterOptionListComponent<T> {
   readonly listMaxHeightClass = input('max-h-72');
   /** Off for a list rendered inline, where escape dismisses nothing. */
   readonly dismissKeyHint = input(true);
+  /** Tints the picked rows, for a list whose selection is the point rather than a filter. */
+  readonly highlightSelected = input(false);
   readonly multiple = input(true);
   readonly loading = input(false);
   readonly pageSize = input(50);
@@ -320,9 +322,14 @@ export class FilterOptionListComponent<T> {
     return this.selected().has(value);
   }
 
-  protected optionClass(index: number): string {
+  protected optionClass(index: number, value: T): string {
     const base =
       'flex w-full items-center gap-3 rounded-sm px-3 py-2 text-left text-sm cursor-pointer select-none transition-colors';
+    const picked = this.highlightSelected() && this.isSelected(value);
+
+    if (picked) {
+      return `${base} bg-primary/25`;
+    }
 
     return this.activeIndex() === index
       ? `${base} bg-neutral-100 dark:bg-neutral-800`

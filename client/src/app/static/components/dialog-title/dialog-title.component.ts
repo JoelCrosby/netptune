@@ -6,8 +6,9 @@ import { DialogCloseDirective } from '../../directives/dialog-close.directive';
 @Component({
   selector: 'app-dialog-title',
   imports: [DialogCloseDirective, IconButtonComponent, LucideX],
+  host: { class: 'block' },
   template: `
-    <div class="relative mb-6">
+    <div class="relative" [class.mb-6]="!noMargin()">
       <h1 class="m-0 pr-10 text-xl font-medium"><ng-content /></h1>
       @if (showCloseButton()) {
         <button
@@ -25,4 +26,5 @@ import { DialogCloseDirective } from '../../directives/dialog-close.directive';
 })
 export class DialogTitleComponent {
   readonly showCloseButton = input(false, { transform: booleanAttribute });
+  readonly noMargin = input(false, { transform: booleanAttribute });
 }

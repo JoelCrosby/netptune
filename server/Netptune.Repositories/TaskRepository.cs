@@ -939,33 +939,63 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                 .SetProperty(task => task.UpdatedAt, DateTime.UtcNow), cancellationToken);
     }
 
-    public async Task AssignTasksToUser(IEnumerable<int> taskIds, string assigneeId, CancellationToken cancellationToken = default)
+    public async Task<List<string>> ReplaceTaskAssignees(
+        IEnumerable<int> taskIds,
+        IReadOnlyCollection<string> assigneeIds,
+        CancellationToken cancellationToken = default)
     {
         var taskIdList = taskIds.ToList();
 
         if (taskIdList.Count == 0)
         {
-            return;
+            return [];
         }
 
         await Entities
             .Where(task => taskIdList.Contains(task.Id))
             .ExecuteUpdateAsync(setters => setters.SetProperty(task => task.UpdatedAt, DateTime.UtcNow), cancellationToken);
 
-        var existingTaskIds = await Context.ProjectTaskAppUsers
-            .AsNoTracking()
-            .Where(assignment => assignment.UserId == assigneeId && taskIdList.Contains(assignment.ProjectTaskId))
-            .Select(assignment => assignment.ProjectTaskId)
+        var assigneeIdList = assigneeIds.ToList();
+        var assignments = Context.ProjectTaskAppUsers
+            .Where(assignment => taskIdList.Contains(assignment.ProjectTaskId));
+
+        var replaced = assigneeIdList.Count == 0
+            ? assignments
+            : assignments.Where(assignment => !assigneeIdList.Contains(assignment.UserId));
+
+        var replacedUserIds = await replaced
+            .Select(assignment => assignment.UserId)
+            .Distinct()
             .ToListAsync(cancellationToken);
 
+        await replaced.ExecuteDeleteAsync(cancellationToken);
+
+        if (assigneeIdList.Count == 0)
+        {
+            return replacedUserIds;
+        }
+
+        var keptAssignments = await Context.ProjectTaskAppUsers
+            .AsNoTracking()
+            .Where(assignment => assigneeIdList.Contains(assignment.UserId) && taskIdList.Contains(assignment.ProjectTaskId))
+            .Select(assignment => new { assignment.ProjectTaskId, assignment.UserId })
+            .ToListAsync(cancellationToken);
+
+        var keptPairs = keptAssignments
+            .Select(assignment => (assignment.ProjectTaskId, assignment.UserId))
+            .ToHashSet();
+
         var missingAssignments = taskIdList
-            .Except(existingTaskIds)
-            .Select(taskId => new ProjectTaskAppUser
+            .SelectMany(taskId => assigneeIdList.Select(userId => (taskId, userId)))
+            .Where(pair => !keptPairs.Contains(pair))
+            .Select(pair => new ProjectTaskAppUser
             {
-                ProjectTaskId = taskId,
-                UserId = assigneeId,
+                ProjectTaskId = pair.taskId,
+                UserId = pair.userId,
             });
 
         await Context.ProjectTaskAppUsers.AddRangeAsync(missingAssignments, cancellationToken);
+
+        return replacedUserIds;
     }
 }

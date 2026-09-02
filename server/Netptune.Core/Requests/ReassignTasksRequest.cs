@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Netptune.Core.Requests;
 
+// An empty AssigneeIds clears every assignee from the tasks rather than naming new ones.
 public record ReassignTasksRequest
 {
     [Required]
@@ -10,6 +11,5 @@ public record ReassignTasksRequest
     [Required]
     public List<int> TaskIds { get; set; } = null!;
 
-    [Required]
-    public string AssigneeId { get; set; } = null!;
+    public List<string> AssigneeIds { get; set; } = [];
 }

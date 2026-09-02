@@ -125,7 +125,7 @@ export class BoardGroupCommandsService {
     this.moveTasksToGroup(newGroupId, taskIds);
   }
 
-  reassignSelectedTasks(assigneeId: string) {
+  reassignSelectedTasks(assigneeIds: string[]) {
     const identifier = this.boardView.identifier();
 
     if (!identifier) return;
@@ -133,7 +133,7 @@ export class BoardGroupCommandsService {
     this.tasksApi
       .reassignTasks({
         boardId: identifier,
-        assigneeId,
+        assigneeIds,
         taskIds: this.selection.taskIds(),
       })
       .pipe(
@@ -142,7 +142,9 @@ export class BoardGroupCommandsService {
       )
       .subscribe(() => {
         this.snackbar.open(
-          $localize`:Confirmation shown after an action succeeds:Tasks Re-assigned`
+          assigneeIds.length
+            ? $localize`:Confirmation shown after an action succeeds:Tasks Re-assigned`
+            : $localize`:Confirmation shown after an action succeeds:Tasks Unassigned`
         );
         this.refresh();
       });
