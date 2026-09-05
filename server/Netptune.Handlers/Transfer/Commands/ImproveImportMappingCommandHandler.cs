@@ -39,6 +39,7 @@ public sealed class ImproveImportMappingCommandHandler
     private readonly IImportMappingAdvisor Heuristics;
     private readonly IAiImportMappingAdvisor Assistant;
     private readonly IAiCredentialProtector Protector;
+    private readonly IAiSpendService Spend;
 
     public ImproveImportMappingCommandHandler(
         INetptuneUnitOfWork unitOfWork,
@@ -46,6 +47,7 @@ public sealed class ImproveImportMappingCommandHandler
         IImportMappingAdvisor heuristics,
         IAiImportMappingAdvisor assistant,
         IAiCredentialProtector protector,
+        IAiSpendService spend,
         IImportSessionRepository importSessions)
     {
         UnitOfWork = unitOfWork;
@@ -53,6 +55,7 @@ public sealed class ImproveImportMappingCommandHandler
         Heuristics = heuristics;
         Assistant = assistant;
         Protector = protector;
+        Spend = spend;
         ImportSessions = importSessions;
     }
 
@@ -74,6 +77,13 @@ public sealed class ImproveImportMappingCommandHandler
         if (workspace is null || !workspace.AssistantEnabled)
         {
             return ClientResponse<ImproveImportMappingResult>.Failed("The assistant is turned off for this workspace.");
+        }
+
+        var spend = await Spend.GetStatus(workspace, cancellationToken);
+
+        if (spend.IsOverCap)
+        {
+            return ClientResponse<ImproveImportMappingResult>.Failed(AiSpendMessages.CapReached);
         }
 
         var profile = session.SourceProfile?.Deserialize<ImportSourceProfile>(JsonOptions.Default);

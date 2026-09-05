@@ -17,6 +17,12 @@ public interface IAiConversationRepository : IRepository<AiConversation, Guid>
 
     Task<AiTokenUsageViewModel> GetUsage(Guid conversationId, CancellationToken cancellationToken = default);
 
+    Task<List<AiSpendSlice>> GetSpendSlices(int workspaceId, DateTime fromUtc, CancellationToken cancellationToken = default);
+
+    Task<List<AiModelTokens>> GetModelTokens(int workspaceId, DateTime fromUtc, CancellationToken cancellationToken = default);
+
+    Task<List<AiConversationCount>> GetConversationCounts(int workspaceId, DateTime fromUtc, CancellationToken cancellationToken = default);
+
     Task<List<AiMessage>> GetMessages(Guid conversationId, CancellationToken cancellationToken = default);
 
     Task<List<AiToolInvocation>> GetToolInvocations(Guid conversationId, CancellationToken cancellationToken = default);

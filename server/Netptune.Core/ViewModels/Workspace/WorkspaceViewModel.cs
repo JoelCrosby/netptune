@@ -21,5 +21,7 @@ public class WorkspaceViewModel
 
     public bool AllowAssistantDataSampling { get; set; } = true;
 
+    public decimal? AssistantSpendCap { get; set; }
+
     public long MaxUploadBytes { get; set; } = UploadLimits.DefaultMaxUploadBytes;
 }

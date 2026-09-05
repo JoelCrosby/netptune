@@ -26,6 +26,8 @@ public record Workspace : AuditableEntity<int>
 
     public bool AllowAssistantDataSampling { get; set; } = true;
 
+    public decimal? AssistantSpendCap { get; set; }
+
     public List<string>? PublicPermissions { get; set; }
 
     public long StorageUsedBytes { get; set; }
@@ -67,6 +69,7 @@ public record Workspace : AuditableEntity<int>
             IsPublic = IsPublic,
             AssistantEnabled = AssistantEnabled,
             AllowAssistantDataSampling = AllowAssistantDataSampling,
+            AssistantSpendCap = AssistantSpendCap,
             MaxUploadBytes = MaxUploadBytes,
         };
     }

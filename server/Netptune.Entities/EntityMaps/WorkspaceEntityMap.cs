@@ -67,10 +67,15 @@ public class WorkspaceEntityMap : AuditableEntityMap<Workspace, int>
             .HasDefaultValue(true)
             .IsRequired();
 
+        builder
+            .Property(workspace => workspace.AssistantSpendCap)
+            .HasPrecision(12, 4);
+
         builder.ToTable(table =>
         {
             table.HasCheckConstraint("ck_workspaces_storage_used_bytes", "storage_used_bytes >= 0");
             table.HasCheckConstraint("ck_workspaces_storage_limit_bytes", "storage_limit_bytes >= 0");
+            table.HasCheckConstraint("ck_workspaces_assistant_spend_cap", "assistant_spend_cap IS NULL OR assistant_spend_cap > 0");
             table.HasCheckConstraint(
                 "ck_workspaces_max_upload_bytes",
                 $"max_upload_bytes >= {UploadLimits.MinimumMaxUploadBytes} AND max_upload_bytes <= {UploadLimits.MaximumMaxUploadBytes}");

@@ -78,6 +78,12 @@ public static class AiEndpoints
         group.MapGet("/admin/conversations/{conversationId:guid}", HandleGetWorkspaceConversation)
             .RequireAuthorization(NetptunePermissions.Assistant.ReadAllConversations);
 
+        group.MapGet("/admin/spend", HandleGetWorkspaceSpend)
+            .RequireAuthorization(NetptunePermissions.Assistant.ReadAllConversations);
+
+        group.MapPut("/admin/spend-cap", HandleSetSpendCap)
+            .RequireAuthorization(NetptunePermissions.Workspace.Update);
+
         group.MapGet("/conversations/{conversationId:guid}/change-set", HandleGetPendingChangeSet);
 
         group.MapGet("/conversations/{conversationId:guid}/change-sets", HandleGetConversationChangeSets);
@@ -232,6 +238,25 @@ public static class AiEndpoints
         var result = await mediator.Send(new GetWorkspaceAiConversationsQuery(), cancellationToken);
 
         return Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleGetWorkspaceSpend(
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetWorkspaceAiSpendQuery(), cancellationToken);
+
+        return result.ToResult();
+    }
+
+    private static async Task<IResult> HandleSetSpendCap(
+        SetAiSpendCapRequest request,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new SetAiSpendCapCommand(request), cancellationToken);
+
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleGetWorkspaceConversation(

@@ -112,6 +112,7 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiSystemPromptBuilder, AiSystemPromptBuilder>();
         services.AddScoped<IAiTitleGenerator, AiTitleGenerator>();
         services.AddScoped<IAiImportMappingAdvisor, AiImportMappingAdvisor>();
+        services.AddScoped<IAiSpendService, AiSpendService>();
         services.AddScoped<IAiConversationService, AiConversationService>();
         services.AddScoped<IAiChangeSetApplier, AiChangeSetApplier>();
         services.AddScoped<IAiUndoCatalog, AiUndoCatalog>();

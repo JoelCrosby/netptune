@@ -37,6 +37,7 @@ public sealed class AiConversationService : IAiConversationService
     private readonly IAiQuestionSink Questions;
     private readonly IAiTitleGenerator Titles;
     private readonly IAiCancellationRegistry Turns;
+    private readonly IAiSpendService Spend;
     private readonly AiOptions Options;
 
     public AiConversationService(
@@ -50,12 +51,14 @@ public sealed class AiConversationService : IAiConversationService
         IAiQuestionSink questions,
         IAiTitleGenerator titles,
         IAiCancellationRegistry turns,
+        IAiSpendService spend,
         IOptions<AiOptions> options)
     {
         ChangeSetBuilder = changeSetBuilder;
         Questions = questions;
         Titles = titles;
         Turns = turns;
+        Spend = spend;
         UnitOfWork = unitOfWork;
         Identity = identity;
         Protector = protector;
@@ -86,9 +89,18 @@ public sealed class AiConversationService : IAiConversationService
         var workspace = await UnitOfWork.Workspaces.GetAsync(workspaceId, true, cancellationToken);
         var isAssistantEnabled = workspace?.AssistantEnabled ?? false;
 
-        if (!isAssistantEnabled)
+        if (workspace is null || !isAssistantEnabled)
         {
             yield return AiStreamEvent.Failed("The assistant is turned off for this workspace.");
+
+            yield break;
+        }
+
+        var spend = await Spend.GetStatus(workspace, cancellationToken);
+
+        if (spend.IsOverCap)
+        {
+            yield return AiStreamEvent.Failed(AiSpendMessages.CapReached);
 
             yield break;
         }

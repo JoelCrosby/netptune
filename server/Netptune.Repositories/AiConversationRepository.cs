@@ -99,6 +99,76 @@ public class AiConversationRepository(DataContext context, IDbConnectionFactory 
         return usage ?? new AiTokenUsageViewModel();
     }
 
+    public Task<List<AiSpendSlice>> GetSpendSlices(
+        int workspaceId,
+        DateTime fromUtc,
+        CancellationToken cancellationToken = default)
+    {
+        return BilledMessages(workspaceId, fromUtc)
+            .GroupBy(message => new
+            {
+                message.Conversation.UserId,
+                DisplayName = string.IsNullOrEmpty(message.Conversation.User.Firstname) && string.IsNullOrEmpty(message.Conversation.User.Lastname)
+                    ? message.Conversation.User.UserName!
+                    : message.Conversation.User.Firstname + " " + message.Conversation.User.Lastname,
+                message.Model,
+                Day = message.CreatedAt.Date,
+            })
+            .Select(group => new AiSpendSlice
+            {
+                UserId = group.Key.UserId,
+                UserDisplayName = group.Key.DisplayName,
+                Model = group.Key.Model,
+                Day = group.Key.Day,
+                InputTokens = group.Sum(message => message.InputTokens),
+                OutputTokens = group.Sum(message => message.OutputTokens),
+                CacheReadTokens = group.Sum(message => message.CacheReadTokens),
+                CacheCreationTokens = group.Sum(message => message.CacheCreationTokens),
+            })
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<List<AiModelTokens>> GetModelTokens(
+        int workspaceId,
+        DateTime fromUtc,
+        CancellationToken cancellationToken = default)
+    {
+        return BilledMessages(workspaceId, fromUtc)
+            .GroupBy(message => message.Model)
+            .Select(group => new AiModelTokens
+            {
+                Model = group.Key,
+                InputTokens = group.Sum(message => message.InputTokens),
+                OutputTokens = group.Sum(message => message.OutputTokens),
+                CacheReadTokens = group.Sum(message => message.CacheReadTokens),
+                CacheCreationTokens = group.Sum(message => message.CacheCreationTokens),
+            })
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<List<AiConversationCount>> GetConversationCounts(
+        int workspaceId,
+        DateTime fromUtc,
+        CancellationToken cancellationToken = default)
+    {
+        return BilledMessages(workspaceId, fromUtc)
+            .GroupBy(message => message.Conversation.UserId)
+            .Select(group => new AiConversationCount(
+                group.Key,
+                group.Select(message => message.ConversationId).Distinct().Count()))
+            .ToListAsync(cancellationToken);
+    }
+
+    private IQueryable<AiMessage> BilledMessages(int workspaceId, DateTime fromUtc)
+    {
+        return Context.AiMessages
+            .AsNoTracking()
+            .Where(message =>
+                message.Conversation.WorkspaceId == workspaceId &&
+                !message.Conversation.IsDeleted &&
+                message.CreatedAt >= fromUtc);
+    }
+
     public async Task<List<AiWorkspaceConversationViewModel>> GetForWorkspace(
         int workspaceId,
         CancellationToken cancellationToken = default)

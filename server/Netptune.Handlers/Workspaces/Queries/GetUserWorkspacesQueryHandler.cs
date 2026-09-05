@@ -50,6 +50,7 @@ public sealed class GetUserWorkspacesQueryHandler : IRequestHandler<GetUserWorks
                     IsPublic = workspace.IsPublic,
                     AssistantEnabled = workspace.AssistantEnabled,
                     AllowAssistantDataSampling = workspace.AllowAssistantDataSampling,
+                    AssistantSpendCap = workspace.AssistantSpendCap,
                     MaxUploadBytes = workspace.MaxUploadBytes,
                     CreatedAt = workspace.CreatedAt,
                     UpdatedAt = workspace.UpdatedAt,
