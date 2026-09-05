@@ -211,19 +211,6 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
         return invites;
     }
 
-    private async Task SeedDefaultPermissionsAsync(string userId, int workspaceId, WorkspaceRole role, CancellationToken cancellationToken = default)
-    {
-        var user = await Context.WorkspaceAppUsers
-            .Where(x => x.UserId == userId && x.WorkspaceId == workspaceId)
-            .FirstOrDefaultAsync(cancellationToken);
-
-        var defaultPermissions = WorkspaceRolePermissions
-            .GetDefaultPermissions(role)
-            .ToList();
-
-        user?.Permissions = defaultPermissions;
-    }
-
     public async Task<List<WorkspaceAppUser>> RemoveUsersFromWorkspace(IEnumerable<string> userIds, int workspaceId, CancellationToken cancellationToken = default)
     {
         var usersToRemove = await Context.WorkspaceAppUsers

@@ -24,23 +24,6 @@ public class ActivityEntryRepository : WorkspaceEntityRepository<DataContext, Ac
     {
     }
 
-    private static Expression<Func<ActivityEntry, bool>> MergeCandidatePredicate(
-        int workspaceId,
-        EntityType entityType,
-        int entityId,
-        string userId,
-        DateTime now)
-    {
-        return entry =>
-            entry.WorkspaceId == workspaceId
-            && entry.EntityType == entityType
-            && entry.EntityId == entityId
-            && entry.UserId == userId
-            && entry.IsOpen
-            && !entry.IsDeleted
-            && entry.WindowExpiresAt > now;
-    }
-
     private static Expression<Func<ActivityEntry, bool>> OtherUsersOpenEntriesPredicate(
         int workspaceId,
         EntityType entityType,

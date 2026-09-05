@@ -228,6 +228,6 @@ public class ReassignTasksCommandHandlerTests
         var options = new ActivityMultipleOptions<AssignActivityMeta>();
         configure(options);
 
-        return options.Type == type && options.Meta?.AssigneeId == assigneeId;
+        return options.Type == type && options.Meta.AssigneeId == assigneeId;
     }
 }

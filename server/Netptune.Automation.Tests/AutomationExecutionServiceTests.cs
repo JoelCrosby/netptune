@@ -14,7 +14,6 @@ using Netptune.Core.Events.Tasks;
 using Netptune.Core.Meta;
 using Netptune.Core.Models.Automations;
 using Netptune.Core.Relationships;
-using Netptune.Core.Requests;
 using Netptune.Entities.Contexts;
 
 using Xunit;

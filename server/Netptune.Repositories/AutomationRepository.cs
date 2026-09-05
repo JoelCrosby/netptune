@@ -9,7 +9,6 @@ using Netptune.Core.Enums;
 using Netptune.Core.Models.Automations;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
-using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Automations;
 using Netptune.Entities.Contexts;

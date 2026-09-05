@@ -6,7 +6,6 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Notifications;

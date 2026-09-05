@@ -4,7 +4,6 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Services.Ai;
-using Netptune.Core.Utilities;
 using Netptune.Handlers.Tasks.Queries;
 
 namespace Netptune.Ai.Tools;

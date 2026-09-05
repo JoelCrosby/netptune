@@ -7,7 +7,6 @@ using Mediator;
 using Netptune.Ai.Execution.Handlers;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
-using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.ProjectTasks;
@@ -91,7 +90,7 @@ public class TaskDescriptionChangeHandlerTests
         CapturedUpdate().Should().BeNull();
     }
 
-    private string? CapturedCreate()
+    private string CapturedCreate()
     {
         var call = Mediator.ReceivedCalls().Single(call => call.GetArguments()[0] is CreateTaskCommand);
         var command = (CreateTaskCommand)call.GetArguments()[0]!;

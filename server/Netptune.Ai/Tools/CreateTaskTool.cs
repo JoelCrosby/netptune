@@ -6,7 +6,6 @@ using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
-using Netptune.Handlers.Projects.Queries;
 using Netptune.Handlers.Statuses.Queries;
 using Netptune.Handlers.Users.Queries;
 

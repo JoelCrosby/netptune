@@ -6,7 +6,6 @@ using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Boards.Queries;
-using Netptune.Handlers.Projects.Queries;
 
 namespace Netptune.Ai.Tools;
 

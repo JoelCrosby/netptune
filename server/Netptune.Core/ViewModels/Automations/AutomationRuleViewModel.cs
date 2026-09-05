@@ -1,4 +1,3 @@
-using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Automations;
 

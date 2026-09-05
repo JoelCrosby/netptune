@@ -52,15 +52,4 @@ public class WorkspaceInviteRepository : Repository<DataContext, WorkspaceInvite
             invite.AcceptedAt = DateTime.UtcNow;
         }
     }
-
-    private IQueryable<WorkspaceInvite> PendingByWorkspaceExcludingMembers(int workspaceId)
-    {
-        return Entities
-            .Where(invite =>
-                invite.WorkspaceId == workspaceId &&
-                invite.AcceptedAt == null &&
-                !Context.WorkspaceAppUsers.Any(user =>
-                    user.WorkspaceId == workspaceId &&
-                    user.User.NormalizedEmail == invite.Email.ToUpper()));
-    }
 }
