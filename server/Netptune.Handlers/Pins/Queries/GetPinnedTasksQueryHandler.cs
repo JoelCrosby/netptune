@@ -32,7 +32,8 @@ public sealed class GetPinnedTasksQueryHandler : IRequestHandler<GetPinnedTasksQ
     public async ValueTask<List<PinnedTaskViewModel>> Handle(GetPinnedTasksQuery request, CancellationToken cancellationToken)
     {
         var workspaceId = await Identity.GetWorkspaceId();
-        var userId = Identity.GetCurrentUserId();
+
+        var userId = Identity.TryGetCurrentUserId();
         var workspaceKey = Identity.TryGetWorkspaceKey();
         var rights = await PinsPermissions.GetWriteRights(PermissionCache, userId, workspaceKey);
         var pins = await TaskPins.GetVisibleInWorkspace(workspaceId, userId, cancellationToken);

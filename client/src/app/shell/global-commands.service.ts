@@ -264,6 +264,8 @@ export class GlobalCommandsService implements OnDestroy {
       if (!event || event.key.toLowerCase() !== 'p') return;
       if (event.ctrlKey || event.metaKey || event.altKey) return;
 
+      if (!this.authenticated()) return;
+
       const typing = isTypingTarget(event);
 
       if (typing) return;

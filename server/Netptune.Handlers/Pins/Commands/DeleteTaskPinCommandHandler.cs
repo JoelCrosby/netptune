@@ -32,6 +32,13 @@ public sealed class DeleteTaskPinCommandHandler : IRequestHandler<DeleteTaskPinC
 
     public async ValueTask<ClientResponse> Handle(DeleteTaskPinCommand request, CancellationToken cancellationToken)
     {
+        var userId = Identity.TryGetCurrentUserId();
+
+        if (userId is null)
+        {
+            return ClientResponse.Forbidden;
+        }
+
         var workspaceId = await Identity.GetWorkspaceId();
         var pin = await TaskPins.GetInWorkspace(request.Id, workspaceId, cancellationToken: cancellationToken);
 
@@ -40,7 +47,6 @@ public sealed class DeleteTaskPinCommandHandler : IRequestHandler<DeleteTaskPinC
             return ClientResponse.NotFound;
         }
 
-        var userId = Identity.GetCurrentUserId();
         var isSomeoneElsesPersonalPin = pin.Scope == TaskPinScope.User && pin.CreatedByUserId != userId;
 
         if (isSomeoneElsesPersonalPin)

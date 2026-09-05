@@ -9,7 +9,7 @@ public sealed record PinProjectionScope
 {
     public required int WorkspaceId { get; init; }
 
-    public required string UserId { get; init; }
+    public required string? UserId { get; init; }
 
     public required PinWriteRights Rights { get; init; }
 }
@@ -59,7 +59,10 @@ public static class PinnedTaskProjection
 
     public static TaskPinViewModel ToViewModel(TaskPin pin, ScopeNameLookup names, PinProjectionScope scope)
     {
-        var isOwnPersonalPin = pin.Scope == TaskPinScope.User && pin.CreatedByUserId == scope.UserId;
+        // A personal pin only ever belongs to the caller, so an anonymous reader — who never sees one
+        // anyway — cannot end up holding rights over it.
+        var isOwnPersonalPin = scope.UserId is not null && pin.CreatedByUserId == scope.UserId;
+        var canUnpin = pin.Scope == TaskPinScope.User ? isOwnPersonalPin : scope.Rights.For(pin.Scope);
 
         return new TaskPinViewModel
         {
@@ -69,7 +72,7 @@ public static class PinnedTaskProjection
             ScopeEntityId = pin.ScopeEntityId,
             ScopeName = names.Resolve(pin.Scope, pin.ScopeEntityId),
             SortOrder = pin.SortOrder,
-            CanUnpin = isOwnPersonalPin || scope.Rights.For(pin.Scope),
+            CanUnpin = canUnpin,
             CreatedAt = pin.CreatedAt,
             CreatedByUserId = pin.CreatedByUserId,
         };

@@ -12,6 +12,7 @@ using Netptune.Core.UnitOfWork;
 using Netptune.Handlers.Pins.Commands;
 
 using NSubstitute;
+using NSubstitute.ReturnsExtensions;
 
 using Xunit;
 
@@ -30,7 +31,7 @@ public class ReorderTaskPinsCommandHandlerTests
     public ReorderTaskPinsCommandHandlerTests()
     {
         Identity.GetWorkspaceId().Returns(WorkspaceId);
-        Identity.GetCurrentUserId().Returns("user-1");
+        Identity.TryGetCurrentUserId().Returns("user-1");
         Identity.TryGetWorkspaceKey().Returns("workspace");
 
         GrantRole(WorkspaceRole.Member);
@@ -92,6 +93,20 @@ public class ReorderTaskPinsCommandHandlerTests
         var result = await Send([]);
 
         result.IsSuccess.Should().BeTrue();
+
+        await UnitOfWork.DidNotReceive().CompleteAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Handle_ShouldRefuseAnAnonymousCaller_ReadingAPublicWorkspace()
+    {
+        Identity.TryGetCurrentUserId().ReturnsNull();
+
+        Stored(Pin(1, TaskPinScope.Workspace, "user-2"));
+
+        var result = await Send([new TaskPinOrder(1, 3d)]);
+
+        result.IsForbidden.Should().BeTrue();
 
         await UnitOfWork.DidNotReceive().CompleteAsync(Arg.Any<CancellationToken>());
     }

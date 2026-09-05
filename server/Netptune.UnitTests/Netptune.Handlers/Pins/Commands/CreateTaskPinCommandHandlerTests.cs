@@ -13,6 +13,7 @@ using Netptune.Core.ViewModels.Pins;
 using Netptune.Handlers.Pins.Commands;
 
 using NSubstitute;
+using NSubstitute.ReturnsExtensions;
 
 using Xunit;
 
@@ -34,7 +35,7 @@ public class CreateTaskPinCommandHandlerTests
     public CreateTaskPinCommandHandlerTests()
     {
         Identity.GetWorkspaceId().Returns(WorkspaceId);
-        Identity.GetCurrentUserId().Returns("user-1");
+        Identity.TryGetCurrentUserId().Returns("user-1");
         Identity.TryGetWorkspaceKey().Returns("workspace");
 
         GrantRole(WorkspaceRole.Member);
@@ -207,6 +208,19 @@ public class CreateTaskPinCommandHandlerTests
 
         await TaskPins.DidNotReceive().AddAsync(Arg.Any<TaskPin>(), Arg.Any<CancellationToken>());
         await UnitOfWork.Received(1).CompleteAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Handle_ShouldRefuseAnAnonymousCaller_ReadingAPublicWorkspace()
+    {
+        Identity.TryGetCurrentUserId().ReturnsNull();
+
+        var result = await Send(new CreateTaskPinRequest { TaskId = TaskId, Scope = TaskPinScope.User });
+
+        result.IsForbidden.Should().BeTrue();
+
+        await TaskPins.DidNotReceive().AddAsync(Arg.Any<TaskPin>(), Arg.Any<CancellationToken>());
+        await UnitOfWork.DidNotReceive().CompleteAsync(Arg.Any<CancellationToken>());
     }
 
     private Task<ClientResponse<TaskPinViewModel>> Send(CreateTaskPinRequest request)

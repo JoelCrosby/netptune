@@ -44,6 +44,13 @@ public sealed class CreateTaskPinCommandHandler : IRequestHandler<CreateTaskPinC
     public async ValueTask<ClientResponse<TaskPinViewModel>> Handle(CreateTaskPinCommand request, CancellationToken cancellationToken)
     {
         var input = request.Request;
+        var userId = Identity.TryGetCurrentUserId();
+
+        if (userId is null)
+        {
+            return ClientResponse<TaskPinViewModel>.Forbidden;
+        }
+
         var workspaceId = await Identity.GetWorkspaceId();
         var task = await UnitOfWork.Tasks.GetInWorkspace(input.TaskId, workspaceId, true, cancellationToken);
 
@@ -66,7 +73,6 @@ public sealed class CreateTaskPinCommandHandler : IRequestHandler<CreateTaskPinC
             return ClientResponse<TaskPinViewModel>.NotFound;
         }
 
-        var userId = Identity.GetCurrentUserId();
         var workspaceKey = Identity.TryGetWorkspaceKey();
         var canWrite = await PinsPermissions.CanWrite(PermissionCache, userId, workspaceKey, input.Scope);
 

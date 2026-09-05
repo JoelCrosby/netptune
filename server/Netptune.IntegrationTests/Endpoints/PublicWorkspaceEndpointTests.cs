@@ -3,13 +3,21 @@ using System.Net.Http.Json;
 
 using FluentAssertions;
 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+
 using Netptune.Core.Authorization;
 using Netptune.Core.Colors;
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.ViewModels.Pins;
+using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Users;
 using Netptune.Core.ViewModels.Workspace;
+using Netptune.Entities.Contexts;
+using Netptune.Handlers.Pins.Commands;
 
 using Xunit;
 
@@ -281,6 +289,182 @@ public sealed class PublicWorkspaceEndpointTests
         var response = await Client.GetAsync("api/public/workspaces/not-a-workspace-key");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    // Pins read as tasks.read, which is on the public allowlist, so an anonymous reader sees the
+    // shared scopes. Nothing about a pin is personal to them, and nothing is theirs to remove.
+    [Fact]
+    public async Task AnonymousRequest_ShouldReturnSharedPinsOnly_WithoutAUser()
+    {
+        var slug = $"public-{Guid.NewGuid():N}"[..20];
+
+        await CreateWorkspace(slug);
+        await SetVisibility(slug, isPublic: true);
+
+        var owner = CreateOwnerClient(slug);
+        var seed = await SeedWorkspace(slug);
+        var task = await CreateTask(owner, seed);
+
+        await Pin(owner, task.Id, TaskPinScope.Workspace);
+        await Pin(owner, task.Id, TaskPinScope.User);
+
+        var anonymous = Fixture.CreateAnonymousNetptuneClient(slug);
+
+        var response = await anonymous.GetAsync("api/pins");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var pinned = await response.Content.ReadFromJsonAsync<List<PinnedTaskViewModel>>();
+        var entry = pinned!.Should().ContainSingle(item => item.Task.Id == task.Id).Subject;
+
+        entry.Pins.Select(pin => pin.Scope).Should().BeEquivalentTo([TaskPinScope.Workspace]);
+        entry.Pins.Should().OnlyContain(pin => !pin.CanUnpin);
+    }
+
+    [Fact]
+    public async Task AnonymousRequest_ShouldReturnBoardPins_WithoutAUser()
+    {
+        var slug = $"public-{Guid.NewGuid():N}"[..20];
+
+        await CreateWorkspace(slug);
+        await SetVisibility(slug, isPublic: true);
+
+        var owner = CreateOwnerClient(slug);
+        var seed = await SeedWorkspace(slug);
+        var task = await CreateTask(owner, seed);
+
+        await Pin(owner, task.Id, TaskPinScope.Board, seed.BoardId);
+
+        var anonymous = Fixture.CreateAnonymousNetptuneClient(slug);
+
+        var pins = await anonymous.GetAsync($"api/pins/board/{seed.BoardId}");
+        var boardView = await anonymous.GetAsync($"api/boards/view/{seed.BoardIdentifier}");
+
+        pins.StatusCode.Should().Be(HttpStatusCode.OK);
+        boardView.StatusCode.Should().Be(HttpStatusCode.OK, "the board view carries each card's pinned scopes");
+
+        var pinned = await pins.Content.ReadFromJsonAsync<List<PinnedTaskViewModel>>();
+
+        pinned!.Should().Contain(item => item.Task.Id == task.Id);
+    }
+
+    [Fact]
+    public async Task AnonymousRequest_ShouldBeDenied_ForPinWritesOnPublicWorkspace()
+    {
+        var slug = $"public-{Guid.NewGuid():N}"[..20];
+
+        await CreateWorkspace(slug);
+        await SetVisibility(slug, isPublic: true);
+
+        var owner = CreateOwnerClient(slug);
+        var seed = await SeedWorkspace(slug);
+        var task = await CreateTask(owner, seed);
+        var pin = await Pin(owner, task.Id, TaskPinScope.Workspace);
+
+        var anonymous = Fixture.CreateAnonymousNetptuneClient(slug);
+
+        var create = await anonymous.PostAsJsonAsync("api/pins", new CreateTaskPinRequest
+        {
+            TaskId = task.Id,
+            Scope = TaskPinScope.User,
+        });
+        var reorder = await anonymous.PutAsJsonAsync("api/pins/reorder", new ReorderTaskPinsRequest
+        {
+            Items = [new TaskPinOrder(pin.Id, -1d)],
+        });
+        var delete = await anonymous.DeleteAsync($"api/pins/{pin.Id}");
+
+        create.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        reorder.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        delete.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    private HttpClient CreateOwnerClient(string slug)
+    {
+        var client = Fixture.CreateNetptuneClient();
+
+        client.DefaultRequestHeaders.Remove("workspace");
+        client.DefaultRequestHeaders.Add("workspace", slug);
+
+        return client;
+    }
+
+    // Every workspace is created with a project, a board, its groups and a status set, which is all a
+    // task needs.
+    private async Task<WorkspaceSeed> SeedWorkspace(string slug)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        var workspace = await context.Workspaces.FirstAsync(item => item.Slug == slug, TestContext.Current.CancellationToken);
+        var project = await context.Projects
+            .FirstAsync(item => item.WorkspaceId == workspace.Id && !item.IsDeleted, TestContext.Current.CancellationToken);
+        var board = await context.Boards
+            .FirstAsync(item => item.WorkspaceId == workspace.Id && !item.IsDeleted, TestContext.Current.CancellationToken);
+        var group = await context.BoardGroups
+            .Where(item => item.BoardId == board.Id && !item.IsDeleted)
+            .OrderBy(item => item.SortOrder)
+            .FirstAsync(TestContext.Current.CancellationToken);
+        var status = await context.Statuses
+            .Where(item => item.WorkspaceId == workspace.Id && item.EntityType == EntityType.Task)
+            .OrderBy(item => item.SortOrder)
+            .FirstAsync(TestContext.Current.CancellationToken);
+
+        return new WorkspaceSeed
+        {
+            ProjectId = project.Id,
+            BoardId = board.Id,
+            BoardIdentifier = board.Identifier,
+            BoardGroupId = group.Id,
+            StatusId = status.Id,
+        };
+    }
+
+    private static async Task<TaskViewModel> CreateTask(HttpClient owner, WorkspaceSeed seed)
+    {
+        var response = await owner.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest
+        {
+            Name = $"Public pin {Guid.NewGuid():N}",
+            Description = "Created by the public workspace integration tests",
+            StatusId = seed.StatusId,
+            ProjectId = seed.ProjectId,
+            BoardGroupId = seed.BoardGroupId,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+
+        return result.Payload!;
+    }
+
+    private static async Task<TaskPinViewModel> Pin(HttpClient owner, int taskId, TaskPinScope scope, int? scopeEntityId = null)
+    {
+        var response = await owner.PostAsJsonAsync("api/pins", new CreateTaskPinRequest
+        {
+            TaskId = taskId,
+            Scope = scope,
+            ScopeEntityId = scopeEntityId,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<TaskPinViewModel>>();
+
+        return result.Payload!;
+    }
+
+    private sealed record WorkspaceSeed
+    {
+        public required int ProjectId { get; init; }
+
+        public required int BoardId { get; init; }
+
+        public required string BoardIdentifier { get; init; }
+
+        public required int BoardGroupId { get; init; }
+
+        public required int StatusId { get; init; }
     }
 
     private async Task CreateWorkspace(string slug)

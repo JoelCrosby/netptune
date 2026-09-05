@@ -24,8 +24,20 @@ public sealed record PinWriteRights
 
 public static class PinsPermissions
 {
-    public static async Task<PinWriteRights> GetWriteRights(IWorkspacePermissionCache permissionCache, string userId, string? workspaceKey)
+    public static readonly PinWriteRights None = new()
     {
+        Board = false,
+        Project = false,
+        Workspace = false,
+    };
+
+    public static async Task<PinWriteRights> GetWriteRights(IWorkspacePermissionCache permissionCache, string? userId, string? workspaceKey)
+    {
+        if (userId is null)
+        {
+            return None;
+        }
+
         var permissions = await permissionCache.GetUserPermissions(userId, workspaceKey);
 
         return new PinWriteRights
@@ -38,10 +50,15 @@ public static class PinsPermissions
 
     public static async Task<bool> CanWrite(
         IWorkspacePermissionCache permissionCache,
-        string userId,
+        string? userId,
         string? workspaceKey,
         TaskPinScope scope)
     {
+        if (userId is null)
+        {
+            return false;
+        }
+
         if (scope == TaskPinScope.User)
         {
             return true;

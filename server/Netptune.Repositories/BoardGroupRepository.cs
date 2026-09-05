@@ -37,7 +37,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
 
     public async Task<List<BoardViewGroup>?> GetBoardViewGroups(
         int boardId,
-        string currentUserId,
+        string? currentUserId,
         string? searchTerm = null,
         int? sprintId = null,
         CancellationToken cancellationToken = default)

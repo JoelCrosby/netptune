@@ -30,7 +30,7 @@ public sealed class GetBoardViewQueryHandler : IRequestHandler<GetBoardViewQuery
 
         var boardId = nullableBoardId.Value;
 
-        var currentUserId = Identity.GetCurrentUserId();
+        var currentUserId = Identity.TryGetCurrentUserId();
         var groups = await UnitOfWork.BoardGroups.GetBoardViewGroups(
             boardId,
             currentUserId,

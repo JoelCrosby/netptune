@@ -40,7 +40,7 @@ public sealed class GetBoardPinsQueryHandler : IRequestHandler<GetBoardPinsQuery
             return ClientResponse<List<PinnedTaskViewModel>>.NotFound;
         }
 
-        var userId = Identity.GetCurrentUserId();
+        var userId = Identity.TryGetCurrentUserId();
         var workspaceKey = Identity.TryGetWorkspaceKey();
         var rights = await PinsPermissions.GetWriteRights(PermissionCache, userId, workspaceKey);
         var pins = await TaskPins.GetForBoard(board.Id, board.ProjectId, workspaceId, userId, cancellationToken);

@@ -13,20 +13,24 @@ public sealed class TaskPinRepository : WorkspaceEntityRepository<DataContext, T
 {
     public TaskPinRepository(DataContext context, IDbConnectionFactory connectionFactory) : base(context, connectionFactory) { }
 
-    public Task<List<TaskPin>> GetVisibleInWorkspace(int workspaceId, string userId, CancellationToken cancellationToken = default)
+    public Task<List<TaskPin>> GetVisibleInWorkspace(int workspaceId, string? userId, CancellationToken cancellationToken = default)
     {
+        var includePersonal = userId is not null;
+
         return LivePins(workspaceId)
-            .Where(pin => pin.Scope != TaskPinScope.User || pin.CreatedByUserId == userId)
+            .Where(pin => pin.Scope != TaskPinScope.User || (includePersonal && pin.CreatedByUserId == userId))
             .OrderBy(pin => pin.SortOrder)
             .ThenByDescending(pin => pin.CreatedAt)
             .ToListAsync(cancellationToken);
     }
 
-    public Task<List<TaskPin>> GetForBoard(int boardId, int projectId, int workspaceId, string userId, CancellationToken cancellationToken = default)
+    public Task<List<TaskPin>> GetForBoard(int boardId, int projectId, int workspaceId, string? userId, CancellationToken cancellationToken = default)
     {
+        var includePersonal = userId is not null;
+
         return LivePins(workspaceId)
             .Where(pin =>
-                (pin.Scope == TaskPinScope.User && pin.ScopeEntityId == workspaceId && pin.CreatedByUserId == userId) ||
+                (includePersonal && pin.Scope == TaskPinScope.User && pin.ScopeEntityId == workspaceId && pin.CreatedByUserId == userId) ||
                 (pin.Scope == TaskPinScope.Board && pin.ScopeEntityId == boardId) ||
                 (pin.Scope == TaskPinScope.Project && pin.ScopeEntityId == projectId) ||
                 (pin.Scope == TaskPinScope.Workspace && pin.ScopeEntityId == workspaceId))
@@ -43,8 +47,6 @@ public sealed class TaskPinRepository : WorkspaceEntityRepository<DataContext, T
             .ToListAsync(cancellationToken);
     }
 
-    // Includes tombstoned rows so create can revive one: the partial unique indexes only cover live
-    // rows, so a blind insert would pile up tombstoned duplicates.
     public Task<TaskPin?> Find(int taskId, TaskPinScope scope, int scopeEntityId, string userId, CancellationToken cancellationToken = default)
     {
         var isPersonal = scope == TaskPinScope.User;

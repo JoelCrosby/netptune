@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Cache;
@@ -13,15 +14,18 @@ public class WorkspacePermissionResourceAuthorizationHandler : AuthorizationHand
     private readonly IIdentityService Identity;
     private readonly IWorkspacePermissionCache Cache;
     private readonly INetptuneUnitOfWork UnitOfWork;
+    private readonly IHttpContextAccessor Context;
 
     public WorkspacePermissionResourceAuthorizationHandler(
         IIdentityService identity,
         IWorkspacePermissionCache cache,
-        INetptuneUnitOfWork unitOfWork)
+        INetptuneUnitOfWork unitOfWork,
+        IHttpContextAccessor context)
     {
         Identity = identity;
         Cache = cache;
         UnitOfWork = unitOfWork;
+        Context = context;
     }
 
     protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, WorkspacePermissionRequirement requirement)
@@ -74,6 +78,12 @@ public class WorkspacePermissionResourceAuthorizationHandler : AuthorizationHand
             return;
         }
 
+        if (!RequestReadsOnly())
+        {
+            context.Fail();
+            return;
+        }
+
         if (workspaceKey is null)
         {
             return;
@@ -93,5 +103,19 @@ public class WorkspacePermissionResourceAuthorizationHandler : AuthorizationHand
         {
             context.Succeed(requirement);
         }
+    }
+
+    // Fails closed when there is no request to inspect, so an authorization check made outside a
+    // request never hands an anonymous caller a grant.
+    private bool RequestReadsOnly()
+    {
+        var method = Context.HttpContext?.Request.Method;
+
+        if (method is null)
+        {
+            return false;
+        }
+
+        return HttpMethods.IsGet(method) || HttpMethods.IsHead(method) || HttpMethods.IsOptions(method);
     }
 }

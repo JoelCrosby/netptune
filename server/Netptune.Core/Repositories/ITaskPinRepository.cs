@@ -6,9 +6,9 @@ namespace Netptune.Core.Repositories;
 
 public interface ITaskPinRepository : IWorkspaceEntityRepository<TaskPin, int>
 {
-    Task<List<TaskPin>> GetVisibleInWorkspace(int workspaceId, string userId, CancellationToken cancellationToken = default);
+    Task<List<TaskPin>> GetVisibleInWorkspace(int workspaceId, string? userId, CancellationToken cancellationToken = default);
 
-    Task<List<TaskPin>> GetForBoard(int boardId, int projectId, int workspaceId, string userId, CancellationToken cancellationToken = default);
+    Task<List<TaskPin>> GetForBoard(int boardId, int projectId, int workspaceId, string? userId, CancellationToken cancellationToken = default);
 
     Task<List<TaskPin>> GetForScopeEntity(int workspaceId, TaskPinScope scope, int scopeEntityId, CancellationToken cancellationToken = default);
 

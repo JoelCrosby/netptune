@@ -46,6 +46,13 @@ public sealed class ReorderTaskPinsCommandHandler : IRequestHandler<ReorderTaskP
             return ClientResponse.Success;
         }
 
+        var userId = Identity.TryGetCurrentUserId();
+
+        if (userId is null)
+        {
+            return ClientResponse.Forbidden;
+        }
+
         var workspaceId = await Identity.GetWorkspaceId();
         var ids = items.Select(item => item.Id).Distinct().ToList();
         var pins = await TaskPins.GetByIds(ids, workspaceId, cancellationToken);
@@ -55,7 +62,6 @@ public sealed class ReorderTaskPinsCommandHandler : IRequestHandler<ReorderTaskP
             return ClientResponse.NotFound;
         }
 
-        var userId = Identity.GetCurrentUserId();
         var workspaceKey = Identity.TryGetWorkspaceKey();
         var rights = await PinsPermissions.GetWriteRights(PermissionCache, userId, workspaceKey);
         var ownsEveryPersonalPin = pins.All(pin => pin.Scope != TaskPinScope.User || pin.CreatedByUserId == userId);

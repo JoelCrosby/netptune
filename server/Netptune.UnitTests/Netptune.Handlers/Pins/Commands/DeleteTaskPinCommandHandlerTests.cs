@@ -12,6 +12,7 @@ using Netptune.Core.UnitOfWork;
 using Netptune.Handlers.Pins.Commands;
 
 using NSubstitute;
+using NSubstitute.ReturnsExtensions;
 
 using Xunit;
 
@@ -31,7 +32,7 @@ public class DeleteTaskPinCommandHandlerTests
     public DeleteTaskPinCommandHandlerTests()
     {
         Identity.GetWorkspaceId().Returns(WorkspaceId);
-        Identity.GetCurrentUserId().Returns("user-1");
+        Identity.TryGetCurrentUserId().Returns("user-1");
         Identity.TryGetWorkspaceKey().Returns("workspace");
 
         GrantRole(WorkspaceRole.Member);
@@ -94,6 +95,21 @@ public class DeleteTaskPinCommandHandlerTests
 
         result.IsSuccess.Should().BeTrue();
         pin.IsDeleted.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task Handle_ShouldRefuseAnAnonymousCaller_ReadingAPublicWorkspace()
+    {
+        Identity.TryGetCurrentUserId().ReturnsNull();
+
+        var pin = Existing(TaskPinScope.Workspace, "user-2");
+
+        var result = await Send();
+
+        result.IsForbidden.Should().BeTrue();
+        pin.IsDeleted.Should().BeFalse();
+
+        await UnitOfWork.DidNotReceive().CompleteAsync(Arg.Any<CancellationToken>());
     }
 
     private Task<ClientResponse> Send()

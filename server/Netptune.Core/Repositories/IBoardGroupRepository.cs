@@ -10,7 +10,7 @@ public interface IBoardGroupRepository : IWorkspaceEntityRepository<BoardGroup, 
 
     Task<List<BoardGroup>> GetBoardGroupsInBoard(int boardId, bool isReadonly = false, CancellationToken cancellationToken = default);
 
-    Task<List<BoardViewGroup>?> GetBoardViewGroups(int boardId, string currentUserId, string? searchTerm = null, int? sprintId = null, CancellationToken cancellationToken = default);
+    Task<List<BoardViewGroup>?> GetBoardViewGroups(int boardId, string? currentUserId, string? searchTerm = null, int? sprintId = null, CancellationToken cancellationToken = default);
 
     Task<BoardGroupTaskTarget?> GetTaskTarget(int groupId, CancellationToken cancellationToken = default);
 

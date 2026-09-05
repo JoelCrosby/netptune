@@ -1,7 +1,8 @@
-import { Component, computed, input, output } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { TaskPin, TaskPinScope } from '@core/models/task-pin';
+import { SessionService } from '@core/services/session.service';
 import { pinScopeIcons } from '@core/util/pin-scope';
 import {
   LucideCheck,
@@ -102,6 +103,10 @@ export class PinScopeMenuComponent {
 
   protected readonly lockedLabel = $localize`:Tooltip on a pin scope the caller is not allowed to set:You do not have permission to pin here`;
 
+  // The shared scopes are already covered by permissions a public workspace cannot share, but the
+  // personal one asks for none — and it still writes, so it takes a signed-in caller.
+  private readonly signedIn = inject(SessionService).isAuthenticated;
+
   private readonly canPinBoard = hasPermission(PERMISSIONS.boards.update);
   private readonly canPinProject = hasPermission(PERMISSIONS.projects.update);
   private readonly canPinWorkspace = hasPermission(
@@ -123,7 +128,7 @@ export class PinScopeMenuComponent {
         label: $localize`:Pin scope that keeps a task in view for you alone:Just for me`,
         qualifier: null,
         pinned: this.isPinned(TaskPinScope.user),
-        allowed: true,
+        allowed: this.signedIn(),
       },
     ];
 

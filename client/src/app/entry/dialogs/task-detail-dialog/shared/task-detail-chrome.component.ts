@@ -17,6 +17,7 @@ import { pinnedTasksResource } from '@core/resources/task-pin.resource';
 import { AiAssistantService } from '@core/services/ai-assistant.service';
 import { BoardViewService } from '@core/services/board-view.service';
 import { PinCommandsService } from '@core/services/pin-commands.service';
+import { SessionService } from '@core/services/session.service';
 import {
   PinScopeMenuComponent,
   PinScopeTarget,
@@ -67,21 +68,23 @@ import { TaskDetailService } from '../task-detail.service';
       }
 
       <div class="ml-auto flex shrink-0 items-center gap-0.5">
-        <app-split-button
-          #pinButton
-          [icon]="pinIcon"
-          [label]="pinLabel()"
-          [menuLabel]="pinMenuLabel"
-          [iconFilled]="isPinned()"
-          [pressed]="isPinned()"
-          (activated)="onPinScopeToggled(personalScope)">
-          <app-pin-scope-menu
-            class="w-72"
-            [pins]="pins()"
-            [target]="pinTarget()"
-            (toggled)="onPinScopeToggled($event); pinButton.closeMenu()"
-            (unpinAll)="onUnpinAll(); pinButton.closeMenu()" />
-        </app-split-button>
+        @if (canPin()) {
+          <app-split-button
+            #pinButton
+            [icon]="pinIcon"
+            [label]="pinLabel()"
+            [menuLabel]="pinMenuLabel"
+            [iconFilled]="isPinned()"
+            [pressed]="isPinned()"
+            (activated)="onPinScopeToggled(personalScope)">
+            <app-pin-scope-menu
+              class="w-72"
+              [pins]="pins()"
+              [target]="pinTarget()"
+              (toggled)="onPinScopeToggled($event); pinButton.closeMenu()"
+              (unpinAll)="onUnpinAll(); pinButton.closeMenu()" />
+          </app-split-button>
+        }
 
         @if (showActivity() && readActivity()) {
           <app-activity-menu
@@ -185,6 +188,10 @@ export class TaskDetailChromeComponent {
   readonly pinIcon = LucidePin;
   readonly personalScope = TaskPinScope.user;
   readonly pinMenuLabel = $localize`:Accessible label for the control that opens the pin scope menu:Choose where to pin`;
+
+  // Pinning always writes, even at the personal scope, so a signed-out reader of a public
+  // workspace has nowhere to put a pin.
+  readonly canPin = inject(SessionService).isAuthenticated;
 
   readonly readActivity = hasPermission(PERMISSIONS.activity.read);
   readonly canDeleteTask = hasPermission(PERMISSIONS.tasks.delete);
