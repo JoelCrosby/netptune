@@ -99,7 +99,13 @@ export class AiTranscriptService {
   }
 
   failLast(message: string) {
-    this.updateLast((last) => ({ ...last, text: message, failed: true }));
+    this.updateLast((last) => {
+      if (last.failed) {
+        return last;
+      }
+
+      return { ...last, text: message, failed: true };
+    });
   }
 
   markLastStopped() {
