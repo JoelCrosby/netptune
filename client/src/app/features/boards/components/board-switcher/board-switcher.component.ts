@@ -36,6 +36,7 @@ import {
         <app-filter-option-list
           [open]="menu.showing()"
           [multiple]="false"
+          widthClass="w-[min(24rem,calc(100vw-2rem))]"
           [options]="options()"
           [selected]="selected()"
           [listAriaLabel]="triggerLabel"

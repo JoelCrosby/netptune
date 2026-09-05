@@ -37,7 +37,7 @@ const nearBottomThresholdPx = 48;
     NgTemplateOutlet,
     SpinnerComponent,
   ],
-  host: { class: 'flex w-64 flex-col overflow-hidden rounded-md' },
+  host: { '[class]': 'hostClass()' },
   template: `
     <app-filter-input
       #search
@@ -193,6 +193,8 @@ export class FilterOptionListComponent<T> {
   /** Rendered between an option's marker and its label, for an avatar or a swatch. */
   readonly optionLeading = input<TemplateRef<{ $implicit: FilterOption<T> }>>();
   readonly listMaxHeightClass = input('max-h-72');
+  /** Widened by lists whose labels are long enough to truncate at the default. */
+  readonly widthClass = input('w-64');
   /** Off for a list rendered inline, where escape dismisses nothing. */
   readonly dismissKeyHint = input(true);
   /** Tints the picked rows, for a list whose selection is the point rather than a filter. */
@@ -218,6 +220,10 @@ export class FilterOptionListComponent<T> {
   readonly dismissed = output();
 
   readonly listId = `filter-option-list-${crypto.randomUUID()}`;
+
+  protected readonly hostClass = computed(() => {
+    return `flex flex-col overflow-hidden rounded-md ${this.widthClass()}`;
+  });
 
   protected readonly scrollerClass = computed(() => {
     return `custom-scroll overflow-y-auto p-1 ${this.listMaxHeightClass()}`;
