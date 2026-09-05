@@ -141,8 +141,8 @@ export const routes: Routes = [
         path: 'assistant',
         canActivate: [workspaceSettingsGuard],
         data: { permission: PERMISSIONS.assistant.readAllConversations },
-        title: $localize`:Page title for workspace assistant conversations:Assistant Conversations`,
-        loadComponent: () => import('./views/assistant-conversations-view/assistant-conversations-view.component').then((m) => m.AssistantConversationsViewComponent),
+        title: $localize`:Page title for the workspace assistant settings:Assistant`,
+        loadComponent: () => import('./views/workspace-assistant-view/workspace-assistant-view.component').then((m) => m.WorkspaceAssistantViewComponent),
       },
       {
         path: '**',

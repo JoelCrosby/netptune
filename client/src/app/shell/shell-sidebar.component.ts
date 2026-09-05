@@ -354,7 +354,7 @@ export class ShellSidebarComponent {
 
     if (this.canReadAssistantConversations()) {
       links.push({
-        label: $localize`:Sidebar link to workspace assistant conversation settings:Assistant`,
+        label: $localize`:Sidebar link to the workspace assistant settings:Assistant`,
         value: ['./settings/workspace/assistant'],
         icon: LucideSparkles,
       });

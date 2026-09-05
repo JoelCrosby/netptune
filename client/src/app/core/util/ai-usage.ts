@@ -43,15 +43,18 @@ export const formatTokenCount = (tokens: number): string => {
   return exact.format(tokens);
 };
 
-export const formatCost = (usage: AiTokenUsage | undefined): string => {
-  const cost = usage?.cost ?? 0;
-  const isNegligible = cost > 0 && cost < 0.01;
+export const formatCurrency = (value: number): string => {
+  const isNegligible = value > 0 && value < 0.01;
 
   if (isNegligible) {
     return `<${currency.format(0.01)}`;
   }
 
-  return currency.format(cost);
+  return currency.format(value);
+};
+
+export const formatCost = (usage: AiTokenUsage | undefined): string => {
+  return formatCurrency(usage?.cost ?? 0);
 };
 
 export const sumUsage = (usages: AiTokenUsage[]): AiTokenUsage => {
