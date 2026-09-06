@@ -2,10 +2,13 @@ import {
   booleanAttribute,
   Component,
   computed,
+  DestroyRef,
+  effect,
   inject,
   input,
 } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { LayoutService } from '@core/services/layout.service';
 import { PageWidthService } from '@core/services/page-width.service';
 import { map, of, switchMap, timer } from 'rxjs';
 import { ProgressBarComponent } from '../progress-bar/progress-bar.component';
@@ -48,6 +51,7 @@ export class PageContainerComponent {
   });
 
   private readonly pageWidth = inject(PageWidthService);
+  private readonly shellLayout = inject(LayoutService);
 
   readonly progressVisible = toSignal(
     toObservable(this.showProgress).pipe(
@@ -61,6 +65,14 @@ export class PageContainerComponent {
   );
 
   private readonly isList = computed(() => this.layout() === 'list');
+
+  constructor() {
+    const destroyRef = inject(DestroyRef);
+
+    effect(() => this.shellLayout.setPageOwnsScroll(this.isList()));
+
+    destroyRef.onDestroy(() => this.shellLayout.setPageOwnsScroll(false));
+  }
 
   private readonly capWidth = computed(() => {
     const followsPreference = this.isList() || this.followsWidthPreference();

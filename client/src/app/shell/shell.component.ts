@@ -101,7 +101,9 @@ const DOCK_ANIMATION_MS = 180;
 
       <main
         class="relative isolate col-start-2 row-start-2 overflow-y-auto"
-        [class.scrollbar-gutter-stable]="!boardBackground.imageUrl()">
+        [class.scrollbar-gutter-stable]="
+          !boardBackground.imageUrl() && !pageOwnsScroll()
+        ">
         @if (boardBackground.imageUrl(); as backgroundUrl) {
           <img
             [src]="backgroundUrl"
@@ -149,6 +151,7 @@ export class ShellComponent {
 
   authenticated = inject(SessionService).isAuthenticated;
   sideMenuOpen = this.layout.sideMenuOpen;
+  pageOwnsScroll = this.layout.pageOwnsScroll;
 
   readonly chunkLoading = signal(false);
 
