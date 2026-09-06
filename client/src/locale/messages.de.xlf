@@ -13,7 +13,7 @@
     </unit>
     <unit id="6097221033230214756">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:58</note>
+        <note category="location">src/app/core/auth/permission-items.ts:59</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -53,7 +53,7 @@
     </unit>
     <unit id="8049735056636703804">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:63</note>
+        <note category="location">src/app/core/auth/permission-items.ts:64</note>
         <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:122</note>
         <note category="location">src/app/shell/workspace-select/workspace-select.component.ts:397</note>
         <note category="description">Name of a workspace permission</note>
@@ -65,7 +65,7 @@
     </unit>
     <unit id="8228130641173001405">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:68</note>
+        <note category="location">src/app/core/auth/permission-items.ts:69</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -115,7 +115,7 @@
     </unit>
     <unit id="8576643134711566154">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:73</note>
+        <note category="location">src/app/core/auth/permission-items.ts:74</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -125,7 +125,7 @@
     </unit>
     <unit id="3561573022652726148">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:78</note>
+        <note category="location">src/app/core/auth/permission-items.ts:79</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -145,7 +145,7 @@
     </unit>
     <unit id="1761054140906700185">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:85</note>
+        <note category="location">src/app/core/auth/permission-items.ts:86</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -178,7 +178,7 @@
     </unit>
     <unit id="185504950006603388">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:90</note>
+        <note category="location">src/app/core/auth/permission-items.ts:91</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -188,7 +188,7 @@
     </unit>
     <unit id="3817505261985538845">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:95</note>
+        <note category="location">src/app/core/auth/permission-items.ts:96</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -218,7 +218,7 @@
     </unit>
     <unit id="5277744923448150585">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:100</note>
+        <note category="location">src/app/core/auth/permission-items.ts:101</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -238,7 +238,7 @@
     </unit>
     <unit id="2799785023614626500">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:105</note>
+        <note category="location">src/app/core/auth/permission-items.ts:106</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -248,7 +248,7 @@
     </unit>
     <unit id="3798028332869343379">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:110</note>
+        <note category="location">src/app/core/auth/permission-items.ts:111</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -268,7 +268,7 @@
     </unit>
     <unit id="6075892571566060535">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:117</note>
+        <note category="location">src/app/core/auth/permission-items.ts:118</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -298,7 +298,7 @@
     </unit>
     <unit id="1726548551961127827">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:122</note>
+        <note category="location">src/app/core/auth/permission-items.ts:123</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -308,7 +308,7 @@
     </unit>
     <unit id="3373039778816479588">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:127</note>
+        <note category="location">src/app/core/auth/permission-items.ts:128</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -328,7 +328,7 @@
     </unit>
     <unit id="1204089050920081335">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:132</note>
+        <note category="location">src/app/core/auth/permission-items.ts:133</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -348,7 +348,7 @@
     </unit>
     <unit id="1575435135569882153">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:139</note>
+        <note category="location">src/app/core/auth/permission-items.ts:140</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -368,7 +368,7 @@
     </unit>
     <unit id="8199152735148472244">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:144</note>
+        <note category="location">src/app/core/auth/permission-items.ts:145</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -378,7 +378,7 @@
     </unit>
     <unit id="8888203649499721040">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:149</note>
+        <note category="location">src/app/core/auth/permission-items.ts:150</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -388,7 +388,7 @@
     </unit>
     <unit id="551552314018962417">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:154</note>
+        <note category="location">src/app/core/auth/permission-items.ts:155</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -398,7 +398,7 @@
     </unit>
     <unit id="5516954416544435229">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:260</note>
+        <note category="location">src/app/core/auth/permission-items.ts:261</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -438,7 +438,7 @@
     </unit>
     <unit id="2819959485156980302">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:161</note>
+        <note category="location">src/app/core/auth/permission-items.ts:162</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -459,7 +459,7 @@
     </unit>
     <unit id="5322626006494247041">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:166</note>
+        <note category="location">src/app/core/auth/permission-items.ts:167</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -490,7 +490,7 @@
     </unit>
     <unit id="6390571285331619884">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:171</note>
+        <note category="location">src/app/core/auth/permission-items.ts:172</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -500,7 +500,7 @@
     </unit>
     <unit id="4529090892145486687">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:176</note>
+        <note category="location">src/app/core/auth/permission-items.ts:177</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -510,7 +510,7 @@
     </unit>
     <unit id="6329198644372548025">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:183</note>
+        <note category="location">src/app/core/auth/permission-items.ts:184</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -520,7 +520,7 @@
     </unit>
     <unit id="2736232235410300078">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:188</note>
+        <note category="location">src/app/core/auth/permission-items.ts:189</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -561,7 +561,7 @@
     </unit>
     <unit id="6985320992724229617">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:193</note>
+        <note category="location">src/app/core/auth/permission-items.ts:194</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -571,7 +571,7 @@
     </unit>
     <unit id="7985187851588850736">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:198</note>
+        <note category="location">src/app/core/auth/permission-items.ts:199</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -581,7 +581,7 @@
     </unit>
     <unit id="8433465645307144784">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:203</note>
+        <note category="location">src/app/core/auth/permission-items.ts:204</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -603,7 +603,7 @@
     </unit>
     <unit id="22852633810459681">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:208</note>
+        <note category="location">src/app/core/auth/permission-items.ts:209</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -613,7 +613,7 @@
     </unit>
     <unit id="7528868572765139441">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:213</note>
+        <note category="location">src/app/core/auth/permission-items.ts:214</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -633,7 +633,7 @@
     </unit>
     <unit id="8992597512682859829">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:218</note>
+        <note category="location">src/app/core/auth/permission-items.ts:219</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -643,7 +643,7 @@
     </unit>
     <unit id="2145525847134662630">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:223</note>
+        <note category="location">src/app/core/auth/permission-items.ts:224</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:78</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
@@ -654,7 +654,7 @@
     </unit>
     <unit id="7884294193521928458">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:228</note>
+        <note category="location">src/app/core/auth/permission-items.ts:229</note>
         <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:343</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
@@ -665,7 +665,7 @@
     </unit>
     <unit id="886870364473177759">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:294</note>
+        <note category="location">src/app/core/auth/permission-items.ts:295</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -675,7 +675,7 @@
     </unit>
     <unit id="4382007774315374200">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:299</note>
+        <note category="location">src/app/core/auth/permission-items.ts:300</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -736,7 +736,7 @@
     </unit>
     <unit id="5179126202645575816">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:304</note>
+        <note category="location">src/app/core/auth/permission-items.ts:305</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -756,7 +756,7 @@
     </unit>
     <unit id="31482867150839515">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:309</note>
+        <note category="location">src/app/core/auth/permission-items.ts:310</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -776,7 +776,7 @@
     </unit>
     <unit id="3002689292416921946">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:314</note>
+        <note category="location">src/app/core/auth/permission-items.ts:315</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -815,7 +815,7 @@
     </unit>
     <unit id="3398156745191610421">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:321</note>
+        <note category="location">src/app/core/auth/permission-items.ts:322</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -825,7 +825,7 @@
     </unit>
     <unit id="5157376787376464663">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:326</note>
+        <note category="location">src/app/core/auth/permission-items.ts:327</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -835,7 +835,6 @@
     </unit>
     <unit id="8821114980467455667">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:407,409</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:27,30</note>
         <note category="description">Counts tokens a conversation has cost</note>
       </notes>
@@ -846,8 +845,8 @@
     </unit>
     <unit id="8822963631978254276">
       <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-banner.component.ts:113</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:64,67</note>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:684</note>
         <note category="description">Button that changes the assistant spend cap</note>
       </notes>
       <segment state="translated">
@@ -857,7 +856,7 @@
     </unit>
     <unit id="8823075031689391120">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:331</note>
+        <note category="location">src/app/core/auth/permission-items.ts:332</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -867,7 +866,7 @@
     </unit>
     <unit id="8824506098366714045">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:313,314</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-privacy-card.component.ts:64,66</note>
         <note category="description">Toggle that shares example values with the assistant</note>
       </notes>
       <segment>
@@ -887,7 +886,7 @@
     </unit>
     <unit id="8933548881178191171">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:336</note>
+        <note category="location">src/app/core/auth/permission-items.ts:337</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -897,7 +896,7 @@
     </unit>
     <unit id="5659725016755840642">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:343</note>
+        <note category="location">src/app/core/auth/permission-items.ts:344</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -907,7 +906,7 @@
     </unit>
     <unit id="5800916510887895585">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:348</note>
+        <note category="location">src/app/core/auth/permission-items.ts:349</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -949,7 +948,7 @@
     </unit>
     <unit id="8144780536536072093">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:353</note>
+        <note category="location">src/app/core/auth/permission-items.ts:354</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -959,7 +958,7 @@
     </unit>
     <unit id="7216658744747223519">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:358</note>
+        <note category="location">src/app/core/auth/permission-items.ts:359</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -969,7 +968,7 @@
     </unit>
     <unit id="3949141401593763883">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:363</note>
+        <note category="location">src/app/core/auth/permission-items.ts:364</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -979,7 +978,7 @@
     </unit>
     <unit id="4217244185667688873">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:370</note>
+        <note category="location">src/app/core/auth/permission-items.ts:371</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -999,7 +998,7 @@
     </unit>
     <unit id="2967407594735372079">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:375</note>
+        <note category="location">src/app/core/auth/permission-items.ts:376</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1009,7 +1008,7 @@
     </unit>
     <unit id="6120183880516360710">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:382</note>
+        <note category="location">src/app/core/auth/permission-items.ts:383</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1030,7 +1029,7 @@
     </unit>
     <unit id="5258368564796629743">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:387</note>
+        <note category="location">src/app/core/auth/permission-items.ts:388</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1080,7 +1079,7 @@
     </unit>
     <unit id="3781527988196646385">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:394</note>
+        <note category="location">src/app/core/auth/permission-items.ts:395</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1090,7 +1089,7 @@
     </unit>
     <unit id="7041821873420776665">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:401</note>
+        <note category="location">src/app/core/auth/permission-items.ts:402</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1110,7 +1109,7 @@
     </unit>
     <unit id="4885466789264460695">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:406</note>
+        <note category="location">src/app/core/auth/permission-items.ts:407</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1140,7 +1139,7 @@
     </unit>
     <unit id="3223868158732972286">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:413</note>
+        <note category="location">src/app/core/auth/permission-items.ts:414</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1150,7 +1149,7 @@
     </unit>
     <unit id="4288759217931050376">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:418</note>
+        <note category="location">src/app/core/auth/permission-items.ts:419</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1160,7 +1159,7 @@
     </unit>
     <unit id="3510542800119420038">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:425</note>
+        <note category="location">src/app/core/auth/permission-items.ts:426</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1180,7 +1179,7 @@
     </unit>
     <unit id="5307305327820813211">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:430</note>
+        <note category="location">src/app/core/auth/permission-items.ts:431</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1190,7 +1189,7 @@
     </unit>
     <unit id="7544555877603826527">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:444</note>
+        <note category="location">src/app/core/auth/permission-items.ts:455</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1222,7 +1221,7 @@
     </unit>
     <unit id="9018075259180774811">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:449</note>
+        <note category="location">src/app/core/auth/permission-items.ts:460</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1232,7 +1231,7 @@
     </unit>
     <unit id="2122122363042197554">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:456</note>
+        <note category="location">src/app/core/auth/permission-items.ts:467</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1274,7 +1273,7 @@
     </unit>
     <unit id="5867014445190639814">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:461</note>
+        <note category="location">src/app/core/auth/permission-items.ts:472</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1294,7 +1293,7 @@
     </unit>
     <unit id="3664214651312931514">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:466</note>
+        <note category="location">src/app/core/auth/permission-items.ts:477</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1315,7 +1314,7 @@
     </unit>
     <unit id="2839504544577956852">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:471</note>
+        <note category="location">src/app/core/auth/permission-items.ts:482</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1325,7 +1324,7 @@
     </unit>
     <unit id="1618471987006077444">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:476</note>
+        <note category="location">src/app/core/auth/permission-items.ts:487</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1355,7 +1354,7 @@
     </unit>
     <unit id="6572526459338060111">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:483</note>
+        <note category="location">src/app/core/auth/permission-items.ts:494</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1365,7 +1364,7 @@
     </unit>
     <unit id="2248388072026596689">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:488</note>
+        <note category="location">src/app/core/auth/permission-items.ts:499</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1385,7 +1384,7 @@
     </unit>
     <unit id="5162962829978601498">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:493</note>
+        <note category="location">src/app/core/auth/permission-items.ts:504</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1405,7 +1404,7 @@
     </unit>
     <unit id="6247029488700953689">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:498</note>
+        <note category="location">src/app/core/auth/permission-items.ts:509</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1415,7 +1414,7 @@
     </unit>
     <unit id="8604673556809626581">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:267</note>
+        <note category="location">src/app/core/auth/permission-items.ts:268</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="initial">
@@ -1425,7 +1424,7 @@
     </unit>
     <unit id="8604924961258321909">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:505</note>
+        <note category="location">src/app/core/auth/permission-items.ts:516</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1445,7 +1444,7 @@
     </unit>
     <unit id="3975259698791708574">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:510</note>
+        <note category="location">src/app/core/auth/permission-items.ts:521</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1465,7 +1464,7 @@
     </unit>
     <unit id="1848580203082626434">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:515</note>
+        <note category="location">src/app/core/auth/permission-items.ts:526</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1495,7 +1494,7 @@
     </unit>
     <unit id="734924568623984342">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:520</note>
+        <note category="location">src/app/core/auth/permission-items.ts:531</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -2264,7 +2263,7 @@
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:34</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:43</note>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:122,124</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-header-actions.component.ts:56,59</note>
         <note category="description">Name of the Anthropic AI provider</note>
       </notes>
       <segment state="translated">
@@ -2436,7 +2435,7 @@
     </unit>
     <unit id="6264002090847080538">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:245</note>
+        <note category="location">src/app/core/auth/permission-items.ts:246</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -2793,7 +2792,7 @@
     </unit>
     <unit id="1293241675469976608">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:250</note>
+        <note category="location">src/app/core/auth/permission-items.ts:251</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -2996,7 +2995,7 @@
     </unit>
     <unit id="2957627656155649168">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:233</note>
+        <note category="location">src/app/core/auth/permission-items.ts:234</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -3809,7 +3808,7 @@
     </unit>
     <unit id="2042627893306275814">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:162,164</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-transcript.component.ts:25,27</note>
         <note category="description">Accessible label for the button that leaves a conversation</note>
       </notes>
       <segment state="translated">
@@ -3972,7 +3971,7 @@
     </unit>
     <unit id="885182347182627513">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:294,296</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-privacy-card.component.ts:49,52</note>
         <note category="description">Heading of the assistant data sampling setting</note>
       </notes>
       <segment>
@@ -5157,10 +5156,21 @@
         <target>Projektdetails</target>
       </segment>
     </unit>
+    <unit id="2575054327998237831">
+      <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:448</note>
+        <note category="description">Name of a workspace permission</note>
+      </notes>
+      <segment state="translated">
+        <source>Assistant Web Access</source>
+        <target>Assistent-Webzugriff</target>
+      </segment>
+    </unit>
     <unit id="2578732368187466916">
       <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:148</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:135,139</note>
-        <note category="description">Column heading for assistant cost</note>
+        <note category="description">Column heading for what a conversation cost</note>
       </notes>
       <segment state="translated">
         <source>Cost</source>
@@ -5240,6 +5250,16 @@
       <segment state="translated">
         <source>Review what will be created.</source>
         <target>Prüfen Sie, was erstellt wird.</target>
+      </segment>
+    </unit>
+    <unit id="5631710543421517153">
+      <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:438</note>
+        <note category="description">Name of a workspace permission</note>
+      </notes>
+      <segment state="translated">
+        <source>Use Assistant</source>
+        <target>Assistent verwenden</target>
       </segment>
     </unit>
     <unit id="6307174276781140101">
@@ -5568,7 +5588,7 @@
     </unit>
     <unit id="1225327047686807431">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:301,303</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-privacy-card.component.ts:54,60</note>
         <note category="description">Explains what turning off assistant data sampling does</note>
       </notes>
       <segment>
@@ -5753,7 +5773,7 @@
     </unit>
     <unit id="1212736918921252015">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:558</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-banner.component.ts:71</note>
         <note category="description">Heading shown when no provider key is stored</note>
       </notes>
       <segment state="translated">
@@ -6543,7 +6563,7 @@
     </unit>
     <unit id="3071051343671085363">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:99,103</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-header-actions.component.ts:34,38</note>
         <note category="description">Link to the workspace audit log</note>
       </notes>
       <segment state="translated">
@@ -7020,7 +7040,7 @@
     </unit>
     <unit id="1494629498718440079">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:255</note>
+        <note category="location">src/app/core/auth/permission-items.ts:256</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -7122,7 +7142,7 @@
     </unit>
     <unit id="6330395320571887799">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:682</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-banner.component.ts:111</note>
         <note category="description">Heading warning that the spend cap is nearly used up</note>
       </notes>
       <segment state="translated">
@@ -7371,6 +7391,16 @@
         <target>Passwörter stimmen nicht überein</target>
       </segment>
     </unit>
+    <unit id="6452372740127749380">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:130</note>
+        <note category="description">Column heading for the number of messages in a conversation</note>
+      </notes>
+      <segment state="translated">
+        <source>Messages</source>
+        <target>Nachrichten</target>
+      </segment>
+    </unit>
     <unit id="21719844597391730">
       <notes>
         <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:36,38</note>
@@ -7588,7 +7618,6 @@
     </unit>
     <unit id="4101852533995361725">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:403,405</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:25,27</note>
         <note category="description">Counts messages in a stored conversation</note>
       </notes>
@@ -9482,7 +9511,7 @@
     </unit>
     <unit id="6911785432558160839">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:240</note>
+        <note category="location">src/app/core/auth/permission-items.ts:241</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -9810,8 +9839,9 @@
     </unit>
     <unit id="4548722462586549001">
       <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:139</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:133,134</note>
-        <note category="description">Column heading counting assistant tokens</note>
+        <note category="description">Column heading for the tokens a conversation used</note>
       </notes>
       <segment state="translated">
         <source>Tokens</source>
@@ -9830,7 +9860,7 @@
     </unit>
     <unit id="7284407085760520822">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:347,349</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:40,43</note>
         <note category="description">Heading of the assistant conversation list</note>
       </notes>
       <segment state="translated">
@@ -10493,8 +10523,9 @@
     </unit>
     <unit id="6297950127540572260">
       <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:122</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:129,130</note>
-        <note category="description">Column heading for a workspace member</note>
+        <note category="description">Column heading for the member who held a conversation</note>
       </notes>
       <segment state="translated">
         <source>Member</source>
@@ -11403,7 +11434,7 @@
     </unit>
     <unit id="8375416460166159043">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:287</note>
+        <note category="location">src/app/core/auth/permission-items.ts:288</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="initial">
@@ -11693,7 +11724,7 @@
     </unit>
     <unit id="3692225495250675697">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:571</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-banner.component.ts:84</note>
         <note category="description">Button that turns the assistant back on</note>
       </notes>
       <segment state="translated">
@@ -12152,14 +12183,14 @@
         <target>Ein einzelnes Projekt</target>
       </segment>
     </unit>
-    <unit id="94147709329597430">
+    <unit id="5306473977542913614">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:325,327</note>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:109,112</note>
         <note category="description">Heading of the assistant activity group</note>
       </notes>
       <segment state="translated">
-        <source> Activity </source>
-        <target> Aktivität </target>
+        <source>Activity</source>
+        <target>Aktivität</target>
       </segment>
     </unit>
     <unit id="942705677413808169">
@@ -12201,6 +12232,16 @@
       <segment state="translated">
         <source>A single sprint</source>
         <target>Ein einzelner Sprint</target>
+      </segment>
+    </unit>
+    <unit id="2806584324064503371">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:60,62</note>
+        <note category="description">Shown when the assistant conversation list fails to load</note>
+      </notes>
+      <segment state="translated">
+        <source>Conversations could not be loaded.</source>
+        <target>Die Unterhaltungen konnten nicht geladen werden.</target>
       </segment>
     </unit>
     <unit id="2807689216255894412">
@@ -12628,7 +12669,7 @@
     </unit>
     <unit id="4264569873878205807">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:111,113</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-header-actions.component.ts:46,50</note>
         <note category="description">Button that adds an assistant connection</note>
       </notes>
       <segment state="translated">
@@ -13900,7 +13941,7 @@
     </unit>
     <unit id="7329865395750709453">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:273,275</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-privacy-card.component.ts:30,35</note>
         <note category="description">Explains what turning the assistant off does</note>
       </notes>
       <segment state="translated">
@@ -14295,6 +14336,16 @@
         <target>Aufgaben</target>
       </segment>
     </unit>
+    <unit id="6909153285279943756">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:64,68</note>
+        <note category="description">Plural noun for assistant conversations, used in the row summary</note>
+      </notes>
+      <segment state="translated">
+        <source>conversations</source>
+        <target>Unterhaltungen</target>
+      </segment>
+    </unit>
     <unit id="3553216189604488439">
       <notes>
         <note category="location">src/app/features/boards/components/boards-grid/boards-grid-card.component.ts:83</note>
@@ -14307,7 +14358,7 @@
     </unit>
     <unit id="3557530844157929330">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:570</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-banner.component.ts:83</note>
         <note category="description">Explains what the assistant being off means</note>
       </notes>
       <segment state="translated">
@@ -15081,7 +15132,7 @@
     </unit>
     <unit id="214787083175103202">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:140,142</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-header-actions.component.ts:73,76</note>
         <note category="description">Name of the assistant web search connection</note>
       </notes>
       <segment state="translated">
@@ -15364,7 +15415,7 @@
     </unit>
     <unit id="6500565621649261493">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:284,285</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-privacy-card.component.ts:39,41</note>
         <note category="description">Toggle that enables the assistant for a workspace</note>
       </notes>
       <segment state="translated">
@@ -15594,7 +15645,7 @@
     </unit>
     <unit id="3313172740302558016">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:188,190</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-transcript.component.ts:50,53</note>
         <note category="description">Counts tokens written to the provider prompt cache</note>
       </notes>
       <segment state="translated">
@@ -16347,7 +16398,7 @@
     </unit>
     <unit id="3043347010343445079">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:258,260</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-privacy-card.component.ts:15,20</note>
         <note category="description">Heading of the assistant access and privacy card</note>
       </notes>
       <segment state="translated">
@@ -16594,7 +16645,7 @@
     </unit>
     <unit id="4435645098786961170">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:179,180</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-transcript.component.ts:42,43</note>
         <note category="description">Counts tokens returned by the model</note>
       </notes>
       <segment state="translated">
@@ -17381,7 +17432,7 @@
     </unit>
     <unit id="380334853194915857">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:277</note>
+        <note category="location">src/app/core/auth/permission-items.ts:278</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="initial">
@@ -17401,8 +17452,9 @@
     </unit>
     <unit id="4717491147966397069">
       <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:115</note>
         <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:82,84</note>
-        <note category="description">Accessible name of the assistant transcript</note>
+        <note category="description">Column heading for an assistant conversation</note>
       </notes>
       <segment state="translated">
         <source>Conversation</source>
@@ -18430,7 +18482,7 @@
     </unit>
     <unit id="4797214229335185452">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:182,185</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-transcript.component.ts:45,48</note>
         <note category="description">Counts tokens read from the provider prompt cache</note>
       </notes>
       <segment state="translated">
@@ -18605,7 +18657,7 @@
         <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:87</note>
         <note category="location">src/app/features/settings/settings.routes.ts:144</note>
         <note category="location">src/app/features/settings/views/personal-assistant-settings-view/personal-assistant-settings-view.component.ts:17,21</note>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:90,91</note>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:52,54</note>
         <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:42,45</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:357</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:413</note>
@@ -19007,7 +19059,7 @@
     </unit>
     <unit id="7264838797878508480">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:272</note>
+        <note category="location">src/app/core/auth/permission-items.ts:273</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="initial">
@@ -19315,7 +19367,7 @@
     </unit>
     <unit id="3108472352698480006">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:427,429</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:88,90</note>
         <note category="description">Heading when no assistant conversations exist</note>
       </notes>
       <segment state="translated">
@@ -19566,7 +19618,7 @@
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:39</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:48</note>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:131,133</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-header-actions.component.ts:64,67</note>
         <note category="description">Name of the OpenAI provider</note>
       </notes>
       <segment state="translated">
@@ -20198,7 +20250,7 @@
     </unit>
     <unit id="4026751160851308362">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:355,359</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:47,51</note>
         <note category="description">Explains what an admin sees on the assistant conversations page</note>
       </notes>
       <segment state="translated">
@@ -20980,7 +21032,7 @@
     </unit>
     <unit id="5870315426897771164">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:560</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-banner.component.ts:73</note>
         <note category="description">Button that adds a provider key</note>
       </notes>
       <segment state="translated">
@@ -22610,7 +22662,7 @@
     </unit>
     <unit id="3341156395496259696">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:282</note>
+        <note category="location">src/app/core/auth/permission-items.ts:283</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="initial">
@@ -22763,7 +22815,7 @@
     </unit>
     <unit id="2215333818982696562">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:569</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-banner.component.ts:82</note>
         <note category="description">Heading shown when the assistant is off</note>
       </notes>
       <segment state="translated">
@@ -23269,7 +23321,7 @@
     </unit>
     <unit id="5383274518270102702">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:437</note>
+        <note category="location">src/app/core/auth/permission-items.ts:443</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -23309,7 +23361,7 @@
     </unit>
     <unit id="6601864657708472888">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:268,270</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-privacy-card.component.ts:25,28</note>
         <note category="description">Heading of the assistant access setting</note>
       </notes>
       <segment state="translated">
@@ -23481,7 +23533,7 @@
     </unit>
     <unit id="1234017355167373884">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:683</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-banner.component.ts:112</note>
         <note category="description">Explains what happens when the assistant spend cap is reached</note>
       </notes>
       <segment state="translated">
@@ -23509,14 +23561,14 @@
         <target>Leeren</target>
       </segment>
     </unit>
-    <unit id="2046716892243700803">
+    <unit id="6492831808763156510">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:241,243</note>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:91,94</note>
         <note category="description">Heading of the assistant setup group</note>
       </notes>
       <segment state="translated">
-        <source> Setup </source>
-        <target> Einrichtung </target>
+        <source>Setup</source>
+        <target>Einrichtung</target>
       </segment>
     </unit>
     <unit id="2049427639275424472">
@@ -23849,7 +23901,7 @@
     </unit>
     <unit id="7136018875175606726">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:177,178</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-transcript.component.ts:40,41</note>
         <note category="description">Counts tokens sent to the model</note>
       </notes>
       <segment state="translated">
@@ -24434,6 +24486,16 @@
         <target>Suchen</target>
       </segment>
     </unit>
+    <unit id="4582943253260659127">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:156</note>
+        <note category="description">Column heading for when a conversation was last active</note>
+      </notes>
+      <segment state="translated">
+        <source>Last message</source>
+        <target>Letzte Nachricht</target>
+      </segment>
+    </unit>
     <unit id="8020170893392581081">
       <notes>
         <note category="location">src/app/static/components/search-input/search-input.component.ts:50,51</note>
@@ -24576,16 +24638,6 @@
       <segment state="translated">
         <source>Go to previous page</source>
         <target>Zur vorherigen Seite</target>
-      </segment>
-    </unit>
-    <unit id="622130541512871637">
-      <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:367,368</note>
-        <note category="description">Accessible label while conversations load</note>
-      </notes>
-      <segment state="translated">
-        <source>Loading conversations</source>
-        <target>Unterhaltungen werden geladen</target>
       </segment>
     </unit>
     <unit id="5430045444410376992">
@@ -24746,7 +24798,7 @@
     </unit>
     <unit id="7326320162722122295">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:559</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-banner.component.ts:72</note>
         <note category="description">Explains why a workspace key helps</note>
       </notes>
       <segment state="translated">
@@ -24849,7 +24901,7 @@
     </unit>
     <unit id="1978378776147370036">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:432,435</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:92,93</note>
         <note category="description">Explains why the assistant conversation list is empty</note>
       </notes>
       <segment state="translated">
