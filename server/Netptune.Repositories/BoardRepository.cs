@@ -199,9 +199,7 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
                 MetaInfo = x.MetaInfo,
                 OwnerUsername = x.Owner == null
                     ? string.Empty
-                    : string.IsNullOrEmpty(x.Owner.Firstname) && string.IsNullOrEmpty(x.Owner.Lastname)
-                        ? x.Owner.UserName!
-                        : x.Owner.Firstname + " " + x.Owner.Lastname,
+                    : x.Owner.DisplayName,
             })
             .FirstOrDefaultAsync(cancellationToken);
     }

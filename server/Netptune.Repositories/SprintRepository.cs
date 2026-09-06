@@ -291,9 +291,7 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
             WorkspaceKey = task.Workspace!.Slug,
             CreatedAt = task.CreatedAt,
             UpdatedAt = task.UpdatedAt,
-            OwnerUsername = string.IsNullOrEmpty(task.Owner!.Firstname) && string.IsNullOrEmpty(task.Owner.Lastname)
-                ? task.Owner.UserName!
-                : task.Owner.Firstname + " " + task.Owner.Lastname,
+            OwnerUsername = task.Owner!.DisplayName,
             OwnerPictureUrl = task.Owner.PictureUrl,
             OwnerIsServiceAccount = task.Owner.UserType == AppUserType.ServiceAccount,
             ProjectName = task.Project == null ? string.Empty : task.Project.Name,

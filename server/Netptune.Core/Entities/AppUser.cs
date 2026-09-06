@@ -19,7 +19,16 @@ public class AppUser : IdentityUser, IKeyedEntity<string>
 
     public string? PictureUrl { get; set; }
 
-    public string DisplayName => GetDisplayName();
+    private string? DisplayNameField;
+
+    // Mapped to a stored computed column so queries can project and sort on the
+    // display name in SQL rather than repeating the expression. A user that has
+    // not been read back from the database yet falls back to computing it here.
+    public string DisplayName
+    {
+        get => DisplayNameField ?? GetDisplayName();
+        private set => DisplayNameField = value;
+    }
 
     private string GetDisplayName()
     {

@@ -179,9 +179,7 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
             Description = x.Description,
             RepositoryUrl = x.RepositoryUrl,
             WorkspaceId = x.WorkspaceId,
-            OwnerDisplayName = string.IsNullOrEmpty(x.Owner!.Firstname) && string.IsNullOrEmpty(x.Owner.Lastname)
-                ? x.Owner.UserName!
-                : x.Owner.Firstname + " " + x.Owner.Lastname,
+            OwnerDisplayName = x.Owner!.DisplayName,
             OwnerPictureUrl = x.Owner.PictureUrl,
             UpdatedAt = x.UpdatedAt,
             CreatedAt = x.CreatedAt,

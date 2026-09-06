@@ -165,9 +165,7 @@ public class WorkspaceRepository : AuditableRepository<DataContext, Workspace, i
                     .Select(member => new AssigneeViewModel
                     {
                         Id = member.User.Id,
-                        DisplayName = string.IsNullOrEmpty(member.User.Firstname) && string.IsNullOrEmpty(member.User.Lastname)
-                            ? member.User.UserName!
-                            : member.User.Firstname + " " + member.User.Lastname,
+                        DisplayName = member.User.DisplayName,
                         PictureUrl = member.User.PictureUrl,
                         IsServiceAccount = member.User.UserType == AppUserType.ServiceAccount,
                     })

@@ -763,9 +763,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             UpdatedAt = x.UpdatedAt,
             OwnerUsername = x.Owner == null
                 ? string.Empty
-                : string.IsNullOrEmpty(x.Owner.Firstname) && string.IsNullOrEmpty(x.Owner.Lastname)
-                    ? x.Owner.UserName!
-                    : x.Owner.Firstname + " " + x.Owner.Lastname,
+                : x.Owner.DisplayName,
             OwnerPictureUrl = x.Owner == null ? null : x.Owner.PictureUrl,
             OwnerIsServiceAccount = x.Owner != null && x.Owner.UserType == AppUserType.ServiceAccount,
             ProjectName = x.Project == null ? string.Empty : x.Project.Name,

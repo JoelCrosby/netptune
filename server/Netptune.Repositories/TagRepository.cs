@@ -65,9 +65,7 @@ public class TagRepository : NamedWorkspaceEntityRepository<DataContext, Tag, in
                 Id = x.Id,
                 Name = x.Name,
                 OwnerId = x.OwnerId!,
-                OwnerName = string.IsNullOrEmpty(x.Owner!.Firstname) && string.IsNullOrEmpty(x.Owner.Lastname)
-                    ? x.Owner.UserName!
-                    : x.Owner.Firstname + " " + x.Owner.Lastname,
+                OwnerName = x.Owner!.DisplayName,
             })
             .FirstOrDefaultAsync(cancellationToken);
     }
@@ -97,9 +95,7 @@ public class TagRepository : NamedWorkspaceEntityRepository<DataContext, Tag, in
                 Id = x.Id,
                 Name = x.Name,
                 OwnerId = x.OwnerId!,
-                OwnerName = string.IsNullOrEmpty(x.Owner!.Firstname) && string.IsNullOrEmpty(x.Owner.Lastname)
-                    ? x.Owner.UserName!
-                    : x.Owner.Firstname + " " + x.Owner.Lastname,
+                OwnerName = x.Owner!.DisplayName,
             })
             .ToListAsync(cancellationToken);
 
@@ -143,9 +139,7 @@ public class TagRepository : NamedWorkspaceEntityRepository<DataContext, Tag, in
                 Id = tag.Id,
                 Name = tag.Name,
                 OwnerId = tag.OwnerId!,
-                OwnerName = string.IsNullOrEmpty(tag.Owner!.Firstname) && string.IsNullOrEmpty(tag.Owner.Lastname)
-                    ? tag.Owner.UserName!
-                    : tag.Owner.Firstname + " " + tag.Owner.Lastname,
+                OwnerName = tag.Owner!.DisplayName,
                 TaskCount = tag.ProjectTaskTags.Count(taskTag => !taskTag.ProjectTask!.IsDeleted),
             });
     }

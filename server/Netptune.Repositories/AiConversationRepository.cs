@@ -112,9 +112,7 @@ public class AiConversationRepository(DataContext context, IDbConnectionFactory 
             .GroupBy(message => new
             {
                 message.Conversation.UserId,
-                DisplayName = string.IsNullOrEmpty(message.Conversation.User.Firstname) && string.IsNullOrEmpty(message.Conversation.User.Lastname)
-                    ? message.Conversation.User.UserName!
-                    : message.Conversation.User.Firstname + " " + message.Conversation.User.Lastname,
+                DisplayName = message.Conversation.User.DisplayName,
                 message.Model,
                 Day = message.CreatedAt.Date,
             })
@@ -204,9 +202,7 @@ public class AiConversationRepository(DataContext context, IDbConnectionFactory 
             Id = conversation.Id,
             Title = conversation.Title,
             UserId = conversation.UserId,
-            UserDisplayName = string.IsNullOrEmpty(conversation.User.Firstname) && string.IsNullOrEmpty(conversation.User.Lastname)
-                ? conversation.User.UserName!
-                : conversation.User.Firstname + " " + conversation.User.Lastname,
+            UserDisplayName = conversation.User.DisplayName,
             UserPictureUrl = conversation.User.PictureUrl,
             Provider = conversation.Provider,
             Model = conversation.Model,
@@ -236,9 +232,7 @@ public class AiConversationRepository(DataContext context, IDbConnectionFactory 
         return request.SortBy?.ToLowerInvariant() switch
         {
             "title" => Order(conversation => conversation.Title),
-            "user" => Order(conversation => string.IsNullOrEmpty(conversation.User.Firstname) && string.IsNullOrEmpty(conversation.User.Lastname)
-                ? conversation.User.UserName!
-                : conversation.User.Firstname + " " + conversation.User.Lastname),
+            "user" => Order(conversation => conversation.User.DisplayName),
             "messagecount" => Order(conversation => conversation.MessageCount),
             "tokens" => Order(conversation => conversation.Messages.Sum(message =>
                 message.InputTokens + message.OutputTokens + message.CacheReadTokens + message.CacheCreationTokens)),

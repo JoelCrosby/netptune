@@ -126,9 +126,7 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
                 EntityId = y.EntityId,
                 EntityType = entityType,
                 UserId = y.UserId,
-                UserUsername = string.IsNullOrEmpty(y.User.Firstname) && string.IsNullOrEmpty(y.User.Lastname)
-                    ? y.User.UserName!
-                    : y.User.Firstname + " " + y.User.Lastname,
+                UserUsername = y.User.DisplayName,
                 UserPictureUrl = y.User.PictureUrl,
                 UserIsServiceAccount = y.User.UserType == AppUserType.ServiceAccount,
                 Agent = y.Agent,
@@ -433,24 +431,7 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
             var entityType = hasKnownEntityType
                 ? parsedEntityType
                 : EntityType.Workspace;
-            var actorIsUnknown = actor is null;
-            var actorHasNoDisplayName = !actorIsUnknown &&
-                string.IsNullOrEmpty(actor!.Firstname) &&
-                string.IsNullOrEmpty(actor.Lastname);
-            string actorDisplayName;
-
-            if (actorIsUnknown)
-            {
-                actorDisplayName = "System";
-            }
-            else if (actorHasNoDisplayName)
-            {
-                actorDisplayName = actor!.UserName!;
-            }
-            else
-            {
-                actorDisplayName = actor!.Firstname + " " + actor.Lastname;
-            }
+            var actorDisplayName = actor?.DisplayName ?? "System";
 
             var hasNumericEntityId = int.TryParse(record.SubjectId, out var entityId);
 

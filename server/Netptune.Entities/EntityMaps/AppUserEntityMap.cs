@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
+using Netptune.Entities.Sql;
 
 namespace Netptune.Entities.EntityMaps;
 
@@ -28,5 +29,9 @@ public class AppUserEntityMap : IEntityTypeConfiguration<AppUser>
         builder
             .Property(user => user.PictureUrl)
             .HasMaxLength(2048);
+
+        builder
+            .Property(user => user.DisplayName)
+            .HasComputedColumnSql(SqlScripts.UserDisplayName, stored: true);
     }
 }

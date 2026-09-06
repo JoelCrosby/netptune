@@ -65,9 +65,7 @@ public class CommentRepository : WorkspaceEntityRepository<DataContext, Comment,
         return x => new CommentViewModel
         {
             Id = x.Id,
-            UserDisplayName = string.IsNullOrEmpty(x.Owner!.Firstname) && string.IsNullOrEmpty(x.Owner.Lastname)
-                ? x.Owner.UserName!
-                : x.Owner.Firstname + " " + x.Owner.Lastname,
+            UserDisplayName = x.Owner!.DisplayName,
             UserDisplayImage = x.Owner.PictureUrl,
             UserIsServiceAccount = x.Owner.UserType == AppUserType.ServiceAccount,
             UserId = x.OwnerId!,
@@ -82,9 +80,7 @@ public class CommentRepository : WorkspaceEntityRepository<DataContext, Comment,
             Mentions = x.Mentions.Select(m => new CommentMentionViewModel
             {
                 UserId = m.UserId,
-                DisplayName = string.IsNullOrEmpty(m.User.Firstname) && string.IsNullOrEmpty(m.User.Lastname)
-                    ? m.User.UserName!
-                    : m.User.Firstname + " " + m.User.Lastname,
+                DisplayName = m.User.DisplayName,
             }).ToList(),
             CreatedAt = x.CreatedAt,
             UpdatedAt = x.UpdatedAt,

@@ -109,9 +109,7 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
             .Select(user => new AssigneeViewModel
             {
                 Id = user.Id,
-                DisplayName = string.IsNullOrEmpty(user.Firstname) && string.IsNullOrEmpty(user.Lastname)
-                    ? user.UserName!
-                    : user.Firstname + " " + user.Lastname,
+                DisplayName = user.DisplayName,
                 PictureUrl = user.PictureUrl,
                 IsServiceAccount = user.UserType == AppUserType.ServiceAccount,
             })
@@ -170,9 +168,7 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
             .Select(user => new UserSelectOptionViewModel
             {
                 Id = user.Id,
-                DisplayName = string.IsNullOrEmpty(user.Firstname) && string.IsNullOrEmpty(user.Lastname)
-                    ? user.UserName!
-                    : user.Firstname + " " + user.Lastname,
+                DisplayName = user.DisplayName,
                 Email = user.Email,
                 PictureUrl = user.PictureUrl,
                 IsServiceAccount = user.UserType == AppUserType.ServiceAccount,
