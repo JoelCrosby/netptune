@@ -20,6 +20,7 @@ public sealed class ApiContainerTests
         "Netptune.Core.Messaging.IEmailService",
         "Netptune.Core.Preferences.IPreferenceDefinitionRegistry",
         "Netptune.Core.Services.Ai.IAiCancellationRegistry",
+        "Netptune.Core.Services.Ai.IAiSpendService",
         "Netptune.Core.Services.Ai.IAiUndoCatalog",
         "Netptune.Core.Services.Automations.IAutomationTriggerEvaluator",
         "Netptune.Core.Services.IStorageService",
