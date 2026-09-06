@@ -28,15 +28,6 @@
         <source>Relations could not be loaded.</source>
       </segment>
     </unit>
-    <unit id="8048392167268197249">
-      <notes>
-        <note category="location">src/app/features/settings/settings.routes.ts:144</note>
-        <note category="description">Page title for workspace assistant conversations</note>
-      </notes>
-      <segment>
-        <source>Assistant Conversations</source>
-      </segment>
-    </unit>
     <unit id="8048507441601477448">
       <notes>
         <note category="location">src/app/core/util/pin-scope.ts:41</note>
@@ -100,6 +91,15 @@
       </notes>
       <segment>
         <source>Bold</source>
+      </segment>
+    </unit>
+    <unit id="8572858781220832020">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:145</note>
+        <note category="description">Explains where personal keys fit in</note>
+      </notes>
+      <segment>
+        <source>Members can still bring their own key</source>
       </segment>
     </unit>
     <unit id="8576643134711566154">
@@ -184,6 +184,15 @@
       </notes>
       <segment>
         <source> of <ph id="0" equiv="LIMIT" disp="{{ usage.limitBytes | fileSize // i18n(ph=&quot;LIMIT&quot;) }}"/> </source>
+      </segment>
+    </unit>
+    <unit id="5276810742763015515">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:80,82</note>
+        <note category="description">Label for when a key was stored</note>
+      </notes>
+      <segment>
+        <source> Added </source>
       </segment>
     </unit>
     <unit id="5277744923448150585">
@@ -744,12 +753,22 @@
     </unit>
     <unit id="8821114980467455667">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:313,315</note>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:407,409</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:27,30</note>
         <note category="description">Counts tokens a conversation has cost</note>
       </notes>
       <segment>
         <source>tokens</source>
+      </segment>
+    </unit>
+    <unit id="8822963631978254276">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:64,67</note>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:684</note>
+        <note category="description">Button that changes the assistant spend cap</note>
+      </notes>
+      <segment>
+        <source>Edit cap</source>
       </segment>
     </unit>
     <unit id="8823075031689391120">
@@ -763,7 +782,7 @@
     </unit>
     <unit id="8824506098366714045">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:180,181</note>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:313,314</note>
         <note category="description">Toggle that shares example values with the assistant</note>
       </notes>
       <segment>
@@ -937,7 +956,7 @@
     </unit>
     <unit id="5265391174966464523">
       <notes>
-        <note category="location">src/app/features/pins/components/pin-scope-menu.component.ts:38,42</note>
+        <note category="location">src/app/features/pins/components/pin-scope-menu.component.ts:39,43</note>
         <note category="description">Heading above the list of scopes a task can be pinned to</note>
       </notes>
       <segment>
@@ -946,7 +965,7 @@
     </unit>
     <unit id="378112044291779678">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:383</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:362</note>
         <note category="description">Shown after the search provider is removed</note>
       </notes>
       <segment>
@@ -969,6 +988,15 @@
       </notes>
       <segment>
         <source>View Audit Log</source>
+      </segment>
+    </unit>
+    <unit id="4880268610354566359">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:139</note>
+        <note category="description">Says how many connections are set up</note>
+      </notes>
+      <segment>
+        <source>of <ph id="0" equiv="total" disp="total"/> connected</source>
       </segment>
     </unit>
     <unit id="4885466789264460695">
@@ -1055,6 +1083,7 @@
     <unit id="7546969606032903393">
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:143,145</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:132,134</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-model-menu.component.ts:15,17</note>
         <note category="description">Accessible label for the assistant model selector</note>
       </notes>
@@ -1209,13 +1238,13 @@
         <source>Upload Media</source>
       </segment>
     </unit>
-    <unit id="2254251805469944900">
+    <unit id="2387195905182230850">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:86,88</note>
-        <note category="description">Tooltip on the button that removes the search provider</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:159,162</note>
+        <note category="description">Button that removes the search provider</note>
       </notes>
       <segment>
-        <source>Remove provider</source>
+        <source> Remove provider </source>
       </segment>
     </unit>
     <unit id="5162962829978601498">
@@ -1477,8 +1506,12 @@
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:804</note>
         <note category="location">src/app/features/profile/components/select-profile-image-dialog/select-profile-image-dialog.component.ts:54,56</note>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:343</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:197,200</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:347</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:168,171</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:346</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-spend-cap-dialog.component.ts:80,83</note>
         <note category="location">src/app/features/settings/components/delete-workspace-dialog/delete-workspace-dialog.component.ts:59,62</note>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:365</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:93,96</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:163,166</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:276</note>
@@ -1829,6 +1862,15 @@
         <source>Are you sure you want to delete this group?</source>
       </segment>
     </unit>
+    <unit id="1714934102960875806">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:126,128</note>
+        <note category="description">Label for the model a connection uses</note>
+      </notes>
+      <segment>
+        <source> Model for assistant chat </source>
+      </segment>
+    </unit>
     <unit id="3596210590059423029">
       <notes>
         <note category="location">src/app/core/services/board-group-commands.service.ts:312</note>
@@ -1955,6 +1997,15 @@
         <source>Project deleted</source>
       </segment>
     </unit>
+    <unit id="7966762171922123918">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-spend-cap-dialog.component.ts:141</note>
+        <note category="description">Shown after the assistant spend cap is stored</note>
+      </notes>
+      <segment>
+        <source>Spend cap saved.</source>
+      </segment>
+    </unit>
     <unit id="7966768232784020577">
       <notes>
         <note category="location">src/app/static/components/editor/editor-bubble-menu.component.ts:204</note>
@@ -1977,6 +2028,8 @@
     <unit id="3118592863000722717">
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:187,190</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:242</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:258</note>
         <note category="description">Button that replaces a stored API key</note>
       </notes>
       <segment>
@@ -1995,6 +2048,8 @@
     <unit id="3127417567733728943">
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:34</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:43</note>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:122,124</note>
         <note category="description">Name of the Anthropic AI provider</note>
       </notes>
       <segment>
@@ -2272,7 +2327,7 @@
     <unit id="7198631316779176054">
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:276</note>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:288</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:270</note>
         <note category="description">Placeholder shown when no key is stored</note>
       </notes>
       <segment>
@@ -2381,7 +2436,7 @@
     </unit>
     <unit id="4145619247688235973">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:363</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:344</note>
         <note category="description">Explains what removing the search provider does</note>
       </notes>
       <segment>
@@ -2508,7 +2563,6 @@
     <unit id="8768927723338869419">
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:90,92</note>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:65,67</note>
         <note category="description">Label preceding the masked API key</note>
       </notes>
       <segment>
@@ -2863,6 +2917,16 @@
         <source>Amber</source>
       </segment>
     </unit>
+    <unit id="5956942447269858960">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-spend-cap-dialog.component.ts:134</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-spend-cap-dialog.component.ts:150</note>
+        <note category="description">Shown when saving the spend cap fails</note>
+      </notes>
+      <segment>
+        <source>The cap could not be saved.</source>
+      </segment>
+    </unit>
     <unit id="5958306903625377545">
       <notes>
         <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:131,132</note>
@@ -3097,7 +3161,7 @@
         <note category="location">src/app/entry/components/setup-creation-summary/setup-creation-summary.component.ts:58</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:220</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:940</note>
-        <note category="location">src/app/features/pins/components/pin-scope-menu.component.ts:155</note>
+        <note category="location">src/app/features/pins/components/pin-scope-menu.component.ts:160</note>
         <note category="location">src/app/features/settings/components/preference-scope.ts:36</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:430</note>
         <note category="description">Badge on a task pinned for the whole workspace</note>
@@ -3260,7 +3324,7 @@
     </unit>
     <unit id="1250336210630791344">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:223</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:210</note>
         <note category="description">Hint describing the SearXNG search provider</note>
       </notes>
       <segment>
@@ -3298,6 +3362,15 @@
         <source>Status</source>
       </segment>
     </unit>
+    <unit id="561898141019524704">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-spend-cap-dialog.component.ts:66,68</note>
+        <note category="description">Explains what happens when the spend cap is reached</note>
+      </notes>
+      <segment>
+        <source> <ph id="0" equiv="INTERPOLATION" disp="{{ spentLabel() }}"/> has been spent this month. Once the cap is reached the assistant stops accepting new messages until the next month. </source>
+      </segment>
+    </unit>
     <unit id="8593484840932672988">
       <notes>
         <note category="location">src/app/entry/dialogs/board-group-dialog/board-group-dialog.component.ts:54,56</note>
@@ -3320,7 +3393,7 @@
         <note category="location">src/app/entry/dialogs/edit-tag-dialog/edit-tag-dialog.component.ts:43,45</note>
         <note category="location">src/app/entry/dialogs/invite-dialog/invite-dialog.component.ts:65,68</note>
         <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:68,70</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:159,160</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:162,163</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:115,117</note>
         <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:258,263</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:98,100</note>
@@ -3375,7 +3448,7 @@
     </unit>
     <unit id="2042627893306275814">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:78,80</note>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:162,164</note>
         <note category="description">Accessible label for the button that leaves a conversation</note>
       </notes>
       <segment>
@@ -3393,7 +3466,7 @@
     </unit>
     <unit id="6755393728505925394">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:102,104</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:63,65</note>
         <note category="description">Accessible label for the search provider selector</note>
       </notes>
       <segment>
@@ -3461,7 +3534,7 @@
     <unit id="5504590309962934202">
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:120,122</note>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:125,127</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:87,89</note>
         <note category="description">Label for the API key input</note>
       </notes>
       <segment>
@@ -3525,7 +3598,7 @@
     </unit>
     <unit id="885182347182627513">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:161,163</note>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:294,296</note>
         <note category="description">Heading of the assistant data sampling setting</note>
       </notes>
       <segment>
@@ -3615,6 +3688,15 @@
       </notes>
       <segment>
         <source> Create Relation Type </source>
+      </segment>
+    </unit>
+    <unit id="7212420048112578295">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:75,80</note>
+        <note category="description">Explains what the assistant connections are</note>
+      </notes>
+      <segment>
+        <source> Model providers and web search, shared by every member without a personal key. </source>
       </segment>
     </unit>
     <unit id="1806667489382256324">
@@ -3917,6 +3999,15 @@
         <source>Description</source>
       </segment>
     </unit>
+    <unit id="5330914023437150915">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-spend-cap-dialog.component.ts:43,46</note>
+        <note category="description">Label for the spend cap input</note>
+      </notes>
+      <segment>
+        <source> Cap in US dollars </source>
+      </segment>
+    </unit>
     <unit id="533409430255690539">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:191,193</note>
@@ -3963,6 +4054,15 @@
         <source>Save Task</source>
       </segment>
     </unit>
+    <unit id="6351721389687055644">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:234</note>
+        <note category="description">Title of the dialog that manages a stored provider key</note>
+      </notes>
+      <segment>
+        <source>Manage <ph id="0" equiv="provider" disp="this.data.label"/> key</source>
+      </segment>
+    </unit>
     <unit id="6353362142589022681">
       <notes>
         <note category="location">src/app/features/task-views/models/task-query-copy.ts:9</note>
@@ -4003,6 +4103,7 @@
     <unit id="8550125178086238714">
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:340</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:344</note>
         <note category="description">Title of the remove API key confirmation</note>
       </notes>
       <segment>
@@ -4160,7 +4261,7 @@
     </unit>
     <unit id="3082475149603784059">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:155,157</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:115,117</note>
         <note category="description">Placeholder for the Google search engine id input</note>
       </notes>
       <segment>
@@ -4169,7 +4270,7 @@
     </unit>
     <unit id="308735601429536200">
       <notes>
-        <note category="location">src/app/features/pins/components/pin-scope-menu.component.ts:123</note>
+        <note category="location">src/app/features/pins/components/pin-scope-menu.component.ts:128</note>
         <note category="description">Pin scope that keeps a task in view for you alone</note>
       </notes>
       <segment>
@@ -4548,6 +4649,15 @@
         <source>{VAR_PLURAL, plural, =1 {Move 1 task} other {Move <ph id="0" equiv="INTERPOLATION"/> tasks}}</source>
       </segment>
     </unit>
+    <unit id="5896927379604759167">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:112,115</note>
+        <note category="description">Shown when no provider key is stored</note>
+      </notes>
+      <segment>
+        <source>Not connected</source>
+      </segment>
+    </unit>
     <unit id="5898235959611677094">
       <notes>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:275,277</note>
@@ -4565,6 +4675,15 @@
       </notes>
       <segment>
         <source>Project details</source>
+      </segment>
+    </unit>
+    <unit id="2578732368187466916">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:135,139</note>
+        <note category="description">Column heading for assistant cost</note>
+      </notes>
+      <segment>
+        <source>Cost</source>
       </segment>
     </unit>
     <unit id="2579453752912852488">
@@ -4644,6 +4763,15 @@
         <source>Repository</source>
       </segment>
     </unit>
+    <unit id="630746867351715318">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:91,93</note>
+        <note category="description">Label for when a key was last used</note>
+      </notes>
+      <segment>
+        <source> Last used </source>
+      </segment>
+    </unit>
     <unit id="8132424293432274889">
       <notes>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:105,109</note>
@@ -4656,6 +4784,15 @@
         <source> Back </source>
       </segment>
     </unit>
+    <unit id="813263746069473514">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:152</note>
+        <note category="description">Button that connects web search</note>
+      </notes>
+      <segment>
+        <source>Connect</source>
+      </segment>
+    </unit>
     <unit id="8134595218621919835">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-thinking.component.ts:66</note>
@@ -4665,13 +4802,13 @@
         <source><ph id="0" equiv="elapsed" disp="elapsed"/> · <ph id="1" equiv="tokens" disp="tokens"/> tokens</source>
       </segment>
     </unit>
-    <unit id="3882696472447982545">
+    <unit id="8847898072904693402">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:192,195</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:258</note>
         <note category="description">Button that stores the search provider</note>
       </notes>
       <segment>
-        <source> Save provider </source>
+        <source>Save provider</source>
       </segment>
     </unit>
     <unit id="3885497195825665706">
@@ -4683,6 +4820,15 @@
       </notes>
       <segment>
         <source>Next</source>
+      </segment>
+    </unit>
+    <unit id="2488331616383675967">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:280</note>
+        <note category="description">Caption naming the busiest day of assistant spend</note>
+      </notes>
+      <segment>
+        <source>Daily estimate this month · peak <ph id="0" equiv="peak" disp="peak.label"/></source>
       </segment>
     </unit>
     <unit id="2489114267038713519">
@@ -4903,7 +5049,7 @@
     </unit>
     <unit id="1225327047686807431">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:168,171</note>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:301,303</note>
         <note category="description">Explains what turning off assistant data sampling does</note>
       </notes>
       <segment>
@@ -5067,6 +5213,15 @@
       </notes>
       <segment>
         <source> Edit Workspace </source>
+      </segment>
+    </unit>
+    <unit id="1212736918921252015">
+      <notes>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:558</note>
+        <note category="description">Heading shown when no provider key is stored</note>
+      </notes>
+      <segment>
+        <source>No provider key yet</source>
       </segment>
     </unit>
     <unit id="1215136168573441022">
@@ -5464,6 +5619,7 @@
     <unit id="5988988986257041887">
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:360</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:363</note>
         <note category="description">Shown after an API key is removed</note>
       </notes>
       <segment>
@@ -5664,7 +5820,7 @@
     </unit>
     <unit id="751924494549380962">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:166,168</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:126,129</note>
         <note category="description">Label for the SearXNG base URL input</note>
       </notes>
       <segment>
@@ -5773,6 +5929,15 @@
         <source>ID</source>
       </segment>
     </unit>
+    <unit id="3071051343671085363">
+      <notes>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:99,103</note>
+        <note category="description">Link to the workspace audit log</note>
+      </notes>
+      <segment>
+        <source>Audit log</source>
+      </segment>
+    </unit>
     <unit id="3071361935587815300">
       <notes>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:197</note>
@@ -5802,7 +5967,7 @@
     </unit>
     <unit id="6411641707154636308">
       <notes>
-        <note category="location">src/app/features/pins/components/pin-scope-menu.component.ts:146</note>
+        <note category="location">src/app/features/pins/components/pin-scope-menu.component.ts:151</note>
         <note category="description">Qualifier after a project name in the pin scope menu</note>
       </notes>
       <segment>
@@ -5816,6 +5981,15 @@
       </notes>
       <segment>
         <source>Causation event ID</source>
+      </segment>
+    </unit>
+    <unit id="4671562292257026998">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:245</note>
+        <note category="description">Label for the API key input</note>
+      </notes>
+      <segment>
+        <source>API key</source>
       </segment>
     </unit>
     <unit id="4674466765772871246">
@@ -5914,13 +6088,13 @@
         <source>Stop following <ph id="0" equiv="NAME" disp="name"/></source>
       </segment>
     </unit>
-    <unit id="1672621016685744342">
+    <unit id="5531875190051704197">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:188,191</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:255</note>
         <note category="description">Button that updates the stored search provider</note>
       </notes>
       <segment>
-        <source> Update provider </source>
+        <source>Update provider</source>
       </segment>
     </unit>
     <unit id="1678559204833619774">
@@ -5942,6 +6116,15 @@
       </notes>
       <segment>
         <source>Netptune logo</source>
+      </segment>
+    </unit>
+    <unit id="4200103759189541053">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:143,149</note>
+        <note category="description">Explains what the assistant does without a search provider</note>
+      </notes>
+      <segment>
+        <source> Without a provider the assistant can still read pages it is given a link to, but it cannot find them itself. </source>
       </segment>
     </unit>
     <unit id="420317131093281855">
@@ -6157,15 +6340,6 @@
         <source> Review changes </source>
       </segment>
     </unit>
-    <unit id="348464760083521708">
-      <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:191,193</note>
-        <note category="description">Section heading for the shared workspace API keys</note>
-      </notes>
-      <segment>
-        <source> Workspace keys </source>
-      </segment>
-    </unit>
     <unit id="34847635610651233">
       <notes>
         <note category="location">src/app/core/services/ai-effort.service.ts:14</note>
@@ -6232,6 +6406,16 @@
         <source> Editing your last question — sending replaces the reply. </source>
       </segment>
     </unit>
+    <unit id="3726797985885972015">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:178</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:216</note>
+        <note category="description">Describes a stored key by its last characters</note>
+      </notes>
+      <segment>
+        <source>Key ending …<ph id="0" equiv="hint" disp="credential?.secretHint"/></source>
+      </segment>
+    </unit>
     <unit id="3728759054958532974">
       <notes>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:224,231</note>
@@ -6266,6 +6450,15 @@
       </notes>
       <segment>
         <source>Change project</source>
+      </segment>
+    </unit>
+    <unit id="6330395320571887799">
+      <notes>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:682</note>
+        <note category="description">Heading warning that the spend cap is nearly used up</note>
+      </notes>
+      <segment>
+        <source><ph id="0" equiv="percent" disp="percent"/>% of the monthly cap used</source>
       </segment>
     </unit>
     <unit id="6333009862786718391">
@@ -6364,7 +6557,7 @@
     </unit>
     <unit id="3240078776048858885">
       <notes>
-        <note category="location">src/app/features/pins/components/pin-scope-menu.component.ts:103</note>
+        <note category="location">src/app/features/pins/components/pin-scope-menu.component.ts:104</note>
         <note category="description">Tooltip on a pin scope the caller is not allowed to set</note>
       </notes>
       <segment>
@@ -6682,7 +6875,7 @@
     </unit>
     <unit id="4101852533995361725">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:309,311</note>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:403,405</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:25,27</note>
         <note category="description">Counts messages in a stored conversation</note>
       </notes>
@@ -6737,6 +6930,15 @@
       </notes>
       <segment>
         <source>Comment</source>
+      </segment>
+    </unit>
+    <unit id="4762234886950747139">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:144</note>
+        <note category="description">Explains that the assistant has no provider key</note>
+      </notes>
+      <segment>
+        <source>The assistant needs a provider key</source>
       </segment>
     </unit>
     <unit id="4762313540524254925">
@@ -7163,6 +7365,15 @@
         <source>Team workload</source>
       </segment>
     </unit>
+    <unit id="6965292663128126881">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-spend-cap-dialog.component.ts:60,64</note>
+        <note category="description">Explains how to clear the cap</note>
+      </notes>
+      <segment>
+        <source> Leave this empty for no cap. </source>
+      </segment>
+    </unit>
     <unit id="6967575591272937015">
       <notes>
         <note category="location">src/app/shared/components/query-builder/query-explanation.ts:33</note>
@@ -7215,6 +7426,15 @@
       </notes>
       <segment>
         <source> Every matching task will run </source>
+      </segment>
+    </unit>
+    <unit id="6181907632373133266">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:131,133</note>
+        <note category="description">Column heading counting assistant conversations</note>
+      </notes>
+      <segment>
+        <source>Chats</source>
       </segment>
     </unit>
     <unit id="6182962540012657075">
@@ -7581,8 +7801,8 @@
     </unit>
     <unit id="4756842401099167454">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:335</note>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:352</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:317</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:333</note>
         <note category="description">Shown when saving the search provider fails</note>
       </notes>
       <segment>
@@ -8483,6 +8703,15 @@
         <source>THEN</source>
       </segment>
     </unit>
+    <unit id="8668810212312203956">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:237</note>
+        <note category="description">Title of the dialog that adds a provider key</note>
+      </notes>
+      <segment>
+        <source>Add <ph id="0" equiv="provider" disp="this.data.label"/> key</source>
+      </segment>
+    </unit>
     <unit id="1341636531721064512">
       <notes>
         <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:79,81</note>
@@ -8652,8 +8881,8 @@
     </unit>
     <unit id="4548722462586549001">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:453</note>
-        <note category="description">Label for the number of tokens the assistant has used</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:133,134</note>
+        <note category="description">Column heading counting assistant tokens</note>
       </notes>
       <segment>
         <source>Tokens</source>
@@ -8670,7 +8899,7 @@
     </unit>
     <unit id="7284407085760520822">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:253,255</note>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:347,349</note>
         <note category="description">Heading of the assistant conversation list</note>
       </notes>
       <segment>
@@ -8797,15 +9026,6 @@
         <source>Limit which tasks this automation can act on.</source>
       </segment>
     </unit>
-    <unit id="180305693599254202">
-      <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:63,66</note>
-        <note category="description">Page title for the workspace assistant conversations</note>
-      </notes>
-      <segment>
-        <source>Assistant conversations</source>
-      </segment>
-    </unit>
     <unit id="7046128589684724143">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:193,195</note>
@@ -8869,6 +9089,15 @@
       </notes>
       <segment>
         <source>Shared <ph id="0" equiv="COUNT" disp="shared"/></source>
+      </segment>
+    </unit>
+    <unit id="3897348120591552265">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:150</note>
+        <note category="description">Button that opens a stored connection</note>
+      </notes>
+      <segment>
+        <source>Manage</source>
       </segment>
     </unit>
     <unit id="3899168401664549038">
@@ -9120,7 +9349,7 @@
     </unit>
     <unit id="4974625000015194391">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:215</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:202</note>
         <note category="description">Hint describing the Google search provider</note>
       </notes>
       <segment>
@@ -9266,6 +9495,15 @@
         <source> Relative calendar days </source>
       </segment>
     </unit>
+    <unit id="6297950127540572260">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:129,130</note>
+        <note category="description">Column heading for a workspace member</note>
+      </notes>
+      <segment>
+        <source>Member</source>
+      </segment>
+    </unit>
     <unit id="6298879458119153413">
       <notes>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:85,87</note>
@@ -9304,7 +9542,7 @@
     </unit>
     <unit id="4819261854771153538">
       <notes>
-        <note category="location">src/app/features/boards/components/board-switcher/board-switcher.component.ts:57</note>
+        <note category="location">src/app/features/boards/components/board-switcher/board-switcher.component.ts:58</note>
         <note category="description">Placeholder in the box that narrows the list of boards</note>
       </notes>
       <segment>
@@ -9550,7 +9788,7 @@
     </unit>
     <unit id="4705684969760487201">
       <notes>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:211</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:213</note>
         <note category="description">Shown when a filter has no options at all</note>
       </notes>
       <segment>
@@ -9637,6 +9875,15 @@
       </notes>
       <segment>
         <source> Clone Automation </source>
+      </segment>
+    </unit>
+    <unit id="6950998974934467421">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:111,114</note>
+        <note category="description">Label for the projected end-of-month assistant spend</note>
+      </notes>
+      <segment>
+        <source> Projected month end </source>
       </segment>
     </unit>
     <unit id="6952430763295454756">
@@ -9768,7 +10015,7 @@
     </unit>
     <unit id="5217580944615845616">
       <notes>
-        <note category="location">src/app/features/pins/components/pin-scope-menu.component.ts:90,96</note>
+        <note category="location">src/app/features/pins/components/pin-scope-menu.component.ts:91,97</note>
         <note category="description">Menu action that removes every pin the caller may remove</note>
       </notes>
       <segment>
@@ -10044,7 +10291,7 @@
     <unit id="8805582001022257690">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:102,104</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:131,133</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:134,136</note>
         <note category="description">Button that asks the assistant about this task</note>
       </notes>
       <segment>
@@ -10058,6 +10305,15 @@
       </notes>
       <segment>
         <source>Sprint completes</source>
+      </segment>
+    </unit>
+    <unit id="8372007266188249803">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:98,100</note>
+        <note category="description">Shown when a key is unused</note>
+      </notes>
+      <segment>
+        <source>Never</source>
       </segment>
     </unit>
     <unit id="8375416460166159043">
@@ -10249,7 +10505,7 @@
     </unit>
     <unit id="2629918234125024312">
       <notes>
-        <note category="location">src/app/features/pins/components/pin-scope-menu.component.ts:135</note>
+        <note category="location">src/app/features/pins/components/pin-scope-menu.component.ts:140</note>
         <note category="description">Qualifier after a board name in the pin scope menu</note>
       </notes>
       <segment>
@@ -10259,7 +10515,7 @@
     <unit id="4510676848705799339">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:236,238</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:141,143</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:144,146</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:85</note>
         <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:165,168</note>
         <note category="description">Accessible label for the button that deletes the task</note>
@@ -10320,6 +10576,15 @@
       </notes>
       <segment>
         <source>changed</source>
+      </segment>
+    </unit>
+    <unit id="3692225495250675697">
+      <notes>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:571</note>
+        <note category="description">Button that turns the assistant back on</note>
+      </notes>
+      <segment>
+        <source>Turn back on</source>
       </segment>
     </unit>
     <unit id="3697582909018473071">
@@ -10410,6 +10675,7 @@
     <unit id="6168573387818230011">
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:322</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:319</note>
         <note category="description">Shown after an API key is stored</note>
       </notes>
       <segment>
@@ -10475,7 +10741,7 @@
     </unit>
     <unit id="6157743857767016939">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:144,147</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:106,109</note>
         <note category="description">Label for the Google search engine id input</note>
       </notes>
       <segment>
@@ -10493,7 +10759,7 @@
     </unit>
     <unit id="5621842545023812080">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:175,177</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:135,137</note>
         <note category="description">Placeholder for the SearXNG base URL input</note>
       </notes>
       <segment>
@@ -10525,6 +10791,15 @@
       </notes>
       <segment>
         <source>Triggering user</source>
+      </segment>
+    </unit>
+    <unit id="7668238381942861983">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-spend-cap-dialog.component.ts:56,57</note>
+        <note category="description">Placeholder shown when no spend cap is set</note>
+      </notes>
+      <segment>
+        <source>No cap</source>
       </segment>
     </unit>
     <unit id="6647181806898890269">
@@ -10717,6 +10992,15 @@
       </notes>
       <segment>
         <source>A single project</source>
+      </segment>
+    </unit>
+    <unit id="94147709329597430">
+      <notes>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:325,327</note>
+        <note category="description">Heading of the assistant activity group</note>
+      </notes>
+      <segment>
+        <source> Activity </source>
       </segment>
     </unit>
     <unit id="942705677413808169">
@@ -11138,6 +11422,24 @@
         <source>When a task&apos;s <ph id="0" equiv="FIELDS" disp="fieldText"/> changes</source>
       </segment>
     </unit>
+    <unit id="4264569873878205807">
+      <notes>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:111,113</note>
+        <note category="description">Button that adds an assistant connection</note>
+      </notes>
+      <segment>
+        <source> Add connection </source>
+      </segment>
+    </unit>
+    <unit id="8862678693903870346">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:117</note>
+        <note category="description">Says what the spend is measured against</note>
+      </notes>
+      <segment>
+        <source>of <ph id="0" equiv="cap" disp="formatCurrency(cap)"/></source>
+      </segment>
+    </unit>
     <unit id="8864329926850607537">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:492</note>
@@ -11246,6 +11548,16 @@
         <source><ph id="0" equiv="SUBJECT" disp="value.trim() || field"/> is removed</source>
       </segment>
     </unit>
+    <unit id="3208980041287937682">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:72,76</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:106,108</note>
+        <note category="description">Shown when a provider key is stored</note>
+      </notes>
+      <segment>
+        <source>Connected</source>
+      </segment>
+    </unit>
     <unit id="3212983257499034193">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:123,125</note>
@@ -11343,6 +11655,15 @@
       </notes>
       <segment>
         <source>Everyone with the <ph id="0" equiv="ROLE" disp="workspaceRoleLabels[role]"/> role</source>
+      </segment>
+    </unit>
+    <unit id="7778493965251158641">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:70,73</note>
+        <note category="description">Heading of the assistant connections card</note>
+      </notes>
+      <segment>
+        <source> Connections </source>
       </segment>
     </unit>
     <unit id="94973602992075959">
@@ -11749,6 +12070,15 @@
         <source>Automation could not be loaded</source>
       </segment>
     </unit>
+    <unit id="3646053136746522210">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:118</note>
+        <note category="description">Says the spend covers the current month</note>
+      </notes>
+      <segment>
+        <source>this month</source>
+      </segment>
+    </unit>
     <unit id="3650965204243552982">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:124,126</note>
@@ -11793,6 +12123,15 @@
         <source> This automation was disabled automatically </source>
       </segment>
     </unit>
+    <unit id="3202815453884947117">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:151</note>
+        <note category="description">Button that adds a provider key</note>
+      </notes>
+      <segment>
+        <source>Add key</source>
+      </segment>
+    </unit>
     <unit id="2536790850571610592">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:141,143</note>
@@ -11827,6 +12166,15 @@
       </notes>
       <segment>
         <source>File</source>
+      </segment>
+    </unit>
+    <unit id="8455215374476542159">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:252</note>
+        <note category="description">Summarises assistant use for the month</note>
+      </notes>
+      <segment>
+        <source><ph id="0" equiv="conversations" disp="spend.conversations"/> conversations · <ph id="1" equiv="tokens" disp="tokens"/> tokens. Nothing is charged by Netptune — this is your provider bill.</source>
       </segment>
     </unit>
     <unit id="4308396666254841731">
@@ -12008,7 +12356,8 @@
     <unit id="3477141043479115606">
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:273</note>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:285</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:250</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:267</note>
         <note category="description">Placeholder shown when a key is already stored</note>
       </notes>
       <segment>
@@ -12107,6 +12456,15 @@
       </notes>
       <segment>
         <source>Automation could not be saved</source>
+      </segment>
+    </unit>
+    <unit id="4282587102956396340">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:69,71</note>
+        <note category="description">Label for the state of a stored connection</note>
+      </notes>
+      <segment>
+        <source> Status </source>
       </segment>
     </unit>
     <unit id="6112696339048270378">
@@ -12214,7 +12572,7 @@
     </unit>
     <unit id="7329865395750709453">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:139,141</note>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:273,275</note>
         <note category="description">Explains what turning the assistant off does</note>
       </notes>
       <segment>
@@ -12454,7 +12812,7 @@
     </unit>
     <unit id="662925928705970482">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:233,235</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:49,51</note>
         <note category="description">Explains how assistant cost is worked out</note>
       </notes>
       <segment>
@@ -12578,6 +12936,15 @@
       </notes>
       <segment>
         <source>Modified</source>
+      </segment>
+    </unit>
+    <unit id="3557530844157929330">
+      <notes>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:570</note>
+        <note category="description">Explains what the assistant being off means</note>
+      </notes>
+      <segment>
+        <source>Members cannot send new messages and pending changes will not apply. Keys and spend history are kept.</source>
       </segment>
     </unit>
     <unit id="7170240979381321210">
@@ -12719,15 +13086,6 @@
       </notes>
       <segment>
         <source>{VAR_PLURAL, plural, =1 {it} other {them}}</source>
-      </segment>
-    </unit>
-    <unit id="8222816683597787340">
-      <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:228,231</note>
-        <note category="description">Section heading for what the assistant has cost the workspace</note>
-      </notes>
-      <segment>
-        <source> Assistant spend </source>
       </segment>
     </unit>
     <unit id="5155262602439071339">
@@ -13103,6 +13461,8 @@
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:312</note>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:330</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:312</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:328</note>
         <note category="description">Shown when saving an API key fails</note>
       </notes>
       <segment>
@@ -13280,8 +13640,8 @@
     </unit>
     <unit id="214787083175103202">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:206,208</note>
-        <note category="description">Section heading for the workspace web search provider</note>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:140,142</note>
+        <note category="description">Name of the assistant web search connection</note>
       </notes>
       <segment>
         <source> Web search </source>
@@ -13308,6 +13668,15 @@
         <source>Previous month</source>
       </segment>
     </unit>
+    <unit id="6040097017567791222">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:99</note>
+        <note category="description">Says how many members used the assistant this month</note>
+      </notes>
+      <segment>
+        <source><ph id="0" equiv="count" disp="activeMembers"/> active this month</source>
+      </segment>
+    </unit>
     <unit id="6040548209741947776">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:103</note>
@@ -13329,7 +13698,7 @@
     <unit id="6044719097380241880">
       <notes>
         <note category="location">src/app/static/components/filter-facet/filter-facet.component.ts:192</note>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:340</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:346</note>
         <note category="description">Button that renders the next page of a filter&apos;s options. COUNT is how many options remain</note>
       </notes>
       <segment>
@@ -13379,7 +13748,7 @@
     </unit>
     <unit id="6154668836448322809">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:388</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:368</note>
         <note category="description">Shown when removing the search provider fails</note>
       </notes>
       <segment>
@@ -13441,6 +13810,15 @@
         <source>No conditions yet, so this view matches no tasks.</source>
       </segment>
     </unit>
+    <unit id="7076328347552597132">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:196</note>
+        <note category="description">Name of the assistant web search connection</note>
+      </notes>
+      <segment>
+        <source>Web search</source>
+      </segment>
+    </unit>
     <unit id="7077495639998556235">
       <notes>
         <note category="location">src/app/features/calendar/dialogs/calendar-move-task-dialog.component.ts:45,49</note>
@@ -13466,6 +13844,15 @@
       </notes>
       <segment>
         <source>Move to</source>
+      </segment>
+    </unit>
+    <unit id="2352286574480757975">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:123</note>
+        <note category="description">Says when the spend period restarts</note>
+      </notes>
+      <segment>
+        <source>Resets <ph id="0" equiv="date" disp="this.resetLabel(spend)"/></source>
       </segment>
     </unit>
     <unit id="2354817630223808522">
@@ -13509,7 +13896,7 @@
     </unit>
     <unit id="6500565621649261493">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:151,152</note>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:284,285</note>
         <note category="description">Toggle that enables the assistant for a workspace</note>
       </notes>
       <segment>
@@ -13717,7 +14104,7 @@
     </unit>
     <unit id="3313172740302558016">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:104,106</note>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:188,190</note>
         <note category="description">Counts tokens written to the provider prompt cache</note>
       </notes>
       <segment>
@@ -14122,7 +14509,7 @@
     </unit>
     <unit id="117068237894470695">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:118,120</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:121,123</note>
         <note category="description">Accessible label for the button that opens the task&apos;s other actions</note>
       </notes>
       <segment>
@@ -14219,6 +14606,15 @@
       </notes>
       <segment>
         <source> Linked Accounts </source>
+      </segment>
+    </unit>
+    <unit id="5348303170078147397">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:277</note>
+        <note category="description">Caption for the daily assistant spend chart</note>
+      </notes>
+      <segment>
+        <source>Daily estimate this month</source>
       </segment>
     </unit>
     <unit id="3565310608022478316">
@@ -14331,15 +14727,6 @@
         <source>View</source>
       </segment>
     </unit>
-    <unit id="2510741784888393227">
-      <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:457</note>
-        <note category="description">Label for what the assistant has cost, priced from published model rates</note>
-      </notes>
-      <segment>
-        <source>Estimated cost</source>
-      </segment>
-    </unit>
     <unit id="2511778450060865122">
       <notes>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:199</note>
@@ -14378,7 +14765,7 @@
     </unit>
     <unit id="5572257597829131111">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:362</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:343</note>
         <note category="description">Title of the remove search provider confirmation</note>
       </notes>
       <segment>
@@ -14392,6 +14779,15 @@
       </notes>
       <segment>
         <source>No assignees</source>
+      </segment>
+    </unit>
+    <unit id="3043347010343445079">
+      <notes>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:258,260</note>
+        <note category="description">Heading of the assistant access and privacy card</note>
+      </notes>
+      <segment>
+        <source> Access &amp; privacy </source>
       </segment>
     </unit>
     <unit id="3046563981885898808">
@@ -14610,7 +15006,7 @@
     </unit>
     <unit id="4435645098786961170">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:95,96</note>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:179,180</note>
         <note category="description">Counts tokens returned by the model</note>
       </notes>
       <segment>
@@ -14639,6 +15035,7 @@
     <unit id="395357454003185588">
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:35</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:44</note>
         <note category="description">Where to find an Anthropic API key</note>
       </notes>
       <segment>
@@ -14800,6 +15197,7 @@
     <unit id="3959473004188974816">
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:365</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:369</note>
         <note category="description">Shown when removing an API key fails</note>
       </notes>
       <segment>
@@ -15087,6 +15485,15 @@
         <source>No sprint selected</source>
       </segment>
     </unit>
+    <unit id="5313896736024470177">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:60,62</note>
+        <note category="description">Label for the masked API key in the connection dialog</note>
+      </notes>
+      <segment>
+        <source> Key </source>
+      </segment>
+    </unit>
     <unit id="5315296767764931025">
       <notes>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:60,62</note>
@@ -15241,6 +15648,15 @@
         <source>Committed and completed scope across recent sprints.</source>
       </segment>
     </unit>
+    <unit id="197242835473782757">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:250</note>
+        <note category="description">Title of the dialog that connects web search</note>
+      </notes>
+      <segment>
+        <source>Connect web search</source>
+      </segment>
+    </unit>
     <unit id="6793067934389787615">
       <notes>
         <note category="location">src/app/features/settings/settings.routes.ts:115</note>
@@ -15334,6 +15750,15 @@
         <source>Last <ph id="0" equiv="DAYS" disp="this.flow.trailingDays"/> days</source>
       </segment>
     </unit>
+    <unit id="3931584627127834131">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-spend-cap-dialog.component.ts:115</note>
+        <note category="description">Shown when the spend cap is not a positive amount</note>
+      </notes>
+      <segment>
+        <source>A cap has to be more than $0. Leave it empty for no cap.</source>
+      </segment>
+    </unit>
     <unit id="3932146926843084642">
       <notes>
         <note category="location">src/app/static/components/number-input/number-input.component.ts:51,53</note>
@@ -15377,15 +15802,6 @@
       </notes>
       <segment>
         <source>Exports are kept for seven days, then removed from workspace storage.</source>
-      </segment>
-    </unit>
-    <unit id="2107380426080326188">
-      <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:449</note>
-        <note category="description">Label for the number of assistant conversations</note>
-      </notes>
-      <segment>
-        <source>Conversations</source>
       </segment>
     </unit>
     <unit id="2108328209482012964">
@@ -15582,7 +15998,7 @@
     </unit>
     <unit id="4810719754522561546">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:187</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:190</note>
         <note category="description">Accessible label for the control that opens the pin scope menu</note>
       </notes>
       <segment>
@@ -15700,6 +16116,15 @@
         <source> Choose the scope, period, and estimation unit used by the reports. </source>
       </segment>
     </unit>
+    <unit id="4084173164020442324">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:100</note>
+        <note category="description">Explains what the assistant being off means</note>
+      </notes>
+      <segment>
+        <source>Members cannot send new messages</source>
+      </segment>
+    </unit>
     <unit id="408476512549431766">
       <notes>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:78,80</note>
@@ -15768,7 +16193,7 @@
     <unit id="928009341755063873">
       <notes>
         <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:222</note>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:226</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:232</note>
         <note category="description">Keyboard key that closes the workspace menu, shown as a hint</note>
       </notes>
       <segment>
@@ -15827,6 +16252,15 @@
       </notes>
       <segment>
         <source>Roadmap filters</source>
+      </segment>
+    </unit>
+    <unit id="7508570474100827037">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:118,122</note>
+        <note category="description">Explains how stored keys behave</note>
+      </notes>
+      <segment>
+        <source> Keys are encrypted and never shown again after saving. </source>
       </segment>
     </unit>
     <unit id="2480953472690013760">
@@ -15972,6 +16406,15 @@
         <source>Week</source>
       </segment>
     </unit>
+    <unit id="5148150062211212405">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:168,172</note>
+        <note category="description">Explains that saving a model needs the key again</note>
+      </notes>
+      <segment>
+        <source> The model is saved with the key, so enter the key again to change it. </source>
+      </segment>
+    </unit>
     <unit id="4776806173794348537">
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:83,85</note>
@@ -16044,6 +16487,7 @@
     <unit id="6406732480689038024">
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:108,110</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:189,192</note>
         <note category="description">Tooltip on the button that removes a stored API key</note>
       </notes>
       <segment>
@@ -16153,6 +16597,15 @@
         <source>The import could not be started.</source>
       </segment>
     </unit>
+    <unit id="2477494455994379026">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:93</note>
+        <note category="description">Says how many members the assistant serves</note>
+      </notes>
+      <segment>
+        <source>for <ph id="0" equiv="count" disp="members"/> members</source>
+      </segment>
+    </unit>
     <unit id="2479388840534737755">
       <notes>
         <note category="location">src/app/features/data-transfer/components/import-steps/import-source-step.component.ts:68</note>
@@ -16210,7 +16663,7 @@
     </unit>
     <unit id="4797214229335185452">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:98,101</note>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:182,185</note>
         <note category="description">Counts tokens read from the provider prompt cache</note>
       </notes>
       <segment>
@@ -16365,7 +16818,10 @@
     <unit id="4361487192183535591">
       <notes>
         <note category="location">src/app/features/assistant/assistant.routes.ts:12</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:87</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:144</note>
         <note category="location">src/app/features/settings/views/personal-assistant-settings-view/personal-assistant-settings-view.component.ts:17,21</note>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:90,91</note>
         <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:42,45</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:357</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:413</note>
@@ -16392,6 +16848,15 @@
       </notes>
       <segment>
         <source>The file could not be uploaded.</source>
+      </segment>
+    </unit>
+    <unit id="4368459498761840040">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:174,178</note>
+        <note category="description">Explains who a workspace connection serves</note>
+      </notes>
+      <segment>
+        <source> Members without a personal key use this one. Removing it stops the assistant for them — spend history is kept. </source>
       </segment>
     </unit>
     <unit id="3078203495278068534">
@@ -16894,7 +17359,7 @@
     </unit>
     <unit id="458592448093195393">
       <notes>
-        <note category="location">src/app/features/boards/components/board-switcher/board-switcher.component.ts:56</note>
+        <note category="location">src/app/features/boards/components/board-switcher/board-switcher.component.ts:57</note>
         <note category="description">Tooltip and accessible label for the button that switches to another board</note>
       </notes>
       <segment>
@@ -16917,6 +17382,15 @@
       </notes>
       <segment>
         <source> The service account will be ready for a credential whenever you need one. </source>
+      </segment>
+    </unit>
+    <unit id="7430229396945550356">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:240</note>
+        <note category="description">Says when the assistant spend period restarts</note>
+      </notes>
+      <segment>
+        <source>Resets <ph id="0" equiv="date" disp="resets"/>.</source>
       </segment>
     </unit>
     <unit id="7430680760319628492">
@@ -16988,7 +17462,7 @@
     </unit>
     <unit id="3108472352698480006">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:331,333</note>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:427,429</note>
         <note category="description">Heading when no assistant conversations exist</note>
       </notes>
       <segment>
@@ -17204,6 +17678,7 @@
     <unit id="8927455770711141149">
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:40</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:49</note>
         <note category="description">Where to find an OpenAI API key</note>
       </notes>
       <segment>
@@ -17213,6 +17688,8 @@
     <unit id="9050138848550192211">
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:39</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:48</note>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:131,133</note>
         <note category="description">Name of the OpenAI provider</note>
       </notes>
       <segment>
@@ -17632,8 +18109,8 @@
     </unit>
     <unit id="6827887873610296004">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:99,101</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:103,104</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:102,104</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:106,107</note>
         <note category="description">Tooltip on the link that opens the task&apos;s own page</note>
       </notes>
       <segment>
@@ -17782,7 +18259,7 @@
     </unit>
     <unit id="4026751160851308362">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:261,265</note>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:355,359</note>
         <note category="description">Explains what an admin sees on the assistant conversations page</note>
       </notes>
       <segment>
@@ -17955,6 +18432,8 @@
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:157,160</note>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:256</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:146,149</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:272</note>
         <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:61,64</note>
         <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:163</note>
         <note category="description">Model option that defers to the server default</note>
@@ -18062,6 +18541,15 @@
         <source>Service account could not be updated</source>
       </segment>
     </unit>
+    <unit id="29108938894290964">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:113</note>
+        <note category="description">Label of the assistant spend status tile</note>
+      </notes>
+      <segment>
+        <source>Spend</source>
+      </segment>
+    </unit>
     <unit id="2919237623258423230">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:159,161</note>
@@ -18083,7 +18571,7 @@
     <unit id="2933395362711398504">
       <notes>
         <note category="location">src/app/static/components/filter-facet/filter-facet.component.ts:136</note>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:214</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:216</note>
         <note category="description">Shown when a filter&apos;s search term matches no options</note>
       </notes>
       <segment>
@@ -18106,6 +18594,15 @@
       </notes>
       <segment>
         <source>Pinned to this project</source>
+      </segment>
+    </unit>
+    <unit id="2941560825505331489">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:68,71</note>
+        <note category="description">Button that sets an assistant spend cap</note>
+      </notes>
+      <segment>
+        <source>Set a cap</source>
       </segment>
     </unit>
     <unit id="2943033819969004159">
@@ -18251,6 +18748,15 @@
       </notes>
       <segment>
         <source>Revoke</source>
+      </segment>
+    </unit>
+    <unit id="8990769651805334695">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:90</note>
+        <note category="description">Shown when the assistant is on</note>
+      </notes>
+      <segment>
+        <source>On</source>
       </segment>
     </unit>
     <unit id="8991032674812724530">
@@ -18454,6 +18960,15 @@
       </notes>
       <segment>
         <source>Tags could not be loaded.</source>
+      </segment>
+    </unit>
+    <unit id="5870315426897771164">
+      <notes>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:560</note>
+        <note category="description">Button that adds a provider key</note>
+      </notes>
+      <segment>
+        <source>Add a key</source>
       </segment>
     </unit>
     <unit id="5872175735754226507">
@@ -18842,6 +19357,15 @@
         <source>Search statuses</source>
       </segment>
     </unit>
+    <unit id="818458871220582756">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-spend-cap-dialog.component.ts:87,92</note>
+        <note category="description">Button that stores the assistant spend cap</note>
+      </notes>
+      <segment>
+        <source>Save cap</source>
+      </segment>
+    </unit>
     <unit id="8185120639208275754">
       <notes>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:52,55</note>
@@ -18854,6 +19378,7 @@
     <unit id="7203070746919732368">
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:341</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:345</note>
         <note category="description">Explains what removing an API key does</note>
       </notes>
       <segment>
@@ -19125,7 +19650,7 @@
     </unit>
     <unit id="4475093671158329161">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:222</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:229</note>
         <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:83,87</note>
         <note category="description">Label on the control that pins a task</note>
       </notes>
@@ -19369,7 +19894,7 @@
     </unit>
     <unit id="115639214090380471">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:207</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:194</note>
         <note category="description">Hint describing the Brave search provider</note>
       </notes>
       <segment>
@@ -19404,15 +19929,6 @@
       </notes>
       <segment>
         <source>Filter by origin</source>
-      </segment>
-    </unit>
-    <unit id="4455504566532091550">
-      <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:47,52</note>
-        <note category="description">Explains what the workspace search provider is for</note>
-      </notes>
-      <segment>
-        <source> The assistant searches the web through this provider. Without one it can still read pages it is given a link to, but it cannot find them itself. </source>
       </segment>
     </unit>
     <unit id="2171902520766849476">
@@ -19538,7 +20054,7 @@
     </unit>
     <unit id="5743757503664322992">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:219</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:226</note>
         <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:46,47</note>
         <note category="location">src/app/features/pins/views/pinned-view/pinned-view.component.ts:63,65</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:231</note>
@@ -19810,6 +20326,15 @@
         <source>{VAR_PLURAL, plural, =1 {1 task elsewhere on this board already has} other {<ph id="0" equiv="INTERPOLATION"/> tasks elsewhere on this board already have }}</source>
       </segment>
     </unit>
+    <unit id="1943281260128552173">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-spend-cap-dialog.component.ts:37,40</note>
+        <note category="description">Title of the dialog that sets the assistant spend cap</note>
+      </notes>
+      <segment>
+        <source> Monthly spend cap </source>
+      </segment>
+    </unit>
     <unit id="8839963009744223515">
       <notes>
         <note category="location">src/app/features/users/views/user-detail-view/user-detail-view.component.ts:30,31</note>
@@ -20046,6 +20571,15 @@
         <source> The task was created, but some files did not upload. Close this dialog and add them from the task. </source>
       </segment>
     </unit>
+    <unit id="2215333818982696562">
+      <notes>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:569</note>
+        <note category="description">Heading shown when the assistant is off</note>
+      </notes>
+      <segment>
+        <source>The assistant is turned off</source>
+      </segment>
+    </unit>
     <unit id="2217519786318593047">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:113</note>
@@ -20053,6 +20587,15 @@
       </notes>
       <segment>
         <source>Goals rewritten</source>
+      </segment>
+    </unit>
+    <unit id="4172048364793692674">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:216</note>
+        <note category="description">Compares assistant spend with the cap</note>
+      </notes>
+      <segment>
+        <source>of <ph id="0" equiv="cap" disp="formatCurrency(cap)"/> cap · <ph id="1" equiv="percent" disp="percent"/>%</source>
       </segment>
     </unit>
     <unit id="417521324376034489">
@@ -20295,7 +20838,7 @@
     </unit>
     <unit id="8784622693944438705">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:96,98</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:57,59</note>
         <note category="description">Label for the search provider</note>
       </notes>
       <segment>
@@ -20363,6 +20906,15 @@
       </notes>
       <segment>
         <source> New notification </source>
+      </segment>
+    </unit>
+    <unit id="2557623954339695776">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:136</note>
+        <note category="description">Label of the assistant connections status tile</note>
+      </notes>
+      <segment>
+        <source>Connections</source>
       </segment>
     </unit>
     <unit id="2557989910244598975">
@@ -20513,8 +21065,8 @@
     </unit>
     <unit id="6601864657708472888">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:134,135</note>
-        <note category="description">Heading of the assistant access card</note>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:268,270</note>
+        <note category="description">Heading of the assistant access setting</note>
       </notes>
       <segment>
         <source> Assistant access </source>
@@ -20621,6 +21173,15 @@
         <source>Use light theme</source>
       </segment>
     </unit>
+    <unit id="1819085214881190211">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:247</note>
+        <note category="description">Title of the dialog that manages web search</note>
+      </notes>
+      <segment>
+        <source>Manage web search</source>
+      </segment>
+    </unit>
     <unit id="5451502558994508455">
       <notes>
         <note category="location">src/app/shell/profile-menu.component.ts:126</note>
@@ -20657,9 +21218,18 @@
         <source>Add File</source>
       </segment>
     </unit>
+    <unit id="1234017355167373884">
+      <notes>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:683</note>
+        <note category="description">Explains what happens when the assistant spend cap is reached</note>
+      </notes>
+      <segment>
+        <source><ph id="0" equiv="remaining" disp="remaining"/> left of <ph id="1" equiv="cap" disp="formatCurrency(cap)"/>. The assistant stops accepting new messages once the cap is reached.</source>
+      </segment>
+    </unit>
     <unit id="1238372923050281145">
       <notes>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:344</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:324</note>
         <note category="description">Shown after the search provider is stored</note>
       </notes>
       <segment>
@@ -20673,6 +21243,15 @@
       </notes>
       <segment>
         <source> Clear </source>
+      </segment>
+    </unit>
+    <unit id="2046716892243700803">
+      <notes>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:241,243</note>
+        <note category="description">Heading of the assistant setup group</note>
+      </notes>
+      <segment>
+        <source> Setup </source>
       </segment>
     </unit>
     <unit id="2049427639275424472">
@@ -20727,6 +21306,15 @@
       </notes>
       <segment>
         <source>Overview</source>
+      </segment>
+    </unit>
+    <unit id="3500458863157551898">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:91</note>
+        <note category="description">Shown when the assistant is off</note>
+      </notes>
+      <segment>
+        <source>Off</source>
       </segment>
     </unit>
     <unit id="3503113826175140473">
@@ -20964,11 +21552,21 @@
     </unit>
     <unit id="7136018875175606726">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:93,94</note>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:177,178</note>
         <note category="description">Counts tokens sent to the model</note>
       </notes>
       <segment>
         <source>in</source>
+      </segment>
+    </unit>
+    <unit id="7136158479220676689">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:211</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:124</note>
+        <note category="description">Says the workspace has no assistant spend cap</note>
+      </notes>
+      <segment>
+        <source>No cap set</source>
       </segment>
     </unit>
     <unit id="1536087519743707362">
@@ -21430,7 +22028,8 @@
       <notes>
         <note category="location">src/app/core/services/task-commands.service.ts:217</note>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:342</note>
-        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:364</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:346</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:345</note>
         <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:82,85</note>
         <note category="location">src/app/static/components/form-select-tags/form-select-tags.component.ts:74,77</note>
         <note category="location">src/app/static/components/image-upload/image-upload.component.ts:90,93</note>
@@ -21472,7 +22071,7 @@
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:44</note>
         <note category="location">src/app/static/components/filter-facet/filter-facet.component.ts:133</note>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:206</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:208</note>
         <note category="location">src/app/static/components/search-input/search-input.component.ts:39</note>
         <note category="location">src/app/static/components/select-filter/select-filter.component.ts:70</note>
         <note category="description">Label of the export search filter</note>
@@ -21613,7 +22212,7 @@
     </unit>
     <unit id="622130541512871637">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:273,274</note>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:367,368</note>
         <note category="description">Accessible label while conversations load</note>
       </notes>
       <segment>
@@ -21659,10 +22258,20 @@
     <unit id="4442108733606169287">
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:190,192</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:261</note>
         <note category="description">Button that stores an API key</note>
       </notes>
       <segment>
         <source>Save key</source>
+      </segment>
+    </unit>
+    <unit id="4443629607890963383">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:212</note>
+        <note category="description">Hint listing the supported web search providers</note>
+      </notes>
+      <segment>
+        <source>Brave, Google or SearXNG</source>
       </segment>
     </unit>
     <unit id="4447140464620115564">
@@ -21681,6 +22290,15 @@
       </notes>
       <segment>
         <source> Estimate Type </source>
+      </segment>
+    </unit>
+    <unit id="6519585035102517922">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:45,47</note>
+        <note category="description">Heading of the assistant spend card</note>
+      </notes>
+      <segment>
+        <source> Spend this month </source>
       </segment>
     </unit>
     <unit id="2391767489498755087">
@@ -21740,6 +22358,15 @@
       </notes>
       <segment>
         <source>relation types</source>
+      </segment>
+    </unit>
+    <unit id="7326320162722122295">
+      <notes>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:559</note>
+        <note category="description">Explains why a workspace key helps</note>
+      </notes>
+      <segment>
+        <source>Add a workspace key so every member can use the assistant without bringing their own.</source>
       </segment>
     </unit>
     <unit id="5890293802666420211">
@@ -21828,7 +22455,7 @@
     </unit>
     <unit id="1978378776147370036">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:335,337</note>
+        <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:432,435</note>
         <note category="description">Explains why the assistant conversation list is empty</note>
       </notes>
       <segment>
