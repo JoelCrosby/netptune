@@ -11,6 +11,41 @@ public class AssistantPermissionTests
     [Theory]
     [InlineData(WorkspaceRole.Owner)]
     [InlineData(WorkspaceRole.Admin)]
+    [InlineData(WorkspaceRole.Member)]
+    public void Use_ShouldBeGranted_FromMemberUpwards(WorkspaceRole role)
+    {
+        var permissions = WorkspaceRolePermissions.GetDefaultPermissions(role);
+
+        permissions.Should().Contain(NetptunePermissions.Assistant.Use);
+    }
+
+    [Fact]
+    public void Use_ShouldNotBeGranted_ToViewers()
+    {
+        var permissions = WorkspaceRolePermissions.GetDefaultPermissions(WorkspaceRole.Viewer);
+
+        permissions.Should().NotContain(
+            NetptunePermissions.Assistant.Use,
+            "a turn spends the workspace's provider budget, which a read only member should not be able to do");
+    }
+
+    [Fact]
+    public void Use_ShouldBeAKnownPermission()
+    {
+        NetptunePermissions.All.Should().Contain(NetptunePermissions.Assistant.Use);
+    }
+
+    [Fact]
+    public void Use_ShouldNotBeReadableByThePublic()
+    {
+        NetptunePermissions.PublicReadable.Should().NotContain(
+            NetptunePermissions.Assistant.Use,
+            "an anonymous visitor to a public workspace must never reach the assistant");
+    }
+
+    [Theory]
+    [InlineData(WorkspaceRole.Owner)]
+    [InlineData(WorkspaceRole.Admin)]
     public void ReadAllConversations_ShouldBeGranted_ToWorkspaceAdministrators(WorkspaceRole role)
     {
         var permissions = WorkspaceRolePermissions.GetDefaultPermissions(role);

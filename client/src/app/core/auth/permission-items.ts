@@ -12,6 +12,7 @@ import {
   LucideFileArchive,
   LucideFilePen,
   LucideFlag,
+  LucideGlobe,
   LucideSparkles,
   LucideIconInput,
   LucideImage,
@@ -432,10 +433,20 @@ export const netptunePermissionLabels: PermissionLabels = {
     },
   },
   assistant: {
+    use: {
+      key: 'assistant.use',
+      label: $localize`:Name of a workspace permission:Use Assistant`,
+      icon: LucideSparkles,
+    },
     readAllConversations: {
       key: 'assistant.read_all_conversations',
       label: $localize`:Name of a workspace permission:View All Assistant Conversations`,
       icon: LucideSparkles,
+    },
+    useWeb: {
+      key: 'assistant.use_web',
+      label: $localize`:Name of a workspace permission:Assistant Web Access`,
+      icon: LucideGlobe,
     },
   },
   flags: {

@@ -103,7 +103,9 @@ export const PERMISSIONS = {
     manage: 'automations.manage',
   },
   assistant: {
+    use: 'assistant.use',
     readAllConversations: 'assistant.read_all_conversations',
+    useWeb: 'assistant.use_web',
   },
   flags: {
     read: 'flags.read',

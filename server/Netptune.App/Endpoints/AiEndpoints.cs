@@ -34,13 +34,17 @@ public static class AiEndpoints
 
         group.MapGet("/models", () => Results.Ok(AiModels.Catalog));
 
-        group.MapGet("/credentials", HandleGetCredentials);
+        group.MapGet("/credentials", HandleGetCredentials)
+            .RequireAuthorization(NetptunePermissions.Assistant.Use);
 
-        group.MapPut("/credentials", HandleSaveCredential);
+        group.MapPut("/credentials", HandleSaveCredential)
+            .RequireAuthorization(NetptunePermissions.Assistant.Use);
 
-        group.MapDelete("/credentials/{credentialId:guid}", HandleDeleteCredential);
+        group.MapDelete("/credentials/{credentialId:guid}", HandleDeleteCredential)
+            .RequireAuthorization(NetptunePermissions.Assistant.Use);
 
-        group.MapGet("/credentials/availability", HandleGetCredentialAvailability);
+        group.MapGet("/credentials/availability", HandleGetCredentialAvailability)
+            .RequireAuthorization(NetptunePermissions.Assistant.Use);
 
         group.MapGet("/workspace-credentials", HandleGetWorkspaceCredentials)
             .RequireAuthorization(NetptunePermissions.Workspace.Update);
@@ -60,17 +64,22 @@ public static class AiEndpoints
         group.MapDelete("/workspace-search-credential", HandleDeleteWorkspaceSearchCredential)
             .RequireAuthorization(NetptunePermissions.Workspace.Update);
 
-        group.MapGet("/conversations", HandleGetConversations);
+        group.MapGet("/conversations", HandleGetConversations)
+            .RequireAuthorization(NetptunePermissions.Assistant.Use);
 
-        group.MapGet("/conversations/{conversationId:guid}", HandleGetConversation);
+        group.MapGet("/conversations/{conversationId:guid}", HandleGetConversation)
+            .RequireAuthorization(NetptunePermissions.Assistant.Use);
 
-        group.MapDelete("/conversations/{conversationId:guid}", HandleDeleteConversation);
+        group.MapDelete("/conversations/{conversationId:guid}", HandleDeleteConversation)
+            .RequireAuthorization(NetptunePermissions.Assistant.Use);
 
         group
             .MapPost("/conversations/messages", HandleSendMessage)
+            .RequireAuthorization(NetptunePermissions.Assistant.Use)
             .RequireRateLimiting(RateLimiterConfiguration.AiPolicyName);
 
-        group.MapPost("/conversations/{conversationId:guid}/stop", HandleStopTurn);
+        group.MapPost("/conversations/{conversationId:guid}/stop", HandleStopTurn)
+            .RequireAuthorization(NetptunePermissions.Assistant.Use);
 
         group.MapGet("/admin/conversations", HandleGetWorkspaceConversations)
             .RequireAuthorization(NetptunePermissions.Assistant.ReadAllConversations);
@@ -84,28 +93,37 @@ public static class AiEndpoints
         group.MapPut("/admin/spend-cap", HandleSetSpendCap)
             .RequireAuthorization(NetptunePermissions.Workspace.Update);
 
-        group.MapGet("/conversations/{conversationId:guid}/change-set", HandleGetPendingChangeSet);
+        group.MapGet("/conversations/{conversationId:guid}/change-set", HandleGetPendingChangeSet)
+            .RequireAuthorization(NetptunePermissions.Assistant.Use);
 
-        group.MapGet("/conversations/{conversationId:guid}/change-sets", HandleGetConversationChangeSets);
+        group.MapGet("/conversations/{conversationId:guid}/change-sets", HandleGetConversationChangeSets)
+            .RequireAuthorization(NetptunePermissions.Assistant.Use);
 
-        group.MapGet("/change-sets/{changeSetId:guid}", HandleGetChangeSet);
+        group.MapGet("/change-sets/{changeSetId:guid}", HandleGetChangeSet)
+            .RequireAuthorization(NetptunePermissions.Assistant.Use);
 
-        group.MapPost("/change-sets/{changeSetId:guid}/discard", HandleDiscardChangeSet);
+        group.MapPost("/change-sets/{changeSetId:guid}/discard", HandleDiscardChangeSet)
+            .RequireAuthorization(NetptunePermissions.Assistant.Use);
 
-        group.MapPatch("/change-sets/{changeSetId:guid}/changes/{changeId:long}", HandleUpdateChange);
+        group.MapPatch("/change-sets/{changeSetId:guid}/changes/{changeId:long}", HandleUpdateChange)
+            .RequireAuthorization(NetptunePermissions.Assistant.Use);
 
         group
             .MapPost("/change-sets/{changeSetId:guid}/apply", HandleApplyChangeSet)
+            .RequireAuthorization(NetptunePermissions.Assistant.Use)
             .RequireRateLimiting(RateLimiterConfiguration.AiPolicyName);
 
-        group.MapPost("/change-sets/{changeSetId:guid}/stop", HandleStopChangeSetApply);
+        group.MapPost("/change-sets/{changeSetId:guid}/stop", HandleStopChangeSetApply)
+            .RequireAuthorization(NetptunePermissions.Assistant.Use);
 
         group
             .MapPost("/change-sets/{changeSetId:guid}/undo", HandleUndoChangeSet)
+            .RequireAuthorization(NetptunePermissions.Assistant.Use)
             .RequireRateLimiting(RateLimiterConfiguration.AiPolicyName);
 
         group
             .MapPost("/change-sets/{changeSetId:guid}/retry", HandleRetryChangeSet)
+            .RequireAuthorization(NetptunePermissions.Assistant.Use)
             .RequireRateLimiting(RateLimiterConfiguration.AiPolicyName);
 
         return group;

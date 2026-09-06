@@ -1,5 +1,5 @@
 import { computed, inject, Service, signal } from '@angular/core';
-import { Permission } from '@core/auth/permissions';
+import { Permission, PERMISSIONS } from '@core/auth/permissions';
 import {
   forgetSessionHint,
   rememberSessionHint,
@@ -47,6 +47,7 @@ export class SessionService {
 
   readonly isAssistantAvailable = computed(() => {
     if (!this.isAuthenticated() || this.isPublicViewer()) return false;
+    if (!this.can(PERMISSIONS.assistant.use)) return false;
 
     return this.currentWorkspace.workspace()?.assistantEnabled !== false;
   });

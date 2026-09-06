@@ -56,6 +56,7 @@ public static class WorkspaceRolePermissions
         NetptunePermissions.Storage.UploadMedia,
         NetptunePermissions.Files.Upload,
         NetptunePermissions.Files.DeleteOwn,
+        NetptunePermissions.Assistant.Use,
         NetptunePermissions.Assistant.UseWeb,
     };
 
