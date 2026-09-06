@@ -203,10 +203,29 @@ public sealed class AiEndpointTests
     public async Task AdminConversations_ShouldListForAWorkspaceAdministrator()
     {
         var client = Fixture.CreateNetptuneClient();
-        var conversations = await client
-            .GetFromJsonAsync<List<AiWorkspaceConversationViewModel>>("api/ai/admin/conversations");
+        var response = await client
+            .GetFromJsonAsync<ClientResponse<PagedResponse<AiWorkspaceConversationViewModel>>>("api/ai/admin/conversations");
 
-        conversations.Should().NotBeNull();
+        response.Payload.Should().NotBeNull();
+        response.Payload!.Items.Should().NotBeNull();
+    }
+
+    [Theory]
+    [InlineData("title")]
+    [InlineData("user")]
+    [InlineData("messageCount")]
+    [InlineData("tokens")]
+    [InlineData("lastMessageAt")]
+    public async Task AdminConversations_ShouldPageAndSort(string sortBy)
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var url = $"api/ai/admin/conversations?page=1&pageSize=25&sortBy={sortBy}&sortDirection=desc";
+        var response = await client
+            .GetFromJsonAsync<ClientResponse<PagedResponse<AiWorkspaceConversationViewModel>>>(url);
+
+        response.Payload.Should().NotBeNull();
+        response.Payload!.Page.Should().Be(1);
+        response.Payload.PageSize.Should().Be(25);
     }
 
     [Fact]

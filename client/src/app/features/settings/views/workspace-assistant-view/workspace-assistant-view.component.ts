@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, computed, inject, signal, viewChild } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Params, RouterLink } from '@angular/router';
 import { AiAssistantMessageComponent } from '@app/shell/ai-assistant/components/ai-assistant-message.component';
 import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
@@ -11,7 +11,6 @@ import { AiWorkspaceConversation } from '@core/models/ai-workspace-conversation'
 import { ClientResponse } from '@core/models/client-response';
 import { aiCredentialResource } from '@core/resources/ai-credential.resource';
 import { aiSpendResource } from '@core/resources/ai-spend.resource';
-import { aiWorkspaceConversationResource } from '@core/resources/ai-workspace-conversation.resource';
 import { searchCredentialResource } from '@core/resources/search-credential.resource';
 import { workspaceUsersResource } from '@core/resources/user.resource';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
@@ -35,6 +34,13 @@ import { FlatButtonComponent } from '@static/components/button/flat-button.compo
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { CalloutComponent } from '@static/components/callout/callout.component';
+import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
+import { DatatableEmptyDirective } from '@static/components/datatable/datatable-empty.directive';
+import { DatatableComponent } from '@static/components/datatable/datatable.component';
+import {
+  DatatableDataSource,
+  DatatableSort,
+} from '@static/components/datatable/datatable.types';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
 import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
@@ -42,7 +48,6 @@ import { IconTileComponent } from '@static/components/icon-tile.component';
 import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
-import { SkeletonComponent } from '@static/components/skeleton/skeleton.component';
 import { SwitchComponent } from '@static/components/switch/switch.component';
 import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
 
@@ -63,6 +68,9 @@ interface AssistantBanner {
     AssistantSpendCardComponent,
     AssistantStatusBandComponent,
     CalloutComponent,
+    DatatableCellTemplateDirective,
+    DatatableComponent,
+    DatatableEmptyDirective,
     DropdownMenuComponent,
     EmptyStateComponent,
     FlatButtonComponent,
@@ -78,7 +86,6 @@ interface AssistantBanner {
     PageHeaderComponent,
     PrettyDatePipe,
     RouterLink,
-    SkeletonComponent,
     StrokedButtonComponent,
     SwitchComponent,
   ],
@@ -201,248 +208,216 @@ interface AssistantBanner {
               }
             </div>
           </section>
-        } @else {
-          <div class="flex flex-col gap-7 pb-10">
-            @if (banner(); as message) {
-              <app-callout
-                [color]="message.color"
-                [icon]="message.icon"
-                class="[&>div]:items-center">
-                <div
-                  class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-                  <div class="min-w-0">
-                    <p class="font-medium">{{ message.title }}</p>
-                    <p class="text-muted mt-0.5">{{ message.body }}</p>
-                  </div>
-                  <button
-                    app-flat-button
-                    type="button"
-                    class="h-8 shrink-0 px-3 text-xs"
-                    (click)="actOnBanner(message)">
-                    {{ message.action }}
-                  </button>
+        }
+        <!-- Kept mounted while a transcript is open so the table holds its
+             page and sort when the reader comes back. -->
+        <div class="flex flex-col gap-7 pb-10" [hidden]="selected()">
+          @if (banner(); as message) {
+            <app-callout
+              [color]="message.color"
+              [icon]="message.icon"
+              class="[&>div]:items-center">
+              <div
+                class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+                <div class="min-w-0">
+                  <p class="font-medium">{{ message.title }}</p>
+                  <p class="text-muted mt-0.5">{{ message.body }}</p>
                 </div>
-              </app-callout>
-            }
-
-            <app-assistant-status-band
-              [enabled]="assistantEnabled()"
-              [memberCount]="memberCount()"
-              [spend]="spend.value()"
-              [connected]="connectedCount()"
-              [totalConnections]="totalConnections" />
-
-            @if (canUpdateWorkspace()) {
-              <div class="flex flex-col gap-4">
-                <div class="flex items-center gap-3">
-                  <span
-                    class="text-muted text-[11px] font-bold tracking-[0.14em] uppercase"
-                    i18n="Heading of the assistant setup group">
-                    Setup
-                  </span>
-                  <span class="bg-foreground/10 h-px flex-1"></span>
-                </div>
-
-                <app-assistant-connections
-                  #connections
-                  [credentials]="credentials.value()"
-                  [searchCredential]="searchCredential.value()"
-                  (changed)="reloadConnections()" />
-
-                <section
-                  class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
-                  <header class="border-border border-b px-6 py-5">
-                    <h2
-                      class="font-overpass text-base font-semibold"
-                      i18n="Heading of the assistant access and privacy card">
-                      Access &amp; privacy
-                    </h2>
-                  </header>
-
-                  <div
-                    class="border-border flex flex-wrap items-center justify-between gap-x-6 gap-y-3 border-b px-6 py-5">
-                    <div class="min-w-0">
-                      <h3
-                        class="text-sm font-medium"
-                        i18n="Heading of the assistant access setting">
-                        Assistant access
-                      </h3>
-                      <p
-                        class="text-muted mt-1 text-sm"
-                        i18n="Explains what turning the assistant off does">
-                        Turning this off stops new assistant messages and blocks
-                        pending changes from being applied.
-                      </p>
-                    </div>
-
-                    <app-switch
-                      class="shrink-0"
-                      [checked]="assistantEnabled()"
-                      i18n-ariaLabel="
-                        Toggle that enables the assistant for a workspace
-                      "
-                      ariaLabel="Allow members to use the assistant"
-                      (changed)="setAssistantEnabled($event)" />
-                  </div>
-
-                  <div
-                    class="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 px-6 py-5">
-                    <div class="min-w-0">
-                      <h3
-                        class="text-sm font-medium"
-                        i18n="Heading of the assistant data sampling setting">
-                        Share example values with the assistant
-                      </h3>
-                      <p
-                        class="text-muted mt-1 text-sm"
-                        i18n="
-                          Explains what turning off assistant data sampling does
-                        ">
-                        When an import mapping is improved by the assistant, a
-                        few real cell values are sent with the column names.
-                        Turn this off to send column names and types only.
-                      </p>
-                    </div>
-
-                    <app-switch
-                      class="shrink-0"
-                      [checked]="allowsDataSampling()"
-                      i18n-ariaLabel="
-                        Toggle that shares example values with the assistant
-                      "
-                      ariaLabel="Share example values with the assistant"
-                      (changed)="setAllowDataSampling($event)" />
-                  </div>
-                </section>
+                <button
+                  app-flat-button
+                  type="button"
+                  class="h-8 shrink-0 px-3 text-xs"
+                  (click)="actOnBanner(message)">
+                  {{ message.action }}
+                </button>
               </div>
-            }
+            </app-callout>
+          }
 
+          <app-assistant-status-band
+            [enabled]="assistantEnabled()"
+            [memberCount]="memberCount()"
+            [spend]="spend.value()"
+            [connected]="connectedCount()"
+            [totalConnections]="totalConnections" />
+
+          @if (canUpdateWorkspace()) {
             <div class="flex flex-col gap-4">
               <div class="flex items-center gap-3">
                 <span
                   class="text-muted text-[11px] font-bold tracking-[0.14em] uppercase"
-                  i18n="Heading of the assistant activity group">
-                  Activity
+                  i18n="Heading of the assistant setup group">
+                  Setup
                 </span>
                 <span class="bg-foreground/10 h-px flex-1"></span>
               </div>
 
-              @if (hasSpend()) {
-                <app-assistant-spend-card
-                  [spend]="spend.value()"
-                  [canEditCap]="canUpdateWorkspace()"
-                  (capChanged)="spend.reload()" />
-              }
+              <app-assistant-connections
+                #connections
+                [credentials]="credentials.value()"
+                [searchCredential]="searchCredential.value()"
+                (changed)="reloadConnections()" />
 
               <section
                 class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
                 <header class="border-border border-b px-6 py-5">
-                  <div class="flex min-w-0 items-center gap-3">
-                    <app-icon-tile [icon]="conversationIcon" />
-
-                    <div class="min-w-0">
-                      <h2
-                        class="font-overpass text-base font-semibold"
-                        i18n="Heading of the assistant conversation list">
-                        Conversations
-                      </h2>
-                      <p
-                        class="text-muted mt-1 text-sm"
-                        i18n="
-                          Explains what an admin sees on the assistant
-                          conversations page
-                        ">
-                        What members asked the assistant. The record of what
-                        changed lives in the audit log.
-                      </p>
-                    </div>
-                  </div>
+                  <h2
+                    class="font-overpass text-base font-semibold"
+                    i18n="Heading of the assistant access and privacy card">
+                    Access &amp; privacy
+                  </h2>
                 </header>
 
-                @if (isInitialLoad()) {
-                  <div
-                    class="flex flex-col gap-4 px-6 py-5"
-                    role="status"
-                    i18n-aria-label="Accessible label while conversations load"
-                    aria-label="Loading conversations">
-                    @for (row of skeletonRows; track $index) {
-                      <div class="flex items-center gap-3">
-                        <app-skeleton class="h-8 w-8 shrink-0 rounded-lg" />
-                        <div class="flex-1">
-                          <app-skeleton class="h-3 w-48" />
-                          <app-skeleton class="mt-2 h-3 w-72" />
-                        </div>
-                      </div>
-                    }
+                <div
+                  class="border-border flex flex-wrap items-center justify-between gap-x-6 gap-y-3 border-b px-6 py-5">
+                  <div class="min-w-0">
+                    <h3
+                      class="text-sm font-medium"
+                      i18n="Heading of the assistant access setting">
+                      Assistant access
+                    </h3>
+                    <p
+                      class="text-muted mt-1 text-sm"
+                      i18n="Explains what turning the assistant off does">
+                      Turning this off stops new assistant messages and blocks
+                      pending changes from being applied.
+                    </p>
                   </div>
-                } @else {
-                  <ul class="divide-border/50 flex flex-col divide-y">
-                    @for (
-                      conversation of conversations.value();
-                      track conversation.id
-                    ) {
-                      <li>
-                        <button
-                          type="button"
-                          class="hover:bg-hover focus-visible:ring-primary flex w-full items-center gap-3 px-6 py-4 text-left transition-colors focus-visible:ring-2 focus-visible:-outline-offset-2 focus-visible:outline-none"
-                          (click)="select(conversation)">
-                          <app-icon-tile
-                            size="small"
-                            [icon]="conversationIcon"
-                            class="mt-0.5" />
 
-                          <span class="min-w-0 flex-1">
-                            <span class="block truncate text-sm font-medium">
-                              {{ conversation.title }}
-                            </span>
-                            <span class="text-muted block truncate text-xs">
-                              {{ conversation.userDisplayName }} ·
-                              {{ conversation.messageCount }}
-                              <span
-                                i18n="Counts messages in a stored conversation"
-                                >messages</span
-                              >
-                              · {{ tokenLabel(conversation) }}
-                              <span i18n="Counts tokens a conversation has cost"
-                                >tokens</span
-                              >
-                              · {{ costLabel(conversation) }}
-                            </span>
-                          </span>
+                  <app-switch
+                    class="shrink-0"
+                    [checked]="assistantEnabled()"
+                    i18n-ariaLabel="
+                      Toggle that enables the assistant for a workspace
+                    "
+                    ariaLabel="Allow members to use the assistant"
+                    (changed)="setAssistantEnabled($event)" />
+                </div>
 
-                          <span class="text-muted shrink-0 text-xs">
-                            {{
-                              toDate(conversation.lastMessageAt) | prettyDate
-                            }}
-                          </span>
-                        </button>
-                      </li>
-                    } @empty {
-                      <li>
-                        <app-empty-state
-                          compact
-                          i18n-title="
-                            Heading when no assistant conversations exist
-                          "
-                          title="There are no conversations"
-                          i18n-description="
-                            Explains why the assistant conversation list is
-                            empty
-                          "
-                          description="Conversations appear here once members use the assistant">
-                          <svg
-                            emptyStateIcon
-                            lucideMessagesSquare
-                            class="h-8 w-8"></svg>
-                        </app-empty-state>
-                      </li>
-                    }
-                  </ul>
-                }
+                <div
+                  class="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 px-6 py-5">
+                  <div class="min-w-0">
+                    <h3
+                      class="text-sm font-medium"
+                      i18n="Heading of the assistant data sampling setting">
+                      Share example values with the assistant
+                    </h3>
+                    <p
+                      class="text-muted mt-1 text-sm"
+                      i18n="
+                        Explains what turning off assistant data sampling does
+                      ">
+                      When an import mapping is improved by the assistant, a few
+                      real cell values are sent with the column names. Turn this
+                      off to send column names and types only.
+                    </p>
+                  </div>
+
+                  <app-switch
+                    class="shrink-0"
+                    [checked]="allowsDataSampling()"
+                    i18n-ariaLabel="
+                      Toggle that shares example values with the assistant
+                    "
+                    ariaLabel="Share example values with the assistant"
+                    (changed)="setAllowDataSampling($event)" />
+                </div>
               </section>
             </div>
+          }
+
+          <div class="flex flex-col gap-4">
+            <div class="flex items-center gap-3">
+              <span
+                class="text-muted text-[11px] font-bold tracking-[0.14em] uppercase"
+                i18n="Heading of the assistant activity group">
+                Activity
+              </span>
+              <span class="bg-foreground/10 h-px flex-1"></span>
+            </div>
+
+            @if (hasSpend()) {
+              <app-assistant-spend-card
+                [spend]="spend.value()"
+                [canEditCap]="canUpdateWorkspace()"
+                (capChanged)="spend.reload()" />
+            }
+
+            <section
+              class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
+              <header class="border-border border-b px-6 py-5">
+                <div class="flex min-w-0 items-center gap-3">
+                  <app-icon-tile [icon]="conversationIcon" />
+
+                  <div class="min-w-0">
+                    <h2
+                      class="font-overpass text-base font-semibold"
+                      i18n="Heading of the assistant conversation list">
+                      Conversations
+                    </h2>
+                    <p
+                      class="text-muted mt-1 text-sm"
+                      i18n="
+                        Explains what an admin sees on the assistant
+                        conversations page
+                      ">
+                      What members asked the assistant. The record of what
+                      changed lives in the audit log.
+                    </p>
+                  </div>
+                </div>
+              </header>
+
+              <app-datatable
+                containerClass="border-0"
+                tableClass="table-fixed"
+                i18n-errorMessage="
+                  Shown when the assistant conversation list fails to load
+                "
+                errorMessage="Conversations could not be loaded."
+                i18n-itemLabel="
+                  Plural noun for assistant conversations, used in the row
+                  summary
+                "
+                itemLabel="conversations"
+                [rounded]="false"
+                [skeletonRows]="5"
+                [data]="conversationData"
+                [(sort)]="conversationSort">
+                <ng-template appDatatableCell="title" let-conversation>
+                  <button
+                    type="button"
+                    class="block w-full truncate text-left font-medium hover:underline"
+                    (click)="select(conversation)">
+                    {{ conversation.title }}
+                  </button>
+                </ng-template>
+
+                <ng-template appDatatableCell="lastMessageAt" let-conversation>
+                  <span class="whitespace-nowrap">
+                    {{ toDate(conversation.lastMessageAt) | prettyDate }}
+                  </span>
+                </ng-template>
+
+                <ng-template appDatatableEmpty>
+                  <app-empty-state
+                    compact
+                    i18n-title="Heading when no assistant conversations exist"
+                    title="There are no conversations"
+                    i18n-description="
+                      Explains why the assistant conversation list is empty
+                    "
+                    description="Conversations appear here once members use the assistant">
+                    <svg
+                      emptyStateIcon
+                      lucideMessagesSquare
+                      class="h-8 w-8"></svg>
+                  </app-empty-state>
+                </ng-template>
+              </app-datatable>
+            </section>
           </div>
-        }
+        </div>
       </app-page-body>
     </app-page-container>
   `,
@@ -462,16 +437,82 @@ export class WorkspaceAssistantViewComponent {
   private readonly connectionsCard = viewChild(AssistantConnectionsComponent);
   private readonly spendCard = viewChild(AssistantSpendCardComponent);
 
-  protected readonly conversations = aiWorkspaceConversationResource();
   protected readonly credentials = aiCredentialResource(() => 'workspace');
   protected readonly searchCredential = searchCredentialResource();
   protected readonly spend = aiSpendResource();
+
+  // The endpoint takes no filters, so the table only ever varies its own paging
+  // and sort parameters.
+  private readonly conversationParams = signal<Params>({});
+
+  protected readonly conversationData: DatatableDataSource<AiWorkspaceConversation> =
+    {
+      key: 'workspace-assistant-conversations',
+      columns: [
+        {
+          id: 'title',
+          header: $localize`:Column heading for an assistant conversation:Conversation`,
+          accessor: 'title',
+          sortable: true,
+          cellClass: 'overflow-hidden',
+        },
+        {
+          id: 'user',
+          header: $localize`:Column heading for the member who held a conversation:Member`,
+          accessor: 'userDisplayName',
+          sortable: true,
+          widthClass: 'w-52',
+          cellClass: 'text-muted truncate',
+        },
+        {
+          id: 'messageCount',
+          header: $localize`:Column heading for the number of messages in a conversation:Messages`,
+          accessor: 'messageCount',
+          sortable: true,
+          align: 'end',
+          widthClass: 'w-28',
+          cellClass: 'text-muted',
+        },
+        {
+          id: 'tokens',
+          header: $localize`:Column heading for the tokens a conversation used:Tokens`,
+          accessor: (conversation) => formatTokens(conversation.usage),
+          sortable: true,
+          align: 'end',
+          widthClass: 'w-24',
+          cellClass: 'text-muted',
+        },
+        {
+          id: 'cost',
+          header: $localize`:Column heading for what a conversation cost:Cost`,
+          accessor: (conversation) => formatCost(conversation.usage),
+          align: 'end',
+          widthClass: 'w-24',
+          cellClass: 'text-muted',
+        },
+        {
+          id: 'lastMessageAt',
+          header: $localize`:Column heading for when a conversation was last active:Last message`,
+          sortable: true,
+          align: 'end',
+          widthClass: 'w-56',
+          cellClass: 'text-muted',
+        },
+      ],
+      resource: {
+        url: 'api/ai/admin/conversations',
+        params: this.conversationParams,
+      },
+      rows: (response) => response?.payload?.items ?? [],
+      trackBy: (_: number, conversation: AiWorkspaceConversation) =>
+        conversation.id,
+    };
 
   protected readonly selected = signal<AiConversationDetail | null>(null);
   protected readonly selectedMember = signal<string | null>(null);
 
   protected readonly conversationIcon = LucideMessagesSquare;
-  protected readonly skeletonRows = Array.from({ length: 4 });
+  protected readonly conversationSort = signal<DatatableSort | null>(null);
 
   protected readonly canUpdateWorkspace = hasPermission(
     PERMISSIONS.workspace.update
@@ -518,15 +559,7 @@ export class WorkspaceAssistantViewComponent {
     return this.workspace()?.allowAssistantDataSampling !== false;
   });
 
-  protected readonly conversationCount = computed(() => {
-    return this.conversations.value()?.length ?? 0;
-  });
-
   protected readonly hasSpend = computed(() => !!this.spend.value());
-
-  protected readonly isInitialLoad = computed(() => {
-    return this.conversations.isLoading() && this.conversationCount() === 0;
-  });
 
   protected readonly detailCostLabel = computed(() => {
     return formatCost(this.selected()?.conversation.usage);
@@ -631,14 +664,6 @@ export class WorkspaceAssistantViewComponent {
       metaInfo: current.metaInfo ?? {},
       assistantEnabled: enabled,
     });
-  }
-
-  protected tokenLabel(conversation: AiWorkspaceConversation): string {
-    return formatTokens(conversation.usage);
-  }
-
-  protected costLabel(conversation: AiWorkspaceConversation): string {
-    return formatCost(conversation.usage);
   }
 
   protected select(conversation: AiWorkspaceConversation) {

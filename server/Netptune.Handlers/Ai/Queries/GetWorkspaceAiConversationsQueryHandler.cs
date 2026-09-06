@@ -1,15 +1,18 @@
 using Mediator;
 
+using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Ai;
 
 namespace Netptune.Handlers.Ai.Queries;
 
-public sealed record GetWorkspaceAiConversationsQuery : IRequest<List<AiWorkspaceConversationViewModel>>;
+public sealed record GetWorkspaceAiConversationsQuery(PageRequest Request)
+    : IRequest<ClientResponse<PagedResponse<AiWorkspaceConversationViewModel>>>;
 
 public sealed class GetWorkspaceAiConversationsQueryHandler
-    : IRequestHandler<GetWorkspaceAiConversationsQuery, List<AiWorkspaceConversationViewModel>>
+    : IRequestHandler<GetWorkspaceAiConversationsQuery, ClientResponse<PagedResponse<AiWorkspaceConversationViewModel>>>
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
@@ -20,12 +23,13 @@ public sealed class GetWorkspaceAiConversationsQueryHandler
         Identity = identity;
     }
 
-    public async ValueTask<List<AiWorkspaceConversationViewModel>> Handle(
+    public async ValueTask<ClientResponse<PagedResponse<AiWorkspaceConversationViewModel>>> Handle(
         GetWorkspaceAiConversationsQuery query,
         CancellationToken cancellationToken)
     {
         var workspaceId = await Identity.GetWorkspaceId();
+        var page = await UnitOfWork.AiConversations.GetPageForWorkspace(workspaceId, query.Request, cancellationToken);
 
-        return await UnitOfWork.AiConversations.GetForWorkspace(workspaceId, cancellationToken);
+        return ClientResponse<PagedResponse<AiWorkspaceConversationViewModel>>.Success(page);
     }
 }

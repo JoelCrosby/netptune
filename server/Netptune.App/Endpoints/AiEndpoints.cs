@@ -8,6 +8,7 @@ using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
+using Netptune.Core.Requests;
 using Netptune.Core.Requests.Ai;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Ai.Commands;
@@ -251,9 +252,10 @@ public static class AiEndpoints
 
     private static async Task<IResult> HandleGetWorkspaceConversations(
         IMediator mediator,
+        [AsParameters] PageRequest request,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetWorkspaceAiConversationsQuery(), cancellationToken);
+        var result = await mediator.Send(new GetWorkspaceAiConversationsQuery(request), cancellationToken);
 
         return Results.Ok(result);
     }

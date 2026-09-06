@@ -1,9 +1,13 @@
+using System.Linq.Expressions;
+
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Ai;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
@@ -169,39 +173,77 @@ public class AiConversationRepository(DataContext context, IDbConnectionFactory 
                 message.CreatedAt >= fromUtc);
     }
 
-    public async Task<List<AiWorkspaceConversationViewModel>> GetForWorkspace(
+    public async Task<PagedResponse<AiWorkspaceConversationViewModel>> GetPageForWorkspace(
         int workspaceId,
+        PageRequest request,
         CancellationToken cancellationToken = default)
     {
-        var conversations = await Entities
+        var query = Entities
             .AsNoTracking()
-            .Where(conversation => conversation.WorkspaceId == workspaceId && !conversation.IsDeleted)
-            .OrderByDescending(conversation => conversation.LastMessageAt)
-            .Select(conversation => new AiWorkspaceConversationViewModel
-            {
-                Id = conversation.Id,
-                Title = conversation.Title,
-                UserId = conversation.UserId,
-                UserDisplayName = string.IsNullOrEmpty(conversation.User.Firstname) && string.IsNullOrEmpty(conversation.User.Lastname)
-                    ? conversation.User.UserName!
-                    : conversation.User.Firstname + " " + conversation.User.Lastname,
-                Provider = conversation.Provider,
-                Model = conversation.Model,
-                LastMessageAt = conversation.LastMessageAt,
-                MessageCount = conversation.MessageCount,
-                Usage = new AiTokenUsageViewModel
-                {
-                    InputTokens = conversation.Messages.Sum(message => message.InputTokens),
-                    OutputTokens = conversation.Messages.Sum(message => message.OutputTokens),
-                    CacheReadTokens = conversation.Messages.Sum(message => message.CacheReadTokens),
-                    CacheCreationTokens = conversation.Messages.Sum(message => message.CacheCreationTokens),
-                },
-            })
+            .Where(conversation => conversation.WorkspaceId == workspaceId && !conversation.IsDeleted);
+
+        var totalCount = await query.CountAsync(cancellationToken);
+        var pagination = request.GetPagination();
+
+        var conversations = await ProjectWorkspaceConversations(SortWorkspaceConversations(query, request))
+            .Skip(pagination.Skip)
+            .Take(pagination.PageSize)
             .ToListAsync(cancellationToken);
 
-        return conversations
+        var items = conversations
             .Select(conversation => conversation with { Usage = conversation.Usage.WithCost(conversation.Model) })
             .ToList();
+
+        return new PagedResponse<AiWorkspaceConversationViewModel>(items, pagination.Page, pagination.PageSize, totalCount);
+    }
+
+    private static IQueryable<AiWorkspaceConversationViewModel> ProjectWorkspaceConversations(IQueryable<AiConversation> query)
+    {
+        return query.Select(conversation => new AiWorkspaceConversationViewModel
+        {
+            Id = conversation.Id,
+            Title = conversation.Title,
+            UserId = conversation.UserId,
+            UserDisplayName = string.IsNullOrEmpty(conversation.User.Firstname) && string.IsNullOrEmpty(conversation.User.Lastname)
+                ? conversation.User.UserName!
+                : conversation.User.Firstname + " " + conversation.User.Lastname,
+            Provider = conversation.Provider,
+            Model = conversation.Model,
+            LastMessageAt = conversation.LastMessageAt,
+            MessageCount = conversation.MessageCount,
+            Usage = new AiTokenUsageViewModel
+            {
+                InputTokens = conversation.Messages.Sum(message => message.InputTokens),
+                OutputTokens = conversation.Messages.Sum(message => message.OutputTokens),
+                CacheReadTokens = conversation.Messages.Sum(message => message.CacheReadTokens),
+                CacheCreationTokens = conversation.Messages.Sum(message => message.CacheCreationTokens),
+            },
+        });
+    }
+
+    // Cost is not sortable because it is derived from the model price list after the
+    // page has been read.
+    private static IQueryable<AiConversation> SortWorkspaceConversations(IQueryable<AiConversation> query, PageRequest request)
+    {
+        var isDescending = string.Equals(request.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+
+        IOrderedQueryable<AiConversation> Order<TKey>(Expression<Func<AiConversation, TKey>> key)
+        {
+            return isDescending ? query.OrderByDescending(key) : query.OrderBy(key);
+        }
+
+        return request.SortBy?.ToLowerInvariant() switch
+        {
+            "title" => Order(conversation => conversation.Title),
+            "user" => Order(conversation => string.IsNullOrEmpty(conversation.User.Firstname) && string.IsNullOrEmpty(conversation.User.Lastname)
+                ? conversation.User.UserName!
+                : conversation.User.Firstname + " " + conversation.User.Lastname),
+            "messagecount" => Order(conversation => conversation.MessageCount),
+            "tokens" => Order(conversation => conversation.Messages.Sum(message =>
+                message.InputTokens + message.OutputTokens + message.CacheReadTokens + message.CacheCreationTokens)),
+            "lastmessageat" => Order(conversation => conversation.LastMessageAt),
+            _ => query.OrderByDescending(conversation => conversation.LastMessageAt),
+        };
     }
 
     public Task<List<AiMessage>> GetMessages(Guid conversationId, CancellationToken cancellationToken = default)

@@ -1,6 +1,8 @@
 using Netptune.Core.Entities;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Ai;
 
 namespace Netptune.Core.Repositories;
@@ -13,7 +15,7 @@ public interface IAiConversationRepository : IRepository<AiConversation, Guid>
 
     Task<AiConversation?> GetInWorkspace(Guid conversationId, int workspaceId, CancellationToken cancellationToken = default);
 
-    Task<List<AiWorkspaceConversationViewModel>> GetForWorkspace(int workspaceId, CancellationToken cancellationToken = default);
+    Task<PagedResponse<AiWorkspaceConversationViewModel>> GetPageForWorkspace(int workspaceId, PageRequest request, CancellationToken cancellationToken = default);
 
     Task<AiTokenUsageViewModel> GetUsage(Guid conversationId, CancellationToken cancellationToken = default);
 
