@@ -3114,6 +3114,16 @@
         <target>Quitar la asignación</target>
       </segment>
     </unit>
+    <unit id="3291907618467497224">
+      <notes>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:102,104</note>
+        <note category="description">Button that hides the throughput breakdown table</note>
+      </notes>
+      <segment state="translated">
+        <source> Hide data </source>
+        <target> Ocultar datos </target>
+      </segment>
+    </unit>
     <unit id="3293831104851635065">
       <notes>
         <note category="location">src/app/core/util/colors/colors.ts:164</note>
@@ -4362,7 +4372,7 @@
       <notes>
         <note category="location">src/app/features/dashboard/components/charts/cycle-time-chart.component.ts:52</note>
         <note category="location">src/app/features/dashboard/components/dashboard-cycle-time-card.component.ts:94</note>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:205</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:218</note>
         <note category="description">Series name for the 85th percentile cycle time</note>
       </notes>
       <segment state="translated">
@@ -5168,7 +5178,7 @@
     </unit>
     <unit id="2578732368187466916">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:148</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:164</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:135,139</note>
         <note category="description">Column heading for what a conversation cost</note>
       </notes>
@@ -5362,7 +5372,7 @@
     <unit id="4360239040231802726">
       <notes>
         <note category="location">src/app/shell/command-palette/command-palette.component.ts:142,145</note>
-        <note category="location">src/app/static/components/datatable/datatable.component.ts:114,117</note>
+        <note category="location">src/app/static/components/datatable/datatable.component.ts:115,118</note>
         <note category="description">Heading above runnable commands in the command palette</note>
       </notes>
       <segment state="translated">
@@ -5835,6 +5845,16 @@
       <segment state="translated">
         <source>Used in workspace URLs.</source>
         <target>Se usa en las URL del espacio de trabajo.</target>
+      </segment>
+    </unit>
+    <unit id="6270836441953507170">
+      <notes>
+        <note category="location">src/app/features/reporting/components/flow-throughput-table.component.ts:18,20</note>
+        <note category="description">Shown when the throughput breakdown fails to load</note>
+      </notes>
+      <segment state="translated">
+        <source>Throughput data could not be loaded.</source>
+        <target>No se han podido cargar los datos de rendimiento.</target>
       </segment>
     </unit>
     <unit id="6273997865051397082">
@@ -7393,7 +7413,7 @@
     </unit>
     <unit id="6452372740127749380">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:130</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:146</note>
         <note category="description">Column heading for the number of messages in a conversation</note>
       </notes>
       <segment state="translated">
@@ -8475,7 +8495,7 @@
     <unit id="3973931101896534797">
       <notes>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:176,177</note>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:92,94</note>
+        <note category="location">src/app/features/reporting/components/flow-throughput-table.component.ts:46</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:113,115</note>
         <note category="description">Label of the date field</note>
       </notes>
@@ -8486,7 +8506,7 @@
     </unit>
     <unit id="2402750656737688">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:218</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:231</note>
         <note category="description">Subheading of the cycle-time chart card. COUNT is how many completed cycles the figures are based on</note>
       </notes>
       <segment state="translated">
@@ -9839,7 +9859,7 @@
     </unit>
     <unit id="4548722462586549001">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:139</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:155</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:133,134</note>
         <note category="description">Column heading for the tokens a conversation used</note>
       </notes>
@@ -9860,7 +9880,7 @@
     </unit>
     <unit id="7284407085760520822">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:40,43</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:42,45</note>
         <note category="description">Heading of the assistant conversation list</note>
       </notes>
       <segment state="translated">
@@ -10268,7 +10288,7 @@
     <unit id="2789470198117284549">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:28,30</note>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:82,83</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:87,88</note>
         <note category="description">Heading of the dashboard throughput card</note>
       </notes>
       <segment state="translated">
@@ -10523,7 +10543,7 @@
     </unit>
     <unit id="6297950127540572260">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:122</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:138</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:129,130</note>
         <note category="description">Column heading for the member who held a conversation</note>
       </notes>
@@ -12236,7 +12256,7 @@
     </unit>
     <unit id="2806584324064503371">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:60,62</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:62,64</note>
         <note category="description">Shown when the assistant conversation list fails to load</note>
       </notes>
       <segment state="translated">
@@ -14338,7 +14358,7 @@
     </unit>
     <unit id="6909153285279943756">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:64,68</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:66,69</note>
         <note category="description">Plural noun for assistant conversations, used in the row summary</note>
       </notes>
       <segment state="translated">
@@ -15592,7 +15612,8 @@
         <note category="location">src/app/features/dashboard/components/charts/velocity-chart.component.ts:44</note>
         <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:207</note>
         <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:86</note>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:197</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:210</note>
+        <note category="location">src/app/features/reporting/components/flow-throughput-table.component.ts:53</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:269</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:212</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:166</note>
@@ -16040,6 +16061,16 @@
       <segment state="translated">
         <source> Visibility </source>
         <target> Visibilidad </target>
+      </segment>
+    </unit>
+    <unit id="1298234632354863914">
+      <notes>
+        <note category="location">src/app/features/reporting/components/flow-throughput-table.component.ts:23,25</note>
+        <note category="description">Plural noun for throughput periods, used in the row summary</note>
+      </notes>
+      <segment state="translated">
+        <source>periods</source>
+        <target>periodos</target>
       </segment>
     </unit>
     <unit id="1021386700199278951">
@@ -16774,7 +16805,7 @@
     <unit id="5391425222835958460">
       <notes>
         <note category="location">src/app/features/reporting/components/charts/flow-throughput-chart.component.ts:16,19</note>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:84,85</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:89,91</note>
         <note category="description">Accessible name of the throughput chart</note>
       </notes>
       <segment state="translated">
@@ -16835,7 +16866,7 @@
     </unit>
     <unit id="8888491308706722034">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:50</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:54</note>
         <note category="description">Section heading for flow metrics</note>
       </notes>
       <segment state="translated">
@@ -16845,7 +16876,7 @@
     </unit>
     <unit id="395920093596085512">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:51,54</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:55,58</note>
         <note category="description">Explains what flow metrics show</note>
       </notes>
       <segment state="translated">
@@ -16866,7 +16897,7 @@
     </unit>
     <unit id="6715882737092090306">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:58,59</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:62,63</note>
         <note category="description">Shown while flow metrics load</note>
       </notes>
       <segment state="translated">
@@ -16876,7 +16907,7 @@
     </unit>
     <unit id="4675733746486809825">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:66,67</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:70,71</note>
         <note category="description">Shown when flow metrics fail to load</note>
       </notes>
       <segment state="translated">
@@ -16886,7 +16917,7 @@
     </unit>
     <unit id="5286842193626986274">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:68,70</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:72,74</note>
         <note category="description">Advice when flow metrics fail to load</note>
       </notes>
       <segment state="translated">
@@ -16896,7 +16927,7 @@
     </unit>
     <unit id="5909176191309455278">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:201</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:214</note>
         <note category="description">Stat label for the median cycle time</note>
       </notes>
       <segment state="translated">
@@ -16916,7 +16947,7 @@
     </unit>
     <unit id="119512492457151325">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:209</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:222</note>
         <note category="description">Stat label for tasks still open</note>
       </notes>
       <segment state="translated">
@@ -16926,9 +16957,8 @@
     </unit>
     <unit id="1381000911274756701">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:96,98</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:197,198</note>
-        <note category="description">Column heading for the completed count</note>
+        <note category="description">Column heading for completed scope</note>
       </notes>
       <segment state="translated">
         <source> Completed </source>
@@ -16937,7 +16967,7 @@
     </unit>
     <unit id="8610729415808550096">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:117,118</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:128,129</note>
         <note category="description">Heading of the cycle-time chart card</note>
       </notes>
       <segment state="translated">
@@ -16947,7 +16977,7 @@
     </unit>
     <unit id="6201455722266161552">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:127,129</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:138,140</note>
         <note category="description">Column heading for the week start date</note>
       </notes>
       <segment state="translated">
@@ -16957,7 +16987,7 @@
     </unit>
     <unit id="8685112381586991835">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:132,134</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:143,145</note>
         <note category="description">Column heading for the median cycle time</note>
       </notes>
       <segment state="translated">
@@ -16997,7 +17027,7 @@
     </unit>
     <unit id="1916606088857978146">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:138,140</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:149,151</note>
         <note category="description">Column heading for the 85th percentile cycle time</note>
       </notes>
       <segment state="translated">
@@ -17007,7 +17037,7 @@
     </unit>
     <unit id="2563444744594008162">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:143,145</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:154,156</note>
         <note category="description">Column heading for the number of samples</note>
       </notes>
       <segment state="translated">
@@ -17017,7 +17047,7 @@
     </unit>
     <unit id="6073259723754877941">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:173,174</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:184,185</note>
         <note category="description">Empty state for flow metrics</note>
       </notes>
       <segment state="translated">
@@ -17037,7 +17067,7 @@
     </unit>
     <unit id="6294652447422181192">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:175,181</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:186,192</note>
         <note category="description">Explains the empty flow metrics state</note>
       </notes>
       <segment state="translated">
@@ -17452,7 +17482,7 @@
     </unit>
     <unit id="4717491147966397069">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:115</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:131</note>
         <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:82,84</note>
         <note category="description">Column heading for an assistant conversation</note>
       </notes>
@@ -19367,7 +19397,7 @@
     </unit>
     <unit id="3108472352698480006">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:88,90</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:104,106</note>
         <note category="description">Heading when no assistant conversations exist</note>
       </notes>
       <segment state="translated">
@@ -20250,7 +20280,7 @@
     </unit>
     <unit id="4026751160851308362">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:47,51</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:49,53</note>
         <note category="description">Explains what an admin sees on the assistant conversations page</note>
       </notes>
       <segment state="translated">
@@ -21924,6 +21954,16 @@
       <segment state="translated">
         <source>Delete sprint</source>
         <target>Eliminar el sprint</target>
+      </segment>
+    </unit>
+    <unit id="1182793675272300291">
+      <notes>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:106,109</note>
+        <note category="description">Button that reveals the throughput breakdown table</note>
+      </notes>
+      <segment state="translated">
+        <source> Show data </source>
+        <target> Mostrar datos </target>
       </segment>
     </unit>
     <unit id="1183305546671848577">
@@ -24175,7 +24215,7 @@
     </unit>
     <unit id="6373820064642279324">
       <notes>
-        <note category="location">src/app/static/components/datatable/datatable.component.ts:102,105</note>
+        <note category="location">src/app/static/components/datatable/datatable.component.ts:103,106</note>
         <note category="description">Accessible label for the button that opens the column customisation dialog</note>
       </notes>
       <segment state="translated">
@@ -24205,7 +24245,7 @@
     </unit>
     <unit id="7973003423744435058">
       <notes>
-        <note category="location">src/app/static/components/datatable/datatable.component.ts:130,134</note>
+        <note category="location">src/app/static/components/datatable/datatable.component.ts:131,135</note>
         <note category="description">Screen-reader label for the checkbox that selects every table row</note>
       </notes>
       <segment state="translated">
@@ -24225,7 +24265,7 @@
     </unit>
     <unit id="3844444380870280621">
       <notes>
-        <note category="location">src/app/static/components/datatable/datatable.component.ts:222,224</note>
+        <note category="location">src/app/static/components/datatable/datatable.component.ts:223,225</note>
         <note category="description">Accessible label for the button that opens a table row&apos;s action menu</note>
       </notes>
       <segment state="translated">
@@ -24235,7 +24275,7 @@
     </unit>
     <unit id="4505486805842266349">
       <notes>
-        <note category="location">src/app/static/components/datatable/datatable.component.ts:263,266</note>
+        <note category="location">src/app/static/components/datatable/datatable.component.ts:264,267</note>
         <note category="description">Screen-reader label for the checkbox that selects one table row</note>
       </notes>
       <segment state="translated">
@@ -24488,7 +24528,7 @@
     </unit>
     <unit id="4582943253260659127">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:156</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:172</note>
         <note category="description">Column heading for when a conversation was last active</note>
       </notes>
       <segment state="translated">
@@ -24901,7 +24941,7 @@
     </unit>
     <unit id="1978378776147370036">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:92,93</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:108,109</note>
         <note category="description">Explains why the assistant conversation list is empty</note>
       </notes>
       <segment state="translated">

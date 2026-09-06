@@ -1,7 +1,8 @@
 import { httpResource } from '@angular/common/http';
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, signal } from '@angular/core';
 import { FlowReport } from '@core/models/reporting';
 import { LucideTimer, LucideTrendingUp } from '@lucide/angular';
+import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { ChartCardComponent } from '@static/components/chart-card/chart-card.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
@@ -19,6 +20,7 @@ import {
 } from '@static/components/table/table.component';
 import { FlowCycleTimeChartComponent } from './charts/flow-cycle-time-chart.component';
 import { FlowThroughputChartComponent } from './charts/flow-throughput-chart.component';
+import { FlowThroughputTableComponent } from './flow-throughput-table.component';
 import { ReportCoverageNoticeComponent } from './report-coverage-notice.component';
 
 function hoursLabel(value?: number | null): string {
@@ -32,11 +34,13 @@ function hoursLabel(value?: number | null): string {
     EmptyStateComponent,
     ErrorStateComponent,
     FlowThroughputChartComponent,
+    FlowThroughputTableComponent,
     FlowCycleTimeChartComponent,
     ReportCoverageNoticeComponent,
     SectionHeaderComponent,
     SkeletonComponent,
     StatStripComponent,
+    StrokedButtonComponent,
     TableComponent,
     TableHeaderRowDirective,
     TableHeadDirective,
@@ -77,38 +81,45 @@ function hoursLabel(value?: number | null): string {
 
         @if (report.buckets.length) {
           <app-chart-card
+            [flush]="true"
             [icon]="throughputIcon"
             i18n-title="Heading of the throughput chart card"
             title="Throughput"
             i18n-description="Subheading of the throughput chart card"
             description="Completed tasks over time">
-            <app-flow-throughput-chart [buckets]="report.buckets" />
-          </app-chart-card>
-
-          <app-table containerClass="overflow-x-auto rounded-lg shadow-sm">
-            <thead appTableHead>
-              <tr appTableHeaderRow>
-                <th class="px-4 py-3">
-                  <span i18n="Column heading for the date">Date</span>
-                </th>
-                <th class="px-4 py-3">
-                  <span i18n="Column heading for the completed count">
-                    Completed
-                  </span>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (bucket of report.buckets; track bucket.date) {
-                <tr appTableRow>
-                  <td class="px-4 py-2.5">{{ bucket.date }}</td>
-                  <td class="px-4 py-2.5 tabular-nums">
-                    {{ bucket.completed }}
-                  </td>
-                </tr>
+            <button
+              chartCardActions
+              app-stroked-button
+              color="neutral"
+              type="button"
+              class="h-9 px-3 text-sm font-normal"
+              id="throughput-data-toggle"
+              aria-controls="throughput-data"
+              [attr.aria-expanded]="showData()"
+              (click)="showData.set(!showData())">
+              @if (showData()) {
+                <span i18n="Button that hides the throughput breakdown table">
+                  Hide data
+                </span>
+              } @else {
+                <span i18n="Button that reveals the throughput breakdown table">
+                  Show data
+                </span>
               }
-            </tbody>
-          </app-table>
+            </button>
+
+            <div class="px-6 py-5">
+              <app-flow-throughput-chart [buckets]="report.buckets" />
+            </div>
+
+            @if (showData()) {
+              <app-flow-throughput-table
+                id="throughput-data"
+                role="region"
+                aria-labelledby="throughput-data-toggle"
+                [query]="query()" />
+            }
+          </app-chart-card>
 
           @if (report.cycleTimeBuckets.length) {
             <app-chart-card
@@ -183,6 +194,8 @@ export class FlowReportComponent {
   readonly resource = httpResource<FlowReport>(
     () => `api/reports/flow?${this.query()}`
   );
+
+  protected readonly showData = signal(false);
 
   protected readonly throughputIcon = LucideTrendingUp;
   protected readonly cycleTimeIcon = LucideTimer;

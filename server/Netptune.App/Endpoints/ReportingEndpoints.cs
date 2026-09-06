@@ -3,6 +3,7 @@ using Mediator;
 using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Models.Reporting;
+using Netptune.Core.Requests;
 using Netptune.Handlers.Reporting.Queries;
 
 namespace Netptune.App.Endpoints;
@@ -70,6 +71,9 @@ public static class ReportingEndpoints
         group.MapGet("/flow", GetFlow)
             .RequireAuthorization(NetptunePermissions.Tasks.Read);
 
+        group.MapGet("/flow/throughput", GetFlowThroughput)
+            .RequireAuthorization(NetptunePermissions.Tasks.Read);
+
         group.MapGet("/workload", GetWorkload)
             .RequireAuthorization(NetptunePermissions.Tasks.Read)
             .RequireAuthorization(NetptunePermissions.Members.Read);
@@ -94,6 +98,18 @@ public static class ReportingEndpoints
         var result = await mediator.Send(new GetFlowReportQuery(filter), cancellationToken);
 
         return result.ToPayloadResult();
+    }
+
+    private static async Task<IResult> GetFlowThroughput(
+        IMediator mediator,
+        [AsParameters] FlowReportRequest request,
+        [AsParameters] PageRequest page,
+        CancellationToken cancellationToken = default)
+    {
+        var query = new GetFlowThroughputQuery(request.ToFilter(), page);
+        var result = await mediator.Send(query, cancellationToken);
+
+        return result.ToResult();
     }
 
     private static async Task<IResult> GetWorkload(

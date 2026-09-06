@@ -35,6 +35,48 @@ public sealed class ReportingEndpointTests(NetptuneFixture fixture)
     }
 
     [Fact]
+    public async Task FlowThroughput_ShouldReturnAPage()
+    {
+        var response = await Client.GetAsync(
+            "api/reports/flow/throughput?from=2026-01-01&to=2026-12-31&timeZone=UTC&page=1&pageSize=25");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content
+            .ReadFromJsonAsync<ClientResponse<PagedResponse<FlowBucket>>>();
+
+        result.Payload.Should().NotBeNull();
+        result.Payload!.Page.Should().Be(1);
+        result.Payload.PageSize.Should().Be(25);
+        result.Payload.Items.Count.Should().BeLessThanOrEqualTo(25);
+    }
+
+    [Theory]
+    [InlineData("date")]
+    [InlineData("completed")]
+    public async Task FlowThroughput_ShouldSort(string sortBy)
+    {
+        var response = await Client.GetAsync(
+            $"api/reports/flow/throughput?from=2026-01-01&to=2026-12-31&timeZone=UTC&sortBy={sortBy}&sortDirection=asc");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content
+            .ReadFromJsonAsync<ClientResponse<PagedResponse<FlowBucket>>>();
+
+        result.Payload.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task FlowThroughput_ShouldRejectInvertedRange()
+    {
+        var response = await Client.GetAsync(
+            "api/reports/flow/throughput?from=2026-12-31&to=2026-01-01&timeZone=UTC");
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
     public async Task Workload_ShouldReturnCurrentOpenTasks()
     {
         var response = await Client.GetAsync("api/reports/workload?unit=Tasks");
