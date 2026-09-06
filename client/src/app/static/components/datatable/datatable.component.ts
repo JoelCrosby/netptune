@@ -12,6 +12,7 @@ import {
   effect,
   inject,
   input,
+  linkedSignal,
   model,
   output,
   signal,
@@ -338,13 +339,14 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   errorDescription = input('Check your connection and try again.');
   itemLabel = input('tasks');
   skeletonRows = input(8);
+  defaultPageSize = input(50);
   stickyHeader = input(false, { transform: booleanAttribute });
   sort = model<DatatableSort | null>(null);
   selectionChanged = output<T[]>();
   loaded = output<{ totalCount: number; hasValue: boolean }>();
 
   currentPage = signal(1);
-  pageSize = signal(50);
+  pageSize = linkedSignal(() => this.defaultPageSize());
 
   localSource = computed(() => {
     const source = this.data();

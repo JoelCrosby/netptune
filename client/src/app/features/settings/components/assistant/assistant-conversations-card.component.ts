@@ -3,6 +3,7 @@ import { Params } from '@angular/router';
 import { AiWorkspaceConversation } from '@core/models/ai-workspace-conversation';
 import { formatCost, formatTokens } from '@core/util/ai-usage';
 import { LucideMessagesSquare } from '@lucide/angular';
+import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableEmptyDirective } from '@static/components/datatable/datatable-empty.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
@@ -17,6 +18,7 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
 @Component({
   selector: 'app-assistant-conversations-card',
   imports: [
+    AvatarComponent,
     DatatableCellTemplateDirective,
     DatatableComponent,
     DatatableEmptyDirective,
@@ -64,6 +66,7 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
         itemLabel="conversations"
         [rounded]="false"
         [skeletonRows]="5"
+        [defaultPageSize]="25"
         [data]="data"
         [(sort)]="sort">
         <ng-template appDatatableCell="title" let-conversation>
@@ -73,6 +76,19 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
             (click)="opened.emit(conversation)">
             {{ conversation.title }}
           </button>
+        </ng-template>
+
+        <ng-template appDatatableCell="user" let-conversation>
+          <div class="flex min-w-0 items-center gap-2">
+            <app-avatar
+              class="shrink-0"
+              size="sm"
+              [name]="conversation.userDisplayName"
+              [imageUrl]="conversation.userPictureUrl" />
+            <span class="min-w-0 truncate">
+              {{ conversation.userDisplayName }}
+            </span>
+          </div>
         </ng-template>
 
         <ng-template appDatatableCell="lastMessageAt" let-conversation>
@@ -122,8 +138,8 @@ export class AssistantConversationsCardComponent {
         header: $localize`:Column heading for the member who held a conversation:Member`,
         accessor: 'userDisplayName',
         sortable: true,
-        widthClass: 'w-52',
-        cellClass: 'text-muted truncate',
+        widthClass: 'w-56',
+        cellClass: 'text-muted overflow-hidden',
       },
       {
         id: 'messageCount',

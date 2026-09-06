@@ -6,6 +6,7 @@ export interface AiWorkspaceConversation {
   title: string;
   userId: string;
   userDisplayName: string;
+  userPictureUrl?: string | null;
   provider: AiProvider;
   model: string;
   lastMessageAt: string;

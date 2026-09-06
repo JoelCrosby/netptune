@@ -207,6 +207,7 @@ public class AiConversationRepository(DataContext context, IDbConnectionFactory 
             UserDisplayName = string.IsNullOrEmpty(conversation.User.Firstname) && string.IsNullOrEmpty(conversation.User.Lastname)
                 ? conversation.User.UserName!
                 : conversation.User.Firstname + " " + conversation.User.Lastname,
+            UserPictureUrl = conversation.User.PictureUrl,
             Provider = conversation.Provider,
             Model = conversation.Model,
             LastMessageAt = conversation.LastMessageAt,

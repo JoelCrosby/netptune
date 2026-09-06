@@ -91,6 +91,8 @@ public sealed record AiWorkspaceConversationViewModel
 
     public required string UserDisplayName { get; init; }
 
+    public string? UserPictureUrl { get; init; }
+
     public AiProvider Provider { get; init; }
 
     public required string Model { get; init; }
