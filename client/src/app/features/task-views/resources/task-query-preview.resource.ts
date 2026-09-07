@@ -1,3 +1,4 @@
+import { requestFrom } from '@core/resources/permission.resource';
 import { httpResource } from '@angular/common/http';
 import { Signal, debounced } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
@@ -30,13 +31,11 @@ export const taskQueryPreviewResource = (
   const settled = debounced(request, 350);
 
   return httpResource<ClientResponse<TaskViewResult>>(
-    () => {
-      const body = settled.value();
-
-      if (!body) return undefined;
-
-      return { url: 'api/task-views/preview', method: 'POST', body };
-    },
+    requestFrom(settled.value, (body) => ({
+      url: 'api/task-views/preview',
+      method: 'POST',
+      body,
+    })),
     {
       defaultValue: { isSuccess: true, payload: emptyResult },
       parse: (response) => response as ClientResponse<TaskViewResult>,

@@ -1,5 +1,6 @@
 import { Signal } from '@angular/core';
 import { Params } from '@angular/router';
+import { requestFrom } from './permission.resource';
 import { PERMISSIONS } from '../auth/permissions';
 import { BoardView } from '../models/view-models/board-view';
 import { stableResource } from './stable.resource';
@@ -10,13 +11,10 @@ export const boardViewResource = (
 ) => {
   return stableResource<BoardView | undefined>({
     permission: PERMISSIONS.boards.read,
-    request: () => {
-      const id = identifier();
-
-      if (!id) return undefined;
-
-      return { url: `api/boards/view/${id}`, params: params() };
-    },
+    request: requestFrom(identifier, (id) => ({
+      url: `api/boards/view/${id}`,
+      params: params(),
+    })),
     refreshOn: ['tasks', 'boardGroups', 'pins'],
     parse: (response) => response.payload,
   });

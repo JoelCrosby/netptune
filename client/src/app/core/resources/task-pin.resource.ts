@@ -1,7 +1,7 @@
 import { Signal } from '@angular/core';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { PinnedTask } from '@core/models/task-pin';
-import { permissionResource } from './permission.resource';
+import { permissionResource, requestFrom } from './permission.resource';
 
 export const pinnedTasksResource = () => {
   return permissionResource<PinnedTask[]>({
@@ -15,11 +15,7 @@ export const pinnedTasksResource = () => {
 export const boardPinsResource = (boardId: Signal<number | undefined>) => {
   return permissionResource<PinnedTask[]>({
     permission: PERMISSIONS.tasks.read,
-    request: () => {
-      const id = boardId();
-
-      return id ? { url: `api/pins/board/${id}` } : undefined;
-    },
+    request: requestFrom(boardId, (id) => ({ url: `api/pins/board/${id}` })),
     defaultValue: [],
     refreshOn: ['tasks', 'pins'],
     parse: (response) => response.payload ?? [],

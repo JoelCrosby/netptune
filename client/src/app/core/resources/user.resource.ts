@@ -7,7 +7,7 @@ import { WorkspaceAppUser } from '../models/appuser';
 import { ClientResponse } from '../models/client-response';
 import { MAX_PAGE_SIZE, Page } from '../models/pagination';
 import { WorkspaceRole } from '../enums/workspace-role';
-import { permissionResource } from './permission.resource';
+import { permissionResource, requestFrom } from './permission.resource';
 
 export const userResource = () => {
   return permissionResource<ClientResponse<Page<WorkspaceAppUser>>>({
@@ -22,11 +22,7 @@ export const userResource = () => {
 export const userDetailResource = (userId: Signal<string | undefined>) => {
   return permissionResource<WorkspaceAppUser>({
     permission: PERMISSIONS.members.read,
-    request: () => {
-      const id = userId();
-
-      return id ? { url: `api/users/${id}` } : undefined;
-    },
+    request: requestFrom(userId, (id) => ({ url: `api/users/${id}` })),
     refreshOn: ['users'],
   });
 };

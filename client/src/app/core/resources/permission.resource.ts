@@ -69,3 +69,20 @@ export function permissionResource<T, TRaw = ClientResponse<T>>(
 
   return Object.assign(resource, { canRead });
 }
+
+/**
+ * Builds a request from a signal, idling the resource while that signal has no
+ * value, so each resource does not repeat the same guard. A falsy source — an
+ * absent id, an empty slug — idles it, matching what the call sites checked
+ * before this existed.
+ */
+export function requestFrom<S, R>(
+  source: Signal<S>,
+  build: (value: NonNullable<S>) => R | undefined
+): () => R | undefined {
+  return () => {
+    const value = source();
+
+    return value ? build(value as NonNullable<S>) : undefined;
+  };
+}

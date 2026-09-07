@@ -1,7 +1,10 @@
 import { Signal } from '@angular/core';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { ClientResponse } from '@core/models/client-response';
-import { permissionResource } from '@core/resources/permission.resource';
+import {
+  permissionResource,
+  requestFrom,
+} from '@core/resources/permission.resource';
 import { TaskQueryCatalog, TaskView } from '../models/task-view.models';
 
 export const taskQueryCatalogResource = () => {
@@ -24,10 +27,6 @@ export const taskViewsResource = () => {
 export const taskViewResource = (slug: Signal<string | undefined>) => {
   return permissionResource<ClientResponse<TaskView>>({
     permission: PERMISSIONS.taskViews.read,
-    request: () => {
-      const key = slug();
-
-      return key ? { url: `api/task-views/${key}` } : undefined;
-    },
+    request: requestFrom(slug, (key) => ({ url: `api/task-views/${key}` })),
   });
 };

@@ -7,7 +7,7 @@ import {
   VelocityReport,
   WorkloadReport,
 } from '../models/reporting';
-import { permissionResource } from './permission.resource';
+import { permissionResource, requestFrom } from './permission.resource';
 
 export const flowReportResource = (params: Signal<Params>) => {
   return permissionResource<FlowReport | undefined>({
@@ -31,13 +31,10 @@ export const sprintBurndownResource = (
 ) => {
   return permissionResource<SprintBurndownReport | undefined>({
     permission: PERMISSIONS.sprints.read,
-    request: () => {
-      const id = sprintId();
-
-      return id === undefined
-        ? undefined
-        : { url: `api/reports/sprints/${id}/burndown`, params: params() };
-    },
+    request: requestFrom(sprintId, (id) => ({
+      url: `api/reports/sprints/${id}/burndown`,
+      params: params(),
+    })),
     parse: (response) => response.payload,
   });
 };
@@ -48,16 +45,10 @@ export const velocityReportResource = (
 ) => {
   return permissionResource<VelocityReport | undefined>({
     permission: PERMISSIONS.sprints.read,
-    request: () => {
-      const id = projectId();
-
-      return id === undefined
-        ? undefined
-        : {
-            url: 'api/reports/velocity',
-            params: { projectId: id, ...params() },
-          };
-    },
+    request: requestFrom(projectId, (id) => ({
+      url: 'api/reports/velocity',
+      params: { projectId: id, ...params() },
+    })),
     parse: (response) => response.payload,
   });
 };
