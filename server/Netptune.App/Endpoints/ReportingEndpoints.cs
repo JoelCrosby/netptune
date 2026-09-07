@@ -97,7 +97,7 @@ public static class ReportingEndpoints
         var filter = request.ToFilter();
         var result = await mediator.Send(new GetFlowReportQuery(filter), cancellationToken);
 
-        return result.ToPayloadResult();
+        return result.ToResult();
     }
 
     private static async Task<IResult> GetFlowThroughput(
@@ -120,7 +120,7 @@ public static class ReportingEndpoints
         var filter = request.ToFilter();
         var result = await mediator.Send(new GetWorkloadReportQuery(filter), cancellationToken);
 
-        return result.ToPayloadResult();
+        return result.ToResult();
     }
 
     private static async Task<IResult> GetBurndown(
@@ -132,7 +132,7 @@ public static class ReportingEndpoints
         var query = new GetSprintBurndownReportQuery(filter);
         var result = await mediator.Send(query, cancellationToken);
 
-        return result.ToPayloadResult();
+        return result.ToResult();
     }
 
     private static async Task<IResult> GetVelocity(
@@ -144,6 +144,6 @@ public static class ReportingEndpoints
         var query = new GetVelocityReportQuery(filter);
         var result = await mediator.Send(query, cancellationToken);
 
-        return result.ToPayloadResult();
+        return result.ToResult();
     }
 }

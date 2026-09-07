@@ -142,8 +142,9 @@ public sealed class UsersEndpointTests
 
         createResponse.StatusCode.Should().Be(HttpStatusCode.OK, await createResponse.Content.ReadAsStringAsync());
 
-        var account = await createResponse.Content
-            .ReadFromJsonAsync<ServiceAccountViewModel>(TestContext.Current.CancellationToken);
+        var result = await createResponse.Content
+            .ReadFromJsonAsync<ClientResponse<ServiceAccountViewModel>>(TestContext.Current.CancellationToken);
+        var account = result!.Payload;
 
         var includedResponse = await Client.GetAsync(
             $"api/users/select?search={accountName}",

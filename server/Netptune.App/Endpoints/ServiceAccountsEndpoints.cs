@@ -44,7 +44,7 @@ public static class ServiceAccountsEndpoints
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new CreateServiceAccountCommand(request), cancellationToken);
-        return result.ToPayloadResult();
+        return result.ToResult();
     }
 
     private static async Task<IResult> CreateCredential(
@@ -57,7 +57,7 @@ public static class ServiceAccountsEndpoints
             new CreateApiCredentialCommand(serviceAccountId, request),
             cancellationToken);
 
-        return result.ToPayloadResult();
+        return result.ToResult();
     }
 
     private static async Task<IResult> UpdateServiceAccount(
@@ -70,7 +70,7 @@ public static class ServiceAccountsEndpoints
             new UpdateServiceAccountCommand(serviceAccountId, request),
             cancellationToken);
 
-        return result.ToPayloadResult();
+        return result.ToResult();
     }
 
     private static async Task<IResult> DeleteServiceAccount(

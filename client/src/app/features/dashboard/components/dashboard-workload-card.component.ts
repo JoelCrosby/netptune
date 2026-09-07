@@ -1,7 +1,4 @@
-import { httpResource } from '@angular/common/http';
-import { Component, computed } from '@angular/core';
-import { hasPermission } from '@core/auth/has-permission';
-import { WorkloadReport } from '@core/models/reporting';
+import { Component, computed, signal } from '@angular/core';
 import { LucideUsers } from '@lucide/angular';
 import { ChartCardComponent } from '@static/components/chart-card/chart-card.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
@@ -10,8 +7,8 @@ import {
   StatStripComponent,
   StatStripItem,
 } from '@static/components/stat-strip/stat-strip.component';
-import { PERMISSIONS } from '@core/auth/permissions';
 import { WorkloadChartComponent } from './charts/workload-chart.component';
+import { workloadReportResource } from '@core/resources/reporting.resource';
 
 const topAssignees = 8;
 
@@ -62,13 +59,7 @@ const topAssignees = 8;
 export class DashboardWorkloadCardComponent {
   protected readonly workloadIcon = LucideUsers;
 
-  readonly canRead = hasPermission(PERMISSIONS.members.read);
-
-  private readonly resource = httpResource<WorkloadReport>(() => {
-    return this.canRead()
-      ? { url: 'api/reports/workload', params: { unit: 'Tasks' } }
-      : undefined;
-  });
+  private readonly resource = workloadReportResource(signal({ unit: 'Tasks' }));
 
   protected readonly isInitialLoad = computed(
     () => this.resource.isLoading() && !this.resource.hasValue()

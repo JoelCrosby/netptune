@@ -42,7 +42,7 @@ public static class PinsEndpoints
     {
         var result = await mediator.Send(new GetBoardPinsQuery(boardId), cancellationToken);
 
-        return result.ToPayloadResult();
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleCreate(

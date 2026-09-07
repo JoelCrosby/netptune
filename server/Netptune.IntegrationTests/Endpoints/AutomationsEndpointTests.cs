@@ -877,7 +877,9 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
 
         response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
 
-        var account = await response.Content.ReadFromJsonAsync<ServiceAccountViewModel>();
+        var result = await response.Content
+            .ReadFromJsonAsync<ClientResponse<ServiceAccountViewModel>>();
+        var account = result!.Payload;
 
         return account!.UserId;
     }

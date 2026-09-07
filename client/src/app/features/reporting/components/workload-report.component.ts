@@ -1,6 +1,4 @@
-import { httpResource } from '@angular/common/http';
 import { Component, computed, input } from '@angular/core';
-import { WorkloadReport } from '@core/models/reporting';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
@@ -15,6 +13,7 @@ import {
   TableHeadDirective,
   TableRowDirective,
 } from '@static/components/table/table.component';
+import { workloadReportResource } from '@core/resources/reporting.resource';
 
 @Component({
   selector: 'app-workload-report',
@@ -105,8 +104,8 @@ import {
 })
 export class WorkloadReportComponent {
   readonly query = input.required<string>();
-  readonly resource = httpResource<WorkloadReport>(
-    () => `api/reports/workload?${this.query()}`
+  readonly resource = workloadReportResource(
+    computed(() => Object.fromEntries(new URLSearchParams(this.query())))
   );
 
   protected readonly stats = computed<StatStripItem[]>(() => {

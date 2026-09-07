@@ -1,8 +1,8 @@
 import { httpResource } from '@angular/common/http';
-import { Component, computed } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { EstimateType, estimateTypeUnits } from '@core/enums/estimate-type';
 import { ClientResponse } from '@core/models/client-response';
+import { EstimateType, estimateTypeUnits } from '@core/enums/estimate-type';
 import { SprintBurndownReport } from '@core/models/reporting';
 import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-view-model';
 import { hostTimeZone } from '@core/util/dates';
@@ -16,6 +16,7 @@ import {
   StatStripItem,
 } from '@static/components/stat-strip/stat-strip.component';
 import { SprintBurndownSparklineComponent } from './sprint-burndown-sparkline.component';
+import { sprintBurndownResource } from '@core/resources/reporting.resource';
 
 @Component({
   selector: 'app-dashboard-current-sprint-card',
@@ -158,12 +159,10 @@ export class DashboardCurrentSprintCardComponent {
 
   // Sprint report data. Fails quietly (pre-coverage sprint, no baseline, or the viewer lacks
   // reporting access) — the card still renders from the sprint stats above.
-  private readonly burndown = httpResource<SprintBurndownReport>(() => {
-    const sprint = this.sprint();
-    return sprint
-      ? `api/reports/sprints/${sprint.id}/burndown?unit=Tasks&timeZone=${encodeURIComponent(hostTimeZone())}`
-      : undefined;
-  });
+  private readonly burndown = sprintBurndownResource(
+    computed(() => this.sprint()?.id),
+    signal({ unit: 'Tasks', timeZone: hostTimeZone() })
+  );
 
   // Reading an errored resource throws, and this one is allowed to fail.
   private readonly burndownReport = computed(() => {

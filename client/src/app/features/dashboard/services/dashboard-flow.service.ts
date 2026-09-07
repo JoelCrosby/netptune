@@ -1,7 +1,6 @@
-import { httpResource } from '@angular/common/http';
 import { Injectable, computed } from '@angular/core';
-import { FlowReport } from '@core/models/reporting';
 import { hostTimeZone, isoDateValue } from '@core/util/dates';
+import { flowReportResource } from '@core/resources/reporting.resource';
 
 const trailingDays = 30;
 
@@ -12,22 +11,21 @@ const trailingDays = 30;
  */
 @Injectable()
 export class DashboardFlowService {
-  readonly resource = httpResource<FlowReport>(() => {
-    const to = new Date();
-    const from = new Date(to);
-    from.setDate(from.getDate() - trailingDays);
+  readonly resource = flowReportResource(
+    computed(() => {
+      const to = new Date();
+      const from = new Date(to);
+      from.setDate(from.getDate() - trailingDays);
 
-    return {
-      url: 'api/reports/flow',
-      params: {
+      return {
         from: isoDateValue(from),
         to: isoDateValue(to),
         unit: 'Tasks',
         grouping: 'Day',
         timeZone: hostTimeZone(),
-      },
-    };
-  });
+      };
+    })
+  );
 
   readonly report = computed(() => this.resource.value() ?? null);
 

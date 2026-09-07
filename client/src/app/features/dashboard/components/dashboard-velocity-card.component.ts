@@ -1,8 +1,4 @@
-import { httpResource } from '@angular/common/http';
-import { Component, computed, linkedSignal } from '@angular/core';
-import { hasPermission } from '@core/auth/has-permission';
-import { PERMISSIONS } from '@core/auth/permissions';
-import { VelocityReport } from '@core/models/reporting';
+import { Component, computed, linkedSignal, signal } from '@angular/core';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { projectResource } from '@core/resources/project.resource';
 import { LucideGauge } from '@lucide/angular';
@@ -18,6 +14,7 @@ import {
   StatStripItem,
 } from '@static/components/stat-strip/stat-strip.component';
 import { VelocityChartComponent } from './charts/velocity-chart.component';
+import { velocityReportResource } from '@core/resources/reporting.resource';
 
 const recentSprints = 8;
 
@@ -81,8 +78,6 @@ const recentSprints = 8;
 export class DashboardVelocityCardComponent {
   protected readonly velocityIcon = LucideGauge;
 
-  readonly canRead = hasPermission(PERMISSIONS.sprints.read);
-
   private readonly projectsResource = projectResource();
   private readonly projects = this.projectsResource.value;
 
@@ -113,16 +108,10 @@ export class DashboardVelocityCardComponent {
     }))
   );
 
-  private readonly resource = httpResource<VelocityReport>(() => {
-    const projectId = this.projectId();
-
-    if (!projectId || !this.canRead()) return undefined;
-
-    return {
-      url: 'api/reports/velocity',
-      params: { projectId, unit: 'Tasks', take: recentSprints },
-    };
-  });
+  private readonly resource = velocityReportResource(
+    computed(() => this.projectId() ?? undefined),
+    signal({ unit: 'Tasks', take: recentSprints })
+  );
 
   protected readonly isInitialLoad = computed(
     () => this.resource.isLoading() && !this.resource.hasValue()

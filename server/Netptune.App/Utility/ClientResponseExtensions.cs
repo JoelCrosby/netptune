@@ -31,13 +31,6 @@ public static class ClientResponseExtensions
         return failure ?? Results.Ok(response);
     }
 
-    public static IResult ToPayloadResult<TPayload>(this ClientResponse<TPayload> response)
-    {
-        var failure = TryGetFailureResult(response);
-
-        return failure ?? Results.Ok(response.Payload);
-    }
-
     public static IResult ToNoContentResult(this ClientResponse response)
     {
         if (response.IsNotFound)

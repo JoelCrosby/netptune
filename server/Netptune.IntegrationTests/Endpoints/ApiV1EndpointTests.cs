@@ -1084,7 +1084,9 @@ public sealed class ApiV1EndpointTests
 
         accountResponse.StatusCode.Should().Be(HttpStatusCode.OK, await accountResponse.Content.ReadAsStringAsync());
 
-        var account = (await accountResponse.Content.ReadFromJsonAsync<ServiceAccountViewModel>())!;
+        var accountResult = await accountResponse.Content
+            .ReadFromJsonAsync<ClientResponse<ServiceAccountViewModel>>();
+        var account = accountResult.Payload!;
 
         var credentialResponse = await client.PostAsJsonAsync(
             $"api/service-accounts/{account.Id}/credentials",
@@ -1096,7 +1098,9 @@ public sealed class ApiV1EndpointTests
 
         credentialResponse.StatusCode.Should().Be(HttpStatusCode.OK, await credentialResponse.Content.ReadAsStringAsync());
 
-        var credential = (await credentialResponse.Content.ReadFromJsonAsync<ApiCredentialCreatedViewModel>())!;
+        var credentialResult = await credentialResponse.Content
+            .ReadFromJsonAsync<ClientResponse<ApiCredentialCreatedViewModel>>();
+        var credential = credentialResult.Payload!;
 
         credential.Token.Should().StartWith("ntp_");
 

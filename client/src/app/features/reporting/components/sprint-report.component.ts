@@ -1,10 +1,5 @@
-import { httpResource } from '@angular/common/http';
-import { Component, input } from '@angular/core';
-import {
-  ReportingUnit,
-  SprintBurndownReport,
-  VelocityReport,
-} from '@core/models/reporting';
+import { Component, computed, input } from '@angular/core';
+import { ReportingUnit, SprintBurndownReport } from '@core/models/reporting';
 import { LucideChartColumnBig, LucideTrendingDown } from '@lucide/angular';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { ChartCardComponent } from '@static/components/chart-card/chart-card.component';
@@ -25,6 +20,12 @@ import { SprintBurndownChartComponent } from './charts/sprint-burndown-chart.com
 import { SprintVelocityChartComponent } from './charts/sprint-velocity-chart.component';
 import { ReportCoverageNoticeComponent } from './report-coverage-notice.component';
 import { formatReportValue } from '@core/util/chart-theme';
+import {
+  sprintBurndownResource,
+  velocityReportResource,
+} from '@core/resources/reporting.resource';
+
+const recentSprints = 12;
 
 @Component({
   selector: 'app-sprint-report',
@@ -280,18 +281,14 @@ export class SprintReportComponent {
   readonly projectId = input<number>();
   readonly unit = input.required<ReportingUnit>();
   readonly timeZone = input.required<string>();
-  readonly burndown = httpResource<SprintBurndownReport>(() => {
-    const sprintId = this.sprintId();
-    return sprintId
-      ? `api/reports/sprints/${sprintId}/burndown?unit=${this.unit()}&timeZone=${encodeURIComponent(this.timeZone())}`
-      : undefined;
-  });
-  readonly velocity = httpResource<VelocityReport>(() => {
-    const projectId = this.projectId();
-    return projectId
-      ? `api/reports/velocity?projectId=${projectId}&unit=${this.unit()}&take=12`
-      : undefined;
-  });
+  readonly burndown = sprintBurndownResource(
+    this.sprintId,
+    computed(() => ({ unit: this.unit(), timeZone: this.timeZone() }))
+  );
+  readonly velocity = velocityReportResource(
+    this.projectId,
+    computed(() => ({ unit: this.unit(), take: recentSprints }))
+  );
 
   shouldShowMissingEstimateWarning(report: SprintBurndownReport): boolean {
     const hasMissingEstimates = report.missingEstimateCount > 0;

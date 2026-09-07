@@ -48,7 +48,8 @@ public sealed class RoadmapEndpointTests
         var created = await createResponse.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
 
         var response = await Client.GetAsync("api/roadmap?from=2026-07-10&to=2026-07-12");
-        var roadmap = await response.Content.ReadFromJsonAsync<RoadmapViewModel>();
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<RoadmapViewModel>>();
+        var roadmap = result!.Payload;
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         roadmap.Should().NotBeNull();
@@ -64,7 +65,8 @@ public sealed class RoadmapEndpointTests
         var to = today.AddDays(60);
         var url = $"api/roadmap?from={from:yyyy-MM-dd}&to={to:yyyy-MM-dd}";
         var response = await Client.GetAsync(url);
-        var roadmap = await response.Content.ReadFromJsonAsync<RoadmapViewModel>();
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<RoadmapViewModel>>();
+        var roadmap = result!.Payload;
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         roadmap.Should().NotBeNull();
@@ -92,7 +94,8 @@ public sealed class RoadmapEndpointTests
 
         var response = await Client.GetAsync(
             $"api/roadmap?from=2026-07-01&to=2026-07-31&search=uniquely%20filtered&statusIds={status.Id}&assignees={user.Id}");
-        var roadmap = await response.Content.ReadFromJsonAsync<RoadmapViewModel>();
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<RoadmapViewModel>>();
+        var roadmap = result!.Payload;
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         roadmap.Should().NotBeNull();
@@ -118,7 +121,8 @@ public sealed class RoadmapEndpointTests
         var relation = await relationResponse.Content.ReadFromJsonAsync<ClientResponse<TaskRelationViewModel>>();
 
         var response = await Client.GetAsync("api/roadmap?from=2026-07-20&to=2026-07-20");
-        var roadmap = await response.Content.ReadFromJsonAsync<RoadmapViewModel>();
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<RoadmapViewModel>>();
+        var roadmap = result!.Payload;
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         roadmap.Should().NotBeNull();

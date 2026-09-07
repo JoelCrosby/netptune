@@ -7,6 +7,8 @@ import {
   ServiceAccount,
   UpdateServiceAccountRequest,
 } from '@core/models/service-account';
+import { ClientResponse } from '@core/models/client-response';
+import { unwrapClientResponse } from '@core/util/rxjs-operators';
 
 @Service()
 export class ServiceAccountsService {
@@ -17,14 +19,18 @@ export class ServiceAccountsService {
   }
 
   create(request: CreateServiceAccountRequest) {
-    return this.http.post<ServiceAccount>('api/service-accounts', request);
+    return this.http
+      .post<ClientResponse<ServiceAccount>>('api/service-accounts', request)
+      .pipe(unwrapClientResponse());
   }
 
   update(serviceAccountId: number, request: UpdateServiceAccountRequest) {
-    return this.http.put<ServiceAccount>(
-      `api/service-accounts/${serviceAccountId}`,
-      request
-    );
+    return this.http
+      .put<ClientResponse<ServiceAccount>>(
+        `api/service-accounts/${serviceAccountId}`,
+        request
+      )
+      .pipe(unwrapClientResponse());
   }
 
   delete(serviceAccountId: number) {
@@ -35,10 +41,12 @@ export class ServiceAccountsService {
     serviceAccountId: number,
     request: CreateApiCredentialRequest
   ) {
-    return this.http.post<ApiCredentialCreated>(
-      `api/service-accounts/${serviceAccountId}/credentials`,
-      request
-    );
+    return this.http
+      .post<ClientResponse<ApiCredentialCreated>>(
+        `api/service-accounts/${serviceAccountId}/credentials`,
+        request
+      )
+      .pipe(unwrapClientResponse());
   }
 
   revokeCredential(serviceAccountId: number, credentialId: string) {

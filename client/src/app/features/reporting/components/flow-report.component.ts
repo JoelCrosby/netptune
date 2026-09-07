@@ -1,6 +1,4 @@
-import { httpResource } from '@angular/common/http';
 import { Component, computed, input, signal } from '@angular/core';
-import { FlowReport } from '@core/models/reporting';
 import { LucideTimer, LucideTrendingUp } from '@lucide/angular';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { ChartCardComponent } from '@static/components/chart-card/chart-card.component';
@@ -22,6 +20,7 @@ import { FlowCycleTimeChartComponent } from './charts/flow-cycle-time-chart.comp
 import { FlowThroughputChartComponent } from './charts/flow-throughput-chart.component';
 import { FlowThroughputTableComponent } from './flow-throughput-table.component';
 import { ReportCoverageNoticeComponent } from './report-coverage-notice.component';
+import { flowReportResource } from '@core/resources/reporting.resource';
 
 function hoursLabel(value?: number | null): string {
   return value == null ? '—' : `${Math.round(value * 10) / 10}h`;
@@ -191,8 +190,8 @@ function hoursLabel(value?: number | null): string {
 })
 export class FlowReportComponent {
   readonly query = input.required<string>();
-  readonly resource = httpResource<FlowReport>(
-    () => `api/reports/flow?${this.query()}`
+  readonly resource = flowReportResource(
+    computed(() => Object.fromEntries(new URLSearchParams(this.query())))
   );
 
   protected readonly showData = signal(false);

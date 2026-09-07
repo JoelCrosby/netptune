@@ -72,6 +72,6 @@ public static class RoadmapEndpoints
         var query = new GetRoadmapQuery(request.ToFilter());
         var result = await mediator.Send(query, cancellationToken);
 
-        return result.ToPayloadResult();
+        return result.ToResult();
     }
 }

@@ -110,7 +110,9 @@ public sealed class PinsEndpointTests
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var pinned = await response.Content.ReadFromJsonAsync<List<PinnedTaskViewModel>>();
+        var result = await response.Content
+            .ReadFromJsonAsync<ClientResponse<List<PinnedTaskViewModel>>>();
+        var pinned = result!.Payload;
 
         pinned!.Should().Contain(item => item.Task.Id == task.Id);
     }

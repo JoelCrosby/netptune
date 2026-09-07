@@ -343,7 +343,9 @@ public sealed class PublicWorkspaceEndpointTests
         pins.StatusCode.Should().Be(HttpStatusCode.OK);
         boardView.StatusCode.Should().Be(HttpStatusCode.OK, "the board view carries each card's pinned scopes");
 
-        var pinned = await pins.Content.ReadFromJsonAsync<List<PinnedTaskViewModel>>();
+        var result = await pins.Content
+            .ReadFromJsonAsync<ClientResponse<List<PinnedTaskViewModel>>>();
+        var pinned = result!.Payload;
 
         pinned!.Should().Contain(item => item.Task.Id == task.Id);
     }

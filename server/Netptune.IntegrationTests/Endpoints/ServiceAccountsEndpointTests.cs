@@ -5,6 +5,7 @@ using FluentAssertions;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests.ServiceAccounts;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.ServiceAccounts;
 
 using Xunit;
@@ -41,7 +42,8 @@ public sealed class ServiceAccountsEndpointTests
 
         response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
 
-        var updated = await response.Content.ReadFromJsonAsync<ServiceAccountViewModel>();
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<ServiceAccountViewModel>>();
+        var updated = result!.Payload;
 
         updated!.Name.Should().Be(updatedName);
         updated.Description.Should().Be("Updated by the integration test.");
@@ -75,8 +77,9 @@ public sealed class ServiceAccountsEndpointTests
 
         credentialResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var credential = await credentialResponse.Content
-            .ReadFromJsonAsync<ApiCredentialCreatedViewModel>();
+        var result = await credentialResponse.Content
+            .ReadFromJsonAsync<ClientResponse<ApiCredentialCreatedViewModel>>();
+        var credential = result!.Payload;
 
         var response = await Client.PutAsJsonAsync(
             $"api/service-accounts/{account.Id}",
@@ -138,7 +141,8 @@ public sealed class ServiceAccountsEndpointTests
 
         response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
 
-        var account = await response.Content.ReadFromJsonAsync<ServiceAccountViewModel>();
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<ServiceAccountViewModel>>();
+        var account = result!.Payload;
 
         return account!;
     }
@@ -164,7 +168,9 @@ public sealed class ServiceAccountsEndpointTests
             });
 
         createAccountResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-        var account = await createAccountResponse.Content.ReadFromJsonAsync<ServiceAccountViewModel>();
+        var accountResult = await createAccountResponse.Content
+            .ReadFromJsonAsync<ClientResponse<ServiceAccountViewModel>>();
+        var account = accountResult!.Payload;
         account.Should().NotBeNull();
         account.Name.Should().Be(accountName);
         account.Permissions.Should().Contain(NetptunePermissions.Sprints.Read);
@@ -179,8 +185,9 @@ public sealed class ServiceAccountsEndpointTests
             });
 
         createCredentialResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-        var createdCredential = await createCredentialResponse.Content
-            .ReadFromJsonAsync<ApiCredentialCreatedViewModel>();
+        var credentialResult = await createCredentialResponse.Content
+            .ReadFromJsonAsync<ClientResponse<ApiCredentialCreatedViewModel>>();
+        var createdCredential = credentialResult!.Payload;
         createdCredential.Should().NotBeNull();
         createdCredential.Token.Should().StartWith("ntp_");
 
@@ -211,7 +218,9 @@ public sealed class ServiceAccountsEndpointTests
                 Name = $"Deleted agent {Guid.NewGuid():N}",
                 Permissions = [NetptunePermissions.Tasks.Read],
             });
-        var account = await createAccountResponse.Content.ReadFromJsonAsync<ServiceAccountViewModel>();
+        var accountResult = await createAccountResponse.Content
+            .ReadFromJsonAsync<ClientResponse<ServiceAccountViewModel>>();
+        var account = accountResult!.Payload;
 
         var createCredentialResponse = await Client.PostAsJsonAsync(
             $"api/service-accounts/{account!.Id}/credentials",
@@ -220,8 +229,9 @@ public sealed class ServiceAccountsEndpointTests
                 Name = "Credential to revoke",
                 Scopes = [NetptunePermissions.Tasks.Read],
             });
-        var credential = await createCredentialResponse.Content
-            .ReadFromJsonAsync<ApiCredentialCreatedViewModel>();
+        var credentialResult = await createCredentialResponse.Content
+            .ReadFromJsonAsync<ClientResponse<ApiCredentialCreatedViewModel>>();
+        var credential = credentialResult!.Payload;
 
         var deleteResponse = await Client.DeleteAsync($"api/service-accounts/{account.Id}");
 
