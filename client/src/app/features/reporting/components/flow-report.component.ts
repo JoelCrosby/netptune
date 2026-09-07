@@ -10,21 +10,13 @@ import {
   StatStripComponent,
   StatStripItem,
 } from '@static/components/stat-strip/stat-strip.component';
-import {
-  TableComponent,
-  TableHeaderRowDirective,
-  TableHeadDirective,
-  TableRowDirective,
-} from '@static/components/table/table.component';
 import { FlowCycleTimeChartComponent } from './charts/flow-cycle-time-chart.component';
 import { FlowThroughputChartComponent } from './charts/flow-throughput-chart.component';
+import { FlowCycleTimeTableComponent } from './flow-cycle-time-table.component';
 import { FlowThroughputTableComponent } from './flow-throughput-table.component';
+import { hoursLabel } from './report-format';
 import { ReportCoverageNoticeComponent } from './report-coverage-notice.component';
 import { flowReportResource } from '@core/resources/reporting.resource';
-
-function hoursLabel(value?: number | null): string {
-  return value == null ? '—' : `${Math.round(value * 10) / 10}h`;
-}
 
 @Component({
   selector: 'app-flow-report',
@@ -32,6 +24,7 @@ function hoursLabel(value?: number | null): string {
     ChartCardComponent,
     EmptyStateComponent,
     ErrorStateComponent,
+    FlowCycleTimeTableComponent,
     FlowThroughputChartComponent,
     FlowThroughputTableComponent,
     FlowCycleTimeChartComponent,
@@ -40,10 +33,6 @@ function hoursLabel(value?: number | null): string {
     SkeletonComponent,
     StatStripComponent,
     StrokedButtonComponent,
-    TableComponent,
-    TableHeaderRowDirective,
-    TableHeadDirective,
-    TableRowDirective,
   ],
   template: `
     <section class="flex flex-col gap-6">
@@ -122,59 +111,46 @@ function hoursLabel(value?: number | null): string {
 
           @if (report.cycleTimeBuckets.length) {
             <app-chart-card
+              [flush]="true"
               [icon]="cycleTimeIcon"
               i18n-title="Heading of the cycle-time chart card"
               title="Cycle-time trend"
               [description]="cycleTimeDescription()">
-              <app-flow-cycle-time-chart [buckets]="report.cycleTimeBuckets" />
-            </app-chart-card>
-
-            <app-table containerClass="overflow-x-auto rounded-lg shadow-sm">
-              <thead appTableHead>
-                <tr appTableHeaderRow>
-                  <th class="px-4 py-3">
-                    <span i18n="Column heading for the week start date">
-                      Week starting
-                    </span>
-                  </th>
-                  <th class="px-4 py-3">
-                    <span i18n="Column heading for the median cycle time">
-                      Median
-                    </span>
-                  </th>
-                  <th class="px-4 py-3">
-                    <span
-                      i18n="Column heading for the 85th percentile cycle time">
-                      85th percentile
-                    </span>
-                  </th>
-                  <th class="px-4 py-3">
-                    <span i18n="Column heading for the number of samples">
-                      Samples
-                    </span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (
-                  bucket of report.cycleTimeBuckets;
-                  track bucket.weekStarting
-                ) {
-                  <tr appTableRow>
-                    <td class="px-4 py-2.5">{{ bucket.weekStarting }}</td>
-                    <td class="px-4 py-2.5 tabular-nums">
-                      {{ hours(bucket.medianCycleTimeHours) }}
-                    </td>
-                    <td class="px-4 py-2.5 tabular-nums">
-                      {{ hours(bucket.p85CycleTimeHours) }}
-                    </td>
-                    <td class="px-4 py-2.5 tabular-nums">
-                      {{ bucket.sampleSize }}
-                    </td>
-                  </tr>
+              <button
+                chartCardActions
+                app-stroked-button
+                color="neutral"
+                type="button"
+                class="h-9 px-3 text-sm font-normal"
+                id="cycle-time-data-toggle"
+                aria-controls="cycle-time-data"
+                [attr.aria-expanded]="showCycleTimeData()"
+                (click)="showCycleTimeData.set(!showCycleTimeData())">
+                @if (showCycleTimeData()) {
+                  <span i18n="Button that hides the throughput breakdown table">
+                    Hide data
+                  </span>
+                } @else {
+                  <span
+                    i18n="Button that reveals the throughput breakdown table">
+                    Show data
+                  </span>
                 }
-              </tbody>
-            </app-table>
+              </button>
+
+              <div class="px-6 py-5">
+                <app-flow-cycle-time-chart
+                  [buckets]="report.cycleTimeBuckets" />
+              </div>
+
+              @if (showCycleTimeData()) {
+                <app-flow-cycle-time-table
+                  id="cycle-time-data"
+                  role="region"
+                  aria-labelledby="cycle-time-data-toggle"
+                  [query]="query()" />
+              }
+            </app-chart-card>
           }
         } @else {
           <app-empty-state
@@ -195,6 +171,7 @@ export class FlowReportComponent {
   );
 
   protected readonly showData = signal(false);
+  protected readonly showCycleTimeData = signal(false);
 
   protected readonly throughputIcon = LucideTrendingUp;
   protected readonly cycleTimeIcon = LucideTimer;

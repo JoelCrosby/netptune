@@ -71,7 +71,7 @@ export interface DatatableRemoteDataSource<
   T = unknown,
 > extends DatatableDataSourceBase<T> {
   resource: {
-    url: string;
+    url: string | Signal<string>;
     params: Signal<Params>;
   };
   rows?: (response: ClientResponse<Page<T>> | undefined) => readonly T[];

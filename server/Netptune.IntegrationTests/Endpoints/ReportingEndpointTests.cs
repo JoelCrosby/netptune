@@ -70,6 +70,77 @@ public sealed class ReportingEndpointTests(NetptuneFixture fixture)
     }
 
     [Fact]
+    public async Task FlowCycleTime_ShouldReturnAPage()
+    {
+        var response = await Client.GetAsync(
+            "api/reports/flow/cycle-time?from=2026-01-01&to=2026-12-31&timeZone=UTC&page=1&pageSize=25");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content
+            .ReadFromJsonAsync<ClientResponse<PagedResponse<CycleTimeBucket>>>();
+
+        result.Payload.Should().NotBeNull();
+        result.Payload!.Page.Should().Be(1);
+        result.Payload.Items.Count.Should().BeLessThanOrEqualTo(25);
+    }
+
+    [Theory]
+    [InlineData("weekStarting")]
+    [InlineData("median")]
+    [InlineData("p85")]
+    [InlineData("samples")]
+    public async Task FlowCycleTime_ShouldSort(string sortBy)
+    {
+        var response = await Client.GetAsync(
+            $"api/reports/flow/cycle-time?from=2026-01-01&to=2026-12-31&timeZone=UTC&sortBy={sortBy}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+    }
+
+    [Fact]
+    public async Task WorkloadRows_ShouldReturnAPage()
+    {
+        var response = await Client.GetAsync("api/reports/workload/rows?unit=Tasks&page=1&pageSize=25");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content
+            .ReadFromJsonAsync<ClientResponse<PagedResponse<WorkloadRow>>>();
+
+        result.Payload.Should().NotBeNull();
+        result.Payload!.TotalCount.Should().BeGreaterThan(0);
+    }
+
+    [Theory]
+    [InlineData("displayName")]
+    [InlineData("taskCount")]
+    [InlineData("value")]
+    public async Task WorkloadRows_ShouldSort(string sortBy)
+    {
+        var response = await Client.GetAsync($"api/reports/workload/rows?unit=Tasks&sortBy={sortBy}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+    }
+
+    [Fact]
+    public async Task VelocitySprints_ShouldReturnNotFound_ForAnUnknownProject()
+    {
+        var response = await Client.GetAsync("api/reports/velocity/sprints?projectId=2147483647");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task BurndownPoints_ShouldReturnNotFound_WhenTheSprintDoesNotExist()
+    {
+        var response = await Client.GetAsync(
+            "api/reports/sprints/2147483647/burndown/points?unit=Tasks&timeZone=UTC");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
     public async Task FlowThroughput_ShouldRejectInvertedRange()
     {
         var response = await Client.GetAsync(

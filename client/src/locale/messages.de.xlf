@@ -336,6 +336,16 @@
         <target>Projekte löschen</target>
       </segment>
     </unit>
+    <unit id="1204756345911253527">
+      <notes>
+        <note category="location">src/app/features/reporting/components/workload-table.component.ts:21,24</note>
+        <note category="description">Plural noun for workload rows, used in the row summary</note>
+      </notes>
+      <segment state="translated">
+        <source>assignees</source>
+        <target>zugewiesene Personen</target>
+      </segment>
+    </unit>
     <unit id="1570107404481300948">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:269,270</note>
@@ -541,7 +551,7 @@
     <unit id="6970305243947070538">
       <notes>
         <note category="location">src/app/features/dashboard/components/sprint-burndown-sparkline.component.ts:12,15</note>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:103,104</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:100,101</note>
         <note category="description">Heading above the sprint burndown sparkline</note>
       </notes>
       <segment state="translated">
@@ -3116,7 +3126,10 @@
     </unit>
     <unit id="3291907618467497224">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:102,104</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:90,92</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:131,133</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:115,118</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:185,187</note>
         <note category="description">Button that hides the throughput breakdown table</note>
       </notes>
       <segment state="translated">
@@ -3896,6 +3909,7 @@
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:187,188</note>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:114</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:76</note>
+        <note category="location">src/app/features/reporting/components/sprint-velocity-table.component.ts:53</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:149</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:175</note>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:71,74</note>
@@ -4021,7 +4035,7 @@
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:74,79</note>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:112,117</note>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:120,125</note>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:86,97</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:82,93</note>
         <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:25,33</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:71,77</note>
         <note category="location">src/app/features/workspaces/components/workspace-list-item.component.ts:148,149</note>
@@ -4184,7 +4198,7 @@
     </unit>
     <unit id="6945435366592832880">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:35,38</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:32,35</note>
         <note category="description">Explains what the workload chart shows</note>
       </notes>
       <segment state="translated">
@@ -4194,7 +4208,7 @@
     </unit>
     <unit id="694553946899296600">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:137,138</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:138,139</note>
         <note category="description">Empty state when no sprint is running</note>
       </notes>
       <segment state="translated">
@@ -4262,6 +4276,16 @@
       <segment state="translated">
         <source> Create Status </source>
         <target>Status erstellen</target>
+      </segment>
+    </unit>
+    <unit id="1381807530861875083">
+      <notes>
+        <note category="location">src/app/features/reporting/components/flow-cycle-time-table.component.ts:24,26</note>
+        <note category="description">Plural noun for cycle-time weeks, used in the row summary</note>
+      </notes>
+      <segment state="translated">
+        <source>weeks</source>
+        <target>Wochen</target>
       </segment>
     </unit>
     <unit id="1384666843214095488">
@@ -4372,7 +4396,8 @@
       <notes>
         <note category="location">src/app/features/dashboard/components/charts/cycle-time-chart.component.ts:52</note>
         <note category="location">src/app/features/dashboard/components/dashboard-cycle-time-card.component.ts:94</note>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:218</note>
+        <note category="location">src/app/features/reporting/components/flow-cycle-time-table.component.ts:60</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:194</note>
         <note category="description">Series name for the 85th percentile cycle time</note>
       </notes>
       <segment state="translated">
@@ -5849,7 +5874,7 @@
     </unit>
     <unit id="6270836441953507170">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-throughput-table.component.ts:18,20</note>
+        <note category="location">src/app/features/reporting/components/flow-throughput-table.component.ts:25,27</note>
         <note category="description">Shown when the throughput breakdown fails to load</note>
       </notes>
       <segment state="translated">
@@ -5957,6 +5982,16 @@
       <segment state="translated">
         <source>Save Workspace</source>
         <target>Arbeitsbereich speichern</target>
+      </segment>
+    </unit>
+    <unit id="484726635285231278">
+      <notes>
+        <note category="location">src/app/features/reporting/components/workload-table.component.ts:19,20</note>
+        <note category="description">Shown when the workload breakdown fails to load</note>
+      </notes>
+      <segment state="translated">
+        <source>Workload data could not be loaded.</source>
+        <target>Die Auslastungsdaten konnten nicht geladen werden.</target>
       </segment>
     </unit>
     <unit id="4848974027668435510">
@@ -6719,7 +6754,7 @@
     </unit>
     <unit id="2268041450256836423">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:40,42</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:37,39</note>
         <note category="description">Accessible label while the workload chart loads</note>
       </notes>
       <segment state="translated">
@@ -6839,6 +6874,16 @@
       <segment state="translated">
         <source>Unlink</source>
         <target>Verknüpfung entfernen</target>
+      </segment>
+    </unit>
+    <unit id="4659305857877720174">
+      <notes>
+        <note category="location">src/app/features/reporting/components/sprint-velocity-table.component.ts:21,22</note>
+        <note category="description">Shown when the velocity breakdown fails to load</note>
+      </notes>
+      <segment state="translated">
+        <source>Velocity data could not be loaded.</source>
+        <target>Die Velocity-Daten konnten nicht geladen werden.</target>
       </segment>
     </unit>
     <unit id="631526687542702213">
@@ -8172,7 +8217,7 @@
     </unit>
     <unit id="6960644556302408953">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:33,34</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:30,31</note>
         <note category="description">Heading of the dashboard workload card</note>
       </notes>
       <segment state="translated">
@@ -8495,8 +8540,8 @@
     <unit id="3973931101896534797">
       <notes>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:176,177</note>
-        <note category="location">src/app/features/reporting/components/flow-throughput-table.component.ts:46</note>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:113,115</note>
+        <note category="location">src/app/features/reporting/components/flow-throughput-table.component.ts:55</note>
+        <note category="location">src/app/features/reporting/components/sprint-burndown-table.component.ts:54</note>
         <note category="description">Label of the date field</note>
       </notes>
       <segment state="translated">
@@ -8506,7 +8551,7 @@
     </unit>
     <unit id="2402750656737688">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:231</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:207</note>
         <note category="description">Subheading of the cycle-time chart card. COUNT is how many completed cycles the figures are based on</note>
       </notes>
       <segment state="translated">
@@ -8961,7 +9006,7 @@
     </unit>
     <unit id="231679111972850796">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:261</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:237</note>
         <note category="description">Stat label for scope added mid-sprint</note>
       </notes>
       <segment state="translated">
@@ -8981,7 +9026,7 @@
     </unit>
     <unit id="5406093358072761930">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:265</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:241</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:603</note>
         <note category="description">Stat label for scope removed mid-sprint</note>
       </notes>
@@ -9208,7 +9253,7 @@
     </unit>
     <unit id="4946687580398284029">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:81,87</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:82,88</note>
         <note category="location">src/app/features/sprints/components/sprint-progress-summary.component.ts:19,25</note>
         <note category="description">Sprint completion. PERCENT is a whole number</note>
       </notes>
@@ -9624,7 +9669,7 @@
     </unit>
     <unit id="5551448153793462049">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:59,61</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:56,58</note>
         <note category="description">Accessible label while the velocity chart loads</note>
       </notes>
       <segment state="translated">
@@ -10001,7 +10046,7 @@
     <unit id="5590086849807274701">
       <notes>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:65</note>
-        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:195</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:194</note>
         <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:103</note>
         <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:21</note>
         <note category="description">Label of the scope field</note>
@@ -10035,7 +10080,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-field-rows.component.ts:247</note>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:83,85</note>
-        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:49,50</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:46,47</note>
         <note category="description">Shown in the project row of the create-task dialog before a project is picked</note>
       </notes>
       <segment state="translated">
@@ -10288,7 +10333,7 @@
     <unit id="2789470198117284549">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:28,30</note>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:87,88</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:75,76</note>
         <note category="description">Heading of the dashboard throughput card</note>
       </notes>
       <segment state="translated">
@@ -11579,7 +11624,7 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:284</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:169,171</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:72</note>
-        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:234</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:233</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:35</note>
         <note category="description">Field heading for the task effort estimate</note>
       </notes>
@@ -11641,7 +11686,7 @@
     </unit>
     <unit id="4510078011810002922">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:42,44</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:39,41</note>
         <note category="description">Explains what the velocity chart compares</note>
       </notes>
       <segment state="translated">
@@ -11680,6 +11725,16 @@
       <segment state="translated">
         <source>Delete task</source>
         <target>Aufgabe löschen</target>
+      </segment>
+    </unit>
+    <unit id="451487510499915796">
+      <notes>
+        <note category="location">src/app/features/reporting/components/sprint-burndown-table.component.ts:21,22</note>
+        <note category="description">Shown when the burndown breakdown fails to load</note>
+      </notes>
+      <segment state="translated">
+        <source>Burndown data could not be loaded.</source>
+        <target>Die Burndown-Daten konnten nicht geladen werden.</target>
       </segment>
     </unit>
     <unit id="8192258211003608112">
@@ -12145,7 +12200,7 @@
     </unit>
     <unit id="4497346320249564712">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:38,40</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:39,41</note>
         <note category="description">Accessible label while the current sprint loads</note>
       </notes>
       <segment state="translated">
@@ -12370,6 +12425,7 @@
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-field-rows.component.ts:236</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:281</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:81,85</note>
+        <note category="location">src/app/features/reporting/components/workload-table.component.ts:41</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:36</note>
         <note category="description">Field heading for the people a task is assigned to</note>
       </notes>
@@ -12410,7 +12466,7 @@
     </unit>
     <unit id="5739581984228459958">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:101</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:92</note>
         <note category="description">Label for tasks assigned to more than one person</note>
       </notes>
       <segment state="translated">
@@ -13566,7 +13622,7 @@
     </unit>
     <unit id="5046831552555610590">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:53,54</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:50,51</note>
         <note category="description">Empty state for the dashboard workload card</note>
       </notes>
       <segment state="translated">
@@ -13920,7 +13976,7 @@
     </unit>
     <unit id="6061621792314924087">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:155</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:144</note>
         <note category="description">Label for the share of committed work that was finished</note>
       </notes>
       <segment state="translated">
@@ -13930,7 +13986,7 @@
     </unit>
     <unit id="6069680004547866674">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:93</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:84</note>
         <note category="description">Label for the number of open assigned tasks</note>
       </notes>
       <segment state="translated">
@@ -14342,7 +14398,7 @@
         <note category="location">src/app/features/boards/components/boards-grid/boards-grid-card.component.ts:79</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:33</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:47</note>
-        <note category="location">src/app/features/reporting/components/workload-report.component.ts:73,75</note>
+        <note category="location">src/app/features/reporting/components/workload-table.component.ts:48</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:120,121</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:261</note>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:165</note>
@@ -15536,7 +15592,7 @@
     </unit>
     <unit id="3154469957623598339">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:70,72</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:71,73</note>
         <note category="description">Link to the current sprint</note>
       </notes>
       <segment state="translated">
@@ -15556,7 +15612,7 @@
     </unit>
     <unit id="4557563402390787256">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:95,102</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:96,103</note>
         <note category="description">Sprint task progress. DONE is finished tasks and TOTAL the total</note>
       </notes>
       <segment state="translated">
@@ -15586,7 +15642,7 @@
     </unit>
     <unit id="3806717211639406056">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:126,128</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:127,129</note>
         <note category="description">Link to the sprint burndown report</note>
       </notes>
       <segment state="translated">
@@ -15596,9 +15652,9 @@
     </unit>
     <unit id="991066160113599649">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:187</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:186</note>
         <note category="location">src/app/features/dashboard/components/sprint-burndown-mini-chart.component.ts:42</note>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:116,118</note>
+        <note category="location">src/app/features/reporting/components/sprint-burndown-table.component.ts:61</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment state="translated">
@@ -15610,11 +15666,12 @@
       <notes>
         <note category="location">src/app/features/dashboard/components/charts/throughput-chart.component.ts:40</note>
         <note category="location">src/app/features/dashboard/components/charts/velocity-chart.component.ts:44</note>
-        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:207</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:206</note>
         <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:86</note>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:210</note>
-        <note category="location">src/app/features/reporting/components/flow-throughput-table.component.ts:53</note>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:269</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:186</note>
+        <note category="location">src/app/features/reporting/components/flow-throughput-table.component.ts:62</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:245</note>
+        <note category="location">src/app/features/reporting/components/sprint-velocity-table.component.ts:69</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:212</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:166</note>
         <note category="description">Series name for tasks finished each day</note>
@@ -15656,7 +15713,7 @@
     </unit>
     <unit id="1167413339139829976">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:147</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:136</note>
         <note category="description">Label for the mean work completed per sprint</note>
       </notes>
       <segment state="translated">
@@ -16065,7 +16122,7 @@
     </unit>
     <unit id="1298234632354863914">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-throughput-table.component.ts:23,25</note>
+        <note category="location">src/app/features/reporting/components/flow-throughput-table.component.ts:30,32</note>
         <note category="description">Plural noun for throughput periods, used in the row summary</note>
       </notes>
       <segment state="translated">
@@ -16329,7 +16386,7 @@
     </unit>
     <unit id="2196169795561391151">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:74,75</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:71,72</note>
         <note category="description">Explains why the velocity chart is empty</note>
       </notes>
       <segment state="translated">
@@ -16805,7 +16862,7 @@
     <unit id="5391425222835958460">
       <notes>
         <note category="location">src/app/features/reporting/components/charts/flow-throughput-chart.component.ts:16,19</note>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:89,91</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:77,79</note>
         <note category="description">Accessible name of the throughput chart</note>
       </notes>
       <segment state="translated">
@@ -16866,7 +16923,7 @@
     </unit>
     <unit id="8888491308706722034">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:54</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:42</note>
         <note category="description">Section heading for flow metrics</note>
       </notes>
       <segment state="translated">
@@ -16876,7 +16933,7 @@
     </unit>
     <unit id="395920093596085512">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:55,58</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:43,46</note>
         <note category="description">Explains what flow metrics show</note>
       </notes>
       <segment state="translated">
@@ -16897,7 +16954,7 @@
     </unit>
     <unit id="6715882737092090306">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:62,63</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:50,51</note>
         <note category="description">Shown while flow metrics load</note>
       </notes>
       <segment state="translated">
@@ -16907,7 +16964,7 @@
     </unit>
     <unit id="4675733746486809825">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:70,71</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:58,59</note>
         <note category="description">Shown when flow metrics fail to load</note>
       </notes>
       <segment state="translated">
@@ -16917,7 +16974,7 @@
     </unit>
     <unit id="5286842193626986274">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:72,74</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:60,62</note>
         <note category="description">Advice when flow metrics fail to load</note>
       </notes>
       <segment state="translated">
@@ -16927,7 +16984,7 @@
     </unit>
     <unit id="5909176191309455278">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:214</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:190</note>
         <note category="description">Stat label for the median cycle time</note>
       </notes>
       <segment state="translated">
@@ -16947,7 +17004,7 @@
     </unit>
     <unit id="119512492457151325">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:222</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:198</note>
         <note category="description">Stat label for tasks still open</note>
       </notes>
       <segment state="translated">
@@ -16955,19 +17012,9 @@
         <target>Aktuell offene Aufgaben</target>
       </segment>
     </unit>
-    <unit id="1381000911274756701">
-      <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:197,198</note>
-        <note category="description">Column heading for completed scope</note>
-      </notes>
-      <segment state="translated">
-        <source> Completed </source>
-        <target>Abgeschlossen</target>
-      </segment>
-    </unit>
     <unit id="8610729415808550096">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:128,129</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:117,118</note>
         <note category="description">Heading of the cycle-time chart card</note>
       </notes>
       <segment state="translated">
@@ -16975,24 +17022,14 @@
         <target>Trend der Zykluszeit</target>
       </segment>
     </unit>
-    <unit id="6201455722266161552">
+    <unit id="1170511679442594603">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:138,140</note>
+        <note category="location">src/app/features/reporting/components/flow-cycle-time-table.component.ts:44</note>
         <note category="description">Column heading for the week start date</note>
       </notes>
       <segment state="translated">
-        <source> Week starting </source>
-        <target> Woche ab </target>
-      </segment>
-    </unit>
-    <unit id="8685112381586991835">
-      <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:143,145</note>
-        <note category="description">Column heading for the median cycle time</note>
-      </notes>
-      <segment state="translated">
-        <source> Median </source>
-        <target> Median </target>
+        <source>Week starting</source>
+        <target>Woche ab</target>
       </segment>
     </unit>
     <unit id="1902863645498591519">
@@ -17025,29 +17062,19 @@
         <target><ph id="0" equiv="FIELD" disp="label"/> geändert</target>
       </segment>
     </unit>
-    <unit id="1916606088857978146">
+    <unit id="454995570276627183">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:149,151</note>
-        <note category="description">Column heading for the 85th percentile cycle time</note>
-      </notes>
-      <segment state="translated">
-        <source> 85th percentile </source>
-        <target> 85. Perzentil </target>
-      </segment>
-    </unit>
-    <unit id="2563444744594008162">
-      <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:154,156</note>
+        <note category="location">src/app/features/reporting/components/flow-cycle-time-table.component.ts:69</note>
         <note category="description">Column heading for the number of samples</note>
       </notes>
       <segment state="translated">
-        <source> Samples </source>
-        <target> Stichproben </target>
+        <source>Samples</source>
+        <target>Stichproben</target>
       </segment>
     </unit>
     <unit id="6073259723754877941">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:184,185</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:159,160</note>
         <note category="description">Empty state for flow metrics</note>
       </notes>
       <segment state="translated">
@@ -17067,7 +17094,7 @@
     </unit>
     <unit id="6294652447422181192">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:186,192</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:161,167</note>
         <note category="description">Explains the empty flow metrics state</note>
       </notes>
       <segment state="translated">
@@ -17137,7 +17164,7 @@
     </unit>
     <unit id="7593806729418317060">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:50,51</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:46,47</note>
         <note category="description">Section heading for sprint reports</note>
       </notes>
       <segment state="translated">
@@ -17157,7 +17184,7 @@
     </unit>
     <unit id="9129776216937058001">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:52,55</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:48,51</note>
         <note category="description">Explains what sprint reports show</note>
       </notes>
       <segment state="translated">
@@ -17198,7 +17225,7 @@
     </unit>
     <unit id="1132945315828298235">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:58,59</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:54,55</note>
         <note category="description">Shown before a sprint is chosen</note>
       </notes>
       <segment state="translated">
@@ -17218,7 +17245,7 @@
     </unit>
     <unit id="5315296767764931025">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:60,62</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:56,58</note>
         <note category="description">Prompts the user to choose a sprint</note>
       </notes>
       <segment state="translated">
@@ -17228,7 +17255,7 @@
     </unit>
     <unit id="9011313573748627602">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:65,67</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:61,63</note>
         <note category="description">Shown while the burndown loads</note>
       </notes>
       <segment state="translated">
@@ -17238,7 +17265,7 @@
     </unit>
     <unit id="1361120296134923223">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:71,72</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:67,68</note>
         <note category="description">Shown when a sprint has no burndown baseline</note>
       </notes>
       <segment state="translated">
@@ -17298,7 +17325,7 @@
     </unit>
     <unit id="8611492333162495855">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:73,75</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:69,71</note>
         <note category="description">Explains why a burndown is unavailable</note>
       </notes>
       <segment state="translated">
@@ -17310,7 +17337,8 @@
       <notes>
         <note category="location">src/app/features/dashboard/components/charts/velocity-chart.component.ts:40</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:667</note>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:257</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:233</note>
+        <note category="location">src/app/features/reporting/components/sprint-velocity-table.component.ts:60</note>
         <note category="description">Series name for work a sprint took on</note>
       </notes>
       <segment state="translated">
@@ -17320,7 +17348,7 @@
     </unit>
     <unit id="1134043805497572295">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:273</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:249</note>
         <note category="description">Stat label for the completion percentage</note>
       </notes>
       <segment state="translated">
@@ -17330,7 +17358,7 @@
     </unit>
     <unit id="3195023709605439944">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:86,93</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:82,89</note>
       </notes>
       <segment state="translated">
         <source>{VAR_PLURAL, plural, =1 {1 current scope item has no compatible estimate and is excluded from numeric totals. } other {<ph id="0" equiv="INTERPOLATION"/> current scope items have no compatible estimate and are excluded from numeric totals. }}</source>
@@ -17339,7 +17367,7 @@
     </unit>
     <unit id="6850280530427691740">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:105,106</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:102,105</note>
         <note category="description">Subheading of the burndown chart card</note>
       </notes>
       <segment state="translated">
@@ -17349,7 +17377,7 @@
     </unit>
     <unit id="7816987675461347822">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:119,121</note>
+        <note category="location">src/app/features/reporting/components/sprint-burndown-table.component.ts:70</note>
         <note category="description">Column heading for total scope</note>
       </notes>
       <segment state="translated">
@@ -17357,19 +17385,9 @@
         <target>Gesamtumfang</target>
       </segment>
     </unit>
-    <unit id="8331236967808234786">
-      <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:123,125</note>
-        <note category="description">Column heading for the ideal burndown value</note>
-      </notes>
-      <segment state="translated">
-        <source> Ideal </source>
-        <target> Ideal </target>
-      </segment>
-    </unit>
     <unit id="3857877369981030045">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:151,152</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:144,145</note>
         <note category="description">Section heading for sprint velocity</note>
       </notes>
       <segment state="translated">
@@ -17379,7 +17397,7 @@
     </unit>
     <unit id="1971022799242079514">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:153,155</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:146,148</note>
         <note category="description">Explains what velocity shows</note>
       </notes>
       <segment state="translated">
@@ -17412,7 +17430,7 @@
     </unit>
     <unit id="6796520629267981972">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:159,161</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:152,154</note>
         <note category="description">Shown while velocity loads</note>
       </notes>
       <segment state="translated">
@@ -17422,7 +17440,7 @@
     </unit>
     <unit id="6949999148572224142">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:165,166</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:158,159</note>
         <note category="description">Shown when velocity fails to load</note>
       </notes>
       <segment state="translated">
@@ -17432,7 +17450,7 @@
     </unit>
     <unit id="1055084063226917954">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:167,169</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:160,162</note>
         <note category="description">Advice when velocity fails to load</note>
       </notes>
       <segment state="translated">
@@ -17442,7 +17460,7 @@
     </unit>
     <unit id="442898940461496743">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:176,177</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:170,171</note>
         <note category="description">Heading of the velocity chart card</note>
       </notes>
       <segment state="translated">
@@ -17452,7 +17470,7 @@
     </unit>
     <unit id="3803064400600933303">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:178,179</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:172,174</note>
         <note category="description">Subheading of the velocity chart card</note>
       </notes>
       <segment state="translated">
@@ -17468,16 +17486,6 @@
       <segment state="initial">
         <source>Manage Export Definitions</source>
         <target>Exportdefinitionen verwalten</target>
-      </segment>
-    </unit>
-    <unit id="4716101983183526938">
-      <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:187,188</note>
-        <note category="description">Column heading for the sprint name</note>
-      </notes>
-      <segment state="translated">
-        <source> Sprint </source>
-        <target>Sprint</target>
       </segment>
     </unit>
     <unit id="4717491147966397069">
@@ -17541,16 +17549,6 @@
         <target>Erweitern Sie den Zeitraum, um aufgezeichnete Ereignisse zu sehen.</target>
       </segment>
     </unit>
-    <unit id="3941944824627691129">
-      <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:192,193</note>
-        <note category="description">Column heading for committed scope</note>
-      </notes>
-      <segment state="translated">
-        <source> Committed </source>
-        <target> Zugesagt </target>
-      </segment>
-    </unit>
     <unit id="2105499142972466940">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:119,121</note>
@@ -17559,16 +17557,6 @@
       <segment>
         <source>Exports are kept for seven days, then removed from workspace storage.</source>
         <target>Exporte werden sieben Tage aufbewahrt und dann aus dem Arbeitsbereichsspeicher entfernt.</target>
-      </segment>
-    </unit>
-    <unit id="2108328209482012964">
-      <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:202,204</note>
-        <note category="description">Column heading for tasks without an estimate</note>
-      </notes>
-      <segment state="translated">
-        <source> Missing estimate </source>
-        <target> Fehlende Schätzung </target>
       </segment>
     </unit>
     <unit id="8253925941682305559">
@@ -17581,19 +17569,19 @@
         <target>Tagesdurchschnitt</target>
       </segment>
     </unit>
-    <unit id="8254706596070129232">
+    <unit id="6892724978675738097">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:208,210</note>
+        <note category="location">src/app/features/reporting/components/sprint-velocity-table.component.ts:87</note>
         <note category="description">Column heading for tasks estimated in another unit</note>
       </notes>
       <segment state="translated">
-        <source> Different unit </source>
-        <target> Andere Einheit </target>
+        <source>Different unit</source>
+        <target>Andere Einheit</target>
       </segment>
     </unit>
     <unit id="2159818663883242096">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:239,240</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:213,214</note>
         <note category="description">Empty state for sprint velocity</note>
       </notes>
       <segment state="translated">
@@ -17603,7 +17591,7 @@
     </unit>
     <unit id="4015182315022243447">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:241,245</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:215,219</note>
         <note category="description">Explains the empty velocity state</note>
       </notes>
       <segment state="translated">
@@ -17613,7 +17601,7 @@
     </unit>
     <unit id="9010209365276278425">
       <notes>
-        <note category="location">src/app/features/reporting/components/workload-report.component.ts:36,37</note>
+        <note category="location">src/app/features/reporting/components/workload-report.component.ts:27,28</note>
         <note category="description">Section heading for the workload report</note>
       </notes>
       <segment state="translated">
@@ -17623,7 +17611,7 @@
     </unit>
     <unit id="7831424791501412228">
       <notes>
-        <note category="location">src/app/features/reporting/components/workload-report.component.ts:38,41</note>
+        <note category="location">src/app/features/reporting/components/workload-report.component.ts:29,32</note>
         <note category="description">Explains what the workload report shows</note>
       </notes>
       <segment state="translated">
@@ -17633,7 +17621,7 @@
     </unit>
     <unit id="2765298659248883432">
       <notes>
-        <note category="location">src/app/features/reporting/components/workload-report.component.ts:45,47</note>
+        <note category="location">src/app/features/reporting/components/workload-report.component.ts:36,38</note>
         <note category="description">Shown while the workload report loads</note>
       </notes>
       <segment state="translated">
@@ -17673,7 +17661,7 @@
     </unit>
     <unit id="4257828580066254399">
       <notes>
-        <note category="location">src/app/features/reporting/components/workload-report.component.ts:53,54</note>
+        <note category="location">src/app/features/reporting/components/workload-report.component.ts:44,45</note>
         <note category="description">Shown when the workload report fails to load</note>
       </notes>
       <segment state="translated">
@@ -17693,7 +17681,7 @@
     </unit>
     <unit id="832650734198023544">
       <notes>
-        <note category="location">src/app/features/reporting/components/workload-report.component.ts:55,57</note>
+        <note category="location">src/app/features/reporting/components/workload-report.component.ts:46,48</note>
         <note category="description">Advice when the workload report fails to load</note>
       </notes>
       <segment state="translated">
@@ -17703,7 +17691,7 @@
     </unit>
     <unit id="1427482027925612559">
       <notes>
-        <note category="location">src/app/features/reporting/components/workload-report.component.ts:119</note>
+        <note category="location">src/app/features/reporting/components/workload-report.component.ts:81</note>
         <note category="description">Stat label for distinct open tasks</note>
       </notes>
       <segment state="translated">
@@ -17715,8 +17703,8 @@
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-field-rows.component.ts:244</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:289</note>
-        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:97</note>
-        <note category="location">src/app/features/reporting/components/workload-report.component.ts:123</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:88</note>
+        <note category="location">src/app/features/reporting/components/workload-report.component.ts:85</note>
         <note category="description">Shown in the assignee picker when a task has nobody assigned</note>
       </notes>
       <segment state="translated">
@@ -17726,7 +17714,7 @@
     </unit>
     <unit id="68633469488862583">
       <notes>
-        <note category="location">src/app/features/reporting/components/workload-report.component.ts:127</note>
+        <note category="location">src/app/features/reporting/components/workload-report.component.ts:89</note>
         <note category="description">Stat label for tasks with several assignees</note>
       </notes>
       <segment state="translated">
@@ -17736,8 +17724,9 @@
     </unit>
     <unit id="6836002360916972371">
       <notes>
-        <note category="location">src/app/features/reporting/components/workload-report.component.ts:131</note>
-        <note category="description">Stat label for tasks without an estimate</note>
+        <note category="location">src/app/features/reporting/components/sprint-velocity-table.component.ts:78</note>
+        <note category="location">src/app/features/reporting/components/workload-report.component.ts:93</note>
+        <note category="description">Column heading for tasks without an estimate</note>
       </notes>
       <segment state="translated">
         <source>Missing estimate</source>
@@ -17764,16 +17753,6 @@
         <target>Geben Sie Ihre Antwort ein</target>
       </segment>
     </unit>
-    <unit id="4810347345927320513">
-      <notes>
-        <note category="location">src/app/features/reporting/components/workload-report.component.ts:69,71</note>
-        <note category="description">Column heading for the assigned person</note>
-      </notes>
-      <segment state="translated">
-        <source> Assignee </source>
-        <target> Zuständig </target>
-      </segment>
-    </unit>
     <unit id="4810719754522561546">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:190</note>
@@ -17794,14 +17773,14 @@
         <target>Für alle Arbeitsbereiche festgelegt</target>
       </segment>
     </unit>
-    <unit id="7671490409333523945">
+    <unit id="6054889078801449309">
       <notes>
-        <note category="location">src/app/features/reporting/components/workload-report.component.ts:77,79</note>
+        <note category="location">src/app/features/reporting/components/workload-table.component.ts:57</note>
         <note category="description">Column heading for the chosen estimation unit</note>
       </notes>
       <segment state="translated">
-        <source> Selected unit </source>
-        <target> Ausgewählte Einheit </target>
+        <source>Selected unit</source>
+        <target>Ausgewählte Einheit</target>
       </segment>
     </unit>
     <unit id="7674792449907070045">
@@ -17837,7 +17816,7 @@
     </unit>
     <unit id="9209157814850494554">
       <notes>
-        <note category="location">src/app/features/reporting/components/workload-report.component.ts:98,99</note>
+        <note category="location">src/app/features/reporting/components/workload-report.component.ts:60,61</note>
         <note category="description">Empty state for the workload report</note>
       </notes>
       <segment state="translated">
@@ -17847,7 +17826,7 @@
     </unit>
     <unit id="8590979282363628894">
       <notes>
-        <note category="location">src/app/features/reporting/components/workload-report.component.ts:100,106</note>
+        <note category="location">src/app/features/reporting/components/workload-report.component.ts:62,68</note>
         <note category="description">Explains the empty workload state</note>
       </notes>
       <segment state="translated">
@@ -18938,6 +18917,7 @@
       <notes>
         <note category="location">src/app/features/dashboard/components/charts/cycle-time-chart.component.ts:43</note>
         <note category="location">src/app/features/dashboard/components/dashboard-cycle-time-card.component.ts:90</note>
+        <note category="location">src/app/features/reporting/components/flow-cycle-time-table.component.ts:51</note>
         <note category="description">Series name for the middle cycle time value</note>
       </notes>
       <segment state="translated">
@@ -19788,7 +19768,7 @@
     </unit>
     <unit id="2758582799865898429">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:151</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:140</note>
         <note category="description">Label for the best sprint result</note>
       </notes>
       <segment state="translated">
@@ -19889,7 +19869,7 @@
     </unit>
     <unit id="5715720410918886861">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:139,140</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:140,141</note>
         <note category="description">Advice shown when no sprint is running</note>
       </notes>
       <segment state="translated">
@@ -20059,6 +20039,16 @@
       <segment state="translated">
         <source>The invite(s) could not be sent. Please try again.</source>
         <target>Die Einladungen konnten nicht gesendet werden. Bitte versuchen Sie es erneut.</target>
+      </segment>
+    </unit>
+    <unit id="5183910045814960568">
+      <notes>
+        <note category="location">src/app/features/reporting/components/flow-cycle-time-table.component.ts:21,22</note>
+        <note category="description">Shown when the cycle-time breakdown fails to load</note>
+      </notes>
+      <segment state="translated">
+        <source>Cycle-time data could not be loaded.</source>
+        <target>Die Zykluszeitdaten konnten nicht geladen werden.</target>
       </segment>
     </unit>
     <unit id="5186531450031488551">
@@ -21762,8 +21752,9 @@
     </unit>
     <unit id="7036284206110282007">
       <notes>
+        <note category="location">src/app/features/reporting/components/sprint-burndown-table.component.ts:24,26</note>
         <note category="location">src/app/features/task-views/models/task-query-builder.ts:56</note>
-        <note category="description">Unit after a relative day count in a query summary</note>
+        <note category="description">Plural noun for burndown days, used in the row summary</note>
       </notes>
       <segment state="translated">
         <source>days</source>
@@ -21917,6 +21908,7 @@
     <unit id="8123881768100361598">
       <notes>
         <note category="location">src/app/core/util/ai-client-context.ts:15</note>
+        <note category="location">src/app/features/reporting/components/sprint-velocity-table.component.ts:24,26</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:80,81</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:125</note>
         <note category="description">Names the screen the user is on</note>
@@ -21958,7 +21950,10 @@
     </unit>
     <unit id="1182793675272300291">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:106,109</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:94,97</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:136,138</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:119,122</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:190,192</note>
         <note category="description">Button that reveals the throughput breakdown table</note>
       </notes>
       <segment state="translated">
@@ -22237,6 +22232,7 @@
     <unit id="5424415261711939344">
       <notes>
         <note category="location">src/app/features/dashboard/components/sprint-burndown-mini-chart.component.ts:48</note>
+        <note category="location">src/app/features/reporting/components/sprint-burndown-table.component.ts:79</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment state="translated">
@@ -22825,7 +22821,7 @@
     </unit>
     <unit id="2212233429253959768">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:40,41</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:37,38</note>
         <note category="description">Heading of the dashboard velocity card</note>
       </notes>
       <segment state="translated">
@@ -22905,7 +22901,7 @@
     </unit>
     <unit id="8104821430899590252">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:55,56</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:52,53</note>
         <note category="description">Advice shown when nobody has open assigned tasks</note>
       </notes>
       <segment state="translated">
@@ -24336,7 +24332,7 @@
     </unit>
     <unit id="6396952862144590894">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:72,73</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:69,70</note>
         <note category="description">Empty state for the dashboard velocity card</note>
       </notes>
       <segment state="translated">
@@ -24921,7 +24917,7 @@
     </unit>
     <unit id="9194597009662429193">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:62,64</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:63,65</note>
         <note category="description">Heading of the dashboard current-sprint card</note>
       </notes>
       <segment state="initial">

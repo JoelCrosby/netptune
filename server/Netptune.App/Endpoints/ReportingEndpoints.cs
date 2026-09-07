@@ -74,7 +74,14 @@ public static class ReportingEndpoints
         group.MapGet("/flow/throughput", GetFlowThroughput)
             .RequireAuthorization(NetptunePermissions.Tasks.Read);
 
+        group.MapGet("/flow/cycle-time", GetFlowCycleTime)
+            .RequireAuthorization(NetptunePermissions.Tasks.Read);
+
         group.MapGet("/workload", GetWorkload)
+            .RequireAuthorization(NetptunePermissions.Tasks.Read)
+            .RequireAuthorization(NetptunePermissions.Members.Read);
+
+        group.MapGet("/workload/rows", GetWorkloadRows)
             .RequireAuthorization(NetptunePermissions.Tasks.Read)
             .RequireAuthorization(NetptunePermissions.Members.Read);
 
@@ -82,7 +89,15 @@ public static class ReportingEndpoints
             .RequireAuthorization(NetptunePermissions.Tasks.Read)
             .RequireAuthorization(NetptunePermissions.Sprints.Read);
 
+        group.MapGet("/sprints/{sprintId:int}/burndown/points", GetBurndownPoints)
+            .RequireAuthorization(NetptunePermissions.Tasks.Read)
+            .RequireAuthorization(NetptunePermissions.Sprints.Read);
+
         group.MapGet("/velocity", GetVelocity)
+            .RequireAuthorization(NetptunePermissions.Tasks.Read)
+            .RequireAuthorization(NetptunePermissions.Sprints.Read);
+
+        group.MapGet("/velocity/sprints", GetVelocitySprints)
             .RequireAuthorization(NetptunePermissions.Tasks.Read)
             .RequireAuthorization(NetptunePermissions.Sprints.Read);
 
@@ -107,6 +122,54 @@ public static class ReportingEndpoints
         CancellationToken cancellationToken = default)
     {
         var query = new GetFlowThroughputQuery(request.ToFilter(), page);
+        var result = await mediator.Send(query, cancellationToken);
+
+        return result.ToResult();
+    }
+
+    private static async Task<IResult> GetFlowCycleTime(
+        IMediator mediator,
+        [AsParameters] FlowReportRequest request,
+        [AsParameters] PageRequest page,
+        CancellationToken cancellationToken = default)
+    {
+        var query = new GetFlowCycleTimeQuery(request.ToFilter(), page);
+        var result = await mediator.Send(query, cancellationToken);
+
+        return result.ToResult();
+    }
+
+    private static async Task<IResult> GetWorkloadRows(
+        IMediator mediator,
+        [AsParameters] WorkloadReportRequest request,
+        [AsParameters] PageRequest page,
+        CancellationToken cancellationToken = default)
+    {
+        var query = new GetWorkloadRowsQuery(request.ToFilter(), page);
+        var result = await mediator.Send(query, cancellationToken);
+
+        return result.ToResult();
+    }
+
+    private static async Task<IResult> GetBurndownPoints(
+        IMediator mediator,
+        [AsParameters] SprintBurndownReportRequest request,
+        [AsParameters] PageRequest page,
+        CancellationToken cancellationToken = default)
+    {
+        var query = new GetSprintBurndownPointsQuery(request.ToFilter(), page);
+        var result = await mediator.Send(query, cancellationToken);
+
+        return result.ToResult();
+    }
+
+    private static async Task<IResult> GetVelocitySprints(
+        IMediator mediator,
+        [AsParameters] VelocityReportRequest request,
+        [AsParameters] PageRequest page,
+        CancellationToken cancellationToken = default)
+    {
+        var query = new GetVelocitySprintsQuery(request.ToFilter(), page);
         var result = await mediator.Send(query, cancellationToken);
 
         return result.ToResult();

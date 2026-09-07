@@ -448,7 +448,12 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
       return undefined;
     }
 
-    return { url: source.resource.url, params: this.buildParams() };
+    const { url } = source.resource;
+
+    return {
+      url: typeof url === 'string' ? url : url(),
+      params: this.buildParams(),
+    };
   });
 
   columns = computed(() => this.data().columns);

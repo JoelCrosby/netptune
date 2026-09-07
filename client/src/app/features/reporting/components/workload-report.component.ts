@@ -7,13 +7,8 @@ import {
   StatStripComponent,
   StatStripItem,
 } from '@static/components/stat-strip/stat-strip.component';
-import {
-  TableComponent,
-  TableHeaderRowDirective,
-  TableHeadDirective,
-  TableRowDirective,
-} from '@static/components/table/table.component';
 import { workloadReportResource } from '@core/resources/reporting.resource';
+import { WorkloadTableComponent } from './workload-table.component';
 
 @Component({
   selector: 'app-workload-report',
@@ -23,10 +18,7 @@ import { workloadReportResource } from '@core/resources/reporting.resource';
     SectionHeaderComponent,
     SkeletonComponent,
     StatStripComponent,
-    TableComponent,
-    TableHeaderRowDirective,
-    TableHeadDirective,
-    TableRowDirective,
+    WorkloadTableComponent,
   ],
   template: `
     <section class="flex flex-col gap-6">
@@ -60,36 +52,7 @@ import { workloadReportResource } from '@core/resources/reporting.resource';
         </section>
 
         @if (report.rows.length) {
-          <app-table containerClass="rounded-lg shadow-sm">
-            <thead appTableHead>
-              <tr appTableHeaderRow>
-                <th class="px-4 py-3">
-                  <span i18n="Column heading for the assigned person">
-                    Assignee
-                  </span>
-                </th>
-                <th class="px-4 py-3">
-                  <span i18n="Column heading for the task count">Tasks</span>
-                </th>
-                <th class="px-4 py-3">
-                  <span i18n="Column heading for the chosen estimation unit">
-                    Selected unit
-                  </span>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (row of report.rows; track row.userId ?? 'unassigned') {
-                <tr appTableRow>
-                  <td class="px-4 py-2.5 font-medium">
-                    {{ row.displayName }}
-                  </td>
-                  <td class="px-4 py-2.5 tabular-nums">{{ row.taskCount }}</td>
-                  <td class="px-4 py-2.5 tabular-nums">{{ row.value }}</td>
-                </tr>
-              }
-            </tbody>
-          </app-table>
+          <app-workload-table [query]="query()" />
         } @else {
           <app-empty-state
             compact

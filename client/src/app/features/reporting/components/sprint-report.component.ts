@@ -1,7 +1,8 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, signal } from '@angular/core';
 import { ReportingUnit, SprintBurndownReport } from '@core/models/reporting';
 import { LucideChartColumnBig, LucideTrendingDown } from '@lucide/angular';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
+import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { ChartCardComponent } from '@static/components/chart-card/chart-card.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
@@ -10,16 +11,11 @@ import {
   StatStripComponent,
   StatStripItem,
 } from '@static/components/stat-strip/stat-strip.component';
-import {
-  TableComponent,
-  TableHeaderRowDirective,
-  TableHeadDirective,
-  TableRowDirective,
-} from '@static/components/table/table.component';
 import { SprintBurndownChartComponent } from './charts/sprint-burndown-chart.component';
 import { SprintVelocityChartComponent } from './charts/sprint-velocity-chart.component';
+import { SprintBurndownTableComponent } from './sprint-burndown-table.component';
+import { SprintVelocityTableComponent } from './sprint-velocity-table.component';
 import { ReportCoverageNoticeComponent } from './report-coverage-notice.component';
-import { formatReportValue } from '@core/util/chart-theme';
 import {
   sprintBurndownResource,
   velocityReportResource,
@@ -37,12 +33,11 @@ const recentSprints = 12;
     ReportCoverageNoticeComponent,
     SectionHeaderComponent,
     SprintBurndownChartComponent,
+    SprintBurndownTableComponent,
     SprintVelocityChartComponent,
+    SprintVelocityTableComponent,
     StatStripComponent,
-    TableComponent,
-    TableHeaderRowDirective,
-    TableHeadDirective,
-    TableRowDirective,
+    StrokedButtonComponent,
   ],
   template: `
     <section class="flex flex-col gap-4">
@@ -99,50 +94,47 @@ const recentSprints = 12;
         }
 
         <app-chart-card
+          [flush]="true"
           [icon]="burndownIcon"
           i18n-title="Heading of the burndown chart card"
           title="Burndown"
           i18n-description="Subheading of the burndown chart card"
           description="Remaining scope compared with the ideal trajectory">
-          <app-sprint-burndown-chart [points]="report.points" />
-        </app-chart-card>
-
-        <app-table containerClass="overflow-x-auto rounded-lg shadow-sm">
-          <thead appTableHead>
-            <tr appTableHeaderRow>
-              <th class="px-4 py-3">
-                <span i18n="Column heading for the date">Date</span>
-              </th>
-              <th class="px-4 py-3">
-                <span i18n="Column heading for remaining scope">Remaining</span>
-              </th>
-              <th class="px-4 py-3">
-                <span i18n="Column heading for total scope">Total scope</span>
-              </th>
-              <th class="px-4 py-3">
-                <span i18n="Column heading for the ideal burndown value">
-                  Ideal
-                </span>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (point of report.points; track point.date) {
-              <tr appTableRow>
-                <td class="px-4 py-2.5">{{ point.date }}</td>
-                <td class="px-4 py-2.5">
-                  {{ formatValue(point.remaining) }}
-                </td>
-                <td class="px-4 py-2.5">
-                  {{ formatValue(point.totalScope) }}
-                </td>
-                <td class="px-4 py-2.5">
-                  {{ formatValue(point.ideal) }}
-                </td>
-              </tr>
+          <button
+            chartCardActions
+            app-stroked-button
+            color="neutral"
+            type="button"
+            class="h-9 px-3 text-sm font-normal"
+            id="burndown-data-toggle"
+            aria-controls="burndown-data"
+            [attr.aria-expanded]="showBurndownData()"
+            (click)="showBurndownData.set(!showBurndownData())">
+            @if (showBurndownData()) {
+              <span i18n="Button that hides the throughput breakdown table">
+                Hide data
+              </span>
+            } @else {
+              <span i18n="Button that reveals the throughput breakdown table">
+                Show data
+              </span>
             }
-          </tbody>
-        </app-table>
+          </button>
+
+          <div class="px-6 py-5">
+            <app-sprint-burndown-chart [points]="report.points" />
+          </div>
+
+          @if (showBurndownData(); as show) {
+            <app-sprint-burndown-table
+              id="burndown-data"
+              role="region"
+              aria-labelledby="burndown-data-toggle"
+              [sprintId]="report.sprintId"
+              [unit]="unit()"
+              [timeZone]="timeZone()" />
+          }
+        </app-chart-card>
       }
 
       @if (projectId()) {
@@ -172,67 +164,48 @@ const recentSprints = 12;
 
           @if (report.sprints.length) {
             <app-chart-card
+              [flush]="true"
               [icon]="velocityIcon"
               i18n-title="Heading of the velocity chart card"
               title="Recent velocity"
               i18n-description="Subheading of the velocity chart card"
               description="Committed and completed sprint scope">
-              <app-sprint-velocity-chart [sprints]="report.sprints" />
-            </app-chart-card>
-
-            <app-table containerClass="overflow-x-auto rounded-lg shadow-sm">
-              <thead appTableHead>
-                <tr appTableHeaderRow>
-                  <th class="px-4 py-3">
-                    <span i18n="Column heading for the sprint name">
-                      Sprint
-                    </span>
-                  </th>
-                  <th class="px-4 py-3">
-                    <span i18n="Column heading for committed scope">
-                      Committed
-                    </span>
-                  </th>
-                  <th class="px-4 py-3">
-                    <span i18n="Column heading for completed scope">
-                      Completed
-                    </span>
-                  </th>
-                  <th class="px-4 py-3">
-                    <span i18n="Column heading for tasks without an estimate">
-                      Missing estimate
-                    </span>
-                  </th>
-                  <th class="px-4 py-3">
-                    <span
-                      i18n="Column heading for tasks estimated in another unit">
-                      Different unit
-                    </span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (point of report.sprints; track point.sprintId) {
-                  <tr appTableRow>
-                    <td class="px-4 py-2.5 font-medium">
-                      {{ point.sprintName }}
-                    </td>
-                    <td class="px-4 py-2.5">
-                      {{ formatValue(point.committed) }}
-                    </td>
-                    <td class="px-4 py-2.5">
-                      {{ formatValue(point.completed) }}
-                    </td>
-                    <td class="px-4 py-2.5">
-                      {{ point.missingEstimateCount }}
-                    </td>
-                    <td class="px-4 py-2.5">
-                      {{ point.differentUnitEstimateCount }}
-                    </td>
-                  </tr>
+              <button
+                chartCardActions
+                app-stroked-button
+                color="neutral"
+                type="button"
+                class="h-9 px-3 text-sm font-normal"
+                id="velocity-data-toggle"
+                aria-controls="velocity-data"
+                [attr.aria-expanded]="showVelocityData()"
+                (click)="showVelocityData.set(!showVelocityData())">
+                @if (showVelocityData()) {
+                  <span i18n="Button that hides the throughput breakdown table">
+                    Hide data
+                  </span>
+                } @else {
+                  <span
+                    i18n="Button that reveals the throughput breakdown table">
+                    Show data
+                  </span>
                 }
-              </tbody>
-            </app-table>
+              </button>
+
+              <div class="px-6 py-5">
+                <app-sprint-velocity-chart [sprints]="report.sprints" />
+              </div>
+
+              @if (showVelocityData() && projectId(); as project) {
+                <app-sprint-velocity-table
+                  id="velocity-data"
+                  role="region"
+                  aria-labelledby="velocity-data-toggle"
+                  [projectId]="project"
+                  [unit]="unit()"
+                  [take]="recentSprints" />
+              }
+            </app-chart-card>
           } @else {
             <app-empty-state
               compact
@@ -247,7 +220,9 @@ const recentSprints = 12;
   `,
 })
 export class SprintReportComponent {
-  readonly formatValue = formatReportValue;
+  protected readonly recentSprints = recentSprints;
+  protected readonly showBurndownData = signal(false);
+  protected readonly showVelocityData = signal(false);
 
   protected readonly burndownIcon = LucideTrendingDown;
   protected readonly velocityIcon = LucideChartColumnBig;
