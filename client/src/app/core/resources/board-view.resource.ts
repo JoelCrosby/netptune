@@ -1,7 +1,6 @@
 import { Signal } from '@angular/core';
 import { Params } from '@angular/router';
 import { PERMISSIONS } from '../auth/permissions';
-import { ClientResponse } from '../models/client-response';
 import { BoardView } from '../models/view-models/board-view';
 import { stableResource } from './stable.resource';
 
@@ -20,7 +19,7 @@ export const boardViewResource = (
     },
     {
       refreshOn: ['tasks', 'boardGroups', 'pins'],
-      parse: (response) => (response as ClientResponse<BoardView>).payload,
+      parse: (response) => response.payload,
     }
   );
 };

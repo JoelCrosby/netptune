@@ -8,6 +8,7 @@ import {
   Signal,
   untracked,
 } from '@angular/core';
+import { ClientResponse } from '../models/client-response';
 import { Permission } from '../auth/permissions';
 import { DEFAULT_PAGE_SIZE } from '../models/pagination';
 import { RefreshScope } from '../models/refresh-scope';
@@ -20,10 +21,10 @@ export type CursorResourceRequest = Omit<HttpResourceRequest, 'params'> & {
   params?: Record<string, string | number | boolean>;
 };
 
-export interface CursorResourceOptions<T> {
+export interface CursorResourceOptions<T, TRaw = ClientResponse<T[]>> {
   /** Identity of a row, used so a page delivered twice is not shown twice. */
   trackBy: (item: T) => string | number;
-  parse?: (response: unknown) => T[];
+  parse?: (response: TRaw) => T[];
   pageSize?: number;
   refreshOn?: readonly RefreshScope[];
 }
@@ -42,10 +43,10 @@ export interface CursorResourceRef<T> {
  * A `permissionResource` for an endpoint that pages by cursor, where the view stacks
  * the pages. Returning undefined from `request` idles it; changing it starts a new list.
  */
-export function cursorResource<T>(
+export function cursorResource<T, TRaw = ClientResponse<T[]>>(
   request: () => CursorResourceRequest | undefined,
   permission: Permission,
-  options: CursorResourceOptions<T>
+  options: CursorResourceOptions<T, TRaw>
 ): CursorResourceRef<T> {
   assertInInjectionContext(cursorResource);
 
@@ -66,7 +67,7 @@ export function cursorResource<T>(
     return isCurrent ? held.value : undefined;
   });
 
-  const resource = permissionResource<T[]>(
+  const resource = permissionResource<T[], TRaw>(
     permission,
     () => {
       const target = base();

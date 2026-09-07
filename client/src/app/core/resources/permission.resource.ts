@@ -11,33 +11,36 @@ import {
   reloadOnRefresh,
   reloadOnWorkspaceChange,
 } from '@core/util/reload-on-refresh';
+import { ClientResponse } from '../models/client-response';
 import { Permission } from '../auth/permissions';
 
 export type PermissionResourceRef<T> = HttpResourceRef<T> & {
   readonly canRead: Signal<boolean>;
 };
 
-export type PermissionResourceOptions<T> = HttpResourceOptions<T, unknown> & {
-  /** Scopes that make this resource stale — it reloads when one of them changes. */
+export type PermissionResourceOptions<
+  T,
+  TRaw = ClientResponse<T>,
+> = HttpResourceOptions<T, TRaw> & {
   refreshOn?: readonly RefreshScope[];
 };
 
-export function permissionResource<T>(
+export function permissionResource<T, TRaw = ClientResponse<T>>(
   permission: Permission,
   request: () => HttpResourceRequest | undefined,
-  options: PermissionResourceOptions<T> & { defaultValue: NoInfer<T> }
+  options: PermissionResourceOptions<T, TRaw> & { defaultValue: NoInfer<T> }
 ): PermissionResourceRef<T>;
 
-export function permissionResource<T>(
+export function permissionResource<T, TRaw = ClientResponse<T>>(
   permission: Permission,
   request: () => HttpResourceRequest | undefined,
-  options?: PermissionResourceOptions<T>
+  options?: PermissionResourceOptions<T, TRaw>
 ): PermissionResourceRef<T | undefined>;
 
-export function permissionResource<T>(
+export function permissionResource<T, TRaw = ClientResponse<T>>(
   permission: Permission,
   request: () => HttpResourceRequest | undefined,
-  options?: PermissionResourceOptions<T>
+  options?: PermissionResourceOptions<T, TRaw>
 ): PermissionResourceRef<T | undefined> {
   assertInInjectionContext(permissionResource);
 

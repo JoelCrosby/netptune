@@ -1,7 +1,6 @@
 import { Signal } from '@angular/core';
 import { Params } from '@angular/router';
 import { PERMISSIONS } from '../auth/permissions';
-import { ClientResponse } from '../models/client-response';
 import {
   FlowReport,
   SprintBurndownReport,
@@ -10,16 +9,11 @@ import {
 } from '../models/reporting';
 import { permissionResource } from './permission.resource';
 
-// Every report is driven by the same filter set, which reaches these either as a
-// parsed query string from the reporting page or as a small object built by a
-// dashboard card. Each takes that as request params, plus the id a report needs
-// for its own request.
-
 export const flowReportResource = (params: Signal<Params>) => {
   return permissionResource<FlowReport | undefined>(
     PERMISSIONS.tasks.read,
     () => ({ url: 'api/reports/flow', params: params() }),
-    { parse: (response) => (response as ClientResponse<FlowReport>).payload }
+    { parse: (response) => response.payload }
   );
 };
 
@@ -28,7 +22,7 @@ export const workloadReportResource = (params: Signal<Params>) => {
     PERMISSIONS.members.read,
     () => ({ url: 'api/reports/workload', params: params() }),
     {
-      parse: (response) => (response as ClientResponse<WorkloadReport>).payload,
+      parse: (response) => response.payload,
     }
   );
 };
@@ -47,8 +41,7 @@ export const sprintBurndownResource = (
         : { url: `api/reports/sprints/${id}/burndown`, params: params() };
     },
     {
-      parse: (response) =>
-        (response as ClientResponse<SprintBurndownReport>).payload,
+      parse: (response) => response.payload,
     }
   );
 };
@@ -70,7 +63,7 @@ export const velocityReportResource = (
           };
     },
     {
-      parse: (response) => (response as ClientResponse<VelocityReport>).payload,
+      parse: (response) => response.payload,
     }
   );
 };

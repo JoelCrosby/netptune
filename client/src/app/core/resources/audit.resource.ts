@@ -1,6 +1,5 @@
 import { Signal } from '@angular/core';
 import { PERMISSIONS } from '../auth/permissions';
-import { ClientResponse } from '../models/client-response';
 import {
   AuditActivityPoint,
   AuditLogFilter,
@@ -29,9 +28,7 @@ export const auditSummaryResource = (filter: Signal<AuditLogFilter>) => {
     () => ({ url: 'api/audit/summary', params: auditFilterParams(filter()) }),
     {
       defaultValue: [],
-      parse: (response) => {
-        return (response as ClientResponse<AuditActivityPoint[]>).payload ?? [];
-      },
+      parse: (response) => response.payload ?? [],
     }
   );
 };

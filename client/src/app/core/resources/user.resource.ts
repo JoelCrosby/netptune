@@ -35,7 +35,10 @@ export const workspaceUsersResource = (): Signal<WorkspaceAppUser[]> => {
   const isPublicViewer = inject(SessionService).isPublicViewer;
   const workspaceKey = inject(CurrentWorkspaceService).slug;
 
-  const members = permissionResource<WorkspaceAppUser[]>(
+  const members = permissionResource<
+    WorkspaceAppUser[],
+    ClientResponse<Page<WorkspaceAppUser>>
+  >(
     PERMISSIONS.members.read,
     () => {
       if (isPublicViewer()) return undefined;
@@ -48,16 +51,14 @@ export const workspaceUsersResource = (): Signal<WorkspaceAppUser[]> => {
     {
       defaultValue: [],
       refreshOn: ['users'],
-      parse: (response) => {
-        return (
-          (response as ClientResponse<Page<WorkspaceAppUser>>).payload?.items ??
-          []
-        );
-      },
+      parse: (response) => response.payload?.items ?? [],
     }
   );
 
-  const publicMembers = permissionResource<WorkspaceAppUser[]>(
+  const publicMembers = permissionResource<
+    WorkspaceAppUser[],
+    Page<AssigneeViewModel>
+  >(
     PERMISSIONS.tasks.read,
     () => {
       const key = workspaceKey();
@@ -71,11 +72,7 @@ export const workspaceUsersResource = (): Signal<WorkspaceAppUser[]> => {
     },
     {
       defaultValue: [],
-      parse: (response) => {
-        const page = response as Page<AssigneeViewModel>;
-
-        return page.items.map(toWorkspaceUser);
-      },
+      parse: (response) => response.items.map(toWorkspaceUser),
     }
   );
 

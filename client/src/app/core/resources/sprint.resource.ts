@@ -1,5 +1,4 @@
 import { Signal } from '@angular/core';
-import { ClientResponse } from '../models/client-response';
 import { SprintDetailViewModel } from '../models/view-models/sprint-detail-view-model';
 import { SprintViewModel } from '../models/view-models/sprint-view-model';
 import { SprintStatus } from '../enums/sprint-status';
@@ -43,9 +42,7 @@ export const sprintDetailResource = (sprintId: Signal<number | undefined>) => {
     },
     {
       refreshOn: ['sprints', 'tasks'],
-      parse: (response) => {
-        return (response as ClientResponse<SprintDetailViewModel>).payload;
-      },
+      parse: (response) => response.payload,
     }
   );
 };

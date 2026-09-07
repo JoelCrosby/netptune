@@ -1,6 +1,5 @@
 import { PERMISSIONS } from '../auth/permissions';
 import { AiSpend } from '../models/ai-spend';
-import { ClientResponse } from '../models/client-response';
 import { permissionResource } from './permission.resource';
 
 export const aiSpendUrl = 'api/ai/admin/spend';
@@ -12,9 +11,7 @@ export const aiSpendResource = () => {
     () => ({ url: aiSpendUrl }),
     {
       defaultValue: null,
-      parse: (response) => {
-        return (response as ClientResponse<AiSpend>).payload ?? null;
-      },
+      parse: (response) => response.payload ?? null,
     }
   );
 };
