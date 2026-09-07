@@ -3541,7 +3541,7 @@
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:82</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:66,67</note>
         <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:22,25</note>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:83</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:91</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:169</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:379</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:301</note>
@@ -3910,7 +3910,7 @@
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:114</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:76</note>
         <note category="location">src/app/features/reporting/components/sprint-velocity-table.component.ts:53</note>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:149</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:146</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:175</note>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:71,74</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:19</note>
@@ -3968,7 +3968,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:54</note>
         <note category="location">src/app/features/automations/models/automation-query-builder.ts:302</note>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:123,124</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:198</note>
         <note category="description">Label of the story points field</note>
       </notes>
       <segment state="translated">
@@ -6052,7 +6052,7 @@
     <unit id="5203279511751768967">
       <notes>
         <note category="location">src/app/features/audit/components/audit-filters/audit-date-range.component.ts:14</note>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:100,101</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:103</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:43</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:393</note>
         <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:101,102</note>
@@ -6086,7 +6086,7 @@
     <unit id="1640609344969975994">
       <notes>
         <note category="location">src/app/features/audit/components/audit-filters/audit-date-range.component.ts:36</note>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:108,109</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:112</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:52</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:403</note>
         <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:109,110</note>
@@ -7869,7 +7869,7 @@
     <unit id="8932917860978648376">
       <notes>
         <note category="location">src/app/features/automations/components/automation-actions-editor.component.ts:290</note>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:117,118</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:123</note>
         <note category="description">Label of the unit field</note>
       </notes>
       <segment state="translated">
@@ -7911,7 +7911,7 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-actions-editor.component.ts:304,305</note>
         <note category="location">src/app/features/automations/models/automation-query-builder.ts:304</note>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:126,127</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:200</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:363</note>
         <note category="description">Delay unit: hours</note>
       </notes>
@@ -13257,6 +13257,16 @@
         <target>Dates d&apos;échéance modifiées</target>
       </segment>
     </unit>
+    <unit id="1326977467186694964">
+      <notes>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:104,106</note>
+        <note category="description">Accessible label for the report start date</note>
+      </notes>
+      <segment state="translated">
+        <source>Report start date</source>
+        <target>Date de début du rapport</target>
+      </segment>
+    </unit>
     <unit id="5176622981716622911">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:784</note>
@@ -14399,7 +14409,7 @@
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:33</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:47</note>
         <note category="location">src/app/features/reporting/components/workload-table.component.ts:48</note>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:120,121</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:125,126</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:261</note>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:165</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:83</note>
@@ -15168,6 +15178,7 @@
     <unit id="6425467213960794982">
       <notes>
         <note category="location">src/app/features/calendar/components/calendar-toolbar/calendar-toolbar.component.ts:50,52</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:92,94</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:134,136</note>
         <note category="description">Filter option including every project</note>
       </notes>
@@ -17846,7 +17857,7 @@
     </unit>
     <unit id="1868606282505332204">
       <notes>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:50,53</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:59,62</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:212</note>
         <note category="location">src/app/workspace.routes.ts:72</note>
         <note category="description">Page title for the reporting views</note>
@@ -17868,7 +17879,7 @@
     </unit>
     <unit id="3030881843197844043">
       <notes>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:62,64</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:71,73</note>
         <note category="description">Heading of the report filter card</note>
       </notes>
       <segment state="translated">
@@ -17878,7 +17889,7 @@
     </unit>
     <unit id="1708810523669700746">
       <notes>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:67,70</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:76,79</note>
         <note category="description">Explains what the report filters control</note>
       </notes>
       <segment state="translated">
@@ -17898,22 +17909,12 @@
     </unit>
     <unit id="408476512549431766">
       <notes>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:78,80</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:87,89</note>
         <note category="description">Accessible name of the report filter form</note>
       </notes>
       <segment state="translated">
         <source>Report filters</source>
         <target>Filtres du rapport</target>
-      </segment>
-    </unit>
-    <unit id="2980109580182727209">
-      <notes>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:87,89</note>
-        <note category="description">Filter option including every project</note>
-      </notes>
-      <segment state="translated">
-        <source> All projects </source>
-        <target> Tous les projets </target>
       </segment>
     </unit>
     <unit id="8770284726358486659">
@@ -17929,7 +17930,7 @@
     </unit>
     <unit id="877780134171662191">
       <notes>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:133,135</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:132,133</note>
         <note category="description">Label of the report grouping filter</note>
       </notes>
       <segment state="translated">
@@ -17960,7 +17961,7 @@
     </unit>
     <unit id="2988589012964101797">
       <notes>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:137,138</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:135</note>
         <note category="description">Report grouping by day</note>
       </notes>
       <segment state="translated">
@@ -17991,22 +17992,12 @@
     </unit>
     <unit id="928838138686087140">
       <notes>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:140,141</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:204</note>
         <note category="description">Report grouping by week</note>
       </notes>
       <segment state="translated">
         <source>Weekly</source>
         <target>Hebdomadaire</target>
-      </segment>
-    </unit>
-    <unit id="5964335690492688166">
-      <notes>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:153,155</note>
-        <note category="description">Placeholder option in the sprint filter</note>
-      </notes>
-      <segment state="translated">
-        <source> Select sprint </source>
-        <target>Sélectionner un sprint</target>
       </segment>
     </unit>
     <unit id="7501850844985876036">
@@ -21711,8 +21702,9 @@
     </unit>
     <unit id="7473967539394647356">
       <notes>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:147,149</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:119,120</note>
-        <note category="description">Placeholder in the target sprint picker</note>
+        <note category="description">Placeholder option in the sprint filter</note>
       </notes>
       <segment state="translated">
         <source>Select sprint</source>
@@ -22684,6 +22676,16 @@
       <segment>
         <source>Audit history</source>
         <target>Historique d&apos;audit</target>
+      </segment>
+    </unit>
+    <unit id="3334152991864561474">
+      <notes>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:113,114</note>
+        <note category="description">Accessible label for the report end date</note>
+      </notes>
+      <segment state="translated">
+        <source>Report end date</source>
+        <target>Date de fin du rapport</target>
       </segment>
     </unit>
     <unit id="3339303141258670173">

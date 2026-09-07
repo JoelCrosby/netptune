@@ -7,10 +7,19 @@ import { PERMISSIONS } from '@core/auth/permissions';
 import { ReportingGrouping, ReportingUnit } from '@core/models/reporting';
 import { projectResource } from '@core/resources/project.resource';
 import { sprintResource } from '@core/resources/sprint.resource';
-import { FormInputComponent } from '@static/components/form-input/form-input.component';
-import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
-import { FormSelectComponent } from '@static/components/form-select/form-select.component';
-import { LucideSlidersHorizontal } from '@lucide/angular';
+import {
+  LucideCalendarRange,
+  LucideFolder,
+  LucideRuler,
+  LucideSlidersHorizontal,
+  LucideTimer,
+} from '@lucide/angular';
+import { DateDropdownButtonComponent } from '@static/components/dropdown-menu/date-dropdown-button.component';
+import { FilterSeparatorComponent } from '@static/components/filter-separator/filter-separator.component';
+import {
+  SelectFilterComponent,
+  SelectFilterOption,
+} from '@static/components/select-filter/select-filter.component';
 import { IconTileComponent } from '@static/components/icon-tile.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
@@ -32,9 +41,9 @@ const defaultFrom = defaultRange.from;
     PageContainerComponent,
     PageHeaderComponent,
     IconTileComponent,
-    FormInputComponent,
-    FormSelectComponent,
-    FormSelectOptionComponent,
+    DateDropdownButtonComponent,
+    FilterSeparatorComponent,
+    SelectFilterComponent,
     FlowReportComponent,
     WorkloadReportComponent,
     SprintReportComponent,
@@ -73,92 +82,73 @@ const defaultFrom = defaultRange.from;
 
         <div class="px-6 py-5">
           <div
-            class="grid grid-cols-1 gap-x-4 sm:grid-cols-2 lg:grid-cols-6"
+            class="flex flex-row flex-wrap items-center gap-3"
             i18n-aria-label="Accessible name of the report filter form"
             aria-label="Report filters">
-            <app-form-select
-              class="[&>div]:mb-0!"
+            <app-select-filter
               i18n-label="Label of the project filter"
               label="Project"
+              i18n-emptyLabel="Filter option including every project"
+              emptyLabel="All projects"
+              [icon]="projectIcon"
+              [options]="projectOptions()"
               [value]="projectId() ?? null"
-              (valueChange)="setProject($event)">
-              <app-form-select-option [value]="null">
-                <span i18n="Filter option including every project">
-                  All projects
-                </span>
-              </app-form-select-option>
-              @for (project of projects(); track project.id) {
-                <app-form-select-option [value]="project.id">
-                  {{ project.name }}
-                </app-form-select-option>
-              }
-            </app-form-select>
+              (changed)="setProject($event)" />
 
-            <app-form-input
+            <app-filter-separator />
+
+            <app-date-dropdown-button
               i18n-label="Label of the start-date filter"
               label="From"
-              type="date"
-              [noMargin]="true"
+              i18n-ariaLabel="Accessible label for the report start date"
+              ariaLabel="Report start date"
+              buttonClass="min-w-40 justify-between"
               [value]="from()"
-              (valueChange)="setParam('from', $event)" />
+              (valueChanged)="setParam('from', $event)" />
 
-            <app-form-input
+            <app-date-dropdown-button
               i18n-label="Label of the end-date filter"
               label="To"
-              type="date"
-              [noMargin]="true"
+              i18n-ariaLabel="Accessible label for the report end date"
+              ariaLabel="Report end date"
+              buttonClass="min-w-40 justify-between"
               [value]="to()"
-              (valueChange)="setParam('to', $event)" />
+              (valueChanged)="setParam('to', $event)" />
 
-            <app-form-select
-              class="[&>div]:mb-0!"
+            <app-filter-separator />
+
+            <app-select-filter
               i18n-label="Label of the estimation unit filter"
               label="Unit"
-              [value]="unit()"
-              (valueChange)="setUnit($event)">
-              <app-form-select-option value="Tasks">
-                <span i18n="Estimation unit: whole tasks">Tasks</span>
-              </app-form-select-option>
-              <app-form-select-option value="StoryPoints">
-                <span i18n="Estimation unit: story points">Story points</span>
-              </app-form-select-option>
-              <app-form-select-option value="Hours">
-                <span i18n="Estimation unit: hours">Hours</span>
-              </app-form-select-option>
-            </app-form-select>
+              i18n-emptyLabel="Estimation unit: whole tasks"
+              emptyLabel="Tasks"
+              [icon]="unitIcon"
+              [options]="unitOptions"
+              [value]="unitFilter()"
+              (changed)="setUnit($event)" />
 
-            <app-form-select
-              class="[&>div]:mb-0!"
+            <app-select-filter
               i18n-label="Label of the report grouping filter"
               label="Grouping"
-              [value]="grouping()"
-              (valueChange)="setGrouping($event)">
-              <app-form-select-option value="Day">
-                <span i18n="Report grouping by day">Daily</span>
-              </app-form-select-option>
-              <app-form-select-option value="Week">
-                <span i18n="Report grouping by week">Weekly</span>
-              </app-form-select-option>
-            </app-form-select>
+              i18n-emptyLabel="Report grouping by day"
+              emptyLabel="Daily"
+              [icon]="groupingIcon"
+              [options]="groupingOptions"
+              [value]="groupingFilter()"
+              (changed)="setGrouping($event)" />
 
             @if (canReadSprints()) {
-              <app-form-select
-                class="[&>div]:mb-0!"
+              <app-filter-separator />
+
+              <app-select-filter
                 i18n-label="Label of the sprint filter"
                 label="Sprint"
+                i18n-emptyLabel="Placeholder option in the sprint filter"
+                emptyLabel="Select sprint"
+                [icon]="sprintIcon"
+                [options]="sprintOptions()"
                 [value]="selectedSprintId() ?? null"
-                (valueChange)="setSprint($event)">
-                <app-form-select-option [value]="null">
-                  <span i18n="Placeholder option in the sprint filter">
-                    Select sprint
-                  </span>
-                </app-form-select-option>
-                @for (sprint of filteredSprints(); track sprint.id) {
-                  <app-form-select-option [value]="sprint.id">
-                    {{ sprint.name }}
-                  </app-form-select-option>
-                }
-              </app-form-select>
+                (changed)="setSprint($event)" />
             }
           </div>
         </div>
@@ -195,6 +185,24 @@ export class ReportingViewComponent {
   readonly sprints = this.sprintsResource.value;
   readonly canReadMembers = hasPermission(PERMISSIONS.members.read);
   readonly canReadSprints = hasPermission(PERMISSIONS.sprints.read);
+  protected readonly projectIcon = LucideFolder;
+  protected readonly unitIcon = LucideRuler;
+  protected readonly groupingIcon = LucideCalendarRange;
+  protected readonly sprintIcon = LucideTimer;
+
+  // The default of each control is the filter's "no filter" entry, so clearing it
+  // drops the query parameter and the report falls back to that default.
+  protected readonly unitOptions: SelectFilterOption<ReportingUnit>[] = [
+    {
+      value: 'StoryPoints',
+      label: $localize`:Estimation unit of story points:Story points`,
+    },
+    { value: 'Hours', label: $localize`:Estimation unit of hours:Hours` },
+  ];
+
+  protected readonly groupingOptions: SelectFilterOption<ReportingGrouping>[] =
+    [{ value: 'Week', label: $localize`:Report grouping by week:Weekly` }];
+
   readonly projectId = computed(() => this.numberParam('projectId'));
   readonly sprintId = computed(() => this.numberParam('sprintId'));
   readonly from = computed(() => this.params().get('from') ?? defaultFrom);
@@ -209,6 +217,37 @@ export class ReportingViewComponent {
     const value = this.params().get('unit');
     return value === 'StoryPoints' || value === 'Hours' ? value : 'Tasks';
   });
+  protected readonly projectOptions = computed<SelectFilterOption<number>[]>(
+    () => {
+      return this.projects().map((project) => ({
+        value: project.id,
+        label: project.name,
+      }));
+    }
+  );
+
+  protected readonly sprintOptions = computed<SelectFilterOption<number>[]>(
+    () => {
+      return this.filteredSprints().map((sprint) => ({
+        value: sprint.id,
+        label: sprint.name,
+      }));
+    }
+  );
+
+  // Null means "left at the default", which is what the filter's empty entry is.
+  protected readonly unitFilter = computed<ReportingUnit | null>(() => {
+    const unit = this.unit();
+
+    return unit === 'Tasks' ? null : unit;
+  });
+
+  protected readonly groupingFilter = computed<ReportingGrouping | null>(() => {
+    const grouping = this.grouping();
+
+    return grouping === 'Day' ? null : grouping;
+  });
+
   readonly filteredSprints = computed(() => {
     const projectId = this.projectId();
     return this.sprints().filter(
