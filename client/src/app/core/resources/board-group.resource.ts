@@ -3,9 +3,10 @@ import { AutomationBoardGroupOption } from '../models/automation-board-group-opt
 import { permissionResource } from './permission.resource';
 
 export const boardGroupOptionsResource = () => {
-  return permissionResource<AutomationBoardGroupOption[]>(
-    PERMISSIONS.boardGroups.read,
-    () => ({ url: 'api/boardgroups/options' }),
-    { defaultValue: [], refreshOn: ['boardGroups'] }
-  );
+  return permissionResource<AutomationBoardGroupOption[]>({
+    permission: PERMISSIONS.boardGroups.read,
+    request: () => ({ url: 'api/boardgroups/options' }),
+    defaultValue: [],
+    refreshOn: ['boardGroups'],
+  });
 };

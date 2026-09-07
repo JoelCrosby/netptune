@@ -21,11 +21,17 @@ export type CursorResourceRequest = Omit<HttpResourceRequest, 'params'> & {
   params?: Record<string, string | number | boolean>;
 };
 
-export interface CursorResourceOptions<T, TRaw = ClientResponse<T[]>> {
+export interface CursorResourceConfig<T, TRaw = ClientResponse<T[]>> {
+  /** The request to make. Returning undefined idles the resource. */
+  request: () => CursorResourceRequest | undefined;
   /** Identity of a row, used so a page delivered twice is not shown twice. */
   trackBy: (item: T) => string | number;
+  /** Gates the request. Omit to fetch for everyone. */
+  permission?: Permission;
   parse?: (response: TRaw) => T[];
+  /** Rows per request. Defaults to the shared page size. */
   pageSize?: number;
+  /** Scopes that make this resource stale — it reloads when one of them changes. */
   refreshOn?: readonly RefreshScope[];
 }
 
@@ -44,13 +50,12 @@ export interface CursorResourceRef<T> {
  * the pages. Returning undefined from `request` idles it; changing it starts a new list.
  */
 export function cursorResource<T, TRaw = ClientResponse<T[]>>(
-  request: () => CursorResourceRequest | undefined,
-  permission: Permission,
-  options: CursorResourceOptions<T, TRaw>
+  config: CursorResourceConfig<T, TRaw>
 ): CursorResourceRef<T> {
   assertInInjectionContext(cursorResource);
 
-  const pageSize = options.pageSize ?? DEFAULT_PAGE_SIZE;
+  const { request, permission, trackBy } = config;
+  const pageSize = config.pageSize ?? DEFAULT_PAGE_SIZE;
   const base = computed(() => request());
   const listKey = computed(() => {
     const target = base();
@@ -67,9 +72,9 @@ export function cursorResource<T, TRaw = ClientResponse<T[]>>(
     return isCurrent ? held.value : undefined;
   });
 
-  const resource = permissionResource<T[], TRaw>(
+  const resource = permissionResource<T[], TRaw>({
     permission,
-    () => {
+    request: () => {
       const target = base();
 
       if (!target) return undefined;
@@ -86,12 +91,10 @@ export function cursorResource<T, TRaw = ClientResponse<T[]>>(
 
       return { ...target, params };
     },
-    {
-      defaultValue: [],
-      parse: options.parse,
-      refreshOn: options.refreshOn,
-    }
-  );
+    defaultValue: [],
+    parse: config.parse,
+    refreshOn: config.refreshOn,
+  });
 
   const items = linkedSignal<string | null, T[]>({
     source: listKey,
@@ -104,7 +107,7 @@ export function cursorResource<T, TRaw = ClientResponse<T[]>>(
     if (!page.length) return;
 
     untracked(() => {
-      items.update((shown) => append(shown, page, options.trackBy));
+      items.update((shown) => append(shown, page, trackBy));
     });
   });
 

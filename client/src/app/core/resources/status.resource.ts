@@ -5,12 +5,13 @@ import { PERMISSIONS } from '../auth/permissions';
 import { permissionResource } from './permission.resource';
 
 export const statusResource = () => {
-  return permissionResource<Status[]>(
-    PERMISSIONS.statuses.read,
-    () => ({
+  return permissionResource<Status[]>({
+    permission: PERMISSIONS.statuses.read,
+    request: () => ({
       url: 'api/statuses',
       params: { page: 1, pageSize: MAX_PAGE_SIZE, entityType: EntityType.task },
     }),
-    { defaultValue: [], refreshOn: ['statuses'] }
-  );
+    defaultValue: [],
+    refreshOn: ['statuses'],
+  });
 };

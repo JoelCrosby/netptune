@@ -3,9 +3,9 @@ import { ServiceAccount } from '../models/service-account';
 import { permissionResource } from './permission.resource';
 
 export const serviceAccountResource = () => {
-  return permissionResource<ServiceAccount[]>(
-    PERMISSIONS.serviceAccounts.read,
-    () => ({ url: 'api/service-accounts' }),
-    { defaultValue: [] }
-  );
+  return permissionResource<ServiceAccount[]>({
+    permission: PERMISSIONS.serviceAccounts.read,
+    request: () => ({ url: 'api/service-accounts' }),
+    defaultValue: [],
+  });
 };

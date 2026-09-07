@@ -4,14 +4,12 @@ import { permissionResource } from '@core/resources/permission.resource';
 import { RoadmapViewModel } from '../models/roadmap.models';
 
 export const roadmapResource = (query: Signal<string | undefined>) =>
-  permissionResource<RoadmapViewModel | undefined>(
-    PERMISSIONS.tasks.read,
-    () => {
+  permissionResource<RoadmapViewModel | undefined>({
+    permission: PERMISSIONS.tasks.read,
+    request: () => {
       const value = query();
 
       return value ? { url: `api/roadmap?${value}` } : undefined;
     },
-    {
-      parse: (response) => response.payload,
-    }
-  );
+    parse: (response) => response.payload,
+  });

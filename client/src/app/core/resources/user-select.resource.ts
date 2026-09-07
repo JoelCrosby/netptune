@@ -13,10 +13,10 @@ export interface UserSelectQuery {
 }
 
 export const userSelectResource = (query: Signal<UserSelectQuery>) => {
-  return permissionResource<ClientResponse<Page<UserSelectOption>>>(
-    PERMISSIONS.members.read,
-    () => buildRequest(query())
-  );
+  return permissionResource<ClientResponse<Page<UserSelectOption>>>({
+    permission: PERMISSIONS.members.read,
+    request: () => buildRequest(query()),
+  });
 };
 
 function buildRequest(query: UserSelectQuery): HttpResourceRequest | undefined {

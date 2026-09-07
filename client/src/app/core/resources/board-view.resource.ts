@@ -8,18 +8,16 @@ export const boardViewResource = (
   identifier: Signal<string | undefined>,
   params: Signal<Params>
 ) => {
-  return stableResource<BoardView | undefined>(
-    PERMISSIONS.boards.read,
-    () => {
+  return stableResource<BoardView | undefined>({
+    permission: PERMISSIONS.boards.read,
+    request: () => {
       const id = identifier();
 
       if (!id) return undefined;
 
       return { url: `api/boards/view/${id}`, params: params() };
     },
-    {
-      refreshOn: ['tasks', 'boardGroups', 'pins'],
-      parse: (response) => response.payload,
-    }
-  );
+    refreshOn: ['tasks', 'boardGroups', 'pins'],
+    parse: (response) => response.payload,
+  });
 };

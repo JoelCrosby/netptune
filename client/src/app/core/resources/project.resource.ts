@@ -5,22 +5,23 @@ import { permissionResource } from './permission.resource';
 import { Signal } from '@angular/core';
 
 export const projectResource = () => {
-  return permissionResource<ProjectViewModel[]>(
-    PERMISSIONS.projects.read,
-    () => ({
+  return permissionResource<ProjectViewModel[]>({
+    permission: PERMISSIONS.projects.read,
+    request: () => ({
       url: 'api/projects',
       params: { page: 1, pageSize: MAX_PAGE_SIZE },
     }),
-    { defaultValue: [], refreshOn: ['projects'] }
-  );
+    defaultValue: [],
+    refreshOn: ['projects'],
+  });
 };
 
 export const projectDetailResource = (keySignal: Signal<string>) => {
-  return permissionResource<ProjectViewModel>(
-    PERMISSIONS.projects.read,
-    () => ({
+  return permissionResource<ProjectViewModel>({
+    permission: PERMISSIONS.projects.read,
+    request: () => ({
       url: `api/projects/${keySignal()}`,
     }),
-    { refreshOn: ['projects'] }
-  );
+    refreshOn: ['projects'],
+  });
 };

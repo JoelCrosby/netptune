@@ -3,12 +3,10 @@ import { NotificationSubscription } from '@core/models/notification-subscription
 import { permissionResource } from './permission.resource';
 
 export const notificationSubscriptionsResource = () => {
-  return permissionResource<NotificationSubscription[]>(
-    PERMISSIONS.notifications.read,
-    () => ({ url: 'api/notification-subscriptions' }),
-    {
-      defaultValue: [],
-      refreshOn: ['notificationSubscriptions'],
-    }
-  );
+  return permissionResource<NotificationSubscription[]>({
+    permission: PERMISSIONS.notifications.read,
+    request: () => ({ url: 'api/notification-subscriptions' }),
+    defaultValue: [],
+    refreshOn: ['notificationSubscriptions'],
+  });
 };

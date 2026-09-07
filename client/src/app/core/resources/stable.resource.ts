@@ -1,4 +1,3 @@
-import { HttpResourceRequest } from '@angular/common/http';
 import {
   assertInInjectionContext,
   linkedSignal,
@@ -6,10 +5,10 @@ import {
   Signal,
   WritableSignal,
 } from '@angular/core';
-import { Permission } from '../auth/permissions';
+import { ClientResponse } from '../models/client-response';
 import {
   permissionResource,
-  PermissionResourceOptions,
+  PermissionResourceConfig,
 } from './permission.resource';
 
 export interface StableResourceRef<T> {
@@ -27,14 +26,12 @@ export interface StableResourceRef<T> {
  * A `permissionResource` that holds its previous value for the duration of the next
  * request, rather than blanking and tearing down whatever the view rendered from it.
  */
-export function stableResource<T>(
-  permission: Permission,
-  request: () => HttpResourceRequest | undefined,
-  options?: PermissionResourceOptions<T>
+export function stableResource<T, TRaw = ClientResponse<T>>(
+  config: PermissionResourceConfig<T, TRaw>
 ): StableResourceRef<T | undefined> {
   assertInInjectionContext(stableResource);
 
-  const resource = permissionResource<T>(permission, request, options);
+  const resource = permissionResource<T, TRaw>(config);
 
   return {
     value: retainWhileLoading(resource),

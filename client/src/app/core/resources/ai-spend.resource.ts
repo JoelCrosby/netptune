@@ -6,12 +6,10 @@ export const aiSpendUrl = 'api/ai/admin/spend';
 export const aiSpendCapUrl = 'api/ai/admin/spend-cap';
 
 export const aiSpendResource = () => {
-  return permissionResource<AiSpend | null>(
-    PERMISSIONS.assistant.readAllConversations,
-    () => ({ url: aiSpendUrl }),
-    {
-      defaultValue: null,
-      parse: (response) => response.payload ?? null,
-    }
-  );
+  return permissionResource<AiSpend | null>({
+    permission: PERMISSIONS.assistant.readAllConversations,
+    request: () => ({ url: aiSpendUrl }),
+    defaultValue: null,
+    parse: (response) => response.payload ?? null,
+  });
 };

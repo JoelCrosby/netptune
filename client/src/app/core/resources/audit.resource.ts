@@ -23,12 +23,13 @@ export const auditFilterParams = (filter: AuditLogFilter) => {
 };
 
 export const auditSummaryResource = (filter: Signal<AuditLogFilter>) => {
-  return permissionResource<AuditActivityPoint[]>(
-    PERMISSIONS.audit.read,
-    () => ({ url: 'api/audit/summary', params: auditFilterParams(filter()) }),
-    {
-      defaultValue: [],
-      parse: (response) => response.payload ?? [],
-    }
-  );
+  return permissionResource<AuditActivityPoint[]>({
+    permission: PERMISSIONS.audit.read,
+    request: () => ({
+      url: 'api/audit/summary',
+      params: auditFilterParams(filter()),
+    }),
+    defaultValue: [],
+    parse: (response) => response.payload ?? [],
+  });
 };

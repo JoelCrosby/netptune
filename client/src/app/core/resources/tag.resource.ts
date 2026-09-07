@@ -4,12 +4,13 @@ import { Tag } from '../models/tag';
 import { permissionResource } from './permission.resource';
 
 export const tagResource = () => {
-  return permissionResource<Tag[]>(
-    PERMISSIONS.tags.read,
-    () => ({
+  return permissionResource<Tag[]>({
+    permission: PERMISSIONS.tags.read,
+    request: () => ({
       url: 'api/tags/workspace',
       params: { page: 1, pageSize: MAX_PAGE_SIZE },
     }),
-    { defaultValue: [], refreshOn: ['tags'] }
-  );
+    defaultValue: [],
+    refreshOn: ['tags'],
+  });
 };

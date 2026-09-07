@@ -12,18 +12,16 @@ export interface ActivityFeedRequest {
 export const activityResource = (
   request: Signal<ActivityFeedRequest | null>
 ) => {
-  return cursorResource<ActivityViewModel>(
-    () => {
+  return cursorResource<ActivityViewModel>({
+    request: () => {
       const feed = request();
 
       if (!feed) return undefined;
 
       return { url: `api/activity/${feed.entityType}/${feed.entityId}` };
     },
-    PERMISSIONS.activity.read,
-    {
-      trackBy: (activity) => activity.id,
-      parse: (response) => response.payload ?? [],
-    }
-  );
+    permission: PERMISSIONS.activity.read,
+    trackBy: (activity) => activity.id,
+    parse: (response) => response.payload ?? [],
+  });
 };

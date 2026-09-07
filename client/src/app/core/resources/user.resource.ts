@@ -10,25 +10,25 @@ import { WorkspaceRole } from '../enums/workspace-role';
 import { permissionResource } from './permission.resource';
 
 export const userResource = () => {
-  return permissionResource<ClientResponse<Page<WorkspaceAppUser>>>(
-    PERMISSIONS.members.read,
-    () => ({
+  return permissionResource<ClientResponse<Page<WorkspaceAppUser>>>({
+    permission: PERMISSIONS.members.read,
+    request: () => ({
       url: 'api/users',
       params: { page: 1, pageSize: MAX_PAGE_SIZE },
-    })
-  );
+    }),
+  });
 };
 
 export const userDetailResource = (userId: Signal<string | undefined>) => {
-  return permissionResource<WorkspaceAppUser>(
-    PERMISSIONS.members.read,
-    () => {
+  return permissionResource<WorkspaceAppUser>({
+    permission: PERMISSIONS.members.read,
+    request: () => {
       const id = userId();
 
       return id ? { url: `api/users/${id}` } : undefined;
     },
-    { refreshOn: ['users'] }
-  );
+    refreshOn: ['users'],
+  });
 };
 
 export const workspaceUsersResource = (): Signal<WorkspaceAppUser[]> => {
@@ -38,9 +38,9 @@ export const workspaceUsersResource = (): Signal<WorkspaceAppUser[]> => {
   const members = permissionResource<
     WorkspaceAppUser[],
     ClientResponse<Page<WorkspaceAppUser>>
-  >(
-    PERMISSIONS.members.read,
-    () => {
+  >({
+    permission: PERMISSIONS.members.read,
+    request: () => {
       if (isPublicViewer()) return undefined;
 
       return {
@@ -48,19 +48,17 @@ export const workspaceUsersResource = (): Signal<WorkspaceAppUser[]> => {
         params: { page: 1, pageSize: MAX_PAGE_SIZE },
       };
     },
-    {
-      defaultValue: [],
-      refreshOn: ['users'],
-      parse: (response) => response.payload?.items ?? [],
-    }
-  );
+    defaultValue: [],
+    refreshOn: ['users'],
+    parse: (response) => response.payload?.items ?? [],
+  });
 
   const publicMembers = permissionResource<
     WorkspaceAppUser[],
     Page<AssigneeViewModel>
-  >(
-    PERMISSIONS.tasks.read,
-    () => {
+  >({
+    permission: PERMISSIONS.tasks.read,
+    request: () => {
       const key = workspaceKey();
 
       if (!isPublicViewer() || !key) return undefined;
@@ -70,11 +68,9 @@ export const workspaceUsersResource = (): Signal<WorkspaceAppUser[]> => {
         params: { page: 1, pageSize: MAX_PAGE_SIZE },
       };
     },
-    {
-      defaultValue: [],
-      parse: (response) => response.items.map(toWorkspaceUser),
-    }
-  );
+    defaultValue: [],
+    parse: (response) => response.items.map(toWorkspaceUser),
+  });
 
   return computed(() => {
     return isPublicViewer() ? publicMembers.value() : members.value();

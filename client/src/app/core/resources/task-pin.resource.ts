@@ -4,25 +4,24 @@ import { PinnedTask } from '@core/models/task-pin';
 import { permissionResource } from './permission.resource';
 
 export const pinnedTasksResource = () => {
-  return permissionResource<PinnedTask[]>(
-    PERMISSIONS.tasks.read,
-    () => ({ url: 'api/pins' }),
-    { defaultValue: [], refreshOn: ['tasks', 'pins'] }
-  );
+  return permissionResource<PinnedTask[]>({
+    permission: PERMISSIONS.tasks.read,
+    request: () => ({ url: 'api/pins' }),
+    defaultValue: [],
+    refreshOn: ['tasks', 'pins'],
+  });
 };
 
 export const boardPinsResource = (boardId: Signal<number | undefined>) => {
-  return permissionResource<PinnedTask[]>(
-    PERMISSIONS.tasks.read,
-    () => {
+  return permissionResource<PinnedTask[]>({
+    permission: PERMISSIONS.tasks.read,
+    request: () => {
       const id = boardId();
 
       return id ? { url: `api/pins/board/${id}` } : undefined;
     },
-    {
-      defaultValue: [],
-      refreshOn: ['tasks', 'pins'],
-      parse: (response) => response.payload ?? [],
-    }
-  );
+    defaultValue: [],
+    refreshOn: ['tasks', 'pins'],
+    parse: (response) => response.payload ?? [],
+  });
 };

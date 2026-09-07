@@ -4,12 +4,13 @@ import { PERMISSIONS } from '../auth/permissions';
 import { permissionResource } from './permission.resource';
 
 export const workspaceBoardsResource = () => {
-  return permissionResource<BoardsViewModel[]>(
-    PERMISSIONS.boards.read,
-    () => ({
+  return permissionResource<BoardsViewModel[]>({
+    permission: PERMISSIONS.boards.read,
+    request: () => ({
       url: 'api/boards/workspace',
       params: { page: 1, pageSize: MAX_PAGE_SIZE },
     }),
-    { defaultValue: [], refreshOn: ['boards'] }
-  );
+    defaultValue: [],
+    refreshOn: ['boards'],
+  });
 };

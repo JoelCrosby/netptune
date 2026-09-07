@@ -10,28 +10,24 @@ export const recentNotificationsResource = () => {
   return permissionResource<
     NotificationViewModel[],
     ClientResponse<Page<NotificationViewModel>>
-  >(
-    PERMISSIONS.notifications.read,
-    () => ({
+  >({
+    permission: PERMISSIONS.notifications.read,
+    request: () => ({
       url: 'api/notifications',
       params: { page: 1, pageSize: RECENT_PAGE_SIZE },
     }),
-    {
-      defaultValue: [],
-      refreshOn: ['notifications'],
-      parse: (response) => response.payload?.items ?? [],
-    }
-  );
+    defaultValue: [],
+    refreshOn: ['notifications'],
+    parse: (response) => response.payload?.items ?? [],
+  });
 };
 
 export const unreadNotificationCountResource = () => {
-  return permissionResource<number>(
-    PERMISSIONS.notifications.read,
-    () => ({ url: 'api/notifications/unread-count' }),
-    {
-      defaultValue: 0,
-      refreshOn: ['notifications'],
-      parse: (response) => response.payload ?? 0,
-    }
-  );
+  return permissionResource<number>({
+    permission: PERMISSIONS.notifications.read,
+    request: () => ({ url: 'api/notifications/unread-count' }),
+    defaultValue: 0,
+    refreshOn: ['notifications'],
+    parse: (response) => response.payload ?? 0,
+  });
 };

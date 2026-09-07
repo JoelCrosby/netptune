@@ -13,9 +13,9 @@ export const transferCatalogResource = () => {
 };
 
 export const exportDefinitionResource = () => {
-  return permissionResource<ExportDefinitionViewModel[]>(
-    PERMISSIONS.tasks.export,
-    () => ({ url: 'api/export/definitions' }),
-    { defaultValue: [] }
-  );
+  return permissionResource<ExportDefinitionViewModel[]>({
+    permission: PERMISSIONS.tasks.export,
+    request: () => ({ url: 'api/export/definitions' }),
+    defaultValue: [],
+  });
 };
