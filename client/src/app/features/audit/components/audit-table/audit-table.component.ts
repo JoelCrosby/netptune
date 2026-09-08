@@ -39,7 +39,7 @@ import { AuditLogDetailDialogComponent } from '../../dialogs/audit-log-detail-di
       i18n-errorMessage="Shown when the audit log fails to load"
       errorMessage="Audit events could not be loaded."
       stickyHeader
-      headerClass="bg-card-header text-muted uppercase"
+      headerClass="text-muted uppercase"
       tableClass="min-w-180 table-fixed"
       i18n-emptyMessage="Empty state for the audit log"
       emptyMessage="No audit events found."

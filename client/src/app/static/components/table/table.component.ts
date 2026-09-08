@@ -288,7 +288,7 @@ export class TableHeaderRowDirective {}
   selector: 'tr[appTableRow]',
   host: {
     class:
-      'bg-card border-border hover:bg-card-hover border-b last:border-0 transition-colors',
+      'bg-card border-border hover:bg-card-hover border-b last:border-0! transition-colors',
   },
 })
 export class TableRowDirective {}
