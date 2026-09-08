@@ -14,6 +14,7 @@ public sealed class SeedContext
     public List<Board> Boards { get; } = [];
     public List<BoardGroup> BoardGroups { get; } = [];
     public List<Status> Statuses { get; } = [];
+    public List<RelationType> RelationTypes { get; } = [];
     public List<ProjectTask> Tasks { get; } = [];
     public List<ProjectTaskAppUser> TaskAssignees { get; } = [];
     public List<EventRecord> EventRecords { get; } = [];
