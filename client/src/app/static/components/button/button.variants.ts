@@ -251,6 +251,26 @@ export const iconButtonVariants = cva(
   }
 );
 
+export const inlineButtonVariants = cva(
+  'inline-flex cursor-pointer select-none items-center gap-1.5 bg-transparent p-0 text-xs transition-colors focus-visible:rounded-xs focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50',
+  {
+    variants: {
+      color: {
+        primary:
+          'text-primary hover:text-primary/75 focus-visible:ring-primary',
+        warn: 'text-warn hover:text-warn/75 focus-visible:ring-warn',
+        neutral:
+          'text-foreground hover:text-foreground/75 focus-visible:ring-foreground',
+        contrast:
+          'text-foreground hover:text-foreground/75 focus-visible:ring-foreground',
+      },
+    },
+    defaultVariants: {
+      color: 'primary',
+    },
+  }
+);
+
 export const toolbarButtonVariants = cva(
   'inline-flex h-9 cursor-pointer select-none items-center gap-2 rounded-lg px-3 text-sm font-medium whitespace-nowrap transition-colors duration-140 ease-in-out focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50',
   {

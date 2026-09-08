@@ -24,7 +24,6 @@ import {
   LucideKeyRound,
   LucidePlus,
   LucideSettings2,
-  LucideShieldCheck,
   LucideTrash,
   LucideX,
 } from '@lucide/angular';
@@ -52,7 +51,7 @@ import {
   EditServiceAccountDialogComponent,
   EditServiceAccountDialogData,
 } from '@settings/components/service-accounts/edit-service-account-dialog.component';
-import { permissionLabel } from '@settings/components/service-accounts/service-account-permissions';
+import { ServiceAccountPermissionSummaryComponent } from '@settings/components/service-accounts/service-account-permission-summary.component';
 
 @Component({
   selector: 'app-service-accounts-view',
@@ -63,7 +62,6 @@ import { permissionLabel } from '@settings/components/service-accounts/service-a
     LucideKeyRound,
     LucidePlus,
     LucideSettings2,
-    LucideShieldCheck,
     LucideTrash,
     LucideX,
     BadgeComponent,
@@ -75,6 +73,7 @@ import { permissionLabel } from '@settings/components/service-accounts/service-a
     PageBodyComponent,
     PageContainerComponent,
     PageHeaderComponent,
+    ServiceAccountPermissionSummaryComponent,
     TooltipDirective,
   ],
   template: `
@@ -203,39 +202,9 @@ import { permissionLabel } from '@settings/components/service-accounts/service-a
                 </header>
 
                 <div
-                  class="grid gap-6 px-5 py-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
-                  <div>
-                    <h4
-                      class="mb-3 flex items-center gap-2 text-sm font-medium">
-                      <svg lucideShieldCheck class="h-4 w-4"></svg>
-                      <span
-                        i18n="
-                          Heading above the permissions granted to a service
-                          account
-                        ">
-                        Account permissions
-                      </span>
-                    </h4>
-                    <div class="flex flex-wrap gap-2">
-                      @for (
-                        permission of account.permissions;
-                        track permission
-                      ) {
-                        <app-badge shape="rounded">
-                          {{ getPermissionLabel(permission) }}
-                        </app-badge>
-                      } @empty {
-                        <span class="text-muted text-sm">
-                          <span
-                            i18n="
-                              Shown when a service account has no permissions
-                            ">
-                            No permissions granted
-                          </span>
-                        </span>
-                      }
-                    </div>
-                  </div>
+                  class="grid gap-6 px-5 py-4 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
+                  <app-service-account-permission-summary
+                    [permissions]="account.permissions" />
 
                   <div>
                     <h4
@@ -640,10 +609,6 @@ export class ServiceAccountsViewComponent {
             $localize`:Error after failing to revoke a credential:Credential could not be revoked`
           ),
       });
-  }
-
-  getPermissionLabel(permission: ApiCredential['scopes'][number]) {
-    return permissionLabel(permission);
   }
 
   /** Discriminant used for styling — see credentialStatusLabel for display text. */

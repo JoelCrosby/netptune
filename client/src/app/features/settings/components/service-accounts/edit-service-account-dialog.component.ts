@@ -14,6 +14,7 @@ import {
 } from '@core/models/service-account';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
+import { InlineButtonComponent } from '@static/components/button/inline-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
@@ -40,6 +41,7 @@ export interface EditServiceAccountDialogData {
     FormField,
     FormInputComponent,
     FormTextAreaComponent,
+    InlineButtonComponent,
     StrokedButtonComponent,
   ],
   template: `
@@ -124,10 +126,7 @@ export interface EditServiceAccountDialogData {
                 <h4 class="text-xs font-semibold tracking-wide uppercase">
                   {{ group.label }}
                 </h4>
-                <button
-                  type="button"
-                  class="text-primary cursor-pointer text-xs"
-                  (click)="toggleGroup(group)">
+                <button app-inline-button (click)="toggleGroup(group)">
                   {{ groupToggleLabel(group) }}
                 </button>
               </header>

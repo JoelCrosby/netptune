@@ -15,6 +15,23 @@ export function permissionLabel(permission: Permission): string {
   return labels.get(permission) ?? permission;
 }
 
+export type PermissionAreaLevel = 'none' | 'partial' | 'full';
+
+export interface PermissionGrant {
+  key: Permission;
+  label: string;
+  granted: boolean;
+}
+
+export interface PermissionAreaSummary {
+  key: string;
+  label: string;
+  granted: number;
+  total: number;
+  level: PermissionAreaLevel;
+  permissions: PermissionGrant[];
+}
+
 export interface PermissionGroupOption {
   key: string;
   label: string;
@@ -33,6 +50,8 @@ const groupLabels: Record<string, string> = {
   boards: 'Boards',
   boardGroups: 'Board groups',
   tasks: 'Tasks',
+  taskViews: 'Task views',
+  data: 'Data',
   sprints: 'Sprints',
   comments: 'Comments',
   tags: 'Tags',
@@ -42,6 +61,7 @@ const groupLabels: Record<string, string> = {
   audit: 'Audit',
   notifications: 'Notifications',
   automations: 'Automations',
+  assistant: 'Assistant',
   flags: 'Flags',
   serviceAccounts: 'Service accounts',
   storage: 'Storage',

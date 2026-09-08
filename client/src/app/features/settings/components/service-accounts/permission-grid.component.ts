@@ -1,5 +1,6 @@
 import { Component, computed, input, output } from '@angular/core';
 import { Permission } from '@core/auth/permissions';
+import { InlineButtonComponent } from '@static/components/button/inline-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
 import { PermissionGroupOption } from './service-account-permissions';
@@ -11,7 +12,7 @@ export interface PermissionToggle {
 
 @Component({
   selector: 'app-permission-grid',
-  imports: [CheckboxComponent, StrokedButtonComponent],
+  imports: [CheckboxComponent, InlineButtonComponent, StrokedButtonComponent],
   template: `
     <div class="mb-3 flex items-center justify-between gap-3">
       <span class="text-muted text-xs">
@@ -58,10 +59,7 @@ export interface PermissionToggle {
             <h4 class="text-xs font-semibold tracking-wide uppercase">
               {{ group.label }}
             </h4>
-            <button
-              type="button"
-              class="text-primary cursor-pointer text-xs"
-              (click)="toggleGroup(group)">
+            <button app-inline-button (click)="toggleGroup(group)">
               {{ groupToggleLabel(group) }}
             </button>
           </header>
