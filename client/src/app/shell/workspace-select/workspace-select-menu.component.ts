@@ -135,7 +135,7 @@ import { WorkspaceSelectOptionComponent } from './workspace-select-option.compon
           <button
             app-workspace-menu-action
             type="button"
-            class="text-[rgba(var(--foreground-rgb),0.8)]"
+            class="text-foreground"
             (click)="createWorkspace.emit()">
             <svg lucidePlus class="text-primary h-3.75 w-3.75 shrink-0"></svg>
             <span
@@ -150,7 +150,7 @@ import { WorkspaceSelectOptionComponent } from './workspace-select-option.compon
 
           <a
             app-workspace-menu-action
-            class="text-[rgba(var(--foreground-rgb),0.8)]"
+            class="text-foreground"
             [routerLink]="['/workspaces']"
             (click)="manage.emit()">
             <svg
