@@ -1,11 +1,20 @@
-import { Component, computed, input, model } from '@angular/core';
+import {
+  booleanAttribute,
+  Component,
+  computed,
+  input,
+  model,
+} from '@angular/core';
 import { cva } from 'class-variance-authority';
 import { cn } from '../button/button.variants';
+import { ColorSwatchComponent } from '../color-swatch/color-swatch.component';
 
 export interface SegmentedOption<T extends string = string> {
   value: T;
   label: string;
   count?: number;
+  /** Renders a colour swatch before the label. */
+  color?: string | null;
 }
 
 export type SegmentedVariant = 'pill' | 'outlined' | 'chips';
@@ -18,14 +27,19 @@ const groupVariants = cva('', {
         'border-border bg-card flex items-center gap-0.5 rounded-[10px] border p-1 text-sm',
       chips: 'flex items-center gap-1.5 text-sm',
     },
+    wrap: {
+      true: 'flex-wrap',
+      false: '',
+    },
   },
   defaultVariants: {
     variant: 'pill',
+    wrap: false,
   },
 });
 
 const optionVariants = cva(
-  'focus-visible:ring-primary cursor-pointer transition-colors outline-none focus-visible:ring-2',
+  'focus-visible:ring-primary inline-flex cursor-pointer items-center gap-2 whitespace-nowrap transition-colors outline-none focus-visible:ring-2',
   {
     variants: {
       variant: {
@@ -74,6 +88,7 @@ const optionVariants = cva(
 
 @Component({
   selector: 'app-segmented-control',
+  imports: [ColorSwatchComponent],
   host: {
     '[class]': 'hostClass()',
     role: 'group',
@@ -86,6 +101,9 @@ const optionVariants = cva(
         [class]="optionClass(option.value === value())"
         [attr.aria-pressed]="option.value === value()"
         (click)="value.set(option.value)">
+        @if (option.color !== undefined) {
+          <app-color-swatch size="sm" [color]="option.color" />
+        }
         {{ option.label }}
         @if (option.count !== undefined) {
           <span class="ml-1.5 opacity-70">{{ option.count }}</span>
@@ -98,12 +116,16 @@ export class SegmentedControlComponent<T extends string = string> {
   readonly options = input.required<SegmentedOption<T>[]>();
   readonly ariaLabel = input<string | null>(null);
   readonly variant = input<SegmentedVariant>('pill');
+  readonly wrap = input(false, { transform: booleanAttribute });
   readonly class = input('');
 
   readonly value = model.required<T>();
 
   protected readonly hostClass = computed(() => {
-    return cn(groupVariants({ variant: this.variant() }), this.class());
+    return cn(
+      groupVariants({ variant: this.variant(), wrap: this.wrap() }),
+      this.class()
+    );
   });
 
   protected optionClass(selected: boolean): string {

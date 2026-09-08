@@ -17,11 +17,18 @@ import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { relationTypeResource } from '@core/resources/relation-type.resource';
 import { LucideLink2, LucideX } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
-import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
-import { ColorSwatchComponent } from '@static/components/color-swatch/color-swatch.component';
-import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
+import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { CalloutComponent } from '@static/components/callout/callout.component';
+import { ColorSwatchComponent } from '@static/components/color-swatch/color-swatch.component';
+import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
+import { ListRowComponent } from '@static/components/list-row.component';
+import {
+  SegmentedControlComponent,
+  SegmentedOption,
+} from '@static/components/segmented-control/segmented-control.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
+import { SectionLabelDirective } from '@static/directives/section-label.directive';
 import { LinkTaskListComponent } from './link-task-list.component';
 
 export interface LinkTaskDialogData {
@@ -47,32 +54,28 @@ interface RelationOption {
 @Component({
   selector: 'app-link-task-dialog',
   imports: [
+    CalloutComponent,
     ColorSwatchComponent,
-    DialogCloseDirective,
+    DialogTitleComponent,
     FlatButtonComponent,
     IconButtonComponent,
     LinkTaskListComponent,
-    LucideLink2,
+    ListRowComponent,
     LucideX,
+    SectionLabelDirective,
+    SegmentedControlComponent,
     StrokedButtonComponent,
     TaskScopeIdComponent,
   ],
   host: { class: 'flex min-h-0 flex-auto flex-col' },
   template: `
-    <div class="border-border relative flex-none border-b px-6 py-5">
-      <h1 class="m-0 pr-10 text-xl font-medium">{{ title() }}</h1>
-      <p class="text-muted mt-1 text-sm">{{ subtitle() }}</p>
-
-      <button
-        class="absolute top-4 right-4"
-        app-icon-button
-        app-dialog-close
-        type="button"
-        i18n-aria-label="Accessible label for the button that closes a dialog"
-        aria-label="Close dialog">
-        <svg lucideX class="h-5 w-5" aria-hidden="true"></svg>
-      </button>
-    </div>
+    <app-dialog-title
+      class="border-border flex-none border-b px-6 py-5"
+      noMargin
+      showCloseButton
+      [subtitle]="subtitle()">
+      {{ title() }}
+    </app-dialog-title>
 
     <div
       class="custom-scroll min-h-0 flex-auto overflow-y-auto lg:grid lg:grid-cols-[minmax(0,1fr)_22rem] lg:overflow-hidden">
@@ -87,52 +90,46 @@ interface RelationOption {
         class="bg-secondary-background custom-scroll flex flex-col gap-6 p-5 lg:min-h-0 lg:overflow-y-auto">
         <section class="flex flex-col gap-2">
           <h2
-            class="text-muted text-xs font-semibold tracking-wide uppercase"
+            appSectionLabel
             i18n="
               Heading over the choices for how two tasks relate to each other
             ">
             Relationship
           </h2>
 
-          <div class="flex flex-wrap gap-1.5">
-            @for (option of relationOptions(); track option.key) {
-              <button
-                type="button"
-                class="focus-visible:ring-primary flex cursor-pointer items-center gap-2 rounded-full border px-3 py-1.5 text-[13px] font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:outline-none"
-                [class]="pillClass(option)"
-                [attr.aria-pressed]="option.key === selectedKey()"
-                (click)="selectedKey.set(option.key)">
-                <app-color-swatch
-                  size="sm"
-                  [color]="option.relationType.color" />
-                {{ option.verb }}
-              </button>
-            } @empty {
-              <p
-                class="text-muted text-[13px] leading-relaxed"
-                i18n="
-                  Shown in the link dialog when the workspace has no relation
-                  types to pick from
-                ">
-                This workspace has no relation types yet. An administrator can
-                add them in workspace settings.
-              </p>
-            }
-          </div>
+          @if (relationChoices().length) {
+            <app-segmented-control
+              variant="chips"
+              wrap
+              i18n-ariaLabel="
+                Accessible name of the group of relationship choices
+              "
+              ariaLabel="Relationship"
+              [options]="relationChoices()"
+              [value]="selectedKey() ?? ''"
+              (valueChange)="selectedKey.set($event)" />
 
-          <p class="text-muted text-[13px] leading-relaxed">
-            {{ selectedOption()?.description }}
-          </p>
+            <p class="text-muted text-[13px] leading-relaxed">
+              {{ selectedOption()?.description }}
+            </p>
+          } @else {
+            <p
+              class="text-muted text-[13px] leading-relaxed"
+              i18n="
+                Shown in the link dialog when the workspace has no relation
+                types to pick from
+              ">
+              This workspace has no relation types yet. An administrator can add
+              them in workspace settings.
+            </p>
+          }
         </section>
 
         <section class="flex flex-col gap-2">
-          <h2 class="text-muted text-xs font-semibold tracking-wide uppercase">
-            {{ pendingLabel() }}
-          </h2>
+          <h2 appSectionLabel>{{ pendingLabel() }}</h2>
 
           @for (pending of selected(); track pending.id) {
-            <div
-              class="border-primary/25 bg-primary/8 flex items-center gap-2 rounded-md border px-2.5 py-2">
+            <app-list-row tone="primary">
               <app-task-scope-id class="shrink-0" [id]="pending.systemId" />
 
               <span class="min-w-0 flex-1 truncate text-[13px]">
@@ -151,33 +148,27 @@ interface RelationOption {
                 (click)="toggle(pending)">
                 <svg lucideX class="h-3.5 w-3.5" aria-hidden="true"></svg>
               </button>
-            </div>
+            </app-list-row>
           } @empty {
-            <div
-              class="border-border text-muted flex items-center gap-2 rounded-md border border-dashed px-3 py-3.5 text-[13px]">
-              <svg
-                lucideLink2
-                class="h-4 w-4 shrink-0"
-                aria-hidden="true"></svg>
-              <span
+            <app-callout [icon]="linkIcon">
+              <ng-container
                 i18n="Empty state of the list of tasks queued up to be linked">
                 Pick tasks on the left to build the list.
-              </span>
-            </div>
+              </ng-container>
+            </app-callout>
           }
         </section>
 
         @if (existingRelations().length) {
           <section class="flex flex-col gap-2">
             <h2
-              class="text-muted text-xs font-semibold tracking-wide uppercase"
+              appSectionLabel
               i18n="Heading over the links a task already has">
               Already linked
             </h2>
 
             @for (relation of existingRelations(); track relation.id) {
-              <div
-                class="border-border bg-background flex items-center gap-2 rounded-md border px-2.5 py-2">
+              <app-list-row class="gap-2">
                 <app-color-swatch
                   size="sm"
                   [color]="relation.relationTypeColor" />
@@ -193,7 +184,7 @@ interface RelationOption {
                 <span class="text-muted min-w-0 flex-1 truncate text-[13px]">
                   {{ relation.relatedTask.name }}
                 </span>
-              </div>
+              </app-list-row>
             }
           </section>
         }
@@ -222,6 +213,8 @@ interface RelationOption {
 })
 export class LinkTaskDialogComponent {
   static readonly panelClass = 'app-link-task-dialog';
+
+  protected readonly linkIcon = LucideLink2;
 
   private readonly dialogRef =
     inject<DialogRef<LinkTaskDialogResult, LinkTaskDialogComponent>>(DialogRef);
@@ -286,6 +279,14 @@ export class LinkTaskDialogComponent {
 
       return options[0]?.key ?? null;
     },
+  });
+
+  protected readonly relationChoices = computed<SegmentedOption[]>(() => {
+    return this.relationOptions().map((option) => ({
+      value: option.key,
+      label: option.verb,
+      color: option.relationType.color ?? null,
+    }));
   });
 
   protected readonly selectedOption = computed(() => {
@@ -399,14 +400,6 @@ export class LinkTaskDialogComponent {
 
     return $localize`:Button that creates several task links:Link ${count}:COUNT: tasks`;
   });
-
-  protected pillClass(option: RelationOption) {
-    if (option.key === this.selectedKey()) {
-      return 'border-primary bg-primary/12 text-foreground';
-    }
-
-    return 'border-border bg-background text-muted hover:border-primary/60 hover:text-foreground';
-  }
 
   protected toggle(task: TaskViewModel) {
     this.selected.update((selected) => {

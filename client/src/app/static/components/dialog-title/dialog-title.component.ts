@@ -10,6 +10,9 @@ import { DialogCloseDirective } from '../../directives/dialog-close.directive';
   template: `
     <div class="relative" [class.mb-6]="!noMargin()">
       <h1 class="m-0 pr-10 text-xl font-medium"><ng-content /></h1>
+      @if (subtitle()) {
+        <p class="text-muted mt-1 pr-10 text-sm">{{ subtitle() }}</p>
+      }
       @if (showCloseButton()) {
         <button
           class="absolute -top-2 -right-2"
@@ -25,6 +28,7 @@ import { DialogCloseDirective } from '../../directives/dialog-close.directive';
   `,
 })
 export class DialogTitleComponent {
+  readonly subtitle = input<string | null>(null);
   readonly showCloseButton = input(false, { transform: booleanAttribute });
   readonly noMargin = input(false, { transform: booleanAttribute });
 }

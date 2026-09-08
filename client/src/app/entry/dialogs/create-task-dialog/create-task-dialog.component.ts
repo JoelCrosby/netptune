@@ -35,6 +35,8 @@ import { TaskCommandsService } from '@core/services/task-commands.service';
 import { TaskFileUploadService } from '@core/services/task-file-upload.service';
 import { LucideLink2, LucideX } from '@lucide/angular';
 import { ColorSwatchComponent } from '@static/components/color-swatch/color-swatch.component';
+import { ListRowComponent } from '@static/components/list-row.component';
+import { SectionLabelDirective } from '@static/directives/section-label.directive';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
@@ -113,6 +115,8 @@ const documentContentTypes = new Set([
     FileTypeIconComponent,
     FlatButtonComponent,
     IconButtonComponent,
+    ListRowComponent,
+    SectionLabelDirective,
     StrokedButtonComponent,
     EditorComponent,
     FormErrorsComponent,
@@ -217,8 +221,7 @@ const documentContentTypes = new Set([
                   <div class="pt-1 pb-3" [class.hidden]="!isExpanded('links')">
                     @for (group of relationGroups(); track group.label) {
                       <div class="mb-3">
-                        <div
-                          class="text-muted mb-1 text-xs font-medium tracking-wide uppercase">
+                        <div appSectionLabel class="mb-1">
                           {{ group.label }}
                         </div>
 
@@ -227,8 +230,7 @@ const documentContentTypes = new Set([
                             relation of group.relations;
                             track relation.task.id
                           ) {
-                            <li
-                              class="border-foreground/8 bg-foreground/[0.02] flex items-center gap-3 rounded-lg border px-3 py-2">
+                            <li app-list-row>
                               <app-color-swatch
                                 size="sm"
                                 [color]="relation.task.statusColor" />

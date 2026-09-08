@@ -19,6 +19,8 @@ import { reloadOnRefresh } from '@core/util/reload-on-refresh';
 import { unwrapClientResponse } from '@core/util/rxjs-operators';
 import { LucideLink2, LucidePlus, LucideX } from '@lucide/angular';
 import { ColorSwatchComponent } from '@static/components/color-swatch/color-swatch.component';
+import { ListRowComponent } from '@static/components/list-row.component';
+import { SectionLabelDirective } from '@static/directives/section-label.directive';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
@@ -42,6 +44,8 @@ interface RelationGroup {
   imports: [
     ColorSwatchComponent,
     IconButtonComponent,
+    ListRowComponent,
+    SectionLabelDirective,
     StrokedButtonComponent,
     TaskScopeIdComponent,
     TooltipDirective,
@@ -74,15 +78,11 @@ interface RelationGroup {
 
     @for (group of groups(); track group.label) {
       <div class="mb-3">
-        <div
-          class="text-muted mb-1 text-xs font-medium tracking-wide uppercase">
-          {{ group.label }}
-        </div>
+        <div appSectionLabel class="mb-1">{{ group.label }}</div>
 
         <ul class="flex flex-col gap-1">
           @for (relation of group.relations; track relation.id) {
-            <li
-              class="border-foreground/8 bg-foreground/[0.02] flex items-center gap-3 rounded-lg border px-3 py-2">
+            <li app-list-row>
               <app-color-swatch
                 size="sm"
                 [color]="relation.relatedTask.statusColor" />

@@ -14,9 +14,12 @@ import { ClientResponse } from '@core/models/client-response';
 import { Page } from '@core/models/pagination';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { permissionResource } from '@core/resources/permission.resource';
-import { LucideCheck, LucideSearch } from '@lucide/angular';
+import { LucideSearch } from '@lucide/angular';
 import { BadgeComponent } from '@static/components/badge/badge.component';
+import { ButtonComponent } from '@static/components/button/button.component';
+import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
+import { SelectableRowComponent } from '@static/components/selectable-row.component';
 import { SkeletonComponent } from '@static/components/skeleton/skeleton.component';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
@@ -41,12 +44,18 @@ interface TaskRow {
 
 const noTasks: LoadedTasks = { items: [], total: 0 };
 
+// Rows meet edge to edge inside the scroller, so the shared row's own radius and
+// padding come off and the selected marker rides the left border.
+const rowBase = 'rounded-none border-b border-l-2 border-border/70 px-3 py-2.5';
+
 @Component({
   selector: 'app-link-task-list',
   imports: [
     BadgeComponent,
+    ButtonComponent,
+    EmptyStateComponent,
     FormInputComponent,
-    LucideCheck,
+    SelectableRowComponent,
     SkeletonComponent,
     SpinnerComponent,
     TaskScopeIdComponent,
@@ -80,25 +89,12 @@ const noTasks: LoadedTasks = { items: [], total: 0 };
         }
       } @else {
         @for (row of rows(); track row.task.id) {
-          <button
-            type="button"
-            class="border-border/70 focus-visible:ring-primary flex w-full items-center gap-3 border-b border-l-2 px-3 py-2.5 text-left focus-visible:ring-2 focus-visible:-outline-offset-2 focus-visible:outline-none"
+          <app-selectable-row
             [class]="rowClass(row)"
+            [checked]="row.selected"
             [disabled]="row.linked"
-            [attr.aria-pressed]="row.linked ? null : row.selected"
-            (click)="toggled.emit(row.task)">
-            <span
-              class="flex h-4 w-4 shrink-0 items-center justify-center rounded-[3px] border-2 transition-colors"
-              [class]="checkboxClass(row)">
-              @if (row.selected) {
-                <svg
-                  lucideCheck
-                  strokeWidth="4"
-                  class="h-3 w-3 text-white dark:text-black"
-                  aria-hidden="true"></svg>
-              }
-            </span>
-
+            [attr.aria-label]="row.task.name"
+            (toggled)="toggled.emit(row.task)">
             <app-task-scope-id class="shrink-0" [id]="row.task.systemId" />
 
             <span class="min-w-0 flex-1 truncate text-sm">
@@ -118,13 +114,12 @@ const noTasks: LoadedTasks = { items: [], total: 0 };
                 [color]="row.task.statusColor"
                 [category]="row.task.statusCategory" />
             }
-          </button>
+          </app-selectable-row>
         } @empty {
-          <p class="text-muted px-3 py-8 text-center text-sm">
-            <ng-container i18n="Shown when no tasks match the link search">
-              No tasks match your search.
-            </ng-container>
-          </p>
+          <app-empty-state
+            compact
+            i18n-title="Shown when no tasks match the link search"
+            title="No tasks match your search." />
         }
 
         @if (loadingMore()) {
@@ -135,13 +130,13 @@ const noTasks: LoadedTasks = { items: [], total: 0 };
             </span>
           </div>
         } @else if (canLoadMore()) {
-          <button
-            type="button"
-            class="text-primary hover:bg-hover focus-visible:ring-primary w-full cursor-pointer px-3 py-3 text-sm font-medium focus-visible:ring-2 focus-visible:outline-none"
+          <app-button
+            class="w-full rounded-none"
+            variant="text"
             i18n="Button that fetches the next page of tasks"
             (click)="loadMore()">
             Load more tasks
-          </button>
+          </app-button>
         }
       }
     </div>
@@ -251,23 +246,11 @@ export class LinkTaskListComponent {
   }
 
   protected rowClass(row: TaskRow) {
-    if (row.linked) {
-      return 'border-l-transparent cursor-not-allowed opacity-55';
-    }
-
     if (row.selected) {
-      return 'border-l-primary bg-primary/8 hover:bg-primary/12 cursor-pointer';
+      return `${rowBase} border-l-primary bg-primary/8 hover:bg-primary/12`;
     }
 
-    return 'border-l-transparent hover:bg-hover cursor-pointer';
-  }
-
-  protected checkboxClass(row: TaskRow) {
-    if (row.linked) return 'border-foreground/25 bg-foreground/10';
-
-    return row.selected
-      ? 'border-primary bg-primary'
-      : 'border-foreground/40 bg-transparent';
+    return `${rowBase} border-l-transparent`;
   }
 
   protected onScroll(event: Event) {

@@ -23,7 +23,7 @@ import { LucideCheck } from '@lucide/angular';
         }
       </div>
 
-      <span class="select-none" [class.opacity-50]="disabled()">
+      <span class="select-none empty:hidden" [class.opacity-50]="disabled()">
         <ng-content />
       </span>
 
