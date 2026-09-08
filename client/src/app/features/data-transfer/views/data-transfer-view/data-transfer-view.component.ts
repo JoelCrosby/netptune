@@ -96,7 +96,10 @@ const ResumableStages = [
     TabGroupComponent,
   ],
   template: `
-    <app-page-container [centerPage]="true" [marginBottom]="true">
+    <app-page-container
+      followsWidthPreference
+      [centerPage]="true"
+      [marginBottom]="true">
       <app-page-header
         i18n-title="Page title for the workspace import and export page"
         title="Data" />
