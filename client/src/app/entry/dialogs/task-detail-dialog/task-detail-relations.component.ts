@@ -205,7 +205,8 @@ export class TaskDetailRelationsComponent {
       LinkTaskDialogData
     >(LinkTaskDialogComponent, {
       data: { task },
-      width: '900px',
+      width: '1100px',
+      panelClass: LinkTaskDialogComponent.panelClass,
     });
 
     dialogRef.closed.subscribe((result) => {

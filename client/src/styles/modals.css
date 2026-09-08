@@ -109,3 +109,44 @@
     max-width: 100vw;
   }
 }
+
+/* The link dialog is three bands — header, the two picking columns, footer — so the
+   container's padding comes off and each band manages its own. */
+.cdk-overlay-pane.app-link-task-dialog {
+  height: auto;
+  max-height: min(760px, 92vh);
+}
+
+.app-link-task-dialog app-dialog-container {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.app-link-task-dialog app-dialog-container .dialog-inner {
+  padding-right: 0;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+@media only screen and (max-width: 1150px) {
+  .cdk-overlay-pane.app-link-task-dialog {
+    max-width: calc(100vw - 32px);
+  }
+}
+
+@media only screen and (max-width: 700px) {
+  .cdk-overlay-pane.app-link-task-dialog {
+    height: 100vh;
+    max-height: 100vh;
+    max-width: 100vw;
+  }
+
+  .app-link-task-dialog app-dialog-container {
+    border-radius: 0;
+  }
+}

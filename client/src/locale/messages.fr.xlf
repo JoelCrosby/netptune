@@ -1362,6 +1362,16 @@
         <target>Préférences de notification</target>
       </segment>
     </unit>
+    <unit id="162633507044660716">
+      <notes>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:164,167</note>
+        <note category="description">Empty state of the list of tasks queued up to be linked</note>
+      </notes>
+      <segment state="translated">
+        <source> Pick tasks on the left to build the list. </source>
+        <target> Choisissez des tâches à gauche pour composer la liste. </target>
+      </segment>
+    </unit>
     <unit id="6572526459338060111">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:494</note>
@@ -1664,7 +1674,7 @@
         <note category="location">src/app/core/services/workspace-commands.service.ts:225</note>
         <note category="location">src/app/core/services/workspace-commands.service.ts:235</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:336,339</note>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:108,111</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:209,212</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:142</note>
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:80,82</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:316</note>
@@ -2234,6 +2244,16 @@
       <segment state="translated">
         <source>Remove Link</source>
         <target>Supprimer le lien</target>
+      </segment>
+    </unit>
+    <unit id="7969803868786128145">
+      <notes>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:364</note>
+        <note category="description">Heading over the links waiting to be created</note>
+      </notes>
+      <segment state="translated">
+        <source>Will create <ph id="0" equiv="COUNT" disp="count"/> links</source>
+        <target>Créera <ph id="0" equiv="COUNT" disp="count"/> liens</target>
       </segment>
     </unit>
     <unit id="311004371875198775">
@@ -3051,6 +3071,16 @@
       <segment state="translated">
         <source>Blue</source>
         <target>Bleu</target>
+      </segment>
+    </unit>
+    <unit id="4083193853987027450">
+      <notes>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:175,178</note>
+        <note category="description">Heading over the links a task already has</note>
+      </notes>
+      <segment state="translated">
+        <source> Already linked </source>
+        <target> Déjà liées </target>
       </segment>
     </unit>
     <unit id="7055914640394142544">
@@ -4739,6 +4769,16 @@
         <target>a1b2c3d4e5f6g7h8i</target>
       </segment>
     </unit>
+    <unit id="3084343944071615109">
+      <notes>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:117,123</note>
+        <note category="description">Shown in the link dialog when the workspace has no relation types to pick from</note>
+      </notes>
+      <segment state="translated">
+        <source> This workspace has no relation types yet. An administrator can add them in workspace settings. </source>
+        <target> Cet espace de travail n&apos;a pas encore de types de relation. Un administrateur peut en ajouter dans les paramètres de l&apos;espace de travail. </target>
+      </segment>
+    </unit>
     <unit id="308735601429536200">
       <notes>
         <note category="location">src/app/features/pins/components/pin-scope-menu.component.ts:128</note>
@@ -4981,22 +5021,22 @@
         <target>Application en cours</target>
       </segment>
     </unit>
-    <unit id="8398664974459229978">
+    <unit id="5060728196587678675">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:47,50</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:340</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:393</note>
         <note category="description">Title of the dialog for linking tasks together</note>
       </notes>
-      <segment state="translated">
-        <source> Link Tasks </source>
+      <segment state="initial">
+        <source>Link tasks</source>
         <target>Lier des tâches</target>
       </segment>
     </unit>
     <unit id="3034679798924651226">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:56,57</note>
         <note category="location">src/app/features/automations/components/automation-relation-editor.component.ts:48,50</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:398</note>
-        <note category="description">Label of the relation type field</note>
+        <note category="description">Label of the relation field</note>
       </notes>
       <segment state="translated">
         <source>Relation</source>
@@ -5025,9 +5065,8 @@
     </unit>
     <unit id="4328738626502194147">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:69,71</note>
         <note category="location">src/app/features/automations/components/automation-relation-editor.component.ts:69,71</note>
-        <note category="description">Label of the field choosing which way a relation points</note>
+        <note category="description">Label of the direction field</note>
       </notes>
       <segment state="translated">
         <source>Direction</source>
@@ -5036,7 +5075,7 @@
     </unit>
     <unit id="5859943658540143078">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:87,90</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-list.component.ts:61,64</note>
         <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:73,76</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:41,44</note>
         <note category="description">Placeholder in the box for finding tasks to link</note>
@@ -5079,22 +5118,11 @@
         <target>Délimiteur</target>
       </segment>
     </unit>
-    <unit id="1830028453025281383">
-      <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:98,100</note>
-        <note category="description">Shown when no tasks match the link search</note>
-      </notes>
-      <segment state="translated">
-        <source>No tasks available to link.</source>
-        <target>Aucune tâche disponible à lier.</target>
-      </segment>
-    </unit>
     <unit id="2981219928115418649">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:116,118</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:37</note>
         <note category="location">src/app/static/components/editor/editor-bubble-menu.component.ts:201</note>
-        <note category="description">Button that creates the task link</note>
+        <note category="description">What a proposed change does</note>
       </notes>
       <segment state="translated">
         <source>Link</source>
@@ -5750,7 +5778,7 @@
     </unit>
     <unit id="5064013424659405171">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:284</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:285</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -6946,6 +6974,16 @@
         <target>Retour à la connexion</target>
       </segment>
     </unit>
+    <unit id="9158197687662075662">
+      <notes>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:150,152</note>
+        <note category="description">Accessible label for the button that drops a task from the list waiting to be linked</note>
+      </notes>
+      <segment state="translated">
+        <source>Remove from list</source>
+        <target>Retirer de la liste</target>
+      </segment>
+    </unit>
     <unit id="1474607462922806359">
       <notes>
         <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:147</note>
@@ -7059,6 +7097,16 @@
       <segment state="translated">
         <source>Password</source>
         <target>Mot de passe</target>
+      </segment>
+    </unit>
+    <unit id="1436939147098481968">
+      <notes>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-list.component.ts:125,127</note>
+        <note category="description">Shown when no tasks match the link search</note>
+      </notes>
+      <segment state="translated">
+        <source> No tasks match your search. </source>
+        <target> Aucune tâche ne correspond à votre recherche. </target>
       </segment>
     </unit>
     <unit id="1447132902979783175">
@@ -11295,6 +11343,16 @@
         <target> Exécuter maintenant </target>
       </segment>
     </unit>
+    <unit id="446269071364611708">
+      <notes>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-list.component.ts:143,147</note>
+        <note category="description">Button that fetches the next page of tasks</note>
+      </notes>
+      <segment state="translated">
+        <source> Load more tasks </source>
+        <target> Charger plus de tâches </target>
+      </segment>
+    </unit>
     <unit id="4463677923816016664">
       <notes>
         <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:228,232</note>
@@ -11735,6 +11793,16 @@
       <segment state="translated">
         <source>Burndown data could not be loaded.</source>
         <target>Les données du burndown n’ont pas pu être chargées.</target>
+      </segment>
+    </unit>
+    <unit id="4519355022354613189">
+      <notes>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:375</note>
+        <note category="description">Prompt shown while nothing is selected in the link dialog</note>
+      </notes>
+      <segment state="translated">
+        <source>Pick at least one task to link.</source>
+        <target>Choisissez au moins une tâche à lier.</target>
       </segment>
     </unit>
     <unit id="8192258211003608112">
@@ -14701,6 +14769,16 @@
         <target>Déplacer les tâches vers un groupe</target>
       </segment>
     </unit>
+    <unit id="3105441486807085959">
+      <notes>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:383</note>
+        <note category="description">Describes the single link that will be created</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="SUBJECT" disp="subject"/> <ph id="1" equiv="VERB" disp="option.verb"/> 1 task.</source>
+        <target><ph id="0" equiv="SUBJECT" disp="subject"/> <ph id="1" equiv="VERB" disp="option.verb"/> 1 tâche.</target>
+      </segment>
+    </unit>
     <unit id="3105841859086865531">
       <notes>
         <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:72,73</note>
@@ -15103,6 +15181,16 @@
       <segment state="translated">
         <source>tasks</source>
         <target>tâches</target>
+      </segment>
+    </unit>
+    <unit id="8713562282465902356">
+      <notes>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:386</note>
+        <note category="description">Describes the links that will be created</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="SUBJECT" disp="subject"/> <ph id="1" equiv="VERB" disp="option.verb"/> <ph id="2" equiv="COUNT" disp="count"/> tasks.</source>
+        <target><ph id="0" equiv="SUBJECT" disp="subject"/> <ph id="1" equiv="VERB" disp="option.verb"/> <ph id="2" equiv="COUNT" disp="count"/> tâches.</target>
       </segment>
     </unit>
     <unit id="8713752143619372030">
@@ -18346,6 +18434,16 @@
         <target>La feuille de route n&apos;a pas pu être chargée</target>
       </segment>
     </unit>
+    <unit id="1125364152850958195">
+      <notes>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-list.component.ts:134,136</note>
+        <note category="description">Shown while more rows load</note>
+      </notes>
+      <segment state="translated">
+        <source> Loading more tasks… </source>
+        <target> Chargement d&apos;autres tâches… </target>
+      </segment>
+    </unit>
     <unit id="1125626855616757413">
       <notes>
         <note category="location">src/app/features/roadmap/views/roadmap-view.component.ts:106,108</note>
@@ -19282,6 +19380,16 @@
         <target>Le compte de service sera prêt à recevoir un identifiant quand vous en aurez besoin.</target>
       </segment>
     </unit>
+    <unit id="7430110226379673413">
+      <notes>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-list.component.ts:238</note>
+        <note category="description">Counts the task rows loaded so far out of the matching total</note>
+      </notes>
+      <segment state="translated">
+        <source>Showing <ph id="0" equiv="SHOWN" disp="items.length"/> of <ph id="1" equiv="TOTAL" disp="total"/> tasks</source>
+        <target>Affichage de <ph id="0" equiv="SHOWN" disp="items.length"/> tâches sur <ph id="1" equiv="TOTAL" disp="total"/></target>
+      </segment>
+    </unit>
     <unit id="7430229396945550356">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:240</note>
@@ -19374,6 +19482,16 @@
       <segment state="translated">
         <source>There are no conversations</source>
         <target>Il n’y a aucune conversation</target>
+      </segment>
+    </unit>
+    <unit id="3108656642361487095">
+      <notes>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:94,98</note>
+        <note category="description">Heading over the choices for how two tasks relate to each other</note>
+      </notes>
+      <segment state="translated">
+        <source> Relationship </source>
+        <target> Relation </target>
       </segment>
     </unit>
     <unit id="3231851886445850180">
@@ -19765,6 +19883,16 @@
       <segment state="translated">
         <source>Best sprint</source>
         <target>Meilleur sprint</target>
+      </segment>
+    </unit>
+    <unit id="5771961292761992273">
+      <notes>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:349</note>
+        <note category="description">Explains that links picked here are saved with the new task</note>
+      </notes>
+      <segment state="translated">
+        <source>The links you pick are created with the task.</source>
+        <target>Les liens que vous choisissez sont créés avec la tâche.</target>
       </segment>
     </unit>
     <unit id="577229888706444517">
@@ -20464,6 +20592,16 @@
         <target>Par défaut</target>
       </segment>
     </unit>
+    <unit id="3281640360025639314">
+      <notes>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:357</note>
+        <note category="description">Heading over the list of links waiting to be created</note>
+      </notes>
+      <segment state="translated">
+        <source>Links to create</source>
+        <target>Liens à créer</target>
+      </segment>
+    </unit>
     <unit id="3285053667163564021">
       <notes>
         <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:215,217</note>
@@ -20981,6 +21119,16 @@
         <target>Créer un statut</target>
       </segment>
     </unit>
+    <unit id="1712670864734983091">
+      <notes>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:343</note>
+        <note category="description">Title of the dialog for linking tasks to the task named</note>
+      </notes>
+      <segment state="translated">
+        <source>Link tasks to <ph id="0" equiv="SYSTEM_ID" disp="systemId"/></source>
+        <target>Lier des tâches à <ph id="0" equiv="SYSTEM_ID" disp="systemId"/></target>
+      </segment>
+    </unit>
     <unit id="6920187614613605770">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:672</note>
@@ -21276,6 +21424,16 @@
       <segment state="translated">
         <source>Goal</source>
         <target>Objectif</target>
+      </segment>
+    </unit>
+    <unit id="502293220231043244">
+      <notes>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-list.component.ts:111,112</note>
+        <note category="description">Marks a task that is already linked</note>
+      </notes>
+      <segment state="translated">
+        <source> Linked </source>
+        <target> Liée </target>
       </segment>
     </unit>
     <unit id="5026839905470666885">
@@ -21618,6 +21776,16 @@
         <target>Déplacer les tâches inachevées vers le backlog</target>
       </segment>
     </unit>
+    <unit id="8351984771338841955">
+      <notes>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:400</note>
+        <note category="description">Button that creates several task links</note>
+      </notes>
+      <segment state="translated">
+        <source>Link <ph id="0" equiv="COUNT" disp="count"/> tasks</source>
+        <target>Lier <ph id="0" equiv="COUNT" disp="count"/> tâches</target>
+      </segment>
+    </unit>
     <unit id="8359451401558817525">
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:132</note>
@@ -21709,6 +21877,16 @@
       <segment state="translated">
         <source>Select sprint</source>
         <target>Sélectionner un sprint</target>
+      </segment>
+    </unit>
+    <unit id="7475074345924337144">
+      <notes>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:361</note>
+        <note category="description">Heading over a single link waiting to be created</note>
+      </notes>
+      <segment state="translated">
+        <source>Will create 1 link</source>
+        <target>Créera 1 lien</target>
       </segment>
     </unit>
     <unit id="2021375731542005347">
@@ -22377,6 +22555,16 @@
       <segment state="translated">
         <source>Workspace role</source>
         <target>Rôle dans l&apos;espace de travail</target>
+      </segment>
+    </unit>
+    <unit id="2306215569541621501">
+      <notes>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:380</note>
+        <note category="description">Stands in for a task that has not been created yet</note>
+      </notes>
+      <segment state="translated">
+        <source>This task</source>
+        <target>Cette tâche</target>
       </segment>
     </unit>
     <unit id="2308680792376328926">
@@ -24364,6 +24552,7 @@
     </unit>
     <unit id="6398969587818603892">
       <notes>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:72,73</note>
         <note category="location">src/app/static/components/dialog-title/dialog-title.component.ts:20,21</note>
         <note category="location">src/app/static/components/dialog-wizard/dialog-wizard.component.ts:34,35</note>
         <note category="description">Accessible label for the button that closes a dialog</note>
@@ -24852,6 +25041,16 @@
       <segment state="translated">
         <source>Change Sprint</source>
         <target>Changer de sprint</target>
+      </segment>
+    </unit>
+    <unit id="5892104910054813459">
+      <notes>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:397</note>
+        <note category="description">Button that creates one task link</note>
+      </notes>
+      <segment state="translated">
+        <source>Link 1 task</source>
+        <target>Lier 1 tâche</target>
       </segment>
     </unit>
     <unit id="6101767777602319924">

@@ -726,7 +726,11 @@ export class CreateTaskDialogComponent {
     const dialogRef = this.dialog.open<
       LinkTaskDialogResult,
       LinkTaskDialogData
-    >(LinkTaskDialogComponent, { data: {}, width: '900px' });
+    >(LinkTaskDialogComponent, {
+      data: {},
+      width: '1100px',
+      panelClass: LinkTaskDialogComponent.panelClass,
+    });
 
     dialogRef.closed.subscribe((result) => {
       if (!result) return;
