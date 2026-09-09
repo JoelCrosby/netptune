@@ -13,12 +13,16 @@ import {
   FormControlShapeDirective,
 } from './form-control.directives';
 
+const disabledBackground =
+  'color-mix(in oklab, var(--foreground) 2%, var(--form-field-background))';
+
 @Component({
   selector: 'app-form-control-field',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: ` <ng-content /> `,
   host: {
     '[class]': 'hostClass()',
+    '[style.background]': 'background()',
     '[style.borderColor]': 'borderColor()',
     '(focusin)': 'focused.set(true)',
     '(focusout)': 'focused.set(false)',
@@ -26,6 +30,7 @@ import {
 })
 export class FormControlFieldComponent {
   readonly invalid = input(false, { transform: (value: unknown) => !!value });
+  readonly disabled = input(false, { transform: (value: unknown) => !!value });
   readonly active = input(false, { transform: (value: unknown) => !!value });
   readonly density = input<FormControlDensity>('default');
   readonly class = input('');
@@ -50,6 +55,12 @@ export class FormControlFieldComponent {
   readonly el: HTMLElement = inject(ElementRef).nativeElement;
 
   protected readonly focused = signal(false);
+
+  // The whole surface has to carry the disabled tint, because the control inside stops short of the
+  // chevron and any suffix, which would leave those strips at the enabled colour.
+  protected readonly background = computed(() => {
+    return this.disabled() ? disabledBackground : null;
+  });
 
   protected readonly borderColor = computed(() => {
     if (this.invalid()) {

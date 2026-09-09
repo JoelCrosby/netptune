@@ -32,6 +32,7 @@ import { FormErrorComponent } from '../form-error/form-error.component';
       }
 
       <app-form-control-field
+        [disabled]="disabled()"
         [invalid]="touched() && invalid()"
         [active]="!!value() && touched()">
         @if (prefix()) {

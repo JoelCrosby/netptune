@@ -37,6 +37,7 @@ import { DatePickerComponent } from '../date-picker/date-picker.component';
 
       <app-form-control-field
         [density]="density()"
+        [disabled]="disabled()"
         [invalid]="touched() && invalid()"
         [active]="pending()">
         @if (prefix()) {

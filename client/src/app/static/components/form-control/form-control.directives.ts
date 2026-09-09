@@ -18,7 +18,7 @@ export class FormControlShapeDirective {
   selector: 'input[appFormInput], textarea[appFormInput], select[appFormInput]',
   host: {
     class:
-      'w-full appearance-none border-0 bg-transparent leading-10 text-inherit outline-none [font-family:inherit] [font-size:inherit] [font-weight:inherit] placeholder:opacity-60 disabled:bg-foreground/[0.02] disabled:text-foreground/40',
+      'w-full appearance-none border-0 bg-transparent leading-10 text-inherit outline-none [font-family:inherit] [font-size:inherit] [font-weight:inherit] placeholder:opacity-60 disabled:text-foreground/40',
   },
 })
 export class FormControlInputDirective {}

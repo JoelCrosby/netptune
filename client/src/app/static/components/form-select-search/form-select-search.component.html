@@ -8,6 +8,7 @@
   <app-form-control-field
     #dropreference
     class="w-full"
+    [disabled]="disabled()"
     [invalid]="touched() && invalid()"
     [active]="!!value() && pending()"
     (click)="onTriggerClick($event)">

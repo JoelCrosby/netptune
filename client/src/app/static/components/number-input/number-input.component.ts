@@ -18,7 +18,10 @@ import {
     class: 'block',
   },
   template: `
-    <app-form-control-field [density]="density()" [invalid]="invalid()">
+    <app-form-control-field
+      [density]="density()"
+      [disabled]="disabled()"
+      [invalid]="invalid()">
       <button
         type="button"
         [class]="stepperClass('left')"

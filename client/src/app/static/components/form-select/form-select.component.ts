@@ -64,6 +64,7 @@ import { FormErrorComponent } from '../form-error/form-error.component';
       <app-form-control-field
         #dropreference
         class="w-full cursor-pointer"
+        [disabled]="disabled()"
         [invalid]="touched() && invalid()"
         [active]="!!value() && pending()"
         (click)="onDropMenuIconClick($event)">

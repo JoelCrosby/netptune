@@ -53,6 +53,7 @@ import { FormSelectTagsService } from './form-select-tags.service';
       <app-form-control-field
         #dropreference
         class="cursor-text! flex-wrap!"
+        [disabled]="disabled()"
         [invalid]="touched() && invalid()"
         [active]="value().length > 0 && pending()"
         (click)="!isReadonly() && onTriggerClick($event)">

@@ -54,6 +54,7 @@ export interface MentionSubmitEvent {
       <app-form-control-field
         [density]="density()"
         [class]="fieldClass()"
+        [disabled]="disabled()"
         [invalid]="touched() && invalid()"
         [active]="pending()">
         @if (prefix()) {
