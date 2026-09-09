@@ -69,6 +69,11 @@ public abstract class Repository<TContext, TEntity, TId> : ReadOnlyRepository, I
         return Entities.AddRangeAsync(entities, cancellationToken);
     }
 
+    public virtual void Detach(TEntity entity)
+    {
+        Context.Entry(entity).State = EntityState.Detached;
+    }
+
     public virtual async Task<TEntity?> DeletePermanent(TId id, CancellationToken cancellationToken = default)
     {
         var entity = await GetAsync(id, cancellationToken: cancellationToken);

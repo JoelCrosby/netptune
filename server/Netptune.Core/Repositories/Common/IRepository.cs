@@ -10,6 +10,8 @@ public interface IRepository<TEntity, in TId> where TEntity : class
 
     Task AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
 
+    void Detach(TEntity entity);
+
     Task<TEntity?> DeletePermanent(TId id, CancellationToken cancellationToken = default);
 
     Task DeletePermanent(IEnumerable<TId> idList, CancellationToken cancellationToken = default);

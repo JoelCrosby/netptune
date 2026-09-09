@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Exceptions;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 
@@ -57,9 +58,24 @@ public sealed class SaveAiWebDocumentCommandHandler : IRequestHandler<SaveAiWebD
             ExpiresAt = now.AddHours(request.RetentionHours),
         };
 
-        await UnitOfWork.AiWebDocuments.AddAsync(document, cancellationToken);
-        await UnitOfWork.CompleteAsync();
+        await Store(document, cancellationToken);
 
         return document.Id;
+    }
+
+    private async Task Store(AiWebDocument document, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await UnitOfWork.Transaction(async () =>
+            {
+                await UnitOfWork.AiWebDocuments.AddAsync(document, cancellationToken);
+                await UnitOfWork.CompleteAsync(cancellationToken);
+            });
+        }
+        catch (UniqueConstraintException)
+        {
+            UnitOfWork.AiWebDocuments.Detach(document);
+        }
     }
 }
