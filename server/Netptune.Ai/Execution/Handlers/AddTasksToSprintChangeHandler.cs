@@ -24,7 +24,9 @@ public sealed class AddTasksToSprintChangeHandler : IAiChangeHandler
     {
         var change = context.Change;
         var payload = change.Payload.RootElement;
-        var sprintId = AiChangePayload.ReadInt(payload, "sprintId") ?? change.EntityId;
+        var sprintId = AiChangePayload.ResolveReference(context, "sprintRef")
+            ?? AiChangePayload.ReadInt(payload, "sprintId")
+            ?? change.EntityId;
         var taskIds = AiChangePayload.ReadIntArray(payload, "taskIds");
 
         if (!sprintId.HasValue || taskIds.Count == 0)

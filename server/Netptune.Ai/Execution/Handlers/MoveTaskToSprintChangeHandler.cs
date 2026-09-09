@@ -27,7 +27,8 @@ public sealed class MoveTaskToSprintChangeHandler : IAiChangeHandler, IAiChangeU
     {
         var change = context.Change;
         var taskId = AiChangePayload.ResolveTaskId(context);
-        var sprintId = AiChangePayload.ReadInt(change.Payload.RootElement, "sprintId");
+        var sprintId = AiChangePayload.ResolveReference(context, "sprintRef")
+            ?? AiChangePayload.ReadInt(change.Payload.RootElement, "sprintId");
 
         if (!taskId.HasValue || !sprintId.HasValue)
         {

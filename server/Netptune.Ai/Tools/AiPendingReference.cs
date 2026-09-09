@@ -20,6 +20,13 @@ public static class AiPendingReference
             string.Equals(change.EntityType, entityType, StringComparison.Ordinal));
     }
 
+    public static string ProposedName(AiChangeDraft draft)
+    {
+        var name = draft.Fields.FirstOrDefault(field => string.Equals(field.Name, "name", StringComparison.Ordinal));
+
+        return name?.After ?? draft.Summary;
+    }
+
     public static string Missing(string refKey, string entityType)
     {
         return $"“{refKey}” does not match a {entityType} proposed in this change set.";

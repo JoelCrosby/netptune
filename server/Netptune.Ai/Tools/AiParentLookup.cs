@@ -48,7 +48,7 @@ internal static class AiParentLookup
                 return AiParentResult.Failed(AiPendingReference.Missing(projectRef, "project"));
             }
 
-            return AiParentResult.Found(new AiParent { Name = ProposedName(pending) });
+            return AiParentResult.Found(new AiParent { Name = AiPendingReference.ProposedName(pending) });
         }
 
         var projectId = AiToolSchema.GetInt(arguments, "projectId");
@@ -86,7 +86,7 @@ internal static class AiParentLookup
                 return AiParentResult.Failed(AiPendingReference.Missing(boardRef, "board"));
             }
 
-            return AiParentResult.Found(new AiParent { Name = ProposedName(pending) });
+            return AiParentResult.Found(new AiParent { Name = AiPendingReference.ProposedName(pending) });
         }
 
         if (!existingBoardId.HasValue)
@@ -99,12 +99,5 @@ internal static class AiParentLookup
             Name = existingBoardName ?? string.Empty,
             Id = existingBoardId,
         });
-    }
-
-    private static string ProposedName(AiChangeDraft draft)
-    {
-        var name = draft.Fields.FirstOrDefault(field => string.Equals(field.Name, "name", StringComparison.Ordinal));
-
-        return name?.After ?? draft.Summary;
     }
 }

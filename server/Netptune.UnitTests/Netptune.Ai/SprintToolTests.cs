@@ -10,6 +10,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.ProjectTasks;
+using Netptune.Core.ViewModels.Projects;
 using Netptune.Core.ViewModels.Sprints;
 using Netptune.Handlers.Projects.Queries;
 using Netptune.Handlers.Sprints.Queries;
@@ -269,6 +270,157 @@ public class SprintToolTests
 
         result.IsError.Should().BeTrue();
         ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task AddTasksToSprint_ShouldProposeTasks_ForASprintPendingInTheSameChangeSet()
+    {
+        GivenProjects([CreateProject()]);
+        GivenTask(CreateTask(1, ProjectId));
+        GivenTask(CreateTask(2, ProjectId));
+
+        var sprintRef = await ProposeSprint($$"""{"name":"Sprint 5","projectId":{{ProjectId}},"startDate":"2026-07-15","endDate":"2026-07-28"}""");
+        var tool = new AddTasksToSprintTool(Mediator, ChangeSet);
+        var arguments = Arguments($$"""{"sprintRef":"{{sprintRef}}","taskIds":[1,2]}""");
+        var result = await tool.Execute(arguments, TestContext.Current.CancellationToken);
+
+        result.IsError.Should().BeFalse();
+        ChangeSet.Changes.Should().HaveCount(2);
+
+        var change = ChangeSet.Changes[1];
+
+        change.EntityId.Should().BeNull();
+        change.Summary.Should().Contain("Sprint 5");
+        change.Payload.RootElement.GetProperty("sprintRef").GetString().Should().Be(sprintRef);
+    }
+
+    [Fact]
+    public async Task AddTasksToSprint_ShouldFail_WhenThePendingSprintBelongsToAnotherProject()
+    {
+        GivenProjects([CreateProject(), CreateProject(ProjectId + 1, "Apollo")]);
+        GivenTask(CreateTask(1, ProjectId));
+
+        var sprintRef = await ProposeSprint($$"""{"name":"Sprint 5","projectId":{{ProjectId + 1}},"startDate":"2026-07-15","endDate":"2026-07-28"}""");
+        var tool = new AddTasksToSprintTool(Mediator, ChangeSet);
+        var arguments = Arguments($$"""{"sprintRef":"{{sprintRef}}","taskIds":[1]}""");
+        var result = await tool.Execute(arguments, TestContext.Current.CancellationToken);
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("Apollo");
+        ChangeSet.Changes.Should().ContainSingle();
+    }
+
+    [Fact]
+    public async Task AddTasksToSprint_ShouldFail_WhenThePendingSprintsProjectIsAlsoPending()
+    {
+        GivenProjects([]);
+        GivenTask(CreateTask(1, ProjectId));
+
+        var createProject = new CreateProjectTool(Mediator, ChangeSet);
+
+        await createProject.Execute(Arguments("""{"name":"Apollo"}"""), TestContext.Current.CancellationToken);
+
+        var projectRef = ChangeSet.Changes.Last().RefKey;
+        var sprintRef = await ProposeSprint($$"""{"name":"Sprint 5","projectRef":"{{projectRef}}","startDate":"2026-07-15","endDate":"2026-07-28"}""");
+        var tool = new AddTasksToSprintTool(Mediator, ChangeSet);
+        var arguments = Arguments($$"""{"sprintRef":"{{sprintRef}}","taskIds":[1]}""");
+        var result = await tool.Execute(arguments, TestContext.Current.CancellationToken);
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("proposed in this change set");
+        ChangeSet.Changes.Should().HaveCount(2);
+    }
+
+    [Fact]
+    public async Task AddTasksToSprint_ShouldFail_WhenTheSprintRefIsUnknown()
+    {
+        GivenTask(CreateTask(1, ProjectId));
+
+        var tool = new AddTasksToSprintTool(Mediator, ChangeSet);
+        var result = await tool.Execute(Arguments("""{"sprintRef":"ref:9","taskIds":[1]}"""), TestContext.Current.CancellationToken);
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("ref:9");
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task MoveTaskToSprint_ShouldProposeTheMove_ForASprintPendingInTheSameChangeSet()
+    {
+        GivenProjects([CreateProject()]);
+        GivenTask(CreateTask(1, ProjectId));
+
+        var sprintRef = await ProposeSprint($$"""{"name":"Sprint 5","projectId":{{ProjectId}},"startDate":"2026-07-15","endDate":"2026-07-28"}""");
+        var tool = new MoveTaskToSprintTool(Mediator, ChangeSet);
+        var arguments = Arguments($$"""{"taskId":1,"sprintRef":"{{sprintRef}}"}""");
+        var result = await tool.Execute(arguments, TestContext.Current.CancellationToken);
+
+        result.IsError.Should().BeFalse();
+
+        var change = ChangeSet.Changes.Last();
+
+        change.EntityId.Should().Be(1);
+        change.Fields.Single(field => field.Name == "sprint").After.Should().Be("Sprint 5");
+    }
+
+    [Fact]
+    public async Task MoveTaskToSprint_ShouldProposeTheMove_ForATaskPendingInTheSameChangeSet()
+    {
+        GivenSprint(CreateSprint());
+        GivenProjects([CreateProject()]);
+
+        var createTask = new CreateTaskTool(Mediator, ChangeSet);
+        var taskArguments = Arguments($$"""{"name":"Wire up the loader","projectId":{{ProjectId}}}""");
+
+        await createTask.Execute(taskArguments, TestContext.Current.CancellationToken);
+
+        var taskRef = ChangeSet.Changes.Last().RefKey;
+        var tool = new MoveTaskToSprintTool(Mediator, ChangeSet);
+        var arguments = Arguments($$"""{"taskRef":"{{taskRef}}","sprintId":{{SprintId}}}""");
+        var result = await tool.Execute(arguments, TestContext.Current.CancellationToken);
+
+        result.IsError.Should().BeFalse();
+
+        var change = ChangeSet.Changes.Last();
+
+        change.EntityId.Should().BeNull();
+        change.Summary.Should().Contain("Wire up the loader");
+        change.Payload.RootElement.GetProperty("taskRef").GetString().Should().Be(taskRef);
+    }
+
+    [Fact]
+    public async Task MoveTaskToSprint_ShouldFail_WhenNeitherATaskIdNorARefIsGiven()
+    {
+        GivenSprint(CreateSprint());
+
+        var tool = new MoveTaskToSprintTool(Mediator, ChangeSet);
+        var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}}}"""), TestContext.Current.CancellationToken);
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("taskRef");
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    private async Task<string> ProposeSprint(string json)
+    {
+        var tool = new CreateSprintTool(Mediator, ChangeSet);
+        var result = await tool.Execute(Arguments(json), TestContext.Current.CancellationToken);
+
+        result.IsError.Should().BeFalse();
+
+        return ChangeSet.Changes.Last().RefKey!;
+    }
+
+    private void GivenProjects(List<ProjectViewModel> projects)
+    {
+        Mediator
+            .Send(Arg.Any<GetProjectsQuery>(), Arg.Any<CancellationToken>())
+            .Returns(projects);
+    }
+
+    private static ProjectViewModel CreateProject(int id = ProjectId, string name = "Netptune")
+    {
+        return new ProjectViewModel { Id = id, Name = name, Key = "NPT", WorkspaceId = 1 };
     }
 
     private void GivenSprint(SprintDetailViewModel sprint)

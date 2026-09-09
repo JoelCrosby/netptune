@@ -26,6 +26,7 @@ public sealed class AddTasksToSprintTool : IAiTool
 
     public string Description =>
         "Propose adding several tasks to a sprint at once. The tasks must already belong to the sprint's project. "
+        + "Pass sprintRef instead of sprintId to add them to a sprint proposed earlier in this change set. "
         + "Nothing is moved until the user reviews and applies the change.";
 
     public AiToolKind Kind => AiToolKind.Write;
@@ -37,6 +38,7 @@ public sealed class AddTasksToSprintTool : IAiTool
         """
         {
           "sprintId": { "type": "integer", "description": "The sprint to add the tasks to." },
+          "sprintRef": { "type": "string", "description": "Handle of a sprint proposed earlier in this change set, instead of sprintId." },
           "taskIds": {
             "type": "array",
             "items": { "type": "integer" },
@@ -44,18 +46,10 @@ public sealed class AddTasksToSprintTool : IAiTool
           }
         }
         """,
-        "sprintId",
         "taskIds");
 
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
-        var sprintId = AiToolSchema.GetInt(arguments, "sprintId");
-
-        if (!sprintId.HasValue)
-        {
-            return AiToolExecution.Failed("A sprintId is required.");
-        }
-
         var taskIds = ReadTaskIds(arguments);
 
         if (taskIds.Count == 0)
@@ -70,20 +64,14 @@ public sealed class AddTasksToSprintTool : IAiTool
             return AiToolExecution.Failed($"No more than {MaximumTasks} tasks can be added in one change.");
         }
 
-        var sprint = await AiSprintLookup.Find(Mediator, sprintId.Value, cancellationToken);
+        var target = await AiSprintTargetLookup.Resolve(Mediator, ChangeSet, arguments, cancellationToken);
 
-        if (sprint is null)
+        if (target.Error is not null)
         {
-            return AiToolExecution.Failed($"Sprint {sprintId} is not in this workspace.");
+            return AiToolExecution.Failed(target.Error);
         }
 
-        var isCompleted = sprint.Status == SprintStatus.Completed;
-
-        if (isCompleted)
-        {
-            return AiToolExecution.Failed($"Sprint “{sprint.Name}” is completed and can no longer be changed.");
-        }
-
+        var sprint = target.Sprint!;
         var pendingIds = new List<int>();
         var pendingLabels = new List<string>();
 
@@ -96,14 +84,14 @@ public sealed class AddTasksToSprintTool : IAiTool
                 return AiToolExecution.Failed($"Task {taskId} was not found in this workspace.");
             }
 
-            var belongsToProject = task.ProjectId == sprint.ProjectId;
+            var mismatch = AiSprintTargetLookup.FindProjectMismatch(sprint, task);
 
-            if (!belongsToProject)
+            if (mismatch is not null)
             {
-                return AiToolExecution.Failed($"Task {task.SystemId} is not in project {sprint.ProjectName}.");
+                return AiToolExecution.Failed(mismatch);
             }
 
-            var isAlreadyInSprint = task.SprintId == sprint.Id;
+            var isAlreadyInSprint = sprint.Id.HasValue && task.SprintId == sprint.Id;
 
             if (isAlreadyInSprint)
             {
@@ -122,6 +110,7 @@ public sealed class AddTasksToSprintTool : IAiTool
         var payload = new
         {
             sprintId = sprint.Id,
+            sprintRef = sprint.RefKey,
             taskIds = pendingIds,
         };
 
