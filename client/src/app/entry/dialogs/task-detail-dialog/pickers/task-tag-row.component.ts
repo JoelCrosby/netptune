@@ -1,5 +1,16 @@
 import { httpResource } from '@angular/common/http';
-import { Component, computed, input, output, signal } from '@angular/core';
+import {
+  afterNextRender,
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  Injector,
+  input,
+  output,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { MAX_PAGE_SIZE } from '@core/models/pagination';
 import { Tag } from '@core/models/tag';
 import { reloadOnRefresh } from '@core/util/reload-on-refresh';
@@ -43,7 +54,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
         [class]="addButtonClass()"
         [attr.aria-label]="addLabel"
         aria-haspopup="menu"
-        (click)="menu.toggle(addButton)">
+        (click)="toggleMenu(addButton)">
         <svg lucidePlus class="h-3.5 w-3.5"></svg>
       </button>
 
@@ -54,6 +65,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
               lucideSearch
               class="text-muted pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2"></svg>
             <input
+              #searchInput
               class="w-full bg-transparent py-2.5 pr-3 pl-9 text-sm focus:outline-none"
               i18n-placeholder="Placeholder in the box for searching tags"
               placeholder="Search or create a tag"
@@ -104,6 +116,11 @@ export class TaskTagRowComponent {
 
   readonly search = signal('');
 
+  private readonly injector = inject(Injector);
+  private readonly menu = viewChild(DropdownMenuComponent);
+  private readonly searchInput =
+    viewChild<ElementRef<HTMLInputElement>>('searchInput');
+
   readonly addLabel = $localize`:Accessible label for the control that adds a tag to a task:Add a tag`;
   readonly removeLabel = $localize`:Accessible label for the button that removes a tag from a task:Remove tag`;
 
@@ -144,6 +161,24 @@ export class TaskTagRowComponent {
 
   constructor() {
     reloadOnRefresh(this.workspaceTags, ['tags']);
+  }
+
+  protected toggleMenu(origin: HTMLElement) {
+    const menu = this.menu();
+
+    if (!menu) return;
+
+    if (menu.showing()) {
+      menu.close();
+
+      return;
+    }
+
+    menu.open(origin);
+
+    afterNextRender(() => this.searchInput()?.nativeElement.focus(), {
+      injector: this.injector,
+    });
   }
 
   protected onSearchInput(event: Event) {

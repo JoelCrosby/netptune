@@ -1,3 +1,5 @@
+import { FocusKeyManager } from '@angular/cdk/a11y';
+import { hasModifierKey } from '@angular/cdk/keycodes';
 import { Overlay, OverlayRef, OverlayConfig } from '@angular/cdk/overlay';
 import { CdkPortal } from '@angular/cdk/portal';
 import { cn } from '../button/button.variants';
@@ -14,11 +16,6 @@ import {
 } from '@angular/core';
 
 export type DropdownMenuXPosition = 'before' | 'after';
-
-/**
- * A menu hangs off a trigger element, or off a bare point when it is opened by
- * a right click and should appear under the pointer.
- */
 export type DropdownMenuOrigin = HTMLElement | { x: number; y: number };
 
 @Component({
@@ -57,9 +54,7 @@ export class DropdownMenuComponent implements OnDestroy {
 
   readonly xPosition = input<DropdownMenuXPosition>('after');
   readonly panelRole = input('menu');
-  /** Padding of the panel itself, dropped by content that draws its own edges. */
   readonly panelClass = input('p-1');
-  /** Nudges the panel back into view, for menus opened at an arbitrary point. */
   readonly push = input(false);
 
   protected readonly className = computed(() => {
@@ -90,12 +85,7 @@ export class DropdownMenuComponent implements OnDestroy {
     this.overlayRef = this.overlay.create(this.getOverlayConfig(origin));
     this.overlayRef.attach(this.portal());
     this.overlayRef.backdropClick().subscribe(() => this.close());
-    this.overlayRef.keydownEvents().subscribe((event) => {
-      if (event.key !== 'Escape') return;
-
-      event.preventDefault();
-      this.closeAndFocusTrigger();
-    });
+    this.overlayRef.keydownEvents().subscribe((event) => this.onKeydown(event));
     this.showing.set(true);
   }
 
@@ -134,6 +124,79 @@ export class DropdownMenuComponent implements OnDestroy {
     }
   }
 
+  private onKeydown(event: KeyboardEvent) {
+    if (event.defaultPrevented) return;
+
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      this.closeAndFocusTrigger();
+
+      return;
+    }
+
+    const active = activeElement();
+
+    if (active instanceof HTMLTextAreaElement) {
+      return;
+    }
+
+    if (active instanceof HTMLInputElement && edgeKeys.includes(event.key)) {
+      return;
+    }
+
+    this.keyManager()?.onKeydown(event);
+
+    if (event.defaultPrevented) {
+      return;
+    }
+
+    this.redirectTypingToSearch(event);
+  }
+
+  private redirectTypingToSearch(event: KeyboardEvent) {
+    if (hasModifierKey(event)) return;
+
+    if (event.key.length !== 1 || event.key === ' ') {
+      return;
+    }
+
+    if (activeElement() instanceof HTMLInputElement) {
+      return;
+    }
+
+    this.searchInput()?.focus();
+  }
+
+  private keyManager() {
+    const items = this.focusableItems();
+
+    if (!items.length) return null;
+
+    const manager = new FocusKeyManager(items).withWrap().withHomeAndEnd();
+    const active = activeElement();
+
+    manager.updateActiveItem(
+      items.findIndex((item) => item.element === active)
+    );
+
+    return manager;
+  }
+
+  private focusableItems() {
+    const panel = this.overlayRef?.overlayElement;
+    const nodes = panel?.querySelectorAll<HTMLElement>(focusableSelector) ?? [];
+
+    return Array.from(nodes)
+      .filter((node) => node.tabIndex >= 0 && node.getClientRects().length > 0)
+      .map((element) => ({ element, focus: () => element.focus() }));
+  }
+
+  private searchInput() {
+    const panel = this.overlayRef?.overlayElement;
+
+    return panel?.querySelector<HTMLInputElement>(searchInputSelector);
+  }
+
   private buildPositionStrategy(origin: DropdownMenuOrigin) {
     const isBefore = this.xPosition() === 'before';
 
@@ -166,6 +229,24 @@ export class DropdownMenuComponent implements OnDestroy {
       backdropClass: 'cdk-overlay-transparent-backdrop',
     });
   }
+}
+
+const focusableSelector = [
+  'a[href]',
+  'button:not([disabled])',
+  'input:not([disabled]):not([type="hidden"])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  '[tabindex]:not([tabindex="-1"])',
+].join(',');
+
+const searchInputSelector =
+  'input:not([type]), input[type="text"], input[type="search"]';
+
+const edgeKeys = ['Home', 'End'];
+
+function activeElement() {
+  return document.activeElement;
 }
 
 function focusTrigger(origin: DropdownMenuOrigin) {
