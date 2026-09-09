@@ -9,7 +9,15 @@ import {
   TaskFilterRouteParams,
 } from '@core/router/task-filter-route-params';
 
-const FILTER_PARAMS = ['term', 'tags', 'users', 'statusIds', 'sprintId'];
+const FILTER_PARAMS = [
+  'term',
+  'tags',
+  'users',
+  'statusIds',
+  'sprintId',
+  'hasTags',
+  'hasFlags',
+];
 
 @Service()
 export class TaskFilterService {
@@ -49,6 +57,8 @@ export class TaskFilterService {
       tags: [],
       users: [],
       statuses: [],
+      hasTags: undefined,
+      hasFlags: undefined,
       sprintId: held.sprintId,
     });
   }
@@ -100,6 +110,8 @@ export class TaskFilterService {
       !!filters.tags?.length ||
       !!filters.users?.length ||
       !!filters.statuses?.length ||
+      filters.hasTags !== undefined ||
+      filters.hasFlags === true ||
       filters.sprintId !== undefined
     );
   }
@@ -111,6 +123,8 @@ export class TaskFilterService {
       users: null,
       statusIds: null,
       sprintId: null,
+      hasTags: null,
+      hasFlags: null,
       ...buildTaskFilterRouteParams(filters, { includeStatuses: true }),
     };
 

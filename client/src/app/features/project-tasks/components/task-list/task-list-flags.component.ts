@@ -1,7 +1,5 @@
-import { Component, computed, inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { injectParams } from '@app/core/router/signals';
-import { parseTaskFilterRouteParams } from '@app/core/router/task-filter-route-params';
+import { Component, computed } from '@angular/core';
+import { taskFilterRoute } from '@core/router/task-filter-route';
 import { LucideFlag } from '@lucide/angular';
 
 @Component({
@@ -24,19 +22,13 @@ import { LucideFlag } from '@lucide/angular';
   `,
 })
 export class TaskListFlagsComponent {
-  private readonly router = inject(Router);
-  private readonly params = injectParams();
+  private readonly filterRoute = taskFilterRoute();
 
   readonly selected = computed(
-    () => parseTaskFilterRouteParams(this.params()).hasFlags === true
+    () => this.filterRoute.filters().hasFlags === true
   );
 
   toggle() {
-    void this.router.navigate([], {
-      queryParams: {
-        hasFlags: this.selected() ? null : true,
-      },
-      queryParamsHandling: 'merge',
-    });
+    this.filterRoute.set('hasFlags', this.selected() ? null : true);
   }
 }

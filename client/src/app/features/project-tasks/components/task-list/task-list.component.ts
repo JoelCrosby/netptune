@@ -104,14 +104,8 @@ export class TaskListComponent {
   private readonly filterRoute = taskFilterRoute();
 
   readonly filtersActive = computed(() => {
-    const routeFilters = this.filterRoute.filters();
-
-    const presenceFiltersActive =
-      routeFilters.hasFlags === true || routeFilters.hasTags !== undefined;
-
     return (
       this.filterRoute.hasFilters() ||
-      presenceFiltersActive ||
       this.sprintFilter.sprintId() !== undefined
     );
   });

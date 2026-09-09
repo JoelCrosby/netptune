@@ -1,5 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, computed } from '@angular/core';
 import { Selected } from '@core/models/selected';
 import { Tag } from '@core/models/tag';
 import { tagResource } from '@core/resources/tag.resource';
@@ -20,7 +19,6 @@ import { TagFilterComponent } from '@static/components/tag-filter/tag-filter.com
   `,
 })
 export class TagFilterContainerComponent {
-  private readonly router = inject(Router);
   private readonly filterRoute = taskFilterRoute();
   private readonly tagsResource = tagResource();
 
@@ -53,15 +51,16 @@ export class TagFilterContainerComponent {
       selected.add(tag.name);
     }
 
-    this.filterRoute.set('tags', [...selected]);
+    this.filterRoute.patch({ tags: [...selected], hasTags: undefined });
   }
 
   onUntaggedChange(untagged: boolean) {
-    void this.router.navigate([], {
-      queryParams: {
-        hasTags: untagged ? false : null,
-      },
-      queryParamsHandling: 'merge',
-    });
+    if (!untagged) {
+      this.filterRoute.set('hasTags', null);
+
+      return;
+    }
+
+    this.filterRoute.patch({ hasTags: false, tags: [] });
   }
 }

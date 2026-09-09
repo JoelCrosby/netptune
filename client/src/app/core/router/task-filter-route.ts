@@ -7,17 +7,19 @@ import {
 import { TaskFilterService } from '@core/services/task-filter.service';
 import { TaskFilterRouteParams } from './task-filter-route-params';
 
-export type TaskFilterKey = 'term' | 'users' | 'tags' | 'statusIds';
+export type TaskFilterKey =
+  'term' | 'users' | 'tags' | 'statusIds' | 'hasTags' | 'hasFlags';
+
+export type TaskFilterValue = string | string[] | number[] | boolean | null;
 
 export interface TaskFilterRoute {
-  /** The filters the views are currently narrowed to. */
   readonly filters: Signal<TaskFilterRouteParams>;
   readonly hasFilters: Signal<boolean>;
-  set(key: TaskFilterKey, value: string | string[] | number[] | null): void;
+  set(key: TaskFilterKey, value: TaskFilterValue): void;
+  patch(filters: TaskFilterRouteParams): void;
   clear(): void;
 }
 
-/** The view-facing shape of {@link TaskFilterService}. */
 export function taskFilterRoute(): TaskFilterRoute {
   assertInInjectionContext(taskFilterRoute);
 
@@ -33,17 +35,20 @@ export function taskFilterRoute(): TaskFilterRoute {
         !!current.term ||
         !!current.tags?.length ||
         !!current.users?.length ||
-        !!current.statuses?.length
+        !!current.statuses?.length ||
+        current.hasTags !== undefined ||
+        current.hasFlags === true
       );
     }),
     set: (key, value) => taskFilters.update(toPatch(key, value)),
+    patch: (filters) => taskFilters.update(filters),
     clear: () => taskFilters.clear(),
   };
 }
 
 function toPatch(
   key: TaskFilterKey,
-  value: string | string[] | number[] | null
+  value: TaskFilterValue
 ): TaskFilterRouteParams {
   if (key === 'term') {
     return { term: (value as string | null) || null };
@@ -51,6 +56,10 @@ function toPatch(
 
   if (key === 'statusIds') {
     return { statuses: (value as number[]) ?? [] };
+  }
+
+  if (key === 'hasTags' || key === 'hasFlags') {
+    return { [key]: (value as boolean | null) ?? undefined };
   }
 
   return { [key]: (value as string[]) ?? [] };
