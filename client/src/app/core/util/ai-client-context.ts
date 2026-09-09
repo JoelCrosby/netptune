@@ -76,7 +76,7 @@ export const projectChip = (
     kind: 'project',
     label: KIND_LABELS.project,
     name: project.name,
-    route: routeFor(workspace, 'project', project.id),
+    route: routeFor(workspace, 'project', project.key),
     context: { projectId: project.id, projectName: project.name },
   };
 };
