@@ -300,6 +300,52 @@ export function describeAutomationRuleSegments(
   ];
 }
 
+export function countAutomationConditions(
+  group: AutomationConditionGroup | null | undefined
+): number {
+  if (!group) return 0;
+
+  return group.groups.reduce(
+    (total, nested) => total + countAutomationConditions(nested),
+    group.conditions.length
+  );
+}
+
+// The compact line the editor pins above and below the flow, counting the parts
+// rather than spelling them out the way the segment descriptions do.
+export function describeAutomationOneLine(
+  trigger: AutomationTrigger,
+  actions: AutomationAction[]
+): string {
+  const event = toLowerText(triggerTypeLabels[trigger.type]);
+  const conditions = describeConditionCount(
+    countAutomationConditions(trigger.conditionGroup)
+  );
+  const followUps = describeActionCount(actions.length);
+
+  return $localize`:One-line summary of an automation rule. EVENT names the trigger event, CONDITIONS and ACTIONS are counts:When ${event}:EVENT:, if ${conditions}:CONDITIONS: match, run ${followUps}:ACTIONS:.`;
+}
+
+function describeConditionCount(count: number): string {
+  if (count === 0) {
+    return $localize`:Part of an automation summary, when a rule has no conditions:no conditions`;
+  }
+
+  if (count === 1) {
+    return $localize`:Part of an automation summary, when a rule has one condition:1 condition`;
+  }
+
+  return $localize`:Part of an automation summary. COUNT is a number greater than one:${count}:COUNT: conditions`;
+}
+
+function describeActionCount(count: number): string {
+  if (count === 1) {
+    return $localize`:Part of an automation summary, when a rule has one action:1 action`;
+  }
+
+  return $localize`:Part of an automation summary. COUNT is a number of actions:${count}:COUNT: actions`;
+}
+
 function describeFieldConditionSegments(
   condition: AutomationFieldCondition,
   statuses: Status[]

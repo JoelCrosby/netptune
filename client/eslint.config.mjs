@@ -115,7 +115,8 @@ export default defineConfig([
             'headerClass', 'hostClass', 'labelWidth', 'maxHeightClass',
             'panelClass', 'rowClass', 'tableClass', 'textClass', 'widthClass',
             // fixed-vocabulary inputs (enum-like), not prose
-            'align', 'appearance', 'appTooltipPosition', 'cdkDropListOrientation',
+            'align', 'appearance', 'appFormShape', 'appTooltipPosition',
+            'cdkDropListOrientation',
             'colWrap', 'density', 'focusMode', 'layout', 'preserveAspectRatio',
             'rowWrap', 'entityType',
             'enterFrom', 'enterTo', 'leaveFrom', 'leaveTo', 'mode', 'provider',

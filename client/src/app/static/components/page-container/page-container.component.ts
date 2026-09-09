@@ -20,6 +20,7 @@ export type PageContainerLayout = 'default' | 'list';
 @Component({
   selector: 'app-page-container',
   imports: [ProgressBarComponent],
+  host: { '[class]': 'hostClass()' },
   template: `
     <div [class]="rootClass()" [attr.aria-busy]="showProgress()">
       <div
@@ -31,6 +32,15 @@ export type PageContainerLayout = 'default' | 'list';
         <ng-content />
       </div>
     </div>
+
+    @if (stickyFooter()) {
+      <div
+        class="border-border bg-card sticky bottom-0 z-10 border-t shadow-[0_-8px_24px_var(--card-shadow)]">
+        <div [class]="footerRowClass()">
+          <ng-content select="[pageFooter]" />
+        </div>
+      </div>
+    }
   `,
 })
 export class PageContainerComponent {
@@ -42,6 +52,11 @@ export class PageContainerComponent {
   readonly centerPage = input<boolean | null>(true);
 
   readonly layout = input<PageContainerLayout>('default');
+
+  // Pins a bar to the bottom of the page for content projected into [pageFooter]. The bar runs
+  // edge to edge while the row inside it keeps the centred cap, the way the list layout's header
+  // band does, so a page's actions reach the sidebar rather than stopping at the content column.
+  readonly stickyFooter = input(false, { transform: booleanAttribute });
 
   // Default-layout pages keep the centred cap unless they opt in, so forms and
   // detail views stay readable while width-filling pages follow the preference.
@@ -88,12 +103,29 @@ export class PageContainerComponent {
     return this.isList() && this.centerPage() !== false && this.capWidth();
   });
 
+  // The footer sits outside the content column so it can run edge to edge, which only leaves it at
+  // the bottom of the page if the host owns the height and the column above takes the slack. A list
+  // page is already exactly one screen tall, so the host takes that height over from the root.
+  protected readonly hostClass = computed(() => {
+    if (!this.stickyFooter()) return '';
+
+    return this.isList()
+      ? 'flex h-[calc(100vh-60px)] flex-col'
+      : 'flex min-h-full flex-col';
+  });
+
   protected readonly rootClass = computed(() => {
     if (this.isList()) {
-      return 'relative flex h-[calc(100vh-60px)] flex-col';
+      const height = this.stickyFooter()
+        ? 'min-h-0 flex-1'
+        : 'h-[calc(100vh-60px)]';
+
+      return `relative flex flex-col ${height}`;
     }
 
     const classes = ['flex flex-col'];
+
+    if (this.stickyFooter()) classes.push('min-h-0 flex-1');
 
     if (this.centerPage()) {
       classes.push('mx-auto w-full');
@@ -103,6 +135,15 @@ export class PageContainerComponent {
 
     if (this.fullHeight() && !this.marginBottom()) classes.push('h-full');
     if (this.marginBottom()) classes.push('pb-[20vh]');
+
+    return classes.join(' ');
+  });
+
+  protected readonly footerRowClass = computed(() => {
+    const classes = ['mx-auto w-full'];
+
+    if (this.centerPage() && this.capWidth()) classes.push('max-w-[1360px]');
+    if (this.horizontalPadding()) classes.push('px-8 max-[600px]:px-3');
 
     return classes.join(' ');
   });

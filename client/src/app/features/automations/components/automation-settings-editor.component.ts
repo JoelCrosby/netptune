@@ -21,16 +21,19 @@ import { FormSelectComponent } from '@static/components/form-select/form-select.
     FormSelectOptionComponent,
   ],
   template: `
-    <div class="flex flex-col justify-baseline gap-4">
+    <div class="grid gap-3.5 sm:grid-cols-3">
       <app-form-input
+        class="sm:col-span-3"
         name="name"
         i18n-label="Label of the name field"
         label="Name"
+        [noMargin]="true"
         [required]="true"
         [(value)]="name" />
 
       <app-form-select
         name="execution-user"
+        [noMargin]="true"
         i18n-label="
           Label of the field choosing which service account runs the actions
         "
@@ -49,83 +52,96 @@ import { FormSelectComponent } from '@static/components/form-select/form-select.
         }
       </app-form-select>
 
+      <app-form-select
+        name="scope-kind"
+        i18n-label="Label of the scope field"
+        label="Scope"
+        [noMargin]="true"
+        [value]="scopeKind()"
+        (valueChange)="setScopeKind($event)">
+        @for (option of scopeOptions; track option) {
+          <app-form-select-option [value]="option">
+            {{ scopeLabel(option) }}
+          </app-form-select-option>
+        }
+      </app-form-select>
+
+      @switch (scopeKind()) {
+        @case ('project') {
+          <app-form-select
+            name="scope-project"
+            i18n-label="Label of the project field"
+            label="Project"
+            i18n-placeholder="Placeholder text: Choose a project"
+            placeholder="Choose a project"
+            [noMargin]="true"
+            [required]="true"
+            [(value)]="projectId">
+            @for (project of projects(); track project.id) {
+              <app-form-select-option [value]="project.id">
+                {{ project.name }}
+              </app-form-select-option>
+            }
+          </app-form-select>
+        }
+        @case ('board') {
+          <app-form-select
+            name="scope-board"
+            i18n-label="Label of the board field"
+            label="Board"
+            i18n-placeholder="Placeholder text: Choose a board"
+            placeholder="Choose a board"
+            [noMargin]="true"
+            [required]="true"
+            [(value)]="boardId">
+            @for (board of boards(); track board.id) {
+              <app-form-select-option [value]="board.id">
+                {{ board.name }}
+              </app-form-select-option>
+            }
+          </app-form-select>
+        }
+        @case ('sprint') {
+          <app-form-select
+            name="scope-sprint"
+            i18n-label="Label of the sprint field"
+            label="Sprint"
+            i18n-placeholder="Placeholder text: Choose a sprint"
+            placeholder="Choose a sprint"
+            [noMargin]="true"
+            [required]="true"
+            [(value)]="sprintId">
+            @for (sprint of sprints(); track sprint.id) {
+              <app-form-select-option [value]="sprint.id">
+                {{ sprint.name }}
+              </app-form-select-option>
+            }
+          </app-form-select>
+        }
+        @default {
+          <app-form-select
+            name="scope-workspace"
+            i18n-label="Label of the workspace scope field"
+            label="Workspace"
+            i18n-placeholder="
+              Placeholder text shown when an automation covers the whole
+              workspace
+            "
+            placeholder="Whole workspace"
+            [noMargin]="true"
+            [disabled]="true" />
+        }
+      }
+
       @if (!serviceAccounts().length) {
-        <p class="text-muted -mt-3 text-sm">
+        <p class="text-muted text-sm sm:col-span-3">
           <span i18n="Warns that a service account is required">
             Create an enabled service account before saving this automation.
           </span>
         </p>
       }
 
-      <div class="flex flex-col gap-3">
-        <app-form-select
-          name="scope-kind"
-          i18n-label="Label of the scope field"
-          label="Scope"
-          i18n-hint="Explains what conditions do"
-          hint="Limit which tasks this automation can act on."
-          [value]="scopeKind()"
-          (valueChange)="setScopeKind($event)">
-          @for (option of scopeOptions; track option) {
-            <app-form-select-option [value]="option">
-              {{ scopeLabel(option) }}
-            </app-form-select-option>
-          }
-        </app-form-select>
-
-        @switch (scopeKind()) {
-          @case ('project') {
-            <app-form-select
-              name="scope-project"
-              i18n-label="Label of the project field"
-              label="Project"
-              i18n-placeholder="Placeholder text: Choose a project"
-              placeholder="Choose a project"
-              [required]="true"
-              [(value)]="projectId">
-              @for (project of projects(); track project.id) {
-                <app-form-select-option [value]="project.id">
-                  {{ project.name }}
-                </app-form-select-option>
-              }
-            </app-form-select>
-          }
-          @case ('board') {
-            <app-form-select
-              name="scope-board"
-              i18n-label="Label of the board field"
-              label="Board"
-              i18n-placeholder="Placeholder text: Choose a board"
-              placeholder="Choose a board"
-              [required]="true"
-              [(value)]="boardId">
-              @for (board of boards(); track board.id) {
-                <app-form-select-option [value]="board.id">
-                  {{ board.name }}
-                </app-form-select-option>
-              }
-            </app-form-select>
-          }
-          @case ('sprint') {
-            <app-form-select
-              name="scope-sprint"
-              i18n-label="Label of the sprint field"
-              label="Sprint"
-              i18n-placeholder="Placeholder text: Choose a sprint"
-              placeholder="Choose a sprint"
-              [required]="true"
-              [(value)]="sprintId">
-              @for (sprint of sprints(); track sprint.id) {
-                <app-form-select-option [value]="sprint.id">
-                  {{ sprint.name }}
-                </app-form-select-option>
-              }
-            </app-form-select>
-          }
-        }
-      </div>
-
-      <div class="border-border bg-foreground/5 rounded-lg border p-4">
+      <div class="sm:col-span-3">
         <app-checkbox [(checked)]="isEnabled">
           <span class="flex flex-col">
             <span

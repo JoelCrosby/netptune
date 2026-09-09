@@ -15,7 +15,8 @@ import { AutomationCopySegment, statusLabel } from '../models/automation-copy';
           [color]="status?.color"
           [category]="status?.category ?? null" />
       } @else {
-        {{ segment.text }}
+        <!-- Segments carry their own spacing, so template whitespace would double it. -->
+        <ng-container>{{ segment.text }}</ng-container>
       }
     }
   `,

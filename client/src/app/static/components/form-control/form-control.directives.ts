@@ -2,6 +2,18 @@ import { computed, Directive, input } from '@angular/core';
 
 export type FormControlDensity = 'default' | 'compact';
 
+export type FormControlShape = 'default' | 'rounded';
+
+// Set on any ancestor — usually the form itself — so every field under it picks the shape up
+// through the element injector. A form's fields are spread across nested editor components, which
+// would otherwise each need to thread an input down to the controls they render.
+@Directive({
+  selector: '[appFormShape]',
+})
+export class FormControlShapeDirective {
+  readonly appFormShape = input<FormControlShape>('default');
+}
+
 @Directive({
   selector: 'input[appFormInput], textarea[appFormInput], select[appFormInput]',
   host: {

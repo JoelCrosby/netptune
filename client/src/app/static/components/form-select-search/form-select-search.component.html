@@ -1,4 +1,4 @@
-<div class="nept-form-control w-[inherit] mb-[1.4rem]">
+<div class="nept-form-control w-[inherit] mb-[1.4rem]" [class.mb-0!]="noMargin()">
   @if (label()) {
     <label [for]="name()" appFormLabel>
       {{ label() }}

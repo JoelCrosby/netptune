@@ -20,23 +20,36 @@ import { sprintResource } from '@core/resources/sprint.resource';
 import { statusResource } from '@core/resources/status.resource';
 import { tagResource } from '@core/resources/tag.resource';
 import { userResource } from '@core/resources/user.resource';
+import {
+  LucideCircleAlert,
+  LucideListFilter,
+  LucideZap,
+} from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { CalloutComponent } from '@static/components/callout/callout.component';
+import { FormControlShapeDirective } from '@static/components/form-control/form-control.directives';
+import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
-import { StepComponent } from '@static/components/stepper/step.component';
-import { StepperComponent } from '@static/components/stepper/stepper.component';
 import { finalize } from 'rxjs';
 import {
   AutomationActionsEditorComponent,
   EditableAutomationAction,
+  automationActionLimit,
 } from '../../components/automation-actions-editor.component';
 import { AutomationConditionsEditorComponent } from '../../components/automation-conditions-editor.component';
-import { AutomationFormPreviewComponent } from '../../components/automation-form-preview.component';
+import { AutomationFlowStepComponent } from '../../components/automation-flow-step.component';
 import { AutomationSettingsEditorComponent } from '../../components/automation-settings-editor.component';
+import { AutomationSetupStripComponent } from '../../components/automation-setup-strip.component';
+import { AutomationSummaryBarComponent } from '../../components/automation-summary-bar.component';
 import { AutomationTriggerEditorComponent } from '../../components/automation-trigger-editor.component';
+import {
+  describeAutomationOneLine,
+  scopeKindLabels,
+} from '../../models/automation-copy';
 import {
   AutomationActionType,
   AutomationDelayUnit,
@@ -50,138 +63,149 @@ import {
   AutomationTriggerType,
   TaskChangeField,
 } from '../../models/automation.models';
-import type { AutomationFormStep } from '../../services/automation-rule-request-builder.service';
 import { AutomationsService } from '../../services/automations.service';
 
 @Component({
   selector: 'app-automation-form-view',
   imports: [
     RouterLink,
+    CalloutComponent,
+    FormControlShapeDirective,
+    PageBodyComponent,
     PageContainerComponent,
     PageHeaderComponent,
     PageLoadingComponent,
     FlatButtonComponent,
     StrokedButtonComponent,
-    StepperComponent,
-    StepComponent,
+    AutomationFlowStepComponent,
     AutomationSettingsEditorComponent,
+    AutomationSetupStripComponent,
+    AutomationSummaryBarComponent,
     AutomationTriggerEditorComponent,
     AutomationConditionsEditorComponent,
     AutomationActionsEditorComponent,
-    AutomationFormPreviewComponent,
   ],
   template: `
-    <app-page-container [centerPage]="true" [marginBottom]="true">
+    <app-page-container layout="list" [stickyFooter]="true">
       <app-page-header
-        [title]="isEdit() ? 'Edit Automation' : 'Create Automation'">
-        <a
-          app-stroked-button
-          [routerLink]="cancelLink()"
-          i18n="Dismisses a dialog without acting">
-          Cancel
-        </a>
-        <button
-          app-flat-button
-          color="primary"
-          type="button"
-          [disabled]="saving()"
-          (click)="onSubmit()">
-          {{ isEdit() ? 'Save Automation' : 'Create Automation' }}
-        </button>
-      </app-page-header>
+        toolbar
+        [title]="isEdit() ? 'Edit Automation' : 'Create Automation'" />
 
-      @if (loading()) {
-        <app-page-loading />
-      } @else {
-        <form
-          class="grid gap-5 lg:grid-cols-[minmax(0,1fr)_360px]"
-          (ngSubmit)="onSubmit()">
-          <div class="flex w-full max-w-3xl flex-col gap-5">
-            <app-stepper>
-              <app-step
-                i18n-title="Title of the settings step"
-                title="Settings"
-                i18n-description="Description of the settings step"
-                description="Name your automation and set whether it is active."
-                [error]="stepError('settings')">
-                <app-automation-settings-editor
-                  [serviceAccounts]="enabledServiceAccounts()"
-                  [projects]="projectsResource.value()"
-                  [boards]="workspaceBoards()"
-                  [sprints]="workspaceSprintsResource.value()"
-                  [(name)]="name"
-                  [(isEnabled)]="isEnabled"
-                  [(executionUserId)]="executionUserId"
-                  [(projectId)]="projectId"
-                  [(boardId)]="boardId"
-                  [(sprintId)]="sprintId" />
-              </app-step>
+      <app-page-body scroll>
+        @if (loading()) {
+          <app-page-loading />
+        } @else {
+          <form
+            appFormShape="rounded"
+            class="mx-auto flex w-full flex-col gap-4 pb-8"
+            (ngSubmit)="onSubmit()">
+            <app-automation-setup-strip
+              [name]="name()"
+              [runAs]="runAsLabel()"
+              [scope]="scopeLabel()"
+              [isEnabled]="isEnabled()"
+              [(open)]="setupOpen">
+              <app-automation-settings-editor
+                [serviceAccounts]="enabledServiceAccounts()"
+                [projects]="projectsResource.value()"
+                [boards]="workspaceBoards()"
+                [sprints]="workspaceSprintsResource.value()"
+                [(name)]="name"
+                [(isEnabled)]="isEnabled"
+                [(executionUserId)]="executionUserId"
+                [(projectId)]="projectId"
+                [(boardId)]="boardId"
+                [(sprintId)]="sprintId" />
+            </app-automation-setup-strip>
 
-              <app-step
-                i18n-title="Title of the trigger step"
-                title="Trigger"
-                i18n-description="Description of the trigger step"
-                description="Choose the event that starts this automation."
-                [error]="stepError('trigger')">
+            <app-automation-summary-bar
+              [trigger]="triggerPreview()"
+              [actions]="actions()"
+              [statuses]="taskStatuses()"
+              [(open)]="summaryOpen" />
+
+            <div class="flex flex-col">
+              <app-automation-flow-step [icon]="triggerIcon">
                 <app-automation-trigger-editor
                   [(triggerType)]="triggerType"
                   [(taskFields)]="taskFields"
                   [(durationDays)]="durationDays" />
-              </app-step>
+              </app-automation-flow-step>
 
-              <app-step
-                i18n-title="Title of the conditions step"
-                title="Conditions"
-                i18n-description="Description of the conditions step"
-                description="Optionally restrict which tasks can continue."
-                [error]="stepError('conditions')">
+              <app-automation-flow-step
+                appearance="outline"
+                [icon]="conditionsIcon">
                 <app-automation-conditions-editor
                   [statuses]="taskStatuses()"
                   [supportsChangeOperators]="
                     triggerType() === automationTriggerType.taskChanged
                   "
                   [(conditionGroup)]="conditionGroup" />
-              </app-step>
+              </app-automation-flow-step>
 
-              <app-step
-                i18n-title="Title of the actions step"
-                title="Actions"
-                i18n-description="Description of the actions step"
-                description="Define what happens when the automation runs."
-                [error]="stepError('actions')">
-                <app-automation-actions-editor
-                  [actions]="actions()"
-                  [statuses]="taskStatuses()"
-                  [users]="workspaceUsers()"
-                  [ruleName]="name()"
-                  [tags]="workspaceTagsResource.value()"
-                  [sprints]="workspaceSprintsResource.value()"
-                  [boardGroups]="workspaceBoardGroupsResource.value()"
-                  [relationTypes]="relationTypesResource.value()"
-                  [defaultStatusId]="defaultActiveStatusId()"
-                  (addAction)="addAction()"
-                  (removeAction)="removeAction($event)"
-                  (actionTypeChanged)="
-                    onActionTypeChanged($event.clientId, $event.type)
-                  "
-                  (actionUpdated)="
-                    updateAction($event.clientId, $event.patch)
-                  " />
-              </app-step>
-            </app-stepper>
+              <app-automation-actions-editor
+                [actions]="actions()"
+                [statuses]="taskStatuses()"
+                [users]="workspaceUsers()"
+                [ruleName]="name()"
+                [tags]="workspaceTagsResource.value()"
+                [sprints]="workspaceSprintsResource.value()"
+                [boardGroups]="workspaceBoardGroupsResource.value()"
+                [relationTypes]="relationTypesResource.value()"
+                [defaultStatusId]="defaultActiveStatusId()"
+                (addAction)="addAction()"
+                (removeAction)="removeAction($event)"
+                (actionTypeChanged)="
+                  onActionTypeChanged($event.clientId, $event.type)
+                "
+                (actionUpdated)="updateAction($event.clientId, $event.patch)" />
+            </div>
+          </form>
+        }
+      </app-page-body>
+
+      @if (!loading()) {
+        <div
+          pageFooter
+          class="mx-auto flex w-full max-w-265 flex-col gap-3 py-4">
+          @if (validationError(); as error) {
+            <app-callout color="warn" role="alert" [icon]="errorIcon">
+              {{ error }}
+            </app-callout>
+          }
+
+          <div class="flex items-center gap-4">
+            <p
+              class="text-foreground/60 min-w-0 flex-1 text-[13px] text-pretty">
+              {{ oneLine() }}
+            </p>
+
+            <a
+              app-stroked-button
+              [routerLink]="cancelLink()"
+              i18n="Dismisses a dialog without acting">
+              Cancel
+            </a>
+
+            <button
+              app-flat-button
+              color="primary"
+              type="button"
+              [disabled]="saving()"
+              (click)="onSubmit()">
+              {{ isEdit() ? 'Save Automation' : 'Create Automation' }}
+            </button>
           </div>
-
-          <app-automation-form-preview
-            [trigger]="triggerPreview()"
-            [actions]="actions()"
-            [statuses]="taskStatuses()" />
-        </form>
+        </div>
       }
     </app-page-container>
   `,
 })
 export class AutomationFormViewComponent {
   readonly automationTriggerType = AutomationTriggerType;
+  readonly triggerIcon = LucideZap;
+  readonly conditionsIcon = LucideListFilter;
+  readonly errorIcon = LucideCircleAlert;
 
   private service = inject(AutomationsService);
   private snackbar = inject(SnackbarService);
@@ -199,7 +223,8 @@ export class AutomationFormViewComponent {
 
   readonly saving = signal(false);
   readonly validationError = signal<string | null>(null);
-  readonly validationStep = signal<AutomationFormStep | null>(null);
+  readonly setupOpen = signal(false);
+  readonly summaryOpen = signal(true);
 
   readonly taskStatusesResource = statusResource();
   readonly serviceAccountsResource = serviceAccountResource();
@@ -267,6 +292,55 @@ export class AutomationFormViewComponent {
   readonly boardId = signal<number | null>(null);
   readonly sprintId = signal<number | null>(null);
 
+  readonly runAsLabel = computed(() => {
+    const account = this.enabledServiceAccounts().find(
+      (candidate) => candidate.userId === this.executionUserId()
+    );
+
+    return (
+      account?.name ??
+      $localize`:Stands in for the service account an automation has not been given yet:no service account`
+    );
+  });
+
+  readonly scopeLabel = computed(() => {
+    const projectId = this.projectId();
+
+    if (projectId !== null) {
+      const project = this.projectsResource
+        .value()
+        .find((candidate) => candidate.id === projectId);
+
+      return this.scopedLabel('project', project?.name);
+    }
+
+    const boardId = this.boardId();
+
+    if (boardId !== null) {
+      const board = this.workspaceBoards().find(
+        (candidate) => candidate.id === boardId
+      );
+
+      return this.scopedLabel('board', board?.name);
+    }
+
+    const sprintId = this.sprintId();
+
+    if (sprintId !== null) {
+      const sprint = this.workspaceSprintsResource
+        .value()
+        .find((candidate) => candidate.id === sprintId);
+
+      return this.scopedLabel('sprint', sprint?.name);
+    }
+
+    return $localize`:Scope of an automation that covers every task in the workspace:Whole workspace`;
+  });
+
+  readonly oneLine = computed(() => {
+    return describeAutomationOneLine(this.triggerPreview(), this.actions());
+  });
+
   constructor() {
     effect(() => {
       const rule = this.ruleResource.value()?.payload;
@@ -304,7 +378,7 @@ export class AutomationFormViewComponent {
   }
 
   addAction() {
-    if (this.actions().length >= 10) {
+    if (this.actions().length >= automationActionLimit) {
       return;
     }
 
@@ -481,13 +555,13 @@ export class AutomationFormViewComponent {
     });
 
     this.validationError.set(result.error);
-    this.validationStep.set(result.errorStep);
+
+    // The setup fields collapse into a summary line, so a failure there would otherwise be invisible.
+    if (result.errorStep === 'settings') {
+      this.setupOpen.set(true);
+    }
 
     return result.request;
-  }
-
-  stepError(step: AutomationFormStep): string | null {
-    return this.validationStep() === step ? this.validationError() : null;
   }
 
   newNotifyAction(): EditableAutomationAction {
@@ -537,5 +611,12 @@ export class AutomationFormViewComponent {
   readRuleId(): number | null {
     const value = Number(this.route.snapshot.paramMap.get('id'));
     return Number.isFinite(value) && value > 0 ? value : null;
+  }
+
+  private scopedLabel(
+    kind: 'project' | 'board' | 'sprint',
+    name: string | undefined
+  ): string {
+    return name ? `${scopeKindLabels[kind]} · ${name}` : scopeKindLabels[kind];
   }
 }

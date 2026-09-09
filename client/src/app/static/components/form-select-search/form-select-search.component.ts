@@ -100,6 +100,7 @@ export class FormSelectSearchComponent<TOption, TValue = TOption>
   readonly hidden = input<boolean>(false);
   readonly invalid = input<boolean>(false);
   readonly pending = input<boolean>(false);
+  readonly noMargin = input(false);
 
   readonly searchQuery = signal('');
   readonly activeIndex = signal(0);

@@ -8,7 +8,10 @@ import {
   signal,
 } from '@angular/core';
 import { cn } from '../button/button.variants';
-import { FormControlDensity } from './form-control.directives';
+import {
+  FormControlDensity,
+  FormControlShapeDirective,
+} from './form-control.directives';
 
 @Component({
   selector: 'app-form-control-field',
@@ -27,13 +30,19 @@ export class FormControlFieldComponent {
   readonly density = input<FormControlDensity>('default');
   readonly class = input('');
 
+  // Read from an ancestor rather than an input of its own, so a whole form opts in at once.
+  private readonly shapeSource = inject(FormControlShapeDirective, {
+    optional: true,
+  });
+
   protected readonly hostClass = computed(() => {
     const base =
       'flex w-[inherit] max-w-[inherit] flex-row items-center bg-form-field-background transition-colors duration-200 ease-out';
+    const rounded = this.shapeSource?.appFormShape() === 'rounded';
     const shape =
       this.density() === 'compact'
         ? 'h-[38px] rounded-lg border'
-        : 'rounded-sm border-2';
+        : `${rounded ? 'rounded-lg' : 'rounded-sm'} border-2`;
 
     return cn(base, shape, this.class());
   });
