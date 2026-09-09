@@ -43,13 +43,9 @@ import {
 import { AutomationConditionsEditorComponent } from '../../components/automation-conditions-editor.component';
 import { AutomationFlowStepComponent } from '../../components/automation-flow-step.component';
 import { AutomationSettingsEditorComponent } from '../../components/automation-settings-editor.component';
-import { AutomationSetupStripComponent } from '../../components/automation-setup-strip.component';
 import { AutomationSummaryBarComponent } from '../../components/automation-summary-bar.component';
 import { AutomationTriggerEditorComponent } from '../../components/automation-trigger-editor.component';
-import {
-  describeAutomationOneLine,
-  scopeKindLabels,
-} from '../../models/automation-copy';
+import { describeAutomationOneLine } from '../../models/automation-copy';
 import {
   AutomationActionType,
   AutomationDelayUnit,
@@ -79,7 +75,6 @@ import { AutomationsService } from '../../services/automations.service';
     StrokedButtonComponent,
     AutomationFlowStepComponent,
     AutomationSettingsEditorComponent,
-    AutomationSetupStripComponent,
     AutomationSummaryBarComponent,
     AutomationTriggerEditorComponent,
     AutomationConditionsEditorComponent,
@@ -99,12 +94,7 @@ import { AutomationsService } from '../../services/automations.service';
             appFormShape="rounded"
             class="mx-auto flex w-full flex-col gap-4 pb-8"
             (ngSubmit)="onSubmit()">
-            <app-automation-setup-strip
-              [name]="name()"
-              [runAs]="runAsLabel()"
-              [scope]="scopeLabel()"
-              [isEnabled]="isEnabled()"
-              [(open)]="setupOpen">
+            <div class="border-border bg-card rounded-lg border p-4 shadow-sm">
               <app-automation-settings-editor
                 [serviceAccounts]="enabledServiceAccounts()"
                 [projects]="projectsResource.value()"
@@ -116,7 +106,7 @@ import { AutomationsService } from '../../services/automations.service';
                 [(projectId)]="projectId"
                 [(boardId)]="boardId"
                 [(sprintId)]="sprintId" />
-            </app-automation-setup-strip>
+            </div>
 
             <app-automation-summary-bar
               [trigger]="triggerPreview()"
@@ -223,7 +213,6 @@ export class AutomationFormViewComponent {
 
   readonly saving = signal(false);
   readonly validationError = signal<string | null>(null);
-  readonly setupOpen = signal(false);
   readonly summaryOpen = signal(true);
 
   readonly taskStatusesResource = statusResource();
@@ -291,51 +280,6 @@ export class AutomationFormViewComponent {
   readonly projectId = signal<number | null>(null);
   readonly boardId = signal<number | null>(null);
   readonly sprintId = signal<number | null>(null);
-
-  readonly runAsLabel = computed(() => {
-    const account = this.enabledServiceAccounts().find(
-      (candidate) => candidate.userId === this.executionUserId()
-    );
-
-    return (
-      account?.name ??
-      $localize`:Stands in for the service account an automation has not been given yet:no service account`
-    );
-  });
-
-  readonly scopeLabel = computed(() => {
-    const projectId = this.projectId();
-
-    if (projectId !== null) {
-      const project = this.projectsResource
-        .value()
-        .find((candidate) => candidate.id === projectId);
-
-      return this.scopedLabel('project', project?.name);
-    }
-
-    const boardId = this.boardId();
-
-    if (boardId !== null) {
-      const board = this.workspaceBoards().find(
-        (candidate) => candidate.id === boardId
-      );
-
-      return this.scopedLabel('board', board?.name);
-    }
-
-    const sprintId = this.sprintId();
-
-    if (sprintId !== null) {
-      const sprint = this.workspaceSprintsResource
-        .value()
-        .find((candidate) => candidate.id === sprintId);
-
-      return this.scopedLabel('sprint', sprint?.name);
-    }
-
-    return $localize`:Scope of an automation that covers every task in the workspace:Whole workspace`;
-  });
 
   readonly oneLine = computed(() => {
     return describeAutomationOneLine(this.triggerPreview(), this.actions());
@@ -556,11 +500,6 @@ export class AutomationFormViewComponent {
 
     this.validationError.set(result.error);
 
-    // The setup fields collapse into a summary line, so a failure there would otherwise be invisible.
-    if (result.errorStep === 'settings') {
-      this.setupOpen.set(true);
-    }
-
     return result.request;
   }
 
@@ -611,12 +550,5 @@ export class AutomationFormViewComponent {
   readRuleId(): number | null {
     const value = Number(this.route.snapshot.paramMap.get('id'));
     return Number.isFinite(value) && value > 0 ? value : null;
-  }
-
-  private scopedLabel(
-    kind: 'project' | 'board' | 'sprint',
-    name: string | undefined
-  ): string {
-    return name ? `${scopeKindLabels[kind]} · ${name}` : scopeKindLabels[kind];
   }
 }

@@ -8882,7 +8882,6 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-enabled-badge.component.ts:17</note>
         <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:91,94</note>
-        <note category="location">src/app/features/automations/components/automation-setup-strip.component.ts:70</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:153</note>
         <note category="description">Badge marking an automation that is switched on</note>
       </notes>
@@ -8915,7 +8914,6 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-enabled-badge.component.ts:18</note>
         <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:97,100</note>
-        <note category="location">src/app/features/automations/components/automation-setup-strip.component.ts:71</note>
         <note category="description">Badge marking an automation that is switched off</note>
       </notes>
       <segment state="translated">
@@ -11490,16 +11488,6 @@
         <target>La tarea se bloquea</target>
       </segment>
     </unit>
-    <unit id="6736585806394709857">
-      <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:297</note>
-        <note category="description">Stands in for the service account an automation has not been given yet</note>
-      </notes>
-      <segment state="translated">
-        <source>no service account</source>
-        <target>sin cuenta de servicio</target>
-      </segment>
-    </unit>
     <unit id="6738441386853039906">
       <notes>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:187</note>
@@ -12112,9 +12100,8 @@
     </unit>
     <unit id="4712988804308845169">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-setup-strip.component.ts:64</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:146</note>
-        <note category="description">Stands in for an automation that has not been named yet</note>
+        <note category="description">Example value shown in the notification preview</note>
       </notes>
       <segment state="translated">
         <source>Untitled automation</source>
@@ -12226,7 +12213,6 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:130,136</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:165</note>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:332</note>
         <note category="description">Placeholder text shown when an automation covers the whole workspace</note>
       </notes>
       <segment state="translated">
@@ -13470,7 +13456,7 @@
     <unit id="2650015568553587457">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:119,120</note>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:353</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:302</note>
         <note category="description">Shown when a single automation fails to load</note>
       </notes>
       <segment state="translated">
@@ -13825,7 +13811,7 @@
     </unit>
     <unit id="2330577642930707695">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:181,184</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:177,180</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:99,101</note>
         <note category="location">src/app/static/components/comments-list/comments-list.component.ts:153,155</note>
         <note category="description">Dismisses a dialog without acting</note>
@@ -13878,7 +13864,7 @@
     </unit>
     <unit id="428134870314022743">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:509</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:458</note>
         <note category="description">Error after failing to save an automation</note>
       </notes>
       <segment state="translated">
@@ -16480,16 +16466,6 @@
         <target>Subir imagen</target>
       </segment>
     </unit>
-    <unit id="2506757259824340304">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-setup-strip.component.ts:77</note>
-        <note category="description">Reveals the automation setup fields</note>
-      </notes>
-      <segment state="translated">
-        <source>Edit setup</source>
-        <target>Editar configuración</target>
-      </segment>
-    </unit>
     <unit id="2509141182388535183">
       <notes>
         <note category="location">src/app/core/util/ai-client-context.ts:26</note>
@@ -17643,16 +17619,6 @@
       <segment>
         <source>Exports are kept for seven days, then removed from workspace storage.</source>
         <target>Las exportaciones se conservan siete días y después se eliminan del almacenamiento del espacio de trabajo.</target>
-      </segment>
-    </unit>
-    <unit id="825226298190464792">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-setup-strip.component.ts:76</note>
-        <note category="description">Hides the automation setup fields</note>
-      </notes>
-      <segment state="translated">
-        <source>Hide setup</source>
-        <target>Ocultar configuración</target>
       </segment>
     </unit>
     <unit id="8253925941682305559">
@@ -25156,16 +25122,6 @@
       <segment state="translated">
         <source>No Sprint</source>
         <target>Sin sprint</target>
-      </segment>
-    </unit>
-    <unit id="6102731007336334776">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-setup-strip.component.ts:20,24</note>
-        <note category="description">Names the service account an automation runs as. ACCOUNT is that account</note>
-      </notes>
-      <segment state="translated">
-        <source> runs as <ph id="0" equiv="ACCOUNT" disp="{{ runAs() // i18n(ph=&quot;ACCOUNT&quot;) }}"/> </source>
-        <target> se ejecuta como <ph id="0" equiv="ACCOUNT" disp="{{ runAs() // i18n(ph=&quot;ACCOUNT&quot;) }}"/> </target>
       </segment>
     </unit>
     <unit id="6104781088222522802">
