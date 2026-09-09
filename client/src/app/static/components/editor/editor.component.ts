@@ -116,7 +116,6 @@ export class EditorComponent
   // the markdown as of the last value handed to a consumer, so a save can tell a
   // real edit from the editor normalising the markdown it was given
   private savedContent: string | null = null;
-  private deliveredValue: string | null = null;
   private destroyed = false;
   private readonly changed = new Subject<void>();
   private readonly emitSaved = (value: string) => this.saved.emit(value);
@@ -170,17 +169,9 @@ export class EditorComponent
 
   // hands the current document over when it differs from the last save
   private persist(deliver: (value: string) => void) {
-    const editor = this.editor();
+    const serialised = this.takePendingEdit();
 
-    if (!editor || editor.isDestroyed) return;
-
-    const serialised = documentToMarkdown(editor.getJSON());
-
-    if (serialised === this.savedContent) return;
-
-    this.savedContent = serialised;
-    this.deliveredValue = serialised;
-    this.editorValue = serialised;
+    if (serialised === null) return;
 
     // writing to the model would emit its change output, which angular has
     // already torn down by the time a final save runs
@@ -189,6 +180,23 @@ export class EditorComponent
     }
 
     deliver(serialised);
+  }
+
+  // returns the document when it holds an edit that has not been handed over
+  // yet, marking it as saved. null when the content matches the last save
+  private takePendingEdit(): string | null {
+    const editor = this.editor();
+
+    if (!editor || editor.isDestroyed) return null;
+
+    const serialised = documentToMarkdown(editor.getJSON());
+
+    if (serialised === this.savedContent) return null;
+
+    this.savedContent = serialised;
+    this.editorValue = serialised;
+
+    return serialised;
   }
 
   onFocusOut(event: FocusEvent) {
@@ -205,11 +213,14 @@ export class EditorComponent
 
     if (!editor) return;
 
-    // an incoming value replaces what is on screen, so hand over the latest
-    // content the editor produced before it goes
-    if (this.editorValue !== null && this.editorValue !== this.deliveredValue) {
-      this.deliveredValue = this.editorValue;
-      this.saved.emit(this.editorValue);
+    // an incoming value replaces what is on screen, so hand over any edit the
+    // editor still holds before it goes. content the editor was given and never
+    // touched is not an edit, so a value arriving from elsewhere is not written
+    // straight back over the update that produced it
+    const pending = this.takePendingEdit();
+
+    if (pending !== null) {
+      this.saved.emit(pending);
     }
 
     this.editorValue = value ?? null;
