@@ -2,12 +2,13 @@ import { Component, input } from '@angular/core';
 import { type LucideIconInput } from '@lucide/angular';
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { IconTileComponent } from '@static/components/icon-tile.component';
+import { panelSurfaceClass } from '@static/components/panel.component';
 
 @Component({
   selector: 'app-automation-flow-card',
   imports: [BadgeComponent, IconTileComponent],
   host: {
-    class: 'border-border bg-card block rounded-lg border shadow-sm',
+    class: `${panelSurfaceClass} bg-card`,
   },
   template: `
     <header

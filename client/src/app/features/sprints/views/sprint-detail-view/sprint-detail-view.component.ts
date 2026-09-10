@@ -43,23 +43,25 @@ import { SprintTaskListComponent } from '../../components/sprint-task-list.compo
 import { EditSprintDialogComponent } from '../../dialogs/edit-sprint-dialog.component';
 import { SprintAddTaskDialogComponent } from '../../dialogs/sprint-add-task-dialog.component';
 import { SprintCompletionDialogComponent } from '../../dialogs/sprint-completion-dialog.component';
+import { PanelComponent } from '@static/components/panel.component';
 
 @Component({
   selector: 'app-sprint-detail-view',
   imports: [
     ErrorStateComponent,
+    FlatButtonComponent,
+    IconButtonComponent,
+    LucideCheck,
+    LucideListPlus,
+    LucidePlus,
+    LucideSettings2,
+    LucideSparkles,
+    LucideTrash2,
+    NotificationSubscribeComponent,
     PageContainerComponent,
     PageHeaderComponent,
     PageLoadingComponent,
-    FlatButtonComponent,
-    IconButtonComponent,
-    LucideListPlus,
-    LucideSettings2,
-    LucidePlus,
-    LucideSparkles,
-    LucideTrash2,
-    LucideCheck,
-    NotificationSubscribeComponent,
+    PanelComponent,
     SprintIdentityComponent,
     SprintStatsComponent,
     SprintTaskListComponent,
@@ -92,7 +94,9 @@ import { SprintCompletionDialogComponent } from '../../dialogs/sprint-completion
       } @else if (sprint(); as sprint) {
         <section class="flex flex-col gap-6">
           <header
-            class="border-border bg-card flex flex-wrap items-start justify-between gap-x-4 gap-y-4 rounded-lg border px-6 py-5 shadow-sm">
+            app-panel
+            surface="card"
+            class="flex flex-wrap items-start justify-between gap-x-4 gap-y-4 px-6 py-5">
             <app-sprint-identity
               class="min-w-0 flex-1"
               size="large"

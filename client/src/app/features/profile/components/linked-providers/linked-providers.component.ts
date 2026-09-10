@@ -1,36 +1,27 @@
 import { Component, computed } from '@angular/core';
 import { loginMethodsResource } from '@core/resources/profile.resource';
 import { LucideLink2 } from '@lucide/angular';
-import { IconTileComponent } from '@static/components/icon-tile.component';
+import { PanelComponent } from '@static/components/panel.component';
+import { PanelHeaderComponent } from '@static/components/panel-header.component';
+import { PanelBodyComponent } from '@static/components/panel-body.component';
 
 @Component({
   selector: 'app-linked-providers',
-  imports: [IconTileComponent],
+  imports: [PanelBodyComponent, PanelComponent, PanelHeaderComponent],
   host: { class: 'block' },
   template: `
-    <section
-      class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
-      <header class="border-border border-b px-6 py-5">
-        <div class="flex min-w-0 items-center gap-3">
-          <app-icon-tile [icon]="linkIcon" />
+    <section app-panel surface="card">
+      <app-panel-header
+        density="comfortable"
+        [icon]="linkIcon"
+        i18n-heading="Heading above linked external sign-in accounts"
+        heading="Linked Accounts"
+        i18n-description="
+          Explains what linked external sign-in accounts are for
+        "
+        description="These external accounts are linked to your profile and can be used to sign in." />
 
-          <div class="min-w-0">
-            <h2
-              class="font-overpass text-base font-semibold"
-              i18n="Heading above linked external sign-in accounts">
-              Linked Accounts
-            </h2>
-            <p
-              class="text-muted mt-1 text-sm"
-              i18n="Explains what linked external sign-in accounts are for">
-              These external accounts are linked to your profile and can be used
-              to sign in.
-            </p>
-          </div>
-        </div>
-      </header>
-
-      <div class="px-6 py-5">
+      <app-panel-body>
         @if (providers().length === 0) {
           <p
             class="text-muted text-sm"
@@ -96,7 +87,7 @@ import { IconTileComponent } from '@static/components/icon-tile.component';
             }
           </div>
         }
-      </div>
+      </app-panel-body>
     </section>
   `,
 })

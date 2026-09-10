@@ -6,15 +6,22 @@ import { referenceMap } from '@core/util/ai-references';
 import { formatCost } from '@core/util/ai-usage';
 import { LucideArrowLeft } from '@lucide/angular';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
+import { PanelComponent } from '@static/components/panel.component';
+import { PanelBodyComponent } from '@static/components/panel-body.component';
 
 @Component({
   selector: 'app-assistant-transcript',
-  imports: [AiAssistantMessageComponent, IconButtonComponent, LucideArrowLeft],
+  imports: [
+    AiAssistantMessageComponent,
+    IconButtonComponent,
+    LucideArrowLeft,
+    PanelBodyComponent,
+    PanelComponent,
+  ],
   host: { class: 'block' },
   template: `
-    <section
-      class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
-      <header class="border-border flex items-start gap-3 border-b px-6 py-5">
+    <section app-panel surface="card">
+      <header app-panel-body divider="bottom" class="flex items-start gap-3">
         <button
           app-icon-button
           class="mt-0.5 h-8 w-8 shrink-0"
@@ -54,14 +61,14 @@ import { IconButtonComponent } from '@static/components/button/icon-button.compo
         </div>
       </header>
 
-      <div class="flex flex-col gap-5 px-6 py-5">
+      <app-panel-body class="flex flex-col gap-5">
         @for (entry of entries(); track $index) {
           <app-ai-assistant-message
             [entry]="entry"
             [references]="references()"
             [workspace]="workspace()" />
         }
-      </div>
+      </app-panel-body>
     </section>
   `,
 })

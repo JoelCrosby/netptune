@@ -1,9 +1,10 @@
 import { Component, input, output } from '@angular/core';
 import { LucideX } from '@lucide/angular';
+import { IconButtonComponent } from '@static/components/button/icon-button.component';
 
 @Component({
   selector: 'app-bulk-edit-row',
-  imports: [LucideX],
+  imports: [IconButtonComponent, LucideX],
   host: { class: 'flex items-start gap-3' },
   template: `
     <label
@@ -24,7 +25,8 @@ import { LucideX } from '@lucide/angular';
 
     <button
       type="button"
-      class="text-muted hover:bg-foreground/8 hover:text-foreground mt-1.5 flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors"
+      app-icon-button
+      class="text-muted hover:text-foreground mt-1.5 h-8 w-8 shrink-0"
       [attr.aria-label]="removeLabel()"
       (click)="removed.emit()">
       <svg lucideX class="h-4 w-4" aria-hidden="true"></svg>

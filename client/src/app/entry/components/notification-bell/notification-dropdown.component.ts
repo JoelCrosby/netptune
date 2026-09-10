@@ -3,15 +3,17 @@ import { SpinnerComponent } from '@app/static/components/spinner/spinner.compone
 import { NotificationListComponent } from '@static/components/notification-list.component';
 import { PopoverSurfaceComponent } from '@static/components/popover-surface/popover-surface.component';
 import { NotificationViewModel } from '@core/models/view-models/notification-view-model';
+import { InlineButtonComponent } from '@static/components/button/inline-button.component';
 
 const DROPDOWN_LIMIT = 10;
 
 @Component({
   selector: 'app-notification-dropdown',
   imports: [
-    SpinnerComponent,
+    InlineButtonComponent,
     NotificationListComponent,
     PopoverSurfaceComponent,
+    SpinnerComponent,
   ],
   template: `
     <app-popover-surface class="mt-[0.4rem] mr-4 block" enterFrom="top-right">
@@ -23,7 +25,10 @@ const DROPDOWN_LIMIT = 10;
         </span>
         @if (unreadCount() > 0) {
           <button
-            class="text-muted hover:text-primary cursor-pointer text-xs underline transition-colors"
+            app-inline-button
+            color="muted"
+            appearance="underline"
+            class="hover:text-primary underline"
             (click)="markAllAsRead.emit()">
             <span i18n="Button that marks every notification as read">
               Mark all as read

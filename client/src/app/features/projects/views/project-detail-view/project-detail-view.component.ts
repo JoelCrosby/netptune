@@ -5,6 +5,8 @@ import { ProjectDetailComponent } from '@projects/components/project-detail/proj
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SkeletonComponent } from '@static/components/skeleton/skeleton.component';
+import { PanelComponent } from '@static/components/panel.component';
+import { PanelBodyComponent } from '@static/components/panel-body.component';
 
 @Component({
   selector: 'app-project-detail-view',
@@ -12,6 +14,8 @@ import { SkeletonComponent } from '@static/components/skeleton/skeleton.componen
     ErrorStateComponent,
     PageContainerComponent,
     PageHeaderComponent,
+    PanelBodyComponent,
+    PanelComponent,
     ProjectDetailComponent,
     SkeletonComponent,
   ],
@@ -22,32 +26,33 @@ import { SkeletonComponent } from '@static/components/skeleton/skeleton.componen
         title="Project" />
 
       @if (project.isLoading()) {
-        <div
-          class="border-border bg-card overflow-hidden rounded-lg border shadow-sm"
+        <app-panel
+          surface="card"
           role="status"
           i18n-aria-label="Accessible label while a project loads"
           aria-label="Loading project">
-          <div class="border-border flex items-center gap-3 border-b px-6 py-5">
+          <app-panel-body
+            class="border-border flex items-center gap-3 border-b">
             <app-skeleton class="h-9 w-9 shrink-0 rounded-lg" />
             <div class="min-w-0 flex-1">
               <app-skeleton class="h-4 w-40" />
               <app-skeleton class="mt-2 h-3 w-64" />
             </div>
-          </div>
+          </app-panel-body>
 
-          <div class="grid max-w-2xl gap-6 px-6 py-5">
+          <app-panel-body class="grid max-w-2xl gap-6">
             @for (row of skeletonRows; track $index) {
               <div>
                 <app-skeleton class="h-3 w-24" />
                 <app-skeleton class="mt-2 h-10 w-full" />
               </div>
             }
-          </div>
+          </app-panel-body>
 
-          <div class="border-border border-t px-6 py-4">
+          <app-panel-body padding="snug" divider="top">
             <app-skeleton class="h-9 w-32" />
-          </div>
-        </div>
+          </app-panel-body>
+        </app-panel>
       } @else if (project.error()) {
         <app-error-state
           i18n-title="Shown when a project fails to load"

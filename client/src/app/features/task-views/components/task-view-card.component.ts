@@ -20,14 +20,14 @@ import {
   TaskView,
 } from '../models/task-view.models';
 import { QueryFieldOptionsService } from '../services/query-field-options.service';
+import { PanelComponent } from '@static/components/panel.component';
 
 @Component({
   selector: 'app-task-view-card',
   imports: [
-    RouterLink,
-    DatePipe,
     AvatarComponent,
     BadgeComponent,
+    DatePipe,
     IconButtonComponent,
     IconTileComponent,
     LucideColumns3,
@@ -36,11 +36,15 @@ import { QueryFieldOptionsService } from '../services/query-field-options.servic
     LucidePinOff,
     LucideTrash2,
     LucideUsers,
+    PanelComponent,
+    RouterLink,
   ],
   host: { class: 'block h-full min-w-0' },
   template: `
     <article
-      class="border-border bg-card hover:border-foreground/20 flex h-full min-w-0 flex-col overflow-hidden rounded-lg border shadow-sm transition-colors">
+      app-panel
+      surface="card"
+      class="hover:border-foreground/20 flex h-full min-w-0 flex-col transition-colors">
       <header
         class="border-border flex items-start justify-between gap-2 border-b px-5 py-4">
         <div class="flex min-w-0 items-start gap-3">

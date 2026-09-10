@@ -11,6 +11,7 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
 import { IconTileComponent } from '@static/components/icon-tile.component';
 import { NotificationListComponent } from '@static/components/notification-list.component';
 import { SkeletonComponent } from '@static/components/skeleton/skeleton.component';
+import { PanelComponent } from '@static/components/panel.component';
 
 const pageSize = 20;
 
@@ -20,15 +21,20 @@ const pageSize = 20;
     BadgeComponent,
     IconTileComponent,
     NotificationListComponent,
+    PanelComponent,
     RouterLink,
     SkeletonComponent,
     StrokedButtonComponent,
   ],
   template: `
     <section
-      class="border-border bg-card flex h-full min-h-24 flex-col overflow-hidden rounded-lg border shadow-sm lg:absolute lg:inset-0">
+      app-panel
+      surface="card"
+      class="flex h-full min-h-24 flex-col lg:absolute lg:inset-0">
       <header
-        class="border-border flex shrink-0 flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b px-6 py-5">
+        app-panel-body
+        divider="bottom"
+        class="flex shrink-0 flex-wrap items-center justify-between gap-x-4 gap-y-2">
         <div class="flex min-w-0 items-center gap-3">
           <app-icon-tile [icon]="notificationIcon" />
 
@@ -76,7 +82,7 @@ const pageSize = 20;
         </div>
 
         @if (hasMore()) {
-          <div class="border-border shrink-0 border-t px-6 py-4">
+          <div app-panel-body padding="snug" divider="top" class="shrink-0">
             <button
               app-stroked-button
               color="primary"

@@ -2,6 +2,7 @@ import { Component, computed, input } from '@angular/core';
 import { AiSpend } from '@core/models/ai-spend';
 import { formatCurrency } from '@core/util/ai-usage';
 import { dateTimeFormat } from '@core/util/locale';
+import { PanelComponent } from '@static/components/panel.component';
 import {
   LucideDynamicIcon,
   LucideKeyRound,
@@ -26,13 +27,12 @@ const resetFormat = dateTimeFormat({ day: 'numeric', month: 'long' });
 
 @Component({
   selector: 'app-assistant-status-band',
-  imports: [LucideDynamicIcon],
+  imports: [LucideDynamicIcon, PanelComponent],
   host: { class: 'block' },
   template: `
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
       @for (tile of tiles(); track tile.id) {
-        <div
-          class="border-border bg-card flex flex-col gap-2.5 rounded-lg border p-5 shadow-sm">
+        <app-panel surface="card" class="flex flex-col gap-2.5 p-5">
           <div class="flex items-center justify-between gap-2">
             <span
               class="text-muted text-xs font-semibold tracking-wide uppercase">
@@ -61,7 +61,7 @@ const resetFormat = dateTimeFormat({ day: 'numeric', month: 'long' });
           </div>
 
           <span class="text-muted text-xs">{{ tile.foot }}</span>
-        </div>
+        </app-panel>
       }
     </div>
   `,

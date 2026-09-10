@@ -13,10 +13,16 @@ import {
 } from '@static/components/filter-facet/filter-facet.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
+import { InlineButtonComponent } from '@static/components/button/inline-button.component';
 
 @Component({
   selector: 'app-export-filter-step',
-  imports: [FilterFacetComponent, FormInputComponent, SectionHeaderComponent],
+  imports: [
+    FilterFacetComponent,
+    FormInputComponent,
+    InlineButtonComponent,
+    SectionHeaderComponent,
+  ],
   template: `
     <app-section-header
       i18n-heading="Heading of the export filter step"
@@ -27,7 +33,9 @@ import { SectionHeaderComponent } from '@static/components/section-header/sectio
         <button
           sectionHeaderActions
           type="button"
-          class="text-muted hover:text-foreground text-xs transition-colors"
+          app-inline-button
+          color="muted"
+          appearance="lift"
           (click)="wizard.clearFilters()">
           <span i18n="Button that clears every export filter">
             Clear all filters

@@ -3,11 +3,12 @@ import { RouterLink } from '@angular/router';
 import { AiContextChip, contextChipKey } from '@core/models/ai-context';
 import { LucideX } from '@lucide/angular';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
+import { InlineButtonComponent } from '@static/components/button/inline-button.component';
 
 @Component({
   selector: 'app-ai-assistant-context',
   host: { class: 'block' },
-  imports: [LucideX, RouterLink, TooltipDirective],
+  imports: [InlineButtonComponent, LucideX, RouterLink, TooltipDirective],
   template: `
     @if (hasRow()) {
       <div
@@ -60,7 +61,10 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
 
           <button
             type="button"
-            class="text-muted hover:text-foreground text-xs underline transition-colors"
+            app-inline-button
+            color="muted"
+            appearance="lift"
+            class="underline"
             (click)="restored.emit()"
             i18n="Puts the removed context chips back">
             Restore

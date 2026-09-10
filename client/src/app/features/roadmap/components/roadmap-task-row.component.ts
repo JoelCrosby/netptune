@@ -3,6 +3,8 @@ import { LucideChevronDown, LucideChevronRight } from '@lucide/angular';
 import { TimelineBarComponent } from '@static/components/timeline/timeline-bar.component';
 import { TimelineLaneComponent } from '@static/components/timeline/timeline-lane.component';
 import { TimelineSchedule } from '@static/components/timeline/timeline.models';
+import { BadgeComponent } from '@static/components/badge/badge.component';
+import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import {
   RoadmapDisplayTask,
   RoadmapScheduleChange,
@@ -12,6 +14,8 @@ import {
 @Component({
   selector: 'app-roadmap-task-row',
   imports: [
+    BadgeComponent,
+    IconButtonComponent,
     LucideChevronDown,
     LucideChevronRight,
     TimelineBarComponent,
@@ -33,7 +37,8 @@ import {
         @if (row().hasChildren) {
           <button
             type="button"
-            class="hover:bg-muted/10 flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded"
+            app-icon-button
+            class="h-7 w-7 shrink-0 rounded"
             [attr.aria-label]="collapseLabel()"
             [attr.aria-expanded]="!collapsed()"
             (click)="collapseToggled.emit(row().task.id)">
@@ -59,18 +64,22 @@ import {
         </button>
 
         @if (row().blockedByCount > 0) {
-          <span
-            class="ml-1 shrink-0 rounded bg-red-500/10 px-1.5 py-0.5 text-[10px] text-red-600 dark:text-red-400"
+          <app-badge
+            color="warn"
+            shape="rounded"
+            class="ml-1 shrink-0 px-1.5 text-[10px]"
             [title]="blockerLabel()">
             {{ row().blockedByCount }}
-          </span>
+          </app-badge>
         }
         @if (row().offscreenBlockedByCount > 0) {
-          <span
-            class="ml-1 shrink-0 rounded border border-red-500/30 px-1 py-0.5 text-[10px] text-red-600 dark:text-red-400"
+          <app-badge
+            color="warn"
+            shape="rounded"
+            class="border-warn/30 ml-1 shrink-0 border bg-transparent px-1 text-[10px]"
             [title]="offscreenBlockerLabel()">
             ↗ {{ row().offscreenBlockedByCount }}
-          </span>
+          </app-badge>
         }
       </div>
 

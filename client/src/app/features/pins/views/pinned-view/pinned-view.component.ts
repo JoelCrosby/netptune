@@ -25,6 +25,7 @@ import { PageContainerComponent } from '@static/components/page-container/page-c
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { PanelComponent } from '@static/components/panel.component';
 import { TaskCompactRowComponent } from '@static/components/task-compact-row.component';
+import { IconButtonComponent } from '@static/components/button/icon-button.component';
 
 interface PinnedRow {
   pin: TaskPin;
@@ -45,6 +46,7 @@ interface PinGroup {
   imports: [
     BadgeComponent,
     EmptyStateComponent,
+    IconButtonComponent,
     IconCircleComponent,
     LucideLock,
     LucidePinOff,
@@ -99,7 +101,8 @@ interface PinGroup {
                   @if (row.pin.canUnpin) {
                     <button
                       type="button"
-                      class="text-foreground/35 hover:bg-foreground/8 hover:text-foreground flex h-7 w-7 flex-none cursor-pointer items-center justify-center rounded-full transition-colors"
+                      app-icon-button
+                      class="text-foreground/35 hover:text-foreground h-7 w-7 flex-none"
                       [title]="unpinLabel"
                       [attr.aria-label]="unpinLabel"
                       (click)="onUnpinClicked(row.pin)">

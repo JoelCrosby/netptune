@@ -5,6 +5,8 @@ import { formatCurrency, formatTokens } from '@core/util/ai-usage';
 import { dateTimeFormat } from '@core/util/locale';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { first } from 'rxjs';
+import { PanelComponent } from '@static/components/panel.component';
+import { PanelHeaderComponent } from '@static/components/panel-header.component';
 import {
   AssistantSpendCapDialogComponent,
   AssistantSpendCapDialogData,
@@ -31,46 +33,42 @@ const resetFormat = dateTimeFormat({ day: 'numeric', month: 'long' });
 
 @Component({
   selector: 'app-assistant-spend-card',
-  imports: [StrokedButtonComponent],
+  imports: [PanelComponent, PanelHeaderComponent, StrokedButtonComponent],
   host: { class: 'block' },
   template: `
-    <section
-      class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
-      <header
-        class="border-border flex flex-wrap items-start justify-between gap-4 border-b px-6 py-5">
-        <div class="min-w-0">
-          <h2
-            class="font-overpass text-base font-semibold"
-            i18n="Heading of the assistant spend card">
-            Spend this month
-          </h2>
-          <p class="text-muted mt-1 text-sm">
-            <span i18n="Explains how assistant cost is worked out">
-              Estimated from published model rates.
-            </span>
-            {{ resetsLabel() }}
-          </p>
-        </div>
+    <section app-panel surface="card">
+      <app-panel-header
+        density="comfortable"
+        i18n-heading="Heading of the assistant spend card"
+        heading="Spend this month">
+        <p panelHeading class="text-muted mt-1 text-sm">
+          <span i18n="Explains how assistant cost is worked out">
+            Estimated from published model rates.
+          </span>
+          {{ resetsLabel() }}
+        </p>
 
-        @if (canEditCap()) {
-          <button
-            app-stroked-button
-            color="neutral"
-            type="button"
-            class="h-8 shrink-0 px-3 text-xs"
-            (click)="editCap()">
-            @if (spend()?.cap) {
-              <span i18n="Button that changes the assistant spend cap"
-                >Edit cap</span
-              >
-            } @else {
-              <span i18n="Button that sets an assistant spend cap"
-                >Set a cap</span
-              >
-            }
-          </button>
-        }
-      </header>
+        <div panelHeaderActions>
+          @if (canEditCap()) {
+            <button
+              app-stroked-button
+              color="neutral"
+              type="button"
+              class="h-8 shrink-0 px-3 text-xs"
+              (click)="editCap()">
+              @if (spend()?.cap) {
+                <span i18n="Button that changes the assistant spend cap"
+                  >Edit cap</span
+                >
+              } @else {
+                <span i18n="Button that sets an assistant spend cap"
+                  >Set a cap</span
+                >
+              }
+            </button>
+          }
+        </div>
+      </app-panel-header>
 
       <div
         class="border-border flex flex-col gap-4 px-6 py-5"

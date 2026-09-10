@@ -7,6 +7,7 @@ import { IconTileComponent } from '@static/components/icon-tile.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SkeletonComponent } from '@static/components/skeleton/skeleton.component';
+import { PanelComponent } from '@static/components/panel.component';
 
 const NOTIFICATION_GROUP = 'notifications';
 const APPEARANCE_GROUP = 'appearance';
@@ -18,6 +19,7 @@ const APPEARANCE_GROUP = 'appearance';
     IconTileComponent,
     PageContainerComponent,
     PageHeaderComponent,
+    PanelComponent,
     PreferenceListComponent,
     SkeletonComponent,
   ],
@@ -28,8 +30,9 @@ const APPEARANCE_GROUP = 'appearance';
         title="General" />
 
       @if (isInitialLoad()) {
-        <div
-          class="border-border bg-card rounded-lg border p-6 shadow-sm"
+        <app-panel
+          surface="card"
+          class="p-6"
           role="status"
           i18n-aria-label="Accessible label while personal settings load"
           aria-label="Loading settings">
@@ -44,13 +47,12 @@ const APPEARANCE_GROUP = 'appearance';
               </div>
             }
           </div>
-        </div>
+        </app-panel>
       } @else {
         <div class="flex flex-col gap-6">
           @for (group of groups(); track group.key) {
-            <section
-              class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
-              <header class="border-border border-b px-6 py-5">
+            <section app-panel surface="card">
+              <header app-panel-body divider="bottom">
                 <div class="flex min-w-0 items-center gap-3">
                   <app-icon-tile [icon]="groupIcon" />
                   <h2 class="font-overpass truncate text-base font-semibold">

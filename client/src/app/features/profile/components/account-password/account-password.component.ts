@@ -15,54 +15,53 @@ import { ProfileCommandsService } from '@core/services/profile-commands.service'
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { LucideLock } from '@lucide/angular';
-import { IconTileComponent } from '@static/components/icon-tile.component';
+import { PanelComponent } from '@static/components/panel.component';
+import { PanelBodyComponent } from '@static/components/panel-body.component';
+import { PanelFooterComponent } from '@static/components/panel-footer.component';
+import { PanelHeaderComponent } from '@static/components/panel-header.component';
 
 @Component({
   selector: 'app-account-password',
   imports: [
     FormField,
     FormInputComponent,
-    IconTileComponent,
+    PanelBodyComponent,
+    PanelComponent,
+    PanelFooterComponent,
+    PanelHeaderComponent,
     StrokedButtonComponent,
   ],
   host: { class: 'block' },
   template: `
     @if (hasPassword() !== undefined) {
-      <form
-        class="border-border bg-card overflow-hidden rounded-lg border shadow-sm"
-        (submit)="submitClicked($event)">
-        <header class="border-border border-b px-6 py-5">
-          <div class="flex min-w-0 items-center gap-3">
-            <app-icon-tile [icon]="passwordIcon" />
-
-            <div class="min-w-0">
-              <h2
-                class="font-overpass text-base font-semibold"
-                i18n="Heading of the account password card">
-                Password
-              </h2>
-              @if (hasPassword()) {
-                <p
-                  class="text-muted mt-1 text-sm"
-                  i18n="Explains what the change password card does">
-                  Change the password you use to sign in.
-                </p>
-              } @else {
-                <p
-                  class="text-muted mt-1 text-sm"
-                  i18n="
-                    Explains what the set password card does for accounts
-                    created through an external provider
-                  ">
-                  You sign in with a linked account. Set a password to also sign
-                  in with your email address.
-                </p>
-              }
-            </div>
+      <form app-panel surface="card" (submit)="submitClicked($event)">
+        <app-panel-header
+          density="comfortable"
+          [icon]="passwordIcon"
+          i18n-heading="Heading of the account password card"
+          heading="Password">
+          <div panelHeading>
+            @if (hasPassword()) {
+              <p
+                class="text-muted mt-1 text-sm"
+                i18n="Explains what the change password card does">
+                Change the password you use to sign in.
+              </p>
+            } @else {
+              <p
+                class="text-muted mt-1 text-sm"
+                i18n="
+                  Explains what the set password card does for accounts created
+                  through an external provider
+                ">
+                You sign in with a linked account. Set a password to also sign
+                in with your email address.
+              </p>
+            }
           </div>
-        </header>
+        </app-panel-header>
 
-        <div class="max-w-120 px-6 py-5">
+        <app-panel-body class="max-w-120">
           @if (hasPassword()) {
             <app-form-input
               type="password"
@@ -88,9 +87,9 @@ import { IconTileComponent } from '@static/components/icon-tile.component';
           @if (error()) {
             <p class="text-warn mt-1 text-sm font-medium">{{ error() }}</p>
           }
-        </div>
+        </app-panel-body>
 
-        <footer class="border-border border-t px-6 py-4">
+        <app-panel-footer>
           <button app-stroked-button type="submit" [disabled]="loading()">
             @if (hasPassword()) {
               <span i18n="Button that changes the account password">
@@ -102,7 +101,7 @@ import { IconTileComponent } from '@static/components/icon-tile.component';
               </span>
             }
           </button>
-        </footer>
+        </app-panel-footer>
       </form>
     }
   `,

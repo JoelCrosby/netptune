@@ -67,7 +67,7 @@ const emptyMessages: Record<SprintStatus, string> = {
           pageHeaderFilters
           [tabs]="statusTabs()"
           [value]="selectedStatus()"
-          (changed)="onStatusChanged($event)" />
+          (valueChange)="onStatusChanged($event)" />
       </app-page-header>
 
       <app-page-body>

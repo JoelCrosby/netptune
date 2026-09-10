@@ -17,6 +17,10 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
 import { first, switchMap } from 'rxjs';
+import { PanelComponent } from '@static/components/panel.component';
+import { PanelBodyComponent } from '@static/components/panel-body.component';
+import { FormControlFieldComponent } from '@static/components/form-control/form-control-field.component';
+import { FormControlInputDirective } from '@static/components/form-control/form-control.directives';
 
 interface ProviderOption {
   provider: WebSearchProvider;
@@ -30,14 +34,18 @@ interface ProviderOption {
 @Component({
   selector: 'app-search-credential',
   imports: [
-    FormsModule,
-    LucideCheck,
-    LucideTrash,
-    IconTileComponent,
+    FormControlInputDirective,
+    FormControlFieldComponent,
     DropdownButtonComponent,
     FlatButtonComponent,
+    FormsModule,
     IconButtonComponent,
+    IconTileComponent,
+    LucideCheck,
+    LucideTrash,
     MenuItemComponent,
+    PanelBodyComponent,
+    PanelComponent,
     TooltipDirective,
   ],
   template: `
@@ -48,10 +56,11 @@ interface ProviderOption {
       still read pages it is given a link to, but it cannot find them itself.
     </p>
 
-    <article
-      class="border-border bg-card mt-6 overflow-hidden rounded-lg border shadow-sm">
+    <article app-panel surface="card" class="mt-6">
       <header
-        class="border-border flex flex-wrap items-start justify-between gap-4 border-b px-6 py-5">
+        app-panel-body
+        divider="bottom"
+        class="flex flex-wrap items-start justify-between gap-4">
         <div class="flex min-w-0 items-start gap-3">
           <app-icon-tile [icon]="providerIcon" />
           <div class="min-w-0">
@@ -90,7 +99,7 @@ interface ProviderOption {
         }
       </header>
 
-      <div class="flex flex-wrap items-end gap-3 px-6 py-5">
+      <app-panel-body class="flex flex-wrap items-end gap-3">
         <div class="flex min-w-56 flex-col gap-1">
           <span class="text-muted text-xs" i18n="Label for the search provider">
             Provider
@@ -124,15 +133,17 @@ interface ProviderOption {
             <span class="text-muted text-xs" i18n="Label for the API key input">
               API key
             </span>
-            <input
-              type="password"
-              name="search-secret"
-              class="border-border bg-background placeholder:text-muted h-9 w-full rounded border px-3 outline-none"
-              autocomplete="off"
-              spellcheck="false"
-              [placeholder]="secretPlaceholder()"
-              [ngModel]="secret()"
-              (ngModelChange)="secret.set($event)" />
+            <app-form-control-field density="compact">
+              <input
+                appFormInput
+                type="password"
+                name="search-secret"
+                autocomplete="off"
+                spellcheck="false"
+                [placeholder]="secretPlaceholder()"
+                [ngModel]="secret()"
+                (ngModelChange)="secret.set($event)" />
+            </app-form-control-field>
           </label>
         }
 
@@ -143,18 +154,20 @@ interface ProviderOption {
               i18n="Label for the Google search engine id input">
               Search engine id
             </span>
-            <input
-              type="text"
-              name="search-engine-id"
-              class="border-border bg-background placeholder:text-muted h-9 w-full rounded border px-3 outline-none"
-              autocomplete="off"
-              spellcheck="false"
-              i18n-placeholder="
-                Placeholder for the Google search engine id input
-              "
-              placeholder="a1b2c3d4e5f6g7h8i"
-              [ngModel]="engineId()"
-              (ngModelChange)="setEngineId($event)" />
+            <app-form-control-field density="compact">
+              <input
+                appFormInput
+                type="text"
+                name="search-engine-id"
+                autocomplete="off"
+                spellcheck="false"
+                i18n-placeholder="
+                  Placeholder for the Google search engine id input
+                "
+                placeholder="a1b2c3d4e5f6g7h8i"
+                [ngModel]="engineId()"
+                (ngModelChange)="setEngineId($event)" />
+            </app-form-control-field>
           </label>
         }
 
@@ -165,16 +178,18 @@ interface ProviderOption {
               i18n="Label for the SearXNG base URL input">
               Base URL
             </span>
-            <input
-              type="url"
-              name="search-endpoint"
-              class="border-border bg-background placeholder:text-muted h-9 w-full rounded border px-3 outline-none"
-              autocomplete="off"
-              spellcheck="false"
-              i18n-placeholder="Placeholder for the SearXNG base URL input"
-              placeholder="https://searxng.example.com"
-              [ngModel]="endpoint()"
-              (ngModelChange)="setEndpoint($event)" />
+            <app-form-control-field density="compact">
+              <input
+                appFormInput
+                type="url"
+                name="search-endpoint"
+                autocomplete="off"
+                spellcheck="false"
+                i18n-placeholder="Placeholder for the SearXNG base URL input"
+                placeholder="https://searxng.example.com"
+                [ngModel]="endpoint()"
+                (ngModelChange)="setEndpoint($event)" />
+            </app-form-control-field>
           </label>
         }
 
@@ -193,7 +208,7 @@ interface ProviderOption {
             </span>
           }
         </button>
-      </div>
+      </app-panel-body>
     </article>
   `,
 })

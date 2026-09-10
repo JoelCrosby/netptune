@@ -109,7 +109,7 @@ const ResumableStages = [
           class="mb-6 block"
           [tabs]="tabs()"
           [value]="selectedTab()"
-          (changed)="onTabChanged($event)" />
+          (valueChange)="onTabChanged($event)" />
       }
 
       @if (selectedTab() === 'exports') {

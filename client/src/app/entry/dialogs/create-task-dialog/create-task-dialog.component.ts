@@ -49,6 +49,7 @@ import { FileSizePipe } from '@static/pipes/file-size.pipe';
 import { TaskDetailAccordionRowComponent } from '../task-detail-dialog/shared/task-detail-accordion-row.component';
 import { TaskStatusSegmentsComponent } from '../task-detail-dialog/pickers/task-status-segments.component';
 import { TaskTagRowComponent } from '../task-detail-dialog/pickers/task-tag-row.component';
+import { InlineButtonComponent } from '@static/components/button/inline-button.component';
 import {
   EYEBROW,
   HEADER_ICON_BUTTON,
@@ -109,19 +110,20 @@ const documentContentTypes = new Set([
   imports: [
     ColorSwatchComponent,
     CreateTaskFieldRowsComponent,
-    FormField,
+    EditorComponent,
     FileDropzoneComponent,
     FileSizePipe,
     FileTypeIconComponent,
     FlatButtonComponent,
-    IconButtonComponent,
-    ListRowComponent,
-    SectionLabelDirective,
-    StrokedButtonComponent,
-    EditorComponent,
     FormErrorsComponent,
+    FormField,
+    IconButtonComponent,
+    InlineButtonComponent,
+    ListRowComponent,
     LucideLink2,
     LucideX,
+    SectionLabelDirective,
+    StrokedButtonComponent,
     TaskDetailAccordionRowComponent,
     TaskScopeIdComponent,
     TaskStatusSegmentsComponent,
@@ -209,7 +211,9 @@ const documentContentTypes = new Set([
                     (toggled)="toggle('links')">
                     <button
                       type="button"
-                      class="text-primary hover:bg-hover shrink-0 cursor-pointer rounded px-2 py-1 text-xs font-medium transition-colors"
+                      app-inline-button
+                      appearance="soft"
+                      class="shrink-0 font-medium"
                       [disabled]="busy()"
                       (click)="openLinkDialog()">
                       <span i18n="Button that links this task to another">
@@ -289,7 +293,9 @@ const documentContentTypes = new Set([
                     (toggled)="toggle('files')">
                     <button
                       type="button"
-                      class="text-primary hover:bg-hover shrink-0 cursor-pointer rounded px-2 py-1 text-xs font-medium transition-colors"
+                      app-inline-button
+                      appearance="soft"
+                      class="shrink-0 font-medium"
                       (click)="expand('files')">
                       <span i18n="Button that opens the file picker">
                         Choose files

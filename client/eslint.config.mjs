@@ -117,8 +117,9 @@ export default defineConfig([
             // fixed-vocabulary inputs (enum-like), not prose
             'align', 'appearance', 'appFormShape', 'appTooltipPosition',
             'cdkDropListOrientation',
-            'colWrap', 'density', 'focusMode', 'layout', 'preserveAspectRatio',
-            'rowWrap', 'entityType',
+            'colWrap', 'density', 'divider', 'focusMode', 'layout',
+            'preserveAspectRatio',
+            'padding', 'rowWrap', 'entityType', 'surface',
             'enterFrom', 'enterTo', 'leaveFrom', 'leaveTo', 'mode', 'provider',
             'shape', 'size', 'tone', 'variant', 'xPosition', 'yPosition',
             // ARIA wiring and element references, not user-visible text

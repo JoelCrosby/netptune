@@ -6,7 +6,6 @@ import {
 import { UserPreferencesService } from '@core/services/user-preferences.service';
 import { LucideBell } from '@lucide/angular';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
-import { IconTileComponent } from '@static/components/icon-tile.component';
 import {
   SegmentedControlComponent,
   SegmentedOption,
@@ -14,6 +13,9 @@ import {
 import { SettingRowComponent } from '@static/components/setting-row/setting-row.component';
 import { SkeletonComponent } from '@static/components/skeleton/skeleton.component';
 import { SwitchComponent } from '@static/components/switch/switch.component';
+import { PanelComponent } from '@static/components/panel.component';
+import { PanelHeaderComponent } from '@static/components/panel-header.component';
+import { InlineButtonComponent } from '@static/components/button/inline-button.component';
 
 interface NotificationRow {
   key: string;
@@ -40,8 +42,10 @@ const SCOPE_OPTIONS: SegmentedOption<PreferenceScope>[] = [
   selector: 'app-notification-preferences',
   imports: [
     EmptyStateComponent,
-    IconTileComponent,
+    InlineButtonComponent,
     LucideBell,
+    PanelComponent,
+    PanelHeaderComponent,
     SegmentedControlComponent,
     SettingRowComponent,
     SkeletonComponent,
@@ -49,28 +53,16 @@ const SCOPE_OPTIONS: SegmentedOption<PreferenceScope>[] = [
   ],
   host: { class: 'block' },
   template: `
-    <section
-      class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
-      <header
-        class="border-border flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-b px-6 py-5">
-        <div class="flex min-w-0 items-center gap-3">
-          <app-icon-tile [icon]="headingIcon" />
-
-          <div class="min-w-0">
-            <h2
-              class="font-overpass text-base font-semibold"
-              i18n="Heading above the notification toggles">
-              Notify me about
-            </h2>
-            <p
-              class="text-muted mt-1 text-sm"
-              i18n="Explains which scope the toggles below are editing">
-              Choose which events notify you, and where that choice applies.
-            </p>
-          </div>
-        </div>
-
+    <section app-panel surface="card">
+      <app-panel-header
+        density="comfortable"
+        [icon]="headingIcon"
+        i18n-heading="Heading above the notification toggles"
+        heading="Notify me about"
+        i18n-description="Explains which scope the toggles below are editing"
+        description="Choose which events notify you, and where that choice applies.">
         <app-segmented-control
+          panelHeaderActions
           class="shrink-0"
           [options]="scopeOptions"
           [(value)]="scope"
@@ -78,7 +70,7 @@ const SCOPE_OPTIONS: SegmentedOption<PreferenceScope>[] = [
             Accessible label for the control that picks the preference scope
           "
           ariaLabel="Preference scope" />
-      </header>
+      </app-panel-header>
 
       @if (isInitialLoad()) {
         <div
@@ -102,7 +94,9 @@ const SCOPE_OPTIONS: SegmentedOption<PreferenceScope>[] = [
             @if (row.isOverridden) {
               <button
                 type="button"
-                class="text-muted hover:text-foreground text-xs"
+                app-inline-button
+                color="muted"
+                appearance="lift"
                 (click)="clearValue(row.preference)">
                 <span i18n="Button that removes a preference override">
                   Reset

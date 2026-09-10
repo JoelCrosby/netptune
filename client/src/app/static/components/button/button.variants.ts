@@ -251,22 +251,32 @@ export const iconButtonVariants = cva(
   }
 );
 
+// `plain` fades on hover, `lift` goes the other way and brightens to full
+// strength, `underline` rules the text, and `soft` picks up a hover background
+// and the padding that needs.
+export type InlineButtonAppearance = 'plain' | 'lift' | 'underline' | 'soft';
+
 export const inlineButtonVariants = cva(
-  'inline-flex cursor-pointer select-none items-center gap-1.5 bg-transparent p-0 text-xs transition-colors focus-visible:rounded-xs focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex cursor-pointer select-none items-center gap-1.5 bg-transparent text-xs transition-colors focus-visible:rounded-xs focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       color: {
-        primary:
-          'text-primary hover:text-primary/75 focus-visible:ring-primary',
-        warn: 'text-warn hover:text-warn/75 focus-visible:ring-warn',
-        neutral:
-          'text-foreground hover:text-foreground/75 focus-visible:ring-foreground',
-        contrast:
-          'text-foreground hover:text-foreground/75 focus-visible:ring-foreground',
+        primary: 'text-primary focus-visible:ring-primary',
+        warn: 'text-warn focus-visible:ring-warn',
+        neutral: 'text-foreground focus-visible:ring-foreground',
+        contrast: 'text-foreground focus-visible:ring-foreground',
+        muted: 'text-muted focus-visible:ring-foreground',
+      },
+      appearance: {
+        plain: 'p-0 hover:opacity-75',
+        lift: 'p-0 hover:text-foreground',
+        underline: 'p-0 hover:underline',
+        soft: 'hover:bg-hover rounded px-2 py-1',
       },
     },
     defaultVariants: {
       color: 'primary',
+      appearance: 'plain',
     },
   }
 );

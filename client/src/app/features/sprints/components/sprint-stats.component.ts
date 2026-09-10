@@ -2,14 +2,14 @@ import { Component, computed, input } from '@angular/core';
 import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-view-model';
 import { StatStripItem } from '@static/components/stat-strip/stat-strip.component';
 import { SprintProgressSummaryComponent } from './sprint-progress-summary.component';
+import { PanelComponent } from '@static/components/panel.component';
 
 @Component({
   selector: 'app-sprint-stats',
-  imports: [SprintProgressSummaryComponent],
+  imports: [PanelComponent, SprintProgressSummaryComponent],
   host: { class: 'block' },
   template: `
-    <section
-      class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
+    <section app-panel surface="card">
       <app-sprint-progress-summary
         [sprint]="sprint()"
         [stats]="resolvedStats()" />

@@ -13,14 +13,14 @@ import {
   AutomationTrigger,
   AutomationTriggerType,
 } from '../models/automation.models';
+import { panelSurfaceClass } from '@static/components/panel.component';
 import { AutomationDescriptionComponent } from './automation-description.component';
 
 @Component({
   selector: 'app-automation-summary-bar',
   imports: [AutomationDescriptionComponent, LucideChevronDown],
   host: {
-    class:
-      'border-border bg-card sticky top-3 z-5 block rounded-lg border shadow-sm',
+    class: `${panelSurfaceClass} bg-card sticky top-3 z-5`,
   },
   template: `
     <div class="flex items-center gap-3 px-3.5 py-2.5">

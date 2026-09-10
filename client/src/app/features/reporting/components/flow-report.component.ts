@@ -17,6 +17,7 @@ import { FlowThroughputTableComponent } from './flow-throughput-table.component'
 import { hoursLabel } from './report-format';
 import { ReportCoverageNoticeComponent } from './report-coverage-notice.component';
 import { flowReportResource } from '@core/resources/reporting.resource';
+import { PanelComponent } from '@static/components/panel.component';
 
 @Component({
   selector: 'app-flow-report',
@@ -24,10 +25,11 @@ import { flowReportResource } from '@core/resources/reporting.resource';
     ChartCardComponent,
     EmptyStateComponent,
     ErrorStateComponent,
+    FlowCycleTimeChartComponent,
     FlowCycleTimeTableComponent,
     FlowThroughputChartComponent,
     FlowThroughputTableComponent,
-    FlowCycleTimeChartComponent,
+    PanelComponent,
     ReportCoverageNoticeComponent,
     SectionHeaderComponent,
     SkeletonComponent,
@@ -43,14 +45,15 @@ import { flowReportResource } from '@core/resources/reporting.resource';
         description="Completed work and elapsed cycle time." />
 
       @if (resource.isLoading()) {
-        <div
-          class="border-border bg-card rounded-lg border p-6 shadow-sm"
+        <app-panel
+          surface="card"
+          class="p-6"
           role="status"
           i18n-aria-label="Shown while flow metrics load"
           aria-label="Loading flow metrics">
           <app-skeleton class="h-10 w-full" />
           <app-skeleton class="mt-6 h-52 w-full" />
-        </div>
+        </app-panel>
       } @else if (resource.error()) {
         <app-error-state
           compact
@@ -62,8 +65,7 @@ import { flowReportResource } from '@core/resources/reporting.resource';
       } @else if (resource.value(); as report) {
         <app-report-coverage-notice [coverage]="report.coverage" />
 
-        <section
-          class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
+        <section app-panel surface="card">
           <app-stat-strip [items]="stats()" />
         </section>
 

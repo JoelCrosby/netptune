@@ -16,6 +16,7 @@ import { IconTileComponent } from '@static/components/icon-tile.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SprintBacklogGroupComponent } from '../../components/sprint-backlog-group.component';
+import { PanelComponent } from '@static/components/panel.component';
 
 interface BacklogGroupConfig {
   label: string;
@@ -25,13 +26,14 @@ interface BacklogGroupConfig {
 @Component({
   selector: 'app-sprint-backlog-view',
   imports: [
-    PageContainerComponent,
-    PageHeaderComponent,
     EmptyStateComponent,
     IconTileComponent,
     LucideListChecks,
-    TaskListFiltersComponent,
+    PageContainerComponent,
+    PageHeaderComponent,
+    PanelComponent,
     SprintBacklogGroupComponent,
+    TaskListFiltersComponent,
   ],
   template: `
     <app-page-container
@@ -47,8 +49,9 @@ interface BacklogGroupConfig {
         <app-task-list-filters [assigneeOptions]="assigneeOptions()" />
 
         @if (canManageTasks() && assignableSprints().length === 0) {
-          <div
-            class="border-border bg-card flex items-start gap-3 rounded-lg border border-dashed px-6 py-5 shadow-sm">
+          <app-panel
+            surface="card"
+            class="flex items-start gap-3 border-dashed px-6 py-5">
             <app-icon-tile [icon]="noticeIcon" />
             <p class="text-muted text-sm">
               <span
@@ -60,7 +63,7 @@ interface BacklogGroupConfig {
                 assign tasks to it.
               </span>
             </p>
-          </div>
+          </app-panel>
         }
 
         @for (group of groups; track group.label) {
@@ -72,12 +75,11 @@ interface BacklogGroupConfig {
         }
 
         @if (allEmpty()) {
-          <div
-            class="border-border bg-card rounded-lg border px-6 py-5 shadow-sm">
+          <app-panel surface="card" class="px-6 py-5">
             <app-empty-state compact [title]="emptyMessage()">
               <svg emptyStateIcon lucideListChecks class="h-8 w-8"></svg>
             </app-empty-state>
-          </div>
+          </app-panel>
         }
       </div>
     </app-page-container>

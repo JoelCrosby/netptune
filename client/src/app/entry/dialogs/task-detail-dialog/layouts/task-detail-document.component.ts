@@ -18,16 +18,17 @@ import { TaskDetailComposerComponent } from '../shared/task-detail-composer.comp
 import { TaskDetailFieldRowsComponent } from '../shared/task-detail-field-rows.component';
 import { TaskDetailPropertyChipsComponent } from '../shared/task-detail-property-chips.component';
 import { TaskDetailTagRowComponent } from '../shared/task-detail-tag-row.component';
-import {
-  TaskDetailTab,
-  TaskDetailTabsComponent,
-} from '../shared/task-detail-tabs.component';
 import { EYEBROW, META_CHIP } from '../task-detail-styles';
 import { TaskDetailService } from '../task-detail.service';
+import {
+  TabGroupComponent,
+  type TabItem,
+} from '@static/components/tab-group/tab-group.component';
 
 @Component({
   selector: 'app-task-detail-document',
   imports: [
+    TabGroupComponent,
     DropdownMenuComponent,
     LucideChevronDown,
     LucideSparkles,
@@ -37,7 +38,6 @@ import { TaskDetailService } from '../task-detail.service';
     TaskDetailTagRowComponent,
     TaskDetailFlagsComponent,
     TaskDetailDescriptionComponent,
-    TaskDetailTabsComponent,
     TaskDetailFieldRowsComponent,
     TaskDetailBoardsComponent,
     TaskDetailRelationsComponent,
@@ -119,9 +119,9 @@ import { TaskDetailService } from '../task-detail.service';
 
           <div class="bg-foreground/8 h-px" aria-hidden="true"></div>
 
-          <app-task-detail-tabs
+          <app-tab-group
+            variant="strip"
             class="gap-4.5"
-            role="tablist"
             [tabs]="
               tabItems(
                 comments.count(),
@@ -130,7 +130,7 @@ import { TaskDetailService } from '../task-detail.service';
                 task.placements.length
               )
             "
-            [(active)]="activeTab" />
+            [(value)]="activeTab" />
 
           @if (readComments()) {
             <div [class.hidden]="activeTab() !== 'comments'">
@@ -205,26 +205,26 @@ export class TaskDetailDocumentComponent {
     files: number | null,
     links: number,
     boards: number
-  ): TaskDetailTab[] {
-    const tabs: TaskDetailTab[] = [];
+  ): TabItem[] {
+    const tabs: TabItem[] = [];
 
     if (this.readComments()) {
       tabs.push({
-        key: 'comments',
+        value: 'comments',
         label: this.labels.comments,
         count: comments,
       });
     }
 
     if (files !== null) {
-      tabs.push({ key: 'files', label: this.labels.files, count: files });
+      tabs.push({ value: 'files', label: this.labels.files, count: files });
     }
 
-    tabs.push({ key: 'links', label: this.labels.links, count: links });
-    tabs.push({ key: 'boards', label: this.labels.boards, count: boards });
+    tabs.push({ value: 'links', label: this.labels.links, count: links });
+    tabs.push({ value: 'boards', label: this.labels.boards, count: boards });
 
     if (this.readActivity()) {
-      tabs.push({ key: 'history', label: this.labels.history, count: null });
+      tabs.push({ value: 'history', label: this.labels.history, count: null });
     }
 
     return tabs;

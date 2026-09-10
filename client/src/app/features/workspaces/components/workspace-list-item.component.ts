@@ -15,6 +15,7 @@ import { avatarColors, colorHex } from '@core/util/colors/colors';
 import { workspaceBrandVariables } from '@core/util/colors/workspace-branding';
 import { LucideChevronRight, LucidePin } from '@lucide/angular';
 import { FromNowPipe } from '@static/pipes/from-now.pipe';
+import { BadgeComponent } from '@static/components/badge/badge.component';
 
 interface RowAvatar {
   id: string;
@@ -26,7 +27,13 @@ const maxAvatars = 5;
 
 @Component({
   selector: 'app-workspace-list-item',
-  imports: [FromNowPipe, LucideChevronRight, LucidePin, RouterLink],
+  imports: [
+    BadgeComponent,
+    FromNowPipe,
+    LucideChevronRight,
+    LucidePin,
+    RouterLink,
+  ],
   host: { class: 'block' },
   styles: `
     .workspace-color-wash {
@@ -110,11 +117,12 @@ const maxAvatars = 5;
             {{ workspace().name }}
           </a>
           @if (workspace().isLastVisited) {
-            <span
-              class="shrink-0 rounded-full bg-[rgba(var(--foreground-rgb),0.09)] px-1.75 py-0.5 text-[10.5px] tracking-[0.04em] whitespace-nowrap text-[rgba(var(--foreground-rgb),0.6)] uppercase"
+            <app-badge
+              color="neutral"
+              class="text-muted shrink-0 px-1.75 text-[10.5px] tracking-[0.04em] uppercase"
               i18n="Label marking the workspace the user last opened">
               Last visited
-            </span>
+            </app-badge>
           }
         </span>
 

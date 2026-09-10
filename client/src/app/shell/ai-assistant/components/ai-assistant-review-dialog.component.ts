@@ -9,7 +9,7 @@ import {
   AiProposedChange,
 } from '@core/models/ai-conversation';
 import { AiAssistantService } from '@core/services/ai-assistant.service';
-import { LucideLoaderCircle, LucideX } from '@lucide/angular';
+import { LucideX } from '@lucide/angular';
 import { ButtonComponent } from '@static/components/button/button.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
@@ -35,6 +35,7 @@ import {
   AiFieldEdit,
 } from './ai-assistant-review-detail.component';
 import { AiAssistantReviewListComponent } from './ai-assistant-review-list.component';
+import { SpinnerIconComponent } from '@static/components/spinner/spinner-icon.component';
 
 export type AiReviewFilter =
   'all' | 'created' | 'updated' | 'removed' | 'blocked' | 'failed';
@@ -63,7 +64,7 @@ const isTextField = (field: AiChangeField): boolean => {
     '(document:keydown)': 'onKeydown($event)',
   },
   imports: [
-    LucideLoaderCircle,
+    SpinnerIconComponent,
     LucideX,
     ButtonComponent,
     FlatButtonComponent,
@@ -103,7 +104,7 @@ const isTextField = (field: AiChangeField): boolean => {
         <span class="flex-1"></span>
         <span
           class="bg-primary/12 text-primary flex shrink-0 items-center gap-2 rounded-full px-3.5 py-1.5 text-[13px] font-medium">
-          <svg lucideLoaderCircle class="h-3.5 w-3.5 animate-spin"></svg>
+          <app-spinner-icon class="h-3.5 w-3.5 text-current" />
           @if (isStoppingApply()) {
             <span i18n="Shown on the review while a run is being stopped"
               >Stopping</span
@@ -260,9 +261,7 @@ const isTextField = (field: AiChangeField): boolean => {
     <footer
       class="border-border bg-card-header flex items-center gap-4 border-t px-4 py-3">
       @if (isRunning()) {
-        <svg
-          lucideLoaderCircle
-          class="text-primary h-4 w-4 shrink-0 animate-spin"></svg>
+        <app-spinner-icon class="shrink-0" />
         <p class="m-0 shrink-0 text-sm font-medium">{{ applyingCount() }}</p>
         @if (applyingLabel(); as label) {
           <p class="text-muted m-0 min-w-0 truncate text-sm" [title]="label">

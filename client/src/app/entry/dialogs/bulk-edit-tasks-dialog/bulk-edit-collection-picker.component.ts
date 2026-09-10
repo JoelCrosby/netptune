@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { BulkCollectionMode } from '@core/enums/bulk-collection-mode';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
+import { InlineButtonComponent } from '@static/components/button/inline-button.component';
 import {
   FilterOption,
   FilterOptionListComponent,
@@ -27,7 +28,12 @@ const modeButtonClass =
 
 @Component({
   selector: 'app-bulk-edit-collection-picker',
-  imports: [AvatarComponent, FilterOptionListComponent, SelectMenuComponent],
+  imports: [
+    AvatarComponent,
+    FilterOptionListComponent,
+    InlineButtonComponent,
+    SelectMenuComponent,
+  ],
   host: { class: 'block' },
   template: `
     <ng-template #avatarSlot let-option>
@@ -71,7 +77,9 @@ const modeButtonClass =
         <button
           searchSuffix
           type="button"
-          class="text-primary shrink-0 cursor-pointer px-0.5 text-xs font-medium hover:underline disabled:cursor-default disabled:opacity-40 disabled:hover:no-underline"
+          app-inline-button
+          appearance="underline"
+          class="shrink-0 px-0.5 font-medium disabled:cursor-default disabled:opacity-40 disabled:hover:no-underline"
           [disabled]="!selected().length"
           (click)="cleared.emit()">
           <span

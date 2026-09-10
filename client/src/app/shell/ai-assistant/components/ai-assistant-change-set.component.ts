@@ -27,6 +27,8 @@ import {
   inlineRow,
 } from './ai-assistant-change-summary';
 import { letterColour } from './ai-assistant-diff';
+import { InlineButtonComponent } from '@static/components/button/inline-button.component';
+import { BadgeComponent } from '@static/components/badge/badge.component';
 import {
   AiAssistantReviewDialogComponent,
   AiReviewData,
@@ -39,12 +41,14 @@ const INLINE_ROW_LIMIT = 3;
   selector: 'app-ai-assistant-change-set',
   host: { class: 'block' },
   imports: [
+    AiAssistantAppliedChangesComponent,
+    AiAssistantApplyProgressComponent,
+    BadgeComponent,
+    InlineButtonComponent,
     LucideCheck,
     LucideChevronDown,
     LucideTriangleAlert,
     SelectionCheckboxComponent,
-    AiAssistantAppliedChangesComponent,
-    AiAssistantApplyProgressComponent,
   ],
   template: `
     <div class="mx-auto w-full px-4 py-3" [class]="contentWidth()">
@@ -67,14 +71,16 @@ const INLINE_ROW_LIMIT = 3;
               i18n="Heading above the list of proposed workspace changes">
               Proposed changes
             </h3>
-            <span
-              class="bg-foreground/9 text-muted flex h-4.5 min-w-4.5 items-center justify-center rounded-full px-1.5 text-[11px] tabular-nums">
+            <app-badge
+              color="neutral"
+              class="text-muted h-4.5 min-w-4.5 px-1.5 text-[11px] tabular-nums">
               {{ total() }}
-            </span>
+            </app-badge>
             <span class="flex-1"></span>
             <button
               type="button"
-              class="text-primary text-xs hover:underline"
+              app-inline-button
+              appearance="underline"
               (click)="reviewAll()"
               i18n="Button that opens the full screen review of the changes">
               Review all
@@ -230,7 +236,10 @@ const INLINE_ROW_LIMIT = 3;
             <span class="flex-1"></span>
             <button
               type="button"
-              class="text-muted hover:text-foreground/80 px-1 text-[12.5px] transition-colors"
+              app-inline-button
+              color="muted"
+              appearance="lift"
+              class="hover:text-foreground/80 px-1 text-[12.5px]"
               [disabled]="isApplying()"
               (click)="discarded.emit()"
               i18n="Button that discards the proposed changes">
@@ -269,7 +278,9 @@ const INLINE_ROW_LIMIT = 3;
               @if (failedCount() > 0) {
                 <button
                   type="button"
-                  class="text-primary shrink-0 text-xs hover:underline"
+                  app-inline-button
+                  appearance="underline"
+                  class="shrink-0"
                   (click)="reviewFailed()"
                   i18n="
                     Button that opens the review filtered to the changes that
@@ -281,7 +292,9 @@ const INLINE_ROW_LIMIT = 3;
 
               <button
                 type="button"
-                class="text-primary shrink-0 text-xs hover:underline"
+                app-inline-button
+                appearance="underline"
+                class="shrink-0"
                 (click)="reviewAll()"
                 i18n="
                   Button that opens the full screen review of the changes that
@@ -293,7 +306,9 @@ const INLINE_ROW_LIMIT = 3;
               @if (canUndo()) {
                 <button
                   type="button"
-                  class="text-primary shrink-0 text-xs hover:underline"
+                  app-inline-button
+                  appearance="underline"
+                  class="shrink-0"
                   [disabled]="isApplying()"
                   (click)="undone.emit()"
                   i18n="Button that takes back an applied change set">

@@ -7,10 +7,11 @@ import {
 import { entityTypeToString } from '@core/transforms/entity-type';
 import { LucideBell } from '@lucide/angular';
 import { AnchoredPopupCardComponent } from '@static/components/anchored-popup/anchored-popup-card.component';
+import { InlineButtonComponent } from '@static/components/button/inline-button.component';
 
 @Component({
   selector: 'app-notification-popup',
-  imports: [LucideBell, AnchoredPopupCardComponent],
+  imports: [AnchoredPopupCardComponent, InlineButtonComponent, LucideBell],
   template: `
     <app-anchored-popup-card (dismissed)="dismissed.emit()">
       <svg popupIcon lucideBell class="h-4 w-4"></svg>
@@ -25,7 +26,9 @@ import { AnchoredPopupCardComponent } from '@static/components/anchored-popup/an
 
       <button
         type="button"
-        class="text-primary mt-2 text-sm font-medium hover:underline"
+        app-inline-button
+        appearance="underline"
+        class="mt-2 text-sm font-medium"
         i18n="
           Button that opens the notification from the new notification popup
         "

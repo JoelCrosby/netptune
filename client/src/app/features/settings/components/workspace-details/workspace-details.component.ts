@@ -32,47 +32,40 @@ import { FlatButtonComponent } from '@static/components/button/flat-button.compo
 import { ColorSelectComponent } from '@static/components/color-select/color-select.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
-import { IconTileComponent } from '@static/components/icon-tile.component';
 import { WorkspaceBrandingComponent } from '@settings/components/workspace-branding/workspace-branding.component';
 import { firstValueFrom, map } from 'rxjs';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
+import { PanelComponent } from '@static/components/panel.component';
+import { PanelHeaderComponent } from '@static/components/panel-header.component';
+import { PanelBodyComponent } from '@static/components/panel-body.component';
+import { PanelFooterComponent } from '@static/components/panel-footer.component';
 
 @Component({
   selector: 'app-workspace-details',
   imports: [
+    ColorSelectComponent,
+    FlatButtonComponent,
     FormField,
     FormInputComponent,
     FormTextAreaComponent,
-    ColorSelectComponent,
-    FlatButtonComponent,
-    IconTileComponent,
+    PanelBodyComponent,
+    PanelComponent,
+    PanelFooterComponent,
+    PanelHeaderComponent,
     WorkspaceBrandingComponent,
   ],
   host: { class: 'block' },
   template: `
-    <form
-      class="border-border bg-card overflow-hidden rounded-lg border shadow-sm"
-      (submit)="save($event)">
-      <header class="border-border border-b px-6 py-5">
-        <div class="flex min-w-0 items-center gap-3">
-          <app-icon-tile [icon]="detailsIcon" />
+    <form app-panel surface="card" (submit)="save($event)">
+      <app-panel-header
+        density="comfortable"
+        [icon]="detailsIcon"
+        i18n-heading="Section heading for the workspace detail form"
+        heading="Workspace details"
+        i18n-description="Explains what the workspace detail form controls"
+        description="How this workspace is named, described and addressed." />
 
-          <div class="min-w-0">
-            <h2
-              class="font-overpass text-base font-semibold"
-              i18n="Section heading for the workspace detail form">
-              Workspace details
-            </h2>
-            <p
-              class="text-muted mt-1 text-sm"
-              i18n="Explains what the workspace detail form controls">
-              How this workspace is named, described and addressed.
-            </p>
-          </div>
-        </div>
-      </header>
-
-      <div class="grid gap-6 px-6 py-5 lg:grid-cols-2 lg:gap-10">
+      <app-panel-body class="grid gap-6 lg:grid-cols-2 lg:gap-10">
         <div class="grid max-w-2xl content-start gap-4">
           <app-form-input
             [formField]="detailsForm.name"
@@ -115,15 +108,15 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
         </div>
 
         <app-workspace-branding />
-      </div>
+      </app-panel-body>
 
-      <footer class="border-border border-t px-6 py-4">
+      <app-panel-footer>
         <button app-flat-button type="submit">
           <span i18n="Button that saves the workspace details">
             Save Changes
           </span>
         </button>
-      </footer>
+      </app-panel-footer>
     </form>
   `,
 })

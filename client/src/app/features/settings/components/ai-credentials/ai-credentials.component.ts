@@ -21,6 +21,10 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
 import { first, switchMap } from 'rxjs';
+import { PanelComponent } from '@static/components/panel.component';
+import { PanelBodyComponent } from '@static/components/panel-body.component';
+import { FormControlFieldComponent } from '@static/components/form-control/form-control-field.component';
+import { FormControlInputDirective } from '@static/components/form-control/form-control.directives';
 
 interface ProviderOption {
   provider: AiProvider;
@@ -44,14 +48,18 @@ const PROVIDER_OPTIONS: ProviderOption[] = [
 @Component({
   selector: 'app-ai-credentials',
   imports: [
-    FormsModule,
-    LucideCheck,
-    LucideTrash,
-    IconTileComponent,
+    FormControlInputDirective,
+    FormControlFieldComponent,
     DropdownButtonComponent,
     FlatButtonComponent,
+    FormsModule,
     IconButtonComponent,
+    IconTileComponent,
+    LucideCheck,
+    LucideTrash,
     MenuItemComponent,
+    PanelBodyComponent,
+    PanelComponent,
     TooltipDirective,
   ],
   template: `
@@ -74,10 +82,11 @@ const PROVIDER_OPTIONS: ProviderOption[] = [
 
     <div class="mt-6 flex flex-col gap-4">
       @for (option of providerOptions(); track option.provider) {
-        <article
-          class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
+        <article app-panel surface="card">
           <header
-            class="border-border flex flex-wrap items-start justify-between gap-4 border-b px-6 py-5">
+            app-panel-body
+            divider="bottom"
+            class="flex flex-wrap items-start justify-between gap-4">
             <div class="flex min-w-0 items-start gap-3">
               <app-icon-tile [icon]="providerIcon" />
               <div class="min-w-0">
@@ -112,22 +121,24 @@ const PROVIDER_OPTIONS: ProviderOption[] = [
             }
           </header>
 
-          <div class="flex flex-wrap items-end gap-3 px-6 py-5">
+          <app-panel-body class="flex flex-wrap items-end gap-3">
             <label class="flex min-w-56 flex-1 flex-col gap-1">
               <span
                 class="text-muted text-xs"
                 i18n="Label for the API key input">
                 API key
               </span>
-              <input
-                type="password"
-                class="border-border bg-background placeholder:text-muted h-9 w-full rounded border px-3 outline-none"
-                autocomplete="off"
-                spellcheck="false"
-                [placeholder]="secretPlaceholder(option.provider)"
-                [ngModel]="secretFor(option.provider)"
-                (ngModelChange)="setSecret(option.provider, $event)"
-                [name]="'secret-' + option.provider" />
+              <app-form-control-field density="compact">
+                <input
+                  appFormInput
+                  type="password"
+                  autocomplete="off"
+                  spellcheck="false"
+                  [placeholder]="secretPlaceholder(option.provider)"
+                  [ngModel]="secretFor(option.provider)"
+                  (ngModelChange)="setSecret(option.provider, $event)"
+                  [name]="'secret-' + option.provider" />
+              </app-form-control-field>
             </label>
 
             <div class="flex min-w-56 flex-col gap-1">
@@ -190,7 +201,7 @@ const PROVIDER_OPTIONS: ProviderOption[] = [
                 <span i18n="Button that stores an API key">Save key</span>
               }
             </button>
-          </div>
+          </app-panel-body>
         </article>
       }
     </div>

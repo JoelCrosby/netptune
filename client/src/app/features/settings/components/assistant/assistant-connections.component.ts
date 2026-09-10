@@ -11,6 +11,8 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
 import { IconTileComponent } from '@static/components/icon-tile.component';
 import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
 import { first } from 'rxjs';
+import { PanelComponent } from '@static/components/panel.component';
+import { PanelHeaderComponent } from '@static/components/panel-header.component';
 import {
   AssistantConnectionDialogComponent,
   AssistantConnectionDialogData,
@@ -58,24 +60,22 @@ const SEARCH_PROVIDER_LABELS: Record<number, string> = {
 
 @Component({
   selector: 'app-assistant-connections',
-  imports: [IconTileComponent, PrettyDatePipe, StrokedButtonComponent],
+  imports: [
+    IconTileComponent,
+    PanelComponent,
+    PanelHeaderComponent,
+    PrettyDatePipe,
+    StrokedButtonComponent,
+  ],
   host: { class: 'block' },
   template: `
-    <section
-      class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
-      <header class="border-border border-b px-6 py-5">
-        <h2
-          class="font-overpass text-base font-semibold"
-          i18n="Heading of the assistant connections card">
-          Connections
-        </h2>
-        <p
-          class="text-muted mt-1 text-sm"
-          i18n="Explains what the assistant connections are">
-          Model providers and web search, shared by every member without a
-          personal key.
-        </p>
-      </header>
+    <section app-panel surface="card">
+      <app-panel-header
+        density="comfortable"
+        i18n-heading="Heading of the assistant connections card"
+        heading="Connections"
+        i18n-description="Explains what the assistant connections are"
+        description="Model providers and web search, shared by every member without a personal key." />
 
       <ul class="divide-border/50 flex flex-col divide-y">
         @for (connection of connections(); track connection.id) {

@@ -1,11 +1,8 @@
 import { Component, computed, input, output } from '@angular/core';
-import {
-  LucideCircleCheck,
-  LucideCircleDashed,
-  LucideLoaderCircle,
-} from '@lucide/angular';
+import { LucideCircleCheck, LucideCircleDashed } from '@lucide/angular';
 import { ProgressBarComponent } from '@static/components/progress-bar/progress-bar.component';
 import { AiChangeLetter, letterColour } from './ai-assistant-diff';
+import { SpinnerIconComponent } from '@static/components/spinner/spinner-icon.component';
 
 /** One kind of change, counted as the run works through it. */
 export interface AiApplyRowView {
@@ -23,17 +20,15 @@ export interface AiApplyRowView {
   selector: 'app-ai-assistant-apply-progress',
   host: { class: 'block' },
   imports: [
+    SpinnerIconComponent,
     LucideCircleCheck,
     LucideCircleDashed,
-    LucideLoaderCircle,
     ProgressBarComponent,
   ],
   template: `
     <div
       class="border-border bg-card-header flex items-center gap-2 border-b px-3 py-2.5">
-      <svg
-        lucideLoaderCircle
-        class="text-primary h-3.5 w-3.5 shrink-0 animate-spin"></svg>
+      <app-spinner-icon class="h-3.5 w-3.5 shrink-0" />
       <h3 class="text-[13px] font-medium whitespace-nowrap">
         {{ heading() }}
       </h3>
@@ -57,10 +52,7 @@ export interface AiApplyRowView {
                 class="text-change-added h-4 w-4"
                 [attr.aria-label]="doneLabel"></svg>
             } @else if (row.done > 0) {
-              <svg
-                lucideLoaderCircle
-                class="text-primary h-4 w-4 animate-spin"
-                [attr.aria-label]="runningLabel"></svg>
+              <app-spinner-icon [label]="runningLabel" />
             } @else {
               <svg
                 lucideCircleDashed

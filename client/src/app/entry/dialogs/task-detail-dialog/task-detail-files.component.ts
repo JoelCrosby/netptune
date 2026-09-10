@@ -19,6 +19,7 @@ import {
 import { FileDropzoneComponent } from '@static/components/file-dropzone/file-dropzone.component';
 import { FileTypeIconComponent } from '@static/components/file-type-icon/file-type-icon.component';
 import { FileSizePipe } from '@static/pipes/file-size.pipe';
+import { InlineButtonComponent } from '@static/components/button/inline-button.component';
 
 @Component({
   selector: 'app-task-detail-files',
@@ -26,6 +27,7 @@ import { FileSizePipe } from '@static/pipes/file-size.pipe';
     FileDropzoneComponent,
     FileSizePipe,
     FileTypeIconComponent,
+    InlineButtonComponent,
     LucideDownload,
     LucideRotateCcw,
     LucideTrash2,
@@ -45,7 +47,9 @@ import { FileSizePipe } from '@static/pipes/file-size.pipe';
         @if (uploading()) {
           <button
             type="button"
-            class="text-muted inline-flex items-center gap-1 text-xs hover:underline"
+            app-inline-button
+            color="muted"
+            appearance="underline"
             (click)="cancelUploads()">
             <svg lucideX class="h-3 w-3"></svg>
             <span i18n="Button that stops in-progress file uploads">

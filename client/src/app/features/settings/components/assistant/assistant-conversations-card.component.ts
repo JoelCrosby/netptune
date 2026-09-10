@@ -12,8 +12,9 @@ import {
   DatatableSort,
 } from '@static/components/datatable/datatable.types';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
-import { IconTileComponent } from '@static/components/icon-tile.component';
 import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
+import { PanelComponent } from '@static/components/panel.component';
+import { PanelHeaderComponent } from '@static/components/panel-header.component';
 
 @Component({
   selector: 'app-assistant-conversations-card',
@@ -23,35 +24,23 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
     DatatableComponent,
     DatatableEmptyDirective,
     EmptyStateComponent,
-    IconTileComponent,
     LucideMessagesSquare,
+    PanelComponent,
+    PanelHeaderComponent,
     PrettyDatePipe,
   ],
   host: { class: 'block' },
   template: `
-    <section
-      class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
-      <header class="border-border border-b px-6 py-5">
-        <div class="flex min-w-0 items-center gap-3">
-          <app-icon-tile [icon]="conversationIcon" />
-
-          <div class="min-w-0">
-            <h2
-              class="font-overpass text-base font-semibold"
-              i18n="Heading of the assistant conversation list">
-              Conversations
-            </h2>
-            <p
-              class="text-muted mt-1 text-sm"
-              i18n="
-                Explains what an admin sees on the assistant conversations page
-              ">
-              What members asked the assistant. The record of what changed lives
-              in the audit log.
-            </p>
-          </div>
-        </div>
-      </header>
+    <section app-panel surface="card">
+      <app-panel-header
+        density="comfortable"
+        [icon]="conversationIcon"
+        i18n-heading="Heading of the assistant conversation list"
+        heading="Conversations"
+        i18n-description="
+          Explains what an admin sees on the assistant conversations page
+        "
+        description="What members asked the assistant. The record of what changed lives in the audit log." />
 
       <app-datatable
         containerClass="border-0"

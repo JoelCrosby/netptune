@@ -17,23 +17,29 @@ import {
 } from '@static/components/stat-strip/stat-strip.component';
 import { SprintBurndownSparklineComponent } from './sprint-burndown-sparkline.component';
 import { sprintBurndownResource } from '@core/resources/reporting.resource';
+import { PanelComponent } from '@static/components/panel.component';
+import { PanelBodyComponent } from '@static/components/panel-body.component';
 
 @Component({
   selector: 'app-dashboard-current-sprint-card',
   imports: [
     EmptyStateComponent,
     LucideCalendarOff,
+    PanelBodyComponent,
+    PanelComponent,
     ProgressBarComponent,
     RouterLink,
     SkeletonComponent,
-    SprintIdentityComponent,
     SprintBurndownSparklineComponent,
+    SprintIdentityComponent,
     StatStripComponent,
   ],
   template: `
     @if (isInitialLoad()) {
       <section
-        class="border-border bg-card rounded-lg border p-6 shadow-sm"
+        app-panel
+        surface="card"
+        class="p-6"
         role="status"
         i18n-aria-label="Accessible label while the current sprint loads"
         aria-label="Loading current sprint">
@@ -53,10 +59,11 @@ import { sprintBurndownResource } from '@core/resources/reporting.resource';
         </div>
       </section>
     } @else if (sprint(); as sprint) {
-      <section
-        class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
+      <section app-panel surface="card">
         <header
-          class="border-border flex flex-wrap items-start justify-between gap-x-4 gap-y-3 border-b px-6 py-5">
+          app-panel-body
+          divider="bottom"
+          class="flex flex-wrap items-start justify-between gap-x-4 gap-y-3">
           <app-sprint-identity
             class="min-w-0"
             i18n-eyebrow="Heading of the dashboard current-sprint card"
@@ -72,7 +79,7 @@ import { sprintBurndownResource } from '@core/resources/reporting.resource';
           </a>
         </header>
 
-        <div class="px-6 py-5">
+        <app-panel-body>
           @if (sprint.taskCount > 0) {
             <div class="flex flex-wrap items-baseline justify-between gap-x-4">
               <p
@@ -112,12 +119,12 @@ import { sprintBurndownResource } from '@core/resources/reporting.resource';
               {{ sprint.goal }}
             </p>
           }
-        </div>
+        </app-panel-body>
 
         <app-stat-strip [items]="stats()" />
 
         @if (burndownPoints().length > 1) {
-          <div class="border-border border-t px-6 py-5">
+          <app-panel-body class="border-border border-t">
             <app-sprint-burndown-sparkline [points]="burndownPoints()" />
             <a
               class="text-primary mt-2 block text-right text-xs font-medium hover:underline"
@@ -127,11 +134,11 @@ import { sprintBurndownResource } from '@core/resources/reporting.resource';
                 View report →
               </span>
             </a>
-          </div>
+          </app-panel-body>
         }
       </section>
     } @else {
-      <section class="border-border bg-card rounded-lg border p-6 shadow-sm">
+      <section app-panel surface="card" class="p-6">
         <app-empty-state
           compact
           i18n-title="Empty state when no sprint is running"

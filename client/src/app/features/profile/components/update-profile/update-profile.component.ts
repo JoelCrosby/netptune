@@ -13,47 +13,40 @@ import { profileResource } from '@core/resources/profile.resource';
 import { ProfileCommandsService } from '@core/services/profile-commands.service';
 import { LucideUserRound } from '@lucide/angular';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
-import { IconTileComponent } from '@static/components/icon-tile.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { UpdateProfileImageComponent } from '@profile/components/update-profile-image/update-profile-image.component';
 import { DialogService } from '@core/services/dialog.service';
 import { SelectProfileImageDialogComponent } from '@profile/components/select-profile-image-dialog/select-profile-image-dialog.component';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
+import { PanelComponent } from '@static/components/panel.component';
+import { PanelHeaderComponent } from '@static/components/panel-header.component';
+import { PanelBodyComponent } from '@static/components/panel-body.component';
+import { PanelFooterComponent } from '@static/components/panel-footer.component';
 
 @Component({
   selector: 'app-update-profile',
   imports: [
     FormField,
     FormInputComponent,
-    IconTileComponent,
+    PanelBodyComponent,
+    PanelComponent,
+    PanelFooterComponent,
+    PanelHeaderComponent,
     StrokedButtonComponent,
     UpdateProfileImageComponent,
   ],
   template: `
-    <form
-      class="border-border bg-card overflow-hidden rounded-lg border shadow-sm"
-      (submit)="updateClicked($event)">
-      <header class="border-border border-b px-6 py-5">
-        <div class="flex min-w-0 items-center gap-3">
-          <app-icon-tile [icon]="profileIcon" />
+    <form app-panel surface="card" (submit)="updateClicked($event)">
+      <app-panel-header
+        density="comfortable"
+        [icon]="profileIcon"
+        i18n-heading="Heading of the profile details card"
+        heading="Profile details"
+        i18n-description="Explains what the profile details card controls"
+        description="Your name, email address and picture." />
 
-          <div class="min-w-0">
-            <h2
-              class="font-overpass text-base font-semibold"
-              i18n="Heading of the profile details card">
-              Profile details
-            </h2>
-            <p
-              class="text-muted mt-1 text-sm"
-              i18n="Explains what the profile details card controls">
-              Your name, email address and picture.
-            </p>
-          </div>
-        </div>
-      </header>
-
-      <div
-        class="flex flex-row justify-start gap-16 px-6 py-5 max-[1036px]:flex-col-reverse">
+      <app-panel-body
+        class="flex flex-row justify-start gap-16 max-[1036px]:flex-col-reverse">
         <div class="w-full max-w-120">
           <app-form-input
             [formField]="profileForm.firstname"
@@ -74,13 +67,13 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
         <app-update-profile-image
           [pictureUrl]="profileForm.pictureUrl().value()"
           (changePictureClicked)="onChangePictureClicked()" />
-      </div>
+      </app-panel-body>
 
-      <footer class="border-border border-t px-6 py-4">
+      <app-panel-footer>
         <button app-stroked-button type="submit" [disabled]="loadingUpdate()">
           <span i18n="Button that saves profile changes">Update Profile</span>
         </button>
-      </footer>
+      </app-panel-footer>
     </form>
   `,
 })

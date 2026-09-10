@@ -20,6 +20,8 @@ import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
 import { first, switchMap } from 'rxjs';
+import { FormControlFieldComponent } from '@static/components/form-control/form-control-field.component';
+import { FormControlInputDirective } from '@static/components/form-control/form-control.directives';
 
 export interface AssistantSearchDialogData {
   credential: SearchCredential | null;
@@ -37,6 +39,8 @@ interface SearchProviderOption {
 @Component({
   selector: 'app-assistant-search-dialog',
   imports: [
+    FormControlInputDirective,
+    FormControlFieldComponent,
     CalloutComponent,
     DialogActionsDirective,
     DialogCloseDirective,
@@ -86,15 +90,17 @@ interface SearchProviderOption {
           <span class="text-muted text-xs" i18n="Label for the API key input">
             API key
           </span>
-          <input
-            type="password"
-            name="assistant-search-secret"
-            class="border-border bg-background placeholder:text-muted h-9 w-full rounded border px-3 outline-none"
-            autocomplete="off"
-            spellcheck="false"
-            [placeholder]="secretPlaceholder()"
-            [ngModel]="secret()"
-            (ngModelChange)="secret.set($event)" />
+          <app-form-control-field density="compact">
+            <input
+              appFormInput
+              type="password"
+              name="assistant-search-secret"
+              autocomplete="off"
+              spellcheck="false"
+              [placeholder]="secretPlaceholder()"
+              [ngModel]="secret()"
+              (ngModelChange)="secret.set($event)" />
+          </app-form-control-field>
         </label>
       }
 
@@ -105,16 +111,20 @@ interface SearchProviderOption {
             i18n="Label for the Google search engine id input">
             Search engine id
           </span>
-          <input
-            type="text"
-            name="assistant-search-engine-id"
-            class="border-border bg-background placeholder:text-muted h-9 w-full rounded border px-3 outline-none"
-            autocomplete="off"
-            spellcheck="false"
-            i18n-placeholder="Placeholder for the Google search engine id input"
-            placeholder="a1b2c3d4e5f6g7h8i"
-            [ngModel]="engineId()"
-            (ngModelChange)="pendingEngineId.set($event)" />
+          <app-form-control-field density="compact">
+            <input
+              appFormInput
+              type="text"
+              name="assistant-search-engine-id"
+              autocomplete="off"
+              spellcheck="false"
+              i18n-placeholder="
+                Placeholder for the Google search engine id input
+              "
+              placeholder="a1b2c3d4e5f6g7h8i"
+              [ngModel]="engineId()"
+              (ngModelChange)="pendingEngineId.set($event)" />
+          </app-form-control-field>
         </label>
       }
 
@@ -125,16 +135,18 @@ interface SearchProviderOption {
             i18n="Label for the SearXNG base URL input">
             Base URL
           </span>
-          <input
-            type="url"
-            name="assistant-search-endpoint"
-            class="border-border bg-background placeholder:text-muted h-9 w-full rounded border px-3 outline-none"
-            autocomplete="off"
-            spellcheck="false"
-            i18n-placeholder="Placeholder for the SearXNG base URL input"
-            placeholder="https://searxng.example.com"
-            [ngModel]="endpoint()"
-            (ngModelChange)="pendingEndpoint.set($event)" />
+          <app-form-control-field density="compact">
+            <input
+              appFormInput
+              type="url"
+              name="assistant-search-endpoint"
+              autocomplete="off"
+              spellcheck="false"
+              i18n-placeholder="Placeholder for the SearXNG base URL input"
+              placeholder="https://searxng.example.com"
+              [ngModel]="endpoint()"
+              (ngModelChange)="pendingEndpoint.set($event)" />
+          </app-form-control-field>
         </label>
       }
 

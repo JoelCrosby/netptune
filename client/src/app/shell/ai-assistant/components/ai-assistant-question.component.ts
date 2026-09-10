@@ -2,6 +2,8 @@ import { Component, computed, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AiQuestion, AiQuestionAnswer } from '@core/models/ai-conversation';
 import { LucideCheck, LucidePencil, LucideSend } from '@lucide/angular';
+import { InlineButtonComponent } from '@static/components/button/inline-button.component';
+import { IconButtonComponent } from '@static/components/button/icon-button.component';
 
 export interface AiQuestionResponse {
   question: AiQuestion;
@@ -12,7 +14,14 @@ export interface AiQuestionResponse {
 @Component({
   selector: 'app-ai-assistant-question',
   host: { class: 'block' },
-  imports: [FormsModule, LucideCheck, LucidePencil, LucideSend],
+  imports: [
+    FormsModule,
+    IconButtonComponent,
+    InlineButtonComponent,
+    LucideCheck,
+    LucidePencil,
+    LucideSend,
+  ],
   template: `
     <div
       class="border-border bg-hover rounded-2xl border p-3"
@@ -68,7 +77,8 @@ export interface AiQuestionResponse {
 
             <button
               type="button"
-              class="bg-primary text-primary-foreground flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition disabled:opacity-40"
+              app-icon-button
+              class="bg-primary text-primary-foreground hover:bg-primary/88 h-9 w-9 shrink-0 disabled:opacity-40"
               [disabled]="!canSendTyped()"
               i18n-aria-label="
                 Accessible label for the button that sends a typed answer
@@ -82,7 +92,10 @@ export interface AiQuestionResponse {
           <div class="mt-2 flex items-center justify-between gap-2">
             <button
               type="button"
-              class="text-muted hover:text-foreground flex items-center gap-1 text-xs"
+              app-inline-button
+              color="muted"
+              appearance="lift"
+              class="gap-1"
               (click)="startTyping()">
               <svg lucidePencil class="h-3 w-3"></svg>
               <span

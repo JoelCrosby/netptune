@@ -60,25 +60,27 @@ import {
   TaskChangeField,
 } from '../../models/automation.models';
 import { AutomationsService } from '../../services/automations.service';
+import { PanelComponent } from '@static/components/panel.component';
 
 @Component({
   selector: 'app-automation-form-view',
   imports: [
-    RouterLink,
+    AutomationActionsEditorComponent,
+    AutomationConditionsEditorComponent,
+    AutomationFlowStepComponent,
+    AutomationSettingsEditorComponent,
+    AutomationSummaryBarComponent,
+    AutomationTriggerEditorComponent,
     CalloutComponent,
+    FlatButtonComponent,
     FormControlShapeDirective,
     PageBodyComponent,
     PageContainerComponent,
     PageHeaderComponent,
     PageLoadingComponent,
-    FlatButtonComponent,
+    PanelComponent,
+    RouterLink,
     StrokedButtonComponent,
-    AutomationFlowStepComponent,
-    AutomationSettingsEditorComponent,
-    AutomationSummaryBarComponent,
-    AutomationTriggerEditorComponent,
-    AutomationConditionsEditorComponent,
-    AutomationActionsEditorComponent,
   ],
   template: `
     <app-page-container layout="list" [stickyFooter]="true">
@@ -94,7 +96,7 @@ import { AutomationsService } from '../../services/automations.service';
             appFormShape="rounded"
             class="mx-auto flex w-full flex-col gap-4 pb-8"
             (ngSubmit)="onSubmit()">
-            <div class="border-border bg-card rounded-lg border p-4 shadow-sm">
+            <app-panel surface="card" class="p-4">
               <app-automation-settings-editor
                 [serviceAccounts]="enabledServiceAccounts()"
                 [projects]="projectsResource.value()"
@@ -106,7 +108,7 @@ import { AutomationsService } from '../../services/automations.service';
                 [(projectId)]="projectId"
                 [(boardId)]="boardId"
                 [(sprintId)]="sprintId" />
-            </div>
+            </app-panel>
 
             <app-automation-summary-bar
               [trigger]="triggerPreview()"

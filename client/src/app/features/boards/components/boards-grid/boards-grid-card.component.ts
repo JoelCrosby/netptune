@@ -6,6 +6,7 @@ import { colorBackgroundClass } from '@core/util/colors/colors';
 import { LucideChartColumnBig } from '@lucide/angular';
 import { IconTileComponent } from '@static/components/icon-tile.component';
 import { FromNowPipe } from '@static/pipes/from-now.pipe';
+import { PanelComponent } from '@static/components/panel.component';
 
 interface BoardStat {
   label: string;
@@ -15,11 +16,13 @@ interface BoardStat {
 @Component({
   selector: 'app-boards-grid-card',
   providers: [FromNowPipe],
-  imports: [IconTileComponent],
+  imports: [IconTileComponent, PanelComponent],
   host: { class: 'block h-full' },
   template: `
     <article
-      class="border-border bg-card hover:border-primary/40 flex h-full min-h-38 flex-col overflow-hidden rounded-lg border shadow-sm transition-colors">
+      app-panel
+      surface="card"
+      class="hover:border-primary/40 flex h-full min-h-38 flex-col transition-colors">
       <div class="flex flex-1 items-start gap-3 px-5 py-4">
         @if (logoUrl(); as url) {
           <img

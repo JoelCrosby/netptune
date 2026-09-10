@@ -23,6 +23,8 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
 import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
 import { first, switchMap } from 'rxjs';
+import { FormControlFieldComponent } from '@static/components/form-control/form-control-field.component';
+import { FormControlInputDirective } from '@static/components/form-control/form-control.directives';
 
 export interface AssistantConnectionDialogData {
   provider: AiProvider;
@@ -34,6 +36,8 @@ export interface AssistantConnectionDialogData {
 @Component({
   selector: 'app-assistant-connection-dialog',
   imports: [
+    FormControlInputDirective,
+    FormControlFieldComponent,
     CalloutComponent,
     DialogActionsDirective,
     DialogCloseDirective,
@@ -105,15 +109,17 @@ export interface AssistantConnectionDialogData {
 
       <label class="flex flex-col gap-1.5">
         <span class="text-muted text-xs">{{ secretLabel() }}</span>
-        <input
-          type="password"
-          name="assistant-connection-secret"
-          class="border-border bg-background placeholder:text-muted h-9 w-full rounded border px-3 outline-none"
-          autocomplete="off"
-          spellcheck="false"
-          [placeholder]="secretPlaceholder()"
-          [ngModel]="secret()"
-          (ngModelChange)="secret.set($event)" />
+        <app-form-control-field density="compact">
+          <input
+            appFormInput
+            type="password"
+            name="assistant-connection-secret"
+            autocomplete="off"
+            spellcheck="false"
+            [placeholder]="secretPlaceholder()"
+            [ngModel]="secret()"
+            (ngModelChange)="secret.set($event)" />
+        </app-form-control-field>
         <span class="text-muted text-xs" i18n="Explains how stored keys behave">
           Keys are encrypted and never shown again after saving.
         </span>

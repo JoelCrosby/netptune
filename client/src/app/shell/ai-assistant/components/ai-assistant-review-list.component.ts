@@ -7,7 +7,6 @@ import {
   LucideChevronDown,
   LucideCircleCheck,
   LucideCircleDashed,
-  LucideLoaderCircle,
   LucideMinus,
   LucideTriangleAlert,
   LucideUndo2,
@@ -20,6 +19,8 @@ import {
 } from './ai-assistant-change-group';
 import { changeSummary } from './ai-assistant-change-kind';
 import { AiChangeLetter, changeLetter } from './ai-assistant-diff';
+import { SpinnerIconComponent } from '@static/components/spinner/spinner-icon.component';
+import { BadgeComponent } from '@static/components/badge/badge.component';
 
 interface AiReviewRow {
   change: AiProposedChange;
@@ -66,14 +67,15 @@ const rowLabels = (
   selector: 'app-ai-assistant-review-list',
   host: { class: 'block' },
   imports: [
+    BadgeComponent,
     LucideChevronDown,
     LucideCircleCheck,
     LucideCircleDashed,
-    LucideLoaderCircle,
     LucideMinus,
     LucideTriangleAlert,
     LucideUndo2,
     SelectionCheckboxComponent,
+    SpinnerIconComponent,
   ],
   template: `
     @for (group of reviewGroups(); track group.key) {
@@ -92,10 +94,9 @@ const rowLabels = (
           </span>
           <span class="min-w-0 truncate font-medium">{{ group.title }}</span>
           <span class="flex-1"></span>
-          <span
-            class="bg-foreground/8 text-muted flex h-5 min-w-5 items-center justify-center rounded-full px-2 text-[13px]">
+          <app-badge color="neutral" class="text-muted h-5 min-w-5 text-[13px]">
             {{ group.count }}
-          </span>
+          </app-badge>
         </button>
 
         @if (group.isOpen) {
@@ -131,10 +132,9 @@ const rowLabels = (
                         [attr.aria-label]="failedLabel"></svg>
                     }
                     @case ('running') {
-                      <svg
-                        lucideLoaderCircle
-                        class="text-primary h-4.5 w-4.5 animate-spin"
-                        [attr.aria-label]="runningLabel"></svg>
+                      <app-spinner-icon
+                        class="h-4.5 w-4.5"
+                        [label]="runningLabel" />
                     }
                     @case ('waiting') {
                       <svg

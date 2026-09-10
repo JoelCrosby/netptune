@@ -20,12 +20,14 @@ import {
   SelectFilterComponent,
   SelectFilterOption,
 } from '@static/components/select-filter/select-filter.component';
-import { IconTileComponent } from '@static/components/icon-tile.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { FlowReportComponent } from '../../components/flow-report.component';
 import { SprintReportComponent } from '../../components/sprint-report.component';
 import { WorkloadReportComponent } from '../../components/workload-report.component';
+import { PanelComponent } from '@static/components/panel.component';
+import { PanelHeaderComponent } from '@static/components/panel-header.component';
+import { PanelBodyComponent } from '@static/components/panel-body.component';
 import {
   defaultReportingRange,
   defaultReportingSprintId,
@@ -38,15 +40,17 @@ const defaultFrom = defaultRange.from;
 @Component({
   selector: 'app-reporting-view',
   imports: [
-    PageContainerComponent,
-    PageHeaderComponent,
-    IconTileComponent,
     DateDropdownButtonComponent,
     FilterSeparatorComponent,
-    SelectFilterComponent,
     FlowReportComponent,
-    WorkloadReportComponent,
+    PageContainerComponent,
+    PageHeaderComponent,
+    PanelBodyComponent,
+    PanelComponent,
+    PanelHeaderComponent,
+    SelectFilterComponent,
     SprintReportComponent,
+    WorkloadReportComponent,
   ],
   template: `
     <app-page-container
@@ -58,29 +62,16 @@ const defaultFrom = defaultRange.from;
         i18n-title="Page title for the reporting views"
         title="Reports" />
 
-      <section
-        class="border-border bg-card sticky top-10 z-12 mb-8 overflow-hidden rounded-lg border shadow-sm">
-        <header class="border-border border-b px-6 py-5">
-          <div class="flex min-w-0 items-center gap-3">
-            <app-icon-tile [icon]="filterIcon" />
+      <section app-panel surface="card" class="sticky top-10 z-12 mb-8">
+        <app-panel-header
+          density="comfortable"
+          [icon]="filterIcon"
+          i18n-heading="Heading of the report filter card"
+          heading="Report filters"
+          i18n-description="Explains what the report filters control"
+          description="Choose the scope, period, and estimation unit used by the reports." />
 
-            <div class="min-w-0">
-              <h2
-                class="font-overpass text-base font-semibold"
-                i18n="Heading of the report filter card">
-                Report filters
-              </h2>
-              <p
-                class="text-muted mt-1 text-sm"
-                i18n="Explains what the report filters control">
-                Choose the scope, period, and estimation unit used by the
-                reports.
-              </p>
-            </div>
-          </div>
-        </header>
-
-        <div class="px-6 py-5">
+        <app-panel-body>
           <div
             class="flex flex-row flex-wrap items-center gap-3"
             i18n-aria-label="Accessible name of the report filter form"
@@ -151,7 +142,7 @@ const defaultFrom = defaultRange.from;
                 (changed)="setSprint($event)" />
             }
           </div>
-        </div>
+        </app-panel-body>
       </section>
 
       <div class="flex flex-col gap-12">

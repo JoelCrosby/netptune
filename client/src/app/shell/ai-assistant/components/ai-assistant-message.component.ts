@@ -17,6 +17,7 @@ import {
   LucideWrench,
 } from '@lucide/angular';
 import { AiAssistantMarkdownComponent } from './ai-assistant-markdown.component';
+import { InlineButtonComponent } from '@static/components/button/inline-button.component';
 import {
   AiAssistantQuestionComponent,
   AiQuestionResponse,
@@ -41,13 +42,14 @@ const MINIMUM_REPORTED_DURATION = 1000;
     '[class.items-end]': 'isUser()',
   },
   imports: [
+    AiAssistantMarkdownComponent,
+    AiAssistantQuestionComponent,
+    InlineButtonComponent,
     LucideBrain,
     LucideListChecks,
     LucidePencil,
     LucideRefreshCw,
     LucideWrench,
-    AiAssistantMarkdownComponent,
-    AiAssistantQuestionComponent,
   ],
   template: `
     @if (thoughtFor(); as duration) {
@@ -101,7 +103,10 @@ const MINIMUM_REPORTED_DURATION = 1000;
       @if (isLast() && !changeSet() && !entry().answer) {
         <button
           type="button"
-          class="text-muted hover:text-foreground flex items-center gap-1 text-xs"
+          app-inline-button
+          color="muted"
+          appearance="lift"
+          class="gap-1"
           (click)="edited.emit()">
           <svg lucidePencil class="h-3 w-3"></svg>
           <span i18n="Button that reopens the last question for rewording">
@@ -136,7 +141,10 @@ const MINIMUM_REPORTED_DURATION = 1000;
       @if (isRetryable()) {
         <button
           type="button"
-          class="text-muted hover:text-foreground mt-1 flex items-center gap-1 text-xs"
+          app-inline-button
+          color="muted"
+          appearance="lift"
+          class="mt-1 gap-1"
           (click)="retried.emit()">
           <svg lucideRefreshCw class="h-3 w-3"></svg>
           @if (entry().failed) {

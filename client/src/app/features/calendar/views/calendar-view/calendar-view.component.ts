@@ -27,6 +27,7 @@ import { todayDate } from '@static/components/timeline/timeline-date-geometry';
 import { CalendarPlanningMonthComponent } from '../../components/calendar-planning-month/calendar-planning-month.component';
 import { CalendarToolbarComponent } from '../../components/calendar-toolbar/calendar-toolbar.component';
 import { calendarResource } from '../../resources/calendar.resource';
+import { PanelComponent } from '@static/components/panel.component';
 import {
   addCalendarMonths,
   calendarMonthRange,
@@ -36,13 +37,14 @@ import {
 @Component({
   selector: 'app-calendar-view',
   imports: [
-    ErrorStateComponent,
-    SkeletonCalendarMonthComponent,
     CalendarPlanningMonthComponent,
     CalendarToolbarComponent,
+    ErrorStateComponent,
     PageBodyComponent,
     PageContainerComponent,
     PageHeaderComponent,
+    PanelComponent,
+    SkeletonCalendarMonthComponent,
     TaskViewFiltersComponent,
   ],
   template: `
@@ -56,8 +58,7 @@ import {
         title="Calendar" />
 
       <app-page-body>
-        <section
-          class="border-border bg-card flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border shadow-sm">
+        <section app-panel surface="card" class="flex min-h-0 flex-1 flex-col">
           <app-calendar-toolbar
             [monthLabel]="range().label"
             [projectId]="projectId()"

@@ -9,12 +9,14 @@ import {
 } from '@static/components/stat-strip/stat-strip.component';
 import { workloadReportResource } from '@core/resources/reporting.resource';
 import { WorkloadTableComponent } from './workload-table.component';
+import { PanelComponent } from '@static/components/panel.component';
 
 @Component({
   selector: 'app-workload-report',
   imports: [
     EmptyStateComponent,
     ErrorStateComponent,
+    PanelComponent,
     SectionHeaderComponent,
     SkeletonComponent,
     StatStripComponent,
@@ -29,14 +31,15 @@ import { WorkloadTableComponent } from './workload-table.component';
         description="Open work by assignee. Multi-assigned tasks appear for every assignee." />
 
       @if (resource.isLoading()) {
-        <div
-          class="border-border bg-card rounded-lg border p-6 shadow-sm"
+        <app-panel
+          surface="card"
+          class="p-6"
           role="status"
           i18n-aria-label="Shown while the workload report loads"
           aria-label="Loading workload">
           <app-skeleton class="h-10 w-full" />
           <app-skeleton class="mt-6 h-32 w-full" />
-        </div>
+        </app-panel>
       } @else if (resource.error()) {
         <app-error-state
           compact
@@ -46,8 +49,7 @@ import { WorkloadTableComponent } from './workload-table.component';
           description="Retry the request to load workload reporting."
           (retry)="resource.reload()" />
       } @else if (resource.value(); as report) {
-        <section
-          class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
+        <section app-panel surface="card">
           <app-stat-strip [items]="stats()" />
         </section>
 

@@ -8,37 +8,31 @@ import { maxUploadPresets } from '@core/util/upload-limits';
 import { LucideUpload } from '@lucide/angular';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
-import { IconTileComponent } from '@static/components/icon-tile.component';
+import { PanelComponent } from '@static/components/panel.component';
+import { PanelHeaderComponent } from '@static/components/panel-header.component';
+import { PanelBodyComponent } from '@static/components/panel-body.component';
 
 @Component({
   selector: 'app-workspace-uploads',
-  imports: [FormSelectComponent, FormSelectOptionComponent, IconTileComponent],
+  imports: [
+    FormSelectComponent,
+    FormSelectOptionComponent,
+    PanelBodyComponent,
+    PanelComponent,
+    PanelHeaderComponent,
+  ],
   host: { class: 'block' },
   template: `
-    <section
-      class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
-      <header class="border-border border-b px-6 py-5">
-        <div class="flex min-w-0 items-center gap-3">
-          <app-icon-tile [icon]="uploadIcon" />
+    <section app-panel surface="card">
+      <app-panel-header
+        density="comfortable"
+        [icon]="uploadIcon"
+        i18n-heading="Section heading for the workspace upload settings"
+        heading="Uploads"
+        i18n-description="Explains what the maximum upload size controls"
+        description="The largest single file anyone in this workspace can attach to a task or embed in a description. Larger files are rejected before they are stored." />
 
-          <div class="min-w-0">
-            <h2
-              class="font-overpass text-base font-semibold"
-              i18n="Section heading for the workspace upload settings">
-              Uploads
-            </h2>
-            <p
-              class="text-muted mt-1 text-sm"
-              i18n="Explains what the maximum upload size controls">
-              The largest single file anyone in this workspace can attach to a
-              task or embed in a description. Larger files are rejected before
-              they are stored.
-            </p>
-          </div>
-        </div>
-      </header>
-
-      <div class="max-w-sm px-6 py-5">
+      <app-panel-body class="max-w-sm">
         <app-form-select
           name="workspace-max-upload"
           i18n-label="Label of the maximum upload size field"
@@ -53,7 +47,7 @@ import { IconTileComponent } from '@static/components/icon-tile.component';
             </app-form-select-option>
           }
         </app-form-select>
-      </div>
+      </app-panel-body>
     </section>
   `,
 })

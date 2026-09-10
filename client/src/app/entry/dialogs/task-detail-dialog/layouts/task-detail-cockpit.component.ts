@@ -15,23 +15,23 @@ import { TaskDetailCommentsService } from '../shared/task-detail-comments.servic
 import { TaskDetailComposerComponent } from '../shared/task-detail-composer.component';
 import { TaskDetailPropertyChipsComponent } from '../shared/task-detail-property-chips.component';
 import { TaskDetailTagRowComponent } from '../shared/task-detail-tag-row.component';
-import {
-  TaskDetailTab,
-  TaskDetailTabsComponent,
-} from '../shared/task-detail-tabs.component';
 import { TaskDetailTimestampsComponent } from '../shared/task-detail-timestamps.component';
 import { TaskDetailService } from '../task-detail.service';
+import {
+  TabGroupComponent,
+  type TabItem,
+} from '@static/components/tab-group/tab-group.component';
 
 @Component({
   selector: 'app-task-detail-cockpit',
   imports: [
+    TabGroupComponent,
     TaskDetailChromeComponent,
     TaskDetailHeaderComponent,
     TaskDetailPropertyChipsComponent,
     TaskDetailTagRowComponent,
     TaskDetailFlagsComponent,
     TaskDetailDescriptionComponent,
-    TaskDetailTabsComponent,
     TaskDetailBoardsComponent,
     TaskDetailRelationsComponent,
     TaskDetailFilesComponent,
@@ -80,9 +80,9 @@ import { TaskDetailService } from '../task-detail.service';
 
           <div class="border-foreground/8 shrink-0 border-t">
             <div class="flex h-[42px] items-center gap-1 px-5">
-              <app-task-detail-tabs
+              <app-tab-group
+                variant="strip"
                 class="gap-1"
-                role="tablist"
                 [tabs]="
                   tabItems(
                     task.placements.length,
@@ -90,7 +90,7 @@ import { TaskDetailService } from '../task-detail.service';
                     filesSection()?.count() ?? null
                   )
                 "
-                [(active)]="activeTab" />
+                [(value)]="activeTab" />
 
               <div class="ml-auto">
                 @if (activeTab() === 'boards' && boards.canAdd()) {
@@ -218,18 +218,14 @@ export class TaskDetailCockpitComponent {
     files: $localize`:Section heading for files attached to a task:Files`,
   };
 
-  tabItems(
-    boards: number,
-    links: number,
-    files: number | null
-  ): TaskDetailTab[] {
-    const tabs: TaskDetailTab[] = [
-      { key: 'boards', label: this.labels.boards, count: boards },
-      { key: 'links', label: this.labels.links, count: links },
+  tabItems(boards: number, links: number, files: number | null): TabItem[] {
+    const tabs: TabItem[] = [
+      { value: 'boards', label: this.labels.boards, count: boards },
+      { value: 'links', label: this.labels.links, count: links },
     ];
 
     if (files !== null) {
-      tabs.push({ key: 'files', label: this.labels.files, count: files });
+      tabs.push({ value: 'files', label: this.labels.files, count: files });
     }
 
     return tabs;

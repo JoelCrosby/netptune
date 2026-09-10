@@ -16,6 +16,7 @@ import { SprintVelocityChartComponent } from './charts/sprint-velocity-chart.com
 import { SprintBurndownTableComponent } from './sprint-burndown-table.component';
 import { SprintVelocityTableComponent } from './sprint-velocity-table.component';
 import { ReportCoverageNoticeComponent } from './report-coverage-notice.component';
+import { PanelComponent } from '@static/components/panel.component';
 import {
   sprintBurndownResource,
   velocityReportResource,
@@ -26,10 +27,11 @@ const recentSprints = 12;
 @Component({
   selector: 'app-sprint-report',
   imports: [
-    ErrorStateComponent,
     ChartCardComponent,
     EmptyStateComponent,
+    ErrorStateComponent,
     PageLoadingComponent,
+    PanelComponent,
     ReportCoverageNoticeComponent,
     SectionHeaderComponent,
     SprintBurndownChartComponent,
@@ -70,8 +72,7 @@ const recentSprints = 12;
           (retry)="burndown.reload()" />
       } @else if (burndown.value(); as report) {
         <app-report-coverage-notice [coverage]="report.coverage" />
-        <section
-          class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
+        <section app-panel surface="card">
           <app-stat-strip [items]="burndownStats(report)" />
         </section>
 

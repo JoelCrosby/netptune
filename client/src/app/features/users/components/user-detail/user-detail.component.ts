@@ -9,13 +9,15 @@ import {
   BadgeComponent,
 } from '@static/components/badge/badge.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
-import { IconTileComponent } from '@static/components/icon-tile.component';
 import { PERMISSIONS } from '@app/core/auth/permissions';
 import { WorkspaceRole, workspaceRoleLabels } from '@core/enums/workspace-role';
 import { UserCommandsService } from '@core/services/user-commands.service';
 import { WorkspaceAppUser } from '@core/models/appuser';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
+import { PanelComponent } from '@static/components/panel.component';
+import { PanelHeaderComponent } from '@static/components/panel-header.component';
+import { PanelBodyComponent } from '@static/components/panel-body.component';
 
 @Component({
   selector: 'app-user-detail',
@@ -23,19 +25,22 @@ import { FormSelectOptionComponent } from '@static/components/form-select/form-s
     AvatarComponent,
     BadgeComponent,
     EmptyStateComponent,
-    IconTileComponent,
-    LucideUserRoundX,
-    PermissionListComponent,
     FormSelectComponent,
     FormSelectOptionComponent,
+    LucideUserRoundX,
+    PanelBodyComponent,
+    PanelComponent,
+    PanelHeaderComponent,
+    PermissionListComponent,
   ],
   template: `
     @if (user(); as user) {
       <div class="flex flex-col gap-6">
-        <section
-          class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
+        <section app-panel surface="card">
           <header
-            class="border-border flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-b px-6 py-5">
+            app-panel-body
+            divider="bottom"
+            class="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
             <div class="flex min-w-0 items-center gap-4">
               <app-avatar
                 [name]="user.displayName"
@@ -56,7 +61,7 @@ import { FormSelectOptionComponent } from '@static/components/form-select/form-s
             </app-badge>
           </header>
 
-          <div class="max-w-sm px-6 py-5">
+          <app-panel-body class="max-w-sm">
             <app-form-select
               i18n-label="Label of the member role field"
               label="Workspace role"
@@ -81,30 +86,17 @@ import { FormSelectOptionComponent } from '@static/components/form-select/form-s
                 </app-form-select-option>
               }
             </app-form-select>
-          </div>
+          </app-panel-body>
         </section>
 
-        <section
-          class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
-          <header class="border-border border-b px-6 py-5">
-            <div class="flex min-w-0 items-center gap-3">
-              <app-icon-tile [icon]="permissionsIcon" />
-
-              <div class="min-w-0">
-                <h2
-                  class="font-overpass text-base font-semibold"
-                  i18n="Heading above a member's permissions">
-                  Permissions
-                </h2>
-                <p
-                  class="text-muted mt-1 text-sm"
-                  i18n="Explains what a member's permissions grant">
-                  What this member can do in the workspace, on top of their
-                  role.
-                </p>
-              </div>
-            </div>
-          </header>
+        <section app-panel surface="card">
+          <app-panel-header
+            density="comfortable"
+            [icon]="permissionsIcon"
+            i18n-heading="Heading above a member's permissions"
+            heading="Permissions"
+            i18n-description="Explains what a member's permissions grant"
+            description="What this member can do in the workspace, on top of their role." />
 
           <app-permission-list [user]="user" />
         </section>

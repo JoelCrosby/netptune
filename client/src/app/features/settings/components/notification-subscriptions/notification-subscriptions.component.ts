@@ -12,8 +12,9 @@ import { NotificationSubscribeComponent } from '@shared/components/notification-
 import { LucideBellPlus, LucideX } from '@lucide/angular';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
-import { IconTileComponent } from '@static/components/icon-tile.component';
 import { SkeletonComponent } from '@static/components/skeleton/skeleton.component';
+import { PanelComponent } from '@static/components/panel.component';
+import { PanelHeaderComponent } from '@static/components/panel-header.component';
 
 interface SubscriptionRow {
   subscription: NotificationSubscription;
@@ -27,36 +28,24 @@ interface SubscriptionRow {
   imports: [
     EmptyStateComponent,
     IconButtonComponent,
-    IconTileComponent,
     LucideBellPlus,
     LucideX,
     NotificationSubscribeComponent,
+    PanelComponent,
+    PanelHeaderComponent,
     RouterLink,
     SkeletonComponent,
   ],
   host: { class: 'block' },
   template: `
-    <section
-      class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
-      <header
-        class="border-border flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-b px-6 py-5">
-        <div class="flex min-w-0 items-center gap-3">
-          <app-icon-tile [icon]="headingIcon" />
-
-          <div class="min-w-0">
-            <h2
-              class="font-overpass text-base font-semibold"
-              i18n="Heading above the list of places the user follows">
-              Places you follow
-            </h2>
-            <p
-              class="text-muted mt-1 text-sm"
-              i18n="Explains what the followed places list contains">
-              Boards, sprints, groups and projects you asked to hear about.
-            </p>
-          </div>
-        </div>
-      </header>
+    <section app-panel surface="card">
+      <app-panel-header
+        density="comfortable"
+        [icon]="headingIcon"
+        i18n-heading="Heading above the list of places the user follows"
+        heading="Places you follow"
+        i18n-description="Explains what the followed places list contains"
+        description="Boards, sprints, groups and projects you asked to hear about." />
 
       @if (loading()) {
         <div

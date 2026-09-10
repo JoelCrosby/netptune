@@ -1,10 +1,16 @@
 import { Component, input, output } from '@angular/core';
 import { LucideSparkles, LucideTriangleAlert } from '@lucide/angular';
 import { AnchoredPopupCardComponent } from '@static/components/anchored-popup/anchored-popup-card.component';
+import { InlineButtonComponent } from '@static/components/button/inline-button.component';
 
 @Component({
   selector: 'app-ai-assistant-reply-popup',
-  imports: [LucideSparkles, LucideTriangleAlert, AnchoredPopupCardComponent],
+  imports: [
+    AnchoredPopupCardComponent,
+    InlineButtonComponent,
+    LucideSparkles,
+    LucideTriangleAlert,
+  ],
   template: `
     <app-anchored-popup-card (dismissed)="dismissed.emit()">
       <span popupIcon class="contents">
@@ -43,7 +49,9 @@ import { AnchoredPopupCardComponent } from '@static/components/anchored-popup/an
 
       <button
         type="button"
-        class="text-primary mt-2 text-sm font-medium hover:underline"
+        app-inline-button
+        appearance="underline"
+        class="mt-2 text-sm font-medium"
         i18n="Button that opens the assistant from the new reply popup"
         (click)="opened.emit()">
         Open chat

@@ -15,7 +15,6 @@ import { ProjectCommandsService } from '@core/services/project-commands.service'
 import { statusResource } from '@core/resources/status.resource';
 import { LucideFolderOpen } from '@lucide/angular';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
-import { IconTileComponent } from '@static/components/icon-tile.component';
 import { ProjectBrandingComponent } from '@projects/components/project-branding/project-branding.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
@@ -23,55 +22,49 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
 import { NotificationSubscribeComponent } from '@shared/components/notification-subscribe/notification-subscribe.component';
 import { NotificationScope } from '@core/models/notification-subscription';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
+import { PanelComponent } from '@static/components/panel.component';
+import { PanelBodyComponent } from '@static/components/panel-body.component';
+import { PanelFooterComponent } from '@static/components/panel-footer.component';
+import { PanelHeaderComponent } from '@static/components/panel-header.component';
 
 @Component({
   selector: 'app-project-detail',
   imports: [
+    FlatButtonComponent,
+    FormField,
     FormInputComponent,
     FormSelectComponent,
     FormSelectOptionComponent,
     FormTextAreaComponent,
-    FlatButtonComponent,
-    IconTileComponent,
-    ProjectBrandingComponent,
     NotificationSubscribeComponent,
-    FormField,
+    PanelBodyComponent,
+    PanelComponent,
+    PanelFooterComponent,
+    PanelHeaderComponent,
+    ProjectBrandingComponent,
   ],
   host: { class: 'block' },
   template: `
-    <form
-      class="border-border bg-card overflow-hidden rounded-lg border shadow-sm"
-      (submit)="updateClicked($event)">
-      <header
-        class="border-border flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-b px-6 py-5">
-        <div class="flex min-w-0 items-center gap-3">
-          <app-icon-tile [icon]="detailsIcon" />
-
-          <div class="min-w-0">
-            <h2
-              class="font-overpass text-base font-semibold"
-              i18n="Section heading for the project detail form">
-              Project details
-            </h2>
-            <p
-              class="text-muted mt-1 text-sm"
-              i18n="Explains what the project detail form controls">
-              How this project is named, identified and where its new tasks
-              start.
-            </p>
-          </div>
+    <form app-panel surface="card" (submit)="updateClicked($event)">
+      <app-panel-header
+        density="comfortable"
+        [icon]="detailsIcon"
+        i18n-heading="Section heading for the project detail form"
+        heading="Project details"
+        i18n-description="Explains what the project detail form controls"
+        description="How this project is named, identified and where its new tasks start.">
+        <div panelHeaderActions>
+          @if (project(); as project) {
+            <app-notification-subscribe
+              class="shrink-0"
+              [scope]="notificationScope.project"
+              [scopeEntityId]="project.id"
+              [scopeName]="project.name" />
+          }
         </div>
+      </app-panel-header>
 
-        @if (project(); as project) {
-          <app-notification-subscribe
-            class="shrink-0"
-            [scope]="notificationScope.project"
-            [scopeEntityId]="project.id"
-            [scopeName]="project.name" />
-        }
-      </header>
-
-      <div class="grid gap-6 px-6 py-5 lg:grid-cols-2 lg:gap-10">
+      <app-panel-body class="grid gap-6 lg:grid-cols-2 lg:gap-10">
         <div class="grid max-w-2xl content-start gap-4">
           <app-form-input
             [formField]="projectForm.name"
@@ -119,16 +112,16 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
         </div>
 
         <app-project-branding [project]="project()" />
-      </div>
+      </app-panel-body>
 
-      <footer class="border-border border-t px-6 py-4">
+      <app-panel-footer>
         <button
           app-flat-button
           type="submit"
           [disabled]="projectForm().disabled()">
           <span i18n="Button that saves the project details">Save Changes</span>
         </button>
-      </footer>
+      </app-panel-footer>
     </form>
   `,
 })

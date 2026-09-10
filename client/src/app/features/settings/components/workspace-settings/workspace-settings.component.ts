@@ -17,45 +17,43 @@ import { WorkspacePublicAccessComponent } from '../workspace-public-access/works
 import { DialogService } from '@core/services/dialog.service';
 import { DeleteWorkspaceDialogComponent } from '../delete-workspace-dialog/delete-workspace-dialog.component';
 import { take } from 'rxjs/operators';
+import { PanelComponent } from '@static/components/panel.component';
+import { PanelBodyComponent } from '@static/components/panel-body.component';
+import { PanelHeaderComponent } from '@static/components/panel-header.component';
 
 @Component({
   selector: 'app-workspace-settings',
   imports: [
     FlatButtonComponent,
-    StrokedButtonComponent,
     IconTileComponent,
+    PanelBodyComponent,
+    PanelComponent,
+    PanelHeaderComponent,
+    StrokedButtonComponent,
     WorkspacePublicAccessComponent,
   ],
   host: { class: 'block' },
   template: `
     <div class="flex flex-col gap-6">
-      <section
-        class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
-        <header class="border-border border-b px-6 py-5">
-          <div class="flex min-w-0 items-center gap-3">
-            <app-icon-tile [icon]="visibilityIcon" />
-
-            <div class="min-w-0">
-              <h2
-                class="font-overpass text-base font-semibold"
-                i18n="Section heading for workspace visibility settings">
-                Visibility and access
-              </h2>
-              <p class="text-muted mt-1 text-sm">
-                @if (workspace()?.isPublic) {
-                  <span i18n="Explains what public workspace visibility means">
-                    Anyone with the link can view whatever is shared below, but
-                    only members can edit it.
-                  </span>
-                } @else {
-                  <span i18n="Explains what private workspace visibility means">
-                    Only members of this workspace can view and edit it.
-                  </span>
-                }
-              </p>
-            </div>
-          </div>
-        </header>
+      <section app-panel surface="card">
+        <app-panel-header
+          density="comfortable"
+          [icon]="visibilityIcon"
+          i18n-heading="Section heading for workspace visibility settings"
+          heading="Visibility and access">
+          <p panelHeading class="text-muted mt-1 text-sm">
+            @if (workspace()?.isPublic) {
+              <span i18n="Explains what public workspace visibility means">
+                Anyone with the link can view whatever is shared below, but only
+                members can edit it.
+              </span>
+            } @else {
+              <span i18n="Explains what private workspace visibility means">
+                Only members of this workspace can view and edit it.
+              </span>
+            }
+          </p>
+        </app-panel-header>
 
         @if (canUpdate()) {
           <div class="border-border border-b px-6 py-4">
@@ -70,15 +68,17 @@ import { take } from 'rxjs/operators';
         }
 
         @if (showPublicAccess()) {
-          <div class="px-6 py-5">
+          <app-panel-body>
             <app-workspace-public-access />
-          </div>
+          </app-panel-body>
         }
       </section>
 
       @if (canLeave()) {
         <section
-          class="border-border bg-card flex flex-wrap items-center justify-between gap-x-4 gap-y-3 rounded-lg border px-6 py-5 shadow-sm">
+          app-panel
+          surface="card"
+          class="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 px-6 py-5">
           <div class="flex min-w-0 items-center gap-3">
             <app-icon-tile [icon]="leaveIcon" />
 
@@ -112,7 +112,9 @@ import { take } from 'rxjs/operators';
 
       @if (canDelete()) {
         <section
-          class="border-warn/40 bg-card flex flex-wrap items-center justify-between gap-x-4 gap-y-3 rounded-lg border px-6 py-5 shadow-sm">
+          app-panel
+          surface="card"
+          class="border-warn/40 flex flex-wrap items-center justify-between gap-x-4 gap-y-3 px-6 py-5">
           <div class="flex min-w-0 items-center gap-3">
             <app-icon-tile [icon]="dangerIcon" class="bg-warn/10 text-warn" />
 

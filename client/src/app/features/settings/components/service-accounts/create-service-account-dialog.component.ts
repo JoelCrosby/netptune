@@ -36,6 +36,7 @@ import {
   permissionLabel,
 } from './service-account-permissions';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
+import { BadgeComponent } from '@static/components/badge/badge.component';
 
 export interface CreateServiceAccountWizardResult {
   account: CreateServiceAccountRequest;
@@ -53,20 +54,21 @@ const defaultPermissions: Permission[] = [
 @Component({
   selector: 'app-create-service-account-dialog',
   imports: [
+    BadgeComponent,
+    CheckboxComponent,
+    DialogActionsDirective,
+    FlatButtonComponent,
     FormField,
     FormInputComponent,
     FormTextAreaComponent,
-    CheckboxComponent,
-    PermissionGridComponent,
-    StepperComponent,
-    StepComponent,
-    DialogActionsDirective,
-    FlatButtonComponent,
-    StrokedButtonComponent,
     LucideChevronLeft,
     LucideChevronRight,
     LucideKeyRound,
     LucideShieldCheck,
+    PermissionGridComponent,
+    StepComponent,
+    StepperComponent,
+    StrokedButtonComponent,
   ],
   template: `
     <form app-dialog-content class="min-w-0">
@@ -283,10 +285,9 @@ const defaultPermissions: Permission[] = [
               </h4>
               <div class="flex max-h-40 flex-wrap gap-2 overflow-y-auto">
                 @for (permission of selectedPermissions(); track permission) {
-                  <span
-                    class="bg-foreground/10 text-foreground rounded px-2 py-1 text-xs">
+                  <app-badge color="neutral" shape="rounded" class="py-1">
                     {{ getPermissionLabel(permission) }}
-                  </span>
+                  </app-badge>
                 }
               </div>
             </div>

@@ -29,23 +29,25 @@ import { EmptyStateComponent } from '@static/components/empty-state/empty-state.
 import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
+import { BadgeComponent } from '@static/components/badge/badge.component';
 
 @Component({
   selector: 'app-projects-view',
   imports: [
-    DatePipe,
-    RouterLink,
-    PageBodyComponent,
-    PageContainerComponent,
-    PageHeaderComponent,
     AvatarComponent,
-    DatatableComponent,
+    BadgeComponent,
     DatatableCellTemplateDirective,
+    DatatableComponent,
     DatatableEmptyDirective,
+    DatePipe,
     EmptyStateComponent,
     FlatButtonComponent,
     LucideFolderOpen,
     LucidePlus,
+    PageBodyComponent,
+    PageContainerComponent,
+    PageHeaderComponent,
+    RouterLink,
   ],
   template: `
     <app-page-container layout="list">
@@ -91,10 +93,12 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
           </ng-template>
 
           <ng-template appDatatableCell="key" let-project>
-            <span
-              class="bg-foreground/5 rounded px-1.5 py-0.5 font-mono text-xs uppercase">
+            <app-badge
+              color="neutral"
+              shape="rounded"
+              class="bg-foreground/5 px-1.5 font-mono uppercase">
               {{ project.key }}
-            </span>
+            </app-badge>
           </ng-template>
 
           <ng-template appDatatableCell="description" let-project>

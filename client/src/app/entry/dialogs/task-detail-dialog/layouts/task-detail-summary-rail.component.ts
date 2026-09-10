@@ -24,6 +24,7 @@ import { TaskDetailStatusSegmentsComponent } from '../shared/task-detail-status-
 import { TaskDetailTagRowComponent } from '../shared/task-detail-tag-row.component';
 import { TaskDetailTimestampsComponent } from '../shared/task-detail-timestamps.component';
 import { TaskDetailService } from '../task-detail.service';
+import { InlineButtonComponent } from '@static/components/button/inline-button.component';
 
 type Section = 'boards' | 'links' | 'files';
 
@@ -43,21 +44,22 @@ const RAIL_FIELDS: TaskDetailField[] = [
   imports: [
     AvatarComponent,
     FromNowPipe,
+    InlineButtonComponent,
     LucideSparkles,
     LucideTrash2,
     TaskDetailAccordionRowComponent,
-    TaskDetailChromeComponent,
-    TaskDetailHeaderComponent,
-    TaskDetailTagRowComponent,
-    TaskDetailFlagsComponent,
-    TaskDetailDescriptionComponent,
     TaskDetailBoardsComponent,
-    TaskDetailRelationsComponent,
-    TaskDetailFilesComponent,
+    TaskDetailChromeComponent,
     TaskDetailCommentsComponent,
     TaskDetailComposerComponent,
+    TaskDetailDescriptionComponent,
     TaskDetailFieldRowsComponent,
+    TaskDetailFilesComponent,
+    TaskDetailFlagsComponent,
+    TaskDetailHeaderComponent,
+    TaskDetailRelationsComponent,
     TaskDetailStatusSegmentsComponent,
+    TaskDetailTagRowComponent,
     TaskDetailTimestampsComponent,
   ],
   providers: [TaskDetailCommentsService],
@@ -109,7 +111,9 @@ const RAIL_FIELDS: TaskDetailField[] = [
                 @if (canUpdate()) {
                   <button
                     type="button"
-                    class="text-primary hover:bg-hover shrink-0 cursor-pointer rounded px-2 py-1 text-xs font-medium transition-colors"
+                    app-inline-button
+                    appearance="soft"
+                    class="shrink-0 font-medium"
                     (click)="relations.openLinkDialog()">
                     <span i18n="Button that links this task to another">
                       Link task
@@ -130,7 +134,9 @@ const RAIL_FIELDS: TaskDetailField[] = [
                   (toggled)="toggle('files')">
                   <button
                     type="button"
-                    class="text-primary hover:bg-hover shrink-0 cursor-pointer rounded px-2 py-1 text-xs font-medium transition-colors"
+                    app-inline-button
+                    appearance="soft"
+                    class="shrink-0 font-medium"
                     (click)="expand('files')">
                     <span i18n="Button that opens the file picker">
                       Choose files
@@ -160,7 +166,8 @@ const RAIL_FIELDS: TaskDetailField[] = [
                 </span>
                 <button
                   type="button"
-                  class="text-primary ml-auto cursor-pointer text-xs font-medium"
+                  app-inline-button
+                  class="ml-auto font-medium"
                   (click)="commentsExpanded.set(!commentsExpanded())">
                   @if (commentsExpanded()) {
                     <span i18n="Collapses the expanded comment list">

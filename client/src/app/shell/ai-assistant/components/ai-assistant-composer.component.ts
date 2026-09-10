@@ -5,16 +5,18 @@ import { AiModelOption } from '@core/models/ai-model';
 import { LucideArrowUp, LucideSquare } from '@lucide/angular';
 import { AiAssistantEffortMenuComponent } from './ai-assistant-effort-menu.component';
 import { AiAssistantModelMenuComponent } from './ai-assistant-model-menu.component';
+import { IconButtonComponent } from '@static/components/button/icon-button.component';
 
 @Component({
   selector: 'app-ai-assistant-composer',
   host: { class: 'block p-3' },
   imports: [
+    AiAssistantEffortMenuComponent,
+    AiAssistantModelMenuComponent,
     FormsModule,
+    IconButtonComponent,
     LucideArrowUp,
     LucideSquare,
-    AiAssistantModelMenuComponent,
-    AiAssistantEffortMenuComponent,
   ],
   template: `
     <div class="mx-auto w-full" [class]="contentWidth()">
@@ -79,7 +81,8 @@ import { AiAssistantModelMenuComponent } from './ai-assistant-model-menu.compone
           } @else {
             <button
               type="button"
-              class="bg-primary text-primary-foreground flex h-9 w-9 items-center justify-center rounded-full transition disabled:opacity-40"
+              app-icon-button
+              class="bg-primary text-primary-foreground hover:bg-primary/88 h-9 w-9 disabled:opacity-40"
               [disabled]="!canSend()"
               i18n-aria-label="
                 Accessible label for the button that sends a message
