@@ -1,5 +1,6 @@
 import { Component, computed, input, model } from '@angular/core';
 import { Status } from '@core/models/status';
+import { LucideListFilter } from '@lucide/angular';
 import {
   emptyQueryBuilderGroup,
   newQueryCondition,
@@ -24,10 +25,13 @@ import { AutomationFlowCardComponent } from './automation-flow-card.component';
   ],
   template: `
     <app-automation-flow-card
+      [icon]="conditionsIcon"
       i18n-keyword="Heading of the conditions part of the rule"
       keyword="IF"
       i18n-heading="Heading above the conditions"
-      heading="Conditions">
+      heading="Conditions"
+      i18n-description="Description of the conditions section"
+      description="Restrict which tasks can continue.">
       <span flowCardActions class="text-foreground/45 text-xs">
         <span i18n="Marks the conditions section as not required"
           >optional</span
@@ -76,6 +80,7 @@ import { AutomationFlowCardComponent } from './automation-flow-card.component';
   `,
 })
 export class AutomationConditionsEditorComponent {
+  readonly conditionsIcon = LucideListFilter;
   readonly statuses = input.required<Status[]>();
   readonly supportsChangeOperators = input(false);
   readonly conditionGroup = model<AutomationConditionGroup | null>(null);

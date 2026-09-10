@@ -1,36 +1,55 @@
 import { Component, input } from '@angular/core';
+import { type LucideIconInput } from '@lucide/angular';
+import { BadgeComponent } from '@static/components/badge/badge.component';
+import { IconTileComponent } from '@static/components/icon-tile.component';
 
 @Component({
   selector: 'app-automation-flow-card',
+  imports: [BadgeComponent, IconTileComponent],
   host: {
     class: 'border-border bg-card block rounded-lg border shadow-sm',
   },
   template: `
-    <div class="flex min-h-11 items-center gap-2.5 px-3.5 pt-2.5 pb-0">
-      <p
-        class="text-primary shrink-0 text-[0.6875rem] font-bold tracking-[0.1em]">
-        {{ keyword() }}
-      </p>
+    <header
+      class="border-border flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b px-4 py-3.5">
+      <div class="flex min-w-0 flex-1 items-center gap-3">
+        <app-icon-tile [icon]="icon()" />
 
-      @if (heading(); as headingText) {
-        <p class="truncate text-[0.9375rem] font-semibold">{{ headingText }}</p>
-      }
+        @if (heading(); as headingText) {
+          <div class="min-w-0">
+            <h3 class="font-overpass truncate text-base font-semibold">
+              {{ headingText }}
+            </h3>
+            @if (description(); as descriptionText) {
+              <p class="text-muted truncate text-sm">{{ descriptionText }}</p>
+            }
+          </div>
+        }
 
-      <div class="flex min-w-0 flex-1 items-center gap-2.5">
-        <ng-content select="[flowCardHeader]" />
+        <div class="flex min-w-0 items-center gap-3 empty:hidden">
+          <ng-content select="[flowCardHeader]" />
+        </div>
       </div>
 
-      <div class="flex shrink-0 items-center gap-1">
+      <div class="flex shrink-0 items-center gap-2.5">
+        <app-badge
+          color="primary"
+          class="text-[0.65rem] font-bold tracking-wider">
+          {{ keyword() }}
+        </app-badge>
+
         <ng-content select="[flowCardActions]" />
       </div>
-    </div>
+    </header>
 
-    <div class="flex min-w-0 flex-col gap-3.5 p-3.5">
+    <div class="flex min-w-0 flex-col gap-3.5 p-4">
       <ng-content />
     </div>
   `,
 })
 export class AutomationFlowCardComponent {
+  readonly icon = input.required<LucideIconInput>();
   readonly keyword = input.required<string>();
   readonly heading = input<string | null>(null);
+  readonly description = input<string | null>(null);
 }

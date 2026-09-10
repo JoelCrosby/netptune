@@ -1,4 +1,5 @@
 import { Component, computed, model } from '@angular/core';
+import { LucideZap } from '@lucide/angular';
 import { cn } from '@static/components/button/button.variants';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormSelectSearchComponent } from '@static/components/form-select-search/form-select-search.component';
@@ -27,10 +28,13 @@ interface DurationCopy {
   ],
   template: `
     <app-automation-flow-card
+      [icon]="triggerIcon"
       i18n-keyword="Heading of the trigger part of the rule"
       keyword="WHEN"
       i18n-heading="Heading above the trigger event"
-      heading="Trigger event">
+      heading="Trigger event"
+      i18n-description="Description of the trigger section"
+      description="Choose what starts this automation.">
       <div class="max-w-105">
         <app-form-select-search
           name="trigger-type"
@@ -122,6 +126,7 @@ interface DurationCopy {
   `,
 })
 export class AutomationTriggerEditorComponent {
+  readonly triggerIcon = LucideZap;
   readonly automationTriggerType = AutomationTriggerType;
   readonly triggerTypes = automationTriggerTypes;
 

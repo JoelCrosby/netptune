@@ -5,7 +5,7 @@ import { RelationType } from '@core/models/relation-type';
 import { Status } from '@core/models/status';
 import { Tag } from '@core/models/tag';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
-import { LucidePlus, LucideTrash2 } from '@lucide/angular';
+import { LucideListOrdered, LucidePlus, LucideTrash2 } from '@lucide/angular';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
@@ -63,7 +63,9 @@ export interface AutomationActionUpdate {
   template: `
     @for (action of actions(); track action.clientId; let index = $index) {
       <app-automation-flow-step [step]="index + 1">
-        <app-automation-flow-card [keyword]="stepKeyword(index)">
+        <app-automation-flow-card
+          [icon]="actionIcon"
+          [keyword]="stepKeyword(index)">
           <div flowCardHeader class="w-full max-w-75 min-w-0">
             <label
               class="sr-only"
@@ -286,6 +288,7 @@ export interface AutomationActionUpdate {
   `,
 })
 export class AutomationActionsEditorComponent {
+  readonly actionIcon = LucideListOrdered;
   readonly addActionIcon = LucidePlus;
   readonly actionLimit = automationActionLimit;
   readonly automationActionType = AutomationActionType;
