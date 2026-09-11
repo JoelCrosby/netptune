@@ -3,12 +3,13 @@ import { Service, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, distinctUntilChanged } from 'rxjs/operators';
 
+// Each value is the last pixel below the Tailwind breakpoint of the same name, so a
+// max-width query here flips at exactly the width the matching `md:`/`lg:` variant does.
 export enum MediaSize {
-  xs = '575.98px',
-  s = '767.98px',
-  m = '991.98px',
-  l = '1199.98px',
-  xl = '1599.98px',
+  sm = '639.98px',
+  md = '767.98px',
+  lg = '1023.98px',
+  xl = '1279.98px',
 }
 
 @Service()

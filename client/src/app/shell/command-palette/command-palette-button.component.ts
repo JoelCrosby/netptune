@@ -9,7 +9,7 @@ import { CommandPaletteService } from './command-palette.service';
   template: `
     <button
       type="button"
-      class="text-muted bg-secondary-background hover:bg-secondary-background-hover hover:text-foreground flex h-8 min-w-64 cursor-pointer items-center gap-2 rounded-md px-3 text-xs transition-colors"
+      class="text-muted bg-secondary-background hover:bg-secondary-background-hover hover:text-foreground flex h-8 w-8 cursor-pointer items-center justify-center gap-2 rounded-md text-xs transition-colors md:w-auto md:min-w-64 md:justify-start md:px-3"
       (click)="commandPalette.open()"
       i18n-aria-label="
         Accessible label for the button that opens the command palette
@@ -17,12 +17,12 @@ import { CommandPaletteService } from './command-palette.service';
       aria-label="Open command palette">
       <svg lucideSearch class="h-3.5 w-3.5"></svg>
       <span
-        class="hidden sm:inline"
+        class="hidden md:inline"
         i18n="Label on the button that opens the command palette">
         Search
       </span>
       <app-keyboard-key
-        class="ml-auto hidden sm:inline-flex"
+        class="ml-auto hidden md:inline-flex"
         i18n="
           Keyboard shortcut hint for the command palette. Translate the modifier
           key to its local name (for example Strg in German); leave the K as-is

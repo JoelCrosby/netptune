@@ -6,40 +6,17 @@ import {
   input,
   output,
 } from '@angular/core';
-import { LayoutService } from '@core/services/layout.service';
 import { HeaderAction } from '@core/types/header-action';
-import { LucideMenu } from '@lucide/angular';
-import { FlatButtonComponent } from '../button/flat-button.component';
 import { PageContainerComponent } from '../page-container/page-container.component';
 import { PageHeaderActionsComponent } from './page-header-actions.component';
 import { PageHeaderTitleComponent } from './page-header-title.component';
 
 @Component({
   selector: 'app-page-header',
-  imports: [
-    LucideMenu,
-    FlatButtonComponent,
-    PageHeaderTitleComponent,
-    PageHeaderActionsComponent,
-  ],
+  imports: [PageHeaderTitleComponent, PageHeaderActionsComponent],
   template: `
     <header [class]="headerClass()">
       <div [class]="titleRowClass()">
-        @if (showSideNavToggle()) {
-          <div>
-            <button
-              app-flat-button
-              i18n-aria-label="
-                Accessible label for the button that opens the sidebar on small
-                screens
-              "
-              aria-label="Open Menu"
-              (click)="onOpenMenu()">
-              <svg lucideMenu></svg>
-            </button>
-          </div>
-        }
-
         <div [class]="titleWrapClass()">
           <app-page-header-title
             [title]="title()"
@@ -88,12 +65,9 @@ export class PageHeaderComponent {
   readonly actionClick = output();
   readonly titleSubmitted = output<string>();
 
-  private readonly layout = inject(LayoutService);
   private readonly container = inject(PageContainerComponent, {
     optional: true,
   });
-
-  readonly showSideNavToggle = this.layout.isMobileView;
 
   private readonly rowWidthClass = computed(() => {
     return this.container?.constrainListContent()
@@ -106,17 +80,17 @@ export class PageHeaderComponent {
       return 'border-border flex shrink-0 flex-col border-b';
     }
 
-    return 'mb-6 flex max-h-34 flex-col pt-[0.4rem] max-[600px]:flex-row max-[600px]:items-center max-[600px]:pt-0 max-[600px]:pb-[1.4rem]';
+    return 'mb-6 flex max-h-34 flex-col pt-[0.4rem] max-md:flex-row max-md:items-center max-md:pt-0 max-md:pb-[1.4rem]';
   });
 
   protected readonly titleRowClass = computed(() => {
     const base = 'flex flex-row items-center justify-between';
 
     if (this.toolbar()) {
-      return `${base} ${this.rowWidthClass()} gap-x-3 gap-y-2 px-8 pt-3.5 pb-2.5 max-[600px]:flex-wrap max-[600px]:px-3 max-[600px]:pt-3 max-[600px]:pb-2`;
+      return `${base} ${this.rowWidthClass()} gap-x-3 gap-y-2 px-8 pt-3.5 pb-2.5 max-md:flex-wrap max-md:px-3 max-md:pt-3 max-md:pb-2`;
     }
 
-    return `${base} max-[600px]:flex-1`;
+    return `${base} max-md:flex-1`;
   });
 
   protected readonly actionsClass = computed(() => {
@@ -128,16 +102,12 @@ export class PageHeaderComponent {
       return 'flex min-w-0 flex-1 flex-col';
     }
 
-    return 'flex flex-col justify-between gap-8 max-[600px]:mt-1 max-[600px]:flex-1';
+    return 'flex flex-col justify-between gap-8 max-md:mt-1 max-md:flex-1';
   });
 
   protected readonly filterRowClass = computed(() => {
     if (!this.toolbar()) return 'hidden';
 
-    return `flex flex-row flex-wrap items-center ${this.rowWidthClass()} gap-2.5 px-8 pb-3 empty:hidden max-[600px]:px-3 max-[600px]:pb-2.5`;
+    return `flex flex-row flex-wrap items-center ${this.rowWidthClass()} gap-2.5 px-8 pb-3 empty:hidden max-md:px-3 max-md:pb-2.5`;
   });
-
-  onOpenMenu() {
-    this.layout.openSideMenu();
-  }
 }

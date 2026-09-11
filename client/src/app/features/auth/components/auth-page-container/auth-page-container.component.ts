@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   template: ` <ng-content /> `,
   host: {
     class:
-      'h-screen    flex flex-col items-center justify-center grid place-items-center',
+      'h-dvh flex flex-col items-center justify-center grid place-items-center',
   },
   styles: [
     `

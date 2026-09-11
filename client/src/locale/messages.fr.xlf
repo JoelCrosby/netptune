@@ -1667,7 +1667,7 @@
     </unit>
     <unit id="2159130950882492111">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:288</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:287</note>
         <note category="location">src/app/core/services/auth-commands.service.ts:196</note>
         <note category="location">src/app/core/services/board-commands.service.ts:65</note>
         <note category="location">src/app/core/services/board-group-commands.service.ts:310</note>
@@ -1923,7 +1923,7 @@
     </unit>
     <unit id="7022070615528435141">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:287</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:286</note>
         <note category="location">src/app/core/services/board-commands.service.ts:64</note>
         <note category="location">src/app/core/services/board-group-commands.service.ts:309</note>
         <note category="location">src/app/core/services/notification-commands.service.ts:74</note>
@@ -2130,7 +2130,7 @@
     </unit>
     <unit id="8640677495548743141">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:286</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:285</note>
         <note category="description">Asks the user to confirm deleting one of their assistant conversations. TITLE is the conversation title</note>
       </notes>
       <segment state="translated">
@@ -3667,6 +3667,16 @@
       <segment state="translated">
         <source> After </source>
         <target> Après </target>
+      </segment>
+    </unit>
+    <unit id="7446913075218839308">
+      <notes>
+        <note category="location">src/app/shell/shell-sidebar-collapse.component.ts:22,27</note>
+        <note category="description">Label on the control that closes the sidebar on small screens</note>
+      </notes>
+      <segment state="translated">
+        <source> Close menu </source>
+        <target> Fermer le menu </target>
       </segment>
     </unit>
     <unit id="3917644028160931566">
@@ -7457,7 +7467,7 @@
     </unit>
     <unit id="3160376611740224455">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:322</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:321</note>
         <note category="description">Seeds the assistant composer with a question about a sprint</note>
       </notes>
       <segment state="translated">
@@ -11008,7 +11018,7 @@
     </unit>
     <unit id="6189233648220583946">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:505</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:504</note>
         <note category="description">Shown when the assistant request fails</note>
       </notes>
       <segment state="translated">
@@ -14156,7 +14166,7 @@
     </unit>
     <unit id="3132998863898047908">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:316</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:315</note>
         <note category="description">Seeds the assistant composer with a question about a task</note>
       </notes>
       <segment state="translated">
@@ -15638,8 +15648,8 @@
     </unit>
     <unit id="3154294923374510663">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:622</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:813</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:621</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:812</note>
         <note category="description">Shown when the assistant reports a failure</note>
       </notes>
       <segment state="translated">
@@ -17616,6 +17626,16 @@
         <target>Élargissez la période pour voir les événements enregistrés.</target>
       </segment>
     </unit>
+    <unit id="2102825898069375693">
+      <notes>
+        <note category="location">src/app/shell/shell.component.ts:204,206</note>
+        <note category="description">Accessible name of the sidebar menu on small screens</note>
+      </notes>
+      <segment state="translated">
+        <source>Menu</source>
+        <target>Menu</target>
+      </segment>
+    </unit>
     <unit id="2105499142972466940">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:122,124</note>
@@ -18478,7 +18498,7 @@
     </unit>
     <unit id="8246436377858718644">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:285</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:284</note>
         <note category="description">Title of the confirmation dialog for deleting an assistant conversation</note>
       </notes>
       <segment state="translated">
@@ -23945,7 +23965,7 @@
     </unit>
     <unit id="6663783128602596673">
       <notes>
-        <note category="location">src/app/shell/shell-navbar.component.ts:47,54</note>
+        <note category="location">src/app/shell/shell-navbar.component.ts:69,76</note>
         <note category="description">Navbar button that takes a signed-out visitor to the login page</note>
       </notes>
       <segment state="translated">
@@ -23956,7 +23976,7 @@
     <unit id="4929778113156900100">
       <notes>
         <note category="location">src/app/features/boards/components/board-pinned-banner/board-pinned-banner.component.ts:156</note>
-        <note category="location">src/app/shell/shell-sidebar-collapse.component.ts:26,30</note>
+        <note category="location">src/app/shell/shell-sidebar-collapse.component.ts:39,44</note>
         <note category="description">Tooltip on the control that collapses the pinned task bar</note>
       </notes>
       <segment state="translated">
@@ -23966,7 +23986,7 @@
     </unit>
     <unit id="1359092845802014498">
       <notes>
-        <note category="location">src/app/shell/shell-sidebar-collapse.component.ts:35</note>
+        <note category="location">src/app/shell/shell-sidebar-collapse.component.ts:50</note>
         <note category="description">Tooltip on the control that expands the collapsed sidebar</note>
       </notes>
       <segment state="translated">
@@ -24727,7 +24747,7 @@
     </unit>
     <unit id="2652512399456369728">
       <notes>
-        <note category="location">src/app/static/components/page-header/page-header.component.ts:36,40</note>
+        <note category="location">src/app/shell/shell-navbar.component.ts:42,45</note>
         <note category="description">Accessible label for the button that opens the sidebar on small screens</note>
       </notes>
       <segment state="translated">

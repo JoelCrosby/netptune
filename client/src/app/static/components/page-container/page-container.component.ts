@@ -110,7 +110,7 @@ export class PageContainerComponent {
     if (!this.stickyFooter()) return '';
 
     return this.isList()
-      ? 'flex h-[calc(100vh-60px)] flex-col'
+      ? 'flex h-[calc(100dvh-60px)] flex-col'
       : 'flex min-h-full flex-col';
   });
 
@@ -118,7 +118,7 @@ export class PageContainerComponent {
     if (this.isList()) {
       const height = this.stickyFooter()
         ? 'min-h-0 flex-1'
-        : 'h-[calc(100vh-60px)]';
+        : 'h-[calc(100dvh-60px)]';
 
       return `relative flex flex-col ${height}`;
     }
@@ -143,7 +143,7 @@ export class PageContainerComponent {
     const classes = ['mx-auto w-full'];
 
     if (this.centerPage() && this.capWidth()) classes.push('max-w-[1360px]');
-    if (this.horizontalPadding()) classes.push('px-8 max-[600px]:px-3');
+    if (this.horizontalPadding()) classes.push('px-8 max-md:px-3');
 
     return classes.join(' ');
   });
@@ -165,9 +165,9 @@ export class PageContainerComponent {
 
     const classes = ['flex flex-1 flex-col'];
 
-    if (this.horizontalPadding()) classes.push('px-8 max-[600px]:px-3');
+    if (this.horizontalPadding()) classes.push('px-8 max-md:px-3');
     if (this.verticalPadding()) classes.push('py-16');
-    if (this.fullHeight()) classes.push('h-[calc(100vh-76px)]');
+    if (this.fullHeight()) classes.push('h-[calc(100dvh-76px)]');
 
     return classes.join(' ');
   });

@@ -16,17 +16,22 @@ export class LayoutService {
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
 
-  readonly isMobileView = toSignal(this.media.maxWidth(MediaSize.xs), {
+  readonly isMobileView = toSignal(this.media.maxWidth(MediaSize.md), {
     initialValue: false,
   });
 
-  private readonly open = linkedSignal(() => !this.isMobileView());
+  readonly isCompactView = toSignal(this.media.maxWidth(MediaSize.lg), {
+    initialValue: false,
+  });
+
+  private readonly open = linkedSignal<boolean, boolean>({
+    source: this.isMobileView,
+    computation: () => false,
+  });
+
   private readonly pageScroll = signal(false);
 
   readonly sideMenuOpen = this.open.asReadonly();
-
-  // A page that scrolls inside its own body leaves the shell's main element at a fixed
-  // height, so the scrollbar gutter reserved there would never be used.
   readonly pageOwnsScroll = this.pageScroll.asReadonly();
 
   constructor() {
@@ -41,6 +46,10 @@ export class LayoutService {
     this.open.set(true);
   }
 
+  closeSideMenu() {
+    this.open.set(false);
+  }
+
   toggleSideMenu() {
     this.open.update((open) => !open);
   }
@@ -51,10 +60,6 @@ export class LayoutService {
         filter((event) => event instanceof NavigationEnd),
         takeUntilDestroyed(this.destroyRef)
       )
-      .subscribe(() => {
-        if (!this.isMobileView()) return;
-
-        this.open.set(false);
-      });
+      .subscribe(() => this.open.set(false));
   }
 }

@@ -37,7 +37,7 @@ export class PageBodyComponent {
   // constrains its title row the same way.
   protected readonly contentClass = computed(() => {
     const classes = [
-      'flex min-h-0 flex-1 flex-col px-8 pt-4 max-[600px]:px-3 max-[600px]:pt-3',
+      'flex min-h-0 flex-1 flex-col px-8 pt-4 max-md:px-3 max-md:pt-3',
     ];
 
     if (this.container?.constrainListContent()) {

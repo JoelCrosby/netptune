@@ -8,6 +8,7 @@ import {
 } from '@core/models/ai-panel-width';
 import { AiModelCatalogService } from '@core/services/ai-model-catalog.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
+import { LayoutService } from '@core/services/layout.service';
 import { SessionService } from '@core/services/session.service';
 import { WorkspaceService } from '@core/services/workspace.service';
 
@@ -22,6 +23,7 @@ export class AiPanelService {
   private readonly workspace = inject(WorkspaceService);
   private readonly workspaceId = inject(CurrentWorkspaceService).slug;
   private readonly catalog = inject(AiModelCatalogService);
+  private readonly layout = inject(LayoutService);
 
   readonly isAvailable = inject(SessionService).isAssistantAvailable;
   readonly isOpen = signal(false);
@@ -38,12 +40,20 @@ export class AiPanelService {
     return this.isOpen() && this.isAvailable();
   });
 
+  // A phone has no room for a docked column, so docked mode shows as the overlay there
+  // without changing the stored preference, and docks again on a wider screen.
+  private readonly displayMode = computed<AiDisplayMode>(() => {
+    const isNarrowDock = this.mode() === 'docked' && this.layout.isMobileView();
+
+    return isNarrowDock ? 'overlay' : this.mode();
+  });
+
   readonly isOverlayOpen = computed(() => {
-    return this.isVisible() && this.mode() === 'overlay';
+    return this.isVisible() && this.displayMode() === 'overlay';
   });
 
   readonly isDocked = computed(() => {
-    return this.isVisible() && this.mode() === 'docked';
+    return this.isVisible() && this.displayMode() === 'docked';
   });
 
   private readonly transcriptViewers = signal(0);
