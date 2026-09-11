@@ -16,7 +16,7 @@ import { queryParams, resetPageOnFilterChange } from './report-table.util';
   template: `
     <app-datatable
       containerClass="border-0 border-t rounded-none shadow-none"
-      tableClass="min-w-140"
+      tableClass="md:min-w-140"
       i18n-errorMessage="Shown when the cycle-time breakdown fails to load"
       errorMessage="Cycle-time data could not be loaded."
       i18n-itemLabel="Plural noun for cycle-time weeks, used in the row summary"
@@ -42,6 +42,7 @@ export class FlowCycleTimeTableComponent {
       {
         id: 'weekStarting',
         header: $localize`:Column heading for the week start date:Week starting`,
+        visibleOnMobile: true,
         accessor: 'weekStarting',
         sortable: true,
         cellClass: 'tabular-nums',
@@ -49,6 +50,7 @@ export class FlowCycleTimeTableComponent {
       {
         id: 'median',
         header: $localize`:Column heading for the median cycle time:Median`,
+        visibleOnMobile: true,
         accessor: (bucket) => hoursLabel(bucket.medianCycleTimeHours),
         sortable: true,
         align: 'end',
@@ -58,6 +60,7 @@ export class FlowCycleTimeTableComponent {
       {
         id: 'p85',
         header: $localize`:Column heading for the 85th percentile cycle time:85th percentile`,
+        visibleOnMobile: true,
         accessor: (bucket) => hoursLabel(bucket.p85CycleTimeHours),
         sortable: true,
         align: 'end',
@@ -67,6 +70,7 @@ export class FlowCycleTimeTableComponent {
       {
         id: 'samples',
         header: $localize`:Column heading for the number of samples:Samples`,
+        visibleOnMobile: true,
         accessor: 'sampleSize',
         sortable: true,
         align: 'end',

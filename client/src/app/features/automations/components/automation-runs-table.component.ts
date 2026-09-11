@@ -110,7 +110,7 @@ import { LucideCircleDashed, LucideZap } from '@lucide/angular';
       i18n-itemLabel="Plural noun for automation runs, used by the paginator"
       itemLabel="runs"
       containerClass="overflow-x-auto"
-      tableClass="min-w-[900px]"
+      tableClass="md:min-w-[900px]"
       [data]="data()"
       [sort]="sort()"
       (sortChange)="sort.set($event)">
@@ -257,16 +257,39 @@ export class AutomationRunsTableComponent {
   readonly data = computed<DatatableDataSource<AutomationRun>>(() => ({
     key: 'automation-runs',
     columns: [
-      { id: 'createdAt', header: 'Time', sortable: true, widthClass: 'w-44' },
+      {
+        id: 'createdAt',
+        header: 'Time',
+        visibleOnMobile: true,
+        sortable: true,
+        widthClass: 'w-44',
+      },
       {
         id: 'triggerType',
         header: 'Trigger',
+        visibleOnMobile: false,
         sortable: true,
         widthClass: 'w-48',
       },
-      { id: 'target', header: 'Target', widthClass: 'w-40' },
-      { id: 'status', header: 'Status', sortable: true, widthClass: 'w-32' },
-      { id: 'result', header: 'Result', cellClass: 'max-w-96' },
+      {
+        id: 'target',
+        header: 'Target',
+        visibleOnMobile: false,
+        widthClass: 'w-40',
+      },
+      {
+        id: 'status',
+        header: 'Status',
+        visibleOnMobile: true,
+        sortable: true,
+        widthClass: 'w-32',
+      },
+      {
+        id: 'result',
+        header: 'Result',
+        visibleOnMobile: false,
+        cellClass: 'max-w-96',
+      },
     ],
     resource: {
       url: `api/automations/${this.ruleId()}/runs`,

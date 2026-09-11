@@ -16,7 +16,7 @@ import { resetPageOnFilterChange } from './report-table.util';
   template: `
     <app-datatable
       containerClass="border-0 border-t rounded-none shadow-none"
-      tableClass="min-w-140"
+      tableClass="md:min-w-140"
       i18n-errorMessage="Shown when the burndown breakdown fails to load"
       errorMessage="Burndown data could not be loaded."
       i18n-itemLabel="Plural noun for burndown days, used in the row summary"
@@ -52,6 +52,7 @@ export class SprintBurndownTableComponent {
       {
         id: 'date',
         header: $localize`:Column heading for the date:Date`,
+        visibleOnMobile: true,
         accessor: 'date',
         sortable: true,
         cellClass: 'tabular-nums',
@@ -59,6 +60,7 @@ export class SprintBurndownTableComponent {
       {
         id: 'remaining',
         header: $localize`:Column heading for remaining scope:Remaining`,
+        visibleOnMobile: true,
         accessor: (point) => formatReportValue(point.remaining),
         sortable: true,
         align: 'end',
@@ -68,6 +70,7 @@ export class SprintBurndownTableComponent {
       {
         id: 'totalScope',
         header: $localize`:Column heading for total scope:Total scope`,
+        visibleOnMobile: true,
         accessor: (point) => formatReportValue(point.totalScope),
         sortable: true,
         align: 'end',
@@ -77,6 +80,7 @@ export class SprintBurndownTableComponent {
       {
         id: 'ideal',
         header: $localize`:Column heading for the ideal burndown value:Ideal`,
+        visibleOnMobile: true,
         accessor: (point) => formatReportValue(point.ideal),
         sortable: true,
         align: 'end',

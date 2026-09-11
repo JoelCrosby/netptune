@@ -68,7 +68,7 @@
     </unit>
     <unit id="7702646444963497962">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:528</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:539</note>
         <note category="description">Column heading for who ran an import</note>
       </notes>
       <segment>
@@ -77,7 +77,7 @@
     </unit>
     <unit id="7713123645366708778">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:662</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:676</note>
         <note category="description">An import whose file has been read</note>
       </notes>
       <segment>
@@ -422,7 +422,7 @@
     </unit>
     <unit id="5321164057411888974">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:674</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:688</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:579</note>
         <note category="description">An import that has been rolled back</note>
       </notes>
@@ -551,7 +551,7 @@
     </unit>
     <unit id="843548054527451651">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:126</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:130</note>
         <note category="location">src/app/features/data-transfer/components/import-steps/import-source-step.component.ts:142</note>
         <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:96,97</note>
         <note category="description">Counts the columns an export will contain</note>
@@ -1356,7 +1356,7 @@
     </unit>
     <unit id="7346727647887816962">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:782</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:796</note>
         <note category="description">Warns that deleting an export also removes its file</note>
       </notes>
       <segment>
@@ -1529,8 +1529,8 @@
         <note category="location">src/app/features/boards/components/move-tasks-dialog/move-tasks-dialog.component.ts:76,79</note>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:102,105</note>
         <note category="location">src/app/features/calendar/dialogs/calendar-move-task-dialog.component.ts:61,64</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:784</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:807</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:798</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:821</note>
         <note category="location">src/app/features/profile/components/select-profile-image-dialog/select-profile-image-dialog.component.ts:54,56</note>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:354</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:203,206</note>
@@ -1542,19 +1542,19 @@
         <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:93,96</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:162,165</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:269</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:492</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:495</note>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:543</note>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:587</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:465</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:367</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:469</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:371</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:86,89</note>
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:69,72</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:62,65</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:164,167</note>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:326</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:255</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:274</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:44,46</note>
-        <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:85,87</note>
+        <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:97,99</note>
         <note category="location">src/app/static/components/editor/editor-bubble-menu.component.ts:205</note>
         <note category="description">Dismisses a dialog without acting</note>
       </notes>
@@ -1748,21 +1748,21 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:141</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:318</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:282</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:783</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:806</note>
-        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:174</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:797</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:820</note>
+        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:194</note>
         <note category="location">src/app/features/project-tasks/components/task-list/task-list-selection-actions.component.ts:32,34</note>
         <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:175</note>
-        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:215</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:491</note>
+        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:249</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:494</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:249</note>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:542</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:464</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:468</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:231</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:366</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:370</note>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:325</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:207</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:254</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:226</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:273</note>
         <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:155</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:33</note>
         <note category="description">Confirms a destructive action</note>
@@ -2280,7 +2280,7 @@
       <notes>
         <note category="location">src/app/core/services/tag-commands.service.ts:77</note>
         <note category="location">src/app/core/services/tag-commands.service.ts:80</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:364</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:368</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment>
@@ -2299,7 +2299,7 @@
     <unit id="6770769801335635194">
       <notes>
         <note category="location">src/app/core/services/task-archive.service.ts:39</note>
-        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:142</note>
+        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:144</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment>
@@ -2745,8 +2745,8 @@
     </unit>
     <unit id="2956098160626271284">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:616</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:668</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:630</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:682</note>
         <note category="description">An export that is being produced</note>
       </notes>
       <segment>
@@ -3152,7 +3152,7 @@
     </unit>
     <unit id="4043049091728011235">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:622</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:636</note>
         <note category="description">An export a member stopped</note>
       </notes>
       <segment>
@@ -3250,7 +3250,7 @@
     </unit>
     <unit id="8117668572148231876">
       <notes>
-        <note category="location">src/app/core/tasks/task-columns.ts:79</note>
+        <note category="location">src/app/core/tasks/task-columns.ts:81</note>
         <note category="location">src/app/core/util/ai-client-context.ts:27</note>
         <note category="location">src/app/core/util/pin-scope.ts:80</note>
         <note category="location">src/app/entry/components/setup-creation-summary/setup-creation-summary.component.ts:59</note>
@@ -3263,8 +3263,8 @@
         <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:26,29</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:82</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:158</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:382</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:304</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:384</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:306</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:46</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:18</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:39</note>
@@ -3330,7 +3330,7 @@
     </unit>
     <unit id="3917644028160931566">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:122</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:126</note>
         <note category="description">Counts the records an export will contain</note>
       </notes>
       <segment>
@@ -3438,7 +3438,7 @@
     </unit>
     <unit id="5611592591303869712">
       <notes>
-        <note category="location">src/app/core/tasks/task-columns.ts:100</note>
+        <note category="location">src/app/core/tasks/task-columns.ts:104</note>
         <note category="location">src/app/entry/dialogs/board-group-dialog/board-group-dialog.component.ts:52</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:34</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/pickers/task-status-segments.component.ts:24,28</note>
@@ -3526,7 +3526,7 @@
         <note category="location">src/app/entry/dialogs/board-group-dialog/board-group-dialog.component.ts:91</note>
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:77,81</note>
         <note category="location">src/app/static/components/comments-list/comments-list.component.ts:161,163</note>
-        <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:88,92</note>
+        <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:100,104</note>
         <note category="description">Confirms and stores an edit</note>
       </notes>
       <segment>
@@ -3581,7 +3581,7 @@
     </unit>
     <unit id="2734022681675842051">
       <notes>
-        <note category="location">src/app/core/tasks/task-columns.ts:116</note>
+        <note category="location">src/app/core/tasks/task-columns.ts:121</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:39</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-field-rows.component.ts:238</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:283</note>
@@ -3608,7 +3608,7 @@
     </unit>
     <unit id="8508552938611649591">
       <notes>
-        <note category="location">src/app/core/tasks/task-columns.ts:88</note>
+        <note category="location">src/app/core/tasks/task-columns.ts:91</note>
         <note category="location">src/app/core/util/ai-client-context.ts:29</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:74</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-field-rows.component.ts:243</note>
@@ -3679,14 +3679,14 @@
     </unit>
     <unit id="4580853214337140621">
       <notes>
-        <note category="location">src/app/core/tasks/task-columns.ts:128</note>
+        <note category="location">src/app/core/tasks/task-columns.ts:134</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:64</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:106,108</note>
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:166,168</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:69</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:117</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:389</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:311</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:392</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:314</note>
         <note category="description">Column heading for the task assignees</note>
       </notes>
       <segment>
@@ -3802,9 +3802,9 @@
         <note category="location">src/app/entry/dialogs/create-relation-type-dialog/create-relation-type-dialog.component.ts:56,57</note>
         <note category="location">src/app/entry/dialogs/create-status-dialog/create-status-dialog.component.ts:68,69</note>
         <note category="location">src/app/entry/dialogs/edit-status-dialog/edit-status-dialog.component.ts:69,70</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:278</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:281</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:155,156</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:254</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:256</note>
         <note category="description">Label of the relation category field</note>
       </notes>
       <segment>
@@ -3864,10 +3864,10 @@
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:144</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:148</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:374</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:266</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:267</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:139</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:346</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:248</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:249</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:107</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:271</note>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:159</note>
@@ -4014,7 +4014,7 @@
     <unit id="3836000317327860441">
       <notes>
         <note category="location">src/app/core/util/ai-client-context.ts:17</note>
-        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:79,82</note>
+        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:79,81</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:124</note>
         <note category="description">Names the screen the user is on</note>
       </notes>
@@ -4064,7 +4064,7 @@
       <notes>
         <note category="location">src/app/features/dashboard/components/charts/cycle-time-chart.component.ts:52</note>
         <note category="location">src/app/features/dashboard/components/dashboard-cycle-time-card.component.ts:94</note>
-        <note category="location">src/app/features/reporting/components/flow-cycle-time-table.component.ts:60</note>
+        <note category="location">src/app/features/reporting/components/flow-cycle-time-table.component.ts:62</note>
         <note category="location">src/app/features/reporting/components/flow-report.component.ts:196</note>
         <note category="description">Series name for the 85th percentile cycle time</note>
       </notes>
@@ -4276,7 +4276,7 @@
     </unit>
     <unit id="6006142956490189252">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:781</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:795</note>
         <note category="description">Title of the dialog that confirms deleting an export</note>
       </notes>
       <segment>
@@ -4626,7 +4626,7 @@
     <unit id="3034679798924651226">
       <notes>
         <note category="location">src/app/features/automations/components/automation-relation-editor.component.ts:48,50</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:401</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:402</note>
         <note category="description">Label of the relation field</note>
       </notes>
       <segment>
@@ -4804,7 +4804,7 @@
     </unit>
     <unit id="2578732368187466916">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:153</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:157</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:133,137</note>
         <note category="description">Column heading for what a conversation cost</note>
       </notes>
@@ -4970,7 +4970,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:124,127</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:60,62</note>
-        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:244</note>
+        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:278</note>
         <note category="description">Button that creates the project</note>
       </notes>
       <segment>
@@ -4980,7 +4980,7 @@
     <unit id="4360239040231802726">
       <notes>
         <note category="location">src/app/shell/command-palette/command-palette.component.ts:142,145</note>
-        <note category="location">src/app/static/components/datatable/datatable.component.ts:115,118</note>
+        <note category="location">src/app/static/components/datatable/datatable.component.ts:116,119</note>
         <note category="description">Heading above runnable commands in the command palette</note>
       </notes>
       <segment>
@@ -5008,7 +5008,7 @@
     </unit>
     <unit id="4315644716788167441">
       <notes>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:365</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:369</note>
         <note category="description">Asks the user to confirm deleting a tag. NAME is the tag name, COUNT is how many tasks carry it</note>
       </notes>
       <segment>
@@ -5249,7 +5249,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:60,63</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:82,83</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:285</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:289</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:341</note>
         <note category="description">Section heading for links between tasks</note>
       </notes>
@@ -5607,7 +5607,7 @@
         <note category="location">src/app/features/audit/components/audit-filters/audit-date-range.component.ts:36</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:103</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:52</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:406</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:408</note>
         <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:109,110</note>
         <note category="description">Label of the end-date filter</note>
       </notes>
@@ -6057,7 +6057,7 @@
     <unit id="8650499415827640724">
       <notes>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:183</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:516</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:525</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment>
@@ -6871,7 +6871,7 @@
     </unit>
     <unit id="6452372740127749380">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:135</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:137</note>
         <note category="description">Column heading for the number of messages in a conversation</note>
       </notes>
       <segment>
@@ -7038,7 +7038,7 @@
     </unit>
     <unit id="8562778474158270448">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:676</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:690</note>
         <note category="description">An import nobody finished configuring</note>
       </notes>
       <segment>
@@ -7160,7 +7160,7 @@
     </unit>
     <unit id="7577628836870551599">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:30,33</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:33,36</note>
         <note category="description">Explains the export review step</note>
       </notes>
       <segment>
@@ -7900,7 +7900,7 @@
     <unit id="4754052462239552170">
       <notes>
         <note category="location">src/app/features/automations/components/automation-detail-heading.component.ts:50,52</note>
-        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:351</note>
+        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:369</note>
         <note category="description">Tooltip on the button that deletes an automation rule</note>
       </notes>
       <segment>
@@ -7909,7 +7909,7 @@
     </unit>
     <unit id="4754993936947658096">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:666</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:680</note>
         <note category="description">An import that has been dry-run</note>
       </notes>
       <segment>
@@ -8224,7 +8224,7 @@
     </unit>
     <unit id="6423210280939340786">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:618</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:632</note>
         <note category="description">An export that finished and can be downloaded</note>
       </notes>
       <segment>
@@ -8629,7 +8629,7 @@
     </unit>
     <unit id="1525443335158357208">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:799</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:813</note>
         <note category="description">Warns that deleting a committed import gives up undo</note>
       </notes>
       <segment>
@@ -8926,7 +8926,7 @@
     </unit>
     <unit id="1083429400694527107">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:336</note>
+        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:354</note>
         <note category="description">Row action that edits an automation</note>
       </notes>
       <segment>
@@ -8953,7 +8953,7 @@
     </unit>
     <unit id="1859763796404778382">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:341</note>
+        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:359</note>
         <note category="description">Row action that toggles an automation on or off</note>
       </notes>
       <segment>
@@ -8962,7 +8962,7 @@
     </unit>
     <unit id="3021733521983397827">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:346</note>
+        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:364</note>
         <note category="description">Row action that duplicates an automation</note>
       </notes>
       <segment>
@@ -8991,7 +8991,7 @@
     </unit>
     <unit id="7343458434870773763">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:505</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:512</note>
         <note category="description">Column heading for the state of an import</note>
       </notes>
       <segment>
@@ -9009,7 +9009,7 @@
     </unit>
     <unit id="4548722462586549001">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:144</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:147</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:131,132</note>
         <note category="description">Column heading for the tokens a conversation used</note>
       </notes>
@@ -9617,7 +9617,7 @@
     </unit>
     <unit id="6297950127540572260">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:127</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:128</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:127,128</note>
         <note category="description">Column heading for the member who held a conversation</note>
       </notes>
@@ -10174,8 +10174,8 @@
     <unit id="5727110993298059160">
       <notes>
         <note category="location">src/app/features/data-transfer/components/import-steps/import-source-step.component.ts:138</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:466</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:522</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:469</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:532</note>
         <note category="description">Counts the rows found in an import file</note>
       </notes>
       <segment>
@@ -10539,6 +10539,15 @@
       </notes>
       <segment>
         <source>Flag task</source>
+      </segment>
+    </unit>
+    <unit id="5230896821418530802">
+      <notes>
+        <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:88,95</note>
+        <note category="description">Marks a column in the table column customisation dialog that is hidden on small screens</note>
+      </notes>
+      <segment>
+        <source> Desktop only </source>
       </segment>
     </unit>
     <unit id="5233717248810666120">
@@ -11166,8 +11175,8 @@
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:173</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:183</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:620</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:672</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:634</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:686</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:583</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:620</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-list.component.ts:248</note>
@@ -11790,8 +11799,8 @@
     </unit>
     <unit id="2825093609304249365">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:534</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:660</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:546</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:674</note>
         <note category="description">Column heading for when an import was uploaded</note>
       </notes>
       <segment>
@@ -11900,7 +11909,7 @@
     </unit>
     <unit id="5846098745343293658">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:804</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:818</note>
         <note category="description">Title of the dialog that confirms deleting an import</note>
       </notes>
       <segment>
@@ -12183,7 +12192,7 @@
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:109,112</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:243</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:225</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:202</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:221</note>
         <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:95,98</note>
         <note category="description">Button that edits the automation</note>
       </notes>
@@ -12274,7 +12283,7 @@
     </unit>
     <unit id="253720644207702428">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:145,147</note>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:145,146</note>
         <note category="description">Shown when a saved view matches no tasks</note>
       </notes>
       <segment>
@@ -12292,7 +12301,7 @@
     </unit>
     <unit id="8455204924704616723">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:511</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:519</note>
         <note category="description">Column heading for the file an import came from</note>
       </notes>
       <segment>
@@ -12545,7 +12554,7 @@
     </unit>
     <unit id="383181061702648553">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:614</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:628</note>
         <note category="description">An export that has not started yet</note>
       </notes>
       <segment>
@@ -13037,10 +13046,10 @@
         <note category="location">src/app/features/boards/components/boards-grid/boards-grid-card.component.ts:82</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:33</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:47</note>
-        <note category="location">src/app/features/reporting/components/workload-table.component.ts:48</note>
+        <note category="location">src/app/features/reporting/components/workload-table.component.ts:49</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:116,117</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:261</note>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:165</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:264</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:166</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:83</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:151</note>
         <note category="location">src/app/workspace.routes.ts:36</note>
@@ -13433,7 +13442,7 @@
     </unit>
     <unit id="7239750919884229270">
       <notes>
-        <note category="location">src/app/core/tasks/task-columns.ts:163</note>
+        <note category="location">src/app/core/tasks/task-columns.ts:172</note>
         <note category="location">src/app/features/boards/util/board-task-sort.ts:33</note>
         <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:102</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:597</note>
@@ -13544,7 +13553,7 @@
     </unit>
     <unit id="7856854208950034768">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:489</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:492</note>
         <note category="description">Title of the confirmation dialog for deleting a relation type</note>
       </notes>
       <segment>
@@ -14144,7 +14153,7 @@
     </unit>
     <unit id="2137697922901944556">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:59,63</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:62,66</note>
         <note category="description">Shown while an export preview loads</note>
       </notes>
       <segment>
@@ -14219,7 +14228,7 @@
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:193</note>
         <note category="location">src/app/features/dashboard/components/sprint-burndown-mini-chart.component.ts:42</note>
-        <note category="location">src/app/features/reporting/components/sprint-burndown-table.component.ts:61</note>
+        <note category="location">src/app/features/reporting/components/sprint-burndown-table.component.ts:62</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment>
@@ -14233,9 +14242,9 @@
         <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:213</note>
         <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:86</note>
         <note category="location">src/app/features/reporting/components/flow-report.component.ts:188</note>
-        <note category="location">src/app/features/reporting/components/flow-throughput-table.component.ts:62</note>
+        <note category="location">src/app/features/reporting/components/flow-throughput-table.component.ts:63</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:246</note>
-        <note category="location">src/app/features/reporting/components/sprint-velocity-table.component.ts:69</note>
+        <note category="location">src/app/features/reporting/components/sprint-velocity-table.component.ts:71</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:212</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:166</note>
         <note category="description">Series name for tasks finished each day</note>
@@ -14514,7 +14523,7 @@
     </unit>
     <unit id="1616968388083998795">
       <notes>
-        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:164</note>
+        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:184</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment>
@@ -14523,7 +14532,7 @@
     </unit>
     <unit id="7593555694782789615">
       <notes>
-        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:169</note>
+        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:189</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-applied-changes.component.ts:58,59</note>
         <note category="description">Label shown in the interface</note>
       </notes>
@@ -14862,7 +14871,7 @@
     </unit>
     <unit id="2194591546577080727">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:664</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:678</note>
         <note category="description">An import whose columns have been mapped</note>
       </notes>
       <segment>
@@ -14925,7 +14934,7 @@
     </unit>
     <unit id="2511878039894643291">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:705</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:719</note>
         <note category="description">Summary of how many rows an import created, updated and skipped</note>
       </notes>
       <segment>
@@ -15157,7 +15166,7 @@
     </unit>
     <unit id="429530728708175872">
       <notes>
-        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:209</note>
+        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:243</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment>
@@ -15501,7 +15510,7 @@
     </unit>
     <unit id="454995570276627183">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-cycle-time-table.component.ts:69</note>
+        <note category="location">src/app/features/reporting/components/flow-cycle-time-table.component.ts:72</note>
         <note category="description">Column heading for the number of samples</note>
       </notes>
       <segment>
@@ -15746,9 +15755,9 @@
     <unit id="2873196070623992437">
       <notes>
         <note category="location">src/app/features/dashboard/components/charts/velocity-chart.component.ts:40</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:670</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:684</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:234</note>
-        <note category="location">src/app/features/reporting/components/sprint-velocity-table.component.ts:60</note>
+        <note category="location">src/app/features/reporting/components/sprint-velocity-table.component.ts:61</note>
         <note category="description">Series name for work a sprint took on</note>
       </notes>
       <segment>
@@ -15783,7 +15792,7 @@
     </unit>
     <unit id="7816987675461347822">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-burndown-table.component.ts:70</note>
+        <note category="location">src/app/features/reporting/components/sprint-burndown-table.component.ts:72</note>
         <note category="description">Column heading for total scope</note>
       </notes>
       <segment>
@@ -15967,7 +15976,7 @@
     </unit>
     <unit id="6892724978675738097">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-velocity-table.component.ts:87</note>
+        <note category="location">src/app/features/reporting/components/sprint-velocity-table.component.ts:91</note>
         <note category="description">Column heading for tasks estimated in another unit</note>
       </notes>
       <segment>
@@ -16021,7 +16030,7 @@
     </unit>
     <unit id="2768015041703766826">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:800</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:814</note>
         <note category="description">Warns that deleting an import also removes its file</note>
       </notes>
       <segment>
@@ -16105,7 +16114,7 @@
     </unit>
     <unit id="6836002360916972371">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-velocity-table.component.ts:78</note>
+        <note category="location">src/app/features/reporting/components/sprint-velocity-table.component.ts:81</note>
         <note category="location">src/app/features/reporting/components/workload-report.component.ts:95</note>
         <note category="description">Column heading for tasks without an estimate</note>
       </notes>
@@ -16160,7 +16169,7 @@
     </unit>
     <unit id="6054889078801449309">
       <notes>
-        <note category="location">src/app/features/reporting/components/workload-table.component.ts:57</note>
+        <note category="location">src/app/features/reporting/components/workload-table.component.ts:59</note>
         <note category="description">Column heading for the chosen estimation unit</note>
       </notes>
       <segment>
@@ -16466,8 +16475,8 @@
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:28</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:34</note>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:130</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:460</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:134</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:462</note>
         <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:97,98</note>
         <note category="description">Heading of the export format step</note>
       </notes>
@@ -16572,11 +16581,11 @@
     </unit>
     <unit id="4578192247039196794">
       <notes>
-        <note category="location">src/app/core/tasks/task-columns.ts:67</note>
+        <note category="location">src/app/core/tasks/task-columns.ts:68</note>
         <note category="location">src/app/core/util/ai-client-context.ts:30</note>
         <note category="location">src/app/features/roadmap/components/roadmap-timeline.component.ts:71,72</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:375</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:297</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:376</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:298</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:17</note>
         <note category="description">Column heading for the task name</note>
       </notes>
@@ -16808,7 +16817,7 @@
     </unit>
     <unit id="4799153980390902924">
       <notes>
-        <note category="location">src/app/core/tasks/task-columns.ts:139</note>
+        <note category="location">src/app/core/tasks/task-columns.ts:146</note>
         <note category="description">Column heading for the task due date</note>
       </notes>
       <segment>
@@ -17184,7 +17193,7 @@
       <notes>
         <note category="location">src/app/features/dashboard/components/charts/cycle-time-chart.component.ts:43</note>
         <note category="location">src/app/features/dashboard/components/dashboard-cycle-time-card.component.ts:90</note>
-        <note category="location">src/app/features/reporting/components/flow-cycle-time-table.component.ts:51</note>
+        <note category="location">src/app/features/reporting/components/flow-cycle-time-table.component.ts:52</note>
         <note category="description">Series name for the middle cycle time value</note>
       </notes>
       <segment>
@@ -17542,7 +17551,7 @@
     </unit>
     <unit id="7430680760319628492">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:29</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:32</note>
         <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:103,104</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:262</note>
         <note category="description">Heading of the export review step</note>
@@ -18190,7 +18199,7 @@
     </unit>
     <unit id="7118117366674423373">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:272</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:274</note>
         <note category="description">Column heading for the reverse direction of a relation</note>
       </notes>
       <segment>
@@ -18253,8 +18262,8 @@
     </unit>
     <unit id="220550782947016929">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:293</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:269</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:298</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:273</note>
         <note category="description">Column heading for the sort order</note>
       </notes>
       <segment>
@@ -18796,7 +18805,7 @@
     </unit>
     <unit id="2943033819969004159">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:480</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:485</note>
         <note category="description">Column heading for when an export was requested</note>
       </notes>
       <segment>
@@ -19004,7 +19013,7 @@
     </unit>
     <unit id="464749780222721589">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:624</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:638</note>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:630</note>
         <note category="description">An export whose file has been removed</note>
       </notes>
@@ -19247,7 +19256,7 @@
     </unit>
     <unit id="8385660955611557548">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:51</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:54</note>
         <note category="description">Names the rows of the export preview table</note>
       </notes>
       <segment>
@@ -19458,7 +19467,7 @@
     </unit>
     <unit id="5162686434580248853">
       <notes>
-        <note category="location">src/app/core/tasks/task-columns.ts:151</note>
+        <note category="location">src/app/core/tasks/task-columns.ts:159</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:73,74</note>
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:56,57</note>
         <note category="description">Column heading for the task start date</note>
@@ -19782,7 +19791,7 @@
     </unit>
     <unit id="7462301153729425254">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:455</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:456</note>
         <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:66,69</note>
         <note category="location">src/app/features/settings/settings.routes.ts:116</note>
         <note category="description">Column heading for what an export contains</note>
@@ -20152,7 +20161,7 @@
     <unit id="1152778269115350205">
       <notes>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:323</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:252</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:271</note>
         <note category="description">Title of the confirmation dialog for deleting a sprint</note>
       </notes>
       <segment>
@@ -20283,7 +20292,7 @@
     <unit id="5424415261711939344">
       <notes>
         <note category="location">src/app/features/dashboard/components/sprint-burndown-mini-chart.component.ts:48</note>
-        <note category="location">src/app/features/reporting/components/sprint-burndown-table.component.ts:79</note>
+        <note category="location">src/app/features/reporting/components/sprint-burndown-table.component.ts:82</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment>
@@ -20292,7 +20301,7 @@
     </unit>
     <unit id="45739481977493163">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:473</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:477</note>
         <note category="location">src/app/features/storage/components/storage-filters.component.ts:148</note>
         <note category="description">Column heading for the size of an export file</note>
       </notes>
@@ -20398,7 +20407,7 @@
     </unit>
     <unit id="2637409888010075708">
       <notes>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:462</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:466</note>
         <note category="description">Title of the confirmation dialog for deleting a status</note>
       </notes>
       <segment>
@@ -20552,7 +20561,7 @@
     </unit>
     <unit id="6381490568322624964">
       <notes>
-        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:134</note>
+        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:135</note>
         <note category="description">Column heading for when a task was deleted</note>
       </notes>
       <segment>
@@ -20561,7 +20570,7 @@
     </unit>
     <unit id="6381762701019694219">
       <notes>
-        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:117</note>
+        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:129</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment>
@@ -20596,7 +20605,7 @@
     </unit>
     <unit id="2285158653699607527">
       <notes>
-        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:122</note>
+        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:134</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment>
@@ -21085,8 +21094,8 @@
     </unit>
     <unit id="628468315033128728">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:490</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:463</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:493</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:467</note>
         <note category="description">Asks the user to confirm deleting a relation type. NAME is the relation type name</note>
       </notes>
       <segment>
@@ -22021,7 +22030,7 @@
     </unit>
     <unit id="7885977021959823727">
       <notes>
-        <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:44,47</note>
+        <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:45,48</note>
         <note category="description">Title of the dialog for choosing table columns</note>
       </notes>
       <segment>
@@ -22039,7 +22048,7 @@
     </unit>
     <unit id="2093555515771561260">
       <notes>
-        <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:49,54</note>
+        <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:50,55</note>
         <note category="description">Instructions in the table column customisation dialog</note>
       </notes>
       <segment>
@@ -22057,7 +22066,7 @@
     </unit>
     <unit id="5670251735546841727">
       <notes>
-        <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:67,69</note>
+        <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:68,70</note>
         <note category="description">Accessible label for the handle that reorders a column</note>
       </notes>
       <segment>
@@ -22103,7 +22112,7 @@
     </unit>
     <unit id="6373820064642279324">
       <notes>
-        <note category="location">src/app/static/components/datatable/datatable.component.ts:103,106</note>
+        <note category="location">src/app/static/components/datatable/datatable.component.ts:104,107</note>
         <note category="description">Accessible label for the button that opens the column customisation dialog</note>
       </notes>
       <segment>
@@ -22130,7 +22139,7 @@
     </unit>
     <unit id="7973003423744435058">
       <notes>
-        <note category="location">src/app/static/components/datatable/datatable.component.ts:131,135</note>
+        <note category="location">src/app/static/components/datatable/datatable.component.ts:132,136</note>
         <note category="description">Screen-reader label for the checkbox that selects every table row</note>
       </notes>
       <segment>
@@ -22148,7 +22157,7 @@
     </unit>
     <unit id="3844444380870280621">
       <notes>
-        <note category="location">src/app/static/components/datatable/datatable.component.ts:223,225</note>
+        <note category="location">src/app/static/components/datatable/datatable.component.ts:224,226</note>
         <note category="description">Accessible label for the button that opens a table row&apos;s action menu</note>
       </notes>
       <segment>
@@ -22157,7 +22166,7 @@
     </unit>
     <unit id="4505486805842266349">
       <notes>
-        <note category="location">src/app/static/components/datatable/datatable.component.ts:264,267</note>
+        <note category="location">src/app/static/components/datatable/datatable.component.ts:265,268</note>
         <note category="description">Screen-reader label for the checkbox that selects one table row</note>
       </notes>
       <segment>
@@ -22386,7 +22395,7 @@
     </unit>
     <unit id="4582943253260659127">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:161</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:166</note>
         <note category="description">Column heading for when a conversation was last active</note>
       </notes>
       <segment>
@@ -22795,7 +22804,7 @@
     </unit>
     <unit id="1982377256620089345">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:41,46</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:44,49</note>
         <note category="description">Explains why an export has to run as a job</note>
       </notes>
       <segment>

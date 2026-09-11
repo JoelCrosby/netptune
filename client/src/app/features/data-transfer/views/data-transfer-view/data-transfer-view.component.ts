@@ -137,7 +137,7 @@ const ResumableStages = [
             i18n-itemLabel="Names the rows of the export history table"
             itemLabel="exports"
             containerClass="border-0 overflow-x-auto"
-            tableClass="min-w-[840px] table-fixed"
+            tableClass="md:min-w-[840px] table-fixed"
             [data]="exportData">
             <ng-template appDatatableCell="status" let-job>
               <app-badge [color]="statusColor(job)">
@@ -273,7 +273,7 @@ const ResumableStages = [
             i18n-itemLabel="Names the rows of the import history table"
             itemLabel="imports"
             containerClass="border-0 overflow-x-auto"
-            tableClass="min-w-[840px] table-fixed"
+            tableClass="md:min-w-[840px] table-fixed"
             [data]="importData">
             <ng-template appDatatableCell="stage" let-session>
               <app-badge [color]="stageColor(session)">
@@ -447,23 +447,27 @@ export class DataTransferViewComponent {
       {
         id: 'status',
         header: $localize`:Column heading for the state of an export:Status`,
+        visibleOnMobile: true,
         cellClass: 'truncate',
         widthClass: 'w-28',
       },
       {
         id: 'name',
         header: $localize`:Column heading for what an export contains:Export`,
+        visibleOnMobile: true,
         cellClass: 'truncate',
       },
       {
         id: 'format',
         header: $localize`:Column heading for the file format of an export:Format`,
+        visibleOnMobile: false,
         cellClass: 'truncate',
         widthClass: 'w-24',
       },
       {
         id: 'rowCount',
         header: $localize`:Column heading for how many rows an export produced:Rows`,
+        visibleOnMobile: false,
         cellClass: 'truncate',
         widthClass: 'w-24',
         align: 'end',
@@ -471,6 +475,7 @@ export class DataTransferViewComponent {
       {
         id: 'sizeBytes',
         header: $localize`:Column heading for the size of an export file:Size`,
+        visibleOnMobile: false,
         cellClass: 'truncate',
         widthClass: 'w-24',
         align: 'end',
@@ -478,12 +483,14 @@ export class DataTransferViewComponent {
       {
         id: 'createdAt',
         header: $localize`:Column heading for when an export was requested:Requested`,
+        visibleOnMobile: false,
         cellClass: 'truncate',
         widthClass: 'w-40',
       },
       {
         id: 'actions',
         header: '',
+        visibleOnMobile: true,
         widthClass: 'w-24',
         align: 'end',
       },
@@ -503,41 +510,48 @@ export class DataTransferViewComponent {
       {
         id: 'stage',
         header: $localize`:Column heading for the state of an import:Stage`,
+        visibleOnMobile: true,
         cellClass: 'truncate',
         widthClass: 'w-28',
       },
       {
         id: 'originalName',
         header: $localize`:Column heading for the file an import came from:File`,
+        visibleOnMobile: true,
         cellClass: 'truncate',
       },
       {
         id: 'targetRecordType',
         header: $localize`:Column heading for what kind of record an import creates:Type`,
+        visibleOnMobile: false,
         cellClass: 'truncate',
         widthClass: 'w-24',
       },
       {
         id: 'counts',
         header: $localize`:Column heading for the created, updated and skipped row counts of an import:Rows`,
+        visibleOnMobile: false,
         cellClass: 'truncate',
         widthClass: 'w-44',
       },
       {
         id: 'createdBy',
         header: $localize`:Column heading for who ran an import:By`,
+        visibleOnMobile: false,
         cellClass: 'truncate',
         widthClass: 'w-36',
       },
       {
         id: 'createdAt',
         header: $localize`:Column heading for when an import was uploaded:Uploaded`,
+        visibleOnMobile: false,
         cellClass: 'truncate',
         widthClass: 'w-40',
       },
       {
         id: 'actions',
         header: '',
+        visibleOnMobile: true,
         widthClass: 'w-20',
         align: 'end',
       },

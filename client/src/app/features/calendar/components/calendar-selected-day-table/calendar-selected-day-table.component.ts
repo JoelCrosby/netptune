@@ -76,6 +76,7 @@ export class CalendarSelectedDayTableComponent {
   private readonly scheduleColumn: DatatableColumn<ScheduledTask> = {
     id: 'schedule',
     header: $localize`:schedule column heading|Column heading for the dates a task is scheduled on:Schedule`,
+    visibleOnMobile: false,
     accessor: (task) => scheduleLabel(task),
     sortable: true,
     widthClass: 'w-52',

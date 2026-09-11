@@ -36,7 +36,7 @@ import { TaskTableComponent } from '@static/components/task-table.component';
         <app-task-table
           key="sprint-backlog"
           url="api/sprints/backlog"
-          tableClass="min-w-[1040px] table-fixed"
+          tableClass="md:min-w-[1040px] table-fixed"
           [containerClass]="scrollHeights.panel"
           [columns]="columns()"
           [params]="params"
@@ -122,7 +122,7 @@ export class SprintBacklogGroupComponent {
         name: taskNameCell<TaskViewModel>({
           link: (task) => ['../../tasks', task.systemId],
         }),
-        status: { widthClass: 'w-32' },
+        status: { widthClass: 'w-32', visibleOnMobile: false },
         priority: { widthClass: 'w-24' },
         project: { widthClass: 'w-32' },
         assignees: { widthClass: 'w-28' },
@@ -133,7 +133,8 @@ export class SprintBacklogGroupComponent {
   private readonly assignColumn: DatatableColumn<TaskViewModel> = {
     id: 'assign',
     header: $localize`:Column heading for the sprint assign action:Assign`,
-    widthClass: 'w-58',
+    visibleOnMobile: true,
+    widthClass: 'w-48 md:w-58',
   };
 
   readonly columns = computed<DatatableColumn<TaskViewModel>[]>(() => {

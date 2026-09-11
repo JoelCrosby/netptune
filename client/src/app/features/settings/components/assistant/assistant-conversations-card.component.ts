@@ -118,6 +118,7 @@ export class AssistantConversationsCardComponent {
       {
         id: 'title',
         header: $localize`:Column heading for an assistant conversation:Conversation`,
+        visibleOnMobile: true,
         accessor: 'title',
         sortable: true,
         cellClass: 'overflow-hidden',
@@ -125,6 +126,7 @@ export class AssistantConversationsCardComponent {
       {
         id: 'user',
         header: $localize`:Column heading for the member who held a conversation:Member`,
+        visibleOnMobile: false,
         accessor: 'userDisplayName',
         sortable: true,
         widthClass: 'w-56',
@@ -133,6 +135,7 @@ export class AssistantConversationsCardComponent {
       {
         id: 'messageCount',
         header: $localize`:Column heading for the number of messages in a conversation:Messages`,
+        visibleOnMobile: false,
         accessor: 'messageCount',
         sortable: true,
         align: 'end',
@@ -142,6 +145,7 @@ export class AssistantConversationsCardComponent {
       {
         id: 'tokens',
         header: $localize`:Column heading for the tokens a conversation used:Tokens`,
+        visibleOnMobile: false,
         accessor: (conversation) => formatTokens(conversation.usage),
         sortable: true,
         align: 'end',
@@ -151,6 +155,7 @@ export class AssistantConversationsCardComponent {
       {
         id: 'cost',
         header: $localize`:Column heading for what a conversation cost:Cost`,
+        visibleOnMobile: false,
         accessor: (conversation) => formatCost(conversation.usage),
         align: 'end',
         widthClass: 'w-24',
@@ -159,6 +164,7 @@ export class AssistantConversationsCardComponent {
       {
         id: 'lastMessageAt',
         header: $localize`:Column heading for when a conversation was last active:Last message`,
+        visibleOnMobile: true,
         sortable: true,
         align: 'end',
         widthClass: 'w-56',

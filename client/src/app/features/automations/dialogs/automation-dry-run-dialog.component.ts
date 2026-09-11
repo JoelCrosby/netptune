@@ -301,15 +301,28 @@ export class AutomationDryRunDialogComponent {
   readonly data: DatatableDataSource<TaskViewModel> = {
     key: 'automation-dry-run-tasks',
     columns: [
-      { id: 'systemId', header: 'Key', sortable: true, widthClass: 'w-28' },
+      {
+        id: 'systemId',
+        header: 'Key',
+        visibleOnMobile: false,
+        sortable: true,
+        widthClass: 'w-28',
+      },
       {
         id: 'name',
         header: 'Task',
+        visibleOnMobile: true,
         accessor: 'name',
         sortable: true,
         cellClass: 'min-w-0',
       },
-      { id: 'action', header: '', widthClass: 'w-24', align: 'end' },
+      {
+        id: 'action',
+        header: '',
+        visibleOnMobile: true,
+        widthClass: 'w-24',
+        align: 'end',
+      },
     ],
     resource: {
       url: 'api/tasks',

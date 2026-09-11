@@ -20,7 +20,7 @@ import { TaskTableComponent } from '@static/components/task-table.component';
       <app-task-table
         key="dashboard-assigned-tasks"
         url="api/tasks"
-        tableClass="min-w-[820px] table-fixed"
+        tableClass="md:min-w-[820px] table-fixed"
         i18n-emptyMessage="Empty state for the assigned-tasks card"
         emptyMessage="You have no tasks assigned to you."
         [containerClass]="scrollHeights.panel"

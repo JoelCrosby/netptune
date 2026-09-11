@@ -89,7 +89,7 @@ const contentTypeGroups: readonly WorkspaceFileContentTypeGroup[] = [
       i18n-errorMessage="Shown when the file list fails to load"
       errorMessage="Files could not be loaded."
       containerClass="overflow-x-auto rounded-lg shadow-sm"
-      tableClass="min-w-200 table-fixed"
+      tableClass="md:min-w-200 table-fixed"
       headerClass="text-muted uppercase"
       rowClass="group"
       emptyCellClass="py-12"
@@ -257,20 +257,33 @@ export class StorageListComponent {
       {
         id: 'name',
         header: 'File',
+        visibleOnMobile: true,
         sortable: true,
-        widthClass: 'w-80',
+        widthClass: 'md:w-80',
       },
-      { id: 'origin', header: 'Origin', widthClass: 'w-56' },
-      { id: 'uploader', header: 'Uploader', widthClass: 'w-48' },
+      {
+        id: 'origin',
+        header: 'Origin',
+        visibleOnMobile: false,
+        widthClass: 'w-56',
+      },
+      {
+        id: 'uploader',
+        header: 'Uploader',
+        visibleOnMobile: false,
+        widthClass: 'w-48',
+      },
       {
         id: 'createdAt',
         header: 'Uploaded',
+        visibleOnMobile: false,
         sortable: true,
         widthClass: 'w-36',
       },
       {
         id: 'sizeBytes',
         header: 'Size',
+        visibleOnMobile: true,
         sortable: true,
         align: 'end',
         widthClass: 'w-28',
@@ -278,6 +291,7 @@ export class StorageListComponent {
       {
         id: 'actions',
         header: '',
+        visibleOnMobile: true,
         align: 'end',
         ariaLabel: 'Actions',
         widthClass: 'w-32',

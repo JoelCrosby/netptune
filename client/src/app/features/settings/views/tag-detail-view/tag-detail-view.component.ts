@@ -185,7 +185,7 @@ import { EMPTY, finalize, firstValueFrom, switchMap } from 'rxjs';
               i18n-errorMessage="Shown when a task list fails to load"
               errorMessage="Tasks could not be loaded."
               containerClass="max-h-[520px] overflow-auto border-0"
-              tableClass="min-w-[720px] table-fixed"
+              tableClass="md:min-w-[720px] table-fixed"
               [data]="taskData"
               [stickyHeader]="true">
               <ng-template appDatatableCell="systemId" let-task>
@@ -288,6 +288,7 @@ export class TagDetailViewComponent {
       {
         id: 'systemId',
         header: $localize`:Column heading for the task key:Key`,
+        visibleOnMobile: false,
         accessor: 'systemId',
         sortable: true,
         widthClass: 'w-28',
@@ -295,6 +296,7 @@ export class TagDetailViewComponent {
       {
         id: 'name',
         header: $localize`:Column heading for the task name:Task`,
+        visibleOnMobile: true,
         accessor: 'name',
         sortable: true,
         cellClass: 'min-w-64',
@@ -302,6 +304,7 @@ export class TagDetailViewComponent {
       {
         id: 'projectName',
         header: $localize`:Column heading for the project name:Project`,
+        visibleOnMobile: false,
         accessor: 'projectName',
         sortKey: 'projectName',
         widthClass: 'w-48',
@@ -309,6 +312,7 @@ export class TagDetailViewComponent {
       {
         id: 'assignees',
         header: $localize`:Column heading for the task assignees:Assignees`,
+        visibleOnMobile: true,
         widthClass: 'w-40',
       },
     ],

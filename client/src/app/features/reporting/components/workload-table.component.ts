@@ -39,6 +39,7 @@ export class WorkloadTableComponent {
       {
         id: 'displayName',
         header: $localize`:Column heading for the assigned person:Assignee`,
+        visibleOnMobile: true,
         accessor: 'displayName',
         sortable: true,
         cellClass: 'font-medium truncate',
@@ -46,6 +47,7 @@ export class WorkloadTableComponent {
       {
         id: 'taskCount',
         header: $localize`:Column heading for the task count:Tasks`,
+        visibleOnMobile: true,
         accessor: 'taskCount',
         sortable: true,
         align: 'end',
@@ -55,6 +57,7 @@ export class WorkloadTableComponent {
       {
         id: 'value',
         header: $localize`:Column heading for the chosen estimation unit:Selected unit`,
+        visibleOnMobile: true,
         accessor: (row) => formatReportValue(row.value),
         sortable: true,
         align: 'end',

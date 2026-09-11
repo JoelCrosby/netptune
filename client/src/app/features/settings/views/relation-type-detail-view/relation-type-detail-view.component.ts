@@ -251,7 +251,7 @@ import { EMPTY, finalize, firstValueFrom, switchMap } from 'rxjs';
               i18n-errorMessage="Shown when the relation list fails to load"
               errorMessage="Relations could not be loaded."
               containerClass="max-h-[520px] overflow-auto border-0"
-              tableClass="min-w-[760px] table-fixed"
+              tableClass="md:min-w-[760px] table-fixed"
               [data]="relationData()"
               [stickyHeader]="true">
               <ng-template appDatatableCell="sourceTask" let-relation>
@@ -394,16 +394,19 @@ export class RelationTypeDetailViewComponent {
     {
       id: 'sourceTask',
       header: $localize`:Column heading for the source side of a task link:From`,
+      visibleOnMobile: true,
       cellClass: 'min-w-64',
     },
     {
       id: 'label',
       header: $localize`:Column heading for the name of a task link:Relation`,
+      visibleOnMobile: false,
       widthClass: 'w-40',
     },
     {
       id: 'targetTask',
       header: $localize`:Column heading for the target side of a task link:To`,
+      visibleOnMobile: true,
       cellClass: 'min-w-64',
     },
   ];

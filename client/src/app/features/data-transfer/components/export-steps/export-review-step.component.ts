@@ -15,6 +15,9 @@ interface ExportPreviewRow {
   values: Record<string, string>;
 }
 
+// The export fields are chosen by the user, so a phone shows the first few of them.
+const mobilePreviewColumnCount = 2;
+
 function formatName(format: ExportFormat): string {
   return ExportFormat[format].toUpperCase();
 }
@@ -49,7 +52,7 @@ function formatName(format: ExportFormat): string {
             i18n-itemLabel="Names the rows of the export preview table"
             itemLabel="rows"
             containerClass="overflow-x-auto rounded-none border-x-0"
-            tableClass="min-w-[900px]"
+            tableClass="md:min-w-[900px]"
             [rounded]="false"
             [data]="previewData()" />
         </div>
@@ -100,9 +103,10 @@ export class ExportReviewStepComponent {
 
     return {
       key: 'export-preview',
-      columns: this.wizard.fields().map((fieldKey) => ({
+      columns: this.wizard.fields().map((fieldKey, index) => ({
         id: fieldKey,
         header: byKey.get(fieldKey) ?? fieldKey,
+        visibleOnMobile: index < mobilePreviewColumnCount,
         accessor: (row: ExportPreviewRow) => row.values[fieldKey] ?? '',
         cellClass: 'max-w-56 truncate',
         headerClass: 'max-w-56 truncate whitespace-nowrap',

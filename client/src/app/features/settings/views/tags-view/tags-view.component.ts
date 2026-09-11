@@ -157,12 +157,14 @@ export class TagsViewComponent {
       {
         id: 'name',
         header: $localize`:Column heading for the name:Name`,
+        visibleOnMobile: true,
         accessor: 'name',
         sortable: true,
       },
       {
         id: 'taskCount',
         header: $localize`:Column heading for the number of tasks using a row:Tasks`,
+        visibleOnMobile: true,
         accessor: 'taskCount',
         sortable: true,
         widthClass: 'w-24',

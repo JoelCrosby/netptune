@@ -25,6 +25,7 @@ export interface DatatableCellRenderer<T = unknown> {
 export interface DatatableColumn<T = unknown> {
   id: string;
   header: string;
+  visibleOnMobile: boolean;
   accessor?: DatatableAccessor<T>;
   sortable?: boolean;
   sortKey?: string;

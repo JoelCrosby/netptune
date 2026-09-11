@@ -124,7 +124,7 @@ import { AutomationEnabledBadgeComponent } from './automation-enabled-badge.comp
       i18n-errorMessage="Shown when the automation list fails to load"
       errorMessage="Automation rules could not be loaded."
       stickyHeader
-      tableClass="min-w-[900px]"
+      tableClass="md:min-w-[900px]"
       [data]="data()"
       [stickyHeader]="true">
       <ng-template appDatatableCell="name" let-rule>
@@ -258,18 +258,36 @@ export class AutomationRulesTableComponent {
   readonly data = computed<DatatableDataSource<AutomationRuleListItem>>(() => ({
     key: 'automation-rules',
     columns: [
-      { id: 'name', header: 'Rule', sortable: true, widthClass: 'w-64' },
+      {
+        id: 'name',
+        header: 'Rule',
+        visibleOnMobile: true,
+        sortable: true,
+        widthClass: 'w-64',
+      },
       {
         id: 'isEnabled',
         header: 'Status',
+        visibleOnMobile: true,
         sortable: true,
         widthClass: 'w-28',
       },
-      { id: 'trigger', header: 'Trigger', cellClass: 'min-w-0' },
-      { id: 'actions', header: 'Actions', cellClass: 'min-w-0' },
+      {
+        id: 'trigger',
+        header: 'Trigger',
+        visibleOnMobile: false,
+        cellClass: 'min-w-0',
+      },
+      {
+        id: 'actions',
+        header: 'Actions',
+        visibleOnMobile: false,
+        cellClass: 'min-w-0',
+      },
       {
         id: 'lastRun',
         header: 'Last run',
+        visibleOnMobile: false,
         widthClass: 'w-44',
       },
     ],

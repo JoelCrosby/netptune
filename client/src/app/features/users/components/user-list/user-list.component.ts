@@ -29,7 +29,7 @@ import { WorkspaceRole, workspaceRoleLabels } from '@core/enums/workspace-role';
       autoFill
       i18n-errorMessage="Shown when the member list fails to load"
       errorMessage="Members could not be loaded."
-      tableClass="min-w-[720px] table-fixed"
+      tableClass="md:min-w-[720px] table-fixed"
       [data]="userData"
       [customizableColumns]="true"
       [stickyHeader]="true"
@@ -102,9 +102,21 @@ export class UserListComponent {
   readonly userData: DatatableDataSource<WorkspaceAppUser> = {
     key: 'user-list',
     columns: [
-      { id: 'user', header: 'User', sortable: true, widthClass: 'w-64' },
-      { id: 'email', header: 'Email', sortable: true },
-      { id: 'status', header: 'Status', sortable: true, widthClass: 'w-32' },
+      {
+        id: 'user',
+        header: 'User',
+        visibleOnMobile: true,
+        sortable: true,
+        widthClass: 'md:w-64',
+      },
+      { id: 'email', header: 'Email', visibleOnMobile: false, sortable: true },
+      {
+        id: 'status',
+        header: 'Status',
+        visibleOnMobile: true,
+        sortable: true,
+        widthClass: 'w-32',
+      },
     ],
     resource: {
       url: 'api/users',

@@ -109,7 +109,7 @@ import { finalize, first } from 'rxjs';
         <app-datatable
           autoFill
           stickyHeader
-          tableClass="min-w-[820px] table-fixed"
+          tableClass="md:min-w-[820px] table-fixed"
           i18n-errorMessage="Shown when the relation type list fails to load"
           errorMessage="Relation types could not be loaded."
           i18n-itemLabel="
@@ -259,23 +259,27 @@ export class RelationTypesViewComponent {
       {
         id: 'color',
         header: $localize`:Column heading for the colour swatch:Color`,
+        visibleOnMobile: true,
         widthClass: 'w-16',
       },
       {
         id: 'name',
         header: $localize`:Column heading for the name:Name`,
+        visibleOnMobile: true,
         accessor: 'name',
         sortable: true,
       },
       {
         id: 'inverseName',
         header: $localize`:Column heading for the reverse direction of a relation:Inverse`,
+        visibleOnMobile: false,
         sortable: true,
         cellClass: 'text-muted truncate',
       },
       {
         id: 'category',
         header: $localize`:Column heading for the relation category:Category`,
+        visibleOnMobile: false,
         accessor: (relationType) => this.categoryLabel(relationType.category),
         sortable: true,
         widthClass: 'w-36',
@@ -283,6 +287,7 @@ export class RelationTypesViewComponent {
       {
         id: 'relationCount',
         header: $localize`:Column heading for the number of task links using a row:Relations`,
+        visibleOnMobile: true,
         accessor: 'relationCount',
         sortable: true,
         widthClass: 'w-28',
@@ -291,6 +296,7 @@ export class RelationTypesViewComponent {
       {
         id: 'sortOrder',
         header: $localize`:Column heading for the sort order:Order`,
+        visibleOnMobile: false,
         sortable: true,
         widthClass: 'w-28',
       },

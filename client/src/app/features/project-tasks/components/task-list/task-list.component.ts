@@ -46,7 +46,7 @@ import { taskFilterRoute } from '@core/router/task-filter-route';
       errorMessage="Tasks could not be loaded."
       key="task-list"
       url="api/tasks"
-      tableClass="min-w-[760px] table-fixed"
+      tableClass="md:min-w-[760px] table-fixed"
       [autoFill]="true"
       [columns]="columns()"
       [params]="taskRequestParams"
@@ -165,7 +165,7 @@ export class TaskListComponent {
             },
           }),
           sprint: { widthClass: 'w-38' },
-          status: { widthClass: 'w-48' },
+          status: { widthClass: 'w-32 md:w-48' },
         },
       }
     );

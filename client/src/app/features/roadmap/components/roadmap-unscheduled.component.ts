@@ -36,7 +36,7 @@ import {
       <app-task-table
         key="roadmap-unscheduled-tasks"
         url="api/roadmap/unscheduled-tasks"
-        tableClass="min-w-[820px] table-fixed"
+        tableClass="md:min-w-[820px] table-fixed"
         i18n-emptyMessage="Empty state for the unscheduled task list"
         emptyMessage="No unscheduled tasks match the current filters."
         i18n-itemLabel="Plural noun for tasks, used in the selection summary"
@@ -109,6 +109,7 @@ export class RoadmapUnscheduledComponent {
   private readonly scheduleColumn: DatatableColumn<RoadmapTask> = {
     id: 'schedule',
     header: $localize`:Column heading for the schedule action:Schedule`,
+    visibleOnMobile: true,
     widthClass: 'w-36',
   };
 

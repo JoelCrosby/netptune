@@ -21,7 +21,7 @@ import { TaskTableComponent } from '@static/components/task-table.component';
       containerClass="overflow-auto rounded-lg shadow-sm"
       key="sprint-tasks"
       url="api/tasks"
-      tableClass="min-w-[820px] table-fixed"
+      tableClass="md:min-w-[820px] table-fixed"
       i18n-emptyMessage="Empty state for the sprint task list"
       emptyMessage="No tasks in this sprint."
       [columns]="columns()"
@@ -81,6 +81,7 @@ export class SprintTaskListComponent {
   private readonly actionsColumn: DatatableColumn<TaskViewModel> = {
     id: 'actions',
     header: '',
+    visibleOnMobile: true,
     widthClass: 'w-28',
     align: 'end',
   };

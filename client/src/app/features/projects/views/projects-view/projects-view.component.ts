@@ -77,7 +77,7 @@ import { BadgeComponent } from '@static/components/badge/badge.component';
             Plural noun for the rows of the project table, shown beside counts
           "
           itemLabel="projects"
-          tableClass="min-w-[900px] table-fixed"
+          tableClass="md:min-w-[900px] table-fixed"
           [data]="data()"
           [customizableColumns]="true"
           [stickyHeader]="true">
@@ -197,12 +197,46 @@ export class ProjectsViewComponent {
   private readonly params = signal<Params>({});
 
   private readonly columns: DatatableColumn<ProjectViewModel>[] = [
-    { id: 'name', header: 'Name', accessor: 'name', sortable: true },
-    { id: 'key', header: 'Key', sortable: true, widthClass: 'w-24' },
-    { id: 'description', header: 'Description', sortable: true },
-    { id: 'owner', header: 'Owner', sortable: true, widthClass: 'w-48' },
-    { id: 'repositoryUrl', header: 'Repository', widthClass: 'w-56' },
-    { id: 'updatedAt', header: 'Updated', sortable: true, widthClass: 'w-36' },
+    {
+      id: 'name',
+      header: 'Name',
+      visibleOnMobile: true,
+      accessor: 'name',
+      sortable: true,
+    },
+    {
+      id: 'key',
+      header: 'Key',
+      visibleOnMobile: true,
+      sortable: true,
+      widthClass: 'w-24',
+    },
+    {
+      id: 'description',
+      header: 'Description',
+      visibleOnMobile: false,
+      sortable: true,
+    },
+    {
+      id: 'owner',
+      header: 'Owner',
+      visibleOnMobile: false,
+      sortable: true,
+      widthClass: 'w-48',
+    },
+    {
+      id: 'repositoryUrl',
+      header: 'Repository',
+      visibleOnMobile: false,
+      widthClass: 'w-56',
+    },
+    {
+      id: 'updatedAt',
+      header: 'Updated',
+      visibleOnMobile: false,
+      sortable: true,
+      widthClass: 'w-36',
+    },
   ];
 
   private readonly goToBoardItem: DatatableMenuItem<ProjectViewModel> = {

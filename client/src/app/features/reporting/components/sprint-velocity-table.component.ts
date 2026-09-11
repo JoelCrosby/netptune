@@ -16,7 +16,7 @@ import { resetPageOnFilterChange } from './report-table.util';
   template: `
     <app-datatable
       containerClass="border-0 border-t rounded-none shadow-none"
-      tableClass="min-w-180"
+      tableClass="md:min-w-180"
       i18n-errorMessage="Shown when the velocity breakdown fails to load"
       errorMessage="Velocity data could not be loaded."
       i18n-itemLabel="Plural noun for velocity sprints, used in the row summary"
@@ -51,6 +51,7 @@ export class SprintVelocityTableComponent {
       {
         id: 'sprintName',
         header: $localize`:Column heading for the sprint name:Sprint`,
+        visibleOnMobile: true,
         accessor: 'sprintName',
         sortable: true,
         cellClass: 'font-medium truncate',
@@ -58,6 +59,7 @@ export class SprintVelocityTableComponent {
       {
         id: 'committed',
         header: $localize`:Column heading for committed scope:Committed`,
+        visibleOnMobile: true,
         accessor: (point) => formatReportValue(point.committed),
         sortable: true,
         align: 'end',
@@ -67,6 +69,7 @@ export class SprintVelocityTableComponent {
       {
         id: 'completed',
         header: $localize`:Column heading for completed scope:Completed`,
+        visibleOnMobile: true,
         accessor: (point) => formatReportValue(point.completed),
         sortable: true,
         align: 'end',
@@ -76,6 +79,7 @@ export class SprintVelocityTableComponent {
       {
         id: 'missingEstimateCount',
         header: $localize`:Column heading for tasks without an estimate:Missing estimate`,
+        visibleOnMobile: false,
         accessor: 'missingEstimateCount',
         sortable: true,
         align: 'end',
@@ -85,6 +89,7 @@ export class SprintVelocityTableComponent {
       {
         id: 'differentUnitEstimateCount',
         header: $localize`:Column heading for tasks estimated in another unit:Different unit`,
+        visibleOnMobile: false,
         accessor: 'differentUnitEstimateCount',
         sortable: true,
         align: 'end',

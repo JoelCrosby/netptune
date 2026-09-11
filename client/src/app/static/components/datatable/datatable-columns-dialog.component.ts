@@ -20,6 +20,7 @@ export interface DatatableColumnsDialogItem {
   id: string;
   header: string;
   visible: boolean;
+  desktopOnly: boolean;
 }
 
 export interface DatatableColumnsDialogData {
@@ -76,6 +77,17 @@ export interface DatatableColumnsDialogData {
             (changed)="toggle(item.id, $event)">
             <span class="truncate">{{ item.header }}</span>
           </app-checkbox>
+
+          @if (item.desktopOnly) {
+            <span
+              class="text-muted shrink-0 text-xs"
+              i18n="
+                Marks a column in the table column customisation dialog that is
+                hidden on small screens
+              ">
+              Desktop only
+            </span>
+          }
         </div>
       }
     </div>

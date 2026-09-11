@@ -106,7 +106,7 @@ import { finalize, first } from 'rxjs';
         <app-datatable
           autoFill
           stickyHeader
-          tableClass="min-w-[720px] table-fixed"
+          tableClass="md:min-w-[720px] table-fixed"
           i18n-errorMessage="Shown when the status list fails to load"
           errorMessage="Statuses could not be loaded."
           i18n-itemLabel="Plural noun for statuses, used in the row summary"
@@ -241,17 +241,20 @@ export class StatusesViewComponent {
       {
         id: 'color',
         header: $localize`:Column heading for the colour swatch:Color`,
+        visibleOnMobile: true,
         widthClass: 'w-16',
       },
       {
         id: 'name',
         header: $localize`:Column heading for the name:Name`,
+        visibleOnMobile: true,
         accessor: 'name',
         sortable: true,
       },
       {
         id: 'category',
         header: $localize`:Column heading for the status category:Category`,
+        visibleOnMobile: false,
         accessor: (status) => this.categoryLabel(status.category),
         sortable: true,
         widthClass: 'w-44',
@@ -259,6 +262,7 @@ export class StatusesViewComponent {
       {
         id: 'taskCount',
         header: $localize`:Column heading for the number of tasks using a row:Tasks`,
+        visibleOnMobile: true,
         accessor: 'taskCount',
         sortable: true,
         widthClass: 'w-24',
@@ -267,6 +271,7 @@ export class StatusesViewComponent {
       {
         id: 'sortOrder',
         header: $localize`:Column heading for the sort order:Order`,
+        visibleOnMobile: false,
         sortable: true,
         widthClass: 'w-28',
       },

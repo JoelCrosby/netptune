@@ -53,6 +53,7 @@ export class FlowThroughputTableComponent {
       {
         id: 'date',
         header: $localize`:Column heading for the date:Date`,
+        visibleOnMobile: true,
         accessor: 'date',
         sortable: true,
         cellClass: 'tabular-nums',
@@ -60,6 +61,7 @@ export class FlowThroughputTableComponent {
       {
         id: 'completed',
         header: $localize`:Column heading for the completed count:Completed`,
+        visibleOnMobile: true,
         accessor: 'completed',
         sortable: true,
         align: 'end',

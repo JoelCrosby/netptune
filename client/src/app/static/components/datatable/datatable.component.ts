@@ -23,6 +23,7 @@ import { Params } from '@angular/router';
 import { ClientResponse } from '@app/core/models/client-response';
 import { Page } from '@app/core/models/pagination';
 import { DialogService } from '@app/core/services/dialog.service';
+import { LayoutService } from '@core/services/layout.service';
 import { reloadOnWorkspaceChange } from '@core/util/reload-on-refresh';
 import {
   LucideArrowDown,
@@ -321,6 +322,7 @@ import {
 export class DatatableComponent<T = unknown> implements OnDestroy {
   injector = inject(Injector);
   dialog = inject(DialogService);
+  private readonly isMobile = inject(LayoutService).isMobileView;
   data = input.required<DatatableDataSource<T>>();
   selection = input(false, { transform: booleanAttribute });
   customizableColumns = input(false, { transform: booleanAttribute });
@@ -468,13 +470,37 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
     return reconcileColumnPreferences(this.columns(), this.columnPreferences());
   });
 
-  visibleColumns = computed(() => {
+  private readonly orderedColumns = computed(() => {
     const byId = new Map(this.columns().map((column) => [column.id, column]));
 
     return this.effectivePreferences()
-      .filter((preference) => preference.visible)
-      .map((preference) => byId.get(preference.id))
-      .filter((column): column is DatatableColumn<T> => column != null);
+      .map((preference) => ({ preference, column: byId.get(preference.id) }))
+      .filter(
+        (entry): entry is PreferredColumn<T> => entry.column !== undefined
+      );
+  });
+
+  visibleColumns = computed(() => {
+    const ordered = this.orderedColumns();
+    const preferred = ordered.filter((entry) => entry.preference.visible);
+
+    if (!this.isMobile()) {
+      return preferred.map((entry) => entry.column);
+    }
+
+    const preferredOnMobile = preferred.filter(
+      (entry) => entry.column.visibleOnMobile
+    );
+
+    if (preferredOnMobile.length) {
+      return preferredOnMobile.map((entry) => entry.column);
+    }
+
+    // Preferences are chosen on a wide screen, so hiding every mobile column there
+    // would otherwise leave a phone with no data columns at all.
+    return ordered
+      .filter((entry) => entry.column.visibleOnMobile)
+      .map((entry) => entry.column);
   });
 
   buildParams = computed<Params>(() => {
@@ -733,11 +759,12 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   }
 
   openColumnsDialog() {
-    const byId = new Map(this.columns().map((column) => [column.id, column]));
-    const items = this.effectivePreferences().map((preference) => ({
+    const isMobile = this.isMobile();
+    const items = this.orderedColumns().map(({ preference, column }) => ({
       id: preference.id,
-      header: byId.get(preference.id)?.header ?? preference.id,
+      header: column.header,
       visible: preference.visible,
+      desktopOnly: isMobile && !column.visibleOnMobile,
     }));
 
     const ref = this.dialog.open<DatatableColumnPreference[]>(
@@ -891,6 +918,11 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
       cellClass
     );
   }
+}
+
+interface PreferredColumn<T> {
+  preference: DatatableColumnPreference;
+  column: DatatableColumn<T>;
 }
 
 function readValue<T>(

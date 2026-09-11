@@ -74,7 +74,7 @@ const emptyMessages: Record<SprintStatus, string> = {
         <app-datatable
           autoFill
           stickyHeader
-          tableClass="min-w-[720px]"
+          tableClass="md:min-w-[720px]"
           i18n-itemLabel="Plural noun for sprints, used in the row summary"
           itemLabel="sprints"
           [data]="data()"
@@ -183,13 +183,32 @@ export class SprintsViewComponent {
   });
 
   private readonly columns: DatatableColumn<SprintViewModel>[] = [
-    { id: 'name', header: 'Name', accessor: 'name', sortable: true },
-    { id: 'status', header: 'Status', sortable: true, widthClass: 'w-52' },
-    { id: 'dates', header: 'Dates', sortable: true, widthClass: 'w-56' },
-    { id: 'goal', header: 'Goal' },
+    {
+      id: 'name',
+      header: 'Name',
+      visibleOnMobile: true,
+      accessor: 'name',
+      sortable: true,
+    },
+    {
+      id: 'status',
+      header: 'Status',
+      visibleOnMobile: true,
+      sortable: true,
+      widthClass: 'w-52',
+    },
+    {
+      id: 'dates',
+      header: 'Dates',
+      visibleOnMobile: false,
+      sortable: true,
+      widthClass: 'w-56',
+    },
+    { id: 'goal', header: 'Goal', visibleOnMobile: false },
     {
       id: 'taskCount',
       header: 'Tasks',
+      visibleOnMobile: false,
       accessor: 'taskCount',
       sortable: true,
       align: 'end',

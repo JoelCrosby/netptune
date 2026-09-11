@@ -53,6 +53,7 @@ const catalog: Record<TaskColumnId, DatatableColumn<TaskColumnRow>> = {
   systemId: {
     id: 'systemId',
     header: $localize`:Column heading for the task reference:Key`,
+    visibleOnMobile: false,
     accessor: 'systemId',
     sortable: true,
     sortKey: 'systemId',
@@ -65,6 +66,7 @@ const catalog: Record<TaskColumnId, DatatableColumn<TaskColumnRow>> = {
   name: {
     id: 'name',
     header: $localize`:Column heading for the task name:Task`,
+    visibleOnMobile: true,
     accessor: 'name',
     sortable: true,
     sortKey: 'name',
@@ -77,6 +79,7 @@ const catalog: Record<TaskColumnId, DatatableColumn<TaskColumnRow>> = {
   project: {
     id: 'project',
     header: $localize`:Column heading for the task project:Project`,
+    visibleOnMobile: false,
     accessor: 'projectName',
     sortable: true,
     sortKey: 'projectName',
@@ -86,6 +89,7 @@ const catalog: Record<TaskColumnId, DatatableColumn<TaskColumnRow>> = {
   sprint: {
     id: 'sprint',
     header: $localize`:Column heading for the task sprint:Sprint`,
+    visibleOnMobile: false,
     accessor: 'sprintName',
     sortable: true,
     sortKey: 'sprint',
@@ -98,10 +102,11 @@ const catalog: Record<TaskColumnId, DatatableColumn<TaskColumnRow>> = {
   status: {
     id: 'status',
     header: $localize`:Column heading for the task status:Status`,
+    visibleOnMobile: true,
     accessor: 'statusName',
     sortable: true,
     sortKey: 'status',
-    widthClass: 'w-40',
+    widthClass: 'w-32 md:w-40',
     cell: {
       component: TaskStatusPillComponent,
       inputs: (task) => ({
@@ -114,6 +119,7 @@ const catalog: Record<TaskColumnId, DatatableColumn<TaskColumnRow>> = {
   priority: {
     id: 'priority',
     header: $localize`:Column heading for the task priority:Priority`,
+    visibleOnMobile: false,
     accessor: 'priority',
     sortable: true,
     sortKey: 'priority',
@@ -126,6 +132,7 @@ const catalog: Record<TaskColumnId, DatatableColumn<TaskColumnRow>> = {
   assignees: {
     id: 'assignees',
     header: $localize`:Column heading for the task assignees:Assignees`,
+    visibleOnMobile: false,
     sortable: true,
     sortKey: 'assignees',
     widthClass: 'w-40',
@@ -137,6 +144,7 @@ const catalog: Record<TaskColumnId, DatatableColumn<TaskColumnRow>> = {
   dueDate: {
     id: 'dueDate',
     header: $localize`:Column heading for the task due date:Due`,
+    visibleOnMobile: false,
     accessor: 'dueDate',
     sortable: true,
     sortKey: 'dueDate',
@@ -149,6 +157,7 @@ const catalog: Record<TaskColumnId, DatatableColumn<TaskColumnRow>> = {
   startDate: {
     id: 'startDate',
     header: $localize`:Column heading for the task start date:Start`,
+    visibleOnMobile: false,
     accessor: 'startDate',
     sortable: true,
     sortKey: 'startDate',
@@ -161,6 +170,7 @@ const catalog: Record<TaskColumnId, DatatableColumn<TaskColumnRow>> = {
   updatedAt: {
     id: 'updatedAt',
     header: $localize`:Column heading for when the task last changed:Updated`,
+    visibleOnMobile: false,
     accessor: 'updatedAt',
     sortable: true,
     sortKey: 'updatedAt',

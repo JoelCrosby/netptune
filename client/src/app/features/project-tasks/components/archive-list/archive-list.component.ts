@@ -65,7 +65,7 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
       errorMessage="Archived tasks could not be loaded."
       key="task-archive"
       url="api/tasks/archive"
-      tableClass="min-w-[760px] table-fixed"
+      tableClass="md:min-w-[760px] table-fixed"
       [autoFill]="true"
       [columns]="columns"
       [menu]="menu"
@@ -120,6 +120,7 @@ export class ArchiveListComponent {
   private readonly deletedByColumn: DatatableColumn<TaskViewModel> = {
     id: 'deletedBy',
     header: $localize`:Column heading for who deleted a task:Deleted by`,
+    visibleOnMobile: false,
     widthClass: 'w-48',
   };
 
@@ -132,6 +133,7 @@ export class ArchiveListComponent {
       overrides: {
         updatedAt: {
           header: $localize`:Column heading for when a task was deleted:Deleted`,
+          visibleOnMobile: true,
         },
       },
     }),

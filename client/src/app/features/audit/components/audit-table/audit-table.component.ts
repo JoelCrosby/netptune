@@ -40,7 +40,7 @@ import { AuditLogDetailDialogComponent } from '../../dialogs/audit-log-detail-di
       errorMessage="Audit events could not be loaded."
       stickyHeader
       headerClass="text-muted uppercase"
-      tableClass="min-w-180 table-fixed"
+      tableClass="md:min-w-180 table-fixed"
       i18n-emptyMessage="Empty state for the audit log"
       emptyMessage="No audit events found."
       i18n-itemLabel="
@@ -137,31 +137,41 @@ export class AuditTableComponent {
       {
         id: 'occurredAt',
         header: 'Timestamp',
-        widthClass: 'w-64',
+        visibleOnMobile: true,
+        widthClass: 'w-44 md:w-64',
         cellClass: 'whitespace-nowrap',
       },
       {
         id: 'userDisplayName',
         header: 'Actor',
+        visibleOnMobile: false,
         widthClass: 'w-56',
         cellClass: 'overflow-hidden',
       },
       {
         id: 'type',
         header: 'Action',
-        widthClass: 'w-48',
+        visibleOnMobile: true,
+        widthClass: 'md:w-48',
         cellClass: 'whitespace-nowrap',
       },
       {
         id: 'entityType',
         header: 'Entity',
+        visibleOnMobile: false,
         widthClass: 'w-40',
         cellClass: 'overflow-hidden',
       },
-      { id: 'context', header: 'Context', cellClass: 'overflow-hidden' },
+      {
+        id: 'context',
+        header: 'Context',
+        visibleOnMobile: false,
+        cellClass: 'overflow-hidden',
+      },
       {
         id: 'details',
         header: '',
+        visibleOnMobile: true,
         align: 'end',
         ariaLabel: 'Details',
         cellClass: 'px-2 py-0',

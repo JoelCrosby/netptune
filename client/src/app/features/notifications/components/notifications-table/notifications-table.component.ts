@@ -43,7 +43,7 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
       autoFill
       i18n-errorMessage="Shown when the notification list fails to load"
       errorMessage="Notifications could not be loaded."
-      tableClass="min-w-[720px] table-fixed"
+      tableClass="md:min-w-[720px] table-fixed"
       [data]="data"
       [stickyHeader]="true"
       [selection]="true"
@@ -146,10 +146,30 @@ export class NotificationsTableComponent {
   readonly data: DatatableDataSource<NotificationViewModel> = {
     key: 'notifications-list',
     columns: [
-      { id: 'actor', header: 'From', widthClass: 'w-48' },
-      { id: 'notification', header: 'Notification', widthClass: 'truncate' },
-      { id: 'createdAt', header: 'When', widthClass: 'w-40' },
-      { id: 'status', header: 'Status', widthClass: 'w-28' },
+      {
+        id: 'actor',
+        header: 'From',
+        visibleOnMobile: false,
+        widthClass: 'w-48',
+      },
+      {
+        id: 'notification',
+        header: 'Notification',
+        visibleOnMobile: true,
+        widthClass: 'truncate',
+      },
+      {
+        id: 'createdAt',
+        header: 'When',
+        visibleOnMobile: true,
+        widthClass: 'w-40',
+      },
+      {
+        id: 'status',
+        header: 'Status',
+        visibleOnMobile: false,
+        widthClass: 'w-28',
+      },
     ],
     resource: {
       url: 'api/notifications',
