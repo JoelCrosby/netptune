@@ -143,7 +143,7 @@ export class NotificationSubscribeComponent {
   protected readonly iconButtonClass = computed(() => {
     const isHidden = this.revealOnHover() && !this.isSubscribed();
 
-    return isHidden ? 'invisible group-hover/header:visible' : '';
+    return isHidden ? 'invisible group-hover/header:visible touch:visible' : '';
   });
 
   protected readonly buttonLabel = computed(() => {

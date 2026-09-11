@@ -7,6 +7,7 @@
 @import "./styles/editor";
 
 @custom-variant dark (&:where(.dark, .dark *));
+@custom-variant touch (@media (pointer: coarse));
 
 :root {
   --border-radius: 8px;

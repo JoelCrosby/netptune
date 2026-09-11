@@ -24,6 +24,11 @@ export class LayoutService {
     initialValue: false,
   });
 
+  // Matches the `touch:` Tailwind variant, for behaviour CSS alone can't switch.
+  readonly isTouchDevice = toSignal(this.media.matches('(pointer: coarse)'), {
+    initialValue: false,
+  });
+
   private readonly open = linkedSignal<boolean, boolean>({
     source: this.isMobileView,
     computation: () => false,

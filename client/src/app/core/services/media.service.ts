@@ -30,6 +30,13 @@ export class MediaService {
     );
   }
 
+  matches(query: string): Observable<boolean> {
+    return this.breakpointObserver.observe([query]).pipe(
+      map((res) => res.matches),
+      distinctUntilChanged()
+    );
+  }
+
   matchesExact(
     sizeInPixels: number,
     query: 'max-width' | 'min-width' = 'max-width'

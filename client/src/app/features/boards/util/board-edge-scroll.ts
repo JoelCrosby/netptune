@@ -2,10 +2,23 @@ let timer: ReturnType<typeof setTimeout> | null = null;
 const edgeSize = 120;
 
 // Original auto scroll code from the link below.
-// the code has been modified to base the viewport rect on a desired div rather than the window.
+// the code has been modified to base the viewport rect on a desired div rather than the window,
+// and to take the drag's pointer position so it works for touch as well as mouse.
 // https://www.bennadel.com/blog/3460-automatically-scroll-the-window-when-the-user-approaches-the-viewport-edge-in-javascript.htm
 
-export const mouseMoveHandler = (e: MouseEvent) => {
+export interface EdgeScrollPoint {
+  x: number;
+  y: number;
+}
+
+export function stopBoardEdgeScroll() {
+  if (timer) {
+    clearTimeout(timer);
+    timer = null;
+  }
+}
+
+export function scrollBoardNearEdge(point: EdgeScrollPoint) {
   const scrollable = document.querySelector('.board-groups');
 
   if (!scrollable) return;
@@ -21,9 +34,9 @@ export const mouseMoveHandler = (e: MouseEvent) => {
   // all here in the mousemove event handler to remove as many of the moving
   // parts as possible and keep the demo as simple as possible.
 
-  // Get the viewport-relative coordinates of the mousemove event.
-  const viewportX = e.clientX;
-  const viewportY = e.clientY;
+  // Get the viewport-relative coordinates of the pointer.
+  const viewportX = point.x;
+  const viewportY = point.y;
 
   // Get the viewport dimensions.
   const viewportRects = scrollable.getBoundingClientRect();
@@ -50,9 +63,7 @@ export const mouseMoveHandler = (e: MouseEvent) => {
   // If the mouse is not in the viewport edge, there's no need to calculate
   // anything else.
   if (!(isInLeftEdge || isInRightEdge || isInTopEdge || isInBottomEdge)) {
-    if (timer) {
-      clearTimeout(timer);
-    }
+    stopBoardEdgeScroll();
     return;
   }
 
@@ -170,4 +181,4 @@ export const mouseMoveHandler = (e: MouseEvent) => {
   };
 
   checkForWindowScroll();
-};
+}

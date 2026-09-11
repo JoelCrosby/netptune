@@ -1,4 +1,9 @@
-import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
+import {
+  CdkDrag,
+  CdkDragDrop,
+  CdkDragMove,
+  CdkDropList,
+} from '@angular/cdk/drag-drop';
 import {
   AfterViewInit,
   Component,
@@ -21,7 +26,12 @@ import { BoardBackgroundService } from '@core/services/board-background.service'
 import { BoardComposerService } from '@core/services/board-composer.service';
 import { BoardSelectionService } from '@core/services/board-selection.service';
 import { BoardViewService } from '@core/services/board-view.service';
-import { mouseMoveHandler } from '@boards/util/mouse-move-handler';
+import {
+  scrollBoardNearEdge,
+  stopBoardEdgeScroll,
+} from '@boards/util/board-edge-scroll';
+import { BOARD_DRAG_START_DELAY } from '@boards/util/board-drag';
+import { LayoutService } from '@core/services/layout.service';
 import { Selected } from '@core/models/selected';
 import { Status } from '@core/models/status';
 import {
@@ -99,12 +109,14 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
             <app-board-group-card
               cdkDrag
               [cdkDragDisabled]="dragDisabled()"
+              [cdkDragStartDelay]="dragStartDelay"
               class="board-group-task-card cursor-pointer"
               [class.cursor-default!]="dragDisabled()"
               [cdkDragData]="task"
               [task]="task"
               [groupId]="group().id"
               (cdkDragStarted)="onDragStarted()"
+              (cdkDragMoved)="onDragMoved($event)"
               (cdkDragReleased)="onDragRelease()"
               (contextmenu)="onTaskContextMenu($event, task)"
               (click)="
@@ -178,6 +190,9 @@ export class BoardGroupComponent implements OnDestroy, AfterViewInit {
   private boardBackground = inject(BoardBackgroundService);
   private taskCommands = inject(TaskCommandsService);
   private destroyRef = inject(DestroyRef);
+  private isTouchDevice = inject(LayoutService).isTouchDevice;
+
+  readonly dragStartDelay = BOARD_DRAG_START_DELAY;
 
   readonly canMove = hasPermission(PERMISSIONS.tasks.move);
   readonly canDelete = hasPermission(PERMISSIONS.tasks.delete);
@@ -210,10 +225,11 @@ export class BoardGroupComponent implements OnDestroy, AfterViewInit {
     () => this.group().id === this.inlineActiveGroupId()
   );
 
+  // Touch has no hover to reveal the button with, so it stays visible there.
   showAddButton = computed(() => {
     return (
       this.isAuthenticated() &&
-      this.focused() &&
+      (this.focused() || this.isTouchDevice()) &&
       !this.isDragging() &&
       !this.isInlineActive()
     );
@@ -232,7 +248,7 @@ export class BoardGroupComponent implements OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
-    document.removeEventListener('mousemove', mouseMoveHandler);
+    stopBoardEdgeScroll();
   }
 
   onAddTaskClicked() {
@@ -262,23 +278,15 @@ export class BoardGroupComponent implements OnDestroy, AfterViewInit {
   }
 
   onDragStarted() {
-    this.trackMousePosition();
-
     this.boardView.setIsDragging(true);
   }
 
-  trackMousePosition() {
-    document.addEventListener('mousemove', mouseMoveHandler, {
-      passive: true,
-    });
-  }
-
-  untrackMousePosition() {
-    document.removeEventListener('mousemove', mouseMoveHandler);
+  onDragMoved(event: CdkDragMove<BoardViewTask>) {
+    scrollBoardNearEdge(event.pointerPosition);
   }
 
   onDragRelease() {
-    this.untrackMousePosition();
+    stopBoardEdgeScroll();
 
     this.boardView.setIsDragging(false);
   }

@@ -13,6 +13,7 @@ import {
   input,
   linkedSignal,
   OnDestroy,
+  signal,
 } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
@@ -48,6 +49,8 @@ import { UserPreferencesService } from '@core/services/user-preferences.service'
 import { statusResource } from '@core/resources/status.resource';
 import { ManageBoardGroupsDialogComponent } from '@boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component';
 import { hiddenGroupIdsForBoard } from '@boards/util/hidden-board-groups';
+import { BOARD_DRAG_START_DELAY } from '@boards/util/board-drag';
+import { LayoutService } from '@core/services/layout.service';
 import {
   boardTaskSortForBoard,
   sortBoardViewTasks,
@@ -150,6 +153,8 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
               cdkDropList
               appScrollShadow
               class="board-groups custom-scroll flex min-h-0 w-full flex-1 flex-row overflow-hidden overflow-x-scroll rounded-lg pb-4"
+              [class.snap-x]="snapColumns()"
+              [class.snap-mandatory]="snapColumns()"
               cdkDropListOrientation="horizontal"
               (cdkDropListDropped)="drop($event)"
               [cdkDropListData]="groups">
@@ -157,7 +162,10 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
                 <app-board-group
                   cdkDrag
                   [cdkDragDisabled]="!isAuthenticated()"
-                  class="board-group mr-4 flex w-75 flex-none flex-col overflow-hidden rounded-[.4rem]"
+                  [cdkDragStartDelay]="dragStartDelay"
+                  class="board-group mr-4 flex w-[80vw] flex-none snap-start flex-col overflow-hidden rounded-[.4rem] md:w-75"
+                  (cdkDragStarted)="groupDragging.set(true)"
+                  (cdkDragReleased)="groupDragging.set(false)"
                   [cdkDragData]="group"
                   [group]="group"
                   [assignedStatus]="
@@ -204,7 +212,7 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
                           Tooltip on the button that edits a board group
                         "
                         title="Edit group"
-                        class="invisible mx-[.2rem] group-hover/header:visible"
+                        class="touch:visible invisible mx-[.2rem] group-hover/header:visible"
                         (click)="onEditGroupClicked(group)">
                         <svg
                           lucideEllipsisVertical
@@ -216,7 +224,7 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
                           Tooltip on the button that deletes a board group
                         "
                         title="Delete group"
-                        class="invisible mx-[.2rem] group-hover/header:visible"
+                        class="touch:visible invisible mx-[.2rem] group-hover/header:visible"
                         (click)="onDeleteGroupClicked(group)">
                         <svg lucideX class="text-foreground/40 h-4 w-4"></svg>
                       </button>
@@ -226,7 +234,7 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
               }
               @if (isAuthenticated()) {
                 <app-create-board-group
-                  class="board-group mr-4 flex w-75 flex-none flex-col overflow-hidden rounded-[.4rem]" />
+                  class="board-group mr-4 flex w-[80vw] flex-none snap-start flex-col overflow-hidden rounded-[.4rem] md:w-75" />
               }
             </div>
           }
@@ -253,6 +261,18 @@ export class BoardGroupsViewComponent implements OnDestroy {
 
   isAuthenticated = inject(SessionService).isAuthenticated;
   readonly notificationScope = NotificationScope;
+  readonly dragStartDelay = BOARD_DRAG_START_DELAY;
+
+  private readonly isMobileView = inject(LayoutService).isMobileView;
+  readonly groupDragging = signal(false);
+
+  // Snapping would pull the board back to a column boundary while a drag is
+  // auto-scrolling it, so it is off for the length of any drag.
+  readonly snapColumns = computed(() => {
+    const dragging = this.groupDragging() || this.boardView.isDragging();
+
+    return this.isMobileView() && !dragging;
+  });
 
   boardLogoUrl = computed(() => {
     return brandingImageUrl(
