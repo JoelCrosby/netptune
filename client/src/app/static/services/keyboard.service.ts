@@ -7,8 +7,18 @@ export class KeyboardService {
   });
 
   constructor() {
-    document.addEventListener('keydown', (el) => this.keyDown.set(el), {
-      passive: true,
-    });
+    document.addEventListener(
+      'keydown',
+      (event: Event) => {
+        const isKeyPress = event instanceof KeyboardEvent;
+
+        if (!isKeyPress) {
+          return;
+        }
+
+        this.keyDown.set(event);
+      },
+      { passive: true }
+    );
   }
 }

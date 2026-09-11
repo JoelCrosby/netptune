@@ -75,6 +75,12 @@ export class CommandShortcutService {
   };
 
   private shouldIgnore(event: KeyboardEvent): boolean {
+    const isKeyPress = event instanceof KeyboardEvent;
+
+    if (!isKeyPress) {
+      return true;
+    }
+
     if (
       this.palette.isOpen() ||
       event.defaultPrevented ||
