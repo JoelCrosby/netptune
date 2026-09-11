@@ -9,6 +9,7 @@ using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Events.Tasks;
 using Netptune.Core.Models.Audit;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
@@ -381,6 +382,7 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
     {
         return query.Where(record =>
             (record.EventKey == EventKeys.ScopeMemberChanged && record.Payload.RootElement.GetProperty("change").GetString() != "removed") ||
+            (record.EventKey == EventKeys.EntityFieldTransitioned && record.Payload.RootElement.GetProperty("field").GetString() == TaskAssigneeTransitions.Field && record.Payload.RootElement.GetProperty("newValue").GetString() != null) ||
             (record.EventKey == EventKeys.EntityActivityRecorded && record.Payload.RootElement.GetProperty("activityType").GetInt32() == legacyActivityType));
     }
 
@@ -390,6 +392,7 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
     {
         return query.Where(record =>
             (record.EventKey == EventKeys.ScopeMemberChanged && record.Payload.RootElement.GetProperty("change").GetString() == "removed") ||
+            (record.EventKey == EventKeys.EntityFieldTransitioned && record.Payload.RootElement.GetProperty("field").GetString() == TaskAssigneeTransitions.Field && record.Payload.RootElement.GetProperty("oldValue").GetString() != null) ||
             (record.EventKey == EventKeys.EntityActivityRecorded && record.Payload.RootElement.GetProperty("activityType").GetInt32() == legacyActivityType));
     }
 

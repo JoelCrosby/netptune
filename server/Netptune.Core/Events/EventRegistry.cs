@@ -2,6 +2,7 @@ using System.Text.Json;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Events.Tasks;
 
 namespace Netptune.Core.Events;
 
@@ -122,10 +123,25 @@ public static class EventKeys
         var isEstimateChange = isMemberAttributeChange || isEstimateTransition;
         var isStartDateTransition = field == "startdate";
         var isDueDateTransition = field == "duedate";
+        var isFieldTransition = eventKey == EntityFieldTransitioned;
+        var oldValue = ReadString(payload, "oldValue");
+        var newValue = ReadString(payload, "newValue");
+        var isAssigneeAddition = isFieldTransition && TaskAssigneeTransitions.IsAddition(field, newValue);
+        var isAssigneeRemoval = isFieldTransition && TaskAssigneeTransitions.IsRemoval(field, oldValue);
 
         if (isEntityCreation)
         {
             return ActivityType.Create;
+        }
+
+        if (isAssigneeAddition)
+        {
+            return ActivityType.Assign;
+        }
+
+        if (isAssigneeRemoval)
+        {
+            return ActivityType.Unassign;
         }
 
         if (isScopeMembershipChange)

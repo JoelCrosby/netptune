@@ -5,9 +5,11 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
+using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Events.Tasks;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Services.Notifications;
 using Netptune.Core.UnitOfWork;
@@ -795,6 +797,42 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
             CancellationToken)).Should().Be(1);
     }
 
+    [Fact]
+    public async Task HandleCanonicalEvent_ShouldNotifyTheAssigneeImmediately_WhenATaskIsAssigned()
+    {
+        const int entityId = 1402;
+        var template = new FieldTransitionedPayload { Field = TaskAssigneeTransitions.Field };
+        var assignment = TaskAssigneeTransitions.Split(template, [fixture.OtherUserId], []).Single();
+
+        await HandleCanonical(entityId, assignment);
+
+        var entry = (await Entries(entityId)).Should().ContainSingle().Subject;
+
+        entry.ActivityType.Should().Be(ActivityType.Assign);
+        entry.IsOpen.Should().BeFalse("an assignment is discrete, not folded into a burst of edits");
+
+        var notification = (await AllNotifications(entityId)).Should().ContainSingle().Subject;
+
+        notification.UserId.Should().Be(fixture.OtherUserId, "only the assignee is addressed");
+        notification.ActivityType.Should().Be(ActivityType.Assign);
+    }
+
+    [Fact]
+    public async Task HandleCanonicalEvent_ShouldRecordButNotNotify_WhenAnAssigneeIsRemoved()
+    {
+        const int entityId = 1403;
+        var template = new FieldTransitionedPayload { Field = TaskAssigneeTransitions.Field };
+        var removal = TaskAssigneeTransitions.Split(template, [], [fixture.OtherUserId]).Single();
+
+        await HandleCanonical(entityId, removal);
+
+        var entry = (await Entries(entityId)).Should().ContainSingle().Subject;
+
+        entry.ActivityType.Should().Be(ActivityType.Unassign);
+
+        (await NotificationCount(entityId)).Should().Be(0);
+    }
+
     #endregion
 
     #region Helpers
@@ -842,6 +880,61 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
             OccurredAt = DateTime.UtcNow,
             RecipientUserIds = [fixture.ActorUserId, fixture.OtherUserId, fixture.ThirdUserId],
         };
+    }
+
+    private async Task HandleCanonical(int entityId, FieldTransitionedPayload transition)
+    {
+        var eventId = Guid.NewGuid();
+        var occurredAt = DateTime.UtcNow;
+        var payload = JsonSerializer.SerializeToDocument(transition, JsonOptions.Default);
+
+        long eventRecordId;
+
+        using (var scope = fixture.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<DataContext>();
+            var record = new EventRecord
+            {
+                EventId = eventId,
+                WorkspaceId = fixture.WorkspaceId,
+                EventKey = EventKeys.EntityFieldTransitioned,
+                SubjectType = EventEntityTypes.From(EntityType.Task),
+                SubjectId = entityId.ToString(),
+                ActorUserId = fixture.ActorUserId,
+                OccurredAt = occurredAt,
+                RecordedAt = occurredAt,
+                RetentionClass = EventRetentionClasses.Permanent,
+                Payload = payload,
+            };
+
+            db.EventRecords.Add(record);
+            await db.SaveChangesAsync(CancellationToken);
+
+            eventRecordId = record.Id;
+        }
+
+        var envelope = new CanonicalEventEnvelope
+        {
+            EventId = eventId,
+            EventRecordId = eventRecordId,
+            EventKey = EventKeys.EntityFieldTransitioned,
+            SchemaVersion = 1,
+            WorkspaceId = fixture.WorkspaceId,
+            SubjectType = EventEntityTypes.From(EntityType.Task),
+            SubjectId = entityId.ToString(),
+            ActorUserId = fixture.ActorUserId,
+            OccurredAt = occurredAt,
+            RecordedAt = occurredAt,
+            RetentionClass = EventRetentionClasses.Permanent,
+            Payload = payload.RootElement.Clone(),
+        };
+
+        var (handlerScope, handler) = fixture.CreateHandler();
+
+        using (handlerScope)
+        {
+            await handler.Handle(envelope, CancellationToken);
+        }
     }
 
     private Task Handle(params ActivityEvent[] events) => Handle(events, null);

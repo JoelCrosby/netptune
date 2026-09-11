@@ -225,6 +225,25 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
                 References = creationReferences,
             }, cancellationToken);
 
+            var assignedUserIds = hasNamedAssignee
+                ? assigneeIds.Where(assigneeId => assigneeId != user.Id)
+                : [];
+            var assignmentTemplate = new FieldTransitionedPayload { Field = TaskAssigneeTransitions.Field };
+            var assignments = TaskAssigneeTransitions.Split(assignmentTemplate, assignedUserIds, []);
+
+            foreach (var assignment in assignments)
+            {
+                await EventRecords.Append(new EventWriteRequest<FieldTransitionedPayload>
+                {
+                    WorkspaceId = task.WorkspaceId,
+                    EventKey = EventKeys.EntityFieldTransitioned,
+                    SubjectType = EventEntityTypes.From(EntityType.Task),
+                    SubjectId = result.Id.ToString(),
+                    Payload = assignment,
+                    References = creationReferences,
+                }, cancellationToken);
+            }
+
             if (task.SprintId.HasValue && targetSprint?.Status == SprintStatus.Active)
             {
                 var scope = new SprintScope(task.WorkspaceId, task.SprintId.Value, task.ProjectId!.Value);

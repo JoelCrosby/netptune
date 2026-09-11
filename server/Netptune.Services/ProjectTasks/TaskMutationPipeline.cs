@@ -147,19 +147,26 @@ public sealed class TaskMutationPipeline : ITaskMutationPipeline
             NewNumericValue = change.Field == TaskChangeField.Estimate ? current.EstimateValue : null,
         };
         var references = BuildScopeReferences(previous, current);
+        var isAssigneeChange = change.Field == TaskChangeField.Assignees;
+        var transitions = isAssigneeChange
+            ? TaskAssigneeTransitions.Split(payload, change.AddedValues, change.RemovedValues)
+            : [payload];
 
-        await EventRecords.Append(new EventWriteRequest<FieldTransitionedPayload>
+        foreach (var transition in transitions)
         {
-            WorkspaceId = current.WorkspaceId,
-            EventKey = EventKeys.EntityFieldTransitioned,
-            SubjectType = EventEntityTypes.From(EntityType.Task),
-            SubjectId = current.Id.ToString(),
-            ActorUserId = request.ActorUserId,
-            CorrelationId = correlationId,
-            CausationEventId = request.CausationEventId,
-            Payload = payload,
-            References = references,
-        }, cancellationToken);
+            await EventRecords.Append(new EventWriteRequest<FieldTransitionedPayload>
+            {
+                WorkspaceId = current.WorkspaceId,
+                EventKey = EventKeys.EntityFieldTransitioned,
+                SubjectType = EventEntityTypes.From(EntityType.Task),
+                SubjectId = current.Id.ToString(),
+                ActorUserId = request.ActorUserId,
+                CorrelationId = correlationId,
+                CausationEventId = request.CausationEventId,
+                Payload = transition,
+                References = references,
+            }, cancellationToken);
+        }
 
         var estimateChangedInActiveSprint = change.Field == TaskChangeField.Estimate
             && current.SprintId.HasValue

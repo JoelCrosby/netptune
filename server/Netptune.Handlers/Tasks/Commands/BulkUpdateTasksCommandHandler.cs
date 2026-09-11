@@ -6,6 +6,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Events.Sprints;
+using Netptune.Core.Events.Tasks;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Relationships;
@@ -172,6 +173,7 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
                 var oldEstimateType = task.EstimateType;
                 var oldEstimateValue = task.EstimateValue;
                 var oldSprintId = task.SprintId;
+                var oldAssigneeIds = task.ProjectTaskAppUsers.Select(assignment => assignment.UserId).ToList();
                 var projectChanged = req.ProjectId.HasValue && task.ProjectId != req.ProjectId.Value;
 
                 if (status is not null)
@@ -343,6 +345,13 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
                     }
                 }
 
+                if (assigneeUpdate.ShouldUpdate)
+                {
+                    var assigneeChange = new TaskAssigneeChange(task, oldAssigneeIds, workspaceId);
+
+                    await AppendAssigneeChanges(assigneeChange, references, cancellationToken);
+                }
+
                 if (oldSprintId != task.SprintId)
                 {
 
@@ -374,6 +383,34 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
         await EventPublisher.IndexTasks(taskIds, workspaceKey);
 
         return ClientResponse.Success;
+    }
+
+    private sealed record TaskAssigneeChange(ProjectTask Task, List<string> PreviousAssigneeIds, int WorkspaceId);
+
+    private async Task AppendAssigneeChanges(
+        TaskAssigneeChange change,
+        List<EventReferenceInput> references,
+        CancellationToken cancellationToken)
+    {
+        var task = change.Task;
+        var currentAssigneeIds = task.ProjectTaskAppUsers.Select(assignment => assignment.UserId).ToList();
+        var addedUserIds = currentAssigneeIds.Except(change.PreviousAssigneeIds, StringComparer.Ordinal);
+        var removedUserIds = change.PreviousAssigneeIds.Except(currentAssigneeIds, StringComparer.Ordinal);
+        var template = new FieldTransitionedPayload { Field = TaskAssigneeTransitions.Field };
+        var transitions = TaskAssigneeTransitions.Split(template, addedUserIds, removedUserIds);
+
+        foreach (var transition in transitions)
+        {
+            await EventRecords.Append(new EventWriteRequest<FieldTransitionedPayload>
+            {
+                WorkspaceId = change.WorkspaceId,
+                EventKey = EventKeys.EntityFieldTransitioned,
+                SubjectType = EventEntityTypes.From(EntityType.Task),
+                SubjectId = task.Id.ToString(),
+                Payload = transition,
+                References = references,
+            }, cancellationToken);
+        }
     }
 
     private async Task<bool> IsActiveSprint(int sprintId, CancellationToken cancellationToken)

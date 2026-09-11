@@ -9,9 +9,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Events.Tasks;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Activity;
+using Netptune.Core.ViewModels.Audit;
 using Netptune.Core.ViewModels.Boards;
 using Netptune.Core.ViewModels.Flags;
 using Netptune.Core.ViewModels.ProjectTasks;
@@ -362,6 +364,59 @@ public sealed class TasksEndpointTests
         clearResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         cleared.IsSuccess.Should().BeTrue();
         cleared.Payload!.Tags.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Update_ShouldRecordOneAddressedTransitionPerAssigneeChange()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var initialAssigneeId = SeedData.Users.ElementAt(1).Id;
+        var addedAssigneeId = SeedData.Users.ElementAt(2).Id;
+        var createResponse = await Client.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest
+        {
+            Name = $"Assignee transitions {Guid.NewGuid():N}",
+            Description = "Task used to verify assignee changes are recorded per user",
+            ProjectId = 1,
+            AssigneeIds = [initialAssigneeId],
+        }, cancellationToken);
+        var created = await createResponse.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>(cancellationToken);
+        var taskId = created.Payload!.Id;
+
+        var updateResponse = await Client.PutAsJsonAsync("api/tasks", new UpdateProjectTaskRequest
+        {
+            Id = taskId,
+            AssigneeIds = [addedAssigneeId],
+        }, cancellationToken);
+
+        updateResponse.StatusCode.Should().Be(HttpStatusCode.OK, await updateResponse.Content.ReadAsStringAsync(cancellationToken));
+
+        using var verificationScope = Fixture.CreateScope();
+        var verificationContext = verificationScope.ServiceProvider.GetRequiredService<DataContext>();
+        var transitions = await verificationContext.EventRecords
+            .AsNoTracking()
+            .Where(item =>
+                item.EventKey == EventKeys.EntityFieldTransitioned &&
+                item.SubjectId == taskId.ToString())
+            .OrderBy(item => item.Id)
+            .ToListAsync(cancellationToken);
+        var assigneeTransitions = transitions
+            .Where(item => item.Payload.RootElement.GetProperty("field").GetString() == TaskAssigneeTransitions.Field)
+            .Select(item => EventKeys.ActivityTypeFor(item.EventKey, item.Payload.RootElement))
+            .ToList();
+
+        assigneeTransitions.Should().Equal(
+            [ActivityType.Assign, ActivityType.Assign, ActivityType.Unassign],
+            "creation assigns the named user, then the update adds one user and removes the other");
+
+        var addition = transitions.Last(item => item.Payload.RootElement.GetProperty("newValue").GetString() == addedAssigneeId);
+
+        addition.Payload.RootElement.GetProperty("recipientUserIds")[0].GetString().Should().Be(addedAssigneeId);
+
+        var auditPage = await Client.GetFromJsonAsync<ClientResponse<PagedResponse<AuditLogViewModel>>>(
+            $"api/audit?page=1&pageSize=100&activityType={(int)ActivityType.Assign}",
+            cancellationToken);
+
+        auditPage.Payload!.Items.Should().Contain(item => item.EntityId == taskId && item.Type == ActivityType.Assign);
     }
 
     [Fact]

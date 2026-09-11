@@ -63,6 +63,19 @@ public sealed class EventDefinitionRegistryTests
         result.Should().Be(expected);
     }
 
+    [Theory]
+    [InlineData("""{ "field": "assignees", "oldValue": null, "newValue": "user-1" }""", ActivityType.Assign)]
+    [InlineData("""{ "field": "assignees", "oldValue": "user-1", "newValue": null }""", ActivityType.Unassign)]
+    [InlineData("""{ "field": "assignees", "oldValue": null, "newValue": null }""", ActivityType.Modify)]
+    public void ActivityTypeFor_ShouldMapAssigneeTransitions(string json, ActivityType expected)
+    {
+        using var payload = JsonDocument.Parse(json);
+
+        var result = EventKeys.ActivityTypeFor(EventKeys.EntityFieldTransitioned, payload.RootElement);
+
+        result.Should().Be(expected);
+    }
+
     [Fact]
     public void Validate_ShouldAcceptGlobalSecurityEvent()
     {

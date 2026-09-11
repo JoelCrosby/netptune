@@ -82,6 +82,8 @@ public sealed record FieldTransitionedPayload
     public decimal? OldNumericValue { get; init; }
 
     public decimal? NewNumericValue { get; init; }
+
+    public IReadOnlyCollection<string>? RecipientUserIds { get; init; }
 }
 
 public sealed record ScopeMemberChangedPayload
