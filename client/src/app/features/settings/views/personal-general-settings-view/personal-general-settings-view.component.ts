@@ -7,6 +7,7 @@ import { IconTileComponent } from '@static/components/icon-tile.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SkeletonComponent } from '@static/components/skeleton/skeleton.component';
+import { PanelBodyComponent } from '@static/components/panel-body.component';
 import { PanelComponent } from '@static/components/panel.component';
 
 const NOTIFICATION_GROUP = 'notifications';
@@ -19,6 +20,7 @@ const APPEARANCE_GROUP = 'appearance';
     IconTileComponent,
     PageContainerComponent,
     PageHeaderComponent,
+    PanelBodyComponent,
     PanelComponent,
     PreferenceListComponent,
     SkeletonComponent,

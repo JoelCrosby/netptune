@@ -11,6 +11,7 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
 import { IconTileComponent } from '@static/components/icon-tile.component';
 import { NotificationListComponent } from '@static/components/notification-list.component';
 import { SkeletonComponent } from '@static/components/skeleton/skeleton.component';
+import { PanelBodyComponent } from '@static/components/panel-body.component';
 import { PanelComponent } from '@static/components/panel.component';
 
 const pageSize = 20;
@@ -21,6 +22,7 @@ const pageSize = 20;
     BadgeComponent,
     IconTileComponent,
     NotificationListComponent,
+    PanelBodyComponent,
     PanelComponent,
     RouterLink,
     SkeletonComponent,
