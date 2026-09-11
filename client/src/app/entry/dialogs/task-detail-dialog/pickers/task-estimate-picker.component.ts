@@ -62,6 +62,7 @@ import { NumberInputComponent } from '@static/components/number-input/number-inp
         } @else {
           <div class="px-3 py-2">
             <app-number-input
+              density="compact"
               [min]="0"
               [ariaLabel]="estimateTypeLabels[currentType()]"
               [value]="estimateValue()"

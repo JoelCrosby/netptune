@@ -35,7 +35,7 @@ import {
       <input
         appFormInput
         type="number"
-        class="min-w-0 flex-1 [appearance:textfield] px-1 text-center leading-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+        class="min-w-0 flex-1 [appearance:textfield] px-1 text-center [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
         [id]="name() || null"
         [value]="value()"
         [disabled]="disabled()"
@@ -70,7 +70,9 @@ export class NumberInputComponent {
   readonly ariaLabel = input<string | null>(null);
   readonly disabled = input(false);
   readonly invalid = input(false);
-  readonly density = input<FormControlDensity>('compact');
+  // Matches every other form control by default; callers sitting in a dense
+  // surface, such as a picker menu, ask for `compact`.
+  readonly density = input<FormControlDensity>('default');
 
   protected stepperClass(side: 'left' | 'right') {
     const base =
