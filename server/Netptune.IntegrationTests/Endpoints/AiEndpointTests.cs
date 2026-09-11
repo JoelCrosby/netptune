@@ -294,6 +294,95 @@ public sealed class AiEndpointTests
     }
 
     [Fact]
+    public async Task DeleteConversation_ShouldHideItFromTheOwner()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var seed = await SeedPendingChangeSet();
+
+        try
+        {
+            var response = await client.DeleteAsync(
+                $"api/ai/conversations/{seed.ConversationId}",
+                TestContext.Current.CancellationToken);
+
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var detail = await client.GetAsync(
+                $"api/ai/conversations/{seed.ConversationId}",
+                TestContext.Current.CancellationToken);
+            var conversations = await client.GetFromJsonAsync<List<AiConversationViewModel>>(
+                "api/ai/conversations",
+                TestContext.Current.CancellationToken);
+
+            detail.StatusCode.Should().Be(HttpStatusCode.NotFound);
+            conversations.Should().NotContain(conversation => conversation.Id == seed.ConversationId);
+        }
+        finally
+        {
+            await RemoveSeed(seed.ConversationId);
+        }
+    }
+
+    [Fact]
+    public async Task DeleteConversation_ShouldLeaveItsPendingChangeSetUnreachable()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var seed = await SeedPendingChangeSet();
+
+        try
+        {
+            await client.DeleteAsync(
+                $"api/ai/conversations/{seed.ConversationId}",
+                TestContext.Current.CancellationToken);
+
+            var changeSet = await client.GetAsync(
+                $"api/ai/change-sets/{seed.ChangeSetId}",
+                TestContext.Current.CancellationToken);
+            var apply = await client.PostAsJsonAsync(
+                $"api/ai/change-sets/{seed.ChangeSetId}/apply",
+                new { changeIds = Array.Empty<long>() },
+                TestContext.Current.CancellationToken);
+
+            changeSet.StatusCode.Should().Be(HttpStatusCode.NotFound);
+            apply.StatusCode.Should().Be(
+                HttpStatusCode.NotFound,
+                "a deleted chat must not be able to change the workspace");
+        }
+        finally
+        {
+            await RemoveSeed(seed.ConversationId);
+        }
+    }
+
+    [Fact]
+    public async Task DeleteConversation_ShouldReturnNotFound_ForAnotherMembersConversation()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var seed = await SeedPendingChangeSet(isOwnedByCaller: false);
+
+        try
+        {
+            var response = await client.DeleteAsync(
+                $"api/ai/conversations/{seed.ConversationId}",
+                TestContext.Current.CancellationToken);
+
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+            using var scope = Fixture.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+            var conversation = await context.AiConversations
+                .AsNoTracking()
+                .FirstAsync(item => item.Id == seed.ConversationId, TestContext.Current.CancellationToken);
+
+            conversation.IsDeleted.Should().BeFalse();
+        }
+        finally
+        {
+            await RemoveSeed(seed.ConversationId);
+        }
+    }
+
+    [Fact]
     public async Task ApplyChangeSet_ShouldBroadcastAWorkspaceEvent_SoOtherClientsDoNotGoStale()
     {
         var client = Fixture.CreateNetptuneClient();
@@ -840,17 +929,26 @@ public sealed class AiEndpointTests
         public JsonDocument? Fields { get; init; }
     }
 
-    private async Task<PendingChangeSetSeed> SeedPendingChangeSet(AiProposedChangeSeed? proposal = null)
+    private async Task<PendingChangeSetSeed> SeedPendingChangeSet(
+        AiProposedChangeSeed? proposal = null,
+        bool isOwnedByCaller = true)
     {
         using var scope = Fixture.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<DataContext>();
-        var membership = await context.WorkspaceAppUsers
+
+        // Ordered the way TestAuthenticationHandler picks the caller, so the first membership is theirs.
+        var memberships = await context.WorkspaceAppUsers
             .Include(workspaceUser => workspaceUser.Workspace)
             .Include(workspaceUser => workspaceUser.User)
             .Where(workspaceUser =>
                 workspaceUser.Workspace.Slug == "netptune" &&
                 workspaceUser.User.UserType == AppUserType.User)
-            .FirstAsync(TestContext.Current.CancellationToken);
+            .OrderBy(workspaceUser => workspaceUser.Role == WorkspaceRole.Owner ? 0 : 1)
+            .ThenBy(workspaceUser => workspaceUser.UserId)
+            .Take(2)
+            .ToListAsync(TestContext.Current.CancellationToken);
+
+        var membership = isOwnedByCaller ? memberships[0] : memberships[1];
 
         var conversation = new AiConversation
         {

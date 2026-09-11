@@ -1503,6 +1503,7 @@
     </unit>
     <unit id="2159130950882492111">
       <notes>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:288</note>
         <note category="location">src/app/core/services/auth-commands.service.ts:196</note>
         <note category="location">src/app/core/services/board-commands.service.ts:65</note>
         <note category="location">src/app/core/services/board-group-commands.service.ts:310</note>
@@ -1738,6 +1739,7 @@
     </unit>
     <unit id="7022070615528435141">
       <notes>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:287</note>
         <note category="location">src/app/core/services/board-commands.service.ts:64</note>
         <note category="location">src/app/core/services/board-group-commands.service.ts:309</note>
         <note category="location">src/app/core/services/notification-commands.service.ts:74</note>
@@ -1763,7 +1765,7 @@
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:254</note>
         <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:155</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:33</note>
-        <note category="description">Confirms the action in a dialog</note>
+        <note category="description">Confirms a destructive action</note>
       </notes>
       <segment>
         <source>Delete</source>
@@ -1922,6 +1924,15 @@
       </notes>
       <segment>
         <source>The archive could not be read.</source>
+      </segment>
+    </unit>
+    <unit id="8640677495548743141">
+      <notes>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:286</note>
+        <note category="description">Asks the user to confirm deleting one of their assistant conversations. TITLE is the conversation title</note>
+      </notes>
+      <segment>
+        <source>Delete &quot;<ph id="0" equiv="TITLE" disp="title"/>&quot;? Its messages and any changes it has not applied yet will be gone.</source>
       </segment>
     </unit>
     <unit id="8641685480888184389">
@@ -3096,7 +3107,7 @@
     <unit id="4057181605248220505">
       <notes>
         <note category="location">src/app/entry/components/notification-bell/notification-dropdown.component.ts:24,26</note>
-        <note category="location">src/app/features/dashboard/components/dashboard-notifications-card.component.ts:45,48</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-notifications-card.component.ts:47,50</note>
         <note category="description">Heading of the notifications dropdown</note>
       </notes>
       <segment>
@@ -3579,7 +3590,7 @@
     </unit>
     <unit id="2734780694152757859">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-notifications-card.component.ts:59,63</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-notifications-card.component.ts:61,65</note>
         <note category="description">Link to the full notifications page</note>
       </notes>
       <segment>
@@ -6746,7 +6757,7 @@
     </unit>
     <unit id="3160376611740224455">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:286</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:322</note>
         <note category="description">Seeds the assistant composer with a question about a sprint</note>
       </notes>
       <segment>
@@ -9412,7 +9423,7 @@
     </unit>
     <unit id="8279959485865788028">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/pickers/task-estimate-picker.component.ts:88</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/pickers/task-estimate-picker.component.ts:89</note>
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:234,236</note>
         <note category="description">Accessible label for the control that changes a task&apos;s estimate</note>
       </notes>
@@ -9952,7 +9963,7 @@
     </unit>
     <unit id="6189233648220583946">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:469</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:505</note>
         <note category="description">Shown when the assistant request fails</note>
       </notes>
       <segment>
@@ -12201,7 +12212,7 @@
     </unit>
     <unit id="3655032270479055533">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-notifications-card.component.ts:68,69</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-notifications-card.component.ts:70,71</note>
         <note category="description">Accessible label while notifications load</note>
       </notes>
       <segment>
@@ -12793,7 +12804,7 @@
     </unit>
     <unit id="3132998863898047908">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:280</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:316</note>
         <note category="description">Seeds the assistant composer with a question about a task</note>
       </notes>
       <segment>
@@ -14133,8 +14144,8 @@
     </unit>
     <unit id="3154294923374510663">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:586</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:777</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:622</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:813</note>
         <note category="description">Shown when the assistant reports a failure</note>
       </notes>
       <segment>
@@ -14271,7 +14282,7 @@
     </unit>
     <unit id="33149636091572968">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-notifications-card.component.ts:93,96</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-notifications-card.component.ts:95,98</note>
         <note category="description">Button that loads more notifications</note>
       </notes>
       <segment>
@@ -16695,6 +16706,15 @@
         <source>The import could not be started.</source>
       </segment>
     </unit>
+    <unit id="8246436377858718644">
+      <notes>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:285</note>
+        <note category="description">Title of the confirmation dialog for deleting an assistant conversation</note>
+      </notes>
+      <segment>
+        <source>Delete Conversation</source>
+      </segment>
+    </unit>
     <unit id="2477494455994379026">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:93</note>
@@ -17441,7 +17461,7 @@
     </unit>
     <unit id="2901842024267246951">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-notifications-card.component.ts:131</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-notifications-card.component.ts:133</note>
         <note category="description">Number of unread notifications shown on the dashboard card</note>
       </notes>
       <segment>
@@ -21212,7 +21232,7 @@
     </unit>
     <unit id="5086267064675007910">
       <notes>
-        <note category="location">src/app/features/settings/views/personal-general-settings-view/personal-general-settings-view.component.ts:38,41</note>
+        <note category="location">src/app/features/settings/views/personal-general-settings-view/personal-general-settings-view.component.ts:40,43</note>
         <note category="description">Accessible label while personal settings load</note>
       </notes>
       <segment>
@@ -21648,7 +21668,7 @@
     </unit>
     <unit id="6439365426343089851">
       <notes>
-        <note category="location">src/app/features/settings/views/personal-general-settings-view/personal-general-settings-view.component.ts:30,33</note>
+        <note category="location">src/app/features/settings/views/personal-general-settings-view/personal-general-settings-view.component.ts:32,35</note>
         <note category="location">src/app/features/settings/views/workspace-general-settings-view/workspace-general-settings-view.component.ts:21,24</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:317</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:395</note>

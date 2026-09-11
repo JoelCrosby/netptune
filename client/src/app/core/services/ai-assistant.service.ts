@@ -29,7 +29,9 @@ import {
 import { AiTranscriptService } from '@core/services/ai-transcript.service';
 import { AiTurnProgressService } from '@core/services/ai-turn-progress.service';
 import { AiTypewriterService } from '@core/services/ai-typewriter.service';
+import { ConfirmationService } from '@core/services/confirmation.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
+import { firstValueFrom } from 'rxjs';
 
 /** Matches the server's turn timeout — a reply cannot arrive after it. */
 const RESUME_TIMEOUT = 5 * 60 * 1000;
@@ -51,6 +53,7 @@ export class AiAssistantService {
   private readonly stream = inject(AiStreamService);
   private readonly progress = inject(AiTurnProgressService);
   private readonly context = inject(AiContextService);
+  private readonly confirmation = inject(ConfirmationService);
   private readonly workspaceId = inject(CurrentWorkspaceService).slug;
 
   readonly workspaceKey = computed(() => this.workspaceId() ?? null);
@@ -242,17 +245,49 @@ export class AiAssistantService {
   }
 
   async deleteConversation(conversationId: string) {
-    await this.conversation.remove(conversationId);
+    const isConfirmed = await this.confirmDelete(conversationId);
+
+    if (!isConfirmed) {
+      return;
+    }
+
+    try {
+      await this.conversation.remove(conversationId);
+    } catch {
+      await this.conversation.loadList();
+
+      return;
+    }
 
     this.drafts.discard(conversationId);
 
     const isCurrent = this.conversationId() === conversationId;
 
     if (isCurrent) {
+      // The server stops the turn, but its last events must not land in the fresh chat.
+      this.abandonTurn();
       this.startNewConversation();
     }
 
     await this.conversation.loadList();
+  }
+
+  private async confirmDelete(conversationId: string) {
+    const conversation = this.conversations().find((item) => {
+      return item.id === conversationId;
+    });
+
+    const title = conversation?.title ?? '';
+
+    return await firstValueFrom(
+      this.confirmation.open({
+        title: $localize`:Title of the confirmation dialog for deleting an assistant conversation:Delete Conversation`,
+        message: $localize`:Asks the user to confirm deleting one of their assistant conversations. TITLE is the conversation title:Delete "${title}:TITLE:"? Its messages and any changes it has not applied yet will be gone.`,
+        acceptLabel: $localize`:Confirms a destructive action:Delete`,
+        cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
+        color: 'warn',
+      })
+    );
   }
 
   startNewConversation() {

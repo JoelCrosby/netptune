@@ -31,7 +31,8 @@ public class AiChangeSetRepository(DataContext context, IDbConnectionFactory con
             .Where(changeSet =>
                 changeSet.Id == changeSetId &&
                 changeSet.UserId == userId &&
-                changeSet.WorkspaceId == workspaceId)
+                changeSet.WorkspaceId == workspaceId &&
+                !changeSet.Conversation.IsDeleted)
             .FirstOrDefaultAsync(cancellationToken);
     }
 
@@ -46,7 +47,8 @@ public class AiChangeSetRepository(DataContext context, IDbConnectionFactory con
                 changeSet.ConversationId == conversationId &&
                 changeSet.UserId == userId &&
                 changeSet.WorkspaceId == workspaceId &&
-                changeSet.Status == AiChangeSetStatus.Pending)
+                changeSet.Status == AiChangeSetStatus.Pending &&
+                !changeSet.Conversation.IsDeleted)
             .OrderByDescending(changeSet => changeSet.MessageId)
             .FirstOrDefaultAsync(cancellationToken);
     }
@@ -61,7 +63,8 @@ public class AiChangeSetRepository(DataContext context, IDbConnectionFactory con
             .Where(changeSet =>
                 changeSet.ConversationId == conversationId &&
                 changeSet.UserId == userId &&
-                changeSet.WorkspaceId == workspaceId)
+                changeSet.WorkspaceId == workspaceId &&
+                !changeSet.Conversation.IsDeleted)
             .OrderBy(changeSet => changeSet.MessageId)
             .ToListAsync(cancellationToken);
     }
