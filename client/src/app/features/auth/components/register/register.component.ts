@@ -13,107 +13,146 @@ import {
   validate,
 } from '@angular/forms/signals';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
-import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
 import { WorkspaceInvite } from '@core/models/session';
 import { AuthCommandsService } from '@core/services/auth-commands.service';
-import { FormErrorsComponent } from '@static/components/form-error/form-errors.component';
-import { FormInputComponent } from '@static/components/form-input/form-input.component';
-import { AuthPageContainerComponent } from '../auth-page-container/auth-page-container.component';
-import { TurnstileComponent } from '../turnstile/turnstile.component';
-import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.component';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
+import { FlatButtonComponent } from '@static/components/button/flat-button.component';
+import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
+import { AuthFieldComponent } from '../auth-field/auth-field.component';
+import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.component';
+import { AuthPageContainerComponent } from '../auth-page-container/auth-page-container.component';
+import { LoginProvidersComponent } from '../login/login-providers.component';
+import { PasswordStrengthMeterComponent } from '../password-strength-meter/password-strength-meter.component';
+import { TurnstileComponent } from '../turnstile/turnstile.component';
+
+const PASSWORD_MIN_LENGTH = 8;
 
 @Component({
   selector: 'app-register',
   imports: [
     AuthPageContainerComponent,
     AuthFormPanelComponent,
-    FormInputComponent,
-    FormErrorsComponent,
-    RouterLink,
+    AuthFieldComponent,
+    CheckboxComponent,
     FlatButtonComponent,
-    StrokedButtonComponent,
+    LoginProvidersComponent,
+    PasswordStrengthMeterComponent,
+    RouterLink,
     FormField,
-    FormErrorsComponent,
     TurnstileComponent,
   ],
   template: `
     <app-auth-page-container>
       <app-auth-form-panel
         showLogo
+        i18n-eyebrow="Label above the heading of the sign-in form"
+        eyebrow="Netptune account"
         i18n-heading="Heading of the account registration form"
-        heading="Create new Account"
+        heading="Create your account"
         [loading]="loading()"
         (submitted)="register()">
-        <app-form-input
-          [formField]="registerForm.firstname"
-          i18n-label="Label of the given-name field on the registration form"
-          label="Firstname"
-          maxLength="128"
-          id="firstname"
-          autocomplete="given-name"></app-form-input>
-
-        <app-form-input
-          [formField]="registerForm.lastname"
-          i18n-label="Label of the family-name field on the registration form"
-          label="Lastname"
-          maxLength="128"
-          id="lastname"
-          autocomplete="family-name"></app-form-input>
-
-        <app-form-input
-          [formField]="registerForm.email"
-          i18n-label="
-            Label of the e-mail address field on the registration form
-          "
-          label="Email"
-          maxLength="128"
-          id="email"
-          type="email"
-          autocomplete="username"></app-form-input>
-
-        <app-form-input
-          [formField]="registerForm.password0"
-          i18n-label="Label of the password field on the registration form"
-          label="Password"
-          maxLength="1024"
-          id="new-password"
-          autocomplete="new-password"
-          type="password"></app-form-input>
-
-        <app-form-input
-          [formField]="registerForm.password1"
-          i18n-label="
-            Label of the password confirmation field on the registration form
-          "
-          label="Confirm Password"
-          maxLength="1024"
-          id="confirm-new-password"
-          autocomplete="new-password"
-          type="password">
-          <app-form-errors [formField]="registerForm.password1" />
-        </app-form-input>
-
-        <app-turnstile (tokenGenerated)="onTurnstileResult($event)" />
-
-        <div class="flex flex-row items-center justify-between gap-4">
+        <p class="text-foreground/50 mt-1.5 text-[13px]" panelSubtitle>
+          <span i18n="Sits before the link to the login form">
+            Already have one?
+          </span>
           <a
-            app-stroked-button
-            color="primary"
-            type="button"
+            class="text-primary font-semibold hover:underline"
             [routerLink]="['/auth/login']">
             <span i18n="Link from the registration form back to the login form">
-              Back to Log in
+              Sign in
             </span>
           </a>
+        </p>
 
-          <button app-flat-button color="primary" type="submit">
-            <span i18n="Submit button on the account registration form">
-              Create Account
+        <div class="mt-5.5 flex flex-col gap-4">
+          <div class="flex flex-col gap-4 sm:flex-row">
+            <app-auth-field
+              [formField]="registerForm.firstname"
+              i18n-label="
+                Label of the given-name field on the registration form
+              "
+              label="First name"
+              maxLength="128"
+              id="firstname"
+              autocomplete="given-name" />
+
+            <app-auth-field
+              [formField]="registerForm.lastname"
+              i18n-label="
+                Label of the family-name field on the registration form
+              "
+              label="Last name"
+              maxLength="128"
+              id="lastname"
+              autocomplete="family-name" />
+          </div>
+
+          <app-auth-field
+            [formField]="registerForm.email"
+            i18n-label="Label of the work e-mail field on the registration form"
+            label="Work email"
+            i18n-placeholder="
+              Placeholder of the e-mail address field on auth forms
+            "
+            placeholder="you@company.com"
+            maxLength="128"
+            id="email"
+            type="email"
+            autocomplete="username" />
+
+          <app-auth-field
+            revealable
+            [formField]="registerForm.password"
+            i18n-label="Label of the password field on the registration form"
+            label="Password"
+            i18n-placeholder="
+              Placeholder of the password field on the registration form
+            "
+            placeholder="At least 8 characters"
+            maxLength="1024"
+            id="new-password"
+            type="password"
+            autocomplete="new-password">
+            <app-password-strength-meter
+              [password]="registerForm.password().value()" />
+          </app-auth-field>
+
+          <app-checkbox
+            [checked]="registerForm.agreedToTerms().value()"
+            (changed)="registerForm.agreedToTerms().value.set($event)">
+            <span class="text-foreground/70 text-[13px] leading-normal">
+              <ng-container
+                i18n="
+                  Checkbox confirming the terms of service on the registration
+                  form
+                ">
+                I agree to the terms of service and privacy policy
+              </ng-container>
             </span>
+          </app-checkbox>
+
+          <app-turnstile (tokenGenerated)="onTurnstileResult($event)" />
+
+          <button
+            app-flat-button
+            color="primary"
+            type="submit"
+            class="h-11.5 w-full rounded-lg font-bold tracking-[.2px]"
+            [disabled]="!canSubmit()">
+            {{ submitLabel() }}
           </button>
         </div>
+
+        <app-login-providers />
+
+        <p class="text-foreground/45 mt-5 text-xs leading-relaxed">
+          <ng-container
+            i18n="
+              Note in the footer of the registration
+              card@@auth.register.inviteNote">
+            Workspace invitations are sent to the address you verify.
+          </ng-container>
+        </p>
       </app-auth-form-panel>
     </app-auth-page-container>
   `,
@@ -135,12 +174,20 @@ export class RegisterComponent {
 
   loading = this.auth.registerLoading;
 
+  submitLabel = computed(() => {
+    if (this.loading()) {
+      return $localize`:Submit button on the registration form while the account is created:Creating account…`;
+    }
+
+    return $localize`:Submit button on the account registration form:Create account`;
+  });
+
   registerFormModel = signal({
     firstname: '',
     lastname: '',
     email: '',
-    password0: '',
-    password1: '',
+    password: '',
+    agreedToTerms: false,
     turnstile: '',
   });
 
@@ -166,29 +213,37 @@ export class RegisterComponent {
       message: $localize`:Validation error when the e-mail field is not a valid address:Enter a valid email address.`,
     });
     maxLength(schema.email, 128);
-    required(schema.password0, {
+    required(schema.password, {
       message: $localize`:Validation error when the password field is empty:Password is required.`,
     });
-    minLength(schema.password0, 4);
-    maxLength(schema.password0, 1024);
-    required(schema.password1, {
-      message: $localize`:Validation error when the password confirmation field is empty:Confirm your password.`,
+    minLength(schema.password, PASSWORD_MIN_LENGTH, {
+      message: $localize`:Validation error when a new password is too short:Use at least 8 characters.`,
     });
-    minLength(schema.password1, 4);
-    maxLength(schema.password1, 1024);
+    maxLength(schema.password, 1024);
+    validate(schema.agreedToTerms, (context) => {
+      if (context.value()) return undefined;
+
+      return {
+        kind: 'termsNotAccepted',
+        message: $localize`:Validation error when the terms of service are not accepted:Accept the terms of service to continue.`,
+      };
+    });
     disabled(schema, () => this.loading());
     disabled(schema.email, () => !!this.invite()?.code);
     required(schema.turnstile);
-    validate(schema.password1, (context) => {
-      if (context.valueOf(schema.password0) !== context.value()) {
-        return {
-          kind: 'noMatch',
-          message: $localize`:Validation error when the two password fields differ:Passwords do not match`,
-        };
-      }
+  });
 
-      return undefined;
-    });
+  // The bot check is deliberately left out — it resolves on its own, and gating the
+  // button on it would leave nothing to click when it fails to load.
+  canSubmit = computed(() => {
+    return (
+      this.registerForm.firstname().valid() &&
+      this.registerForm.lastname().valid() &&
+      this.registerForm.email().valid() &&
+      this.registerForm.password().valid() &&
+      this.registerForm.agreedToTerms().valid() &&
+      !this.loading()
+    );
   });
 
   constructor() {
@@ -206,7 +261,7 @@ export class RegisterComponent {
       const firstname = this.registerForm.firstname().value().trim();
       const lastname = this.registerForm.lastname().value().trim();
       const email = this.registerForm.email().value().trim();
-      const password = this.registerForm.password0().value();
+      const password = this.registerForm.password().value();
       const turnstile = this.registerForm.turnstile().value();
       const inviteCode = this.invite()?.code;
 

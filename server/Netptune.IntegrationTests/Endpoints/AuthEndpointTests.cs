@@ -103,6 +103,52 @@ public sealed class AuthEndpointTests
     }
 
     [Fact]
+    public async Task Login_ShouldIssueSessionCookies_WhenTheUserDidNotAskToStaySignedIn()
+    {
+        var client = CreateClient();
+        var email = await Register(client);
+
+        var response = await client.PostAsJsonAsync("api/auth/login", new TokenRequest
+        {
+            Email = email,
+            Password = Password,
+            Turnstile = TestTurnstileService.ValidToken,
+            KeepSignedIn = false,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        SetCookieNames(response).Should().Contain("auth_persist");
+        GetCookie(response, "refresh_token").Should().NotContain("expires=");
+    }
+
+    [Fact]
+    public async Task Refresh_ShouldLeaveTheSessionUnpersisted_WhenTheMarkerCookieIsPresent()
+    {
+        var client = CreateClient();
+        var email = await Register(client);
+        var login = await client.PostAsJsonAsync("api/auth/login", new TokenRequest
+        {
+            Email = email,
+            Password = Password,
+            Turnstile = TestTurnstileService.ValidToken,
+            KeepSignedIn = false,
+        });
+
+        var refreshToken = GetCookieValue(login, "refresh_token");
+
+        var request = new HttpRequestMessage(HttpMethod.Post, "api/auth/refresh");
+
+        request.Headers.Add("Cookie", $"refresh_token={refreshToken}; auth_persist=0");
+
+        var response = await client.SendAsync(request);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        GetCookie(response, "refresh_token").Should().NotContain("expires=");
+    }
+
+    [Fact]
     public async Task Login_ShouldReturnUnauthorized_WhenPasswordIsWrong()
     {
         var client = CreateClient();
@@ -453,9 +499,14 @@ public sealed class AuthEndpointTests
 
     private static string GetCookieValue(HttpResponseMessage response, string name)
     {
-        var cookie = response.Headers.GetValues("Set-Cookie")
-            .Single(item => item.StartsWith($"{name}=", StringComparison.Ordinal));
+        var cookie = GetCookie(response, name);
 
         return cookie[(name.Length + 1)..].Split(';', 2)[0];
+    }
+
+    private static string GetCookie(HttpResponseMessage response, string name)
+    {
+        return response.Headers.GetValues("Set-Cookie")
+            .Single(item => item.StartsWith($"{name}=", StringComparison.Ordinal));
     }
 }

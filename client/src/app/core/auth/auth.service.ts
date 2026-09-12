@@ -70,8 +70,8 @@ export class AuthService {
   }
 
   requestPasswordReset(email: string) {
-    return this.http.post<ClientResponse>('api/auth/request-password-reset', {
-      email,
+    return this.http.get<ClientResponse>('api/auth/request-password-reset', {
+      params: { email },
     });
   }
 

@@ -29,6 +29,7 @@ export class AuthCommandsService {
   private readonly registering = signal(false);
   private readonly confirmingEmail = signal(false);
   private readonly requestingPasswordReset = signal(false);
+  private readonly passwordResetSentTo = signal<string | null>(null);
   private readonly resettingPassword = signal(false);
 
   readonly loginLoading = this.loggingIn.asReadonly();
@@ -37,6 +38,7 @@ export class AuthCommandsService {
   readonly confirmEmailLoading = this.confirmingEmail.asReadonly();
   readonly requestPasswordResetLoading =
     this.requestingPasswordReset.asReadonly();
+  readonly passwordResetEmail = this.passwordResetSentTo.asReadonly();
   readonly resetPasswordLoading = this.resettingPassword.asReadonly();
 
   login(request: LoginRequest) {
@@ -123,12 +125,11 @@ export class AuthCommandsService {
         catchError(() => EMPTY),
         finalize(() => this.requestingPasswordReset.set(false))
       )
-      .subscribe(() => {
-        this.snackbar.open(
-          $localize`:Confirmation shown after an action succeeds:Password reset email has been sent`
-        );
-        void this.router.navigate(['/auth/login']);
-      });
+      .subscribe(() => this.passwordResetSentTo.set(email));
+  }
+
+  clearPasswordResetSent() {
+    this.passwordResetSentTo.set(null);
   }
 
   resetPassword(request: ResetPasswordRequest) {

@@ -1,12 +1,18 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { BuildInfoService } from '@core/services/build-info.service';
+
+export type BuildNumberAppearance = 'fixed' | 'inline';
+
+const appearanceClasses: Record<BuildNumberAppearance, string> = {
+  fixed: 'fixed right-8 bottom-4 text-xs font-medium tracking-[0.125px]',
+  inline: 'font-avatar text-[11px] tracking-[.04em]',
+};
 
 @Component({
   selector: 'app-build-number',
   template: `
     @if (buildInfo(); as buildInfo) {
-      <div
-        class="fixed right-8 bottom-4 text-xs font-medium tracking-[0.125px] opacity-60">
+      <div [class]="wrapperClass()">
         <a
           class="gitHashShort"
           [href]="
@@ -16,7 +22,7 @@ import { BuildInfoService } from '@core/services/build-info.service';
           rel="noopener noreferrer">
           {{ buildInfo.gitHashShort }}
         </a>
-        <span>|</span>
+        <span aria-hidden="true">{{ separator() }}</span>
         <span class="buildNumber">
           <ng-container
             i18n="
@@ -28,7 +34,7 @@ import { BuildInfoService } from '@core/services/build-info.service';
             }}
           </ng-container>
         </span>
-        <span>|</span>
+        <span aria-hidden="true">{{ separator() }}</span>
         <a
           class="runId"
           [href]="
@@ -47,4 +53,14 @@ import { BuildInfoService } from '@core/services/build-info.service';
 })
 export class BuildNumberComponent {
   readonly buildInfo = inject(BuildInfoService).buildInfo;
+
+  readonly appearance = input<BuildNumberAppearance>('fixed');
+
+  protected readonly wrapperClass = computed(() => {
+    return `${appearanceClasses[this.appearance()]} opacity-60`;
+  });
+
+  protected readonly separator = computed(() => {
+    return this.appearance() === 'inline' ? '·' : '|';
+  });
 }

@@ -139,7 +139,7 @@ public static class AuthEndpoints
             return Results.Unauthorized();
         }
 
-        CookieHelper.SetAuthCookies(context.Response, result.Ticket!);
+        CookieHelper.SetAuthCookies(context, result.Ticket!, request.KeepSignedIn);
 
         return Results.Ok(result.Ticket!.ToUserResponse());
     }
@@ -165,7 +165,9 @@ public static class AuthEndpoints
             return Results.Unauthorized();
         }
 
-        CookieHelper.SetAuthCookies(context.Response, result.Ticket!);
+        var keepSignedIn = CookieHelper.ShouldKeepSignedIn(context.Request);
+
+        CookieHelper.SetAuthCookies(context, result.Ticket!, keepSignedIn);
 
         return Results.Ok(result.Ticket!.ToUserResponse());
     }
@@ -194,7 +196,7 @@ public static class AuthEndpoints
             );
         }
 
-        CookieHelper.SetAuthCookies(context.Response, result.Ticket!);
+        CookieHelper.SetAuthCookies(context, result.Ticket!);
 
         return Results.Ok(result.Ticket!.ToUserResponse());
     }
@@ -216,7 +218,7 @@ public static class AuthEndpoints
 
         if (!result.IsSuccess) return Results.Unauthorized();
 
-        CookieHelper.SetAuthCookies(context.Response, result.Ticket!);
+        CookieHelper.SetAuthCookies(context, result.Ticket!);
 
         return Results.Ok(result.Ticket!.ToUserResponse());
     }
@@ -262,7 +264,7 @@ public static class AuthEndpoints
 
         if (!result.IsSuccess) return Results.Unauthorized();
 
-        CookieHelper.SetAuthCookies(context.Response, result.Ticket!);
+        CookieHelper.SetAuthCookies(context, result.Ticket!);
 
         return Results.Ok(result.Ticket!.ToUserResponse());
     }
@@ -339,7 +341,7 @@ public static class AuthEndpoints
             return Results.Unauthorized();
         }
 
-        CookieHelper.SetAuthCookies(context.Response, result.Ticket);
+        CookieHelper.SetAuthCookies(context, result.Ticket);
 
         return Results.Ok(result.Ticket.ToUserResponse());
     }
@@ -442,7 +444,7 @@ public static class AuthEndpoints
             return Results.Unauthorized();
         }
 
-        CookieHelper.SetAuthCookies(context.Response, result.Ticket);
+        CookieHelper.SetAuthCookies(context, result.Ticket);
 
         var redirect = hosting.ClientOrigin
             .AppendPathSegments("/auth/auth-provider-login")

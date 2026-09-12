@@ -1,4 +1,10 @@
-import { Component, inject, linkedSignal, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  linkedSignal,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
   disabled,
@@ -11,81 +17,99 @@ import {
   validate,
 } from '@angular/forms/signals';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
-import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
 import { ResetPasswordRequest } from '@core/models/session';
 import { AuthCommandsService } from '@core/services/auth-commands.service';
-import { FormErrorsComponent } from '@static/components/form-error/form-errors.component';
-import { FormInputComponent } from '@static/components/form-input/form-input.component';
-import { AuthPageContainerComponent } from '../auth-page-container/auth-page-container.component';
+import { FlatButtonComponent } from '@static/components/button/flat-button.component';
+import { AuthFieldComponent } from '../auth-field/auth-field.component';
 import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.component';
+import { AuthPageContainerComponent } from '../auth-page-container/auth-page-container.component';
+import { PasswordStrengthMeterComponent } from '../password-strength-meter/password-strength-meter.component';
+
+const PASSWORD_MIN_LENGTH = 8;
 
 @Component({
   selector: 'app-reset-password',
   imports: [
     AuthPageContainerComponent,
     AuthFormPanelComponent,
-    FormInputComponent,
-    FormErrorsComponent,
-    RouterLink,
+    AuthFieldComponent,
     FlatButtonComponent,
-    StrokedButtonComponent,
+    PasswordStrengthMeterComponent,
+    RouterLink,
     FormField,
   ],
   template: `
     <app-auth-page-container>
       <app-auth-form-panel
+        showLogo
+        i18n-eyebrow="Label above the heading of the password reset forms"
+        eyebrow="Password reset"
         i18n-heading="Heading of the form for choosing a new password"
-        heading="Reset your password"
+        heading="Set a new password"
         [loading]="loading()"
         (submitted)="resetPassword()">
-        <app-form-input
-          [formField]="resetForm.password0"
-          i18n-label="
-            Label of the new password field on the password reset form
-          "
-          label="New Password"
-          maxLength="1024"
-          id="new-password"
-          type="password"
-          autocomplete="new-password"></app-form-input>
+        <p class="text-foreground/50 mt-1.5 text-[13px] leading-relaxed">
+          <ng-container
+            i18n="
+              Explains what the form for choosing a new password
+              does@@auth.resetPassword.intro">
+            Choose a password you have not used here before. You will be signed
+            in once it is saved.
+          </ng-container>
+        </p>
 
-        <app-form-input
-          [formField]="resetForm.password1"
-          i18n-label="
-            Label of the new password confirmation field on the password reset
-            form
-          "
-          label="Confirm New Password"
-          maxLength="1024"
-          id="confirm-new-password"
-          type="password"
-          autocomplete="new-password">
-          <app-form-errors [formField]="resetForm.password1" />
-        </app-form-input>
+        <div class="mt-5.5 flex flex-col gap-4">
+          <app-auth-field
+            revealable
+            [formField]="resetForm.password0"
+            i18n-label="
+              Label of the new password field on the password reset form
+            "
+            label="New password"
+            i18n-placeholder="
+              Placeholder of the password field on the registration form
+            "
+            placeholder="At least 8 characters"
+            maxLength="1024"
+            id="new-password"
+            type="password"
+            autocomplete="new-password">
+            <app-password-strength-meter
+              [password]="resetForm.password0().value()" />
+          </app-auth-field>
 
-        <div class="button-container">
-          <a
-            app-stroked-button
-            color="primary"
-            type="button"
-            class="form-action-button"
-            [routerLink]="['/auth/login']">
-            <span i18n="Link from the registration form back to the login form">
-              Back to Log in
-            </span>
-          </a>
+          <app-auth-field
+            [formField]="resetForm.password1"
+            i18n-label="
+              Label of the new password confirmation field on the password reset
+              form
+            "
+            label="Confirm new password"
+            maxLength="1024"
+            id="confirm-new-password"
+            type="password"
+            autocomplete="new-password" />
 
           <button
             app-flat-button
             color="primary"
             type="submit"
-            class="form-action-button">
-            <span i18n="Submit button on the password reset form">
-              Reset Password
-            </span>
+            class="h-11.5 w-full rounded-lg font-bold tracking-[.2px]">
+            {{ submitLabel() }}
           </button>
         </div>
+
+        <p
+          class="border-border/70 text-foreground/50 mt-6 border-t pt-4.5 text-[13px]">
+          <span i18n="Sits before the link back to the login form">
+            Remembered it?
+          </span>
+          <a
+            class="text-primary font-semibold hover:underline"
+            [routerLink]="['/auth/login']">
+            <span i18n="Link back to the login form">Back to sign in</span>
+          </a>
+        </p>
       </app-auth-form-panel>
     </app-auth-page-container>
   `,
@@ -96,6 +120,14 @@ export class ResetPasswordComponent {
 
   loading = this.auth.resetPasswordLoading;
   routeData = toSignal(this.activatedRoute.data);
+
+  submitLabel = computed(() => {
+    if (this.loading()) {
+      return $localize`:Submit button on the password reset form while saving:Saving password…`;
+    }
+
+    return $localize`:Submit button on the password reset form:Save new password`;
+  });
 
   request = linkedSignal<ResetPasswordRequest>(() => {
     return this.routeData()?.resetPassword;
@@ -113,8 +145,9 @@ export class ResetPasswordComponent {
     required(schema.password1, {
       message: $localize`:Validation error when the password confirmation field is empty:Confirm your password.`,
     });
-    minLength(schema.password0, 4);
-    minLength(schema.password1, 4);
+    minLength(schema.password0, PASSWORD_MIN_LENGTH, {
+      message: $localize`:Validation error when a new password is too short:Use at least 8 characters.`,
+    });
     maxLength(schema.password0, 1024);
     maxLength(schema.password1, 1024);
     disabled(schema, () => this.loading());

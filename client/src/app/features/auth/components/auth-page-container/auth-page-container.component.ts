@@ -1,35 +1,29 @@
 import { Component } from '@angular/core';
+import { AuthSidebarComponent } from '../auth-sidebar/auth-sidebar.component';
 
 @Component({
   selector: 'app-auth-page-container',
-  template: ` <ng-content /> `,
+  imports: [AuthSidebarComponent],
   host: {
-    class:
-      'h-dvh flex flex-col items-center justify-center grid place-items-center',
+    class: 'grid h-dvh grid-cols-1 lg:grid-cols-[520px_1fr]',
   },
+  template: `
+    <app-auth-sidebar class="hidden lg:flex" />
+
+    <div
+      class="auth-page-surface flex min-w-0 items-center justify-center overflow-y-auto px-4 py-10 sm:px-10">
+      <ng-content />
+    </div>
+  `,
   styles: [
     `
-      :host::before {
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        content: '';
-        width: 100%;
-        height: 50vh;
-        background-size: 20px 20px;
-        background-color: rgba(var(--background-rgb), 0.6);
+      .auth-page-surface {
+        background-color: var(--background);
         background-image: radial-gradient(
-          rgba(var(--foreground-rgb), 0.2) 1px,
-          var(--background) 1px
+          color-mix(in oklab, var(--foreground) 17%, transparent) 1px,
+          transparent 1px
         );
-        z-index: 0;
-        transform: rotateX(20deg);
-      }
-
-      @media only screen and (max-width: 600px) {
-        :host {
-          font-size: 18px;
-        }
+        background-size: 20px 20px;
       }
     `,
   ],

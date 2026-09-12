@@ -4,38 +4,50 @@ import { ProgressBarComponent } from '@static/components/progress-bar/progress-b
 @Component({
   selector: 'app-auth-form-panel',
   imports: [ProgressBarComponent],
-  host: { class: 'z-1 block' },
+  host: { class: 'z-1 block w-full max-w-[27.5rem]' },
   template: `
     <form
-      class="bg-background border-border flex w-md flex-col gap-4 rounded border p-8 shadow-lg"
+      class="bg-card border-border relative w-full overflow-hidden rounded-xl border p-8 shadow-xs"
       [attr.aria-busy]="loading()"
       (submit)="onSubmit($event)">
-      <div class="h-1">
-        @if (loading()) {
-          <app-progress-bar mode="indeterminate" />
-        }
-      </div>
+      @if (loading()) {
+        <app-progress-bar
+          class="absolute inset-x-0 top-0"
+          mode="indeterminate"
+          [rounded]="false" />
+      }
 
       @if (showLogo()) {
         <img
-          class="from-brand/40 mx-auto my-2 rounded-lg bg-linear-to-tl via-fuchsia-300/30 to-sky-300/30 p-2"
-          src="assets/apple-touch-icon.png"
+          class="mb-4.5 block h-11 w-11 rounded-[10px]"
+          src="assets/android-chrome-192x192.png"
           i18n-alt="Alt text for the Netptune logo above auth forms"
           alt="Netptune logo"
-          width="72"
-          height="72" />
+          width="44"
+          height="44" />
       }
 
-      <h1 class="mb-6 w-full text-center text-xl font-normal tracking-normal">
+      @if (eyebrow(); as eyebrow) {
+        <p
+          class="text-foreground/45 mb-0.5 text-xs font-semibold tracking-[.08em] uppercase">
+          {{ eyebrow }}
+        </p>
+      }
+
+      <ng-content select="[panelBadge]" />
+
+      <h1 class="text-[1.625rem] font-bold tracking-[-.3px]">
         {{ heading() }}
       </h1>
 
+      <ng-content select="[panelSubtitle]" />
       <ng-content />
     </form>
   `,
 })
 export class AuthFormPanelComponent {
   readonly heading = input.required<string>();
+  readonly eyebrow = input<string | null>(null);
   readonly loading = input(false, { transform: booleanAttribute });
   readonly showLogo = input(false, { transform: booleanAttribute });
 

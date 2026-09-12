@@ -25,14 +25,14 @@ import {
   template: `
     <app-auth-page-container>
       <section
-        class="bg-background border-border z-1 flex w-md max-w-[calc(100vw-2rem)] flex-col gap-5 rounded border p-8 shadow-lg">
+        class="bg-card border-border z-1 flex w-full max-w-[27.5rem] flex-col gap-5 rounded-xl border p-8 shadow-xs">
         <img
-          src="assets/apple-touch-icon.png"
+          src="assets/android-chrome-192x192.png"
           i18n-alt="Alt text for the Netptune logo above auth forms"
           alt="Netptune logo"
-          width="72"
-          height="72"
-          class="mx-auto my-2" />
+          width="44"
+          height="44"
+          class="mx-auto h-11 w-11 rounded-[10px]" />
 
         <div class="flex flex-col gap-2 text-center">
           <h3 class="font-normal tracking-normal">

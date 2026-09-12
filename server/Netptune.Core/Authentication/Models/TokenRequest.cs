@@ -7,4 +7,6 @@ public class TokenRequest
     public string? Password { get; init; }
 
     public string? Turnstile { get; init; }
+
+    public bool KeepSignedIn { get; init; } = true;
 }
