@@ -21,6 +21,20 @@ export function coerceIconButtonColor(color: IconButtonColor): ButtonColor {
   return color === 'default' ? 'neutral' : color;
 }
 
+const buttonSizeVariants = {
+  small: 'h-8 rounded-sm px-3 text-xs font-medium tracking-wide',
+  default: 'h-10 rounded-sm font-medium tracking-wide',
+  large: 'h-11.5 rounded-lg font-bold tracking-[.2px]',
+};
+
+const buttonBlockVariants = {
+  true: 'w-full',
+  false: '',
+};
+
+export type ButtonSize = keyof typeof buttonSizeVariants;
+export type IconButtonSize = 'default' | 'small';
+
 export const buttonHostVariants = cva(
   'inline-flex items-center justify-center transition-colors',
   {
@@ -124,6 +138,7 @@ export const buttonLinkVariants = cva(
   'inline-flex h-10 min-h-9 cursor-pointer select-none items-center justify-center gap-2 rounded-sm px-4 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
+      block: buttonBlockVariants,
       variant: {
         text: 'bg-transparent',
         filled: '',
@@ -187,14 +202,17 @@ export const buttonLinkVariants = cva(
     defaultVariants: {
       variant: 'text',
       color: 'primary',
+      block: false,
     },
   }
 );
 
 export const flatButtonVariants = cva(
-  'inline-flex h-10 min-w-16 cursor-pointer select-none items-center justify-center gap-2 rounded-sm px-4 text-sm font-medium tracking-wide transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex min-w-16 cursor-pointer select-none items-center justify-center gap-2 px-4 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
+      size: buttonSizeVariants,
+      block: buttonBlockVariants,
       color: {
         primary:
           'bg-primary text-white hover:bg-primary/90 focus-visible:ring-primary dark:text-neutral-900',
@@ -209,14 +227,18 @@ export const flatButtonVariants = cva(
     },
     defaultVariants: {
       color: 'primary',
+      size: 'default',
+      block: false,
     },
   }
 );
 
 export const strokedButtonVariants = cva(
-  'border-border inline-flex h-10 min-w-16 cursor-pointer select-none items-center justify-center gap-2 rounded-sm border bg-transparent px-4 text-sm font-medium tracking-wide transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50',
+  'border-border inline-flex min-w-16 cursor-pointer select-none items-center justify-center gap-2 border bg-transparent px-4 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
+      size: buttonSizeVariants,
+      block: buttonBlockVariants,
       color: {
         primary: 'text-primary hover:bg-primary/10 focus-visible:ring-primary',
         warn: 'text-warn hover:bg-warn/10 focus-visible:ring-warn',
@@ -228,14 +250,20 @@ export const strokedButtonVariants = cva(
     },
     defaultVariants: {
       color: 'primary',
+      size: 'default',
+      block: false,
     },
   }
 );
 
 export const iconButtonVariants = cva(
-  'inline-flex h-10 w-10 cursor-pointer select-none items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex cursor-pointer select-none items-center justify-center transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
+      size: {
+        default: 'h-10 w-10 rounded-full',
+        small: 'h-8 w-8 rounded-lg',
+      },
       color: {
         primary: 'text-primary hover:bg-primary/10 focus-visible:ring-primary',
         warn: 'text-warn hover:bg-warn/10 focus-visible:ring-warn',
@@ -247,6 +275,7 @@ export const iconButtonVariants = cva(
     },
     defaultVariants: {
       color: 'neutral',
+      size: 'default',
     },
   }
 );

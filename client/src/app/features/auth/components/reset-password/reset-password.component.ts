@@ -20,6 +20,8 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ResetPasswordRequest } from '@core/models/session';
 import { AuthCommandsService } from '@core/services/auth-commands.service';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
+import { DividerComponent } from '@static/components/divider/divider.component';
+import { TextLinkComponent } from '@static/components/text-link.component';
 import { AuthFieldComponent } from '../auth-field/auth-field.component';
 import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.component';
 import { AuthPageContainerComponent } from '../auth-page-container/auth-page-container.component';
@@ -34,7 +36,9 @@ const PASSWORD_MIN_LENGTH = 8;
     AuthFormPanelComponent,
     AuthFieldComponent,
     FlatButtonComponent,
+    DividerComponent,
     PasswordStrengthMeterComponent,
+    TextLinkComponent,
     RouterLink,
     FormField,
   ],
@@ -48,7 +52,7 @@ const PASSWORD_MIN_LENGTH = 8;
         heading="Set a new password"
         [loading]="loading()"
         (submitted)="resetPassword()">
-        <p class="text-foreground/50 mt-1.5 text-[13px] leading-relaxed">
+        <p panelSubtitle>
           <ng-container
             i18n="
               Explains what the form for choosing a new password
@@ -93,20 +97,20 @@ const PASSWORD_MIN_LENGTH = 8;
           <button
             app-flat-button
             color="primary"
-            type="submit"
-            class="h-11.5 w-full rounded-lg font-bold tracking-[.2px]">
+            size="large"
+            block
+            type="submit">
             {{ submitLabel() }}
           </button>
         </div>
 
-        <p
-          class="border-border/70 text-foreground/50 mt-6 border-t pt-4.5 text-[13px]">
+        <app-divider class="mt-6" />
+
+        <p panelFootnote>
           <span i18n="Sits before the link back to the login form">
             Remembered it?
           </span>
-          <a
-            class="text-primary font-semibold hover:underline"
-            [routerLink]="['/auth/login']">
+          <a app-text-link [routerLink]="['/auth/login']">
             <span i18n="Link back to the login form">Back to sign in</span>
           </a>
         </p>

@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { SessionService } from '@core/services/session.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthPageContainerComponent } from '../auth-page-container/auth-page-container.component';
+import { BrandLogoComponent } from '@static/components/brand-logo.component';
 import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
 import { AuthService } from '@app/core/auth/auth.service';
@@ -18,6 +19,7 @@ import {
   selector: 'app-link-provider',
   imports: [
     AuthPageContainerComponent,
+    BrandLogoComponent,
     RouterLink,
     StrokedButtonComponent,
     FlatButtonComponent,
@@ -26,13 +28,7 @@ import {
     <app-auth-page-container>
       <section
         class="bg-card border-border z-1 flex w-full max-w-[27.5rem] flex-col gap-5 rounded-xl border p-8 shadow-xs">
-        <img
-          src="assets/android-chrome-192x192.png"
-          i18n-alt="Alt text for the Netptune logo above auth forms"
-          alt="Netptune logo"
-          width="44"
-          height="44"
-          class="mx-auto h-11 w-11 rounded-[10px]" />
+        <app-brand-logo class="mx-auto" size="large" />
 
         <div class="flex flex-col gap-2 text-center">
           <h3 class="font-normal tracking-normal">

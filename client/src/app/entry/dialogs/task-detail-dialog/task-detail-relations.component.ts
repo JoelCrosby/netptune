@@ -63,7 +63,7 @@ interface RelationGroup {
           <button
             app-stroked-button
             type="button"
-            size="sm"
+            size="small"
             (click)="openLinkDialog()">
             <svg lucidePlus class="h-4 w-4"></svg>
             <span i18n="Button that links this task to another">Link task</span>

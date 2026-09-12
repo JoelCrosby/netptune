@@ -1,7 +1,8 @@
-import { Component, HostBinding, input } from '@angular/core';
+import { booleanAttribute, Component, HostBinding, input } from '@angular/core';
 import {
   cn,
   flatButtonVariants,
+  type ButtonSize,
   type FlatButtonColor,
 } from './button.variants';
 
@@ -12,9 +13,18 @@ import {
 })
 export class FlatButtonComponent {
   readonly color = input<FlatButtonColor>('primary');
+  readonly size = input<ButtonSize>('default');
+  readonly block = input(false, { transform: booleanAttribute });
   readonly class = input('');
 
   @HostBinding('class') get className(): string {
-    return cn(flatButtonVariants({ color: this.color() }), this.class());
+    return cn(
+      flatButtonVariants({
+        color: this.color(),
+        size: this.size(),
+        block: this.block(),
+      }),
+      this.class()
+    );
   }
 }

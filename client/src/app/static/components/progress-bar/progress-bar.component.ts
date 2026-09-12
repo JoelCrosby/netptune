@@ -1,7 +1,16 @@
 import { Component, booleanAttribute, computed, input } from '@angular/core';
 
 export type ProgressBarMode = 'determinate' | 'indeterminate' | 'buffer';
-export type ProgressBarColor = 'primary' | 'warn' | 'destructive';
+export type ProgressBarColor =
+  'primary' | 'warn' | 'destructive' | 'caution' | 'success';
+
+const barColors: Record<ProgressBarColor, string> = {
+  primary: 'bg-primary',
+  warn: 'bg-warn',
+  destructive: 'bg-destructive',
+  caution: 'bg-yellow-500',
+  success: 'bg-green-600 dark:bg-green-500',
+};
 
 @Component({
   selector: 'app-progress-bar',
@@ -74,7 +83,9 @@ export type ProgressBarColor = 'primary' | 'warn' | 'destructive';
       [class.rounded-full]="rounded()"
       [style]="{ '--progress-bar-track': 'rgba(var(--primary-rgb), 0.3)' }"
       role="progressbar"
+      [attr.aria-label]="ariaLabel()"
       [attr.aria-valuenow]="mode() !== 'indeterminate' ? clampedValue() : null"
+      [attr.aria-valuetext]="valueText()"
       aria-valuemin="0"
       aria-valuemax="100">
       <!-- Track background (buffer dots or solid) -->
@@ -82,41 +93,31 @@ export type ProgressBarColor = 'primary' | 'warn' | 'destructive';
         <div class="buffer-bg absolute inset-0"></div>
         <div
           class="absolute inset-y-0 left-0 opacity-30 transition-[width] duration-300"
+          [class]="barClass()"
           [class.rounded-full]="rounded()"
-          [class.bg-primary]="color() === 'primary'"
-          [class.bg-warn]="color() === 'warn'"
-          [class.bg-destructive]="color() === 'destructive'"
           [style.width]="clampedBufferValue() + '%'"></div>
       } @else {
         <div
           class="absolute inset-0 opacity-20"
-          [class.rounded-full]="rounded()"
-          [class.bg-primary]="color() === 'primary'"
-          [class.bg-warn]="color() === 'warn'"
-          [class.bg-destructive]="color() === 'destructive'"></div>
+          [class]="barClass()"
+          [class.rounded-full]="rounded()"></div>
       }
 
       <!-- Primary bar -->
       @if (mode() === 'indeterminate') {
         <div
           class="bar-primary-indeterminate absolute inset-y-0"
-          [class.rounded-full]="rounded()"
-          [class.bg-primary]="color() === 'primary'"
-          [class.bg-warn]="color() === 'warn'"
-          [class.bg-destructive]="color() === 'destructive'"></div>
+          [class]="barClass()"
+          [class.rounded-full]="rounded()"></div>
         <div
           class="bar-secondary-indeterminate absolute inset-y-0"
-          [class.rounded-full]="rounded()"
-          [class.bg-primary]="color() === 'primary'"
-          [class.bg-warn]="color() === 'warn'"
-          [class.bg-destructive]="color() === 'destructive'"></div>
+          [class]="barClass()"
+          [class.rounded-full]="rounded()"></div>
       } @else {
         <div
           class="absolute inset-y-0 left-0 transition-[width] duration-300"
+          [class]="barClass()"
           [class.rounded-full]="rounded()"
-          [class.bg-primary]="color() === 'primary'"
-          [class.bg-warn]="color() === 'warn'"
-          [class.bg-destructive]="color() === 'destructive'"
           [style.width]="clampedValue() + '%'"></div>
       }
     </div>
@@ -128,6 +129,10 @@ export class ProgressBarComponent {
   readonly value = input(0);
   readonly bufferValue = input(0);
   readonly rounded = input(true, { transform: booleanAttribute });
+  readonly ariaLabel = input<string | null>(null);
+  readonly valueText = input<string | null>(null);
+
+  readonly barClass = computed(() => barColors[this.color()]);
 
   readonly clampedValue = computed(() =>
     Math.min(100, Math.max(0, this.value()))

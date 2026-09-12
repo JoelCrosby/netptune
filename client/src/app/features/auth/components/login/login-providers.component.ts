@@ -1,21 +1,22 @@
 import { Component } from '@angular/core';
+import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { DividerComponent } from '@static/components/divider/divider.component';
 
 @Component({
   selector: 'app-login-providers',
+  imports: [StrokedButtonComponent, DividerComponent],
   template: `
-    <div class="mt-6 mb-4.5 flex items-center gap-3">
-      <span class="bg-foreground/7 h-px grow"></span>
-      <span
-        class="text-foreground/45 text-[11px] font-bold tracking-[.1em] uppercase"
-        i18n="Separator above the external sign-in provider buttons">
-        or continue with
-      </span>
-      <span class="bg-foreground/7 h-px grow"></span>
-    </div>
+    <app-divider
+      class="mt-6 mb-4.5"
+      i18n-label="Separator above the external sign-in provider buttons"
+      label="or continue with" />
 
     <div class="grid grid-cols-3 gap-2.5">
       <button
-        class="border-border text-foreground/70 hover:bg-foreground/3 hover:text-foreground flex h-11 cursor-pointer items-center justify-center gap-2 rounded-lg border bg-transparent text-[13px] font-semibold transition-colors"
+        app-stroked-button
+        color="neutral"
+        size="large"
+        block
         type="button"
         [attr.aria-label]="githubLabel"
         (click)="signInWithGithub()">
@@ -34,7 +35,10 @@ import { Component } from '@angular/core';
       </button>
 
       <button
-        class="border-border text-foreground/70 hover:bg-foreground/3 hover:text-foreground flex h-11 cursor-pointer items-center justify-center gap-2 rounded-lg border bg-transparent text-[13px] font-semibold transition-colors"
+        app-stroked-button
+        color="neutral"
+        size="large"
+        block
         type="button"
         [attr.aria-label]="googleLabel"
         (click)="signInWithGoogle()">
@@ -62,7 +66,10 @@ import { Component } from '@angular/core';
       </button>
 
       <button
-        class="border-border text-foreground/70 hover:bg-foreground/3 hover:text-foreground flex h-11 cursor-pointer items-center justify-center gap-2 rounded-lg border bg-transparent text-[13px] font-semibold transition-colors"
+        app-stroked-button
+        color="neutral"
+        size="large"
+        block
         type="button"
         [attr.aria-label]="microsoftLabel"
         (click)="signInWithMicrosoft()">

@@ -125,7 +125,7 @@
     </unit>
     <unit id="8577589920465745165">
       <notes>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:71,75</note>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:80,84</note>
         <note category="description">Button that sends the password reset email again</note>
       </notes>
       <segment state="initial">
@@ -756,7 +756,7 @@
     </unit>
     <unit id="439765603666921129">
       <notes>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:161</note>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:176</note>
         <note category="description">Submit button on the password reset request form while sending</note>
       </notes>
       <segment state="initial">
@@ -988,7 +988,7 @@
     </unit>
     <unit id="8142272561668739216">
       <notes>
-        <note category="location">src/app/features/auth/components/password-strength-meter/password-strength-meter.component.ts:70</note>
+        <note category="location">src/app/features/auth/components/password-strength-meter/password-strength-meter.component.ts:65</note>
         <note category="description">Rating of a typed password</note>
       </notes>
       <segment state="initial">
@@ -1871,7 +1871,7 @@
     </unit>
     <unit id="3794536784545139282">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login.component.ts:49,52</note>
+        <note category="location">src/app/features/auth/components/login/login.component.ts:53,55</note>
         <note category="description">Sits before the link to the registration form</note>
       </notes>
       <segment state="initial">
@@ -2622,7 +2622,7 @@
     </unit>
     <unit id="7182242959675416946">
       <notes>
-        <note category="location">src/app/features/auth/components/password-strength-meter/password-strength-meter.component.ts:61</note>
+        <note category="location">src/app/features/auth/components/password-strength-meter/password-strength-meter.component.ts:57</note>
         <note category="description">Rating of a typed password</note>
       </notes>
       <segment state="initial">
@@ -2975,9 +2975,9 @@
     </unit>
     <unit id="965218006709575156">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login.component.ts:85,88</note>
+        <note category="location">src/app/features/auth/components/login/login.component.ts:82,85</note>
         <note category="location">src/app/features/auth/components/register/register.component.ts:97,100</note>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:112,115</note>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:125,128</note>
         <note category="description">Placeholder of the e-mail address field on auth forms</note>
       </notes>
       <segment state="initial">
@@ -5071,9 +5071,9 @@
     <unit id="8602814243662345124">
       <notes>
         <note category="location">src/app/entry/dialogs/invite-dialog/invite-dialog.component.ts:93</note>
-        <note category="location">src/app/features/auth/components/login/login.component.ts:190</note>
+        <note category="location">src/app/features/auth/components/login/login.component.ts:179</note>
         <note category="location">src/app/features/auth/components/register/register.component.ts:210</note>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:173</note>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:188</note>
         <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:108</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
@@ -5095,9 +5095,9 @@
     <unit id="2112768397949905814">
       <notes>
         <note category="location">src/app/entry/dialogs/invite-dialog/invite-dialog.component.ts:96</note>
-        <note category="location">src/app/features/auth/components/login/login.component.ts:193</note>
+        <note category="location">src/app/features/auth/components/login/login.component.ts:182</note>
         <note category="location">src/app/features/auth/components/register/register.component.ts:213</note>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:176</note>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:191</note>
         <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:112</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
@@ -6521,8 +6521,8 @@
     </unit>
     <unit id="2565164139557117651">
       <notes>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:38,41</note>
-        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:46,47</note>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:44,47</note>
+        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:50,51</note>
         <note category="description">Label above the heading of the password reset forms</note>
       </notes>
       <segment state="initial">
@@ -6971,7 +6971,7 @@
     </unit>
     <unit id="5537979240619532485">
       <notes>
-        <note category="location">src/app/features/auth/components/password-strength-meter/password-strength-meter.component.ts:87</note>
+        <note category="location">src/app/features/auth/components/password-strength-meter/password-strength-meter.component.ts:80</note>
         <note category="description">Rating of a typed password</note>
       </notes>
       <segment state="initial">
@@ -6993,9 +6993,7 @@
     </unit>
     <unit id="1534566831902538001">
       <notes>
-        <note category="location">src/app/features/auth/components/auth-form-panel/auth-form-panel.component.ts:25,30</note>
-        <note category="location">src/app/features/auth/components/auth-sidebar/auth-sidebar.component.ts:34,37</note>
-        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:32,35</note>
+        <note category="location">src/app/static/components/brand-logo.component.ts:24,27</note>
         <note category="description">Alt text for the Netptune logo above auth forms</note>
       </notes>
       <segment state="translated">
@@ -7025,8 +7023,8 @@
     </unit>
     <unit id="4204889037794993823">
       <notes>
-        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:44,48</note>
-        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:101,105</note>
+        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:40,44</note>
+        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:97,101</note>
         <note category="description">Heading of the page that links an external sign-in provider to an account. PROVIDER is the provider name, e.g. GitHub</note>
       </notes>
       <segment state="translated">
@@ -7036,7 +7034,7 @@
     </unit>
     <unit id="4655137338430194907">
       <notes>
-        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:58,65</note>
+        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:54,61</note>
         <note category="description">Explains that the e-mail address of an external provider already belongs to a Netptune account. EMAIL is that address, PROVIDER is the provider name</note>
       </notes>
       <segment state="translated">
@@ -7066,7 +7064,7 @@
     </unit>
     <unit id="631526687542702213">
       <notes>
-        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:74,79</note>
+        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:70,75</note>
         <note category="description">Shown when an external provider link has expired or was not found</note>
       </notes>
       <segment state="translated">
@@ -7086,7 +7084,7 @@
     </unit>
     <unit id="1287089777017082490">
       <notes>
-        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:114,118</note>
+        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:110,114</note>
         <note category="description">Prompts a signed-out visitor to sign in before linking an external provider. PROVIDER is the provider name</note>
       </notes>
       <segment state="translated">
@@ -7116,7 +7114,7 @@
     </unit>
     <unit id="9155752269182001378">
       <notes>
-        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:125,129</note>
+        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:121,125</note>
         <note category="description">Link back to the login form from the provider-link page</note>
       </notes>
       <segment state="translated">
@@ -7136,7 +7134,7 @@
     </unit>
     <unit id="1474607462922806359">
       <notes>
-        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:147</note>
+        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:143</note>
         <note category="description">Stands in for the external sign-in provider&apos;s name when it is unknown</note>
       </notes>
       <segment state="translated">
@@ -7146,7 +7144,7 @@
     </unit>
     <unit id="9108390059687067634">
       <notes>
-        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:169</note>
+        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:165</note>
         <note category="description">Confirmation shown after linking an external sign-in provider. PROVIDER is the provider name</note>
       </notes>
       <segment state="translated">
@@ -7167,7 +7165,7 @@
     </unit>
     <unit id="7935613686723040127">
       <notes>
-        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:174</note>
+        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:170</note>
         <note category="description">Error shown when an external provider link cannot be used</note>
       </notes>
       <segment state="translated">
@@ -7177,7 +7175,7 @@
     </unit>
     <unit id="205893145549690950">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login-providers.component.ts:91</note>
+        <note category="location">src/app/features/auth/components/login/login-providers.component.ts:98</note>
         <note category="description">Accessible label of the button that starts sign-in via GitHub</note>
       </notes>
       <segment state="translated">
@@ -7187,7 +7185,7 @@
     </unit>
     <unit id="3655082891939518750">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login-providers.component.ts:92</note>
+        <note category="location">src/app/features/auth/components/login/login-providers.component.ts:99</note>
         <note category="description">Accessible label of the button that starts sign-in via Google</note>
       </notes>
       <segment state="translated">
@@ -7197,7 +7195,7 @@
     </unit>
     <unit id="7512763792746430085">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login-providers.component.ts:93</note>
+        <note category="location">src/app/features/auth/components/login/login-providers.component.ts:100</note>
         <note category="description">Accessible label of the button that starts sign-in via Microsoft</note>
       </notes>
       <segment state="translated">
@@ -7207,7 +7205,7 @@
     </unit>
     <unit id="5548899014377876749">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login.component.ts:44,46</note>
+        <note category="location">src/app/features/auth/components/login/login.component.ts:48,50</note>
         <note category="description">Heading of the login form</note>
       </notes>
       <segment state="translated">
@@ -7217,8 +7215,8 @@
     </unit>
     <unit id="4768749765465246664">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login.component.ts:82,83</note>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:109,110</note>
+        <note category="location">src/app/features/auth/components/login/login.component.ts:79,80</note>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:122,123</note>
         <note category="description">Label of the e-mail address field on the login form</note>
       </notes>
       <segment state="translated">
@@ -7228,7 +7226,7 @@
     </unit>
     <unit id="1431416938026210429">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login.component.ts:95,98</note>
+        <note category="location">src/app/features/auth/components/login/login.component.ts:92,95</note>
         <note category="location">src/app/features/auth/components/register/register.component.ts:107,109</note>
         <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:42,44</note>
         <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:146</note>
@@ -7251,7 +7249,7 @@
     </unit>
     <unit id="1446670643492611810">
       <notes>
-        <note category="location">src/app/features/auth/components/auth-field/auth-field.component.ts:108</note>
+        <note category="location">src/app/features/auth/components/auth-field/auth-field.component.ts:113</note>
         <note category="description">Label of the button that hides a typed password again</note>
       </notes>
       <segment state="initial">
@@ -7333,7 +7331,7 @@
     </unit>
     <unit id="5207635742003539443">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login.component.ts:179</note>
+        <note category="location">src/app/features/auth/components/login/login.component.ts:168</note>
         <note category="description">Submit button on the login form</note>
       </notes>
       <segment state="translated">
@@ -7434,7 +7432,7 @@
     </unit>
     <unit id="3035570095838445091">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login.component.ts:108,111</note>
+        <note category="location">src/app/features/auth/components/login/login.component.ts:106,109</note>
         <note category="description">Link from the login form to the password reset request form</note>
       </notes>
       <segment state="initial">
@@ -7454,9 +7452,9 @@
     </unit>
     <unit id="3577237269587081090">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login.component.ts:197</note>
+        <note category="location">src/app/features/auth/components/login/login.component.ts:186</note>
         <note category="location">src/app/features/auth/components/register/register.component.ts:217</note>
-        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:143</note>
+        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:147</note>
         <note category="description">Validation error when the password field is empty</note>
       </notes>
       <segment state="translated">
@@ -7598,7 +7596,7 @@
     </unit>
     <unit id="3581094312243308441">
       <notes>
-        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:126</note>
+        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:130</note>
         <note category="description">Submit button on the password reset form while saving</note>
       </notes>
       <segment state="initial">
@@ -7608,7 +7606,7 @@
     </unit>
     <unit id="3582180388125532112">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login.component.ts:123,126</note>
+        <note category="location">src/app/features/auth/components/login/login.component.ts:121,125</note>
         <note category="description">Checkbox that keeps the session alive after the browser is closed</note>
       </notes>
       <segment state="initial">
@@ -7630,7 +7628,7 @@
     </unit>
     <unit id="3588415639242079458">
       <notes>
-        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:68,70</note>
+        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:72,74</note>
         <note category="description">Label of the new password field on the password reset form</note>
       </notes>
       <segment state="initial">
@@ -7640,7 +7638,7 @@
     </unit>
     <unit id="8596711597112316583">
       <notes>
-        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:146</note>
+        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:150</note>
         <note category="description">Validation error when the password confirmation field is empty</note>
       </notes>
       <segment state="translated">
@@ -7650,7 +7648,7 @@
     </unit>
     <unit id="6451269955734195952">
       <notes>
-        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:158</note>
+        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:162</note>
         <note category="description">Validation error when the two password fields differ</note>
       </notes>
       <segment state="translated">
@@ -7712,7 +7710,7 @@
     </unit>
     <unit id="8656126574213649581">
       <notes>
-        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:87,91</note>
+        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:91,95</note>
         <note category="description">Label of the new password confirmation field on the password reset form</note>
       </notes>
       <segment state="initial">
@@ -7722,7 +7720,7 @@
     </unit>
     <unit id="auth.login.legalNote">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login.component.ts:159,162</note>
+        <note category="location">src/app/features/auth/components/login/login.component.ts:146,149</note>
         <note category="description">Legal note in the footer of the sign-in card</note>
       </notes>
       <segment state="initial">
@@ -7732,7 +7730,7 @@
     </unit>
     <unit id="auth.passwordReset.intro">
       <notes>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:96,101</note>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:107,113</note>
         <note category="description">Explains what the password reset form does</note>
       </notes>
       <segment state="initial">
@@ -7742,7 +7740,7 @@
     </unit>
     <unit id="auth.passwordReset.sentTo">
       <notes>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:56,61</note>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:62,67</note>
         <note category="description">Confirms that a password reset link was sent. EMAIL is the address it went to</note>
       </notes>
       <segment state="initial">
@@ -7762,7 +7760,7 @@
     </unit>
     <unit id="auth.resetPassword.intro">
       <notes>
-        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:56,61</note>
+        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:60,65</note>
         <note category="description">Explains what the form for choosing a new password does</note>
       </notes>
       <segment state="initial">
@@ -9820,7 +9818,7 @@
     </unit>
     <unit id="5554528553553249088">
       <notes>
-        <note category="location">src/app/features/auth/components/auth-field/auth-field.component.ts:111</note>
+        <note category="location">src/app/features/auth/components/auth-field/auth-field.component.ts:116</note>
         <note category="description">Label of the button that shows a typed password</note>
       </notes>
       <segment state="initial">
@@ -9872,7 +9870,7 @@
     </unit>
     <unit id="1341235140977676266">
       <notes>
-        <note category="location">src/app/features/auth/components/password-strength-meter/password-strength-meter.component.ts:45</note>
+        <note category="location">src/app/features/auth/components/password-strength-meter/password-strength-meter.component.ts:41</note>
         <note category="description">Accessible label of the meter that rates a typed password</note>
       </notes>
       <segment state="initial">
@@ -10233,7 +10231,7 @@
     </unit>
     <unit id="7047821026526981903">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login.component.ts:55,59</note>
+        <note category="location">src/app/features/auth/components/login/login.component.ts:57,61</note>
         <note category="description">Link from the login form to the registration form</note>
       </notes>
       <segment state="initial">
@@ -10475,8 +10473,8 @@
     </unit>
     <unit id="4939428286618017421">
       <notes>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:136,139</note>
-        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:110,113</note>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:149,152</note>
+        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:114,117</note>
         <note category="description">Link back to the login form</note>
       </notes>
       <segment state="initial">
@@ -11245,7 +11243,7 @@
     </unit>
     <unit id="4591169383100169155">
       <notes>
-        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:129</note>
+        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:133</note>
         <note category="description">Submit button on the password reset form</note>
       </notes>
       <segment state="initial">
@@ -13658,8 +13656,8 @@
     </unit>
     <unit id="3649865062920158321">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login.component.ts:42,44</note>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:49,50</note>
+        <note category="location">src/app/features/auth/components/login/login.component.ts:46,48</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:51,52</note>
         <note category="description">Label above the heading of the sign-in form</note>
       </notes>
       <segment state="initial">
@@ -14271,7 +14269,7 @@
     </unit>
     <unit id="1402579729059041118">
       <notes>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:86,91</note>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:95,101</note>
         <note category="description">Button that returns to the form for entering another email address</note>
       </notes>
       <segment state="initial">
@@ -14958,7 +14956,7 @@
     </unit>
     <unit id="1041104936823929398">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login.component.ts:176</note>
+        <note category="location">src/app/features/auth/components/login/login.component.ts:165</note>
         <note category="description">Submit button on the login form while signing in</note>
       </notes>
       <segment state="initial">
@@ -14998,7 +14996,7 @@
     </unit>
     <unit id="2224947564116830026">
       <notes>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:51,53</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:53,55</note>
         <note category="description">Heading of the account registration form</note>
       </notes>
       <segment state="initial">
@@ -15401,7 +15399,7 @@
     </unit>
     <unit id="5111842031822965750">
       <notes>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:164</note>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:179</note>
         <note category="description">Submit button on the password reset request form</note>
       </notes>
       <segment state="initial">
@@ -15826,8 +15824,8 @@
     </unit>
     <unit id="130105749950410304">
       <notes>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:131,134</note>
-        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:105,108</note>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:146,148</note>
+        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:111,113</note>
         <note category="description">Sits before the link back to the login form</note>
       </notes>
       <segment state="initial">
@@ -16196,7 +16194,7 @@
     </unit>
     <unit id="2012659005494284050">
       <notes>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:156</note>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:171</note>
         <note category="description">Heading of the password reset request form</note>
       </notes>
       <segment state="initial">
@@ -16673,7 +16671,7 @@
     <unit id="2195844952748654945">
       <notes>
         <note category="location">src/app/features/auth/components/register/register.component.ts:220</note>
-        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:149</note>
+        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:153</note>
         <note category="description">Validation error when a new password is too short</note>
       </notes>
       <segment state="initial">
@@ -18686,7 +18684,7 @@
     <unit id="5241223076967248456">
       <notes>
         <note category="location">src/app/features/auth/components/register/register.component.ts:111,114</note>
-        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:72,75</note>
+        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:76,79</note>
         <note category="description">Placeholder of the password field on the registration form</note>
       </notes>
       <segment state="initial">
@@ -19039,7 +19037,7 @@
     </unit>
     <unit id="4365227028908342999">
       <notes>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:153</note>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:168</note>
         <note category="description">Heading shown once the password reset email has been sent</note>
       </notes>
       <segment state="initial">
@@ -19408,7 +19406,7 @@
     </unit>
     <unit id="7313867364439733953">
       <notes>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:56,59</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:58,60</note>
         <note category="description">Sits before the link to the login form</note>
       </notes>
       <segment state="initial">
@@ -19633,7 +19631,7 @@
     </unit>
     <unit id="2904079922768988996">
       <notes>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:129,134</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:129,133</note>
         <note category="description">Checkbox confirming the terms of service on the registration form</note>
       </notes>
       <segment state="initial">
@@ -19643,7 +19641,7 @@
     </unit>
     <unit id="4585825587400520198">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login.component.ts:137,145</note>
+        <note category="location">src/app/features/auth/components/turnstile/turnstile-notice.component.ts:17,22</note>
         <note category="description">Notes that the sign-in form is guarded by the Cloudflare Turnstile bot check. Turnstile is a product name and must not be translated</note>
       </notes>
       <segment state="initial">
@@ -20388,14 +20386,14 @@
         <target>Beziehungstyp erstellen</target>
       </segment>
     </unit>
-    <unit id="4000312085274982180">
+    <unit id="475077506966252387">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login-providers.component.ts:11,13</note>
+        <note category="location">src/app/features/auth/components/login/login-providers.component.ts:12,16</note>
         <note category="description">Separator above the external sign-in provider buttons</note>
       </notes>
       <segment state="initial">
-        <source> or continue with </source>
-        <target> oder weiter mit </target>
+        <source>or continue with</source>
+        <target>oder weiter mit</target>
       </segment>
     </unit>
     <unit id="400343125846819376">
@@ -21032,7 +21030,7 @@
     </unit>
     <unit id="29167121133682512">
       <notes>
-        <note category="location">src/app/features/auth/components/password-strength-meter/password-strength-meter.component.ts:79</note>
+        <note category="location">src/app/features/auth/components/password-strength-meter/password-strength-meter.component.ts:73</note>
         <note category="description">Rating of a typed password</note>
       </notes>
       <segment state="initial">
@@ -23691,7 +23689,7 @@
     </unit>
     <unit id="8282309360961339523">
       <notes>
-        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:48,50</note>
+        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:52,54</note>
         <note category="description">Heading of the form for choosing a new password</note>
       </notes>
       <segment state="initial">
@@ -23752,7 +23750,7 @@
     </unit>
     <unit id="8787158466879133733">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login.component.ts:72,75</note>
+        <note category="location">src/app/features/auth/components/login/login.component.ts:69,72</note>
         <note category="description">Error shown when login credentials are rejected</note>
       </notes>
       <segment state="initial">

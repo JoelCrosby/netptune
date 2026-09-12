@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { booleanAttribute, Component, computed, input } from '@angular/core';
 import {
   buttonLinkVariants,
   cn,
@@ -16,6 +16,7 @@ import {
 export class ButtonLinkComponent {
   readonly variant = input<ButtonVariant>('text');
   readonly color = input<ButtonColorInput>('primary');
+  readonly block = input(false, { transform: booleanAttribute });
   readonly class = input('');
 
   className = computed(() =>
@@ -23,6 +24,7 @@ export class ButtonLinkComponent {
       buttonLinkVariants({
         color: coerceButtonColor(this.color()),
         variant: this.variant(),
+        block: this.block(),
       }),
       this.class()
     )

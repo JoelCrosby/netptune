@@ -11,8 +11,12 @@ import {
 import { RouterLink } from '@angular/router';
 import { LucideMail } from '@lucide/angular';
 import { AuthCommandsService } from '@core/services/auth-commands.service';
+import { ButtonLinkComponent } from '@static/components/button/button-link.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { DividerComponent } from '@static/components/divider/divider.component';
+import { IconTileComponent } from '@static/components/icon-tile.component';
+import { TextLinkComponent } from '@static/components/text-link.component';
 import { AuthFieldComponent } from '../auth-field/auth-field.component';
 import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.component';
 import { AuthPageContainerComponent } from '../auth-page-container/auth-page-container.component';
@@ -23,9 +27,12 @@ import { AuthPageContainerComponent } from '../auth-page-container/auth-page-con
     AuthPageContainerComponent,
     AuthFormPanelComponent,
     AuthFieldComponent,
+    ButtonLinkComponent,
     FlatButtonComponent,
     StrokedButtonComponent,
-    LucideMail,
+    DividerComponent,
+    IconTileComponent,
+    TextLinkComponent,
     RouterLink,
     FormField,
   ],
@@ -39,16 +46,15 @@ import { AuthPageContainerComponent } from '../auth-page-container/auth-page-con
         [loading]="loading()"
         (submitted)="requestPasswordReset()">
         @if (sentTo()) {
-          <span
-            class="bg-primary/12 text-primary mt-2.5 mb-3.5 flex h-11 w-11 items-center justify-center rounded-[10px]"
+          <app-icon-tile
             panelBadge
-            aria-hidden="true">
-            <svg lucideMail size="22"></svg>
-          </span>
+            size="large"
+            [icon]="mailIcon"
+            [class]="badgeClass" />
         }
 
         @if (sentTo(); as sentTo) {
-          <p class="text-foreground/50 mt-1.5 text-[13px] leading-relaxed">
+          <p panelSubtitle>
             <ng-container
               i18n="
                 Confirms that a password reset link was sent. EMAIL is the
@@ -60,23 +66,26 @@ import { AuthPageContainerComponent } from '../auth-page-container/auth-page-con
               >. Check your spam folder if it has not arrived in a few minutes.
             </ng-container>
           </p>
+        }
 
+        @if (sentTo()) {
           <div class="mt-5.5 flex flex-col gap-2.5">
             <button
               app-stroked-button
               color="neutral"
-              type="submit"
-              class="h-11.5 w-full rounded-lg font-bold tracking-[.2px]">
+              size="large"
+              block
+              type="submit">
               <span i18n="Button that sends the password reset email again">
                 Resend the link
               </span>
             </button>
 
             <button
-              app-flat-button
-              color="ghost"
+              app-button-link
+              color="primary"
+              block
               type="button"
-              class="text-primary hover:bg-primary/8 h-10 w-full rounded-lg text-[13px] font-bold"
               (click)="useDifferentEmail()">
               <span
                 i18n="
@@ -87,8 +96,10 @@ import { AuthPageContainerComponent } from '../auth-page-container/auth-page-con
               </span>
             </button>
           </div>
-        } @else {
-          <p class="text-foreground/50 mt-1.5 text-[13px] leading-relaxed">
+        }
+
+        @if (!sentTo()) {
+          <p panelSubtitle>
             <ng-container
               i18n="
                 Explains what the password reset form
@@ -97,7 +108,9 @@ import { AuthPageContainerComponent } from '../auth-page-container/auth-page-con
               new password.
             </ng-container>
           </p>
+        }
 
+        @if (!sentTo()) {
           <div class="mt-5.5 flex flex-col gap-4">
             <app-auth-field
               [formField]="requestForm.email"
@@ -118,21 +131,21 @@ import { AuthPageContainerComponent } from '../auth-page-container/auth-page-con
             <button
               app-flat-button
               color="primary"
-              type="submit"
-              class="h-11.5 w-full rounded-lg font-bold tracking-[.2px]">
+              size="large"
+              block
+              type="submit">
               {{ submitLabel() }}
             </button>
           </div>
         }
 
-        <p
-          class="border-border/70 text-foreground/50 mt-6 border-t pt-4.5 text-[13px]">
+        <app-divider class="mt-6" />
+
+        <p panelFootnote>
           <span i18n="Sits before the link back to the login form">
             Remembered it?
           </span>
-          <a
-            class="text-primary font-semibold hover:underline"
-            [routerLink]="['/auth/login']">
+          <a app-text-link [routerLink]="['/auth/login']">
             <span i18n="Link back to the login form">Back to sign in</span>
           </a>
         </p>
@@ -142,6 +155,10 @@ import { AuthPageContainerComponent } from '../auth-page-container/auth-page-con
 })
 export class RequestPasswordResetComponent {
   private auth = inject(AuthCommandsService);
+
+  protected readonly mailIcon = LucideMail;
+  protected readonly badgeClass =
+    'bg-primary/12 mt-2.5 mb-3.5 h-11 w-11 rounded-[10px]';
 
   loading = this.auth.requestPasswordResetLoading;
   sentTo = this.auth.passwordResetEmail;

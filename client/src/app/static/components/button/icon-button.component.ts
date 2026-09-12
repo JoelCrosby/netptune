@@ -10,6 +10,7 @@ import {
   coerceIconButtonColor,
   iconButtonVariants,
   type IconButtonColor,
+  type IconButtonSize,
 } from './button.variants';
 
 @Component({
@@ -29,6 +30,7 @@ export class IconButtonComponent {
   });
 
   readonly color = input<IconButtonColor>('default');
+  readonly size = input<IconButtonSize>('default');
   readonly class = input('');
   readonly ariaLabel = input<string | null>(null);
 
@@ -38,7 +40,10 @@ export class IconButtonComponent {
 
   @HostBinding('class') get className(): string {
     return cn(
-      iconButtonVariants({ color: coerceIconButtonColor(this.color()) }),
+      iconButtonVariants({
+        color: coerceIconButtonColor(this.color()),
+        size: this.size(),
+      }),
       this.class()
     );
   }

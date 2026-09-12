@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { LucideDynamicIcon, LucideEye, LucideEyeOff } from '@lucide/angular';
 import { AbstractFormValueControl } from '@static/components/abstract-form-value-control';
+import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { FormControlFieldComponent } from '@static/components/form-control/form-control-field.component';
 import {
   FormControlInputDirective,
@@ -18,6 +19,7 @@ import { FormErrorComponent } from '@static/components/form-error/form-error.com
   selector: 'app-auth-field',
   imports: [
     LucideDynamicIcon,
+    IconButtonComponent,
     FormControlFieldComponent,
     FormControlInputDirective,
     FormControlLabelDirective,
@@ -59,9 +61,12 @@ import { FormErrorComponent } from '@static/components/form-error/form-error.com
 
         @if (revealable()) {
           <button
-            class="text-foreground/50 hover:bg-hover hover:text-foreground mr-1.5 flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-lg transition-colors"
+            app-icon-button
+            class="mr-1.5 shrink-0"
+            size="small"
+            color="neutral"
             type="button"
-            [attr.aria-label]="revealLabel()"
+            [ariaLabel]="revealLabel()"
             [attr.title]="revealLabel()"
             (click)="toggleReveal()">
             <svg

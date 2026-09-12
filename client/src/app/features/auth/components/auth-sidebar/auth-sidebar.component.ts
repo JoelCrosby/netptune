@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
+import { BrandLogoComponent } from '@static/components/brand-logo.component';
 import { BuildNumberComponent } from '@static/components/build-number/build-number.component';
 
 @Component({
   selector: 'app-auth-sidebar',
-  imports: [BuildNumberComponent],
+  imports: [BrandLogoComponent, BuildNumberComponent],
   host: {
     class:
       'bg-side-bar border-side-bar-border relative flex flex-col overflow-hidden border-r p-10 text-white',
@@ -27,13 +28,7 @@ import { BuildNumberComponent } from '@static/components/build-number/build-numb
     </div>
 
     <div class="relative z-1 flex items-center gap-3.5">
-      <img
-        class="block h-8 w-8 shrink-0 rounded-lg"
-        src="assets/android-chrome-192x192.png"
-        i18n-alt="Alt text for the Netptune logo above auth forms"
-        alt="Netptune logo"
-        width="32"
-        height="32" />
+      <app-brand-logo size="small" />
       <span class="text-[15px] font-semibold tracking-[.225px]">
         {{ brandName }}
       </span>

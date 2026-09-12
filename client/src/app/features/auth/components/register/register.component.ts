@@ -18,6 +18,7 @@ import { AuthCommandsService } from '@core/services/auth-commands.service';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
+import { TextLinkComponent } from '@static/components/text-link.component';
 import { AuthFieldComponent } from '../auth-field/auth-field.component';
 import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.component';
 import { AuthPageContainerComponent } from '../auth-page-container/auth-page-container.component';
@@ -37,6 +38,7 @@ const PASSWORD_MIN_LENGTH = 8;
     FlatButtonComponent,
     LoginProvidersComponent,
     PasswordStrengthMeterComponent,
+    TextLinkComponent,
     RouterLink,
     FormField,
     TurnstileComponent,
@@ -51,13 +53,11 @@ const PASSWORD_MIN_LENGTH = 8;
         heading="Create your account"
         [loading]="loading()"
         (submitted)="register()">
-        <p class="text-foreground/50 mt-1.5 text-[13px]" panelSubtitle>
+        <p panelSubtitle>
           <span i18n="Sits before the link to the login form">
             Already have one?
           </span>
-          <a
-            class="text-primary font-semibold hover:underline"
-            [routerLink]="['/auth/login']">
+          <a app-text-link [routerLink]="['/auth/login']">
             <span i18n="Link from the registration form back to the login form">
               Sign in
             </span>
@@ -118,17 +118,16 @@ const PASSWORD_MIN_LENGTH = 8;
           </app-auth-field>
 
           <app-checkbox
+            density="compact"
             [checked]="registerForm.agreedToTerms().value()"
             (changed)="registerForm.agreedToTerms().value.set($event)">
-            <span class="text-foreground/70 text-[13px] leading-normal">
-              <ng-container
-                i18n="
-                  Checkbox confirming the terms of service on the registration
-                  form
-                ">
-                I agree to the terms of service and privacy policy
-              </ng-container>
-            </span>
+            <ng-container
+              i18n="
+                Checkbox confirming the terms of service on the registration
+                form
+              ">
+              I agree to the terms of service and privacy policy
+            </ng-container>
           </app-checkbox>
 
           <app-turnstile (tokenGenerated)="onTurnstileResult($event)" />
@@ -136,8 +135,9 @@ const PASSWORD_MIN_LENGTH = 8;
           <button
             app-flat-button
             color="primary"
+            size="large"
+            block
             type="submit"
-            class="h-11.5 w-full rounded-lg font-bold tracking-[.2px]"
             [disabled]="!canSubmit()">
             {{ submitLabel() }}
           </button>
@@ -145,7 +145,7 @@ const PASSWORD_MIN_LENGTH = 8;
 
         <app-login-providers />
 
-        <p class="text-foreground/45 mt-5 text-xs leading-relaxed">
+        <p panelFootnote>
           <ng-container
             i18n="
               Note in the footer of the registration

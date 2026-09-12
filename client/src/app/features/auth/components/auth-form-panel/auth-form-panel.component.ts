@@ -1,9 +1,10 @@
 import { booleanAttribute, Component, input, output } from '@angular/core';
+import { BrandLogoComponent } from '@static/components/brand-logo.component';
 import { ProgressBarComponent } from '@static/components/progress-bar/progress-bar.component';
 
 @Component({
   selector: 'app-auth-form-panel',
-  imports: [ProgressBarComponent],
+  imports: [BrandLogoComponent, ProgressBarComponent],
   host: { class: 'z-1 block w-full max-w-[27.5rem]' },
   template: `
     <form
@@ -18,13 +19,7 @@ import { ProgressBarComponent } from '@static/components/progress-bar/progress-b
       }
 
       @if (showLogo()) {
-        <img
-          class="mb-4.5 block h-11 w-11 rounded-[10px]"
-          src="assets/android-chrome-192x192.png"
-          i18n-alt="Alt text for the Netptune logo above auth forms"
-          alt="Netptune logo"
-          width="44"
-          height="44" />
+        <app-brand-logo class="mb-4.5" size="large" />
       }
 
       @if (eyebrow(); as eyebrow) {
@@ -40,8 +35,15 @@ import { ProgressBarComponent } from '@static/components/progress-bar/progress-b
         {{ heading() }}
       </h1>
 
-      <ng-content select="[panelSubtitle]" />
+      <div class="text-foreground/50 mt-1.5 text-[13px] leading-relaxed">
+        <ng-content select="[panelSubtitle]" />
+      </div>
+
       <ng-content />
+
+      <div class="text-foreground/45 mt-5 text-xs leading-relaxed">
+        <ng-content select="[panelFootnote]" />
+      </div>
     </form>
   `,
 })

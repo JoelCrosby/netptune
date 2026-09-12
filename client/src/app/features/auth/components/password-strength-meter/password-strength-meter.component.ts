@@ -1,42 +1,38 @@
 import { Component, computed, input } from '@angular/core';
+import {
+  ProgressBarComponent,
+  type ProgressBarColor,
+} from '@static/components/progress-bar/progress-bar.component';
 
 interface PasswordStrength {
-  width: string;
-  color: string;
+  value: number;
+  color: ProgressBarColor;
   label: string;
-  score: number;
 }
 
 const EMPTY_STRENGTH: PasswordStrength = {
-  width: '0%',
-  color: 'bg-primary',
+  value: 0,
+  color: 'primary',
   label: '',
-  score: 0,
 };
 
 @Component({
   selector: 'app-password-strength-meter',
+  imports: [ProgressBarComponent],
+  host: { class: 'mt-0.5 flex items-center gap-2.5' },
   template: `
-    <div class="mt-0.5 flex items-center gap-2.5">
-      <span
-        class="bg-foreground/5 relative h-1 grow overflow-hidden rounded-full"
-        role="progressbar"
-        aria-valuemin="0"
-        aria-valuemax="5"
-        [attr.aria-valuenow]="strength().score"
-        [attr.aria-valuetext]="strength().label || null"
-        [attr.aria-label]="meterLabel">
-        <span
-          class="absolute inset-y-0 left-0 rounded-full transition-[width] duration-200"
-          [class]="strength().color"
-          [style.width]="strength().width"></span>
-      </span>
+    <app-progress-bar
+      class="grow"
+      mode="determinate"
+      [ariaLabel]="meterLabel"
+      [valueText]="strength().label || null"
+      [value]="strength().value"
+      [color]="strength().color" />
 
-      <span
-        class="text-foreground/50 min-w-[54px] text-right text-xs font-semibold">
-        {{ strength().label }}
-      </span>
-    </div>
+    <span
+      class="text-foreground/50 min-w-13.5 text-right text-xs font-semibold">
+      {{ strength().label }}
+    </span>
   `,
 })
 export class PasswordStrengthMeterComponent {
@@ -56,36 +52,32 @@ function rate(password: string): PasswordStrength {
 
   if (score <= 2) {
     return {
-      width: '33%',
-      color: 'bg-warn',
+      value: 33,
+      color: 'warn',
       label: $localize`:Rating of a typed password:Weak`,
-      score,
     };
   }
 
   if (score === 3) {
     return {
-      width: '55%',
-      color: 'bg-[#f9a825]',
+      value: 55,
+      color: 'caution',
       label: $localize`:Rating of a typed password:Fair`,
-      score,
     };
   }
 
   if (score === 4) {
     return {
-      width: '78%',
-      color: 'bg-primary',
+      value: 78,
+      color: 'primary',
       label: $localize`:Rating of a typed password:Good`,
-      score,
     };
   }
 
   return {
-    width: '100%',
-    color: 'bg-[#2e7d32]',
+    value: 100,
+    color: 'success',
     label: $localize`:Rating of a typed password:Strong`,
-    score,
   };
 }
 

@@ -45,7 +45,7 @@ import { TaskDetailService } from './task-detail.service';
           <button
             app-stroked-button
             type="button"
-            size="sm"
+            size="small"
             (click)="openAddMenu(el.nativeElement)">
             <svg lucidePlus class="h-4 w-4"></svg>
             <span i18n="Button that puts this task on another board">

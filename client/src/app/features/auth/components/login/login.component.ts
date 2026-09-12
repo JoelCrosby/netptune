@@ -9,14 +9,17 @@ import {
   submit,
 } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
-import { LucideCircleAlert, LucideLock } from '@lucide/angular';
+import { LucideCircleAlert } from '@lucide/angular';
 import { AuthCommandsService } from '@core/services/auth-commands.service';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
+import { TextLinkComponent } from '@static/components/text-link.component';
+import { CalloutComponent } from '@static/components/callout/callout.component';
 import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
 import { AuthFieldComponent } from '../auth-field/auth-field.component';
 import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.component';
 import { AuthPageContainerComponent } from '../auth-page-container/auth-page-container.component';
 import { TurnstileComponent } from '../turnstile/turnstile.component';
+import { TurnstileNoticeComponent } from '../turnstile/turnstile-notice.component';
 import { LoginProvidersComponent } from './login-providers.component';
 
 @Component({
@@ -25,14 +28,15 @@ import { LoginProvidersComponent } from './login-providers.component';
     AuthPageContainerComponent,
     AuthFormPanelComponent,
     AuthFieldComponent,
+    CalloutComponent,
     CheckboxComponent,
     FlatButtonComponent,
     LoginProvidersComponent,
-    LucideCircleAlert,
-    LucideLock,
+    TextLinkComponent,
     RouterLink,
     FormField,
     TurnstileComponent,
+    TurnstileNoticeComponent,
   ],
   template: `
     <app-auth-page-container>
@@ -44,13 +48,11 @@ import { LoginProvidersComponent } from './login-providers.component';
         heading="Sign in to continue"
         [loading]="loading()"
         (submitted)="login()">
-        <p class="text-foreground/50 mt-1.5 text-[13px]" panelSubtitle>
+        <p panelSubtitle>
           <span i18n="Sits before the link to the registration form">
             No account yet?
           </span>
-          <a
-            class="text-primary font-semibold hover:underline"
-            [routerLink]="['/auth/register']">
+          <a app-text-link [routerLink]="['/auth/register']">
             <span i18n="Link from the login form to the registration form">
               Create one
             </span>
@@ -58,20 +60,15 @@ import { LoginProvidersComponent } from './login-providers.component';
         </p>
 
         @if (showLoginError()) {
-          <div
-            class="text-warn bg-warn/8 mt-4.5 flex items-center gap-2.5 rounded-lg px-3 py-2.5"
-            role="alert">
-            <svg
-              class="shrink-0"
-              lucideCircleAlert
-              size="16"
-              aria-hidden="true"></svg>
-            <span
-              class="text-[13px] font-medium tracking-[.25px]"
-              i18n="Error shown when login credentials are rejected">
+          <app-callout
+            class="mt-4.5"
+            color="warn"
+            role="alert"
+            [icon]="alertIcon">
+            <span i18n="Error shown when login credentials are rejected">
               That email and password do not match an account.
             </span>
-          </div>
+          </app-callout>
         }
 
         <div class="mt-5.5 flex flex-col gap-4">
@@ -98,7 +95,8 @@ import { LoginProvidersComponent } from './login-providers.component';
             type="password"
             autocomplete="current-password">
             <a
-              class="text-primary text-xs font-semibold hover:underline"
+              app-text-link
+              size="small"
               fieldAction
               [routerLink]="['/auth/request-password-reset']">
               <span
@@ -112,31 +110,19 @@ import { LoginProvidersComponent } from './login-providers.component';
 
           <div class="flex items-center justify-between gap-4">
             <app-checkbox
+              density="compact"
               [checked]="keepSignedIn()"
               (changed)="keepSignedIn.set($event)">
-              <span class="text-foreground/70 text-[13px]">
-                <ng-container
-                  i18n="
-                    Checkbox that keeps the session alive after the browser is
-                    closed
-                  ">
-                  Keep me signed in
-                </ng-container>
-              </span>
-            </app-checkbox>
-
-            <span
-              class="text-foreground/45 flex shrink-0 items-center gap-1.5 text-xs">
-              <svg lucideLock size="13" aria-hidden="true"></svg>
               <ng-container
                 i18n="
-                  Notes that the sign-in form is guarded by the Cloudflare
-                  Turnstile bot check. Turnstile is a product name and must not
-                  be translated
+                  Checkbox that keeps the session alive after the browser is
+                  closed
                 ">
-                Protected by Turnstile
+                Keep me signed in
               </ng-container>
-            </span>
+            </app-checkbox>
+
+            <app-turnstile-notice />
           </div>
 
           <app-turnstile (tokenGenerated)="onTurnstileResult($event)" />
@@ -144,15 +130,16 @@ import { LoginProvidersComponent } from './login-providers.component';
           <button
             app-flat-button
             color="primary"
-            type="submit"
-            class="h-11.5 w-full rounded-lg font-bold tracking-[.2px]">
+            size="large"
+            block
+            type="submit">
             {{ submitLabel() }}
           </button>
         </div>
 
         <app-login-providers />
 
-        <p class="text-foreground/45 mt-5 text-xs leading-relaxed">
+        <p panelFootnote>
           <ng-container
             i18n="
               Legal note in the footer of the sign-in card@@auth.login.legalNote">
@@ -165,6 +152,8 @@ import { LoginProvidersComponent } from './login-providers.component';
 })
 export class LoginComponent {
   private auth = inject(AuthCommandsService);
+
+  protected readonly alertIcon = LucideCircleAlert;
 
   loading = this.auth.loginLoading;
   showLoginError = this.auth.loginError;
