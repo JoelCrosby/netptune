@@ -40,7 +40,7 @@ import { TaskScopeIdComponent } from './task-scope-id.component';
     @if (removable()) {
       <button
         app-icon-button
-        class="bg-foreground/8 text-foreground/60 hover:bg-foreground/15 invisible h-4.5 w-4.5 flex-none group-hover:visible"
+        class="bg-foreground/8 text-foreground/60 hover:bg-foreground/15 touch:visible invisible h-4.5 w-4.5 flex-none group-hover:visible"
         [ariaLabel]="removeLabel()"
         [title]="removeLabel()"
         (click)="removed.emit()">

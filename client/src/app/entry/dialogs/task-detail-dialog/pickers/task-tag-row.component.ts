@@ -37,7 +37,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
         @if (editable()) {
           <button
             type="button"
-            class="hidden cursor-pointer opacity-70 group-hover:block hover:opacity-100 focus-visible:block"
+            class="touch:block hidden cursor-pointer opacity-70 group-hover:block hover:opacity-100 focus-visible:block"
             [attr.aria-label]="removeLabel"
             (click)="removed.emit(tag)">
             <svg lucideX class="h-3 w-3"></svg>

@@ -19,6 +19,18 @@ export interface DialogWizardConfig<D, R, C> extends DialogConfig<
   title: string;
 }
 
+// Marks the overlay pane of every dialog, so the shared sizing in modals.css can
+// reach it. It goes first so a dialog's own panel class still overrides it.
+const DIALOG_PANEL_CLASS = 'np-dialog';
+
+function withDialogPanelClass(panelClass?: string | string[]): string[] {
+  if (!panelClass) return [DIALOG_PANEL_CLASS];
+
+  const existing = Array.isArray(panelClass) ? panelClass : [panelClass];
+
+  return [DIALOG_PANEL_CLASS, ...existing];
+}
+
 @Service()
 export class DialogService {
   private dialog = inject(Dialog);
@@ -60,6 +72,7 @@ export class DialogService {
     return this.dialog.open<R, D, C>(component, {
       ...config,
       hasBackdrop: true,
+      panelClass: withDialogPanelClass(config.panelClass),
       container: {
         type: container,
         providers: () => [

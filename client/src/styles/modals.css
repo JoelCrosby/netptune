@@ -1,3 +1,33 @@
+/* Every dialog opened through DialogService. The CDK caps the overlay pane at the
+   viewport height but the container does not scroll, so anything taller than a phone
+   screen used to be clipped and unreachable. These come first so a dialog's own panel
+   class (the full-screen ones below) still overrides them at equal specificity. */
+@media only screen and (max-width: 767.98px) {
+  .np-dialog {
+    max-width: calc(100vw - 24px) !important;
+    max-height: calc(100dvh - 24px);
+  }
+
+  .np-dialog app-dialog-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .np-dialog app-dialog-container .dialog-inner {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  /* Keeps the confirm/save row reachable while the rest of the dialog scrolls. */
+  .np-dialog app-dialog-container [app-dialog-actions] {
+    position: sticky;
+    bottom: 0;
+    background: var(--dialog-background);
+    padding-bottom: 4px;
+  }
+}
+
 .app-modal-class {
   transition: max-height .3s ease-out;
   height: auto;

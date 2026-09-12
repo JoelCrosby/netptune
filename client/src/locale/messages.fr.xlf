@@ -675,7 +675,7 @@
     <unit id="7884294193521928458">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:229</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:343</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:363</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1979,7 +1979,7 @@
     <unit id="8878271828886295802">
       <notes>
         <note category="location">src/app/core/services/board-commands.service.ts:67</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:358</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:378</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -6519,7 +6519,7 @@
     </unit>
     <unit id="176582944453303482">
       <notes>
-        <note category="location">src/app/features/audit/views/audit-view/audit-view.component.ts:28,30</note>
+        <note category="location">src/app/features/audit/views/audit-view/audit-view.component.ts:29,31</note>
         <note category="description">Accessible name of the audit log filter row</note>
       </notes>
       <segment state="translated">
@@ -6908,7 +6908,7 @@
     </unit>
     <unit id="1678559204833619774">
       <notes>
-        <note category="location">src/app/features/audit/views/audit-view/audit-view.component.ts:26,27</note>
+        <note category="location">src/app/features/audit/views/audit-view/audit-view.component.ts:27,28</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:381</note>
         <note category="location">src/app/workspace.routes.ts:108</note>
         <note category="description">Page title for the workspace audit log</note>
@@ -11725,7 +11725,7 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:243,245</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:144,146</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:85</note>
-        <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:165,168</note>
+        <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:177,180</note>
         <note category="description">Accessible label for the button that deletes the task</note>
       </notes>
       <segment state="translated">
@@ -14340,7 +14340,7 @@
     </unit>
     <unit id="6996270126255502228">
       <notes>
-        <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:129,131</note>
+        <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:141,143</note>
         <note category="description">Button that adds a task to this board group</note>
       </notes>
       <segment state="translated">
@@ -14511,7 +14511,7 @@
     <unit id="5810814854864452102">
       <notes>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:130</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:330</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:350</note>
         <note category="description">Title of the edit-board dialog</note>
       </notes>
       <segment state="translated">
@@ -14875,7 +14875,7 @@
     </unit>
     <unit id="9210705833797356375">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:206,207</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:214,215</note>
         <note category="description">Tooltip on the button that edits a board group</note>
       </notes>
       <segment state="translated">
@@ -14906,7 +14906,7 @@
     <unit id="989480357041643523">
       <notes>
         <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:302,305</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:218,219</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:226,227</note>
         <note category="description">Menu item that deletes a board group</note>
       </notes>
       <segment state="translated">
@@ -14926,7 +14926,7 @@
     </unit>
     <unit id="1779801045860441380">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:335</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:355</note>
         <note category="description">Overflow action that opens the manage-groups dialog</note>
       </notes>
       <segment state="translated">
@@ -14936,7 +14936,7 @@
     </unit>
     <unit id="6413760592493508393">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:351</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:371</note>
         <note category="description">Overflow action that downloads the board tasks as CSV</note>
       </notes>
       <segment state="translated">
@@ -21097,7 +21097,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:90,92</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:94,95</note>
-        <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:149,154</note>
+        <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:161,166</note>
         <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:142</note>
         <note category="description">Tooltip on the button that takes a task off a board</note>
       </notes>

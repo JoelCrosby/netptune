@@ -20,7 +20,7 @@ import { AuditLogDetailDialogComponent } from '../../dialogs/audit-log-detail-di
 
 @Component({
   selector: 'app-audit-table',
-  host: { class: 'flex min-h-0 flex-1 flex-col' },
+  host: { class: 'flex min-h-0 flex-1 flex-col max-md:flex-none' },
   imports: [
     ActivityTypePipe,
     AvatarComponent,

@@ -52,7 +52,9 @@ export class TabGroupComponent {
 
   protected readonly hostClass = computed(() => {
     return cn(
-      'flex items-center',
+      // A narrow screen cannot fit every tab, so the row scrolls sideways rather than
+      // running off the edge.
+      'flex items-center overflow-x-auto',
       this.variant() === 'default' ? 'border-border border-b' : '',
       this.class()
     );
@@ -63,7 +65,7 @@ export class TabGroupComponent {
 
     if (this.variant() === 'default') {
       return cn(
-        'inline-flex cursor-pointer items-center gap-2 border-b-2 px-3 pt-1 pb-2.5 text-sm font-medium transition-colors focus-visible:outline-none',
+        'inline-flex shrink-0 cursor-pointer items-center gap-2 border-b-2 px-3 pt-1 pb-2.5 text-sm font-medium transition-colors focus-visible:outline-none',
         isActive
           ? 'border-primary text-foreground'
           : 'border-transparent text-muted hover:text-foreground hover:border-border'
@@ -71,7 +73,7 @@ export class TabGroupComponent {
     }
 
     return cn(
-      'h-[42px] cursor-pointer border-b-2 px-3 text-[13px] transition-colors',
+      'h-[42px] shrink-0 cursor-pointer border-b-2 px-3 text-[13px] transition-colors',
       isActive
         ? 'border-primary text-foreground font-semibold'
         : 'border-transparent text-muted hover:text-foreground font-medium'

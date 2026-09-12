@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
+import { LayoutService } from '@core/services/layout.service';
 import { AuditFiltersComponent } from '@audit/components/audit-filters/audit-filters.component';
 import { AuditTableComponent } from '@audit/components/audit-table/audit-table.component';
 import { AuditActivityChartComponent } from '@audit/components/audit-activity-chart/audit-activity-chart.component';
@@ -31,8 +32,8 @@ import { AuditFilterService } from '@audit/audit-filter.service';
           (filterChange)="auditTable.goToFirstPage()" />
       </app-page-header>
 
-      <app-page-body>
-        <div class="flex min-h-0 flex-1 flex-col gap-6 pb-4">
+      <app-page-body [scroll]="isMobileView()">
+        <div class="flex min-h-0 flex-1 flex-col gap-6 pb-4 max-md:flex-none">
           <app-audit-activity-chart class="shrink-0" />
           <app-audit-table #auditTable />
         </div>
@@ -40,4 +41,6 @@ import { AuditFilterService } from '@audit/audit-filter.service';
     </app-page-container>
   `,
 })
-export class AuditViewComponent {}
+export class AuditViewComponent {
+  protected readonly isMobileView = inject(LayoutService).isMobileView;
+}

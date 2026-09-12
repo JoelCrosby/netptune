@@ -10,7 +10,7 @@ import { SkeletonComponent } from './skeleton.component';
       class="flex max-h-[calc(100dvh-180px)] w-full flex-1 flex-row overflow-hidden rounded-lg pb-4">
       @for (column of columnRange(); track $index) {
         <div
-          class="mr-4 flex w-75 flex-none flex-col overflow-hidden rounded-[.4rem]">
+          class="mr-4 flex w-[80vw] flex-none flex-col overflow-hidden rounded-[.4rem] md:w-75">
           <div
             class="border-border bg-board-group relative flex h-full flex-1 flex-col gap-3 rounded border p-3">
             <div class="flex items-center justify-between">

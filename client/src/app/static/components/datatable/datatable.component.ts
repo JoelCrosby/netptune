@@ -94,7 +94,7 @@ import {
               <th scope="col" class="w-10 p-1">
                 @if (customizableColumns()) {
                   <button
-                    class="h-5 rounded"
+                    class="touch:h-9 h-5 rounded"
                     app-icon-button
                     type="button"
                     i18n-aria-label="
@@ -399,6 +399,10 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   });
 
   filling = computed(() => {
+    // A phone has no spare height to fill: the page's own scroll carries the rows,
+    // rather than the table becoming a second scrolling box inside a short page.
+    if (this.isMobile()) return false;
+
     if (this.fill()) return true;
     if (!this.autoFill()) return false;
 

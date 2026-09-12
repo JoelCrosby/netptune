@@ -21,7 +21,7 @@ export const REACTION_VALUES = [
   template: `
     <button
       type="button"
-      class="flex h-6 w-6 items-center justify-center rounded-full border border-dashed border-neutral-300 opacity-0 transition-opacity group-hover:opacity-100 focus:opacity-100 dark:border-neutral-600"
+      class="touch:opacity-100 flex h-6 w-6 items-center justify-center rounded-full border border-dashed border-neutral-300 opacity-0 transition-opacity group-hover:opacity-100 focus:opacity-100 dark:border-neutral-600"
       i18n-aria-label="
         Accessible label for the button that opens the emoji picker for reacting
         to a comment

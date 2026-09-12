@@ -1,5 +1,6 @@
 import { computed, inject, Service } from '@angular/core';
 import { APPEARANCE_TASK_DETAIL_LAYOUT } from '@core/models/user-preferences';
+import { LayoutService } from '@core/services/layout.service';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
 
 export type TaskDetailLayout = 'summary-rail' | 'cockpit' | 'document';
@@ -15,8 +16,11 @@ function isTaskDetailLayout(value: unknown): value is TaskDetailLayout {
 @Service()
 export class TaskDetailLayoutService {
   private readonly preferences = inject(UserPreferencesService);
+  private readonly isMobileView = inject(LayoutService).isMobileView;
 
   readonly layout = computed<TaskDetailLayout>(() => {
+    if (this.isMobileView()) return 'document';
+
     const value = this.preferences.effectiveValueFor(
       APPEARANCE_TASK_DETAIL_LAYOUT
     );

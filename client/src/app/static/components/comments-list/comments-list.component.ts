@@ -198,7 +198,7 @@ interface CommentReactions {
             </div>
 
             @if (canEditComment(comment) || canDeleteComment(comment)) {
-              <div class="hidden w-10 group-hover:block">
+              <div class="touch:block hidden w-10 group-hover:block">
                 <button
                   app-icon-button
                   i18n-aria-label="
