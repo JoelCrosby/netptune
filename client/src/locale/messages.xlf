@@ -4,6 +4,7 @@
     <unit id="1196063204965083742">
       <notes>
         <note category="location">src/app/app.routes.ts:23</note>
+        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:40,42</note>
         <note category="description">Page title for the workspace picker</note>
       </notes>
       <segment>
@@ -49,7 +50,7 @@
     <unit id="8049735056636703804">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:64</note>
-        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:122</note>
+        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:147</note>
         <note category="location">src/app/shell/workspace-select/workspace-select.component.ts:397</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
@@ -4731,7 +4732,7 @@
     </unit>
     <unit id="1827176903766812596">
       <notes>
-        <note category="location">src/app/features/workspaces/components/workspace-list.component.ts:35,41</note>
+        <note category="location">src/app/features/workspaces/components/workspace-list.component.ts:45,51</note>
         <note category="description">Explains how the workspace list is ordered</note>
       </notes>
       <segment>
@@ -5204,7 +5205,7 @@
     </unit>
     <unit id="4637008718556560792">
       <notes>
-        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:45,48</note>
+        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:51,54</note>
         <note category="description">Subhead shown above the list of the user&apos;s workspaces</note>
       </notes>
       <segment>
@@ -6222,7 +6223,7 @@
     </unit>
     <unit id="4674786003114619502">
       <notes>
-        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:40,42</note>
+        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:46,48</note>
         <note category="description">Subhead shown when the user has one workspace</note>
       </notes>
       <segment>
@@ -8765,6 +8766,15 @@
         <source>Task to link</source>
       </segment>
     </unit>
+    <unit id="5327777449073669222">
+      <notes>
+        <note category="location">src/app/features/workspaces/components/workspace-list.component.ts:36,41</note>
+        <note category="description">Advice shown when no workspace matches the filter</note>
+      </notes>
+      <segment>
+        <source>Check the spelling, or create a new workspace.</source>
+      </segment>
+    </unit>
     <unit id="4206709627683312934">
       <notes>
         <note category="location">src/app/features/automations/components/automation-relation-editor.component.ts:167</note>
@@ -10510,6 +10520,15 @@
       </notes>
       <segment>
         <source> Ask the assistant </source>
+      </segment>
+    </unit>
+    <unit id="8808562628765178233">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:116</note>
+        <note category="description">Label above the workspace picker naming the signed-in account. EMAIL is its address</note>
+      </notes>
+      <segment>
+        <source>Signed in as <ph id="0" equiv="EMAIL" disp="email"/></source>
       </segment>
     </unit>
     <unit id="8371388720393236934">
@@ -12387,7 +12406,7 @@
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:110,112</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:91,93</note>
         <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:62,64</note>
-        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:68,70</note>
+        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:77,79</note>
         <note category="description">Advice shown when a page fails to load</note>
       </notes>
       <segment>
@@ -16505,9 +16524,8 @@
     </unit>
     <unit id="8778336716895792712">
       <notes>
-        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:56,59</note>
         <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:144,146</note>
-        <note category="description">Button that opens the create-workspace dialog</note>
+        <note category="description">Workspace menu action that creates a new workspace</note>
       </notes>
       <segment>
         <source> New workspace </source>
@@ -16727,6 +16745,15 @@
       </notes>
       <segment>
         <source>Day</source>
+      </segment>
+    </unit>
+    <unit id="514029247521459043">
+      <notes>
+        <note category="location">src/app/features/workspaces/components/workspace-list.component.ts:83</note>
+        <note category="description">Shown when no workspace matches the filter. QUERY is what the user typed</note>
+      </notes>
+      <segment>
+        <source>No workspace matches “<ph id="0" equiv="QUERY" disp="query"/>”</source>
       </segment>
     </unit>
     <unit id="5141352019990967744">
@@ -18225,6 +18252,15 @@
       </notes>
       <segment>
         <source>Share none</source>
+      </segment>
+    </unit>
+    <unit id="2754654270554116224">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:83,85</note>
+        <note category="description">Placeholder of the workspace filter</note>
+      </notes>
+      <segment>
+        <source>Filter workspaces</source>
       </segment>
     </unit>
     <unit id="2758582799865898429">
@@ -20972,7 +21008,7 @@
     </unit>
     <unit id="5125508136883174617">
       <notes>
-        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:66,67</note>
+        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:75,76</note>
         <note category="description">Shown when the workspace list fails to load</note>
       </notes>
       <segment>
@@ -21999,6 +22035,15 @@
         <source>Expand</source>
       </segment>
     </unit>
+    <unit id="6432332024639591969">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:65,68</note>
+        <note category="description">Button that opens the create-workspace dialog</note>
+      </notes>
+      <segment>
+        <source> Create workspace </source>
+      </segment>
+    </unit>
     <unit id="6439365426343089851">
       <notes>
         <note category="location">src/app/features/settings/views/personal-general-settings-view/personal-general-settings-view.component.ts:32,35</note>
@@ -22131,15 +22176,6 @@
       </notes>
       <segment>
         <source>Search..</source>
-      </segment>
-    </unit>
-    <unit id="3451492603028845941">
-      <notes>
-        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:34,36</note>
-        <note category="description">Page title for the workspace picker</note>
-      </notes>
-      <segment>
-        <source> Workspaces </source>
       </segment>
     </unit>
     <unit id="4250467317941972098">

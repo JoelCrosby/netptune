@@ -7,7 +7,12 @@ import { booleanAttribute, Component, input } from '@angular/core';
   template: `
     <div
       class="flex flex-col items-center justify-center gap-2 text-center"
-      [class]="compact() ? 'min-h-32 py-4' : 'my-10 h-full'">
+      [class]="compact() ? 'min-h-32 py-4' : 'my-10 h-full'"
+      [class.border-border]="outlined()"
+      [class.rounded-[14px]]="outlined()"
+      [class.border]="outlined()"
+      [class.border-dashed]="outlined()"
+      [class.px-5]="outlined()">
       <div class="text-muted" aria-hidden="true">
         <ng-content select="[emptyStateIcon]" />
       </div>
@@ -36,4 +41,5 @@ export class EmptyStateComponent {
   readonly title = input.required<string>();
   readonly description = input('');
   readonly compact = input(false, { transform: booleanAttribute });
+  readonly outlined = input(false, { transform: booleanAttribute });
 }

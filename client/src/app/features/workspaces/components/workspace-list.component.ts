@@ -1,8 +1,10 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Workspace } from '@core/models/workspace';
+import { matchesQuery } from '@core/util/strings';
 import { WorkspaceListService } from '@core/services/workspace-list.service';
 import { WorkspaceService } from '@core/services/workspace.service';
+import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { PinnedWorkspacesService } from '../services/pinned-workspaces.service';
 import { WorkspaceListItemComponent } from './workspace-list-item.component';
 
@@ -13,22 +15,31 @@ interface WorkspaceRow {
 
 @Component({
   selector: 'app-workspace-list',
-  imports: [WorkspaceListItemComponent],
+  imports: [EmptyStateComponent, WorkspaceListItemComponent],
   template: `
     <div
       class="flex flex-col gap-2.5"
       (pointerenter)="pointerInside.set(true)"
       (pointerleave)="onPointerLeave()">
-      @for (row of rows(); track row.workspace.id) {
+      @for (row of visibleRows(); track row.workspace.id) {
         <app-workspace-list-item
           [workspace]="row.workspace"
           [isPinned]="row.isPinned"
           (open)="onOpen(row.workspace)"
           (pinToggle)="onPinToggle(row.workspace)" />
+      } @empty {
+        @if (hasQuery()) {
+          <app-empty-state
+            compact
+            outlined
+            [title]="noMatchesTitle()"
+            i18n-description="Advice shown when no workspace matches the filter"
+            description="Check the spelling, or create a new workspace." />
+        }
       }
     </div>
 
-    @if (workspaces().length > 1) {
+    @if (workspaces().length > 1 && visibleRows().length > 0) {
       <p
         class="mt-5 text-[12.5px] text-[rgba(var(--foreground-rgb),0.52)]"
         i18n="Explains how the workspace list is ordered">
@@ -42,14 +53,29 @@ export class WorkspaceListComponent {
   private readonly workspaceService = inject(WorkspaceService);
   private readonly router = inject(Router);
   private readonly pinned = inject(PinnedWorkspacesService);
-
-  // Pinning re-sorts the list, which would pull the row out from under the
-  // pointer that just clicked it. Hold the order until the pointer leaves.
   private readonly heldOrder = signal<number[] | null>(null);
 
   protected readonly pointerInside = signal(false);
 
+  readonly query = input('');
+
   readonly workspaces = inject(WorkspaceListService).workspaces;
+
+  protected readonly hasQuery = computed(() => !!this.query().trim());
+
+  protected readonly visibleRows = computed(() => {
+    const query = this.query();
+
+    return this.rows().filter((row) => {
+      return matchesQuery(row.workspace, query, ['name', 'description']);
+    });
+  });
+
+  protected readonly noMatchesTitle = computed(() => {
+    const query = this.query().trim();
+
+    return $localize`:Shown when no workspace matches the filter. QUERY is what the user typed:No workspace matches “${query}:QUERY:”`;
+  });
 
   protected readonly rows = computed<WorkspaceRow[]>(() => {
     const pinnedIds = this.pinned.pinnedIds();
@@ -69,8 +95,6 @@ export class WorkspaceListComponent {
       );
     }
 
-    // The list arrives ordered by recent activity; pinning only lifts rows out
-    // of it, so a stable partition keeps that order inside both groups.
     return [
       ...rows.filter((row) => row.isPinned),
       ...rows.filter((row) => !row.isPinned),
@@ -83,7 +107,6 @@ export class WorkspaceListComponent {
   }
 
   protected onPinToggle(workspace: Workspace) {
-    // Keyboard toggles have no pointer to protect, so they reorder immediately.
     if (this.pointerInside()) {
       this.heldOrder.set(this.rows().map((row) => row.workspace.id));
     }
@@ -99,7 +122,5 @@ export class WorkspaceListComponent {
 
 function heldIndex(held: number[], workspaceId: number): number {
   const index = held.indexOf(workspaceId);
-
-  // A workspace the hold predates sorts after the rows it does know about.
   return index === -1 ? held.length : index;
 }

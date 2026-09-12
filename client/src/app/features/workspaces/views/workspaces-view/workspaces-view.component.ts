@@ -1,62 +1,71 @@
-import { Component, computed, effect, inject, untracked } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+  untracked,
+} from '@angular/core';
+import { AuthPageContainerComponent } from '@app/features/auth/components/auth-page-container/auth-page-container.component';
 import { WorkspaceListComponent } from '@app/features/workspaces/components/workspace-list.component';
-import { BuildNumberComponent } from '@app/static/components/build-number/build-number.component';
+import { WorkspacesHeaderComponent } from '@app/features/workspaces/components/workspaces-header.component';
 import { DialogService } from '@core/services/dialog.service';
+import { SessionService } from '@core/services/session.service';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
 import { WorkspaceListService } from '@core/services/workspace-list.service';
 import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
 import { LucidePlus } from '@lucide/angular';
+import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
-import { PageContainerComponent } from '@static/components/page-container/page-container.component';
+import { FilterInputComponent } from '@static/components/filter-input/filter-input.component';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 
 @Component({
   selector: 'app-workspaces-view',
   imports: [
-    BuildNumberComponent,
+    AuthPageContainerComponent,
     ErrorStateComponent,
+    FilterInputComponent,
     LucidePlus,
-    PageContainerComponent,
     PageLoadingComponent,
+    StrokedButtonComponent,
     WorkspaceListComponent,
+    WorkspacesHeaderComponent,
   ],
   template: `
-    <app-page-container
-      [centerPage]="false"
-      [horizontalPadding]="false"
-      [fullHeight]="false">
-      <div class="mx-auto w-full max-w-195 px-4 pt-12 pb-8 sm:px-6 sm:pt-18">
-        <header class="flex items-start gap-4">
-          <div class="min-w-0 flex-1">
-            <h1
-              class="font-overpass m-0 text-3xl font-semibold tracking-[-0.01em] text-[rgb(var(--foreground-rgb))]"
-              i18n="Page title for the workspace picker">
-              Workspaces
-            </h1>
-            <p class="mt-1.5 text-sm text-[rgba(var(--foreground-rgb),0.5)]">
-              @if (singleWorkspace()) {
-                <ng-container
-                  i18n="Subhead shown when the user has one workspace">
-                  One workspace, ready when you are.
-                </ng-container>
-              } @else {
-                <ng-container
-                  i18n="Subhead shown above the list of the user's workspaces">
-                  Pick up where you left off, or jump somewhere else.
-                </ng-container>
-              }
-            </p>
-          </div>
+    <app-auth-page-container layout="narrow" align="start">
+      <div class="mx-auto flex w-full max-w-180 flex-col gap-6.5">
+        <app-workspaces-header
+          i18n-heading="Page title for the workspace picker"
+          heading="Workspaces"
+          [eyebrow]="signedInAs()">
+          <ng-container headerSubtitle>
+            @if (singleWorkspace()) {
+              <ng-container
+                i18n="Subhead shown when the user has one workspace">
+                One workspace, ready when you are.
+              </ng-container>
+            } @else {
+              <ng-container
+                i18n="Subhead shown above the list of the user's workspaces">
+                Pick up where you left off, or jump somewhere else.
+              </ng-container>
+            }
+          </ng-container>
+
           <button
+            app-stroked-button
+            color="neutral"
+            class="shrink-0"
             type="button"
-            class="border-border hover:border-foreground/22 inline-flex h-9 shrink-0 cursor-pointer items-center gap-1.75 rounded-[7px] border bg-transparent px-3.5 text-[13px] font-medium whitespace-nowrap transition-colors hover:bg-[rgba(var(--foreground-rgb),0.06)]"
+            headerActions
             (click)="openWorkspaceDialog()">
-            <svg lucidePlus class="h-3.75 w-3.75" aria-hidden="true"></svg>
+            <svg lucidePlus class="h-4 w-4" aria-hidden="true"></svg>
             <span i18n="Button that opens the create-workspace dialog">
-              New workspace
+              Create workspace
             </span>
           </button>
-        </header>
+        </app-workspaces-header>
 
         @if (loading() && !loaded()) {
           <app-page-loading />
@@ -68,28 +77,44 @@ import { PageLoadingComponent } from '@static/components/page-loading/page-loadi
             description="Check your connection and try again."
             (retry)="reload()" />
         } @else {
-          <div class="mt-7">
-            <app-workspace-list />
-          </div>
+          @if (canFilter()) {
+            <app-filter-input
+              i18n-placeholder="Placeholder of the workspace filter"
+              placeholder="Filter workspaces"
+              [(value)]="query" />
+          }
+
+          <app-workspace-list [query]="query()" />
         }
       </div>
-
-      <app-build-number />
-    </app-page-container>
+    </app-auth-page-container>
   `,
 })
 export class WorkspacesViewComponent {
   private readonly dialog = inject(DialogService);
   private readonly list = inject(WorkspaceListService);
   private readonly preferences = inject(UserPreferencesService);
+  private readonly session = inject(SessionService);
 
   readonly loading = this.list.loading;
   readonly loadError = this.list.loadError;
 
   protected readonly loaded = this.list.loaded;
+  protected readonly query = signal('');
+
   protected readonly singleWorkspace = computed(
     () => this.workspaces().length === 1
   );
+
+  protected readonly canFilter = computed(() => this.workspaces().length > 1);
+
+  protected readonly signedInAs = computed(() => {
+    const email = this.session.currentUser()?.email;
+
+    if (!email) return null;
+
+    return $localize`:Label above the workspace picker naming the signed-in account. EMAIL is its address:Signed in as ${email}:EMAIL:`;
+  });
 
   private readonly workspaces = this.list.workspaces;
   private initialSetupOpened = false;

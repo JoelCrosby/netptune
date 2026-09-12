@@ -8,7 +8,7 @@ import { ProgressBarComponent } from '@static/components/progress-bar/progress-b
   host: { class: 'z-1 block w-full max-w-[27.5rem]' },
   template: `
     <form
-      class="bg-card border-border relative w-full overflow-hidden rounded-xl border p-8 shadow-xs"
+      class="bg-card border-border relative w-full overflow-hidden rounded-xl border p-8 shadow"
       [attr.aria-busy]="loading()"
       (submit)="onSubmit($event)">
       @if (loading()) {
