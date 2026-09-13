@@ -10,6 +10,7 @@ import { ErrorStateComponent } from '@static/components/error-state/error-state.
 import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
+import { PanelComponent } from '@static/components/panel.component';
 import { SkeletonCardGridComponent } from '@static/components/skeleton/skeleton-card-grid.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { TaskViewCardComponent } from '../../components/task-view-card.component';
@@ -29,6 +30,7 @@ import { EMPTY, switchMap } from 'rxjs';
     PageBodyComponent,
     PageContainerComponent,
     PageHeaderComponent,
+    PanelComponent,
     ErrorStateComponent,
     EmptyStateComponent,
     FlatButtonComponent,
@@ -76,27 +78,29 @@ import { EMPTY, switchMap } from 'rxjs';
             }
           </ul>
         } @else {
-          <app-empty-state
-            i18n-title="Heading of the empty saved view list"
-            title="No views yet"
-            i18n-description="
-              Explains what saved task views do, on the empty state
-            "
-            description="A view pairs a saved query with the columns and sort you want to read it in, and can be kept private or shared with the workspace.">
-            <svg emptyStateIcon lucideListFilter class="h-8 w-8"></svg>
-            @if (canCreate()) {
-              <a
-                emptyStateAction
-                app-flat-button
-                color="primary"
-                [routerLink]="['new']">
-                <svg lucidePlus class="h-4 w-4"></svg>
-                <span i18n="Button that opens the create-view form">
-                  Create View
-                </span>
-              </a>
-            }
-          </app-empty-state>
+          <app-panel surface="card">
+            <app-empty-state
+              i18n-title="Heading of the empty saved view list"
+              title="No views yet"
+              i18n-description="
+                Explains what saved task views do, on the empty state
+              "
+              description="A view pairs a saved query with the columns and sort you want to read it in, and can be kept private or shared with the workspace.">
+              <svg emptyStateIcon lucideListFilter class="h-8 w-8"></svg>
+              @if (canCreate()) {
+                <a
+                  emptyStateAction
+                  app-flat-button
+                  color="primary"
+                  [routerLink]="['new']">
+                  <svg lucidePlus class="h-4 w-4"></svg>
+                  <span i18n="Button that opens the create-view form">
+                    Create View
+                  </span>
+                </a>
+              }
+            </app-empty-state>
+          </app-panel>
         }
       </app-page-body>
     </app-page-container>

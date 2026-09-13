@@ -14,6 +14,7 @@ import { ErrorStateComponent } from '@static/components/error-state/error-state.
 import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
+import { PanelComponent } from '@static/components/panel.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 import { EMPTY, finalize, forkJoin, switchMap } from 'rxjs';
@@ -41,6 +42,7 @@ import { AutomationsService } from '../../services/automations.service';
     PageBodyComponent,
     PageContainerComponent,
     PageHeaderComponent,
+    PanelComponent,
     PageLoadingComponent,
     EmptyStateComponent,
     FlatButtonComponent,
@@ -91,7 +93,7 @@ import { AutomationsService } from '../../services/automations.service';
               (deleteRule)="onDelete($event)" />
           </div>
         } @else {
-          <div class="border-border bg-card rounded border">
+          <app-panel surface="card">
             <app-empty-state
               i18n-title="Heading of the empty automation list"
               title="No automations yet"
@@ -113,7 +115,7 @@ import { AutomationsService } from '../../services/automations.service';
                 </a>
               }
             </app-empty-state>
-          </div>
+          </app-panel>
         }
       </app-page-body>
     </app-page-container>
