@@ -1,10 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Service, inject } from '@angular/core';
 import {
+  ApiCredential,
   ApiCredentialCreated,
   CreateApiCredentialRequest,
   CreateServiceAccountRequest,
   ServiceAccount,
+  UpdateApiCredentialScopesRequest,
   UpdateServiceAccountRequest,
 } from '@core/models/service-account';
 import { ClientResponse } from '@core/models/client-response';
@@ -44,6 +46,19 @@ export class ServiceAccountsService {
     return this.http
       .post<ClientResponse<ApiCredentialCreated>>(
         `api/service-accounts/${serviceAccountId}/credentials`,
+        request
+      )
+      .pipe(unwrapClientResponse());
+  }
+
+  updateCredentialScopes(
+    serviceAccountId: number,
+    credentialId: string,
+    request: UpdateApiCredentialScopesRequest
+  ) {
+    return this.http
+      .put<ClientResponse<ApiCredential>>(
+        `api/service-accounts/${serviceAccountId}/credentials/${credentialId}/scopes`,
         request
       )
       .pipe(unwrapClientResponse());

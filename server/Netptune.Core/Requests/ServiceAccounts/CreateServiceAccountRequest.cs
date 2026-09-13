@@ -20,6 +20,11 @@ public sealed record CreateApiCredentialRequest
     public DateTime? ExpiresAt { get; init; }
 }
 
+public sealed record UpdateApiCredentialScopesRequest
+{
+    public IReadOnlyList<string> Scopes { get; init; } = [];
+}
+
 public sealed record UpdateServiceAccountRequest
 {
     public required string Name { get; init; }

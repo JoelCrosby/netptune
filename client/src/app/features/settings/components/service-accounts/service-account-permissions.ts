@@ -3,6 +3,7 @@ import {
   PermissionMeta,
 } from '@core/auth/permission-items';
 import { Permission } from '@core/auth/permissions';
+import { ApiCredential, ServiceAccount } from '@core/models/service-account';
 
 const labels = Object.values(netptunePermissionLabels)
   .flatMap((group) => Object.values(group) as PermissionMeta[])
@@ -84,6 +85,15 @@ export const permissionGroups: PermissionGroupOption[] = Object.entries(
 export const allPermissions: Permission[] = permissionGroups.flatMap((group) =>
   group.permissions.map((permission) => permission.key)
 );
+
+export function missingCredentialScopes(
+  account: ServiceAccount,
+  credential: ApiCredential
+): Permission[] {
+  const scopes = new Set(credential.scopes);
+
+  return account.permissions.filter((permission) => !scopes.has(permission));
+}
 
 export function filterPermissionGroups(
   available: Iterable<Permission>

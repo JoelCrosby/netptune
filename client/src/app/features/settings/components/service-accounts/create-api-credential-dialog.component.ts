@@ -70,10 +70,13 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
         <p class="text-muted mb-3 text-xs">
           <span
             i18n="
-              Explains that credential scopes narrow the account permissions
+              Explains that credential scopes narrow the account permissions and
+              are fixed when the credential is created
             ">
             Scopes can restrict this credential further than the service
-            account.
+            account. They are fixed when the credential is created: permissions
+            added to the account later must be added to the credential's scopes
+            before it can use them.
           </span>
         </p>
 

@@ -25,10 +25,26 @@ public static class ServiceAccountsEndpoints
             .RequireAuthorization(NetptunePermissions.ServiceAccounts.Delete);
         group.MapPost("/{serviceAccountId:int}/credentials", CreateCredential)
             .RequireAuthorization(NetptunePermissions.ServiceAccounts.ManageCredentials);
+        group.MapPut("/{serviceAccountId:int}/credentials/{credentialId:guid}/scopes", UpdateCredentialScopes)
+            .RequireAuthorization(NetptunePermissions.ServiceAccounts.ManageCredentials);
         group.MapDelete("/{serviceAccountId:int}/credentials/{credentialId:guid}", RevokeCredential)
             .RequireAuthorization(NetptunePermissions.ServiceAccounts.ManageCredentials);
 
         return group;
+    }
+
+    private static async Task<IResult> UpdateCredentialScopes(
+        IMediator mediator,
+        int serviceAccountId,
+        Guid credentialId,
+        UpdateApiCredentialScopesRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(
+            new UpdateApiCredentialScopesCommand(serviceAccountId, credentialId, request),
+            cancellationToken);
+
+        return result.ToResult();
     }
 
     private static async Task<IResult> GetServiceAccounts(

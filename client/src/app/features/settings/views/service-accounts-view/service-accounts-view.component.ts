@@ -14,6 +14,7 @@ import {
   ApiCredentialCreated,
   CreateApiCredentialRequest,
   ServiceAccount,
+  UpdateApiCredentialScopesRequest,
   UpdateServiceAccountRequest,
 } from '@core/models/service-account';
 import { ConfirmationService } from '@core/services/confirmation.service';
@@ -22,9 +23,11 @@ import { ServiceAccountsService } from '@core/services/service-accounts.service'
 import {
   LucideBot,
   LucideKeyRound,
+  LucideListChecks,
   LucidePlus,
   LucideSettings2,
   LucideTrash,
+  LucideTriangleAlert,
   LucideX,
 } from '@lucide/angular';
 import { BadgeComponent } from '@static/components/badge/badge.component';
@@ -51,7 +54,12 @@ import {
   EditServiceAccountDialogComponent,
   EditServiceAccountDialogData,
 } from '@settings/components/service-accounts/edit-service-account-dialog.component';
+import {
+  EditApiCredentialScopesDialogComponent,
+  EditApiCredentialScopesDialogData,
+} from '@settings/components/service-accounts/edit-api-credential-scopes-dialog.component';
 import { ServiceAccountPermissionSummaryComponent } from '@settings/components/service-accounts/service-account-permission-summary.component';
+import { missingCredentialScopes } from '@settings/components/service-accounts/service-account-permissions';
 
 @Component({
   selector: 'app-service-accounts-view',
@@ -60,9 +68,11 @@ import { ServiceAccountPermissionSummaryComponent } from '@settings/components/s
     LucideBot,
     IconTileComponent,
     LucideKeyRound,
+    LucideListChecks,
     LucidePlus,
     LucideSettings2,
     LucideTrash,
+    LucideTriangleAlert,
     LucideX,
     BadgeComponent,
     FlatButtonComponent,
@@ -267,7 +277,84 @@ import { ServiceAccountPermissionSummaryComponent } from '@settings/components/s
                                 </span>
                               }
                             </p>
+                            @if (!credential.revokedAt) {
+                              <p
+                                class="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
+                                @if (
+                                  missingScopeCount(account, credential);
+                                  as missing
+                                ) {
+                                  <span
+                                    class="text-warn inline-flex items-center gap-1">
+                                    <svg
+                                      lucideTriangleAlert
+                                      class="h-3 w-3 shrink-0"></svg>
+                                    <ng-container
+                                      i18n="
+                                        Warns that a credential cannot use some
+                                        of its service account's permissions.
+                                        COUNT is how many
+                                      ">
+                                      {missing, plural,
+                                        =1 {Missing 1 account permission}
+                                        other {
+                                          Missing {{ missing }} account
+                                          permissions
+                                        }
+                                      }
+                                    </ng-container>
+                                  </span>
+                                  <span
+                                    class="text-muted"
+                                    i18n="
+                                      How many permissions a credential's scopes
+                                      cover. Keep the leading separator. SCOPES
+                                      and TOTAL are counts
+                                    ">
+                                    · Scoped to
+                                    {{
+                                      credential.scopes.length // i18n(ph="SCOPES")
+                                    }}
+                                    of
+                                    {{
+                                      account.permissions.length // i18n(ph="TOTAL")
+                                    }}
+                                  </span>
+                                } @else {
+                                  <span
+                                    class="text-muted"
+                                    i18n="
+                                      Shown on a credential whose scopes cover
+                                      every permission of its service account
+                                    ">
+                                    All account permissions
+                                  </span>
+                                }
+                              </p>
+                            }
                           </div>
+
+                          @if (
+                            canManageCredentials() &&
+                            !credential.revokedAt &&
+                            !account.disabledAt
+                          ) {
+                            <button
+                              app-icon-button
+                              type="button"
+                              i18n-appTooltip="
+                                Tooltip on the button that edits a credential's
+                                scopes
+                              "
+                              appTooltip="Edit scopes"
+                              [attr.aria-label]="
+                                editScopesLabel(credential.name)
+                              "
+                              [disabled]="busy()"
+                              (click)="openEditScopes(account, credential)">
+                              <svg lucideListChecks class="h-4 w-4"></svg>
+                            </button>
+                          }
 
                           @if (
                             canManageCredentials() && !credential.revokedAt
@@ -578,6 +665,45 @@ export class ServiceAccountsViewComponent {
     );
   }
 
+  openEditScopes(account: ServiceAccount, credential: ApiCredential) {
+    const dialogRef = this.dialog.open<
+      UpdateApiCredentialScopesRequest,
+      EditApiCredentialScopesDialogData
+    >(EditApiCredentialScopesDialogComponent, {
+      data: { account, credential },
+      width: '600px',
+    });
+
+    dialogRef.closed
+      .pipe(
+        first(),
+        switchMap((request) => {
+          if (!request) return EMPTY;
+          this.busy.set(true);
+          return this.service
+            .updateCredentialScopes(account.id, credential.id, request)
+            .pipe(finalize(() => this.busy.set(false)));
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe({
+        next: () => {
+          this.snackbar.success(
+            $localize`:Confirmation after saving a credential's scopes:Credential scopes updated`
+          );
+          this.load();
+        },
+        error: () =>
+          this.snackbar.error(
+            $localize`:Error after failing to save a credential's scopes:Credential scopes could not be updated`
+          ),
+      });
+  }
+
+  missingScopeCount(account: ServiceAccount, credential: ApiCredential) {
+    return missingCredentialScopes(account, credential).length;
+  }
+
   revokeCredential(account: ServiceAccount, credential: ApiCredential) {
     this.confirmation
       .open({
@@ -647,6 +773,10 @@ export class ServiceAccountsViewComponent {
 
   deleteAccountLabel(name: string): string {
     return $localize`:Accessible label for the button that deletes a service account. NAME is the account name:Delete ${name}:NAME:`;
+  }
+
+  editScopesLabel(name: string): string {
+    return $localize`:Accessible label for the button that edits a credential's scopes. NAME is the credential name:Edit scopes for ${name}:NAME:`;
   }
 
   revokeCredentialLabel(name: string): string {

@@ -43,6 +43,10 @@ export interface CreateApiCredentialRequest {
   expiresAt?: string;
 }
 
+export interface UpdateApiCredentialScopesRequest {
+  scopes: Permission[];
+}
+
 export interface ApiCredentialCreated {
   id: string;
   name: string;

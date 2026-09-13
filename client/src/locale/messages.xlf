@@ -148,6 +148,15 @@
         <source>View Members</source>
       </segment>
     </unit>
+    <unit id="8108308365027351358">
+      <notes>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-api-credential-scopes-dialog.component.ts:109,114</note>
+        <note category="description">Button that saves a credential&apos;s scopes</note>
+      </notes>
+      <segment>
+        <source>Save Scopes</source>
+      </segment>
+    </unit>
     <unit id="810888510148304696">
       <notes>
         <note category="location">src/app/core/services/ai-effort.service.ts:47</note>
@@ -293,6 +302,14 @@
       </notes>
       <segment>
         <source>Create Projects</source>
+      </segment>
+    </unit>
+    <unit id="3365632461151309436">
+      <notes>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-api-credential-scopes-dialog.component.ts:66,69</note>
+      </notes>
+      <segment>
+        <source>{VAR_PLURAL, plural, =1 {This credential lacks 1 permission the account has:} other {This credential lacks <ph id="0" equiv="INTERPOLATION"/> permissions the account has: }}</source>
       </segment>
     </unit>
     <unit id="3373039778816479588">
@@ -1165,7 +1182,7 @@
     </unit>
     <unit id="2123659921722214537">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:46,47</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:48,49</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:220</note>
         <note category="location">src/app/workspace.routes.ts:42</note>
         <note category="description">Page title for the saved task view list</note>
@@ -1553,7 +1570,7 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:142</note>
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:80,82</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:319</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:283</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:285</note>
         <note category="location">src/app/features/boards/components/move-tasks-dialog/move-tasks-dialog.component.ts:76,79</note>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:102,105</note>
         <note category="location">src/app/features/calendar/dialogs/calendar-move-task-dialog.component.ts:61,64</note>
@@ -1567,12 +1584,13 @@
         <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:358</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-spend-cap-dialog.component.ts:80,83</note>
         <note category="location">src/app/features/settings/components/delete-workspace-dialog/delete-workspace-dialog.component.ts:59,62</note>
-        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:93,96</note>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:162,165</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:96,99</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-api-credential-scopes-dialog.component.ts:102,105</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:163,166</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:269</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:495</note>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:543</note>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:587</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:630</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:713</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:469</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:371</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:86,89</note>
@@ -1775,7 +1793,7 @@
         <note category="location">src/app/core/services/task-commands.service.ts:234</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:141</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:318</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:282</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:284</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:797</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:820</note>
         <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:194</note>
@@ -1784,14 +1802,14 @@
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:249</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:494</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:249</note>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:542</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:629</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:468</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:231</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:370</note>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:325</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:226</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:273</note>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:155</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:159</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:33</note>
         <note category="description">Confirms a destructive action</note>
       </notes>
@@ -2641,6 +2659,14 @@
       </notes>
       <segment>
         <source> Rows </source>
+      </segment>
+    </unit>
+    <unit id="4242679617595226090">
+      <notes>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:298,301</note>
+      </notes>
+      <segment>
+        <source>{VAR_PLURAL, plural, =1 {Missing 1 account permission} other {Missing <ph id="0" equiv="INTERPOLATION"/> account permissions }}</source>
       </segment>
     </unit>
     <unit id="8768927723338869419">
@@ -3781,7 +3807,9 @@
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:112,117</note>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:120,125</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:83,94</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-api-credential-scopes-dialog.component.ts:66,74</note>
         <note category="location">src/app/features/settings/components/service-accounts/service-account-permission-summary.component.ts:138,144</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:298,305</note>
         <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:25,33</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:71,77</note>
         <note category="location">src/app/features/workspaces/components/workspace-list-item.component.ts:156,157</note>
@@ -3907,7 +3935,7 @@
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:94,95</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:400</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:57,59</note>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:207</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:208</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:74,76</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:144</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:148</note>
@@ -4597,6 +4625,15 @@
         <source> Invite Users </source>
       </segment>
     </unit>
+    <unit id="8602659137274865199">
+      <notes>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:698</note>
+        <note category="description">Error after failing to save a credential&apos;s scopes</note>
+      </notes>
+      <segment>
+        <source>Credential scopes could not be updated</source>
+      </segment>
+    </unit>
     <unit id="8602814243662345124">
       <notes>
         <note category="location">src/app/entry/dialogs/invite-dialog/invite-dialog.component.ts:93</note>
@@ -4732,7 +4769,7 @@
     </unit>
     <unit id="1827176903766812596">
       <notes>
-        <note category="location">src/app/features/workspaces/components/workspace-list.component.ts:45,51</note>
+        <note category="location">src/app/features/workspaces/components/workspace-list.component.ts:46,52</note>
         <note category="description">Explains how the workspace list is ordered</note>
       </notes>
       <segment>
@@ -5257,6 +5294,15 @@
         <source> Resolve </source>
       </segment>
     </unit>
+    <unit id="4254800522768794113">
+      <notes>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:779</note>
+        <note category="description">Accessible label for the button that edits a credential&apos;s scopes. NAME is the credential name</note>
+      </notes>
+      <segment>
+        <source>Edit scopes for <ph id="0" equiv="NAME" disp="name"/></source>
+      </segment>
+    </unit>
     <unit id="4128937884409277931">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-flags.component.ts:90,93</note>
@@ -5470,7 +5516,7 @@
     <unit id="6273997865051397082">
       <notes>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:119,122</note>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:171,176</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:172,177</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:116,119</note>
         <note category="description">Button that saves edits to the workspace</note>
       </notes>
@@ -7468,7 +7514,7 @@
     </unit>
     <unit id="4827228128561377686">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:81,83</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:84,86</note>
         <note category="description">Heading of the empty saved view list</note>
       </notes>
       <segment>
@@ -8143,7 +8189,7 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-enabled-badge.component.ts:17</note>
         <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:91,94</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:153</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:155</note>
         <note category="description">Badge marking an automation that is switched on</note>
       </notes>
       <segment>
@@ -8440,7 +8486,7 @@
     </unit>
     <unit id="8171377612720992766">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:175</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:179</note>
         <note category="description">Shown when a view could not be deleted</note>
       </notes>
       <segment>
@@ -8468,7 +8514,7 @@
     </unit>
     <unit id="4941019389369938795">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:56,58</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:58,60</note>
         <note category="description">Accessible label while the saved view list loads</note>
       </notes>
       <segment>
@@ -8768,7 +8814,7 @@
     </unit>
     <unit id="5327777449073669222">
       <notes>
-        <note category="location">src/app/features/workspaces/components/workspace-list.component.ts:36,41</note>
+        <note category="location">src/app/features/workspaces/components/workspace-list.component.ts:37,42</note>
         <note category="description">Advice shown when no workspace matches the filter</note>
       </notes>
       <segment>
@@ -9794,7 +9840,7 @@
     </unit>
     <unit id="6542150205027637766">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:87,89</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:97,99</note>
         <note category="description">Button that opens the create-service-account dialog</note>
       </notes>
       <segment>
@@ -10822,7 +10868,7 @@
     </unit>
     <unit id="249911539328381860">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:153</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:157</note>
         <note category="description">Title of the delete-view confirmation</note>
       </notes>
       <segment>
@@ -12399,13 +12445,13 @@
     <unit id="3660632916771561809">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:121,123</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:79,81</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:81,83</note>
         <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:39,42</note>
         <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:61,63</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:104,106</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:110,112</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:91,93</note>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:62,64</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:64,66</note>
         <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:77,79</note>
         <note category="description">Advice shown when a page fails to load</note>
       </notes>
@@ -12597,7 +12643,7 @@
     <unit id="976634642400414372">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:308</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:228</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:230</note>
         <note category="description">Error after failing to update an automation</note>
       </notes>
       <segment>
@@ -12616,7 +12662,7 @@
     <unit id="7223592009379733387">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:316</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:280</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:282</note>
         <note category="description">Title of the confirmation dialog for deleting an automation</note>
       </notes>
       <segment>
@@ -12626,7 +12672,7 @@
     <unit id="2841737509665294845">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:335</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:301</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:303</note>
         <note category="description">Confirmation after deleting an automation</note>
       </notes>
       <segment>
@@ -12663,7 +12709,7 @@
     <unit id="3476741388176301769">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:341</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:307</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:309</note>
         <note category="description">Error after failing to delete an automation</note>
       </notes>
       <segment>
@@ -12694,7 +12740,7 @@
     </unit>
     <unit id="2330979404051267952">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:134</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:138</note>
         <note category="description">Button that opens the create-view form</note>
       </notes>
       <segment>
@@ -12749,8 +12795,8 @@
     </unit>
     <unit id="6112696339048270378">
       <notes>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:58,59</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:67,71</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:60,61</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:69,73</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:249</note>
         <note category="location">src/app/workspace.routes.ts:54</note>
         <note category="description">Page title for the automation list</note>
@@ -12770,7 +12816,7 @@
     </unit>
     <unit id="8913974798870595154">
       <notes>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:60,62</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:62,64</note>
         <note category="description">Button that opens the create-automation form</note>
       </notes>
       <segment>
@@ -12788,7 +12834,7 @@
     </unit>
     <unit id="6054707091375835376">
       <notes>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:77,78</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:79,80</note>
         <note category="description">Shown when the automation list fails to load</note>
       </notes>
       <segment>
@@ -12834,7 +12880,7 @@
     <unit id="9063742557685234950">
       <notes>
         <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:236</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:97,99</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:99,101</note>
         <note category="description">Heading of the empty automation list</note>
       </notes>
       <segment>
@@ -12843,7 +12889,7 @@
     </unit>
     <unit id="7327883206054172578">
       <notes>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:101,102</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:103,104</note>
         <note category="description">Explains what workspace automations do, on the empty state</note>
       </notes>
       <segment>
@@ -12861,7 +12907,7 @@
     </unit>
     <unit id="378048253639190257">
       <notes>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:111,113</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:113,115</note>
         <note category="description">Button that opens the create-automation form</note>
       </notes>
       <segment>
@@ -12870,7 +12916,7 @@
     </unit>
     <unit id="4645345687322304891">
       <notes>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:149</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:151</note>
         <note category="description">Stat label for how many automation rules exist</note>
       </notes>
       <segment>
@@ -12897,7 +12943,7 @@
     </unit>
     <unit id="3036804340853319197">
       <notes>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:157</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:159</note>
         <note category="description">Stat label for recent failed automation runs</note>
       </notes>
       <segment>
@@ -12915,7 +12961,7 @@
     </unit>
     <unit id="6473284394312594965">
       <notes>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:268</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:270</note>
         <note category="description">Error after failing to clone an automation</note>
       </notes>
       <segment>
@@ -14638,7 +14684,7 @@
     </unit>
     <unit id="4951986255869916102">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:154</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:158</note>
         <note category="description">Body of the delete-view confirmation</note>
       </notes>
       <segment>
@@ -15055,6 +15101,15 @@
         <source>Archived tasks could not be loaded.</source>
       </segment>
     </unit>
+    <unit id="1258539912357116302">
+      <notes>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:78,84</note>
+        <note category="description">Warns that removing an account permission also affects its credentials, while adding one does not</note>
+      </notes>
+      <segment>
+        <source> Removing a permission also removes it from every credential on this account. Adding one does not add it to existing credentials; edit their scopes to grant it. </source>
+      </segment>
+    </unit>
     <unit id="1258729180612470994">
       <notes>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:121,123</note>
@@ -15265,6 +15320,15 @@
       </notes>
       <segment>
         <source> Create Task </source>
+      </segment>
+    </unit>
+    <unit id="2631658929830152455">
+      <notes>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-api-credential-scopes-dialog.component.ts:83,86</note>
+        <note category="description">Button that adds every account permission to a credential</note>
+      </notes>
+      <segment>
+        <source> Grant all account permissions </source>
       </segment>
     </unit>
     <unit id="1055686627716339120">
@@ -15806,7 +15870,7 @@
     </unit>
     <unit id="4105895757984243460">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:170</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:174</note>
         <note category="description">Confirmation that a view was deleted</note>
       </notes>
       <segment>
@@ -16749,7 +16813,7 @@
     </unit>
     <unit id="514029247521459043">
       <notes>
-        <note category="location">src/app/features/workspaces/components/workspace-list.component.ts:83</note>
+        <note category="location">src/app/features/workspaces/components/workspace-list.component.ts:77</note>
         <note category="description">Shown when no workspace matches the filter. QUERY is what the user typed</note>
       </notes>
       <segment>
@@ -17221,7 +17285,7 @@
     </unit>
     <unit id="436231775780502366">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:85,86</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:88,89</note>
         <note category="description">Explains what saved task views do, on the empty state</note>
       </notes>
       <segment>
@@ -17357,7 +17421,7 @@
     <unit id="9048091755272109818">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:57,58</note>
-        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:126</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:129</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:189,191</note>
         <note category="description">Label of the credential name field</note>
       </notes>
@@ -17413,15 +17477,6 @@
         <source>Loading</source>
       </segment>
     </unit>
-    <unit id="4374197485677367703">
-      <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:75,80</note>
-        <note category="description">Explains that credential scopes narrow the account permissions</note>
-      </notes>
-      <segment>
-        <source> Scopes can restrict this credential further than the service account. </source>
-      </segment>
-    </unit>
     <unit id="4378805774812012692">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-timestamps.component.ts:51,55</note>
@@ -17433,7 +17488,8 @@
     </unit>
     <unit id="6722861709318164496">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:119</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:122</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-api-credential-scopes-dialog.component.ts:148</note>
         <note category="description">Shown when a service account has no permissions to scope</note>
       </notes>
       <segment>
@@ -17472,7 +17528,7 @@
     </unit>
     <unit id="196598341098112332">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:101,104</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:104,107</note>
         <note category="description">Button that creates the API credential</note>
       </notes>
       <segment>
@@ -17495,6 +17551,15 @@
       </notes>
       <segment>
         <source>Name and describe the service account.</source>
+      </segment>
+    </unit>
+    <unit id="6131179082252661684">
+      <notes>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:349,351</note>
+        <note category="description">Tooltip on the button that edits a credential&apos;s scopes</note>
+      </notes>
+      <segment>
+        <source>Edit scopes</source>
       </segment>
     </unit>
     <unit id="6133388483919940418">
@@ -17626,6 +17691,15 @@
         <source>Invite members without an account</source>
       </segment>
     </unit>
+    <unit id="8543162326739201845">
+      <notes>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:314,322</note>
+        <note category="description">How many permissions a credential&apos;s scopes cover. Keep the leading separator. SCOPES and TOTAL are counts</note>
+      </notes>
+      <segment>
+        <source> · Scoped to <ph id="0" equiv="SCOPES" disp="{{ credential.scopes.length // i18n(ph=&quot;SCOPES&quot;) }}"/> of <ph id="1" equiv="TOTAL" disp="{{ account.permissions.length // i18n(ph=&quot;TOTAL&quot;) }}"/> </source>
+      </segment>
+    </unit>
     <unit id="8543632336454964015">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:133,138</note>
@@ -17637,7 +17711,7 @@
     </unit>
     <unit id="4777350418733054176">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:90,97</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:91,98</note>
         <note category="location">src/app/features/settings/components/service-accounts/permission-grid.component.ts:24,31</note>
         <note category="description">How many permissions are selected. SELECTED is the chosen count and TOTAL the number available</note>
       </notes>
@@ -17647,7 +17721,7 @@
     </unit>
     <unit id="1916930465370171483">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:107,109</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:108,110</note>
         <note category="location">src/app/features/settings/components/service-accounts/permission-grid.component.ts:40,43</note>
         <note category="description">Button that selects every permission</note>
       </notes>
@@ -17658,7 +17732,7 @@
     <unit id="1420721946741654809">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:150,153</note>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:153,157</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:154,158</note>
         <note category="description">Validation message when no permission is selected</note>
       </notes>
       <segment>
@@ -17894,7 +17968,7 @@
     </unit>
     <unit id="3108295184226330469">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:181</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:182</note>
         <note category="location">src/app/features/settings/components/service-accounts/permission-grid.component.ts:140</note>
         <note category="description">Button that deselects every permission in a group</note>
       </notes>
@@ -17939,7 +18013,7 @@
     </unit>
     <unit id="3235487491166357848">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:182</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:183</note>
         <note category="location">src/app/features/settings/components/service-accounts/permission-grid.component.ts:141</note>
         <note category="description">Button that selects every permission in a group</note>
       </notes>
@@ -17994,20 +18068,11 @@
         <source>Today: <ph id="0" equiv="DETAIL" disp="detail"/></source>
       </segment>
     </unit>
-    <unit id="8146552333316099536">
-      <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:78,83</note>
-        <note category="description">Warns that removing an account permission also affects its credentials</note>
-      </notes>
-      <segment>
-        <source> Removing a permission also removes it from every credential on this account. </source>
-      </segment>
-    </unit>
     <unit id="8700121026680200191">
       <notes>
         <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:109,110</note>
         <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:67,71</note>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:115,118</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:116,119</note>
         <note category="location">src/app/features/settings/components/service-accounts/permission-grid.component.ts:47,52</note>
         <note category="location">src/app/static/components/filter-facet/filter-facet.component.ts:67,70</note>
         <note category="description">Button that clears the task selection</note>
@@ -18671,8 +18736,8 @@
     </unit>
     <unit id="517565553858035199">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:85,86</note>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:93,98</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:95,96</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:103,108</note>
         <note category="description">Page title for workspace service accounts</note>
       </notes>
       <segment>
@@ -18681,7 +18746,7 @@
     </unit>
     <unit id="1930837065550961764">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:100,104</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:110,114</note>
         <note category="description">Explains what service accounts are for</note>
       </notes>
       <segment>
@@ -18718,7 +18783,7 @@
     </unit>
     <unit id="4022991066353475675">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:327,329</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:414,416</note>
         <note category="description">Button that opens the create-service-account dialog</note>
       </notes>
       <segment>
@@ -18745,7 +18810,7 @@
     </unit>
     <unit id="7357824854550266974">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:108,110</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:118,120</note>
         <note category="description">Shown while service accounts are loading</note>
       </notes>
       <segment>
@@ -18772,7 +18837,7 @@
     </unit>
     <unit id="5949868576384453504">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:113,115</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:123,125</note>
         <note category="description">Shown when the service account list fails to load</note>
       </notes>
       <segment>
@@ -18790,7 +18855,7 @@
     </unit>
     <unit id="6197665339164385071">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:133,134</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:143,144</note>
         <note category="description">Badge marking a disabled service account</note>
       </notes>
       <segment>
@@ -18816,7 +18881,7 @@
     </unit>
     <unit id="2453142225616430507">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:139,140</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:149,150</note>
         <note category="description">Badge marking an enabled service account</note>
       </notes>
       <segment>
@@ -18843,7 +18908,7 @@
     </unit>
     <unit id="8673416323370089865">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:165,168</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:175,178</note>
         <note category="description">Button that issues a new credential for a service account</note>
       </notes>
       <segment>
@@ -18861,7 +18926,7 @@
     </unit>
     <unit id="1967521248845505958">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:177,178</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:187,188</note>
         <note category="description">Tooltip on the button that edits a service account</note>
       </notes>
       <segment>
@@ -18897,7 +18962,7 @@
     </unit>
     <unit id="7279697022989713952">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:193,194</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:203,204</note>
         <note category="description">Tooltip on the button that deletes a service account</note>
       </notes>
       <segment>
@@ -18947,7 +19012,7 @@
     </unit>
     <unit id="328621173789640026">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:215,217</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:225,227</note>
         <note category="description">Heading above a service account&apos;s credentials</note>
       </notes>
       <segment>
@@ -18956,7 +19021,7 @@
     </unit>
     <unit id="1093298112453582456">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:243,247</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:253,257</note>
         <note category="description">Credential expiry. DATE is a formatted date and time</note>
       </notes>
       <segment>
@@ -18965,7 +19030,7 @@
     </unit>
     <unit id="500706082319652388">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:255,259</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:265,269</note>
         <note category="description">When a credential was last used, shown after the expiry. Keep the leading separator. DATE is a formatted date and time</note>
       </notes>
       <segment>
@@ -18974,7 +19039,7 @@
     </unit>
     <unit id="1017176843140426408">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:266,269</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:276,279</note>
         <note category="description">Shown after the expiry when a credential has never been used. Keep the leading separator</note>
       </notes>
       <segment>
@@ -18983,7 +19048,7 @@
     </unit>
     <unit id="4100161296614821905">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:282,284</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:369,371</note>
         <note category="description">Tooltip on the button that revokes a credential</note>
       </notes>
       <segment>
@@ -18992,7 +19057,7 @@
     </unit>
     <unit id="3805624567600550690">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:298,299</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:385,386</note>
         <note category="description">Shown when a service account has no credentials</note>
       </notes>
       <segment>
@@ -19001,7 +19066,7 @@
     </unit>
     <unit id="4727914465322020260">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:310,312</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:397,399</note>
         <note category="description">Heading of the empty service account list</note>
       </notes>
       <segment>
@@ -19010,7 +19075,7 @@
     </unit>
     <unit id="5969171311226450326">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:314,315</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:401,402</note>
         <note category="description">Explains what to do on the empty service account list</note>
       </notes>
       <segment>
@@ -19019,7 +19084,7 @@
     </unit>
     <unit id="5123157349160155784">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:413</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:500</note>
         <note category="description">Confirmation after updating a service account</note>
       </notes>
       <segment>
@@ -19028,7 +19093,7 @@
     </unit>
     <unit id="2461866678085650489">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:419</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:506</note>
         <note category="description">Error after failing to update a service account</note>
       </notes>
       <segment>
@@ -19092,7 +19157,7 @@
     </unit>
     <unit id="294017637034538270">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:428</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:515</note>
         <note category="description">Title of the create-service-account dialog</note>
       </notes>
       <segment>
@@ -19117,6 +19182,15 @@
         <source>Set a cap</source>
       </segment>
     </unit>
+    <unit id="2942359578078973905">
+      <notes>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-api-credential-scopes-dialog.component.ts:52,55</note>
+        <note category="description">Explains that credential scopes are fixed. NAME is the credential name</note>
+      </notes>
+      <segment>
+        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;"><ph id="1" equiv="INTERPOLATION" disp="{{ credential.name }}"/></pc> can only use the permissions selected here. Permissions added to the service account later are not added to it automatically. The secret does not change. </source>
+      </segment>
+    </unit>
     <unit id="2943033819969004159">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:485</note>
@@ -19137,7 +19211,7 @@
     </unit>
     <unit id="7889477161949511803">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:496</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:583</note>
         <note category="description">Error after failing to create a service account</note>
       </notes>
       <segment>
@@ -19146,7 +19220,7 @@
     </unit>
     <unit id="5367814144868464481">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:525</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:612</note>
         <note category="description">Confirmation after creating an API credential</note>
       </notes>
       <segment>
@@ -19155,7 +19229,7 @@
     </unit>
     <unit id="2324466341727176555">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:532</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:619</note>
         <note category="description">Error after failing to create a credential</note>
       </notes>
       <segment>
@@ -19164,7 +19238,7 @@
     </unit>
     <unit id="6987126257530896673">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:540</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:627</note>
         <note category="description">Title of the confirmation dialog for deleting a service account</note>
       </notes>
       <segment>
@@ -19182,7 +19256,7 @@
     </unit>
     <unit id="427261400160913038">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:541</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:628</note>
         <note category="description">Confirmation body for deleting a service account. NAME is the account name</note>
       </notes>
       <segment>
@@ -19210,7 +19284,7 @@
     </unit>
     <unit id="8601029512667360957">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:559</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:646</note>
         <note category="description">Confirmation after deleting a service account</note>
       </notes>
       <segment>
@@ -19219,7 +19293,7 @@
     </unit>
     <unit id="3516071416582225023">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:565</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:652</note>
         <note category="description">Error after failing to delete a service account</note>
       </notes>
       <segment>
@@ -19228,7 +19302,7 @@
     </unit>
     <unit id="2821548213457034230">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:584</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:710</note>
         <note category="description">Title of the confirmation dialog for revoking a credential</note>
       </notes>
       <segment>
@@ -19246,7 +19320,7 @@
     </unit>
     <unit id="3180558417601739827">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:585</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:711</note>
         <note category="description">Confirmation body for revoking a credential. NAME is the credential name</note>
       </notes>
       <segment>
@@ -19255,7 +19329,7 @@
     </unit>
     <unit id="135077277733987408">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:586</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:712</note>
         <note category="description">Confirms revoking a credential</note>
       </notes>
       <segment>
@@ -19282,7 +19356,7 @@
     </unit>
     <unit id="2819197521571556241">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:603</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:729</note>
         <note category="description">Confirmation after revoking a credential</note>
       </notes>
       <segment>
@@ -19300,7 +19374,7 @@
     </unit>
     <unit id="3779512077059821091">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:609</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:735</note>
         <note category="description">Error after failing to revoke a credential</note>
       </notes>
       <segment>
@@ -19318,7 +19392,7 @@
     </unit>
     <unit id="7096440230985171865">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:626</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:752</note>
         <note category="description">Badge on a credential that has been revoked</note>
       </notes>
       <segment>
@@ -19328,7 +19402,7 @@
     <unit id="464749780222721589">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:638</note>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:630</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:756</note>
         <note category="description">An export whose file has been removed</note>
       </notes>
       <segment>
@@ -19337,7 +19411,7 @@
     </unit>
     <unit id="8204176479746810612">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:633</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:759</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:156</note>
         <note category="description">Badge on a credential that is currently usable</note>
       </notes>
@@ -19395,7 +19469,7 @@
     </unit>
     <unit id="851501460099408919">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:645</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:771</note>
         <note category="description">Accessible label for the button that edits a service account. NAME is the account name</note>
       </notes>
       <segment>
@@ -19404,7 +19478,7 @@
     </unit>
     <unit id="7335218886954930171">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:649</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:775</note>
         <note category="description">Accessible label for the button that deletes a service account. NAME is the account name</note>
       </notes>
       <segment>
@@ -19413,7 +19487,7 @@
     </unit>
     <unit id="3866373356324045807">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:653</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:783</note>
         <note category="description">Accessible label for the button that revokes a credential. NAME is the credential name</note>
       </notes>
       <segment>
@@ -19633,7 +19707,7 @@
     </unit>
     <unit id="8211774880361154235">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:95,97</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:98,100</note>
         <note category="description">Button that opens the create-view form</note>
       </notes>
       <segment>
@@ -20049,6 +20123,15 @@
         <source>Link <ph id="0" equiv="COUNT" disp="count"/> tasks</source>
       </segment>
     </unit>
+    <unit id="8354941244589100972">
+      <notes>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:692</note>
+        <note category="description">Confirmation after saving a credential&apos;s scopes</note>
+      </notes>
+      <segment>
+        <source>Credential scopes updated</source>
+      </segment>
+    </unit>
     <unit id="8359451401558817525">
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:132</note>
@@ -20074,6 +20157,15 @@
       </notes>
       <segment>
         <source>Move to another sprint</source>
+      </segment>
+    </unit>
+    <unit id="7523114787603051321">
+      <notes>
+        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:76,84</note>
+        <note category="description">Explains that credential scopes narrow the account permissions and are fixed when the credential is created</note>
+      </notes>
+      <segment>
+        <source> Scopes can restrict this credential further than the service account. They are fixed when the credential is created: permissions added to the account later must be added to the credential&apos;s scopes before it can use them. </source>
       </segment>
     </unit>
     <unit id="580124269805283452">
@@ -22153,7 +22245,7 @@
     </unit>
     <unit id="6499828313169795693">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:60,61</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:62,63</note>
         <note category="description">Shown when the saved view list fails to load</note>
       </notes>
       <segment>
@@ -22938,6 +23030,15 @@
         <source>Brave, Google or SearXNG</source>
       </segment>
     </unit>
+    <unit id="444463860595403557">
+      <notes>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-api-credential-scopes-dialog.component.ts:42,45</note>
+        <note category="description">Title of the edit-credential-scopes dialog</note>
+      </notes>
+      <segment>
+        <source> Edit Credential Scopes </source>
+      </segment>
+    </unit>
     <unit id="4447140464620115564">
       <notes>
         <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:66,69</note>
@@ -22999,6 +23100,15 @@
       </notes>
       <segment>
         <source>Change Project</source>
+      </segment>
+    </unit>
+    <unit id="5463605367129349064">
+      <notes>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:330,333</note>
+        <note category="description">Shown on a credential whose scopes cover every permission of its service account</note>
+      </notes>
+      <segment>
+        <source> All account permissions </source>
       </segment>
     </unit>
     <unit id="2085611136494552870">

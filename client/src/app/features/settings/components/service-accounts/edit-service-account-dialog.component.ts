@@ -73,10 +73,11 @@ export interface EditServiceAccountDialogData {
           <span
             i18n="
               Warns that removing an account permission also affects its
-              credentials
+              credentials, while adding one does not
             ">
             Removing a permission also removes it from every credential on this
-            account.
+            account. Adding one does not add it to existing credentials; edit
+            their scopes to grant it.
           </span>
         </p>
 

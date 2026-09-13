@@ -100,6 +100,98 @@ public sealed class ServiceAccountsEndpointTests
     }
 
     [Fact]
+    public async Task UpdateCredentialScopes_ShouldGrantPermissionAddedToAccountAfterCreation()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var account = await CreateAccount([NetptunePermissions.Tasks.Read]);
+        var credential = await CreateCredential(account.Id, [NetptunePermissions.Tasks.Read]);
+
+        var accountUpdate = await Client.PutAsJsonAsync(
+            $"api/service-accounts/{account.Id}",
+            new UpdateServiceAccountRequest
+            {
+                Name = account.Name,
+                Permissions = [NetptunePermissions.Tasks.Read, NetptunePermissions.Projects.Create],
+            },
+            cancellationToken);
+
+        accountUpdate.StatusCode.Should().Be(HttpStatusCode.OK, await accountUpdate.Content.ReadAsStringAsync(cancellationToken));
+
+        var response = await Client.PutAsJsonAsync(
+            $"api/service-accounts/{account.Id}/credentials/{credential.Id}/scopes",
+            new UpdateApiCredentialScopesRequest
+            {
+                Scopes = [NetptunePermissions.Tasks.Read, NetptunePermissions.Projects.Create],
+            },
+            cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync(cancellationToken));
+
+        var accounts = await Client.GetFromJsonAsync<List<ServiceAccountViewModel>>(
+            "api/service-accounts",
+            cancellationToken);
+        var listedCredential = accounts!
+            .Single(item => item.Id == account.Id)
+            .Credentials.Single(item => item.Id == credential.Id);
+
+        listedCredential.Scopes.Should().BeEquivalentTo([
+            NetptunePermissions.Tasks.Read,
+            NetptunePermissions.Projects.Create,
+        ]);
+    }
+
+    [Fact]
+    public async Task UpdateCredentialScopes_ShouldFail_WhenScopeIsNotOnAccount()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var account = await CreateAccount([NetptunePermissions.Tasks.Read]);
+        var credential = await CreateCredential(account.Id, [NetptunePermissions.Tasks.Read]);
+
+        var response = await Client.PutAsJsonAsync(
+            $"api/service-accounts/{account.Id}/credentials/{credential.Id}/scopes",
+            new UpdateApiCredentialScopesRequest
+            {
+                Scopes = [NetptunePermissions.Tasks.Read, NetptunePermissions.Projects.Create],
+            },
+            cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task UpdateCredentialScopes_ShouldFail_WhenCredentialIsRevoked()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var account = await CreateAccount([NetptunePermissions.Tasks.Read]);
+        var credential = await CreateCredential(account.Id, [NetptunePermissions.Tasks.Read]);
+
+        await Client.DeleteAsync(
+            $"api/service-accounts/{account.Id}/credentials/{credential.Id}",
+            cancellationToken);
+
+        var response = await Client.PutAsJsonAsync(
+            $"api/service-accounts/{account.Id}/credentials/{credential.Id}/scopes",
+            new UpdateApiCredentialScopesRequest { Scopes = [NetptunePermissions.Tasks.Read] },
+            cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task UpdateCredentialScopes_ShouldReturnNotFound_ForUnknownCredential()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var account = await CreateAccount([NetptunePermissions.Tasks.Read]);
+
+        var response = await Client.PutAsJsonAsync(
+            $"api/service-accounts/{account.Id}/credentials/{Guid.NewGuid()}/scopes",
+            new UpdateApiCredentialScopesRequest { Scopes = [NetptunePermissions.Tasks.Read] },
+            cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
     public async Task Update_ShouldFail_WithoutPermissions()
     {
         var account = await CreateAccount([NetptunePermissions.Tasks.Read]);
@@ -145,6 +237,24 @@ public sealed class ServiceAccountsEndpointTests
         var account = result!.Payload;
 
         return account!;
+    }
+
+    private async Task<ApiCredentialCreatedViewModel> CreateCredential(int serviceAccountId, string[] scopes)
+    {
+        var response = await Client.PostAsJsonAsync(
+            $"api/service-accounts/{serviceAccountId}/credentials",
+            new CreateApiCredentialRequest
+            {
+                Name = "Scoped credential",
+                Scopes = scopes,
+            });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<ApiCredentialCreatedViewModel>>();
+        var credential = result!.Payload;
+
+        return credential!;
     }
 
     [Fact]
