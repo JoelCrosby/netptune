@@ -1,5 +1,11 @@
 import { Component, computed, inject, input, output } from '@angular/core';
-import { AiCredential, AiProvider } from '@core/models/ai-credential';
+import {
+  AiCredential,
+  AiCredentialAvailability,
+  AiCredentialScope,
+  AiCredentialSource,
+  AiProvider,
+} from '@core/models/ai-credential';
 import { SearchCredential } from '@core/models/search-credential';
 import { DialogService } from '@core/services/dialog.service';
 import {
@@ -34,6 +40,7 @@ export interface AssistantConnection {
   name: string;
   detail: string;
   connected: boolean;
+  usesWorkspaceKey: boolean;
   lastUsedAt: string | null;
   actionLabel: string;
   provider: AiProvider | null;
@@ -74,8 +81,7 @@ const SEARCH_PROVIDER_LABELS: Record<number, string> = {
         density="comfortable"
         i18n-heading="Heading of the assistant connections card"
         heading="Connections"
-        i18n-description="Explains what the assistant connections are"
-        description="Model providers and web search, shared by every member without a personal key." />
+        [description]="description()" />
 
       <ul class="divide-border/50 flex flex-col divide-y">
         @for (connection of connections(); track connection.id) {
@@ -96,14 +102,21 @@ const SEARCH_PROVIDER_LABELS: Record<number, string> = {
             <div class="flex items-center gap-2">
               <span
                 class="h-1.5 w-1.5 shrink-0 rounded-full"
-                [class]="
-                  connection.connected ? 'bg-primary' : 'bg-foreground/30'
-                "
+                [class]="statusDotClass(connection)"
                 aria-hidden="true"></span>
               <span class="text-sm">
                 @if (connection.connected) {
                   <span i18n="Shown when a provider key is stored"
                     >Connected</span
+                  >
+                } @else if (connection.usesWorkspaceKey) {
+                  <span
+                    class="text-muted"
+                    i18n="
+                      Shown when a member has no key of their own for a provider
+                      and the workspace key is used instead
+                    "
+                    >Workspace key</span
                   >
                 } @else {
                   <span
@@ -140,8 +153,10 @@ const SEARCH_PROVIDER_LABELS: Record<number, string> = {
   `,
 })
 export class AssistantConnectionsComponent {
+  readonly scope = input<AiCredentialScope>('workspace');
   readonly credentials = input.required<AiCredential[]>();
-  readonly searchCredential = input.required<SearchCredential | null>();
+  readonly searchCredential = input<SearchCredential | null>(null);
+  readonly availability = input<AiCredentialAvailability | null>(null);
 
   readonly changed = output();
 
@@ -151,13 +166,31 @@ export class AssistantConnectionsComponent {
   private readonly addKeyLabel = $localize`:Button that adds a provider key:Add key`;
   private readonly connectLabel = $localize`:Button that connects web search:Connect`;
 
+  protected readonly description = computed(() => {
+    if (this.scope() === 'workspace') {
+      return $localize`:Explains what the assistant connections are:Model providers and web search, shared by every member without a personal key.`;
+    }
+
+    return $localize`:Explains what personal assistant connections are:Your own model provider keys. They are used for requests you start, instead of any workspace key.`;
+  });
+
   protected readonly connections = computed<AssistantConnection[]>(() => {
     const providerRows = PROVIDERS.map((descriptor) => {
       return this.toProviderRow(descriptor);
     });
 
+    if (this.scope() !== 'workspace') {
+      return providerRows;
+    }
+
     return [...providerRows, this.toSearchRow()];
   });
+
+  protected statusDotClass(connection: AssistantConnection): string {
+    if (connection.connected) return 'bg-primary';
+
+    return connection.usesWorkspaceKey ? 'bg-primary/40' : 'bg-foreground/30';
+  }
 
   protected toDate(value: string): Date {
     return new Date(value);
@@ -183,6 +216,8 @@ export class AssistantConnectionsComponent {
       name: descriptor.label,
       detail: credential ? keyDetail : descriptor.hint,
       connected: !!credential,
+      usesWorkspaceKey:
+        !credential && this.coveredByWorkspace(descriptor.provider),
       lastUsedAt: credential?.lastUsedAt ?? null,
       actionLabel: credential ? this.manageLabel : this.addKeyLabel,
       provider: descriptor.provider,
@@ -201,6 +236,7 @@ export class AssistantConnectionsComponent {
       name: label,
       detail: this.searchDetail(credential),
       connected: !!credential,
+      usesWorkspaceKey: false,
       lastUsedAt: credential?.lastUsedAt ?? null,
       actionLabel: credential ? this.manageLabel : this.connectLabel,
       provider: null,
@@ -219,6 +255,17 @@ export class AssistantConnectionsComponent {
     return credential.endpoint ?? '';
   }
 
+  private coveredByWorkspace(provider: AiProvider): boolean {
+    const providers = this.availability()?.providers ?? [];
+
+    return providers.some((item) => {
+      return (
+        item.provider === provider &&
+        item.source === AiCredentialSource.workspace
+      );
+    });
+  }
+
   private credentialFor(provider: AiProvider): AiCredential | undefined {
     return this.credentials().find((item) => item.provider === provider);
   }
@@ -231,6 +278,7 @@ export class AssistantConnectionsComponent {
     }
 
     const data: AssistantConnectionDialogData = {
+      scope: this.scope(),
       provider,
       label: descriptor.label,
       hint: descriptor.hint,

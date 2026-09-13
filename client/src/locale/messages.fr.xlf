@@ -239,7 +239,7 @@
     </unit>
     <unit id="5276810742763015515">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:84,86</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:86,88</note>
         <note category="description">Label for when a key was stored</note>
       </notes>
       <segment state="translated">
@@ -325,6 +325,16 @@
       <segment state="translated">
         <source>How long finished tasks took, by week</source>
         <target>Durée des tâches terminées, par semaine</target>
+      </segment>
+    </unit>
+    <unit id="6087946707787576324">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:119,124</note>
+        <note category="description">Shown when a member has no key of their own for a provider and the workspace key is used instead</note>
+      </notes>
+      <segment state="initial">
+        <source>Workspace key</source>
+        <target>Clé de l&apos;espace de travail</target>
       </segment>
     </unit>
     <unit id="1726548551961127827">
@@ -1269,8 +1279,7 @@
     </unit>
     <unit id="7546969606032903393">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:154,156</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:138,140</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:140,142</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-model-menu.component.ts:15,17</note>
         <note category="description">Accessible label for the assistant model selector</note>
       </notes>
@@ -1746,9 +1755,8 @@
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:798</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:821</note>
         <note category="location">src/app/features/profile/components/select-profile-image-dialog/select-profile-image-dialog.component.ts:54,56</note>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:354</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:203,206</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:353</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:212,215</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:363</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:180,183</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:358</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-spend-cap-dialog.component.ts:80,83</note>
@@ -2141,7 +2149,7 @@
     </unit>
     <unit id="1714934102960875806">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:132,134</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:134,136</note>
         <note category="description">Label for the model a connection uses</note>
       </notes>
       <segment state="translated">
@@ -2342,10 +2350,9 @@
     </unit>
     <unit id="3118592863000722717">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:198,201</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:248</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:264</note>
-        <note category="description">Button that replaces a stored API key</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:258</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:274</note>
+        <note category="description">Label for the input that replaces a stored key</note>
       </notes>
       <segment state="translated">
         <source>Replace key</source>
@@ -2364,9 +2371,8 @@
     </unit>
     <unit id="3127417567733728943">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:38</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:45</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-header-actions.component.ts:56,59</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:52</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-header-actions.component.ts:60,63</note>
         <note category="description">Name of the Anthropic AI provider</note>
       </notes>
       <segment state="translated">
@@ -2382,6 +2388,16 @@
       <segment state="translated">
         <source>Project updated</source>
         <target>Projet mis à jour</target>
+      </segment>
+    </unit>
+    <unit id="3128883254519772741">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:188,192</note>
+        <note category="description">Explains who a personal connection serves</note>
+      </notes>
+      <segment state="initial">
+        <source> Only requests you start use this key, instead of any workspace key. Removing it falls back to the workspace key when there is one. </source>
+        <target> Seules les requêtes que vous lancez utilisent cette clé, à la place de toute clé de l&apos;espace de travail. La supprimer revient à la clé de l&apos;espace de travail s&apos;il y en a une. </target>
       </segment>
     </unit>
     <unit id="6302903762785466130">
@@ -2683,7 +2699,6 @@
     </unit>
     <unit id="7198631316779176054">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:287</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:282</note>
         <note category="description">Placeholder shown when no key is stored</note>
       </notes>
@@ -2853,6 +2868,16 @@
         <target>Retirer des utilisateurs de l&apos;espace de travail</target>
       </segment>
     </unit>
+    <unit id="8995278196065289493">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:174</note>
+        <note category="description">Explains what personal assistant connections are</note>
+      </notes>
+      <segment state="initial">
+        <source>Your own model provider keys. They are used for requests you start, instead of any workspace key.</source>
+        <target>Vos propres clés de fournisseur de modèles. Elles sont utilisées pour les requêtes que vous lancez, à la place de toute clé de l&apos;espace de travail.</target>
+      </segment>
+    </unit>
     <unit id="5589864608128781435">
       <notes>
         <note category="location">src/app/core/services/workspace-commands.service.ts:71</note>
@@ -2950,16 +2975,6 @@
       <segment state="initial">
         <source>{VAR_PLURAL, plural, =1 {Missing 1 account permission} other {Missing <ph id="0" equiv="INTERPOLATION"/> account permissions}}</source>
         <target>{VAR_PLURAL, plural, =1 {1 permission du compte manquante} other {<ph id="0" equiv="INTERPOLATION"/> permissions du compte manquantes }}</target>
-      </segment>
-    </unit>
-    <unit id="8768927723338869419">
-      <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:99,101</note>
-        <note category="description">Label preceding the masked API key</note>
-      </notes>
-      <segment state="translated">
-        <source>Key ending</source>
-        <target>Clé se terminant par</target>
       </segment>
     </unit>
     <unit id="950348144194379022">
@@ -3606,16 +3621,6 @@
         <target>Exécutions totales</target>
       </segment>
     </unit>
-    <unit id="6707264088417972826">
-      <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:77,82</note>
-        <note category="description">Explains why a key is needed</note>
-      </notes>
-      <segment state="translated">
-        <source> The assistant uses your own provider API key. Keys are encrypted, are never shown again after saving, and are only used for requests you start. </source>
-        <target> L&apos;assistant utilise votre propre clé API de fournisseur. Les clés sont chiffrées, ne sont plus affichées après l&apos;enregistrement et ne servent qu&apos;aux requêtes que vous lancez. </target>
-      </segment>
-    </unit>
     <unit id="6711113068963618455">
       <notes>
         <note category="location">src/app/entry/components/notification-bell/notification-dropdown.component.ts:53,55</note>
@@ -4090,7 +4095,6 @@
     </unit>
     <unit id="5504590309962934202">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:129,131</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:91,93</note>
         <note category="description">Label for the API key input</note>
       </notes>
@@ -4267,7 +4271,7 @@
     </unit>
     <unit id="6937996967118036600">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:78,80</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:171</note>
         <note category="description">Explains what the assistant connections are</note>
       </notes>
       <segment state="translated">
@@ -4674,7 +4678,7 @@
     </unit>
     <unit id="6351721389687055644">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:240</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:250</note>
         <note category="description">Title of the dialog that manages a stored provider key</note>
       </notes>
       <segment state="translated">
@@ -4725,8 +4729,7 @@
     </unit>
     <unit id="8550125178086238714">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:351</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:350</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:360</note>
         <note category="description">Title of the remove API key confirmation</note>
       </notes>
       <segment state="translated">
@@ -5349,7 +5352,7 @@
     </unit>
     <unit id="5896927379604759167">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:112,115</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:125,128</note>
         <note category="description">Shown when no provider key is stored</note>
       </notes>
       <segment state="translated">
@@ -5497,7 +5500,7 @@
     </unit>
     <unit id="630746867351715318">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:95,97</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:97,99</note>
         <note category="description">Label for when a key was last used</note>
       </notes>
       <segment state="translated">
@@ -5520,7 +5523,7 @@
     </unit>
     <unit id="813263746069473514">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:152</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:167</note>
         <note category="description">Button that connects web search</note>
       </notes>
       <segment state="translated">
@@ -6470,8 +6473,7 @@
     </unit>
     <unit id="5988988986257041887">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:371</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:369</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:379</note>
         <note category="description">Shown after an API key is removed</note>
       </notes>
       <segment state="translated">
@@ -6837,7 +6839,7 @@
     </unit>
     <unit id="3071051343671085363">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-header-actions.component.ts:34,38</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-header-actions.component.ts:38,42</note>
         <note category="description">Link to the workspace audit log</note>
       </notes>
       <segment state="translated">
@@ -6897,7 +6899,7 @@
     </unit>
     <unit id="4671562292257026998">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:251</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:261</note>
         <note category="description">Label for the API key input</note>
       </notes>
       <segment state="translated">
@@ -7403,8 +7405,8 @@
     </unit>
     <unit id="3726797985885972015">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:178</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:216</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:211</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:252</note>
         <note category="description">Describes a stored key by its last characters</note>
       </notes>
       <segment state="translated">
@@ -9922,7 +9924,7 @@
     </unit>
     <unit id="8668810212312203956">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:243</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:253</note>
         <note category="description">Title of the dialog that adds a provider key</note>
       </notes>
       <segment state="translated">
@@ -10353,7 +10355,7 @@
     </unit>
     <unit id="3897348120591552265">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:150</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:165</note>
         <note category="description">Button that opens a stored connection</note>
       </notes>
       <segment state="translated">
@@ -11031,16 +11033,6 @@
         <target>nombre</target>
       </segment>
     </unit>
-    <unit id="741060543658723189">
-      <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:70,75</note>
-        <note category="description">Explains what a workspace API key is for</note>
-      </notes>
-      <segment state="translated">
-        <source> A workspace key lets every member use the assistant without adding one of their own. Anyone who has added a personal key keeps using theirs. </source>
-        <target> Une clé d’espace de travail permet à chaque membre d’utiliser l’assistant sans en ajouter une. Ceux qui ont déjà ajouté une clé personnelle continuent d’utiliser la leur. </target>
-      </segment>
-    </unit>
     <unit id="4294442977279527891">
       <notes>
         <note category="location">src/app/features/roadmap/components/roadmap-unscheduled.component.ts:71,74</note>
@@ -11702,7 +11694,7 @@
     </unit>
     <unit id="8372007266188249803">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:102,104</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:104,106</note>
         <note category="description">Shown when a key is unused</note>
       </notes>
       <segment state="translated">
@@ -12136,8 +12128,7 @@
     </unit>
     <unit id="6168573387818230011">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:333</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:325</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:335</note>
         <note category="description">Shown after an API key is stored</note>
       </notes>
       <segment state="translated">
@@ -12989,7 +12980,7 @@
     </unit>
     <unit id="4264569873878205807">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-header-actions.component.ts:46,50</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-header-actions.component.ts:50,54</note>
         <note category="description">Button that adds an assistant connection</note>
       </notes>
       <segment state="translated">
@@ -13129,8 +13120,8 @@
     </unit>
     <unit id="3208980041287937682">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:76,80</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:106,108</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:78,82</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:110,112</note>
         <note category="description">Shown when a provider key is stored</note>
       </notes>
       <segment state="translated">
@@ -13787,7 +13778,7 @@
     </unit>
     <unit id="3202815453884947117">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:151</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:166</note>
         <note category="description">Button that adds a provider key</note>
       </notes>
       <segment state="translated">
@@ -14062,8 +14053,7 @@
     </unit>
     <unit id="3477141043479115606">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:284</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:256</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:266</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:279</note>
         <note category="description">Placeholder shown when a key is already stored</note>
       </notes>
@@ -14137,7 +14127,7 @@
     </unit>
     <unit id="4282587102956396340">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:73,75</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:75,77</note>
         <note category="description">Label for the state of a stored connection</note>
       </notes>
       <segment state="translated">
@@ -15332,10 +15322,8 @@
     </unit>
     <unit id="3423740992676752364">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:323</note>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:341</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:318</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:334</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:328</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:344</note>
         <note category="description">Shown when saving an API key fails</note>
       </notes>
       <segment state="translated">
@@ -15553,7 +15541,7 @@
     </unit>
     <unit id="214787083175103202">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-header-actions.component.ts:73,76</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-header-actions.component.ts:77,80</note>
         <note category="description">Name of the assistant web search connection</note>
       </notes>
       <segment state="translated">
@@ -15743,7 +15731,7 @@
     </unit>
     <unit id="7076328347552597132">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:196</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:231</note>
         <note category="description">Name of the assistant web search connection</note>
       </notes>
       <segment state="translated">
@@ -17161,8 +17149,7 @@
     </unit>
     <unit id="395357454003185588">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:39</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:46</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:53</note>
         <note category="description">Where to find an Anthropic API key</note>
       </notes>
       <segment state="translated">
@@ -17350,8 +17337,7 @@
     </unit>
     <unit id="3959473004188974816">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:376</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:375</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:385</note>
         <note category="description">Shown when removing an API key fails</note>
       </notes>
       <segment state="translated">
@@ -17642,7 +17628,7 @@
     </unit>
     <unit id="5313896736024470177">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:64,66</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:66,68</note>
         <note category="description">Label for the masked API key in the connection dialog</note>
       </notes>
       <segment state="translated">
@@ -18438,7 +18424,7 @@
     </unit>
     <unit id="7508570474100827037">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:124,128</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:126,130</note>
         <note category="description">Explains how stored keys behave</note>
       </notes>
       <segment state="translated">
@@ -18616,7 +18602,7 @@
     </unit>
     <unit id="5148150062211212405">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:174,178</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:176,180</note>
         <note category="description">Explains that saving a model needs the key again</note>
       </notes>
       <segment state="translated">
@@ -18702,9 +18688,8 @@
     </unit>
     <unit id="6406732480689038024">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:117,119</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:195,198</note>
-        <note category="description">Tooltip on the button that removes a stored API key</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:204,207</note>
+        <note category="description">Button that removes a stored API key</note>
       </notes>
       <segment state="translated">
         <source>Remove key</source>
@@ -19103,7 +19088,7 @@
         <note category="location">src/app/features/assistant/assistant.routes.ts:12</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:87</note>
         <note category="location">src/app/features/settings/settings.routes.ts:144</note>
-        <note category="location">src/app/features/settings/views/personal-assistant-settings-view/personal-assistant-settings-view.component.ts:17,21</note>
+        <note category="location">src/app/features/settings/views/personal-assistant-settings-view/personal-assistant-settings-view.component.ts:29,31</note>
         <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:52,54</note>
         <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:42,45</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:357</note>
@@ -19148,7 +19133,7 @@
     </unit>
     <unit id="4368459498761840040">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:180,184</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:183,186</note>
         <note category="description">Explains who a workspace connection serves</note>
       </notes>
       <segment state="translated">
@@ -20113,8 +20098,7 @@
     </unit>
     <unit id="8927455770711141149">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:44</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:51</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:58</note>
         <note category="description">Where to find an OpenAI API key</note>
       </notes>
       <segment state="translated">
@@ -20124,9 +20108,8 @@
     </unit>
     <unit id="9050138848550192211">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:43</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:50</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-header-actions.component.ts:64,67</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:57</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-header-actions.component.ts:68,71</note>
         <note category="description">Name of the OpenAI provider</note>
       </notes>
       <segment state="translated">
@@ -20998,10 +20981,8 @@
     </unit>
     <unit id="5607669932062416162">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:168,171</note>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:267</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:152,155</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:278</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:154,157</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:288</note>
         <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:61,64</note>
         <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:163</note>
         <note category="description">Model option that defers to the server default</note>
@@ -22125,8 +22106,7 @@
     </unit>
     <unit id="7203070746919732368">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:352</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:351</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:361</note>
         <note category="description">Explains what removing an API key does</note>
       </notes>
       <segment state="translated">
@@ -23971,7 +23951,7 @@
     </unit>
     <unit id="2557623954339695776">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:76,77</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:83,86</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:136</note>
         <note category="description">Heading of the assistant connections card</note>
       </notes>
@@ -24120,16 +24100,6 @@
       <segment state="translated">
         <source>Go to Storage</source>
         <target>Aller au stockage</target>
-      </segment>
-    </unit>
-    <unit id="5388692830516022173">
-      <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:146,148</note>
-        <note category="description">Label for the model input</note>
-      </notes>
-      <segment state="translated">
-        <source> Model </source>
-        <target> Modèle </target>
       </segment>
     </unit>
     <unit id="5389189004241549939">
@@ -24346,6 +24316,7 @@
     </unit>
     <unit id="6492831808763156510">
       <notes>
+        <note category="location">src/app/features/settings/views/personal-assistant-settings-view/personal-assistant-settings-view.component.ts:43,46</note>
         <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:91,94</note>
         <note category="description">Heading of the assistant setup group</note>
       </notes>
@@ -25212,8 +25183,7 @@
     <unit id="4814285799071780083">
       <notes>
         <note category="location">src/app/core/services/task-commands.service.ts:217</note>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:353</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:352</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:362</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:357</note>
         <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:82,85</note>
         <note category="location">src/app/static/components/form-select-tags/form-select-tags.component.ts:75,78</note>
@@ -25476,8 +25446,7 @@
     </unit>
     <unit id="4442108733606169287">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:201,203</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:267</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:277</note>
         <note category="description">Button that stores an API key</note>
       </notes>
       <segment state="translated">
@@ -25487,7 +25456,7 @@
     </unit>
     <unit id="4443629607890963383">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:212</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:248</note>
         <note category="description">Hint listing the supported web search providers</note>
       </notes>
       <segment state="translated">

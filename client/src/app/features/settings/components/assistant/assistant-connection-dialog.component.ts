@@ -3,6 +3,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   AiCredential,
+  AiCredentialScope,
   AiProvider,
   SaveAiCredentialRequest,
 } from '@core/models/ai-credential';
@@ -27,6 +28,7 @@ import { FormControlFieldComponent } from '@static/components/form-control/form-
 import { FormControlInputDirective } from '@static/components/form-control/form-control.directives';
 
 export interface AssistantConnectionDialogData {
+  scope: AiCredentialScope;
   provider: AiProvider;
   label: string;
   hint: string;
@@ -112,6 +114,7 @@ export interface AssistantConnectionDialogData {
         <app-form-control-field density="compact">
           <input
             appFormInput
+            class="px-4"
             type="password"
             name="assistant-connection-secret"
             autocomplete="off"
@@ -176,10 +179,17 @@ export interface AssistantConnectionDialogData {
       </div>
 
       <app-callout [icon]="infoIcon" color="primary">
-        <p i18n="Explains who a workspace connection serves">
-          Members without a personal key use this one. Removing it stops the
-          assistant for them — spend history is kept.
-        </p>
+        @if (isWorkspace) {
+          <p i18n="Explains who a workspace connection serves">
+            Members without a personal key use this one. Removing it stops the
+            assistant for them — spend history is kept.
+          </p>
+        } @else {
+          <p i18n="Explains who a personal connection serves">
+            Only requests you start use this key, instead of any workspace key.
+            Removing it falls back to the workspace key when there is one.
+          </p>
+        }
       </app-callout>
     </div>
 
@@ -224,6 +234,7 @@ export class AssistantConnectionDialogComponent {
   private readonly catalog = aiModelResource();
 
   protected readonly infoIcon = LucideInfo;
+  protected readonly isWorkspace = this.data.scope === 'workspace';
   protected readonly credential = signal(this.data.credential);
   protected readonly secret = signal('');
   protected readonly busy = signal(false);
@@ -306,7 +317,7 @@ export class AssistantConnectionDialogComponent {
     this.busy.set(true);
 
     this.service
-      .save(request, 'workspace')
+      .save(request, this.data.scope)
       .pipe(first())
       .subscribe({
         next: (response) => {
@@ -360,7 +371,7 @@ export class AssistantConnectionDialogComponent {
             return [];
           }
 
-          return this.service.delete(stored.id, 'workspace');
+          return this.service.delete(stored.id, this.data.scope);
         })
       )
       .subscribe({

@@ -2,7 +2,11 @@ import { Component, computed, inject, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
-import { AiCredential, AiProvider } from '@core/models/ai-credential';
+import {
+  AiCredential,
+  AiCredentialScope,
+  AiProvider,
+} from '@core/models/ai-credential';
 import { SearchCredential } from '@core/models/search-credential';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { LucidePlus, LucideShield } from '@lucide/angular';
@@ -24,7 +28,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
   ],
   host: { class: 'flex items-center gap-2' },
   template: `
-    @if (canReadAudit()) {
+    @if (showAuditLink()) {
       <a
         app-stroked-button
         color="neutral"
@@ -64,7 +68,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
             <span i18n="Name of the OpenAI provider">OpenAI</span>
           </button>
         }
-        @if (!searchCredential()) {
+        @if (scope() === 'workspace' && !searchCredential()) {
           <button
             app-menu-item
             type="button"
@@ -79,8 +83,9 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
   `,
 })
 export class AssistantHeaderActionsComponent {
+  readonly scope = input<AiCredentialScope>('workspace');
   readonly credentials = input.required<readonly AiCredential[]>();
-  readonly searchCredential = input.required<SearchCredential | null>();
+  readonly searchCredential = input<SearchCredential | null>(null);
   readonly canAddConnection = input.required<boolean>();
 
   readonly addProvider = output<AiProvider>();
@@ -91,7 +96,11 @@ export class AssistantHeaderActionsComponent {
 
   private readonly workspaceIdentifier = inject(CurrentWorkspaceService).slug;
 
-  protected readonly canReadAudit = hasPermission(PERMISSIONS.audit.read);
+  private readonly canReadAudit = hasPermission(PERMISSIONS.audit.read);
+
+  protected readonly showAuditLink = computed(() => {
+    return this.scope() === 'workspace' && this.canReadAudit();
+  });
 
   protected readonly auditLink = computed(() => {
     return ['/', this.workspaceIdentifier() ?? '', 'audit'];

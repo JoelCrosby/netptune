@@ -93,6 +93,7 @@ interface SearchProviderOption {
           <app-form-control-field density="compact">
             <input
               appFormInput
+              class="px-4"
               type="password"
               name="assistant-search-secret"
               autocomplete="off"
@@ -114,6 +115,7 @@ interface SearchProviderOption {
           <app-form-control-field density="compact">
             <input
               appFormInput
+              class="px-4"
               type="text"
               name="assistant-search-engine-id"
               autocomplete="off"
@@ -138,6 +140,7 @@ interface SearchProviderOption {
           <app-form-control-field density="compact">
             <input
               appFormInput
+              class="px-4"
               type="url"
               name="assistant-search-endpoint"
               autocomplete="off"
