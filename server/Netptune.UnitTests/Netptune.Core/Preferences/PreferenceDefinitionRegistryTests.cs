@@ -84,6 +84,27 @@ public class PreferenceDefinitionRegistryTests
     }
 
     [Fact]
+    public void GetGroups_FilesEveryNotificationToggleIntoANamedSection()
+    {
+        var group = Registry.GetGroups().Single(group => group.Key == "notifications");
+
+        var sectionKeys = group.Preferences.Select(preference => preference.Section?.Key).ToList();
+
+        sectionKeys.Should().NotContain([null, "other"]);
+    }
+
+    [Fact]
+    public void GetGroups_KeepsEachNotificationSectionTogether()
+    {
+        var group = Registry.GetGroups().Single(group => group.Key == "notifications");
+
+        var sectionKeys = group.Preferences.Select(preference => preference.Section!.Key).ToList();
+        var sectionRuns = sectionKeys.Where((key, index) => index == 0 || sectionKeys[index - 1] != key).ToList();
+
+        sectionRuns.Should().Equal("tasks", "people", "comments", "attachments", "workspace");
+    }
+
+    [Fact]
     public void Find_ReturnsNull_ForUnknownPreference()
     {
         Registry.Find("unknown.preference").Should().BeNull();

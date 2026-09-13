@@ -19,9 +19,15 @@ export interface PreferenceOption {
   label: string;
 }
 
+export interface PreferenceSection {
+  key: string;
+  label: string;
+}
+
 export interface PreferenceDefinition {
   key: string;
   groupKey: string;
+  section: PreferenceSection | null;
   label: string;
   controlType: 'select' | 'toggle' | 'hidden';
   valueType:

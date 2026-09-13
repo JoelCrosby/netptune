@@ -234,7 +234,7 @@
     </unit>
     <unit id="5279254778188887460">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:112,113</note>
+        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:145,146</note>
         <note category="description">Explains how to start following a place</note>
       </notes>
       <segment>
@@ -787,6 +787,15 @@
         <source>A committed import can be undone until its session expires.</source>
       </segment>
     </unit>
+    <unit id="3392062750241531265">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:189,191</note>
+        <note category="description">Button that collapses every notification group</note>
+      </notes>
+      <segment>
+        <source> Collapse all </source>
+      </segment>
+    </unit>
     <unit id="3392754525167799121">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/pickers/task-tag-row.component.ts:125</note>
@@ -1036,7 +1045,7 @@
     </unit>
     <unit id="378112044291779678">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:374</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:377</note>
         <note category="description">Shown after the search provider is removed</note>
       </notes>
       <segment>
@@ -1153,7 +1162,7 @@
     </unit>
     <unit id="7546969606032903393">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:140,142</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:141,143</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-model-menu.component.ts:15,17</note>
         <note category="description">Accessible label for the assistant model selector</note>
       </notes>
@@ -1319,7 +1328,7 @@
     </unit>
     <unit id="2387195905182230850">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:171,174</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:174,177</note>
         <note category="description">Button that removes the search provider</note>
       </notes>
       <segment>
@@ -1585,10 +1594,10 @@
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:798</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:821</note>
         <note category="location">src/app/features/profile/components/select-profile-image-dialog/select-profile-image-dialog.component.ts:54,56</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:212,215</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:363</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:180,183</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:358</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:213,216</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:364</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:183,186</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:361</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-spend-cap-dialog.component.ts:80,83</note>
         <note category="location">src/app/features/settings/components/delete-workspace-dialog/delete-workspace-dialog.component.ts:59,62</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:96,99</note>
@@ -1945,7 +1954,7 @@
     </unit>
     <unit id="1714934102960875806">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:134,136</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:135,137</note>
         <note category="description">Label for the model a connection uses</note>
       </notes>
       <segment>
@@ -2126,8 +2135,8 @@
     </unit>
     <unit id="3118592863000722717">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:258</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:274</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:259</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:275</note>
         <note category="description">Label for the input that replaces a stored key</note>
       </notes>
       <segment>
@@ -2164,7 +2173,7 @@
     </unit>
     <unit id="3128883254519772741">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:188,192</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:189,193</note>
         <note category="description">Explains who a personal connection serves</note>
       </notes>
       <segment>
@@ -2441,7 +2450,7 @@
     </unit>
     <unit id="7198631316779176054">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:282</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:285</note>
         <note category="description">Placeholder shown when no key is stored</note>
       </notes>
       <segment>
@@ -2550,7 +2559,7 @@
     </unit>
     <unit id="4145619247688235973">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:356</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:359</note>
         <note category="description">Explains what removing the search provider does</note>
       </notes>
       <segment>
@@ -3182,7 +3191,7 @@
         <note category="location">src/app/entry/components/notification-bell/notification-bell.component.ts:50,52</note>
         <note category="location">src/app/features/notifications/notifications.routes.ts:12</note>
         <note category="location">src/app/features/notifications/views/notifications-view/notifications-view.component.ts:29,30</note>
-        <note category="location">src/app/features/settings/views/personal-notification-settings-view/personal-notification-settings-view.component.ts:22,25</note>
+        <note category="location">src/app/features/settings/views/personal-notification-settings-view/personal-notification-settings-view.component.ts:22,24</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:400</note>
         <note category="location">src/app/workspace.routes.ts:96</note>
         <note category="description">Accessible label for the notifications button</note>
@@ -3340,7 +3349,7 @@
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:66,67</note>
         <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:26,29</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:82</note>
-        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:158</note>
+        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:371</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:384</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:306</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:46</note>
@@ -3498,7 +3507,7 @@
     </unit>
     <unit id="1250336210630791344">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:222</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:225</note>
         <note category="description">Hint describing the SearXNG search provider</note>
       </notes>
       <segment>
@@ -3696,7 +3705,7 @@
         <note category="location">src/app/features/automations/models/automation-copy.ts:76</note>
         <note category="location">src/app/features/reporting/components/sprint-velocity-table.component.ts:53</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:137</note>
-        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:164</note>
+        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:377</note>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:76,79</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:19</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:38</note>
@@ -3704,6 +3713,15 @@
       </notes>
       <segment>
         <source>Sprint</source>
+      </segment>
+    </unit>
+    <unit id="5503213672777720666">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:348</note>
+        <note category="description">Summary of notification events. ENABLED and TOTAL are counts, CHANGED is how many differ from the default</note>
+      </notes>
+      <segment>
+        <source><ph id="0" equiv="ENABLED" disp="enabled"/> of <ph id="1" equiv="TOTAL" disp="total"/> events on · <ph id="2" equiv="CHANGED" disp="changed"/> changed from default</source>
       </segment>
     </unit>
     <unit id="5504590309962934202">
@@ -4243,7 +4261,7 @@
     </unit>
     <unit id="6351721389687055644">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:250</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:251</note>
         <note category="description">Title of the dialog that manages a stored provider key</note>
       </notes>
       <segment>
@@ -4289,7 +4307,7 @@
     </unit>
     <unit id="8550125178086238714">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:360</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:361</note>
         <note category="description">Title of the remove API key confirmation</note>
       </notes>
       <segment>
@@ -4456,7 +4474,7 @@
     </unit>
     <unit id="3082475149603784059">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:124,126</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:126,128</note>
         <note category="description">Placeholder for the Google search engine id input</note>
       </notes>
       <segment>
@@ -5026,7 +5044,7 @@
     </unit>
     <unit id="8847898072904693402">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:270</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:273</note>
         <note category="description">Button that stores the search provider</note>
       </notes>
       <segment>
@@ -5421,7 +5439,7 @@
     </unit>
     <unit id="2362646105488486702">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:225</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:531</note>
         <note category="description">Shown when a notification has never been changed</note>
       </notes>
       <segment>
@@ -5657,6 +5675,15 @@
         <source>Activity over time</source>
       </segment>
     </unit>
+    <unit id="895474011655201510">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:173,178</note>
+        <note category="description">Accessible label for the control that filters notification events by state</note>
+      </notes>
+      <segment>
+        <source>Show events</source>
+      </segment>
+    </unit>
     <unit id="5200831341853054486">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:148,150</note>
@@ -5868,7 +5895,7 @@
     </unit>
     <unit id="5988988986257041887">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:379</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:380</note>
         <note category="description">Shown after an API key is removed</note>
       </notes>
       <segment>
@@ -6044,6 +6071,7 @@
     <unit id="7556340900290410206">
       <notes>
         <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:44,45</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:163,166</note>
         <note category="description">Placeholder in the box that searches trigger events</note>
       </notes>
       <segment>
@@ -6088,7 +6116,7 @@
     </unit>
     <unit id="751924494549380962">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:136,138</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:138,140</note>
         <note category="description">Label for the SearXNG base URL input</note>
       </notes>
       <segment>
@@ -6252,7 +6280,7 @@
     </unit>
     <unit id="4671562292257026998">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:261</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:262</note>
         <note category="description">Label for the API key input</note>
       </notes>
       <segment>
@@ -6283,7 +6311,7 @@
         <note category="location">src/app/core/util/pin-scope.ts:78</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:228</note>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:92</note>
-        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:160</note>
+        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:373</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:20</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:40</note>
         <note category="description">Names the kind of thing a context chip points at</note>
@@ -6348,7 +6376,7 @@
     </unit>
     <unit id="1671085147617141474">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:150</note>
+        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:353</note>
         <note category="description">Accessible label for the button that stops following a place. NAME is the board, sprint or project name</note>
       </notes>
       <segment>
@@ -6357,7 +6385,7 @@
     </unit>
     <unit id="5531875190051704197">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:267</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:270</note>
         <note category="description">Button that updates the stored search provider</note>
       </notes>
       <segment>
@@ -6395,11 +6423,20 @@
     </unit>
     <unit id="4200103759189541053">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:155,161</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:158,164</note>
         <note category="description">Explains what the assistant does without a search provider</note>
       </notes>
       <segment>
         <source> Without a provider the assistant can still read pages it is given a link to, but it cannot find them itself. </source>
+      </segment>
+    </unit>
+    <unit id="4202788523463485576">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:86</note>
+        <note category="description">Notification filter showing events changed from the default</note>
+      </notes>
+      <segment>
+        <source>Changed</source>
       </segment>
     </unit>
     <unit id="420317131093281855">
@@ -6946,6 +6983,15 @@
         <source> Keep me signed in </source>
       </segment>
     </unit>
+    <unit id="3582459763200691347">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:405</note>
+        <note category="description">Button that turns on every event in a notification group</note>
+      </notes>
+      <segment>
+        <source>Turn all on</source>
+      </segment>
+    </unit>
     <unit id="3586674587150281199">
       <notes>
         <note category="location">src/app/features/auth/components/register/register.component.ts:84,87</note>
@@ -7274,7 +7320,7 @@
     </unit>
     <unit id="7575333699500892760">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:172</note>
+        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:52</note>
         <note category="description">Notification subscription event</note>
       </notes>
       <segment>
@@ -7569,10 +7615,12 @@
     </unit>
     <unit id="1616102757855967475">
       <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:74</note>
+        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:71</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:171</note>
         <note category="location">src/app/shared/components/query-builder/query-builder.models.ts:72</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:587</note>
-        <note category="description">Filter showing sprints in any state</note>
+        <note category="description">Notification filter showing every event</note>
       </notes>
       <segment>
         <source>All</source>
@@ -7930,7 +7978,7 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:204,206</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:77</note>
-        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:162</note>
+        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:375</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:21</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:41</note>
         <note category="description">Label of the board group field</note>
@@ -8041,8 +8089,8 @@
     </unit>
     <unit id="4756842401099167454">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:329</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:345</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:332</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:348</note>
         <note category="description">Shown when saving the search provider fails</note>
       </notes>
       <segment>
@@ -8292,7 +8340,7 @@
     </unit>
     <unit id="6487858875754492541">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:55,57</note>
+        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:128,130</note>
         <note category="description">Accessible label while followed places load</note>
       </notes>
       <segment>
@@ -8448,7 +8496,7 @@
     </unit>
     <unit id="4697947893832068670">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:215</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:521</note>
         <note category="description">Shown when a notification is set for this workspace only</note>
       </notes>
       <segment>
@@ -8533,7 +8581,7 @@
     </unit>
     <unit id="4944057561753398636">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:33</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:63</note>
         <note category="description">Preference scope applying to every workspace</note>
       </notes>
       <segment>
@@ -8961,6 +9009,15 @@
         <source> IF </source>
       </segment>
     </unit>
+    <unit id="5557116058439889949">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:273</note>
+        <note category="description">Count of followed places when there is one</note>
+      </notes>
+      <segment>
+        <source>1 place</source>
+      </segment>
+    </unit>
     <unit id="5658740166539513693">
       <notes>
         <note category="location">src/app/features/automations/components/automation-rule-summary.component.ts:102,104</note>
@@ -8983,7 +9040,7 @@
     </unit>
     <unit id="8668810212312203956">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:253</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:254</note>
         <note category="description">Title of the dialog that adds a provider key</note>
       </notes>
       <segment>
@@ -9638,7 +9695,7 @@
     </unit>
     <unit id="4974625000015194391">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:214</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:217</note>
         <note category="description">Hint describing the Google search provider</note>
       </notes>
       <segment>
@@ -9928,7 +9985,7 @@
     </unit>
     <unit id="1838131741653693713">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:80,82</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:134,136</note>
         <note category="description">Accessible label while notification preferences load</note>
       </notes>
       <segment>
@@ -10137,6 +10194,15 @@
       </notes>
       <segment>
         <source>Inline Code</source>
+      </segment>
+    </unit>
+    <unit id="6188987311144157990">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:223,229</note>
+        <note category="description">Suggests how to find followed places after a search found nothing</note>
+      </notes>
+      <segment>
+        <source>Try another name, or show all scopes.</source>
       </segment>
     </unit>
     <unit id="6189233648220583946">
@@ -10616,7 +10682,7 @@
     </unit>
     <unit id="6738441386853039906">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:176</note>
+        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:56</note>
         <note category="description">Notification subscription event</note>
       </notes>
       <segment>
@@ -10972,7 +11038,7 @@
     </unit>
     <unit id="6168573387818230011">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:335</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:336</note>
         <note category="description">Shown after an API key is stored</note>
       </notes>
       <segment>
@@ -11038,7 +11104,7 @@
     </unit>
     <unit id="6157743857767016939">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:112,114</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:113,115</note>
         <note category="description">Label for the Google search engine id input</note>
       </notes>
       <segment>
@@ -11056,7 +11122,7 @@
     </unit>
     <unit id="5621842545023812080">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:146,148</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:149,151</note>
         <note category="description">Placeholder for the SearXNG base URL input</note>
       </notes>
       <segment>
@@ -11413,7 +11479,7 @@
     </unit>
     <unit id="9171463325443980706">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:180</note>
+        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:60</note>
         <note category="description">Notification subscription event</note>
       </notes>
       <segment>
@@ -12150,7 +12216,7 @@
     </unit>
     <unit id="5491331354469487333">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:46,47</note>
+        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:113,114</note>
         <note category="description">Heading above the list of places the user follows</note>
       </notes>
       <segment>
@@ -12709,8 +12775,8 @@
     </unit>
     <unit id="3477141043479115606">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:266</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:279</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:267</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:282</note>
         <note category="description">Placeholder shown when a key is already stored</note>
       </notes>
       <segment>
@@ -13006,6 +13072,15 @@
         <source>Remove <ph id="0" equiv="FIELD" disp="label"/></source>
       </segment>
     </unit>
+    <unit id="2705186663019856771">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:274</note>
+        <note category="description">Count of followed places. COUNT is a number</note>
+      </notes>
+      <segment>
+        <source><ph id="0" equiv="COUNT" disp="count"/> places</source>
+      </segment>
+    </unit>
     <unit id="3130959333071454929">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:525</note>
@@ -13054,7 +13129,7 @@
     </unit>
     <unit id="3136143367735182406">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:120,121</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:153,155</note>
         <note category="description">Explains why the notification preference list is empty</note>
       </notes>
       <segment>
@@ -13442,7 +13517,7 @@
     </unit>
     <unit id="5478121364779850827">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:102,104</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:254,255</note>
         <note category="description">Button that removes a preference override</note>
       </notes>
       <segment>
@@ -13856,8 +13931,8 @@
     </unit>
     <unit id="3423740992676752364">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:328</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:344</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:329</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:345</note>
         <note category="description">Shown when saving an API key fails</note>
       </notes>
       <segment>
@@ -14162,7 +14237,7 @@
     </unit>
     <unit id="6154668836448322809">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:380</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:383</note>
         <note category="description">Shown when removing the search provider fails</note>
       </notes>
       <segment>
@@ -14494,7 +14569,7 @@
     </unit>
     <unit id="1164332617862004960">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:173</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:479</note>
         <note category="description">Accessible label for a notification toggle. EVENT is the already-localised event name</note>
       </notes>
       <segment>
@@ -14526,6 +14601,15 @@
       </notes>
       <segment>
         <source>Average velocity</source>
+      </segment>
+    </unit>
+    <unit id="1168206319879732017">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:292,295</note>
+        <note category="description">Button that clears the notification search and state filter</note>
+      </notes>
+      <segment>
+        <source> Clear search and filter </source>
       </segment>
     </unit>
     <unit id="3313172740302558016">
@@ -15190,15 +15274,6 @@
         <source>View</source>
       </segment>
     </unit>
-    <unit id="2511778450060865122">
-      <notes>
-        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:188</note>
-        <note category="description">Shown when a followed place has no events selected</note>
-      </notes>
-      <segment>
-        <source>nothing selected</source>
-      </segment>
-    </unit>
     <unit id="2511878039894643291">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:719</note>
@@ -15228,7 +15303,7 @@
     </unit>
     <unit id="5572257597829131111">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:355</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:358</note>
         <note category="description">Title of the remove search provider confirmation</note>
       </notes>
       <segment>
@@ -15378,7 +15453,7 @@
     </unit>
     <unit id="5059726383052729167">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:184</note>
+        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:64</note>
         <note category="description">Notification subscription event</note>
       </notes>
       <segment>
@@ -15676,7 +15751,7 @@
     </unit>
     <unit id="3959473004188974816">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:385</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:386</note>
         <note category="description">Shown when removing an API key fails</note>
       </notes>
       <segment>
@@ -16093,7 +16168,7 @@
     </unit>
     <unit id="197242835473782757">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:262</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:265</note>
         <note category="description">Title of the dialog that connects web search</note>
       </notes>
       <segment>
@@ -16434,7 +16509,7 @@
     </unit>
     <unit id="4811445635785211905">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:222</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:528</note>
         <note category="description">Shown when a notification is set for every workspace</note>
       </notes>
       <segment>
@@ -16656,7 +16731,7 @@
     </unit>
     <unit id="7508570474100827037">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:126,130</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:127,131</note>
         <note category="description">Explains how stored keys behave</note>
       </notes>
       <segment>
@@ -16817,7 +16892,7 @@
     </unit>
     <unit id="5148150062211212405">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:176,180</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:177,181</note>
         <note category="description">Explains that saving a model needs the key again</note>
       </notes>
       <segment>
@@ -16895,7 +16970,7 @@
     </unit>
     <unit id="6406732480689038024">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:204,207</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:205,208</note>
         <note category="description">Button that removes a stored API key</note>
       </notes>
       <segment>
@@ -16983,6 +17058,15 @@
       </notes>
       <segment>
         <source> This roadmap contains more than 2,000 scheduled tasks. Narrow the project or date filters to see the complete result. </source>
+      </segment>
+    </unit>
+    <unit id="5244478317141032759">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:399</note>
+        <note category="description">How many events in a notification group match the filter</note>
+      </notes>
+      <segment>
+        <source><ph id="0" equiv="SHOWN" disp="shown"/> of <ph id="1" equiv="TOTAL" disp="total"/> shown</source>
       </segment>
     </unit>
     <unit id="5249135576117895248">
@@ -17297,7 +17381,7 @@
     </unit>
     <unit id="4368459498761840040">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:183,186</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:184,187</note>
         <note category="description">Explains who a workspace connection serves</note>
       </notes>
       <segment>
@@ -17714,6 +17798,15 @@
         <source> Select all </source>
       </segment>
     </unit>
+    <unit id="1918603297826248431">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:193,196</note>
+        <note category="description">Button that expands every notification group</note>
+      </notes>
+      <segment>
+        <source> Expand all </source>
+      </segment>
+    </unit>
     <unit id="1420721946741654809">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:150,153</note>
@@ -17744,7 +17837,7 @@
     </unit>
     <unit id="188527826541298850">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:218</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:524</note>
         <note category="description">Shown when a workspace notification follows the global choice</note>
       </notes>
       <segment>
@@ -18194,6 +18287,15 @@
         <source>Could not verify Identifier availability</source>
       </segment>
     </unit>
+    <unit id="4481221474810705643">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:155,158</note>
+        <note category="description">Placeholder in the followed places search box</note>
+      </notes>
+      <segment>
+        <source>Search the places you follow</source>
+      </segment>
+    </unit>
     <unit id="4481497787765929776">
       <notes>
         <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:82,84</note>
@@ -18502,6 +18604,15 @@
       </notes>
       <segment>
         <source>Try a different term.</source>
+      </segment>
+    </unit>
+    <unit id="1532753058248581257">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:400</note>
+        <note category="description">How many events in a notification group are turned on</note>
+      </notes>
+      <segment>
+        <source><ph id="0" equiv="ENABLED" disp="enabledCount"/> of <ph id="1" equiv="TOTAL" disp="total"/> on</source>
       </segment>
     </unit>
     <unit id="5397887234065885154">
@@ -18874,7 +18985,7 @@
     </unit>
     <unit id="2456694907046019567">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:61,62</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:115,116</note>
         <note category="description">Heading above the notification toggles</note>
       </notes>
       <segment>
@@ -18964,8 +19075,8 @@
     </unit>
     <unit id="5607669932062416162">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:154,157</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:288</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:155,158</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:289</note>
         <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:61,64</note>
         <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:163</note>
         <note category="description">Model option that defers to the server default</note>
@@ -19321,6 +19432,7 @@
     <unit id="8990769651805334695">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:90</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:78</note>
         <note category="description">Shown when the assistant is on</note>
       </notes>
       <segment>
@@ -19334,6 +19446,15 @@
       </notes>
       <segment>
         <source>No tasks match this query yet.</source>
+      </segment>
+    </unit>
+    <unit id="2810641013948921213">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:165,170</note>
+        <note category="description">Accessible label for the control that filters followed places by scope</note>
+      </notes>
+      <segment>
+        <source>Show places</source>
       </segment>
     </unit>
     <unit id="2819197521571556241">
@@ -19370,6 +19491,15 @@
       </notes>
       <segment>
         <source> Upload a file to see what it contains. </source>
+      </segment>
+    </unit>
+    <unit id="7099805567995662271">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:351</note>
+        <note category="description">Summary of notification events. ENABLED and TOTAL are counts</note>
+      </notes>
+      <segment>
+        <source><ph id="0" equiv="ENABLED" disp="enabled"/> of <ph id="1" equiv="TOTAL" disp="total"/> events on</source>
       </segment>
     </unit>
     <unit id="4564490338927533643">
@@ -19896,7 +20026,7 @@
     <unit id="2247746632525326951">
       <notes>
         <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:293</note>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:37</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:67</note>
         <note category="description">Archive destination that fills the current workspace</note>
       </notes>
       <segment>
@@ -19979,7 +20109,7 @@
     </unit>
     <unit id="7203070746919732368">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:361</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:362</note>
         <note category="description">Explains what removing an API key does</note>
       </notes>
       <segment>
@@ -20029,6 +20159,15 @@
       </notes>
       <segment>
         <source> Complete Sprint </source>
+      </segment>
+    </unit>
+    <unit id="7648635992567747657">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:275,277</note>
+        <note category="description">Empty state when no notification events match the search</note>
+      </notes>
+      <segment>
+        <source>No events match</source>
       </segment>
     </unit>
     <unit id="1310824757926803504">
@@ -20181,6 +20320,15 @@
       </notes>
       <segment>
         <source>estimate</source>
+      </segment>
+    </unit>
+    <unit id="7455114085219104367">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:404</note>
+        <note category="description">Button that turns off every event in a notification group</note>
+      </notes>
+      <segment>
+        <source>Mute all</source>
       </segment>
     </unit>
     <unit id="7462101298047770099">
@@ -20382,9 +20530,10 @@
     </unit>
     <unit id="8693603235657020323">
       <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:36</note>
         <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:125</note>
         <note category="location">src/app/features/storage/components/storage-filters.component.ts:136</note>
-        <note category="description">Backlog group heading for tasks in any other status</note>
+        <note category="description">Notification settings group for events without a group</note>
       </notes>
       <segment>
         <source>Other</source>
@@ -20573,7 +20722,7 @@
     </unit>
     <unit id="115639214090380471">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:206</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:209</note>
         <note category="description">Hint describing the Brave search provider</note>
       </notes>
       <segment>
@@ -20846,7 +20995,7 @@
     </unit>
     <unit id="2921674616272225672">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:48,52</note>
+        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:115,117</note>
         <note category="description">Explains what the followed places list contains</note>
       </notes>
       <segment>
@@ -21070,7 +21219,7 @@
     </unit>
     <unit id="8987098024875595306">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:116,118</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:149,151</note>
         <note category="description">Empty state for the notification preference list</note>
       </notes>
       <segment>
@@ -21179,7 +21328,7 @@
     </unit>
     <unit id="4422463525624222082">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:72,77</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:126,131</note>
         <note category="description">Accessible label for the control that picks the preference scope</note>
       </notes>
       <segment>
@@ -21516,7 +21665,7 @@
     </unit>
     <unit id="2188854212912601730">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:63,66</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:117,120</note>
         <note category="description">Explains which scope the toggles below are editing</note>
       </notes>
       <segment>
@@ -21900,7 +22049,7 @@
     </unit>
     <unit id="1819085214881190211">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:259</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:262</note>
         <note category="description">Title of the dialog that manages web search</note>
       </notes>
       <segment>
@@ -21954,7 +22103,7 @@
     </unit>
     <unit id="1238372923050281145">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:336</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:339</note>
         <note category="description">Shown after the search provider is stored</note>
       </notes>
       <segment>
@@ -22009,7 +22158,7 @@
     </unit>
     <unit id="2601654600106221602">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:110,111</note>
+        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:143,144</note>
         <note category="description">Empty state for the followed places list</note>
       </notes>
       <segment>
@@ -22037,6 +22186,7 @@
     <unit id="3500458863157551898">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:91</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:82</note>
         <note category="description">Shown when the assistant is off</note>
       </notes>
       <segment>
@@ -22114,6 +22264,15 @@
       </notes>
       <segment>
         <source> Create workspace </source>
+      </segment>
+    </unit>
+    <unit id="6437922782751429973">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:280,283</note>
+        <note category="description">Suggests how to find notification events after a search found nothing</note>
+      </notes>
+      <segment>
+        <source>Try a shorter word, or clear the filter.</source>
       </segment>
     </unit>
     <unit id="6439365426343089851">
@@ -22754,8 +22913,8 @@
     <unit id="4814285799071780083">
       <notes>
         <note category="location">src/app/core/services/task-commands.service.ts:217</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:362</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:357</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:363</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:360</note>
         <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:82,85</note>
         <note category="location">src/app/static/components/form-select-tags/form-select-tags.component.ts:75,78</note>
         <note category="location">src/app/static/components/image-upload/image-upload.component.ts:90,93</note>
@@ -22841,6 +23000,15 @@
       </notes>
       <segment>
         <source>Search Icon</source>
+      </segment>
+    </unit>
+    <unit id="9191370172271683407">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:219,221</note>
+        <note category="description">Empty state when no followed places match the search</note>
+      </notes>
+      <segment>
+        <source>Nothing here matches that</source>
       </segment>
     </unit>
     <unit id="4870297096326513340">
@@ -22992,7 +23160,7 @@
     </unit>
     <unit id="4442108733606169287">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:277</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:278</note>
         <note category="description">Button that stores an API key</note>
       </notes>
       <segment>

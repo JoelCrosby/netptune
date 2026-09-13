@@ -205,18 +205,93 @@ public sealed class PreferenceDefinitionRegistry : IPreferenceDefinitionRegistry
         ..NotificationDefinitions(),
     ];
 
+    private sealed record NotificationSection(PreferenceSection Section, IReadOnlyList<ActivityType> ActivityTypes);
+
+    private static readonly IReadOnlyList<NotificationSection> NotificationSections =
+    [
+        new(
+            new() { Key = "tasks", Label = "Task activity" },
+            [
+                ActivityType.Create,
+                ActivityType.Modify,
+                ActivityType.Delete,
+                ActivityType.Restore,
+                ActivityType.Move,
+                ActivityType.Reorder,
+                ActivityType.ModifyStatus,
+                ActivityType.ModifyPriority,
+                ActivityType.ModifyEstimate,
+                ActivityType.ModifyDueDate,
+                ActivityType.ModifyStartDate,
+                ActivityType.ModifyName,
+                ActivityType.ModifyDescription,
+            ]),
+        new(
+            new() { Key = "people", Label = "People & access" },
+            [
+                ActivityType.Assign,
+                ActivityType.Unassign,
+                ActivityType.Mention,
+                ActivityType.Invite,
+                ActivityType.Remove,
+                ActivityType.RoleChanged,
+                ActivityType.PermissionChanged,
+            ]),
+        new(
+            new() { Key = "comments", Label = "Comments" },
+            [
+                ActivityType.AddComment,
+                ActivityType.ModifyComment,
+                ActivityType.RemoveComment,
+            ]),
+        new(
+            new() { Key = "attachments", Label = "Tags, links & files" },
+            [
+                ActivityType.AddTag,
+                ActivityType.RemoveTag,
+                ActivityType.AddRelation,
+                ActivityType.RemoveRelation,
+                ActivityType.AddFile,
+                ActivityType.RemoveFile,
+            ]),
+        new(
+            new() { Key = "workspace", Label = "Workspace & data" },
+            [
+                ActivityType.WorkspaceSettingsChanged,
+                ActivityType.ImportCompleted,
+                ActivityType.ImportFailed,
+                ActivityType.ExportCompleted,
+                ActivityType.ExportFailed,
+                ActivityType.AutomationNotification,
+            ]),
+    ];
+
+    private static readonly PreferenceSection OtherNotificationSection = new() { Key = "other", Label = "Other" };
+
     private static IEnumerable<PreferenceDefinition> NotificationDefinitions()
     {
-        var activityTypes = Enum.GetValues<ActivityType>()
+        var notifiableActivityTypes = Enum.GetValues<ActivityType>()
             .Where(activityType => activityType is not ActivityType.ExportRequested
                 and not ActivityType.LoginSuccess
-                and not ActivityType.LoginFailed);
+                and not ActivityType.LoginFailed)
+            .ToList();
 
-        return activityTypes.Select((activityType, index) => new PreferenceDefinition
+        var sectionedActivityTypes = NotificationSections
+            .SelectMany(section => section.ActivityTypes.Select(activityType => (section.Section, activityType)))
+            .ToList();
+
+        var unsectionedActivityTypes = notifiableActivityTypes
+            .Except(sectionedActivityTypes.Select(entry => entry.activityType))
+            .Select(activityType => (Section: OtherNotificationSection, activityType));
+
+        var orderedActivityTypes = sectionedActivityTypes.Concat(unsectionedActivityTypes);
+
+        return orderedActivityTypes.Select((entry, index) => new PreferenceDefinition
         {
-            Key = PreferenceKeys.NotificationEvent(activityType),
+            Key = PreferenceKeys.NotificationEvent(entry.activityType),
             GroupKey = "notifications",
-            Label = NotificationLabel(activityType),
+            Section = entry.Section,
+            Label = NotificationLabel(entry.activityType),
             ControlType = "toggle",
             ValueType = "boolean",
             DefaultValue = JsonSerializer.SerializeToElement(true),

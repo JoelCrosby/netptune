@@ -16,11 +16,15 @@ import { Component, input, model, output } from '@angular/core';
         (change)="onChanged($event)" />
 
       <span
-        class="peer-focus-visible:ring-primary relative flex h-5 w-9 shrink-0 items-center rounded-full transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2 peer-disabled:opacity-50"
-        [class]="checked() ? 'bg-primary' : 'bg-foreground/25'">
+        class="peer-focus-visible:ring-primary relative flex h-5.25 w-9.5 shrink-0 items-center rounded-full p-0.5 transition-colors duration-150 peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2 peer-disabled:opacity-50"
+        [class]="checked() ? 'bg-primary' : 'bg-foreground/20'">
         <span
-          class="h-4 w-4 rounded-full bg-white shadow-sm transition-transform"
-          [class]="checked() ? 'translate-x-4.5' : 'translate-x-0.5'"></span>
+          class="block h-4.25 w-4.25 rounded-full transition-transform duration-150"
+          [class]="
+            checked()
+              ? 'translate-x-4.25 bg-white dark:bg-black/80'
+              : 'translate-x-0 bg-white dark:bg-white/85'
+          "></span>
       </span>
     </label>
   `,

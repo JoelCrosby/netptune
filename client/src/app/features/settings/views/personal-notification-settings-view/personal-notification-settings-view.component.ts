@@ -19,10 +19,18 @@ const NOTIFICATION_GROUP = 'notifications';
     <app-page-container [centerPage]="true" [marginBottom]="true">
       <app-page-header
         i18n-title="Page title for personal notification settings"
-        title="Notifications" />
+        title="Notifications">
+        @if (preferences().length) {
+          <p pageHeaderActions class="text-muted text-sm">
+            {{ preferencesPanel.summary() }}
+          </p>
+        }
+      </app-page-header>
 
       <div class="flex flex-col gap-6">
-        <app-notification-preferences [values]="preferences()" />
+        <app-notification-preferences
+          #preferencesPanel
+          [values]="preferences()" />
 
         <app-notification-subscriptions />
       </div>

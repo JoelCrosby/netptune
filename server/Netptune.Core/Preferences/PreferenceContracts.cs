@@ -38,6 +38,13 @@ public sealed record PreferenceGroupDefinition
     public int Order { get; init; }
 }
 
+public sealed record PreferenceSection
+{
+    public required string Key { get; init; }
+
+    public required string Label { get; init; }
+}
+
 public sealed record PreferenceOption
 {
     public required string Value { get; init; }
@@ -50,6 +57,8 @@ public sealed record PreferenceDefinition
     public required string Key { get; init; }
 
     public required string GroupKey { get; init; }
+
+    public PreferenceSection? Section { get; init; }
 
     public required string Label { get; init; }
 
@@ -65,8 +74,6 @@ public sealed record PreferenceDefinition
 
     public int Order { get; init; }
 
-    // Internal preferences are persisted and resolved like any other, but are
-    // driven by a dedicated UI (not the generic settings screen).
     public bool Internal { get; init; }
 }
 
