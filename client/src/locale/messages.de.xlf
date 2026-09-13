@@ -895,7 +895,7 @@
     </unit>
     <unit id="8820848217522438872">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/service-account-permission-summary.component.ts:40,44</note>
+        <note category="location">src/app/features/settings/components/service-accounts/service-account-permission-summary.component.ts:45,49</note>
         <note category="description">Headline on a service account that holds every workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1757,9 +1757,9 @@
         <note category="location">src/app/features/settings/components/service-accounts/edit-api-credential-scopes-dialog.component.ts:102,105</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:163,166</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:269</note>
+        <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:151</note>
+        <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:218</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:495</note>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:630</note>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:713</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:469</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:371</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:86,89</note>
@@ -1989,9 +1989,9 @@
         <note category="location">src/app/features/project-tasks/components/task-list/task-list-selection-actions.component.ts:32,34</note>
         <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:175</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:249</note>
+        <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:150</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:494</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:249</note>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:629</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:468</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:231</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:370</note>
@@ -2943,12 +2943,12 @@
         <target>Zeilen</target>
       </segment>
     </unit>
-    <unit id="4242679617595226090">
+    <unit id="5257439678093354442">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:298,301</note>
+        <note category="location">src/app/features/settings/components/service-accounts/api-credential-row.component.ts:96,98</note>
       </notes>
       <segment state="initial">
-        <source>{VAR_PLURAL, plural, =1 {Missing 1 account permission} other {Missing <ph id="0" equiv="INTERPOLATION"/> account permissions }}</source>
+        <source>{VAR_PLURAL, plural, =1 {Missing 1 account permission} other {Missing <ph id="0" equiv="INTERPOLATION"/> account permissions}}</source>
         <target>{VAR_PLURAL, plural, =1 {1 Kontoberechtigung fehlt} other {<ph id="0" equiv="INTERPOLATION"/> Kontoberechtigungen fehlen }}</target>
       </segment>
     </unit>
@@ -4202,9 +4202,9 @@
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:112,117</note>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:120,125</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:83,94</note>
+        <note category="location">src/app/features/settings/components/service-accounts/api-credential-row.component.ts:96,100</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-api-credential-scopes-dialog.component.ts:66,74</note>
-        <note category="location">src/app/features/settings/components/service-accounts/service-account-permission-summary.component.ts:138,144</note>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:298,305</note>
+        <note category="location">src/app/features/settings/components/service-accounts/service-account-permission-summary.component.ts:145,151</note>
         <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:25,33</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:71,77</note>
         <note category="location">src/app/features/workspaces/components/workspace-list-item.component.ts:156,157</note>
@@ -5102,7 +5102,7 @@
     </unit>
     <unit id="8602659137274865199">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:698</note>
+        <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:208</note>
         <note category="description">Error after failing to save a credential&apos;s scopes</note>
       </notes>
       <segment state="initial">
@@ -5841,7 +5841,7 @@
     </unit>
     <unit id="4254800522768794113">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:779</note>
+        <note category="location">src/app/features/settings/components/service-accounts/api-credential-row.component.ts:187</note>
         <note category="description">Accessible label for the button that edits a credential&apos;s scopes. NAME is the credential name</note>
       </notes>
       <segment state="initial">
@@ -7752,7 +7752,7 @@
     </unit>
     <unit id="911035755223389510">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/service-account-permission-summary.component.ts:60,74</note>
+        <note category="location">src/app/features/settings/components/service-accounts/service-account-permission-summary.component.ts:65,79</note>
         <note category="description">Summarises the size of a service account&apos;s grant. GRANTED is how many permissions it holds, TOTAL how many exist, and the plural covers how many permission areas they fall into</note>
       </notes>
       <segment state="translated">
@@ -9827,7 +9827,7 @@
     </unit>
     <unit id="493120935326007946">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/service-account-permission-summary.component.ts:103,111</note>
+        <note category="location">src/app/features/settings/components/service-accounts/service-account-permission-summary.component.ts:107,115</note>
         <note category="description">How much of one permission area a service account holds. Keep the leading separator. GRANTED and TOTAL are counts</note>
       </notes>
       <segment state="translated">
@@ -10873,7 +10873,7 @@
     </unit>
     <unit id="6542150205027637766">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:97,99</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:38,40</note>
         <note category="description">Button that opens the create-service-account dialog</note>
       </notes>
       <segment state="translated">
@@ -14301,7 +14301,7 @@
     </unit>
     <unit id="4645977302210183540">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/service-account-permission-summary.component.ts:49,54</note>
+        <note category="location">src/app/features/settings/components/service-accounts/service-account-permission-summary.component.ts:54,59</note>
         <note category="description">Headline on a service account that holds only some workspace permissions</note>
       </notes>
       <segment state="translated">
@@ -15143,7 +15143,7 @@
     </unit>
     <unit id="986372123393633192">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/service-account-permission-summary.component.ts:164,169</note>
+        <note category="location">src/app/features/settings/components/service-accounts/service-account-permission-summary.component.ts:171,176</note>
         <note category="description">Button that reveals the permission areas a service account cannot touch</note>
       </notes>
       <segment state="translated">
@@ -15174,7 +15174,7 @@
     </unit>
     <unit id="1779099943760978227">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/service-account-permission-summary.component.ts:156,160</note>
+        <note category="location">src/app/features/settings/components/service-accounts/service-account-permission-summary.component.ts:163,167</note>
         <note category="description">Button that hides the permission areas a service account cannot touch</note>
       </notes>
       <segment state="translated">
@@ -19417,7 +19417,7 @@
     </unit>
     <unit id="6131179082252661684">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:349,351</note>
+        <note category="location">src/app/features/settings/components/service-accounts/api-credential-row.component.ts:136,138</note>
         <note category="description">Tooltip on the button that edits a credential&apos;s scopes</note>
       </notes>
       <segment state="initial">
@@ -19570,11 +19570,11 @@
     </unit>
     <unit id="8543162326739201845">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:314,322</note>
+        <note category="location">src/app/features/settings/components/service-accounts/api-credential-row.component.ts:108,116</note>
         <note category="description">How many permissions a credential&apos;s scopes cover. Keep the leading separator. SCOPES and TOTAL are counts</note>
       </notes>
       <segment state="initial">
-        <source> · Scoped to <ph id="0" equiv="SCOPES" disp="{{ credential.scopes.length // i18n(ph=&quot;SCOPES&quot;) }}"/> of <ph id="1" equiv="TOTAL" disp="{{ account.permissions.length // i18n(ph=&quot;TOTAL&quot;) }}"/> </source>
+        <source> · Scoped to <ph id="0" equiv="SCOPES" disp="{{ credential().scopes.length // i18n(ph=&quot;SCOPES&quot;) }}"/> of <ph id="1" equiv="TOTAL" disp="{{ account().permissions.length // i18n(ph=&quot;TOTAL&quot;) }}"/> </source>
         <target> · Beschränkt auf <ph id="0" equiv="SCOPES" disp="{{ credential.scopes.length // i18n(ph=&quot;SCOPES&quot;) }}"/> von <ph id="1" equiv="TOTAL" disp="{{ account.permissions.length // i18n(ph=&quot;TOTAL&quot;) }}"/> </target>
       </segment>
     </unit>
@@ -19916,7 +19916,7 @@
     </unit>
     <unit id="3233982031377391824">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/service-account-permission-summary.component.ts:138,141</note>
+        <note category="location">src/app/features/settings/components/service-accounts/service-account-permission-summary.component.ts:145,148</note>
       </notes>
       <segment state="translated">
         <source>{VAR_PLURAL, plural, =0 {Every area in the workspace.} =1 {No access to 1 other area.} other {No access to <ph id="0" equiv="INTERPOLATION"/> other areas.}}</source>
@@ -20726,8 +20726,8 @@
     </unit>
     <unit id="517565553858035199">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:95,96</note>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:103,108</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:36,37</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:44,49</note>
         <note category="description">Page title for workspace service accounts</note>
       </notes>
       <segment state="translated">
@@ -20737,7 +20737,7 @@
     </unit>
     <unit id="1930837065550961764">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:110,114</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:51,55</note>
         <note category="description">Explains what service accounts are for</note>
       </notes>
       <segment state="translated">
@@ -20778,7 +20778,7 @@
     </unit>
     <unit id="4022991066353475675">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:414,416</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:91,93</note>
         <note category="description">Button that opens the create-service-account dialog</note>
       </notes>
       <segment state="translated">
@@ -20808,7 +20808,7 @@
     </unit>
     <unit id="7357824854550266974">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:118,120</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:59,61</note>
         <note category="description">Shown while service accounts are loading</note>
       </notes>
       <segment state="translated">
@@ -20838,7 +20838,7 @@
     </unit>
     <unit id="5949868576384453504">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:123,125</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:64,67</note>
         <note category="description">Shown when the service account list fails to load</note>
       </notes>
       <segment state="translated">
@@ -20858,7 +20858,7 @@
     </unit>
     <unit id="6197665339164385071">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:143,144</note>
+        <note category="location">src/app/features/settings/components/service-accounts/service-account-card.component.ts:52,54</note>
         <note category="description">Badge marking a disabled service account</note>
       </notes>
       <segment state="translated">
@@ -20887,8 +20887,9 @@
     </unit>
     <unit id="2453142225616430507">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:149,150</note>
-        <note category="description">Badge marking an enabled service account</note>
+        <note category="location">src/app/features/settings/components/service-accounts/api-credential-row.component.ts:50,52</note>
+        <note category="location">src/app/features/settings/components/service-accounts/service-account-card.component.ts:58,60</note>
+        <note category="description">Badge on a credential that is currently usable</note>
       </notes>
       <segment state="translated">
         <source> Active </source>
@@ -20917,7 +20918,7 @@
     </unit>
     <unit id="8673416323370089865">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:175,178</note>
+        <note category="location">src/app/features/settings/components/service-accounts/service-account-card.component.ts:80,83</note>
         <note category="description">Button that issues a new credential for a service account</note>
       </notes>
       <segment state="translated">
@@ -20937,7 +20938,7 @@
     </unit>
     <unit id="1967521248845505958">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:187,188</note>
+        <note category="location">src/app/features/settings/components/service-accounts/service-account-card.component.ts:92,94</note>
         <note category="description">Tooltip on the button that edits a service account</note>
       </notes>
       <segment state="translated">
@@ -20977,7 +20978,7 @@
     </unit>
     <unit id="7279697022989713952">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:203,204</note>
+        <note category="location">src/app/features/settings/components/service-accounts/service-account-card.component.ts:108,110</note>
         <note category="description">Tooltip on the button that deletes a service account</note>
       </notes>
       <segment state="translated">
@@ -20987,7 +20988,7 @@
     </unit>
     <unit id="5606751605449364227">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/service-account-permission-summary.component.ts:80,83</note>
+        <note category="location">src/app/features/settings/components/service-accounts/service-account-permission-summary.component.ts:85,88</note>
         <note category="description">Shown when a service account has no permissions</note>
       </notes>
       <segment state="translated">
@@ -21032,7 +21033,7 @@
     </unit>
     <unit id="328621173789640026">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:225,227</note>
+        <note category="location">src/app/features/settings/components/service-accounts/service-account-card.component.ts:129,133</note>
         <note category="description">Heading above a service account&apos;s credentials</note>
       </notes>
       <segment state="translated">
@@ -21042,27 +21043,27 @@
     </unit>
     <unit id="1093298112453582456">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:253,257</note>
+        <note category="location">src/app/features/settings/components/service-accounts/api-credential-row.component.ts:59,63</note>
         <note category="description">Credential expiry. DATE is a formatted date and time</note>
       </notes>
-      <segment state="translated">
-        <source> Expires <ph id="0" equiv="DATE" disp="{{ formatDate(credential.expiresAt) // i18n(ph=&quot;DATE&quot;) }}"/> </source>
+      <segment state="initial">
+        <source> Expires <ph id="0" equiv="DATE" disp="{{ formatDate(credential().expiresAt) // i18n(ph=&quot;DATE&quot;) }}"/> </source>
         <target>Läuft ab am <ph id="0" equiv="DATE" disp="{{ formatDate(credential.expiresAt) // i18n(ph=&quot;DATE&quot;) }}"/></target>
       </segment>
     </unit>
     <unit id="500706082319652388">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:265,269</note>
+        <note category="location">src/app/features/settings/components/service-accounts/api-credential-row.component.ts:70,74</note>
         <note category="description">When a credential was last used, shown after the expiry. Keep the leading separator. DATE is a formatted date and time</note>
       </notes>
-      <segment state="translated">
-        <source> · Last used <ph id="0" equiv="DATE" disp="{{ formatDate(credential.lastUsedAt) // i18n(ph=&quot;DATE&quot;) }}"/> </source>
+      <segment state="initial">
+        <source> · Last used <ph id="0" equiv="DATE" disp="{{ formatDate(lastUsedAt) // i18n(ph=&quot;DATE&quot;) }}"/> </source>
         <target>· Zuletzt verwendet <ph id="0" equiv="DATE" disp="{{ formatDate(credential.lastUsedAt) // i18n(ph=&quot;DATE&quot;) }}"/></target>
       </segment>
     </unit>
     <unit id="1017176843140426408">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:276,279</note>
+        <note category="location">src/app/features/settings/components/service-accounts/api-credential-row.component.ts:81,87</note>
         <note category="description">Shown after the expiry when a credential has never been used. Keep the leading separator</note>
       </notes>
       <segment state="translated">
@@ -21072,7 +21073,7 @@
     </unit>
     <unit id="4100161296614821905">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:369,371</note>
+        <note category="location">src/app/features/settings/components/service-accounts/api-credential-row.component.ts:148,150</note>
         <note category="description">Tooltip on the button that revokes a credential</note>
       </notes>
       <segment state="translated">
@@ -21082,7 +21083,7 @@
     </unit>
     <unit id="3805624567600550690">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:385,386</note>
+        <note category="location">src/app/features/settings/components/service-accounts/service-account-card.component.ts:144,147</note>
         <note category="description">Shown when a service account has no credentials</note>
       </notes>
       <segment state="translated">
@@ -21092,7 +21093,7 @@
     </unit>
     <unit id="4727914465322020260">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:397,399</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:74,76</note>
         <note category="description">Heading of the empty service account list</note>
       </notes>
       <segment state="translated">
@@ -21102,7 +21103,7 @@
     </unit>
     <unit id="5969171311226450326">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:401,402</note>
+        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:78,79</note>
         <note category="description">Explains what to do on the empty service account list</note>
       </notes>
       <segment state="translated">
@@ -21112,7 +21113,7 @@
     </unit>
     <unit id="5123157349160155784">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:500</note>
+        <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:140</note>
         <note category="description">Confirmation after updating a service account</note>
       </notes>
       <segment state="translated">
@@ -21122,7 +21123,7 @@
     </unit>
     <unit id="2461866678085650489">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:506</note>
+        <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:141</note>
         <note category="description">Error after failing to update a service account</note>
       </notes>
       <segment state="translated">
@@ -21193,7 +21194,7 @@
     </unit>
     <unit id="294017637034538270">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:515</note>
+        <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:90</note>
         <note category="description">Title of the create-service-account dialog</note>
       </notes>
       <segment state="translated">
@@ -21253,7 +21254,7 @@
     </unit>
     <unit id="7889477161949511803">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:583</note>
+        <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:123</note>
         <note category="description">Error after failing to create a service account</note>
       </notes>
       <segment state="translated">
@@ -21263,7 +21264,7 @@
     </unit>
     <unit id="5367814144868464481">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:612</note>
+        <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:181</note>
         <note category="description">Confirmation after creating an API credential</note>
       </notes>
       <segment state="translated">
@@ -21273,7 +21274,7 @@
     </unit>
     <unit id="2324466341727176555">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:619</note>
+        <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:183</note>
         <note category="description">Error after failing to create a credential</note>
       </notes>
       <segment state="translated">
@@ -21283,7 +21284,7 @@
     </unit>
     <unit id="6987126257530896673">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:627</note>
+        <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:148</note>
         <note category="description">Title of the confirmation dialog for deleting a service account</note>
       </notes>
       <segment state="translated">
@@ -21303,7 +21304,7 @@
     </unit>
     <unit id="427261400160913038">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:628</note>
+        <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:149</note>
         <note category="description">Confirmation body for deleting a service account. NAME is the account name</note>
       </notes>
       <segment state="translated">
@@ -21334,7 +21335,7 @@
     </unit>
     <unit id="8601029512667360957">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:646</note>
+        <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:159</note>
         <note category="description">Confirmation after deleting a service account</note>
       </notes>
       <segment state="translated">
@@ -21344,7 +21345,7 @@
     </unit>
     <unit id="3516071416582225023">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:652</note>
+        <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:160</note>
         <note category="description">Error after failing to delete a service account</note>
       </notes>
       <segment state="translated">
@@ -21354,7 +21355,7 @@
     </unit>
     <unit id="2821548213457034230">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:710</note>
+        <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:215</note>
         <note category="description">Title of the confirmation dialog for revoking a credential</note>
       </notes>
       <segment state="translated">
@@ -21374,7 +21375,7 @@
     </unit>
     <unit id="3180558417601739827">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:711</note>
+        <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:216</note>
         <note category="description">Confirmation body for revoking a credential. NAME is the credential name</note>
       </notes>
       <segment state="translated">
@@ -21384,7 +21385,7 @@
     </unit>
     <unit id="135077277733987408">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:712</note>
+        <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:217</note>
         <note category="description">Confirms revoking a credential</note>
       </notes>
       <segment state="translated">
@@ -21414,7 +21415,7 @@
     </unit>
     <unit id="2819197521571556241">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:729</note>
+        <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:226</note>
         <note category="description">Confirmation after revoking a credential</note>
       </notes>
       <segment state="translated">
@@ -21434,7 +21435,7 @@
     </unit>
     <unit id="3779512077059821091">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:735</note>
+        <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:227</note>
         <note category="description">Error after failing to revoke a credential</note>
       </notes>
       <segment state="translated">
@@ -21452,20 +21453,19 @@
         <target> Laden Sie eine Datei hoch, um ihren Inhalt zu sehen. </target>
       </segment>
     </unit>
-    <unit id="7096440230985171865">
+    <unit id="4564490338927533643">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:752</note>
+        <note category="location">src/app/features/settings/components/service-accounts/api-credential-row.component.ts:38,40</note>
         <note category="description">Badge on a credential that has been revoked</note>
       </notes>
       <segment state="translated">
-        <source>Revoked</source>
-        <target>Widerrufen</target>
+        <source> Revoked </source>
+        <target> Widerrufen </target>
       </segment>
     </unit>
     <unit id="464749780222721589">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:638</note>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:756</note>
         <note category="description">An export whose file has been removed</note>
       </notes>
       <segment state="translated">
@@ -21475,9 +21475,8 @@
     </unit>
     <unit id="8204176479746810612">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:759</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:156</note>
-        <note category="description">Badge on a credential that is currently usable</note>
+        <note category="description">Filter showing sprints currently running</note>
       </notes>
       <segment state="translated">
         <source>Active</source>
@@ -21539,7 +21538,7 @@
     </unit>
     <unit id="851501460099408919">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:771</note>
+        <note category="location">src/app/features/settings/components/service-accounts/service-account-card.component.ts:162</note>
         <note category="description">Accessible label for the button that edits a service account. NAME is the account name</note>
       </notes>
       <segment state="translated">
@@ -21549,7 +21548,7 @@
     </unit>
     <unit id="7335218886954930171">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:775</note>
+        <note category="location">src/app/features/settings/components/service-accounts/service-account-card.component.ts:168</note>
         <note category="description">Accessible label for the button that deletes a service account. NAME is the account name</note>
       </notes>
       <segment state="translated">
@@ -21559,7 +21558,7 @@
     </unit>
     <unit id="3866373356324045807">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:783</note>
+        <note category="location">src/app/features/settings/components/service-accounts/api-credential-row.component.ts:193</note>
         <note category="description">Accessible label for the button that revokes a credential. NAME is the credential name</note>
       </notes>
       <segment state="translated">
@@ -22266,7 +22265,7 @@
     </unit>
     <unit id="8354941244589100972">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:692</note>
+        <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:207</note>
         <note category="description">Confirmation after saving a credential&apos;s scopes</note>
       </notes>
       <segment state="initial">
@@ -22352,6 +22351,16 @@
       <segment state="initial">
         <source>estimate</source>
         <target>Schätzung</target>
+      </segment>
+    </unit>
+    <unit id="7462101298047770099">
+      <notes>
+        <note category="location">src/app/features/settings/components/service-accounts/api-credential-row.component.ts:44,47</note>
+        <note category="description">Badge on a credential that has passed its expiry</note>
+      </notes>
+      <segment state="initial">
+        <source> Expired </source>
+        <target> Abgelaufen </target>
       </segment>
     </unit>
     <unit id="7462301153729425254">
@@ -23248,7 +23257,7 @@
     </unit>
     <unit id="2282610215329238795">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/service-account-permission-summary.component.ts:68,70</note>
+        <note category="location">src/app/features/settings/components/service-accounts/service-account-permission-summary.component.ts:73,75</note>
       </notes>
       <segment state="translated">
         <source>{VAR_PLURAL, plural, =1 {1 area} other {<ph id="0" equiv="INTERPOLATION"/> areas}}</source>
@@ -25568,7 +25577,7 @@
     </unit>
     <unit id="5463605367129349064">
       <notes>
-        <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:330,333</note>
+        <note category="location">src/app/features/settings/components/service-accounts/api-credential-row.component.ts:124,132</note>
         <note category="description">Shown on a credential whose scopes cover every permission of its service account</note>
       </notes>
       <segment state="initial">

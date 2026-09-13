@@ -16,10 +16,6 @@ import { unwrapClientResponse } from '@core/util/rxjs-operators';
 export class ServiceAccountsService {
   private readonly http = inject(HttpClient);
 
-  getAll() {
-    return this.http.get<ServiceAccount[]>('api/service-accounts');
-  }
-
   create(request: CreateServiceAccountRequest) {
     return this.http
       .post<ClientResponse<ServiceAccount>>('api/service-accounts', request)

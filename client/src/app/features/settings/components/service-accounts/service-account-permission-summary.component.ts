@@ -1,12 +1,14 @@
 import { Component, computed, input, signal } from '@angular/core';
 import { Permission } from '@core/auth/permissions';
 import { LucideCheck, LucideShieldCheck, LucideX } from '@lucide/angular';
+import { BadgeComponent } from '@static/components/badge/badge.component';
 import { InlineButtonComponent } from '@static/components/button/inline-button.component';
+import { CalloutComponent } from '@static/components/callout/callout.component';
+import { SectionLabelDirective } from '@static/directives/section-label.directive';
 import { PermissionAreaChipComponent } from './permission-area-chip.component';
 import {
   PermissionAreaLevel,
   PermissionAreaSummary,
-  PermissionGrant,
   permissionGroups,
 } from './service-account-permissions';
 
@@ -17,11 +19,14 @@ const totalPermissionCount = permissionGroups.reduce((total, group) => {
 @Component({
   selector: 'app-service-account-permission-summary',
   imports: [
+    BadgeComponent,
+    CalloutComponent,
     InlineButtonComponent,
     LucideCheck,
     LucideShieldCheck,
     LucideX,
     PermissionAreaChipComponent,
+    SectionLabelDirective,
   ],
   template: `
     <div class="flex flex-col gap-3">
@@ -90,42 +95,44 @@ const totalPermissionCount = permissionGroups.reduce((total, group) => {
         </div>
 
         @if (expandedArea(); as area) {
-          <div
-            class="border-primary/30 bg-primary/6 flex flex-col gap-2 rounded-md border px-3.5 py-3">
-            <p
-              class="text-foreground/76 text-[11px] font-semibold tracking-[0.08em] uppercase">
-              <span>{{ area.label }}</span>
-              <span
-                i18n="
-                  How much of one permission area a service account holds. Keep
-                  the leading separator. GRANTED and TOTAL are counts
-                ">
-                —
-                {{
-                  area.granted // i18n(ph="GRANTED")
-                }}
-                of
-                {{
-                  area.total // i18n(ph="TOTAL")
-                }}
-                granted
-              </span>
-            </p>
-            <div class="flex flex-wrap gap-1.5">
-              @for (permission of area.permissions; track permission.key) {
+          <app-callout color="primary">
+            <div class="flex flex-col gap-2">
+              <p appSectionLabel>
+                <span>{{ area.label }}</span>
                 <span
-                  class="inline-flex items-center gap-1.5 rounded px-2 py-0.5 text-xs"
-                  [class]="permissionClass(permission)">
-                  @if (permission.granted) {
-                    <svg lucideCheck class="h-3 w-3 shrink-0"></svg>
-                  } @else {
-                    <svg lucideX class="h-3 w-3 shrink-0"></svg>
-                  }
-                  {{ permission.label }}
+                  i18n="
+                    How much of one permission area a service account holds.
+                    Keep the leading separator. GRANTED and TOTAL are counts
+                  ">
+                  —
+                  {{
+                    area.granted // i18n(ph="GRANTED")
+                  }}
+                  of
+                  {{
+                    area.total // i18n(ph="TOTAL")
+                  }}
+                  granted
                 </span>
-              }
+              </p>
+              <div class="flex flex-wrap gap-1.5">
+                @for (permission of area.permissions; track permission.key) {
+                  @if (permission.granted) {
+                    <app-badge shape="rounded" class="font-normal">
+                      <svg lucideCheck class="h-3 w-3 shrink-0"></svg>
+                      {{ permission.label }}
+                    </app-badge>
+                  } @else {
+                    <span
+                      class="text-foreground/52 inline-flex items-center gap-1 px-2 py-0.5 text-xs">
+                      <svg lucideX class="h-3 w-3 shrink-0"></svg>
+                      {{ permission.label }}
+                    </span>
+                  }
+                }
+              </div>
             </div>
-          </div>
+          </app-callout>
         }
 
         <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
@@ -249,12 +256,6 @@ export class ServiceAccountPermissionSummaryComponent {
 
   toggleEmptyAreas() {
     this.revealEmptyAreas.update((reveal) => !reveal);
-  }
-
-  protected permissionClass(permission: PermissionGrant): string {
-    return permission.granted
-      ? 'bg-foreground/9 text-foreground'
-      : 'text-foreground/52';
   }
 }
 
