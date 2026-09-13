@@ -33,7 +33,7 @@ interface BoardStat {
           <app-icon-tile [icon]="boardIcon" [class]="tileClass()" />
         }
 
-        <h3 class="font-overpass min-w-0 truncate text-base font-semibold">
+        <h3 class="min-w-0 truncate text-base">
           {{ board().name }}
         </h3>
       </div>
