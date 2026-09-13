@@ -13,6 +13,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { LucideCheck, LucideChevronDown } from '@lucide/angular';
+import { ListboxKeyboard, listboxOptions } from '../listbox-keyboard';
 
 export interface InlineSelectOption {
   value: string;
@@ -39,7 +40,7 @@ let nextPanelId = 0;
       [attr.aria-activedescendant]="activeOptionId()"
       aria-haspopup="listbox"
       (click)="toggle()"
-      (keydown)="onTriggerKeydown($event)">
+      (keydown)="keyboard.handleKeydown($event)">
       <span class="truncate" [class.text-muted]="!selectedLabel()">
         {{ selectedLabel() || placeholder() }}
       </span>
@@ -62,9 +63,9 @@ let nextPanelId = 0;
             role="option"
             [id]="panelId + '-' + index"
             class="flex w-full cursor-pointer items-center justify-between gap-2 rounded-sm px-2 py-1.5 text-left text-sm transition-colors"
-            [class.bg-foreground/10]="index === activeIndex()"
+            [class.bg-foreground/10]="index === keyboard.activeIndex()"
             [attr.aria-selected]="option.value === value()"
-            (mouseenter)="activeIndex.set(index)"
+            (mouseenter)="keyboard.setActiveIndex(index)"
             (click)="select(option.value)">
             <span class="truncate">{{ option.label }}</span>
 
@@ -90,11 +91,24 @@ export class InlineSelectComponent implements OnDestroy {
 
   protected readonly panelId = `inline-select-${nextPanelId++}`;
   protected readonly isOpen = signal(false);
-  protected readonly activeIndex = signal(0);
   protected readonly panelWidth = signal(0);
 
+  protected readonly keyboard = new ListboxKeyboard({
+    items: listboxOptions(this.options, (option) => option.label),
+    isOpen: () => this.isOpen(),
+    open: () => this.open(),
+    close: () => this.close(),
+    select: (option) => this.select(option.value.value),
+    openKeys: ['Enter', ' ', 'ArrowDown', 'ArrowUp'],
+    selectKeys: ['Enter', ' '],
+    homeAndEnd: true,
+    typeahead: true,
+  });
+
   protected readonly activeOptionId = computed(() => {
-    return this.isOpen() ? `${this.panelId}-${this.activeIndex()}` : null;
+    const index = this.keyboard.activeIndex();
+
+    return this.isOpen() ? `${this.panelId}-${index}` : null;
   });
 
   private readonly portal = viewChild.required(CdkPortal);
@@ -138,86 +152,6 @@ export class InlineSelectComponent implements OnDestroy {
     this.trigger().nativeElement.focus();
   }
 
-  protected onTriggerKeydown(event: KeyboardEvent) {
-    if (this.isOpen()) {
-      this.onOpenKeydown(event);
-
-      return;
-    }
-
-    const opensPanel =
-      event.key === 'Enter' ||
-      event.key === ' ' ||
-      event.key === 'ArrowDown' ||
-      event.key === 'ArrowUp';
-
-    if (opensPanel) {
-      event.preventDefault();
-      this.open();
-    }
-  }
-
-  private onOpenKeydown(event: KeyboardEvent) {
-    const lastIndex = this.options().length - 1;
-
-    switch (event.key) {
-      case 'ArrowDown':
-        event.preventDefault();
-        this.activeIndex.update((index) => Math.min(index + 1, lastIndex));
-
-        return;
-      case 'ArrowUp':
-        event.preventDefault();
-        this.activeIndex.update((index) => Math.max(index - 1, 0));
-
-        return;
-      case 'Home':
-        event.preventDefault();
-        this.activeIndex.set(0);
-
-        return;
-      case 'End':
-        event.preventDefault();
-        this.activeIndex.set(lastIndex);
-
-        return;
-      case 'Enter':
-      case ' ': {
-        event.preventDefault();
-
-        const active = this.options()[this.activeIndex()];
-
-        if (active) {
-          this.select(active.value);
-        }
-
-        return;
-      }
-      case 'Escape':
-        event.preventDefault();
-        this.close();
-
-        return;
-      default:
-        this.focusByTypeAhead(event.key);
-    }
-  }
-
-  private focusByTypeAhead(key: string) {
-    const isCharacter = key.length === 1;
-
-    if (!isCharacter) return;
-
-    const search = key.toLowerCase();
-    const index = this.options().findIndex((option) =>
-      option.label.toLowerCase().startsWith(search)
-    );
-
-    if (index >= 0) {
-      this.activeIndex.set(index);
-    }
-  }
-
   private open() {
     const origin = this.trigger().nativeElement;
     const selectedIndex = this.options().findIndex(
@@ -225,7 +159,7 @@ export class InlineSelectComponent implements OnDestroy {
     );
 
     this.panelWidth.set(origin.getBoundingClientRect().width);
-    this.activeIndex.set(selectedIndex >= 0 ? selectedIndex : 0);
+    this.keyboard.setActiveIndex(selectedIndex >= 0 ? selectedIndex : 0);
 
     this.overlayRef = this.overlay.create(this.buildConfig(origin));
     this.overlayRef.attach(this.portal());

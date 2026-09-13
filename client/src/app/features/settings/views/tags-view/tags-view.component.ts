@@ -1,31 +1,18 @@
-import {
-  Component,
-  computed,
-  effect,
-  inject,
-  signal,
-  viewChild,
-} from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { Params, RouterLink } from '@angular/router';
+import { Component, inject, viewChild } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { DialogService } from '@core/services/dialog.service';
 import { TagCommandsService } from '@core/services/tag-commands.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import {
-  CreateTagDialogComponent,
-  CreateTagDialogResult,
-} from '@entry/dialogs/create-tag-dialog/create-tag-dialog.component';
-import {
-  EditTagDialogComponent,
-  EditTagDialogResult,
-} from '@entry/dialogs/edit-tag-dialog/edit-tag-dialog.component';
+  TagDialogComponent,
+  TagDialogResult,
+} from '@entry/dialogs/tag-dialog/tag-dialog.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableEmptyDirective } from '@static/components/datatable/datatable-empty.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
 import {
   DatatableDataSource,
   DatatableMenuItem,
-  DatatableSort,
 } from '@static/components/datatable/datatable.types';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { PageBodyComponent } from '@static/components/page-container/page-body.component';
@@ -34,8 +21,7 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
 import { SearchInputComponent } from '@static/components/search-input/search-input.component';
 import { Tag } from '@core/models/tag';
 import { LucideSettings2, LucideTags, LucideX } from '@lucide/angular';
-import { debounceTime } from 'rxjs/operators';
-import { first } from 'rxjs';
+import { searchableEntityList } from '../../shared/orderable-entity-list';
 
 @Component({
   selector: 'app-tags-view',
@@ -61,17 +47,18 @@ import { first } from 'rxjs';
         actionTitle="Create tag"
         i18n-filtersLabel="Accessible name of the tag list filter row"
         filtersLabel="Filter tags"
-        [count]="count()"
+        [count]="table.loadedCount()"
         (actionClick)="openCreateDialog()">
         <div pageHeaderFilters class="flex flex-row items-center gap-2.5">
           <app-search-input
-            [term]="searchInput()"
-            (searchChange)="searchInput.set($event ?? '')" />
+            [term]="list.searchInput()"
+            (searchChange)="list.searchInput.set($event ?? '')" />
         </div>
       </app-page-header>
 
       <app-page-body>
         <app-datatable
+          #table
           autoFill
           stickyHeader
           tableClass="table-fixed"
@@ -80,8 +67,7 @@ import { first } from 'rxjs';
           i18n-itemLabel="Plural noun for tags, used in the row summary"
           itemLabel="tags"
           [data]="data"
-          [(sort)]="sort"
-          (loaded)="count.set($event.hasValue ? $event.totalCount : null)">
+          [(sort)]="list.sort">
           <ng-template appDatatableCell="name" let-tag>
             <a
               class="block w-full truncate text-left font-medium hover:underline"
@@ -91,7 +77,7 @@ import { first } from 'rxjs';
           </ng-template>
 
           <ng-template appDatatableEmpty>
-            @if (search()) {
+            @if (list.search()) {
               <app-empty-state
                 compact
                 i18n-title="Heading shown when a search matches nothing"
@@ -121,22 +107,9 @@ export class TagsViewComponent {
   private readonly dialog = inject(DialogService);
   private readonly workspaceRefresh = inject(WorkspaceRefreshService);
 
-  readonly count = signal<number | null>(null);
-  readonly searchInput = signal('');
-  readonly sort = signal<DatatableSort | null>(null);
-
-  readonly search = toSignal(
-    toObservable(this.searchInput).pipe(debounceTime(250)),
-    { initialValue: '' }
-  );
-
   private readonly datatable = viewChild(DatatableComponent<Tag>);
 
-  private readonly resourceParams = computed<Params>(() => {
-    const search = this.search().trim();
-
-    return search ? { search } : {};
-  });
+  readonly list = searchableEntityList(this.datatable);
 
   private readonly menu: DatatableMenuItem<Tag>[] = [
     {
@@ -171,61 +144,35 @@ export class TagsViewComponent {
         cellClass: 'text-muted',
       },
     ],
-    resource: { url: 'api/tags/page', params: this.resourceParams },
+    resource: { url: 'api/tags/page', params: this.list.searchParams },
     rows: (response) => response?.payload?.items ?? [],
     trackBy: (_: number, tag: Tag) => tag.id,
     menu: this.menu,
     reloadSignal: this.workspaceRefresh.version('tags'),
   };
 
-  constructor() {
-    let previousSearch = this.search();
-
-    effect(() => {
-      const search = this.search();
-
-      if (search === previousSearch) return;
-
-      previousSearch = search;
-      this.datatable()?.goToPage(1);
-    });
-  }
-
-  openCreateDialog() {
-    const dialogRef = this.dialog.open<CreateTagDialogResult>(
-      CreateTagDialogComponent,
-      {
-        width: '420px',
-      }
+  async openCreateDialog() {
+    const result = await this.dialog.openForResult<TagDialogResult>(
+      TagDialogComponent,
+      { width: '420px' }
     );
 
-    dialogRef.closed.pipe(first()).subscribe({
-      next: (result) => {
-        const name = result?.name.trim();
-        if (!name) return;
+    const name = result?.name.trim();
+    if (!name) return;
 
-        this.tagCommands.create(name);
-      },
-    });
+    this.tagCommands.create(name);
   }
 
-  openEditDialog(tag: Tag) {
-    const dialogRef = this.dialog.open<EditTagDialogResult, Tag>(
-      EditTagDialogComponent,
-      {
-        data: tag,
-        width: '420px',
-      }
+  async openEditDialog(tag: Tag) {
+    const result = await this.dialog.openForResult<TagDialogResult, Tag>(
+      TagDialogComponent,
+      { data: tag, width: '420px' }
     );
 
-    dialogRef.closed.pipe(first()).subscribe({
-      next: (result) => {
-        const newValue = result?.name.trim();
-        if (!newValue || newValue === tag.name) return;
+    const newValue = result?.name.trim();
+    if (!newValue || newValue === tag.name) return;
 
-        this.tagCommands.rename(tag.name, newValue);
-      },
-    });
+    this.tagCommands.rename(tag.name, newValue);
   }
 
   onDeleteClicked(tag: Tag) {

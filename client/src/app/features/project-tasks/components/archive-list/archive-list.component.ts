@@ -1,11 +1,4 @@
-import {
-  Component,
-  computed,
-  inject,
-  output,
-  signal,
-  viewChild,
-} from '@angular/core';
+import { Component, computed, inject, signal, viewChild } from '@angular/core';
 import { DatatableCellTemplateDirective } from '@app/static/components/datatable/datatable-cell-template.directive';
 import { DatatableEmptyDirective } from '@app/static/components/datatable/datatable-empty.directive';
 import {
@@ -17,6 +10,7 @@ import { TaskTableComponent } from '@app/static/components/task-table.component'
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { TaskArchiveService } from '@core/services/task-archive.service';
 import { taskColumns } from '@core/tasks/task-columns';
+import { reloadToken } from '@core/util/signals';
 import { LucideArchiveRestore } from '@lucide/angular';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
@@ -73,8 +67,7 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
       [selection]="true"
       [customizableColumns]="true"
       [stickyHeader]="true"
-      (selectionChanged)="selection.set($event)"
-      (loaded)="onLoaded($event)">
+      (selectionChanged)="selection.set($event)">
       <ng-template appDatatableCell="deletedBy" let-task>
         @if (task.deletedByUsername) {
           <div class="flex items-center gap-2">
@@ -110,12 +103,12 @@ export class ArchiveListComponent {
   private archiveService = inject(TaskArchiveService);
 
   private table = viewChild(TaskTableComponent<TaskViewModel>);
-  readonly countChange = output<number>();
+  readonly count = computed(() => this.table()?.loadedCount() ?? null);
 
   readonly selection = signal<TaskViewModel[]>([]);
   readonly selectedCount = computed(() => this.selection().length);
 
-  readonly reloadVersion = signal(0);
+  readonly reloadVersion = reloadToken();
 
   private readonly deletedByColumn: DatatableColumn<TaskViewModel> = {
     id: 'deletedBy',
@@ -147,12 +140,6 @@ export class ArchiveListComponent {
     },
   ];
 
-  onLoaded(event: { totalCount: number; hasValue: boolean }) {
-    if (event.hasValue) {
-      this.countChange.emit(event.totalCount);
-    }
-  }
-
   restoreSelected() {
     this.restore(this.selection().map((task) => task.id));
   }
@@ -163,7 +150,7 @@ export class ArchiveListComponent {
     this.archiveService.restore(ids).subscribe(() => {
       this.table()?.clearSelection();
       this.selection.set([]);
-      this.reloadVersion.update((version) => version + 1);
+      this.reloadVersion.bump();
     });
   }
 }

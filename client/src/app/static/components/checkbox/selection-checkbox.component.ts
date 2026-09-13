@@ -1,5 +1,6 @@
-import { Component, input, model, output } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { LucideCheck } from '@lucide/angular';
+import { AbstractCheckableControl } from '../abstract-checkable-control';
 
 /** Compact primary-filled box for selecting rows in a list, without a projected label. */
 @Component({
@@ -34,16 +35,6 @@ import { LucideCheck } from '@lucide/angular';
     </label>
   `,
 })
-export class SelectionCheckboxComponent {
-  readonly checked = model(false);
-  readonly disabled = input(false);
+export class SelectionCheckboxComponent extends AbstractCheckableControl {
   readonly label = input<string | null>(null);
-  readonly changed = output<boolean>();
-
-  onChanged(event: Event) {
-    const input = event.target as HTMLInputElement;
-
-    this.checked.set(input.checked);
-    this.changed.emit(input.checked);
-  }
 }

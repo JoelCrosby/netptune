@@ -5,10 +5,10 @@
     title="Users"
     i18n-actionTitle="Button that opens the invite dialog"
     actionTitle="Invite Users"
-    [count]="count()"
+    [count]="userList.count()"
     (actionClick)="onInviteUsers()" />
 
   <app-page-body>
-    <app-user-list (countChange)="count.set($event)" />
+    <app-user-list #userList />
   </app-page-body>
 </app-page-container>

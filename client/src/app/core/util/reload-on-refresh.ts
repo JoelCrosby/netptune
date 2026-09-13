@@ -1,13 +1,8 @@
-import {
-  assertInInjectionContext,
-  effect,
-  inject,
-  Signal,
-  untracked,
-} from '@angular/core';
+import { assertInInjectionContext, computed, inject } from '@angular/core';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { RefreshScope } from '@core/models/refresh-scope';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
+import { onChange } from '@core/util/signals';
 
 export interface ReloadableResource {
   reload(): boolean;
@@ -21,8 +16,9 @@ export function onWorkspaceRefresh(
 
   const workspaceRefresh = inject(WorkspaceRefreshService);
   const versions = scopes.map((scope) => workspaceRefresh.version(scope));
+  const combined = computed(() => versions.map((version) => version()));
 
-  onChange(versions, onRefresh);
+  onChange(combined, () => onRefresh());
 }
 
 export function reloadOnRefresh(
@@ -43,27 +39,5 @@ export function reloadOnWorkspaceChange(resource: ReloadableResource): void {
 
   const workspaceIdentifier = inject(CurrentWorkspaceService).slug;
 
-  onChange([workspaceIdentifier], () => resource.reload());
-}
-
-/** The first run is the value the caller already has, so only later ones are changes. */
-function onChange(
-  sources: readonly Signal<unknown>[],
-  onChanged: () => void
-): void {
-  let isFirstRun = true;
-
-  effect(() => {
-    for (const source of sources) {
-      source();
-    }
-
-    if (isFirstRun) {
-      isFirstRun = false;
-
-      return;
-    }
-
-    untracked(onChanged);
-  });
+  onChange(workspaceIdentifier, () => resource.reload());
 }

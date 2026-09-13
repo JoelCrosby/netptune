@@ -1,11 +1,4 @@
-import {
-  Component,
-  computed,
-  effect,
-  inject,
-  output,
-  viewChild,
-} from '@angular/core';
+import { Component, computed, effect, inject, viewChild } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { Params } from '@angular/router';
 import { PERMISSIONS } from '@app/core/auth/permissions';
@@ -54,8 +47,7 @@ import { taskFilterRoute } from '@core/router/task-filter-route';
       [selection]="canDelete()"
       [customizableColumns]="true"
       [stickyHeader]="true"
-      (selectionChanged)="onSelectionChanged($event)"
-      (loaded)="onLoaded($event)">
+      (selectionChanged)="onSelectionChanged($event)">
       <ng-template appDatatableEmpty>
         <app-empty-state
           [title]="
@@ -94,7 +86,7 @@ export class TaskListComponent {
 
   private table = viewChild(TaskTableComponent<TaskViewModel>);
 
-  readonly countChange = output<number>();
+  readonly count = computed(() => this.table()?.loadedCount() ?? null);
 
   private readonly taskCommands = inject(TaskCommandsService);
   private readonly taskSelection = inject(TaskSelectionService);
@@ -189,12 +181,6 @@ export class TaskListComponent {
         this.table()?.clearSelection();
       }
     });
-  }
-
-  onLoaded(event: { totalCount: number; hasValue: boolean }) {
-    if (event.hasValue) {
-      this.countChange.emit(event.totalCount);
-    }
   }
 
   onSelectionChanged(tasks: TaskViewModel[]) {

@@ -18,10 +18,12 @@ import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
 import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
 import { LocaleSwitcherComponent } from './locale-switcher.component';
+import { MenuSeparatorComponent } from '@static/components/dropdown-menu/menu-separator.component';
 
 @Component({
   selector: 'app-profile-menu',
   imports: [
+    MenuSeparatorComponent,
     AvatarComponent,
     DropdownMenuComponent,
     LocaleSwitcherComponent,
@@ -61,7 +63,7 @@ import { LocaleSwitcherComponent } from './locale-switcher.component';
           }
         </div>
 
-        <div class="border-border/50 my-1 border-t"></div>
+        <app-menu-separator />
 
         <button
           app-menu-item
@@ -97,7 +99,7 @@ import { LocaleSwitcherComponent } from './locale-switcher.component';
 
         <app-locale-switcher />
 
-        <div class="border-border/50 my-1 border-t"></div>
+        <app-menu-separator />
 
         <button app-menu-item type="button" (click)="logOut(profileMenu)">
           <svg lucideLogOut class="h-4 w-4 shrink-0"></svg>

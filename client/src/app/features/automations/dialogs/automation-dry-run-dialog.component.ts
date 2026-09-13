@@ -1,10 +1,6 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
-import {
-  takeUntilDestroyed,
-  toObservable,
-  toSignal,
-} from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Params } from '@angular/router';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { sprintResource } from '@core/resources/sprint.resource';
@@ -19,8 +15,8 @@ import { DialogTitleComponent } from '@static/components/dialog-title/dialog-tit
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
-import { finalize } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { mutation } from '@core/util/mutation';
+import { debouncedSignal } from '@core/util/signals';
 import { AutomationConditionExplanationComponent } from '../components/automation-condition-explanation.component';
 import { AutomationDryRunEffectsComponent } from '../components/automation-dry-run-effects.component';
 import { triggerTypeLabels } from '../models/automation-copy';
@@ -94,7 +90,7 @@ export interface AutomationDryRunDialogData {
           <button
             app-stroked-button
             type="button"
-            [disabled]="running()"
+            [disabled]="test.pending()"
             (click)="onTest(task)">
             <span i18n="Button that tests the automation against a task">
               Test
@@ -103,7 +99,7 @@ export interface AutomationDryRunDialogData {
         </ng-template>
       </app-datatable>
 
-      @if (failed()) {
+      @if (test.error()) {
         <p class="text-warn text-sm">
           <span i18n="Shown when a test run fails">
             Could not test this task.
@@ -217,7 +213,7 @@ export interface AutomationDryRunDialogData {
             <button
               app-flat-button
               type="button"
-              [disabled]="running() || queueing()"
+              [disabled]="test.pending() || queue.pending()"
               (click)="onRunNow(dryRun)">
               <span i18n="Button that runs the automation immediately">
                 Run now
@@ -242,7 +238,7 @@ export interface AutomationDryRunDialogData {
             </p>
           }
 
-          @if (queueFailed()) {
+          @if (queue.error()) {
             <p class="text-warn text-xs">
               <span i18n="Shown when starting a run fails">
                 Could not start this run.
@@ -280,17 +276,12 @@ export class AutomationDryRunDialogComponent {
   });
 
   readonly searchInput = signal('');
-  readonly running = signal(false);
-  readonly failed = signal(false);
-  readonly queueing = signal(false);
+  readonly test = mutation();
+  readonly queue = mutation();
   readonly queued = signal(false);
-  readonly queueFailed = signal(false);
   readonly dryRun = signal<AutomationDryRun | null>(null);
 
-  private search = toSignal(
-    toObservable(this.searchInput).pipe(debounceTime(250)),
-    { initialValue: '' }
-  );
+  private search = debouncedSignal(this.searchInput);
 
   private params = computed<Params>(() => {
     const search = this.search().trim();
@@ -342,40 +333,26 @@ export class AutomationDryRunDialogComponent {
 
   onRunNow(dryRun: AutomationDryRun) {
     this.queued.set(false);
-    this.queueFailed.set(false);
-    this.queueing.set(true);
 
-    this.service
-      .runNow(this.dialogData.ruleId, [dryRun.taskId])
-      .pipe(
-        finalize(() => this.queueing.set(false)),
-        takeUntilDestroyed(this.destroyRef)
-      )
-      .subscribe({
-        next: () => this.queued.set(true),
-        error: () => this.queueFailed.set(true),
-      });
+    const request = this.service.runNow(this.dialogData.ruleId, [
+      dryRun.taskId,
+    ]);
+
+    this.queue.run(request.pipe(takeUntilDestroyed(this.destroyRef)), {
+      onSuccess: () => this.queued.set(true),
+    });
   }
 
   onTest(task: TaskViewModel) {
-    this.failed.set(false);
     this.queued.set(false);
-    this.queueFailed.set(false);
-    this.running.set(true);
+    this.queue.clearError();
 
-    this.service
-      .dryRun(this.dialogData.ruleId, task.id)
-      .pipe(
-        finalize(() => this.running.set(false)),
-        takeUntilDestroyed(this.destroyRef)
-      )
-      .subscribe({
-        next: (dryRun) => this.dryRun.set(dryRun),
-        error: () => {
-          this.dryRun.set(null);
-          this.failed.set(true);
-        },
-      });
+    const request = this.service.dryRun(this.dialogData.ruleId, task.id);
+
+    this.test.run(request.pipe(takeUntilDestroyed(this.destroyRef)), {
+      onSuccess: (dryRun) => this.dryRun.set(dryRun),
+      onError: () => this.dryRun.set(null),
+    });
   }
 
   close() {

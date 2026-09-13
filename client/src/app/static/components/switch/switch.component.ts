@@ -1,4 +1,5 @@
-import { Component, input, model, output } from '@angular/core';
+import { Component, input } from '@angular/core';
+import { AbstractCheckableControl } from '../abstract-checkable-control';
 
 @Component({
   selector: 'app-switch',
@@ -29,17 +30,6 @@ import { Component, input, model, output } from '@angular/core';
     </label>
   `,
 })
-export class SwitchComponent {
-  readonly checked = model(false);
-  readonly disabled = input(false);
+export class SwitchComponent extends AbstractCheckableControl {
   readonly ariaLabel = input<string | null>(null);
-
-  readonly changed = output<boolean>();
-
-  protected onChanged(event: Event) {
-    const input = event.target as HTMLInputElement;
-
-    this.checked.set(input.checked);
-    this.changed.emit(input.checked);
-  }
 }

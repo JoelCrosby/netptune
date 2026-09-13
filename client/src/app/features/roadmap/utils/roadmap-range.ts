@@ -1,4 +1,4 @@
-const millisecondsPerDay = 86_400_000;
+import { inclusiveDayCount } from '@static/components/timeline/timeline-date-geometry';
 
 export const validateRoadmapRange = (
   from: string,
@@ -8,7 +8,7 @@ export const validateRoadmapRange = (
     return 'Choose valid roadmap start and end dates.';
   }
 
-  const dayCount = (dateValue(to) - dateValue(from)) / millisecondsPerDay + 1;
+  const dayCount = inclusiveDayCount(from, to);
 
   if (dayCount < 1) {
     return 'Roadmap start date must be on or before its end date.';
@@ -29,6 +29,3 @@ const isIsoDate = (value: string): boolean => {
     !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value
   );
 };
-
-const dateValue = (date: string): number =>
-  new Date(`${date}T00:00:00Z`).getTime();

@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, viewChild } from '@angular/core';
 import { ArchiveListComponent } from '@project-tasks/components/archive-list/archive-list.component';
 import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
@@ -21,11 +21,12 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
         [count]="count()" />
 
       <app-page-body>
-        <app-archive-list (countChange)="count.set($event)" />
+        <app-archive-list />
       </app-page-body>
     </app-page-container>
   `,
 })
 export class ArchiveViewComponent {
-  readonly count = signal<number | null>(null);
+  private readonly list = viewChild(ArchiveListComponent);
+  readonly count = computed(() => this.list()?.count() ?? null);
 }

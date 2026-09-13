@@ -36,6 +36,7 @@ import {
   FormSelectDropdownStyleDirective,
   FormSelectOptionDirective,
 } from '../form-select/form-select.directives';
+import { ListboxKeyboard, listboxOptions } from '../listbox-keyboard';
 
 interface OptionTemplateContext<TOption> {
   $implicit: TOption;
@@ -103,7 +104,6 @@ export class FormSelectSearchComponent<TOption, TValue = TOption>
   readonly noMargin = input(false);
 
   readonly searchQuery = signal('');
-  readonly activeIndex = signal(0);
   readonly listboxId = `form-select-search-${crypto.randomUUID()}`;
 
   @ContentChild('option')
@@ -149,12 +149,25 @@ export class FormSelectSearchComponent<TOption, TValue = TOption>
     return Math.min(contentHeight, this.maxDropdownHeight());
   });
 
+  readonly keyboard = new ListboxKeyboard({
+    items: listboxOptions(this.filteredOptions),
+    isOpen: () => this.isOpen(),
+    open: () => this.showDropdown(),
+    close: () => this.hideDropdown(),
+    select: (option) => this.selectOption(option.value),
+    openKeys: ['ArrowDown', 'ArrowUp', 'Enter', ' '],
+    closeOnTab: true,
+    homeAndEnd: true,
+    wrap: true,
+    navigated: () => this.scrollActiveOptionIntoView(),
+  });
+
   readonly activeOptionId = computed(() => {
     if (!this.isOpen() || !this.filteredOptions().length) {
       return null;
     }
 
-    return this.optionId(this.activeIndex());
+    return this.optionId(this.keyboard.activeIndex());
   });
 
   readonly trackByOption: TrackByFunction<TOption> = (_, option) =>
@@ -191,56 +204,13 @@ export class FormSelectSearchComponent<TOption, TValue = TOption>
 
   onSearchInput(event: Event) {
     this.searchQuery.set((event.target as HTMLInputElement).value);
-    this.activeIndex.set(0);
+    this.keyboard.setActiveIndex(0);
 
     if (!this.dropdown().showing()) {
       this.dropdown().show();
     }
 
     this.scrollActiveOptionIntoView();
-  }
-
-  onKeyDown(event: KeyboardEvent) {
-    const dropdown = this.dropdown();
-
-    if (event.key === 'Escape' || event.key === 'Esc') {
-      if (dropdown.showing()) {
-        event.preventDefault();
-        this.hideDropdown();
-      }
-      return;
-    }
-
-    if (!dropdown.showing()) {
-      if (
-        ['ArrowDown', 'Down', 'ArrowUp', 'Up', 'Enter', ' '].includes(event.key)
-      ) {
-        event.preventDefault();
-        this.showDropdown();
-      }
-      return;
-    }
-
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      this.selectActiveOption();
-    } else if (event.key === 'ArrowDown' || event.key === 'Down') {
-      event.preventDefault();
-      this.moveActiveIndex(1);
-    } else if (event.key === 'ArrowUp' || event.key === 'Up') {
-      event.preventDefault();
-      this.moveActiveIndex(-1);
-    } else if (event.key === 'Home') {
-      event.preventDefault();
-      this.setActiveIndex(0);
-      this.scrollActiveOptionIntoView();
-    } else if (event.key === 'End') {
-      event.preventDefault();
-      this.setActiveIndex(this.filteredOptions().length - 1);
-      this.scrollActiveOptionIntoView();
-    } else if (event.key === 'Tab') {
-      this.hideDropdown();
-    }
   }
 
   selectOption(option: TOption, event?: UIEvent) {
@@ -255,54 +225,28 @@ export class FormSelectSearchComponent<TOption, TValue = TOption>
     this.input().nativeElement.focus();
   }
 
-  selectActiveOption() {
-    const option = this.filteredOptions()[this.activeIndex()];
-
-    if (option) {
-      this.selectOption(option);
-    }
-  }
-
   isSelected(option: TOption): boolean {
     return this.compareWith()(this.valueWith()(option), this.value());
   }
 
   isActive(index: number): boolean {
-    return this.activeIndex() === index;
-  }
-
-  setActiveIndex(index: number) {
-    const maxIndex = this.filteredOptions().length - 1;
-    this.activeIndex.set(Math.max(0, Math.min(index, maxIndex)));
+    return this.keyboard.activeIndex() === index;
   }
 
   optionId(index: number): string {
     return `${this.listboxId}-option-${index}`;
   }
 
-  private moveActiveIndex(delta: number) {
-    const options = this.filteredOptions();
-
-    if (!options.length) {
-      return;
-    }
-
-    const nextIndex =
-      (this.activeIndex() + delta + options.length) % options.length;
-    this.activeIndex.set(nextIndex);
-    this.scrollActiveOptionIntoView();
-  }
-
   private setActiveToSelectedOption() {
     const selected = this.selectedOption();
     const options = this.filteredOptions();
     const selectedIndex = selected ? options.indexOf(selected) : -1;
-    this.activeIndex.set(selectedIndex >= 0 ? selectedIndex : 0);
+    this.keyboard.setActiveIndex(selectedIndex >= 0 ? selectedIndex : 0);
   }
 
   private scrollActiveOptionIntoView() {
     queueMicrotask(() => {
-      this.viewport()?.scrollToIndex(this.activeIndex());
+      this.viewport()?.scrollToIndex(this.keyboard.activeIndex());
     });
   }
 }

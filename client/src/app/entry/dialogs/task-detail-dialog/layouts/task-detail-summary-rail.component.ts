@@ -1,7 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
-import { AiAssistantService } from '@core/services/ai-assistant.service';
 import { LucideSparkles, LucideTrash2 } from '@lucide/angular';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { FromNowPipe } from '@static/pipes/from-now.pipe';
@@ -25,6 +24,7 @@ import { TaskDetailTagRowComponent } from '../shared/task-detail-tag-row.compone
 import { TaskDetailTimestampsComponent } from '../shared/task-detail-timestamps.component';
 import { TaskDetailService } from '../task-detail.service';
 import { InlineButtonComponent } from '@static/components/button/inline-button.component';
+import { toggleInSet } from '@core/util/signals';
 
 type Section = 'boards' | 'links' | 'files';
 
@@ -226,7 +226,7 @@ const RAIL_FIELDS: TaskDetailField[] = [
               <button
                 type="button"
                 class="border-foreground/8 hover:bg-hover flex h-8.5 flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg border text-xs font-medium transition-colors"
-                (click)="askAssistant()">
+                (click)="taskDetail.askAssistant()">
                 <svg lucideSparkles class="h-3.5 w-3.5"></svg>
                 <span i18n="Button that asks the assistant about this task">
                   Ask assistant
@@ -258,8 +258,7 @@ export class TaskDetailSummaryRailComponent {
   readonly taskDetail = inject(TaskDetailService);
   readonly comments = inject(TaskDetailCommentsService);
 
-  private readonly assistant = inject(AiAssistantService);
-  private readonly expanded = signal(new Set<Section>());
+  private readonly expanded = signal<ReadonlySet<Section>>(new Set());
 
   readonly task = this.taskDetail.task;
   readonly commentsExpanded = signal(false);
@@ -278,9 +277,7 @@ export class TaskDetailSummaryRailComponent {
   readonly readFlags = hasPermission(PERMISSIONS.flags.read);
   readonly readComments = hasPermission(PERMISSIONS.comments.read);
 
-  readonly canAskAssistant = computed(() => {
-    return this.assistant.isAvailable() && this.task() !== null;
-  });
+  readonly canAskAssistant = this.taskDetail.canAskAssistant;
 
   readonly boardSummary = computed(() => {
     const placements = this.task()?.placements ?? [];
@@ -301,17 +298,11 @@ export class TaskDetailSummaryRailComponent {
   }
 
   toggle(section: Section) {
-    this.expanded.update((sections) => {
-      const next = new Set(sections);
-
-      if (!next.delete(section)) next.add(section);
-
-      return next;
-    });
+    toggleInSet(this.expanded, section);
   }
 
   expand(section: Section) {
-    this.expanded.update((sections) => new Set(sections).add(section));
+    toggleInSet(this.expanded, section, true);
   }
 
   linkSummary(count: number) {
@@ -336,13 +327,5 @@ export class TaskDetailSummaryRailComponent {
     }
 
     return $localize`:Accordion summary counting a task's attachments. COUNT is how many:${count}:COUNT: files`;
-  }
-
-  askAssistant() {
-    const task = this.task();
-
-    if (!task) return;
-
-    this.assistant.askAboutTask(task);
   }
 }

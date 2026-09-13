@@ -15,9 +15,8 @@ import {
   form,
   submit,
 } from '@angular/forms/signals';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { PERMISSIONS } from '@core/auth/permissions';
-import { ConfirmationService } from '@core/services/confirmation.service';
 import { tagUsageResource } from '@core/resources/entity-usage.resource';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { TagsService } from '@core/services/tags.service';
@@ -46,7 +45,7 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { EntityUsagePanelComponent } from '../../components/entity-usage-panel.component';
-import { EMPTY, finalize, firstValueFrom, switchMap } from 'rxjs';
+import { entityDelete, entitySave } from '../../shared/entity-detail';
 
 @Component({
   selector: 'app-tag-detail-view',
@@ -110,7 +109,10 @@ import { EMPTY, finalize, firstValueFrom, switchMap } from 'rxjs';
                 <div
                   class="border-border flex flex-wrap items-center gap-3 border-t pt-4">
                   @if (canUpdate()) {
-                    <button app-flat-button type="submit" [disabled]="saving()">
+                    <button
+                      app-flat-button
+                      type="submit"
+                      [disabled]="saving.pending()">
                       <span i18n="Button that saves changes to the tag">
                         Save Tag
                       </span>
@@ -122,7 +124,7 @@ import { EMPTY, finalize, firstValueFrom, switchMap } from 'rxjs';
                       app-stroked-button
                       class="ml-auto"
                       type="button"
-                      [disabled]="deleting()"
+                      [disabled]="deleting.pending()"
                       (click)="delete()">
                       <svg lucideTrash2 class="h-4 w-4"></svg>
                       <span i18n="Button that deletes a tag">Delete tag</span>
@@ -234,9 +236,6 @@ import { EMPTY, finalize, firstValueFrom, switchMap } from 'rxjs';
 export class TagDetailViewComponent {
   private readonly tagsService = inject(TagsService);
   private readonly workspaceRefresh = inject(WorkspaceRefreshService);
-  private readonly confirmation = inject(ConfirmationService);
-  private readonly router = inject(Router);
-  private readonly route = inject(ActivatedRoute);
 
   readonly id = input.required<string>();
 
@@ -252,8 +251,8 @@ export class TagDetailViewComponent {
   readonly canUpdate = hasPermission(PERMISSIONS.tags.update);
   readonly canDelete = hasPermission(PERMISSIONS.tags.delete);
 
-  readonly deleting = signal(false);
-  readonly saving = signal(false);
+  readonly deleting = entityDelete();
+  readonly saving = entitySave();
   readonly hasReferences = computed(() => {
     return (this.usage.value()?.references.length ?? 0) > 0;
   });
@@ -273,7 +272,7 @@ export class TagDetailViewComponent {
         minLength: 2,
       })
     );
-    disabled(schema, () => !this.canUpdate() || this.saving());
+    disabled(schema, () => !this.canUpdate() || this.saving.pending());
   });
 
   readonly name = computed(() => this.usage.value()?.name ?? '');
@@ -344,15 +343,10 @@ export class TagDetailViewComponent {
 
       if (isUnchanged) return;
 
-      this.saving.set(true);
+      const rename = this.tagsService.patch({ currentValue, newValue });
+      const saved = await this.saving.run(rename);
 
-      const rename = this.tagsService
-        .patch({ currentValue, newValue })
-        .pipe(finalize(() => this.saving.set(false)));
-
-      const response = await firstValueFrom(rename);
-
-      if (!response.isSuccess) return;
+      if (!saved) return;
 
       this.workspaceRefresh.refresh(['tags']);
       this.usage.reload();
@@ -363,35 +357,12 @@ export class TagDetailViewComponent {
     const name = this.name();
     if (!name) return;
 
-    this.confirmation
-      .open({
-        title: $localize`:Title of the confirmation dialog for deleting a tag:Delete Tag`,
-        message: $localize`:Asks the user to confirm deleting a tag. NAME is the tag name, COUNT is how many tasks carry it:Delete "${name}:NAME:"? It will be removed from ${this.taskCount()}:COUNT: tasks.`,
-        acceptLabel: $localize`:Confirms a destructive action:Delete`,
-        cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
-        color: 'warn',
-      })
-      .pipe(
-        switchMap((confirmed) => {
-          if (!confirmed) return EMPTY;
-
-          this.deleting.set(true);
-
-          return this.tagsService.delete({ tags: [name] });
-        }),
-        finalize(() => this.deleting.set(false))
-      )
-      .subscribe({
-        next: (response) => {
-          if (!response.isSuccess) {
-            this.usage.reload();
-            return;
-          }
-
-          this.workspaceRefresh.refresh(['tags']);
-          void this.router.navigate(['..'], { relativeTo: this.route });
-        },
-        error: () => this.usage.reload(),
-      });
+    void this.deleting.run({
+      title: $localize`:Title of the confirmation dialog for deleting a tag:Delete Tag`,
+      message: $localize`:Asks the user to confirm deleting a tag. NAME is the tag name, COUNT is how many tasks carry it:Delete "${name}:NAME:"? It will be removed from ${this.taskCount()}:COUNT: tasks.`,
+      request: () => this.tagsService.delete({ tags: [name] }),
+      onDeleted: () => this.workspaceRefresh.refresh(['tags']),
+      onFailed: () => this.usage.reload(),
+    });
   }
 }

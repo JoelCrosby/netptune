@@ -32,7 +32,7 @@
       [style.padding]="prefix() ? '0 .8rem 0 0' : '0 .8rem'"
       (click)="$event.stopPropagation(); showDropdown()"
       (input)="onSearchInput($event)"
-      (keydown)="onKeyDown($event)"
+      (keydown)="keyboard.handleKeydown($event)"
       (blur)="touched.set(true)"
       autocomplete="off" />
 
@@ -78,7 +78,7 @@
               [class.selected]="isSelected(option)"
               [style.height.px]="itemSize()"
               [attr.aria-selected]="isSelected(option)"
-              (mouseenter)="setActiveIndex(index)"
+              (mouseenter)="keyboard.setActiveIndex(index)"
               (click)="selectOption(option, $event)">
               @if (optionTemplate) {
                 <ng-container

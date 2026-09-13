@@ -1,3 +1,4 @@
+import { toggleValue } from '@core/util/arrays';
 import { Component, computed, input, output } from '@angular/core';
 import { Selected } from '@core/models/selected';
 import { Tag } from '@core/models/tag';
@@ -123,10 +124,4 @@ export class TaskViewFiltersComponent {
   toggleStatus(statusId: number): void {
     this.statusIdsChanged.emit(toggleValue(this.statusIds(), statusId));
   }
-}
-
-function toggleValue<T>(values: T[], value: T): T[] {
-  return values.includes(value)
-    ? values.filter((item) => item !== value)
-    : [...values, value];
 }

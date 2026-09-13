@@ -16,6 +16,7 @@ import {
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { ToolbarButtonComponent } from '@static/components/button/toolbar-button.component';
 import { TaskChipComponent } from '@static/components/task-chip.component';
+import { DividerComponent } from '@static/components/divider/divider.component';
 
 const visibleChips = 3;
 
@@ -29,6 +30,7 @@ interface BannerPin {
 @Component({
   selector: 'app-board-pinned-banner',
   imports: [
+    DividerComponent,
     LucideChevronDown,
     LucideChevronRight,
     LucidePin,
@@ -90,7 +92,7 @@ interface BannerPin {
             </span>
           </div>
 
-          <span class="bg-border mx-1 h-6 w-px" aria-hidden="true"></span>
+          <app-divider orientation="vertical" class="mx-1" />
 
           <div class="flex items-center gap-1.5">
             @for (chip of chips(); track chip.pinned.task.id) {
@@ -117,7 +119,7 @@ interface BannerPin {
             }
           </div>
 
-          <span class="bg-border mx-1 h-6 w-px" aria-hidden="true"></span>
+          <app-divider orientation="vertical" class="mx-1" />
 
           <button
             app-toolbar-button

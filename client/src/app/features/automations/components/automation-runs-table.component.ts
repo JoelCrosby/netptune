@@ -1,15 +1,13 @@
 import {
   Component,
   computed,
-  effect,
   input,
   signal,
   Signal,
   viewChild,
 } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { debouncedSignal, onChange, toggleInSet } from '@core/util/signals';
 import { Params } from '@angular/router';
-import { debounceTime } from 'rxjs/operators';
 import {
   actionTypeLabels,
   automationActionResultStatusLabels,
@@ -213,10 +211,7 @@ export class AutomationRunsTableComponent {
     new Set()
   );
 
-  private readonly search = toSignal(
-    toObservable(this.searchInput).pipe(debounceTime(250)),
-    { initialValue: '' }
-  );
+  private readonly search = debouncedSignal(this.searchInput);
 
   private readonly datatable = viewChild(DatatableComponent<AutomationRun>);
 
@@ -301,25 +296,16 @@ export class AutomationRunsTableComponent {
   }));
 
   constructor() {
-    let previousSearch = this.search();
-
-    effect(() => {
-      const search = this.search();
-
-      if (search === previousSearch) return;
-
-      previousSearch = search;
-      this.goToFirstPage();
-    });
+    onChange(this.search, () => this.goToFirstPage());
   }
 
   toggleStatusFilter(status: AutomationRunStatus) {
-    this.statusFilter.update((current) => toggle(current, status));
+    toggleInSet(this.statusFilter, status);
     this.goToFirstPage();
   }
 
   toggleTriggerFilter(triggerType: AutomationTriggerType) {
-    this.triggerFilter.update((current) => toggle(current, triggerType));
+    toggleInSet(this.triggerFilter, triggerType);
     this.goToFirstPage();
   }
 
@@ -377,14 +363,4 @@ export class AutomationRunsTableComponent {
   targetLabel(run: AutomationRun): string {
     return entityTargetLabel(run.entityType, run.entityId);
   }
-}
-
-function toggle<T>(current: ReadonlySet<T>, value: T): ReadonlySet<T> {
-  const next = new Set(current);
-
-  if (!next.delete(value)) {
-    next.add(value);
-  }
-
-  return next;
 }

@@ -34,7 +34,6 @@ import { PageContainerComponent } from '@static/components/page-container/page-c
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
-import { finalize } from 'rxjs';
 import {
   AutomationActionsEditorComponent,
   EditableAutomationAction,
@@ -61,6 +60,7 @@ import {
 } from '../../models/automation.models';
 import { AutomationsService } from '../../services/automations.service';
 import { PanelComponent } from '@static/components/panel.component';
+import { mutation } from '@core/util/mutation';
 
 @Component({
   selector: 'app-automation-form-view',
@@ -183,7 +183,7 @@ import { PanelComponent } from '@static/components/panel.component';
               app-flat-button
               color="primary"
               type="button"
-              [disabled]="saving()"
+              [disabled]="saving.pending()"
               (click)="onSubmit()">
               {{ isEdit() ? 'Save Automation' : 'Create Automation' }}
             </button>
@@ -213,7 +213,7 @@ export class AutomationFormViewComponent {
   );
   private readonly ruleId = signal(this.readRuleId());
 
-  readonly saving = signal(false);
+  readonly saving = mutation();
   readonly validationError = signal<string | null>(null);
   readonly summaryOpen = signal(true);
 
@@ -441,25 +441,19 @@ export class AutomationFormViewComponent {
       ? this.service.update(id, request)
       : this.service.create(request);
 
-    this.saving.set(true);
-
-    save
-      .pipe(
-        finalize(() => this.saving.set(false)),
-        takeUntilDestroyed(this.destroyRef)
-      )
-      .subscribe({
-        next: (rule) => {
-          this.snackbar.open(id ? 'Automation updated' : 'Automation created');
-          void this.router.navigate(id ? ['../'] : ['../', rule.id], {
-            relativeTo: this.route,
-          });
-        },
-        error: () =>
-          this.snackbar.error(
-            $localize`:Error after failing to save an automation:Automation could not be saved`
-          ),
-      });
+    this.saving.run(save.pipe(takeUntilDestroyed(this.destroyRef)), {
+      onSuccess: (rule) => {
+        this.snackbar.open(id ? 'Automation updated' : 'Automation created');
+        void this.router.navigate(id ? ['../'] : ['../', rule.id], {
+          relativeTo: this.route,
+        });
+      },
+      onError: () => {
+        this.snackbar.error(
+          $localize`:Error after failing to save an automation:Automation could not be saved`
+        );
+      },
+    });
   }
 
   populate(rule: AutomationRule) {

@@ -10,6 +10,7 @@ import { SelectableRowComponent } from '@static/components/selectable-row.compon
 import { StatusChipComponent } from '@static/components/status-chip.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
+import { toggleInSet } from '@core/util/signals';
 
 export interface MoveMatchingTask {
   id: number;
@@ -255,7 +256,7 @@ export class MoveMatchingTasksDialogComponent {
 
   readonly data = inject<MoveMatchingTasksDialogData>(DIALOG_DATA);
 
-  readonly selectedIds = signal(
+  readonly selectedIds = signal<ReadonlySet<number>>(
     new Set(this.data.tasks.map((task) => task.id))
   );
 
@@ -285,17 +286,7 @@ export class MoveMatchingTasksDialogComponent {
   }
 
   toggle(taskId: number, selected: boolean) {
-    this.selectedIds.update((ids) => {
-      const next = new Set(ids);
-
-      if (selected) {
-        next.add(taskId);
-      } else {
-        next.delete(taskId);
-      }
-
-      return next;
-    });
+    toggleInSet(this.selectedIds, taskId, selected);
   }
 
   toggleAll(selected: boolean) {

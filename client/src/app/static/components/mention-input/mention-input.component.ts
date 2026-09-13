@@ -24,6 +24,7 @@ import {
   FormControlPrefixDirective,
 } from '../form-control/form-control.directives';
 import { FormErrorComponent } from '../form-error/form-error.component';
+import { ListboxKeyboard, listboxOptions } from '../listbox-keyboard';
 
 export interface MentionSubmitEvent {
   text: string;
@@ -110,7 +111,7 @@ export interface MentionSubmitEvent {
         @for (user of filteredUsers(); track user.id) {
           <button
             class="hover:bg-hover flex cursor-pointer flex-row items-center gap-2 border-0 bg-transparent px-3 py-2 text-left text-sm"
-            [class.bg-hover]="activeIndex() === $index"
+            [class.bg-hover]="keyboard.activeIndex() === $index"
             (mousedown)="selectUser(user)">
             <app-avatar
               size="sm"
@@ -160,7 +161,14 @@ export class MentionInputComponent
   readonly mentionSubmit = output<MentionSubmitEvent>();
 
   filteredUsers = signal<AppUser[]>([]);
-  activeIndex = signal(0);
+
+  readonly keyboard = new ListboxKeyboard({
+    items: listboxOptions(this.filteredUsers),
+    isOpen: () => !!this.overlayRef?.hasAttached(),
+    close: () => this.closeDropdown(),
+    select: (option) => this.selectUser(option.value),
+    selectKeys: ['Enter', 'Tab'],
+  });
 
   private overlayRef?: OverlayRef;
   private mentionStart = -1;
@@ -199,36 +207,16 @@ export class MentionInputComponent
   }
 
   onKeyDown(event: KeyboardEvent) {
-    if (!this.overlayRef?.hasAttached()) {
-      if (event.key === 'Enter') {
-        event.preventDefault();
-        this.submit();
-      }
+    const submits = event.key === 'Enter' && !this.overlayRef?.hasAttached();
+
+    if (!submits) {
+      this.keyboard.handleKeydown(event);
+
       return;
     }
 
-    const users = this.filteredUsers();
-
-    switch (event.key) {
-      case 'ArrowDown':
-        event.preventDefault();
-        this.activeIndex.update((i) => Math.min(i + 1, users.length - 1));
-        break;
-      case 'ArrowUp':
-        event.preventDefault();
-        this.activeIndex.update((i) => Math.max(i - 1, 0));
-        break;
-      case 'Enter':
-      case 'Tab':
-        event.preventDefault();
-        if (users[this.activeIndex()]) {
-          this.selectUser(users[this.activeIndex()]);
-        }
-        break;
-      case 'Escape':
-        this.closeDropdown();
-        break;
-    }
+    event.preventDefault();
+    this.submit();
   }
 
   onBlur() {
@@ -303,7 +291,7 @@ export class MentionInputComponent
       : allUsers;
 
     this.filteredUsers.set(filtered);
-    this.activeIndex.set(0);
+    this.keyboard.setActiveIndex(0);
 
     if (!this.overlayRef?.hasAttached()) {
       this.overlayRef = this.overlay.create({

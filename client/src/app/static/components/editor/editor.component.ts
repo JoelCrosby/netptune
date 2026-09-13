@@ -16,6 +16,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UploadResponse } from '@core/models/upload-result';
 import { StorageService } from '@core/services/storage.service';
 import { unwrapClientResponse } from '@core/util/rxjs-operators';
+import { reloadToken } from '@core/util/signals';
 import { Editor } from '@tiptap/core';
 import { BubbleMenu } from '@tiptap/extension-bubble-menu';
 import { FloatingMenu } from '@tiptap/extension-floating-menu';
@@ -109,7 +110,7 @@ export class EditorComponent
 
   // bumped on every transaction so the menus can recompute which marks and nodes
   // are active at the cursor
-  protected readonly revision = signal(0);
+  protected readonly revision = reloadToken();
 
   private editorValue: string | null = null;
 
@@ -247,7 +248,7 @@ export class EditorComponent
       },
       onCreate: () => this.loaded.emit(),
       onUpdate: ({ editor: updated }) => this.onUpdate(updated),
-      onTransaction: () => this.revision.update((value) => value + 1),
+      onTransaction: () => this.revision.bump(),
     });
 
     this.editorValue = this.value();

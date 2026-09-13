@@ -1,3 +1,4 @@
+import { toDateInputValue } from '@core/util/dates';
 import {
   Component,
   ElementRef,
@@ -23,7 +24,6 @@ import {
   calendarDays,
   calendarMonths,
   calendarWeekdays,
-  dateValue,
   makeDate,
   parseDateValue,
   sameCalendarDay,
@@ -352,7 +352,7 @@ export class CalendarComponent {
   private focusDate(date: Date): void {
     setTimeout(() => {
       const button = this.grid().nativeElement.querySelector<HTMLElement>(
-        `[data-date="${dateValue(date)}"]`
+        `[data-date="${toDateInputValue(date)}"]`
       );
       button?.focus();
     });

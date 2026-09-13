@@ -1,5 +1,6 @@
-import { Component, computed, input, model, output } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { LucideCheck } from '@lucide/angular';
+import { AbstractCheckableControl } from '../abstract-checkable-control';
 
 export type CheckboxDensity = 'default' | 'compact';
 
@@ -50,18 +51,9 @@ const boxClasses: Record<CheckboxDensity, string> = {
     </label>
   `,
 })
-export class CheckboxComponent {
-  readonly checked = model(false);
-  readonly disabled = input(false);
+export class CheckboxComponent extends AbstractCheckableControl {
   readonly density = input<CheckboxDensity>('default');
-  readonly changed = output<boolean>();
 
   protected readonly labelClass = computed(() => labelClasses[this.density()]);
   protected readonly boxClass = computed(() => boxClasses[this.density()]);
-
-  onChanged(event: Event) {
-    const input = event.target as HTMLInputElement;
-    this.checked.set(input.checked);
-    this.changed.emit(input.checked);
-  }
 }

@@ -1,4 +1,10 @@
-import { Component, OnDestroy, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  OnDestroy,
+  viewChild,
+} from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { PERMISSIONS } from '@core/auth/permissions';
@@ -53,7 +59,7 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
       }
 
       <app-page-body>
-        <app-task-list (countChange)="count.set($event)" />
+        <app-task-list />
       </app-page-body>
     </app-page-container>
   `,
@@ -63,7 +69,8 @@ export class ProjectTasksViewComponent implements OnDestroy {
   private taskCommands = inject(TaskCommandsService);
   private hubService = inject(ProjectTasksHubService);
 
-  readonly count = signal<number | null>(null);
+  private readonly taskList = viewChild(TaskListComponent);
+  readonly count = computed(() => this.taskList()?.count() ?? null);
 
   workspaceId = inject(CurrentWorkspaceService).slug;
   canCreateTasks = hasPermission(PERMISSIONS.tasks.create);

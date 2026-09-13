@@ -2,8 +2,9 @@ import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AiSpendService } from '@core/services/ai-spend.service';
-import { getErrorMessage } from '@core/util/error-message';
 import { formatCurrency } from '@core/util/ai-usage';
+import { mutation } from '@core/util/mutation';
+import { requireSuccess } from '@core/util/rxjs-operators';
 import { LucideInfo } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
@@ -12,7 +13,6 @@ import { DialogTitleComponent } from '@static/components/dialog-title/dialog-tit
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
-import { first } from 'rxjs';
 
 export interface AssistantSpendCapDialogData {
   cap: number | null;
@@ -99,8 +99,12 @@ export class AssistantSpendCapDialogComponent {
 
   protected readonly infoIcon = LucideInfo;
   protected readonly cap = signal<number | null>(this.data.cap);
-  protected readonly busy = signal(false);
-  protected readonly error = signal<string | null>(null);
+  private readonly request = mutation({
+    fallbackError: $localize`:Shown when saving the spend cap fails:The cap could not be saved.`,
+  });
+
+  protected readonly busy = this.request.pending;
+  protected readonly error = this.request.error;
 
   protected readonly spentLabel = computed(() => {
     return formatCurrency(this.data.monthToDate);
@@ -111,47 +115,21 @@ export class AssistantSpendCapDialogComponent {
     const isInvalid = cap !== null && cap <= 0;
 
     if (isInvalid) {
-      this.error.set(
+      this.request.setError(
         $localize`:Shown when the spend cap is not a positive amount:A cap has to be more than $0. Leave it empty for no cap.`
       );
 
       return;
     }
 
-    this.busy.set(true);
-    this.error.set(null);
-
-    this.service
-      .setCap({ cap })
-      .pipe(first())
-      .subscribe({
-        next: (response) => {
-          this.busy.set(false);
-
-          if (!response.isSuccess) {
-            this.error.set(
-              response.message ??
-                $localize`:Shown when saving the spend cap fails:The cap could not be saved.`
-            );
-
-            return;
-          }
-
-          this.snackbar.success(
-            $localize`:Shown after the assistant spend cap is stored:Spend cap saved.`
-          );
-          this.dialogRef.close(true);
-        },
-        error: (error) => {
-          this.busy.set(false);
-          this.error.set(
-            getErrorMessage(
-              error,
-              $localize`:Shown when saving the spend cap fails:The cap could not be saved.`
-            )
-          );
-        },
-      });
+    this.request.run(this.service.setCap({ cap }).pipe(requireSuccess()), {
+      onSuccess: () => {
+        this.snackbar.success(
+          $localize`:Shown after the assistant spend cap is stored:Spend cap saved.`
+        );
+        this.dialogRef.close(true);
+      },
+    });
   }
 
   private normalisedCap(): number | null {

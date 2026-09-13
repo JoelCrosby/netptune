@@ -1,14 +1,5 @@
-import {
-  Component,
-  computed,
-  effect,
-  inject,
-  signal,
-  viewChild,
-} from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { getErrorMessage } from '@core/util/error-message';
-import { Params, RouterLink } from '@angular/router';
+import { Component, inject, viewChild } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import {
   RelationCategory,
   RelationType,
@@ -42,7 +33,6 @@ import { DatatableComponent } from '@static/components/datatable/datatable.compo
 import {
   DatatableDataSource,
   DatatableMenuItem,
-  DatatableSort,
 } from '@static/components/datatable/datatable.types';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
@@ -51,8 +41,7 @@ import { PageContainerComponent } from '@static/components/page-container/page-c
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SearchInputComponent } from '@static/components/search-input/search-input.component';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
-import { debounceTime } from 'rxjs/operators';
-import { finalize, first } from 'rxjs';
+import { orderableEntityList } from '../../shared/orderable-entity-list';
 
 @Component({
   selector: 'app-relation-types-view',
@@ -84,17 +73,17 @@ import { finalize, first } from 'rxjs';
         actionTitle="Create relation type"
         i18n-filtersLabel="Accessible name of the relation type list filter row"
         filtersLabel="Filter relation types"
-        [count]="count()"
+        [count]="table.loadedCount()"
         (actionClick)="openCreateDialog()">
         <div pageHeaderFilters class="flex flex-row items-center gap-2.5">
           <app-search-input
-            [term]="searchInput()"
-            (searchChange)="searchInput.set($event ?? '')" />
+            [term]="list.searchInput()"
+            (searchChange)="list.searchInput.set($event ?? '')" />
         </div>
       </app-page-header>
 
       <app-page-body>
-        @if (error()) {
+        @if (list.error()) {
           <app-error-state
             compact
             class="mb-3 shrink-0"
@@ -102,11 +91,12 @@ import { finalize, first } from 'rxjs';
               Shown when a change to a relation type could not be saved
             "
             title="That change could not be saved"
-            [description]="error() ?? ''"
-            (retry)="reload()" />
+            [description]="list.error() ?? ''"
+            (retry)="list.reload()" />
         }
 
         <app-datatable
+          #table
           autoFill
           stickyHeader
           tableClass="md:min-w-[820px] table-fixed"
@@ -117,8 +107,7 @@ import { finalize, first } from 'rxjs';
           "
           itemLabel="relations"
           [data]="data"
-          [(sort)]="sort"
-          (loaded)="count.set($event.hasValue ? $event.totalCount : null)">
+          [(sort)]="list.sort">
           <ng-template appDatatableCell="color" let-relationType>
             <app-color-swatch variant="swatch" [color]="relationType.color" />
           </ng-template>
@@ -150,24 +139,24 @@ import { finalize, first } from 'rxjs';
             <div class="flex gap-1">
               <button
                 app-icon-button
-                [appTooltip]="moveTooltip(moveUpLabel)"
+                [appTooltip]="list.moveTooltip(list.moveUpLabel)"
                 i18n-aria-label="
                   Accessible label for the button that moves a relation type up
                 "
                 aria-label="Move relation type up"
-                [disabled]="!canMoveUp(i)"
+                [disabled]="!list.canMoveUp(i)"
                 (click)="move(relationType.id, SortMoveDirection.up)">
                 <svg lucideArrowUp class="h-4 w-4"></svg>
               </button>
               <button
                 app-icon-button
-                [appTooltip]="moveTooltip(moveDownLabel)"
+                [appTooltip]="list.moveTooltip(list.moveDownLabel)"
                 i18n-aria-label="
                   Accessible label for the button that moves a relation type
                   down
                 "
                 aria-label="Move relation type down"
-                [disabled]="!canMoveDown(i)"
+                [disabled]="!list.canMoveDown(i)"
                 (click)="move(relationType.id, SortMoveDirection.down)">
                 <svg lucideArrowDown class="h-4 w-4"></svg>
               </button>
@@ -175,7 +164,7 @@ import { finalize, first } from 'rxjs';
           </ng-template>
 
           <ng-template appDatatableEmpty>
-            @if (search()) {
+            @if (list.search()) {
               <app-empty-state
                 compact
                 i18n-title="Heading shown when a search matches nothing"
@@ -205,51 +194,23 @@ export class RelationTypesViewComponent {
   private readonly dialog = inject(DialogService);
 
   readonly SortMoveDirection = SortMoveDirection;
-  readonly moveUpLabel = $localize`:Tooltip on the button that moves a row up:Move up`;
-  readonly moveDownLabel = $localize`:Tooltip on the button that moves a row down:Move down`;
-  readonly manualOrderOnlyLabel = $localize`:Explains that manual reordering needs the default, unfiltered view:Clear the search and sort by Order to reorder`;
-
-  readonly saving = signal(false);
-  readonly error = signal<string | null>(null);
-  readonly count = signal<number | null>(null);
-  readonly searchInput = signal('');
-  readonly sort = signal<DatatableSort | null>(null);
-  private readonly reloadToken = signal(0);
-
-  readonly search = toSignal(
-    toObservable(this.searchInput).pipe(debounceTime(250)),
-    { initialValue: '' }
-  );
 
   private readonly datatable = viewChild(DatatableComponent<RelationType>);
 
-  // Rows only sit next to their sort-order neighbours in the default, unfiltered view,
-  // so that is the only view where moving a row up or down means anything.
-  readonly manualOrderActive = computed(() => {
-    const sort = this.sort();
-    const sortedByOrder = sort === null || sort.sortBy === 'sortOrder';
-
-    return sortedByOrder && !this.search().trim();
-  });
-
-  private readonly resourceParams = computed<Params>(() => {
-    const search = this.search().trim();
-
-    return search ? { search } : {};
-  });
+  readonly list = orderableEntityList(this.datatable);
 
   private readonly menu: DatatableMenuItem<RelationType>[] = [
     {
       label: $localize`:Row action that edits a relation type:Edit`,
       icon: LucideSettings2,
       onClick: (relationType) => this.openEditDialog(relationType),
-      disabled: () => this.saving(),
+      disabled: () => this.list.pending(),
     },
     {
       label: $localize`:Row action that deletes a relation type:Delete`,
       icon: LucideTrash2,
       onClick: (relationType) => this.delete(relationType),
-      disabled: (relationType) => relationType.isSystem || this.saving(),
+      disabled: (relationType) => relationType.isSystem || this.list.pending(),
     },
   ];
 
@@ -301,109 +262,44 @@ export class RelationTypesViewComponent {
         widthClass: 'w-28',
       },
     ],
-    resource: { url: 'api/relation-types/page', params: this.resourceParams },
+    resource: {
+      url: 'api/relation-types/page',
+      params: this.list.searchParams,
+    },
     rows: (response) => response?.payload?.items ?? [],
     trackBy: (_: number, relationType: RelationType) => relationType.id,
     menu: this.menu,
-    reloadSignal: this.reloadToken,
+    reloadSignal: this.list.reloadToken,
   };
 
-  constructor() {
-    let previousSearch = this.search();
+  async openCreateDialog() {
+    const result =
+      await this.dialog.openForResult<CreateRelationTypeDialogResult>(
+        CreateRelationTypeDialogComponent,
+        { width: '480px' }
+      );
 
-    effect(() => {
-      const search = this.search();
+    if (!result) return;
 
-      if (search === previousSearch) return;
-
-      previousSearch = search;
-      this.datatable()?.goToPage(1);
-    });
-  }
-
-  reload() {
-    this.error.set(null);
-    this.reloadToken.update((token) => token + 1);
-  }
-
-  moveTooltip(label: string) {
-    return this.manualOrderActive() ? label : this.manualOrderOnlyLabel;
-  }
-
-  canMoveUp(rowIndex: number) {
-    const isFirstOverall = this.globalIndex(rowIndex) === 0;
-
-    return this.manualOrderActive() && !this.saving() && !isFirstOverall;
-  }
-
-  canMoveDown(rowIndex: number) {
-    const table = this.datatable();
-    const isLastOverall =
-      this.globalIndex(rowIndex) === (table?.totalCount() ?? 0) - 1;
-
-    return this.manualOrderActive() && !this.saving() && !isLastOverall;
-  }
-
-  private globalIndex(rowIndex: number) {
-    const table = this.datatable();
-
-    if (!table) return rowIndex;
-
-    return (table.currentPage() - 1) * table.pageSize() + rowIndex;
-  }
-
-  openCreateDialog() {
-    const dialogRef = this.dialog.open<CreateRelationTypeDialogResult>(
-      CreateRelationTypeDialogComponent,
-      {
-        width: '480px',
-      }
-    );
-
-    dialogRef.closed.pipe(first()).subscribe({
-      next: (result) => {
-        if (!result) return;
-
-        this.create(result);
-      },
-    });
+    this.create(result);
   }
 
   create(result: CreateRelationTypeDialogResult) {
     const name = result.name.trim();
     if (!name) return;
 
-    this.saving.set(true);
-    this.error.set(null);
+    const request = this.relationTypesService.create({
+      name,
+      inverseName: result.inverseName,
+      category: result.category,
+      color: fallbackColor,
+    });
 
-    this.relationTypesService
-      .create({
-        name,
-        inverseName: result.inverseName,
-        category: result.category,
-        color: fallbackColor,
-      })
-      .pipe(finalize(() => this.saving.set(false)))
-      .subscribe({
-        next: (response) => {
-          if (!response.isSuccess || !response.payload) {
-            this.error.set(
-              response.message ?? 'Relation type could not be created.'
-            );
-            return;
-          }
-
-          this.reload();
-        },
-        error: (error) =>
-          this.error.set(
-            getErrorMessage(error, 'Relation type could not be created.')
-          ),
-      });
+    this.list.create(request, 'Relation type could not be created.');
   }
 
-  openEditDialog(relationType: RelationType) {
-    const dialogRef = this.dialog.open<
+  async openEditDialog(relationType: RelationType) {
+    const result = await this.dialog.openForResult<
       EditRelationTypeDialogResult,
       RelationType
     >(EditRelationTypeDialogComponent, {
@@ -411,99 +307,41 @@ export class RelationTypesViewComponent {
       width: '480px',
     });
 
-    dialogRef.closed.pipe(first()).subscribe({
-      next: (result) => {
-        if (!result) return;
+    if (!result) return;
 
-        this.update(relationType, result);
-      },
-    });
+    this.update(relationType, result);
   }
 
   update(relationType: RelationType, result: EditRelationTypeDialogResult) {
     const name = result.name.trim();
     if (!name) return;
 
-    this.saving.set(true);
-    this.error.set(null);
+    const request = this.relationTypesService.update({
+      id: relationType.id,
+      name,
+      inverseName: result.inverseName,
+      description: relationType.description?.trim() || null,
+      color: result.color,
+    });
 
-    this.relationTypesService
-      .update({
-        id: relationType.id,
-        name,
-        inverseName: result.inverseName,
-        description: relationType.description?.trim() || null,
-        color: result.color,
-      })
-      .pipe(finalize(() => this.saving.set(false)))
-      .subscribe({
-        next: (response) => {
-          if (!response.isSuccess) {
-            this.error.set(
-              response.message ?? 'Relation type could not be saved.'
-            );
-            return;
-          }
-
-          this.reload();
-        },
-        error: (error) =>
-          this.error.set(
-            getErrorMessage(error, 'Relation type could not be saved.')
-          ),
-      });
+    this.list.save(request, 'Relation type could not be saved.');
   }
 
   delete(relationType: RelationType) {
     if (relationType.isSystem) return;
 
-    this.saving.set(true);
-    this.error.set(null);
+    const request = this.relationTypesService.delete(relationType.id);
 
-    this.relationTypesService
-      .delete(relationType.id)
-      .pipe(finalize(() => this.saving.set(false)))
-      .subscribe({
-        next: (response) => {
-          if (!response.isSuccess) {
-            this.error.set(
-              response.message ?? 'Relation type could not be deleted.'
-            );
-            return;
-          }
-
-          this.reload();
-        },
-        error: (error) =>
-          this.error.set(
-            getErrorMessage(error, 'Relation type could not be deleted.')
-          ),
-      });
+    this.list.save(request, 'Relation type could not be deleted.');
   }
 
   move(relationTypeId: number, direction: SortMoveDirection) {
-    this.saving.set(true);
-    this.error.set(null);
+    const request = this.relationTypesService.move({
+      id: relationTypeId,
+      direction,
+    });
 
-    this.relationTypesService
-      .move({ id: relationTypeId, direction })
-      .pipe(finalize(() => this.saving.set(false)))
-      .subscribe({
-        next: (response) => {
-          if (!response.isSuccess) {
-            this.error.set(
-              response.message ?? 'Relation types could not be reordered.'
-            );
-            return;
-          }
-
-          this.reload();
-        },
-        error: (error) =>
-          this.error.set(
-            getErrorMessage(error, 'Relation types could not be reordered.')
-          ),
-      });
+    this.list.save(request, 'Relation types could not be reordered.');
   }
 
   isSymmetric(relationType: RelationType) {

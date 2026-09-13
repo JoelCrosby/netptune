@@ -1,12 +1,15 @@
 import { hostTimeZone } from '@core/util/dates';
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { ReportingGrouping, ReportingUnit } from '@core/models/reporting';
 import { projectResource } from '@core/resources/project.resource';
 import { sprintResource } from '@core/resources/sprint.resource';
+import { projectSprintRoute } from '@core/router/project-sprint-route';
+import {
+  queryParamSignal,
+  queryParamsRoute,
+} from '@core/router/query-param-signal';
 import {
   LucideCalendarRange,
   LucideFolder,
@@ -95,7 +98,7 @@ const defaultFrom = defaultRange.from;
               ariaLabel="Report start date"
               buttonClass="min-w-40 justify-between"
               [value]="from()"
-              (valueChanged)="setParam('from', $event)" />
+              (valueChanged)="from.set($event || null)" />
 
             <app-date-dropdown-button
               i18n-label="Label of the end-date filter"
@@ -104,7 +107,7 @@ const defaultFrom = defaultRange.from;
               ariaLabel="Report end date"
               buttonClass="min-w-40 justify-between"
               [value]="to()"
-              (valueChanged)="setParam('to', $event)" />
+              (valueChanged)="to.set($event || null)" />
 
             <app-filter-separator />
 
@@ -164,11 +167,8 @@ const defaultFrom = defaultRange.from;
 export class ReportingViewComponent {
   protected readonly filterIcon = LucideSlidersHorizontal;
 
-  private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
-  private readonly params = toSignal(this.route.queryParamMap, {
-    initialValue: this.route.snapshot.queryParamMap,
-  });
+  private readonly queryParams = queryParamsRoute();
+  private readonly projectSprint = projectSprintRoute();
 
   readonly projectsResource = projectResource();
   readonly projects = this.projectsResource.value;
@@ -194,18 +194,16 @@ export class ReportingViewComponent {
   protected readonly groupingOptions: SelectFilterOption<ReportingGrouping>[] =
     [{ value: 'Week', label: $localize`:Report grouping by week:Weekly` }];
 
-  readonly projectId = computed(() => this.numberParam('projectId'));
-  readonly sprintId = computed(() => this.numberParam('sprintId'));
-  readonly from = computed(() => this.params().get('from') ?? defaultFrom);
-  readonly to = computed(() => this.params().get('to') ?? defaultTo);
-  readonly timeZone = computed(
-    () => this.params().get('timeZone') ?? hostTimeZone()
+  readonly projectId = this.projectSprint.projectId;
+  readonly sprintId = this.projectSprint.sprintId;
+  readonly from = queryParamSignal('from', (value) => value ?? defaultFrom);
+  readonly to = queryParamSignal('to', (value) => value ?? defaultTo);
+  readonly timeZone = queryParamSignal(
+    'timeZone',
+    (value) => value ?? hostTimeZone()
   );
-  readonly grouping = computed<ReportingGrouping>(() =>
-    reportingGrouping(this.params().get('grouping'))
-  );
-  readonly unit = computed<ReportingUnit>(() => {
-    const value = this.params().get('unit');
+  readonly grouping = queryParamSignal('grouping', reportingGrouping);
+  readonly unit = queryParamSignal('unit', (value): ReportingUnit => {
     return value === 'StoryPoints' || value === 'Hours' ? value : 'Tasks';
   });
   protected readonly projectOptions = computed<SelectFilterOption<number>[]>(
@@ -285,48 +283,25 @@ export class ReportingViewComponent {
     }
   }
 
-  setParam(key: string, value: string): void {
-    void this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
-        [key]: value || null,
-        ...(key === 'projectId' ? { sprintId: null } : {}),
-      },
-      queryParamsHandling: 'merge',
-    });
-  }
-
   setProject(projectId: number | null): void {
-    this.setParam('projectId', projectId?.toString() ?? '');
+    this.projectSprint.setProject(projectId);
   }
 
   setUnit(unit: ReportingUnit | null): void {
-    this.setParam('unit', unit ?? '');
+    this.unit.set(unit);
   }
 
   setGrouping(grouping: ReportingGrouping | null): void {
-    this.setParam('grouping', grouping ?? '');
+    this.grouping.set(grouping);
   }
 
   setSprint(sprintId: number | null): void {
     const sprint = this.sprints().find((item) => item.id === sprintId);
-    void this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
-        sprintId,
-        projectId: sprint?.projectId ?? this.projectId() ?? null,
-      },
-      queryParamsHandling: 'merge',
-    });
-  }
-
-  private numberParam(key: string): number | undefined {
-    const value = Number(this.params().get(key));
-    return Number.isInteger(value) && value > 0 ? value : undefined;
+    this.projectSprint.setSprint(sprintId, sprint?.projectId);
   }
 
   private ensureDefaultParams(): void {
-    const queryParams = this.route.snapshot.queryParamMap;
+    const queryParams = this.queryParams.paramMap();
     const hasDateRange = queryParams.has('from') && queryParams.has('to');
     const hasUnit = queryParams.has('unit');
     const hasTimeZone = queryParams.has('timeZone');
@@ -338,17 +313,15 @@ export class ReportingViewComponent {
       return;
     }
 
-    void this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
+    this.queryParams.patch(
+      {
         from: queryParams.get('from') ?? defaultFrom,
         to: queryParams.get('to') ?? defaultTo,
         unit: queryParams.get('unit') ?? 'Tasks',
         timeZone: queryParams.get('timeZone') ?? hostTimeZone(),
         grouping: queryParams.get('grouping') ?? 'Day',
       },
-      queryParamsHandling: 'merge',
-      replaceUrl: true,
-    });
+      { replaceUrl: true }
+    );
   }
 }

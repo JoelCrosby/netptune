@@ -1,13 +1,4 @@
-import {
-  Component,
-  computed,
-  effect,
-  inject,
-  signal,
-  viewChild,
-} from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { getErrorMessage } from '@core/util/error-message';
+import { Component, computed, inject, viewChild } from '@angular/core';
 import { Params, RouterLink } from '@angular/router';
 import { EntityType } from '@core/models/entity-type';
 import { SortMoveDirection } from '@core/models/sort-move-direction';
@@ -19,13 +10,9 @@ import {
 import { StatusesService } from '@core/services/statuses.service';
 import { DialogService } from '@core/services/dialog.service';
 import {
-  CreateStatusDialogComponent,
-  CreateStatusDialogResult,
-} from '@entry/dialogs/create-status-dialog/create-status-dialog.component';
-import {
-  EditStatusDialogComponent,
-  EditStatusDialogResult,
-} from '@entry/dialogs/edit-status-dialog/edit-status-dialog.component';
+  StatusDialogComponent,
+  StatusDialogResult,
+} from '@entry/dialogs/status-dialog/status-dialog.component';
 import {
   LucideArrowDown,
   LucideArrowUp,
@@ -41,7 +28,6 @@ import { DatatableComponent } from '@static/components/datatable/datatable.compo
 import {
   DatatableDataSource,
   DatatableMenuItem,
-  DatatableSort,
 } from '@static/components/datatable/datatable.types';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
@@ -50,8 +36,7 @@ import { PageContainerComponent } from '@static/components/page-container/page-c
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SearchInputComponent } from '@static/components/search-input/search-input.component';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
-import { debounceTime } from 'rxjs/operators';
-import { finalize, first } from 'rxjs';
+import { orderableEntityList } from '../../shared/orderable-entity-list';
 
 @Component({
   selector: 'app-statuses-view',
@@ -83,27 +68,28 @@ import { finalize, first } from 'rxjs';
         actionTitle="Create status"
         i18n-filtersLabel="Accessible name of the status list filter row"
         filtersLabel="Filter statuses"
-        [count]="count()"
+        [count]="table.loadedCount()"
         (actionClick)="openCreateDialog()">
         <div pageHeaderFilters class="flex flex-row items-center gap-2.5">
           <app-search-input
-            [term]="searchInput()"
-            (searchChange)="searchInput.set($event ?? '')" />
+            [term]="list.searchInput()"
+            (searchChange)="list.searchInput.set($event ?? '')" />
         </div>
       </app-page-header>
 
       <app-page-body>
-        @if (error()) {
+        @if (list.error()) {
           <app-error-state
             compact
             class="mb-3 shrink-0"
             i18n-title="Shown when a change to a status could not be saved"
             title="That change could not be saved"
-            [description]="error() ?? ''"
-            (retry)="reload()" />
+            [description]="list.error() ?? ''"
+            (retry)="list.reload()" />
         }
 
         <app-datatable
+          #table
           autoFill
           stickyHeader
           tableClass="md:min-w-[720px] table-fixed"
@@ -112,8 +98,7 @@ import { finalize, first } from 'rxjs';
           i18n-itemLabel="Plural noun for statuses, used in the row summary"
           itemLabel="statuses"
           [data]="data"
-          [(sort)]="sort"
-          (loaded)="count.set($event.hasValue ? $event.totalCount : null)">
+          [(sort)]="list.sort">
           <ng-template appDatatableCell="color" let-status>
             <app-color-swatch variant="swatch" [color]="status.color" />
           </ng-template>
@@ -130,23 +115,23 @@ import { finalize, first } from 'rxjs';
             <div class="flex gap-1">
               <button
                 app-icon-button
-                [appTooltip]="moveTooltip(moveUpLabel)"
+                [appTooltip]="list.moveTooltip(list.moveUpLabel)"
                 i18n-aria-label="
                   Accessible label for the button that moves a status up
                 "
                 aria-label="Move status up"
-                [disabled]="!canMoveUp(i)"
+                [disabled]="!list.canMoveUp(i)"
                 (click)="move(status.id, SortMoveDirection.up)">
                 <svg lucideArrowUp class="h-4 w-4"></svg>
               </button>
               <button
                 app-icon-button
-                [appTooltip]="moveTooltip(moveDownLabel)"
+                [appTooltip]="list.moveTooltip(list.moveDownLabel)"
                 i18n-aria-label="
                   Accessible label for the button that moves a status down
                 "
                 aria-label="Move status down"
-                [disabled]="!canMoveDown(i)"
+                [disabled]="!list.canMoveDown(i)"
                 (click)="move(status.id, SortMoveDirection.down)">
                 <svg lucideArrowDown class="h-4 w-4"></svg>
               </button>
@@ -154,7 +139,7 @@ import { finalize, first } from 'rxjs';
           </ng-template>
 
           <ng-template appDatatableEmpty>
-            @if (search()) {
+            @if (list.search()) {
               <app-empty-state
                 compact
                 i18n-title="Heading shown when a search matches nothing"
@@ -184,39 +169,15 @@ export class StatusesViewComponent {
   private readonly dialog = inject(DialogService);
 
   readonly SortMoveDirection = SortMoveDirection;
-  readonly moveUpLabel = $localize`:Tooltip on the button that moves a row up:Move up`;
-  readonly moveDownLabel = $localize`:Tooltip on the button that moves a row down:Move down`;
-  readonly manualOrderOnlyLabel = $localize`:Explains that manual reordering needs the default, unfiltered view:Clear the search and sort by Order to reorder`;
-
-  readonly count = signal<number | null>(null);
-  readonly saving = signal(false);
-  readonly error = signal<string | null>(null);
-  readonly searchInput = signal('');
-  readonly sort = signal<DatatableSort | null>(null);
-  private readonly reloadToken = signal(0);
-
-  readonly search = toSignal(
-    toObservable(this.searchInput).pipe(debounceTime(250)),
-    { initialValue: '' }
-  );
 
   private readonly datatable = viewChild(DatatableComponent<Status>);
 
-  // Rows only sit next to their sort-order neighbours in the default, unfiltered view,
-  // so that is the only view where moving a row up or down means anything.
-  readonly manualOrderActive = computed(() => {
-    const sort = this.sort();
-    const sortedByOrder = sort === null || sort.sortBy === 'sortOrder';
-
-    return sortedByOrder && !this.search().trim();
-  });
+  readonly list = orderableEntityList(this.datatable);
 
   private readonly resourceParams = computed<Params>(() => {
-    const search = this.search().trim();
-
     return {
       entityType: EntityType.task,
-      ...(search ? { search } : {}),
+      ...this.list.searchParams(),
     };
   });
 
@@ -225,13 +186,13 @@ export class StatusesViewComponent {
       label: $localize`:Row action that edits a status:Edit`,
       icon: LucideSettings2,
       onClick: (status) => this.openEditDialog(status),
-      disabled: () => this.saving(),
+      disabled: () => this.list.pending(),
     },
     {
       label: $localize`:Row action that deletes a status:Delete`,
       icon: LucideTrash2,
       onClick: (status) => this.delete(status),
-      disabled: (status) => status.isSystem || this.saving(),
+      disabled: (status) => status.isSystem || this.list.pending(),
     },
   ];
 
@@ -280,198 +241,73 @@ export class StatusesViewComponent {
     rows: (response) => response?.payload?.items ?? [],
     trackBy: (_: number, status: Status) => status.id,
     menu: this.menu,
-    reloadSignal: this.reloadToken,
+    reloadSignal: this.list.reloadToken,
   };
 
-  constructor() {
-    let previousSearch = this.search();
-
-    effect(() => {
-      const search = this.search();
-
-      if (search === previousSearch) return;
-
-      previousSearch = search;
-      this.datatable()?.goToPage(1);
-    });
-  }
-
-  reload() {
-    this.error.set(null);
-    this.reloadToken.update((token) => token + 1);
-  }
-
-  moveTooltip(label: string) {
-    return this.manualOrderActive() ? label : this.manualOrderOnlyLabel;
-  }
-
-  canMoveUp(rowIndex: number) {
-    const isFirstOverall = this.globalIndex(rowIndex) === 0;
-
-    return this.manualOrderActive() && !this.saving() && !isFirstOverall;
-  }
-
-  canMoveDown(rowIndex: number) {
-    const table = this.datatable();
-    const isLastOverall =
-      this.globalIndex(rowIndex) === (table?.totalCount() ?? 0) - 1;
-
-    return this.manualOrderActive() && !this.saving() && !isLastOverall;
-  }
-
-  private globalIndex(rowIndex: number) {
-    const table = this.datatable();
-
-    if (!table) return rowIndex;
-
-    return (table.currentPage() - 1) * table.pageSize() + rowIndex;
-  }
-
-  openCreateDialog() {
-    const dialogRef = this.dialog.open<CreateStatusDialogResult>(
-      CreateStatusDialogComponent,
-      {
-        width: '420px',
-      }
+  async openCreateDialog() {
+    const result = await this.dialog.openForResult<StatusDialogResult>(
+      StatusDialogComponent,
+      { width: '420px' }
     );
 
-    dialogRef.closed.pipe(first()).subscribe({
-      next: (result) => {
-        if (!result) return;
+    if (!result) return;
 
-        this.create(result);
-      },
-    });
+    this.create(result);
   }
 
-  create(result: CreateStatusDialogResult) {
+  create(result: StatusDialogResult) {
     const name = result.name.trim();
     if (!name) return;
 
-    this.saving.set(true);
-    this.error.set(null);
+    const request = this.statusesService.create({
+      entityType: EntityType.task,
+      name,
+      category: result.category,
+      color: result.color,
+    });
 
-    this.statusesService
-      .create({
-        entityType: EntityType.task,
-        name,
-        category: result.category,
-        color: result.color,
-      })
-      .pipe(finalize(() => this.saving.set(false)))
-      .subscribe({
-        next: (response) => {
-          if (!response.isSuccess || !response.payload) {
-            this.error.set(response.message ?? 'Status could not be created.');
-            return;
-          }
-
-          this.reload();
-        },
-        error: (error) =>
-          this.error.set(
-            getErrorMessage(error, 'Status could not be created.')
-          ),
-      });
+    this.list.create(request, 'Status could not be created.');
   }
 
-  openEditDialog(status: Status) {
-    const dialogRef = this.dialog.open<EditStatusDialogResult, Status>(
-      EditStatusDialogComponent,
-      {
-        data: status,
-        width: '420px',
-      }
+  async openEditDialog(status: Status) {
+    const result = await this.dialog.openForResult<StatusDialogResult, Status>(
+      StatusDialogComponent,
+      { data: status, width: '420px' }
     );
 
-    dialogRef.closed.pipe(first()).subscribe({
-      next: (result) => {
-        if (!result) return;
+    if (!result) return;
 
-        this.update(status, result);
-      },
-    });
+    this.update(status, result);
   }
 
-  update(status: Status, result: EditStatusDialogResult) {
+  update(status: Status, result: StatusDialogResult) {
     const name = result.name.trim();
     if (!name) return;
 
-    this.saving.set(true);
-    this.error.set(null);
+    const request = this.statusesService.update({
+      id: status.id,
+      entityType: status.entityType,
+      name,
+      description: status.description?.trim() || null,
+      color: result.color,
+      category: result.category,
+    });
 
-    this.statusesService
-      .update({
-        id: status.id,
-        entityType: status.entityType,
-        name,
-        description: status.description?.trim() || null,
-        color: result.color,
-        category: result.category,
-      })
-      .pipe(finalize(() => this.saving.set(false)))
-      .subscribe({
-        next: (response) => {
-          if (!response.isSuccess) {
-            this.error.set(response.message ?? 'Status could not be saved.');
-            return;
-          }
-
-          this.reload();
-        },
-        error: (error) =>
-          this.error.set(getErrorMessage(error, 'Status could not be saved.')),
-      });
+    this.list.save(request, 'Status could not be saved.');
   }
 
   delete(status: Status) {
     if (status.isSystem) return;
 
-    this.saving.set(true);
-    this.error.set(null);
+    const request = this.statusesService.delete(status.id);
 
-    this.statusesService
-      .delete(status.id)
-      .pipe(finalize(() => this.saving.set(false)))
-      .subscribe({
-        next: (response) => {
-          if (!response.isSuccess) {
-            this.error.set(response.message ?? 'Status could not be deleted.');
-            return;
-          }
-
-          this.reload();
-        },
-        error: (error) =>
-          this.error.set(
-            getErrorMessage(error, 'Status could not be deleted.')
-          ),
-      });
+    this.list.save(request, 'Status could not be deleted.');
   }
 
   move(statusId: number, direction: SortMoveDirection) {
-    this.saving.set(true);
-    this.error.set(null);
+    const request = this.statusesService.move({ id: statusId, direction });
 
-    this.statusesService
-      .move({ id: statusId, direction })
-      .pipe(finalize(() => this.saving.set(false)))
-      .subscribe({
-        next: (response) => {
-          if (!response.isSuccess) {
-            this.error.set(
-              response.message ?? 'Statuses could not be reordered.'
-            );
-            return;
-          }
-
-          this.reload();
-        },
-        error: (error) =>
-          this.error.set(
-            getErrorMessage(error, 'Statuses could not be reordered.')
-          ),
-      });
+    this.list.save(request, 'Statuses could not be reordered.');
   }
 
   categoryLabel(category: StatusCategory) {

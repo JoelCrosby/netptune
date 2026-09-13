@@ -18,6 +18,7 @@ import {
 } from '@core/models/view-models/export-definition';
 import { ExportJobViewModel } from '@core/models/view-models/export-job-view-model';
 import { DialogService } from '@core/services/dialog.service';
+import { mutation } from '@core/util/mutation';
 import {
   SaveExportDefinitionDialogComponent,
   SaveExportDefinitionDialogResult,
@@ -36,7 +37,6 @@ import { PageContainerComponent } from '@static/components/page-container/page-c
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { StepComponent } from '@static/components/stepper/step.component';
 import { StepperComponent } from '@static/components/stepper/stepper.component';
-import { first } from 'rxjs';
 
 @Component({
   selector: 'app-export-wizard-view',
@@ -166,7 +166,9 @@ export class ExportWizardViewComponent {
   protected readonly activeIndex = this.wizard.activeIndex;
   protected readonly preview = signal<ExportPreviewResult | null>(null);
   protected readonly error = signal<string | null>(null);
-  protected readonly isBusy = signal(false);
+  private readonly running = mutation();
+
+  protected readonly isBusy = this.running.pending;
 
   protected readonly archiveFileBytes = computed(() => {
     return this.preview()?.archiveFileBytes ?? 0;
@@ -201,19 +203,16 @@ export class ExportWizardViewComponent {
     this.queue();
   }
 
-  protected saveDefinition() {
-    const dialogRef = this.dialog.open<SaveExportDefinitionDialogResult>(
-      SaveExportDefinitionDialogComponent,
-      { width: '460px' }
-    );
+  protected async saveDefinition() {
+    const result =
+      await this.dialog.openForResult<SaveExportDefinitionDialogResult>(
+        SaveExportDefinitionDialogComponent,
+        { width: '460px' }
+      );
 
-    dialogRef.closed.pipe(first()).subscribe({
-      next: (result) => {
-        if (!result?.name) return;
+    if (!result?.name) return;
 
-        this.storeDefinition(result.name, result.isShared);
-      },
-    });
+    this.storeDefinition(result.name, result.isShared);
   }
 
   private storeDefinition(name: string, isShared: boolean) {
@@ -252,59 +251,52 @@ export class ExportWizardViewComponent {
   }
 
   private download() {
-    this.isBusy.set(true);
+    const request = this.http.post(
+      'api/export/run',
+      { definition: this.wizard.definition() },
+      {
+        observe: 'response',
+        responseType: 'blob',
+      }
+    );
 
-    this.http
-      .post(
-        'api/export/run',
-        { definition: this.wizard.definition() },
-        {
-          observe: 'response',
-          responseType: 'blob',
-        }
-      )
-      .subscribe({
-        next: (response) => {
-          this.isBusy.set(false);
-          this.saveBlob(
-            response.body,
-            response.headers.get('content-disposition')
-          );
-        },
-        error: () => {
-          this.isBusy.set(false);
-          this.error.set(
-            $localize`:Shown when an immediate export download failed:The export could not be downloaded.`
-          );
-        },
-      });
+    this.running.run(request, {
+      onSuccess: (response) => {
+        this.saveBlob(
+          response.body,
+          response.headers.get('content-disposition')
+        );
+      },
+      onError: () => {
+        this.error.set(
+          $localize`:Shown when an immediate export download failed:The export could not be downloaded.`
+        );
+      },
+    });
   }
 
   private queue() {
-    this.isBusy.set(true);
+    const request = this.http.post<ClientResponse<ExportJobViewModel>>(
+      'api/export/jobs',
+      { definition: this.wizard.definition() }
+    );
 
-    this.http
-      .post<ClientResponse<ExportJobViewModel>>('api/export/jobs', {
-        definition: this.wizard.definition(),
-      })
-      .subscribe({
-        next: () => {
-          this.isBusy.set(false);
-          this.router.navigate([
-            '/',
-            this.workspaceId(),
-            'settings',
-            'workspace',
-            'data',
-          ]);
-        },
-        error: () => {
-          this.isBusy.set(false);
-          this.error.set(
-            $localize`:Shown when an export job could not be queued:The export could not be started.`
-          );
-        },
-      });
+    this.running.run(request, {
+      onSuccess: () => {
+        this.router.navigate([
+          '/',
+          this.workspaceId(),
+          'settings',
+          'workspace',
+          'data',
+        ]);
+      },
+      onError: () => {
+        this.error.set(
+          $localize`:Shown when an export job could not be queued:The export could not be started.`
+        );
+      },
+    });
   }
 
   private saveBlob(body: Blob | null, contentDisposition: string | null) {

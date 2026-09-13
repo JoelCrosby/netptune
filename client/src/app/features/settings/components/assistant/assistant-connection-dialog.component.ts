@@ -11,7 +11,6 @@ import { AiModelOption } from '@core/models/ai-model';
 import { aiModelResource } from '@core/resources/ai-model.resource';
 import { AiCredentialsService } from '@core/services/ai-credentials.service';
 import { ConfirmationService } from '@core/services/confirmation.service';
-import { getErrorMessage } from '@core/util/error-message';
 import { LucideCheck, LucideInfo } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
@@ -24,6 +23,8 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
 import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
 import { first, switchMap } from 'rxjs';
+import { mutation } from '@core/util/mutation';
+import { requireSuccess } from '@core/util/rxjs-operators';
 import { FormControlFieldComponent } from '@static/components/form-control/form-control-field.component';
 import { FormControlInputDirective } from '@static/components/form-control/form-control.directives';
 
@@ -237,7 +238,11 @@ export class AssistantConnectionDialogComponent {
   protected readonly isWorkspace = this.data.scope === 'workspace';
   protected readonly credential = signal(this.data.credential);
   protected readonly secret = signal('');
-  protected readonly busy = signal(false);
+  private readonly request = mutation({
+    fallbackError: $localize`:Shown when saving an API key fails:The key could not be saved.`,
+  });
+
+  protected readonly busy = this.request.pending;
   protected readonly model = signal(this.data.credential?.model ?? '');
 
   protected readonly models = computed<AiModelOption[]>(() => {
@@ -314,39 +319,18 @@ export class AssistantConnectionDialogComponent {
       model: model.length > 0 ? model : null,
     };
 
-    this.busy.set(true);
-
-    this.service
-      .save(request, this.data.scope)
-      .pipe(first())
-      .subscribe({
-        next: (response) => {
-          this.busy.set(false);
-
-          if (!response.isSuccess) {
-            this.snackbar.open(
-              response.message ??
-                $localize`:Shown when saving an API key fails:The key could not be saved.`
-            );
-
-            return;
-          }
-
+    this.request.run(
+      this.service.save(request, this.data.scope).pipe(requireSuccess()),
+      {
+        onSuccess: () => {
           this.snackbar.success(
             $localize`:Shown after an API key is stored:Key saved.`
           );
           this.dialogRef.close(true);
         },
-        error: (error) => {
-          this.busy.set(false);
-          this.snackbar.open(
-            getErrorMessage(
-              error,
-              $localize`:Shown when saving an API key fails:The key could not be saved.`
-            )
-          );
-        },
-      });
+        onError: (message) => this.snackbar.open(message),
+      }
+    );
   }
 
   protected remove() {

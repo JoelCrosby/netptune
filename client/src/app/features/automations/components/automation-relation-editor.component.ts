@@ -1,12 +1,11 @@
 import { httpResource } from '@angular/common/http';
 import { Component, computed, input, output, signal } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { RelationType } from '@core/models/relation-type';
+import { debouncedSignal } from '@core/util/signals';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
-import { debounceTime } from 'rxjs/operators';
 import {
   AutomationAction,
   AutomationRelationDirection,
@@ -131,10 +130,7 @@ export class AutomationRelationEditorComponent {
 
   readonly taskSearch = signal('');
 
-  private readonly search = toSignal(
-    toObservable(this.taskSearch).pipe(debounceTime(250)),
-    { initialValue: '' }
-  );
+  private readonly search = debouncedSignal(this.taskSearch);
 
   private readonly taskResults = httpResource<TaskSearchResponse>(() => {
     const search = this.search().trim();

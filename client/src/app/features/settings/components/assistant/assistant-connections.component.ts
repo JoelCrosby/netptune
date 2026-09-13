@@ -16,7 +16,6 @@ import {
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { IconTileComponent } from '@static/components/icon-tile.component';
 import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
-import { first } from 'rxjs';
 import { PanelComponent } from '@static/components/panel.component';
 import { PanelHeaderComponent } from '@static/components/panel-header.component';
 import {
@@ -270,7 +269,7 @@ export class AssistantConnectionsComponent {
     return this.credentials().find((item) => item.provider === provider);
   }
 
-  openProvider(provider: AiProvider) {
+  async openProvider(provider: AiProvider) {
     const descriptor = PROVIDERS.find((item) => item.provider === provider);
 
     if (!descriptor) {
@@ -285,33 +284,27 @@ export class AssistantConnectionsComponent {
       credential: this.credentialFor(provider) ?? null,
     };
 
-    this.dialog
-      .open<boolean, AssistantConnectionDialogData>(
-        AssistantConnectionDialogComponent,
-        { width: '560px', data }
-      )
-      .closed.pipe(first())
-      .subscribe((changed) => {
-        if (changed) this.changed.emit();
-      });
+    const changed = await this.dialog.openForResult<
+      boolean,
+      AssistantConnectionDialogData
+    >(AssistantConnectionDialogComponent, { width: '560px', data });
+
+    if (changed) this.changed.emit();
   }
 
-  openSearch() {
+  async openSearch() {
     const data: AssistantSearchDialogData = {
       credential: this.searchCredential(),
     };
 
-    this.dialog
-      .open<boolean, AssistantSearchDialogData>(
-        AssistantSearchDialogComponent,
-        {
-          width: '560px',
-          data,
-        }
-      )
-      .closed.pipe(first())
-      .subscribe((changed) => {
-        if (changed) this.changed.emit();
-      });
+    const changed = await this.dialog.openForResult<
+      boolean,
+      AssistantSearchDialogData
+    >(AssistantSearchDialogComponent, {
+      width: '560px',
+      data,
+    });
+
+    if (changed) this.changed.emit();
   }
 }

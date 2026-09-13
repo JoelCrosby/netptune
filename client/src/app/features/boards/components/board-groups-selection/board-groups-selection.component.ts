@@ -21,6 +21,7 @@ import { KeyboardService } from '@static/services/keyboard.service';
 import { BulkEditTasksDialogComponent } from '@entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component';
 import { MoveTasksDialogComponent } from '../move-tasks-dialog/move-tasks-dialog.component';
 import { ReassignTasksDialogComponent } from '../reassign-tasks-dialog/reassign-tasks-dialog.component';
+import { DividerComponent } from '@static/components/divider/divider.component';
 
 interface SelectionAction {
   label: string;
@@ -32,6 +33,7 @@ interface SelectionAction {
 @Component({
   selector: 'app-board-groups-selection',
   imports: [
+    DividerComponent,
     LucideDynamicIcon,
     LucideX,
     ToolbarButtonComponent,
@@ -89,7 +91,7 @@ interface SelectionAction {
         </div>
 
         @if (actions().length) {
-          <span class="bg-border mx-1 h-6 w-px" aria-hidden="true"></span>
+          <app-divider orientation="vertical" class="mx-1" />
 
           @for (action of actions(); track action.label) {
             <button
@@ -102,7 +104,7 @@ interface SelectionAction {
           }
         }
 
-        <span class="bg-border mx-1 h-6 w-px" aria-hidden="true"></span>
+        <app-divider orientation="vertical" class="mx-1" />
 
         <button app-toolbar-button (click)="onClearClicked()">
           <svg lucideX class="h-4 w-4"></svg>

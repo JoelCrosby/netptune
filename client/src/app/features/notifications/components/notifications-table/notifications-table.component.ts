@@ -1,16 +1,17 @@
 import { DatePipe } from '@angular/common';
 import {
   Component,
+  computed,
   inject,
   input,
   output,
-  signal,
   viewChild,
 } from '@angular/core';
 import { Params, Router } from '@angular/router';
 import { NotificationViewModel } from '@core/models/view-models/notification-view-model';
 import { NotificationCommandsService } from '@core/services/notification-commands.service';
 import { onWorkspaceRefresh } from '@core/util/reload-on-refresh';
+import { reloadToken } from '@core/util/signals';
 import {
   notificationNamesEntity,
   notificationSummary,
@@ -47,8 +48,7 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
       [data]="data"
       [stickyHeader]="true"
       [selection]="true"
-      (selectionChanged)="selectionChanged.emit($event)"
-      (loaded)="loaded.emit($event)">
+      (selectionChanged)="selectionChanged.emit($event)">
       <ng-template appDatatableCell="actor" let-notification>
         <div class="flex min-w-0 items-center gap-3">
           <app-avatar
@@ -134,14 +134,15 @@ export class NotificationsTableComponent {
   readonly params = input<Params>({});
 
   readonly selectionChanged = output<NotificationViewModel[]>();
-  readonly loaded = output<{ totalCount: number; hasValue: boolean }>();
 
-  private readonly reload = signal(0);
+  private readonly reload = reloadToken();
 
   private readonly datatable =
-    viewChild.required<DatatableComponent<NotificationViewModel>>(
-      DatatableComponent
-    );
+    viewChild<DatatableComponent<NotificationViewModel>>(DatatableComponent);
+
+  readonly loadedCount = computed(() => {
+    return this.datatable()?.loadedCount() ?? null;
+  });
 
   readonly data: DatatableDataSource<NotificationViewModel> = {
     key: 'notifications-list',
@@ -200,17 +201,17 @@ export class NotificationsTableComponent {
 
   constructor() {
     onWorkspaceRefresh(['notifications'], () => {
-      this.datatable().clearSelection();
-      this.reload.update((value) => value + 1);
+      this.datatable()?.clearSelection();
+      this.reload.bump();
     });
   }
 
   goToFirstPage() {
-    this.datatable().goToPage(1);
+    this.datatable()?.goToPage(1);
   }
 
   clearSelection() {
-    this.datatable().clearSelection();
+    this.datatable()?.clearSelection();
   }
 
   onMarkRead(notification: NotificationViewModel) {

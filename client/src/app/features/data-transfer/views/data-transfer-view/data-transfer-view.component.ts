@@ -19,6 +19,7 @@ import {
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { TransferJobSseService } from '@core/sse/transfer-job-sse.service';
 import { CoalescedAction } from '@core/util/coalesced-action';
+import { reloadToken } from '@core/util/signals';
 import {
   LucideBan,
   LucideDatabase,
@@ -52,7 +53,7 @@ import {
 } from '@static/components/tab-group/tab-group.component';
 import { FileSizePipe } from '@static/pipes/file-size.pipe';
 import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
-import { first } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 type DataTab = 'exports' | 'imports';
 
@@ -436,8 +437,8 @@ export class DataTransferViewComponent {
     this.requestedTab.set(value === 'imports' ? 'imports' : 'exports');
   }
 
-  private readonly reloadToken = signal(0);
-  private readonly importReloadToken = signal(0);
+  private readonly exportsReloadToken = reloadToken();
+  private readonly importsReloadToken = reloadToken();
 
   private readonly requestParams = computed(() => ({}));
 
@@ -501,7 +502,7 @@ export class DataTransferViewComponent {
     },
     rows: (response) => response?.payload?.items ?? [],
     trackBy: (_: number, job: ExportJobViewModel) => job.publicId,
-    reloadSignal: this.reloadToken,
+    reloadSignal: this.exportsReloadToken,
   };
 
   protected readonly importData: DatatableDataSource<ImportSessionViewModel> = {
@@ -562,16 +563,16 @@ export class DataTransferViewComponent {
     },
     rows: (response) => response?.payload?.items ?? [],
     trackBy: (_: number, session: ImportSessionViewModel) => session.publicId,
-    reloadSignal: this.importReloadToken,
+    reloadSignal: this.importsReloadToken,
   };
 
   private readonly exportReload = new CoalescedAction(
-    () => this.reload(),
+    () => this.exportsReloadToken.bump(),
     ProgressReloadWindowMs
   );
 
   private readonly importReload = new CoalescedAction(
-    () => this.reloadImports(),
+    () => this.importsReloadToken.bump(),
     ProgressReloadWindowMs
   );
 
@@ -767,7 +768,7 @@ export class DataTransferViewComponent {
         `api/export/jobs/${job.publicId}/cancel`,
         {}
       )
-      .subscribe(() => this.reload());
+      .subscribe(() => this.exportsReloadToken.bump());
   }
 
   protected undo(session: ImportSessionViewModel): void {
@@ -781,61 +782,51 @@ export class DataTransferViewComponent {
       .subscribe({
         next: () => {
           this.undoing.set(null);
-          this.reloadImports();
+          this.importsReloadToken.bump();
         },
         error: () => this.undoing.set(null),
       });
   }
 
-  protected deleteExport(job: ExportJobViewModel): void {
+  protected async deleteExport(job: ExportJobViewModel): Promise<void> {
     const name = job.name ?? job.fileName ?? job.recordType;
 
-    this.confirmation
-      .open({
+    const confirmed = await firstValueFrom(
+      this.confirmation.open({
         title: $localize`:Title of the dialog that confirms deleting an export:Delete this export?`,
         message: $localize`:Warns that deleting an export also removes its file:${name}:name: and its file are removed for good.`,
         acceptLabel: $localize`:Confirms deleting a record:Delete`,
         cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
         color: 'warn',
       })
-      .pipe(first())
-      .subscribe((confirmed) => {
-        if (!confirmed) return;
+    );
 
-        this.http
-          .delete<ClientResponse>(`api/export/jobs/${job.publicId}`)
-          .subscribe(() => this.reload());
-      });
+    if (!confirmed) return;
+
+    this.http
+      .delete<ClientResponse>(`api/export/jobs/${job.publicId}`)
+      .subscribe(() => this.exportsReloadToken.bump());
   }
 
-  protected deleteImport(session: ImportSessionViewModel): void {
+  protected async deleteImport(session: ImportSessionViewModel): Promise<void> {
     const message = session.canUndo
       ? $localize`:Warns that deleting a committed import gives up undo:${session.originalName}:name: is removed and this import can no longer be undone.`
       : $localize`:Warns that deleting an import also removes its file:${session.originalName}:name: and its uploaded file are removed for good.`;
 
-    this.confirmation
-      .open({
+    const confirmed = await firstValueFrom(
+      this.confirmation.open({
         title: $localize`:Title of the dialog that confirms deleting an import:Delete this import?`,
         message,
         acceptLabel: $localize`:Confirms deleting a record:Delete`,
         cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
         color: 'warn',
       })
-      .pipe(first())
-      .subscribe((confirmed) => {
-        if (!confirmed) return;
+    );
 
-        this.http
-          .delete<ClientResponse>(`api/import/sessions/${session.publicId}`)
-          .subscribe(() => this.reloadImports());
-      });
-  }
+    if (!confirmed) return;
 
-  private reload(): void {
-    this.reloadToken.update((token) => token + 1);
-  }
-
-  private reloadImports(): void {
-    this.importReloadToken.update((token) => token + 1);
+    this.http
+      .delete<ClientResponse>(`api/import/sessions/${session.publicId}`)
+      .subscribe(() => this.importsReloadToken.bump());
   }
 }

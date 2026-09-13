@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, viewChild } from '@angular/core';
 import { SessionService } from '@core/services/session.service';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { taskColumns, taskNameCell } from '@core/tasks/task-columns';
@@ -26,15 +26,15 @@ import { TaskTableComponent } from '@static/components/task-table.component';
         [containerClass]="scrollHeights.panel"
         [columns]="columns"
         [params]="params"
-        [stickyHeader]="true"
-        (loaded)="onLoaded($event)" />
+        [stickyHeader]="true" />
     </section>
   `,
 })
 export class DashboardAssignedTasksComponent {
   readonly scrollHeights = scrollHeights;
 
-  readonly totalCount = signal<number | null>(null);
+  private readonly table = viewChild(TaskTableComponent<TaskViewModel>);
+  readonly totalCount = computed(() => this.table()?.loadedCount() ?? null);
 
   readonly currentUserId = inject(SessionService).currentUserId;
 
@@ -56,10 +56,4 @@ export class DashboardAssignedTasksComponent {
       },
     }
   );
-
-  onLoaded(event: { totalCount: number; hasValue: boolean }) {
-    if (event.hasValue) {
-      this.totalCount.set(event.totalCount);
-    }
-  }
 }

@@ -20,6 +20,7 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
 import { PermissionGridComponent } from './permission-grid.component';
 import { filterPermissionGroups } from './service-account-permissions';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
+import { toggleInSet } from '@core/util/signals';
 
 @Component({
   selector: 'app-create-api-credential-dialog',
@@ -115,7 +116,7 @@ export class CreateApiCredentialDialogComponent {
 
   readonly account = inject<ServiceAccount>(DIALOG_DATA);
   readonly scopeGroups = filterPermissionGroups(this.account.permissions);
-  readonly selectedScopes = signal<Set<Permission>>(
+  readonly selectedScopes = signal<ReadonlySet<Permission>>(
     new Set(this.account.permissions)
   );
 
@@ -134,15 +135,7 @@ export class CreateApiCredentialDialogComponent {
   });
 
   setScope(permission: Permission, selected: boolean) {
-    this.selectedScopes.update((current) => {
-      const next = new Set(current);
-      if (selected) {
-        next.add(permission);
-      } else {
-        next.delete(permission);
-      }
-      return next;
-    });
+    toggleInSet(this.selectedScopes, permission, selected);
   }
 
   selectAllScopes() {

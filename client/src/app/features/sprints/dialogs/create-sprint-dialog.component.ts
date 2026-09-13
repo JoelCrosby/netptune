@@ -19,6 +19,7 @@ import { FormInputComponent } from '@static/components/form-input/form-input.com
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
+import { toDateInputValue } from '@core/util/dates';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
 @Component({
@@ -182,11 +183,4 @@ export class CreateSprintDialogComponent {
       this.dialogRef.close();
     });
   }
-}
-
-function toDateInputValue(date: Date): string {
-  const year = date.getFullYear();
-  const month = `${date.getMonth() + 1}`.padStart(2, '0');
-  const day = `${date.getDate()}`.padStart(2, '0');
-  return `${year}-${month}-${day}`;
 }

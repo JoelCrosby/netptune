@@ -1,17 +1,16 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, computed, inject, signal } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { Params } from '@angular/router';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { SprintCommandsService } from '@core/services/sprint-commands.service';
 import { taskColumns } from '@core/tasks/task-columns';
+import { debouncedSignal } from '@core/util/signals';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { TaskTableComponent } from '@static/components/task-table.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
-import { debounceTime } from 'rxjs/operators';
 
 export interface SprintAddTaskDialogData {
   sprintId: number;
@@ -91,10 +90,7 @@ export class SprintAddTaskDialogComponent {
   readonly selected = signal<readonly TaskViewModel[]>([]);
 
   // Debounce so each keystroke doesn't trigger a server fetch.
-  private search = toSignal(
-    toObservable(this.searchInput).pipe(debounceTime(250)),
-    { initialValue: '' }
-  );
+  private search = debouncedSignal(this.searchInput);
 
   // excludeSprintId returns tasks in the project that aren't already in this
   // sprint — the same set the old inline dropdown offered.

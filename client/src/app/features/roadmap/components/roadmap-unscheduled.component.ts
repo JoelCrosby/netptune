@@ -1,10 +1,10 @@
 import {
   Component,
-  Signal,
   computed,
   input,
   output,
-  signal,
+  Signal,
+  viewChild,
 } from '@angular/core';
 import { Params } from '@angular/router';
 import { taskColumns } from '@core/tasks/task-columns';
@@ -45,8 +45,7 @@ import {
         [columns]="columns()"
         [params]="params"
         [reloadSignal]="reloadSignal()"
-        [stickyHeader]="true"
-        (loaded)="totalCount.set($event.totalCount)">
+        [stickyHeader]="true">
         <ng-template appDatatableCell="name" let-task>
           <button
             type="button"
@@ -88,7 +87,8 @@ export class RoadmapUnscheduledComponent {
   readonly reloadSignal = input.required<Signal<unknown>>();
   readonly taskSelected = output<RoadmapTask>();
   readonly scheduleRequested = output<RoadmapScheduleChange>();
-  readonly totalCount = signal(0);
+  private readonly table = viewChild(TaskTableComponent<RoadmapTask>);
+  readonly totalCount = computed(() => this.table()?.loadedCount() ?? 0);
 
   readonly scrollHeights = scrollHeights;
 

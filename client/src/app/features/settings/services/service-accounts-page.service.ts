@@ -1,10 +1,4 @@
-import {
-  DestroyRef,
-  Injectable,
-  computed,
-  inject,
-  signal,
-} from '@angular/core';
+import { DestroyRef, Injectable, computed, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
@@ -20,13 +14,12 @@ import { serviceAccountResource } from '@core/resources/service-account.resource
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { DialogService } from '@core/services/dialog.service';
 import { ServiceAccountsService } from '@core/services/service-accounts.service';
+import { mutation } from '@core/util/mutation';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import {
-  EMPTY,
   Observable,
   catchError,
-  finalize,
-  first,
+  firstValueFrom,
   map,
   of,
   switchMap,
@@ -46,11 +39,6 @@ import {
   EditServiceAccountDialogData,
 } from '../components/service-accounts/edit-service-account-dialog.component';
 
-interface MutationMessages<T> {
-  success: string | ((result: T) => string);
-  error: string;
-}
-
 @Injectable()
 export class ServiceAccountsPageService {
   private readonly service = inject(ServiceAccountsService);
@@ -60,7 +48,9 @@ export class ServiceAccountsPageService {
   private readonly destroyRef = inject(DestroyRef);
 
   readonly accounts = serviceAccountResource();
-  readonly busy = signal(false);
+  private readonly request = mutation();
+
+  readonly busy = this.request.pending;
 
   readonly canCreate = hasPermission(PERMISSIONS.serviceAccounts.create);
   readonly canUpdate = hasPermission(PERMISSIONS.serviceAccounts.update);
@@ -83,7 +73,7 @@ export class ServiceAccountsPageService {
     this.accounts.reload();
   }
 
-  createAccount() {
+  async createAccount() {
     const dialogRef = this.dialog.openWizard<CreateServiceAccountWizardResult>(
       CreateServiceAccountDialogComponent,
       {
@@ -92,17 +82,14 @@ export class ServiceAccountsPageService {
       }
     );
 
-    const creation = dialogRef.closed.pipe(
-      first(),
-      switchMap((result) => {
-        if (!result) return EMPTY;
+    const result = await firstValueFrom(dialogRef.closed, {
+      defaultValue: undefined,
+    });
 
-        return this.whileBusy(this.createAccountWithCredential(result));
-      })
-    );
+    if (!result) return;
 
-    this.run(
-      creation,
+    this.mutate(
+      this.createAccountWithCredential(result),
       ({ credential, credentialFailed }) => {
         if (credentialFailed) {
           this.snackbar.warn(
@@ -124,8 +111,8 @@ export class ServiceAccountsPageService {
     );
   }
 
-  editAccount(account: ServiceAccount) {
-    const dialogRef = this.dialog.open<
+  async editAccount(account: ServiceAccount) {
+    const request = await this.dialog.openForResult<
       UpdateServiceAccountRequest,
       EditServiceAccountDialogData
     >(EditServiceAccountDialogComponent, {
@@ -133,37 +120,45 @@ export class ServiceAccountsPageService {
       width: '720px',
     });
 
-    this.mutateOnClose(
-      dialogRef.closed,
-      (request) => this.service.update(account.id, request),
-      {
-        success: $localize`:Confirmation after updating a service account:Service account updated`,
-        error: $localize`:Error after failing to update a service account:Service account could not be updated`,
-      }
+    if (!request) return;
+
+    this.mutate(
+      this.service.update(account.id, request),
+      () => {
+        this.snackbar.success(
+          $localize`:Confirmation after updating a service account:Service account updated`
+        );
+      },
+      $localize`:Error after failing to update a service account:Service account could not be updated`
     );
   }
 
-  deleteAccount(account: ServiceAccount) {
-    const confirmed = this.confirmation.open({
-      title: $localize`:Title of the confirmation dialog for deleting a service account:Delete Service Account`,
-      message: $localize`:Confirmation body for deleting a service account. NAME is the account name:Delete "${account.name}:NAME:"? All of its credentials will immediately stop working. The account will remain in history as disabled.`,
-      acceptLabel: $localize`:Confirms a destructive action:Delete`,
-      cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
-      color: 'warn',
-    });
+  async deleteAccount(account: ServiceAccount) {
+    const accepted = await firstValueFrom(
+      this.confirmation.open({
+        title: $localize`:Title of the confirmation dialog for deleting a service account:Delete Service Account`,
+        message: $localize`:Confirmation body for deleting a service account. NAME is the account name:Delete "${account.name}:NAME:"? All of its credentials will immediately stop working. The account will remain in history as disabled.`,
+        acceptLabel: $localize`:Confirms a destructive action:Delete`,
+        cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
+        color: 'warn',
+      })
+    );
 
-    this.mutateOnClose(
-      confirmed.pipe(map((accepted) => accepted || undefined)),
-      () => this.service.delete(account.id),
-      {
-        success: $localize`:Confirmation after deleting a service account:Service account deleted`,
-        error: $localize`:Error after failing to delete a service account:Service account could not be deleted`,
-      }
+    if (!accepted) return;
+
+    this.mutate(
+      this.service.delete(account.id),
+      () => {
+        this.snackbar.success(
+          $localize`:Confirmation after deleting a service account:Service account deleted`
+        );
+      },
+      $localize`:Error after failing to delete a service account:Service account could not be deleted`
     );
   }
 
-  createCredential(account: ServiceAccount) {
-    const dialogRef = this.dialog.open<
+  async createCredential(account: ServiceAccount) {
+    const request = await this.dialog.openForResult<
       CreateApiCredentialRequest,
       ServiceAccount
     >(CreateApiCredentialDialogComponent, {
@@ -171,22 +166,25 @@ export class ServiceAccountsPageService {
       width: '560px',
     });
 
-    this.mutateOnClose(
-      dialogRef.closed,
-      (request) => this.service.createCredential(account.id, request),
-      {
-        success: (credential) => {
-          this.openCredentialSecret(credential);
+    if (!request) return;
 
-          return $localize`:Confirmation after creating an API credential:API credential created`;
-        },
-        error: $localize`:Error after failing to create a credential:Credential could not be created`,
-      }
+    this.mutate(
+      this.service.createCredential(account.id, request),
+      (credential) => {
+        this.openCredentialSecret(credential);
+        this.snackbar.success(
+          $localize`:Confirmation after creating an API credential:API credential created`
+        );
+      },
+      $localize`:Error after failing to create a credential:Credential could not be created`
     );
   }
 
-  editCredentialScopes(account: ServiceAccount, credential: ApiCredential) {
-    const dialogRef = this.dialog.open<
+  async editCredentialScopes(
+    account: ServiceAccount,
+    credential: ApiCredential
+  ) {
+    const request = await this.dialog.openForResult<
       UpdateApiCredentialScopesRequest,
       EditApiCredentialScopesDialogData
     >(EditApiCredentialScopesDialogComponent, {
@@ -194,38 +192,40 @@ export class ServiceAccountsPageService {
       width: '600px',
     });
 
-    this.mutateOnClose(
-      dialogRef.closed,
-      (request) => {
-        return this.service.updateCredentialScopes(
-          account.id,
-          credential.id,
-          request
+    if (!request) return;
+
+    this.mutate(
+      this.service.updateCredentialScopes(account.id, credential.id, request),
+      () => {
+        this.snackbar.success(
+          $localize`:Confirmation after saving a credential's scopes:Credential scopes updated`
         );
       },
-      {
-        success: $localize`:Confirmation after saving a credential's scopes:Credential scopes updated`,
-        error: $localize`:Error after failing to save a credential's scopes:Credential scopes could not be updated`,
-      }
+      $localize`:Error after failing to save a credential's scopes:Credential scopes could not be updated`
     );
   }
 
-  revokeCredential(account: ServiceAccount, credential: ApiCredential) {
-    const confirmed = this.confirmation.open({
-      title: $localize`:Title of the confirmation dialog for revoking a credential:Revoke API Credential`,
-      message: $localize`:Confirmation body for revoking a credential. NAME is the credential name:Revoke "${credential.name}:NAME:"? Any agent using it will immediately lose access.`,
-      acceptLabel: $localize`:Confirms revoking a credential:Revoke`,
-      cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
-      color: 'warn',
-    });
+  async revokeCredential(account: ServiceAccount, credential: ApiCredential) {
+    const accepted = await firstValueFrom(
+      this.confirmation.open({
+        title: $localize`:Title of the confirmation dialog for revoking a credential:Revoke API Credential`,
+        message: $localize`:Confirmation body for revoking a credential. NAME is the credential name:Revoke "${credential.name}:NAME:"? Any agent using it will immediately lose access.`,
+        acceptLabel: $localize`:Confirms revoking a credential:Revoke`,
+        cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
+        color: 'warn',
+      })
+    );
 
-    this.mutateOnClose(
-      confirmed.pipe(map((accepted) => accepted || undefined)),
-      () => this.service.revokeCredential(account.id, credential.id),
-      {
-        success: $localize`:Confirmation after revoking a credential:Credential revoked`,
-        error: $localize`:Error after failing to revoke a credential:Credential could not be revoked`,
-      }
+    if (!accepted) return;
+
+    this.mutate(
+      this.service.revokeCredential(account.id, credential.id),
+      () => {
+        this.snackbar.success(
+          $localize`:Confirmation after revoking a credential:Credential revoked`
+        );
+      },
+      $localize`:Error after failing to revoke a credential:Credential could not be revoked`
     );
   }
 
@@ -250,52 +250,18 @@ export class ServiceAccountsPageService {
     );
   }
 
-  private mutateOnClose<TRequest, TResult>(
-    closed: Observable<TRequest | undefined>,
-    mutate: (request: TRequest) => Observable<TResult>,
-    messages: MutationMessages<TResult>
-  ) {
-    const mutation = closed.pipe(
-      first(),
-      switchMap((request) => {
-        if (!request) return EMPTY;
-
-        return this.whileBusy(mutate(request));
-      })
-    );
-
-    this.run(
-      mutation,
-      (result) => {
-        const message =
-          typeof messages.success === 'function'
-            ? messages.success(result)
-            : messages.success;
-
-        this.snackbar.success(message);
-      },
-      messages.error
-    );
-  }
-
-  private run<T>(
-    mutation: Observable<T>,
+  private mutate<T>(
+    request: Observable<T>,
     onSuccess: (result: T) => void,
     errorMessage: string
   ) {
-    mutation.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (result) => {
+    this.request.run(request.pipe(takeUntilDestroyed(this.destroyRef)), {
+      onSuccess: (result) => {
         onSuccess(result);
         this.reload();
       },
-      error: () => this.snackbar.error(errorMessage),
+      onError: () => this.snackbar.error(errorMessage),
     });
-  }
-
-  private whileBusy<T>(request: Observable<T>) {
-    this.busy.set(true);
-
-    return request.pipe(finalize(() => this.busy.set(false)));
   }
 
   private openCredentialSecret(credential: ApiCredentialCreated) {

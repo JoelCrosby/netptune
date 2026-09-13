@@ -62,3 +62,11 @@ export const fuzzysearch = (needle: string, haystack: string) => {
 
   return true;
 };
+
+export function toggleValue<T>(values: readonly T[], value: T): T[] {
+  const selected = values.includes(value);
+
+  return selected
+    ? values.filter((current) => current !== value)
+    : [...values, value];
+}

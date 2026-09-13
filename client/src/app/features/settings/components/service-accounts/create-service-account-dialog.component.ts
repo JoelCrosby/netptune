@@ -36,6 +36,7 @@ import {
   permissionLabel,
 } from './service-account-permissions';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
+import { toggleInSet } from '@core/util/signals';
 import { BadgeComponent } from '@static/components/badge/badge.component';
 
 export interface CreateServiceAccountWizardResult {
@@ -379,10 +380,10 @@ export class CreateServiceAccountDialogComponent {
   readonly finalStep = 3;
   readonly permissionGroups = permissionGroups;
   readonly totalPermissionCount = allPermissions.length;
-  readonly selectedPermissions = signal<Set<Permission>>(
+  readonly selectedPermissions = signal<ReadonlySet<Permission>>(
     new Set(defaultPermissions)
   );
-  readonly credentialScopes = signal<Set<Permission>>(
+  readonly credentialScopes = signal<ReadonlySet<Permission>>(
     new Set(defaultPermissions)
   );
 
@@ -448,12 +449,8 @@ export class CreateServiceAccountDialogComponent {
   }
 
   setPermission(permission: Permission, selected: boolean) {
-    this.selectedPermissions.update((current) =>
-      this.updateSelection(current, permission, selected)
-    );
-    this.credentialScopes.update((current) =>
-      this.updateSelection(current, permission, selected)
-    );
+    toggleInSet(this.selectedPermissions, permission, selected);
+    toggleInSet(this.credentialScopes, permission, selected);
   }
 
   selectAllPermissions() {
@@ -472,9 +469,7 @@ export class CreateServiceAccountDialogComponent {
   }
 
   setCredentialScope(permission: Permission, selected: boolean) {
-    this.credentialScopes.update((current) =>
-      this.updateSelection(current, permission, selected)
-    );
+    toggleInSet(this.credentialScopes, permission, selected);
   }
 
   selectAllCredentialScopes() {
@@ -565,19 +560,5 @@ export class CreateServiceAccountDialogComponent {
 
     if (!valid) this.accountForm().markAsTouched();
     return valid;
-  }
-
-  private updateSelection(
-    current: Set<Permission>,
-    permission: Permission,
-    selected: boolean
-  ) {
-    const next = new Set(current);
-    if (selected) {
-      next.add(permission);
-    } else {
-      next.delete(permission);
-    }
-    return next;
   }
 }

@@ -8,7 +8,6 @@ import {
 } from '@core/models/search-credential';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { SearchCredentialsService } from '@core/services/search-credentials.service';
-import { getErrorMessage } from '@core/util/error-message';
 import { LucideCheck, LucideInfo } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
@@ -20,6 +19,8 @@ import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
 import { first, switchMap } from 'rxjs';
+import { mutation } from '@core/util/mutation';
+import { requireSuccess } from '@core/util/rxjs-operators';
 import { FormControlFieldComponent } from '@static/components/form-control/form-control-field.component';
 import { FormControlInputDirective } from '@static/components/form-control/form-control.directives';
 
@@ -232,7 +233,11 @@ export class AssistantSearchDialogComponent {
   protected readonly infoIcon = LucideInfo;
   protected readonly credential = signal(this.data.credential);
   protected readonly secret = signal('');
-  protected readonly busy = signal(false);
+  private readonly request = mutation({
+    fallbackError: $localize`:Shown when saving the search provider fails:The provider could not be saved.`,
+  });
+
+  protected readonly busy = this.request.pending;
   protected readonly pendingEngineId = signal<string | null>(null);
   protected readonly pendingEndpoint = signal<string | null>(null);
 
@@ -317,39 +322,15 @@ export class AssistantSearchDialogComponent {
       endpoint: option.needsEndpoint ? this.endpoint().trim() : null,
     };
 
-    this.busy.set(true);
-
-    this.service
-      .save(request)
-      .pipe(first())
-      .subscribe({
-        next: (response) => {
-          this.busy.set(false);
-
-          if (!response.isSuccess) {
-            this.snackbar.open(
-              response.message ??
-                $localize`:Shown when saving the search provider fails:The provider could not be saved.`
-            );
-
-            return;
-          }
-
-          this.snackbar.success(
-            $localize`:Shown after the search provider is stored:Search provider saved.`
-          );
-          this.dialogRef.close(true);
-        },
-        error: (error) => {
-          this.busy.set(false);
-          this.snackbar.open(
-            getErrorMessage(
-              error,
-              $localize`:Shown when saving the search provider fails:The provider could not be saved.`
-            )
-          );
-        },
-      });
+    this.request.run(this.service.save(request).pipe(requireSuccess()), {
+      onSuccess: () => {
+        this.snackbar.success(
+          $localize`:Shown after the search provider is stored:Search provider saved.`
+        );
+        this.dialogRef.close(true);
+      },
+      onError: (message) => this.snackbar.open(message),
+    });
   }
 
   protected remove() {

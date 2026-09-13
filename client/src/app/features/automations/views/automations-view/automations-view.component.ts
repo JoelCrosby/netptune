@@ -33,6 +33,7 @@ import {
   AutomationCloneDialogResult,
 } from '../../dialogs/automation-clone-dialog.component';
 import { AutomationsService } from '../../services/automations.service';
+import { reloadToken } from '@core/util/signals';
 
 @Component({
   selector: 'app-automations-view',
@@ -86,7 +87,7 @@ import { AutomationsService } from '../../services/automations.service';
             <app-automation-rules-table
               [canManage]="canManage()"
               [statuses]="statuses()"
-              [reloadSignal]="reloadToken"
+              [reloadSignal]="rulesReload"
               (toggleRule)="onToggle($event)"
               (editRule)="onEdit($event)"
               (cloneRule)="onClone($event)"
@@ -133,7 +134,7 @@ export class AutomationsViewComponent {
 
   readonly summary = signal<AutomationRuleSummary | null>(null);
   readonly statuses = signal<Status[]>([]);
-  readonly reloadToken = signal(0);
+  readonly rulesReload = reloadToken();
   readonly loading = signal(true);
   readonly error = signal(false);
   readonly busyId = signal<number | null>(null);
@@ -170,12 +171,8 @@ export class AutomationsViewComponent {
     void this.router.navigate(['new'], { relativeTo: this.route });
   }
 
-  reloadRules() {
-    this.reloadToken.update((token) => token + 1);
-  }
-
   refresh() {
-    this.reloadRules();
+    this.rulesReload.bump();
 
     this.service
       .getSummary()
@@ -201,7 +198,7 @@ export class AutomationsViewComponent {
         next: ({ summary, statuses }) => {
           this.summary.set(summary);
           this.statuses.set(statuses);
-          this.reloadRules();
+          this.rulesReload.bump();
         },
         error: () => this.error.set(true),
       });
@@ -232,7 +229,7 @@ export class AutomationsViewComponent {
       });
   }
 
-  onClone(rule: AutomationRuleListItem) {
+  async onClone(rule: AutomationRuleListItem) {
     const data: AutomationCloneDialogData = {
       ruleName: rule.name,
       trigger: rule.trigger,
@@ -240,21 +237,18 @@ export class AutomationsViewComponent {
       statuses: this.statuses(),
     };
 
-    this.dialog
-      .open<AutomationCloneDialogResult, AutomationCloneDialogData>(
-        AutomationCloneDialogComponent,
-        { data }
-      )
-      .closed.pipe(
-        switchMap((result) => {
-          if (!result) {
-            return EMPTY;
-          }
+    const result = await this.dialog.openForResult<
+      AutomationCloneDialogResult,
+      AutomationCloneDialogData
+    >(AutomationCloneDialogComponent, { data });
 
-          this.busyId.set(rule.id);
+    if (!result) return;
 
-          return this.service.clone(rule.id, result.name);
-        }),
+    this.busyId.set(rule.id);
+
+    this.service
+      .clone(rule.id, result.name)
+      .pipe(
         finalize(() => this.busyId.set(null)),
         takeUntilDestroyed(this.destroyRef)
       )

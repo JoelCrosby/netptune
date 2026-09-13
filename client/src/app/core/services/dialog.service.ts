@@ -6,6 +6,7 @@ import {
 } from '@angular/cdk/dialog';
 import { ComponentType } from '@angular/cdk/portal';
 import { Service, StaticProvider, Type, inject } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { DialogContainerComponent } from '@static/components/dialog/dialog-container.component';
 import {
   DIALOG_WIZARD_TITLE,
@@ -46,6 +47,16 @@ export class DialogService {
       dialogConfig,
       DialogContainerComponent
     );
+  }
+
+  // Resolves with undefined when the dialog is dismissed, so callers only need `if (!result) return;`.
+  openForResult<R = unknown, D = unknown, C = unknown>(
+    component: ComponentType<C>,
+    config?: DialogConfig<D, DialogRef<R, C>>
+  ): Promise<R | undefined> {
+    const dialogRef = this.open<R, D, C>(component, config);
+
+    return firstValueFrom(dialogRef.closed, { defaultValue: undefined });
   }
 
   openWizard<R = unknown, D = unknown, C = unknown>(

@@ -1,4 +1,3 @@
-import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
 import { CdkPortal } from '@angular/cdk/portal';
 import {
   Component,
@@ -6,7 +5,6 @@ import {
   contentChildren,
   ElementRef,
   inject,
-  Injector,
   input,
   model,
   output,
@@ -35,6 +33,7 @@ import { FormSelectOptionComponent } from './form-select-option.component';
 import { FormSelectDropdownStyleDirective } from './form-select.directives';
 import { FormSelectService } from './form-select.service';
 import { FormErrorComponent } from '../form-error/form-error.component';
+import { ListboxKeyboard } from '../listbox-keyboard';
 
 @Component({
   selector: 'app-form-select',
@@ -85,7 +84,7 @@ import { FormErrorComponent } from '../form-error/form-error.component';
           [attr.aria-describedby]="describedBy()"
           readonly
           (click)="$event.stopPropagation(); showDropdown()"
-          (keydown)="onKeyDown($event)"
+          (keydown)="keyboard.handleKeydown($event)"
           (blur)="touched.set(true)"
           autocomplete="off" />
 
@@ -136,7 +135,6 @@ export class FormSelectComponent<
   TValue,
 > implements FormValueControl<TValue | null> {
   private service = inject<FormSelectService<TValue>>(FormSelectService);
-  private injector = inject(Injector);
 
   readonly label = input.required<string>();
   readonly icon = input<LucideIconInput | null>();
@@ -179,7 +177,6 @@ export class FormSelectComponent<
   readonly noMargin = input(false);
 
   selectedPortal?: CdkPortal;
-  keyManager?: ActiveDescendantKeyManager<FormSelectOptionComponent<TValue>>;
 
   isOpen = computed(() => this.dropdown().showing());
 
@@ -193,16 +190,21 @@ export class FormSelectComponent<
     () => this.selectedOption()?.viewValue ?? ''
   );
 
+  readonly keyboard = new ListboxKeyboard({
+    items: this.options,
+    isOpen: () => this.isOpen(),
+    open: () => this.showDropdown(),
+    close: () => this.hideDropdown(),
+    select: (option) => this.selectOption(option),
+    openKeys: ['Enter', ' ', 'ArrowDown', 'ArrowUp'],
+    selectKeys: ['Enter', ' '],
+    trapKeys: ['PageUp', 'PageDown', 'Tab'],
+    horizontal: true,
+    wrap: true,
+  });
+
   constructor() {
     this.service.register(this);
-
-    this.keyManager = new ActiveDescendantKeyManager(
-      this.options,
-      this.injector
-    )
-      .withHorizontalOrientation('ltr')
-      .withVerticalOrientation()
-      .withWrap();
   }
 
   showDropdown() {
@@ -215,9 +217,9 @@ export class FormSelectComponent<
     const selected = this.selectedOption();
 
     if (selected) {
-      this.keyManager?.setActiveItem(selected);
+      this.keyboard.setActiveItem(selected);
     } else {
-      this.keyManager?.setFirstItemActive();
+      this.keyboard.setFirstItemActive();
     }
   }
 
@@ -243,7 +245,7 @@ export class FormSelectComponent<
     const value = option.value();
 
     this.value.set(value ?? null);
-    this.keyManager?.setActiveItem(option);
+    this.keyboard.setActiveItem(option);
 
     this.hideDropdown();
 
@@ -251,50 +253,5 @@ export class FormSelectComponent<
 
     this.changed.emit(value);
     this.input().nativeElement.focus();
-  }
-
-  onKeyDown(event: KeyboardEvent) {
-    const inactiveKeys = ['Enter', ' ', 'ArrowDown', 'Down', 'ArrowUp', 'Up'];
-    const arrowKeys = [
-      'ArrowUp',
-      'Up',
-      'ArrowDown',
-      'Down',
-      'ArrowRight',
-      'Right',
-      'ArrowLeft',
-      'Left',
-    ];
-
-    const dropdown = this.dropdown();
-    if (inactiveKeys.includes(event.key)) {
-      if (!dropdown.showing) {
-        this.showDropdown();
-        return;
-      }
-
-      if (!this.options()?.length) {
-        event.preventDefault();
-        return;
-      }
-    }
-
-    if (event.key === 'Enter' || event.key === ' ') {
-      this.selectOption(this.keyManager?.activeItem);
-    } else if (event.key === 'Escape' || event.key === 'Esc') {
-      if (dropdown.showing()) {
-        this.hideDropdown();
-      }
-    } else if (arrowKeys.includes(event.key)) {
-      this.keyManager?.onKeydown(event);
-    } else if (
-      event.key === 'PageUp' ||
-      event.key === 'PageDown' ||
-      event.key === 'Tab'
-    ) {
-      if (dropdown.showing()) {
-        event.preventDefault();
-      }
-    }
   }
 }

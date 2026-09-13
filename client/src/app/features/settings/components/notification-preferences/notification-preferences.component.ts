@@ -5,6 +5,7 @@ import {
   ResolvedPreferenceValue,
 } from '@core/models/user-preferences';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
+import { toggleInSet } from '@core/util/signals';
 import {
   LucideBell,
   LucideChevronRight,
@@ -411,17 +412,7 @@ export class NotificationPreferencesComponent {
   });
 
   protected toggleGroup(key: string) {
-    this.expanded.update((current) => {
-      const next = new Set(current);
-
-      if (next.has(key)) {
-        next.delete(key);
-      } else {
-        next.add(key);
-      }
-
-      return next;
-    });
+    toggleInSet(this.expanded, key);
   }
 
   protected toggleAllGroups() {

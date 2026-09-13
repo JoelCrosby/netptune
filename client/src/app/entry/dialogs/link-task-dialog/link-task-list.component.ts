@@ -8,12 +8,12 @@ import {
   signal,
   untracked,
 } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { ClientResponse } from '@core/models/client-response';
 import { Page } from '@core/models/pagination';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { permissionResource } from '@core/resources/permission.resource';
+import { debouncedSignal } from '@core/util/signals';
 import { LucideSearch } from '@lucide/angular';
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { ButtonComponent } from '@static/components/button/button.component';
@@ -24,7 +24,6 @@ import { SkeletonComponent } from '@static/components/skeleton/skeleton.componen
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 import { TaskStatusPillComponent } from '@static/components/task-status-pill.component';
-import { debounceTime, map } from 'rxjs/operators';
 
 const PAGE_SIZE = 50;
 
@@ -155,13 +154,8 @@ export class LinkTaskListComponent {
   readonly searchInput = signal('');
 
   // Debounce so each keystroke doesn't trigger a server fetch.
-  private readonly search = toSignal(
-    toObservable(this.searchInput).pipe(
-      debounceTime(250),
-      map((value) => value.trim())
-    ),
-    { initialValue: '' }
-  );
+  private readonly debouncedSearch = debouncedSignal(this.searchInput);
+  private readonly search = computed(() => this.debouncedSearch().trim());
 
   // Every field the query depends on, so a change to any of them starts a fresh list.
   private readonly listKey = computed(

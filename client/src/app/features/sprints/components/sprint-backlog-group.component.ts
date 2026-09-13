@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, signal } from '@angular/core';
+import { Component, computed, inject, input, viewChild } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { Params } from '@angular/router';
 import { PERMISSIONS } from '@core/auth/permissions';
@@ -40,8 +40,7 @@ import { TaskTableComponent } from '@static/components/task-table.component';
           [containerClass]="scrollHeights.panel"
           [columns]="columns()"
           [params]="params"
-          [stickyHeader]="true"
-          (loaded)="onLoaded($event)">
+          [stickyHeader]="true">
           <ng-template appDatatableCell="assign" let-task>
             @if (sprints().length > 0) {
               <app-dropdown-button
@@ -95,20 +94,12 @@ export class SprintBacklogGroupComponent {
   readonly loading = this.sprintCommands.isUpdating;
   readonly canManageTasks = hasPermission(PERMISSIONS.sprints.manageTasks);
 
-  // Total backlog tasks for this group and whether its fetch has resolved,
-  // pushed up from the table's own paginated fetch via its (loaded) output.
-  private totalCount = signal(0);
-  private resolved = signal(false);
-  readonly count = this.totalCount.asReadonly();
-  readonly hasLoaded = this.resolved.asReadonly();
+  private readonly table = viewChild(TaskTableComponent<TaskViewModel>);
+  readonly count = computed(() => this.table()?.loadedCount() ?? 0);
+  readonly hasLoaded = computed(() => this.table()?.loadedCount() != null);
   // Hide the whole group once we know it has no tasks. The table stays mounted
   // (hidden, not removed) so it keeps refetching when filters change.
-  readonly isEmpty = computed(() => this.resolved() && this.totalCount() === 0);
-
-  onLoaded(event: { totalCount: number; hasValue: boolean }) {
-    this.totalCount.set(event.totalCount);
-    this.resolved.set(event.hasValue);
-  }
+  readonly isEmpty = computed(() => this.hasLoaded() && this.count() === 0);
 
   readonly params = computed<Params>(() => ({
     statusCategories: this.categories(),

@@ -1,3 +1,4 @@
+import { toDateInputValue } from '@core/util/dates';
 import { firstDayOfWeek, monthNames, weekdayNames } from '@core/util/locale';
 
 export interface CalendarWeekday {
@@ -58,13 +59,6 @@ export const parseDateValue = (
   return valid ? date : null;
 };
 
-export const dateValue = (date: Date): string => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
-
 export const makeDate = (year: number, month: number, day: number): Date =>
   new Date(year, month, day, 12, 0, 0, 0);
 
@@ -87,7 +81,7 @@ export const addCalendarMonths = (date: Date, months: number): Date => {
 };
 
 export const sameCalendarDay = (left: Date, right: Date): boolean =>
-  dateValue(left) === dateValue(right);
+  toDateInputValue(left) === toDateInputValue(right);
 
 export const startOfCalendarMonth = (date: Date): Date =>
   makeDate(date.getFullYear(), date.getMonth(), 1);
@@ -111,7 +105,7 @@ export const calendarDays = (
 
     return {
       date,
-      value: dateValue(date),
+      value: toDateInputValue(date),
       currentMonth: date.getMonth() === viewDate.getMonth(),
       today: sameCalendarDay(date, today),
       selected: selectedDate !== null && sameCalendarDay(date, selectedDate),

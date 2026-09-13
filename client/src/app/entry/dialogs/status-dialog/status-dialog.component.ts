@@ -1,4 +1,4 @@
-import { DialogRef } from '@angular/cdk/dialog';
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, inject, signal } from '@angular/core';
 import {
   apply,
@@ -9,6 +9,7 @@ import {
   submit,
 } from '@angular/forms/signals';
 import {
+  Status,
   StatusCategory,
   statusCategoryLabels,
   statusCategoryOptions,
@@ -25,14 +26,14 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
-export interface CreateStatusDialogResult {
+export interface StatusDialogResult {
   name: string;
   color: string;
   category: StatusCategory;
 }
 
 @Component({
-  selector: 'app-create-status-dialog',
+  selector: 'app-status-dialog',
   imports: [
     DialogTitleComponent,
     FormField,
@@ -46,9 +47,15 @@ export interface CreateStatusDialogResult {
     StrokedButtonComponent,
   ],
   template: `
-    <app-dialog-title i18n="Title of the create-status dialog">
-      Create Status
-    </app-dialog-title>
+    @if (data) {
+      <app-dialog-title i18n="Title of the edit-status dialog">
+        Edit Status
+      </app-dialog-title>
+    } @else {
+      <app-dialog-title i18n="Title of the create-status dialog">
+        Create Status
+      </app-dialog-title>
+    }
 
     <form app-dialog-content (submit)="submit($event)">
       <app-form-input
@@ -79,23 +86,28 @@ export interface CreateStatusDialogResult {
         <span i18n="Dismisses a dialog without saving">Close</span>
       </button>
       <button app-flat-button type="button" (click)="submit($event)">
-        <span i18n="Button that creates the status">Create Status</span>
+        @if (data) {
+          <span i18n="Button that saves changes to the status">
+            Save Status
+          </span>
+        } @else {
+          <span i18n="Button that creates the status">Create Status</span>
+        }
       </button>
     </div>
   `,
 })
-export class CreateStatusDialogComponent {
+export class StatusDialogComponent {
   private readonly dialogRef =
-    inject<DialogRef<CreateStatusDialogResult, CreateStatusDialogComponent>>(
-      DialogRef
-    );
+    inject<DialogRef<StatusDialogResult, StatusDialogComponent>>(DialogRef);
 
+  readonly data = inject<Status | null>(DIALOG_DATA, { optional: true });
   readonly categories = statusCategoryOptions;
 
   readonly statusFormModel = signal({
-    name: '',
-    color: fallbackColor,
-    category: StatusCategory.backlog,
+    name: this.data?.name ?? '',
+    color: this.data?.color ?? fallbackColor,
+    category: this.data?.category ?? StatusCategory.backlog,
   });
 
   readonly statusForm = form(this.statusFormModel, (schema) => {

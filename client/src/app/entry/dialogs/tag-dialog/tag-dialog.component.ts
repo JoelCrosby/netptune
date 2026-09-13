@@ -1,6 +1,7 @@
-import { DialogRef } from '@angular/cdk/dialog';
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, inject, signal } from '@angular/core';
 import { apply, FormField, form, submit } from '@angular/forms/signals';
+import { Tag } from '@core/models/tag';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
@@ -9,12 +10,12 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
-export interface CreateTagDialogResult {
+export interface TagDialogResult {
   name: string;
 }
 
 @Component({
-  selector: 'app-create-tag-dialog',
+  selector: 'app-tag-dialog',
   imports: [
     DialogTitleComponent,
     FormField,
@@ -25,9 +26,15 @@ export interface CreateTagDialogResult {
     StrokedButtonComponent,
   ],
   template: `
-    <app-dialog-title i18n="Title of the create-tag dialog">
-      Create Tag
-    </app-dialog-title>
+    @if (data) {
+      <app-dialog-title i18n="Title of the edit-tag dialog">
+        Edit Tag
+      </app-dialog-title>
+    } @else {
+      <app-dialog-title i18n="Title of the create-tag dialog">
+        Create Tag
+      </app-dialog-title>
+    }
 
     <form app-dialog-content (submit)="submit($event)">
       <app-form-input
@@ -42,19 +49,23 @@ export interface CreateTagDialogResult {
         <span i18n="Dismisses a dialog without saving">Close</span>
       </button>
       <button app-flat-button type="button" (click)="submit($event)">
-        <span i18n="Button that creates the tag">Create Tag</span>
+        @if (data) {
+          <span i18n="Button that saves changes to the tag">Save Tag</span>
+        } @else {
+          <span i18n="Button that creates the tag">Create Tag</span>
+        }
       </button>
     </div>
   `,
 })
-export class CreateTagDialogComponent {
+export class TagDialogComponent {
   private readonly dialogRef =
-    inject<DialogRef<CreateTagDialogResult, CreateTagDialogComponent>>(
-      DialogRef
-    );
+    inject<DialogRef<TagDialogResult, TagDialogComponent>>(DialogRef);
+
+  readonly data = inject<Tag | null>(DIALOG_DATA, { optional: true });
 
   readonly tagFormModel = signal({
-    name: '',
+    name: this.data?.name ?? '',
   });
 
   readonly tagForm = form(this.tagFormModel, (schema) => {

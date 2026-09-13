@@ -14,7 +14,6 @@ import { PERMISSIONS } from '@core/auth/permissions';
 import { EntityType } from '@core/models/entity-type';
 import { TaskPin, TaskPinScope } from '@core/models/task-pin';
 import { pinnedTasksResource } from '@core/resources/task-pin.resource';
-import { AiAssistantService } from '@core/services/ai-assistant.service';
 import { BoardViewService } from '@core/services/board-view.service';
 import { PinCommandsService } from '@core/services/pin-commands.service';
 import { SessionService } from '@core/services/session.service';
@@ -38,10 +37,12 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
 import { TooltipDirective } from '@static/directives/tooltip.directive';
 import { HEADER_ICON_BUTTON } from '../task-detail-styles';
 import { TaskDetailService } from '../task-detail.service';
+import { DividerComponent } from '@static/components/divider/divider.component';
 
 @Component({
   selector: 'app-task-detail-chrome',
   imports: [
+    DividerComponent,
     RouterLink,
     ActivityMenuComponent,
     PinScopeMenuComponent,
@@ -128,7 +129,7 @@ import { TaskDetailService } from '../task-detail.service';
               @if (canAskAssistant()) {
                 <button
                   app-menu-item
-                  (click)="askAssistant(); overflowMenu.close()">
+                  (click)="taskDetail.askAssistant(); overflowMenu.close()">
                   <svg lucideSparkles class="h-4 w-4"></svg>
                   <span i18n="Menu item that asks the assistant about a task">
                     Ask the assistant
@@ -149,9 +150,9 @@ import { TaskDetailService } from '../task-detail.service';
         }
 
         @if (dialogRef) {
-          <span
-            class="bg-foreground/8 mx-1.5 h-5 w-px shrink-0"
-            aria-hidden="true"></span>
+          <app-divider
+            orientation="vertical"
+            class="bg-foreground/8 mx-1.5 h-5" />
           <button
             type="button"
             [class]="iconButtonClass"
@@ -174,10 +175,9 @@ export class TaskDetailChromeComponent {
 
   readonly dialogRef = inject(DialogRef, { optional: true });
 
-  private readonly taskDetail = inject(TaskDetailService);
+  protected readonly taskDetail = inject(TaskDetailService);
   private readonly pinCommands = inject(PinCommandsService);
   private readonly boardView = inject(BoardViewService);
-  private readonly assistant = inject(AiAssistantService);
   private readonly pinsRef = pinnedTasksResource();
   private readonly pinButton = viewChild(SplitButtonComponent);
 
@@ -196,9 +196,7 @@ export class TaskDetailChromeComponent {
   readonly readActivity = hasPermission(PERMISSIONS.activity.read);
   readonly canDeleteTask = hasPermission(PERMISSIONS.tasks.delete);
 
-  readonly canAskAssistant = computed(() => {
-    return this.assistant.isAvailable() && this.task() !== null;
-  });
+  readonly canAskAssistant = this.taskDetail.canAskAssistant;
 
   readonly hasOverflowActions = computed(() => {
     return this.canDeleteTask() || this.canAskAssistant();
@@ -257,14 +255,6 @@ export class TaskDetailChromeComponent {
     }
 
     this.dialogRef?.close();
-  }
-
-  protected askAssistant() {
-    const task = this.task();
-
-    if (!task) return;
-
-    this.assistant.askAboutTask(task);
   }
 
   protected deleteTask() {

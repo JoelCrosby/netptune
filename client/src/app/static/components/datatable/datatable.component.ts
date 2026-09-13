@@ -347,6 +347,10 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   selectionChanged = output<T[]>();
   loaded = output<{ totalCount: number; hasValue: boolean }>();
 
+  private readonly settledCount = signal<number | null>(null);
+  // Null until rows first arrive, and holds the last count while a reload is in flight.
+  readonly loadedCount = this.settledCount.asReadonly();
+
   currentPage = signal(1);
   pageSize = linkedSignal(() => this.defaultPageSize());
 
@@ -616,10 +620,10 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
 
       const hasValue = this.localSource() ? true : this.resourceRef.hasValue();
 
-      this.loaded.emit({
-        totalCount: hasValue ? this.totalCount() : 0,
-        hasValue,
-      });
+      const totalCount = hasValue ? this.totalCount() : 0;
+
+      this.settledCount.set(hasValue ? totalCount : null);
+      this.loaded.emit({ totalCount, hasValue });
     });
 
     effect(() => {

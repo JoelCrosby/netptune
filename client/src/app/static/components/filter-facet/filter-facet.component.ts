@@ -9,6 +9,7 @@ import {
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
 import { FilterInputComponent } from '@static/components/filter-input/filter-input.component';
+import { ScrollNearBottomDirective } from '@static/directives/scroll-near-bottom.directive';
 
 export interface FilterFacetOption {
   value: string;
@@ -36,11 +37,14 @@ const heightClasses: Record<FilterFacetHeight, string> = {
   none: '',
 };
 
-const nearBottomThresholdPx = 48;
-
 @Component({
   selector: 'app-filter-facet',
-  imports: [BadgeComponent, CheckboxComponent, FilterInputComponent],
+  imports: [
+    BadgeComponent,
+    CheckboxComponent,
+    FilterInputComponent,
+    ScrollNearBottomDirective,
+  ],
   host: { class: 'block' },
   template: `
     <div class="border-border bg-background flex flex-col rounded-lg border">
@@ -91,7 +95,8 @@ const nearBottomThresholdPx = 48;
         <div
           class="custom-scroll p-2"
           [class]="listClass()"
-          (scroll)="onScroll($event)">
+          appScrollNearBottom
+          (nearBottom)="loadMore()">
           @for (option of renderedOptions(); track option.value) {
             <div
               class="hover:bg-foreground/5 rounded-md px-2 py-2.5 transition-colors">
@@ -193,19 +198,9 @@ export class FilterFacetComponent {
   }
 
   protected loadMore() {
-    this.page.update((page) => page + 1);
-  }
-
-  protected onScroll(event: Event) {
     if (this.hiddenCount() <= 0) return;
 
-    const element = event.target as HTMLElement;
-    const distanceToBottom =
-      element.scrollHeight - element.scrollTop - element.clientHeight;
-
-    if (distanceToBottom > nearBottomThresholdPx) return;
-
-    this.loadMore();
+    this.page.update((page) => page + 1);
   }
 
   private survivesQuery(option: FilterFacetOption, query: string): boolean {

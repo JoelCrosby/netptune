@@ -1,5 +1,4 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { getErrorMessage } from '@core/util/error-message';
 import { FormsModule } from '@angular/forms';
 import {
   SaveSearchCredentialRequest,
@@ -17,6 +16,8 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
 import { first, switchMap } from 'rxjs';
+import { mutation } from '@core/util/mutation';
+import { requireSuccess } from '@core/util/rxjs-operators';
 import { PanelComponent } from '@static/components/panel.component';
 import { PanelBodyComponent } from '@static/components/panel-body.component';
 import { FormControlFieldComponent } from '@static/components/form-control/form-control-field.component';
@@ -252,7 +253,11 @@ export class SearchCredentialComponent {
   private readonly pendingEndpoint = signal<string | null>(null);
 
   protected readonly secret = signal('');
-  protected readonly saving = signal(false);
+  private readonly request = mutation({
+    fallbackError: $localize`:Shown when saving the search provider fails:The provider could not be saved.`,
+  });
+
+  protected readonly saving = this.request.pending;
 
   protected readonly stored = computed(() => this.credential.value());
 
@@ -335,40 +340,16 @@ export class SearchCredentialComponent {
       endpoint: option.needsEndpoint ? this.endpoint().trim() : null,
     };
 
-    this.saving.set(true);
-
-    this.service
-      .save(request)
-      .pipe(first())
-      .subscribe({
-        next: (response) => {
-          this.saving.set(false);
-
-          if (!response.isSuccess) {
-            this.snackbar.open(
-              response.message ??
-                $localize`:Shown when saving the search provider fails:The provider could not be saved.`
-            );
-
-            return;
-          }
-
-          this.reset();
-          this.credential.reload();
-          this.snackbar.success(
-            $localize`:Shown after the search provider is stored:Search provider saved.`
-          );
-        },
-        error: (error) => {
-          this.saving.set(false);
-          this.snackbar.open(
-            getErrorMessage(
-              error,
-              $localize`:Shown when saving the search provider fails:The provider could not be saved.`
-            )
-          );
-        },
-      });
+    this.request.run(this.service.save(request).pipe(requireSuccess()), {
+      onSuccess: () => {
+        this.reset();
+        this.credential.reload();
+        this.snackbar.success(
+          $localize`:Shown after the search provider is stored:Search provider saved.`
+        );
+      },
+      onError: (message) => this.snackbar.open(message),
+    });
   }
 
   protected remove() {

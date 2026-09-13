@@ -1,13 +1,17 @@
-import { Component, computed, inject, signal, viewChild } from '@angular/core';
+import { Component, computed, inject, viewChild } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { DialogService } from '@core/services/dialog.service';
 import { projectResource } from '@core/resources/project.resource';
 import { sprintResource } from '@core/resources/sprint.resource';
+import { projectSprintRoute } from '@core/router/project-sprint-route';
+import {
+  queryParamSignal,
+  queryParamsRoute,
+} from '@core/router/query-param-signal';
 import { taskFilterRoute } from '@core/router/task-filter-route';
-import { TaskFilterRouteParams } from '@core/router/task-filter-route-params';
+import { reloadToken } from '@core/util/signals';
+import { appendTaskFilters } from '@core/util/task-filter-query';
 import { TaskViewFiltersComponent } from '@shared/components/task-view-filters/task-view-filters.component';
 import { delayedLoading } from '@core/util/delayed-loading';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
@@ -68,9 +72,9 @@ const defaultTo = addDays(today, 45);
             [sprintId]="sprintId()"
             [sprints]="sprintOptions()"
             [includeUnscheduled]="includeUnscheduled()"
-            (fromChanged)="setParam('from', $event)"
-            (toChanged)="setParam('to', $event)"
-            (zoomChanged)="setParam('zoom', $event)"
+            (fromChanged)="from.set($event || null)"
+            (toChanged)="to.set($event || null)"
+            (zoomChanged)="zoom.set($event || null)"
             (projectChanged)="setProject($event)"
             (sprintChanged)="setSprint($event)"
             (includeUnscheduledChanged)="setUnscheduled($event)"
@@ -151,16 +155,13 @@ const defaultTo = addDays(today, 45);
   `,
 })
 export class RoadmapViewComponent {
-  private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
   private readonly dialog = inject(DialogService);
   private readonly planningTimeline = viewChild(
     RoadmapPlanningTimelineComponent
   );
 
-  private readonly params = toSignal(this.route.queryParamMap, {
-    initialValue: this.route.snapshot.queryParamMap,
-  });
+  private readonly queryParams = queryParamsRoute();
+  private readonly projectSprint = projectSprintRoute();
 
   readonly projectsResource = projectResource();
   readonly projects = this.projectsResource.value;
@@ -169,22 +170,22 @@ export class RoadmapViewComponent {
 
   readonly canUpdateTasks = hasPermission(PERMISSIONS.tasks.update);
   readonly canReadSprints = hasPermission(PERMISSIONS.sprints.read);
-  readonly unscheduledReload = signal(0);
-  readonly from = computed(() => this.params().get('from') ?? defaultFrom);
-  readonly to = computed(() => this.params().get('to') ?? defaultTo);
-  readonly projectId = computed(() => this.numberParam('projectId'));
-  readonly sprintId = computed(() => this.numberParam('sprintId'));
+  readonly unscheduledReload = reloadToken();
+  readonly from = queryParamSignal('from', (value) => value ?? defaultFrom);
+  readonly to = queryParamSignal('to', (value) => value ?? defaultTo);
+  readonly projectId = this.projectSprint.projectId;
+  readonly sprintId = this.projectSprint.sprintId;
   protected readonly filterRoute = taskFilterRoute();
   readonly taskFilters = this.filterRoute.filters;
-  readonly includeUnscheduled = computed(
-    () => this.params().get('unscheduled') !== 'false'
+  readonly includeUnscheduled = queryParamSignal(
+    'unscheduled',
+    (value) => value !== 'false'
   );
   readonly rangeValidationError = computed(() =>
     validateRoadmapRange(this.from(), this.to())
   );
 
-  readonly zoom = computed<TimelineZoom>(() => {
-    const value = this.params().get('zoom');
+  readonly zoom = queryParamSignal('zoom', (value): TimelineZoom => {
     return value === 'day' || value === 'month' ? value : 'week';
   });
 
@@ -230,63 +231,33 @@ export class RoadmapViewComponent {
     this.ensureDefaultParams();
   }
 
-  setParam(key: string, value: string): void {
-    void this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: { [key]: value || null },
-      queryParamsHandling: 'merge',
-    });
-  }
-
   setProject(projectId: number | null): void {
-    void this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
-        projectId: projectId?.toString() ?? null,
-        sprintId: null,
-      },
-      queryParamsHandling: 'merge',
-    });
+    this.projectSprint.setProject(projectId);
   }
 
   setSprint(sprintId: number | null): void {
     const sprint = this.sprintOptions().find((item) => item.id === sprintId);
-    void this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
-        sprintId,
-        projectId: sprint?.projectId ?? this.projectId() ?? null,
-      },
-      queryParamsHandling: 'merge',
-    });
+    this.projectSprint.setSprint(sprintId, sprint?.projectId);
   }
 
   setUnscheduled(includeUnscheduled: boolean): void {
-    this.setParam('unscheduled', String(includeUnscheduled));
+    this.includeUnscheduled.set(String(includeUnscheduled));
   }
 
   showToday(): void {
     const centre = todayDate();
-    void this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
-        from: addDays(centre, -45),
-        to: addDays(centre, 45),
-      },
-      queryParamsHandling: 'merge',
+    this.queryParams.patch({
+      from: addDays(centre, -45),
+      to: addDays(centre, 45),
     });
   }
 
   navigateRange(direction: -1 | 1): void {
     const rangeDays = Math.max(1, inclusiveDayCount(this.from(), this.to()));
     const offset = rangeDays * direction;
-    void this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
-        from: addDays(this.from(), offset),
-        to: addDays(this.to(), offset),
-      },
-      queryParamsHandling: 'merge',
+    this.queryParams.patch({
+      from: addDays(this.from(), offset),
+      to: addDays(this.to(), offset),
     });
   }
 
@@ -299,7 +270,7 @@ export class RoadmapViewComponent {
       this.refreshRoadmap();
     }
 
-    this.unscheduledReload.update((value) => value + 1);
+    this.unscheduledReload.bump();
   }
 
   refreshRoadmap(): void {
@@ -308,15 +279,15 @@ export class RoadmapViewComponent {
 
   refreshRoadmapData(): void {
     this.refreshRoadmap();
-    this.unscheduledReload.update((value) => value + 1);
+    this.unscheduledReload.bump();
   }
 
   scheduleTask(change: RoadmapScheduleChange): void {
     this.planningTimeline()?.updateSchedule(change);
   }
 
-  openTask(task: RoadmapTask): void {
-    const dialogRef = this.dialog.open(TaskDetailDialogComponent, {
+  async openTask(task: RoadmapTask): Promise<void> {
+    await this.dialog.openForResult(TaskDetailDialogComponent, {
       width: TaskDetailDialogComponent.width,
       height: TaskDetailDialogComponent.height,
       data: task,
@@ -324,18 +295,11 @@ export class RoadmapViewComponent {
       panelClass: TaskDetailDialogComponent.panelClass,
     });
 
-    dialogRef.closed.subscribe(() => {
-      this.refresh();
-    });
-  }
-
-  private numberParam(key: string): number | undefined {
-    const value = Number(this.params().get(key));
-    return Number.isInteger(value) && value > 0 ? value : undefined;
+    this.refresh();
   }
 
   private ensureDefaultParams(): void {
-    const query = this.route.snapshot.queryParamMap;
+    const query = this.queryParams.paramMap();
     const hasDefaults =
       query.has('from') && query.has('to') && query.has('zoom');
 
@@ -343,30 +307,13 @@ export class RoadmapViewComponent {
       return;
     }
 
-    void this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
+    this.queryParams.patch(
+      {
         from: query.get('from') ?? defaultFrom,
         to: query.get('to') ?? defaultTo,
         zoom: query.get('zoom') ?? 'week',
       },
-      queryParamsHandling: 'merge',
-      replaceUrl: true,
-    });
+      { replaceUrl: true }
+    );
   }
-}
-
-function appendTaskFilters(
-  query: URLSearchParams,
-  filters: TaskFilterRouteParams
-): void {
-  if (filters.term) {
-    query.set('search', filters.term);
-  }
-
-  filters.users?.forEach((value) => query.append('assignees', value));
-  filters.tags?.forEach((value) => query.append('tags', value));
-  filters.statuses?.forEach((value) =>
-    query.append('statusIds', value.toString())
-  );
 }

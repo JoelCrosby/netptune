@@ -101,6 +101,10 @@ export class TaskTableComponent<T extends TaskColumnRow> {
   readonly selectionChanged = output<T[]>();
   readonly loaded = output<{ totalCount: number; hasValue: boolean }>();
 
+  readonly loadedCount = computed(
+    () => this.datatable()?.loadedCount() ?? null
+  );
+
   protected readonly cellTemplates = contentChildren<
     DatatableCellTemplateDirective<T>
   >(DatatableCellTemplateDirective, { descendants: true });

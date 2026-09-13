@@ -1,7 +1,6 @@
-import { Component, computed, inject, signal, viewChild } from '@angular/core';
+import { Component, inject, signal, viewChild } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
-import { AiAssistantService } from '@core/services/ai-assistant.service';
 import { LucideChevronDown, LucideSparkles } from '@lucide/angular';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
 import { TaskDetailBoardsComponent } from '../task-detail-boards.component';
@@ -96,7 +95,7 @@ import {
                   <button
                     type="button"
                     class="text-primary hover:bg-hover flex h-8.5 w-full cursor-pointer items-center gap-2 px-3.5 text-left text-[13px] font-medium transition-colors"
-                    (click)="askAssistant(); fieldsMenu.close()">
+                    (click)="taskDetail.askAssistant(); fieldsMenu.close()">
                     <svg lucideSparkles class="h-3.5 w-3.5"></svg>
                     <span i18n="Button that asks the assistant about this task">
                       Ask the assistant
@@ -172,8 +171,6 @@ export class TaskDetailDocumentComponent {
   readonly taskDetail = inject(TaskDetailService);
   readonly comments = inject(TaskDetailCommentsService);
 
-  private readonly assistant = inject(AiAssistantService);
-
   protected readonly filesSection = viewChild(TaskDetailFilesComponent);
 
   readonly task = this.taskDetail.task;
@@ -188,9 +185,7 @@ export class TaskDetailDocumentComponent {
   readonly readComments = hasPermission(PERMISSIONS.comments.read);
   readonly readActivity = hasPermission(PERMISSIONS.activity.read);
 
-  readonly canAskAssistant = computed(() => {
-    return this.assistant.isAvailable() && this.task() !== null;
-  });
+  readonly canAskAssistant = this.taskDetail.canAskAssistant;
 
   private readonly labels = {
     comments: $localize`:Section heading for a task's comments:Comments`,
@@ -228,13 +223,5 @@ export class TaskDetailDocumentComponent {
     }
 
     return tabs;
-  }
-
-  askAssistant() {
-    const task = this.task();
-
-    if (!task) return;
-
-    this.assistant.askAboutTask(task);
   }
 }

@@ -13,6 +13,7 @@ import {
   UpdateServiceAccountRequest,
 } from '@core/models/service-account';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
+import { toggleInSet } from '@core/util/signals';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { InlineButtonComponent } from '@static/components/button/inline-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
@@ -192,7 +193,7 @@ export class EditServiceAccountDialogComponent {
   readonly permissionGroups = permissionGroups;
   readonly totalPermissionCount = allPermissions.length;
 
-  readonly selectedPermissions = signal<Set<Permission>>(
+  readonly selectedPermissions = signal<ReadonlySet<Permission>>(
     new Set(this.dialogData.account.permissions)
   );
 
@@ -220,17 +221,7 @@ export class EditServiceAccountDialogComponent {
   }
 
   setPermission(permission: Permission, selected: boolean) {
-    this.selectedPermissions.update((current) => {
-      const next = new Set(current);
-
-      if (selected) {
-        next.add(permission);
-      } else {
-        next.delete(permission);
-      }
-
-      return next;
-    });
+    toggleInSet(this.selectedPermissions, permission, selected);
   }
 
   isGroupSelected(group: PermissionGroupOption) {

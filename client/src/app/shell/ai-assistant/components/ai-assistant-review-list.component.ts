@@ -229,7 +229,7 @@ const rowLabels = (
 export class AiAssistantReviewListComponent {
   readonly groups = input.required<AiChangeGroup[]>();
   readonly excludedChangeIds = input.required<Set<number>>();
-  readonly collapsedKeys = input.required<Set<string>>();
+  readonly collapsedKeys = input.required<ReadonlySet<string>>();
   readonly selectedChangeId = input<number | null>(null);
   readonly isPending = input(false);
   readonly isApplying = input(false);

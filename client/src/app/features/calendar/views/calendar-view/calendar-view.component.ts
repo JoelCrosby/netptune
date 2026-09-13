@@ -6,13 +6,16 @@ import {
   viewChild,
 } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { ScheduledTask } from '@core/models/scheduled-task';
 import { DialogService } from '@core/services/dialog.service';
+import { projectSprintRoute } from '@core/router/project-sprint-route';
+import {
+  queryParamSignal,
+  queryParamsRoute,
+} from '@core/router/query-param-signal';
 import { taskFilterRoute } from '@core/router/task-filter-route';
-import { TaskFilterRouteParams } from '@core/router/task-filter-route-params';
+import { appendTaskFilters } from '@core/util/task-filter-query';
 import { projectResource } from '@core/resources/project.resource';
 import { sprintResource } from '@core/resources/sprint.resource';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
@@ -127,14 +130,11 @@ import {
   styles: ``,
 })
 export class CalendarViewComponent {
-  private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
   private readonly dialog = inject(DialogService);
   private readonly planningMonth = viewChild(CalendarPlanningMonthComponent);
 
-  private readonly params = toSignal(this.route.queryParamMap, {
-    initialValue: this.route.snapshot.queryParamMap,
-  });
+  private readonly queryParams = queryParamsRoute();
+  private readonly projectSprint = projectSprintRoute();
 
   readonly projectsResource = projectResource();
   readonly projects = this.projectsResource.value;
@@ -143,12 +143,10 @@ export class CalendarViewComponent {
   readonly canUpdateTasks = hasPermission(PERMISSIONS.tasks.update);
   readonly canReadSprints = hasPermission(PERMISSIONS.sprints.read);
 
-  readonly month = computed(() =>
-    validCalendarMonth(this.params().get('month'))
-  );
+  readonly month = queryParamSignal('month', validCalendarMonth);
   readonly range = computed(() => calendarMonthRange(this.month()));
-  readonly projectId = computed(() => this.numberParam('projectId'));
-  readonly sprintId = computed(() => this.numberParam('sprintId'));
+  readonly projectId = this.projectSprint.projectId;
+  readonly sprintId = this.projectSprint.sprintId;
   protected readonly filterRoute = taskFilterRoute();
   readonly taskFilters = this.filterRoute.filters;
   readonly query = computed(() => {
@@ -187,34 +185,20 @@ export class CalendarViewComponent {
   }
 
   navigateMonth(direction: -1 | 1): void {
-    this.setParam('month', addCalendarMonths(this.month(), direction));
+    this.month.set(addCalendarMonths(this.month(), direction));
   }
 
   showToday(): void {
-    this.setParam('month', todayDate().slice(0, 7));
+    this.month.set(todayDate().slice(0, 7));
   }
 
   setProject(projectId: number | null): void {
-    void this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
-        projectId: projectId?.toString() ?? null,
-        sprintId: null,
-      },
-      queryParamsHandling: 'merge',
-    });
+    this.projectSprint.setProject(projectId);
   }
 
   setSprint(sprintId: number | null): void {
     const sprint = this.sprints().find((item) => item.id === sprintId);
-    void this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
-        sprintId,
-        projectId: sprint?.projectId ?? this.projectId() ?? null,
-      },
-      queryParamsHandling: 'merge',
-    });
+    this.projectSprint.setSprint(sprintId, sprint?.projectId);
   }
 
   refresh(): void {
@@ -226,59 +210,29 @@ export class CalendarViewComponent {
     }
   }
 
-  openTask(task: ScheduledTask): void {
-    const dialogRef = this.dialog.open(TaskDetailDialogComponent, {
+  async openTask(task: ScheduledTask): Promise<void> {
+    await this.dialog.openForResult(TaskDetailDialogComponent, {
       width: TaskDetailDialogComponent.width,
       height: TaskDetailDialogComponent.height,
       data: task,
       autoFocus: false,
       panelClass: TaskDetailDialogComponent.panelClass,
     });
-    dialogRef.closed.subscribe(() => this.refresh());
-  }
 
-  private setParam(key: string, value: string): void {
-    void this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: { [key]: value },
-      queryParamsHandling: 'merge',
-    });
+    this.refresh();
   }
 
   refreshCalendar(): void {
     this.calendar.reload();
   }
 
-  private numberParam(key: string): number | undefined {
-    const value = Number(this.params().get(key));
-    return Number.isInteger(value) && value > 0 ? value : undefined;
-  }
-
   private ensureDefaultMonth(): void {
-    if (this.route.snapshot.queryParamMap.has('month')) {
+    const hasMonth = this.queryParams.paramMap().has('month');
+
+    if (hasMonth) {
       return;
     }
 
-    void this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: { month: this.month() },
-      queryParamsHandling: 'merge',
-      replaceUrl: true,
-    });
+    this.month.set(this.month(), { replaceUrl: true });
   }
-}
-
-function appendTaskFilters(
-  query: URLSearchParams,
-  filters: TaskFilterRouteParams
-): void {
-  if (filters.term) {
-    query.set('search', filters.term);
-  }
-
-  filters.users?.forEach((value) => query.append('assignees', value));
-  filters.tags?.forEach((value) => query.append('tags', value));
-  filters.statuses?.forEach((value) =>
-    query.append('statusIds', value.toString())
-  );
 }

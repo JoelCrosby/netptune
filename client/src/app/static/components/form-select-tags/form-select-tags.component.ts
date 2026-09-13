@@ -1,6 +1,4 @@
-import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
 import {
-  AfterViewInit,
   Component,
   computed,
   contentChildren,
@@ -27,6 +25,7 @@ import {
 import { FormSelectDropdownComponent } from '../form-select/form-select-dropdown.component';
 import { FormSelectDropdownStyleDirective } from '../form-select/form-select.directives';
 import { hintIdFor } from '../form-control-a11y';
+import { ListboxKeyboard } from '../listbox-keyboard';
 import { FormSelectTagsOptionComponent } from './form-select-tags-option.component';
 import { FormSelectTagsService } from './form-select-tags.service';
 
@@ -121,9 +120,9 @@ import { FormSelectTagsService } from './form-select-tags.service';
     </div>
   `,
 })
-export class FormSelectTagsComponent<TValue>
-  implements AfterViewInit, FormValueControl<TValue[]>
-{
+export class FormSelectTagsComponent<TValue> implements FormValueControl<
+  TValue[]
+> {
   private service = inject<FormSelectTagsService<TValue>>(
     FormSelectTagsService
   );
@@ -160,39 +159,39 @@ export class FormSelectTagsComponent<TValue>
     );
   });
 
-  keyManager?: ActiveDescendantKeyManager<
-    FormSelectTagsOptionComponent<TValue>
-  >;
+  readonly keyboard = new ListboxKeyboard({
+    items: this.options,
+    isOpen: () => this.dropdown().showing(),
+    open: () => this.showDropdown(),
+    close: () => {
+      this.hideDropdown();
+      this.searchInput().nativeElement.focus();
+    },
+    select: (option) => this.toggleOption(option),
+    openKeys: ['ArrowDown', 'ArrowUp', 'Enter'],
+    trapKeys: ['Tab'],
+    skip: (option) => option.hiddenBySearch,
+    wrap: true,
+  });
 
   constructor() {
     this.service.register(this);
-  }
-
-  ngAfterViewInit() {
-    this.rebuildKeyManager();
   }
 
   isSelected(value: TValue): boolean {
     return this.value().some((v) => v === value);
   }
 
-  private rebuildKeyManager() {
-    const visibleOptions = this.options().filter((opt) => !opt.hiddenBySearch);
-    this.keyManager = new ActiveDescendantKeyManager(visibleOptions)
-      .withVerticalOrientation()
-      .withWrap();
-  }
-
   private clearSearch() {
     this.searchQuery.set('');
     this.searchInput().nativeElement.value = '';
-    this.rebuildKeyManager();
+    this.keyboard.clearActive();
   }
 
   showDropdown() {
     this.dropdown().show();
     if (this.options()?.length) {
-      this.keyManager?.setFirstItemActive();
+      this.keyboard.setFirstItemActive();
     }
   }
 
@@ -213,7 +212,7 @@ export class FormSelectTagsComponent<TValue>
     this.clearSearch();
 
     if (this.dropdown().showing()) {
-      this.keyManager?.setFirstItemActive();
+      this.keyboard.setFirstItemActive();
     }
 
     this.searchInput().nativeElement.focus();
@@ -235,7 +234,7 @@ export class FormSelectTagsComponent<TValue>
 
   onSearchInput(event: Event) {
     this.searchQuery.set((event.target as HTMLInputElement).value);
-    this.rebuildKeyManager();
+    this.keyboard.clearActive();
     if (!this.dropdown().showing()) {
       this.showDropdown();
     }
@@ -246,42 +245,19 @@ export class FormSelectTagsComponent<TValue>
   }
 
   onKeyDown(event: KeyboardEvent) {
-    const dropdown = this.dropdown();
+    const removesLastTag = event.key === 'Backspace' && !this.searchQuery();
 
-    if (event.key === 'Escape' || event.key === 'Esc') {
-      if (dropdown.showing()) {
-        this.hideDropdown();
-        this.searchInput().nativeElement.focus();
-      }
+    if (!removesLastTag) {
+      this.keyboard.handleKeydown(event);
+
       return;
     }
 
-    if (event.key === 'Backspace' && !this.searchQuery()) {
-      const current = this.value();
-      if (current.length) {
-        this.value.set(current.slice(0, -1));
-        this.changed.emit(this.value());
-      }
-      return;
-    }
+    const current = this.value();
 
-    if (!dropdown.showing()) {
-      if (['ArrowDown', 'Down', 'ArrowUp', 'Up', 'Enter'].includes(event.key)) {
-        this.showDropdown();
-      }
-      return;
-    }
-
-    if (event.key === 'Enter') {
-      const activeItem = this.keyManager?.activeItem;
-      if (activeItem) {
-        this.toggleOption(activeItem);
-      }
-    } else if (['ArrowUp', 'Up', 'ArrowDown', 'Down'].includes(event.key)) {
-      event.preventDefault();
-      this.keyManager?.onKeydown(event);
-    } else if (event.key === 'Tab') {
-      event.preventDefault();
+    if (current.length) {
+      this.value.set(current.slice(0, -1));
+      this.changed.emit(this.value());
     }
   }
 }

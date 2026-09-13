@@ -6,6 +6,7 @@ import {
   ServiceAccount,
   UpdateApiCredentialScopesRequest,
 } from '@core/models/service-account';
+import { toggleInSet } from '@core/util/signals';
 import { LucideTriangleAlert } from '@lucide/angular';
 import { CalloutComponent } from '@static/components/callout/callout.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
@@ -129,7 +130,7 @@ export class EditApiCredentialScopesDialogComponent {
   readonly credential = this.data.credential;
   readonly scopeGroups = filterPermissionGroups(this.account.permissions);
 
-  readonly selectedScopes = signal<Set<Permission>>(
+  readonly selectedScopes = signal<ReadonlySet<Permission>>(
     new Set(this.credential.scopes)
   );
 
@@ -148,17 +149,7 @@ export class EditApiCredentialScopesDialogComponent {
   readonly noPermissionsMessage = $localize`:Shown when a service account has no permissions to scope:This service account has no API permissions.`;
 
   setScope(permission: Permission, selected: boolean) {
-    this.selectedScopes.update((current) => {
-      const next = new Set(current);
-
-      if (selected) {
-        next.add(permission);
-      } else {
-        next.delete(permission);
-      }
-
-      return next;
-    });
+    toggleInSet(this.selectedScopes, permission, selected);
   }
 
   selectAll() {

@@ -48,6 +48,7 @@ import {
   ManageBoardGroupRow,
   ManageBoardGroupsRowComponent,
 } from './manage-board-groups-row.component';
+import { MenuSeparatorComponent } from '@static/components/dropdown-menu/menu-separator.component';
 
 // Past this many groups the mini board stops reading as columns, so the preview
 // drops to one tick per group, rows tighten and the name filter earns its place.
@@ -56,6 +57,7 @@ const DENSE_GROUP_COUNT = 12;
 @Component({
   selector: 'app-manage-board-groups-dialog',
   imports: [
+    MenuSeparatorComponent,
     CdkDrag,
     CdkDropList,
     DialogTitleComponent,
@@ -263,7 +265,7 @@ const DENSE_GROUP_COUNT = 12;
             </span>
           </button>
 
-          <div class="border-border/50 my-1 border-t"></div>
+          <app-menu-separator />
 
           <button
             app-menu-item
@@ -289,7 +291,7 @@ const DENSE_GROUP_COUNT = 12;
 
         @if (canDelete()) {
           @if (canUpdate()) {
-            <div class="border-border/50 my-1 border-t"></div>
+            <app-menu-separator />
           }
 
           <button

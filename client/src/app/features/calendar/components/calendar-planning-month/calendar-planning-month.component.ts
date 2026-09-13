@@ -13,6 +13,7 @@ import { ScheduledTask } from '@core/models/scheduled-task';
 import { DialogService } from '@core/services/dialog.service';
 import { TaskSchedulingService } from '@core/services/task-scheduling.service';
 import { onWorkspaceRefresh } from '@core/util/reload-on-refresh';
+import { toggleInSet } from '@core/util/signals';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { debounceTime, Subject } from 'rxjs';
 import {
@@ -152,13 +153,13 @@ export class CalendarPlanningMonthComponent {
       schedule.startDate,
       schedule.endDate
     );
-    this.setPending(change.task.id, true);
+    toggleInSet(this.pendingTaskIds, change.task.id, true);
     this.scheduling
       .updateSchedule(change.task.id, schedule)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          this.setPending(change.task.id, false);
+          toggleInSet(this.pendingTaskIds, change.task.id, false);
           this.announcement.set(
             `${change.task.systemId} moved to ${change.toDate}`
           );
@@ -173,7 +174,7 @@ export class CalendarPlanningMonthComponent {
             previous.startDate,
             previous.dueDate
           );
-          this.setPending(change.task.id, false);
+          toggleInSet(this.pendingTaskIds, change.task.id, false);
           this.announcement.set(`${change.task.systemId} could not be moved`);
           this.snackbar.error(
             $localize`:Error shown after an action fails:Task schedule could not be updated`
@@ -205,17 +206,5 @@ export class CalendarPlanningMonthComponent {
         task.id === taskId ? { ...task, startDate, dueDate } : task
       )
     );
-  }
-
-  private setPending(taskId: number, pending: boolean): void {
-    this.pendingTaskIds.update((ids) => {
-      const updated = new Set(ids);
-      if (pending) {
-        updated.add(taskId);
-      } else {
-        updated.delete(taskId);
-      }
-      return updated;
-    });
   }
 }

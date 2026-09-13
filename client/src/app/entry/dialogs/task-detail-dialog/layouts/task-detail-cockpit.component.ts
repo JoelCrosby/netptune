@@ -21,10 +21,12 @@ import {
   TabGroupComponent,
   type TabItem,
 } from '@static/components/tab-group/tab-group.component';
+import { DividerComponent } from '@static/components/divider/divider.component';
 
 @Component({
   selector: 'app-task-detail-cockpit',
   imports: [
+    DividerComponent,
     TabGroupComponent,
     TaskDetailChromeComponent,
     TaskDetailHeaderComponent,
@@ -57,9 +59,9 @@ import {
           <app-task-detail-property-chips variant="bar" />
 
           @if (readTags()) {
-            <span
-              class="bg-foreground/8 mx-1 h-5 w-px shrink-0"
-              aria-hidden="true"></span>
+            <app-divider
+              orientation="vertical"
+              class="bg-foreground/8 mx-1 h-5" />
             <app-task-detail-tag-row size="md" />
           }
         </div>

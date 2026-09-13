@@ -36,6 +36,7 @@ import {
 } from '../utils/roadmap-row-builder';
 import { countOffscreenDependencies } from '../utils/roadmap-relation-index';
 import { RoadmapTaskRowComponent } from './roadmap-task-row.component';
+import { toggleInSet } from '@core/util/signals';
 
 const defaultTaskColumnWidth = 320;
 const projectRowHeight = 36;
@@ -299,11 +300,11 @@ export class RoadmapTimelineComponent {
   });
 
   toggleProject(projectId: number): void {
-    this.collapsedProjectIds.update((ids) => toggledSet(ids, projectId));
+    toggleInSet(this.collapsedProjectIds, projectId);
   }
 
   toggleTask(taskId: number): void {
-    this.collapsedTaskIds.update((ids) => toggledSet(ids, taskId));
+    toggleInSet(this.collapsedTaskIds, taskId);
   }
 
   isProjectCollapsed(projectId: number): boolean {
@@ -439,21 +440,6 @@ export class RoadmapTimelineComponent {
     return positions;
   }
 }
-
-const toggledSet = (
-  values: ReadonlySet<number>,
-  value: number
-): ReadonlySet<number> => {
-  const updated = new Set(values);
-
-  if (updated.has(value)) {
-    updated.delete(value);
-  } else {
-    updated.add(value);
-  }
-
-  return updated;
-};
 
 const parseDraggedTask = (value: string): RoadmapTask | undefined => {
   try {

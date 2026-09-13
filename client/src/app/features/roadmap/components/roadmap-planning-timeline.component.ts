@@ -19,6 +19,7 @@ import {
   RoadmapViewModel,
 } from '../models/roadmap.models';
 import { RoadmapTimelineComponent } from './roadmap-timeline.component';
+import { toggleInSet } from '@core/util/signals';
 
 @Component({
   selector: 'app-roadmap-planning-timeline',
@@ -149,17 +150,7 @@ export class RoadmapPlanningTimelineComponent {
   }
 
   private setTaskPending(taskId: number, pending: boolean): void {
-    this.pendingTaskIds.update((taskIds) => {
-      const updated = new Set(taskIds);
-
-      if (pending) {
-        updated.add(taskId);
-      } else {
-        updated.delete(taskId);
-      }
-
-      return updated;
-    });
+    toggleInSet(this.pendingTaskIds, taskId, pending);
   }
 
   private flushRefresh(): void {

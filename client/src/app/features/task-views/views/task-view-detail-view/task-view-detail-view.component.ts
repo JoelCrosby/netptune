@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
 import { hasPermission } from '@core/auth/has-permission';
@@ -150,8 +150,7 @@ import { findStaleReferences } from '../../util/stale-references';
             [columns]="columns()"
             [autoFill]="true"
             [stickyHeader]="true"
-            [customizableColumns]="true"
-            (loaded)="onLoaded($event)" />
+            [customizableColumns]="true" />
         }
       </app-page-body>
     </app-page-container>
@@ -181,7 +180,8 @@ export class TaskViewDetailViewComponent {
     return !this.loading() && !this.view();
   });
 
-  readonly totalCount = signal<number | null>(null);
+  private readonly table = viewChild(TaskTableComponent<TaskViewModel>);
+  readonly totalCount = computed(() => this.table()?.loadedCount() ?? null);
 
   readonly errors = computed<TaskQueryValidationError[]>(() => {
     const query = this.view()?.definition?.query;
@@ -246,10 +246,6 @@ export class TaskViewDetailViewComponent {
     if (id === undefined) return;
 
     this.pinned.toggle(id);
-  }
-
-  onLoaded(event: { totalCount: number; hasValue: boolean }) {
-    this.totalCount.set(event.totalCount);
   }
 
   onCopyLink() {

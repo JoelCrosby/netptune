@@ -6,9 +6,9 @@ import {
   inject,
   input,
   signal,
-  untracked,
   viewChild,
 } from '@angular/core';
+import { onChange } from '@core/util/signals';
 import {
   LucideBold,
   LucideCheck,
@@ -226,11 +226,7 @@ export class EditorBubbleMenuComponent {
   });
 
   constructor() {
-    effect(() => {
-      this.revision();
-
-      untracked(() => this.linkMode.set(false));
-    });
+    onChange(this.revision, () => this.linkMode.set(false));
 
     effect(() => {
       if (!this.linkMode()) return;

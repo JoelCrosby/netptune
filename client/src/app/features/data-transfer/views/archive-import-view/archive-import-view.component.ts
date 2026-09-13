@@ -10,6 +10,7 @@ import {
   ArchiveImportResult,
 } from '@core/models/view-models/archive-import';
 import { formatBytes } from '@core/util/bytes';
+import { mutation } from '@core/util/mutation';
 import {
   LucideCircleCheck,
   LucideFileArchive,
@@ -314,8 +315,10 @@ export class ArchiveImportViewComponent {
   protected readonly targetSlug = signal('');
   protected readonly inviteUnmatchedMembers = signal(false);
 
-  protected readonly isBusy = signal(false);
-  protected readonly error = signal<string | null>(null);
+  private readonly request = mutation();
+
+  protected readonly isBusy = this.request.pending;
+  protected readonly error = this.request.error;
   protected readonly preview = signal<ArchiveImportPreview | null>(null);
   protected readonly result = signal<ArchiveImportResult | null>(null);
 
@@ -386,7 +389,7 @@ export class ArchiveImportViewComponent {
     this.file.set(files[0] ?? null);
     this.preview.set(null);
     this.result.set(null);
-    this.error.set(null);
+    this.request.clearError();
   }
 
   protected check(): void {
@@ -411,28 +414,24 @@ export class ArchiveImportViewComponent {
     const form = new FormData();
 
     form.append('file', chosen, chosen.name);
-    this.isBusy.set(true);
-    this.error.set(null);
 
-    this.http
-      .post<ClientResponse<T>>(`${url}?${this.query()}`, form)
-      .subscribe({
-        next: (response) => {
-          this.isBusy.set(false);
+    const request = this.http.post<ClientResponse<T>>(
+      `${url}?${this.query()}`,
+      form
+    );
 
-          if (!response.payload) {
-            this.error.set(response.message ?? this.failedMessage);
+    this.request.run(request, {
+      fallbackError: this.failedMessage,
+      onSuccess: (response) => {
+        if (!response.payload) {
+          this.request.setError(response.message ?? this.failedMessage);
 
-            return;
-          }
+          return;
+        }
 
-          onSuccess(response.payload);
-        },
-        error: (response: { error?: ClientResponse<T> }) => {
-          this.isBusy.set(false);
-          this.error.set(response.error?.message ?? this.failedMessage);
-        },
-      });
+        onSuccess(response.payload);
+      },
+    });
   }
 
   private query(): string {

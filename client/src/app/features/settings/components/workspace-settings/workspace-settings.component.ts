@@ -16,7 +16,6 @@ import { IconTileComponent } from '@static/components/icon-tile.component';
 import { WorkspacePublicAccessComponent } from '../workspace-public-access/workspace-public-access.component';
 import { DialogService } from '@core/services/dialog.service';
 import { DeleteWorkspaceDialogComponent } from '../delete-workspace-dialog/delete-workspace-dialog.component';
-import { take } from 'rxjs/operators';
 import { PanelComponent } from '@static/components/panel.component';
 import { PanelBodyComponent } from '@static/components/panel-body.component';
 import { PanelHeaderComponent } from '@static/components/panel-header.component';
@@ -198,12 +197,12 @@ export class WorkspaceSettings {
     this.workspaceCommands.leave(workspace);
   }
 
-  openDeleteDialog() {
+  async openDeleteDialog() {
     const workspace = this.workspace();
 
     if (!workspace?.slug) return;
 
-    const dialogRef = this.dialog.open<
+    const confirmed = await this.dialog.openForResult<
       boolean,
       Workspace,
       DeleteWorkspaceDialogComponent
@@ -213,10 +212,8 @@ export class WorkspaceSettings {
       ariaLabel: `Delete ${workspace.name} workspace`,
     });
 
-    dialogRef.closed.pipe(take(1)).subscribe((confirmed) => {
-      if (confirmed) {
-        this.workspaceCommands.delete(workspace);
-      }
-    });
+    if (!confirmed) return;
+
+    this.workspaceCommands.delete(workspace);
   }
 }

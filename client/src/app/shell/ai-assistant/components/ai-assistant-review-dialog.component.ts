@@ -2,10 +2,8 @@ import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import {
   AiChangeApplyStatus,
-  AiChangeField,
   AiChangeSet,
   AiChangeSetStatus,
-  AiChangeValueKind,
   AiProposedChange,
 } from '@core/models/ai-conversation';
 import { AiAssistantService } from '@core/services/ai-assistant.service';
@@ -26,6 +24,7 @@ import {
   AiChangeGroup,
   groupChanges,
   isApplied,
+  isTextField,
   isValid,
 } from './ai-assistant-change-group';
 import { changeSummary } from './ai-assistant-change-kind';
@@ -36,6 +35,7 @@ import {
 } from './ai-assistant-review-detail.component';
 import { AiAssistantReviewListComponent } from './ai-assistant-review-list.component';
 import { SpinnerIconComponent } from '@static/components/spinner/spinner-icon.component';
+import { toggleInSet } from '@core/util/signals';
 
 export type AiReviewFilter =
   'all' | 'created' | 'updated' | 'removed' | 'blocked' | 'failed';
@@ -52,10 +52,6 @@ export interface AiReviewData {
 }
 
 const MODE_KEY = 'netptune.ai.review.mode';
-
-const isTextField = (field: AiChangeField): boolean => {
-  return field.kind === AiChangeValueKind.text;
-};
 
 @Component({
   selector: 'app-ai-assistant-review-dialog',
@@ -422,7 +418,7 @@ export class AiAssistantReviewDialogComponent {
     this.data?.filter ?? 'all'
   );
   protected readonly query = signal('');
-  protected readonly collapsedKeys = signal<Set<string>>(new Set());
+  protected readonly collapsedKeys = signal<ReadonlySet<string>>(new Set());
   protected readonly editingField = signal<string | null>(null);
   protected readonly editError = signal<string | null>(null);
   protected readonly mode = signal<AiDiffMode>(this.storedMode());
@@ -709,17 +705,7 @@ export class AiAssistantReviewDialogComponent {
   }
 
   protected toggleGroup(key: string) {
-    this.collapsedKeys.update((current) => {
-      const next = new Set(current);
-
-      if (next.has(key)) {
-        next.delete(key);
-      } else {
-        next.add(key);
-      }
-
-      return next;
-    });
+    toggleInSet(this.collapsedKeys, key);
   }
 
   protected toggleAll() {

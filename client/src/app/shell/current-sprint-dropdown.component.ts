@@ -18,10 +18,12 @@ import {
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
 import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
 import { SprintDaysBadgeComponent } from '@static/components/sprint-days-badge.component';
+import { MenuSeparatorComponent } from '@static/components/dropdown-menu/menu-separator.component';
 
 @Component({
   selector: 'app-current-sprint-dropdown',
   imports: [
+    MenuSeparatorComponent,
     DropdownMenuComponent,
     MenuItemComponent,
     LucideCalendarDays,
@@ -87,7 +89,7 @@ import { SprintDaysBadgeComponent } from '@static/components/sprint-days-badge.c
         }
 
         @if (selectedSprintFilter(); as selectedSprint) {
-          <div class="border-border/50 my-1 border-t"></div>
+          <app-menu-separator />
 
           <button
             app-menu-item
@@ -118,7 +120,7 @@ import { SprintDaysBadgeComponent } from '@static/components/sprint-days-badge.c
           </button>
         }
 
-        <div class="border-border/50 my-1 border-t"></div>
+        <app-menu-separator />
 
         <button
           app-menu-item

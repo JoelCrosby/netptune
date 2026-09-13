@@ -195,12 +195,12 @@ export class TaskDetailRelationsComponent {
     reloadOnRefresh(this.relations, ['tasks']);
   }
 
-  openLinkDialog() {
+  async openLinkDialog() {
     const task = this.task();
 
     if (!task) return;
 
-    const dialogRef = this.dialog.open<
+    const result = await this.dialog.openForResult<
       LinkTaskDialogResult,
       LinkTaskDialogData
     >(LinkTaskDialogComponent, {
@@ -209,11 +209,9 @@ export class TaskDetailRelationsComponent {
       panelClass: LinkTaskDialogComponent.panelClass,
     });
 
-    dialogRef.closed.subscribe((result) => {
-      if (!result) return;
+    if (!result) return;
 
-      this.link(task, result);
-    });
+    this.link(task, result);
   }
 
   private link(task: TaskViewModel, result: LinkTaskDialogResult) {

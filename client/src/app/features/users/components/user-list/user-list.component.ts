@@ -1,4 +1,4 @@
-import { Component, inject, output, signal } from '@angular/core';
+import { Component, computed, inject, signal, viewChild } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { RouterLink } from '@angular/router';
 import { PERMISSIONS } from '@app/core/auth/permissions';
@@ -32,8 +32,7 @@ import { WorkspaceRole, workspaceRoleLabels } from '@core/enums/workspace-role';
       tableClass="md:min-w-[720px] table-fixed"
       [data]="userData"
       [customizableColumns]="true"
-      [stickyHeader]="true"
-      (loaded)="onLoaded($event)">
+      [stickyHeader]="true">
       <ng-template appDatatableCell="user" let-user>
         <div class="flex min-w-0 items-center gap-3">
           <app-avatar
@@ -94,7 +93,9 @@ import { WorkspaceRole, workspaceRoleLabels } from '@core/enums/workspace-role';
 export class UserListComponent {
   private userCommands = inject(UserCommandsService);
 
-  readonly countChange = output<number>();
+  private readonly table = viewChild(DatatableComponent);
+
+  readonly count = computed(() => this.table()?.loadedCount() ?? null);
   readonly workspaceRole = WorkspaceRole;
 
   canReadUsers = hasPermission(PERMISSIONS.members.read);
@@ -137,12 +138,6 @@ export class UserListComponent {
       },
     ],
   };
-
-  onLoaded(event: { totalCount: number; hasValue: boolean }) {
-    if (event.hasValue) {
-      this.countChange.emit(event.totalCount);
-    }
-  }
 
   routerLink(user: WorkspaceAppUser) {
     if (user.isPending) return null;

@@ -40,3 +40,17 @@ export const unwrapClientPageResponse =
         }
       })
     );
+
+// An empty message lets getErrorMessage fall back to the caller's wording.
+export const requireSuccess =
+  <R extends ClientResponse<unknown>>() =>
+  (source: Observable<R>): Observable<R> =>
+    source.pipe(
+      map((response) => {
+        if (!response.isSuccess) {
+          throw new Error(response.message ?? '');
+        }
+
+        return response;
+      })
+    );

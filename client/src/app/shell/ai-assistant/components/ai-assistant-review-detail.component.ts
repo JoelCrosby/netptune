@@ -1,10 +1,6 @@
 import { Component, computed, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import {
-  AiChangeField,
-  AiChangeValueKind,
-  AiProposedChange,
-} from '@core/models/ai-conversation';
+import { AiProposedChange } from '@core/models/ai-conversation';
 import {
   LucideCheck,
   LucideExternalLink,
@@ -20,7 +16,12 @@ import { ButtonComponent } from '@static/components/button/button.component';
 import { ButtonLinkComponent } from '@static/components/button/button-link.component';
 import { CalloutComponent } from '@static/components/callout/callout.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
-import { changeRoute, entityLabel, isValid } from './ai-assistant-change-group';
+import {
+  changeRoute,
+  entityLabel,
+  isTextField,
+  isValid,
+} from './ai-assistant-change-group';
 import {
   changeAction,
   changeSummary,
@@ -33,10 +34,6 @@ export interface AiFieldEdit {
   name: string;
   value: string;
 }
-
-const isTextField = (field: AiChangeField): boolean => {
-  return field.kind === AiChangeValueKind.text;
-};
 
 /** The right hand pane of a review: what one change does, field by field. */
 @Component({

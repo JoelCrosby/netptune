@@ -63,6 +63,7 @@ import {
   LinkTaskDialogData,
   LinkTaskDialogResult,
 } from '../link-task-dialog/link-task-dialog.component';
+import { toggleInSet } from '@core/util/signals';
 
 export interface CreateTaskDialogData {
   projectId?: number;
@@ -515,7 +516,7 @@ export class CreateTaskDialogComponent {
   readonly stagedRelations = signal<StagedRelation[]>([]);
   readonly uploads = this.uploadService.uploads;
 
-  private readonly expanded = signal(new Set<Section>());
+  private readonly expanded = signal<ReadonlySet<Section>>(new Set());
 
   // Set once the task exists, which is also the point the dialog stops accepting edits.
   private readonly createdSystemId = signal<string | null>(null);
@@ -648,17 +649,11 @@ export class CreateTaskDialogComponent {
   }
 
   toggle(section: Section) {
-    this.expanded.update((sections) => {
-      const next = new Set(sections);
-
-      if (!next.delete(section)) next.add(section);
-
-      return next;
-    });
+    toggleInSet(this.expanded, section);
   }
 
   expand(section: Section) {
-    this.expanded.update((sections) => new Set(sections).add(section));
+    toggleInSet(this.expanded, section, true);
   }
 
   linkSummary() {
@@ -730,8 +725,8 @@ export class CreateTaskDialogComponent {
     this.stagedFiles.update((staged) => staged.filter((item) => item !== file));
   }
 
-  openLinkDialog() {
-    const dialogRef = this.dialog.open<
+  async openLinkDialog() {
+    const result = await this.dialog.openForResult<
       LinkTaskDialogResult,
       LinkTaskDialogData
     >(LinkTaskDialogComponent, {
@@ -740,11 +735,9 @@ export class CreateTaskDialogComponent {
       panelClass: LinkTaskDialogComponent.panelClass,
     });
 
-    dialogRef.closed.subscribe((result) => {
-      if (!result) return;
+    if (!result) return;
 
-      this.stageRelations(result);
-    });
+    this.stageRelations(result);
   }
 
   removeRelation(relation: StagedRelation) {

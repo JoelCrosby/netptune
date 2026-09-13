@@ -1,3 +1,4 @@
+import { toggleValue } from '@core/util/arrays';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import {
   Component,
@@ -795,12 +796,4 @@ export class BulkEditTasksDialogComponent {
     this.showTopFade.set(element.scrollTop > fadeEdgePx);
     this.showBottomFade.set(remaining > fadeEdgePx);
   }
-}
-
-function toggleValue(values: string[], value: string): string[] {
-  const selected = values.includes(value);
-
-  return selected
-    ? values.filter((current) => current !== value)
-    : [...values, value];
 }

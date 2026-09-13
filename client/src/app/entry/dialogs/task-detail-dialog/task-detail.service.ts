@@ -15,6 +15,7 @@ import {
   UserSelectValue,
 } from '@core/models/view-models/user-select-option';
 import { taskDetailResource } from '@core/resources/task.resource';
+import { AiAssistantService } from '@core/services/ai-assistant.service';
 import { SprintsService } from '@core/services/sprints.service';
 import { CurrentTaskService } from '@core/services/current-task.service';
 import { TaskCommandsService } from '@core/services/task-commands.service';
@@ -30,6 +31,7 @@ export class TaskDetailService {
   private readonly taskCommands = inject(TaskCommandsService);
   private readonly currentTask = inject(CurrentTaskService);
   private readonly workspaceRefresh = inject(WorkspaceRefreshService);
+  private readonly assistant = inject(AiAssistantService);
 
   private readonly openSystemId = signal<string | undefined>(undefined);
 
@@ -44,6 +46,10 @@ export class TaskDetailService {
 
   readonly loadError = computed(() => {
     return this.resource.error() as HttpErrorResponse | undefined;
+  });
+
+  readonly canAskAssistant = computed(() => {
+    return this.assistant.isAvailable() && this.task() !== null;
   });
 
   constructor() {
@@ -126,6 +132,14 @@ export class TaskDetailService {
         ? assignees.filter((assignee) => assignee.id !== user.id)
         : [...assignees, user]
     );
+  }
+
+  askAssistant() {
+    const task = this.task();
+
+    if (!task) return;
+
+    this.assistant.askAboutTask(task);
   }
 
   deleteTask(onDeleted?: () => void) {

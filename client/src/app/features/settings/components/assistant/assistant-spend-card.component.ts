@@ -4,7 +4,6 @@ import { DialogService } from '@core/services/dialog.service';
 import { formatCurrency, formatTokens } from '@core/util/ai-usage';
 import { dateTimeFormat } from '@core/util/locale';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
-import { first } from 'rxjs';
 import { PanelComponent } from '@static/components/panel.component';
 import { PanelHeaderComponent } from '@static/components/panel-header.component';
 import {
@@ -292,22 +291,19 @@ export class AssistantSpendCardComponent {
     return bar.isPeak ? 'bg-primary' : 'bg-primary/35';
   }
 
-  editCap() {
+  async editCap() {
     const spend = this.spend();
     const data: AssistantSpendCapDialogData = {
       cap: spend?.cap ?? null,
       monthToDate: spend?.monthToDate ?? 0,
     };
 
-    this.dialog
-      .open<boolean, AssistantSpendCapDialogData>(
-        AssistantSpendCapDialogComponent,
-        { width: '480px', data }
-      )
-      .closed.pipe(first())
-      .subscribe((changed) => {
-        if (changed) this.capChanged.emit();
-      });
+    const changed = await this.dialog.openForResult<
+      boolean,
+      AssistantSpendCapDialogData
+    >(AssistantSpendCapDialogComponent, { width: '480px', data });
+
+    if (changed) this.capChanged.emit();
   }
 
   private toMemberRow(member: AiSpendMember): SpendMemberRow {

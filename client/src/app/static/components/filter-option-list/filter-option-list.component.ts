@@ -19,6 +19,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { LucideCheck } from '@lucide/angular';
 import { FilterInputComponent } from '@static/components/filter-input/filter-input.component';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
+import { ScrollNearBottomDirective } from '@static/directives/scroll-near-bottom.directive';
 
 export interface FilterOption<T> {
   value: T;
@@ -27,14 +28,13 @@ export interface FilterOption<T> {
   sticky?: boolean;
 }
 
-const nearBottomThresholdPx = 48;
-
 @Component({
   selector: 'app-filter-option-list',
   imports: [
     FilterInputComponent,
     LucideCheck,
     NgTemplateOutlet,
+    ScrollNearBottomDirective,
     SpinnerComponent,
   ],
   host: { '[class]': 'hostClass()' },
@@ -72,7 +72,8 @@ const nearBottomThresholdPx = 48;
         [id]="listId"
         [attr.aria-multiselectable]="multiple()"
         [attr.aria-label]="listAriaLabel()"
-        (scroll)="onScroll($event)">
+        appScrollNearBottom
+        (nearBottom)="loadMore()">
         @for (
           option of stickyOptions();
           track option.value;
@@ -351,19 +352,9 @@ export class FilterOptionListComponent<T> {
   }
 
   protected loadMore() {
-    this.page.update((page) => page + 1);
-  }
-
-  protected onScroll(event: Event) {
     if (this.hiddenCount() <= 0) return;
 
-    const element = event.target as HTMLElement;
-    const distanceToBottom =
-      element.scrollHeight - element.scrollTop - element.clientHeight;
-
-    if (distanceToBottom > nearBottomThresholdPx) return;
-
-    this.loadMore();
+    this.page.update((page) => page + 1);
   }
 
   protected onKeydown(event: KeyboardEvent) {

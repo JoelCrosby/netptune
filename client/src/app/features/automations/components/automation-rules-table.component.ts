@@ -1,14 +1,13 @@
 import {
   Component,
   computed,
-  effect,
   input,
   output,
   signal,
   Signal,
   viewChild,
 } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { debouncedSignal, onChange, toggleInSet } from '@core/util/signals';
 import { Params, RouterLink } from '@angular/router';
 import { Status } from '@core/models/status';
 import {
@@ -30,7 +29,6 @@ import { MenuCheckboxItemComponent } from '@static/components/dropdown-menu/menu
 import { FilterActionButtonComponent } from '@static/components/filter-action-button/filter-action-button.component';
 import { SearchInputComponent } from '@static/components/search-input/search-input.component';
 import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
-import { debounceTime } from 'rxjs/operators';
 import {
   automationRunStatusLabels,
   automationTriggerTypes,
@@ -211,10 +209,7 @@ export class AutomationRulesTableComponent {
     new Set()
   );
 
-  private readonly search = toSignal(
-    toObservable(this.searchInput).pipe(debounceTime(250)),
-    { initialValue: '' }
-  );
+  private readonly search = debouncedSignal(this.searchInput);
 
   private readonly datatable = viewChild(
     DatatableComponent<AutomationRuleListItem>
@@ -302,16 +297,7 @@ export class AutomationRulesTableComponent {
   }));
 
   constructor() {
-    let previousSearch = this.search();
-
-    effect(() => {
-      const search = this.search();
-
-      if (search === previousSearch) return;
-
-      previousSearch = search;
-      this.goToFirstPage();
-    });
+    onChange(this.search, () => this.goToFirstPage());
   }
 
   triggerLabel(trigger: AutomationTriggerType): string {
@@ -319,12 +305,12 @@ export class AutomationRulesTableComponent {
   }
 
   toggleEnabledFilter(isEnabled: boolean) {
-    this.enabledFilter.update((current) => toggle(current, isEnabled));
+    toggleInSet(this.enabledFilter, isEnabled);
     this.goToFirstPage();
   }
 
   toggleTriggerFilter(triggerType: AutomationTriggerType) {
-    this.triggerFilter.update((current) => toggle(current, triggerType));
+    toggleInSet(this.triggerFilter, triggerType);
     this.goToFirstPage();
   }
 
@@ -372,14 +358,4 @@ export class AutomationRulesTableComponent {
       },
     ];
   }
-}
-
-function toggle<T>(current: ReadonlySet<T>, value: T): ReadonlySet<T> {
-  const next = new Set(current);
-
-  if (!next.delete(value)) {
-    next.add(value);
-  }
-
-  return next;
 }

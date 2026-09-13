@@ -48,6 +48,7 @@ import { fromEvent } from 'rxjs';
 import { BoardGroupCardComponent } from '../board-group-card/board-group-card.component';
 import { BoardGroupTaskInlineComponent } from '../board-group-task-inline/board-group-task-inline.component';
 import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
+import { MenuSeparatorComponent } from '@static/components/dropdown-menu/menu-separator.component';
 
 @Component({
   selector: 'app-board-group',
@@ -79,6 +80,7 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
     }
   `,
   imports: [
+    MenuSeparatorComponent,
     CdkDropList,
     ScrollShadowVericalDirective,
     BoardGroupCardComponent,
@@ -165,7 +167,7 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
 
         @if (canDelete()) {
           @if (canMove()) {
-            <div class="border-border/50 my-1 border-t"></div>
+            <app-menu-separator />
           }
 
           <button

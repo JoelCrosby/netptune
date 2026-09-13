@@ -17,9 +17,8 @@ import {
   required,
   submit,
 } from '@angular/forms/signals';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { PERMISSIONS } from '@core/auth/permissions';
-import { ConfirmationService } from '@core/services/confirmation.service';
 import { relationTypeUsageResource } from '@core/resources/entity-usage.resource';
 import { relationTypeResource } from '@core/resources/relation-type.resource';
 import {
@@ -57,7 +56,7 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { EntityUsagePanelComponent } from '../../components/entity-usage-panel.component';
-import { EMPTY, finalize, firstValueFrom, switchMap } from 'rxjs';
+import { entityDelete, entitySave } from '../../shared/entity-detail';
 
 @Component({
   selector: 'app-relation-type-detail-view',
@@ -179,7 +178,10 @@ import { EMPTY, finalize, firstValueFrom, switchMap } from 'rxjs';
                 @if (canManage()) {
                   <div
                     class="border-border flex flex-wrap items-center gap-3 border-t pt-4">
-                    <button app-flat-button type="submit" [disabled]="saving()">
+                    <button
+                      app-flat-button
+                      type="submit"
+                      [disabled]="saving.pending()">
                       <span
                         i18n="Button that saves changes to the relation type">
                         Save Relation Type
@@ -194,7 +196,7 @@ import { EMPTY, finalize, firstValueFrom, switchMap } from 'rxjs';
                       <button
                         app-stroked-button
                         type="button"
-                        [disabled]="!canDelete() || deleting()"
+                        [disabled]="!canDelete() || deleting.pending()"
                         (click)="delete(current)">
                         <svg lucideTrash2 class="h-4 w-4"></svg>
                         <span i18n="Button that deletes a relation type">
@@ -321,9 +323,6 @@ import { EMPTY, finalize, firstValueFrom, switchMap } from 'rxjs';
 })
 export class RelationTypeDetailViewComponent {
   private readonly relationTypesService = inject(RelationTypesService);
-  private readonly confirmation = inject(ConfirmationService);
-  private readonly router = inject(Router);
-  private readonly route = inject(ActivatedRoute);
 
   readonly id = input.required<string>();
 
@@ -350,8 +349,8 @@ export class RelationTypeDetailViewComponent {
   readonly relationCount = computed(() => this.usage.value()?.usageCount ?? 0);
   readonly blockedReason = computed(() => this.usage.value()?.blockedReason);
   readonly canDelete = computed(() => this.usage.value()?.canDelete ?? false);
-  readonly deleting = signal(false);
-  readonly saving = signal(false);
+  readonly deleting = entityDelete();
+  readonly saving = entitySave();
   readonly hasReferences = computed(() => {
     return (this.usage.value()?.references.length ?? 0) > 0;
   });
@@ -379,7 +378,7 @@ export class RelationTypeDetailViewComponent {
     maxLength(schema.description, 512);
     maxLength(schema.color, 32);
     required(schema.color);
-    disabled(schema, () => !this.canManage() || this.saving());
+    disabled(schema, () => !this.canManage() || this.saving.pending());
   });
 
   readonly isSymmetric = computed(() => {
@@ -454,8 +453,6 @@ export class RelationTypeDetailViewComponent {
     if (!current) return;
 
     submit(this.relationTypeForm, async () => {
-      this.saving.set(true);
-
       const name = this.relationTypeForm.name().value().trim();
       const inverseName = this.isSymmetric()
         ? name
@@ -469,13 +466,11 @@ export class RelationTypeDetailViewComponent {
         color: this.relationTypeForm.color().value(),
       };
 
-      const update = this.relationTypesService
-        .update(request)
-        .pipe(finalize(() => this.saving.set(false)));
+      const saved = await this.saving.run(
+        this.relationTypesService.update(request)
+      );
 
-      const response = await firstValueFrom(update);
-
-      if (!response.isSuccess) return;
+      if (!saved) return;
 
       this.relationTypes.reload();
       this.usage.reload();
@@ -487,34 +482,11 @@ export class RelationTypeDetailViewComponent {
   }
 
   delete(relationType: RelationType) {
-    this.confirmation
-      .open({
-        title: $localize`:Title of the confirmation dialog for deleting a relation type:Delete Relation Type`,
-        message: $localize`:Asks the user to confirm deleting a relation type. NAME is the relation type name:Delete "${relationType.name}:NAME:"? This cannot be undone.`,
-        acceptLabel: $localize`:Confirms a destructive action:Delete`,
-        cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
-        color: 'warn',
-      })
-      .pipe(
-        switchMap((confirmed) => {
-          if (!confirmed) return EMPTY;
-
-          this.deleting.set(true);
-
-          return this.relationTypesService.delete(relationType.id);
-        }),
-        finalize(() => this.deleting.set(false))
-      )
-      .subscribe({
-        next: (response) => {
-          if (!response.isSuccess) {
-            this.usage.reload();
-            return;
-          }
-
-          void this.router.navigate(['..'], { relativeTo: this.route });
-        },
-        error: () => this.usage.reload(),
-      });
+    void this.deleting.run({
+      title: $localize`:Title of the confirmation dialog for deleting a relation type:Delete Relation Type`,
+      message: $localize`:Asks the user to confirm deleting a relation type. NAME is the relation type name:Delete "${relationType.name}:NAME:"? This cannot be undone.`,
+      request: () => this.relationTypesService.delete(relationType.id),
+      onFailed: () => this.usage.reload(),
+    });
   }
 }

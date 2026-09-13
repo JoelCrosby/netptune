@@ -29,8 +29,10 @@ import { NotificationsTableComponent } from '../../components/notifications-tabl
         title="Notifications"
         i18n-filtersLabel="Accessible name of the notification list filter row"
         filtersLabel="Filter notifications"
-        [count]="count()"
-        [actionTitle]="count() ? markAllAsReadLabel : null"
+        [count]="notificationsTable.loadedCount()"
+        [actionTitle]="
+          notificationsTable.loadedCount() ? markAllAsReadLabel : null
+        "
         (actionClick)="onMarkAllAsRead()">
         <app-notifications-filters
           pageHeaderFilters
@@ -46,9 +48,9 @@ import { NotificationsTableComponent } from '../../components/notifications-tabl
 
       <app-page-body>
         <app-notifications-table
+          #notificationsTable
           [params]="resourceParams()"
-          (selectionChanged)="selected.set($event)"
-          (loaded)="onLoaded($event)" />
+          (selectionChanged)="selected.set($event)" />
       </app-page-body>
     </app-page-container>
   `,
@@ -58,7 +60,6 @@ export class NotificationsViewComponent {
 
   readonly markAllAsReadLabel = $localize`:Button that marks every notification as read:Mark all as read`;
 
-  readonly count = signal<number | null>(null);
   readonly selected = signal<NotificationViewModel[]>([]);
   readonly searchTerm = signal<string | null>(null);
   readonly selectedUsers = signal<UserSelectValue[]>([]);
@@ -95,12 +96,6 @@ export class NotificationsViewComponent {
   onClearUserFilter() {
     this.selectedUsers.set([]);
     this.table().goToFirstPage();
-  }
-
-  onLoaded(event: { totalCount: number; hasValue: boolean }) {
-    if (event.hasValue) {
-      this.count.set(event.totalCount);
-    }
   }
 
   onMarkSelectedAsRead() {

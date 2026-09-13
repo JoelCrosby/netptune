@@ -21,7 +21,7 @@ import { PageContainerComponent } from '@static/components/page-container/page-c
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
-import { EMPTY, finalize, forkJoin, switchMap } from 'rxjs';
+import { finalize, firstValueFrom, forkJoin } from 'rxjs';
 import { AutomationDetailHeadingComponent } from '../../components/automation-detail-heading.component';
 import { AutomationDetailStatsComponent } from '../../components/automation-detail-stats.component';
 import {
@@ -33,6 +33,8 @@ import { AutomationRuleSummaryComponent } from '../../components/automation-rule
 import { AutomationRule, AutomationRun } from '../../models/automation.models';
 import { AutomationsService } from '../../services/automations.service';
 import { Page, PageQuery } from '@core/models/pagination';
+import { mutation } from '@core/util/mutation';
+import { reloadToken } from '@core/util/signals';
 
 const latestRunQuery: PageQuery = { page: 1, pageSize: 1 };
 
@@ -88,7 +90,7 @@ const latestRunQuery: PageQuery = { page: 1, pageSize: 1 };
             pageHeaderActions
             app-stroked-button
             type="button"
-            [disabled]="saving()"
+            [disabled]="saving.pending()"
             (click)="onToggle(rule)">
             @if (rule.isEnabled) {
               <svg lucideCirclePause class="h-4 w-4"></svg>
@@ -125,7 +127,7 @@ const latestRunQuery: PageQuery = { page: 1, pageSize: 1 };
           <app-automation-detail-heading
             [rule]="rule"
             [canManage]="canManage()"
-            [saving]="saving()"
+            [saving]="saving.pending()"
             (deleteRule)="onDelete($event)" />
 
           @if (rule.autoDisabledReason) {
@@ -195,7 +197,7 @@ const latestRunQuery: PageQuery = { page: 1, pageSize: 1 };
             </div>
             <app-automation-runs-table
               [ruleId]="rule.id"
-              [reloadSignal]="reloadToken" />
+              [reloadSignal]="runsReload" />
           </section>
         </section>
       }
@@ -216,9 +218,9 @@ export class AutomationDetailViewComponent {
   readonly totalRuns = signal(0);
   readonly lastRun = signal<AutomationRun | null>(null);
   readonly statuses = signal<Status[]>([]);
-  readonly reloadToken = signal(0);
+  readonly runsReload = reloadToken();
   readonly loading = signal(true);
-  readonly saving = signal(false);
+  readonly saving = mutation();
   readonly error = signal(false);
   readonly canManage = hasPermission(PERMISSIONS.automations.manage);
 
@@ -261,7 +263,7 @@ export class AutomationDetailViewComponent {
 
     if (!id) return;
 
-    this.reloadToken.update((token) => token + 1);
+    this.runsReload.bump();
 
     this.service
       .getRuns(id, latestRunQuery)
@@ -284,63 +286,57 @@ export class AutomationDetailViewComponent {
   }
 
   onToggle(rule: AutomationRule) {
-    this.saving.set(true);
     const request = rule.isEnabled
       ? this.service.disable(rule.id)
       : this.service.enable(rule.id);
 
-    request
-      .pipe(
-        finalize(() => this.saving.set(false)),
-        takeUntilDestroyed(this.destroyRef)
-      )
-      .subscribe({
-        next: () => {
-          this.snackbar.open(
-            rule.isEnabled
-              ? $localize`:Confirmation after switching an automation off:Automation disabled`
-              : $localize`:Confirmation after switching an automation on:Automation enabled`
-          );
-          this.load();
-        },
-        error: () =>
-          this.snackbar.error(
-            $localize`:Error after failing to update an automation:Automation could not be updated`
-          ),
-      });
+    this.saving.run(request.pipe(takeUntilDestroyed(this.destroyRef)), {
+      onSuccess: () => {
+        this.snackbar.open(
+          rule.isEnabled
+            ? $localize`:Confirmation after switching an automation off:Automation disabled`
+            : $localize`:Confirmation after switching an automation on:Automation enabled`
+        );
+        this.load();
+      },
+      onError: () => {
+        this.snackbar.error(
+          $localize`:Error after failing to update an automation:Automation could not be updated`
+        );
+      },
+    });
   }
 
-  onDelete(rule: AutomationRule) {
-    this.confirmation
-      .open({
+  async onDelete(rule: AutomationRule) {
+    const confirmed = await firstValueFrom(
+      this.confirmation.open({
         title: $localize`:Title of the confirmation dialog for deleting an automation:Delete Automation`,
         message: `Delete "${rule.name}"? This cannot be undone.`,
         acceptLabel: $localize`:Confirms a destructive action:Delete`,
         cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
         color: 'warn',
-      })
-      .pipe(
-        switchMap((confirmed) => {
-          if (!confirmed) return EMPTY;
+      }),
+      { defaultValue: false }
+    );
 
-          this.saving.set(true);
-          return this.service.delete(rule.id);
-        }),
-        finalize(() => this.saving.set(false)),
-        takeUntilDestroyed(this.destroyRef)
-      )
-      .subscribe({
-        next: () => {
+    if (!confirmed) return;
+
+    this.saving.run(
+      this.service.delete(rule.id).pipe(takeUntilDestroyed(this.destroyRef)),
+      {
+        onSuccess: () => {
           this.snackbar.open(
             $localize`:Confirmation after deleting an automation:Automation deleted`
           );
           void this.router.navigate(['../'], { relativeTo: this.route });
         },
-        error: () =>
+        onError: () => {
           this.snackbar.error(
             $localize`:Error after failing to delete an automation:Automation could not be deleted`
-          ),
-      });
+          );
+        },
+      }
+    );
   }
 
   private ruleId(): number | null {
