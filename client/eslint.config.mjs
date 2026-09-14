@@ -116,6 +116,7 @@ export default defineConfig([
             'marker-end',
             'marker-start',
             // CSS class inputs on this repo's design-system components
+            'bodyClass',
             'buttonClass',
             'containerClass',
             'emptyCellClass',
@@ -139,6 +140,7 @@ export default defineConfig([
             'density',
             'divider',
             'focusMode',
+            'kind',
             'layout',
             'orientation',
             'preserveAspectRatio',

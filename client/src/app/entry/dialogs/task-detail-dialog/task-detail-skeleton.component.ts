@@ -1,10 +1,20 @@
 import { Component, computed, inject } from '@angular/core';
 import { SkeletonComponent } from '@static/components/skeleton/skeleton.component';
 import { TaskDetailLayoutService } from './task-detail-layout';
+import { AccordionComponent } from '@static/components/accordion/accordion.component';
+import { DialogHeaderComponent } from '@static/components/dialog/dialog-header.component';
+import { DialogRailComponent } from '@static/components/dialog/dialog-rail.component';
+import { DialogSectionComponent } from '@static/components/dialog/dialog-section.component';
 
 @Component({
   selector: 'app-task-detail-skeleton',
-  imports: [SkeletonComponent],
+  imports: [
+    AccordionComponent,
+    DialogHeaderComponent,
+    DialogRailComponent,
+    DialogSectionComponent,
+    SkeletonComponent,
+  ],
   host: {
     class: 'flex h-full min-h-0 flex-col',
     role: 'status',
@@ -59,18 +69,17 @@ import { TaskDetailLayoutService } from './task-detail-layout';
         </div>
       </div>
     } @else {
-      <div
-        class="border-foreground/8 flex h-[50px] shrink-0 items-center gap-2.5 border-b pr-3.5 pl-5">
+      <app-dialog-header>
         <app-skeleton class="h-6 w-20 rounded-sm" />
         <app-skeleton class="h-4 w-40" />
-        <div class="ml-auto flex items-center gap-2">
+        <div dialogHeaderActions class="flex items-center gap-2">
           <app-skeleton class="h-8 w-24 rounded-lg" />
           <app-skeleton class="h-8 w-8 rounded-md" />
           <app-skeleton class="h-8 w-8 rounded-md" />
         </div>
-      </div>
+      </app-dialog-header>
 
-      <div class="flex min-h-0 flex-1 flex-row">
+      <div class="flex min-h-0 flex-1 flex-row max-[1200px]:flex-col">
         <div class="flex min-w-0 flex-1 flex-col gap-[18px] px-7 pt-6">
           <app-skeleton class="h-9 w-3/4" />
 
@@ -86,7 +95,7 @@ import { TaskDetailLayoutService } from './task-detail-layout';
             }
           </div>
 
-          <div class="border-foreground/8 mt-auto flex flex-col border-t">
+          <app-accordion class="mt-auto">
             @for (row of sectionRange; track $index) {
               <div
                 class="border-foreground/8 flex h-[46px] items-center gap-3 border-b last:border-b-0">
@@ -95,16 +104,16 @@ import { TaskDetailLayoutService } from './task-detail-layout';
                 <app-skeleton class="h-3 w-32" />
               </div>
             }
-          </div>
+          </app-accordion>
         </div>
 
-        <div
-          class="border-foreground/8 bg-foreground/[0.02] flex w-[340px] shrink-0 flex-col border-l">
-          <div
-            class="border-foreground/8 flex flex-col gap-2.5 border-b px-5 pt-4.5 pb-4">
+        <app-dialog-rail>
+          <app-dialog-section
+            divider="bottom"
+            class="flex flex-col gap-2.5 px-5 pt-4.5 pb-4">
             <app-skeleton class="h-2.5 w-12" />
             <app-skeleton class="h-8 w-full rounded-lg" />
-          </div>
+          </app-dialog-section>
 
           <div class="flex flex-col gap-1 px-2 pt-2">
             @for (field of fieldRange; track $index) {
@@ -114,7 +123,7 @@ import { TaskDetailLayoutService } from './task-detail-layout';
               </div>
             }
           </div>
-        </div>
+        </app-dialog-rail>
       </div>
     }
   `,

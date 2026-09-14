@@ -33,24 +33,26 @@ import { DialogService } from '@core/services/dialog.service';
 import { SessionService } from '@core/services/session.service';
 import { TaskCommandsService } from '@core/services/task-commands.service';
 import { TaskFileUploadService } from '@core/services/task-file-upload.service';
-import { LucideLink2, LucideX } from '@lucide/angular';
-import { ColorSwatchComponent } from '@static/components/color-swatch/color-swatch.component';
-import { ListRowComponent } from '@static/components/list-row.component';
+import { LucideX } from '@lucide/angular';
 import { SectionLabelDirective } from '@static/directives/section-label.directive';
+import { ListRowComponent } from '@static/components/list-row.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { FileDropzoneComponent } from '@static/components/file-dropzone/file-dropzone.component';
 import { FileTypeIconComponent } from '@static/components/file-type-icon/file-type-icon.component';
 import { FormErrorsComponent } from '@static/components/form-error/form-errors.component';
-import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
-import { TooltipDirective } from '@static/directives/tooltip.directive';
 import { FileSizePipe } from '@static/pipes/file-size.pipe';
 import { TaskStatusSegmentsComponent } from '../task-detail-dialog/pickers/task-status-segments.component';
 import { TaskTagRowComponent } from '../task-detail-dialog/pickers/task-tag-row.component';
-import { InlineButtonComponent } from '@static/components/button/inline-button.component';
+import { TaskFilesSectionComponent } from '../task-detail-dialog/parts/task-files-section.component';
+import { TaskLinksSectionComponent } from '../task-detail-dialog/parts/task-links-section.component';
+import {
+  TaskRelationListComponent,
+  TaskRelationListItem,
+} from '../task-detail-dialog/parts/task-relation-list.component';
 import { AccordionComponent } from '@static/components/accordion/accordion.component';
-import { AccordionRowComponent } from '@static/components/accordion/accordion-row.component';
+import { DialogColumnsComponent } from '@static/components/dialog/dialog-columns.component';
 import { DialogFooterComponent } from '@static/components/dialog/dialog-footer.component';
 import { DialogHeaderComponent } from '@static/components/dialog/dialog-header.component';
 import { DialogRailComponent } from '@static/components/dialog/dialog-rail.component';
@@ -85,11 +87,6 @@ interface StagedRelation {
   task: TaskViewModel;
 }
 
-interface StagedRelationGroup {
-  label: string;
-  relations: StagedRelation[];
-}
-
 type Section = 'links' | 'files';
 
 const archiveContentTypes = new Set([
@@ -113,9 +110,8 @@ const documentContentTypes = new Set([
 @Component({
   imports: [
     AccordionComponent,
-    AccordionRowComponent,
-    ColorSwatchComponent,
     CreateTaskFieldRowsComponent,
+    DialogColumnsComponent,
     DialogFooterComponent,
     DialogHeaderComponent,
     DialogRailComponent,
@@ -129,16 +125,15 @@ const documentContentTypes = new Set([
     FormField,
     HeadingInputDirective,
     IconButtonComponent,
-    InlineButtonComponent,
     ListRowComponent,
-    LucideLink2,
     LucideX,
     SectionLabelDirective,
     StrokedButtonComponent,
-    TaskScopeIdComponent,
+    TaskFilesSectionComponent,
+    TaskLinksSectionComponent,
+    TaskRelationListComponent,
     TaskStatusSegmentsComponent,
     TaskTagRowComponent,
-    TooltipDirective,
     UploadProgressComponent,
   ],
   providers: [TaskFileUploadService],
@@ -154,222 +149,133 @@ const documentContentTypes = new Set([
         i18n-heading="Title of the create-task dialog"
         heading="Create Task" />
 
-      <div class="flex min-h-0 flex-1 flex-row max-[1200px]:flex-col">
-        <div class="flex min-w-0 flex-1 flex-col">
-          <div
-            class="custom-scroll flex min-h-0 flex-1 flex-col gap-[18px] overflow-y-auto px-7 pt-6 pb-5">
-            <div>
-              <input
-                appHeadingInput
-                type="text"
-                autocomplete="off"
-                i18n-placeholder="Placeholder in the empty task summary field"
-                placeholder="Task summary"
-                i18n-aria-label="Label of the task title field"
-                aria-label="Summary"
-                [formField]="taskForm.name" />
-              <app-form-errors [formField]="taskForm.name" />
-            </div>
-
-            @if (canAssignTags()) {
-              <app-task-tag-row
-                [tags]="selectedTags()"
-                [editable]="!busy()"
-                (added)="addTag($event)"
-                (removed)="removeTag($event)" />
-            }
-
-            <div>
-              <div
-                appSectionLabel
-                variant="eyebrow"
-                class="mb-2.5"
-                id="create-task-description-label">
-                {{ labels.description }}
-              </div>
-              <app-editor
-                aria-labelledby="create-task-description-label"
-                appearance="flat"
-                hostClass="text-[15px]/[26px]"
-                i18n-placeholder="
-                  Placeholder in the empty task description editor
-                "
-                placeholder="Add a Description..."
-                [formField]="taskForm.description"
-                [isReadOnly]="busy()" />
-              <app-form-errors [formField]="taskForm.description" />
-            </div>
-
-            @if (canLinkTasks() || canUploadFiles()) {
-              <app-accordion class="mt-auto">
-                @if (canLinkTasks()) {
-                  <app-accordion-row
-                    [label]="labels.links"
-                    [summary]="linkSummary()"
-                    [last]="!canUploadFiles()"
-                    [expanded]="isExpanded('links')"
-                    (toggled)="toggle('links')">
-                    <button
-                      type="button"
-                      app-inline-button
-                      appearance="soft"
-                      class="shrink-0 font-medium"
-                      [disabled]="busy()"
-                      (click)="openLinkDialog()">
-                      <span i18n="Button that links this task to another">
-                        Link task
-                      </span>
-                    </button>
-                  </app-accordion-row>
-
-                  <div class="pt-1 pb-3" [class.hidden]="!isExpanded('links')">
-                    @for (group of relationGroups(); track group.label) {
-                      <div class="mb-3">
-                        <div appSectionLabel class="mb-1">
-                          {{ group.label }}
-                        </div>
-
-                        <ul class="flex flex-col gap-1">
-                          @for (
-                            relation of group.relations;
-                            track relation.task.id
-                          ) {
-                            <li app-list-row>
-                              <app-color-swatch
-                                size="sm"
-                                [color]="relation.task.statusColor" />
-
-                              <app-task-scope-id
-                                [id]="relation.task.systemId" />
-
-                              <span class="flex-1 truncate">
-                                {{ relation.task.name }}
-                              </span>
-
-                              <span class="text-muted shrink-0 text-xs">
-                                {{ relation.task.statusName }}
-                              </span>
-
-                              <button
-                                app-icon-button
-                                type="button"
-                                [disabled]="busy()"
-                                i18n-appTooltip="
-                                  Tooltip on the button that removes a task link
-                                "
-                                appTooltip="Remove link"
-                                i18n-aria-label="
-                                  Accessible label for the button that removes a
-                                  task link
-                                "
-                                aria-label="Remove link"
-                                (click)="removeRelation(relation)">
-                                <svg lucideX class="h-4 w-4"></svg>
-                              </button>
-                            </li>
-                          }
-                        </ul>
-                      </div>
-                    } @empty {
-                      <div
-                        class="text-muted flex items-center gap-2 p-4 text-sm">
-                        <svg lucideLink2 class="h-4 w-4"></svg>
-                        <span
-                          i18n="
-                            Empty state when a task has no links to other tasks
-                          ">
-                          No linked tasks
-                        </span>
-                      </div>
-                    }
-                  </div>
-                }
-
-                @if (canUploadFiles()) {
-                  <app-accordion-row
-                    [label]="labels.files"
-                    [summary]="fileSummary()"
-                    [last]="true"
-                    [expanded]="isExpanded('files')"
-                    (toggled)="toggle('files')">
-                    <button
-                      type="button"
-                      app-inline-button
-                      appearance="soft"
-                      class="shrink-0 font-medium"
-                      (click)="expand('files')">
-                      <span i18n="Button that opens the file picker">
-                        Choose files
-                      </span>
-                    </button>
-                  </app-accordion-row>
-
-                  <div class="pt-1 pb-3" [class.hidden]="!isExpanded('files')">
-                    <app-file-dropzone
-                      [disabled]="busy()"
-                      [maxBytes]="maxUploadBytes()"
-                      (filesSelected)="addFiles($event)" />
-
-                    <ul class="mt-3 flex flex-col gap-2">
-                      @for (
-                        file of stagedFiles();
-                        track file.name + file.size
-                      ) {
-                        <li app-list-row>
-                          <app-file-type-icon
-                            size="small"
-                            [group]="fileGroup(file)" />
-                          <div class="min-w-0 flex-1">
-                            <span class="block truncate font-medium">
-                              {{ file.name }}
-                            </span>
-                            <span class="text-muted text-xs">
-                              {{ file.size | fileSize }}
-                            </span>
-                          </div>
-                          <button
-                            app-icon-button
-                            type="button"
-                            [disabled]="busy()"
-                            i18n-aria-label="
-                              Accessible label for the button that takes a file
-                              off a task that has not been created yet
-                            "
-                            aria-label="Remove file"
-                            (click)="removeFile(file)">
-                            <svg lucideX class="h-4 w-4"></svg>
-                          </button>
-                        </li>
-                      }
-                    </ul>
-
-                    <div class="mt-2 flex flex-col gap-2" aria-live="polite">
-                      @for (upload of uploads(); track upload.id) {
-                        <app-upload-progress
-                          [name]="upload.name"
-                          [progress]="upload.progress"
-                          [error]="upload.error" />
-                      }
-                    </div>
-
-                    @if (uploadsFailed()) {
-                      <p class="text-warn mt-2 text-sm" role="alert">
-                        <span
-                          i18n="
-                            Shown when a new task was saved but some of its
-                            files did not upload
-                          ">
-                          The task was created, but some files did not upload.
-                          Close this dialog and add them from the task.
-                        </span>
-                      </p>
-                    }
-                  </div>
-                }
-              </app-accordion>
-            }
-          </div>
+      <app-dialog-columns>
+        <div>
+          <input
+            appHeadingInput
+            type="text"
+            autocomplete="off"
+            i18n-placeholder="Placeholder in the empty task summary field"
+            placeholder="Task summary"
+            i18n-aria-label="Label of the task title field"
+            aria-label="Summary"
+            [formField]="taskForm.name" />
+          <app-form-errors [formField]="taskForm.name" />
         </div>
+
+        @if (canAssignTags()) {
+          <app-task-tag-row
+            [tags]="selectedTags()"
+            [editable]="!busy()"
+            (added)="addTag($event)"
+            (removed)="removeTag($event)" />
+        }
+
+        <div>
+          <div
+            appSectionLabel
+            variant="eyebrow"
+            class="mb-2.5"
+            id="create-task-description-label">
+            {{ labels.description }}
+          </div>
+          <app-editor
+            aria-labelledby="create-task-description-label"
+            appearance="flat"
+            hostClass="text-[15px]/[26px]"
+            i18n-placeholder="Placeholder in the empty task description editor"
+            placeholder="Add a Description..."
+            [formField]="taskForm.description"
+            [isReadOnly]="busy()" />
+          <app-form-errors [formField]="taskForm.description" />
+        </div>
+
+        @if (canLinkTasks() || canUploadFiles()) {
+          <app-accordion class="mt-auto">
+            @if (canLinkTasks()) {
+              <app-task-links-section
+                canLink
+                [count]="stagedRelations().length"
+                [last]="!canUploadFiles()"
+                [disabled]="busy()"
+                [expanded]="isExpanded('links')"
+                (toggled)="toggle('links')"
+                (linkRequested)="openLinkDialog()">
+                <app-task-relation-list
+                  removable
+                  [items]="relationItems()"
+                  [disabled]="busy()"
+                  (removed)="removeRelation($event)" />
+              </app-task-links-section>
+            }
+
+            @if (canUploadFiles()) {
+              <app-task-files-section
+                last
+                [count]="stagedFiles().length"
+                [expanded]="isExpanded('files')"
+                (toggled)="toggle('files')"
+                (chooseRequested)="expand('files')">
+                <app-file-dropzone
+                  [disabled]="busy()"
+                  [maxBytes]="maxUploadBytes()"
+                  (filesSelected)="addFiles($event)" />
+
+                <ul class="mt-3 flex flex-col gap-2">
+                  @for (file of stagedFiles(); track file.name + file.size) {
+                    <li app-list-row>
+                      <app-file-type-icon
+                        size="small"
+                        [group]="fileGroup(file)" />
+                      <div class="min-w-0 flex-1">
+                        <span class="block truncate font-medium">
+                          {{ file.name }}
+                        </span>
+                        <span class="text-muted text-xs">
+                          {{ file.size | fileSize }}
+                        </span>
+                      </div>
+                      <button
+                        app-icon-button
+                        type="button"
+                        [disabled]="busy()"
+                        i18n-aria-label="
+                          Accessible label for the button that takes a file off
+                          a task that has not been created yet
+                        "
+                        aria-label="Remove file"
+                        (click)="removeFile(file)">
+                        <svg lucideX class="h-4 w-4"></svg>
+                      </button>
+                    </li>
+                  }
+                </ul>
+
+                <div class="mt-2 flex flex-col gap-2" aria-live="polite">
+                  @for (upload of uploads(); track upload.id) {
+                    <app-upload-progress
+                      [name]="upload.name"
+                      [progress]="upload.progress"
+                      [error]="upload.error" />
+                  }
+                </div>
+
+                @if (uploadsFailed()) {
+                  <p class="text-warn mt-2 text-sm" role="alert">
+                    <span
+                      i18n="
+                        Shown when a new task was saved but some of its files
+                        did not upload
+                      ">
+                      The task was created, but some files did not upload. Close
+                      this dialog and add them from the task.
+                    </span>
+                  </p>
+                }
+              </app-task-files-section>
+            }
+          </app-accordion>
+        }
 
         <app-dialog-rail>
           @if (readStatus()) {
@@ -426,7 +332,7 @@ const documentContentTypes = new Set([
             </app-dialog-section>
           }
         </app-dialog-rail>
-      </div>
+      </app-dialog-columns>
 
       <app-dialog-footer>
         <button app-stroked-button type="button" (click)="close()">
@@ -473,8 +379,6 @@ export class CreateTaskDialogComponent {
 
   readonly labels = {
     description: $localize`:Label of the task description editor:Description`,
-    links: $localize`:Section heading for links between tasks:Linked tasks`,
-    files: $localize`:Section heading for files attached to a task:Files`,
   };
 
   // Picking tags means both listing the workspace's tags and being allowed to attach one.
@@ -533,23 +437,15 @@ export class CreateTaskDialogComponent {
     () => this.submissionAttempted() && this.projectId() === null
   );
 
-  // Relations arrive one link dialog at a time, so they are grouped for display the same way the
-  // task detail dialog groups them: by the label the link reads as in this direction.
-  readonly relationGroups = computed<StagedRelationGroup[]>(() => {
-    const groups: StagedRelationGroup[] = [];
-
-    for (const relation of this.stagedRelations()) {
-      const existing = groups.find((group) => group.label === relation.label);
-
-      if (existing) {
-        existing.relations.push(relation);
-        continue;
-      }
-
-      groups.push({ label: relation.label, relations: [relation] });
-    }
-
-    return groups;
+  readonly relationItems = computed<TaskRelationListItem[]>(() => {
+    return this.stagedRelations().map((relation) => ({
+      id: this.relationKey(relation),
+      label: relation.label,
+      systemId: relation.task.systemId,
+      name: relation.task.name,
+      statusName: relation.task.statusName,
+      statusColor: relation.task.statusColor,
+    }));
   });
 
   taskFormModel = signal<CreateTaskForm>({
@@ -639,34 +535,6 @@ export class CreateTaskDialogComponent {
     toggleInSet(this.expanded, section, true);
   }
 
-  linkSummary() {
-    const count = this.stagedRelations().length;
-
-    if (!count) {
-      return $localize`:Accordion summary when a task links to nothing:None yet`;
-    }
-
-    if (count === 1) {
-      return $localize`:Accordion summary when a task links to one other:1 linked task`;
-    }
-
-    return $localize`:Accordion summary counting the tasks this one links to. COUNT is how many:${count}:COUNT: linked tasks`;
-  }
-
-  fileSummary() {
-    const count = this.stagedFiles().length;
-
-    if (!count) {
-      return $localize`:Prompt on the collapsed files section:Drop a file to attach`;
-    }
-
-    if (count === 1) {
-      return $localize`:Accordion summary when a task has one attachment:1 file`;
-    }
-
-    return $localize`:Accordion summary counting a task's attachments. COUNT is how many:${count}:COUNT: files`;
-  }
-
   addTag(tag: string) {
     this.selectedTags.update((tags) => [...tags, tag]);
   }
@@ -723,10 +591,12 @@ export class CreateTaskDialogComponent {
     this.stageRelations(result);
   }
 
-  removeRelation(relation: StagedRelation) {
-    this.stagedRelations.update((staged) =>
-      staged.filter((item) => item !== relation)
-    );
+  removeRelation(item: TaskRelationListItem) {
+    this.stagedRelations.update((staged) => {
+      return staged.filter(
+        (relation) => this.relationKey(relation) !== item.id
+      );
+    });
   }
 
   close() {

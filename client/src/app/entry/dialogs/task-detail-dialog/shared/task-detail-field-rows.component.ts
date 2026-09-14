@@ -1,22 +1,20 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
-import { EstimateType, formatEstimate } from '@core/enums/estimate-type';
+import { LucideChevronDown } from '@lucide/angular';
+import { cn } from '@static/components/button/button.variants';
 import {
-  TaskPriority,
-  taskPriorityColors,
-  taskPriorityLabels,
-} from '@core/enums/task-priority';
-import { LucideChevronDown, LucideFlag } from '@lucide/angular';
-import { AvatarComponent } from '@static/components/avatar/avatar.component';
-import { DatePickerComponent } from '@static/components/date-picker/date-picker.component';
-import { UserSelectComponent } from '@static/components/user-select/user-select.component';
-import { TaskEstimatePickerComponent } from '../pickers/task-estimate-picker.component';
-import { TaskPriorityPickerComponent } from '../pickers/task-priority-picker.component';
-import { TaskProjectPickerComponent } from '../pickers/task-project-picker.component';
-import { TaskSprintPickerComponent } from '../pickers/task-sprint-picker.component';
+  fieldLabelClass,
+  fieldRowClass,
+} from '@static/components/field-row/field-row.component';
+import { TaskAssigneeFieldComponent } from '../parts/fields/task-assignee-field.component';
+import { TaskDateFieldComponent } from '../parts/fields/task-date-field.component';
+import { TaskEstimateFieldComponent } from '../parts/fields/task-estimate-field.component';
+import { TaskPriorityFieldComponent } from '../parts/fields/task-priority-field.component';
+import { TaskProjectFieldComponent } from '../parts/fields/task-project-field.component';
+import { TaskReporterFieldComponent } from '../parts/fields/task-reporter-field.component';
+import { TaskSprintFieldComponent } from '../parts/fields/task-sprint-field.component';
 import { TaskStatusPickerComponent } from '../pickers/task-status-picker.component';
-import { EMPTY_VALUE, FIELD_LABEL, FIELD_ROW } from '../task-detail-styles';
 import { TaskDetailService } from '../task-detail.service';
 
 export type TaskDetailField =
@@ -45,16 +43,15 @@ const ALL_FIELDS: TaskDetailField[] = [
 @Component({
   selector: 'app-task-detail-field-rows',
   imports: [
-    AvatarComponent,
-    DatePickerComponent,
-    UserSelectComponent,
-    TaskEstimatePickerComponent,
-    TaskPriorityPickerComponent,
-    TaskProjectPickerComponent,
-    TaskSprintPickerComponent,
-    TaskStatusPickerComponent,
     LucideChevronDown,
-    LucideFlag,
+    TaskAssigneeFieldComponent,
+    TaskDateFieldComponent,
+    TaskEstimateFieldComponent,
+    TaskPriorityFieldComponent,
+    TaskProjectFieldComponent,
+    TaskReporterFieldComponent,
+    TaskSprintFieldComponent,
+    TaskStatusPickerComponent,
   ],
   host: { class: 'block' },
   template: `
@@ -80,157 +77,77 @@ const ALL_FIELDS: TaskDetailField[] = [
 
           @case ('assignee') {
             @if (readMembers()) {
-              <app-user-select
-                [buttonClass]="rowClass"
+              <app-task-assignee-field
+                [labelWidth]="labelWidth()"
                 [disabled]="!canUpdate()"
-                [excludeServiceAccounts]="true"
-                [value]="task.assignees"
-                (selectChange)="taskDetail.toggleAssignee($event)">
-                <span [class]="labelClass()">{{ labels.assignee }}</span>
-                @if (task.assignees.length) {
-                  <span class="flex min-w-0 items-center gap-1.5 font-medium">
-                    @for (assignee of task.assignees; track assignee.id) {
-                      <app-avatar
-                        size="sm"
-                        [tooltip]="true"
-                        [name]="assignee.displayName"
-                        [imageUrl]="assignee.pictureUrl"
-                        [isServiceAccount]="
-                          assignee.isServiceAccount ?? false
-                        " />
-                    }
-                    <span class="truncate">{{ assigneeLabel() }}</span>
-                  </span>
-                } @else {
-                  <span [class]="emptyValue">{{ labels.unassigned }}</span>
-                }
-              </app-user-select>
+                [assignees]="task.assignees"
+                (toggled)="taskDetail.toggleAssignee($event)" />
             }
           }
 
           @case ('reporter') {
-            <div [class]="staticRowClass">
-              <span [class]="labelClass()">{{ labels.reporter }}</span>
-              <span class="flex min-w-0 items-center gap-1.5 font-medium">
-                <app-avatar
-                  size="sm"
-                  [tooltip]="false"
-                  [name]="task.ownerUsername"
-                  [imageUrl]="task.ownerPictureUrl"
-                  [isServiceAccount]="task.ownerIsServiceAccount ?? false" />
-                <span class="truncate">{{ task.ownerUsername }}</span>
-              </span>
-            </div>
+            <app-task-reporter-field
+              [labelWidth]="labelWidth()"
+              [name]="task.ownerUsername"
+              [pictureUrl]="task.ownerPictureUrl"
+              [isServiceAccount]="task.ownerIsServiceAccount ?? false" />
           }
 
           @case ('priority') {
-            <app-task-priority-picker
-              [buttonClass]="rowClass"
+            <app-task-priority-field
+              [labelWidth]="labelWidth()"
               [disabled]="!canUpdate()"
               [value]="task.priority"
-              (valueChange)="taskDetail.setPriority($event)">
-              <span [class]="labelClass()">{{ labels.priority }}</span>
-              @if (task.priority === null) {
-                <span [class]="emptyValue">{{ labels.notSet }}</span>
-              } @else {
-                <span
-                  class="flex items-center gap-2 font-medium"
-                  [class]="priorityColor(task.priority)">
-                  <svg lucideFlag class="h-3.5 w-3.5"></svg>
-                  {{ priorityLabel(task.priority) }}
-                </span>
-              }
-            </app-task-priority-picker>
+              (valueChange)="taskDetail.setPriority($event)" />
           }
 
           @case ('estimate') {
-            <app-task-estimate-picker
-              [buttonClass]="rowClass"
+            <app-task-estimate-field
+              [labelWidth]="labelWidth()"
               [disabled]="!canUpdate()"
               [estimateType]="task.estimateType"
               [estimateValue]="task.estimateValue"
-              (estimateChange)="taskDetail.setEstimate($event)">
-              <span [class]="labelClass()">{{ labels.estimate }}</span>
-              @if (estimateLabel(); as estimate) {
-                <span class="font-medium">{{ estimate }}</span>
-              } @else {
-                <span [class]="emptyValue">{{ labels.notSet }}</span>
-              }
-            </app-task-estimate-picker>
+              (estimateChange)="taskDetail.setEstimate($event)" />
           }
 
           @case ('startDate') {
-            <div [class]="dateRowClass">
-              <span [class]="labelClass()">{{ labels.startDate }}</span>
-              <app-date-picker
-                class="min-w-0 flex-1"
-                appearance="bare"
-                [buttonClass]="dateButtonClass"
-                [showLeadingIcon]="false"
-                [showChevron]="false"
-                [disabled]="!canUpdate()"
-                i18n-placeholder="
-                  Shown in place of a date the task does not have
-                "
-                placeholder="Not set"
-                i18n-ariaLabel="Accessible label for the task start date picker"
-                ariaLabel="Start date"
-                [value]="task.startDate ?? ''"
-                (valueChange)="taskDetail.setStartDate($event)" />
-            </div>
+            <app-task-date-field
+              kind="start"
+              [labelWidth]="labelWidth()"
+              [disabled]="!canUpdate()"
+              [value]="task.startDate ?? ''"
+              (valueChange)="taskDetail.setStartDate($event)" />
           }
 
           @case ('dueDate') {
-            <div [class]="dateRowClass">
-              <span [class]="labelClass()">{{ labels.dueDate }}</span>
-              <app-date-picker
-                class="min-w-0 flex-1"
-                appearance="bare"
-                [buttonClass]="dateButtonClass"
-                [showLeadingIcon]="false"
-                [showChevron]="false"
-                [disabled]="!canUpdate()"
-                i18n-placeholder="
-                  Shown in place of a date the task does not have
-                "
-                placeholder="Not set"
-                i18n-ariaLabel="Accessible label for the task due date picker"
-                ariaLabel="Due date"
-                [value]="task.dueDate ?? ''"
-                (valueChange)="taskDetail.setDueDate($event)" />
-            </div>
+            <app-task-date-field
+              kind="due"
+              [labelWidth]="labelWidth()"
+              [disabled]="!canUpdate()"
+              [value]="task.dueDate ?? ''"
+              (valueChange)="taskDetail.setDueDate($event)" />
           }
 
           @case ('project') {
             @if (readProjects()) {
-              <app-task-project-picker
-                [buttonClass]="rowClass"
+              <app-task-project-field
+                [labelWidth]="labelWidth()"
                 [disabled]="!canUpdate()"
+                [projectName]="task.projectName"
                 [value]="task.projectId"
-                (valueChange)="taskDetail.setProject($event)">
-                <span [class]="labelClass()">{{ labels.project }}</span>
-                <span class="truncate font-medium">{{ task.projectName }}</span>
-              </app-task-project-picker>
+                (valueChange)="taskDetail.setProject($event)" />
             }
           }
 
           @case ('sprint') {
             @if (readSprints()) {
-              <app-task-sprint-picker
-                [buttonClass]="rowClass"
+              <app-task-sprint-field
+                [labelWidth]="labelWidth()"
                 [disabled]="!canUpdate()"
                 [projectId]="task.projectId"
+                [sprintName]="task.sprintName"
                 [value]="task.sprintId ?? null"
-                (valueChange)="taskDetail.setSprint($event)">
-                <span [class]="labelClass()">{{ labels.sprint }}</span>
-                @if (task.sprintName) {
-                  <span class="truncate font-medium">{{
-                    task.sprintName
-                  }}</span>
-                } @else {
-                  <span [class]="emptyValue">{{ labels.noSprint }}</span>
-                }
-              </app-task-sprint-picker>
+                (valueChange)="taskDetail.setSprint($event)" />
             }
           }
         }
@@ -264,11 +181,7 @@ export class TaskDetailFieldRowsComponent {
   readonly task = this.taskDetail.task;
   readonly emptyExpanded = signal(false);
 
-  readonly rowClass = FIELD_ROW;
-  readonly staticRowClass = `${FIELD_ROW} cursor-default hover:bg-transparent`;
-  readonly dateRowClass = `${FIELD_ROW} cursor-default`;
-  readonly dateButtonClass = 'h-8 w-auto gap-2 px-0 text-[13px] font-medium';
-  readonly emptyValue = EMPTY_VALUE;
+  readonly rowClass = fieldRowClass;
 
   readonly canUpdate = hasPermission(PERMISSIONS.tasks.update);
   readonly readStatus = hasPermission(PERMISSIONS.statuses.read);
@@ -278,27 +191,10 @@ export class TaskDetailFieldRowsComponent {
 
   readonly labels = {
     status: $localize`:Field heading for the task status:Status`,
-    assignee: $localize`:Field heading for the people a task is assigned to:Assignee`,
-    reporter: $localize`:Field heading for the person who raised the task:Reporter`,
-    priority: $localize`:Field heading for the task priority:Priority`,
-    estimate: $localize`:Field heading for the task effort estimate:Estimate`,
-    startDate: $localize`:Field heading for the task start date:Start date`,
-    dueDate: $localize`:Field heading for the task due date:Due date`,
-    project: $localize`:Field heading for the task's project:Project`,
-    sprint: $localize`:Field heading for the task's sprint:Sprint`,
-    unassigned: $localize`:Shown in the assignee picker when a task has nobody assigned:Unassigned`,
-    noSprint: $localize`:Shown in place of a sprint name when a task has no sprint:No Sprint`,
-    notSet: $localize`:Shown in place of a value the task does not have:Not set`,
   };
 
-  readonly labelClass = computed(() => `${FIELD_LABEL} ${this.labelWidth()}`);
-
-  readonly assigneeLabel = computed(() => {
-    const assignees = this.task()?.assignees ?? [];
-
-    if (assignees.length === 1) return assignees[0].displayName;
-
-    return `${assignees.length}`;
+  readonly labelClass = computed(() => {
+    return cn(fieldLabelClass, this.labelWidth());
   });
 
   private readonly emptyFields = computed<TaskDetailField[]>(() => {
@@ -353,25 +249,6 @@ export class TaskDetailFieldRowsComponent {
 
     return $localize`:Reveals the rows for fields the task has no value for. COUNT is how many there are, FIELDS lists their names:${count}:COUNT: empty fields — ${list}:FIELDS:`;
   });
-
-  readonly estimateLabel = computed(() => {
-    const task = this.task();
-
-    if (!task || task.estimateValue === null) return '';
-
-    return formatEstimate(
-      task.estimateType ?? EstimateType.storyPoints,
-      task.estimateValue
-    );
-  });
-
-  protected priorityColor(priority: TaskPriority) {
-    return taskPriorityColors[priority];
-  }
-
-  protected priorityLabel(priority: TaskPriority) {
-    return taskPriorityLabels[priority];
-  }
 
   private fieldName(field: TaskDetailField) {
     switch (field) {

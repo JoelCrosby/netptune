@@ -31,16 +31,19 @@ export const fieldLabelClass = 'text-muted w-24 shrink-0';
   selector: 'app-field-row, [app-field-row]',
   host: { '[class]': 'hostClass()' },
   template: `
-    <span [class]="labelClass">{{ label() }}</span>
+    <span [class]="labelClass()">{{ label() }}</span>
     <ng-content />
   `,
 })
 export class FieldRowComponent {
   readonly label = input.required<string>();
   readonly mode = input<FieldRowMode>('static');
+  readonly labelWidth = input('');
   readonly class = input('');
 
-  protected readonly labelClass = fieldLabelClass;
+  protected readonly labelClass = computed(() => {
+    return cn(fieldLabelClass, this.labelWidth());
+  });
 
   protected readonly hostClass = computed(() => {
     return cn(fieldRowVariants({ mode: this.mode() }), this.class());

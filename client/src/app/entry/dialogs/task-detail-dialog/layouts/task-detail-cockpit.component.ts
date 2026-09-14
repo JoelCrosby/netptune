@@ -22,10 +22,16 @@ import {
   type TabItem,
 } from '@static/components/tab-group/tab-group.component';
 import { DividerComponent } from '@static/components/divider/divider.component';
+import { DialogColumnsComponent } from '@static/components/dialog/dialog-columns.component';
+import { DialogRailComponent } from '@static/components/dialog/dialog-rail.component';
+import { DialogSectionComponent } from '@static/components/dialog/dialog-section.component';
 
 @Component({
   selector: 'app-task-detail-cockpit',
   imports: [
+    DialogColumnsComponent,
+    DialogRailComponent,
+    DialogSectionComponent,
     DividerComponent,
     TabGroupComponent,
     TaskDetailChromeComponent,
@@ -71,72 +77,66 @@ import { DividerComponent } from '@static/components/divider/divider.component';
         }
       </div>
 
-      <div class="flex min-h-0 flex-1 flex-row max-[1200px]:flex-col">
-        <div class="flex min-w-0 flex-1 flex-col">
-          <div
-            class="custom-scroll min-h-0 flex-1 overflow-y-auto px-7 pt-5.5 pb-6">
-            <app-task-detail-description
-              [label]="descriptionLabel"
-              textClass="text-[15px]/[26px]" />
-          </div>
+      <app-dialog-columns bodyClass="px-7 pt-5.5 pb-6">
+        <app-task-detail-description
+          [label]="descriptionLabel"
+          textClass="text-[15px]/[26px]" />
 
-          <div class="border-foreground/8 shrink-0 border-t">
-            <div class="flex h-[42px] items-center gap-1 px-5">
-              <app-tab-group
-                variant="strip"
-                class="gap-1"
-                [tabs]="
-                  tabItems(
-                    task.placements.length,
-                    relations.count(),
-                    filesSection()?.count() ?? null
-                  )
-                "
-                [(value)]="activeTab" />
+        <app-dialog-section dialogColumnsFooter divider="top" class="shrink-0">
+          <div class="flex h-[42px] items-center gap-1 px-5">
+            <app-tab-group
+              variant="strip"
+              class="gap-1"
+              [tabs]="
+                tabItems(
+                  task.placements.length,
+                  relations.count(),
+                  filesSection()?.count() ?? null
+                )
+              "
+              [(value)]="activeTab" />
 
-              <div class="ml-auto">
-                @if (activeTab() === 'boards' && boards.canAdd()) {
-                  <button
-                    #addToBoard
-                    type="button"
-                    [class]="tabActionClass"
-                    (click)="boards.openAddMenu(addToBoard)">
-                    <span i18n="Button that puts this task on another board">
-                      Add to board
-                    </span>
-                  </button>
-                }
-                @if (activeTab() === 'links' && canUpdate()) {
-                  <button
-                    type="button"
-                    [class]="tabActionClass"
-                    (click)="relations.openLinkDialog()">
-                    <span i18n="Button that links this task to another">
-                      Link task
-                    </span>
-                  </button>
-                }
-              </div>
-            </div>
-
-            <div class="max-h-56 overflow-y-auto px-5 pt-4 pb-4">
-              <div [class.hidden]="activeTab() !== 'boards'">
-                <app-task-detail-boards #boards />
-              </div>
-              <div [class.hidden]="activeTab() !== 'links'">
-                <app-task-detail-relations #relations />
-              </div>
-              @if (readFiles()) {
-                <div [class.hidden]="activeTab() !== 'files'">
-                  <app-task-detail-files />
-                </div>
+            <div class="ml-auto">
+              @if (activeTab() === 'boards' && boards.canAdd()) {
+                <button
+                  #addToBoard
+                  type="button"
+                  [class]="tabActionClass"
+                  (click)="boards.openAddMenu(addToBoard)">
+                  <span i18n="Button that puts this task on another board">
+                    Add to board
+                  </span>
+                </button>
+              }
+              @if (activeTab() === 'links' && canUpdate()) {
+                <button
+                  type="button"
+                  [class]="tabActionClass"
+                  (click)="relations.openLinkDialog()">
+                  <span i18n="Button that links this task to another">
+                    Link task
+                  </span>
+                </button>
               }
             </div>
           </div>
-        </div>
 
-        <div
-          class="border-foreground/8 bg-foreground/[0.02] flex w-[372px] shrink-0 flex-col border-l max-[1200px]:w-full max-[1200px]:border-t max-[1200px]:border-l-0">
+          <div class="max-h-56 overflow-y-auto px-5 pt-4 pb-4">
+            <div [class.hidden]="activeTab() !== 'boards'">
+              <app-task-detail-boards #boards />
+            </div>
+            <div [class.hidden]="activeTab() !== 'links'">
+              <app-task-detail-relations #relations />
+            </div>
+            @if (readFiles()) {
+              <div [class.hidden]="activeTab() !== 'files'">
+                <app-task-detail-files />
+              </div>
+            }
+          </div>
+        </app-dialog-section>
+
+        <app-dialog-rail class="w-[372px]">
           <div
             class="border-foreground/8 flex h-11 shrink-0 items-center gap-2 border-b px-4">
             <div class="bg-hover flex gap-0.5 rounded-[7px] p-0.5">
@@ -184,8 +184,8 @@ import { DividerComponent } from '@static/components/divider/divider.component';
               class="border-foreground/8 shrink-0 border-t px-4 py-3"
               [showAvatar]="false" />
           }
-        </div>
-      </div>
+        </app-dialog-rail>
+      </app-dialog-columns>
 
       <app-task-detail-timestamps
         class="border-foreground/8 h-10 shrink-0 border-t px-5"

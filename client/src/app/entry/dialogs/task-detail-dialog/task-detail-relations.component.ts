@@ -17,42 +17,24 @@ import { TaskRelationsService } from '@core/services/task-relations.service';
 import { retainWhileLoading } from '@core/resources/stable.resource';
 import { reloadOnRefresh } from '@core/util/reload-on-refresh';
 import { unwrapClientResponse } from '@core/util/rxjs-operators';
-import { LucideLink2, LucidePlus, LucideX } from '@lucide/angular';
-import { ColorSwatchComponent } from '@static/components/color-swatch/color-swatch.component';
-import { ListRowComponent } from '@static/components/list-row.component';
-import { SectionLabelDirective } from '@static/directives/section-label.directive';
-import { IconButtonComponent } from '@static/components/button/icon-button.component';
+import { LucidePlus } from '@lucide/angular';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
-import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
-import { TooltipDirective } from '@static/directives/tooltip.directive';
 import { EMPTY, catchError, concatMap, from, tap, toArray } from 'rxjs';
 import {
   LinkTaskDialogComponent,
   LinkTaskDialogData,
   LinkTaskDialogResult,
 } from '../link-task-dialog/link-task-dialog.component';
+import {
+  TaskRelationListComponent,
+  TaskRelationListItem,
+} from './parts/task-relation-list.component';
 import { TaskDetailService } from './task-detail.service';
-
-interface RelationGroup {
-  label: string;
-  relations: TaskRelation[];
-}
 
 @Component({
   selector: 'app-task-detail-relations',
-  imports: [
-    ColorSwatchComponent,
-    IconButtonComponent,
-    ListRowComponent,
-    SectionLabelDirective,
-    StrokedButtonComponent,
-    TaskScopeIdComponent,
-    TooltipDirective,
-    LucideLink2,
-    LucidePlus,
-    LucideX,
-  ],
+  imports: [LucidePlus, StrokedButtonComponent, TaskRelationListComponent],
   template: `
     @if (showHeading()) {
       <div class="mt-4 mb-2 flex items-center justify-between">
@@ -76,58 +58,13 @@ interface RelationGroup {
       <div class="text-danger mb-2 text-sm">{{ error() }}</div>
     }
 
-    @for (group of groups(); track group.label) {
-      <div class="mb-3">
-        <div appSectionLabel class="mb-1">{{ group.label }}</div>
-
-        <ul class="flex flex-col gap-1">
-          @for (relation of group.relations; track relation.id) {
-            <li app-list-row>
-              <app-color-swatch
-                size="sm"
-                [color]="relation.relatedTask.statusColor" />
-
-              <app-task-scope-id [id]="relation.relatedTask.systemId" />
-
-              <button
-                type="button"
-                class="flex-1 cursor-pointer truncate text-left"
-                (click)="openTask(relation)">
-                {{ relation.relatedTask.name }}
-              </button>
-
-              <span class="text-muted shrink-0 text-xs">
-                {{ relation.relatedTask.statusName }}
-              </span>
-
-              @if (canUpdate()) {
-                <button
-                  app-icon-button
-                  i18n-appTooltip="
-                    Tooltip on the button that removes a task link
-                  "
-                  appTooltip="Remove link"
-                  i18n-aria-label="
-                    Accessible label for the button that removes a task link
-                  "
-                  aria-label="Remove link"
-                  [disabled]="busy()"
-                  (click)="unlink(relation)">
-                  <svg lucideX class="h-4 w-4"></svg>
-                </button>
-              }
-            </li>
-          }
-        </ul>
-      </div>
-    } @empty {
-      <div class="text-muted flex items-center gap-2 text-sm">
-        <svg lucideLink2 class="h-4 w-4"></svg>
-        <span i18n="Empty state when a task has no links to other tasks">
-          No linked tasks
-        </span>
-      </div>
-    }
+    <app-task-relation-list
+      openable
+      [items]="items()"
+      [removable]="canUpdate()"
+      [disabled]="busy()"
+      (opened)="openTask($event)"
+      (removed)="unlink($event)" />
   `,
 })
 export class TaskDetailRelationsComponent {
@@ -171,24 +108,15 @@ export class TaskDetailRelationsComponent {
 
   readonly count = computed(() => this.displayedRelations().length);
 
-  // Relations arrive ordered by relation type and direction, so consecutive rows sharing a label
-  // belong together. Grouping by label rather than by type id is deliberate: one type produces two
-  // groups ("Blocks" and "Is Blocked By") depending on which end this task sits on.
-  readonly groups = computed<RelationGroup[]>(() => {
-    const groups: RelationGroup[] = [];
-
-    for (const relation of this.displayedRelations()) {
-      const last = groups.at(-1);
-
-      if (last?.label === relation.label) {
-        last.relations.push(relation);
-        continue;
-      }
-
-      groups.push({ label: relation.label, relations: [relation] });
-    }
-
-    return groups;
+  readonly items = computed<TaskRelationListItem[]>(() => {
+    return this.displayedRelations().map((relation) => ({
+      id: String(relation.id),
+      label: relation.label,
+      systemId: relation.relatedTask.systemId,
+      name: relation.relatedTask.name,
+      statusName: relation.relatedTask.statusName,
+      statusColor: relation.relatedTask.statusColor,
+    }));
   });
 
   constructor() {
@@ -268,7 +196,11 @@ export class TaskDetailRelationsComponent {
       });
   }
 
-  unlink(relation: TaskRelation) {
+  unlink(item: TaskRelationListItem) {
+    const relation = this.findRelation(item);
+
+    if (!relation) return;
+
     this.busy.set(true);
     this.error.set(null);
 
@@ -295,18 +227,19 @@ export class TaskDetailRelationsComponent {
   // This section renders inside both the task detail dialog and the standalone task page, so it
   // cannot assume a dialog is open. When one is, it has to close before navigating or it would sit
   // over the task we just navigated to.
-  openTask(relation: TaskRelation) {
+  openTask(item: TaskRelationListItem) {
     const workspaceKey = this.task()?.workspaceKey;
 
     if (!workspaceKey) return;
 
     this.dialogRef?.close();
 
-    void this.router.navigate([
-      '/',
-      workspaceKey,
-      'tasks',
-      relation.relatedTask.systemId,
-    ]);
+    void this.router.navigate(['/', workspaceKey, 'tasks', item.systemId]);
+  }
+
+  private findRelation(item: TaskRelationListItem) {
+    return this.displayedRelations().find((relation) => {
+      return String(relation.id) === item.id;
+    });
   }
 }

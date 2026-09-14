@@ -529,7 +529,7 @@
     </unit>
     <unit id="5322873861888163184">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:105,107</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:107,109</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:52,55</note>
         <note category="description">Button that puts this task on another board</note>
       </notes>
@@ -1643,8 +1643,7 @@
     </unit>
     <unit id="7735505964227370595">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:666</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:329</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/task-files-section.component.ts:60</note>
         <note category="description">Accordion summary counting a task&apos;s attachments. COUNT is how many</note>
       </notes>
       <segment state="initial">
@@ -3691,8 +3690,7 @@
         <note category="location">src/app/core/util/pin-scope.ts:80</note>
         <note category="location">src/app/entry/components/setup-creation-summary/setup-creation-summary.component.ts:59</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:69</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-field-rows.component.ts:237</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:287</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-project-field.component.ts:31</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:224</note>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:75</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:66,67</note>
@@ -3897,7 +3895,7 @@
         <note category="location">src/app/entry/dialogs/board-group-dialog/board-group-dialog.component.ts:52</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:34</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/pickers/task-status-segments.component.ts:24,28</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:280</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:193</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:58,59</note>
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:49,50</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:68</note>
@@ -3938,7 +3936,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/board-group-dialog/board-group-dialog.component.ts:69,71</note>
         <note category="location">src/app/entry/dialogs/create-relation-type-dialog/create-relation-type-dialog.component.ts:102,104</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:432,435</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:339,342</note>
         <note category="location">src/app/entry/dialogs/edit-relation-type-dialog/edit-relation-type-dialog.component.ts:89,91</note>
         <note category="location">src/app/entry/dialogs/invite-dialog/invite-dialog.component.ts:65,68</note>
         <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:68,70</note>
@@ -4048,8 +4046,7 @@
       <notes>
         <note category="location">src/app/core/tasks/task-columns.ts:121</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:39</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-field-rows.component.ts:233</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:283</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-priority-field.component.ts:44</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:102,104</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:75,77</note>
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:74,76</note>
@@ -4078,8 +4075,7 @@
         <note category="location">src/app/core/tasks/task-columns.ts:91</note>
         <note category="location">src/app/core/util/ai-client-context.ts:29</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:74</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-field-rows.component.ts:238</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:288</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-sprint-field.component.ts:33</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:187,188</note>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:109</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:76</note>
@@ -4553,7 +4549,7 @@
     </unit>
     <unit id="6164296601931172481">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:155,157</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:150,153</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:40,41</note>
         <note category="location">src/app/shell/global-commands.service.ts:180</note>
         <note category="description">Title of the create-task dialog</note>
@@ -4588,7 +4584,7 @@
     </unit>
     <unit id="4739818603756173797">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:170</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:162</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:84</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:176</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:52,54</note>
@@ -4601,7 +4597,7 @@
     </unit>
     <unit id="4902817035128594900">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:474</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:381</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:66,67</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:206</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:104,107</note>
@@ -4635,7 +4631,7 @@
     </unit>
     <unit id="533409430255690539">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:197,199</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:187,189</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-description.component.ts:29,31</note>
         <note category="description">Placeholder in the empty task description editor</note>
       </notes>
@@ -4646,7 +4642,7 @@
     </unit>
     <unit id="5681661801164770412">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:411,415</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:318,322</note>
         <note category="description">Validation error when a task&apos;s start date is after its due date</note>
       </notes>
       <segment state="translated">
@@ -4656,7 +4652,7 @@
     </unit>
     <unit id="6672445733608764176">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:421,424</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:328,331</note>
         <note category="description">Validation error when no project is selected for a task</note>
       </notes>
       <segment state="translated">
@@ -4676,7 +4672,7 @@
     </unit>
     <unit id="6346359058786917733">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:440,442</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:347,349</note>
         <note category="description">Button that saves the new task</note>
       </notes>
       <segment state="translated">
@@ -4726,8 +4722,8 @@
     </unit>
     <unit id="8547576940529836596">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:561</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:573</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:458</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:470</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -4757,7 +4753,7 @@
     </unit>
     <unit id="9021131006692744653">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:580</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:477</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -4767,7 +4763,7 @@
     </unit>
     <unit id="704019817450663548">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:587</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:484</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -4777,7 +4773,7 @@
     </unit>
     <unit id="633922115206256018">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:594</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:491</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -5676,10 +5672,9 @@
     </unit>
     <unit id="4116911651502837995">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:476</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:220</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:192</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:270</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/task-files-section.component.ts:47</note>
         <note category="description">Section heading for files attached to a task</note>
       </notes>
       <segment state="translated">
@@ -5891,7 +5886,7 @@
     </unit>
     <unit id="3915858391862498397">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:60,63</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:42,45</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:71,72</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:250</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:341</note>
@@ -5904,7 +5899,8 @@
     </unit>
     <unit id="3802104514603079488">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:69,73</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/task-links-section.component.ts:32,35</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:51,55</note>
         <note category="description">Button that links this task to another</note>
       </notes>
       <segment state="translated">
@@ -5914,10 +5910,8 @@
     </unit>
     <unit id="1880237574877817137">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:260,262</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:265,267</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:109,111</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:113,115</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/task-relation-list.component.ts:80,82</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/task-relation-list.component.ts:84,86</note>
         <note category="description">Tooltip on the button that removes a task link</note>
       </notes>
       <segment state="translated">
@@ -5927,8 +5921,7 @@
     </unit>
     <unit id="5445703507341144559">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:280,282</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:127,133</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/task-relation-list.component.ts:98,104</note>
         <note category="description">Empty state when a task has no links to other tasks</note>
       </notes>
       <segment state="translated">
@@ -5948,7 +5941,7 @@
     </unit>
     <unit id="5064013424659405171">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:283</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:215</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -6250,7 +6243,7 @@
     <unit id="5200831341853054486">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:150,152</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:161,163</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:145,147</note>
         <note category="description">Section heading for a task&apos;s comments</note>
       </notes>
       <segment state="initial">
@@ -6963,7 +6956,7 @@
     </unit>
     <unit id="248355614476686779">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:379</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:256</note>
         <note category="description">Lowercase field name listed in the empty-fields summary</note>
       </notes>
       <segment state="initial">
@@ -7166,7 +7159,7 @@
     </unit>
     <unit id="12871331938626366">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:349</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:245</note>
         <note category="description">Reveals the row for the one field the task has no value for. FIELD is its name</note>
       </notes>
       <segment state="initial">
@@ -7514,7 +7507,7 @@
     </unit>
     <unit id="3571377974793640030">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:381</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:258</note>
         <note category="description">Lowercase field name listed in the empty-fields summary</note>
       </notes>
       <segment state="initial">
@@ -8048,8 +8041,7 @@
     </unit>
     <unit id="7575041808886442392">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:649</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:314</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/task-links-section.component.ts:62</note>
         <note category="description">Accordion summary when a task links to one other</note>
       </notes>
       <segment state="initial">
@@ -8642,10 +8634,8 @@
     <unit id="2413171611497962745">
       <notes>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:44</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-field-rows.component.ts:183,188</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-field-rows.component.ts:236</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:198,200</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:286</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-date-field.component.ts:48</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-date-field.component.ts:49</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:153,154</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:155,157</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:139,141</note>
@@ -8711,7 +8701,7 @@
     </unit>
     <unit id="7893521235243357800">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:389</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:266</note>
         <note category="description">Lowercase field name listed in the empty-fields summary</note>
       </notes>
       <segment state="initial">
@@ -9284,17 +9274,6 @@
       <segment state="translated">
         <source>Low</source>
         <target>Niedrig</target>
-      </segment>
-    </unit>
-    <unit id="5973718738996433339">
-      <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:301,302</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:142,143</note>
-        <note category="description">Button that opens the file picker</note>
-      </notes>
-      <segment state="initial">
-        <source> Choose files </source>
-        <target> Dateien auswählen </target>
       </segment>
     </unit>
     <unit id="5979951160895696674">
@@ -9889,8 +9868,7 @@
     </unit>
     <unit id="5550975895729371495">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:645</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:310</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/task-links-section.component.ts:58</note>
         <note category="description">Accordion summary when a task links to nothing</note>
       </notes>
       <segment state="initial">
@@ -10321,7 +10299,7 @@
     </unit>
     <unit id="7047572971445448461">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-field-rows.component.ts:242</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-project-field.component.ts:32</note>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:76,78</note>
         <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:46,47</note>
         <note category="description">Shown in the project row of the create-task dialog before a project is picked</note>
@@ -10710,8 +10688,7 @@
     </unit>
     <unit id="4987947040082180128">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:663</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:326</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/task-files-section.component.ts:57</note>
         <note category="description">Accordion summary when a task has one attachment</note>
       </notes>
       <segment state="initial">
@@ -10943,14 +10920,12 @@
     </unit>
     <unit id="888341446683346521">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-field-rows.component.ts:168,172</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-field-rows.component.ts:235</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:177,179</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:285</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-date-field.component.ts:42</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-date-field.component.ts:43</note>
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:397</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:75</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:33</note>
-        <note category="description">Accessible label for the task start date picker</note>
+        <note category="description">Field heading for the task start date</note>
       </notes>
       <segment state="translated">
         <source>Start date</source>
@@ -11164,7 +11139,7 @@
     </unit>
     <unit id="8318489133130094433">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-skeleton.component.ts:129</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-skeleton.component.ts:138</note>
         <note category="description">Accessible label shown while a task loads</note>
       </notes>
       <segment state="translated">
@@ -11873,8 +11848,7 @@
     </unit>
     <unit id="1845447508284521819">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-field-rows.component.ts:234</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:284</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-estimate-field.component.ts:40</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:169,171</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:72</note>
         <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:240</note>
@@ -11979,7 +11953,7 @@
     </unit>
     <unit id="4510676848705799339">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:243,245</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:227,229</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:145,147</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:85</note>
         <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:179,182</note>
@@ -12705,8 +12679,7 @@
     </unit>
     <unit id="8224724288725812333">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-field-rows.component.ts:231</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:281</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-assignee-field.component.ts:49</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:81,85</note>
         <note category="location">src/app/features/reporting/components/workload-table.component.ts:41</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:37</note>
@@ -13562,7 +13535,7 @@
     </unit>
     <unit id="7382546590159708114">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:385</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:262</note>
         <note category="description">Lowercase field name listed in the empty-fields summary</note>
       </notes>
       <segment state="initial">
@@ -14605,7 +14578,7 @@
     </unit>
     <unit id="8761140310272472389">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:167,168</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:159,160</note>
         <note category="location">src/app/features/boards/components/board-group-task-inline/board-group-task-inline.component.ts:127</note>
         <note category="description">Placeholder in the empty task summary field</note>
       </notes>
@@ -14942,7 +14915,7 @@
     </unit>
     <unit id="6381140642359438701">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:178,180</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:162,164</note>
         <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:184,186</note>
         <note category="description">Expands the comment list over the task body</note>
       </notes>
@@ -15264,7 +15237,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:218</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:194</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:268</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:253</note>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:37</note>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:46,49</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:71,72</note>
@@ -16023,7 +15996,7 @@
     </unit>
     <unit id="4563489865947095174">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:286</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:269</note>
         <note category="description">Accordion summary when a task is not on any board</note>
       </notes>
       <segment state="initial">
@@ -18161,8 +18134,7 @@
     </unit>
     <unit id="8406787523492971076">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-field-rows.component.ts:239</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:289</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-assignee-field.component.ts:50</note>
         <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:88</note>
         <note category="location">src/app/features/reporting/components/workload-report.component.ts:87</note>
         <note category="description">Shown in the assignee picker when a task has nobody assigned</note>
@@ -18369,8 +18341,7 @@
     </unit>
     <unit id="8770284726358486659">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:659</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:322</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/task-files-section.component.ts:53</note>
         <note category="description">Prompt on the collapsed files section</note>
       </notes>
       <segment state="initial">
@@ -19519,8 +19490,7 @@
     </unit>
     <unit id="730589419287534524">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-field-rows.component.ts:232</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:282</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-reporter-field.component.ts:29</note>
         <note category="description">Field heading for the person who raised the task</note>
       </notes>
       <segment state="initial">
@@ -20074,7 +20044,7 @@
     </unit>
     <unit id="9109640022429823254">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:387</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:264</note>
         <note category="description">Lowercase field name listed in the empty-fields summary</note>
       </notes>
       <segment state="initial">
@@ -20447,7 +20417,7 @@
     </unit>
     <unit id="5713343516682617780">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:232,234</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:216,218</note>
         <note category="description">Button that asks the assistant about this task</note>
       </notes>
       <segment state="initial">
@@ -22452,7 +22422,7 @@
     </unit>
     <unit id="7454488038548338364">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:383</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:260</note>
         <note category="description">Lowercase field name listed in the empty-fields summary</note>
       </notes>
       <segment state="initial">
@@ -22567,7 +22537,7 @@
     </unit>
     <unit id="1860554948960397865">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:341</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:237</note>
         <note category="description">Collapses the rows for fields the task has no value for</note>
       </notes>
       <segment state="initial">
@@ -22829,9 +22799,7 @@
     </unit>
     <unit id="2467702290618186989">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:220,221</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:115,117</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:119,121</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:117,119</note>
         <note category="description">Button that links this task to another</note>
       </notes>
       <segment state="initial">
@@ -23314,8 +23282,7 @@
     </unit>
     <unit id="2997922512329830488">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:652</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:317</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/task-links-section.component.ts:65</note>
         <note category="description">Accordion summary counting the tasks this one links to. COUNT is how many</note>
       </notes>
       <segment state="initial">
@@ -23685,7 +23652,7 @@
     </unit>
     <unit id="221384062319096861">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:361,364</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:270,274</note>
         <note category="description">Shown when a new task was saved but some of its files did not upload</note>
       </notes>
       <segment state="translated">
@@ -23806,8 +23773,7 @@
     </unit>
     <unit id="4911319983039735103">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:475</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:269</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/task-links-section.component.ts:52</note>
         <note category="description">Section heading for links between tasks</note>
       </notes>
       <segment state="initial">
@@ -23907,7 +23873,7 @@
     </unit>
     <unit id="6281284727431074654">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:337,340</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:246,249</note>
         <note category="description">Accessible label for the button that takes a file off a task that has not been created yet</note>
       </notes>
       <segment state="translated">
@@ -24475,7 +24441,7 @@
     </unit>
     <unit id="2049913543296309259">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:174,175</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:158,160</note>
         <note category="description">Collapses the expanded comment list</note>
       </notes>
       <segment state="initial">
@@ -25291,6 +25257,7 @@
     </unit>
     <unit id="7927073582775061981">
       <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/task-files-section.component.ts:30,32</note>
         <note category="location">src/app/static/components/file-dropzone/file-dropzone.component.ts:32,34</note>
         <note category="description">Button that opens the file picker</note>
       </notes>
@@ -25715,12 +25682,9 @@
     </unit>
     <unit id="2085611136494552870">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-field-rows.component.ts:167</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-field-rows.component.ts:182</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-field-rows.component.ts:241</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:176</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:197</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:291</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-date-field.component.ts:27,28</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-estimate-field.component.ts:41</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-priority-field.component.ts:45</note>
         <note category="description">Shown in place of a date the task does not have</note>
       </notes>
       <segment state="initial">
@@ -25770,7 +25734,7 @@
     </unit>
     <unit id="6101767777602319924">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:354</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:250</note>
         <note category="description">Reveals the rows for fields the task has no value for. COUNT is how many there are, FIELDS lists their names</note>
       </notes>
       <segment state="initial">
@@ -25780,9 +25744,8 @@
     </unit>
     <unit id="6102419433188590465">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-field-rows.component.ts:240</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-sprint-field.component.ts:34</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/pickers/task-sprint-picker.component.ts:27,30</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:290</note>
         <note category="description">Shown in place of a sprint name when a task has no sprint</note>
       </notes>
       <segment state="translated">
