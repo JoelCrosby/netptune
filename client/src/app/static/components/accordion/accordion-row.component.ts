@@ -2,12 +2,12 @@ import { Component, input, output } from '@angular/core';
 import { LucideChevronRight } from '@lucide/angular';
 
 @Component({
-  selector: 'app-task-detail-accordion-row',
+  selector: 'app-accordion-row',
   imports: [LucideChevronRight],
   host: { class: 'block' },
   template: `
     <div
-      class="border-foreground/8 flex h-[46px] items-center gap-2"
+      class="border-foreground/8 flex h-11.5 items-center gap-2 py-1"
       [class.border-b]="!last()">
       <button
         type="button"
@@ -26,7 +26,7 @@ import { LucideChevronRight } from '@lucide/angular';
     </div>
   `,
 })
-export class TaskDetailAccordionRowComponent {
+export class AccordionRowComponent {
   readonly label = input.required<string>();
   readonly summary = input('');
 

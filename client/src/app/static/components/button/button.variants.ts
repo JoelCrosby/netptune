@@ -5,7 +5,7 @@ export type ButtonVariant = 'text' | 'filled' | 'outlined';
 export type ButtonColor = 'primary' | 'warn' | 'neutral' | 'contrast';
 export type ButtonColorInput = ButtonColor | '';
 export type FlatButtonColor = ButtonColor | 'ghost';
-export type IconButtonColor = ButtonColor | 'default';
+export type IconButtonColor = ButtonColor | 'default' | 'muted';
 
 export function cn(...inputs: CxOptions): string {
   return twMerge(cx(...inputs));
@@ -17,7 +17,9 @@ export function coerceButtonColor(
   return color || 'neutral';
 }
 
-export function coerceIconButtonColor(color: IconButtonColor): ButtonColor {
+export function coerceIconButtonColor(
+  color: IconButtonColor
+): Exclude<IconButtonColor, 'default'> {
   return color === 'default' ? 'neutral' : color;
 }
 
@@ -271,6 +273,8 @@ export const iconButtonVariants = cva(
           'text-foreground hover:bg-foreground/10 focus-visible:ring-foreground',
         contrast:
           'text-foreground hover:bg-foreground/10 focus-visible:ring-foreground',
+        muted:
+          'text-muted hover:bg-hover hover:text-foreground focus-visible:ring-foreground',
       },
     },
     defaultVariants: {

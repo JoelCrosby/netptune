@@ -26,10 +26,10 @@ import { TaskPriorityPickerComponent } from '../task-detail-dialog/pickers/task-
 import { TaskProjectPickerComponent } from '../task-detail-dialog/pickers/task-project-picker.component';
 import { TaskSprintPickerComponent } from '../task-detail-dialog/pickers/task-sprint-picker.component';
 import {
-  EMPTY_VALUE,
-  FIELD_LABEL,
-  FIELD_ROW,
-} from '../task-detail-dialog/task-detail-styles';
+  FieldRowComponent,
+  fieldLabelClass,
+  fieldRowClass,
+} from '@static/components/field-row/field-row.component';
 
 export interface CreateTaskReporter {
   displayName: string;
@@ -44,6 +44,7 @@ export interface CreateTaskReporter {
   imports: [
     AvatarComponent,
     DatePickerComponent,
+    FieldRowComponent,
     UserSelectComponent,
     TaskEstimatePickerComponent,
     TaskPriorityPickerComponent,
@@ -74,14 +75,13 @@ export interface CreateTaskReporter {
             <span class="truncate">{{ assigneeLabel() }}</span>
           </span>
         } @else {
-          <span [class]="emptyValue">{{ labels.unassigned }}</span>
+          <span class="text-muted">{{ labels.unassigned }}</span>
         }
       </app-user-select>
     }
 
     @if (reporter(); as reporter) {
-      <div [class]="staticRowClass">
-        <span [class]="labelClass">{{ labels.reporter }}</span>
+      <div app-field-row [label]="labels.reporter">
         <span class="flex min-w-0 items-center gap-1.5 font-medium">
           <app-avatar
             size="sm"
@@ -100,7 +100,7 @@ export interface CreateTaskReporter {
       [(value)]="priority">
       <span [class]="labelClass">{{ labels.priority }}</span>
       @if (priority() === null) {
-        <span [class]="emptyValue">{{ labels.notSet }}</span>
+        <span class="text-muted">{{ labels.notSet }}</span>
       } @else {
         <span
           class="flex items-center gap-2 font-medium"
@@ -120,7 +120,7 @@ export interface CreateTaskReporter {
         @if (projectName(); as name) {
           <span class="truncate font-medium">{{ name }}</span>
         } @else {
-          <span [class]="emptyValue">{{ labels.chooseProject }}</span>
+          <span class="text-muted">{{ labels.chooseProject }}</span>
         }
       </app-task-project-picker>
     }
@@ -135,7 +135,7 @@ export interface CreateTaskReporter {
         @if (sprintName(); as name) {
           <span class="truncate font-medium">{{ name }}</span>
         } @else {
-          <span [class]="emptyValue">{{ labels.noSprint }}</span>
+          <span class="text-muted">{{ labels.noSprint }}</span>
         }
       </app-task-sprint-picker>
     }
@@ -150,12 +150,11 @@ export interface CreateTaskReporter {
       @if (estimateLabel(); as estimate) {
         <span class="font-medium">{{ estimate }}</span>
       } @else {
-        <span [class]="emptyValue">{{ labels.notSet }}</span>
+        <span class="text-muted">{{ labels.notSet }}</span>
       }
     </app-task-estimate-picker>
 
-    <div [class]="dateRowClass">
-      <span [class]="labelClass">{{ labels.startDate }}</span>
+    <div app-field-row mode="container" [label]="labels.startDate">
       <app-date-picker
         class="min-w-0 flex-1"
         appearance="bare"
@@ -170,8 +169,7 @@ export interface CreateTaskReporter {
         [(value)]="startDate" />
     </div>
 
-    <div [class]="dateRowClass">
-      <span [class]="labelClass">{{ labels.dueDate }}</span>
+    <div app-field-row mode="container" [label]="labels.dueDate">
       <app-date-picker
         class="min-w-0 flex-1"
         appearance="bare"
@@ -204,12 +202,9 @@ export class CreateTaskFieldRowsComponent {
 
   readonly estimateChange = output<TaskEstimate>();
 
-  readonly rowClass = FIELD_ROW;
-  readonly staticRowClass = `${FIELD_ROW} cursor-default hover:bg-transparent`;
-  readonly dateRowClass = `${FIELD_ROW} cursor-default`;
+  readonly rowClass = fieldRowClass;
   readonly dateButtonClass = 'h-8 w-auto gap-2 px-0 text-[13px] font-medium';
-  readonly labelClass = `${FIELD_LABEL} w-24`;
-  readonly emptyValue = EMPTY_VALUE;
+  readonly labelClass = fieldLabelClass;
 
   readonly readSprints = hasPermission(PERMISSIONS.sprints.read);
   readonly readProjects = hasPermission(PERMISSIONS.projects.read);

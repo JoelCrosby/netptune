@@ -20,10 +20,12 @@ import { FileDropzoneComponent } from '@static/components/file-dropzone/file-dro
 import { FileTypeIconComponent } from '@static/components/file-type-icon/file-type-icon.component';
 import { FileSizePipe } from '@static/pipes/file-size.pipe';
 import { InlineButtonComponent } from '@static/components/button/inline-button.component';
+import { UploadProgressComponent } from '@static/components/upload-progress/upload-progress.component';
 
 @Component({
   selector: 'app-task-detail-files',
   imports: [
+    UploadProgressComponent,
     FileDropzoneComponent,
     FileSizePipe,
     FileTypeIconComponent,
@@ -74,31 +76,24 @@ import { InlineButtonComponent } from '@static/components/button/inline-button.c
 
       <div class="mt-3 space-y-2" aria-live="polite">
         @for (upload of uploads(); track upload.id) {
-          <div class="bg-card rounded p-2 text-sm">
-            <div class="flex items-center justify-between gap-2">
-              <span class="truncate">{{ upload.name }}</span>
-              @if (upload.error) {
-                <span class="text-destructive ml-auto">{{ upload.error }}</span>
-                <button
-                  type="button"
-                  class="text-primary inline-flex items-center gap-1 hover:underline disabled:opacity-50"
-                  [disabled]="uploading()"
-                  (click)="retry(upload)">
-                  <svg lucideRotateCcw class="h-3 w-3"></svg>
-                  <span i18n="Button that retries a failed file upload">
-                    Retry
-                  </span>
-                </button>
-              } @else {
-                <span>{{ upload.progress }}%</span>
-              }
-            </div>
-            <div class="bg-muted mt-1 h-1 overflow-hidden rounded">
-              <div
-                class="bg-primary h-full"
-                [style.width.%]="upload.progress"></div>
-            </div>
-          </div>
+          <app-upload-progress
+            [name]="upload.name"
+            [progress]="upload.progress"
+            [error]="upload.error">
+            <button
+              type="button"
+              app-inline-button
+              color="primary"
+              appearance="underline"
+              class="text-sm"
+              [disabled]="uploading()"
+              (click)="retry(upload)">
+              <svg lucideRotateCcw class="h-3 w-3"></svg>
+              <span i18n="Button that retries a failed file upload">
+                Retry
+              </span>
+            </button>
+          </app-upload-progress>
         }
         @for (file of files(); track file.id) {
           <div class="border-border flex items-center gap-3 rounded border p-2">

@@ -46,14 +46,17 @@ import { FormErrorsComponent } from '@static/components/form-error/form-errors.c
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
 import { FileSizePipe } from '@static/pipes/file-size.pipe';
-import { TaskDetailAccordionRowComponent } from '../task-detail-dialog/shared/task-detail-accordion-row.component';
 import { TaskStatusSegmentsComponent } from '../task-detail-dialog/pickers/task-status-segments.component';
 import { TaskTagRowComponent } from '../task-detail-dialog/pickers/task-tag-row.component';
 import { InlineButtonComponent } from '@static/components/button/inline-button.component';
-import {
-  EYEBROW,
-  HEADER_ICON_BUTTON,
-} from '../task-detail-dialog/task-detail-styles';
+import { AccordionComponent } from '@static/components/accordion/accordion.component';
+import { AccordionRowComponent } from '@static/components/accordion/accordion-row.component';
+import { DialogFooterComponent } from '@static/components/dialog/dialog-footer.component';
+import { DialogHeaderComponent } from '@static/components/dialog/dialog-header.component';
+import { DialogRailComponent } from '@static/components/dialog/dialog-rail.component';
+import { DialogSectionComponent } from '@static/components/dialog/dialog-section.component';
+import { HeadingInputDirective } from '@static/components/form-input/heading-input.directive';
+import { UploadProgressComponent } from '@static/components/upload-progress/upload-progress.component';
 import {
   CreateTaskFieldRowsComponent,
   CreateTaskReporter,
@@ -109,8 +112,14 @@ const documentContentTypes = new Set([
 
 @Component({
   imports: [
+    AccordionComponent,
+    AccordionRowComponent,
     ColorSwatchComponent,
     CreateTaskFieldRowsComponent,
+    DialogFooterComponent,
+    DialogHeaderComponent,
+    DialogRailComponent,
+    DialogSectionComponent,
     EditorComponent,
     FileDropzoneComponent,
     FileSizePipe,
@@ -118,6 +127,7 @@ const documentContentTypes = new Set([
     FlatButtonComponent,
     FormErrorsComponent,
     FormField,
+    HeadingInputDirective,
     IconButtonComponent,
     InlineButtonComponent,
     ListRowComponent,
@@ -125,11 +135,11 @@ const documentContentTypes = new Set([
     LucideX,
     SectionLabelDirective,
     StrokedButtonComponent,
-    TaskDetailAccordionRowComponent,
     TaskScopeIdComponent,
     TaskStatusSegmentsComponent,
     TaskTagRowComponent,
     TooltipDirective,
+    UploadProgressComponent,
   ],
   providers: [TaskFileUploadService],
   host: { class: 'block h-full min-h-0' },
@@ -139,25 +149,10 @@ const documentContentTypes = new Set([
       id="create-task-form"
       novalidate
       (submit)="saveClicked($event)">
-      <div
-        class="border-foreground/8 flex h-[50px] shrink-0 items-center gap-2.5 border-b pr-3.5 pl-5">
-        <span class="text-[13px] font-semibold">
-          <span i18n="Title of the create-task dialog">Create Task</span>
-        </span>
-
-        <div class="ml-auto flex shrink-0 items-center gap-0.5">
-          <button
-            type="button"
-            [class]="iconButtonClass"
-            i18n-aria-label="
-              Accessible label for the button that closes a dialog
-            "
-            aria-label="Close"
-            (click)="close()">
-            <svg lucideX class="h-4 w-4"></svg>
-          </button>
-        </div>
-      </div>
+      <app-dialog-header
+        showCloseButton
+        i18n-heading="Title of the create-task dialog"
+        heading="Create Task" />
 
       <div class="flex min-h-0 flex-1 flex-row max-[1200px]:flex-col">
         <div class="flex min-w-0 flex-1 flex-col">
@@ -165,7 +160,7 @@ const documentContentTypes = new Set([
             class="custom-scroll flex min-h-0 flex-1 flex-col gap-[18px] overflow-y-auto px-7 pt-6 pb-5">
             <div>
               <input
-                class="placeholder:text-muted -mx-2 w-full rounded bg-transparent px-2 py-1 text-[28px]/[36px] font-semibold tracking-[-0.012em] transition-colors outline-none hover:bg-black/5 focus:bg-black/5 dark:hover:bg-white/5 dark:focus:bg-white/5"
+                appHeadingInput
                 type="text"
                 autocomplete="off"
                 i18n-placeholder="Placeholder in the empty task summary field"
@@ -185,7 +180,11 @@ const documentContentTypes = new Set([
             }
 
             <div>
-              <div [class]="eyebrowClass" id="create-task-description-label">
+              <div
+                appSectionLabel
+                variant="eyebrow"
+                class="mb-2.5"
+                id="create-task-description-label">
                 {{ labels.description }}
               </div>
               <app-editor
@@ -202,9 +201,9 @@ const documentContentTypes = new Set([
             </div>
 
             @if (canLinkTasks() || canUploadFiles()) {
-              <div class="border-foreground/8 mt-auto flex flex-col border-t">
+              <app-accordion class="mt-auto">
                 @if (canLinkTasks()) {
-                  <app-task-detail-accordion-row
+                  <app-accordion-row
                     [label]="labels.links"
                     [summary]="linkSummary()"
                     [last]="!canUploadFiles()"
@@ -221,7 +220,7 @@ const documentContentTypes = new Set([
                         Link task
                       </span>
                     </button>
-                  </app-task-detail-accordion-row>
+                  </app-accordion-row>
 
                   <div class="pt-1 pb-3" [class.hidden]="!isExpanded('links')">
                     @for (group of relationGroups(); track group.label) {
@@ -272,7 +271,8 @@ const documentContentTypes = new Set([
                         </ul>
                       </div>
                     } @empty {
-                      <div class="text-muted flex items-center gap-2 text-sm">
+                      <div
+                        class="text-muted flex items-center gap-2 p-4 text-sm">
                         <svg lucideLink2 class="h-4 w-4"></svg>
                         <span
                           i18n="
@@ -286,7 +286,7 @@ const documentContentTypes = new Set([
                 }
 
                 @if (canUploadFiles()) {
-                  <app-task-detail-accordion-row
+                  <app-accordion-row
                     [label]="labels.files"
                     [summary]="fileSummary()"
                     [last]="true"
@@ -302,7 +302,7 @@ const documentContentTypes = new Set([
                         Choose files
                       </span>
                     </button>
-                  </app-task-detail-accordion-row>
+                  </app-accordion-row>
 
                   <div class="pt-1 pb-3" [class.hidden]="!isExpanded('files')">
                     <app-file-dropzone
@@ -310,13 +310,12 @@ const documentContentTypes = new Set([
                       [maxBytes]="maxUploadBytes()"
                       (filesSelected)="addFiles($event)" />
 
-                    <div class="mt-3 flex flex-col gap-2">
+                    <ul class="mt-3 flex flex-col gap-2">
                       @for (
                         file of stagedFiles();
                         track file.name + file.size
                       ) {
-                        <div
-                          class="border-foreground/8 bg-foreground/[0.02] flex items-center gap-3 rounded-lg border px-3 py-2">
+                        <li app-list-row>
                           <app-file-type-icon
                             size="small"
                             [group]="fileGroup(file)" />
@@ -340,30 +339,16 @@ const documentContentTypes = new Set([
                             (click)="removeFile(file)">
                             <svg lucideX class="h-4 w-4"></svg>
                           </button>
-                        </div>
+                        </li>
                       }
-                    </div>
+                    </ul>
 
                     <div class="mt-2 flex flex-col gap-2" aria-live="polite">
                       @for (upload of uploads(); track upload.id) {
-                        <div class="bg-card rounded p-2 text-sm">
-                          <div class="flex items-center justify-between gap-2">
-                            <span class="truncate">{{ upload.name }}</span>
-                            @if (upload.error) {
-                              <span class="text-destructive ml-auto">
-                                {{ upload.error }}
-                              </span>
-                            } @else {
-                              <span>{{ upload.progress }}%</span>
-                            }
-                          </div>
-                          <div
-                            class="bg-muted mt-1 h-1 overflow-hidden rounded">
-                            <div
-                              class="bg-primary h-full"
-                              [style.width.%]="upload.progress"></div>
-                          </div>
-                        </div>
+                        <app-upload-progress
+                          [name]="upload.name"
+                          [progress]="upload.progress"
+                          [error]="upload.error" />
                       }
                     </div>
 
@@ -381,19 +366,19 @@ const documentContentTypes = new Set([
                     }
                   </div>
                 }
-              </div>
+              </app-accordion>
             }
           </div>
         </div>
 
-        <div
-          class="border-foreground/8 bg-foreground/[0.02] flex w-[340px] shrink-0 flex-col border-l max-[1200px]:w-full max-[1200px]:border-t max-[1200px]:border-l-0">
+        <app-dialog-rail>
           @if (readStatus()) {
-            <app-task-status-segments
-              class="border-foreground/8 border-b px-5 pt-4.5 pb-4"
-              [eyebrowId]="statusEyebrowId"
-              [disabled]="busy()"
-              [(value)]="statusId" />
+            <app-dialog-section divider="bottom" class="px-5 pt-4.5 pb-4">
+              <app-task-status-segments
+                [eyebrowId]="statusEyebrowId"
+                [disabled]="busy()"
+                [(value)]="statusId" />
+            </app-dialog-section>
           }
 
           <app-create-task-field-rows
@@ -413,8 +398,9 @@ const documentContentTypes = new Set([
             (estimateChange)="setEstimate($event)" />
 
           @if (scheduleInvalid() || projectInvalid()) {
-            <div
-              class="border-foreground/8 text-warn shrink-0 border-t px-4 py-3 text-xs"
+            <app-dialog-section
+              divider="top"
+              class="text-warn shrink-0 px-4 py-3 text-xs"
               role="alert">
               @if (scheduleInvalid()) {
                 <p>
@@ -437,13 +423,12 @@ const documentContentTypes = new Set([
                   </span>
                 </p>
               }
-            </div>
+            </app-dialog-section>
           }
-        </div>
+        </app-dialog-rail>
       </div>
 
-      <div
-        class="border-foreground/8 bg-foreground/[0.02] flex shrink-0 items-center justify-end gap-2 border-t px-5 py-3">
+      <app-dialog-footer>
         <button app-stroked-button type="button" (click)="close()">
           <span i18n="Dismisses a dialog without saving">Close</span>
         </button>
@@ -455,7 +440,7 @@ const documentContentTypes = new Set([
           [disabled]="busy()">
           <span i18n="Button that saves the new task">Save Task</span>
         </button>
-      </div>
+      </app-dialog-footer>
     </form>
   `,
 })
@@ -484,9 +469,7 @@ export class CreateTaskDialogComponent {
   readonly canLinkTasks = hasPermission(PERMISSIONS.tasks.update);
   readonly readStatus = hasPermission(PERMISSIONS.statuses.read);
 
-  readonly iconButtonClass = HEADER_ICON_BUTTON;
   readonly statusEyebrowId = 'create-task-status-eyebrow';
-  readonly eyebrowClass = `${EYEBROW} mb-2.5`;
 
   readonly labels = {
     description: $localize`:Label of the task description editor:Description`,

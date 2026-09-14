@@ -1,3 +1,8 @@
+import {
+  fieldLabelClass,
+  fieldRowClass,
+} from '@static/components/field-row/field-row.component';
+
 export const EMPTY_VALUE = 'text-muted';
 
 export const HEADER_ICON_BUTTON =
@@ -15,10 +20,9 @@ export const CHIP_EMPTY = `${CHIP} border-foreground/8 text-muted hover:bg-hover
 export const META_CHIP =
   'flex h-[26px] cursor-pointer flex-nowrap items-center gap-1.5 rounded-md px-2 text-[13px] font-medium transition-colors hover:bg-hover';
 
-export const FIELD_ROW =
-  'hover:bg-hover flex h-10 w-full cursor-pointer flex-nowrap items-center rounded-[7px] px-3 text-left text-[13px] transition-colors';
+export const FIELD_ROW = fieldRowClass;
 
-export const FIELD_LABEL = 'text-muted w-24 shrink-0';
+export const FIELD_LABEL = fieldLabelClass;
 
 export const EYEBROW =
   'font-avatar text-muted text-[10px] tracking-[0.14em] uppercase';

@@ -11,7 +11,7 @@ import { TaskDetailFilesComponent } from '../task-detail-files.component';
 import { TaskDetailFlagsComponent } from '../task-detail-flags.component';
 import { TaskDetailHeaderComponent } from '../task-detail-header.component';
 import { TaskDetailRelationsComponent } from '../task-detail-relations.component';
-import { TaskDetailAccordionRowComponent } from '../shared/task-detail-accordion-row.component';
+import { AccordionRowComponent } from '@static/components/accordion/accordion-row.component';
 import { TaskDetailChromeComponent } from '../shared/task-detail-chrome.component';
 import { TaskDetailCommentsService } from '../shared/task-detail-comments.service';
 import { TaskDetailComposerComponent } from '../shared/task-detail-composer.component';
@@ -47,7 +47,7 @@ const RAIL_FIELDS: TaskDetailField[] = [
     InlineButtonComponent,
     LucideSparkles,
     LucideTrash2,
-    TaskDetailAccordionRowComponent,
+    AccordionRowComponent,
     TaskDetailBoardsComponent,
     TaskDetailChromeComponent,
     TaskDetailCommentsComponent,
@@ -88,7 +88,7 @@ const RAIL_FIELDS: TaskDetailField[] = [
             <app-task-detail-description textClass="text-[15px]/[26px]" />
 
             <div class="border-foreground/8 mt-auto flex flex-col border-t">
-              <app-task-detail-accordion-row
+              <app-accordion-row
                 [label]="labels.boards"
                 [summary]="boardSummary()"
                 [expanded]="isExpanded('boards')"
@@ -96,14 +96,14 @@ const RAIL_FIELDS: TaskDetailField[] = [
                 <span class="text-muted shrink-0 pr-1 text-xs">
                   {{ task.placements.length }}
                 </span>
-              </app-task-detail-accordion-row>
+              </app-accordion-row>
               @if (isExpanded('boards')) {
                 <div class="pt-1 pb-3">
                   <app-task-detail-boards />
                 </div>
               }
 
-              <app-task-detail-accordion-row
+              <app-accordion-row
                 [label]="labels.links"
                 [summary]="linkSummary(relations.count())"
                 [expanded]="isExpanded('links')"
@@ -120,13 +120,13 @@ const RAIL_FIELDS: TaskDetailField[] = [
                     </span>
                   </button>
                 }
-              </app-task-detail-accordion-row>
+              </app-accordion-row>
               <div class="pt-1 pb-3" [class.hidden]="!isExpanded('links')">
                 <app-task-detail-relations #relations />
               </div>
 
               @if (readFiles()) {
-                <app-task-detail-accordion-row
+                <app-accordion-row
                   [label]="labels.files"
                   [summary]="fileSummary(files.count())"
                   [last]="true"
@@ -142,7 +142,7 @@ const RAIL_FIELDS: TaskDetailField[] = [
                       Choose files
                     </span>
                   </button>
-                </app-task-detail-accordion-row>
+                </app-accordion-row>
                 <div class="pt-1 pb-3" [class.hidden]="!isExpanded('files')">
                   <app-task-detail-files #files />
                 </div>
