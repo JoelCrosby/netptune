@@ -440,14 +440,14 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
 
     private bool HasPermission(AiProposedChange change, IReadOnlySet<string> permissions)
     {
-        var tool = Tools.Find(change.ToolName);
+        var tool = Tools.FindProposer(change.ToolName);
 
         if (tool is null)
         {
             return false;
         }
 
-        var required = tool.GetRequiredPermissions(change.Payload.RootElement);
+        var required = tool.GetChangePermissions(change.ToolName, change.Payload.RootElement);
 
         return required.All(permissions.Contains);
     }

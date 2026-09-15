@@ -24,7 +24,7 @@ public sealed class CreateStatusTool : IAiTool
     public string Name => "propose_create_status";
 
     public string Description =>
-        "Propose creating a task status for the workspace. The status is not created until the user reviews and applies the change.";
+        "Propose creating a task status for the workspace.";
 
     public AiToolKind Kind => AiToolKind.Write;
 

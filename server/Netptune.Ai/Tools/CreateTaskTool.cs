@@ -30,8 +30,7 @@ public sealed class CreateTaskTool : IAiTool
 
     public string Description =>
         "Propose creating a task, fully formed: assignee, sprint, board group, status, priority, estimate and dates "
-        + "can all be set here rather than in a second change. Tags may be set here too. "
-        + "The task is not created until the user reviews and applies the change.";
+        + "can all be set here rather than in a second change. Tags may be set here too.";
 
     public AiToolKind Kind => AiToolKind.Write;
 

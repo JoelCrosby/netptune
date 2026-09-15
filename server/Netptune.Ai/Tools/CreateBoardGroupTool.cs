@@ -25,8 +25,7 @@ public sealed class CreateBoardGroupTool : IAiTool
     public string Name => "propose_create_board_group";
 
     public string Description =>
-        "Propose adding a group, the column on a board, to an existing board. "
-        + "The group is not created until the user reviews and applies the change.";
+        "Propose adding a group, the column on a board, to an existing board.";
 
     public AiToolKind Kind => AiToolKind.Write;
 

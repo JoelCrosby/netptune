@@ -20,28 +20,40 @@ namespace Netptune.UnitTests.Netptune.Ai;
 public class AiToolRegistrationTests
 {
     [Fact]
-    public void EveryWriteTool_ShouldHaveAChangeHandler()
+    public void EveryProposedChange_ShouldHaveAChangeHandler()
     {
         using var provider = CreateProvider();
 
-        var tools = provider.GetServices<IAiTool>().Where(tool => tool.Kind == AiToolKind.Write).ToList();
+        var writeTools = provider.GetServices<IAiTool>().Where(tool => tool.Kind == AiToolKind.Write).ToList();
+        var proposedChanges = writeTools.SelectMany(tool => tool.ProposedChanges).ToList();
         var handlerNames = provider.GetServices<IAiChangeHandler>().Select(handler => handler.ToolName).ToHashSet();
-        var orphaned = tools.Where(tool => !handlerNames.Contains(tool.Name)).Select(tool => tool.Name).ToList();
+        var orphaned = proposedChanges.Where(change => !handlerNames.Contains(change)).ToList();
 
-        tools.Should().NotBeEmpty("this guard is worthless if no write tools resolve");
-        orphaned.Should().BeEmpty("a write tool without a change handler proposes changes that can never be applied");
+        writeTools.Should().NotBeEmpty("this guard is worthless if no write tools resolve");
+        writeTools.Should().OnlyContain(tool => tool.ProposedChanges.Count > 0, "a write tool must propose something");
+        orphaned.Should().BeEmpty("a proposed change without a handler can never be applied");
     }
 
     [Fact]
-    public void EveryChangeHandler_ShouldHaveAWriteTool()
+    public void EveryChangeHandler_ShouldHaveAToolThatProposesIt()
     {
         using var provider = CreateProvider();
 
-        var toolNames = provider.GetServices<IAiTool>().Select(tool => tool.Name).ToHashSet();
+        var proposedChanges = provider.GetServices<IAiTool>().SelectMany(tool => tool.ProposedChanges).ToHashSet();
         var handlers = provider.GetServices<IAiChangeHandler>().Select(handler => handler.ToolName).ToList();
-        var orphaned = handlers.Where(name => !toolNames.Contains(name)).ToList();
+        var orphaned = handlers.Where(name => !proposedChanges.Contains(name)).ToList();
 
-        orphaned.Should().BeEmpty("a change handler with no tool is dead code");
+        orphaned.Should().BeEmpty("a change handler no tool proposes is dead code");
+    }
+
+    [Fact]
+    public void EveryProposedChange_ShouldHaveASingleProposer()
+    {
+        using var provider = CreateProvider();
+
+        var proposedChanges = provider.GetServices<IAiTool>().SelectMany(tool => tool.ProposedChanges).ToList();
+
+        proposedChanges.Should().OnlyHaveUniqueItems("applying a change asks its one proposer which permissions it needs");
     }
 
     [Fact]

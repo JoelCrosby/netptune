@@ -139,7 +139,7 @@ public sealed class AiConversationRunner : IAiConversationRunner
             {
                 yield return AiStreamEvent.ToolStarted(call.Name);
 
-                var result = await ExecuteTool(call, availableTools, cancellationToken);
+                var result = await ExecuteTool(call, availableTools, context.Permissions, cancellationToken);
 
                 context.Invocations.Add(new AiToolInvocationRecord
                 {
@@ -180,6 +180,7 @@ public sealed class AiConversationRunner : IAiConversationRunner
     private async Task<AiToolExecution> ExecuteTool(
         AiToolCall call,
         IReadOnlyList<IAiTool> availableTools,
+        IReadOnlySet<string> permissions,
         CancellationToken cancellationToken)
     {
         var tool = availableTools.FirstOrDefault(item => string.Equals(item.Name, call.Name, StringComparison.Ordinal));
@@ -187,6 +188,15 @@ public sealed class AiConversationRunner : IAiConversationRunner
         if (tool is null)
         {
             return AiToolExecution.Failed($"Tool {call.Name} is not available.");
+        }
+
+        var required = tool.GetRequiredPermissions(call.Arguments.RootElement);
+        var missing = required.Where(permission => !permissions.Contains(permission)).ToList();
+
+        if (missing.Count > 0)
+        {
+            return AiToolExecution.Failed(
+                $"The user does not have permission to do this with {call.Name}: {string.Join(", ", missing)}.");
         }
 
         try
@@ -222,7 +232,7 @@ public sealed class AiConversationRunner : IAiConversationRunner
     private IReadOnlyList<IAiTool> GetAvailableTools(IReadOnlySet<string> permissions)
     {
         return Tools.All
-            .Where(tool => tool.RequiredPermissions.All(permissions.Contains))
+            .Where(tool => tool.IsAvailable(permissions))
             .ToList();
     }
 

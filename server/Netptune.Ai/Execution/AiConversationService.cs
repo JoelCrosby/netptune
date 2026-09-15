@@ -38,6 +38,7 @@ public sealed class AiConversationService : IAiConversationService
     private readonly IAiTitleGenerator Titles;
     private readonly IAiCancellationRegistry Turns;
     private readonly IAiSpendService Spend;
+    private readonly IAiToolRegistry Tools;
     private readonly AiOptions Options;
 
     public AiConversationService(
@@ -52,6 +53,7 @@ public sealed class AiConversationService : IAiConversationService
         IAiTitleGenerator titles,
         IAiCancellationRegistry turns,
         IAiSpendService spend,
+        IAiToolRegistry tools,
         IOptions<AiOptions> options)
     {
         ChangeSetBuilder = changeSetBuilder;
@@ -59,6 +61,7 @@ public sealed class AiConversationService : IAiConversationService
         Titles = titles;
         Turns = turns;
         Spend = spend;
+        Tools = tools;
         UnitOfWork = unitOfWork;
         Identity = identity;
         Protector = protector;
@@ -451,10 +454,11 @@ public sealed class AiConversationService : IAiConversationService
             return null;
         }
 
+        var proposer = Tools.FindProposer(change.ToolName);
         var lines = new List<string>
         {
             "The user is asking you to rework this proposal, which you made earlier in this conversation.",
-            $"tool: {change.ToolName}",
+            $"tool: {proposer?.Name ?? change.ToolName}",
             $"summary: {change.Summary}",
         };
 

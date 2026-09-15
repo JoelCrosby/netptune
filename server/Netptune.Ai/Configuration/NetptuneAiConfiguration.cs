@@ -33,11 +33,8 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiTool, ListMembersTool>();
         services.AddScoped<IAiTool, CreateTaskTool>();
         services.AddScoped<IAiTool, UpdateTaskTool>();
-        services.AddScoped<IAiTool, AssignTaskTool>();
         services.AddScoped<IAiTool, ListSprintsTool>();
-        services.AddScoped<IAiTool, MoveTaskToSprintTool>();
         services.AddScoped<IAiTool, ListTagsTool>();
-        services.AddScoped<IAiTool, SetTaskTagsTool>();
         services.AddScoped<IAiTool, AddTaskCommentTool>();
         services.AddScoped<IAiTool, ListBoardsTool>();
         services.AddScoped<IAiTool, ListBoardGroupsTool>();
@@ -45,21 +42,14 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiTool, CreateProjectTool>();
         services.AddScoped<IAiTool, CreateBoardTool>();
         services.AddScoped<IAiTool, CreateStatusTool>();
-        services.AddScoped<IAiTool, MoveTaskToBoardGroupTool>();
         services.AddScoped<IAiTool, LinkTasksTool>();
         services.AddScoped<IAiTool, GetTaskTool>();
-        services.AddScoped<IAiTool, ListTaskCommentsTool>();
-        services.AddScoped<IAiTool, ListTaskRelationsTool>();
         services.AddScoped<IAiTool, ListRelationsTool>();
         services.AddScoped<IAiTool, GetCurrentSprintTool>();
         services.AddScoped<IAiTool, CreateSprintTool>();
         services.AddScoped<IAiTool, UpdateSprintTool>();
-        services.AddScoped<IAiTool, StartSprintTool>();
-        services.AddScoped<IAiTool, CompleteSprintTool>();
-        services.AddScoped<IAiTool, CancelSprintTool>();
-        services.AddScoped<IAiTool, DeleteSprintTool>();
-        services.AddScoped<IAiTool, AddTasksToSprintTool>();
-        services.AddScoped<IAiTool, RemoveTaskFromSprintTool>();
+        services.AddScoped<IAiTool, SprintTransitionTool>();
+        services.AddScoped<IAiTool, SetTaskSprintTool>();
         services.AddScoped<IAiTool, UpdateProjectTool>();
         services.AddScoped<IAiTool, ResolveTaskFlagTool>();
         services.AddScoped<IAiTool, CreateTagTool>();
@@ -74,7 +64,6 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiTool, ListAutomationsTool>();
         services.AddScoped<IAiTool, ListAutomationRunsTool>();
         services.AddScoped<IAiTool, ListMemberRolesTool>();
-        services.AddScoped<IAiTool, ListTaskFilesTool>();
         services.AddScoped<IAiTool, ListWorkspaceFilesTool>();
         services.AddScoped<IAiTool, AskQuestionTool>();
 

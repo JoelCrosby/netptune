@@ -25,8 +25,7 @@ public sealed class LinkTasksTool : IAiTool
 
     public string Description =>
         "Propose linking two tasks with a relation such as blocks or relates to. "
-        + "Name the relation type with relationType — its ids differ between workspaces, so never guess one. "
-        + "The link is not created until the user reviews and applies the change.";
+        + "Name the relation type with relationType — its ids differ between workspaces, so never guess one.";
 
     public AiToolKind Kind => AiToolKind.Write;
 

@@ -25,8 +25,7 @@ public sealed class ResolveTaskFlagTool : IAiTool
 
     public string Description =>
         "Propose clearing a flag raised on a task, either as resolved because the underlying problem is fixed, "
-        + "or as dismissed because it does not apply. Flag ids come from get_task. "
-        + "The flag is not cleared until the user reviews and applies the change.";
+        + "or as dismissed because it does not apply. Flag ids come from get_task.";
 
     public AiToolKind Kind => AiToolKind.Write;
 

@@ -26,7 +26,8 @@ public sealed class ListRelationsTool : IAiTool
 
     public string Description =>
         "List the task links across the whole workspace, such as everything that blocks something else, "
-        + "optionally narrowed to one relation type. Use list_task_relations for the links on a single task.";
+        + "optionally narrowed to one relation type. "
+        + "Use get_task with include relations for the links on a single task.";
 
     public AiToolKind Kind => AiToolKind.Read;
 

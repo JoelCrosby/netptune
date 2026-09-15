@@ -42,9 +42,23 @@ public interface IAiTool
 
     JsonDocument InputSchema { get; }
 
-    IReadOnlySet<string> GetRequiredPermissions(JsonElement payload)
+    // A tool that proposes several kinds of change records each one under its own name, so handlers,
+    // stored change sets and the client keep keying on the kind rather than on the tool that proposed it.
+    IReadOnlyList<string> ProposedChanges => Kind == AiToolKind.Write ? [Name] : [];
+
+    bool IsAvailable(IReadOnlySet<string> permissions)
+    {
+        return RequiredPermissions.All(permissions.Contains);
+    }
+
+    IReadOnlySet<string> GetRequiredPermissions(JsonElement arguments)
     {
         return RequiredPermissions;
+    }
+
+    IReadOnlySet<string> GetChangePermissions(string changeName, JsonElement payload)
+    {
+        return GetRequiredPermissions(payload);
     }
 
     Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken);
@@ -55,6 +69,8 @@ public interface IAiToolRegistry
     IReadOnlyList<IAiTool> All { get; }
 
     IAiTool? Find(string name);
+
+    IAiTool? FindProposer(string changeName);
 
     IReadOnlyList<AiToolDefinition> GetDefinitions();
 }

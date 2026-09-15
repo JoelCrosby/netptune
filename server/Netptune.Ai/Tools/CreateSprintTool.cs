@@ -22,7 +22,7 @@ public sealed class CreateSprintTool : IAiTool
     public string Name => "propose_create_sprint";
 
     public string Description =>
-        "Propose creating a sprint in a project. The sprint is not created until the user reviews and applies the change.";
+        "Propose creating a sprint in a project.";
 
     public AiToolKind Kind => AiToolKind.Write;
 

@@ -25,7 +25,7 @@ public sealed class AddTaskCommentTool : IAiTool
     public string Name => "propose_add_comment";
 
     public string Description =>
-        "Propose adding a comment to a task. The comment is posted under the user's own name once they approve it.";
+        "Propose adding a comment to a task. The comment is posted under the user's own name.";
 
     public AiToolKind Kind => AiToolKind.Write;
 

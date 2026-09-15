@@ -23,8 +23,7 @@ public sealed class UpdateProjectTool : IAiTool
     public string Name => "propose_update_project";
 
     public string Description =>
-        "Propose changing a project's name, description or repository url. "
-        + "The change is not applied until the user reviews and applies it.";
+        "Propose changing a project's name, description or repository url.";
 
     public AiToolKind Kind => AiToolKind.Write;
 

@@ -6,6 +6,7 @@ using Mediator;
 
 using Netptune.Ai.Execution;
 using Netptune.Ai.Tools;
+using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Ai;
@@ -123,13 +124,13 @@ public class SprintToolTests
     }
 
     [Fact]
-    public async Task StartSprint_ShouldProposeTheStatusChange()
+    public async Task SprintTransition_Start_ShouldProposeTheStatusChange()
     {
         GivenSprint(CreateSprint());
         GivenActiveSprints([]);
 
-        var tool = new StartSprintTool(Mediator, ChangeSet);
-        var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}}}"""), TestContext.Current.CancellationToken);
+        var tool = new SprintTransitionTool(Mediator, ChangeSet);
+        var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}},"action":"start"}"""), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeFalse();
         ChangeSet.Changes.Should().ContainSingle();
@@ -137,25 +138,25 @@ public class SprintToolTests
     }
 
     [Fact]
-    public async Task StartSprint_ShouldFail_WhenTheSprintIsNotPlanning()
+    public async Task SprintTransition_Start_ShouldFail_WhenTheSprintIsNotPlanning()
     {
         GivenSprint(CreateSprint(SprintStatus.Active));
 
-        var tool = new StartSprintTool(Mediator, ChangeSet);
-        var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}}}"""), TestContext.Current.CancellationToken);
+        var tool = new SprintTransitionTool(Mediator, ChangeSet);
+        var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}},"action":"start"}"""), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeTrue();
         ChangeSet.Changes.Should().BeEmpty();
     }
 
     [Fact]
-    public async Task StartSprint_ShouldFail_WhenTheProjectIsAlreadyRunningASprint()
+    public async Task SprintTransition_Start_ShouldFail_WhenTheProjectIsAlreadyRunningASprint()
     {
         GivenSprint(CreateSprint());
         GivenActiveSprints([CreateActiveSprint()]);
 
-        var tool = new StartSprintTool(Mediator, ChangeSet);
-        var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}}}"""), TestContext.Current.CancellationToken);
+        var tool = new SprintTransitionTool(Mediator, ChangeSet);
+        var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}},"action":"start"}"""), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeTrue();
         result.Content.Should().Contain("Sprint 3");
@@ -163,64 +164,64 @@ public class SprintToolTests
     }
 
     [Fact]
-    public async Task StartSprint_ShouldPropose_WhenTheChangeSetCompletesTheRunningSprintFirst()
+    public async Task SprintTransition_Start_ShouldPropose_WhenTheChangeSetCompletesTheRunningSprintFirst()
     {
         var active = CreateActiveSprint();
 
         GivenSprint(CreateSprint());
         GivenActiveSprints([active]);
-        GivenProposedClosure(active.Id, CompleteSprintTool.ToolName);
+        GivenProposedClosure(active.Id, SprintTransitionTool.CompleteChange);
 
-        var tool = new StartSprintTool(Mediator, ChangeSet);
-        var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}}}"""), TestContext.Current.CancellationToken);
+        var tool = new SprintTransitionTool(Mediator, ChangeSet);
+        var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}},"action":"start"}"""), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeFalse();
         ChangeSet.Changes.Should().HaveCount(2);
     }
 
     [Fact]
-    public async Task CompleteSprint_ShouldFail_WhenTheSprintIsNotActive()
+    public async Task SprintTransition_Complete_ShouldFail_WhenTheSprintIsNotActive()
     {
         GivenSprint(CreateSprint());
 
-        var tool = new CompleteSprintTool(Mediator, ChangeSet);
-        var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}}}"""), TestContext.Current.CancellationToken);
+        var tool = new SprintTransitionTool(Mediator, ChangeSet);
+        var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}},"action":"complete"}"""), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeTrue();
         ChangeSet.Changes.Should().BeEmpty();
     }
 
     [Fact]
-    public async Task CancelSprint_ShouldFail_WhenTheSprintIsAlreadyCancelled()
+    public async Task SprintTransition_Cancel_ShouldFail_WhenTheSprintIsAlreadyCancelled()
     {
         GivenSprint(CreateSprint(SprintStatus.Cancelled));
 
-        var tool = new CancelSprintTool(Mediator, ChangeSet);
-        var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}}}"""), TestContext.Current.CancellationToken);
+        var tool = new SprintTransitionTool(Mediator, ChangeSet);
+        var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}},"action":"cancel"}"""), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeTrue();
         ChangeSet.Changes.Should().BeEmpty();
     }
 
     [Fact]
-    public async Task DeleteSprint_ShouldFail_WhenTheSprintIsActive()
+    public async Task SprintTransition_Delete_ShouldFail_WhenTheSprintIsActive()
     {
         GivenSprint(CreateSprint(SprintStatus.Active));
 
-        var tool = new DeleteSprintTool(Mediator, ChangeSet);
-        var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}}}"""), TestContext.Current.CancellationToken);
+        var tool = new SprintTransitionTool(Mediator, ChangeSet);
+        var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}},"action":"delete"}"""), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeTrue();
         ChangeSet.Changes.Should().BeEmpty();
     }
 
     [Fact]
-    public async Task DeleteSprint_ShouldProposeDeletingACancelledSprint()
+    public async Task SprintTransition_Delete_ShouldProposeDeletingACancelledSprint()
     {
         GivenSprint(CreateSprint(SprintStatus.Cancelled));
 
-        var tool = new DeleteSprintTool(Mediator, ChangeSet);
-        var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}}}"""), TestContext.Current.CancellationToken);
+        var tool = new SprintTransitionTool(Mediator, ChangeSet);
+        var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}},"action":"delete"}"""), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeFalse();
         ChangeSet.Changes.Should().ContainSingle();
@@ -228,13 +229,13 @@ public class SprintToolTests
     }
 
     [Fact]
-    public async Task AddTasksToSprint_ShouldFail_WhenATaskBelongsToAnotherProject()
+    public async Task SetTaskSprint_ShouldFail_WhenATaskBelongsToAnotherProject()
     {
         GivenSprint(CreateSprint());
         GivenTask(CreateTask(1, ProjectId));
         GivenTask(CreateTask(2, ProjectId + 1));
 
-        var tool = new AddTasksToSprintTool(Mediator, ChangeSet);
+        var tool = new SetTaskSprintTool(Mediator, ChangeSet);
         var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}},"taskIds":[1,2]}"""), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeTrue();
@@ -242,30 +243,31 @@ public class SprintToolTests
     }
 
     [Fact]
-    public async Task AddTasksToSprint_ShouldSkipTasksAlreadyInTheSprint()
+    public async Task SetTaskSprint_ShouldSkipTasksAlreadyInTheSprint()
     {
         GivenSprint(CreateSprint());
         GivenTask(CreateTask(1, ProjectId, SprintId));
         GivenTask(CreateTask(2, ProjectId));
 
-        var tool = new AddTasksToSprintTool(Mediator, ChangeSet);
+        var tool = new SetTaskSprintTool(Mediator, ChangeSet);
         var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}},"taskIds":[1,2]}"""), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeFalse();
         ChangeSet.Changes.Should().ContainSingle();
 
-        var payload = ChangeSet.Changes[0].Payload.RootElement.GetProperty("taskIds");
+        var change = ChangeSet.Changes[0];
 
-        payload.EnumerateArray().Select(item => item.GetInt32()).Should().BeEquivalentTo([2]);
+        change.ToolName.Should().Be(SetTaskSprintTool.MoveChange);
+        change.EntityId.Should().Be(2);
     }
 
     [Fact]
-    public async Task AddTasksToSprint_ShouldFail_WhenEveryTaskIsAlreadyInTheSprint()
+    public async Task SetTaskSprint_ShouldFail_WhenEveryTaskIsAlreadyInTheSprint()
     {
         GivenSprint(CreateSprint());
         GivenTask(CreateTask(1, ProjectId, SprintId));
 
-        var tool = new AddTasksToSprintTool(Mediator, ChangeSet);
+        var tool = new SetTaskSprintTool(Mediator, ChangeSet);
         var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}},"taskIds":[1]}"""), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeTrue();
@@ -273,14 +275,14 @@ public class SprintToolTests
     }
 
     [Fact]
-    public async Task AddTasksToSprint_ShouldProposeTasks_ForASprintPendingInTheSameChangeSet()
+    public async Task SetTaskSprint_ShouldProposeTasks_ForASprintPendingInTheSameChangeSet()
     {
         GivenProjects([CreateProject()]);
         GivenTask(CreateTask(1, ProjectId));
         GivenTask(CreateTask(2, ProjectId));
 
         var sprintRef = await ProposeSprint($$"""{"name":"Sprint 5","projectId":{{ProjectId}},"startDate":"2026-07-15","endDate":"2026-07-28"}""");
-        var tool = new AddTasksToSprintTool(Mediator, ChangeSet);
+        var tool = new SetTaskSprintTool(Mediator, ChangeSet);
         var arguments = Arguments($$"""{"sprintRef":"{{sprintRef}}","taskIds":[1,2]}""");
         var result = await tool.Execute(arguments, TestContext.Current.CancellationToken);
 
@@ -295,13 +297,13 @@ public class SprintToolTests
     }
 
     [Fact]
-    public async Task AddTasksToSprint_ShouldFail_WhenThePendingSprintBelongsToAnotherProject()
+    public async Task SetTaskSprint_ShouldFail_WhenThePendingSprintBelongsToAnotherProject()
     {
         GivenProjects([CreateProject(), CreateProject(ProjectId + 1, "Apollo")]);
         GivenTask(CreateTask(1, ProjectId));
 
         var sprintRef = await ProposeSprint($$"""{"name":"Sprint 5","projectId":{{ProjectId + 1}},"startDate":"2026-07-15","endDate":"2026-07-28"}""");
-        var tool = new AddTasksToSprintTool(Mediator, ChangeSet);
+        var tool = new SetTaskSprintTool(Mediator, ChangeSet);
         var arguments = Arguments($$"""{"sprintRef":"{{sprintRef}}","taskIds":[1]}""");
         var result = await tool.Execute(arguments, TestContext.Current.CancellationToken);
 
@@ -311,7 +313,7 @@ public class SprintToolTests
     }
 
     [Fact]
-    public async Task AddTasksToSprint_ShouldFail_WhenThePendingSprintsProjectIsAlsoPending()
+    public async Task SetTaskSprint_ShouldFail_WhenThePendingSprintsProjectIsAlsoPending()
     {
         GivenProjects([]);
         GivenTask(CreateTask(1, ProjectId));
@@ -322,7 +324,7 @@ public class SprintToolTests
 
         var projectRef = ChangeSet.Changes.Last().RefKey;
         var sprintRef = await ProposeSprint($$"""{"name":"Sprint 5","projectRef":"{{projectRef}}","startDate":"2026-07-15","endDate":"2026-07-28"}""");
-        var tool = new AddTasksToSprintTool(Mediator, ChangeSet);
+        var tool = new SetTaskSprintTool(Mediator, ChangeSet);
         var arguments = Arguments($$"""{"sprintRef":"{{sprintRef}}","taskIds":[1]}""");
         var result = await tool.Execute(arguments, TestContext.Current.CancellationToken);
 
@@ -332,11 +334,11 @@ public class SprintToolTests
     }
 
     [Fact]
-    public async Task AddTasksToSprint_ShouldFail_WhenTheSprintRefIsUnknown()
+    public async Task SetTaskSprint_ShouldFail_WhenTheSprintRefIsUnknown()
     {
         GivenTask(CreateTask(1, ProjectId));
 
-        var tool = new AddTasksToSprintTool(Mediator, ChangeSet);
+        var tool = new SetTaskSprintTool(Mediator, ChangeSet);
         var result = await tool.Execute(Arguments("""{"sprintRef":"ref:9","taskIds":[1]}"""), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeTrue();
@@ -345,14 +347,14 @@ public class SprintToolTests
     }
 
     [Fact]
-    public async Task MoveTaskToSprint_ShouldProposeTheMove_ForASprintPendingInTheSameChangeSet()
+    public async Task SetTaskSprint_ShouldProposeTheMove_ForASprintPendingInTheSameChangeSet()
     {
         GivenProjects([CreateProject()]);
         GivenTask(CreateTask(1, ProjectId));
 
         var sprintRef = await ProposeSprint($$"""{"name":"Sprint 5","projectId":{{ProjectId}},"startDate":"2026-07-15","endDate":"2026-07-28"}""");
-        var tool = new MoveTaskToSprintTool(Mediator, ChangeSet);
-        var arguments = Arguments($$"""{"taskId":1,"sprintRef":"{{sprintRef}}"}""");
+        var tool = new SetTaskSprintTool(Mediator, ChangeSet);
+        var arguments = Arguments($$"""{"taskIds":[1],"sprintRef":"{{sprintRef}}"}""");
         var result = await tool.Execute(arguments, TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeFalse();
@@ -364,7 +366,7 @@ public class SprintToolTests
     }
 
     [Fact]
-    public async Task MoveTaskToSprint_ShouldProposeTheMove_ForATaskPendingInTheSameChangeSet()
+    public async Task SetTaskSprint_ShouldProposeTheMove_ForATaskPendingInTheSameChangeSet()
     {
         GivenSprint(CreateSprint());
         GivenProjects([CreateProject()]);
@@ -375,8 +377,8 @@ public class SprintToolTests
         await createTask.Execute(taskArguments, TestContext.Current.CancellationToken);
 
         var taskRef = ChangeSet.Changes.Last().RefKey;
-        var tool = new MoveTaskToSprintTool(Mediator, ChangeSet);
-        var arguments = Arguments($$"""{"taskRef":"{{taskRef}}","sprintId":{{SprintId}}}""");
+        var tool = new SetTaskSprintTool(Mediator, ChangeSet);
+        var arguments = Arguments($$"""{"taskRefs":["{{taskRef}}"],"sprintId":{{SprintId}}}""");
         var result = await tool.Execute(arguments, TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeFalse();
@@ -389,16 +391,128 @@ public class SprintToolTests
     }
 
     [Fact]
-    public async Task MoveTaskToSprint_ShouldFail_WhenNeitherATaskIdNorARefIsGiven()
+    public async Task SetTaskSprint_ShouldFail_WhenNeitherATaskIdNorARefIsGiven()
     {
         GivenSprint(CreateSprint());
 
-        var tool = new MoveTaskToSprintTool(Mediator, ChangeSet);
+        var tool = new SetTaskSprintTool(Mediator, ChangeSet);
         var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}}}"""), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeTrue();
         result.Content.Should().Contain("taskRef");
         ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task SprintTransition_Start_ShouldRecordTheChangeUnderItsOwnName()
+    {
+        GivenSprint(CreateSprint());
+        GivenActiveSprints([]);
+
+        var tool = new SprintTransitionTool(Mediator, ChangeSet);
+
+        await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}},"action":"start"}"""), TestContext.Current.CancellationToken);
+
+        ChangeSet.Changes.Single().ToolName.Should().Be(SprintTransitionTool.StartChange);
+    }
+
+    [Fact]
+    public async Task SprintTransition_ShouldFail_WhenTheActionIsUnknown()
+    {
+        GivenSprint(CreateSprint());
+
+        var tool = new SprintTransitionTool(Mediator, ChangeSet);
+        var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}},"action":"archive"}"""), TestContext.Current.CancellationToken);
+
+        result.IsError.Should().BeTrue();
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void SprintTransition_ShouldDemandDeletePermission_OnlyForDeleting()
+    {
+        var tool = new SprintTransitionTool(Mediator, ChangeSet);
+        var payload = Arguments($$"""{"sprintId":{{SprintId}}}""");
+
+        tool.GetRequiredPermissions(Arguments("""{"action":"delete"}""")).Should().Equal(NetptunePermissions.Sprints.Delete);
+        tool.GetRequiredPermissions(Arguments("""{"action":"start"}""")).Should().Equal(NetptunePermissions.Sprints.Update);
+        tool.GetChangePermissions(SprintTransitionTool.DeleteChange, payload).Should().Equal(NetptunePermissions.Sprints.Delete);
+        tool.GetChangePermissions(SprintTransitionTool.CancelChange, payload).Should().Equal(NetptunePermissions.Sprints.Update);
+    }
+
+    [Fact]
+    public void SprintTransition_ShouldBeAvailable_ToAMemberWhoCanOnlyDelete()
+    {
+        var tool = new SprintTransitionTool(Mediator, ChangeSet);
+        var deleteOnly = new HashSet<string> { NetptunePermissions.Sprints.Read, NetptunePermissions.Sprints.Delete };
+        var readOnly = new HashSet<string> { NetptunePermissions.Sprints.Read };
+
+        tool.IsAvailable(deleteOnly).Should().BeTrue();
+        tool.IsAvailable(readOnly).Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task SetTaskSprint_ShouldProposeTakingTasksOutOfTheirSprint_WhenBacklogIsSet()
+    {
+        GivenTask(CreateTask(1, ProjectId, SprintId));
+        GivenTask(CreateTask(2, ProjectId, SprintId));
+
+        var tool = new SetTaskSprintTool(Mediator, ChangeSet);
+        var result = await tool.Execute(Arguments("""{"taskIds":[1,2],"backlog":true}"""), TestContext.Current.CancellationToken);
+
+        result.IsError.Should().BeFalse();
+        ChangeSet.Changes.Should().HaveCount(2);
+        ChangeSet.Changes.Should().OnlyContain(change => change.ToolName == SetTaskSprintTool.RemoveChange);
+    }
+
+    [Fact]
+    public async Task SetTaskSprint_ShouldFail_WhenATaskToTakeOutIsNotInASprint()
+    {
+        GivenTask(CreateTask(1, ProjectId, SprintId));
+        GivenTask(CreateTask(2, ProjectId));
+
+        var tool = new SetTaskSprintTool(Mediator, ChangeSet);
+        var result = await tool.Execute(Arguments("""{"taskIds":[1,2],"backlog":true}"""), TestContext.Current.CancellationToken);
+
+        result.IsError.Should().BeTrue();
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task SetTaskSprint_ShouldFail_WhenNeitherASprintNorBacklogIsGiven()
+    {
+        GivenTask(CreateTask(1, ProjectId, SprintId));
+
+        var tool = new SetTaskSprintTool(Mediator, ChangeSet);
+        var result = await tool.Execute(Arguments("""{"taskIds":[1]}"""), TestContext.Current.CancellationToken);
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("backlog");
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task SetTaskSprint_ShouldProposeOneAdditionForSeveralTasks_AndAMoveForEachPendingTask()
+    {
+        GivenSprint(CreateSprint());
+        GivenProjects([CreateProject()]);
+        GivenTask(CreateTask(1, ProjectId));
+        GivenTask(CreateTask(2, ProjectId));
+
+        var createTask = new CreateTaskTool(Mediator, ChangeSet);
+
+        await createTask.Execute(Arguments($$"""{"name":"Wire up the loader","projectId":{{ProjectId}}}"""), TestContext.Current.CancellationToken);
+
+        var taskRef = ChangeSet.Changes.Last().RefKey;
+        var tool = new SetTaskSprintTool(Mediator, ChangeSet);
+        var arguments = Arguments($$"""{"taskIds":[1,2],"taskRefs":["{{taskRef}}"],"sprintId":{{SprintId}}}""");
+        var result = await tool.Execute(arguments, TestContext.Current.CancellationToken);
+
+        result.IsError.Should().BeFalse();
+
+        var proposed = ChangeSet.Changes.Skip(1).Select(change => change.ToolName);
+
+        proposed.Should().Equal(SetTaskSprintTool.MoveChange, SetTaskSprintTool.AddChange);
     }
 
     private async Task<string> ProposeSprint(string json)

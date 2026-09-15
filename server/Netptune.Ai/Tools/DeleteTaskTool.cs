@@ -25,8 +25,7 @@ public sealed class DeleteTaskTool : IAiTool
     public string Description =>
         "Propose deleting a task — for duplicates, mistakes and abandoned work. "
         + "The task is archived rather than erased, so it can be restored afterwards. "
-        + "Only tasks can be deleted this way; projects and boards cannot. "
-        + "Nothing is deleted until the user reviews and applies the change.";
+        + "Only tasks can be deleted this way; projects and boards cannot.";
 
     public AiToolKind Kind => AiToolKind.Write;
 

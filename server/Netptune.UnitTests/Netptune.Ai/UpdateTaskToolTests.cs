@@ -6,9 +6,12 @@ using Mediator;
 
 using Netptune.Ai.Execution;
 using Netptune.Ai.Tools;
+using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.ProjectTasks;
+using Netptune.Core.ViewModels.Tags;
+using Netptune.Handlers.Tags.Queries;
 using Netptune.Handlers.Tasks.Queries;
 
 using NSubstitute;
@@ -161,6 +164,123 @@ public class UpdateTaskToolTests
         field.Name.Should().Be("description");
         field.Before.Should().Be("## Steps");
         field.After.Should().Be("## Steps\n\nAnd a line.");
+    }
+
+    [Fact]
+    public async Task Execute_ShouldProposeFieldsAndTagsAsSeparateChanges()
+    {
+        GivenTask(CreateTask());
+        GivenTags("bug");
+
+        var result = await Execute($$"""{"taskId":{{TaskId}},"priority":"High","tags":["bug"]}""");
+
+        result.IsError.Should().BeFalse();
+        ChangeSet.Changes.Select(change => change.ToolName).Should().Equal("propose_update_task", "propose_set_task_tags");
+
+        var fieldPayload = ChangeSet.Changes[0].Payload.RootElement;
+
+        fieldPayload.TryGetProperty("tags", out _).Should().BeFalse();
+        fieldPayload.GetProperty("priority").GetString().Should().Be("High");
+    }
+
+    [Fact]
+    public async Task Execute_ShouldProposeNothing_WhenAnyPartFails()
+    {
+        GivenTask(CreateTask());
+        GivenTags("bug");
+
+        var result = await Execute($$"""{"taskId":{{TaskId}},"priority":"High","tags":["unknown"]}""");
+
+        result.IsError.Should().BeTrue();
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Execute_ShouldFail_WhenTheTagsAreAlreadyOnTheTask()
+    {
+        GivenTask(CreateTask() with { Tags = ["bug"] });
+        GivenTags("bug");
+
+        var result = await Execute($$"""{"taskId":{{TaskId}},"tags":["Bug"]}""");
+
+        result.IsError.Should().BeTrue();
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Execute_ShouldTagATaskPendingInTheSameChangeSet()
+    {
+        GivenTags("bug");
+
+        var taskRef = ProposePendingTask();
+        var result = await Execute($$"""{"taskRef":"{{taskRef}}","tags":["bug"]}""");
+
+        result.IsError.Should().BeFalse();
+
+        var change = ChangeSet.Changes.Last();
+
+        change.ToolName.Should().Be("propose_set_task_tags");
+        change.Payload.RootElement.GetProperty("taskRef").GetString().Should().Be(taskRef);
+    }
+
+    [Fact]
+    public async Task Execute_ShouldFail_WhenATaskPendingInTheSameChangeSetIsGivenMoreThanTags()
+    {
+        var taskRef = ProposePendingTask();
+        var result = await Execute($$"""{"taskRef":"{{taskRef}}","priority":"High"}""");
+
+        result.IsError.Should().BeTrue();
+        ChangeSet.Changes.Should().ContainSingle();
+    }
+
+    [Fact]
+    public void GetRequiredPermissions_ShouldDemandOnlyWhatTheArgumentsChange()
+    {
+        var tool = new UpdateTaskTool(Mediator, ChangeSet);
+        var tagsOnly = JsonDocument.Parse("""{"taskId":1,"tags":["bug"]}""").RootElement;
+        var priorityAndAssignees = JsonDocument.Parse("""{"taskId":1,"priority":"High","assigneeIds":[]}""").RootElement;
+
+        tool.GetRequiredPermissions(tagsOnly).Should().BeEquivalentTo([NetptunePermissions.Tags.Assign]);
+        tool.GetRequiredPermissions(priorityAndAssignees)
+            .Should()
+            .BeEquivalentTo([NetptunePermissions.Tasks.Update, NetptunePermissions.Tasks.Reassign]);
+    }
+
+    [Fact]
+    public void IsAvailable_ShouldOfferTheTool_ToAMemberWhoCanOnlyTag()
+    {
+        var tool = new UpdateTaskTool(Mediator, ChangeSet);
+        var tagOnly = new HashSet<string> { NetptunePermissions.Tasks.Read, NetptunePermissions.Tags.Assign };
+        var readOnly = new HashSet<string> { NetptunePermissions.Tasks.Read };
+
+        tool.IsAvailable(tagOnly).Should().BeTrue();
+        tool.IsAvailable(readOnly).Should().BeFalse();
+    }
+
+    private string ProposePendingTask()
+    {
+        var refKey = ChangeSet.CreateRefKey();
+
+        ChangeSet.Add(new AiChangeDraft
+        {
+            ToolName = "propose_create_task",
+            EntityType = "task",
+            RefKey = refKey,
+            Summary = "Create task “Wire up the loader”",
+            Fields = [new AiChangeField { Name = "name", After = "Wire up the loader" }],
+            Payload = JsonDocument.Parse("""{"name":"Wire up the loader","projectId":3}"""),
+        });
+
+        return refKey;
+    }
+
+    private void GivenTags(params string[] names)
+    {
+        var tags = names.Select(name => new TagViewModel { Name = name }).ToList();
+
+        Mediator
+            .Send(Arg.Any<GetTagsForWorkspaceQuery>(), Arg.Any<CancellationToken>())
+            .Returns(tags);
     }
 
     private async Task<AiToolExecution> Execute(string arguments)

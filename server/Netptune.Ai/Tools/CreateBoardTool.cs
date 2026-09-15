@@ -23,7 +23,7 @@ public sealed class CreateBoardTool : IAiTool
     public string Name => "propose_create_board";
 
     public string Description =>
-        "Propose creating a board in a project. The board is not created until the user reviews and applies the change.";
+        "Propose creating a board in a project.";
 
     public AiToolKind Kind => AiToolKind.Write;
 

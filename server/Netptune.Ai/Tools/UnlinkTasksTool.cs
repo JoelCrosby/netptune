@@ -23,8 +23,8 @@ public sealed class UnlinkTasksTool : IAiTool
     public string Name => "propose_unlink_tasks";
 
     public string Description =>
-        "Propose removing a relation between two tasks. Read the relation id from list_task_relations first. "
-        + "The link is not removed until the user reviews and applies the change.";
+        "Propose removing a relation between two tasks. "
+        + "Read the relation id from get_task with include relations first.";
 
     public AiToolKind Kind => AiToolKind.Write;
 
@@ -35,7 +35,7 @@ public sealed class UnlinkTasksTool : IAiTool
         """
         {
           "systemId": { "type": "string", "description": "The task's system id, for example NPT-42." },
-          "relationId": { "type": "integer", "description": "The relation id, from list_task_relations on that task." }
+          "relationId": { "type": "integer", "description": "The relation id, from get_task with include relations." }
         }
         """,
         "systemId",

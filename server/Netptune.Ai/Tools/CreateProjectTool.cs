@@ -23,7 +23,7 @@ public sealed class CreateProjectTool : IAiTool
     public string Name => "propose_create_project";
 
     public string Description =>
-        "Propose creating a project. The project is not created until the user reviews and applies the change.";
+        "Propose creating a project.";
 
     public AiToolKind Kind => AiToolKind.Write;
 

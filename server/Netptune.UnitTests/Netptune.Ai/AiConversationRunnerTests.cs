@@ -130,6 +130,29 @@ public class AiConversationRunnerTests
     }
 
     [Fact]
+    public async Task Run_ShouldRefuseACall_WhenItsArgumentsNeedAPermissionThatIsNotHeld()
+    {
+        var tool = new StubTool("allowed_tool", NetptunePermissions.Tasks.Read)
+        {
+            CallPermissions = new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Comments.Read },
+        };
+
+        var runner = CreateRunner([tool]);
+
+        Provider.CallToolOnce = "allowed_tool";
+
+        var context = CreateContext(NetptunePermissions.Tasks.Read);
+
+        await Drain(runner, context);
+
+        var invocation = context.Invocations.Single();
+
+        invocation.IsError.Should().BeTrue();
+        invocation.Result.Should().Contain(NetptunePermissions.Comments.Read);
+        tool.WasExecuted.Should().BeFalse();
+    }
+
+    [Fact]
     public async Task Run_ShouldAskTheModelToProposeAgain_WhenItClaimsAProposalItNeverMade()
     {
         var tool = new StubTool("propose_change", NetptunePermissions.Tasks.Create)
@@ -412,8 +435,19 @@ public class AiConversationRunnerTests
 
         public string Result { get; set; } = "ok";
 
+        public IReadOnlySet<string>? CallPermissions { get; set; }
+
+        public bool WasExecuted { get; private set; }
+
+        public IReadOnlySet<string> GetRequiredPermissions(JsonElement arguments)
+        {
+            return CallPermissions ?? RequiredPermissions;
+        }
+
         public Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
         {
+            WasExecuted = true;
+
             return Task.FromResult(AiToolExecution.Success(Result));
         }
     }

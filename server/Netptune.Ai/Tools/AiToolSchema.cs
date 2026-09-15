@@ -137,6 +137,41 @@ public static class AiToolSchema
         return isBoolean ? value.GetBoolean() : null;
     }
 
+    public static List<int> GetIntArray(JsonElement arguments, string name)
+    {
+        var items = GetArray(arguments, name);
+
+        return items
+            .Where(item => item.ValueKind == JsonValueKind.Number && item.TryGetInt32(out _))
+            .Select(item => item.GetInt32())
+            .ToList();
+    }
+
+    public static List<string> GetStringArray(JsonElement arguments, string name)
+    {
+        var items = GetArray(arguments, name);
+
+        return items
+            .Where(item => item.ValueKind == JsonValueKind.String)
+            .Select(item => item.GetString()!.Trim())
+            .Where(item => item.Length > 0)
+            .ToList();
+    }
+
+    private static List<JsonElement> GetArray(JsonElement arguments, string name)
+    {
+        var isObject = arguments.ValueKind == JsonValueKind.Object;
+
+        if (!isObject)
+        {
+            return [];
+        }
+
+        var hasArray = arguments.TryGetProperty(name, out var value) && value.ValueKind == JsonValueKind.Array;
+
+        return hasArray ? value.EnumerateArray().ToList() : [];
+    }
+
     public static void AddOptionalField(List<AiChangeField> fields, string name, string? value)
     {
         var hasValue = !string.IsNullOrWhiteSpace(value);

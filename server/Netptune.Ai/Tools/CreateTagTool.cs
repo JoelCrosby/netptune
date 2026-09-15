@@ -26,8 +26,7 @@ public sealed class CreateTagTool : IAiTool
 
     public string Description =>
         "Propose adding a tag to the workspace vocabulary, for a theme no existing tag covers. "
-        + "Once proposed, propose_set_task_tags may use the new tag in the same change set. "
-        + "The tag is not created until the user reviews and applies the change.";
+        + "Once proposed, propose_create_task and propose_update_task may use it in the same change set.";
 
     public AiToolKind Kind => AiToolKind.Write;
 
