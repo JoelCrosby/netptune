@@ -4,6 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { AiCredentialAvailability } from '@core/models/ai-credential';
 import { AiModelOption } from '@core/models/ai-model';
 import { ClientResponse } from '@core/models/client-response';
+import { Page } from '@core/models/pagination';
 import {
   AiChangeSet,
   AiConversation,
@@ -54,12 +55,18 @@ export class AiApiService {
     return availability ?? null;
   }
 
-  async listConversations(): Promise<AiConversation[]> {
-    const conversations = await firstValueFrom(
-      this.http.get<AiConversation[]>('api/ai/conversations')
+  async listConversations(
+    page: number,
+    pageSize: number
+  ): Promise<Page<AiConversation> | null> {
+    const response = await firstValueFrom(
+      this.http.get<ClientResponse<Page<AiConversation>>>(
+        'api/ai/conversations',
+        { params: { page, pageSize } }
+      )
     );
 
-    return conversations ?? [];
+    return response?.payload ?? null;
   }
 
   async readConversation(

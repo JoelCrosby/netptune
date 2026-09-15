@@ -132,7 +132,7 @@
     </unit>
     <unit id="3563415301877713192">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:107,112</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:109,114</note>
         <note category="description">Shown when older messages were left out of what the assistant can see</note>
       </notes>
       <segment>
@@ -834,7 +834,7 @@
     </unit>
     <unit id="8821114980467455667">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:27,30</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:29,32</note>
         <note category="description">Counts tokens a conversation has cost</note>
       </notes>
       <segment>
@@ -1564,7 +1564,7 @@
     </unit>
     <unit id="2159130950882492111">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:287</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:308</note>
         <note category="location">src/app/core/services/auth-commands.service.ts:197</note>
         <note category="location">src/app/core/services/board-commands.service.ts:65</note>
         <note category="location">src/app/core/services/board-group-commands.service.ts:310</note>
@@ -1798,7 +1798,7 @@
     </unit>
     <unit id="7022070615528435141">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:286</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:307</note>
         <note category="location">src/app/core/services/board-commands.service.ts:64</note>
         <note category="location">src/app/core/services/board-group-commands.service.ts:309</note>
         <note category="location">src/app/core/services/notification-commands.service.ts:74</note>
@@ -1813,8 +1813,9 @@
         <note category="location">src/app/features/project-tasks/components/task-list/task-list-selection-actions.component.ts:32,34</note>
         <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:167</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:249</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:179</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:321</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:183</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:317</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:154</note>
         <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:141</note>
         <note category="location">src/app/features/settings/shared/entity-detail.ts:31</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:210</note>
@@ -1987,7 +1988,7 @@
     </unit>
     <unit id="8640677495548743141">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:285</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:875</note>
         <note category="description">Asks the user to confirm deleting one of their assistant conversations. TITLE is the conversation title</note>
       </notes>
       <segment>
@@ -2716,6 +2717,15 @@
         <source>No backlog tasks match these filters.</source>
       </segment>
     </unit>
+    <unit id="955080669037591255">
+      <notes>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:867</note>
+        <note category="description">Asks the user to confirm deleting several of their assistant conversations</note>
+      </notes>
+      <segment>
+        <source>Their messages and any changes they have not applied yet will be gone.</source>
+      </segment>
+    </unit>
     <unit id="960978123005616777">
       <notes>
         <note category="location">src/app/features/workspaces/components/workspace-list-item.component.ts:249</note>
@@ -3166,6 +3176,7 @@
       <notes>
         <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:110,112</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-activity-feed.component.ts:80,83</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:58,64</note>
         <note category="description">Button that loads the next page of activity</note>
       </notes>
       <segment>
@@ -4885,7 +4896,8 @@
     </unit>
     <unit id="2578732368187466916">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:231</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:235</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:193</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:132,136</note>
         <note category="description">Column heading for what a conversation cost</note>
       </notes>
@@ -6107,7 +6119,7 @@
     </unit>
     <unit id="7629072322253412501">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:44,49</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:46,51</note>
         <note category="description">Empty state for stored conversations</note>
       </notes>
       <segment>
@@ -6875,7 +6887,7 @@
     </unit>
     <unit id="3160376611740224455">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:321</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:342</note>
         <note category="description">Seeds the assistant composer with a question about a sprint</note>
       </notes>
       <segment>
@@ -7005,7 +7017,8 @@
     </unit>
     <unit id="6452372740127749380">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:211</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:215</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:173</note>
         <note category="description">Column heading for the number of messages in a conversation</note>
       </notes>
       <segment>
@@ -7189,7 +7202,7 @@
     </unit>
     <unit id="4101852533995361725">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:25,27</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:27,29</note>
         <note category="description">Counts messages in a stored conversation</note>
       </notes>
       <segment>
@@ -7310,8 +7323,8 @@
     </unit>
     <unit id="7579940623714391431">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:329</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:37,39</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:325</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:39,41</note>
         <note category="description">Title of the dialog that deletes one assistant conversation</note>
       </notes>
       <segment>
@@ -8686,7 +8699,7 @@
     </unit>
     <unit id="353682188682946421">
       <notes>
-        <note category="location">src/app/core/services/ai-api.service.ts:34</note>
+        <note category="location">src/app/core/services/ai-api.service.ts:35</note>
         <note category="description">Shown when an edit to a proposed change is refused</note>
       </notes>
       <segment>
@@ -8951,7 +8964,7 @@
     </unit>
     <unit id="5554263124496870226">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:339</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:335</note>
         <note category="description">Title of the dialog that deletes several assistant conversations. COUNT is how many</note>
       </notes>
       <segment>
@@ -9183,7 +9196,8 @@
     </unit>
     <unit id="4548722462586549001">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:221</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:225</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:183</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:130,131</note>
         <note category="description">Column heading for the tokens a conversation used</note>
       </notes>
@@ -9202,7 +9216,8 @@
     </unit>
     <unit id="2107380426080326188">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:61,63</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:65,67</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:49,51</note>
         <note category="description">Heading of the assistant conversation list</note>
       </notes>
       <segment>
@@ -9809,7 +9824,7 @@
     </unit>
     <unit id="6297950127540572260">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:202</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:206</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:126,127</note>
         <note category="description">Column heading for the member who held a conversation</note>
       </notes>
@@ -9980,7 +9995,8 @@
         <note category="location">src/app/features/notifications/components/notifications-filters/notifications-filters.component.ts:60,63</note>
         <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:40,43</note>
         <note category="location">src/app/features/project-tasks/components/task-list/task-list-selection-actions.component.ts:20,23</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:74,77</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:78,81</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:62,65</note>
         <note category="description">How many watched fields are selected. COUNT is that number</note>
       </notes>
       <segment>
@@ -10172,7 +10188,7 @@
     </unit>
     <unit id="6189233648220583946">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:504</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:525</note>
         <note category="description">Shown when the assistant request fails</note>
       </notes>
       <segment>
@@ -10719,7 +10735,7 @@
     </unit>
     <unit id="3714581278731395601">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:310</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversation-messages.ts:8</note>
         <note category="description">Confirmation shown after assistant conversations are deleted. COUNT is how many</note>
       </notes>
       <segment>
@@ -10935,7 +10951,7 @@
     </unit>
     <unit id="7151632936989469818">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:249</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:251</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:48,50</note>
         <note category="description">Header of a conversation that has not started yet</note>
       </notes>
@@ -11333,6 +11349,7 @@
     </unit>
     <unit id="5306473977542913614">
       <notes>
+        <note category="location">src/app/features/settings/views/personal-assistant-settings-view/personal-assistant-settings-view.component.ts:57,59</note>
         <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:109,112</note>
         <note category="description">Heading of the assistant activity group</note>
       </notes>
@@ -11379,7 +11396,8 @@
     </unit>
     <unit id="2806584324064503371">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:99,101</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:103,105</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:90,93</note>
         <note category="description">Shown when the assistant conversation list fails to load</note>
       </notes>
       <segment>
@@ -13073,7 +13091,7 @@
     </unit>
     <unit id="3132998863898047908">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:315</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:336</note>
         <note category="description">Seeds the assistant composer with a question about a task</note>
       </notes>
       <segment>
@@ -13312,7 +13330,8 @@
     </unit>
     <unit id="6909153285279943756">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:103,106</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:107,110</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:91,95</note>
         <note category="description">Plural noun for assistant conversations, used in the row summary</note>
       </notes>
       <segment>
@@ -13849,7 +13868,7 @@
     </unit>
     <unit id="7868133837803962595">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:303</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversation-messages.ts:1</note>
         <note category="description">Error shown after an action fails</note>
       </notes>
       <segment>
@@ -14456,8 +14475,8 @@
     </unit>
     <unit id="3154294923374510663">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:621</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:812</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:642</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:833</note>
         <note category="description">Shown when the assistant reports a failure</note>
       </notes>
       <segment>
@@ -14728,7 +14747,8 @@
     <unit id="6660925946511264619">
       <notes>
         <note category="location">src/app/features/notifications/components/notifications-filters/notifications-filters.component.ts:82,85</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:87,91</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:91,95</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:75,79</note>
         <note category="description">Button that deletes the selected notifications</note>
       </notes>
       <segment>
@@ -15309,6 +15329,15 @@
         <source>Access &amp; privacy</source>
       </segment>
     </unit>
+    <unit id="3042181511233640121">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:120,122</note>
+        <note category="description">Heading when the signed-in user has no assistant conversations</note>
+      </notes>
+      <segment>
+        <source>You have no conversations</source>
+      </segment>
+    </unit>
     <unit id="3046563981885898808">
       <notes>
         <note category="location">src/app/features/project-tasks/components/task-list/task-list-flags.component.ts:19,24</note>
@@ -15543,7 +15572,7 @@
     </unit>
     <unit id="4439392167302208491">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:340</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:336</note>
         <note category="description">Warns that deleting members&apos; assistant conversations removes them for those members too. OWNERS lists the members who held them</note>
       </notes>
       <segment>
@@ -16233,7 +16262,8 @@
     </unit>
     <unit id="4717491147966397069">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:194</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:198</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:165</note>
         <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:82,84</note>
         <note category="description">Column heading for an assistant conversation</note>
       </notes>
@@ -17098,7 +17128,7 @@
     </unit>
     <unit id="8246436377858718644">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:284</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:874</note>
         <note category="description">Title of the confirmation dialog for deleting an assistant conversation</note>
       </notes>
       <segment>
@@ -17232,6 +17262,15 @@
         <source>Global</source>
       </segment>
     </unit>
+    <unit id="3437949281645193309">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:125,127</note>
+        <note category="description">Explains why the signed-in user&apos;s assistant conversation list is empty</note>
+      </notes>
+      <segment>
+        <source>Conversations appear here once you use the assistant</source>
+      </segment>
+    </unit>
     <unit id="3439615715079709827">
       <notes>
         <note category="location">src/app/features/settings/components/entity-usage-panel.component.ts:29,31</note>
@@ -17328,7 +17367,7 @@
         <note category="location">src/app/features/assistant/assistant.routes.ts:12</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:87</note>
         <note category="location">src/app/features/settings/settings.routes.ts:144</note>
-        <note category="location">src/app/features/settings/views/personal-assistant-settings-view/personal-assistant-settings-view.component.ts:29,31</note>
+        <note category="location">src/app/features/settings/views/personal-assistant-settings-view/personal-assistant-settings-view.component.ts:31,33</note>
         <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:52,54</note>
         <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:42,45</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:357</note>
@@ -18043,7 +18082,7 @@
     </unit>
     <unit id="3108472352698480006">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:143,145</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:147,149</note>
         <note category="description">Heading when no assistant conversations exist</note>
       </notes>
       <segment>
@@ -18880,7 +18919,7 @@
     </unit>
     <unit id="8674937611142284741">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:65,68</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:69,72</note>
         <note category="description">Explains what an admin sees on the assistant conversations page</note>
       </notes>
       <segment>
@@ -19440,6 +19479,15 @@
       </notes>
       <segment>
         <source>Show places</source>
+      </segment>
+    </unit>
+    <unit id="2815307902323863621">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:53,56</note>
+        <note category="description">Explains the list of the signed-in user&apos;s own assistant conversations</note>
+      </notes>
+      <segment>
+        <source>Your conversations with the assistant in this workspace.</source>
       </segment>
     </unit>
     <unit id="2819197521571556241">
@@ -20292,7 +20340,7 @@
     </unit>
     <unit id="3259201493560941662">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:146,148</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:148,150</note>
         <note category="description">Accessible label for the button that scrolls to the newest message</note>
       </notes>
       <segment>
@@ -20605,7 +20653,7 @@
     </unit>
     <unit id="7605037935086101913">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:330</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:326</note>
         <note category="description">Warns that deleting a member&apos;s assistant conversation removes it for them too. TITLE is the conversation title, OWNER the member who held it</note>
       </notes>
       <segment>
@@ -20894,6 +20942,15 @@
       </notes>
       <segment>
         <source>Pinned</source>
+      </segment>
+    </unit>
+    <unit id="574980856658424744">
+      <notes>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:866</note>
+        <note category="description">Title of the confirmation dialog for deleting several assistant conversations. COUNT is how many</note>
+      </notes>
+      <segment>
+        <source>Delete <ph id="0" equiv="COUNT" disp="count"/> Conversations</source>
       </segment>
     </unit>
     <unit id="5547904534300795196">
@@ -22121,7 +22178,7 @@
     </unit>
     <unit id="6492831808763156510">
       <notes>
-        <note category="location">src/app/features/settings/views/personal-assistant-settings-view/personal-assistant-settings-view.component.ts:43,46</note>
+        <note category="location">src/app/features/settings/views/personal-assistant-settings-view/personal-assistant-settings-view.component.ts:45,48</note>
         <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:91,94</note>
         <note category="description">Heading of the assistant setup group</note>
       </notes>
@@ -22739,7 +22796,7 @@
     </unit>
     <unit id="3848213923616570190">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:307</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversation-messages.ts:5</note>
         <note category="description">Confirmation shown after an assistant conversation is deleted</note>
       </notes>
       <segment>
@@ -22977,7 +23034,8 @@
     </unit>
     <unit id="4582943253260659127">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:240</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:244</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:202</note>
         <note category="description">Column heading for when a conversation was last active</note>
       </notes>
       <segment>
@@ -23390,7 +23448,7 @@
     </unit>
     <unit id="1978378776147370036">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:147,148</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:151,152</note>
         <note category="description">Explains why the assistant conversation list is empty</note>
       </notes>
       <segment>

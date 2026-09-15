@@ -18,6 +18,10 @@ export interface Page<T> {
   totalPages: number;
 }
 
+export function hasNextPage<T>(page: Page<T> | null | undefined): boolean {
+  return !!page && page.page < page.totalPages;
+}
+
 export interface CursorQuery {
   take?: number;
   cursor?: string | null;

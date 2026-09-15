@@ -228,9 +228,12 @@ public static class AiEndpoints
         return result.ToResult();
     }
 
-    private static async Task<IResult> HandleGetConversations(IMediator mediator, CancellationToken cancellationToken)
+    private static async Task<IResult> HandleGetConversations(
+        IMediator mediator,
+        [AsParameters] PageRequest request,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetAiConversationsQuery(), cancellationToken);
+        var result = await mediator.Send(new GetAiConversationsQuery(request), cancellationToken);
 
         return Results.Ok(result);
     }

@@ -4,6 +4,7 @@ import { formatTokens } from '@core/util/ai-usage';
 import { LucideMessageSquare, LucideTrash } from '@lucide/angular';
 import { ActionCardComponent } from '@static/components/action-card/action-card.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
+import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 
 @Component({
   selector: 'app-ai-assistant-history',
@@ -13,6 +14,7 @@ import { IconButtonComponent } from '@static/components/button/icon-button.compo
     LucideTrash,
     ActionCardComponent,
     IconButtonComponent,
+    StrokedButtonComponent,
   ],
   template: `
     @for (conversation of conversations(); track conversation.id) {
@@ -44,13 +46,28 @@ import { IconButtonComponent } from '@static/components/button/icon-button.compo
         There are no earlier conversations.
       </p>
     }
+
+    @if (hasMore()) {
+      <button
+        app-stroked-button
+        type="button"
+        class="w-full"
+        (click)="loadMore.emit()">
+        <span
+          i18n="Button that loads more of the stored assistant conversations">
+          Load more
+        </span>
+      </button>
+    }
   `,
 })
 export class AiAssistantHistoryComponent {
   readonly conversations = input.required<AiConversation[]>();
+  readonly hasMore = input(false);
 
   readonly opened = output<string>();
   readonly deleted = output<string>();
+  readonly loadMore = output();
 
   protected tokenLabel(conversation: AiConversation): string {
     return formatTokens(conversation.usage);

@@ -1,16 +1,19 @@
 using Mediator;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Ai;
 
 namespace Netptune.Handlers.Ai.Queries;
 
-public sealed record GetAiConversationsQuery : IRequest<List<AiConversationViewModel>>;
+public sealed record GetAiConversationsQuery(PageRequest Request)
+    : IRequest<ClientResponse<PagedResponse<AiConversationViewModel>>>;
 
 public sealed class GetAiConversationsQueryHandler
-    : IRequestHandler<GetAiConversationsQuery, List<AiConversationViewModel>>
+    : IRequestHandler<GetAiConversationsQuery, ClientResponse<PagedResponse<AiConversationViewModel>>>
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
@@ -21,15 +24,15 @@ public sealed class GetAiConversationsQueryHandler
         Identity = identity;
     }
 
-    public async ValueTask<List<AiConversationViewModel>> Handle(
+    public async ValueTask<ClientResponse<PagedResponse<AiConversationViewModel>>> Handle(
         GetAiConversationsQuery query,
         CancellationToken cancellationToken)
     {
         var userId = Identity.GetCurrentUserId();
         var workspaceId = await Identity.GetWorkspaceId();
-        var conversations = await UnitOfWork.AiConversations.GetForUser(userId, workspaceId, cancellationToken);
+        var page = await UnitOfWork.AiConversations.GetPageForUser(userId, workspaceId, query.Request, cancellationToken);
 
-        return conversations;
+        return ClientResponse<PagedResponse<AiConversationViewModel>>.Success(page);
     }
 
     public static AiConversationViewModel ToViewModel(AiConversation conversation, IReadOnlyList<AiMessage> messages)

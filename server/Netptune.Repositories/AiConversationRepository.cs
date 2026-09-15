@@ -17,39 +17,52 @@ namespace Netptune.Repositories;
 public class AiConversationRepository(DataContext context, IDbConnectionFactory connectionFactory)
     : Repository<DataContext, AiConversation, Guid>(context, connectionFactory), IAiConversationRepository
 {
-    public async Task<List<AiConversationViewModel>> GetForUser(
+    public async Task<PagedResponse<AiConversationViewModel>> GetPageForUser(
         string userId,
         int workspaceId,
+        PageRequest request,
         CancellationToken cancellationToken = default)
     {
-        var conversations = await Entities
+        var query = Entities
             .AsNoTracking()
             .Where(conversation =>
                 conversation.UserId == userId &&
                 conversation.WorkspaceId == workspaceId &&
-                !conversation.IsDeleted)
-            .OrderByDescending(conversation => conversation.LastMessageAt)
-            .Select(conversation => new AiConversationViewModel
-            {
-                Id = conversation.Id,
-                Title = conversation.Title,
-                Provider = conversation.Provider,
-                Model = conversation.Model,
-                LastMessageAt = conversation.LastMessageAt,
-                MessageCount = conversation.MessageCount,
-                Usage = new AiTokenUsageViewModel
-                {
-                    InputTokens = conversation.Messages.Sum(message => message.InputTokens),
-                    OutputTokens = conversation.Messages.Sum(message => message.OutputTokens),
-                    CacheReadTokens = conversation.Messages.Sum(message => message.CacheReadTokens),
-                    CacheCreationTokens = conversation.Messages.Sum(message => message.CacheCreationTokens),
-                },
-            })
+                !conversation.IsDeleted);
+
+        var totalCount = await query.CountAsync(cancellationToken);
+        var pagination = request.GetPagination();
+
+        var conversations = await ProjectUserConversations(SortConversations(query, request))
+            .Skip(pagination.Skip)
+            .Take(pagination.PageSize)
             .ToListAsync(cancellationToken);
 
-        return conversations
+        var items = conversations
             .Select(conversation => conversation with { Usage = conversation.Usage.WithCost(conversation.Model) })
             .ToList();
+
+        return new PagedResponse<AiConversationViewModel>(items, pagination.Page, pagination.PageSize, totalCount);
+    }
+
+    private static IQueryable<AiConversationViewModel> ProjectUserConversations(IQueryable<AiConversation> query)
+    {
+        return query.Select(conversation => new AiConversationViewModel
+        {
+            Id = conversation.Id,
+            Title = conversation.Title,
+            Provider = conversation.Provider,
+            Model = conversation.Model,
+            LastMessageAt = conversation.LastMessageAt,
+            MessageCount = conversation.MessageCount,
+            Usage = new AiTokenUsageViewModel
+            {
+                InputTokens = conversation.Messages.Sum(message => message.InputTokens),
+                OutputTokens = conversation.Messages.Sum(message => message.OutputTokens),
+                CacheReadTokens = conversation.Messages.Sum(message => message.CacheReadTokens),
+                CacheCreationTokens = conversation.Messages.Sum(message => message.CacheCreationTokens),
+            },
+        });
     }
 
     public Task<AiConversation?> GetOwned(
@@ -197,7 +210,7 @@ public class AiConversationRepository(DataContext context, IDbConnectionFactory 
         var totalCount = await query.CountAsync(cancellationToken);
         var pagination = request.GetPagination();
 
-        var conversations = await ProjectWorkspaceConversations(SortWorkspaceConversations(query, request))
+        var conversations = await ProjectWorkspaceConversations(SortConversations(query, request))
             .Skip(pagination.Skip)
             .Take(pagination.PageSize)
             .ToListAsync(cancellationToken);
@@ -234,7 +247,7 @@ public class AiConversationRepository(DataContext context, IDbConnectionFactory 
 
     // Cost is not sortable because it is derived from the model price list after the
     // page has been read.
-    private static IQueryable<AiConversation> SortWorkspaceConversations(IQueryable<AiConversation> query, PageRequest request)
+    private static IQueryable<AiConversation> SortConversations(IQueryable<AiConversation> query, PageRequest request)
     {
         var isDescending = string.Equals(request.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
 

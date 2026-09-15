@@ -5,6 +5,7 @@ import {
   aiCredentialResource,
 } from '@core/resources/ai-credential.resource';
 import { AssistantConnectionsComponent } from '@settings/components/assistant/assistant-connections.component';
+import { AssistantOwnConversationsCardComponent } from '@settings/components/assistant/assistant-own-conversations-card.component';
 import { AssistantHeaderActionsComponent } from '@settings/components/assistant/assistant-header-actions.component';
 import { AssistantSectionHeadingComponent } from '@settings/components/assistant/assistant-section-heading.component';
 import { PageBodyComponent } from '@static/components/page-container/page-body.component';
@@ -16,6 +17,7 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
   imports: [
     AssistantConnectionsComponent,
     AssistantHeaderActionsComponent,
+    AssistantOwnConversationsCardComponent,
     AssistantSectionHeadingComponent,
     PageBodyComponent,
     PageContainerComponent,
@@ -47,6 +49,14 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
               [credentials]="credentials.value()"
               [availability]="availability.value()"
               (changed)="reloadConnections()" />
+          </div>
+
+          <div class="flex flex-col gap-4">
+            <app-assistant-section-heading
+              i18n-label="Heading of the assistant activity group"
+              label="Activity" />
+
+            <app-assistant-own-conversations-card />
           </div>
         </div>
       </app-page-body>

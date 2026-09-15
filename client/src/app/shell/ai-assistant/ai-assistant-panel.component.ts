@@ -92,6 +92,8 @@ import { AiAssistantUsageComponent } from './components/ai-assistant-usage.compo
             @if (assistant.showHistory()) {
               <app-ai-assistant-history
                 [conversations]="assistant.conversations()"
+                [hasMore]="assistant.hasMoreConversations()"
+                (loadMore)="loadMoreConversations()"
                 (opened)="openConversation($event)"
                 (deleted)="deleteConversation($event)" />
             } @else if (entries().length === 0) {
@@ -315,6 +317,10 @@ export class AiAssistantPanelComponent {
 
   protected openConversation(conversationId: string) {
     void this.assistant.openConversation(conversationId);
+  }
+
+  protected loadMoreConversations() {
+    void this.assistant.loadMoreConversations();
   }
 
   protected deleteConversation(conversationId: string) {

@@ -5,11 +5,14 @@ import {
   AiConversationDetail,
   AiMessageRole,
 } from '@core/models/ai-conversation';
+import { hasNextPage } from '@core/models/pagination';
 import { AiApiService } from '@core/services/ai-api.service';
 import { AiChangeSetService } from '@core/services/ai-change-set.service';
 import { AiEffortService } from '@core/services/ai-effort.service';
 import { AiModelCatalogService } from '@core/services/ai-model-catalog.service';
 import { AiTranscriptService } from '@core/services/ai-transcript.service';
+
+const HISTORY_PAGE_SIZE = 50;
 
 @Service()
 export class AiConversationService {
@@ -22,6 +25,7 @@ export class AiConversationService {
   readonly id = signal<string | null>(null);
   readonly title = signal<string | null>(null);
   readonly conversations = signal<AiConversation[]>([]);
+  readonly hasMoreConversations = signal(false);
   readonly showHistory = signal(false);
 
   readonly awaitingReplySince = signal<number | null>(null);
@@ -30,8 +34,30 @@ export class AiConversationService {
     return await this.api.readConversation(conversationId);
   }
 
+  private loadedPage = 0;
+
   async loadList() {
-    this.conversations.set(await this.api.listConversations());
+    const page = await this.api.listConversations(1, HISTORY_PAGE_SIZE);
+
+    this.loadedPage = 1;
+    this.conversations.set(page?.items ?? []);
+    this.hasMoreConversations.set(hasNextPage(page));
+  }
+
+  async loadMore() {
+    const nextPage = this.loadedPage + 1;
+    const page = await this.api.listConversations(nextPage, HISTORY_PAGE_SIZE);
+
+    if (!page) return;
+
+    this.loadedPage = nextPage;
+    this.conversations.update((loaded) => {
+      const loadedIds = new Set(loaded.map((item) => item.id));
+      const unseen = page.items.filter((item) => !loadedIds.has(item.id));
+
+      return [...loaded, ...unseen];
+    });
+    this.hasMoreConversations.set(hasNextPage(page));
   }
 
   async toggleHistory() {
@@ -108,7 +134,9 @@ export class AiConversationService {
   /** A chat from the workspace being left must not follow the user into the next one. */
   clear() {
     this.reset();
+    this.loadedPage = 0;
     this.conversations.set([]);
+    this.hasMoreConversations.set(false);
   }
 
   private reset() {

@@ -30,6 +30,10 @@ import {
   DatatableSort,
 } from '@static/components/datatable/datatable.types';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
+import {
+  buildConversationsDeletedMessage,
+  DELETE_CONVERSATIONS_FAILED,
+} from '@settings/components/assistant/assistant-conversation-messages';
 import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
 import { PanelComponent } from '@static/components/panel.component';
 import { PanelHeaderComponent } from '@static/components/panel-header.component';
@@ -283,14 +287,16 @@ export class AssistantConversationsCardComponent {
       )
       .subscribe({
         next: () => {
-          this.snackbar.open(buildDeletedMessage(ids.length));
+          this.snackbar.open(buildConversationsDeletedMessage(ids.length));
           this.table()?.clearSelection();
           this.selection.set([]);
           this.reloadVersion.bump();
           this.deleted.emit();
         },
         error: (error: unknown) => {
-          this.snackbar.error(getErrorMessage(error, DELETE_FAILED));
+          this.snackbar.error(
+            getErrorMessage(error, DELETE_CONVERSATIONS_FAILED)
+          );
         },
       });
   }
@@ -298,16 +304,6 @@ export class AssistantConversationsCardComponent {
   protected toDate(value: string): Date {
     return new Date(value);
   }
-}
-
-const DELETE_FAILED = $localize`:Error shown after an action fails:The conversation(s) could not be deleted. Please try again.`;
-
-function buildDeletedMessage(count: number): string {
-  if (count === 1) {
-    return $localize`:Confirmation shown after an assistant conversation is deleted:Conversation deleted`;
-  }
-
-  return $localize`:Confirmation shown after assistant conversations are deleted. COUNT is how many:${count}:COUNT: conversations deleted`;
 }
 
 function buildDeleteConfirmation(

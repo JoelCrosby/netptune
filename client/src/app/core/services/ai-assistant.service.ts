@@ -1,5 +1,6 @@
 import { Service, computed, effect, inject, signal } from '@angular/core';
 import {
+  AiConversation,
   AiConversationDetail,
   AiMessageRole,
   AiQuestion,
@@ -70,6 +71,7 @@ export class AiAssistantService {
   readonly conversationId = this.conversation.id;
   readonly conversationTitle = this.conversation.title;
   readonly conversations = this.conversation.conversations;
+  readonly hasMoreConversations = this.conversation.hasMoreConversations;
   readonly showHistory = this.conversation.showHistory;
 
   readonly changeSet = this.changeSets.changeSet;
@@ -234,6 +236,10 @@ export class AiAssistantService {
     await this.conversation.loadList();
   }
 
+  async loadMoreConversations() {
+    await this.conversation.loadMore();
+  }
+
   async openConversation(conversationId: string) {
     const detail = await this.conversation.read(conversationId);
 
@@ -245,44 +251,59 @@ export class AiAssistantService {
   }
 
   async deleteConversation(conversationId: string) {
-    const isConfirmed = await this.confirmDelete(conversationId);
-
-    if (!isConfirmed) {
-      return;
-    }
-
-    try {
-      await this.conversation.remove(conversationId);
-    } catch {
-      await this.conversation.loadList();
-
-      return;
-    }
-
-    this.drafts.discard(conversationId);
-
-    const isCurrent = this.conversationId() === conversationId;
-
-    if (isCurrent) {
-      // The server stops the turn, but its last events must not land in the fresh chat.
-      this.abandonTurn();
-      this.startNewConversation();
-    }
-
-    await this.conversation.loadList();
-  }
-
-  private async confirmDelete(conversationId: string) {
     const conversation = this.conversations().find((item) => {
       return item.id === conversationId;
     });
 
     const title = conversation?.title ?? '';
 
+    await this.deleteConversations([{ id: conversationId, title }]);
+  }
+
+  // Resolves with null when the dialog is dismissed, otherwise with the ids that were
+  // deleted, which is fewer than asked for when a request fails.
+  async deleteConversations(
+    conversations: readonly DeletableConversation[]
+  ): Promise<string[] | null> {
+    if (conversations.length === 0) return null;
+
+    const isConfirmed = await this.confirmDelete(conversations);
+
+    if (!isConfirmed) {
+      return null;
+    }
+
+    const conversationIds = conversations.map((item) => item.id);
+    const results = await Promise.allSettled(
+      conversationIds.map((id) => this.conversation.remove(id))
+    );
+    const deletedIds = conversationIds.filter((_, index) => {
+      return results[index].status === 'fulfilled';
+    });
+
+    for (const id of deletedIds) {
+      this.drafts.discard(id);
+    }
+
+    const currentId = this.conversationId();
+    const isCurrentDeleted =
+      currentId !== null && deletedIds.includes(currentId);
+
+    if (isCurrentDeleted) {
+      // The server stops the turn, but its last events must not land in the fresh chat.
+      this.abandonTurn();
+      this.startNewConversation();
+    }
+
+    await this.conversation.loadList();
+
+    return deletedIds;
+  }
+
+  private async confirmDelete(conversations: readonly DeletableConversation[]) {
     return await firstValueFrom(
       this.confirmation.open({
-        title: $localize`:Title of the confirmation dialog for deleting an assistant conversation:Delete Conversation`,
-        message: $localize`:Asks the user to confirm deleting one of their assistant conversations. TITLE is the conversation title:Delete "${title}:TITLE:"? Its messages and any changes it has not applied yet will be gone.`,
+        ...deleteConfirmationText(conversations),
         acceptLabel: $localize`:Confirms a destructive action:Delete`,
         cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
         color: 'warn',
@@ -831,4 +852,26 @@ export class AiAssistantService {
 
 function wait(duration: number) {
   return new Promise<void>((resolve) => setTimeout(resolve, duration));
+}
+
+type DeletableConversation = Pick<AiConversation, 'id' | 'title'>;
+
+function deleteConfirmationText(
+  conversations: readonly DeletableConversation[]
+) {
+  const count = conversations.length;
+
+  if (count > 1) {
+    return {
+      title: $localize`:Title of the confirmation dialog for deleting several assistant conversations. COUNT is how many:Delete ${count}:COUNT: Conversations`,
+      message: $localize`:Asks the user to confirm deleting several of their assistant conversations:Their messages and any changes they have not applied yet will be gone.`,
+    };
+  }
+
+  const title = conversations[0].title;
+
+  return {
+    title: $localize`:Title of the confirmation dialog for deleting an assistant conversation:Delete Conversation`,
+    message: $localize`:Asks the user to confirm deleting one of their assistant conversations. TITLE is the conversation title:Delete "${title}:TITLE:"? Its messages and any changes it has not applied yet will be gone.`,
+  };
 }

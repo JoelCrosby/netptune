@@ -229,6 +229,49 @@ public sealed class AiEndpointTests
         response.Payload.PageSize.Should().Be(25);
     }
 
+    [Theory]
+    [InlineData("title")]
+    [InlineData("messageCount")]
+    [InlineData("tokens")]
+    [InlineData("lastMessageAt")]
+    public async Task ConversationPage_ShouldPageAndSort(string sortBy)
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var url = $"api/ai/conversations?page=1&pageSize=25&sortBy={sortBy}&sortDirection=desc";
+        var response = await client.GetFromJsonAsync<ClientResponse<PagedResponse<AiConversationViewModel>>>(
+            url,
+            TestContext.Current.CancellationToken);
+
+        response!.Payload.Should().NotBeNull();
+        response.Payload!.Page.Should().Be(1);
+        response.Payload.PageSize.Should().Be(25);
+    }
+
+    [Fact]
+    public async Task ConversationPage_ShouldListOnlyTheCallersConversations()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var client = Fixture.CreateNetptuneClient();
+        var own = await SeedPendingChangeSet();
+        var others = await SeedPendingChangeSet(isOwnedByCaller: false);
+
+        try
+        {
+            var response = await client.GetFromJsonAsync<ClientResponse<PagedResponse<AiConversationViewModel>>>(
+                "api/ai/conversations?page=1&pageSize=100",
+                cancellationToken);
+            var ids = response!.Payload!.Items.Select(conversation => conversation.Id).ToList();
+
+            ids.Should().Contain(own.ConversationId);
+            ids.Should().NotContain(others.ConversationId);
+        }
+        finally
+        {
+            await RemoveSeed(own.ConversationId);
+            await RemoveSeed(others.ConversationId);
+        }
+    }
+
     [Fact]
     public async Task AdminConversations_ShouldReturnNotFound_WhenTheConversationDoesNotExist()
     {
@@ -236,15 +279,6 @@ public sealed class AiEndpointTests
         var response = await client.GetAsync($"api/ai/admin/conversations/{Guid.NewGuid()}");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-    }
-
-    [Fact]
-    public async Task Conversations_ShouldListWithoutError()
-    {
-        var client = Fixture.CreateNetptuneClient();
-        var conversations = await client.GetFromJsonAsync<List<AiConversationViewModel>>("api/ai/conversations");
-
-        conversations.Should().NotBeNull();
     }
 
     [Fact]
@@ -311,12 +345,12 @@ public sealed class AiEndpointTests
             var detail = await client.GetAsync(
                 $"api/ai/conversations/{seed.ConversationId}",
                 TestContext.Current.CancellationToken);
-            var conversations = await client.GetFromJsonAsync<List<AiConversationViewModel>>(
-                "api/ai/conversations",
+            var conversations = await client.GetFromJsonAsync<ClientResponse<PagedResponse<AiConversationViewModel>>>(
+                "api/ai/conversations?page=1&pageSize=100",
                 TestContext.Current.CancellationToken);
 
             detail.StatusCode.Should().Be(HttpStatusCode.NotFound);
-            conversations.Should().NotContain(conversation => conversation.Id == seed.ConversationId);
+            conversations!.Payload!.Items.Should().NotContain(conversation => conversation.Id == seed.ConversationId);
         }
         finally
         {
