@@ -4,7 +4,7 @@ import { cn } from './button/button.variants';
 
 export type ListRowTone = 'neutral' | 'primary';
 
-const listRowVariants = cva(
+export const listRowVariants = cva(
   'flex items-center gap-3 rounded-lg border px-3 py-2',
   {
     variants: {

@@ -1,19 +1,21 @@
 import { Component, computed, input, output, signal } from '@angular/core';
 import {
   brandingImageAccept,
+  brandingImageError,
   brandingImageMaxBytes,
-  isBrandingImageType,
 } from '@core/util/branding';
 import { formatBytes } from '@core/util/bytes';
 import { LucideImage, LucideTrash2, LucideUpload } from '@lucide/angular';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { FileDropDirective } from '@static/directives/file-drop.directive';
 
 export type ImageUploadShape = 'square' | 'circle' | 'wide';
 
 @Component({
   selector: 'app-image-upload',
   imports: [
+    FileDropDirective,
     LucideImage,
     LucideTrash2,
     LucideUpload,
@@ -26,11 +28,12 @@ export type ImageUploadShape = 'square' | 'circle' | 'wide';
       <div
         class="border-border bg-secondary-background relative shrink-0 overflow-hidden border"
         [class]="frameClass()"
-        [class.border-primary]="dragging()"
+        [class.border-primary]="drop.dragging()"
         [class.border-dashed]="!imageUrl()"
-        (dragover)="onDragOver($event)"
-        (dragleave)="dragging.set(false)"
-        (drop)="onDrop($event)">
+        appFileDrop
+        #drop="appFileDrop"
+        [fileDropDisabled]="isBusy()"
+        (filesDropped)="handleFile($event[0])">
         @if (imageUrl(); as url) {
           <img
             [src]="url"
@@ -124,7 +127,6 @@ export class ImageUploadComponent {
 
   protected readonly accept = brandingImageAccept;
   protected readonly maxBytesLabel = formatBytes(brandingImageMaxBytes);
-  protected readonly dragging = signal(false);
   protected readonly error = signal('');
 
   protected readonly isBusy = computed(() => {
@@ -142,24 +144,6 @@ export class ImageUploadComponent {
     }
   });
 
-  protected onDragOver(event: DragEvent) {
-    event.preventDefault();
-    this.dragging.set(!this.isBusy());
-  }
-
-  protected onDrop(event: DragEvent) {
-    event.preventDefault();
-    this.dragging.set(false);
-
-    if (this.isBusy()) return;
-
-    const file = event.dataTransfer?.files?.[0];
-
-    if (!file) return;
-
-    this.handleFile(file);
-  }
-
   protected onInput(event: Event) {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
@@ -171,26 +155,13 @@ export class ImageUploadComponent {
     this.handleFile(file);
   }
 
-  private handleFile(file: File) {
-    const isSupportedType = isBrandingImageType(file);
+  protected handleFile(file: File) {
+    const error = brandingImageError(file);
 
-    if (!isSupportedType) {
-      this.error.set(
-        $localize`:Validation error when a chosen file is not a supported image:Choose a PNG, JPEG, WebP, GIF or AVIF image.`
-      );
+    this.error.set(error);
 
-      return;
-    }
+    if (error) return;
 
-    if (file.size > brandingImageMaxBytes) {
-      this.error.set(
-        $localize`:Validation error when a chosen image is too large. SIZE is a formatted byte limit:The image must be smaller than ${this.maxBytesLabel}:SIZE:.`
-      );
-
-      return;
-    }
-
-    this.error.set('');
     this.fileSelected.emit(file);
   }
 }

@@ -814,6 +814,16 @@
         <target>Modifier les sprints</target>
       </segment>
     </unit>
+    <unit id="3148185478683979722">
+      <notes>
+        <note category="location">src/app/core/services/profile-commands.service.ts:86</note>
+        <note category="description">Shown when the user&apos;s email address has no Gravatar. EMAIL is the address</note>
+      </notes>
+      <segment state="translated">
+        <source>No Gravatar found for <ph id="0" equiv="EMAIL" disp="email"/></source>
+        <target>Aucun Gravatar trouvé pour <ph id="0" equiv="EMAIL" disp="email"/></target>
+      </segment>
+    </unit>
     <unit id="3148280808384999851">
       <notes>
         <note category="location">src/app/core/util/pin-scope.ts:67</note>
@@ -1763,7 +1773,6 @@
         <note category="location">src/app/features/calendar/dialogs/calendar-move-task-dialog.component.ts:61,64</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:799</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:821</note>
-        <note category="location">src/app/features/profile/components/select-profile-image-dialog/select-profile-image-dialog.component.ts:54,56</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:214,217</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:348</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:184,187</note>
@@ -2257,7 +2266,7 @@
     </unit>
     <unit id="7286578348594697265">
       <notes>
-        <note category="location">src/app/core/services/profile-commands.service.ts:46</note>
+        <note category="location">src/app/core/services/profile-commands.service.ts:49</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -2267,7 +2276,7 @@
     </unit>
     <unit id="6949755576948440615">
       <notes>
-        <note category="location">src/app/core/services/profile-commands.service.ts:80</note>
+        <note category="location">src/app/core/services/profile-commands.service.ts:126</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -2482,6 +2491,7 @@
     <unit id="6932865105766151309">
       <notes>
         <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:57,58</note>
+        <note category="location">src/app/features/profile/components/update-profile-image/update-profile-image.component.ts:103,107</note>
         <note category="description">Wizard step that uploads the file to import</note>
       </notes>
       <segment>
@@ -2904,6 +2914,16 @@
       <segment state="translated">
         <source>Leave</source>
         <target>Quitter</target>
+      </segment>
+    </unit>
+    <unit id="2274123682906240391">
+      <notes>
+        <note category="location">src/app/features/profile/components/update-profile-image/update-profile-image.component.ts:76,78</note>
+        <note category="description">Menu item that removes the profile picture</note>
+      </notes>
+      <segment state="translated">
+        <source> Remove picture </source>
+        <target> Supprimer la photo </target>
       </segment>
     </unit>
     <unit id="141527660815930501">
@@ -4261,6 +4281,16 @@
         <target>{VAR_PLURAL, plural, =1 {Appliquer 1 modification} other {Appliquer <ph id="0" equiv="INTERPOLATION"/> modifications}}</target>
       </segment>
     </unit>
+    <unit id="7388667162535449437">
+      <notes>
+        <note category="location">src/app/features/profile/components/update-profile-image/update-profile-image.component.ts:88,92</note>
+        <note category="description">Hint beside the profile picture. SIZE is a formatted byte limit such as 10 MiB</note>
+      </notes>
+      <segment state="translated">
+        <source> Click the picture to replace it, or drag an image onto this row. PNG, JPEG, WebP, GIF or AVIF, up to <ph id="0" equiv="INTERPOLATION" disp="{{ maxBytesLabel }}"/>. </source>
+        <target> Cliquez sur la photo pour la remplacer, ou glissez une image sur cette ligne. PNG, JPEG, WebP, GIF ou AVIF, jusqu&apos;à <ph id="0" equiv="INTERPOLATION" disp="{{ maxBytesLabel }}"/>. </target>
+      </segment>
+    </unit>
     <unit id="7004542764820586045">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:235</note>
@@ -5126,7 +5156,7 @@
         <note category="location">src/app/features/auth/components/login/login.component.ts:179</note>
         <note category="location">src/app/features/auth/components/register/register.component.ts:210</note>
         <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:188</note>
-        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:108</note>
+        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:121</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -5150,7 +5180,7 @@
         <note category="location">src/app/features/auth/components/login/login.component.ts:182</note>
         <note category="location">src/app/features/auth/components/register/register.component.ts:213</note>
         <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:191</note>
-        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:112</note>
+        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:125</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -6358,7 +6388,7 @@
     </unit>
     <unit id="7476029104914053071">
       <notes>
-        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:44,45</note>
+        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:48,49</note>
         <note category="description">Heading of the profile details card</note>
       </notes>
       <segment state="translated">
@@ -7564,7 +7594,7 @@
     </unit>
     <unit id="4360072995007239979">
       <notes>
-        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:54,56</note>
+        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:66,68</note>
         <note category="description">Label of the given-name field</note>
       </notes>
       <segment state="translated">
@@ -7574,7 +7604,7 @@
     </unit>
     <unit id="7617062131879090220">
       <notes>
-        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:58,60</note>
+        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:70,73</note>
         <note category="description">Label of the family-name field</note>
       </notes>
       <segment state="translated">
@@ -7666,7 +7696,7 @@
       <notes>
         <note category="location">src/app/features/auth/components/register/register.component.ts:74,77</note>
         <note category="location">src/app/features/auth/components/register/register.component.ts:198</note>
-        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:96</note>
+        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:109</note>
         <note category="description">Label of the given-name field on the registration form</note>
       </notes>
       <segment state="translated">
@@ -7708,7 +7738,7 @@
       <notes>
         <note category="location">src/app/features/auth/components/register/register.component.ts:84,87</note>
         <note category="location">src/app/features/auth/components/register/register.component.ts:205</note>
-        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:103</note>
+        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:116</note>
         <note category="description">Label of the family-name field on the registration form</note>
       </notes>
       <segment state="translated">
@@ -9234,7 +9264,7 @@
     </unit>
     <unit id="2318416617601405241">
       <notes>
-        <note category="location">src/app/static/components/image-upload/image-upload.component.ts:101,103</note>
+        <note category="location">src/app/static/components/image-upload/image-upload.component.ts:104,106</note>
         <note category="description">Hint under an image picker. SIZE is a formatted byte limit such as 10 MiB</note>
       </notes>
       <segment state="translated">
@@ -11110,7 +11140,7 @@
     </unit>
     <unit id="4419785925408189157">
       <notes>
-        <note category="location">src/app/static/components/image-upload/image-upload.component.ts:73,75</note>
+        <note category="location">src/app/static/components/image-upload/image-upload.component.ts:76,78</note>
         <note category="description">Button that replaces an already uploaded image</note>
       </notes>
       <segment state="translated">
@@ -11126,6 +11156,16 @@
       <segment state="translated">
         <source>days before the sprint end date</source>
         <target>jours avant la date de fin du sprint</target>
+      </segment>
+    </unit>
+    <unit id="4703848376604347254">
+      <notes>
+        <note category="location">src/app/features/profile/components/update-profile-image/update-profile-image.component.ts:43,45</note>
+        <note category="description">Heading of the profile picture row</note>
+      </notes>
+      <segment state="translated">
+        <source>Profile picture</source>
+        <target>Photo de profil</target>
       </segment>
     </unit>
     <unit id="4704705744112109737">
@@ -11277,6 +11317,16 @@
       <segment state="translated">
         <source> Cloning <pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;text-foreground font-medium&quot;&gt;" dispEnd="&lt;/span &gt;"><ph id="1" equiv="NAME" disp="{{ dialogData.ruleName // i18n(ph=&quot;NAME&quot;) }}"/></pc>. The copy keeps the same trigger and actions, and starts disabled so you can review it before it runs. </source>
         <target> Duplication de <pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;text-foreground font-medium&quot;&gt;" dispEnd="&lt;/span &gt;"><ph id="1" equiv="NAME" disp="{{ dialogData.ruleName // i18n(ph=&quot;NAME&quot;) }}"/></pc>. La copie conserve le même déclencheur et les mêmes actions, et démarre désactivée pour que vous puissiez la vérifier avant son exécution. </target>
+      </segment>
+    </unit>
+    <unit id="1230154438678955604">
+      <notes>
+        <note category="location">src/app/features/profile/components/update-profile-image/update-profile-image.component.ts:57,58</note>
+        <note category="description">Overlay on the profile picture that opens the picker</note>
+      </notes>
+      <segment state="translated">
+        <source>Change</source>
+        <target>Changer</target>
       </segment>
     </unit>
     <unit id="5832711343712261211">
@@ -12862,6 +12912,17 @@
         <target>Lorsqu&apos;une tâche reste non assignée pendant <ph id="0" equiv="DAYS" disp="durationDays"/> jours</target>
       </segment>
     </unit>
+    <unit id="5667388668553946035">
+      <notes>
+        <note category="location">src/app/core/services/profile-commands.service.ts:71</note>
+        <note category="location">src/app/core/services/profile-commands.service.ts:95</note>
+        <note category="description">Confirmation shown after an action succeeds</note>
+      </notes>
+      <segment state="translated">
+        <source>Profile Picture Updated</source>
+        <target>Photo de profil mise à jour</target>
+      </segment>
+    </unit>
     <unit id="714104267047738799">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:465</note>
@@ -13245,7 +13306,7 @@
     </unit>
     <unit id="778667009561929745">
       <notes>
-        <note category="location">src/app/core/services/profile-commands.service.ts:102</note>
+        <note category="location">src/app/core/services/profile-commands.service.ts:148</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -13352,6 +13413,16 @@
       <segment state="translated">
         <source>Remove the configured task relations</source>
         <target>Supprimer les relations de tâches configurées</target>
+      </segment>
+    </unit>
+    <unit id="7345308961124559567">
+      <notes>
+        <note category="location">src/app/features/profile/components/update-profile-image/update-profile-image.component.ts:112,118</note>
+        <note category="description">Shown while an image is dragged over the profile picture row</note>
+      </notes>
+      <segment state="translated">
+        <source>Drop to upload</source>
+        <target>Déposez pour importer</target>
       </segment>
     </unit>
     <unit id="880144039825111570">
@@ -16519,14 +16590,14 @@
         <target>et</target>
       </segment>
     </unit>
-    <unit id="5912956176604656702">
+    <unit id="8121243032338244113">
       <notes>
-        <note category="location">src/app/features/profile/components/select-profile-image-dialog/select-profile-image-dialog.component.ts:19,22</note>
-        <note category="description">Title of the change-profile-picture dialog</note>
+        <note category="location">src/app/features/profile/components/update-profile-image/update-profile-image.component.ts:52,53</note>
+        <note category="description">Accessible label of the profile picture button</note>
       </notes>
       <segment state="translated">
-        <source> Change Profile Picture </source>
-        <target> Modifier la photo de profil </target>
+        <source>Change profile picture</source>
+        <target>Changer la photo de profil</target>
       </segment>
     </unit>
     <unit id="5914287100798497400">
@@ -16552,7 +16623,6 @@
     <unit id="1295614462098694869">
       <notes>
         <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:74,76</note>
-        <note category="location">src/app/features/profile/components/select-profile-image-dialog/select-profile-image-dialog.component.ts:28</note>
         <note category="description">Wizard step that shows what an import would do</note>
       </notes>
       <segment state="translated">
@@ -16580,26 +16650,6 @@
         <target>périodes</target>
       </segment>
     </unit>
-    <unit id="1021386700199278951">
-      <notes>
-        <note category="location">src/app/features/profile/components/select-profile-image-dialog/select-profile-image-dialog.component.ts:33,38</note>
-        <note category="description">Shown before a profile picture has been chosen</note>
-      </notes>
-      <segment state="translated">
-        <source> No image selected </source>
-        <target> Aucune image sélectionnée </target>
-      </segment>
-    </unit>
-    <unit id="982796275405577552">
-      <notes>
-        <note category="location">src/app/features/profile/components/select-profile-image-dialog/select-profile-image-dialog.component.ts:47,52</note>
-        <note category="description">Button that opens the file picker for a profile picture</note>
-      </notes>
-      <segment state="translated">
-        <source> Select Image </source>
-        <target> Sélectionner une image </target>
-      </segment>
-    </unit>
     <unit id="984317232812925706">
       <notes>
         <note category="location">src/app/features/settings/components/workspace-branding/workspace-branding.component.ts:26,28</note>
@@ -16610,26 +16660,6 @@
         <target>Logo de l&apos;espace de travail</target>
       </segment>
     </unit>
-    <unit id="4842432534148275616">
-      <notes>
-        <note category="location">src/app/features/profile/components/select-profile-image-dialog/select-profile-image-dialog.component.ts:58,63</note>
-        <note category="description">Button that uploads the chosen profile picture</note>
-      </notes>
-      <segment state="translated">
-        <source> Upload </source>
-        <target> Téléverser </target>
-      </segment>
-    </unit>
-    <unit id="4357457444132463679">
-      <notes>
-        <note category="location">src/app/features/profile/components/update-profile-image/update-profile-image.component.ts:14,17</note>
-        <note category="description">Alt text for the current profile picture</note>
-      </notes>
-      <segment state="translated">
-        <source>Profile Image</source>
-        <target>Photo de profil</target>
-      </segment>
-    </unit>
     <unit id="117068237894470695">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:122,124</note>
@@ -16638,16 +16668,6 @@
       <segment state="initial">
         <source>More actions</source>
         <target>Autres actions</target>
-      </segment>
-    </unit>
-    <unit id="1178531177658657535">
-      <notes>
-        <note category="location">src/app/features/profile/components/update-profile-image/update-profile-image.component.ts:22,26</note>
-        <note category="description">Button that opens the change-profile-picture dialog</note>
-      </notes>
-      <segment state="translated">
-        <source> Change Picture </source>
-        <target> Modifier la photo </target>
       </segment>
     </unit>
     <unit id="117954017715534854">
@@ -16672,7 +16692,7 @@
     </unit>
     <unit id="4879517228803151475">
       <notes>
-        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:62,64</note>
+        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:77,81</note>
         <note category="description">Label of the e-mail address field</note>
       </notes>
       <segment state="translated">
@@ -16692,7 +16712,7 @@
     </unit>
     <unit id="935836356119933355">
       <notes>
-        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:74,76</note>
+        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:83,86</note>
         <note category="description">Button that saves profile changes</note>
       </notes>
       <segment state="translated">
@@ -16877,7 +16897,7 @@
     </unit>
     <unit id="2501989539336327542">
       <notes>
-        <note category="location">src/app/static/components/image-upload/image-upload.component.ts:77,80</note>
+        <note category="location">src/app/static/components/image-upload/image-upload.component.ts:80,83</note>
         <note category="description">Button that opens the image picker</note>
       </notes>
       <segment state="translated">
@@ -19296,6 +19316,16 @@
         <target>Copié</target>
       </segment>
     </unit>
+    <unit id="2530906912432671651">
+      <notes>
+        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:90,96</note>
+        <note category="description">Explains that profile picture changes do not need the save button</note>
+      </notes>
+      <segment state="translated">
+        <source> Picture changes save as soon as you pick one. </source>
+        <target> Les changements de photo sont enregistrés dès que vous en choisissez une. </target>
+      </segment>
+    </unit>
     <unit id="2531121713631279756">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/api-credential-secret-dialog.component.ts:71,75</note>
@@ -19950,6 +19980,16 @@
       <segment state="translated">
         <source> Account permissions </source>
         <target>Autorisations du compte</target>
+      </segment>
+    </unit>
+    <unit id="810642630346823191">
+      <notes>
+        <note category="location">src/app/features/profile/components/update-profile-image/update-profile-image.component.ts:62,65</note>
+        <note category="description">Menu item that opens the profile picture picker</note>
+      </notes>
+      <segment state="translated">
+        <source> Upload a photo </source>
+        <target> Importer une photo </target>
       </segment>
     </unit>
     <unit id="3237067120046264827">
@@ -20841,11 +20881,11 @@
     </unit>
     <unit id="241133425066737749">
       <notes>
-        <note category="location">src/app/static/components/image-upload/image-upload.component.ts:187</note>
+        <note category="location">src/app/core/util/branding.ts:45</note>
         <note category="description">Validation error when a chosen image is too large. SIZE is a formatted byte limit</note>
       </notes>
-      <segment state="translated">
-        <source>The image must be smaller than <ph id="0" equiv="SIZE" disp="this.maxBytesLabel"/>.</source>
+      <segment state="initial">
+        <source>The image must be smaller than <ph id="0" equiv="SIZE" disp="maxBytesLabel"/>.</source>
         <target>L&apos;image doit être inférieure à <ph id="0" equiv="SIZE" disp="this.maxBytesLabel"/>.</target>
       </segment>
     </unit>
@@ -20949,6 +20989,16 @@
       <segment state="translated">
         <source>Loading service accounts</source>
         <target>Chargement des comptes de service</target>
+      </segment>
+    </unit>
+    <unit id="5940441973505116735">
+      <notes>
+        <note category="location">src/app/features/profile/components/update-profile-image/update-profile-image.component.ts:54,55</note>
+        <note category="description">Accessible label of the profile picture actions menu</note>
+      </notes>
+      <segment state="translated">
+        <source>Picture actions</source>
+        <target>Actions sur la photo</target>
       </segment>
     </unit>
     <unit id="5944081365893210369">
@@ -21627,6 +21677,16 @@
         <target> Révoqué </target>
       </segment>
     </unit>
+    <unit id="4569295903076125082">
+      <notes>
+        <note category="location">src/app/features/profile/components/update-profile-image/update-profile-image.component.ts:68,71</note>
+        <note category="description">Menu item that sets the profile picture from Gravatar</note>
+      </notes>
+      <segment state="translated">
+        <source> Use my Gravatar </source>
+        <target> Utiliser mon Gravatar </target>
+      </segment>
+    </unit>
     <unit id="464749780222721589">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:639</note>
@@ -21649,7 +21709,7 @@
     </unit>
     <unit id="8207875327947940735">
       <notes>
-        <note category="location">src/app/static/components/image-upload/image-upload.component.ts:179</note>
+        <note category="location">src/app/core/util/branding.ts:39</note>
         <note category="description">Validation error when a chosen file is not a supported image</note>
       </notes>
       <segment state="translated">
@@ -22006,7 +22066,7 @@
     </unit>
     <unit id="8966831176355460987">
       <notes>
-        <note category="location">src/app/static/components/file-dropzone/file-dropzone.component.ts:40,44</note>
+        <note category="location">src/app/static/components/file-dropzone/file-dropzone.component.ts:42,46</note>
         <note category="description">Hint under the file picker. SIZE is a formatted byte limit such as 50 MB</note>
       </notes>
       <segment state="initial">
@@ -22936,7 +22996,7 @@
     </unit>
     <unit id="6590865873100666446">
       <notes>
-        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:46,49</note>
+        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:50,53</note>
         <note category="description">Explains what the profile details card controls</note>
       </notes>
       <segment state="translated">
@@ -24718,6 +24778,16 @@
         <target>Essayez un mot plus court ou effacez le filtre.</target>
       </segment>
     </unit>
+    <unit id="6438068096515510852">
+      <notes>
+        <note category="location">src/app/core/services/profile-commands.service.ts:104</note>
+        <note category="description">Confirmation shown after an action succeeds</note>
+      </notes>
+      <segment state="translated">
+        <source>Profile Picture Removed</source>
+        <target>Photo de profil supprimée</target>
+      </segment>
+    </unit>
     <unit id="6439365426343089851">
       <notes>
         <note category="location">src/app/features/settings/views/personal-general-settings-view/personal-general-settings-view.component.ts:32,35</note>
@@ -25395,7 +25465,7 @@
     <unit id="7927073582775061981">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/task-files-section.component.ts:30,32</note>
-        <note category="location">src/app/static/components/file-dropzone/file-dropzone.component.ts:32,34</note>
+        <note category="location">src/app/static/components/file-dropzone/file-dropzone.component.ts:34,36</note>
         <note category="description">Button that opens the file picker</note>
       </notes>
       <segment state="translated">
@@ -25415,7 +25485,7 @@
     </unit>
     <unit id="4865868083675132195">
       <notes>
-        <note category="location">src/app/static/components/file-dropzone/file-dropzone.component.ts:54,57</note>
+        <note category="location">src/app/static/components/file-dropzone/file-dropzone.component.ts:56,59</note>
         <note category="description">Remaining upload allowance. SIZE is a formatted byte count such as 1.2 MB</note>
       </notes>
       <segment state="translated">
@@ -25440,7 +25510,7 @@
         <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:341</note>
         <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:82,85</note>
         <note category="location">src/app/static/components/form-select-tags/form-select-tags.component.ts:74,77</note>
-        <note category="location">src/app/static/components/image-upload/image-upload.component.ts:90,93</note>
+        <note category="location">src/app/static/components/image-upload/image-upload.component.ts:93,96</note>
         <note category="location">src/app/static/components/task-chip.component.ts:59</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>

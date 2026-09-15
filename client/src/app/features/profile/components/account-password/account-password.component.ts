@@ -13,7 +13,7 @@ import { ChangePasswordRequest } from '@core/models/requests/change-password-req
 import { loginMethodsResource } from '@core/resources/profile.resource';
 import { ProfileCommandsService } from '@core/services/profile-commands.service';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
-import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { LucideLock } from '@lucide/angular';
 import { PanelComponent } from '@static/components/panel.component';
 import { PanelBodyComponent } from '@static/components/panel-body.component';
@@ -23,13 +23,13 @@ import { PanelHeaderComponent } from '@static/components/panel-header.component'
 @Component({
   selector: 'app-account-password',
   imports: [
+    FlatButtonComponent,
     FormField,
     FormInputComponent,
     PanelBodyComponent,
     PanelComponent,
     PanelFooterComponent,
     PanelHeaderComponent,
-    StrokedButtonComponent,
   ],
   host: { class: 'block' },
   template: `
@@ -90,7 +90,7 @@ import { PanelHeaderComponent } from '@static/components/panel-header.component'
         </app-panel-body>
 
         <app-panel-footer>
-          <button app-stroked-button type="submit" [disabled]="loading()">
+          <button app-flat-button type="submit" [disabled]="loading()">
             @if (hasPassword()) {
               <span i18n="Button that changes the account password">
                 Change Password

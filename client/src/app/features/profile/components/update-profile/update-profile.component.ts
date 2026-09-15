@@ -1,4 +1,4 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal, untracked } from '@angular/core';
 import {
   apply,
   disabled,
@@ -12,27 +12,31 @@ import {
 import { profileResource } from '@core/resources/profile.resource';
 import { ProfileCommandsService } from '@core/services/profile-commands.service';
 import { LucideUserRound } from '@lucide/angular';
-import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { UpdateProfileImageComponent } from '@profile/components/update-profile-image/update-profile-image.component';
-import { DialogService } from '@core/services/dialog.service';
-import { SelectProfileImageDialogComponent } from '@profile/components/select-profile-image-dialog/select-profile-image-dialog.component';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 import { PanelComponent } from '@static/components/panel.component';
 import { PanelHeaderComponent } from '@static/components/panel-header.component';
 import { PanelBodyComponent } from '@static/components/panel-body.component';
 import { PanelFooterComponent } from '@static/components/panel-footer.component';
 
+interface ProfileFields {
+  firstname: string;
+  lastname: string;
+  email: string;
+}
+
 @Component({
   selector: 'app-update-profile',
   imports: [
+    FlatButtonComponent,
     FormField,
     FormInputComponent,
     PanelBodyComponent,
     PanelComponent,
     PanelFooterComponent,
     PanelHeaderComponent,
-    StrokedButtonComponent,
     UpdateProfileImageComponent,
   ],
   template: `
@@ -45,9 +49,17 @@ import { PanelFooterComponent } from '@static/components/panel-footer.component'
         i18n-description="Explains what the profile details card controls"
         description="Your name, email address and picture." />
 
-      <app-panel-body
-        class="flex flex-row justify-start gap-16 max-[1036px]:flex-col-reverse">
-        <div class="w-full max-w-120">
+      <app-panel-body>
+        <app-update-profile-image
+          class="mb-6"
+          [pictureUrl]="currentProfile()?.pictureUrl"
+          [name]="currentProfile()?.displayName"
+          [uploading]="updatingPicture()"
+          (fileSelected)="onPictureSelected($event)"
+          (gravatarClicked)="onGravatarClicked()"
+          (removeClicked)="onRemovePictureClicked()" />
+
+        <div class="grid grid-cols-1 gap-x-4 md:grid-cols-2">
           <app-form-input
             [formField]="profileForm.firstname"
             i18n-label="Label of the given-name field"
@@ -56,23 +68,27 @@ import { PanelFooterComponent } from '@static/components/panel-footer.component'
             [formField]="profileForm.lastname"
             i18n-label="Label of the family-name field"
             label="Lastname" />
+        </div>
+
+        <div class="max-w-120">
           <app-form-input
             [formField]="profileForm.email"
             i18n-label="Label of the e-mail address field"
             label="Email Address" />
-
-          <input type="hidden" [formField]="profileForm.pictureUrl" />
         </div>
-
-        <app-update-profile-image
-          [pictureUrl]="profileForm.pictureUrl().value()"
-          (changePictureClicked)="onChangePictureClicked()" />
       </app-panel-body>
 
-      <app-panel-footer>
-        <button app-stroked-button type="submit" [disabled]="loadingUpdate()">
+      <app-panel-footer class="flex flex-wrap items-center gap-3">
+        <button app-flat-button type="submit" [disabled]="loadingUpdate()">
           <span i18n="Button that saves profile changes">Update Profile</span>
         </button>
+        <span
+          class="text-muted text-xs"
+          i18n="
+            Explains that profile picture changes do not need the save button
+          ">
+          Picture changes save as soon as you pick one.
+        </span>
       </app-panel-footer>
     </form>
   `,
@@ -80,13 +96,10 @@ import { PanelFooterComponent } from '@static/components/panel-footer.component'
 export class UpdateProfileComponent {
   protected readonly profileIcon = LucideUserRound;
 
-  private dialog = inject(DialogService);
-
-  profileFormModel = signal({
+  profileFormModel = signal<ProfileFields>({
     firstname: '',
     lastname: '',
     email: '',
-    pictureUrl: '',
   });
 
   profileForm = form(this.profileFormModel, (schema) => {
@@ -119,6 +132,7 @@ export class UpdateProfileComponent {
 
   currentProfile = this.profile.value;
   loadingUpdate = this.profileCommands.isUpdating;
+  updatingPicture = this.profileCommands.isUpdatingPicture;
 
   constructor() {
     effect(() => {
@@ -126,12 +140,20 @@ export class UpdateProfileComponent {
 
       if (!value) return;
 
-      this.profileFormModel.set({
+      const next = {
         firstname: value.firstname,
         lastname: value.lastname,
         email: value.email,
-        pictureUrl: value.pictureUrl ?? '',
+      };
+
+      // A picture change reloads the profile too, which must not wipe unsaved edits.
+      const keepEdits = untracked(() => {
+        return this.profileForm().dirty() && !this.matchesForm(next);
       });
+
+      if (keepEdits) return;
+
+      this.profileForm().reset(next);
     });
   }
 
@@ -151,7 +173,33 @@ export class UpdateProfileComponent {
     });
   }
 
-  onChangePictureClicked() {
-    this.dialog.open(SelectProfileImageDialogComponent, { width: '360px' });
+  onPictureSelected(file: File) {
+    this.profileCommands.uploadPicture(file);
+  }
+
+  onGravatarClicked() {
+    const profile = this.currentProfile();
+
+    if (!profile) return;
+
+    this.profileCommands.useGravatar(profile.id, profile.email);
+  }
+
+  onRemovePictureClicked() {
+    const profile = this.currentProfile();
+
+    if (!profile) return;
+
+    this.profileCommands.removePicture(profile.id);
+  }
+
+  private matchesForm(values: ProfileFields) {
+    const current = this.profileFormModel();
+
+    return (
+      current.firstname === values.firstname &&
+      current.lastname === values.lastname &&
+      current.email === values.email
+    );
   }
 }

@@ -5,7 +5,7 @@ export type ButtonVariant = 'text' | 'filled' | 'outlined';
 export type ButtonColor = 'primary' | 'warn' | 'neutral' | 'contrast';
 export type ButtonColorInput = ButtonColor | '';
 export type FlatButtonColor = ButtonColor | 'ghost';
-export type IconButtonColor = ButtonColor | 'default' | 'muted';
+export type IconButtonColor = ButtonColor | 'default' | 'muted' | 'solid';
 
 export function cn(...inputs: CxOptions): string {
   return twMerge(cx(...inputs));
@@ -35,7 +35,7 @@ const buttonBlockVariants = {
 };
 
 export type ButtonSize = keyof typeof buttonSizeVariants;
-export type IconButtonSize = 'default' | 'small';
+export type IconButtonSize = 'default' | 'small' | 'xs';
 
 export const buttonHostVariants = cva(
   'inline-flex items-center justify-center transition-colors',
@@ -265,6 +265,7 @@ export const iconButtonVariants = cva(
       size: {
         default: 'h-10 w-10 rounded-full',
         small: 'h-8 w-8 rounded-lg',
+        xs: 'h-7.5 w-7.5 rounded-full',
       },
       color: {
         primary: 'text-primary hover:bg-primary/10 focus-visible:ring-primary',
@@ -275,6 +276,8 @@ export const iconButtonVariants = cva(
           'text-foreground hover:bg-foreground/10 focus-visible:ring-foreground',
         muted:
           'text-muted hover:bg-hover hover:text-foreground focus-visible:ring-foreground',
+        solid:
+          'bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-primary',
       },
     },
     defaultVariants: {

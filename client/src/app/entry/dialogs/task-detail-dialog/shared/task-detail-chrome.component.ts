@@ -139,7 +139,7 @@ import { DividerComponent } from '@static/components/divider/divider.component';
               @if (canDeleteTask()) {
                 <button
                   app-menu-item
-                  class="text-warn!"
+                  color="warn"
                   (click)="deleteTask(); overflowMenu.close()">
                   <svg lucideTrash2 class="h-4 w-4"></svg>
                   <span i18n="Menu item that deletes a task">Delete task</span>

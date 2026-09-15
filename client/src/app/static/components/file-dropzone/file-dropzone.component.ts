@@ -1,20 +1,22 @@
 import { Component, input, output, signal } from '@angular/core';
 import { formatBytes } from '@core/util/bytes';
 import { LucideUpload } from '@lucide/angular';
+import { FileDropDirective } from '@static/directives/file-drop.directive';
 
 const defaultMaxFileSize = 50 * 1024 * 1024;
 
 @Component({
   selector: 'app-file-dropzone',
-  imports: [LucideUpload],
+  imports: [FileDropDirective, LucideUpload],
   host: { class: 'block' },
   template: `
     <div
       class="border-border bg-card/40 rounded border border-dashed p-4 text-center"
-      [class.border-primary]="dragging()"
-      (dragover)="onDragOver($event)"
-      (dragleave)="dragging.set(false)"
-      (drop)="onDrop($event)">
+      [class.border-primary]="drop.dragging()"
+      appFileDrop
+      #drop="appFileDrop"
+      [fileDropDisabled]="disabled()"
+      (filesDropped)="accept($event)">
       <input
         #picker
         class="sr-only"
@@ -73,24 +75,7 @@ export class FileDropzoneComponent {
   readonly maxBytes = input(defaultMaxFileSize);
   readonly remainingBytes = input<number>();
   readonly filesSelected = output<File[]>();
-  readonly dragging = signal(false);
   readonly error = signal('');
-
-  onDragOver(event: DragEvent) {
-    event.preventDefault();
-
-    if (!this.disabled()) this.dragging.set(true);
-  }
-
-  onDrop(event: DragEvent) {
-    event.preventDefault();
-
-    this.dragging.set(false);
-
-    if (!this.disabled()) {
-      this.accept(Array.from(event.dataTransfer?.files ?? []));
-    }
-  }
 
   onInput(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -98,7 +83,7 @@ export class FileDropzoneComponent {
     input.value = '';
   }
 
-  private accept(files: File[]) {
+  protected accept(files: File[]) {
     const limit = this.maxBytes();
     const valid = files.filter((file) => file.size > 0 && file.size <= limit);
     const rejected = files.length - valid.length;
