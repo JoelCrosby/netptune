@@ -21,6 +21,7 @@ export interface ShellMenuLink {
   overviewLabel?: string;
   overviewIcon?: LucideIconInput;
   count?: number;
+  exact?: boolean;
 }
 
 @Component({
@@ -38,7 +39,7 @@ export interface ShellMenuLink {
       <div
         class="outline-foreground focus-visible:ring-2:focus-visible ring-foreground hover:bg-side-bar-active/60 my-px flex w-full items-center rounded text-sm font-medium text-white/70 transition-colors select-none"
         routerLinkActive="bg-side-bar-active text-white!"
-        [routerLinkActiveOptions]="activeOptions">
+        [routerLinkActiveOptions]="activeOptions()">
         @if (expandable()) {
           <button
             type="button"
@@ -125,12 +126,14 @@ export class ShellMenuLinkComponent {
   lucideLayoutGrid = LucideLayoutGrid;
   readonly subMenuExpanded = signal(false);
 
-  protected readonly activeOptions: IsActiveMatchOptions = {
-    paths: 'exact',
-    queryParams: 'ignored',
-    fragment: 'ignored',
-    matrixParams: 'ignored',
-  };
+  protected readonly activeOptions = computed<IsActiveMatchOptions>(() => {
+    return {
+      paths: this.link().exact ? 'exact' : 'subset',
+      queryParams: 'ignored',
+      fragment: 'ignored',
+      matrixParams: 'ignored',
+    };
+  });
 
   readonly childLinks = computed<ShellMenuLink[]>(() => {
     const link = this.link();
@@ -148,6 +151,7 @@ export class ShellMenuLinkComponent {
               $localize`:Sub-menu entry linking to the parent section's own page:Overview`,
             value: link.value,
             icon: link.overviewIcon ?? this.lucideLayoutGrid,
+            exact: true,
           },
         ]
       : [];
