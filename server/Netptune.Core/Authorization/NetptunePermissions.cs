@@ -175,6 +175,7 @@ public static class NetptunePermissions
     {
         public const string Use = "assistant.use";
         public const string ReadAllConversations = "assistant.read_all_conversations";
+        public const string DeleteAnyConversations = "assistant.delete_any_conversations";
         public const string UseWeb = "assistant.use_web";
     }
 

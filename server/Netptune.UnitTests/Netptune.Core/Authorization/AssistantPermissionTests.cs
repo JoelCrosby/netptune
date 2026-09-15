@@ -74,6 +74,40 @@ public class AssistantPermissionTests
     [Theory]
     [InlineData(WorkspaceRole.Owner)]
     [InlineData(WorkspaceRole.Admin)]
+    public void DeleteAnyConversations_ShouldBeGranted_ToWorkspaceAdministrators(WorkspaceRole role)
+    {
+        var permissions = WorkspaceRolePermissions.GetDefaultPermissions(role);
+
+        permissions.Should().Contain(NetptunePermissions.Assistant.DeleteAnyConversations);
+    }
+
+    [Theory]
+    [InlineData(WorkspaceRole.Member)]
+    [InlineData(WorkspaceRole.Viewer)]
+    public void DeleteAnyConversations_ShouldNotBeGranted_ToOrdinaryMembers(WorkspaceRole role)
+    {
+        var permissions = WorkspaceRolePermissions.GetDefaultPermissions(role);
+
+        permissions.Should().NotContain(
+            NetptunePermissions.Assistant.DeleteAnyConversations,
+            "it removes a colleague's conversation history from the workspace");
+    }
+
+    [Fact]
+    public void DeleteAnyConversations_ShouldBeAKnownPermission()
+    {
+        NetptunePermissions.All.Should().Contain(NetptunePermissions.Assistant.DeleteAnyConversations);
+    }
+
+    [Fact]
+    public void DeleteAnyConversations_ShouldNotBeReadableByThePublic()
+    {
+        NetptunePermissions.PublicReadable.Should().NotContain(NetptunePermissions.Assistant.DeleteAnyConversations);
+    }
+
+    [Theory]
+    [InlineData(WorkspaceRole.Owner)]
+    [InlineData(WorkspaceRole.Admin)]
     [InlineData(WorkspaceRole.Member)]
     public void UseWeb_ShouldBeGranted_FromMemberUpwards(WorkspaceRole role)
     {

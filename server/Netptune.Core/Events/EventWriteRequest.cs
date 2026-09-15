@@ -225,3 +225,14 @@ public sealed record FlagResolutionPayload
 
     public int? AutomationRuleId { get; init; }
 }
+
+public sealed record AssistantConversationDeletedPayload
+{
+    public Guid ConversationId { get; init; }
+
+    public required string Title { get; init; }
+
+    public required string OwnerUserId { get; init; }
+
+    public string? OwnerDisplayName { get; init; }
+}

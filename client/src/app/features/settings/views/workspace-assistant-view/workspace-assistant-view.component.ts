@@ -115,7 +115,9 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
                 (capChanged)="spend.reload()" />
             }
 
-            <app-assistant-conversations-card (opened)="select($event)" />
+            <app-assistant-conversations-card
+              (opened)="select($event)"
+              (deleted)="spend.reload()" />
           </div>
         </div>
       </app-page-body>

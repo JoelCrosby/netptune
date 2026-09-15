@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Events;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Realtime;
@@ -380,6 +381,89 @@ public sealed class AiEndpointTests
         {
             await RemoveSeed(seed.ConversationId);
         }
+    }
+
+    [Fact]
+    public async Task AdminDeleteConversations_ShouldDeleteAnotherMembersConversation()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var client = Fixture.CreateNetptuneClient();
+        var seed = await SeedPendingChangeSet(isOwnedByCaller: false);
+
+        try
+        {
+            var response = await client.SendAsync(DeleteWorkspaceConversations(seed.ConversationId), cancellationToken);
+
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            using var scope = Fixture.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+            var conversation = await context.AiConversations
+                .AsNoTracking()
+                .FirstAsync(item => item.Id == seed.ConversationId, cancellationToken);
+            var detail = await client.GetAsync($"api/ai/admin/conversations/{seed.ConversationId}", cancellationToken);
+
+            conversation.IsDeleted.Should().BeTrue();
+            conversation.DeletedByUserId.Should().NotBe(conversation.UserId);
+            detail.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
+        finally
+        {
+            await RemoveSeed(seed.ConversationId);
+        }
+    }
+
+    [Fact]
+    public async Task AdminDeleteConversations_ShouldRecordTheDeletionInTheAuditLog()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var client = Fixture.CreateNetptuneClient();
+        var seed = await SeedPendingChangeSet(isOwnedByCaller: false);
+
+        try
+        {
+            await client.SendAsync(DeleteWorkspaceConversations(seed.ConversationId), cancellationToken);
+
+            using var scope = Fixture.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+            var conversation = await context.AiConversations
+                .AsNoTracking()
+                .FirstAsync(item => item.Id == seed.ConversationId, cancellationToken);
+            var auditEvent = await context.EventRecords
+                .AsNoTracking()
+                .SingleAsync(item =>
+                    item.EventKey == EventKeys.AssistantConversationDeleted &&
+                    item.SubjectId == seed.ConversationId.ToString(),
+                    cancellationToken);
+            var ownerUserId = auditEvent.Payload.RootElement.GetProperty("ownerUserId").GetString();
+
+            auditEvent.ActorUserId.Should().Be(conversation.DeletedByUserId);
+            ownerUserId.Should().Be(conversation.UserId);
+        }
+        finally
+        {
+            await RemoveSeed(seed.ConversationId);
+        }
+    }
+
+    [Fact]
+    public async Task AdminDeleteConversations_ShouldReturnNotFound_WhenNoConversationMatches()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var request = DeleteWorkspaceConversations(Guid.NewGuid());
+        var response = await client.SendAsync(request, TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    private static HttpRequestMessage DeleteWorkspaceConversations(params Guid[] conversationIds)
+    {
+        return new HttpRequestMessage
+        {
+            Method = HttpMethod.Delete,
+            RequestUri = new("api/ai/admin/conversations", UriKind.RelativeOrAbsolute),
+            Content = JsonContent.Create(conversationIds),
+        };
     }
 
     [Fact]

@@ -81,6 +81,20 @@ public class AiConversationRepository(DataContext context, IDbConnectionFactory 
             .FirstOrDefaultAsync(cancellationToken);
     }
 
+    public Task<List<AiConversation>> GetManyInWorkspace(
+        IReadOnlyCollection<Guid> conversationIds,
+        int workspaceId,
+        CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .Include(conversation => conversation.User)
+            .Where(conversation =>
+                conversationIds.Contains(conversation.Id) &&
+                conversation.WorkspaceId == workspaceId &&
+                !conversation.IsDeleted)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<AiTokenUsageViewModel> GetUsage(
         Guid conversationId,
         CancellationToken cancellationToken = default)

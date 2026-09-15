@@ -54,6 +54,7 @@ public sealed class EventDefinitionRegistryTests
     [InlineData(EventKeys.CommentCreated, ActivityType.AddComment)]
     [InlineData(EventKeys.CommentUpdated, ActivityType.ModifyComment)]
     [InlineData(EventKeys.CommentDeleted, ActivityType.RemoveComment)]
+    [InlineData(EventKeys.AssistantConversationDeleted, ActivityType.Delete)]
     public void ActivityTypeFor_ShouldMapAuditEventKeys(string eventKey, ActivityType expected)
     {
         using var payload = JsonDocument.Parse("{}");

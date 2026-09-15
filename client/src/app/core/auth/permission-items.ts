@@ -443,6 +443,11 @@ export const netptunePermissionLabels: PermissionLabels = {
       label: $localize`:Name of a workspace permission:View All Assistant Conversations`,
       icon: LucideSparkles,
     },
+    deleteAnyConversations: {
+      key: 'assistant.delete_any_conversations',
+      label: $localize`:Name of a workspace permission:Delete Any Assistant Conversation`,
+      icon: LucideTrash2,
+    },
     useWeb: {
       key: 'assistant.use_web',
       label: $localize`:Name of a workspace permission:Assistant Web Access`,

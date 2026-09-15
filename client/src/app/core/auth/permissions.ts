@@ -105,6 +105,7 @@ export const PERMISSIONS = {
   assistant: {
     use: 'assistant.use',
     readAllConversations: 'assistant.read_all_conversations',
+    deleteAnyConversations: 'assistant.delete_any_conversations',
     useWeb: 'assistant.use_web',
   },
   flags: {

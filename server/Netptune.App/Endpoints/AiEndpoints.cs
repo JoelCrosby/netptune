@@ -2,6 +2,8 @@ using System.Text.Json;
 
 using Mediator;
 
+using Microsoft.AspNetCore.Mvc;
+
 using Netptune.App.Configuration;
 using Netptune.App.Services;
 using Netptune.App.Utility;
@@ -87,6 +89,9 @@ public static class AiEndpoints
 
         group.MapGet("/admin/conversations/{conversationId:guid}", HandleGetWorkspaceConversation)
             .RequireAuthorization(NetptunePermissions.Assistant.ReadAllConversations);
+
+        group.MapDelete("/admin/conversations", HandleDeleteWorkspaceConversations)
+            .RequireAuthorization(NetptunePermissions.Assistant.DeleteAnyConversations);
 
         group.MapGet("/admin/spend", HandleGetWorkspaceSpend)
             .RequireAuthorization(NetptunePermissions.Assistant.ReadAllConversations);
@@ -258,6 +263,17 @@ public static class AiEndpoints
         var result = await mediator.Send(new GetWorkspaceAiConversationsQuery(request), cancellationToken);
 
         return Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleDeleteWorkspaceConversations(
+        IMediator mediator,
+        [FromBody] Guid[] conversationIds,
+        CancellationToken cancellationToken)
+    {
+        var command = new DeleteWorkspaceAiConversationsCommand(conversationIds);
+        var result = await mediator.Send(command, cancellationToken);
+
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleGetWorkspaceSpend(

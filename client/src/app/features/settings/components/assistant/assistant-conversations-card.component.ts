@@ -1,20 +1,40 @@
-import { Component, output, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import {
+  Component,
+  computed,
+  inject,
+  output,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { Params } from '@angular/router';
+import { hasPermission } from '@core/auth/has-permission';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { AiWorkspaceConversation } from '@core/models/ai-workspace-conversation';
+import { ClientResponse } from '@core/models/client-response';
+import { ConfirmationService } from '@core/services/confirmation.service';
 import { formatCost, formatTokens } from '@core/util/ai-usage';
-import { LucideMessagesSquare } from '@lucide/angular';
+import { getErrorMessage } from '@core/util/error-message';
+import { requireSuccess } from '@core/util/rxjs-operators';
+import { reloadToken } from '@core/util/signals';
+import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
+import { LucideMessagesSquare, LucideTrash2 } from '@lucide/angular';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
+import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableEmptyDirective } from '@static/components/datatable/datatable-empty.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
 import {
   DatatableDataSource,
+  DatatableMenuItem,
   DatatableSort,
 } from '@static/components/datatable/datatable.types';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
 import { PanelComponent } from '@static/components/panel.component';
 import { PanelHeaderComponent } from '@static/components/panel-header.component';
+import { SnackbarService } from '@static/components/snackbar/snackbar.service';
+import { EMPTY, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-assistant-conversations-card',
@@ -25,9 +45,11 @@ import { PanelHeaderComponent } from '@static/components/panel-header.component'
     DatatableEmptyDirective,
     EmptyStateComponent,
     LucideMessagesSquare,
+    LucideTrash2,
     PanelComponent,
     PanelHeaderComponent,
     PrettyDatePipe,
+    StrokedButtonComponent,
   ],
   host: { class: 'block' },
   template: `
@@ -41,6 +63,32 @@ import { PanelHeaderComponent } from '@static/components/panel-header.component'
           Explains what an admin sees on the assistant conversations page
         "
         description="What members asked the assistant. The record of what changed lives in the audit log." />
+
+      @if (selectedCount() > 0) {
+        <div class="flex h-12 items-center justify-end gap-4 px-4">
+          <span
+            class="text-muted text-sm"
+            i18n="
+              Count of selected rows above a table. COUNT is the number selected
+            ">
+            {{
+              selectedCount() // i18n(ph="COUNT")
+            }}
+            selected
+          </span>
+          <button
+            app-stroked-button
+            type="button"
+            color="warn"
+            (click)="deleteSelected()">
+            <svg lucideTrash2 class="h-4 w-4"></svg>
+            <span
+              i18n="Button that deletes the selected assistant conversations">
+              Delete
+            </span>
+          </button>
+        </div>
+      }
 
       <app-datatable
         containerClass="border-0"
@@ -56,8 +104,10 @@ import { PanelHeaderComponent } from '@static/components/panel-header.component'
         [rounded]="false"
         [skeletonRows]="5"
         [defaultPageSize]="25"
-        [data]="data"
-        [(sort)]="sort">
+        [data]="data()"
+        [selection]="canDelete()"
+        [(sort)]="sort"
+        (selectionChanged)="selection.set($event)">
         <ng-template appDatatableCell="title" let-conversation>
           <button
             type="button"
@@ -103,16 +153,40 @@ import { PanelHeaderComponent } from '@static/components/panel-header.component'
   `,
 })
 export class AssistantConversationsCardComponent {
+  private readonly http = inject(HttpClient);
+  private readonly confirmation = inject(ConfirmationService);
+  private readonly snackbar = inject(SnackbarService);
+
+  private readonly table = viewChild(DatatableComponent);
+
   readonly opened = output<AiWorkspaceConversation>();
+  readonly deleted = output();
 
   protected readonly conversationIcon = LucideMessagesSquare;
   protected readonly sort = signal<DatatableSort | null>(null);
+
+  protected readonly canDelete = hasPermission(
+    PERMISSIONS.assistant.deleteAnyConversations
+  );
+
+  protected readonly selection = signal<AiWorkspaceConversation[]>([]);
+  protected readonly selectedCount = computed(() => this.selection().length);
+
+  private readonly reloadVersion = reloadToken();
+
+  private readonly menu: DatatableMenuItem<AiWorkspaceConversation>[] = [
+    {
+      label: $localize`:Row action that deletes an assistant conversation:Delete`,
+      icon: LucideTrash2,
+      onClick: (conversation) => this.delete([conversation]),
+    },
+  ];
 
   // The endpoint takes no filters, so the table only ever varies its own paging
   // and sort parameters.
   private readonly params = signal<Params>({});
 
-  protected readonly data: DatatableDataSource<AiWorkspaceConversation> = {
+  private readonly source: DatatableDataSource<AiWorkspaceConversation> = {
     key: 'workspace-assistant-conversations',
     columns: [
       {
@@ -178,9 +252,91 @@ export class AssistantConversationsCardComponent {
     rows: (response) => response?.payload?.items ?? [],
     trackBy: (_: number, conversation: AiWorkspaceConversation) =>
       conversation.id,
+    reloadSignal: this.reloadVersion,
   };
+
+  protected readonly data = computed(() => {
+    return { ...this.source, menu: this.canDelete() ? this.menu : undefined };
+  });
+
+  protected deleteSelected() {
+    this.delete(this.selection());
+  }
+
+  private delete(conversations: readonly AiWorkspaceConversation[]) {
+    if (conversations.length === 0) return;
+
+    const ids = conversations.map((conversation) => conversation.id);
+
+    this.confirmation
+      .open(buildDeleteConfirmation(conversations))
+      .pipe(
+        switchMap((confirmed) => {
+          if (!confirmed) return EMPTY;
+
+          return this.http
+            .delete<ClientResponse>('api/ai/admin/conversations', {
+              body: ids,
+            })
+            .pipe(requireSuccess());
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.snackbar.open(buildDeletedMessage(ids.length));
+          this.table()?.clearSelection();
+          this.selection.set([]);
+          this.reloadVersion.bump();
+          this.deleted.emit();
+        },
+        error: (error: unknown) => {
+          this.snackbar.error(getErrorMessage(error, DELETE_FAILED));
+        },
+      });
+  }
 
   protected toDate(value: string): Date {
     return new Date(value);
   }
+}
+
+const DELETE_FAILED = $localize`:Error shown after an action fails:The conversation(s) could not be deleted. Please try again.`;
+
+function buildDeletedMessage(count: number): string {
+  if (count === 1) {
+    return $localize`:Confirmation shown after an assistant conversation is deleted:Conversation deleted`;
+  }
+
+  return $localize`:Confirmation shown after assistant conversations are deleted. COUNT is how many:${count}:COUNT: conversations deleted`;
+}
+
+function buildDeleteConfirmation(
+  conversations: readonly AiWorkspaceConversation[]
+): ConfirmDialogOptions {
+  const owners = [
+    ...new Set(
+      conversations.map((conversation) => conversation.userDisplayName)
+    ),
+  ].join(', ');
+  const acceptLabel = $localize`:Confirms deleting assistant conversations in a dialog:Delete`;
+
+  if (conversations.length === 1) {
+    const title = conversations[0].title;
+
+    return {
+      acceptLabel,
+      color: 'warn',
+      title: $localize`:Title of the dialog that deletes one assistant conversation:Delete conversation`,
+      message: $localize`:Warns that deleting a member's assistant conversation removes it for them too. TITLE is the conversation title, OWNER the member who held it:"${title}:TITLE:" belongs to ${owners}:OWNER:. Deleting it removes it from this list and from their own assistant history.`,
+    };
+  }
+
+  const count = conversations.length;
+
+  return {
+    acceptLabel,
+    color: 'warn',
+    title: $localize`:Title of the dialog that deletes several assistant conversations. COUNT is how many:Delete ${count}:COUNT: conversations`,
+    message: $localize`:Warns that deleting members' assistant conversations removes them for those members too. OWNERS lists the members who held them:These conversations belong to ${owners}:OWNERS:. Deleting them removes them from this list and from each member's own assistant history.`,
+  };
 }

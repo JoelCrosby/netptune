@@ -530,6 +530,7 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
             EventKeys.CommentCreated => "Comment added",
             EventKeys.CommentUpdated => "Comment edited",
             EventKeys.CommentDeleted => "Comment deleted",
+            EventKeys.AssistantConversationDeleted => FormatAssistantConversationDeletion(payload),
             _ => FormatLegacySummary(payload, activityType, statusNames),
         };
 
@@ -589,6 +590,16 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
         var subject = email is null ? outcome : $"{outcome} for {FormatValue(email)}";
 
         return method is null ? subject : $"{subject} via {Humanize(method).ToLowerInvariant()}";
+    }
+
+    private static string FormatAssistantConversationDeletion(JsonElement payload)
+    {
+        var title = FormatValue(GetPayloadValue(payload, "title"));
+        var owner = GetPayloadValue(payload, "ownerDisplayName");
+
+        return owner is null
+            ? $"Deleted assistant conversation \"{title}\""
+            : $"Deleted {owner}'s assistant conversation \"{title}\"";
     }
 
     private static string FormatWorkspaceSettingsChange(JsonElement payload)
