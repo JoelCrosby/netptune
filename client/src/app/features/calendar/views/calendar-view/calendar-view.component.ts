@@ -61,7 +61,7 @@ import {
         title="Calendar" />
 
       <app-page-body>
-        <section app-panel surface="card" class="flex min-h-0 flex-1 flex-col">
+        <section app-panel surface="card" class="mb-4 flex min-h-0 flex-1 flex-col max-md:mb-3">
           <app-calendar-toolbar
             [monthLabel]="range().label"
             [projectId]="projectId()"
