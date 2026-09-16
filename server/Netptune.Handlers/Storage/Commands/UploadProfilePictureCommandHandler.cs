@@ -1,5 +1,7 @@
 using Mediator;
 
+using Microsoft.Extensions.Logging;
+
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -25,16 +27,27 @@ public sealed class UploadProfilePictureCommandHandler : IRequestHandler<UploadP
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IStorageService Storage;
+    private readonly ILogger<UploadProfilePictureCommandHandler> Logger;
 
-    public UploadProfilePictureCommandHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity, IStorageService storage)
+    public UploadProfilePictureCommandHandler(
+        INetptuneUnitOfWork unitOfWork,
+        IIdentityService identity,
+        IStorageService storage,
+        ILogger<UploadProfilePictureCommandHandler> logger)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Storage = storage;
+        Logger = logger;
     }
 
     public async ValueTask<ClientResponse<UploadResponse>> Handle(UploadProfilePictureCommand request, CancellationToken cancellationToken)
     {
+        if (request.Length <= 0)
+        {
+            return ClientResponse<UploadResponse>.Failed("The file is empty.");
+        }
+
         if (request.Length > UploadLimits.ProfilePictureMaxBytes)
         {
             var limit = UploadLimits.Describe(UploadLimits.ProfilePictureMaxBytes);
@@ -42,14 +55,29 @@ public sealed class UploadProfilePictureCommandHandler : IRequestHandler<UploadP
             return ClientResponse<UploadResponse>.Failed($"Request file size exceeds maximum of {limit}.");
         }
 
+        if (!ImageUploadTypes.IsAllowed(request.ContentType))
+        {
+            var supported = ImageUploadTypes.Describe();
+
+            return ClientResponse<UploadResponse>.Failed($"A profile picture must be a {supported} image.");
+        }
+
         var userId = Identity.GetCurrentUserId();
-        var extension = Path.GetExtension(request.FileName);
+        var user = await UnitOfWork.Users.GetAsync(userId, cancellationToken: cancellationToken);
+
+        if (user is null)
+        {
+            return ClientResponse<UploadResponse>.NotFound;
+        }
+
+        var contentType = ImageUploadTypes.Normalize(request.ContentType);
+        var extension = ImageUploadTypes.ExtensionFor(contentType);
         var key = Path.Join(PathConstants.ProfilePicturePath, $"{userId}-{UniqueIdBuilder.Generate(userId)}{extension}");
         var uploadOptions = new StorageUploadOptions
         {
             Name = key,
             Key = key,
-            ContentType = request.ContentType,
+            ContentType = contentType,
             Access = StorageAccess.PublicRead,
         };
 
@@ -60,17 +88,32 @@ public sealed class UploadProfilePictureCommandHandler : IRequestHandler<UploadP
             return ClientResponse<UploadResponse>.Failed("The profile picture could not be uploaded.");
         }
 
-        var user = await UnitOfWork.Users.GetAsync(userId, cancellationToken: cancellationToken);
-
-        if (user is null)
-        {
-            return ClientResponse<UploadResponse>.NotFound;
-        }
+        var previousUrl = user.PictureUrl;
 
         user.PictureUrl = result.Payload.Uri;
 
         await UnitOfWork.CompleteAsync(cancellationToken);
+        await RemovePreviousPicture(previousUrl, cancellationToken);
 
         return result;
+    }
+
+    private async Task RemovePreviousPicture(string? previousUrl, CancellationToken cancellationToken)
+    {
+        var previousKey = StorageKeys.TryResolveProfilePictureKey(previousUrl);
+
+        if (previousKey is null)
+        {
+            return;
+        }
+
+        try
+        {
+            await Storage.DeleteFileAsync(previousKey, cancellationToken);
+        }
+        catch (Exception exception)
+        {
+            Logger.LogWarning(exception, "Failed to remove the previous profile picture {Key}", previousKey);
+        }
     }
 }

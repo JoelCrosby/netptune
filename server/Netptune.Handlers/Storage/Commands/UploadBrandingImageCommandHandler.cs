@@ -76,9 +76,9 @@ public sealed class UploadBrandingImageCommandHandler : IRequestHandler<UploadBr
             return ClientResponse<BrandingImageViewModel>.Failed($"The image exceeds the {limit} limit.");
         }
 
-        if (!BrandingImageTypes.IsAllowed(upload.ContentType))
+        if (!ImageUploadTypes.IsAllowed(upload.ContentType))
         {
-            var supported = BrandingImageTypes.Describe();
+            var supported = ImageUploadTypes.Describe();
 
             return ClientResponse<BrandingImageViewModel>.Failed($"The image must be a {supported} file.");
         }
@@ -98,7 +98,7 @@ public sealed class UploadBrandingImageCommandHandler : IRequestHandler<UploadBr
             WorkspaceId = workspaceId,
             UserId = userId,
             OriginalName = originalName,
-            ContentType = BrandingImageTypes.Normalize(upload.ContentType),
+            ContentType = ImageUploadTypes.Normalize(upload.ContentType),
             Length = upload.Length,
         };
 

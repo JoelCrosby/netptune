@@ -32,17 +32,7 @@ public sealed class StorageEndpointTests
     [Fact]
     public async Task UploadProfilePicture_ShouldReturnCorrectly_WhenInputValid()
     {
-        var request = new HttpRequestMessage
-        {
-            Method = HttpMethod.Post,
-            RequestUri = new("api/storage/profile-picture", UriKind.RelativeOrAbsolute),
-            Content = new MultipartFormDataContent
-            {
-                { new StreamContent(Stream.Null), "file", "picture.png" },
-            },
-        };
-
-        var response = await Client.SendAsync(request);
+        var response = await PostProfilePicture("picture.png", "image/png", [1, 2, 3]);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -50,6 +40,55 @@ public sealed class StorageEndpointTests
 
         result.IsSuccess.Should().BeTrue();
     }
+
+    [Fact]
+    public async Task UploadProfilePicture_ShouldReject_WhenContentTypeIsNotAnImage()
+    {
+        var response = await PostProfilePicture("payload.html", "text/html", "<script>"u8.ToArray());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<UploadResponse>>();
+
+        result.IsSuccess.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task UploadProfilePicture_ShouldReject_WhenContentTypeIsSvg()
+    {
+        var response = await PostProfilePicture("picture.svg", "image/svg+xml", "<svg/>"u8.ToArray());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<UploadResponse>>();
+
+        result.IsSuccess.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task UploadProfilePicture_ShouldReject_WhenTheFileIsEmpty()
+    {
+        var response = await PostProfilePicture("picture.png", "image/png", []);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<UploadResponse>>();
+
+        result.IsSuccess.Should().BeFalse();
+    }
+
+    private Task<HttpResponseMessage> PostProfilePicture(string fileName, string contentType, byte[] content)
+    {
+        var fileContent = new ByteArrayContent(content);
+        fileContent.Headers.ContentType = new(contentType);
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Post,
+            RequestUri = new("api/storage/profile-picture", UriKind.RelativeOrAbsolute),
+            Content = new MultipartFormDataContent
+            {
+                { fileContent, "file", fileName },
+            },
+        };
+
+        return Client.SendAsync(request);
+    }
+
     [Fact]
     public async Task UploadMedia_ShouldReturnCorrectly_WhenInputValid()
     {

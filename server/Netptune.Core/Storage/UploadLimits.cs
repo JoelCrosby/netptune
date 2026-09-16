@@ -8,7 +8,7 @@ public static class UploadLimits
 
     public const long MaximumMaxUploadBytes = 512L * 1024 * 1024;
 
-    public const long ProfilePictureMaxBytes = DefaultMaxUploadBytes;
+    public const long ProfilePictureMaxBytes = 5L * 1024 * 1024;
 
     public const long BrandingImageMaxBytes = 10L * 1024 * 1024;
 
