@@ -14,6 +14,10 @@ using Xunit;
 
 namespace Netptune.IntegrationTests.Endpoints;
 
+// The board view filter tests place tasks of their own, so this class writes to workspace 1 and
+// has to serialise with everything else that does -- an archive export taken while a task is
+// being added captures a placement whose task is not in the same snapshot.
+[Collection(WorkspaceMutationCollection.Name)]
 public sealed class BoardsEndpointTests
 {
     private readonly HttpClient Client;
