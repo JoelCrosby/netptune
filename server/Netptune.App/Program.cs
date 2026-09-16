@@ -167,7 +167,7 @@ app.UseAuthorization();
 app.UseWorkspaceValidation();
 
 var apiGroup = app.MapGroup("/api")
-    .RequireRateLimiting("api");
+    .RequireRateLimiting(RateLimiterConfiguration.ApiPolicyName);
 
 apiGroup.MapBoardEventsEndpoints();
 apiGroup.MapNotificationsEndpoints();

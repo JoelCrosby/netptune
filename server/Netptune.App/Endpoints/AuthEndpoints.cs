@@ -3,6 +3,7 @@ using Flurl;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 
+using Netptune.App.Configuration;
 using Netptune.App.Utility;
 using Netptune.Core.Authentication;
 using Netptune.Core.Authentication.Models;
@@ -28,24 +29,27 @@ public static class AuthEndpoints
         group
             .MapPost("/login", HandleLogin)
             .AllowAnonymous()
-            .RequireRateLimiting("auth");
+            .RequireRateLimiting(RateLimiterConfiguration.AuthPolicyName);
 
         group
             .MapPost("/register", HandleRegister)
             .AllowAnonymous()
-            .RequireRateLimiting("register");
+            .RequireRateLimiting(RateLimiterConfiguration.RegisterPolicyName);
 
         group
             .MapPost("/confirm-email", HandleConfirmEmail)
-            .AllowAnonymous();
+            .AllowAnonymous()
+            .RequireRateLimiting(RateLimiterConfiguration.AuthPolicyName);
 
         group
-            .MapGet("/request-password-reset", HandleRequestPasswordReset)
-            .AllowAnonymous();
+            .MapPost("/request-password-reset", HandleRequestPasswordReset)
+            .AllowAnonymous()
+            .RequireRateLimiting(RateLimiterConfiguration.AuthPolicyName);
 
         group
             .MapPost("/reset-password", HandleResetPassword)
-            .AllowAnonymous();
+            .AllowAnonymous()
+            .RequireRateLimiting(RateLimiterConfiguration.AuthPolicyName);
 
         group
             .MapPatch("/change-password", HandleChangePassword)
@@ -61,11 +65,13 @@ public static class AuthEndpoints
 
         group
             .MapGet("/validate-workspace-invite", HandleValidateWorkspaceInvite)
-            .AllowAnonymous();
+            .AllowAnonymous()
+            .RequireRateLimiting(RateLimiterConfiguration.AuthPolicyName);
 
         group
             .MapPost("/refresh", HandleRefresh)
-            .AllowAnonymous();
+            .AllowAnonymous()
+            .RequireRateLimiting(RateLimiterConfiguration.RefreshPolicyName);
 
         group
             .MapPost("/logout", HandleLogout)
@@ -225,17 +231,14 @@ public static class AuthEndpoints
 
     public static async Task<IResult> HandleRequestPasswordReset(
         INetptuneAuthService authenticationService,
-        string email)
+        RequestPasswordResetRequest request)
     {
-        if (string.IsNullOrWhiteSpace(email))
+        if (string.IsNullOrWhiteSpace(request.Email))
         {
             return Results.BadRequest();
         }
 
-        var result = await authenticationService.RequestPasswordReset(new RequestPasswordResetRequest
-        {
-            Email = email,
-        });
+        var result = await authenticationService.RequestPasswordReset(request);
 
         return Results.Ok(result);
     }

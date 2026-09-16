@@ -271,8 +271,9 @@ public sealed class AuthEndpointTests
         var client = CreateClient();
         var email = await Register(client);
 
-        var response = await client.GetAsync(
-            $"api/auth/request-password-reset?email={Uri.EscapeDataString(email)}");
+        var response = await client.PostAsJsonAsync(
+            "api/auth/request-password-reset",
+            new RequestPasswordResetRequest { Email = email });
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -286,7 +287,9 @@ public sealed class AuthEndpointTests
     {
         var client = CreateClient();
 
-        var response = await client.GetAsync("api/auth/request-password-reset?email=nobody@netptune.test");
+        var response = await client.PostAsJsonAsync(
+            "api/auth/request-password-reset",
+            new RequestPasswordResetRequest { Email = "nobody@netptune.test" });
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
