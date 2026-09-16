@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Netptune.Core.Entities;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Requests;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
 
@@ -20,6 +21,8 @@ public sealed class TaskViewRepository : WorkspaceEntityRepository<DataContext, 
             .Where(view => view.WorkspaceId == workspaceId && !view.IsDeleted)
             .Where(view => view.IsShared || view.CreatedByUserId == currentUserId)
             .OrderBy(view => view.Name)
+            .ThenBy(view => view.Id)
+            .Take(PaginationDefaults.MaxUnpagedRows)
             .ToListAsync(cancellationToken);
     }
 

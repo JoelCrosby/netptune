@@ -28,6 +28,7 @@ public sealed class StatusRepository : WorkspaceEntityRepository<DataContext, St
             .Where(status => status.WorkspaceId == workspaceId && status.EntityType == entityType && !status.IsDeleted)
             .OrderBy(status => status.SortOrder)
             .ThenBy(status => status.Id)
+            .Take(PaginationDefaults.MaxUnpagedRows)
             .AsNoTracking()
             .Select(status => new StatusViewModel
             {

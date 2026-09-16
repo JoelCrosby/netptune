@@ -93,6 +93,8 @@ public sealed class WorkspaceFileRepository : WorkspaceEntityRepository<DataCont
 
         return await Project(query, currentUserId, canDeleteAny)
             .OrderByDescending(file => file.CreatedAt)
+            .ThenByDescending(file => file.Id)
+            .Take(PaginationDefaults.MaxUnpagedRows)
             .ToListAsync(cancellationToken);
     }
 

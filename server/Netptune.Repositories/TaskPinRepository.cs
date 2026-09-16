@@ -4,6 +4,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Requests;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
 
@@ -21,6 +22,7 @@ public sealed class TaskPinRepository : WorkspaceEntityRepository<DataContext, T
             .Where(pin => pin.Scope != TaskPinScope.User || (includePersonal && pin.CreatedByUserId == userId))
             .OrderBy(pin => pin.SortOrder)
             .ThenByDescending(pin => pin.CreatedAt)
+            .Take(PaginationDefaults.MaxUnpagedRows)
             .ToListAsync(cancellationToken);
     }
 
@@ -36,6 +38,7 @@ public sealed class TaskPinRepository : WorkspaceEntityRepository<DataContext, T
                 (pin.Scope == TaskPinScope.Workspace && pin.ScopeEntityId == workspaceId))
             .OrderBy(pin => pin.SortOrder)
             .ThenByDescending(pin => pin.CreatedAt)
+            .Take(PaginationDefaults.MaxUnpagedRows)
             .ToListAsync(cancellationToken);
     }
 
@@ -44,6 +47,8 @@ public sealed class TaskPinRepository : WorkspaceEntityRepository<DataContext, T
         return Entities
             .Where(pin => pin.WorkspaceId == workspaceId && !pin.IsDeleted)
             .Where(pin => pin.Scope == scope && pin.ScopeEntityId == scopeEntityId)
+            .OrderBy(pin => pin.Id)
+            .Take(PaginationDefaults.MaxUnpagedRows)
             .ToListAsync(cancellationToken);
     }
 

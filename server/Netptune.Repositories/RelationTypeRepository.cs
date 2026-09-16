@@ -25,6 +25,7 @@ public sealed class RelationTypeRepository : WorkspaceEntityRepository<DataConte
             .Where(relationType => relationType.WorkspaceId == workspaceId && !relationType.IsDeleted)
             .OrderBy(relationType => relationType.SortOrder)
             .ThenBy(relationType => relationType.Id)
+            .Take(PaginationDefaults.MaxUnpagedRows)
             .AsNoTracking()
             .Select(relationType => new RelationTypeViewModel
             {

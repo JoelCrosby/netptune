@@ -30,7 +30,7 @@ public sealed class ProjectTaskRelationRepository : Repository<DataContext, Proj
 
         var command = new CommandDefinition(
             SqlScripts.GetTaskRelations,
-            new { TaskId = taskId, WorkspaceId = workspaceId },
+            new { TaskId = taskId, WorkspaceId = workspaceId, Limit = PaginationDefaults.MaxUnpagedRows },
             cancellationToken: cancellationToken);
 
         var rows = await connection.QueryAsync<TaskRelationRowMap>(command);

@@ -7,6 +7,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.ViewModels.Notifications;
+using Netptune.Core.Requests;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
 using Netptune.Repositories.Sql;
@@ -27,6 +28,7 @@ public sealed class NotificationSubscriptionRepository
             .Where(subscription => subscription.UserId == userId)
             .OrderBy(subscription => subscription.Scope)
             .ThenBy(subscription => subscription.ScopeEntityId)
+            .Take(PaginationDefaults.MaxUnpagedRows)
             .ToListAsync(cancellationToken);
     }
 

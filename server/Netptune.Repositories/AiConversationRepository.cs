@@ -274,6 +274,7 @@ public class AiConversationRepository(DataContext context, IDbConnectionFactory 
             .AsNoTracking()
             .Where(message => message.ConversationId == conversationId)
             .OrderBy(message => message.Sequence)
+            .Take(PaginationDefaults.MaxConversationMessages)
             .ToListAsync(cancellationToken);
     }
 

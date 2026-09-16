@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Requests;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
 using Netptune.Transfer.Entities;
@@ -20,6 +21,8 @@ public sealed class ExportDefinitionRepository : WorkspaceEntityRepository<DataC
             .Where(definition => definition.WorkspaceId == workspaceId && !definition.IsDeleted)
             .Where(definition => definition.IsShared || definition.CreatedByUserId == currentUserId)
             .OrderBy(definition => definition.Name)
+            .ThenBy(definition => definition.Id)
+            .Take(PaginationDefaults.MaxUnpagedRows)
             .ToListAsync(cancellationToken);
     }
 

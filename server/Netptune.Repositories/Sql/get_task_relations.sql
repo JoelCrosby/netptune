@@ -36,4 +36,5 @@ FROM project_task_relations relation
          LEFT JOIN projects other_project ON other.project_id = other_project.id
 WHERE relation.workspace_id = @WorkspaceId
   AND (relation.source_task_id = @TaskId OR relation.target_task_id = @TaskId)
-ORDER BY relation_type.sort_order, relation_type.id, is_source DESC, other.id;
+ORDER BY relation_type.sort_order, relation_type.id, is_source DESC, other.id
+LIMIT @Limit;
