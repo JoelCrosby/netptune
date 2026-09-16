@@ -87,7 +87,7 @@ public sealed class MeilisearchService : IMeilisearchService
         var sw = Stopwatch.StartNew();
 
         var indexes = ResolveIndexes(query.Types);
-        var filter = $"workspaceSlug = \"{query.WorkspaceSlug}\"";
+        var filter = $"workspaceSlug = \"{EscapeFilterValue(query.WorkspaceSlug)}\"";
         var meiliQuery = new MeiliSearchQuery { Filter = filter, Limit = query.Limit };
 
         var tasks = indexes.Select(idx => SearchIndexAsync(idx, query.Q, meiliQuery, cancellationToken));
@@ -100,6 +100,11 @@ public sealed class MeilisearchService : IMeilisearchService
             Results = resultSets.SelectMany(r => r).ToList(),
             ProcessingTimeMs = sw.ElapsedMilliseconds,
         };
+    }
+
+    private static string EscapeFilterValue(string value)
+    {
+        return value.Replace("\\", "\\\\").Replace("\"", "\\\"");
     }
 
     private async Task<IEnumerable<SearchResultViewModel>> SearchIndexAsync(string indexName, string q, MeiliSearchQuery meiliQuery, CancellationToken cancellationToken)

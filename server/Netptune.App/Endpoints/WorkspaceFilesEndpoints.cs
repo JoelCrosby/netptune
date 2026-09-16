@@ -94,6 +94,7 @@ public static class WorkspaceFilesEndpoints
         var query = new GetWorkspaceFileContentQuery
         {
             ContentId = contentId,
+            WorkspaceKey = workspaceKey,
             Disposition = disposition,
             CanReadTasks = canReadTasks,
         };

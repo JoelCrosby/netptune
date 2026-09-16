@@ -12,6 +12,8 @@ public sealed record GetWorkspaceFileContentQuery : IRequest<ClientResponse<Uri>
 {
     public required string ContentId { get; init; }
 
+    public required string WorkspaceKey { get; init; }
+
     public string? Disposition { get; init; }
 
     public bool CanReadTasks { get; init; }
@@ -32,6 +34,13 @@ public sealed class GetWorkspaceFileContentQueryHandler : IRequestHandler<GetWor
 
     public async ValueTask<ClientResponse<Uri>> Handle(GetWorkspaceFileContentQuery request, CancellationToken cancellationToken)
     {
+        var workspaceKey = Identity.GetWorkspaceKey();
+
+        if (!string.Equals(workspaceKey, request.WorkspaceKey, StringComparison.OrdinalIgnoreCase))
+        {
+            return ClientResponse<Uri>.NotFound;
+        }
+
         var workspaceId = await Identity.GetWorkspaceId();
         var entity = await UnitOfWork.WorkspaceFiles.GetByContentId(request.ContentId, workspaceId, isReadonly: true, cancellationToken);
 
@@ -48,7 +57,7 @@ public sealed class GetWorkspaceFileContentQueryHandler : IRequestHandler<GetWor
         }
 
         var requestedInline = string.Equals(request.Disposition, "inline", StringComparison.OrdinalIgnoreCase);
-        var safeInline = requestedInline && (entity.ContentType.StartsWith("image/") || entity.ContentType == "application/pdf");
+        var safeInline = requestedInline && ImageUploadTypes.IsInlineSafe(entity.ContentType);
         var readOptions = new StorageReadOptions
         {
             Key = entity.StorageKey,
