@@ -56,6 +56,7 @@ public sealed class BoardEventService : IBoardEventService, IHostedService
     private readonly ISubscriber Subscriber;
     private readonly IWorkspaceEventPublisher EventPublisher;
     private readonly ConcurrentDictionary<string, LocalConnection> Connections = new();
+    private readonly ConcurrentDictionary<string, ConcurrentDictionary<string, LocalConnection>> ConnectionsByWorkspace = new();
     private readonly Dictionary<PresenceGroup, Dictionary<string, HashSet<string>>> Presence = [];
     private readonly object PresenceLock = new();
 
@@ -122,6 +123,7 @@ public sealed class BoardEventService : IBoardEventService, IHostedService
         };
 
         Connections[subscription.ConnectionId] = localConnection;
+        WorkspaceConnections(subscription.Workspace)[subscription.ConnectionId] = localConnection;
         AddPresence(subscription);
         WritePresenceFrames(subscription.Workspace, subscription.Group);
         await BroadcastPresenceAsync(subscription, PresenceKind.Join);
@@ -141,6 +143,7 @@ public sealed class BoardEventService : IBoardEventService, IHostedService
         finally
         {
             Connections.TryRemove(subscription.ConnectionId, out _);
+            WorkspaceConnections(subscription.Workspace).TryRemove(subscription.ConnectionId, out _);
             RemovePresence(subscription);
             WritePresenceFrames(subscription.Workspace, subscription.Group);
             await BroadcastPresenceAsync(subscription, PresenceKind.Leave);
@@ -167,13 +170,13 @@ public sealed class BoardEventService : IBoardEventService, IHostedService
 
             var frame = CreateUpdateFrame(workspaceEvent.Scopes);
 
-            foreach (var connection in Connections.Values)
+            // Indexed by workspace so one tenant's traffic costs the size of that tenant rather than
+            // the size of the node.
+            foreach (var connection in WorkspaceConnections(workspaceEvent.Workspace).Values)
             {
-                var subscription = connection.Subscription;
-                var isSameWorkspace = subscription.Workspace == workspaceEvent.Workspace;
-                var isSourceClient = subscription.SourceClientId == workspaceEvent.SourceClientId;
+                var isSourceClient = connection.Subscription.SourceClientId == workspaceEvent.SourceClientId;
 
-                if (isSameWorkspace && !isSourceClient)
+                if (!isSourceClient)
                 {
                     TryWrite(connection, frame);
                 }
@@ -183,6 +186,11 @@ public sealed class BoardEventService : IBoardEventService, IHostedService
         {
             Logger.LogError(exception, "Workspace event deserialization failed");
         }
+    }
+
+    private ConcurrentDictionary<string, LocalConnection> WorkspaceConnections(string workspace)
+    {
+        return ConnectionsByWorkspace.GetOrAdd(workspace, _ => new ConcurrentDictionary<string, LocalConnection>());
     }
 
     private static string CreateUpdateFrame(string[] scopes)

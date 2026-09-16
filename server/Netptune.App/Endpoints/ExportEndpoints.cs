@@ -73,8 +73,19 @@ public static class ExportEndpoints
     private static async Task HandleSse(
         HttpContext context,
         IIdentityService identity,
-        ITransferJobEventService transferJobEvents)
+        ITransferJobEventService transferJobEvents,
+        SseConnectionLimiter connectionLimiter)
     {
+        var userId = identity.GetCurrentUserId();
+
+        using var lease = connectionLimiter.TryAcquire(userId);
+
+        if (lease is null)
+        {
+            context.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+            return;
+        }
+
         var workspaceKey = identity.GetWorkspaceKey();
 
         await transferJobEvents.SubscribeAsync(workspaceKey, context.Response, context.RequestAborted);

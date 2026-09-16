@@ -80,6 +80,7 @@ builder.Services.AddHostedService<BoardEventService>(services => services.GetReq
 builder.Services.AddSingleton<INotificationEventService, NotificationEventService>();
 builder.Services.AddSingleton<ITransferJobEventService, TransferJobEventService>();
 builder.Services.AddSingleton<IPreferenceDefinitionRegistry, PreferenceDefinitionRegistry>();
+builder.Services.AddSingleton<SseConnectionLimiter>();
 
 builder.Services.AddNetptuneIdentity().AddNetptuneIdentityEntities();
 builder.Services.AddNetptuneAuthorization();

@@ -20,6 +20,7 @@ public static class BoardEventsEndpoints
         IBoardEventService boardEventService,
         IIdentityService identity,
         IWorkspacePermissionCache permissionCache,
+        SseConnectionLimiter connectionLimiter,
         string workspace,
         string group,
         string clientId)
@@ -30,6 +31,14 @@ public static class BoardEventsEndpoints
         if (permissions is null)
         {
             context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            return;
+        }
+
+        using var lease = connectionLimiter.TryAcquire(userId);
+
+        if (lease is null)
+        {
+            context.Response.StatusCode = StatusCodes.Status429TooManyRequests;
             return;
         }
 

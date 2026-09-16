@@ -92,9 +92,18 @@ public static class NotificationsEndpoints
     private static async Task HandleSse(
         HttpContext context,
         IIdentityService identity,
-        INotificationEventService notificationEventService)
+        INotificationEventService notificationEventService,
+        SseConnectionLimiter connectionLimiter)
     {
         var userId = identity.GetCurrentUserId();
+
+        using var lease = connectionLimiter.TryAcquire(userId);
+
+        if (lease is null)
+        {
+            context.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+            return;
+        }
 
         await notificationEventService.SubscribeAsync(userId, context.Response, context.RequestAborted);
     }
