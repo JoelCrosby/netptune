@@ -74,15 +74,22 @@ Two things have to agree:
 1. A **Cloudflare Transform Rule** — Rules → Transform Rules → Modify Request Header → *Set static*,
    applied to all requests, setting the header named by `trustedProxies.edgeAuthorizationHeader`
    (default `X-Netptune-Edge`) to a generated secret.
-2. **`secrets.app.edge_authorization_secret`** and **`secrets.api.edge_authorization_secret`** in
-   `values.secret.yaml`, set to that same value.
+2. The **`NETPTUNE_EDGE_AUTHORIZATION_SECRET`** GitHub Actions secret, set to that same value. The
+   deploy workflow passes it to both `secrets.app.edge_authorization_secret` and
+   `secrets.api.edge_authorization_secret`. For a manual `helm upgrade`, set those two values
+   directly in `values.secret.yaml` instead.
 
 Leave the secret empty and the check is skipped, which is what local development does. Set only one
 half and the application refuses to start rather than quietly falling back — a half-configured check
 would otherwise show up days later as rate limits behaving oddly.
 
+Create the Transform Rule **before** setting the secret. A header nothing is sending is ignored, but a
+secret nothing is stamping means the address header stops being believed and every caller collapses
+into the ingress's own address for rate limiting.
+
 Nothing here expires or needs refreshing. Rotating the secret means updating the Transform Rule and
-the Helm secret; there is no scheduled maintenance.
+the GitHub secret; there is no scheduled maintenance. To rotate without a gap, add the new value to
+the Transform Rule first, deploy, then remove the old one.
 
 Swapping CDN means changing `trustedProxies.clientAddressHeader` to whatever that CDN uses
 (`True-Client-IP` for Akamai and Fastly) and recreating the equivalent header rule. No application

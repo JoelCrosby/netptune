@@ -581,8 +581,10 @@ jobs:
             --set "secrets.app.turnstile_secret_key=${{ secrets.NETPTUNE_TURNSTILE_SECRET_KEY }}" \
             --set "secrets.app.cloudflare_email_token=${{ secrets.NETPTUNE_CLOUDFLARE_EMAIL_TOKEN }}" \
             --set "secrets.app.cloudflare_account_id=${{ secrets.NETPTUNE_CLOUDFLARE_ACCOUNT_ID }}" \
+            --set "secrets.app.edge_authorization_secret=${{ secrets.NETPTUNE_EDGE_AUTHORIZATION_SECRET }}" \
             --set "secrets.api.cache_password=${{ secrets.CACHE_PASSWORD }}" \
             --set "secrets.api.postgres_password=${{ secrets.POSTGRES_PASSWORD }}" \
+            --set "secrets.api.edge_authorization_secret=${{ secrets.NETPTUNE_EDGE_AUTHORIZATION_SECRET }}" \
             --set "secrets.jobs.cache_password=${{ secrets.CACHE_PASSWORD }}" \
             --set "secrets.jobs.postgres_password=${{ secrets.POSTGRES_PASSWORD }}" \
             --set "secrets.jobs.signing_key=${{ secrets.SIGNING_KEY }}" \
