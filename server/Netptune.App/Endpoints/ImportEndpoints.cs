@@ -74,10 +74,12 @@ public static class ImportEndpoints
 
         group.MapPost("/archive/preview", HandlePreviewArchive)
             .WithMetadata(new RequestSizeLimitAttribute(MaxArchiveRequestSize))
+            .RequireRateLimiting(RateLimiterConfiguration.TransferPolicyName)
             .RequireAuthorization(NetptunePermissions.Data.ImportArchive);
 
         group.MapPost("/archive", HandleImportArchive)
             .WithMetadata(new RequestSizeLimitAttribute(MaxArchiveRequestSize))
+            .RequireRateLimiting(RateLimiterConfiguration.TransferPolicyName)
             .RequireAuthorization(NetptunePermissions.Data.ImportArchive);
 
         return group;
@@ -147,13 +149,43 @@ public static class ImportEndpoints
         return cloneAuthorization.Succeeded ? null : Results.Forbid();
     }
 
+    private static async Task<Stream> OpenSeekable(IFormFile file, CancellationToken cancellationToken)
+    {
+        var upload = file.OpenReadStream();
+
+        if (upload.CanSeek)
+        {
+            upload.Seek(0, SeekOrigin.Begin);
+
+            return upload;
+        }
+
+        var spool = new FileStream(
+            Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()),
+            FileMode.Create,
+            FileAccess.ReadWrite,
+            FileShare.None,
+            bufferSize: 81920,
+            FileOptions.DeleteOnClose | FileOptions.Asynchronous);
+
+        await using (upload)
+        {
+            await upload.CopyToAsync(spool, cancellationToken);
+        }
+
+        spool.Seek(0, SeekOrigin.Begin);
+
+        return spool;
+    }
+
     private static ArchiveImportMode ParseMode(string? mode)
     {
         return Enum.TryParse<ArchiveImportMode>(mode, true, out var value) ? value : ArchiveImportMode.Clone;
     }
 
-    // Spools the upload to a temporary file: reading a zip means seeking, which an upload stream does
-    // not support, and an archive is far too large to hold in memory.
+    // Reading a zip means seeking. The form file is normally already buffered, in which case its own
+    // stream seeks and a second copy would only double the disk the request costs; the temporary spool
+    // is the fallback for a stream that cannot.
     private static async Task<IResult> WithArchive(
         HttpRequest request,
         string? mode,
@@ -195,24 +227,11 @@ public static class ImportEndpoints
             return Results.BadRequest("The archive is larger than the maximum supported size.");
         }
 
-        await using var spool = new FileStream(
-            Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()),
-            FileMode.Create,
-            FileAccess.ReadWrite,
-            FileShare.None,
-            bufferSize: 81920,
-            FileOptions.DeleteOnClose | FileOptions.Asynchronous);
-
-        await using (var upload = file.OpenReadStream())
-        {
-            await upload.CopyToAsync(spool, request.HttpContext.RequestAborted);
-        }
-
-        spool.Seek(0, SeekOrigin.Begin);
+        await using var archive = await OpenSeekable(file, request.HttpContext.RequestAborted);
 
         return await handle(new ImportArchiveRequest
         {
-            Archive = spool,
+            Archive = archive,
             Mode = parsedMode,
             TargetSlug = targetSlug,
             InviteUnmatchedMembers = inviteUnmatchedMembers,

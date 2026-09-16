@@ -125,18 +125,20 @@ public sealed record ArchiveRow
 public sealed class ArchiveReader : IDisposable
 {
     private readonly ZipArchive Zip;
+    private readonly DecompressionBudget Budget;
 
     public ArchiveReader(Stream source)
     {
         source.Seek(0, SeekOrigin.Begin);
 
+        Budget = new DecompressionBudget(source.Length);
+
         try
         {
             Zip = new ZipArchive(source, ZipArchiveMode.Read, leaveOpen: true);
         }
-        catch (InvalidDataException exception)
+        catch (Exception exception) when (exception is InvalidDataException or ArgumentOutOfRangeException)
         {
-            // An upload that is not a zip at all is a bad request, not a server fault.
             throw new ArchiveSchemaException("This file is not a Netptune archive: it could not be read as an archive.", exception);
         }
     }
@@ -146,7 +148,7 @@ public sealed class ArchiveReader : IDisposable
         var entry = Zip.GetEntry(ArchiveManifest.FileName)
             ?? throw new ArchiveSchemaException("This file is not a Netptune archive: it has no manifest.");
 
-        using var stream = entry.Open();
+        using var stream = OpenBudgeted(entry);
 
         return JsonSerializer.Deserialize<ArchiveManifest>(stream, JsonOptions.Default)
             ?? throw new ArchiveSchemaException("The archive manifest could not be read.");
@@ -168,7 +170,7 @@ public sealed class ArchiveReader : IDisposable
             yield break;
         }
 
-        using var stream = entry.Open();
+        using var stream = OpenBudgeted(entry);
         using var reader = new StreamReader(stream);
 
         while (await reader.ReadLineAsync(cancellationToken) is { } line)
@@ -193,7 +195,14 @@ public sealed class ArchiveReader : IDisposable
 
     public Stream? OpenFile(string entryPath)
     {
-        return Zip.GetEntry(entryPath)?.Open();
+        var entry = Zip.GetEntry(entryPath);
+
+        return entry is null ? null : OpenBudgeted(entry);
+    }
+
+    private BudgetedStream OpenBudgeted(ZipArchiveEntry entry)
+    {
+        return new BudgetedStream(entry.Open(), Budget);
     }
 
     public void Dispose()
