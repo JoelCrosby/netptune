@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 using Netptune.Core.Enums;
 using Netptune.Core.Requests;
 
@@ -5,6 +7,7 @@ namespace Netptune.Api.Requests;
 
 public sealed record PublicBulkUpdateTasksRequest
 {
+    [MaxLength(RequestLimits.MaxBulkIds)]
     public List<int> TaskIds { get; init; } = [];
 
     public int? StatusId { get; init; }
@@ -23,10 +26,12 @@ public sealed record PublicBulkUpdateTasksRequest
 
     public bool ClearDueDate { get; init; }
 
+    [MaxLength(RequestLimits.MaxBulkAssignees)]
     public List<string>? AssigneeIds { get; init; }
 
     public BulkCollectionMode AssigneeMode { get; init; }
 
+    [MaxLength(RequestLimits.MaxBulkTags)]
     public List<string>? Tags { get; init; }
 
     public BulkCollectionMode TagMode { get; init; }

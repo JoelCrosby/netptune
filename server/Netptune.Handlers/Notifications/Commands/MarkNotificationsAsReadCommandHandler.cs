@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
@@ -21,9 +22,17 @@ public sealed class MarkNotificationsAsReadCommandHandler : IRequestHandler<Mark
 
     public async ValueTask<ClientResponse> Handle(MarkNotificationsAsReadCommand request, CancellationToken cancellationToken)
     {
+        var ids = request.Ids.ToList();
+        var overflow = RequestLimits.DescribeBulkIdOverflow(ids.Count);
+
+        if (overflow is not null)
+        {
+            return ClientResponse.Failed(overflow);
+        }
+
         var userId = Identity.GetCurrentUserId();
 
-        await UnitOfWork.Notifications.MarkAsRead(request.Ids, userId, cancellationToken);
+        await UnitOfWork.Notifications.MarkAsRead(ids, userId, cancellationToken);
 
         return ClientResponse.Success;
     }

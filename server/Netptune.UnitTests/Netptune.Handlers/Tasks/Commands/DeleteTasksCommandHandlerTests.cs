@@ -48,7 +48,10 @@ public class DeleteTasksCommandHandlerTests
 
         await Handler.Handle(new DeleteTasksCommand(ids), TestContext.Current.CancellationToken);
 
-        await UnitOfWork.Tasks.Received(1).SoftDelete(ids, "userId", TestContext.Current.CancellationToken);
+        await UnitOfWork.Tasks.Received(1).SoftDelete(
+            Arg.Is<IEnumerable<int>>(deleted => deleted.SequenceEqual(ids)),
+            "userId",
+            TestContext.Current.CancellationToken);
     }
 
     [Fact]

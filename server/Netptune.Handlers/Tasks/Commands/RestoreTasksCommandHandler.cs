@@ -2,6 +2,7 @@ using Mediator;
 
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Search;
+using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
@@ -28,6 +29,14 @@ public sealed class RestoreTasksCommandHandler : IRequestHandler<RestoreTasksCom
 
     public async ValueTask<ClientResponse> Handle(RestoreTasksCommand request, CancellationToken cancellationToken)
     {
+        var ids = request.Ids.ToList();
+        var overflow = RequestLimits.DescribeBulkIdOverflow(ids.Count);
+
+        if (overflow is not null)
+        {
+            return ClientResponse.Failed(overflow);
+        }
+
         var workspaceSlug = Identity.GetWorkspaceKey();
         var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceSlug, cancellationToken);
 
@@ -36,7 +45,7 @@ public sealed class RestoreTasksCommandHandler : IRequestHandler<RestoreTasksCom
             return ClientResponse.Failed($"workspace with key {workspaceSlug} not found");
         }
 
-        var deletedIds = await UnitOfWork.Tasks.GetDeletedTaskIdsInWorkspace(request.Ids, workspaceId.Value, cancellationToken);
+        var deletedIds = await UnitOfWork.Tasks.GetDeletedTaskIdsInWorkspace(ids, workspaceId.Value, cancellationToken);
         var restoredIds = await UnitOfWork.Tasks.Restore(deletedIds, cancellationToken);
 
         if (restoredIds.Count == 0) return ClientResponse.Success;

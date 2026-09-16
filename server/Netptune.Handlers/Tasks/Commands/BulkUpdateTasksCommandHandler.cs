@@ -23,6 +23,8 @@ public sealed record BulkUpdateTasksCommand(BulkUpdateTasksRequest Request) : IR
 
 public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTasksCommand, ClientResponse>
 {
+    private const int MissingIdsNamedInError = 10;
+
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly ILogger<BulkUpdateTasksCommandHandler> Logger;
@@ -61,6 +63,13 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
             return ClientResponse.Failed("At least one task is required");
         }
 
+        var overflow = RequestLimits.DescribeBulkIdOverflow(requestedTaskIds.Count);
+
+        if (overflow is not null)
+        {
+            return ClientResponse.Failed(overflow);
+        }
+
         var taskIds = await UnitOfWork.Tasks.GetValidTaskIdsInWorkspace(
             requestedTaskIds,
             workspaceId,
@@ -69,8 +78,11 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
 
         if (missingTaskIds.Count > 0)
         {
-            return ClientResponse.Failed(
-                $"Tasks were not found in the workspace: {string.Join(", ", missingTaskIds)}");
+            var namedIds = string.Join(", ", missingTaskIds.Take(MissingIdsNamedInError));
+            var remainder = missingTaskIds.Count - MissingIdsNamedInError;
+            var suffix = remainder > 0 ? $" and {remainder} more" : string.Empty;
+
+            return ClientResponse.Failed($"Tasks were not found in the workspace: {namedIds}{suffix}");
         }
 
         var tasks = await UnitOfWork.Tasks.GetTasksForUpdate(taskIds, cancellationToken);

@@ -8,6 +8,7 @@ public record MoveTasksToGroupRequest
     public string BoardId { get; set; } = null!;
 
     [Required]
+    [MaxLength(RequestLimits.MaxBulkIds)]
     public List<int> TaskIds { get; set; } = null!;
 
     [Required]

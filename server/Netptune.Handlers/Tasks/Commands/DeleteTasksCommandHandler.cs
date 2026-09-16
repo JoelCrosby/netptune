@@ -2,6 +2,7 @@ using Mediator;
 
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Search;
+using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
@@ -28,9 +29,16 @@ public sealed class DeleteTasksCommandHandler : IRequestHandler<DeleteTasksComma
 
     public async ValueTask<ClientResponse> Handle(DeleteTasksCommand request, CancellationToken cancellationToken)
     {
-        var userId = Identity.GetCurrentUserId();
+        var ids = request.Ids.ToList();
+        var overflow = RequestLimits.DescribeBulkIdOverflow(ids.Count);
 
-        var deletedIds = await UnitOfWork.Tasks.SoftDelete(request.Ids, userId, cancellationToken);
+        if (overflow is not null)
+        {
+            return ClientResponse.Failed(overflow);
+        }
+
+        var userId = Identity.GetCurrentUserId();
+        var deletedIds = await UnitOfWork.Tasks.SoftDelete(ids, userId, cancellationToken);
 
         Activity.LogMany(options =>
         {

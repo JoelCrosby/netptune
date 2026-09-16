@@ -39,7 +39,12 @@ public class RestoreTasksCommandHandlerTests
         var requested = new[] { 1, 2, 3 };
         var deleted = new List<int> { 1, 3 };
 
-        UnitOfWork.Tasks.GetDeletedTaskIdsInWorkspace(requested, WorkspaceId, Arg.Any<CancellationToken>()).Returns(deleted);
+        UnitOfWork.Tasks
+            .GetDeletedTaskIdsInWorkspace(
+                Arg.Is<IEnumerable<int>>(ids => ids.SequenceEqual(requested)),
+                WorkspaceId,
+                Arg.Any<CancellationToken>())
+            .Returns(deleted);
         UnitOfWork.Tasks.Restore(deleted, Arg.Any<CancellationToken>()).Returns(deleted);
 
         var result = await Handler.Handle(new RestoreTasksCommand(requested), TestContext.Current.CancellationToken);
@@ -54,7 +59,12 @@ public class RestoreTasksCommandHandlerTests
     {
         var ids = new[] { 1, 2 };
 
-        UnitOfWork.Tasks.GetDeletedTaskIdsInWorkspace(ids, WorkspaceId, Arg.Any<CancellationToken>()).Returns(ids.ToList());
+        UnitOfWork.Tasks
+            .GetDeletedTaskIdsInWorkspace(
+                Arg.Is<IEnumerable<int>>(requested => requested.SequenceEqual(ids)),
+                WorkspaceId,
+                Arg.Any<CancellationToken>())
+            .Returns(ids.ToList());
         UnitOfWork.Tasks.Restore(Arg.Any<IEnumerable<int>>(), Arg.Any<CancellationToken>()).Returns(ids.ToList());
 
         await Handler.Handle(new RestoreTasksCommand(ids), TestContext.Current.CancellationToken);
@@ -67,7 +77,12 @@ public class RestoreTasksCommandHandlerTests
     {
         var ids = new[] { 1, 2 };
 
-        UnitOfWork.Tasks.GetDeletedTaskIdsInWorkspace(ids, WorkspaceId, Arg.Any<CancellationToken>()).Returns(ids.ToList());
+        UnitOfWork.Tasks
+            .GetDeletedTaskIdsInWorkspace(
+                Arg.Is<IEnumerable<int>>(requested => requested.SequenceEqual(ids)),
+                WorkspaceId,
+                Arg.Any<CancellationToken>())
+            .Returns(ids.ToList());
         UnitOfWork.Tasks.Restore(Arg.Any<IEnumerable<int>>(), Arg.Any<CancellationToken>()).Returns(ids.ToList());
 
         await Handler.Handle(new RestoreTasksCommand(ids), TestContext.Current.CancellationToken);
@@ -84,7 +99,12 @@ public class RestoreTasksCommandHandlerTests
     {
         var ids = new[] { 1, 2 };
 
-        UnitOfWork.Tasks.GetDeletedTaskIdsInWorkspace(ids, WorkspaceId, Arg.Any<CancellationToken>()).Returns([]);
+        UnitOfWork.Tasks
+            .GetDeletedTaskIdsInWorkspace(
+                Arg.Is<IEnumerable<int>>(requested => requested.SequenceEqual(ids)),
+                WorkspaceId,
+                Arg.Any<CancellationToken>())
+            .Returns([]);
         UnitOfWork.Tasks.Restore(Arg.Any<IEnumerable<int>>(), Arg.Any<CancellationToken>()).Returns([]);
 
         var result = await Handler.Handle(new RestoreTasksCommand(ids), TestContext.Current.CancellationToken);

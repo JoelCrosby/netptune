@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 using Netptune.Core.Enums;
 
 namespace Netptune.Core.Requests;
@@ -7,6 +9,7 @@ namespace Netptune.Core.Requests;
 // assignees carry a mode, because a bulk edit is as often "add these" as "make it exactly these".
 public class BulkUpdateTasksRequest
 {
+    [MaxLength(RequestLimits.MaxBulkIds)]
     public List<int> TaskIds { get; init; } = [];
 
     public int? StatusId { get; init; }
@@ -27,10 +30,12 @@ public class BulkUpdateTasksRequest
 
     public bool ClearDueDate { get; init; }
 
+    [MaxLength(RequestLimits.MaxBulkAssignees)]
     public List<string>? AssigneeIds { get; init; }
 
     public BulkCollectionMode AssigneeMode { get; init; }
 
+    [MaxLength(RequestLimits.MaxBulkTags)]
     public List<string>? Tags { get; init; }
 
     public BulkCollectionMode TagMode { get; init; }
