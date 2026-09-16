@@ -40,7 +40,7 @@ public class GetBoardViewQueryHandlerTests
 
         Identity.GetWorkspaceId().Returns(workspaceId);
         UnitOfWork.Boards.GetIdByIdentifier(identifier, workspaceId, TestContext.Current.CancellationToken).Returns(boardId);
-        UnitOfWork.BoardGroups.GetBoardViewGroups(boardId, Arg.Any<string>(), Arg.Any<string>(), Arg.Any<int?>(), TestContext.Current.CancellationToken).Returns(groups);
+        UnitOfWork.BoardGroups.GetBoardViewGroups(boardId, Arg.Any<string>(), Arg.Any<BoardGroupsFilter>(), TestContext.Current.CancellationToken).Returns(groups);
         UnitOfWork.Boards.GetViewModel(boardId, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(boardViewModel);
         UnitOfWork.Users.GetAllByIdAsync(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(users);
 
@@ -49,30 +49,24 @@ public class GetBoardViewQueryHandlerTests
         result.IsSuccess.Should().BeTrue();
     }
 
+    // Filtering itself now happens in SQL and is covered by BoardsEndpointTests; what the handler
+    // still owns is handing the filter to the repository untouched.
     [Fact]
-    public async Task GetBoardView_ShouldReturnOnlyUntaggedTasks_WhenHasTagsIsFalse()
+    public async Task GetBoardView_ShouldPassFilterToRepository_WhenFilterSupplied()
     {
-        var filter = BoardGroupsFilter.Empty() with { HasTags = false };
+        var filter = BoardGroupsFilter.Empty() with { HasTags = true, StatusIds = [4, 5] };
 
-        var result = await HandleWithTaggedAndUntaggedTasks(filter);
+        await HandleWithTaggedAndUntaggedTasks(filter);
 
-        result.IsSuccess.Should().BeTrue();
-        result.Payload!.Groups.Single().Tasks.Select(task => task.Id).Should().Equal(2);
+        await UnitOfWork.BoardGroups.Received(1).GetBoardViewGroups(
+            Arg.Any<int>(),
+            Arg.Any<string>(),
+            filter,
+            TestContext.Current.CancellationToken);
     }
 
     [Fact]
-    public async Task GetBoardView_ShouldReturnOnlyTaggedTasks_WhenHasTagsIsTrue()
-    {
-        var filter = BoardGroupsFilter.Empty() with { HasTags = true };
-
-        var result = await HandleWithTaggedAndUntaggedTasks(filter);
-
-        result.IsSuccess.Should().BeTrue();
-        result.Payload!.Groups.Single().Tasks.Select(task => task.Id).Should().Equal(1);
-    }
-
-    [Fact]
-    public async Task GetBoardView_ShouldReturnEveryTask_WhenHasTagsIsNotSupplied()
+    public async Task GetBoardView_ShouldReturnEveryTaskTheRepositoryGave_WhenNoFilterApplied()
     {
         var filter = BoardGroupsFilter.Empty();
 
@@ -98,7 +92,7 @@ public class GetBoardViewQueryHandlerTests
 
         Identity.GetWorkspaceId().Returns(workspaceId);
         UnitOfWork.Boards.GetIdByIdentifier(identifier, workspaceId, TestContext.Current.CancellationToken).Returns(boardId);
-        UnitOfWork.BoardGroups.GetBoardViewGroups(boardId, Arg.Any<string>(), Arg.Any<string>(), Arg.Any<int?>(), TestContext.Current.CancellationToken).Returns([group]);
+        UnitOfWork.BoardGroups.GetBoardViewGroups(boardId, Arg.Any<string>(), Arg.Any<BoardGroupsFilter>(), TestContext.Current.CancellationToken).Returns([group]);
         UnitOfWork.Boards.GetViewModel(boardId, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardViewModel);
         UnitOfWork.Users.GetAllByIdAsync(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns([]);
 
@@ -128,7 +122,7 @@ public class GetBoardViewQueryHandlerTests
 
         Identity.GetWorkspaceId().Returns(workspaceId);
         UnitOfWork.Boards.GetIdByIdentifier(identifier, workspaceId, TestContext.Current.CancellationToken).ReturnsNull();
-        UnitOfWork.BoardGroups.GetBoardViewGroups(Arg.Any<int>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<int?>(), TestContext.Current.CancellationToken).Returns(new List<BoardViewGroup> { AutoFixtures.BoardViewGroup });
+        UnitOfWork.BoardGroups.GetBoardViewGroups(Arg.Any<int>(), Arg.Any<string>(), Arg.Any<BoardGroupsFilter>(), TestContext.Current.CancellationToken).Returns(new List<BoardViewGroup> { AutoFixtures.BoardViewGroup });
         UnitOfWork.Boards.GetViewModel(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardViewModel);
         UnitOfWork.Users.GetAllByIdAsync(Arg.Any<List<string>>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(new List<AppUser> { AutoFixtures.AppUser });
 
@@ -147,7 +141,7 @@ public class GetBoardViewQueryHandlerTests
 
         Identity.GetWorkspaceId().Returns(workspaceId);
         UnitOfWork.Boards.GetIdByIdentifier(identifier, workspaceId, TestContext.Current.CancellationToken).Returns(boardId);
-        UnitOfWork.BoardGroups.GetBoardViewGroups(Arg.Any<int>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<int?>(), TestContext.Current.CancellationToken).Returns(new List<BoardViewGroup> { AutoFixtures.BoardViewGroup });
+        UnitOfWork.BoardGroups.GetBoardViewGroups(Arg.Any<int>(), Arg.Any<string>(), Arg.Any<BoardGroupsFilter>(), TestContext.Current.CancellationToken).Returns(new List<BoardViewGroup> { AutoFixtures.BoardViewGroup });
         UnitOfWork.Boards.GetViewModel(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
         UnitOfWork.Users.GetAllByIdAsync(Arg.Any<List<string>>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(new List<AppUser> { AutoFixtures.AppUser });
 
@@ -166,7 +160,7 @@ public class GetBoardViewQueryHandlerTests
 
         Identity.GetWorkspaceId().Returns(workspaceId);
         UnitOfWork.Boards.GetIdByIdentifier(identifier, workspaceId, TestContext.Current.CancellationToken).Returns(boardId);
-        UnitOfWork.BoardGroups.GetBoardViewGroups(Arg.Any<int>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<int?>(), TestContext.Current.CancellationToken).ReturnsNull();
+        UnitOfWork.BoardGroups.GetBoardViewGroups(Arg.Any<int>(), Arg.Any<string>(), Arg.Any<BoardGroupsFilter>(), TestContext.Current.CancellationToken).ReturnsNull();
         UnitOfWork.Boards.GetViewModel(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardViewModel);
         UnitOfWork.Users.GetAllByIdAsync(Arg.Any<List<string>>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(new List<AppUser> { AutoFixtures.AppUser });
 

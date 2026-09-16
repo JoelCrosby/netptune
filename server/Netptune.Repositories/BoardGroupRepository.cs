@@ -8,6 +8,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Repositories;
+using Netptune.Core.Requests;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.ViewModels.Boards;
 using Netptune.Core.ViewModels.Users;
@@ -38,11 +39,14 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
     public async Task<List<BoardViewGroup>?> GetBoardViewGroups(
         int boardId,
         string? currentUserId,
-        string? searchTerm = null,
-        int? sprintId = null,
+        BoardGroupsFilter? filter = null,
         CancellationToken cancellationToken = default)
     {
         using var connection = ConnectionFactory.StartConnection();
+
+        filter ??= BoardGroupsFilter.Empty();
+
+        var searchTerm = filter.Term;
 
         // websearch_to_tsquery treats spaces as AND; join words with "or" to preserve
         // the original match-any-word behaviour while staying injection-safe.
@@ -51,10 +55,27 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
             : string.Join(" or ", searchTerm.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries));
 
         var searchPattern = $"%{searchTerm?.Trim().ToLowerInvariant()}%";
+        var assignees = filter.Users.Where(user => !string.IsNullOrWhiteSpace(user)).ToArray();
+        var tags = filter.Tags.Where(tag => !string.IsNullOrWhiteSpace(tag)).ToArray();
+
+        var parameters = new
+        {
+            boardId,
+            currentUserId,
+            searchPhrase,
+            searchPattern,
+            sprintId = filter.SprintId,
+            taskEntityType = EntityType.Task,
+            statusIds = filter.StatusIds,
+            assignees,
+            tags,
+            hasTags = filter.HasTags,
+            groupTaskLimit = BoardViewLimits.MaxTasksPerGroup,
+        };
 
         var results = await connection.QueryMultipleAsync(new CommandDefinition(
             SqlScripts.GetBoardView,
-            new { boardId, currentUserId, searchPhrase, searchPattern, sprintId, taskEntityType = EntityType.Task },
+            parameters,
             cancellationToken: cancellationToken));
 
         var rows = results.Read<BoardViewRowMap>();
@@ -77,6 +98,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                     Name = row.Board_Group_Name,
                     SortOrder = row.Board_Group_Sort_Order,
                     StatusId = row.Board_Group_Status_Id,
+                    TotalTaskCount = row.Group_Task_Count,
                     Tasks = new List<BoardViewTask>(),
                 };
 

@@ -3,6 +3,11 @@ using Netptune.Core.ViewModels.Users;
 
 namespace Netptune.Core.ViewModels.Boards;
 
+public static class BoardViewLimits
+{
+    public const int MaxTasksPerGroup = 500;
+}
+
 public class BoardView
 {
     public BoardViewModel Board { get; set; } = null!;
@@ -25,6 +30,10 @@ public class BoardViewGroup
     public int? StatusId { get; set; }
 
     public IList<BoardViewTask> Tasks { get; set; } = null!;
+
+    public int TotalTaskCount { get; set; }
+
+    public bool IsTruncated => TotalTaskCount > Tasks.Count;
 }
 
 public class BoardViewTask

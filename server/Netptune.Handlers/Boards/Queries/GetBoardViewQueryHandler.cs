@@ -34,41 +34,17 @@ public sealed class GetBoardViewQueryHandler : IRequestHandler<GetBoardViewQuery
         var groups = await UnitOfWork.BoardGroups.GetBoardViewGroups(
             boardId,
             currentUserId,
-            request.Filter?.Term,
-            request.Filter?.SprintId,
+            request.Filter,
             cancellationToken);
         var board = await UnitOfWork.Boards.GetViewModel(boardId, true, cancellationToken);
 
         if (groups is null || board is null) return ClientResponse<BoardView>.Failed();
-
-        var includeUserFilter = request.Filter?.Users.Any() ?? false;
-        var includeTagFilter = request.Filter?.Tags.Any() ?? false;
-        var includeStatusFilter = request.Filter?.StatusIds.Any() ?? false;
-        var requiredTagPresence = request.Filter?.HasTags;
 
         var userIds = groups
             .SelectMany(group => group.Tasks)
             .SelectMany(task => task.Assignees)
             .Select(rel => rel.Id)
             .ToHashSet();
-
-        foreach (var group in groups)
-        {
-            group.Tasks = group.Tasks.Where(task =>
-            {
-                var matchUser = !includeUserFilter || (request.Filter?.Users.Any(u => task.Assignees.Any(a => a.Id == u)) ?? true);
-                if (!matchUser) return false;
-
-                var matchTag = !includeTagFilter || (request.Filter?.Tags.Intersect(task.Tags).Any() ?? true);
-                if (!matchTag) return false;
-
-                var matchTagPresence = requiredTagPresence is null || requiredTagPresence == task.Tags.Any();
-                if (!matchTagPresence) return false;
-
-                var matchStatus = !includeStatusFilter || (request.Filter?.StatusIds.Contains(task.StatusId) ?? true);
-                return matchStatus;
-            }).ToList();
-        }
 
         var userEntities = await UnitOfWork.Users.GetAllByIdAsync(userIds, true, cancellationToken);
         var users = userEntities.Select(user => user.ToViewModel());

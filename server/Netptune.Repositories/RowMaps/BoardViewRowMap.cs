@@ -54,6 +54,8 @@ public class BoardViewRowMap
 
     public double Board_Group_Sort_Order { get; set; }
 
+    public int Group_Task_Count { get; set; }
+
     public string[] Tags { get; set; } = [];
 
     public int[] Pinned_Scopes { get; set; } = [];

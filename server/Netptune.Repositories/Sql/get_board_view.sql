@@ -12,7 +12,7 @@ WITH board_groups_for_board AS (
 ),
 -- MATERIALIZED because this is referenced once and postgres would otherwise inline it, re-running
 -- the whole task scan and search filter for every board group rather than once for the board.
-limited_tasks AS MATERIALIZED (
+filtered_tasks AS MATERIALIZED (
     SELECT pt.id               AS task_id
          , pt.name             AS task_name
          , pt.priority         AS task_priority
@@ -35,6 +35,7 @@ limited_tasks AS MATERIALIZED (
          , bg.id               AS board_group_id
          , pt.workspace_id     AS workspace_id
          , pt.project_id       AS project_id
+         , ROW_NUMBER() OVER (PARTITION BY bg.id ORDER BY ptibg.sort_order, pt.id) AS group_row_number
     FROM board_groups_for_board bg
              INNER JOIN project_task_in_board_groups ptibg on bg.id = ptibg.board_group_id
              INNER JOIN project_tasks pt on pt.id = ptibg.project_task_id
@@ -46,6 +47,39 @@ limited_tasks AS MATERIALIZED (
       AND (@searchPhrase IS NULL
            OR to_tsvector('english', pt.name) @@ websearch_to_tsquery('english', @searchPhrase)
            OR LOWER(CONCAT(p.key, '-', pt.project_scope_id)) LIKE @searchPattern)
+      AND (CARDINALITY(@statusIds) = 0 OR pt.status_id = ANY(@statusIds))
+      AND (CARDINALITY(@assignees) = 0 OR EXISTS (
+          SELECT 1
+          FROM project_task_app_users ptau_filter
+          WHERE ptau_filter.project_task_id = pt.id
+            AND ptau_filter.user_id = ANY(@assignees)
+      ))
+      AND (CARDINALITY(@tags) = 0 OR EXISTS (
+          SELECT 1
+          FROM project_task_tags ptt_filter
+                   INNER JOIN tags t_filter ON ptt_filter.tag_id = t_filter.id AND NOT t_filter.is_deleted
+          WHERE ptt_filter.project_task_id = pt.id
+            AND t_filter.name = ANY(@tags)
+      ))
+      AND (@hasTags IS NULL OR @hasTags = EXISTS (
+          SELECT 1
+          FROM project_task_tags ptt_presence
+                   INNER JOIN tags t_presence ON ptt_presence.tag_id = t_presence.id AND NOT t_presence.is_deleted
+          WHERE ptt_presence.project_task_id = pt.id
+      ))
+),
+-- A board column is read, not paged, so the cap is per column and the client is told when it bites
+-- rather than being handed every task the column has ever held.
+limited_tasks AS (
+    SELECT *
+    FROM filtered_tasks
+    WHERE group_row_number <= @groupTaskLimit
+),
+group_counts AS (
+    SELECT board_group_id
+         , COUNT(*)::integer AS group_task_count
+    FROM filtered_tasks
+    GROUP BY board_group_id
 )
 SELECT lt.task_id
      , lt.task_name
@@ -72,6 +106,7 @@ SELECT lt.task_id
      , bg.sort_order       AS board_group_sort_order
      , lt.workspace_id
      , lt.project_id
+     , COALESCE(gc.group_task_count, 0) AS group_task_count
      , EXISTS (
            SELECT 1
            FROM comments c
@@ -127,6 +162,7 @@ SELECT lt.task_id
 FROM board_groups_for_board bg
 
          LEFT JOIN limited_tasks lt on bg.id = lt.board_group_id
+         LEFT JOIN group_counts gc on bg.id = gc.board_group_id
 
 ORDER BY bg.sort_order, bg.id, lt.task_sort_order, lt.task_id;
 

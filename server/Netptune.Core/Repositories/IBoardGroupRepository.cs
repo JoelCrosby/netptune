@@ -1,6 +1,7 @@
 using Netptune.Core.Entities;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Requests;
 using Netptune.Core.ViewModels.Boards;
 
 namespace Netptune.Core.Repositories;
@@ -10,7 +11,7 @@ public interface IBoardGroupRepository : IWorkspaceEntityRepository<BoardGroup, 
 
     Task<List<BoardGroup>> GetBoardGroupsInBoard(int boardId, bool isReadonly = false, CancellationToken cancellationToken = default);
 
-    Task<List<BoardViewGroup>?> GetBoardViewGroups(int boardId, string? currentUserId, string? searchTerm = null, int? sprintId = null, CancellationToken cancellationToken = default);
+    Task<List<BoardViewGroup>?> GetBoardViewGroups(int boardId, string? currentUserId, BoardGroupsFilter? filter = null, CancellationToken cancellationToken = default);
 
     Task<BoardGroupTaskTarget?> GetTaskTarget(int groupId, CancellationToken cancellationToken = default);
 

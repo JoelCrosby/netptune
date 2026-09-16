@@ -7,6 +7,8 @@ using Netptune.Core.Requests;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Boards;
+using Netptune.Core.ViewModels.ProjectTasks;
+using Netptune.TestData;
 
 using Xunit;
 
@@ -196,17 +198,103 @@ public sealed class BoardsEndpointTests
     [Fact]
     public async Task GetBoardView_ShouldExcludeTaggedTasks_WhenHasTagsFalse()
     {
+        var tagged = await SeedBoardTask("tagged", ["Typescript"]);
+        var untagged = await SeedBoardTask("untagged", []);
+
         var tasks = await GetBoardViewTasks("api/boards/view/neovim?hasTags=false");
 
         tasks.Should().NotContain(task => task.Tags.Count > 0);
+        tasks.Should().Contain(task => task.Id == untagged.Id);
+        tasks.Should().NotContain(task => task.Id == tagged.Id);
     }
 
     [Fact]
     public async Task GetBoardView_ShouldExcludeUntaggedTasks_WhenHasTagsTrue()
     {
+        var tagged = await SeedBoardTask("tagged", ["Typescript"]);
+        var untagged = await SeedBoardTask("untagged", []);
+
         var tasks = await GetBoardViewTasks("api/boards/view/neovim?hasTags=true");
 
         tasks.Should().NotContain(task => task.Tags.Count == 0);
+        tasks.Should().Contain(task => task.Id == tagged.Id);
+        tasks.Should().NotContain(task => task.Id == untagged.Id);
+    }
+
+    // The seeded board columns hold no tasks, so these place one themselves. Without that the
+    // assertions pass against an empty board and prove nothing about the filters.
+    [Fact]
+    public async Task GetBoardView_ShouldReturnOnlyMatchingStatuses_WhenStatusIdsProvided()
+    {
+        var seeded = await SeedBoardTask("status filter", ["Typescript"]);
+
+        var tasks = await GetBoardViewTasks($"api/boards/view/neovim?statusIds={seeded.StatusId}");
+
+        tasks.Should().NotBeEmpty();
+        tasks.Should().OnlyContain(task => task.StatusId == seeded.StatusId);
+        tasks.Should().Contain(task => task.Id == seeded.Id);
+    }
+
+    [Fact]
+    public async Task GetBoardView_ShouldReturnOnlyMatchingAssignees_WhenUsersProvided()
+    {
+        var assignee = SeedData.Users.ElementAt(0);
+        var seeded = await SeedBoardTask("assignee filter", ["Typescript"], assignee.Id);
+
+        var tasks = await GetBoardViewTasks($"api/boards/view/neovim?users={assignee.Id}");
+
+        tasks.Should().NotBeEmpty();
+        tasks.Should().OnlyContain(task => task.Assignees.Any(user => user.Id == assignee.Id));
+        tasks.Should().Contain(task => task.Id == seeded.Id);
+    }
+
+    [Fact]
+    public async Task GetBoardView_ShouldReturnOnlyMatchingTags_WhenTagsProvided()
+    {
+        var seeded = await SeedBoardTask("tag filter", ["Typescript"]);
+
+        var tasks = await GetBoardViewTasks("api/boards/view/neovim?tags=Typescript");
+
+        tasks.Should().NotBeEmpty();
+        tasks.Should().OnlyContain(task => task.Tags.Contains("Typescript"));
+        tasks.Should().Contain(task => task.Id == seeded.Id);
+    }
+
+    [Fact]
+    public async Task GetBoardView_ShouldReportTheColumnSize_WhenNothingIsTruncated()
+    {
+        await SeedBoardTask("column size", []);
+
+        var response = await Client.GetAsync("api/boards/view/neovim");
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<BoardView>>();
+        var groups = result.Payload!.Groups.ToList();
+
+        groups.Should().NotBeEmpty();
+        groups.Should().Contain(group => group.Tasks.Count > 0);
+        groups.Should().OnlyContain(group => group.TotalTaskCount == group.Tasks.Count);
+        groups.Should().OnlyContain(group => !group.IsTruncated);
+    }
+
+    private async Task<TaskViewModel> SeedBoardTask(string name, List<string> tags, string? assigneeId = null)
+    {
+        var view = await Client.GetFromJsonAsync<ClientResponse<BoardView>>("api/boards/view/neovim");
+        var boardGroupId = view.Payload!.Groups.First().Id;
+
+        var response = await Client.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest
+        {
+            Name = $"Board view {name} {Guid.NewGuid():N}"[..48],
+            Description = "Task used to verify board view filtering",
+            ProjectId = 1,
+            BoardGroupId = boardGroupId,
+            Tags = tags,
+            AssigneeIds = assigneeId is null ? null : [assigneeId],
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var created = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+
+        return created.Payload!;
     }
 
     private async Task<List<BoardViewTask>> GetBoardViewTasks(string url)
