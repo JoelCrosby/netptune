@@ -16,6 +16,7 @@ using Netptune.Repositories.Configuration;
 using Netptune.Search;
 using Netptune.ServiceDefaults;
 using Netptune.ServiceDefaults.Middleware;
+using Netptune.ServiceDefaults.Networking;
 using Netptune.Services.Configuration;
 
 using Scalar.AspNetCore;
@@ -34,6 +35,10 @@ var connectionString = configuration.GetNetptuneConnectionString("netptune");
 var redisConnectionString = configuration.GetNetptuneRedisConnectionString();
 var natsConnectionString = configuration.GetNetptuneNatsConnectionString();
 
+builder.Services.AddNetptuneClientIpAddress(configuration);
+
+// Scheme and host only. The client address is resolved by UseNetptuneClientIpAddress, which runs
+// first and can still see which peer actually opened the connection.
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders =
@@ -74,6 +79,7 @@ builder.Services.AddApiOpenApi();
 var app = builder.Build();
 
 app.UseNetptuneRequestDefaults();
+app.UseNetptuneClientIpAddress();
 app.UseForwardedHeaders();
 app.UseMiddleware<ContentSecurityPolicyMiddleware>();
 app.UseMiddleware<PreAuthenticationRateLimiterMiddleware>();

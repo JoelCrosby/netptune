@@ -1,5 +1,7 @@
 using System.Threading.RateLimiting;
 
+using Netptune.ServiceDefaults.Networking;
+
 namespace Netptune.Api.Configuration;
 
 public sealed class PreAuthenticationRateLimiter : IDisposable
@@ -7,7 +9,7 @@ public sealed class PreAuthenticationRateLimiter : IDisposable
     private readonly PartitionedRateLimiter<HttpContext> Limiter =
         PartitionedRateLimiter.Create<HttpContext, string>(context =>
             RateLimitPartition.GetSlidingWindowLimiter(
-                context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                context.GetClientIpAddress() ?? "unknown",
                 _ => new SlidingWindowRateLimiterOptions
                 {
                     PermitLimit = 300,

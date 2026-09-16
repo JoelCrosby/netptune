@@ -24,6 +24,7 @@ using Netptune.Repositories.Configuration;
 using Netptune.Search;
 using Netptune.ServiceDefaults;
 using Netptune.ServiceDefaults.Middleware;
+using Netptune.ServiceDefaults.Networking;
 using Netptune.Services.Configuration;
 using Netptune.Storage;
 using Netptune.Transfer;
@@ -61,12 +62,16 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddNetptuneClientIpAddress(configuration);
+
+// Scheme and host only. The client address is resolved by UseNetptuneClientIpAddress, which runs
+// first and can still see which peer actually opened the connection.
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders =
-        ForwardedHeaders.XForwardedFor
-        | ForwardedHeaders.XForwardedProto
-        | ForwardedHeaders.XForwardedHost;
+        ForwardedHeaders.XForwardedFor  |
+        ForwardedHeaders.XForwardedProto |
+        ForwardedHeaders.XForwardedHost;
     options.KnownIPNetworks.Clear();
     options.KnownProxies.Clear();
 });
@@ -155,6 +160,7 @@ builder.Services.AddNetptuneWorkspaceStorage(configuration);
 var app = builder.Build();
 
 app.UseNetptuneRequestDefaults();
+app.UseNetptuneClientIpAddress();
 app.UseForwardedHeaders();
 
 app.UseRouting();

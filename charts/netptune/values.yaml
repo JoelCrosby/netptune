@@ -1,3 +1,36 @@
+# Who the application believes about a caller's address.
+#
+# networks lists the peers whose forwarding headers are worth reading at all. Requests arriving from
+# anywhere else are rate limited by the address that actually opened the socket.
+#
+# clientAddressHeader names the header the edge puts the caller's address in. It is deliberately not
+# hard coded in the application -- swapping CDN is a values change, not a code change. Cloudflare uses
+# CF-Connecting-IP; Akamai and Fastly use True-Client-IP. Empty means the standard X-Forwarded-For
+# chain is used on its own.
+#
+# The origin has a public address, so the ingress being a trusted peer is not by itself evidence that
+# a request came through the edge -- anyone can connect to the origin and claim whatever address they
+# like. edgeAuthorizationHeader/Secret closes that: the edge stamps a secret only it knows, and the
+# address header is believed only when the secret is present.
+#
+# This is preferred over fencing the origin off by IP range. An allowlist of the CDN's addresses has
+# to be refreshed by hand whenever the CDN changes them, and a stale list takes the site down; this
+# has nothing in it that expires or drifts.
+#
+# Set the secret with a Cloudflare Transform Rule (Rules -> Transform Rules -> Modify Request Header,
+# set edgeAuthorizationHeader to the same value on all requests to the origin). Any CDN that can add
+# a request header works the same way.
+trustedProxies:
+  networks:
+    - "10.0.0.0/8"
+    - "172.16.0.0/12"
+    - "192.168.0.0/16"
+    - "127.0.0.0/8"
+    - "::1/128"
+    - "fc00::/7"
+  clientAddressHeader: "CF-Connecting-IP"
+  edgeAuthorizationHeader: "X-Netptune-Edge"
+
 ingress:
   enabled: true
   host: "netptune.co.uk"
@@ -250,6 +283,7 @@ secrets:
     s3_secret_access_key: ""
   app:
     cache_password: ""
+    edge_authorization_secret: ""
     postgres_password: ""
     signing_key: ""
     github_client_id: ""
@@ -271,6 +305,7 @@ secrets:
     cloudflare_account_id: ""
   api:
     cache_password: ""
+    edge_authorization_secret: ""
     postgres_password: ""
 config:
   postgres:

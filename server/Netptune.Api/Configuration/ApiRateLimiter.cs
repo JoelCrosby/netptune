@@ -2,6 +2,7 @@ using System.Security.Claims;
 using System.Threading.RateLimiting;
 
 using Netptune.Core.Authorization;
+using Netptune.ServiceDefaults.Networking;
 
 namespace Netptune.Api.Configuration;
 
@@ -41,10 +42,8 @@ public static class ApiRateLimiter
             return $"credential:{credentialId}";
         }
 
-        var connectingIp = context.Request.Headers["CF-Connecting-IP"].FirstOrDefault();
-        var forwardedFor = context.Request.Headers["X-Forwarded-For"].FirstOrDefault();
-        var forwardedKey = connectingIp ?? forwardedFor;
+        var clientAddress = context.GetClientIpAddress();
 
-        return $"ip:{forwardedKey ?? context.Connection.RemoteIpAddress?.ToString() ?? "unknown"}";
+        return $"ip:{clientAddress ?? "unknown"}";
     }
 }

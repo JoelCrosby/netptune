@@ -76,6 +76,8 @@ public sealed class NetptuneFixture : IAsyncLifetime
         Environment.SetEnvironmentVariable("ConnectionStrings__nats", NatsContainer.GetConnectionString());
         Environment.SetEnvironmentVariable("ConnectionStrings__meilisearch", GetSearchConnectionString());
 
+        Environment.SetEnvironmentVariable("TrustedProxies__TrustRequestsWithoutPeerAddress", "true");
+
         Environment.SetEnvironmentVariable("RateLimiting__ApiPermitLimit", "100000");
         Environment.SetEnvironmentVariable("RateLimiting__AuthPermitLimit", "100000");
         Environment.SetEnvironmentVariable("RateLimiting__RegisterPermitLimit", "100000");

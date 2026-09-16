@@ -23,6 +23,13 @@ data:
   POSTGRESDB_JDBCCONNECTIONSTRING: "{{ .Values.config.app.POSTGRESDB_JDBCCONNECTIONSTRING }}"
   POSTGRESDB_DATABASENAME: "{{ .Values.config.app.POSTGRESDB_DATABASENAME }}"
   ConnectionStrings__nats: "{{ .Values.config.app.ConnectionStrings__nats }}"
+  TrustedProxies__ClientAddressHeader: "{{ .Values.trustedProxies.clientAddressHeader }}"
+{{- if .Values.secrets.app.edge_authorization_secret }}
+  TrustedProxies__EdgeAuthorizationHeader: "{{ .Values.trustedProxies.edgeAuthorizationHeader }}"
+{{- end }}
+{{- range $index, $network := .Values.trustedProxies.networks }}
+  TrustedProxies__Networks__{{ $index }}: "{{ $network }}"
+{{- end }}
 {{- if .Values.aspire.enabled }}
   OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard-service:18889"
   OTEL_EXPORTER_OTLP_PROTOCOL: "grpc"

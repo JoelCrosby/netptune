@@ -18,21 +18,22 @@ traefik:
       enabled: false
 
   # Provisions the Vultr load balancer that Cloudflare treats as the origin.
+  #
+  # loadBalancerSourceRanges is deliberately left unset. Restricting the origin to the CDN's published
+  # address ranges is the usual advice, and Cloudflare rates it "moderately secure", but the list has
+  # to be refreshed by hand whenever those ranges change and a stale list refuses real traffic. That
+  # makes continued operation depend on a recurring manual task, which is not a trade worth making
+  # here.
+  #
+  # What that allowlist is usually protecting -- the client address header being believable -- is
+  # handled in the application instead, by having the edge stamp a secret only it knows. See
+  # trustedProxies in charts/netptune/values.yaml. Nothing in that scheme expires or drifts.
+  #
+  # Set this if you later want the origin closed at the network layer too, for DDoS and WAF-bypass
+  # reasons rather than address-header reasons. The current ranges are at
+  # https://www.cloudflare.com/ips, and the list must be reviewed whenever they change.
   service:
     type: LoadBalancer
-
-  # Traefik previously ran with no resource requests at all, which put it in the
-  # BestEffort QoS class — first in line to be CPU starved. On a saturated node that
-  # produced a restart loop and Cloudflare 520/525 responses, because Traefik is the
-  # origin's TLS terminator. A request moves it to Burstable and lets the scheduler
-  # place it somewhere with real headroom. No CPU limit on purpose: throttling an
-  # ingress under load is worse than letting it burst.
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      memory: 256Mi
 
   # Chart defaults are timeoutSeconds 2 on both probes with readiness failureThreshold 1,
   # so a single slow response pulled Traefik out of the Service endpoints and three killed

@@ -58,6 +58,44 @@ Cloudflare points at.
 The vendored subchart under `charts/traefik/charts/` is gitignored; `Chart.lock` pins the
 version and `helm dependency update` restores it.
 
+## Client addresses and the edge
+
+Rate limiting partitions on the caller's address, so the application has to know which address to
+believe. Requests arrive from the ingress, not from the caller, and the caller's own address comes in
+a header the CDN adds. Anyone who reaches the origin without going through the CDN can set that
+header to whatever they like, which would let them mint a fresh rate limit partition per request.
+
+The origin has a public address and answers on it, so being behind Cloudflare is not by itself
+evidence that a given request came through Cloudflare. The application therefore believes the address
+header only when the request also carries a secret that only the edge knows.
+
+Two things have to agree:
+
+1. A **Cloudflare Transform Rule** — Rules → Transform Rules → Modify Request Header → *Set static*,
+   applied to all requests, setting the header named by `trustedProxies.edgeAuthorizationHeader`
+   (default `X-Netptune-Edge`) to a generated secret.
+2. **`secrets.app.edge_authorization_secret`** and **`secrets.api.edge_authorization_secret`** in
+   `values.secret.yaml`, set to that same value.
+
+Leave the secret empty and the check is skipped, which is what local development does. Set only one
+half and the application refuses to start rather than quietly falling back — a half-configured check
+would otherwise show up days later as rate limits behaving oddly.
+
+Nothing here expires or needs refreshing. Rotating the secret means updating the Transform Rule and
+the Helm secret; there is no scheduled maintenance.
+
+Swapping CDN means changing `trustedProxies.clientAddressHeader` to whatever that CDN uses
+(`True-Client-IP` for Akamai and Fastly) and recreating the equivalent header rule. No application
+code changes.
+
+### Why not an origin IP allowlist
+
+Restricting the load balancer to Cloudflare's published ranges is the more usual advice, and
+`charts/traefik/values.yaml` documents how. It is not used here because the range list has to be
+refreshed by hand and a stale list refuses real traffic — it makes continued operation depend on a
+recurring manual task. It remains worth adding if you later want the origin closed for DDoS or
+WAF-bypass reasons, which the edge secret does not address.
+
 ## Local Development
 
 The server projects use [.NET Aspire](https://learn.microsoft.com/en-us/dotnet/aspire/) for local orchestration. Docker is required.
