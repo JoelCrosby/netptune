@@ -16,9 +16,26 @@ namespace Netptune.Repositories;
 
 public sealed class ReportingRepository : IReportingRepository
 {
+    // Cycle time for a task finished inside the window needs the event that created it, which can sit
+    // before the window. That lookback is bounded so it cannot widen into the whole ledger.
+    private const int MaxLookbackDays = 366;
+
+    private const int MaxFlowEvents = 200_000;
+
     private sealed record ReportingEventScope(ReportingScope Scope, int? ProjectId);
 
     private sealed record ReportingEventRange(DateTime From, DateTime To);
+
+    private sealed record FlowEventRecord
+    {
+        public required string EventKey { get; init; }
+
+        public required string? SubjectId { get; init; }
+
+        public required DateTime OccurredAt { get; init; }
+
+        public required JsonDocument Payload { get; init; }
+    }
 
     private readonly DataContext Context;
 
@@ -35,13 +52,21 @@ public sealed class ReportingRepository : IReportingRepository
         var eventScope = new ReportingEventScope(scope, filter.ProjectId);
 
         var coverageStart = await CoverageStart(eventScope, cancellationToken);
-        var eventRange = new ReportingEventRange(coverageStart ?? from, to);
+        var earliestQueryable = from.AddDays(-MaxLookbackDays);
+        var requestedStart = coverageStart ?? from;
+        var boundedStart = requestedStart < earliestQueryable ? earliestQueryable : requestedStart;
+        var eventRange = new ReportingEventRange(boundedStart, to);
 
-        var events = await QueryEvents(eventScope, eventRange, cancellationToken);
+        // What the report can actually speak to: the later of where the ledger begins and where the
+        // bounded lookback begins, still null when there is no ledger to cover anything.
+        var hasLedger = coverageStart is not null;
+        var effectiveCoverageStart = hasLedger ? boundedStart : (DateTime?)null;
+
+        var events = await QueryFlowEvents(eventScope, eventRange, cancellationToken);
 
         var facts = new List<FlowFact>();
 
-        foreach (var record in events.Where(record => record.SubjectType == "task"))
+        foreach (var record in events)
         {
             if (record.SubjectId is null)
             {
@@ -87,7 +112,7 @@ public sealed class ReportingRepository : IReportingRepository
             TimeZone = timeZone,
             From = from,
             To = to,
-            CoverageStart = coverageStart,
+            CoverageStart = effectiveCoverageStart,
             Grouping = filter.Grouping,
         };
         var report = FlowMetricCalculator.Calculate(calculation);
@@ -394,7 +419,10 @@ public sealed class ReportingRepository : IReportingRepository
         return members;
     }
 
-    private async Task<List<EventRecord>> QueryEvents(
+    // Only the task creation and status transition events reach the flow calculation, and only four of
+    // their columns. Selecting the whole record with its references pulled the entire ledger into
+    // memory to throw most of it away.
+    private async Task<List<FlowEventRecord>> QueryFlowEvents(
         ReportingEventScope eventScope,
         ReportingEventRange range,
         CancellationToken token)
@@ -403,16 +431,37 @@ public sealed class ReportingRepository : IReportingRepository
 
         var query = Context.EventRecords
             .AsNoTracking()
-            .Include(record => record.References)
             .Where(record => record.WorkspaceId == eventScope.Scope.WorkspaceId &&
                 record.OccurredAt >= range.From &&
-                record.OccurredAt <= range.To);
+                record.OccurredAt <= range.To &&
+                record.SubjectType == "task" &&
+                record.SubjectId != null &&
+                (record.EventKey == EventKeys.EntityCreated || record.EventKey == EventKeys.EntityFieldTransitioned));
 
         query = eventScope.ProjectId.HasValue
             ? query.Where(record => record.References.Any(reference => reference.EntityType == "project" && reference.EntityId == eventScope.ProjectId.Value.ToString()))
             : query.Where(record => record.References.Any(reference => reference.EntityType == "project" && visibleProjectIds.Contains(reference.EntityId)));
 
-        var events = await query.OrderBy(record => record.OccurredAt).ThenBy(record => record.Id).ToListAsync(token);
+        var events = await query
+            .OrderBy(record => record.OccurredAt)
+            .ThenBy(record => record.Id)
+            .Take(MaxFlowEvents + 1)
+            .Select(record => new FlowEventRecord
+            {
+                EventKey = record.EventKey,
+                SubjectId = record.SubjectId,
+                OccurredAt = record.OccurredAt,
+                Payload = record.Payload,
+            })
+            .ToListAsync(token);
+
+        // Truncating would drop the newest events and quietly report the wrong throughput, so an
+        // over-large window is refused rather than answered inaccurately.
+        if (events.Count > MaxFlowEvents)
+        {
+            throw new InvalidReportingFilterException(
+                "This range covers too much history to report on. Narrow the dates or pick a single project.");
+        }
 
         return events;
     }
