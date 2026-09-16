@@ -22,7 +22,7 @@ public static class SearchEndpoints
         IMediator mediator,
         string? q,
         [Microsoft.AspNetCore.Mvc.FromQuery(Name = "types")] string[]? types,
-        int limit = 20,
+        int limit = SearchQueryHandler.DefaultLimit,
         CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(q)) return Results.Ok(new { results = Array.Empty<object>(), processingTimeMs = 0 });

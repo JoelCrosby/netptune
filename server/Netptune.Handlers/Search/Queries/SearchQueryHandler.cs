@@ -12,6 +12,9 @@ public sealed record SearchQuery(string Q, string[]? Types = null, int Limit = 2
 
 public sealed class SearchQueryHandler : IRequestHandler<SearchQuery, SearchResponse>
 {
+    public const int DefaultLimit = 20;
+    public const int MaximumLimit = 100;
+
     private readonly IMeilisearchService Search;
     private readonly IIdentityService Identity;
     private readonly INetptuneUnitOfWork UnitOfWork;
@@ -26,7 +29,8 @@ public sealed class SearchQueryHandler : IRequestHandler<SearchQuery, SearchResp
     public async ValueTask<SearchResponse> Handle(SearchQuery request, CancellationToken cancellationToken)
     {
         var workspaceSlug = Identity.GetWorkspaceKey();
-        var query = new GlobalSearchQuery(request.Q, workspaceSlug, request.Types, request.Limit);
+        var limit = Math.Clamp(request.Limit, 1, MaximumLimit);
+        var query = new GlobalSearchQuery(request.Q, workspaceSlug, request.Types, limit);
         var response = await Search.SearchAsync(query, cancellationToken);
         var results = await HydrateTaskResults(response.Results, workspaceSlug, cancellationToken);
         var exactTask = await ResolveExactTask(request, workspaceSlug, cancellationToken);
