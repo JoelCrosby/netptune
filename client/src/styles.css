@@ -77,6 +77,10 @@
   --radius: var(--border-radius);
   --radius-sm: var(--border-radius-small);
 
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', ui-sans-serif,
+    system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
   --font-overpass: 'Overpass', sans-serif;
   --font-avatar: 'Roboto Mono', 'Roboto', sans-serif;
 
