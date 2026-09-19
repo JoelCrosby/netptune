@@ -48,7 +48,6 @@
     "**/.cache/**": true,
     "**/.angular/**": true
   },
-  "dotnet.defaultSolution": "server/Netptune.sln",
   "[typescript]": {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode"

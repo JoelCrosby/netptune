@@ -6,6 +6,7 @@ import {
   inject,
   input,
   linkedSignal,
+  viewChild,
 } from '@angular/core';
 import {
   NotificationScope,
@@ -17,7 +18,10 @@ import { NotificationSubscriptionCommandsService } from '@core/services/notifica
 import { NotificationSubscriptionsService } from '@core/services/notification-subscriptions.service';
 import { LucideBell, LucideBellRing } from '@lucide/angular';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
-import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
+import {
+  DropdownMenuComponent,
+  DropdownMenuXPosition,
+} from '@static/components/dropdown-menu/dropdown-menu.component';
 import { MenuCheckboxItemComponent } from '@static/components/dropdown-menu/menu-checkbox-item.component';
 import { FilterActionButtonComponent } from '@static/components/filter-action-button/filter-action-button.component';
 
@@ -66,7 +70,7 @@ const EVENT_OPTIONS: EventOption[] = [
         [color]="isSubscribed() ? 'primary' : undefined"
         [dot]="isSubscribed()"
         (action)="menu.toggle(el.nativeElement)" />
-    } @else {
+    } @else if (appearance() === 'icon') {
       <button
         app-icon-button
         type="button"
@@ -82,7 +86,7 @@ const EVENT_OPTIONS: EventOption[] = [
       </button>
     }
 
-    <app-dropdown-menu #menu>
+    <app-dropdown-menu #menu [xPosition]="xPosition()">
       <div class="min-w-56">
         <p
           class="text-muted px-3 py-2 text-xs font-medium tracking-wide uppercase"
@@ -115,13 +119,18 @@ export class NotificationSubscribeComponent {
   readonly scope = input.required<NotificationScope>();
   readonly scopeEntityId = input.required<number>();
   readonly scopeName = input<string>();
-  readonly appearance = input<'toolbar' | 'icon'>('icon');
+  // `hidden` renders no trigger of its own: a host that already owns one — an overflow menu row,
+  // say — calls `open` with the element the panel should hang off.
+  readonly appearance = input<'toolbar' | 'icon' | 'hidden'>('icon');
+  readonly xPosition = input<DropdownMenuXPosition>('after');
 
   // Board columns carry one of these each, so an unsubscribed bell stays out of the way until the
   // column is hovered. A subscribed one always shows, or the setting would be invisible.
   readonly revealOnHover = input(false, { transform: booleanAttribute });
 
   readonly el = inject(ElementRef);
+
+  private readonly menu = viewChild.required(DropdownMenuComponent);
 
   private readonly commands = inject(NotificationSubscriptionCommandsService);
   private readonly subscriptions = inject(NotificationSubscriptionsService);
@@ -159,6 +168,10 @@ export class NotificationSubscribeComponent {
       ? $localize`:Tooltip on the control that subscribes to activity. NAME is the board, sprint or project name:Notify me about ${name}:NAME:`
       : $localize`:Tooltip on the control that subscribes to activity:Notify me about this`;
   });
+
+  open(origin: HTMLElement) {
+    this.menu().open(origin);
+  }
 
   protected isSelected(event: NotificationSubscriptionEvent): boolean {
     return hasSubscriptionEvent(this.events(), event);

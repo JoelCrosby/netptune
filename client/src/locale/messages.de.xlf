@@ -1790,7 +1790,7 @@
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:70,73</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:61,64</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:164,167</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:326</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:206</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:274</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:44,46</note>
         <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:97,99</note>
@@ -1896,7 +1896,7 @@
     </unit>
     <unit id="6585555772286165070">
       <notes>
-        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:44</note>
+        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:45</note>
         <note category="description">Notification subscription event, a task left this place</note>
       </notes>
       <segment state="initial">
@@ -2020,7 +2020,7 @@
         <note category="location">src/app/features/settings/shared/entity-detail.ts:31</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:210</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:192</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:325</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:205</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:226</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:273</note>
         <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:159</note>
@@ -2246,7 +2246,7 @@
     </unit>
     <unit id="5494028412212080550">
       <notes>
-        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:32</note>
+        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:33</note>
         <note category="description">Notification subscription event, a task was created here</note>
       </notes>
       <segment state="initial">
@@ -2478,6 +2478,16 @@
         <target>Sprint erstellt</target>
       </segment>
     </unit>
+    <unit id="7218673323911297063">
+      <notes>
+        <note category="location">src/app/features/sprints/components/sprint-detail-actions.component.ts:164,168</note>
+        <note category="description">Menu item that opens the sprint notification settings</note>
+      </notes>
+      <segment state="translated">
+        <source> Notify me about this sprint </source>
+        <target> Mich über diesen Sprint benachrichtigen </target>
+      </segment>
+    </unit>
     <unit id="6930203756458180911">
       <notes>
         <note category="location">src/app/core/services/sprint-commands.service.ts:70</note>
@@ -2647,7 +2657,7 @@
     <unit id="8473956176297638892">
       <notes>
         <note category="location">src/app/core/services/task-commands.service.ts:89</note>
-        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:36</note>
+        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:37</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -4116,7 +4126,7 @@
         <note category="location">src/app/features/reporting/components/sprint-velocity-table.component.ts:53</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:140</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:377</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:76,79</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:55,58</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:20</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:39</note>
         <note category="description">Column heading for the task sprint</note>
@@ -4511,7 +4521,7 @@
     </unit>
     <unit id="1384666843214095488">
       <notes>
-        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:154</note>
+        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:159</note>
         <note category="description">Tooltip on the notify control when already subscribed. NAME is the board, sprint or project name</note>
       </notes>
       <segment state="initial">
@@ -5567,6 +5577,16 @@
       <segment state="translated">
         <source>Connect</source>
         <target>Verbinden</target>
+      </segment>
+    </unit>
+    <unit id="8134329200152393366">
+      <notes>
+        <note category="location">src/app/features/sprints/components/sprint-detail-actions.component.ts:68,70</note>
+        <note category="description">Button that opens the menu for adding work to the sprint</note>
+      </notes>
+      <segment state="translated">
+        <source> Add work </source>
+        <target> Arbeit hinzufügen </target>
       </segment>
     </unit>
     <unit id="8134595218621919835">
@@ -8065,6 +8085,16 @@
         <target>Board-Logo</target>
       </segment>
     </unit>
+    <unit id="4765115421638638540">
+      <notes>
+        <note category="location">src/app/features/sprints/components/sprint-detail-actions.component.ts:186,189</note>
+        <note category="description">Menu item that edits the sprint</note>
+      </notes>
+      <segment state="translated">
+        <source>Sprint settings</source>
+        <target>Sprint-Einstellungen</target>
+      </segment>
+    </unit>
     <unit id="4766402403585838311">
       <notes>
         <note category="location">src/app/features/automations/components/automation-actions-editor.component.ts:140,142</note>
@@ -8836,7 +8866,7 @@
     </unit>
     <unit id="3019943373516607551">
       <notes>
-        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:40</note>
+        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:41</note>
         <note category="description">Notification subscription event, a task joined this place</note>
       </notes>
       <segment state="initial">
@@ -10808,7 +10838,7 @@
     </unit>
     <unit id="8949873009695123445">
       <notes>
-        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:155</note>
+        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:160</note>
         <note category="description">Tooltip on the notify control when already subscribed</note>
       </notes>
       <segment state="initial">
@@ -12097,7 +12127,7 @@
     </unit>
     <unit id="2490742431400447774">
       <notes>
-        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:160</note>
+        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:165</note>
         <note category="description">Tooltip on the control that subscribes to activity</note>
       </notes>
       <segment state="initial">
@@ -16612,7 +16642,7 @@
     </unit>
     <unit id="1295579971866134458">
       <notes>
-        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:108,114</note>
+        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:109,115</note>
         <note category="description">Explains that per-scope notifications still obey the personal notification settings</note>
       </notes>
       <segment state="initial">
@@ -16811,16 +16841,6 @@
       <segment state="initial">
         <source> Removing a permission also removes it from every credential on this account. Adding one does not add it to existing credentials; edit their scopes to grant it. </source>
         <target> Wird eine Berechtigung entfernt, wird sie auch aus allen Zugangsdaten dieses Kontos entfernt. Eine hinzugefügte Berechtigung wird nicht zu bestehenden Zugangsdaten hinzugefügt; bearbeiten Sie deren Bereiche, um sie zu gewähren. </target>
-      </segment>
-    </unit>
-    <unit id="1258729180612470994">
-      <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:121,123</note>
-        <note category="description">Tooltip on the button that asks the assistant about this sprint</note>
-      </notes>
-      <segment state="translated">
-        <source>Ask the assistant about this sprint</source>
-        <target>Den Assistenten zu diesem Sprint fragen</target>
       </segment>
     </unit>
     <unit id="1258966902012251034">
@@ -18464,6 +18484,16 @@
       <segment state="translated">
         <source> New workspace </source>
         <target> Neuer Arbeitsbereich </target>
+      </segment>
+    </unit>
+    <unit id="8779960702238713495">
+      <notes>
+        <note category="location">src/app/features/sprints/components/sprint-detail-actions.component.ts:175,180</note>
+        <note category="description">Menu item that asks the assistant about this sprint</note>
+      </notes>
+      <segment state="translated">
+        <source> Summarise with Assistant </source>
+        <target> Mit dem Assistenten zusammenfassen </target>
       </segment>
     </unit>
     <unit id="2987662557279760947">
@@ -21033,7 +21063,7 @@
     </unit>
     <unit id="595057067927295883">
       <notes>
-        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:90,93</note>
+        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:91,94</note>
         <note category="description">Heading above the per-scope notification event toggles</note>
       </notes>
       <segment state="translated">
@@ -21595,6 +21625,16 @@
       <segment state="translated">
         <source>No tasks match this query yet.</source>
         <target>Noch entsprechen keine Aufgaben dieser Abfrage.</target>
+      </segment>
+    </unit>
+    <unit id="899159681812917020">
+      <notes>
+        <note category="location">src/app/features/sprints/components/sprint-detail-actions.component.ts:112,115</note>
+        <note category="description">Explains where assigned tasks come from</note>
+      </notes>
+      <segment state="translated">
+        <source> Pull from the backlog </source>
+        <target> Aus dem Backlog </target>
       </segment>
     </unit>
     <unit id="2810641013948921213">
@@ -22407,10 +22447,19 @@
         <target> Alle <ph id="0" equiv="TOTAL" disp="{{ sprint.taskCount // i18n(ph=&quot;TOTAL&quot;) }}"/> Aufgaben in diesem Sprint sind abgeschlossen. </target>
       </segment>
     </unit>
+    <unit id="7636906995680646584">
+      <notes>
+        <note category="location">src/app/features/sprints/components/sprint-detail-actions.component.ts:89,92</note>
+        <note category="description">Explains what creating a sprint task does</note>
+      </notes>
+      <segment state="translated">
+        <source> New task, added to this sprint </source>
+        <target> Neue Aufgabe, diesem Sprint hinzugefügt </target>
+      </segment>
+    </unit>
     <unit id="763816024488593537">
       <notes>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:59,61</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:203,204</note>
         <note category="description">Title of the dialog for completing a sprint</note>
       </notes>
       <segment state="translated">
@@ -22694,6 +22743,7 @@
     </unit>
     <unit id="1860421182220689611">
       <notes>
+        <note category="location">src/app/features/sprints/components/sprint-detail-actions.component.ts:138,143</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:172,175</note>
         <note category="description">Button that completes the sprint</note>
       </notes>
@@ -22860,16 +22910,6 @@
         <target>Sprints</target>
       </segment>
     </unit>
-    <unit id="8124076252558546675">
-      <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:132,134</note>
-        <note category="description">Tooltip on the button that edits the sprint</note>
-      </notes>
-      <segment state="translated">
-        <source>Edit sprint</source>
-        <target>Sprint bearbeiten</target>
-      </segment>
-    </unit>
     <unit id="8127725951732050615">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:313,315</note>
@@ -22882,8 +22922,8 @@
     </unit>
     <unit id="6222783490221982219">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:140,142</note>
-        <note category="description">Tooltip on the button that deletes the sprint</note>
+        <note category="location">src/app/features/sprints/components/sprint-detail-actions.component.ts:197,200</note>
+        <note category="description">Menu item that deletes the sprint</note>
       </notes>
       <segment state="translated">
         <source>Delete sprint</source>
@@ -22901,16 +22941,6 @@
       <segment state="translated">
         <source> Show data </source>
         <target> Daten anzeigen </target>
-      </segment>
-    </unit>
-    <unit id="1183305546671848577">
-      <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:156,158</note>
-        <note category="description">Tooltip on the button that adds existing tasks to the sprint</note>
-      </notes>
-      <segment state="translated">
-        <source>Add existing tasks to this sprint</source>
-        <target>Bestehende Aufgaben zu diesem Sprint hinzufügen</target>
       </segment>
     </unit>
     <unit id="7605037935086101913">
@@ -22946,8 +22976,8 @@
     </unit>
     <unit id="7609408325154938991">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:164,168</note>
-        <note category="description">Button that opens the dialog for adding existing tasks to the sprint</note>
+        <note category="location">src/app/features/sprints/components/sprint-detail-actions.component.ts:107,111</note>
+        <note category="description">Menu item that opens the dialog for adding existing tasks to the sprint</note>
       </notes>
       <segment state="translated">
         <source> Assign Existing Tasks </source>
@@ -22962,16 +22992,6 @@
       <segment state="translated">
         <source>, </source>
         <target>, </target>
-      </segment>
-    </unit>
-    <unit id="2465583616985358329">
-      <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:174,176</note>
-        <note category="description">Tooltip on the button that creates a task in the sprint</note>
-      </notes>
-      <segment state="translated">
-        <source>Create a new task in this sprint</source>
-        <target>Neue Aufgabe in diesem Sprint erstellen</target>
       </segment>
     </unit>
     <unit id="2467702290618186989">
@@ -23006,8 +23026,8 @@
     </unit>
     <unit id="4013607694293243242">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:178,180</note>
-        <note category="description">Button that creates a new task in the sprint</note>
+        <note category="location">src/app/features/sprints/components/sprint-detail-actions.component.ts:84,87</note>
+        <note category="description">Menu item that creates a new task in the sprint</note>
       </notes>
       <segment state="translated">
         <source> Create Sprint Task </source>
@@ -23016,7 +23036,7 @@
     </unit>
     <unit id="4741538562127389826">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:190,192</note>
+        <note category="location">src/app/features/sprints/components/sprint-detail-actions.component.ts:126,130</note>
         <note category="description">Button that starts the sprint</note>
       </notes>
       <segment state="translated">
@@ -23036,7 +23056,7 @@
     </unit>
     <unit id="1152778269115350205">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:323</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:203</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:271</note>
         <note category="description">Title of the confirmation dialog for deleting a sprint</note>
       </notes>
@@ -24668,7 +24688,7 @@
     </unit>
     <unit id="2614607010577950577">
       <notes>
-        <note category="location">src/app/shell/shell-menu-link.component.ts:148</note>
+        <note category="location">src/app/shell/shell-menu-link.component.ts:151</note>
         <note category="description">Sub-menu entry linking to the parent section&apos;s own page</note>
       </notes>
       <segment state="translated">
@@ -24689,7 +24709,7 @@
     </unit>
     <unit id="3503113826175140473">
       <notes>
-        <note category="location">src/app/shell/shell-menu-link.component.ts:166</note>
+        <note category="location">src/app/shell/shell-menu-link.component.ts:170</note>
         <note category="description">Accessible label for the control that collapses a sidebar sub-menu. SECTION is the section name, e.g. Sprints</note>
       </notes>
       <segment state="translated">
@@ -24708,7 +24728,7 @@
     </unit>
     <unit id="5787827157889164686">
       <notes>
-        <note category="location">src/app/shell/shell-menu-link.component.ts:167</note>
+        <note category="location">src/app/shell/shell-menu-link.component.ts:171</note>
         <note category="description">Accessible label for the control that expands a sidebar sub-menu. SECTION is the section name, e.g. Sprints</note>
       </notes>
       <segment state="translated">
@@ -25111,7 +25131,7 @@
     </unit>
     <unit id="7909666899128311457">
       <notes>
-        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:159</note>
+        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:164</note>
         <note category="description">Tooltip on the control that subscribes to activity. NAME is the board, sprint or project name</note>
       </notes>
       <segment state="initial">
@@ -25278,6 +25298,16 @@
       <segment state="translated">
         <source> Select all rows </source>
         <target>Alle Zeilen auswählen</target>
+      </segment>
+    </unit>
+    <unit id="7974457105739353704">
+      <notes>
+        <note category="location">src/app/features/sprints/components/sprint-detail-actions.component.ts:152,154</note>
+        <note category="description">Accessible label for the button that opens the sprint action menu</note>
+      </notes>
+      <segment state="translated">
+        <source>More sprint actions</source>
+        <target>Weitere Sprint-Aktionen</target>
       </segment>
     </unit>
     <unit id="7975467617398451139">

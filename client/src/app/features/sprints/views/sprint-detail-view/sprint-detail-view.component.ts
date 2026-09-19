@@ -12,32 +12,19 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateTaskDialogComponent } from '@app/entry/dialogs/create-task-dialog/create-task-dialog.component';
 import { PERMISSIONS } from '@core/auth/permissions';
-import { SprintStatus } from '@core/enums/sprint-status';
 import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-view-model';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { CurrentSprintService } from '@core/services/current-sprint.service';
 import { DialogService } from '@core/services/dialog.service';
 import { sprintDetailResource } from '@core/resources/sprint.resource';
 import { SprintCommandsService } from '@core/services/sprint-commands.service';
-import {
-  LucideCheck,
-  LucideListPlus,
-  LucideSettings2,
-  LucidePlus,
-  LucideSparkles,
-  LucideTrash2,
-} from '@lucide/angular';
-import { AiAssistantService } from '@core/services/ai-assistant.service';
-import { FlatButtonComponent } from '@static/components/button/flat-button.component';
-import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 import { distinctUntilChanged, map } from 'rxjs/operators';
-import { NotificationSubscribeComponent } from '@shared/components/notification-subscribe/notification-subscribe.component';
-import { NotificationScope } from '@core/models/notification-subscription';
 import { SprintIdentityComponent } from '@static/components/sprint-identity.component';
+import { SprintDetailActionsComponent } from '../../components/sprint-detail-actions.component';
 import { SprintStatsComponent } from '../../components/sprint-stats.component';
 import { SprintTaskListComponent } from '../../components/sprint-task-list.component';
 import { EditSprintDialogComponent } from '../../dialogs/edit-sprint-dialog.component';
@@ -49,19 +36,11 @@ import { PanelComponent } from '@static/components/panel.component';
   selector: 'app-sprint-detail-view',
   imports: [
     ErrorStateComponent,
-    FlatButtonComponent,
-    IconButtonComponent,
-    LucideCheck,
-    LucideListPlus,
-    LucidePlus,
-    LucideSettings2,
-    LucideSparkles,
-    LucideTrash2,
-    NotificationSubscribeComponent,
     PageContainerComponent,
     PageHeaderComponent,
     PageLoadingComponent,
     PanelComponent,
+    SprintDetailActionsComponent,
     SprintIdentityComponent,
     SprintStatsComponent,
     SprintTaskListComponent,
@@ -104,107 +83,14 @@ import { PanelComponent } from '@static/components/panel.component';
               [headingLevel]="1"
               [sprint]="sprint" />
 
-            <div class="flex shrink-0 flex-wrap items-center gap-2">
-              <app-notification-subscribe
-                [scope]="notificationScope.sprint"
-                [scopeEntityId]="sprint.id"
-                [scopeName]="sprint.name" />
-
-              @if (assistant.isAvailable()) {
-                <button
-                  app-icon-button
-                  type="button"
-                  i18n-title="
-                    Tooltip on the button that asks the assistant about this
-                    sprint
-                  "
-                  title="Ask the assistant about this sprint"
-                  (click)="assistant.askAboutSprint(sprint)">
-                  <svg lucideSparkles class="h-4 w-4"></svg>
-                </button>
-              }
-
-              @if (canUpdate()) {
-                <button
-                  app-icon-button
-                  type="button"
-                  i18n-title="Tooltip on the button that edits the sprint"
-                  title="Edit sprint"
-                  (click)="onEdit(sprint)">
-                  <svg lucideSettings2 class="h-4 w-4"></svg>
-                </button>
-                <button
-                  app-icon-button
-                  type="button"
-                  i18n-title="Tooltip on the button that deletes the sprint"
-                  title="Delete sprint"
-                  (click)="onDelete(sprint)">
-                  <svg lucideTrash2 class="h-4 w-4"></svg>
-                </button>
-              }
-
-              @if (
-                canManageTasks() && sprint.status !== sprintStatus.completed
-              ) {
-                <button
-                  app-flat-button
-                  color="neutral"
-                  type="button"
-                  i18n-title="
-                    Tooltip on the button that adds existing tasks to the sprint
-                  "
-                  title="Add existing tasks to this sprint"
-                  (click)="onAddTasks(sprint)">
-                  <svg lucideListPlus class="h-4 w-4"></svg>
-                  <span
-                    i18n="
-                      Button that opens the dialog for adding existing tasks to
-                      the sprint
-                    ">
-                    Assign Existing Tasks
-                  </span>
-                </button>
-                <button
-                  app-flat-button
-                  color="neutral"
-                  type="button"
-                  i18n-title="
-                    Tooltip on the button that creates a task in the sprint
-                  "
-                  title="Create a new task in this sprint"
-                  (click)="onCreateTask(sprint)">
-                  <svg lucidePlus class="h-4 w-4"></svg>
-                  <span i18n="Button that creates a new task in the sprint">
-                    Create Sprint Task
-                  </span>
-                </button>
-              }
-
-              @if (canUpdate() && sprint.status === sprintStatus.planning) {
-                <button
-                  app-flat-button
-                  color="primary"
-                  type="button"
-                  [disabled]="updateLoading()"
-                  (click)="onStart(sprint.id)">
-                  <span i18n="Button that starts the sprint">Start Sprint</span>
-                </button>
-              }
-
-              @if (canUpdate() && sprint.status === sprintStatus.active) {
-                <button
-                  app-flat-button
-                  color="primary"
-                  type="button"
-                  [disabled]="updateLoading()"
-                  (click)="onComplete(sprint)">
-                  <svg lucideCheck class="h-4 w-4"></svg>
-                  <span i18n="Button that completes the sprint">
-                    Complete Sprint
-                  </span>
-                </button>
-              }
-            </div>
+            <app-sprint-detail-actions
+              [sprint]="sprint"
+              (createTask)="onCreateTask(sprint)"
+              (assignTasks)="onAddTasks(sprint)"
+              (startSprint)="onStart(sprint.id)"
+              (completeSprint)="onComplete(sprint)"
+              (editSprint)="onEdit(sprint)"
+              (deleteSprint)="onDelete(sprint)" />
           </header>
 
           <app-sprint-stats [sprint]="sprint" />
@@ -223,10 +109,6 @@ export class SprintDetailViewComponent {
   private dialog = inject(DialogService);
   private confirmation = inject(ConfirmationService);
 
-  protected readonly assistant = inject(AiAssistantService);
-
-  readonly sprintStatus = SprintStatus;
-  readonly notificationScope = NotificationScope;
   readonly sprintId = signal<number | null>(null);
   private readonly sprintCommands = inject(SprintCommandsService);
   private readonly currentSprint = inject(CurrentSprintService);
@@ -244,8 +126,6 @@ export class SprintDetailViewComponent {
     return this.sprintResourceRef.error() as HttpErrorResponse | undefined;
   });
 
-  readonly updateLoading = this.sprintCommands.isUpdating;
-  readonly canUpdate = hasPermission(PERMISSIONS.sprints.update);
   readonly canManageTasks = hasPermission(PERMISSIONS.sprints.manageTasks);
 
   constructor() {
