@@ -6,6 +6,7 @@ const scopesByEntityType: Record<string, readonly RefreshScope[]> = {
   sprint: ['sprints', 'tasks'],
   project: ['projects', 'boards', 'tasks'],
   board: ['boards', 'boardGroups'],
+  boardGroup: ['boardGroups', 'boards', 'tasks'],
   tag: ['tags', 'tasks'],
   status: ['statuses', 'tasks', 'boardGroups'],
   comment: ['comments', 'tasks'],

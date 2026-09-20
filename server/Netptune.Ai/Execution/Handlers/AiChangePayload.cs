@@ -32,6 +32,21 @@ public static class AiChangePayload
         return hasProperty ? value.GetInt32() : null;
     }
 
+    public static bool? ReadBool(JsonElement payload, string name)
+    {
+        var isObject = payload.ValueKind == JsonValueKind.Object;
+
+        if (!isObject)
+        {
+            return null;
+        }
+
+        var hasProperty = payload.TryGetProperty(name, out var value)
+            && value.ValueKind is JsonValueKind.True or JsonValueKind.False;
+
+        return hasProperty ? value.GetBoolean() : null;
+    }
+
     public static List<string> ReadStringArray(JsonElement payload, string name)
     {
         var isObject = payload.ValueKind == JsonValueKind.Object;

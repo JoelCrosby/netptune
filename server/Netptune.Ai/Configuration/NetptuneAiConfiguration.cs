@@ -55,6 +55,11 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiTool, CreateTagTool>();
         services.AddScoped<IAiTool, DeleteTaskTool>();
         services.AddScoped<IAiTool, CreateBoardGroupTool>();
+        services.AddScoped<IAiTool, UpdateBoardTool>();
+        services.AddScoped<IAiTool, DeleteBoardTool>();
+        services.AddScoped<IAiTool, UpdateBoardGroupTool>();
+        services.AddScoped<IAiTool, DeleteBoardGroupTool>();
+        services.AddScoped<IAiTool, ReorderBoardGroupsTool>();
         services.AddScoped<IAiTool, UnlinkTasksTool>();
         services.AddScoped<IAiTool, CreateRelationTypeTool>();
         services.AddScoped<IAiTool, GetFlowReportTool>();
@@ -91,6 +96,11 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiChangeHandler, CreateTagChangeHandler>();
         services.AddScoped<IAiChangeHandler, DeleteTaskChangeHandler>();
         services.AddScoped<IAiChangeHandler, CreateBoardGroupChangeHandler>();
+        services.AddScoped<IAiChangeHandler, UpdateBoardChangeHandler>();
+        services.AddScoped<IAiChangeHandler, DeleteBoardChangeHandler>();
+        services.AddScoped<IAiChangeHandler, UpdateBoardGroupChangeHandler>();
+        services.AddScoped<IAiChangeHandler, DeleteBoardGroupChangeHandler>();
+        services.AddScoped<IAiChangeHandler, ReorderBoardGroupsChangeHandler>();
         services.AddScoped<IAiChangeHandler, UnlinkTasksChangeHandler>();
         services.AddScoped<IAiChangeHandler, CreateRelationTypeChangeHandler>();
         services.AddScoped<IAiChangeSetBuilder, AiChangeSetBuilder>();
