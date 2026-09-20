@@ -71,7 +71,7 @@ import {
 import { Router } from '@angular/router';
 import { delayedLoading } from '@core/util/delayed-loading';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
-import { InlineEditInputComponent } from '@static/components/inline-edit-input/inline-edit-input.component';
+import { InlineEditHeadingComponent } from '@static/components/inline-edit-heading/inline-edit-heading.component';
 import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { SkeletonBoardComponent } from '@static/components/skeleton/skeleton-board.component';
@@ -119,7 +119,7 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
     LucideEllipsisVertical,
     LucideX,
     BoardGroupStatusDotComponent,
-    InlineEditInputComponent,
+    InlineEditHeadingComponent,
     IconButtonComponent,
     CreateBoardGroupComponent,
     NotificationSubscribeComponent,
@@ -187,14 +187,12 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
                       ) {
                         <app-board-group-status-dot [status]="status" />
                       }
-                      <app-inline-edit-input
-                        class="hover:bg-primary/6 ml-2 w-full rounded px-1.5 py-1 transition-colors duration-200"
-                        [size]="group.name.length"
+                      <app-inline-edit-heading
+                        class="ml-2 block w-full min-w-0"
+                        textClass="px-1.5 py-1 font-sans text-sm font-medium tracking-[.1px] break-words"
                         [value]="group.name"
-                        [disabled]="!isAuthenticated()"
-                        (submitted)="
-                          onGroupNameSubmitted($event, group)
-                        "></app-inline-edit-input>
+                        [isReadonly]="!isAuthenticated()"
+                        (submitted)="onGroupNameSubmitted($event, group)" />
                       <span class="text-foreground/30 ml-[.2rem] font-bold">
                         {{ group.tasks.length }}
                       </span>
@@ -482,12 +480,16 @@ export class BoardGroupsViewComponent implements OnDestroy {
     });
   }
 
-  onGroupNameSubmitted(value: Event | string, group: BoardViewGroup) {
-    if (value instanceof Event) return;
+  onGroupNameSubmitted(value: string, group: BoardViewGroup) {
+    const name = value.trim();
+
+    // Blurring commits whatever is in the field, so an untouched or emptied
+    // name is dropped rather than sent as an update.
+    if (!name || name === group.name) return;
 
     const request: UpdateBoardGroupRequest = {
       boardGroupId: group.id,
-      name: value,
+      name,
     };
 
     this.boardGroupCommands.editGroup(request);

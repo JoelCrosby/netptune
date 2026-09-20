@@ -20,10 +20,11 @@ import { cn } from '../button/button.variants';
       tabindex="0"
       [class]="headingClass()"
       [attr.contenteditable]="isEditing() ? 'plaintext-only' : null"
-      [class.cursor-text]="!disabled() && !isReadonly()"
-      [class.hover:bg-black/5]="!disabled() && !isReadonly()"
-      [class.dark:hover:bg-white/5]="!disabled() && !isReadonly()"
-      (mousedown)="onMouseDown()"
+      [class.cursor-text]="isInteractive()"
+      [class.select-text]="isInteractive()"
+      [class.hover:bg-black/5]="isInteractive()"
+      [class.dark:hover:bg-white/5]="isInteractive()"
+      (mousedown)="onMouseDown($event)"
       (focus)="startEditing()"
       (blur)="onBlur()"
       (input)="onContentInput($event)"
@@ -46,6 +47,10 @@ export class InlineEditHeadingComponent extends AbstractFormValueControl {
 
   readonly editableRef = viewChild<ElementRef>('editable');
 
+  readonly isInteractive = computed(
+    () => !this.disabled() && !this.isReadonly()
+  );
+
   isEditing = signal(false);
 
   private originalValue = '';
@@ -54,7 +59,6 @@ export class InlineEditHeadingComponent extends AbstractFormValueControl {
   constructor() {
     super();
 
-    // Sync external value changes into the DOM while not editing
     effect(() => {
       const val = this.value();
       const el = this.editableRef()?.nativeElement as HTMLElement | undefined;
@@ -63,7 +67,6 @@ export class InlineEditHeadingComponent extends AbstractFormValueControl {
       }
     });
 
-    // Move cursor to end when editing starts via keyboard/programmatic focus
     effect(() => {
       const el = this.editableRef()?.nativeElement as HTMLElement | undefined;
       if (el && this.isEditing() && !this.clickedIn) {
@@ -78,12 +81,53 @@ export class InlineEditHeadingComponent extends AbstractFormValueControl {
     });
   }
 
-  onMouseDown() {
+  onMouseDown(event: MouseEvent) {
     this.clickedIn = true;
+
+    if (!this.isInteractive()) {
+      return;
+    }
+
+    if (this.isEditing()) {
+      event.stopPropagation();
+
+      return;
+    }
+
+    if (event.button !== 0) {
+      return;
+    }
+
+    const el = this.editableRef()?.nativeElement as HTMLElement | undefined;
+
+    if (!el) {
+      return;
+    }
+
+    event.preventDefault();
+
+    el.setAttribute('contenteditable', 'plaintext-only');
+    this.startEditing();
+
+    el.focus();
+    this.placeCaretFromPoint(el, event.clientX, event.clientY);
+  }
+
+  private placeCaretFromPoint(el: HTMLElement, x: number, y: number) {
+    const selection = window.getSelection();
+
+    if (!selection) {
+      return;
+    }
+
+    const range = caretRangeFromPoint(x, y) ?? caretRangeAtEnd(el);
+
+    selection.removeAllRanges();
+    selection.addRange(range);
   }
 
   startEditing() {
-    if (this.disabled() || this.isReadonly() || this.isEditing()) {
+    if (!this.isInteractive() || this.isEditing()) {
       return;
     }
 
@@ -130,4 +174,44 @@ export class InlineEditHeadingComponent extends AbstractFormValueControl {
     this.isEditing.set(false);
     this.submitted.emit(val);
   }
+}
+
+type CaretDocument = Document & {
+  caretRangeFromPoint?: (x: number, y: number) => Range | null;
+  caretPositionFromPoint?: (
+    x: number,
+    y: number
+  ) => { offsetNode: Node; offset: number } | null;
+};
+
+function caretRangeFromPoint(x: number, y: number): Range | null {
+  const doc = document as CaretDocument;
+
+  const range = doc.caretRangeFromPoint?.(x, y);
+
+  if (range) {
+    return range;
+  }
+
+  const position = doc.caretPositionFromPoint?.(x, y);
+
+  if (!position) {
+    return null;
+  }
+
+  const fromPosition = document.createRange();
+
+  fromPosition.setStart(position.offsetNode, position.offset);
+  fromPosition.collapse(true);
+
+  return fromPosition;
+}
+
+function caretRangeAtEnd(el: HTMLElement): Range {
+  const range = document.createRange();
+
+  range.selectNodeContents(el);
+  range.collapse(false);
+
+  return range;
 }
