@@ -16,6 +16,8 @@ public class AuditLogViewModel
 
     public string? UserPictureUrl { get; set; }
 
+    public bool UserIsServiceAccount { get; set; }
+
     public string? Agent { get; set; }
 
     public ActivityType Type { get; set; }

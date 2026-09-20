@@ -61,7 +61,8 @@ import { AuditLogDetailDialogComponent } from '../../dialogs/audit-log-detail-di
             class="shrink-0"
             size="sm"
             [name]="row.userDisplayName"
-            [imageUrl]="row.userPictureUrl" />
+            [imageUrl]="row.userPictureUrl"
+            [isServiceAccount]="row.userIsServiceAccount ?? false" />
           <span class="min-w-0 truncate">
             <span class="font-medium">{{ row.userDisplayName }}</span>
             @if (row.agent) {
