@@ -176,35 +176,19 @@ export class InlineEditHeadingComponent extends AbstractFormValueControl {
   }
 }
 
-type CaretDocument = Document & {
-  caretRangeFromPoint?: (x: number, y: number) => Range | null;
-  caretPositionFromPoint?: (
-    x: number,
-    y: number
-  ) => { offsetNode: Node; offset: number } | null;
-};
-
 function caretRangeFromPoint(x: number, y: number): Range | null {
-  const doc = document as CaretDocument;
-
-  const range = doc.caretRangeFromPoint?.(x, y);
-
-  if (range) {
-    return range;
-  }
-
-  const position = doc.caretPositionFromPoint?.(x, y);
+  const position = document.caretPositionFromPoint(x, y);
 
   if (!position) {
     return null;
   }
 
-  const fromPosition = document.createRange();
+  const range = document.createRange();
 
-  fromPosition.setStart(position.offsetNode, position.offset);
-  fromPosition.collapse(true);
+  range.setStart(position.offsetNode, position.offset);
+  range.collapse(true);
 
-  return fromPosition;
+  return range;
 }
 
 function caretRangeAtEnd(el: HTMLElement): Range {
