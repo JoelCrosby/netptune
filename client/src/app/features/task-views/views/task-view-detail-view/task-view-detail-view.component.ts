@@ -1,4 +1,4 @@
-import { Component, computed, inject, viewChild } from '@angular/core';
+import { Component, computed, effect, inject, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
 import { hasPermission } from '@core/auth/has-permission';
@@ -10,12 +10,16 @@ import {
   LucidePencil,
   LucidePin,
   LucidePinOff,
+  LucideTrash2,
   LucideTriangleAlert,
 } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { CalloutComponent } from '@static/components/callout/callout.component';
-import { DatatableColumn } from '@static/components/datatable/datatable.types';
+import {
+  DatatableColumn,
+  DatatableMenuItem,
+} from '@static/components/datatable/datatable.types';
 import { TaskTableComponent } from '@static/components/task-table.component';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { PageBodyComponent } from '@static/components/page-container/page-body.component';
@@ -23,6 +27,9 @@ import { PageContainerComponent } from '@static/components/page-container/page-c
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
+import { TaskCommandsService } from '@core/services/task-commands.service';
+import { TaskSelectionService } from '@core/services/task-selection.service';
+import { TaskSelectionActionsComponent } from '@shared/components/task-selection-actions/task-selection-actions.component';
 import { QueryFieldOptionsService } from '../../services/query-field-options.service';
 import { PinnedViewsService } from '../../services/pinned-views.service';
 import { TaskQueryValidationError } from '../../models/task-view.models';
@@ -42,6 +49,7 @@ import { findStaleReferences } from '../../util/stale-references';
     PageLoadingComponent,
     ErrorStateComponent,
     TaskTableComponent,
+    TaskSelectionActionsComponent,
     CalloutComponent,
     FlatButtonComponent,
     StrokedButtonComponent,
@@ -138,7 +146,14 @@ import { findStaleReferences } from '../../util/stale-references';
             }
           </div>
 
+          @if (selectedCount() > 0) {
+            <div class="mb-3 flex shrink-0 flex-row items-center justify-end">
+              <app-task-selection-actions />
+            </div>
+          }
+
           <app-task-table
+            #table
             i18n-itemLabel="Plural noun for tasks, used in the row summary"
             itemLabel="tasks"
             i18n-emptyMessage="Shown when a saved view matches no tasks"
@@ -148,9 +163,12 @@ import { findStaleReferences } from '../../util/stale-references';
             [url]="tableUrl()"
             [params]="params"
             [columns]="columns()"
+            [menu]="menu()"
+            [selection]="canDeleteTasks()"
             [autoFill]="true"
             [stickyHeader]="true"
-            [customizableColumns]="true" />
+            [customizableColumns]="true"
+            (selectionChanged)="onSelectionChanged($event)" />
         }
       </app-page-body>
     </app-page-container>
@@ -162,6 +180,8 @@ export class TaskViewDetailViewComponent {
   private readonly snackbar = inject(SnackbarService);
   private readonly fieldOptions = inject(QueryFieldOptionsService);
   private readonly pinned = inject(PinnedViewsService);
+  private readonly taskCommands = inject(TaskCommandsService);
+  private readonly taskSelection = inject(TaskSelectionService);
 
   private readonly routeParams = toSignal(this.route.params, {
     initialValue: {} as Params,
@@ -196,6 +216,19 @@ export class TaskViewDetailViewComponent {
   });
 
   readonly canUpdate = hasPermission(PERMISSIONS.taskViews.update);
+  readonly canDeleteTasks = hasPermission(PERMISSIONS.tasks.delete);
+
+  readonly selectedCount = computed(() => this.taskSelection.tasks().length);
+
+  private readonly deleteMenuItem: DatatableMenuItem<TaskViewModel> = {
+    label: $localize`:Row action that deletes a task:Delete`,
+    icon: LucideTrash2,
+    onClick: (task) => this.taskCommands.delete(task),
+  };
+
+  readonly menu = computed<DatatableMenuItem<TaskViewModel>[]>(() => {
+    return this.canDeleteTasks() ? [this.deleteMenuItem] : [];
+  });
 
   protected readonly warningIcon = LucideTriangleAlert;
 
@@ -233,6 +266,25 @@ export class TaskViewDetailViewComponent {
       }
     );
   });
+
+  constructor() {
+    this.taskSelection.clear();
+
+    effect(() => {
+      this.viewSlug();
+      this.taskSelection.clear();
+    });
+
+    effect(() => {
+      if (this.taskSelection.tasks().length === 0) {
+        this.table()?.clearSelection();
+      }
+    });
+  }
+
+  onSelectionChanged(tasks: TaskViewModel[]) {
+    this.taskSelection.set(tasks);
+  }
 
   isPinned(): boolean {
     const id = this.view()?.id;

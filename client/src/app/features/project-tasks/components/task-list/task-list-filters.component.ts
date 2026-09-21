@@ -7,7 +7,7 @@ import { TagFilterContainerComponent } from '@shared/components/tag-filter/tag-f
 import { TaskListAssigneesComponent } from './task-list-assignees.component';
 import { TaskListFlagsComponent } from './task-list-flags.component';
 import { TaskListSearchComponent } from './task-list-search.component';
-import { TaskListSelectionActionsComponent } from './task-list-selection-actions.component';
+import { TaskSelectionActionsComponent } from '@shared/components/task-selection-actions/task-selection-actions.component';
 import { TaskListStatusComponent } from './task-list-status.component';
 import { PERMISSIONS } from '@app/core/auth/permissions';
 
@@ -18,7 +18,7 @@ import { PERMISSIONS } from '@app/core/auth/permissions';
     TaskListFlagsComponent,
     TaskListAssigneesComponent,
     TaskListSearchComponent,
-    TaskListSelectionActionsComponent,
+    TaskSelectionActionsComponent,
     TaskListStatusComponent,
     TagFilterContainerComponent,
   ],
@@ -44,7 +44,7 @@ import { PERMISSIONS } from '@app/core/auth/permissions';
         <app-task-list-status />
       }
 
-      <app-task-list-selection-actions class="ml-auto" />
+      <app-task-selection-actions class="ml-auto" />
     </div>
   `,
 })

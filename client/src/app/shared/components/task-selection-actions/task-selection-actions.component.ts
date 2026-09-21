@@ -7,7 +7,7 @@ import { TaskCommandsService } from '@core/services/task-commands.service';
 import { TaskSelectionService } from '@core/services/task-selection.service';
 
 @Component({
-  selector: 'app-task-list-selection-actions',
+  selector: 'app-task-selection-actions',
   imports: [StrokedButtonComponent, LucideSettings2, LucideTrash],
   template: `
     @if (selectedCount() > 0) {
@@ -44,7 +44,7 @@ import { TaskSelectionService } from '@core/services/task-selection.service';
     }
   `,
 })
-export class TaskListSelectionActionsComponent {
+export class TaskSelectionActionsComponent {
   private readonly dialog = inject(DialogService);
 
   private readonly taskCommands = inject(TaskCommandsService);
@@ -66,6 +66,6 @@ export class TaskListSelectionActionsComponent {
 
     if (ids.length === 0) return;
 
-    this.taskCommands.deleteMany([...ids]);
+    this.taskCommands.deleteMany([...ids], () => this.taskSelection.clear());
   }
 }

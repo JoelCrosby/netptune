@@ -112,7 +112,7 @@ export class TaskCommandsService {
       });
   }
 
-  deleteMany(ids: number[]) {
+  deleteMany(ids: number[], onDeleted?: () => void) {
     this.confirmation
       .open(buildDeleteTasksConfirmation(ids.length))
       .pipe(
@@ -128,6 +128,7 @@ export class TaskCommandsService {
           ids.length === 1 ? 'Task deleted' : `${ids.length} tasks deleted`
         );
         this.refresh();
+        onDeleted?.();
       });
   }
 
