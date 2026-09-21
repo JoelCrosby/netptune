@@ -65,7 +65,7 @@ import { QueryConditionEditorComponent } from './query-condition-editor.componen
     </div>
 
     <app-dropdown-menu panelRole="dialog" #menu>
-      <div class="w-[420px] max-w-[calc(100vw-2rem)] p-3">
+      <div class="w-[620px] max-w-[calc(100vw-2rem)] p-3">
         <app-query-condition-editor
           [catalog]="catalog()"
           [condition]="condition()"

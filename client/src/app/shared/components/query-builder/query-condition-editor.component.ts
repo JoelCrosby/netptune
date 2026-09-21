@@ -3,6 +3,7 @@ import { LucideDynamicIcon } from '@lucide/angular';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
+import { FormSelectSearchComponent } from '@static/components/form-select-search/form-select-search.component';
 import { FormSelectTagsOptionComponent } from '@static/components/form-select-tags/form-select-tags-option.component';
 import { FormSelectTagsComponent } from '@static/components/form-select-tags/form-select-tags.component';
 import {
@@ -22,25 +23,28 @@ import {
     FormInputComponent,
     FormSelectComponent,
     FormSelectOptionComponent,
+    FormSelectSearchComponent,
     FormSelectTagsComponent,
     FormSelectTagsOptionComponent,
     LucideDynamicIcon,
   ],
   template: `
     <div
-      class="grid min-w-0 flex-1 gap-2 lg:grid-cols-[minmax(150px,1fr)_minmax(150px,1fr)_minmax(180px,1.4fr)]">
-      <app-form-select
+      class="grid min-w-0 flex-1 gap-2 lg:grid-cols-[minmax(200px,1.2fr)_minmax(150px,1fr)_minmax(190px,1.2fr)]">
+      <app-form-select-search
+        name="query-field"
         i18n-label="Label of the query builder field picker"
         label="Field"
+        i18n-placeholder="Placeholder in the box that searches query fields"
+        placeholder="Search fields"
+        i18n-emptyMessage="Shown when no query field matches the search"
+        emptyMessage="No fields found"
         [noMargin]="true"
+        [options]="catalog().fields"
+        [labelWith]="fieldLabel"
+        [valueWith]="fieldKey"
         [value]="condition().field"
-        (valueChange)="setField($event)">
-        @for (option of catalog().fields; track option.key) {
-          <app-form-select-option [value]="option.key">
-            {{ option.name }}
-          </app-form-select-option>
-        }
-      </app-form-select>
+        (changed)="setField($event)" />
 
       <app-form-select
         i18n-label="Label of the query builder operator picker"
@@ -165,6 +169,9 @@ export class QueryConditionEditorComponent {
       this.operator()?.valuePlaceholder ?? this.field()?.valuePlaceholder ?? ''
     );
   });
+
+  readonly fieldLabel = (field: QueryBuilderField) => field.name;
+  readonly fieldKey = (field: QueryBuilderField) => field.key;
 
   valueAt(index: number): string {
     return this.condition().values[index] ?? '';
