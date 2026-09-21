@@ -71,6 +71,13 @@ public sealed class SaveTaskViewCommandHandler : IRequestHandler<SaveTaskViewCom
             return ClientResponse<TaskViewViewModel>.Failed(structural.ToMessage());
         }
 
+        var conditionCount = input.Definition.Query.CountConditions();
+
+        if (conditionCount == 0)
+        {
+            return ClientResponse<TaskViewViewModel>.Failed("A view needs at least one condition.");
+        }
+
         var workspaceId = await Identity.GetWorkspaceId();
         var workspaceKey = Identity.GetWorkspaceKey();
         var scope = new QueryWorkspaceScope(workspaceId, workspaceKey);

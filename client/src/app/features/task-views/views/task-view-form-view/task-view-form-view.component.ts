@@ -19,10 +19,12 @@ import {
   DEFAULT_VIEW_PAGE_SIZE,
   SaveTaskViewRequest,
   TaskQueryGroup,
+  TaskQueryValidationError,
   TaskViewResult,
+  countQueryConditions,
   emptyQueryGroup,
 } from '../../models/task-view.models';
-import { emptyTaskQueryMessage } from '../../models/task-query-copy';
+import { taskQueryConditionRequiredMessage } from '../../models/task-query-copy';
 import {
   fromBuilderGroup,
   toBuilderGroup,
@@ -131,10 +133,9 @@ import { TaskViewPreviewToolbarComponent } from '../../components/task-view-prev
             <app-query-chip-bar
               [group]="builderQuery()"
               [catalog]="builderCatalog()"
-              [errors]="previewErrors()"
+              [errors]="queryErrors()"
               i18n-summaryPrefix="Prefix of the plain-language query summary"
               summaryPrefix="Shows tasks where"
-              [emptySummary]="emptySummary"
               (groupChange)="setQuery($event)" />
           </div>
 
@@ -207,8 +208,6 @@ export class TaskViewFormViewComponent {
   readonly isShared = signal(false);
   readonly query = signal<TaskQueryGroup>(emptyQueryGroup());
 
-  readonly emptySummary = emptyTaskQueryMessage;
-
   // The chip bar speaks the shared builder vocabulary, so the view's own query crosses over on the
   // way in and back again on every edit.
   readonly builderCatalog = computed(() => {
@@ -233,7 +232,15 @@ export class TaskViewFormViewComponent {
     return this.catalog().fields.filter((field) => field.isSortable);
   });
 
-  readonly canSave = computed(() => Boolean(this.name().trim()));
+  // A view that filters nothing is not a view, so the query has to carry at least one condition
+  // before it can be saved — nested groups count, so an outer group holding only groups is empty.
+  readonly hasConditions = computed(() => {
+    return countQueryConditions(this.query()) > 0;
+  });
+
+  readonly canSave = computed(() => {
+    return Boolean(this.name().trim()) && this.hasConditions();
+  });
 
   readonly shareableQuery = computed(() => encodeQuery(this.query()));
 
@@ -270,6 +277,19 @@ export class TaskViewFormViewComponent {
 
   readonly previewErrors = computed(() => {
     return this.previewPayload()?.errors ?? [];
+  });
+
+  // The chip bar's own status line is where the query speaks, so the missing-condition rule is
+  // reported there rather than as a second message somewhere else on the page.
+  readonly queryErrors = computed<TaskQueryValidationError[]>(() => {
+    const errors = this.previewErrors();
+
+    if (this.hasConditions()) return errors;
+
+    return [
+      ...errors,
+      { path: 'query', message: taskQueryConditionRequiredMessage },
+    ];
   });
 
   constructor() {

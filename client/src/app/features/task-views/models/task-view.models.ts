@@ -147,3 +147,15 @@ export function emptyViewDefinition(): TaskViewDefinition {
     display: { columns: [], pageSize: DEFAULT_VIEW_PAGE_SIZE },
   };
 }
+
+export function countQueryConditions(
+  group: TaskQueryGroup | null | undefined
+): number {
+  if (!group) return 0;
+
+  const nested = group.groups.reduce((total, child) => {
+    return total + countQueryConditions(child);
+  }, 0);
+
+  return group.conditions.length + nested;
+}

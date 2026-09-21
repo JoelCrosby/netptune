@@ -16,8 +16,8 @@ import { IconButtonComponent } from '@static/components/button/icon-button.compo
 import { IconTileComponent } from '@static/components/icon-tile.component';
 import {
   TaskQueryCatalog,
-  TaskQueryGroup,
   TaskView,
+  countQueryConditions,
 } from '../models/task-view.models';
 import { QueryFieldOptionsService } from '../services/query-field-options.service';
 import { PanelComponent } from '@static/components/panel.component';
@@ -187,7 +187,7 @@ export class TaskViewCardComponent {
   });
 
   protected readonly filterLabel = computed(() => {
-    const count = countConditions(this.view().definition?.query);
+    const count = countQueryConditions(this.view().definition?.query);
 
     if (count === 0) {
       return $localize`:Shown on a saved view that filters nothing out:No filters`;
@@ -207,14 +207,4 @@ export class TaskViewCardComponent {
       ? $localize`:Shown on a saved view that displays one column:1 column`
       : $localize`:Number of columns a saved view displays. COUNT is how many there are:${count}:COUNT: columns`;
   });
-}
-
-function countConditions(group: TaskQueryGroup | null | undefined): number {
-  if (!group) return 0;
-
-  const nested = group.groups.reduce((total, child) => {
-    return total + countConditions(child);
-  }, 0);
-
-  return group.conditions.length + nested;
 }

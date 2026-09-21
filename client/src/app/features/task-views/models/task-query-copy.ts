@@ -22,6 +22,8 @@ export const taskQueryOperatorLabels: Record<TaskQueryOperator, string> = {
 
 export const emptyTaskQueryMessage = $localize`:Summary shown when a query has no conditions and therefore matches nothing:No conditions yet, so this view matches no tasks.`;
 
+export const taskQueryConditionRequiredMessage = $localize`:Shown in the view editor when a query has no conditions, which is why the view cannot be saved:Add at least one condition before this view can be saved.`;
+
 export function operatorArity(operator: TaskQueryOperator): number {
   switch (operator) {
     case TaskQueryOperator.isEmpty:

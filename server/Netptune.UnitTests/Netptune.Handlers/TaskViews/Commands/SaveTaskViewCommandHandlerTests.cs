@@ -71,6 +71,22 @@ public class SaveTaskViewCommandHandlerTests
     }
 
     [Fact]
+    public async Task Handle_ShouldFail_WhenTheQueryHasNoConditions()
+    {
+        var definition = new TaskViewDefinition
+        {
+            Query = new QueryGroup
+            {
+                Groups = [new QueryGroup()],
+            },
+        };
+        var result = await Send(Request() with { Definition = definition });
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Be("A view needs at least one condition.");
+    }
+
+    [Fact]
     public async Task Handle_ShouldFail_WhenTheNameIsAlreadyTaken()
     {
         TaskViews.NameExists(123, "Due soon", null, Arg.Any<CancellationToken>()).Returns(true);
