@@ -92,7 +92,7 @@ export class TaskDetailActivityFeedComponent {
   readonly readActivity = hasPermission(PERMISSIONS.activity.read);
 
   private readonly request = computed<ActivityFeedRequest | null>(() => {
-    const entityId = this.taskDetail.task()?.id;
+    const entityId = this.taskDetail.taskId();
 
     if (!this.enabled() || entityId === undefined) return null;
 

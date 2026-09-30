@@ -3,8 +3,8 @@ import { TaskPriority } from '@core/enums/task-priority';
 
 export interface UpdateProjectTaskRequest {
   id?: number;
-  name: string;
-  description: string;
+  name?: string;
+  description?: string;
   statusId?: number;
   sortOrder?: number;
   ownerId?: string | null;

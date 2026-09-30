@@ -30,7 +30,7 @@ export class TaskDetailCommentsService {
 
   readonly resource = httpResource<CommentViewModel[]>(
     () => {
-      const systemId = this.taskDetail.task()?.systemId;
+      const systemId = this.taskDetail.systemId();
 
       if (!systemId) return undefined;
 

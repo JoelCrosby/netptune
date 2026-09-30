@@ -55,7 +55,11 @@ export class TaskCommandsService {
 
   update(
     task: Partial<UpdateProjectTaskRequest>,
-    options?: { silent?: boolean }
+    options?: {
+      silent?: boolean;
+      refresh?: boolean;
+      onUpdated?: (updated: TaskViewModel) => void;
+    }
   ) {
     this.editing.set(true);
 
@@ -66,14 +70,18 @@ export class TaskCommandsService {
         catchError(() => EMPTY),
         finalize(() => this.editing.set(false))
       )
-      .subscribe(() => {
+      .subscribe((updated) => {
         if (!options?.silent) {
           this.snackbar.open(
             $localize`:Confirmation shown after an action succeeds:Task updated`
           );
         }
 
-        this.refresh();
+        if (options?.refresh !== false) {
+          this.refresh();
+        }
+
+        options?.onUpdated?.(updated);
       });
   }
 

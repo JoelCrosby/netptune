@@ -41,6 +41,10 @@ export class TaskDetailService {
     return this.resource.hasValue() ? this.resource.value() : undefined;
   });
 
+  readonly taskId = computed(() => this.task()?.id);
+  readonly systemId = computed(() => this.task()?.systemId);
+  readonly projectId = computed(() => this.task()?.projectId);
+
   readonly loading = this.resource.isLoading;
   readonly isEditing = this.taskCommands.isEditing;
 
@@ -73,12 +77,25 @@ export class TaskDetailService {
     this.resource.reload();
   }
 
-  updateTask(update: Partial<UpdateProjectTaskRequest>) {
+  updateTask(
+    update: Partial<UpdateProjectTaskRequest>,
+    options?: { silent?: boolean; refresh?: boolean }
+  ) {
     const task = this.task();
 
     if (!task) return;
 
-    this.taskCommands.update({ ...task, ...update });
+    this.taskCommands.update(
+      { id: task.id, ...update },
+      {
+        ...options,
+        onUpdated: (updated) => this.resource.value.set(updated),
+      }
+    );
+  }
+
+  updateDescription(description: string) {
+    this.updateTask({ description }, { silent: true, refresh: false });
   }
 
   setStatus(statusId: number | null) {

@@ -95,7 +95,7 @@ export class TaskDetailRelationsComponent {
 
   private readonly relations = httpResource<TaskRelation[]>(
     () => {
-      const systemId = this.task()?.systemId;
+      const systemId = this.taskDetail.systemId();
 
       if (!systemId) return undefined;
 

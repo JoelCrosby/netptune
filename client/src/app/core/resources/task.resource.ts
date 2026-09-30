@@ -11,5 +11,8 @@ export const taskDetailResource = (systemId: Signal<string | undefined>) => {
       params: { systemId: id },
     })),
     refreshOn: ['tasks'],
+    equal: (previous, current) => {
+      return JSON.stringify(previous) === JSON.stringify(current);
+    },
   });
 };

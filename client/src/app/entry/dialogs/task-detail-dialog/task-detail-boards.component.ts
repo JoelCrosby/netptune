@@ -125,7 +125,7 @@ export class TaskDetailBoardsComponent {
 
   private readonly boards = httpResource<BoardViewModel[]>(
     () => {
-      const projectId = this.task()?.projectId;
+      const projectId = this.taskDetail.projectId();
 
       if (!projectId) return undefined;
 

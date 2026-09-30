@@ -72,6 +72,6 @@ export class TaskDetailDescriptionComponent {
       return;
     }
 
-    this.taskDetail.updateTask({ description });
+    this.taskDetail.updateDescription(description);
   }
 }

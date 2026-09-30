@@ -154,7 +154,7 @@ export class TaskDetailFilesComponent {
 
   private readonly taskDetail = inject(TaskDetailService);
 
-  readonly systemId = computed(() => this.taskDetail.task()?.systemId);
+  readonly systemId = this.taskDetail.systemId;
 
   private readonly filesResource = taskFilesResource(this.systemId);
   private readonly uploadService = inject(TaskFileUploadService);
