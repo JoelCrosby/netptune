@@ -56,17 +56,28 @@ export class TaskDetailService {
     return this.assistant.isAvailable() && this.task() !== null;
   });
 
+  // The resource is torn down before this service's destroy hook runs, so the task
+  // it held is gone by then; remember what was published to clear it on close.
+  private publishedSystemId: string | undefined;
+
   constructor() {
-    effect(() => this.currentTask.set(this.task()));
+    effect(() => this.publishCurrentTask());
     inject(DestroyRef).onDestroy(() => this.clearCurrentTask());
   }
 
-  private clearCurrentTask() {
+  private publishCurrentTask() {
     const task = this.task();
 
-    if (!task) return;
+    this.publishedSystemId = task?.systemId;
+    this.currentTask.set(task);
+  }
 
-    this.currentTask.clearIfCurrent(task.systemId);
+  private clearCurrentTask() {
+    const systemId = this.publishedSystemId;
+
+    if (!systemId) return;
+
+    this.currentTask.clearIfCurrent(systemId);
   }
 
   show(systemId: string) {
