@@ -24,11 +24,13 @@ export class PageBodyComponent {
   });
 
   // The host runs edge to edge so a scrolling page keeps its scrollbar against the window
-  // rather than down the middle of a centred page.
+  // rather than down the middle of a centred page. A scrolling body is also the containing block,
+  // otherwise absolutely positioned descendants (sr-only labels) anchor to the page container,
+  // escape this clip and stretch the shell's main element into a second scrollbar.
   protected readonly hostClass = computed(() => {
     const classes = ['flex min-h-0 flex-1 flex-col'];
 
-    if (this.scroll()) classes.push('overflow-y-auto');
+    if (this.scroll()) classes.push('relative overflow-y-auto');
 
     return classes.join(' ');
   });
