@@ -17,7 +17,7 @@ import { ShellService } from './shell.service';
         type="button"
         class="hover:bg-side-bar-active/60 transition:background-color flex w-full cursor-pointer items-center justify-start gap-4 overflow-hidden rounded px-4 py-2 text-sm font-medium text-white/70 select-none"
         (click)="layout.closeSideMenu()">
-        <svg lucidePanelLeftClose class="h-5 w-5"></svg>
+        <svg lucidePanelLeftClose class="h-5 w-5 flex-none"></svg>
         <p i18n="Label on the control that closes the sidebar on small screens">
           Close menu
         </p>
@@ -30,12 +30,16 @@ import { ShellService } from './shell.service';
         appTooltipPosition="right"
         role="button">
         @if (shell.sideNavExpanded()) {
-          <svg lucidePanelLeftClose class="h-5 w-5"></svg>
+          <svg lucidePanelLeftClose class="h-5 w-5 flex-none"></svg>
         } @else {
-          <svg lucidePanelLeftOpen class="h-5 w-5"></svg>
+          <svg lucidePanelLeftOpen class="h-5 w-5 flex-none"></svg>
         }
         @if (shell.sideNavExpanded()) {
-          <p i18n="Label on the control that collapses the sidebar">Collapse</p>
+          <p
+            class="whitespace-nowrap"
+            i18n="Label on the control that collapses the sidebar">
+            Collapse
+          </p>
         }
       </div>
     }
