@@ -84,7 +84,7 @@ export class PageHeaderComponent {
       return 'border-border flex shrink-0 flex-col border-b';
     }
 
-    return 'mb-6 flex max-h-34 flex-col pt-[0.4rem] max-md:flex-row max-md:items-center max-md:pt-0 max-md:pb-[1.4rem]';
+    return 'mb-6 flex max-h-34 flex-col pt-[0.4rem] max-md:mb-4 max-md:flex-row max-md:items-center max-md:pt-0 max-md:pl-1.5';
   });
 
   protected readonly titleRowClass = computed(() => {
