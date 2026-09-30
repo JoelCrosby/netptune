@@ -1,11 +1,4 @@
-import {
-  Component,
-  computed,
-  effect,
-  inject,
-  input,
-  model,
-} from '@angular/core';
+import { Component, computed, inject, input, model } from '@angular/core';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { hasPermission } from '@core/auth/has-permission';
 import { TaskViewModel } from '@app/core/models/view-models/project-task-dto';
@@ -59,12 +52,6 @@ export class TaskDetailDescriptionComponent {
 
     return (value: string) => this.saveDescription(task, value);
   });
-
-  constructor() {
-    effect(() => {
-      this.description.set(this.task()?.description ?? '');
-    });
-  }
 
   updateTask(value?: string) {
     if (typeof value === 'undefined' || value === null) {

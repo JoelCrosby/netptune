@@ -33,7 +33,7 @@ import { EditorBubbleMenuComponent } from './editor-bubble-menu.component';
 import { documentToMarkdown, markdownToDocument } from './editor-content';
 import { EditorFloatingMenuComponent } from './editor-floating-menu.component';
 
-const saveDebounceMs = 750;
+const saveDebounceMs = 2400;
 
 export type EditorAppearance = 'boxed' | 'flat';
 
