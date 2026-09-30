@@ -7,6 +7,7 @@ import {
   PreferenceScope,
   ResolvedPreferenceValue,
 } from '@core/models/user-preferences';
+import { ThemeService } from '@core/services/theme.service';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { cn } from '@static/components/button/button.variants';
@@ -187,7 +188,7 @@ function hasTilePreview(preference: ResolvedPreferenceValue): boolean {
               </span>
 
               @if (caption(option); as optionCaption) {
-                <span class="text-muted text-xs leading-[18px]">
+                <span class="text-muted text-xs leading-4.5">
                   {{ optionCaption }}
                 </span>
               }
@@ -206,6 +207,7 @@ export class AppearancePreferencesComponent {
   readonly values = input.required<ResolvedPreferenceValue[]>();
 
   private readonly userPreferences = inject(UserPreferencesService);
+  private readonly theme = inject(ThemeService);
   private readonly selectedScopes = signal<PreferenceScopeSelection>({});
   private readonly pendingKey = signal<string | null>(null);
   private readonly optimisticValues = signal<Record<string, string>>({});
@@ -368,7 +370,17 @@ export class AppearancePreferencesComponent {
   private currentValue(preference: ResolvedPreferenceValue): string {
     const optimistic = this.optimisticValues()[preference.definition.key];
 
-    if (optimistic) return optimistic;
+    if (optimistic) {
+      return optimistic;
+    }
+
+    const followsSystemTheme =
+      preference.definition.key === APPEARANCE_THEME &&
+      preference.source === 'default';
+
+    if (followsSystemTheme) {
+      return this.theme.theme();
+    }
 
     const value = valueForScope(preference, this.selectedScope(preference));
 
