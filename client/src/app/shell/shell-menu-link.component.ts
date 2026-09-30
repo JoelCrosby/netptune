@@ -43,7 +43,7 @@ export interface ShellMenuLink {
         @if (expandable()) {
           <button
             type="button"
-            class="flex min-w-0 flex-1 cursor-pointer items-center gap-4 overflow-hidden py-2 pl-4 text-left"
+            class="flex min-h-9 min-w-0 flex-1 cursor-pointer items-center gap-4 overflow-hidden py-2 pl-5 text-left"
             [attr.aria-expanded]="subMenuExpanded()"
             [attr.aria-label]="subMenuLabel()"
             (click)="toggleSubMenu()">
@@ -73,9 +73,7 @@ export interface ShellMenuLink {
           </button>
         } @else {
           <a
-            class="flex min-w-0 flex-1 cursor-pointer items-center gap-4 overflow-hidden py-2"
-            [class.justify-center]="!shell.sideNavExpanded()"
-            [class.pl-4]="shell.sideNavExpanded()"
+            class="flex min-h-9 min-w-0 flex-1 cursor-pointer items-center gap-4 overflow-hidden py-2 pl-5"
             [routerLink]="link.value"
             [appTooltip]="shell.sideNavExpanded() ? '' : link.label"
             appTooltipPosition="right">

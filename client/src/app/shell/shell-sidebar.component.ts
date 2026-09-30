@@ -78,7 +78,7 @@ const maxSprintLinks = 2;
         @if (user(); as user) {
           <app-shell-menu-link [link]="profileLink">
             <app-avatar
-              class="app-menu-link-profile"
+              class="app-menu-link-profile -ml-1"
               [name]="user.displayName"
               [imageUrl]="user.pictureUrl"
               size="sm"

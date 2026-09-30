@@ -47,12 +47,7 @@ const maxRecentWorkspaces = 3;
   },
   template: `
     <button
-      class="hover:bg-side-bar-active/60 transition:background-color flex h-full w-full cursor-pointer items-center justify-center gap-4 overflow-hidden rounded px-2 text-sm font-medium text-white/70"
-      [class.justify-start]="shell.sideNavExpanded()"
-      [class.w-full]="shell.sideNavExpanded()"
-      [class.text-left]="shell.sideNavExpanded()"
-      [class.justify-center]="shell.sideNavCollapsed()"
-      [class.mx-auto]="shell.sideNavCollapsed()"
+      class="hover:bg-side-bar-active/60 transition:background-color flex h-full w-full cursor-pointer items-center justify-start gap-4 overflow-hidden rounded pr-2 pl-3.5 text-left text-sm font-medium text-white/70"
       (click)="isAuthenticated() === true && toggleMenu()"
       #origin>
       @if (currentWorkspace(); as workspace) {

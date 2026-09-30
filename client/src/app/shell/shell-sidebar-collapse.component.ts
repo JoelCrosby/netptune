@@ -24,8 +24,7 @@ import { ShellService } from './shell.service';
       </button>
     } @else {
       <div
-        class="hover:bg-side-bar-active/60 transition:background-color flex w-full cursor-pointer items-center justify-center gap-4 overflow-hidden rounded px-4 py-2 text-sm font-medium text-white/70 select-none"
-        [class.justify-start]="shell.sideNavExpanded()"
+        class="hover:bg-side-bar-active/60 transition:background-color flex w-full cursor-pointer items-center justify-start gap-4 overflow-hidden rounded py-2 pr-4 pl-4.5 text-sm font-medium text-white/70 select-none"
         (click)="shell.toggleSidebar()"
         [appTooltip]="shell.sideNavExpanded() ? '' : expandTooltip"
         appTooltipPosition="right"
