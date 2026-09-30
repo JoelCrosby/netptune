@@ -18,6 +18,7 @@ using Netptune.Query.Model;
 using Netptune.Query.Tasks;
 using Netptune.Query.ViewModels;
 using Netptune.Query.Views;
+using Netptune.TestData;
 
 using Xunit;
 
@@ -164,6 +165,21 @@ public sealed class TaskViewsEndpointTests
         result.IsSuccess.Should().BeTrue();
         result.Payload!.Items.Should().NotBeEmpty();
         result.Payload.Items.Should().OnlyContain(task => statusIds.Contains(task.StatusId));
+    }
+
+    // Assignee membership binds a text[] through ANY() inside an EXISTS subquery.
+    [Fact]
+    public async Task Preview_ShouldRunASetMembershipOverAssignees()
+    {
+        var assigneeId = SeedData.Users.ElementAt(0).Id;
+        var seeded = await SeedAssignedTask(assigneeId);
+        var query = Group(Condition(TaskFieldKeys.Assignees, QueryOperator.In, assigneeId));
+        var result = await Preview(query);
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Items.Should().NotBeEmpty();
+        result.Payload.Items.Should().OnlyContain(task => task.Assignees.Any(assignee => assignee.Id == assigneeId));
+        result.Payload.Items.Should().Contain(task => task.Id == seeded.Id);
     }
 
     [Fact]
@@ -405,6 +421,22 @@ public sealed class TaskViewsEndpointTests
         await unitOfWork.CompleteAsync(TestContext.Current.CancellationToken);
 
         return view.Slug;
+    }
+
+    private async Task<TaskViewModel> SeedAssignedTask(string assigneeId)
+    {
+        var response = await Client.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest
+        {
+            Name = $"Task view assignee {Guid.NewGuid():N}"[..48],
+            ProjectId = 1,
+            AssigneeIds = [assigneeId],
+        }, TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var created = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>(TestContext.Current.CancellationToken);
+
+        return created.Payload!;
     }
 
     private async Task<TaskViewViewModel> CreateView(string name)

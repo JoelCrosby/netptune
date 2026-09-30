@@ -1,8 +1,11 @@
 -- Filtered, sorted, paginated task list for TaskRepository.GetTasksAsync.
--- {taskOrder} and {rowOrder} are replaced at runtime with whitelisted ORDER BY
+-- The taskOrder and rowOrder placeholders are replaced at runtime with whitelisted ORDER BY
 -- expressions (see GetTaskOrderBy / GetTaskRowOrderBy) before execution.
--- {queryPredicate} is replaced with the saved-view predicate emitted by
+-- The queryPredicate placeholder is replaced with the saved-view predicate emitted by
 -- QueryCompiler, and defaults to TRUE when the filter carries no query.
+-- Placeholder names are written without braces in these comments because the substitution
+-- is a plain string replace: a braced name here would be replaced too, and a multi-line
+-- predicate would spill out of the comment.
 -- count(*) OVER() carries the unpaged total on every row.
 WITH filtered_tasks AS (
     SELECT pt.id
