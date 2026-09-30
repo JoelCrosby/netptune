@@ -62,7 +62,8 @@ const defaultTo = addDays(today, 45);
 
       <app-page-body scroll>
         <section
-          class="border-border bg-card flex min-h-100 flex-1 flex-col overflow-hidden rounded-lg border">
+          class="border-border bg-card flex min-h-100 flex-1 flex-col overflow-hidden rounded-lg border"
+          [class]="showUnscheduled() ? '' : 'mb-4 max-md:mb-3'">
           <app-roadmap-filters
             [from]="from()"
             [to]="to()"
@@ -134,21 +135,19 @@ const defaultTo = addDays(today, 45);
           }
         </section>
 
-        @if (roadmap.value()) {
-          @if (includeUnscheduled()) {
-            <app-roadmap-unscheduled
-              [projectId]="projectId()"
-              [sprintId]="sprintId()"
-              [search]="taskFilters().term ?? undefined"
-              [assigneeIds]="taskFilters().users ?? []"
-              [tagNames]="taskFilters().tags ?? []"
-              [statusIds]="taskFilters().statuses ?? []"
-              [canUpdateTasks]="canUpdateTasks()"
-              [scheduleDate]="from()"
-              [reloadSignal]="unscheduledReload"
-              (scheduleRequested)="scheduleTask($event)"
-              (taskSelected)="openTask($event)" />
-          }
+        @if (showUnscheduled()) {
+          <app-roadmap-unscheduled
+            [projectId]="projectId()"
+            [sprintId]="sprintId()"
+            [search]="taskFilters().term ?? undefined"
+            [assigneeIds]="taskFilters().users ?? []"
+            [tagNames]="taskFilters().tags ?? []"
+            [statusIds]="taskFilters().statuses ?? []"
+            [canUpdateTasks]="canUpdateTasks()"
+            [scheduleDate]="from()"
+            [reloadSignal]="unscheduledReload"
+            (scheduleRequested)="scheduleTask($event)"
+            (taskSelected)="openTask($event)" />
         }
       </app-page-body>
     </app-page-container>
@@ -216,6 +215,10 @@ export class RoadmapViewComponent {
   });
 
   readonly roadmap = roadmapResource(this.query);
+
+  readonly showUnscheduled = computed(() => {
+    return !!this.roadmap.value() && this.includeUnscheduled();
+  });
 
   readonly showSkeleton = delayedLoading(
     computed(() => this.roadmap.isLoading() && !this.roadmap.hasValue())
