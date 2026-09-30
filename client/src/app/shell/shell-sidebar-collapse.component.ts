@@ -24,7 +24,7 @@ import { ShellService } from './shell.service';
       </button>
     } @else {
       <div
-        class="hover:bg-side-bar-active/60 transition:background-color flex w-full cursor-pointer items-center justify-start gap-4 overflow-hidden rounded py-2 pr-4 pl-4.5 text-sm font-medium text-white/70 select-none"
+        class="hover:bg-side-bar-active/60 transition:background-color flex w-full cursor-pointer items-center justify-start gap-4 overflow-hidden rounded py-2 pr-4 pl-4.5 text-sm font-medium whitespace-nowrap text-white/70 select-none"
         (click)="shell.toggleSidebar()"
         [appTooltip]="shell.sideNavExpanded() ? '' : expandTooltip"
         appTooltipPosition="right"
@@ -35,11 +35,7 @@ import { ShellService } from './shell.service';
           <svg lucidePanelLeftOpen class="h-5 w-5 flex-none"></svg>
         }
         @if (shell.sideNavExpanded()) {
-          <p
-            class="whitespace-nowrap"
-            i18n="Label on the control that collapses the sidebar">
-            Collapse
-          </p>
+          <p i18n="Label on the control that collapses the sidebar">Collapse</p>
         }
       </div>
     }
