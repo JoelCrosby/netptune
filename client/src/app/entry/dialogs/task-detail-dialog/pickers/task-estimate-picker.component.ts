@@ -1,4 +1,5 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, linkedSignal, output } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   EstimateType,
   estimateTypeLabels,
@@ -10,6 +11,14 @@ import { LucideCheck } from '@lucide/angular';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
 import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
 import { NumberInputComponent } from '@static/components/number-input/number-input.component';
+import { debounce, Subject, timer } from 'rxjs';
+
+const valueDebounceMs = 400;
+
+interface PendingEstimate {
+  estimate: TaskEstimate;
+  delay: number;
+}
 
 @Component({
   selector: 'app-task-estimate-picker',
@@ -65,8 +74,8 @@ import { NumberInputComponent } from '@static/components/number-input/number-inp
               density="compact"
               [min]="0"
               [ariaLabel]="estimateTypeLabels[currentType()]"
-              [value]="estimateValue()"
-              (valueChange)="selectEstimateValue($event)" />
+              [value]="draftValue()"
+              (valueChange)="stepEstimateValue($event)" />
           </div>
         }
       </div>
@@ -88,6 +97,19 @@ export class TaskEstimatePickerComponent {
 
   readonly ariaLabel = $localize`:Accessible label for the control that changes a task's estimate:Set estimate`;
 
+  protected readonly draftValue = linkedSignal(() => this.estimateValue());
+
+  private readonly pendingEstimates = new Subject<PendingEstimate>();
+
+  constructor() {
+    this.pendingEstimates
+      .pipe(
+        debounce(({ delay }) => timer(delay)),
+        takeUntilDestroyed()
+      )
+      .subscribe(({ estimate }) => this.estimateChange.emit(estimate));
+  }
+
   currentType() {
     return this.estimateType() ?? EstimateType.storyPoints;
   }
@@ -95,13 +117,22 @@ export class TaskEstimatePickerComponent {
   selectEstimateType(estimateType: EstimateType) {
     if (estimateType === this.estimateType()) return;
 
-    this.estimateChange.emit({ estimateType, estimateValue: null });
+    this.queueEstimate({ estimateType, estimateValue: null }, 0);
   }
 
   selectEstimateValue(estimateValue: number | null) {
-    this.estimateChange.emit({
-      estimateType: this.currentType(),
-      estimateValue,
-    });
+    this.queueEstimate({ estimateType: this.currentType(), estimateValue }, 0);
+  }
+
+  stepEstimateValue(estimateValue: number | null) {
+    this.draftValue.set(estimateValue);
+    this.queueEstimate(
+      { estimateType: this.currentType(), estimateValue },
+      valueDebounceMs
+    );
+  }
+
+  private queueEstimate(estimate: TaskEstimate, delay: number) {
+    this.pendingEstimates.next({ estimate, delay });
   }
 }
