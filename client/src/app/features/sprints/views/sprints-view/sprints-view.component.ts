@@ -58,13 +58,11 @@ const emptyMessages: Record<SprintStatus, string> = {
         toolbar
         i18n-title="Page title for the sprint list"
         title="Sprints"
-        i18n-filtersLabel="Accessible name of the sprint list filter row"
-        filtersLabel="Filter sprints"
         [count]="count()"
         [actionTitle]="createActionTitle()"
         (actionClick)="onOpenCreateDialog()">
         <app-tab-group
-          pageHeaderFilters
+          pageHeaderTabs
           [tabs]="statusTabs()"
           [value]="selectedStatus()"
           (valueChange)="onStatusChanged($event)" />

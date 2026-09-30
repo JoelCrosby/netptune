@@ -47,6 +47,10 @@ import { PageHeaderTitleComponent } from './page-header-title.component';
         [attr.aria-label]="filtersLabel()">
         <ng-content select="[pageHeaderFilters]" />
       </div>
+
+      <div [class]="tabRowClass()">
+        <ng-content select="[pageHeaderTabs]" />
+      </div>
     </header>
   `,
 })
@@ -109,5 +113,11 @@ export class PageHeaderComponent {
     if (!this.toolbar()) return 'hidden';
 
     return `flex flex-row flex-wrap items-center ${this.rowWidthClass()} gap-2.5 px-8 pb-3 empty:hidden max-md:px-3 max-md:pb-2.5`;
+  });
+
+  protected readonly tabRowClass = computed(() => {
+    if (!this.toolbar()) return 'hidden';
+
+    return `${this.rowWidthClass()} -mb-px px-5 empty:hidden max-md:px-0 [&>app-tab-group]:border-b-0`;
   });
 }
