@@ -1,9 +1,18 @@
 import { Component, computed, inject, viewChild } from '@angular/core';
 import { SessionService } from '@core/services/session.service';
+import { StatusCategory } from '@core/models/status';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { taskColumns, taskNameCell } from '@core/tasks/task-columns';
 import { scrollHeights } from '@static/components/datatable/datatable-classes';
 import { TaskTableComponent } from '@static/components/task-table.component';
+
+const openStatusCategories = [
+  StatusCategory.new,
+  StatusCategory.backlog,
+  StatusCategory.todo,
+  StatusCategory.active,
+  StatusCategory.inactive,
+];
 
 @Component({
   selector: 'app-dashboard-assigned-tasks',
@@ -41,7 +50,12 @@ export class DashboardAssignedTasksComponent {
   readonly params = computed(() => {
     const userId = this.currentUserId();
 
-    return userId ? { assignees: [userId] } : {};
+    return userId
+      ? {
+          assignees: [userId],
+          statusCategories: openStatusCategories,
+        }
+      : {};
   });
 
   readonly columns = taskColumns<TaskViewModel>(
