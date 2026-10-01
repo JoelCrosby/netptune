@@ -84,13 +84,15 @@
   border-radius: var(--border-radius-small);
   padding: 0.75rem 1rem;
   overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.6;
 }
 
 .editor-content pre code {
   background: none;
   border: 0;
   padding: 0;
-  font-size: 0.875rem;
+  font-size: inherit;
 }
 
 .editor-content blockquote {
