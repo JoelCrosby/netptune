@@ -7,6 +7,9 @@ import { LucideChartColumnBig } from '@lucide/angular';
 import { IconTileComponent } from '@static/components/icon-tile.component';
 import { FromNowPipe } from '@static/pipes/from-now.pipe';
 import { PanelComponent } from '@static/components/panel.component';
+import { AvatarStackComponent } from '@static/components/avatar-stack/avatar-stack.component';
+
+const MAX_VISIBLE_ASSIGNEES = 5;
 
 interface BoardStat {
   label: string;
@@ -16,7 +19,7 @@ interface BoardStat {
 @Component({
   selector: 'app-boards-grid-card',
   providers: [FromNowPipe],
-  imports: [IconTileComponent, PanelComponent],
+  imports: [IconTileComponent, PanelComponent, AvatarStackComponent],
   host: { class: 'block h-full' },
   template: `
     <article
@@ -33,9 +36,19 @@ interface BoardStat {
           <app-icon-tile [icon]="boardIcon" [class]="tileClass()" />
         }
 
-        <h3 class="min-w-0 truncate text-base">
+        <h3 class="min-w-0 flex-1 truncate text-base">
           {{ board().name }}
         </h3>
+
+        @if (visibleAssignees().length) {
+          <div class="flex shrink-0 items-center gap-1.5">
+            <app-avatar-stack [avatars]="visibleAssignees()" />
+
+            @if (hiddenAssigneeCount(); as hidden) {
+              <span class="text-muted text-xs font-medium">+{{ hidden }}</span>
+            }
+          </div>
+        }
       </div>
 
       <dl
@@ -72,6 +85,14 @@ export class BoardsGridCardComponent {
 
   protected readonly tileClass = computed(() => {
     return `${colorBackgroundClass(this.board().metaInfo.color)} text-white`;
+  });
+
+  protected readonly visibleAssignees = computed(() => {
+    return this.board().assignees.slice(0, MAX_VISIBLE_ASSIGNEES);
+  });
+
+  protected readonly hiddenAssigneeCount = computed(() => {
+    return Math.max(this.board().assignees.length - MAX_VISIBLE_ASSIGNEES, 0);
   });
 
   protected readonly stats = computed<BoardStat[]>(() => {

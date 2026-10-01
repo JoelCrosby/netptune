@@ -1,4 +1,7 @@
+using System.Text.Json;
+
 using Netptune.Core.Enums;
+using Netptune.Core.ViewModels.Users;
 
 namespace Netptune.Repositories.RowMaps;
 
@@ -80,6 +83,26 @@ public class BoardViewAssigneeRowMap
     public string? Picture_Url { get; set; }
 
     public bool Is_Service_Account { get; set; }
+
+    private static readonly JsonSerializerOptions JsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true,
+    };
+
+    public static List<AssigneeViewModel> ParseList(string assigneesJson)
+    {
+        var assignees = JsonSerializer.Deserialize<List<BoardViewAssigneeRowMap>>(assigneesJson, JsonOptions);
+
+        if (assignees is null) return new List<AssigneeViewModel>();
+
+        return assignees.ConvertAll(assignee => new AssigneeViewModel
+        {
+            Id = assignee.Id,
+            DisplayName = $"{assignee.Firstname} {assignee.Lastname}",
+            PictureUrl = assignee.Picture_Url,
+            IsServiceAccount = assignee.Is_Service_Account,
+        });
+    }
 }
 
 public class BoardViewMetaRowMap

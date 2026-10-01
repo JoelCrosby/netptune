@@ -1,4 +1,5 @@
 import { BoardMeta, BoardType } from '../board';
+import { AssigneeViewModel } from './board-view';
 
 export interface BoardViewModel {
   id: number;
@@ -13,4 +14,5 @@ export interface BoardViewModel {
   metaInfo: BoardMeta;
   taskCount: number;
   lastUpdated: Date;
+  assignees: AssigneeViewModel[];
 }

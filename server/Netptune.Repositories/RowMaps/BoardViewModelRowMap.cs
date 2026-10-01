@@ -29,4 +29,6 @@ public class BoardViewModelRowMap
     public int Task_Count { get; set; }
 
     public DateTime? Last_Updated { get; set; }
+
+    public string Assignees { get; set; } = "[]";
 }

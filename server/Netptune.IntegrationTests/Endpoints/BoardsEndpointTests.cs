@@ -161,6 +161,21 @@ public sealed class BoardsEndpointTests
     }
 
     [Fact]
+    public async Task GetBoardsInWorkspace_ShouldIncludeAssignees_WhenBoardHasAssignedTasks()
+    {
+        var assignee = SeedData.Users.ElementAt(0);
+        await SeedBoardTask("workspace assignees", [], assignee.Id);
+
+        var result = await Client.GetFromJsonAsync<List<BoardsViewModel>>(
+            "api/boards/workspace",
+            TestContext.Current.CancellationToken);
+
+        var board = result!.SelectMany(group => group.Boards).Single(board => board.Identifier == "neovim");
+
+        board.Assignees.Should().ContainSingle(user => user.Id == assignee.Id);
+    }
+
+    [Fact]
     public async Task GetBoardsInProject_ShouldReturnCorrectly_WhenInputValid()
     {
         var response = await Client.GetAsync("api/boards/project/1");

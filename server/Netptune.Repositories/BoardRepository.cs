@@ -77,45 +77,14 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
 
         using var connection = ConnectionFactory.StartConnection();
 
-        var results = await connection.QueryMultipleAsync(new CommandDefinition(@"
-                SELECT b.id,
-                       b.name,
-                       b.identifier,
-                       b.project_id,
-                       b.board_type,
-                       CAST(b.created_at AS timestamp with time zone),
-                       CAST(b.updated_at AS timestamp with time zone),
-                       b.meta_info,
-                       (u.id IS NULL),
-                       u.firstname,
-                       u.lastname,
-                       p.name AS project_name,
-                       task_stats.task_count,
-                       task_stats.last_updated
-                FROM boards AS b
-                         INNER JOIN projects AS p ON b.project_id = p.id AND NOT p.is_deleted
-                         INNER JOIN workspaces AS w ON p.workspace_id = w.id AND NOT w.is_deleted
-                         LEFT JOIN users AS u ON b.owner_id = u.id
-                         LEFT JOIN LATERAL (
-                             SELECT COUNT(pt.id)      AS task_count,
-                                    MAX(pt.updated_at) AS last_updated
-                             FROM board_groups AS bg
-                                      INNER JOIN project_task_in_board_groups AS ptbg ON ptbg.board_group_id = bg.id
-                                      INNER JOIN project_tasks AS pt ON pt.id = ptbg.project_task_id AND NOT pt.is_deleted
-                             WHERE bg.board_id = b.id AND NOT bg.is_deleted
-                         ) AS task_stats ON TRUE
-                WHERE w.slug = @slug AND NOT b.is_deleted
-                ORDER BY COALESCE(p.updated_at, p.created_at) DESC, p.id DESC, COALESCE(b.updated_at, b.created_at) DESC, b.id DESC
-                OFFSET @skip
-                LIMIT @pageSize
-            ", new
+        var command = new CommandDefinition(SqlScripts.GetWorkspaceBoards, new
         {
             slug,
             skip = pagination.Skip,
             pageSize = pagination.PageSize,
-        }, cancellationToken: cancellationToken));
+        }, cancellationToken: cancellationToken);
 
-        var rows = results.Read<BoardViewModelRowMap>();
+        var rows = await connection.QueryAsync<BoardViewModelRowMap>(command);
 
         static BoardMeta GetMetaInfo(BoardViewModelRowMap board)
         {
@@ -138,6 +107,7 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
             OwnerUsername = $"{board.Firstname} {board.Lastname}",
             TaskCount = board.Task_Count,
             LastUpdated = board.Last_Updated ?? board.Created_At,
+            Assignees = BoardViewAssigneeRowMap.ParseList(board.Assignees),
         })
             .Aggregate(new List<BoardsViewModel>(), (prev, board) =>
             {

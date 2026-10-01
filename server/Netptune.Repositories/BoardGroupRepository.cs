@@ -1,5 +1,3 @@
-using System.Text.Json;
-
 using Dapper;
 
 using Microsoft.EntityFrameworkCore;
@@ -134,33 +132,13 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                 ProjectId = row.Project_Id,
                 WorkspaceId = row.Workspace_Id,
                 WorkspaceKey = meta.Workspace_Identifier,
-                Assignees = ParseAssignees(row.Assignees),
+                Assignees = BoardViewAssigneeRowMap.ParseList(row.Assignees),
                 PinnedScopes = row.Pinned_Scopes.Select(scope => (TaskPinScope)scope).ToList(),
                 BoardCount = row.Board_Count,
             });
         }
 
         return groups;
-    }
-
-    private static readonly JsonSerializerOptions AssigneeJsonOptions = new()
-    {
-        PropertyNameCaseInsensitive = true,
-    };
-
-    private static List<AssigneeViewModel> ParseAssignees(string assigneesJson)
-    {
-        var assignees = JsonSerializer.Deserialize<List<BoardViewAssigneeRowMap>>(assigneesJson, AssigneeJsonOptions);
-
-        if (assignees is null) return new List<AssigneeViewModel>();
-
-        return assignees.ConvertAll(assignee => new AssigneeViewModel
-        {
-            Id = assignee.Id,
-            DisplayName = $"{assignee.Firstname} {assignee.Lastname}",
-            PictureUrl = assignee.Picture_Url,
-            IsServiceAccount = assignee.Is_Service_Account,
-        });
     }
 
     public Task<BoardGroupTaskTarget?> GetTaskTarget(int groupId, CancellationToken cancellationToken = default)

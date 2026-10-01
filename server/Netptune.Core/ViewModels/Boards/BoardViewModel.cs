@@ -1,5 +1,6 @@
 using Netptune.Core.Enums;
 using Netptune.Core.Meta;
+using Netptune.Core.ViewModels.Users;
 
 namespace Netptune.Core.ViewModels.Boards;
 
@@ -28,6 +29,8 @@ public class BoardViewModel
     public int TaskCount { get; set; }
 
     public DateTime LastUpdated { get; set; }
+
+    public List<AssigneeViewModel> Assignees { get; set; } = new();
 }
 
 public class BoardsViewModel
