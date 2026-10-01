@@ -251,8 +251,8 @@ import {
                 }
                 @if (selection()) {
                   <td
-                    class="px-2 py-2 align-middle"
-                    (mousedown)="rangeSelectActive = $event.shiftKey">
+                    class="px-2 py-2 align-middle select-none"
+                    (mousedown)="onSelectionCellMouseDown($event)">
                     <app-checkbox
                       [checked]="isSelected(row)"
                       (changed)="toggleRow(row, $event, rowIndex)">
@@ -694,6 +694,17 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
 
   isSelected(row: T): boolean {
     return this.selectionModel().has(this.rowKey(row));
+  }
+
+  onSelectionCellMouseDown(event: MouseEvent) {
+    this.rangeSelectActive = event.shiftKey;
+
+    // Shift+mousedown would otherwise extend the text selection across the
+    // rows between the last click and this checkbox.
+    if (event.shiftKey) {
+      event.preventDefault();
+      window.getSelection()?.removeAllRanges();
+    }
   }
 
   toggleRow(row: T, selected: boolean, index: number) {
