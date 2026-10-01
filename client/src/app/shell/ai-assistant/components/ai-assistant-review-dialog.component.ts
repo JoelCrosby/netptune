@@ -76,18 +76,8 @@ const MODE_KEY = 'netptune.ai.review.mode';
   ],
   template: `
     <header
-      class="border-border bg-card-header flex items-center gap-4 border-b py-3 pr-4 pl-2.5">
-      <button
-        app-icon-button
-        class="h-10 w-10"
-        type="button"
-        i18n-aria-label="Accessible label for the button that closes the review"
-        aria-label="Close review"
-        (click)="close()">
-        <svg lucideX class="h-5 w-5"></svg>
-      </button>
-
-      <div class="flex min-w-0 items-baseline gap-2.5">
+      class="border-border bg-card-header flex items-center gap-4 border-b py-3 pr-2.5 pl-4">
+      <div class="flex min-w-0 flex-1 items-baseline gap-2.5">
         <h1 class="font-overpass m-0 text-[22px] font-medium whitespace-nowrap">
           {{ title() }}
         </h1>
@@ -97,7 +87,6 @@ const MODE_KEY = 'netptune.ai.review.mode';
       </div>
 
       @if (isRunning()) {
-        <span class="flex-1"></span>
         <span
           class="bg-primary/12 text-primary flex shrink-0 items-center gap-2 rounded-full px-3.5 py-1.5 text-[13px] font-medium">
           <app-spinner-icon class="h-3.5 w-3.5 text-current" />
@@ -112,6 +101,16 @@ const MODE_KEY = 'netptune.ai.review.mode';
           }
         </span>
       }
+
+      <button
+        app-icon-button
+        class="h-10 w-10"
+        type="button"
+        i18n-aria-label="Accessible label for the button that closes the review"
+        aria-label="Close review"
+        (click)="close()">
+        <svg lucideX class="h-5 w-5"></svg>
+      </button>
     </header>
 
     <div class="border-border flex items-center gap-3 border-b px-4 py-2.5">
