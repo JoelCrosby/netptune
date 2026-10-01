@@ -17,12 +17,14 @@ import {
 import { taskDetailResource } from '@core/resources/task.resource';
 import { AiAssistantService } from '@core/services/ai-assistant.service';
 import { SprintsService } from '@core/services/sprints.service';
+import { StorageService } from '@core/services/storage.service';
 import { CurrentTaskService } from '@core/services/current-task.service';
 import { TaskCommandsService } from '@core/services/task-commands.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import { unwrapClientResponse } from '@core/util/rxjs-operators';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
-import { catchError, EMPTY, tap } from 'rxjs';
+import { EditorUpload } from '@static/components/editor/editor.component';
+import { catchError, EMPTY, firstValueFrom, tap } from 'rxjs';
 
 @Injectable()
 export class TaskDetailService {
@@ -32,6 +34,7 @@ export class TaskDetailService {
   private readonly currentTask = inject(CurrentTaskService);
   private readonly workspaceRefresh = inject(WorkspaceRefreshService);
   private readonly assistant = inject(AiAssistantService);
+  private readonly storage = inject(StorageService);
 
   private readonly openSystemId = signal<string | undefined>(undefined);
 
@@ -107,6 +110,15 @@ export class TaskDetailService {
 
   updateDescription(description: string) {
     this.updateTask({ description }, { silent: true, refresh: false });
+  }
+
+  // media embedded in the description is linked to the task so it shows in its files.
+  uploadMedia(file: File): Promise<EditorUpload | null> {
+    const systemId = this.task()?.systemId ?? null;
+
+    return firstValueFrom(
+      this.storage.uploadMedia(file, systemId).pipe(unwrapClientResponse())
+    );
   }
 
   setStatus(statusId: number | null) {

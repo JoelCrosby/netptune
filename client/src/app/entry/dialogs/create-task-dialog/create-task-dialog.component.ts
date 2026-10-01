@@ -16,7 +16,10 @@ import {
   submit,
   validate,
 } from '@angular/forms/signals';
-import { EditorComponent } from '@app/static/components/editor/editor.component';
+import {
+  EditorComponent,
+  EditorUploader,
+} from '@app/static/components/editor/editor.component';
 import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { EstimateType, TaskEstimate } from '@core/enums/estimate-type';
@@ -31,8 +34,11 @@ import { CurrentProjectService } from '@core/services/current-project.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SessionService } from '@core/services/session.service';
+import { StorageService } from '@core/services/storage.service';
 import { TaskCommandsService } from '@core/services/task-commands.service';
 import { TaskFileUploadService } from '@core/services/task-file-upload.service';
+import { unwrapClientResponse } from '@core/util/rxjs-operators';
+import { firstValueFrom } from 'rxjs';
 import { LucideX } from '@lucide/angular';
 import { SectionLabelDirective } from '@static/directives/section-label.directive';
 import { ListRowComponent } from '@static/components/list-row.component';
@@ -186,6 +192,7 @@ const documentContentTypes = new Set([
             i18n-placeholder="Placeholder in the empty task description editor"
             placeholder="Add a Description..."
             [formField]="taskForm.description"
+            [uploader]="uploadMedia"
             [isReadOnly]="busy()" />
           <app-form-errors [formField]="taskForm.description" />
         </div>
@@ -359,6 +366,7 @@ export class CreateTaskDialogComponent {
   private dialog = inject(DialogService);
   private session = inject(SessionService);
   private uploadService = inject(TaskFileUploadService);
+  private storage = inject(StorageService);
   dialogRef = inject<DialogRef<CreateTaskDialogComponent>>(DialogRef);
   readonly data = inject<CreateTaskDialogData | null>(DIALOG_DATA, {
     optional: true,
@@ -372,6 +380,13 @@ export class CreateTaskDialogComponent {
     PERMISSIONS.tags.assign
   );
   readonly canUploadFiles = hasPermission(PERMISSIONS.files.upload);
+
+  // the task does not exist yet, so the server links description media to it on create.
+  readonly uploadMedia: EditorUploader = (file) => {
+    return firstValueFrom(
+      this.storage.uploadMedia(file).pipe(unwrapClientResponse())
+    );
+  };
   readonly canLinkTasks = hasPermission(PERMISSIONS.tasks.update);
   readonly readStatus = hasPermission(PERMISSIONS.statuses.read);
 

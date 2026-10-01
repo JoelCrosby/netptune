@@ -13,9 +13,6 @@ import {
   viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { UploadResponse } from '@core/models/upload-result';
-import { StorageService } from '@core/services/storage.service';
-import { unwrapClientResponse } from '@core/util/rxjs-operators';
 import { reloadToken } from '@core/util/signals';
 import { Editor } from '@tiptap/core';
 import { BubbleMenu } from '@tiptap/extension-bubble-menu';
@@ -25,7 +22,7 @@ import { TaskItem, TaskList } from '@tiptap/extension-list';
 import { Placeholder } from '@tiptap/extensions';
 import type { EditorView } from '@tiptap/pm/view';
 import { StarterKit } from '@tiptap/starter-kit';
-import { firstValueFrom, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { AbstractFormValueControl } from '../abstract-form-value-control';
 import { cn } from '../button/button.variants';
@@ -36,6 +33,13 @@ import { EditorFloatingMenuComponent } from './editor-floating-menu.component';
 const saveDebounceMs = 2400;
 
 export type EditorAppearance = 'boxed' | 'flat';
+
+export interface EditorUpload {
+  name: string;
+  uri: string;
+}
+
+export type EditorUploader = (file: File) => Promise<EditorUpload | null>;
 
 @Component({
   selector: 'app-editor',
@@ -48,6 +52,7 @@ export type EditorAppearance = 'boxed' | 'flat';
     <app-editor-floating-menu
       [editor]="editor()"
       [revision]="revision()"
+      [canUpload]="!!uploader()"
       (fileRequested)="filePicker.click()" />
 
     <input
@@ -67,7 +72,6 @@ export class EditorComponent
   extends AbstractFormValueControl
   implements OnDestroy
 {
-  private readonly storage = inject(StorageService);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
   readonly el = viewChild.required<ElementRef<HTMLElement>>('editorHost');
@@ -79,13 +83,9 @@ export class EditorComponent
 
   readonly placeholder = input('');
   readonly isReadOnly = input(false);
-
   readonly appearance = input<EditorAppearance>('boxed');
-
   readonly hostClass = input('');
-
-  // uploaded media is linked to this task so it can be traced back from storage.
-  readonly taskSystemId = input<string | null>(null);
+  readonly uploader = input<EditorUploader | null>(null);
 
   protected readonly appearanceClass = computed(() => {
     if (this.appearance() !== 'flat') {
@@ -101,12 +101,7 @@ export class EditorComponent
   readonly loaded = output();
   readonly saved = output<string>();
 
-  // receives the editor's final content while the component is torn down. this
-  // cannot go through `saved`: angular removes output listeners as part of the
-  // same teardown. for the same reason the callback must not read state that the
-  // teardown clears.
   readonly finalSave = input<((value: string) => void) | null>(null);
-
   readonly injector = inject(Injector);
 
   readonly editor = signal<Editor | null>(null);
@@ -329,7 +324,7 @@ export class EditorComponent
   private onPaste(event: ClipboardEvent): boolean {
     const files = Array.from(event.clipboardData?.files ?? []);
 
-    if (!files.length) return false;
+    if (!files.length || !this.uploader()) return false;
 
     void this.uploadFiles(files);
 
@@ -341,7 +336,7 @@ export class EditorComponent
 
     const files = Array.from(event.dataTransfer?.files ?? []);
 
-    if (!files.length) return false;
+    if (!files.length || !this.uploader()) return false;
 
     event.preventDefault();
 
@@ -366,10 +361,14 @@ export class EditorComponent
   }
 
   private async uploadFiles(files: File[], position?: number) {
+    const uploader = this.uploader();
+
+    if (!uploader) return;
+
     let insertAt = position;
 
     for (const file of files) {
-      const upload = await this.uploadFile(file);
+      const upload = await uploader(file).catch(() => null);
 
       if (!upload) continue;
 
@@ -377,16 +376,8 @@ export class EditorComponent
     }
   }
 
-  private async uploadFile(file: File): Promise<UploadResponse | null> {
-    return firstValueFrom(
-      this.storage
-        .uploadMedia(file, this.taskSystemId())
-        .pipe(unwrapClientResponse())
-    ).catch(() => null);
-  }
-
   private insertUpload(
-    upload: UploadResponse,
+    upload: EditorUpload,
     file: File,
     position?: number
   ): number | undefined {

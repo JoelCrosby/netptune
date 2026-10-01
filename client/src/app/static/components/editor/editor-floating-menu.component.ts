@@ -119,14 +119,16 @@ import {
           (click)="insertDivider(editor)">
           <svg lucideMinus [class]="iconClass"></svg>
         </button>
-        <button
-          type="button"
-          [class]="buttonClass"
-          [attr.aria-label]="labels.file"
-          [title]="labels.file"
-          (click)="fileRequested.emit()">
-          <svg lucideImage [class]="iconClass"></svg>
-        </button>
+        @if (canUpload()) {
+          <button
+            type="button"
+            [class]="buttonClass"
+            [attr.aria-label]="labels.file"
+            [title]="labels.file"
+            (click)="fileRequested.emit()">
+            <svg lucideImage [class]="iconClass"></svg>
+          </button>
+        }
       </div>
     }
   `,
@@ -136,6 +138,7 @@ export class EditorFloatingMenuComponent {
 
   readonly editor = input<Editor | null>(null);
   readonly revision = input(0);
+  readonly canUpload = input(false);
 
   readonly fileRequested = output();
 

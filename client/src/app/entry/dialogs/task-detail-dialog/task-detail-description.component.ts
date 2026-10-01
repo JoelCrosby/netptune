@@ -5,6 +5,7 @@ import { TaskViewModel } from '@app/core/models/view-models/project-task-dto';
 import {
   EditorAppearance,
   EditorComponent,
+  EditorUploader,
 } from '@static/components/editor/editor.component';
 import { EYEBROW } from './task-detail-styles';
 import { TaskDetailService } from './task-detail.service';
@@ -22,7 +23,7 @@ import { TaskDetailService } from './task-detail.service';
       placeholder="Add a Description..."
       [appearance]="appearance()"
       [hostClass]="textClass()"
-      [taskSystemId]="task()?.systemId ?? null"
+      [uploader]="uploadMedia"
       (saved)="updateTask($event)"
       [finalSave]="finalSave()"
       [(value)]="description"
@@ -42,6 +43,10 @@ export class TaskDetailDescriptionComponent {
 
   readonly eyebrowClass = `${EYEBROW} mb-2.5`;
   readonly labelId = 'task-detail-description-label';
+
+  readonly uploadMedia: EditorUploader = (file) => {
+    return this.taskDetail.uploadMedia(file);
+  };
 
   isReadOnly = computed(() => !this.canUpdate());
   description = model(this.task()?.description ?? '');
