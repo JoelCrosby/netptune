@@ -180,7 +180,8 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
                     cdkDragHandle
                     class="group/header flex cursor-pointer flex-row items-center justify-between uppercase">
                     <div
-                      class="text-foreground/60 flex h-12.5 w-full flex-row-reverse items-center justify-end pl-4 text-sm font-medium tracking-[.1px]">
+                      class="text-foreground/60 flex h-12.5 w-full flex-row-reverse items-center justify-end pl-4 text-sm font-medium tracking-[.1px]"
+                      [class.pr-4]="!isAuthenticated()">
                       @if (
                         group.statusId && statusMap().get(group.statusId);
                         as status

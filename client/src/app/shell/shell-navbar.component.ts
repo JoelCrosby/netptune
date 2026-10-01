@@ -61,8 +61,9 @@ import { AiAssistantButtonComponent } from './ai-assistant/ai-assistant-button.c
         } @else {
           <a
             app-button-link
-            variant="filled"
+            variant="outlined"
             routerLink="/auth/login"
+            class="h-6 rounded-xl"
             i18n="
               Navbar button that takes a signed-out visitor to the login page
             ">
