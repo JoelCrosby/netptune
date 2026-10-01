@@ -6,6 +6,8 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
+using Netptune.Core.Enums;
+using Netptune.Core.Requests;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Storage;
@@ -110,6 +112,70 @@ public sealed class StorageEndpointTests
 
         result.IsSuccess.Should().BeTrue();
         result.Payload!.Uri.Should().StartWith("/api/workspaces/netptune/files/");
+    }
+
+    [Fact]
+    public async Task UploadMedia_ShouldLinkToTask_WhenTaskSystemIdProvided()
+    {
+        var tasksResponse = await Client.GetFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>("api/tasks?pageSize=1");
+        var systemId = tasksResponse.Payload!.Items.Single().SystemId;
+        var upload = await UploadMedia(systemId);
+        var fileId = int.Parse(upload.Key);
+
+        var filtered = await Client.GetFromJsonAsync<ClientResponse<PagedResponse<WorkspaceFileViewModel>>>(
+            $"api/storage/files?taskSystemId={systemId}&pageSize=100");
+
+        filtered.Payload!.Items.Should().Contain(item =>
+            item.Id == fileId &&
+            item.Purpose == WorkspaceFilePurpose.InlineMedia &&
+            item.TaskSystemId == systemId);
+
+        var taskFiles = await Client.GetFromJsonAsync<ClientResponse<IReadOnlyList<WorkspaceFileViewModel>>>($"api/tasks/{systemId}/files");
+
+        taskFiles.Payload.Should().Contain(item => item.Id == fileId);
+    }
+
+    [Fact]
+    public async Task UploadMedia_ShouldFail_WhenTaskDoesNotExist()
+    {
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Post,
+            RequestUri = new("api/storage/media", UriKind.RelativeOrAbsolute),
+            Content = new MultipartFormDataContent
+            {
+                { new ByteArrayContent([1, 2, 3]), "file", "media.jpg" },
+                { new StringContent("NOPE-99999"), "taskSystemId" },
+            },
+        };
+
+        var response = await Client.SendAsync(request);
+
+        response.IsSuccessStatusCode.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task CreateTask_ShouldLinkInlineMediaInTheDescription()
+    {
+        var upload = await UploadMedia(null);
+        var fileId = int.Parse(upload.Key);
+
+        var response = await Client.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest
+        {
+            Name = $"Inline media {Guid.NewGuid():N}"[..32],
+            Description = $"![screenshot]({upload.Uri})",
+            ProjectId = 1,
+        }, TestContext.Current.CancellationToken);
+
+        response.IsSuccessStatusCode.Should().BeTrue(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
+
+        var created = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>(TestContext.Current.CancellationToken);
+        var systemId = created!.Payload!.SystemId;
+
+        var filtered = await Client.GetFromJsonAsync<ClientResponse<PagedResponse<WorkspaceFileViewModel>>>(
+            $"api/storage/files?taskSystemId={systemId}&pageSize=100", TestContext.Current.CancellationToken);
+
+        filtered.Payload!.Items.Should().Contain(item => item.Id == fileId && item.TaskSystemId == systemId);
     }
 
     [Fact]
@@ -310,6 +376,26 @@ public sealed class StorageEndpointTests
 
         command.CommandText = "SELECT count(*) FROM pg_type WHERE typtype = 'e' AND typname IN ('workspace_file_purpose', 'workspace_file_status')";
         Convert.ToInt32(await command.ExecuteScalarAsync()).Should().Be(2);
+    }
+
+    private async Task<UploadResponse> UploadMedia(string? taskSystemId)
+    {
+        using var content = new MultipartFormDataContent();
+
+        content.Add(new ByteArrayContent([1, 2, 3]), "file", "media.png");
+
+        if (taskSystemId is not null)
+        {
+            content.Add(new StringContent(taskSystemId), "taskSystemId");
+        }
+
+        var response = await Client.PostAsync("api/storage/media", content, TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<UploadResponse>>(TestContext.Current.CancellationToken);
+
+        return result!.Payload!;
     }
 
     private async Task<WorkspaceFileViewModel> UploadTaskFile(string systemId, string fileName)

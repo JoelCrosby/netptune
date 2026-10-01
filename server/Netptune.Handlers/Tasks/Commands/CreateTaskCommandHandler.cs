@@ -15,6 +15,7 @@ using Netptune.Core.Services.Activity;
 using Netptune.Core.Services.ProjectTasks;
 using Netptune.Core.Services.Relations;
 using Netptune.Core.UnitOfWork;
+using Netptune.Core.Utilities;
 using Netptune.Core.ViewModels.ProjectTasks;
 
 namespace Netptune.Handlers.Tasks.Commands;
@@ -187,6 +188,8 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
 
             linkedRelations.AddRange(links);
 
+            await LinkInlineMedia(task.Description, task.WorkspaceId, result.Id, cancellationToken);
+
             var creationReferences = new List<EventReferenceInput>
             {
                 new EventReferenceInput
@@ -285,6 +288,30 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
         await RelationLinker.Publish(linkedRelations, user.Id);
 
         return ClientResponse<TaskViewModel>.Success(response!);
+    }
+
+    // Images pasted into the description are uploaded before the task exists, so they are linked
+    // back to it here rather than at upload time.
+    private async Task LinkInlineMedia(string? description, int workspaceId, int taskId, CancellationToken cancellationToken)
+    {
+        var contentIds = InlineMediaReferences.ExtractContentIds(description);
+
+        if (contentIds.Count == 0)
+        {
+            return;
+        }
+
+        var fileIds = await UnitOfWork.WorkspaceFiles.GetUnlinkedInlineMediaIds(workspaceId, contentIds, cancellationToken);
+
+        foreach (var fileId in fileIds)
+        {
+            await UnitOfWork.TaskFiles.AddAsync(new TaskFile
+            {
+                WorkspaceId = workspaceId,
+                ProjectTaskId = taskId,
+                WorkspaceFileId = fileId,
+            }, cancellationToken);
+        }
     }
 
     private static List<string> ReadRequestedAssignees(AddProjectTaskRequest request)

@@ -118,6 +118,19 @@ public sealed class WorkspaceFileRepository : WorkspaceEntityRepository<DataCont
                 file.IsDeleted == false, cancellationToken);
     }
 
+    public Task<List<int>> GetUnlinkedInlineMediaIds(int workspaceId, IReadOnlyCollection<string> contentIds, CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .Where(file =>
+                file.WorkspaceId == workspaceId &&
+                file.IsDeleted == false &&
+                file.Purpose == WorkspaceFilePurpose.InlineMedia &&
+                contentIds.Contains(file.ContentId) &&
+                !file.TaskFiles.Any())
+            .Select(file => file.Id)
+            .ToListAsync(cancellationToken);
+    }
+
     public Task<WorkspaceFileViewModel?> GetViewModel(int id, string currentUserId, bool canDeleteAny, CancellationToken cancellationToken = default)
     {
         return Project(Entities.Where(file => file.Id == id), currentUserId, canDeleteAny)

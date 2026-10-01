@@ -14,6 +14,8 @@ public interface IWorkspaceFileRepository : IWorkspaceEntityRepository<Workspace
 
     Task<WorkspaceFile?> GetByContentId(string contentId, int workspaceId, bool isReadonly = false, CancellationToken cancellationToken = default);
 
+    Task<List<int>> GetUnlinkedInlineMediaIds(int workspaceId, IReadOnlyCollection<string> contentIds, CancellationToken cancellationToken = default);
+
     Task<WorkspaceFileViewModel?> GetViewModel(int id, string currentUserId, bool canDeleteAny, CancellationToken cancellationToken = default);
 
     Task<bool> TryMarkQuotaReleased(int id, string userId, CancellationToken cancellationToken = default);

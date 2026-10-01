@@ -89,6 +89,7 @@ public static class StorageEndpoints
             FileName = file.FileName,
             ContentType = file.ContentType,
             Length = file.Length,
+            TaskSystemId = form["taskSystemId"].FirstOrDefault(),
         };
         var result = await mediator.Send(command, cancellationToken);
 

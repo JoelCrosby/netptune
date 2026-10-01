@@ -8,9 +8,16 @@ import { Observable } from 'rxjs';
 export class StorageService {
   private http = inject(HttpClient);
 
-  uploadMedia(file: File): Observable<ClientResponse<UploadResponse>> {
+  uploadMedia(
+    file: File,
+    taskSystemId?: string | null
+  ): Observable<ClientResponse<UploadResponse>> {
     const formData = new FormData();
     formData.append('files', file);
+
+    if (taskSystemId) {
+      formData.append('taskSystemId', taskSystemId);
+    }
 
     return this.http.post<ClientResponse<UploadResponse>>(
       'api/storage/media/',

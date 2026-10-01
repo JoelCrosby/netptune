@@ -84,6 +84,9 @@ export class EditorComponent
 
   readonly hostClass = input('');
 
+  // uploaded media is linked to this task so it can be traced back from storage.
+  readonly taskSystemId = input<string | null>(null);
+
   protected readonly appearanceClass = computed(() => {
     if (this.appearance() !== 'flat') {
       return cn(
@@ -376,7 +379,9 @@ export class EditorComponent
 
   private async uploadFile(file: File): Promise<UploadResponse | null> {
     return firstValueFrom(
-      this.storage.uploadMedia(file).pipe(unwrapClientResponse())
+      this.storage
+        .uploadMedia(file, this.taskSystemId())
+        .pipe(unwrapClientResponse())
     ).catch(() => null);
   }
 

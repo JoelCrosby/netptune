@@ -3,6 +3,7 @@ using Mediator;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Extensions;
+using Netptune.Core.Relationships;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -21,6 +22,9 @@ public sealed record UploadStorageMediaCommand : IRequest<ClientResponse<UploadR
     public required string ContentType { get; init; }
 
     public required long Length { get; init; }
+
+    // Media embedded in a task's description is linked back to that task.
+    public string? TaskSystemId { get; init; }
 }
 
 public sealed class UploadStorageMediaCommandHandler : IRequestHandler<UploadStorageMediaCommand, ClientResponse<UploadResponse>>
@@ -54,6 +58,20 @@ public sealed class UploadStorageMediaCommandHandler : IRequestHandler<UploadSto
         }
 
         var workspaceId = await Identity.GetWorkspaceId();
+        int? taskId = null;
+
+        if (!string.IsNullOrWhiteSpace(request.TaskSystemId))
+        {
+            var task = await UnitOfWork.Tasks.GetTaskInWorkspace(request.TaskSystemId, workspaceId, cancellationToken);
+
+            if (task is null || task.IsDeleted)
+            {
+                return ClientResponse<UploadResponse>.NotFound;
+            }
+
+            taskId = task.Id;
+        }
+
         var maxUploadBytes = await WorkspaceUploadLimit.Resolve(UnitOfWork, workspaceId, cancellationToken);
 
         if (request.Length > maxUploadBytes)
@@ -90,6 +108,16 @@ public sealed class UploadStorageMediaCommandHandler : IRequestHandler<UploadSto
             await UnitOfWork.CompleteAsync(cancellationToken);
 
             entity.StorageKey = $"workspace/{workspaceId}/files/{entity.Id}/{Guid.NewGuid():N}";
+
+            if (taskId.HasValue)
+            {
+                await UnitOfWork.TaskFiles.AddAsync(new TaskFile
+                {
+                    WorkspaceId = workspaceId,
+                    ProjectTaskId = taskId.Value,
+                    WorkspaceFileId = entity.Id,
+                }, cancellationToken);
+            }
 
             await UnitOfWork.CompleteAsync(cancellationToken);
 

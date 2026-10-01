@@ -22,6 +22,7 @@ import { TaskDetailService } from './task-detail.service';
       placeholder="Add a Description..."
       [appearance]="appearance()"
       [hostClass]="textClass()"
+      [taskSystemId]="task()?.systemId ?? null"
       (saved)="updateTask($event)"
       [finalSave]="finalSave()"
       [(value)]="description"
