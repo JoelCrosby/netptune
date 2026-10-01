@@ -44,17 +44,15 @@ const DROPDOWN_LIMIT = 10;
           <app-notification-list [notifications]="visibleNotifications()" />
         </div>
 
-        @if (notifications().length) {
-          <div class="border-border/50 sticky bottom-0 border-t bg-inherit">
-            <button
-              class="hover:text-primary text-muted w-full cursor-pointer px-[1.2rem] py-3 text-center text-sm font-medium transition-colors"
-              (click)="viewAll.emit()">
-              <span i18n="Link to the full notifications page">
-                View all notifications
-              </span>
-            </button>
-          </div>
-        }
+        <div class="border-border/50 sticky bottom-0 border-t bg-inherit">
+          <button
+            class="hover:text-primary text-muted w-full cursor-pointer px-[1.2rem] py-3 text-center text-sm font-medium transition-colors"
+            (click)="viewAll.emit()">
+            <span i18n="Link to the full notifications page">
+              View all notifications
+            </span>
+          </button>
+        </div>
       } @else {
         <div class="flex justify-center p-4">
           <app-spinner diameter="24" />

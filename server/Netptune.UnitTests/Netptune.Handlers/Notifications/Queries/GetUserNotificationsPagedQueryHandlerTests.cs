@@ -41,10 +41,11 @@ public class GetUserNotificationsPagedQueryHandlerTests
                 new PageRequest { Page = 1, PageSize = 25 }.GetPagination(),
                 null,
                 null,
+                false,
                 TestContext.Current.CancellationToken)
             .Returns(notifications);
         UnitOfWork.Notifications
-            .GetUserNotificationsCount(UserId, WorkspaceId, null, null, TestContext.Current.CancellationToken).Returns(40);
+            .GetUserNotificationsCount(UserId, WorkspaceId, null, null, false, TestContext.Current.CancellationToken).Returns(40);
 
         var query = new GetUserNotificationsPagedQuery(new NotificationFilter { Page = 1, PageSize = 25 });
 
@@ -68,6 +69,7 @@ public class GetUserNotificationsPagedQueryHandlerTests
                 Arg.Any<Pagination>(),
                 Arg.Any<string?>(),
                 Arg.Any<string?>(),
+                Arg.Any<bool>(),
                 TestContext.Current.CancellationToken)
             .Returns(new List<NotificationViewModel>());
 
@@ -82,8 +84,9 @@ public class GetUserNotificationsPagedQueryHandlerTests
                 new PageRequest { Page = 3, PageSize = 10 }.GetPagination(),
                 null,
                 null,
+                false,
                 TestContext.Current.CancellationToken);
         await UnitOfWork.Notifications.Received(1)
-            .GetUserNotificationsCount(UserId, WorkspaceId, null, null, TestContext.Current.CancellationToken);
+            .GetUserNotificationsCount(UserId, WorkspaceId, null, null, false, TestContext.Current.CancellationToken);
     }
 }

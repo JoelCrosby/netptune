@@ -4,9 +4,9 @@ import { Page } from '../models/pagination';
 import { NotificationViewModel } from '../models/view-models/notification-view-model';
 import { permissionResource } from './permission.resource';
 
-const RECENT_PAGE_SIZE = 10;
+const UNREAD_PAGE_SIZE = 10;
 
-export const recentNotificationsResource = () => {
+export const unreadNotificationsResource = () => {
   return permissionResource<
     NotificationViewModel[],
     ClientResponse<Page<NotificationViewModel>>
@@ -14,7 +14,7 @@ export const recentNotificationsResource = () => {
     permission: PERMISSIONS.notifications.read,
     request: () => ({
       url: 'api/notifications',
-      params: { page: 1, pageSize: RECENT_PAGE_SIZE },
+      params: { page: 1, pageSize: UNREAD_PAGE_SIZE, unreadOnly: true },
     }),
     defaultValue: [],
     refreshOn: ['notifications'],

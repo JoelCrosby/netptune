@@ -2,7 +2,7 @@
 -- NotificationRepository.GetUserNotifications. Entity-type discriminators and
 -- the @skip/@take window are supplied as Dapper parameters. The optional
 -- @search (pre-wrapped with wildcards) and @actorId parameters filter the feed
--- by text and by the acting user respectively. Notification links are not
+-- by text and by the acting user respectively, and @unreadOnly drops read rows. Notification links are not
 -- stored; the workspace slug and route identifier are resolved from the live
 -- rows here so renames are always reflected, and NotificationViewModel.Link
 -- assembles them into a route.
@@ -58,6 +58,7 @@ WITH notification_feed AS (
       AND n.user_id = @userId
       AND n.workspace_id = @workspaceId
       AND (@actorId::text IS NULL OR al.actor_user_id = @actorId)
+      AND (@unreadOnly = FALSE OR n.is_read = FALSE)
 )
 SELECT *
 FROM notification_feed

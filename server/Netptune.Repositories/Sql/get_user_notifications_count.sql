@@ -1,6 +1,6 @@
 -- Total count for the paginated notification feed, used by
 -- NotificationRepository.GetUserNotificationsCount. Mirrors the filtering of
--- get_user_notifications.sql (search + actor) so pagination totals stay in sync.
+-- get_user_notifications.sql (search + actor + unread) so pagination totals stay in sync.
 WITH notification_feed AS (
     SELECT
           n.id
@@ -26,6 +26,7 @@ WITH notification_feed AS (
       AND n.user_id = @userId
       AND n.workspace_id = @workspaceId
       AND (@actorId::text IS NULL OR al.actor_user_id = @actorId)
+      AND (@unreadOnly = FALSE OR n.is_read = FALSE)
 )
 SELECT COUNT(*)
 FROM notification_feed

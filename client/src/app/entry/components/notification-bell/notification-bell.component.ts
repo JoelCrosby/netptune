@@ -19,7 +19,7 @@ import { IconButtonComponent } from '@app/static/components/button/icon-button.c
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { NotificationViewModel } from '@core/models/view-models/notification-view-model';
 import {
-  recentNotificationsResource,
+  unreadNotificationsResource,
   unreadNotificationCountResource,
 } from '@core/resources/notification.resource';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
@@ -88,7 +88,7 @@ export class NotificationBellComponent implements OnDestroy {
   private route = inject(ActivatedRoute);
 
   readonly authenticated = inject(SessionService).isAuthenticated;
-  private readonly recent = recentNotificationsResource();
+  private readonly recent = unreadNotificationsResource();
   private readonly unread = unreadNotificationCountResource();
   private readonly workspaceId = inject(CurrentWorkspaceService).id;
 

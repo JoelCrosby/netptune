@@ -24,6 +24,7 @@ public class NotificationRepository(DataContext context, IDbConnectionFactory co
         Pagination pagination,
         string? search = null,
         string? actorId = null,
+        bool unreadOnly = false,
         CancellationToken cancellationToken = default)
     {
         using var connection = ConnectionFactory.StartConnection();
@@ -35,6 +36,7 @@ public class NotificationRepository(DataContext context, IDbConnectionFactory co
                 workspaceId,
                 search = ToSearchParam(search),
                 actorId = ToActorParam(actorId),
+                unreadOnly,
                 skip = pagination.Skip,
                 take = pagination.PageSize,
                 taskType = EntityType.Task,
@@ -59,7 +61,7 @@ public class NotificationRepository(DataContext context, IDbConnectionFactory co
         return notifications;
     }
 
-    public async Task<int> GetUserNotificationsCount(string userId, int workspaceId, string? search = null, string? actorId = null, CancellationToken cancellationToken = default)
+    public async Task<int> GetUserNotificationsCount(string userId, int workspaceId, string? search = null, string? actorId = null, bool unreadOnly = false, CancellationToken cancellationToken = default)
     {
         using var connection = ConnectionFactory.StartConnection();
 
@@ -70,6 +72,7 @@ public class NotificationRepository(DataContext context, IDbConnectionFactory co
                 workspaceId,
                 search = ToSearchParam(search),
                 actorId = ToActorParam(actorId),
+                unreadOnly,
                 taskType = EntityType.Task,
                 projectType = EntityType.Project,
                 boardType = EntityType.Board,

@@ -5,4 +5,6 @@ public class NotificationFilter : PageRequest
     public string? Search { get; init; }
 
     public string? UserId { get; init; }
+
+    public bool? UnreadOnly { get; init; }
 }

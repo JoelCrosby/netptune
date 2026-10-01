@@ -31,6 +31,7 @@ public sealed class GetUserNotificationsPagedQueryHandler : IRequestHandler<GetU
 
         var search = filter.Search;
         var actorId = filter.UserId;
+        var unreadOnly = filter.UnreadOnly ?? false;
 
         var notifications = await UnitOfWork.Notifications.GetUserNotifications(
             userId,
@@ -38,8 +39,9 @@ public sealed class GetUserNotificationsPagedQueryHandler : IRequestHandler<GetU
             pagination,
             search,
             actorId,
+            unreadOnly,
             cancellationToken);
-        var totalCount = await UnitOfWork.Notifications.GetUserNotificationsCount(userId, workspaceId, search, actorId, cancellationToken);
+        var totalCount = await UnitOfWork.Notifications.GetUserNotificationsCount(userId, workspaceId, search, actorId, unreadOnly, cancellationToken);
 
         var page = new PagedResponse<NotificationViewModel>(
             notifications,
