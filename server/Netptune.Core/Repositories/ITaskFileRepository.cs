@@ -9,7 +9,5 @@ public interface ITaskFileRepository : IRepository<TaskFile, int>
 
     Task<int> CountByWorkspaceFileId(int workspaceFileId, CancellationToken cancellationToken = default);
 
-    Task<bool> ExistsByWorkspaceFileId(int workspaceFileId, CancellationToken cancellationToken = default);
-
     Task DeleteByWorkspaceFileId(int workspaceFileId, CancellationToken cancellationToken = default);
 }

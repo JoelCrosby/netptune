@@ -34,7 +34,7 @@ public static class WorkspaceFilesEndpoints
 
         builder
             .MapGet("workspaces/{workspaceKey}/files/{contentId}/content", GetContent)
-            .RequireAuthorization(NetptunePermissions.Files.Read);
+            .RequireAuthorization(NetptunePolicies.WorkspaceViewer);
 
         return builder;
     }
@@ -90,13 +90,17 @@ public static class WorkspaceFilesEndpoints
 
     private static async Task<IResult> GetContent(string workspaceKey, string contentId, string? disposition, IMediator mediator, IAuthorizationService authorization, HttpContext http, CancellationToken cancellationToken)
     {
-        var canReadTasks = (await authorization.AuthorizeAsync(http.User, NetptunePermissions.Tasks.Read)).Succeeded;
+        var canReadFiles = await authorization.AuthorizeAsync(http.User, NetptunePermissions.Files.Read);
+        var canReadTasks = await authorization.AuthorizeAsync(http.User, NetptunePermissions.Tasks.Read);
+        var canReadProjects = await authorization.AuthorizeAsync(http.User, NetptunePermissions.Projects.Read);
         var query = new GetWorkspaceFileContentQuery
         {
             ContentId = contentId,
             WorkspaceKey = workspaceKey,
             Disposition = disposition,
-            CanReadTasks = canReadTasks,
+            CanReadFiles = canReadFiles.Succeeded,
+            CanReadTasks = canReadTasks.Succeeded,
+            CanReadProjects = canReadProjects.Succeeded,
         };
         var result = await mediator.Send(query, cancellationToken);
 

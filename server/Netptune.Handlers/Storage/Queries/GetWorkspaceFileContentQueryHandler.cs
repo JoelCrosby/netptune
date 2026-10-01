@@ -16,7 +16,11 @@ public sealed record GetWorkspaceFileContentQuery : IRequest<ClientResponse<Uri>
 
     public string? Disposition { get; init; }
 
+    public bool CanReadFiles { get; init; }
+
     public bool CanReadTasks { get; init; }
+
+    public bool CanReadProjects { get; init; }
 }
 
 public sealed class GetWorkspaceFileContentQueryHandler : IRequestHandler<GetWorkspaceFileContentQuery, ClientResponse<Uri>>
@@ -49,9 +53,9 @@ public sealed class GetWorkspaceFileContentQueryHandler : IRequestHandler<GetWor
             return ClientResponse<Uri>.NotFound;
         }
 
-        var isTaskFile = await UnitOfWork.TaskFiles.ExistsByWorkspaceFileId(entity.Id, cancellationToken);
+        var canReadFile = CanRead(entity.Purpose, request);
 
-        if (isTaskFile && !request.CanReadTasks)
+        if (!canReadFile)
         {
             return ClientResponse<Uri>.Forbidden;
         }
@@ -69,5 +73,19 @@ public sealed class GetWorkspaceFileContentQueryHandler : IRequestHandler<GetWor
         var uri = await Storage.GetReadUriAsync(readOptions, cancellationToken);
 
         return uri is null ? ClientResponse<Uri>.NotFound : ClientResponse<Uri>.Success(uri);
+    }
+
+    private static bool CanRead(WorkspaceFilePurpose purpose, GetWorkspaceFileContentQuery request)
+    {
+        var canReadEmbeddingContent = request.CanReadTasks || request.CanReadProjects;
+        var canReadAttachments = request.CanReadFiles && request.CanReadTasks;
+
+        return purpose switch
+        {
+            WorkspaceFilePurpose.Branding => true,
+            WorkspaceFilePurpose.InlineMedia => request.CanReadFiles || canReadEmbeddingContent,
+            WorkspaceFilePurpose.TaskFile => canReadAttachments,
+            _ => false,
+        };
     }
 }

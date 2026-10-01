@@ -49,6 +49,12 @@ public static class AuthorizationServiceCollectionExtensions
             .AddPolicy(NetptunePolicies.Workspace, builder => builder.RequireAuthenticatedUser()
                 .AddAuthenticationSchemes(authenticationScheme)
                 .AddRequirements(new WorkspaceRequirement())
+                .Build())
+
+            // No authenticated-user requirement, so anonymous readers of a public workspace get through.
+            .AddPolicy(NetptunePolicies.WorkspaceViewer, builder => builder
+                .AddAuthenticationSchemes(authenticationScheme)
+                .AddRequirements(new WorkspaceRequirement())
                 .Build());
 
         services.AddScoped<IAuthorizationHandler, WorkspaceAuthorizationHandler>();

@@ -115,6 +115,11 @@ public sealed class NetptuneFixture : IAsyncLifetime
                             .AddRequirements(new WorkspaceRequirement())
                             .Build());
 
+                        options.AddPolicy(NetptunePolicies.WorkspaceViewer, config => config
+                            .AddAuthenticationSchemes(TestAuthenticationHandler.AuthenticationScheme)
+                            .AddRequirements(new WorkspaceRequirement())
+                            .Build());
+
                         options.AddPolicy(NetptunePolicies.InteractiveUser, config => config.RequireAuthenticatedUser()
                             .AddAuthenticationSchemes(TestAuthenticationHandler.AuthenticationScheme)
                             .RequireClaim(NetptuneClaims.ActorType, AppUserType.User.ToString())

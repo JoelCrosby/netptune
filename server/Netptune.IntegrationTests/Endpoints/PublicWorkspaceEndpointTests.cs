@@ -11,7 +11,10 @@ using Netptune.Core.Colors;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.ViewModels.Branding;
+using Netptune.Core.ViewModels.Files;
 using Netptune.Core.ViewModels.Pins;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Users;
@@ -379,6 +382,157 @@ public sealed class PublicWorkspaceEndpointTests
         create.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         reorder.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         delete.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
+    public async Task AnonymousImageRequest_ShouldRedirect_ForBrandingAndInlineMediaOnPublicWorkspace()
+    {
+        var slug = $"public-{Guid.NewGuid():N}"[..20];
+
+        await CreateWorkspace(slug);
+        await SetVisibility(slug, isPublic: true);
+
+        var owner = CreateOwnerClient(slug);
+        var logoUrl = await UploadWorkspaceLogo(owner);
+        var mediaUrl = await UploadInlineMedia(owner);
+
+        var anonymous = CreateAnonymousImageClient(slug);
+
+        var logo = await anonymous.GetAsync(logoUrl);
+        var media = await anonymous.GetAsync(mediaUrl);
+
+        logo.StatusCode.Should().Be(HttpStatusCode.Redirect);
+        media.StatusCode.Should().Be(HttpStatusCode.Redirect);
+    }
+
+    [Fact]
+    public async Task AnonymousImageRequest_ShouldBeDenied_ForTaskAttachmentsOnPublicWorkspace()
+    {
+        var slug = $"public-{Guid.NewGuid():N}"[..20];
+
+        await CreateWorkspace(slug);
+        await SetVisibility(slug, isPublic: true);
+
+        var owner = CreateOwnerClient(slug);
+        var seed = await SeedWorkspace(slug);
+        var task = await CreateTask(owner, seed);
+        var attachmentUrl = await UploadTaskFile(owner, task.SystemId);
+
+        var anonymous = CreateAnonymousImageClient(slug);
+
+        var response = await anonymous.GetAsync(attachmentUrl);
+
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
+
+    [Fact]
+    public async Task AnonymousImageRequest_ShouldOnlyServeBranding_WhenTheWorkspaceExposesNoContent()
+    {
+        var slug = $"public-{Guid.NewGuid():N}"[..20];
+
+        await CreateWorkspace(slug);
+        await SetVisibility(slug, isPublic: true);
+
+        var owner = CreateOwnerClient(slug);
+        var logoUrl = await UploadWorkspaceLogo(owner);
+        var mediaUrl = await UploadInlineMedia(owner);
+
+        await SetPublicPermissions(slug, []);
+
+        var anonymous = CreateAnonymousImageClient(slug);
+
+        var logo = await anonymous.GetAsync(logoUrl);
+        var media = await anonymous.GetAsync(mediaUrl);
+
+        logo.StatusCode.Should().Be(HttpStatusCode.Redirect);
+        media.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
+
+    [Fact]
+    public async Task AnonymousImageRequest_ShouldBeDenied_ForPrivateWorkspace()
+    {
+        var slug = $"private-{Guid.NewGuid():N}"[..20];
+
+        await CreateWorkspace(slug);
+
+        var owner = CreateOwnerClient(slug);
+        var logoUrl = await UploadWorkspaceLogo(owner);
+
+        var anonymous = CreateAnonymousImageClient(slug);
+
+        var response = await anonymous.GetAsync(logoUrl);
+
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    // An <img> sends neither credentials nor the workspace header, only the key in the route.
+    private HttpClient CreateAnonymousImageClient(string slug)
+    {
+        var client = Fixture.CreateAnonymousNetptuneClient(slug);
+
+        client.DefaultRequestHeaders.Remove("workspace");
+
+        return client;
+    }
+
+    private static async Task<string> UploadWorkspaceLogo(HttpClient owner)
+    {
+        var image = new ByteArrayContent([1, 2, 3]);
+
+        image.Headers.ContentType = new("image/png");
+
+        using var form = new MultipartFormDataContent
+        {
+            { image, "image", "logo.png" },
+        };
+
+        var response = await owner.PostAsync("api/workspaces/branding/logo", form);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<BrandingImageViewModel>>();
+
+        return result.Payload!.ContentUrl;
+    }
+
+    private static async Task<string> UploadInlineMedia(HttpClient owner)
+    {
+        var image = new ByteArrayContent([1, 2, 3]);
+
+        image.Headers.ContentType = new("image/png");
+
+        using var form = new MultipartFormDataContent
+        {
+            { image, "file", "media.png" },
+        };
+
+        var response = await owner.PostAsync("api/storage/media", form);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<UploadResponse>>();
+
+        return result.Payload!.Uri;
+    }
+
+    private static async Task<string> UploadTaskFile(HttpClient owner, string systemId)
+    {
+        var file = new ByteArrayContent([10, 20, 30, 40]);
+
+        file.Headers.ContentType = new("application/pdf");
+
+        using var form = new MultipartFormDataContent
+        {
+            { file, "files", "evidence.pdf" },
+        };
+
+        var response = await owner.PostAsync($"api/tasks/{systemId}/files", form);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<FileUploadResult>>();
+
+        return result.Payload!.File!.ContentUrl;
     }
 
     private HttpClient CreateOwnerClient(string slug)

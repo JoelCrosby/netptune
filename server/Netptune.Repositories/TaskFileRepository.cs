@@ -22,11 +22,6 @@ public sealed class TaskFileRepository : Repository<DataContext, TaskFile, int>,
         return Entities.CountAsync(link => link.WorkspaceFileId == workspaceFileId, cancellationToken);
     }
 
-    public Task<bool> ExistsByWorkspaceFileId(int workspaceFileId, CancellationToken cancellationToken = default)
-    {
-        return Entities.AnyAsync(link => link.WorkspaceFileId == workspaceFileId, cancellationToken);
-    }
-
     public async Task DeleteByWorkspaceFileId(int workspaceFileId, CancellationToken cancellationToken = default)
     {
         await Entities
