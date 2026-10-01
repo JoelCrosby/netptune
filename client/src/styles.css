@@ -76,6 +76,7 @@
 
   --radius: var(--border-radius);
   --radius-sm: var(--border-radius-small);
+  --radius-dialog: 10px;
 
   --font-sans:
     -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', ui-sans-serif,

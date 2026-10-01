@@ -8,14 +8,13 @@ import { Component } from '@angular/core';
       :host {
         display: block;
         background: var(--dialog-background);
-        border-radius: 8px;
+        border-radius: var(--radius-dialog);
         border: 1px solid var(--border);
         box-shadow:
           0 11px 15px -7px #0003,
           0 24px 38px 3px #00000024,
           0 9px 46px 8px #0000001f;
         padding: 24px 4px 24px 24px;
-        border-radius: 4px;
         box-sizing: border-box;
         outline: 0;
         width: 100%;

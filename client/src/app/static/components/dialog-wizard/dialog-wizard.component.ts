@@ -18,7 +18,7 @@ export const DIALOG_WIZARD_TITLE = new InjectionToken<string>(
   ],
   host: {
     class:
-      'border-border bg-dialog-background flex h-full w-full flex-col overflow-hidden rounded border shadow-2xl outline-none',
+      'border-border bg-dialog-background flex h-full w-full flex-col overflow-hidden rounded-dialog border shadow-2xl outline-none',
   },
   template: `
     <header

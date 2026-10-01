@@ -1,4 +1,4 @@
-import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { DialogRef } from '@angular/cdk/dialog';
 import {
   Component,
   computed,
@@ -19,9 +19,7 @@ import { FlatButtonComponent } from '@app/static/components/button/flat-button.c
 import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
 import { BoardCommandsService } from '@core/services/board-commands.service';
 import { BoardsService } from '@core/services/boards.service';
-import { Board } from '@core/models/board';
 import { AddBoardRequest } from '@core/models/requests/add-board-request';
-import { UpdateBoardRequest } from '@core/models/requests/update-board-request';
 import { projectResource } from '@core/resources/project.resource';
 import { colorDictionary } from '@core/util/colors/colors';
 import { toUrlSlug } from '@core/util/strings';
@@ -35,14 +33,15 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
 import { firstValueFrom } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { BoardBrandingComponent } from '@boards/components/board-branding/board-branding.component';
 import { SetupTemplatePickerComponent } from '@app/entry/components/setup-template-picker/setup-template-picker.component';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
 @Component({
   selector: 'app-create-board',
   template: `
-    <app-dialog-title>{{ titleLabel }}</app-dialog-title>
+    <app-dialog-title>
+      <span i18n="Title of the create-board dialog">Create Board</span>
+    </app-dialog-title>
 
     <form app-dialog-content class="form-auth">
       <app-form-input
@@ -59,38 +58,25 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
         [icon]="identifierIcon()"
         [loading]="boardForm.identifier().pending()"></app-form-input>
 
-      @if (!isEditMode) {
-        <app-form-select
-          [formField]="boardForm.projectId"
-          i18n-label="Label of the project field"
-          label="Project">
-          @for (project of projects(); track project.id) {
-            <app-form-select-option [value]="project.id">
-              {{ project.name }}
-            </app-form-select-option>
-          }
-        </app-form-select>
-      }
+      <app-form-select
+        [formField]="boardForm.projectId"
+        i18n-label="Label of the project field"
+        label="Project">
+        @for (project of projects(); track project.id) {
+          <app-form-select-option [value]="project.id">
+            {{ project.name }}
+          </app-form-select-option>
+        }
+      </app-form-select>
 
       <app-color-select
         [formField]="boardForm.color"
         i18n-label="Label of the colour picker field"
         label="Color"></app-color-select>
 
-      @if (!isEditMode) {
-        <app-setup-template-picker
-          [selectedKey]="boardForm.templateKey().value()"
-          (selectedKeyChange)="setTemplate($event)" />
-      }
-
-      @if (editingBoardId; as boardId) {
-        <app-board-branding
-          [boardId]="boardId"
-          [initialLogoFileId]="data?.metaInfo?.logoFileId ?? null"
-          [initialBackgroundFileId]="
-            data?.metaInfo?.backgroundFileId ?? null
-          " />
-      }
+      <app-setup-template-picker
+        [selectedKey]="boardForm.templateKey().value()"
+        (selectedKeyChange)="setTemplate($event)" />
     </form>
 
     <div app-dialog-actions align="end">
@@ -98,7 +84,7 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
         <span i18n="Dismisses a dialog without saving">Close</span>
       </button>
       <button app-flat-button type="button" (click)="getResult()">
-        {{ submitLabel }}
+        <span i18n="Button that creates the board">Create Board</span>
       </button>
     </div>
   `,
@@ -114,7 +100,6 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
     StrokedButtonComponent,
     FlatButtonComponent,
     SetupTemplatePickerComponent,
-    BoardBrandingComponent,
   ],
 })
 export class CreateBoardComponent {
@@ -122,25 +107,12 @@ export class CreateBoardComponent {
   private boardsService = inject(BoardsService);
 
   dialogRef = inject<DialogRef<CreateBoardComponent>>(DialogRef);
-  data = inject<Board>(DIALOG_DATA, { optional: true });
-  isEditMode = !!this.data;
-
-  /** Ternaries in a template expression cannot be marked, so build the copy here. */
-  readonly titleLabel = this.isEditMode
-    ? $localize`:Title of the edit-board dialog:Edit Board`
-    : $localize`:Title of the create-board dialog:Create Board`;
-
-  readonly editingBoardId = this.isEditMode ? (this.data?.id ?? null) : null;
-
-  readonly submitLabel = this.isEditMode
-    ? $localize`:Button that saves edits to the board:Save Changes`
-    : $localize`:Button that creates the board:Create Board`;
 
   boardFormModel = signal({
-    name: this.data?.name ?? '',
-    identifier: this.data?.identifier ?? '',
-    color: this.data?.metaInfo?.color ?? '',
-    projectId: this.data?.projectId ?? (null as number | null),
+    name: '',
+    identifier: '',
+    color: '',
+    projectId: null as number | null,
     templateKey: 'software',
   });
 
@@ -161,13 +133,10 @@ export class CreateBoardComponent {
       })
     );
     required(schema.color);
-    required(schema.projectId, { when: () => !this.isEditMode });
+    required(schema.projectId);
     validateAsync(schema.identifier, {
       params: ({ value }) => {
         const identifier = value();
-        if (this.isEditMode && identifier === this.data?.identifier) {
-          return undefined;
-        }
         if (!identifier || identifier.length < 4) return undefined;
         return identifier;
       },
@@ -218,8 +187,6 @@ export class CreateBoardComponent {
 
   constructor() {
     effect(() => {
-      if (this.data) return;
-
       const current = this.boardForm.identifier().value();
       const name = this.boardForm.name().value();
       const identifier = toUrlSlug(name);
@@ -239,36 +206,21 @@ export class CreateBoardComponent {
     submit(this.boardForm, async () => {
       const { name, identifier, color, templateKey } = this.boardForm;
 
-      if (this.isEditMode) {
-        if (!this.data?.id) return;
+      const projectId = this.boardForm.projectId().value();
 
-        const request: UpdateBoardRequest = {
-          id: this.data.id,
-          name: name().value().trim(),
-          identifier: identifier().value().trim(),
-          meta: {
-            color: color().value(),
-          },
-        };
+      if (!projectId) return;
 
-        this.boardCommands.update(request);
-      } else {
-        const projectId = this.boardForm.projectId().value();
+      const request: AddBoardRequest = {
+        name: name().value().trim(),
+        identifier: identifier().value().trim(),
+        projectId,
+        meta: {
+          color: color().value(),
+        },
+        templateKey: templateKey().value(),
+      };
 
-        if (!projectId) return;
-
-        const request: AddBoardRequest = {
-          name: name().value().trim(),
-          identifier: identifier().value().trim(),
-          projectId,
-          meta: {
-            color: color().value(),
-          },
-          templateKey: templateKey().value(),
-        };
-
-        this.boardCommands.create(request);
-      }
+      this.boardCommands.create(request);
 
       this.dialogRef.close();
     });

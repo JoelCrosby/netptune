@@ -61,7 +61,7 @@
 }
 
 /* The create dialog wears the task detail dialog's panel so the two read as one
-   surface: same chromeless container, radius, shadow and responsive behaviour. */
+   surface: same chromeless container, shadow and responsive behaviour. */
 .app-task-detail-dialog {
   height: 740px;
   max-height: 92vh;
@@ -69,7 +69,6 @@
 
 .app-task-detail-dialog app-dialog-container {
   padding: 0;
-  border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 24px 48px -12px rgba(0, 0, 0, .5);
 }

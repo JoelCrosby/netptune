@@ -33,7 +33,7 @@ import { BoardSwitcherComponent } from '@boards/components/board-switcher/board-
 import { BoardPinnedBannerComponent } from '@boards/components/board-pinned-banner/board-pinned-banner.component';
 import { BoardGroupStatusDotComponent } from '@boards/components/board-group-status-dot/board-group-status-dot.component';
 import { BoardGroupComponent } from '@boards/components/board-group/board-group.component';
-import { CreateBoardComponent } from '@boards/components/create-board/create-board.component';
+import { EditBoardComponent } from '@boards/components/edit-board/edit-board.component';
 import { CreateBoardGroupComponent } from '@boards/components/create-board-group/create-board-group.component';
 import { NotificationSubscribeComponent } from '@shared/components/notification-subscribe/notification-subscribe.component';
 import { NotificationScope } from '@core/models/notification-subscription';
@@ -512,8 +512,9 @@ export class BoardGroupsViewComponent implements OnDestroy {
 
     if (!board) return;
 
-    this.dialog.open(CreateBoardComponent, {
-      width: '600px',
+    this.dialog.open(EditBoardComponent, {
+      width: '580px',
+      maxWidth: 'calc(100vw - 32px)',
       data: board,
     });
   }
