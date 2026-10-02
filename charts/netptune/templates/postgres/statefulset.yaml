@@ -61,7 +61,6 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 3
-          # Memory only — the node pool has no spare CPU to reserve against.
           resources:
 {{- toYaml .Values.parameters.postgres.resources | nindent 12 }}
   updateStrategy:

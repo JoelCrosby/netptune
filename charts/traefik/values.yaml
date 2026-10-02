@@ -45,9 +45,19 @@ traefik:
     failureThreshold: 5
     timeoutSeconds: 5
 
-  # A second replica is the change that would have prevented the outage entirely, but the
-  # current vc2-1c-2gb pool has no node with 100m of unreserved CPU besides the one Traefik
-  # is on, so a second pod would sit Pending. Raise this to 2 with required anti-affinity
-  # once the cluster moves to larger nodes.
+  # Two replicas, so losing one node or one pod doesn't take the origin down. The spread is soft
+  # rather than required anti-affinity: the pool has two nodes, and a required rule would leave the
+  # surge pod nowhere to schedule during a rolling update.
   deployment:
-    replicas: 1
+    replicas: 2
+  topologySpreadConstraints:
+    - labelSelector:
+        matchLabels:
+          app.kubernetes.io/name: '{{ template "traefik.name" . }}'
+          app.kubernetes.io/instance: '{{ .Release.Name }}-{{ include "traefik.namespace" . }}'
+      maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+  podDisruptionBudget:
+    enabled: true
+    minAvailable: 1
