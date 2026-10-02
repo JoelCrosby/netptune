@@ -24,7 +24,7 @@ import { TaskDetailService } from './task-detail.service';
 })
 export class TaskDetailHeaderComponent {
   readonly textClass = input(
-    '-mx-2 px-2 py-1 text-[28px]/[36px] font-semibold tracking-[-0.012em]'
+    '-mx-2 px-2 py-1 text-[22px]/[30px] font-semibold md:text-[28px]/[36px] tracking-[-0.012em]'
   );
 
   private readonly taskDetail = inject(TaskDetailService);

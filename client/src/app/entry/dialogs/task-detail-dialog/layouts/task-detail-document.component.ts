@@ -58,7 +58,7 @@ import {
         class="custom-scroll flex min-h-0 flex-1 justify-center overflow-y-auto pt-2">
         <div class="flex w-[680px] max-w-full flex-col gap-[22px] px-4 pb-7">
           <app-task-detail-header
-            textClass="-mx-2 px-2 py-1 text-[34px]/[42px] font-semibold tracking-[-0.015em]" />
+            textClass="-mx-2 px-2 py-1 text-[24px]/[32px] font-semibold md:text-[34px]/[42px] tracking-[-0.015em]" />
 
           <div class="text-muted flex flex-wrap items-center gap-2 text-[13px]">
             <app-task-detail-property-chips variant="meta" />

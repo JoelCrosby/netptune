@@ -58,7 +58,7 @@ import { DialogSectionComponent } from '@static/components/dialog/dialog-section
       <div
         class="border-foreground/8 flex shrink-0 flex-col gap-3.5 border-b px-7 pt-5.5 pb-4">
         <app-task-detail-header
-          textClass="-mx-2 px-2 py-1 text-[27px]/[34px] font-semibold tracking-[-0.01em]" />
+          textClass="-mx-2 px-2 py-1 text-[22px]/[30px] font-semibold md:text-[27px]/[34px] tracking-[-0.01em]" />
 
         <div class="flex flex-wrap items-center gap-2">
           <app-task-detail-property-chips variant="bar" />

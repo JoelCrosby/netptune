@@ -84,7 +84,7 @@ const RAIL_FIELDS: TaskDetailField[] = [
 
       <app-dialog-columns>
         <app-task-detail-header
-          textClass="-mx-2 px-2 py-1 text-[28px]/[36px] font-semibold tracking-[-0.012em]" />
+          textClass="-mx-2 px-2 py-1 text-[22px]/[30px] font-semibold md:text-[28px]/[36px] tracking-[-0.012em]" />
 
         @if (readTags()) {
           <app-task-detail-tag-row />
