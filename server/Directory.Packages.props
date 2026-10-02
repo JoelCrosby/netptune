@@ -10,17 +10,17 @@
     <PackageVersion Include="AspNet.Security.OAuth.GitHub" Version="10.0.0" />
     <PackageVersion Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0" />
     <PackageVersion Include="AspNetCore.HealthChecks.Redis" Version="9.0.0" />
-    <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.5.4" />
-    <PackageVersion Include="Aspire.Hosting.JavaScript" Version="13.5.4" />
-    <PackageVersion Include="Aspire.Hosting.Nats" Version="13.5.4" />
-    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.5.4" />
-    <PackageVersion Include="Aspire.Hosting.Valkey" Version="13.5.4" />
-    <PackageVersion Include="Aspire.NATS.Net" Version="13.5.4" />
+    <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.6.0" />
+    <PackageVersion Include="Aspire.Hosting.JavaScript" Version="13.6.0" />
+    <PackageVersion Include="Aspire.Hosting.Nats" Version="13.6.0" />
+    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.6.0" />
+    <PackageVersion Include="Aspire.Hosting.Valkey" Version="13.6.0" />
+    <PackageVersion Include="Aspire.NATS.Net" Version="13.6.0" />
     <PackageVersion Include="AutoFixture" Version="4.18.1" />
-    <PackageVersion Include="CommunityToolkit.Aspire.Hosting.Meilisearch" Version="13.5.0" />
-    <PackageVersion Include="CommunityToolkit.Aspire.Hosting.PostgreSQL.Extensions" Version="13.5.0" />
-    <PackageVersion Include="CommunityToolkit.Aspire.Hosting.DbGate" Version="13.5.0" />
-    <PackageVersion Include="CommunityToolkit.Aspire.Meilisearch" Version="13.5.0" />
+    <PackageVersion Include="CommunityToolkit.Aspire.Hosting.Meilisearch" Version="13.6.0" />
+    <PackageVersion Include="CommunityToolkit.Aspire.Hosting.PostgreSQL.Extensions" Version="13.6.0" />
+    <PackageVersion Include="CommunityToolkit.Aspire.Hosting.DbGate" Version="13.6.0" />
+    <PackageVersion Include="CommunityToolkit.Aspire.Meilisearch" Version="13.6.0" />
     <PackageVersion Include="ClosedXML" Version="0.105.1" />
     <PackageVersion Include="CsvHelper" Version="33.1.0" />
     <PackageVersion Include="Dapper" Version="2.1.86" />

@@ -78,7 +78,7 @@ dbgate:
 
 aspire:
   enabled: true
-  image: "mcr.microsoft.com/dotnet/aspire-dashboard:13.4.2"
+  image: "mcr.microsoft.com/dotnet/aspire-dashboard:13.6.0"
   host: "aspire.netptune.co.uk"
   resources:
     requests:
