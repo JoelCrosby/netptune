@@ -128,12 +128,13 @@ import { MenuSeparatorComponent } from '@static/components/dropdown-menu/menu-se
 
           @if (isInlineActive()) {
             <app-board-group-task-inline
+              class="order-last"
               (canceled)="onInlineCanceled()"
               [boardGroupId]="group().id"></app-board-group-task-inline>
           }
 
           @if (showAddButton()) {
-            <div class="h-11.5 p-[.3rem]">
+            <div class="order-last h-11.5 p-[.3rem]">
               <button
                 app-stroked-button
                 color="primary"
@@ -145,7 +146,7 @@ import { MenuSeparatorComponent } from '@static/components/dropdown-menu/menu-se
               </button>
             </div>
           } @else {
-            <div class="h-11.5 min-h-11.5 w-full">{{ ' ' }}</div>
+            <div class="order-last h-11.5 min-h-11.5 w-full">{{ ' ' }}</div>
           }
         </div>
       </div>
