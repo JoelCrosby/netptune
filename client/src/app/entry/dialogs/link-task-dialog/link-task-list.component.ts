@@ -41,6 +41,11 @@ interface TaskRow {
   linked: boolean;
 }
 
+export interface LinkTaskRangeSelection {
+  tasks: readonly TaskViewModel[];
+  selected: boolean;
+}
+
 const noTasks: LoadedTasks = { items: [], total: 0 };
 
 // Rows meet edge to edge inside the scroller, so the shared row's own radius and
@@ -93,7 +98,8 @@ const rowBase = 'rounded-none border-b border-l-2 border-border/70 px-3 py-2.5';
             [checked]="row.selected"
             [disabled]="row.linked"
             [attr.aria-label]="row.task.name"
-            (toggled)="toggled.emit(row.task)">
+            (mousedown)="onRowMouseDown($event)"
+            (toggled)="onRowToggled(row.task, $event)">
             <app-task-scope-id class="shrink-0" [id]="row.task.systemId" />
 
             <span class="min-w-0 flex-1 truncate text-sm">
@@ -147,6 +153,7 @@ export class LinkTaskListComponent {
   readonly linkedIds = input<ReadonlySet<number>>(new Set<number>());
 
   readonly toggled = output<TaskViewModel>();
+  readonly rangeSelected = output<LinkTaskRangeSelection>();
 
   protected readonly searchIcon = LucideSearch;
   protected readonly skeletonRows = [1, 2, 3, 4, 5, 6, 7, 8];
@@ -195,6 +202,15 @@ export class LinkTaskListComponent {
     source: this.listKey,
     computation: () => noTasks,
   });
+
+  // The row a shift-click extends from. Held by id rather than index so it
+  // survives more pages loading, and dropped when the list is replaced.
+  private readonly rangeAnchorId = linkedSignal<string, number | null>({
+    source: this.listKey,
+    computation: () => null,
+  });
+
+  private rangeSelectActive = false;
 
   protected readonly rows = computed<TaskRow[]>(() => {
     const selectedIds = this.selectedIds();
@@ -245,6 +261,47 @@ export class LinkTaskListComponent {
     }
 
     return `${rowBase} border-l-transparent`;
+  }
+
+  protected onRowMouseDown(event: MouseEvent) {
+    this.rangeSelectActive = event.shiftKey;
+  }
+
+  protected onRowToggled(task: TaskViewModel, selected: boolean) {
+    const rangeSelect = this.rangeSelectActive;
+    this.rangeSelectActive = false;
+
+    const range = rangeSelect ? this.rangeTo(task) : null;
+
+    if (range) {
+      this.rangeSelected.emit({ tasks: range, selected });
+      return;
+    }
+
+    this.rangeAnchorId.set(task.id);
+    this.toggled.emit(task);
+  }
+
+  // Every selectable task between the anchor and the clicked row, inclusive.
+  // Rows already linked are skipped, as they cannot be picked one at a time either.
+  private rangeTo(task: TaskViewModel): TaskViewModel[] | null {
+    const anchorId = this.rangeAnchorId();
+
+    if (anchorId === null) return null;
+
+    const items = this.loaded().items;
+    const anchorIndex = items.findIndex((item) => item.id === anchorId);
+    const index = items.findIndex((item) => item.id === task.id);
+
+    if (anchorIndex === -1 || index === -1) return null;
+
+    const start = Math.min(anchorIndex, index);
+    const end = Math.max(anchorIndex, index);
+    const linkedIds = this.linkedIds();
+
+    return items
+      .slice(start, end + 1)
+      .filter((item) => !linkedIds.has(item.id));
   }
 
   protected onScroll(event: Event) {

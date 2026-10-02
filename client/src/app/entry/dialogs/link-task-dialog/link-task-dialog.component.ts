@@ -84,7 +84,8 @@ interface RelationOption {
         [excludeTaskId]="task?.id"
         [selectedIds]="selectedIds()"
         [linkedIds]="duplicateIds()"
-        (toggled)="toggle($event)" />
+        (toggled)="toggle($event)"
+        (rangeSelected)="setSelected($event.tasks, $event.selected)" />
 
       <aside
         class="bg-secondary-background custom-scroll flex flex-col gap-6 p-5 lg:min-h-0 lg:overflow-y-auto">
@@ -410,6 +411,21 @@ export class LinkTaskDialogComponent {
       }
 
       return [...selected, task];
+    });
+  }
+
+  protected setSelected(tasks: readonly TaskViewModel[], selected: boolean) {
+    this.selected.update((current) => {
+      if (!selected) {
+        const ids = new Set(tasks.map((task) => task.id));
+
+        return current.filter((picked) => !ids.has(picked.id));
+      }
+
+      const pickedIds = new Set(current.map((picked) => picked.id));
+      const added = tasks.filter((task) => !pickedIds.has(task.id));
+
+      return [...current, ...added];
     });
   }
 
