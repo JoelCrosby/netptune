@@ -590,7 +590,7 @@
     </unit>
     <unit id="2739290873356276814">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:776</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:775</note>
         <note category="description">Seeds the composer with a request to rework one proposed change</note>
       </notes>
       <segment state="translated">
@@ -715,7 +715,7 @@
     <unit id="7884294193521928458">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:229</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:361</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:362</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -756,7 +756,7 @@
     <unit id="4391289919356861627">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:231,233</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:361,362</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:360,361</note>
         <note category="description">Button that applies the proposed changes</note>
       </notes>
       <segment state="translated">
@@ -1503,7 +1503,7 @@
     </unit>
     <unit id="62403536163906103">
       <notes>
-        <note category="location">src/app/core/services/task-commands.service.ts:221</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:229</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -1756,9 +1756,9 @@
         <note category="location">src/app/core/services/project-commands.service.ts:69</note>
         <note category="location">src/app/core/services/tag-commands.service.ts:78</note>
         <note category="location">src/app/core/services/task-archive.service.ts:40</note>
-        <note category="location">src/app/core/services/task-commands.service.ts:219</note>
-        <note category="location">src/app/core/services/task-commands.service.ts:228</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:227</note>
         <note category="location">src/app/core/services/task-commands.service.ts:236</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:244</note>
         <note category="location">src/app/core/services/workspace-commands.service.ts:215</note>
         <note category="location">src/app/core/services/workspace-commands.service.ts:225</note>
         <note category="location">src/app/core/services/workspace-commands.service.ts:235</note>
@@ -1768,6 +1768,7 @@
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:80,82</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:316</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:279</note>
+        <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:133,136</note>
         <note category="location">src/app/features/boards/components/move-tasks-dialog/move-tasks-dialog.component.ts:76,79</note>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:102,105</note>
         <note category="location">src/app/features/calendar/dialogs/calendar-move-task-dialog.component.ts:61,64</note>
@@ -2002,8 +2003,8 @@
         <note category="location">src/app/core/services/board-commands.service.ts:64</note>
         <note category="location">src/app/core/services/board-group-commands.service.ts:309</note>
         <note category="location">src/app/core/services/notification-commands.service.ts:74</note>
-        <note category="location">src/app/core/services/task-commands.service.ts:227</note>
         <note category="location">src/app/core/services/task-commands.service.ts:235</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:243</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:141</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:315</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:278</note>
@@ -2056,7 +2057,7 @@
     <unit id="8878271828886295802">
       <notes>
         <note category="location">src/app/core/services/board-commands.service.ts:67</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:376</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:377</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -2097,7 +2098,7 @@
     </unit>
     <unit id="996642948903085680">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:650</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:649</note>
         <note category="description">Counts the proposals that will be applied</note>
       </notes>
       <segment state="initial">
@@ -2563,7 +2564,7 @@
     <unit id="5256927257860771053">
       <notes>
         <note category="location">src/app/core/services/sprint-commands.service.ts:176</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail.service.ts:164</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail.service.ts:204</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -2593,7 +2594,7 @@
     </unit>
     <unit id="6269606295190909224">
       <notes>
-        <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:152</note>
+        <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:155</note>
         <note category="description">Accessible label for the editor&apos;s checklist button</note>
       </notes>
       <segment state="translated">
@@ -2604,7 +2605,7 @@
     <unit id="9054551961119650411">
       <notes>
         <note category="location">src/app/core/services/sprint-commands.service.ts:191</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail.service.ts:184</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail.service.ts:224</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -2647,7 +2648,7 @@
     </unit>
     <unit id="6419601202667262693">
       <notes>
-        <note category="location">src/app/core/services/task-commands.service.ts:72</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:76</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -2657,7 +2658,7 @@
     </unit>
     <unit id="8473956176297638892">
       <notes>
-        <note category="location">src/app/core/services/task-commands.service.ts:89</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:97</note>
         <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:40</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
@@ -2708,7 +2709,7 @@
     </unit>
     <unit id="7190478463652380023">
       <notes>
-        <note category="location">src/app/core/services/task-commands.service.ts:108</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:116</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -2738,7 +2739,7 @@
     </unit>
     <unit id="1316502449942805709">
       <notes>
-        <note category="location">src/app/core/services/task-commands.service.ts:229</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:237</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -2758,7 +2759,7 @@
     </unit>
     <unit id="1614669751334500006">
       <notes>
-        <note category="location">src/app/core/services/task-commands.service.ts:230</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:238</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -3172,7 +3173,7 @@
     </unit>
     <unit id="2953598261736389227">
       <notes>
-        <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:150</note>
+        <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:153</note>
         <note category="description">Accessible label for the editor&apos;s bulleted list button</note>
       </notes>
       <segment state="translated">
@@ -3672,7 +3673,7 @@
     </unit>
     <unit id="6711113068963618455">
       <notes>
-        <note category="location">src/app/entry/components/notification-bell/notification-dropdown.component.ts:53,55</note>
+        <note category="location">src/app/entry/components/notification-bell/notification-dropdown.component.ts:52,54</note>
         <note category="description">Link to the full notifications page</note>
       </notes>
       <segment state="translated">
@@ -3738,7 +3739,7 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-project-field.component.ts:31</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:224</note>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:75</note>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:66,67</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:64,65</note>
         <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:26,29</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:85</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:371</note>
@@ -3981,7 +3982,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/board-group-dialog/board-group-dialog.component.ts:69,71</note>
         <note category="location">src/app/entry/dialogs/create-relation-type-dialog/create-relation-type-dialog.component.ts:102,104</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:339,342</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:346,349</note>
         <note category="location">src/app/entry/dialogs/edit-relation-type-dialog/edit-relation-type-dialog.component.ts:89,91</note>
         <note category="location">src/app/entry/dialogs/invite-dialog/invite-dialog.component.ts:65,68</note>
         <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:68,70</note>
@@ -3990,9 +3991,9 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:163,164</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:115,117</note>
         <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:254,259</note>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:98,100</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:84,86</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:61,62</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:396,400</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:395,399</note>
         <note category="location">src/app/static/components/dialog/dialog-header.component.ts:31</note>
         <note category="description">Dismisses a dialog without saving</note>
       </notes>
@@ -4079,7 +4080,7 @@
     <unit id="6811068315125831753">
       <notes>
         <note category="location">src/app/static/components/editor/editor-bubble-menu.component.ts:195</note>
-        <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:148</note>
+        <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:151</note>
         <note category="description">Accessible label for the editor&apos;s heading 1 button</note>
       </notes>
       <segment state="translated">
@@ -4398,6 +4399,7 @@
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:69,70</note>
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:106</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:66</note>
+        <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:94</note>
         <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:73,75</note>
         <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:159</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:95,96</note>
@@ -4450,7 +4452,7 @@
     </unit>
     <unit id="6947960783690563673">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:315,317</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:314,316</note>
         <note category="description">Keyboard hint for including a change</note>
       </notes>
       <segment state="translated">
@@ -4604,7 +4606,7 @@
     </unit>
     <unit id="6164296601931172481">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:150,153</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:156,159</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:40,41</note>
         <note category="location">src/app/shell/global-commands.service.ts:180</note>
         <note category="description">Title of the create-task dialog</note>
@@ -4639,7 +4641,7 @@
     </unit>
     <unit id="4739818603756173797">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:162</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:168</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:84</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:176</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:52,54</note>
@@ -4652,7 +4654,7 @@
     </unit>
     <unit id="4902817035128594900">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:381</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:396</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:66,67</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:206</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:104,107</note>
@@ -4686,8 +4688,8 @@
     </unit>
     <unit id="533409430255690539">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:187,189</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-description.component.ts:29,31</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:193,195</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-description.component.ts:23,25</note>
         <note category="description">Placeholder in the empty task description editor</note>
       </notes>
       <segment state="translated">
@@ -4697,7 +4699,7 @@
     </unit>
     <unit id="5681661801164770412">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:318,322</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:325,329</note>
         <note category="description">Validation error when a task&apos;s start date is after its due date</note>
       </notes>
       <segment state="translated">
@@ -4707,7 +4709,7 @@
     </unit>
     <unit id="6672445733608764176">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:328,331</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:335,338</note>
         <note category="description">Validation error when no project is selected for a task</note>
       </notes>
       <segment state="translated">
@@ -4727,7 +4729,7 @@
     </unit>
     <unit id="6346359058786917733">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:347,349</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:354,356</note>
         <note category="description">Button that saves the new task</note>
       </notes>
       <segment state="translated">
@@ -4757,7 +4759,7 @@
     </unit>
     <unit id="6355874628025541354">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:295,298</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:294,297</note>
         <note category="description">Keyboard key that moves down the review list. Leave the letter as-is</note>
       </notes>
       <segment state="translated">
@@ -4777,8 +4779,8 @@
     </unit>
     <unit id="8547576940529836596">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:458</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:470</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:473</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:485</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -4808,7 +4810,7 @@
     </unit>
     <unit id="9021131006692744653">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:477</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:492</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -4818,7 +4820,7 @@
     </unit>
     <unit id="704019817450663548">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:484</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:499</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -4828,7 +4830,7 @@
     </unit>
     <unit id="633922115206256018">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:491</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:506</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -4905,7 +4907,7 @@
         <note category="location">src/app/entry/dialogs/status-dialog/status-dialog.component.ts:70,73</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:110,113</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:159,161</note>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:78,80</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:75,77</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:97,100</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:176,179</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:222</note>
@@ -5022,7 +5024,7 @@
     <unit id="5635707779811339571">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:499</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:660</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:659</note>
         <note category="description">Shown after applied proposals were taken back</note>
       </notes>
       <segment state="translated">
@@ -5222,7 +5224,7 @@
     <unit id="8394008335792720695">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-apply-progress.component.ts:120</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:110,115</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:99,105</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-list.component.ts:249</note>
         <note category="description">Marks a group of changes being applied</note>
       </notes>
@@ -5339,6 +5341,16 @@
         <target>Vincular</target>
       </segment>
     </unit>
+    <unit id="2685827559358442738">
+      <notes>
+        <note category="location">src/app/static/components/branding-preview/branding-preview.component.ts:57,59</note>
+        <note category="description">Button that replaces a background image</note>
+      </notes>
+      <segment state="translated">
+        <source> Change background </source>
+        <target> Cambiar fondo </target>
+      </segment>
+    </unit>
     <unit id="2687179756279777445">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-question.component.ts:106,110</note>
@@ -5361,7 +5373,7 @@
     </unit>
     <unit id="5311439953585427905">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:159,161</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:158,160</note>
         <note category="description">Button that clears every selected change</note>
       </notes>
       <segment state="translated">
@@ -5862,7 +5874,7 @@
     </unit>
     <unit id="1224160359892670574">
       <notes>
-        <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:151</note>
+        <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:154</note>
         <note category="description">Accessible label for the editor&apos;s numbered list button</note>
       </notes>
       <segment state="translated">
@@ -6089,6 +6101,7 @@
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:141,143</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:183,185</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:257</note>
+        <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:102,104</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:79,81</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:151</note>
         <note category="description">Label of the workspace URL identifier field</note>
@@ -6100,7 +6113,7 @@
     </unit>
     <unit id="4166637194006456845">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:430</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:429</note>
         <note category="description">Accessible label for the diff layout switch</note>
       </notes>
       <segment state="translated">
@@ -6266,7 +6279,7 @@
     <unit id="6807439652660785540">
       <notes>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:290</note>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:192</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:161</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:185</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
@@ -6278,7 +6291,7 @@
     <unit id="8398928552891290802">
       <notes>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:295</note>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:197</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:166</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -6333,7 +6346,7 @@
     </unit>
     <unit id="163701335564941353">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:439</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:438</note>
         <note category="description">Title of the full screen review of proposed changes</note>
       </notes>
       <segment state="translated">
@@ -7052,7 +7065,7 @@
     </unit>
     <unit id="166657180724463675">
       <notes>
-        <note category="location">src/app/core/services/task-commands.service.ts:177</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:185</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -7422,7 +7435,7 @@
     <unit id="1494518490116523821">
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:80,83</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:163,166</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:162,165</note>
         <note category="description">Button that selects every exportable field</note>
       </notes>
       <segment state="translated">
@@ -7695,7 +7708,7 @@
     </unit>
     <unit id="5341318787086825007">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:194,198</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:193,197</note>
         <note category="description">Single letter marking a change that creates something. It labels the rows in the list, so leave the letter as-is</note>
       </notes>
       <segment state="translated">
@@ -8023,16 +8036,6 @@
         <target>Eliminar acción</target>
       </segment>
     </unit>
-    <unit id="1304817289455064169">
-      <notes>
-        <note category="location">src/app/features/boards/components/board-branding/board-branding.component.ts:27,28</note>
-        <note category="description">Alt text for the board logo preview</note>
-      </notes>
-      <segment state="translated">
-        <source>Board logo</source>
-        <target>Logotipo del tablero</target>
-      </segment>
-    </unit>
     <unit id="2662644497259948010">
       <notes>
         <note category="location">src/app/features/automations/components/automation-actions-editor.component.ts:126,127</note>
@@ -8074,16 +8077,6 @@
       <segment state="translated">
         <source>Unpin from sidebar</source>
         <target>Dejar de fijar en la barra lateral</target>
-      </segment>
-    </unit>
-    <unit id="4764218454049191113">
-      <notes>
-        <note category="location">src/app/features/boards/components/board-branding/board-branding.component.ts:22,24</note>
-        <note category="description">Label of the board logo picker</note>
-      </notes>
-      <segment state="translated">
-        <source>Board Logo</source>
-        <target>Logotipo del tablero</target>
       </segment>
     </unit>
     <unit id="4765115421638638540">
@@ -8446,7 +8439,7 @@
     </unit>
     <unit id="7943935000920929978">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:205,209</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:204,208</note>
         <note category="description">Single letter marking a change that updates something. It labels the rows in the list, so leave the letter as-is</note>
       </notes>
       <segment state="translated">
@@ -8460,7 +8453,7 @@
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:71</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:169</note>
         <note category="location">src/app/shared/components/query-builder/query-builder.models.ts:72</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:583</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:582</note>
         <note category="description">Notification filter showing every event</note>
       </notes>
       <segment state="translated">
@@ -8550,7 +8543,7 @@
     </unit>
     <unit id="4771541703055633807">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:335,338</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:334,337</note>
         <note category="description">Keyboard hint for applying the selected changes</note>
       </notes>
       <segment state="translated">
@@ -8885,16 +8878,6 @@
         <target>Vincular con la tarea desencadenante</target>
       </segment>
     </unit>
-    <unit id="5901109136841373457">
-      <notes>
-        <note category="location">src/app/features/boards/components/board-branding/board-branding.component.ts:48,50</note>
-        <note category="description">Alt text for the board background image preview</note>
-      </notes>
-      <segment state="translated">
-        <source>Board background</source>
-        <target>Fondo del tablero</target>
-      </segment>
-    </unit>
     <unit id="5904337364744457239">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:342</note>
@@ -9070,7 +9053,7 @@
     </unit>
     <unit id="5775346636203685655">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:386,389</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:385,388</note>
         <note category="description">Button that takes back an applied change set</note>
       </notes>
       <segment state="translated">
@@ -9306,7 +9289,7 @@
     <unit id="5406093358072761930">
       <notes>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:242</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:598</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:597</note>
         <note category="description">Stat label for scope removed mid-sprint</note>
       </notes>
       <segment state="translated">
@@ -10522,7 +10505,7 @@
     </unit>
     <unit id="1049706183293561301">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:332,334</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:331,333</note>
         <note category="description">Symbol for the return key. Leave the symbol as-is</note>
       </notes>
       <segment state="translated">
@@ -10573,7 +10556,7 @@
       <notes>
         <note category="location">src/app/core/services/board-group-commands.service.ts:316</note>
         <note category="location">src/app/core/services/board-group-commands.service.ts:319</note>
-        <note category="location">src/app/core/services/task-commands.service.ts:223</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:231</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
@@ -10799,7 +10782,7 @@
     <unit id="4995415456901189493">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-apply-progress.component.ts:99,102</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:276,280</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:275,279</note>
         <note category="description">Shown on the stop button once a stop was asked for</note>
       </notes>
       <segment state="translated">
@@ -10895,6 +10878,16 @@
       <segment state="initial">
         <source>Search members</source>
         <target>Buscar miembros</target>
+      </segment>
+    </unit>
+    <unit id="1813454028982088068">
+      <notes>
+        <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:223</note>
+        <note category="description">Shown when the board identifier availability check fails</note>
+      </notes>
+      <segment state="translated">
+        <source>Could not verify identifier availability.</source>
+        <target>No se pudo verificar la disponibilidad del identificador.</target>
       </segment>
     </unit>
     <unit id="1815539532540276970">
@@ -11370,6 +11363,16 @@
         <target>Sube un archivo CSV, TSV, Excel, JSON o NDJSON. Hasta 50 MB.</target>
       </segment>
     </unit>
+    <unit id="8621747926428260404">
+      <notes>
+        <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:112,116</note>
+        <note category="description">Label of the colour picker field</note>
+      </notes>
+      <segment state="translated">
+        <source>Colour</source>
+        <target>Color</target>
+      </segment>
+    </unit>
     <unit id="862193009858945810">
       <notes>
         <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:336</note>
@@ -11757,7 +11760,7 @@
     </unit>
     <unit id="3278205153911408159">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:630</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:629</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:247</note>
         <note category="description">Diff layout with one column</note>
       </notes>
@@ -12293,7 +12296,7 @@
     <unit id="5873012413476626725">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:101</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:221,224</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:220,223</note>
         <note category="description">Operator used in an automation condition</note>
       </notes>
       <segment state="translated">
@@ -12708,7 +12711,7 @@
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:635</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:687</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:583</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:616</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:615</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-list.component.ts:248</note>
         <note category="description">Outcome status of an automation run</note>
       </notes>
@@ -13668,6 +13671,16 @@
         <target>Fecha de inicio del informe</target>
       </segment>
     </unit>
+    <unit id="1331381156208841382">
+      <notes>
+        <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:274</note>
+        <note category="description">Footer note in the edit-board dialog</note>
+      </notes>
+      <segment state="translated">
+        <source>1 unsaved change</source>
+        <target>1 cambio sin guardar</target>
+      </segment>
+    </unit>
     <unit id="5176622981716622911">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:830</note>
@@ -13720,7 +13733,7 @@
     </unit>
     <unit id="7387635272539030076">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:196,198</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:195,197</note>
         <note category="description">Legend for changes that create something</note>
       </notes>
       <segment state="translated">
@@ -14086,7 +14099,7 @@
     </unit>
     <unit id="1103299628984958400">
       <notes>
-        <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:153</note>
+        <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:156</note>
         <note category="description">Accessible label for the editor&apos;s quote button</note>
       </notes>
       <segment state="translated">
@@ -14188,7 +14201,7 @@
     </unit>
     <unit id="2847261689301738134">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:208,211</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:207,210</note>
         <note category="description">Legend for changes that update something</note>
       </notes>
       <segment state="translated">
@@ -14208,7 +14221,7 @@
     </unit>
     <unit id="8091027299239292755">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:436</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:435</note>
         <note category="description">Title of the full screen view of changes already made</note>
       </notes>
       <segment state="translated">
@@ -14392,6 +14405,16 @@
       <segment state="translated">
         <source>Commitment met</source>
         <target>Compromiso cumplido</target>
+      </segment>
+    </unit>
+    <unit id="6063389103648532499">
+      <notes>
+        <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:218</note>
+        <note category="description">Validation error when a board identifier is already in use</note>
+      </notes>
+      <segment state="translated">
+        <source>Another board already uses this identifier.</source>
+        <target>Otro tablero ya usa este identificador.</target>
       </segment>
     </unit>
     <unit id="6069680004547866674">
@@ -14580,7 +14603,7 @@
     </unit>
     <unit id="3131851492199185855">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:373,375</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:372,374</note>
         <note category="description">Button that runs the changes that failed again</note>
       </notes>
       <segment state="translated">
@@ -14601,7 +14624,7 @@
     <unit id="3133539296286953705">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-apply-progress.component.ts:103,110</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:281,286</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:280,285</note>
         <note category="description">Button that stops changes part way through being applied</note>
       </notes>
       <segment state="translated">
@@ -14733,7 +14756,7 @@
     </unit>
     <unit id="8761140310272472389">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:159,160</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:165,166</note>
         <note category="location">src/app/features/boards/components/board-group-task-inline/board-group-task-inline.component.ts:127</note>
         <note category="description">Placeholder in the empty task summary field</note>
       </notes>
@@ -14835,7 +14858,7 @@
     </unit>
     <unit id="6904866445262015585">
       <notes>
-        <note category="location">src/app/features/boards/components/boards-grid/boards-grid-card.component.ts:82</note>
+        <note category="location">src/app/features/boards/components/boards-grid/boards-grid-card.component.ts:103</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:39</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:53</note>
         <note category="location">src/app/features/reporting/components/workload-table.component.ts:49</note>
@@ -14865,7 +14888,7 @@
     </unit>
     <unit id="3553216189604488439">
       <notes>
-        <note category="location">src/app/features/boards/components/boards-grid/boards-grid-card.component.ts:86</note>
+        <note category="location">src/app/features/boards/components/boards-grid/boards-grid-card.component.ts:107</note>
         <note category="description">Stat label for when a board was last changed</note>
       </notes>
       <segment state="translated">
@@ -14905,7 +14928,7 @@
     </unit>
     <unit id="5787327883657253628">
       <notes>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:51,52</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:50,51</note>
         <note category="description">Label of the board name field</note>
       </notes>
       <segment state="translated">
@@ -14915,7 +14938,7 @@
     </unit>
     <unit id="1611891243024655805">
       <notes>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:57,59</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:56,58</note>
         <note category="description">Label of the board URL identifier field</note>
       </notes>
       <segment state="translated">
@@ -14925,8 +14948,8 @@
     </unit>
     <unit id="5810814854864452102">
       <notes>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:130</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:348</note>
+        <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:72,75</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:349</note>
         <note category="description">Title of the edit-board dialog</note>
       </notes>
       <segment state="translated">
@@ -14956,8 +14979,8 @@
     </unit>
     <unit id="5254986591758472931">
       <notes>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:131</note>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:137</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:43,46</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:87,91</note>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:38,40</note>
         <note category="description">Title of the create-board dialog</note>
       </notes>
@@ -14968,7 +14991,7 @@
     </unit>
     <unit id="4319441956121197474">
       <notes>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:136</note>
+        <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:140,145</note>
         <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:122,124</note>
         <note category="description">Button that saves edits to the board</note>
       </notes>
@@ -14979,7 +15002,9 @@
     </unit>
     <unit id="8257779685263061072">
       <notes>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:151</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:123</note>
+        <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:95,98</note>
+        <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:178</note>
         <note category="description">Field name used inside validation messages, e.g. &quot;Board name is required.&quot;</note>
       </notes>
       <segment state="translated">
@@ -14989,7 +15014,8 @@
     </unit>
     <unit id="2534295129536831583">
       <notes>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:158</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:130</note>
+        <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:185</note>
         <note category="description">Field name used inside validation messages, e.g. &quot;Board identifier is required.&quot;</note>
       </notes>
       <segment state="translated">
@@ -15049,10 +15075,21 @@
         <target><ph id="0" equiv="VISIBLE" disp="{{ visibleCount() // i18n(ph=&quot;VISIBLE&quot;) }}"/> de <ph id="1" equiv="TOTAL" disp="{{ rows().length // i18n(ph=&quot;TOTAL&quot;) }}"/> columnas visibles</target>
       </segment>
     </unit>
+    <unit id="5470005823208377634">
+      <notes>
+        <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:277</note>
+        <note category="description">Footer note in the edit-board dialog. COUNT is a number greater than one</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="COUNT" disp="count"/> unsaved changes</source>
+        <target><ph id="0" equiv="COUNT" disp="count"/> cambios sin guardar</target>
+      </segment>
+    </unit>
     <unit id="5478121364779850827">
       <notes>
+        <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:128,132</note>
         <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:255,256</note>
-        <note category="description">Button that removes a preference override</note>
+        <note category="description">Button that discards unsaved edits to the board</note>
       </notes>
       <segment state="translated">
         <source> Reset </source>
@@ -15300,7 +15337,7 @@
         <note category="location">src/app/core/tasks/task-columns.ts:172</note>
         <note category="location">src/app/features/boards/util/board-task-sort.ts:33</note>
         <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:102</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:593</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:592</note>
         <note category="description">Column heading for when the task last changed</note>
       </notes>
       <segment state="translated">
@@ -15310,7 +15347,7 @@
     </unit>
     <unit id="9210705833797356375">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:212,213</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:213,214</note>
         <note category="description">Tooltip on the button that edits a board group</note>
       </notes>
       <segment state="translated">
@@ -15341,7 +15378,7 @@
     <unit id="989480357041643523">
       <notes>
         <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:304,307</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:224,225</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:225,226</note>
         <note category="description">Menu item that deletes a board group</note>
       </notes>
       <segment state="translated">
@@ -15361,7 +15398,7 @@
     </unit>
     <unit id="1779801045860441380">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:353</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:354</note>
         <note category="description">Overflow action that opens the manage-groups dialog</note>
       </notes>
       <segment state="translated">
@@ -15371,7 +15408,7 @@
     </unit>
     <unit id="6413760592493508393">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:369</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:370</note>
         <note category="description">Overflow action that downloads the board tasks as CSV</note>
       </notes>
       <segment state="translated">
@@ -15455,6 +15492,16 @@
       <segment state="translated">
         <source>The conversation(s) could not be deleted. Please try again.</source>
         <target>No se han podido eliminar las conversaciones. Inténtalo de nuevo.</target>
+      </segment>
+    </unit>
+    <unit id="7869199587095613616">
+      <notes>
+        <note category="location">src/app/static/components/branding-preview/branding-preview.component.ts:156</note>
+        <note category="description">Preview title when no name is entered</note>
+      </notes>
+      <segment state="translated">
+        <source>Untitled</source>
+        <target>Sin título</target>
       </segment>
     </unit>
     <unit id="8077962914491228902">
@@ -15988,7 +16035,7 @@
     </unit>
     <unit id="3823219296477075982">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:352,355</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:351,354</note>
         <note category="description">Button that discards the proposed changes</note>
       </notes>
       <segment state="translated">
@@ -16058,6 +16105,16 @@
         <target> Este calendario contiene más de 2.000 tareas programadas. Restringe el filtro de proyecto o de sprint para ver el resultado completo. </target>
       </segment>
     </unit>
+    <unit id="3755118663455824286">
+      <notes>
+        <note category="location">src/app/static/components/logo-picker/logo-picker.component.ts:61</note>
+        <note category="description">Tooltip and accessible label of a logo picker</note>
+      </notes>
+      <segment state="translated">
+        <source>Change logo</source>
+        <target>Cambiar logotipo</target>
+      </segment>
+    </unit>
     <unit id="3759965007855499397">
       <notes>
         <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:79,80</note>
@@ -16070,7 +16127,7 @@
     </unit>
     <unit id="3763180352815734429">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-assigned-tasks.component.ts:15,17</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-assigned-tasks.component.ts:24,26</note>
         <note category="description">Heading of the dashboard card listing your tasks</note>
       </notes>
       <segment state="translated">
@@ -16091,7 +16148,7 @@
     </unit>
     <unit id="1301232718408636510">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-assigned-tasks.component.ts:25,27</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-assigned-tasks.component.ts:34,36</note>
         <note category="description">Empty state for the assigned-tasks card</note>
       </notes>
       <segment state="translated">
@@ -16581,6 +16638,16 @@
         <target> Cambiar contraseña </target>
       </segment>
     </unit>
+    <unit id="1481847793699328575">
+      <notes>
+        <note category="location">src/app/static/components/branding-preview/branding-preview.component.ts:111,116</note>
+        <note category="description">Hint under a branding preview explaining how to set images</note>
+      </notes>
+      <segment state="translated">
+        <source> Click the logo or drop images onto the preview. </source>
+        <target> Haz clic en el logotipo o suelta imágenes sobre la vista previa. </target>
+      </segment>
+    </unit>
     <unit id="1543538730036692975">
       <notes>
         <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:169</note>
@@ -16834,6 +16901,16 @@
         <target>Restaurar</target>
       </segment>
     </unit>
+    <unit id="356809777619253530">
+      <notes>
+        <note category="location">src/app/static/components/branding-preview/branding-preview.component.ts:119,121</note>
+        <note category="description">Accepted image formats under a branding preview. SIZE is a formatted byte limit such as 10 MiB</note>
+      </notes>
+      <segment state="translated">
+        <source> PNG, JPEG, WebP, GIF or AVIF · <ph id="0" equiv="INTERPOLATION" disp="{{ maxBytesLabel }}"/> max </source>
+        <target> PNG, JPEG, WebP, GIF o AVIF · <ph id="0" equiv="INTERPOLATION" disp="{{ maxBytesLabel }}"/> máx. </target>
+      </segment>
+    </unit>
     <unit id="4898753656326237317">
       <notes>
         <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:59,62</note>
@@ -17034,6 +17111,16 @@
       <segment state="initial">
         <source>Running the import</source>
         <target>Importación en curso</target>
+      </segment>
+    </unit>
+    <unit id="3048864229888841870">
+      <notes>
+        <note category="location">src/app/static/components/branding-preview/branding-preview.component.ts:61,64</note>
+        <note category="description">Button that adds a background image</note>
+      </notes>
+      <segment state="translated">
+        <source> Add background </source>
+        <target> Añadir fondo </target>
       </segment>
     </unit>
     <unit id="8054034789307349890">
@@ -17276,7 +17363,7 @@
     <unit id="3950857212526495627">
       <notes>
         <note category="location">src/app/static/components/editor/editor-bubble-menu.component.ts:196</note>
-        <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:149</note>
+        <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:152</note>
         <note category="description">Accessible label for the editor&apos;s heading 2 button</note>
       </notes>
       <segment state="translated">
@@ -17835,7 +17922,7 @@
     </unit>
     <unit id="1364951183871731535">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:306,309</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:305,308</note>
         <note category="description">Keyboard hint for moving through the review list</note>
       </notes>
       <segment state="translated">
@@ -18222,7 +18309,7 @@
     </unit>
     <unit id="8322685192229295037">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:106,109</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:95,98</note>
         <note category="description">Shown on the review while a run is being stopped</note>
       </notes>
       <segment state="translated">
@@ -18366,7 +18453,7 @@
     <unit id="7679272376567925786">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-message.component.ts:213</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:670</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:669</note>
         <note category="description">Describes what applying a change set did</note>
       </notes>
       <segment state="translated">
@@ -18640,7 +18727,7 @@
     </unit>
     <unit id="2434944824726929798">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:626</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:625</note>
         <note category="description">Diff layout with two columns</note>
       </notes>
       <segment state="translated">
@@ -19170,7 +19257,7 @@
     </unit>
     <unit id="9080564422139929268">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:218,222</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:217,221</note>
         <note category="description">Single letter marking a change that removes something. It labels the rows in the list, so leave the letter as-is</note>
       </notes>
       <segment state="translated">
@@ -19180,7 +19267,7 @@
     </unit>
     <unit id="9081463435738465430">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:603</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:602</note>
         <note category="description">Review filter showing changes that cannot be applied</note>
       </notes>
       <segment state="translated">
@@ -19231,7 +19318,7 @@
     </unit>
     <unit id="9095134843628689709">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:326,328</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:325,327</note>
         <note category="description">Keyboard hint for editing a change</note>
       </notes>
       <segment state="translated">
@@ -19389,7 +19476,7 @@
     </unit>
     <unit id="8638195718204770647">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:431</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:430</note>
         <note category="description">Shown when there is no change to review</note>
       </notes>
       <segment state="translated">
@@ -19658,7 +19745,7 @@
     </unit>
     <unit id="7306009472583884794">
       <notes>
-        <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:155</note>
+        <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:158</note>
         <note category="description">Accessible label for the editor&apos;s divider button</note>
       </notes>
       <segment state="translated">
@@ -20144,6 +20231,16 @@
         <target><ph id="0" equiv="COUNT" disp="count"/> sin asignar</target>
       </segment>
     </unit>
+    <unit id="4522179192905235010">
+      <notes>
+        <note category="location">src/app/static/components/branding-preview/branding-preview.component.ts:95,99</note>
+        <note category="description">Shown while an image is dragged over a branding preview</note>
+      </notes>
+      <segment state="translated">
+        <source>Drop to set background</source>
+        <target>Suelta para establecer el fondo</target>
+      </segment>
+    </unit>
     <unit id="4524361724085569852">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:408</note>
@@ -20394,7 +20491,7 @@
     </unit>
     <unit id="6848079532028484128">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:85,87</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:110,112</note>
         <note category="description">Accessible label for the button that closes the review</note>
       </notes>
       <segment state="translated">
@@ -20444,7 +20541,7 @@
     </unit>
     <unit id="1005445972395556557">
       <notes>
-        <note category="location">src/app/core/services/task-commands.service.ts:203</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:211</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -20654,16 +20751,6 @@
         <target>Estados del espacio de trabajo</target>
       </segment>
     </unit>
-    <unit id="6017543453915220413">
-      <notes>
-        <note category="location">src/app/features/boards/components/board-branding/board-branding.component.ts:36,40</note>
-        <note category="description">Label of the board background image picker</note>
-      </notes>
-      <segment state="translated">
-        <source> Board Background </source>
-        <target> Fondo del tablero </target>
-      </segment>
-    </unit>
     <unit id="6017786801241064671">
       <notes>
         <note category="location">src/app/features/settings/settings.routes.ts:88</note>
@@ -20749,7 +20836,7 @@
     <unit id="5000740075940518750">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:492</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:654</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:653</note>
         <note category="description">Shown after proposals were discarded</note>
       </notes>
       <segment state="translated">
@@ -21800,7 +21887,7 @@
     </unit>
     <unit id="8511730155855822220">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:458</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:457</note>
         <note category="description">Counts the changes a run has applied so far</note>
       </notes>
       <segment state="translated">
@@ -21883,7 +21970,7 @@
     </unit>
     <unit id="6920187614613605770">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:667</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:666</note>
         <note category="description">Shown after a change set was partly applied</note>
       </notes>
       <segment state="translated">
@@ -21997,7 +22084,7 @@
         <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:99</note>
         <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:44</note>
         <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:117</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:588</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:587</note>
         <note category="description">Heading above the newly created tasks leaving a sprint</note>
       </notes>
       <segment state="translated">
@@ -22923,7 +23010,7 @@
     </unit>
     <unit id="8127725951732050615">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:313,315</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:312,314</note>
         <note category="description">Name of the space bar. Translate it to its local name</note>
       </notes>
       <segment state="translated">
@@ -23141,7 +23228,7 @@
     </unit>
     <unit id="4901555042063443017">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:324,326</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:323,325</note>
         <note category="description">Keyboard key that edits the selected change. Leave the letter as-is</note>
       </notes>
       <segment state="translated">
@@ -23450,7 +23537,7 @@
     </unit>
     <unit id="345994992360406582">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:642</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:641</note>
         <note category="description">Counts the changes and the entities they touch</note>
       </notes>
       <segment state="translated">
@@ -23480,7 +23567,7 @@
     </unit>
     <unit id="8178416786371438773">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:432</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:431</note>
         <note category="description">Explains the empty review surface</note>
       </notes>
       <segment state="translated">
@@ -23788,16 +23875,6 @@
         <target> Borrar filtros </target>
       </segment>
     </unit>
-    <unit id="8420607717802107601">
-      <notes>
-        <note category="location">src/app/features/boards/components/board-branding/board-branding.component.ts:42,45</note>
-        <note category="description">Explains where the board background image appears</note>
-      </notes>
-      <segment state="translated">
-        <source> Fills the background of this board&apos;s page. </source>
-        <target> Rellena el fondo de la página de este tablero. </target>
-      </segment>
-    </unit>
     <unit id="8420929075694258422">
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:35,37</note>
@@ -23870,7 +23947,7 @@
     </unit>
     <unit id="221384062319096861">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:270,274</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:277,281</note>
         <note category="description">Shown when a new task was saved but some of its files did not upload</note>
       </notes>
       <segment state="translated">
@@ -24091,7 +24168,7 @@
     </unit>
     <unit id="6281284727431074654">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:246,249</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:253,256</note>
         <note category="description">Accessible label for the button that takes a file off a task that has not been created yet</note>
       </notes>
       <segment state="translated">
@@ -24526,8 +24603,8 @@
     </unit>
     <unit id="23718004345171053">
       <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:427</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:428</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:429</note>
         <note category="description">Placeholder of the field that filters the review list</note>
       </notes>
       <segment state="translated">
@@ -24598,7 +24675,7 @@
     </unit>
     <unit id="1233677209404619820">
       <notes>
-        <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:156</note>
+        <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:159</note>
         <note category="description">Accessible label for the button that adds a file to the editor</note>
       </notes>
       <segment state="translated">
@@ -24749,7 +24826,7 @@
     </unit>
     <unit id="6662317772987702772">
       <notes>
-        <note category="location">src/app/core/services/task-commands.service.ts:222</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:230</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -24757,10 +24834,20 @@
         <target>¿Quitar esta tarea de este tablero? La tarea se conserva, junto con su estado, sus comentarios y su historial.</target>
       </segment>
     </unit>
+    <unit id="6663704937139116673">
+      <notes>
+        <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:247</note>
+        <note category="description">Hint under a valid board identifier</note>
+      </notes>
+      <segment state="translated">
+        <source>Used in this board&apos;s URL.</source>
+        <target>Se usa en la URL de este tablero.</target>
+      </segment>
+    </unit>
     <unit id="6663783128602596673">
       <notes>
         <note category="location">src/app/features/auth/components/register/register.component.ts:62,67</note>
-        <note category="location">src/app/shell/shell-navbar.component.ts:69,76</note>
+        <note category="location">src/app/shell/shell-navbar.component.ts:70,77</note>
         <note category="description">Link from the registration form back to the login form</note>
       </notes>
       <segment state="translated">
@@ -25152,7 +25239,7 @@
     </unit>
     <unit id="7923105806433235005">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:303,305</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:302,304</note>
         <note category="description">Keyboard key that moves up the review list. Leave the letter as-is</note>
       </notes>
       <segment state="translated">
@@ -25363,7 +25450,7 @@
     </unit>
     <unit id="450937500922433442">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:634</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:633</note>
         <note category="description">Diff layout highlighting changed words</note>
       </notes>
       <segment state="translated">
@@ -25546,10 +25633,11 @@
     </unit>
     <unit id="4814285799071780083">
       <notes>
-        <note category="location">src/app/core/services/task-commands.service.ts:218</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:226</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:347</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:341</note>
         <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:82,85</note>
+        <note category="location">src/app/static/components/branding-preview/branding-preview.component.ts:46,49</note>
         <note category="location">src/app/static/components/form-select-tags/form-select-tags.component.ts:74,77</note>
         <note category="location">src/app/static/components/image-upload/image-upload.component.ts:93,96</note>
         <note category="location">src/app/static/components/task-chip.component.ts:59</note>
@@ -25941,6 +26029,16 @@
         <target>Sin definir</target>
       </segment>
     </unit>
+    <unit id="7323157798987369833">
+      <notes>
+        <note category="location">src/app/static/components/branding-preview/branding-preview.component.ts:107,109</note>
+        <note category="description">Button that removes a logo</note>
+      </notes>
+      <segment state="translated">
+        <source> Remove logo </source>
+        <target> Quitar logotipo </target>
+      </segment>
+    </unit>
     <unit id="7325056332252610932">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:131</note>
@@ -26015,7 +26113,7 @@
     </unit>
     <unit id="2034729730694169160">
       <notes>
-        <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:154</note>
+        <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:157</note>
         <note category="description">Accessible label for the editor&apos;s code block button</note>
       </notes>
       <segment state="translated">
