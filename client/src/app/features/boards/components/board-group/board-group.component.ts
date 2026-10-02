@@ -98,11 +98,11 @@ import { MenuSeparatorComponent } from '@static/components/dropdown-menu/menu-se
       [class.translucent]="hasBoardBackground()">
       <ng-content />
 
-      <div #container class="min-h-0 flex-1">
+      <div #container class="@container-size min-h-0 flex-1">
         <div
           cdkDropList
           appScrollShadowVertical
-          class="custom-scroll board-task-list flex h-full flex-col overflow-y-auto p-[.6rem]"
+          class="custom-scroll board-task-list flex h-full flex-col overflow-y-auto p-[.6rem] pb-[calc(.6rem+42cqh)]"
           [id]="dragListId()"
           [cdkDropListConnectedTo]="siblingIds()"
           (cdkDropListDropped)="drop($event)"
