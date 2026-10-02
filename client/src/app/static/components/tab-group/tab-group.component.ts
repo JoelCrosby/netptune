@@ -4,16 +4,11 @@ import { cn } from '../button/button.variants';
 export interface TabItem {
   label: string;
   value: string | number | null;
-  // Rendered as a filled pill on the `default` variant, and as a plain muted
-  // number on `strip`.
   badge?: number;
   count?: number | null;
 }
 
-// `default` is the page-level tab bar, which carries its own bottom rule.
-// `strip` is the compact in-panel row, where the rule sits under each tab and
-// the caller sets the spacing.
-export type TabGroupVariant = 'default' | 'strip';
+export type TabGroupVariant = 'default' | 'island';
 
 @Component({
   selector: 'app-tab-group',
@@ -52,10 +47,10 @@ export class TabGroupComponent {
 
   protected readonly hostClass = computed(() => {
     return cn(
-      // A narrow screen cannot fit every tab, so the row scrolls sideways rather than
-      // running off the edge.
       'flex items-center overflow-x-auto',
-      this.variant() === 'default' ? 'border-border border-b' : '',
+      this.variant() === 'default'
+        ? 'border-border border-b'
+        : 'border-border bg-card w-fit max-w-full shrink-0 gap-0.5 rounded-[10px] border p-1',
       this.class()
     );
   });
@@ -73,10 +68,10 @@ export class TabGroupComponent {
     }
 
     return cn(
-      'h-[42px] shrink-0 cursor-pointer border-b-2 px-3 text-[13px] transition-colors',
+      'focus-visible:ring-primary inline-flex h-7 shrink-0 cursor-pointer items-center rounded-[7px] border px-2.5 text-[13px] transition-colors outline-none focus-visible:ring-2',
       isActive
-        ? 'border-primary text-foreground font-semibold'
-        : 'border-transparent text-muted hover:text-foreground font-medium'
+        ? 'border-border bg-hover text-foreground font-semibold'
+        : 'border-transparent text-muted hover:bg-hover/60 hover:text-foreground font-medium'
     );
   }
 

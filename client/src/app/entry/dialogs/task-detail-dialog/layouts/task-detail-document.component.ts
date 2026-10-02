@@ -119,8 +119,7 @@ import {
           <div class="bg-foreground/8 h-px" aria-hidden="true"></div>
 
           <app-tab-group
-            variant="strip"
-            class="gap-4.5"
+            variant="island"
             [tabs]="
               tabItems(
                 comments.count(),

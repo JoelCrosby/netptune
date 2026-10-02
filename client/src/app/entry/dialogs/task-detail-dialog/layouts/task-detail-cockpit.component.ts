@@ -1,6 +1,5 @@
 import { Component, inject, signal, viewChild } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
-import { cn } from '@static/components/button/button.variants';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { TaskDetailBoardsComponent } from '../task-detail-boards.component';
 import { TaskDetailCommentsComponent } from '../task-detail-comments.component';
@@ -83,10 +82,9 @@ import { DialogSectionComponent } from '@static/components/dialog/dialog-section
           textClass="text-[15px]/[26px]" />
 
         <app-dialog-section dialogColumnsFooter divider="top" class="shrink-0">
-          <div class="flex h-[42px] items-center gap-1 px-5">
+          <div class="flex h-[52px] items-center gap-1 px-5">
             <app-tab-group
-              variant="strip"
-              class="gap-1"
+              variant="island"
               [tabs]="
                 tabItems(
                   task.placements.length,
@@ -138,36 +136,11 @@ import { DialogSectionComponent } from '@static/components/dialog/dialog-section
 
         <app-dialog-rail class="w-[372px]">
           <div
-            class="border-foreground/8 flex h-11 shrink-0 items-center gap-2 border-b px-4">
-            <div class="bg-hover flex gap-0.5 rounded-[7px] p-0.5">
-              @if (readComments()) {
-                <button
-                  type="button"
-                  [class]="segmentClass(railTab() === 'comments')"
-                  [attr.aria-pressed]="railTab() === 'comments'"
-                  (click)="railTab.set('comments')">
-                  <span i18n="Section heading for a task's comments">
-                    Comments
-                  </span>
-                </button>
-              }
-              @if (readActivity()) {
-                <button
-                  type="button"
-                  [class]="segmentClass(railTab() === 'history')"
-                  [attr.aria-pressed]="railTab() === 'history'"
-                  (click)="railTab.set('history')">
-                  <span i18n="Tab showing what has happened to a task">
-                    History
-                  </span>
-                </button>
-              }
-            </div>
-            @if (railTab() === 'comments') {
-              <span class="text-muted ml-auto text-xs">
-                {{ comments.count() }}
-              </span>
-            }
+            class="border-foreground/8 flex h-[52px] shrink-0 items-center gap-2 border-b px-4">
+            <app-tab-group
+              variant="island"
+              [tabs]="railTabItems(comments.count())"
+              [(value)]="railTab" />
           </div>
 
           <div class="custom-scroll min-h-0 flex-1 overflow-y-auto px-4 py-3.5">
@@ -201,7 +174,7 @@ export class TaskDetailCockpitComponent {
 
   readonly task = this.taskDetail.task;
   readonly activeTab = signal('boards');
-  readonly railTab = signal<'comments' | 'history'>('comments');
+  readonly railTab = signal('comments');
 
   readonly descriptionLabel = $localize`:Eyebrow above the task description:Description`;
   readonly tabActionClass =
@@ -218,6 +191,8 @@ export class TaskDetailCockpitComponent {
     boards: $localize`:Section heading for the boards a task appears on:Boards`,
     links: $localize`:Tab listing the tasks this one links to:Links`,
     files: $localize`:Section heading for files attached to a task:Files`,
+    comments: $localize`:Section heading for a task's comments:Comments`,
+    history: $localize`:Tab showing what has happened to a task:History`,
   };
 
   tabItems(boards: number, links: number, files: number | null): TabItem[] {
@@ -233,12 +208,21 @@ export class TaskDetailCockpitComponent {
     return tabs;
   }
 
-  segmentClass(active: boolean) {
-    return cn(
-      'h-6 cursor-pointer rounded-[5px] px-2.5 text-xs transition-colors',
-      active
-        ? 'bg-dialog-background text-foreground font-semibold'
-        : 'text-muted hover:text-foreground font-medium'
-    );
+  railTabItems(comments: number): TabItem[] {
+    const tabs: TabItem[] = [];
+
+    if (this.readComments()) {
+      tabs.push({
+        value: 'comments',
+        label: this.labels.comments,
+        count: comments,
+      });
+    }
+
+    if (this.readActivity()) {
+      tabs.push({ value: 'history', label: this.labels.history, count: null });
+    }
+
+    return tabs;
   }
 }
