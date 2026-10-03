@@ -1,4 +1,11 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+  untracked,
+} from '@angular/core';
 import { SessionService } from '@core/services/session.service';
 import {
   disabled,
@@ -90,7 +97,7 @@ import { PanelHeaderComponent } from '@static/components/panel-header.component'
         </app-panel-body>
 
         <app-panel-footer>
-          <button app-flat-button type="submit" [disabled]="loading()">
+          <button app-flat-button type="submit" [disabled]="loading() || !passwordForm().dirty()">
             @if (hasPassword()) {
               <span i18n="Button that changes the account password">
                 Change Password
@@ -178,10 +185,12 @@ export class AccountPasswordComponent {
     effect(() => {
       this.hasPassword();
 
-      this.passwordFormModel.set({
-        currentPassword: '',
-        newPassword: '',
-        confirmPassword: '',
+      untracked(() => {
+        this.passwordForm().reset({
+          currentPassword: '',
+          newPassword: '',
+          confirmPassword: '',
+        });
       });
     });
   }

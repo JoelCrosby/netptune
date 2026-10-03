@@ -79,7 +79,7 @@ interface ProfileFields {
       </app-panel-body>
 
       <app-panel-footer class="flex flex-wrap items-center gap-3">
-        <button app-flat-button type="submit" [disabled]="loadingUpdate()">
+        <button app-flat-button type="submit" [disabled]="loadingUpdate() || !profileForm().dirty()">
           <span i18n="Button that saves profile changes">Update Profile</span>
         </button>
         <span
