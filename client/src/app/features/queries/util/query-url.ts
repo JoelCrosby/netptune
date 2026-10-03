@@ -3,7 +3,7 @@ import {
   TaskQueryGroup,
   TaskQueryGroupOperator,
   TaskQueryOperator,
-} from '../models/task-view.models';
+} from '../models/saved-query.models';
 
 // A link has to survive being pasted into chat clients and mail, so the query travels
 // base64url encoded rather than as raw JSON in the query string.

@@ -235,30 +235,30 @@ export const netptunePermissionLabels: PermissionLabels = {
       icon: LucidePin,
     },
   },
-  taskViews: {
+  queries: {
     read: {
       key: 'task_views.read',
-      label: $localize`:Name of a workspace permission:View Task Views`,
+      label: $localize`:Name of a workspace permission:View Queries`,
       icon: LucideListFilter,
     },
     create: {
       key: 'task_views.create',
-      label: $localize`:Name of a workspace permission:Create Task Views`,
+      label: $localize`:Name of a workspace permission:Create Queries`,
       icon: LucideCirclePlus,
     },
     update: {
       key: 'task_views.update',
-      label: $localize`:Name of a workspace permission:Edit Task Views`,
+      label: $localize`:Name of a workspace permission:Edit Queries`,
       icon: LucideFilePen,
     },
     delete: {
       key: 'task_views.delete',
-      label: $localize`:Name of a workspace permission:Delete Task Views`,
+      label: $localize`:Name of a workspace permission:Delete Queries`,
       icon: LucideTrash2,
     },
     manageShared: {
       key: 'task_views.manage_shared',
-      label: $localize`:Name of a workspace permission:Manage Shared Task Views`,
+      label: $localize`:Name of a workspace permission:Manage Shared Queries`,
       icon: LucideUsers,
     },
   },

@@ -411,15 +411,6 @@
         <source>Delete Boards</source>
       </segment>
     </unit>
-    <unit id="5516954416544435229">
-      <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:261</note>
-        <note category="description">Name of a workspace permission</note>
-      </notes>
-      <segment>
-        <source>Manage Shared Task Views</source>
-      </segment>
-    </unit>
     <unit id="551825878782946048">
       <notes>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:266</note>
@@ -477,7 +468,7 @@
     </unit>
     <unit id="5322873861888163184">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:107,109</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:105,107</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:52,55</note>
         <note category="description">Button that puts this task on another board</note>
       </notes>
@@ -589,7 +580,7 @@
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:130</note>
         <note category="location">src/app/features/data-transfer/components/import-steps/import-source-step.component.ts:142</note>
-        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:96,97</note>
+        <note category="location">src/app/features/queries/components/query-display-menu.component.ts:96,97</note>
         <note category="description">Counts the columns an export will contain</note>
       </notes>
       <segment>
@@ -1181,7 +1172,7 @@
     </unit>
     <unit id="7549003559091431913">
       <notes>
-        <note category="location">src/app/features/task-views/components/task-view-preview-toolbar.component.ts:34,39</note>
+        <note category="location">src/app/features/queries/components/query-preview-toolbar.component.ts:34,39</note>
         <note category="description">Label after the number of tasks a query matches</note>
       </notes>
       <segment>
@@ -1204,17 +1195,6 @@
       </notes>
       <segment>
         <source>View Service Accounts</source>
-      </segment>
-    </unit>
-    <unit id="2123659921722214537">
-      <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:48,49</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:220</note>
-        <note category="location">src/app/workspace.routes.ts:42</note>
-        <note category="description">Page title for the saved task view list</note>
-      </notes>
-      <segment>
-        <source>Views</source>
       </segment>
     </unit>
     <unit id="2128755808672960949">
@@ -1310,7 +1290,7 @@
     </unit>
     <unit id="162633507044660716">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:156,158</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:157,159</note>
         <note category="description">Empty state of the list of tasks queued up to be linked</note>
       </notes>
       <segment>
@@ -1591,7 +1571,7 @@
         <note category="location">src/app/core/services/workspace-commands.service.ts:225</note>
         <note category="location">src/app/core/services/workspace-commands.service.ts:235</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:337,340</note>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:200,203</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:201,204</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:142</note>
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:80,82</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:316</note>
@@ -1769,13 +1749,13 @@
         <source>Proposed value</source>
       </segment>
     </unit>
-    <unit id="4683971466135928572">
+    <unit id="1277566644129121082">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:115,116</note>
-        <note category="description">Shown when a saved view cannot be found</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:118,119</note>
+        <note category="description">Shown when a saved query cannot be found</note>
       </notes>
       <segment>
-        <source>This view could not be found</source>
+        <source>This query could not be found</source>
       </segment>
     </unit>
     <unit id="4686852710008865123">
@@ -1821,6 +1801,8 @@
         <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:195</note>
         <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:167</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:249</note>
+        <note category="location">src/app/features/queries/views/queries-view/queries-view.component.ts:159</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:229</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:183</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:317</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:154</note>
@@ -1831,8 +1813,6 @@
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:205</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:224</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:271</note>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:224</note>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:159</note>
         <note category="location">src/app/shared/components/task-selection-actions/task-selection-actions.component.ts:32,34</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:35</note>
         <note category="description">Confirms a destructive action</note>
@@ -1913,6 +1893,15 @@
       </notes>
       <segment>
         <source> Created <ph id="0" equiv="WHEN" disp="{{ task.createdAt | fromNow // i18n(ph=&quot;WHEN&quot;) }}"/> </source>
+      </segment>
+    </unit>
+    <unit id="2854805906147535167">
+      <notes>
+        <note category="location">src/app/features/queries/views/queries-view/queries-view.component.ts:157</note>
+        <note category="description">Title of the delete-query confirmation</note>
+      </notes>
+      <segment>
+        <source>Delete query?</source>
       </segment>
     </unit>
     <unit id="2856093664313447266">
@@ -2124,7 +2113,7 @@
     </unit>
     <unit id="7969803868786128145">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:365</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:366</note>
         <note category="description">Heading over the links waiting to be created</note>
       </notes>
       <segment>
@@ -2335,15 +2324,6 @@
         <source>Tasks added to sprint</source>
       </segment>
     </unit>
-    <unit id="6264002090847080538">
-      <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:246</note>
-        <note category="description">Name of a workspace permission</note>
-      </notes>
-      <segment>
-        <source>Create Task Views</source>
-      </segment>
-    </unit>
     <unit id="6269606295190909224">
       <notes>
         <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:155</note>
@@ -2441,7 +2421,7 @@
     </unit>
     <unit id="718435595344345097">
       <notes>
-        <note category="location">src/app/features/task-views/models/task-query-copy.ts:16</note>
+        <note category="location">src/app/features/queries/models/task-query-copy.ts:16</note>
         <note category="description">Query operator matching values at or below a number or date</note>
       </notes>
       <segment>
@@ -2538,6 +2518,15 @@
         <source>Invite resent</source>
       </segment>
     </unit>
+    <unit id="4131981277552441916">
+      <notes>
+        <note category="location">src/app/features/queries/views/queries-view/queries-view.component.ts:58,60</note>
+        <note category="description">Accessible label while the saved query list loads</note>
+      </notes>
+      <segment>
+        <source>Loading queries</source>
+      </segment>
+    </unit>
     <unit id="4137345330647893937">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:150</note>
@@ -2567,8 +2556,8 @@
     </unit>
     <unit id="4140474966837806672">
       <notes>
-        <note category="location">src/app/features/task-views/components/task-view-card.component.ts:130,132</note>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:128,130</note>
+        <note category="location">src/app/features/queries/components/query-card.component.ts:130,132</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:133,135</note>
         <note category="description">Eyebrow above the plain-language query summary</note>
       </notes>
       <segment>
@@ -2681,15 +2670,6 @@
       </notes>
       <segment>
         <source>Resume Import</source>
-      </segment>
-    </unit>
-    <unit id="1293241675469976608">
-      <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:251</note>
-        <note category="description">Name of a workspace permission</note>
-      </notes>
-      <segment>
-        <source>Edit Task Views</source>
       </segment>
     </unit>
     <unit id="1293575230061580250">
@@ -2932,7 +2912,7 @@
     </unit>
     <unit id="4083193853987027450">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:167,170</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:168,171</note>
         <note category="description">Heading over the links a task already has</note>
       </notes>
       <segment>
@@ -3135,13 +3115,13 @@
         <source>IF</source>
       </segment>
     </unit>
-    <unit id="5958306903625377545">
+    <unit id="3516718364454168290">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:139,140</note>
-        <note category="description">Heading shown when a saved view no longer compiles</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:144,145</note>
+        <note category="description">Heading shown when a saved query no longer compiles</note>
       </notes>
       <segment>
-        <source>This view needs attention</source>
+        <source>This query needs attention</source>
       </segment>
     </unit>
     <unit id="8598918991528773310">
@@ -3671,6 +3651,15 @@
         <source>Back to conversations</source>
       </segment>
     </unit>
+    <unit id="2044041659641246299">
+      <notes>
+        <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:205</note>
+        <note category="description">Default name of a new saved query</note>
+      </notes>
+      <segment>
+        <source>Untitled query</source>
+      </segment>
+    </unit>
     <unit id="6899352499692995227">
       <notes>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:87,89</note>
@@ -4108,6 +4097,15 @@
         <source>You are being notified about <ph id="0" equiv="NAME" disp="name"/></source>
       </segment>
     </unit>
+    <unit id="138586768768642306">
+      <notes>
+        <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:394</note>
+        <note category="description">Confirmation that a query was saved</note>
+      </notes>
+      <segment>
+        <source>Query saved</source>
+      </segment>
+    </unit>
     <unit id="424356320420294719">
       <notes>
         <note category="location">src/app/features/storage/components/storage-filters.component.ts:124</note>
@@ -4221,18 +4219,18 @@
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:396</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:66,67</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:206</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:179</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:104,107</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:153,156</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:48,50</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:67</note>
         <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:78,81</note>
+        <note category="location">src/app/features/queries/components/query-details-drawer.component.ts:31,33</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:106,108</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:63,65</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:91,94</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:170,173</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:143,146</note>
-        <note category="location">src/app/features/task-views/components/task-view-details-drawer.component.ts:31,33</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:30</note>
         <note category="description">Label of the task description editor</note>
       </notes>
@@ -4306,7 +4304,7 @@
     </unit>
     <unit id="6353362142589022681">
       <notes>
-        <note category="location">src/app/features/task-views/models/task-query-copy.ts:9</note>
+        <note category="location">src/app/features/queries/models/task-query-copy.ts:9</note>
         <note category="description">Query operator excluding text anywhere in a field</note>
       </notes>
       <segment>
@@ -4472,8 +4470,8 @@
     </unit>
     <unit id="9012859797411084017">
       <notes>
-        <note category="location">src/app/features/task-views/util/stale-references.ts:28</note>
-        <note category="description">Shown when a saved view names a field the workspace no longer has</note>
+        <note category="location">src/app/features/queries/util/stale-references.ts:28</note>
+        <note category="description">Shown when a saved query names a field the workspace no longer has</note>
       </notes>
       <segment>
         <source>&apos;<ph id="0" equiv="fieldKey" disp="condition.field"/>&apos; is no longer a task field.</source>
@@ -4518,7 +4516,7 @@
     </unit>
     <unit id="3084343944071615109">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:122,128</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:123,129</note>
         <note category="description">Shown in the link dialog when the workspace has no relation types to pick from</note>
       </notes>
       <segment>
@@ -4608,6 +4606,15 @@
         <source>Download</source>
       </segment>
     </unit>
+    <unit id="3961280130972484704">
+      <notes>
+        <note category="location">src/app/features/queries/components/query-card.component.ts:111,113</note>
+        <note category="description">Accessible label for the button that deletes a query</note>
+      </notes>
+      <segment>
+        <source>Delete query</source>
+      </segment>
+    </unit>
     <unit id="3961381754418860602">
       <notes>
         <note category="location">src/app/entry/dialogs/tag-dialog/tag-dialog.component.ts:31,33</note>
@@ -4695,7 +4702,7 @@
     </unit>
     <unit id="2110223804478113558">
       <notes>
-        <note category="location">src/app/features/task-views/components/task-view-preview-toolbar.component.ts:27,30</note>
+        <note category="location">src/app/features/queries/components/query-preview-toolbar.component.ts:27,30</note>
         <note category="description">Shown while the query result count is being recounted</note>
       </notes>
       <segment>
@@ -4746,8 +4753,8 @@
     </unit>
     <unit id="5060728196587678675">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:341</note>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:394</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:342</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:395</note>
         <note category="description">Title of the dialog for linking tasks together</note>
       </notes>
       <segment>
@@ -4793,7 +4800,7 @@
     </unit>
     <unit id="5859943658540143078">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-list.component.ts:69,72</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-list.component.ts:74,77</note>
         <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:69,72</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:40,43</note>
         <note category="description">Placeholder in the box for finding tasks to link</note>
@@ -4921,6 +4928,15 @@
       </notes>
       <segment>
         <source>No tasks use this yet.</source>
+      </segment>
+    </unit>
+    <unit id="621637643160342146">
+      <notes>
+        <note category="location">src/app/features/queries/views/queries-view/queries-view.component.ts:98,100</note>
+        <note category="description">Button that opens the create-query form</note>
+      </notes>
+      <segment>
+        <source> Create Query </source>
       </segment>
     </unit>
     <unit id="6217148491814648113">
@@ -5139,7 +5155,8 @@
     </unit>
     <unit id="3807699453257291879">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:191</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:194</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:190</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:89</note>
         <note category="description">Section heading for a task&apos;s comments</note>
       </notes>
@@ -5210,10 +5227,19 @@
         <source>Completing closes <ph id="0" equiv="SPRINT" disp="sprintName"/> and moves <ph id="1" equiv="TASKS" disp="tasks"/> to the sprint you pick.</source>
       </segment>
     </unit>
+    <unit id="4112448628063511508">
+      <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:261</note>
+        <note category="description">Name of a workspace permission</note>
+      </notes>
+      <segment>
+        <source>Manage Shared Queries</source>
+      </segment>
+    </unit>
     <unit id="4116911651502837995">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:220</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:192</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:193</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:191</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/task-files-section.component.ts:47</note>
         <note category="description">Section heading for files attached to a task</note>
       </notes>
@@ -5653,7 +5679,7 @@
     </unit>
     <unit id="3971949003366430322">
       <notes>
-        <note category="location">src/app/features/task-views/models/task-query-copy.ts:5</note>
+        <note category="location">src/app/features/queries/models/task-query-copy.ts:5</note>
         <note category="description">Query operator excluding an exact value</note>
       </notes>
       <segment>
@@ -5729,7 +5755,6 @@
     </unit>
     <unit id="5200831341853054486">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:150,152</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:145,147</note>
         <note category="description">Section heading for a task&apos;s comments</note>
       </notes>
@@ -5839,7 +5864,7 @@
     </unit>
     <unit id="7699622144571229146">
       <notes>
-        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:50,51</note>
+        <note category="location">src/app/features/queries/components/query-display-menu.component.ts:50,51</note>
         <note category="description">Heading of the sort menu</note>
       </notes>
       <segment>
@@ -5947,9 +5972,9 @@
     </unit>
     <unit id="5989040236984882526">
       <notes>
-        <note category="location">src/app/features/task-views/components/task-view-card.component.ts:208</note>
-        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:174</note>
-        <note category="description">Number of columns a saved view displays. COUNT is how many there are</note>
+        <note category="location">src/app/features/queries/components/query-card.component.ts:211</note>
+        <note category="location">src/app/features/queries/components/query-display-menu.component.ts:174</note>
+        <note category="description">Number of columns a saved query displays. COUNT is how many there are</note>
       </notes>
       <segment>
         <source><ph id="0" equiv="COUNT" disp="count"/> columns</source>
@@ -6195,9 +6220,9 @@
     </unit>
     <unit id="6143795228406387052">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:73,77</note>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:100,104</note>
-        <note category="description">Button that copies a shareable link to a view</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:76,80</note>
+        <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:100,104</note>
+        <note category="description">Button that copies a shareable link to a query</note>
       </notes>
       <segment>
         <source> Copy link </source>
@@ -6444,6 +6469,15 @@
         <source>Strong</source>
       </segment>
     </unit>
+    <unit id="5539980799648688022">
+      <notes>
+        <note category="location">src/app/features/queries/views/queries-view/queries-view.component.ts:174</note>
+        <note category="description">Confirmation that a query was deleted</note>
+      </notes>
+      <segment>
+        <source>Query deleted</source>
+      </segment>
+    </unit>
     <unit id="1678559204833619774">
       <notes>
         <note category="location">src/app/features/audit/views/audit-view/audit-view.component.ts:27,28</note>
@@ -6584,7 +6618,7 @@
     </unit>
     <unit id="9158197687662075662">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:147,149</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:148,150</note>
         <note category="description">Accessible label for the button that drops a task from the list waiting to be linked</note>
       </notes>
       <segment>
@@ -6688,7 +6722,7 @@
     </unit>
     <unit id="593766646040159024">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-list.component.ts:121,125</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-list.component.ts:127,131</note>
         <note category="description">Shown when no tasks match the link search</note>
       </notes>
       <segment>
@@ -6740,15 +6774,6 @@
       </notes>
       <segment>
         <source>Select all</source>
-      </segment>
-    </unit>
-    <unit id="1494629498718440079">
-      <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:256</note>
-        <note category="description">Name of a workspace permission</note>
-      </notes>
-      <segment>
-        <source>Delete Task Views</source>
       </segment>
     </unit>
     <unit id="1496852746214979643">
@@ -7309,8 +7334,8 @@
     </unit>
     <unit id="4762376336950167226">
       <notes>
-        <note category="location">src/app/features/task-views/components/task-view-card.component.ts:177</note>
-        <note category="description">Button that removes a view from the sidebar</note>
+        <note category="location">src/app/features/queries/components/query-card.component.ts:180</note>
+        <note category="description">Button that removes a query from the sidebar</note>
       </notes>
       <segment>
         <source>Unpin from sidebar</source>
@@ -7451,7 +7476,7 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-actions-editor.component.ts:236,237</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:168,169</note>
-        <note category="location">src/app/features/task-views/models/task-query-builder.ts:127</note>
+        <note category="location">src/app/features/queries/models/task-query-builder.ts:127</note>
         <note category="description">Delay unit: days</note>
       </notes>
       <segment>
@@ -7469,8 +7494,8 @@
     </unit>
     <unit id="329406837759048287">
       <notes>
-        <note category="location">src/app/features/task-views/components/task-view-card.component.ts:65,67</note>
-        <note category="description">Badge marking a view shared with the workspace</note>
+        <note category="location">src/app/features/queries/components/query-card.component.ts:65,67</note>
+        <note category="description">Badge marking a query shared with the workspace</note>
       </notes>
       <segment>
         <source> Shared </source>
@@ -7594,15 +7619,6 @@
         <source>Field</source>
       </segment>
     </unit>
-    <unit id="4827228128561377686">
-      <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:84,86</note>
-        <note category="description">Heading of the empty saved view list</note>
-      </notes>
-      <segment>
-        <source>No views yet</source>
-      </segment>
-    </unit>
     <unit id="124664468810153826">
       <notes>
         <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:61,63</note>
@@ -7623,8 +7639,8 @@
     </unit>
     <unit id="7937380552660364144">
       <notes>
-        <note category="location">src/app/features/task-views/components/task-view-card.component.ts:198</note>
-        <note category="description">Number of filters on a saved view. COUNT is how many there are</note>
+        <note category="location">src/app/features/queries/components/query-card.component.ts:201</note>
+        <note category="description">Number of filters on a saved query. COUNT is how many there are</note>
       </notes>
       <segment>
         <source><ph id="0" equiv="COUNT" disp="count"/> filters</source>
@@ -7786,6 +7802,15 @@
         <source>{VAR_PLURAL, plural, =1 {Replaces the assignees on 1 selected task.} other {Replaces the assignees on <ph id="0" equiv="INTERPOLATION"/> selected tasks.}}</source>
       </segment>
     </unit>
+    <unit id="8748180536879356854">
+      <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:246</note>
+        <note category="description">Name of a workspace permission</note>
+      </notes>
+      <segment>
+        <source>Create Queries</source>
+      </segment>
+    </unit>
     <unit id="8754000074916889543">
       <notes>
         <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:52,53</note>
@@ -7906,8 +7931,8 @@
     </unit>
     <unit id="1946568146736450576">
       <notes>
-        <note category="location">src/app/features/task-views/components/task-view-card.component.ts:193</note>
-        <note category="description">Shown on a saved view that filters nothing out</note>
+        <note category="location">src/app/features/queries/components/query-card.component.ts:196</note>
+        <note category="description">Shown on a saved query that filters nothing out</note>
       </notes>
       <segment>
         <source>No filters</source>
@@ -8325,7 +8350,7 @@
     </unit>
     <unit id="6554042910841979279">
       <notes>
-        <note category="location">src/app/features/task-views/models/task-query-copy.ts:14</note>
+        <note category="location">src/app/features/queries/models/task-query-copy.ts:14</note>
         <note category="description">Query operator matching values at or above a number or date</note>
       </notes>
       <segment>
@@ -8436,8 +8461,8 @@
     </unit>
     <unit id="8023561518384670313">
       <notes>
-        <note category="location">src/app/features/task-views/components/task-view-card.component.ts:207</note>
-        <note category="description">Shown on a saved view that displays one column</note>
+        <note category="location">src/app/features/queries/components/query-card.component.ts:210</note>
+        <note category="description">Shown on a saved query that displays one column</note>
       </notes>
       <segment>
         <source>1 column</source>
@@ -8454,8 +8479,8 @@
     </unit>
     <unit id="5979951160895696674">
       <notes>
-        <note category="location">src/app/features/task-views/util/stale-references.ts:45</note>
-        <note category="description">Shown when a saved view references an entity that has been deleted</note>
+        <note category="location">src/app/features/queries/util/stale-references.ts:45</note>
+        <note category="description">Shown when a saved query references an entity that has been deleted</note>
       </notes>
       <segment>
         <source><ph id="0" equiv="fieldName" disp="field.name"/> no longer has an option for &apos;<ph id="1" equiv="value" disp="value"/>&apos;.</source>
@@ -8546,13 +8571,13 @@
         <source>Users</source>
       </segment>
     </unit>
-    <unit id="8171377612720992766">
+    <unit id="8230941224806112453">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:179</note>
-        <note category="description">Shown when a view could not be deleted</note>
+        <note category="location">src/app/features/queries/views/queries-view/queries-view.component.ts:179</note>
+        <note category="description">Shown when a query could not be deleted</note>
       </notes>
       <segment>
-        <source>View could not be deleted</source>
+        <source>Query could not be deleted</source>
       </segment>
     </unit>
     <unit id="8175487656067850245">
@@ -8572,15 +8597,6 @@
       </notes>
       <segment>
         <source>Workspace roles</source>
-      </segment>
-    </unit>
-    <unit id="4941019389369938795">
-      <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:58,60</note>
-        <note category="description">Accessible label while the saved view list loads</note>
-      </notes>
-      <segment>
-        <source>Loading views</source>
       </segment>
     </unit>
     <unit id="4943579562117131898">
@@ -8703,8 +8719,8 @@
     </unit>
     <unit id="139060283234317043">
       <notes>
-        <note category="location">src/app/features/task-views/components/task-view-card.component.ts:71,73</note>
-        <note category="description">Badge marking a view only its owner can see</note>
+        <note category="location">src/app/features/queries/components/query-card.component.ts:71,73</note>
+        <note category="description">Badge marking a query only its owner can see</note>
       </notes>
       <segment>
         <source> Private </source>
@@ -8898,15 +8914,6 @@
       </notes>
       <segment>
         <source>Choose a task</source>
-      </segment>
-    </unit>
-    <unit id="6911785432558160839">
-      <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:241</note>
-        <note category="description">Name of a workspace permission</note>
-      </notes>
-      <segment>
-        <source>View Task Views</source>
       </segment>
     </unit>
     <unit id="6914161425970763792">
@@ -9203,6 +9210,15 @@
       </notes>
       <segment>
         <source> Apply this </source>
+      </segment>
+    </unit>
+    <unit id="8493682611789857374">
+      <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:241</note>
+        <note category="description">Name of a workspace permission</note>
+      </notes>
+      <segment>
+        <source>View Queries</source>
       </segment>
     </unit>
     <unit id="8497552253509503838">
@@ -10153,6 +10169,15 @@
         <source> Actions run once for every task in the sprint. </source>
       </segment>
     </unit>
+    <unit id="8314762806813599338">
+      <notes>
+        <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:113,115</note>
+        <note category="description">Button that saves a query</note>
+      </notes>
+      <segment>
+        <source>Save query</source>
+      </segment>
+    </unit>
     <unit id="8316005860907344508">
       <notes>
         <note category="location">src/app/features/auth/components/register/register.component.ts:228</note>
@@ -10291,7 +10316,7 @@
     </unit>
     <unit id="862193009858945810">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:336</note>
+        <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:340</note>
         <note category="description">Shown when a query is too large to share as a link</note>
       </notes>
       <segment>
@@ -10300,8 +10325,8 @@
     </unit>
     <unit id="862315084299301566">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:117,119</note>
-        <note category="description">Advice shown when a saved view is missing</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:120,121</note>
+        <note category="description">Advice shown when a saved query is missing</note>
       </notes>
       <segment>
         <source>It may have been deleted, or it may be private to somebody else.</source>
@@ -10512,7 +10537,7 @@
     </unit>
     <unit id="446269071364611708">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-list.component.ts:137,141</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-list.component.ts:143,147</note>
         <note category="description">Button that fetches the next page of tasks</note>
       </notes>
       <segment>
@@ -10794,8 +10819,8 @@
     </unit>
     <unit id="3712427397909119671">
       <notes>
-        <note category="location">src/app/features/task-views/components/task-view-details-drawer.component.ts:51,54</note>
-        <note category="description">Checkbox that shares a view with the whole workspace</note>
+        <note category="location">src/app/features/queries/components/query-details-drawer.component.ts:51,54</note>
+        <note category="description">Checkbox that shares a query with the whole workspace</note>
       </notes>
       <segment>
         <source> Share with the workspace </source>
@@ -10879,9 +10904,9 @@
     </unit>
     <unit id="5234544449365538384">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:314</note>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:358</note>
-        <note category="description">Shown when a shareable view link could not be copied</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:319</note>
+        <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:362</note>
+        <note category="description">Shown when a shareable query link could not be copied</note>
       </notes>
       <segment>
         <source>Link could not be copied</source>
@@ -10928,7 +10953,7 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:227,229</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:145,147</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:85</note>
-        <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:179,182</note>
+        <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:180,183</note>
         <note category="description">Accessible label for the button that deletes the task</note>
       </notes>
       <segment>
@@ -10946,7 +10971,7 @@
     </unit>
     <unit id="4519355022354613189">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:376</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:377</note>
         <note category="description">Prompt shown while nothing is selected in the link dialog</note>
       </notes>
       <segment>
@@ -10987,15 +11012,6 @@
       </notes>
       <segment>
         <source>Manage task relation</source>
-      </segment>
-    </unit>
-    <unit id="249911539328381860">
-      <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:157</note>
-        <note category="description">Title of the delete-view confirmation</note>
-      </notes>
-      <segment>
-        <source>Delete view?</source>
       </segment>
     </unit>
     <unit id="1790106018092279624">
@@ -11056,7 +11072,7 @@
     <unit id="326106955650253946">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:97</note>
-        <note category="location">src/app/features/task-views/models/task-query-copy.ts:8</note>
+        <note category="location">src/app/features/queries/models/task-query-copy.ts:8</note>
         <note category="description">Operator used in an automation condition</note>
       </notes>
       <segment>
@@ -11084,7 +11100,7 @@
     <unit id="5325481293405718739">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:98</note>
-        <note category="location">src/app/features/task-views/models/task-query-copy.ts:11</note>
+        <note category="location">src/app/features/queries/models/task-query-copy.ts:11</note>
         <note category="description">Operator used in an automation condition</note>
       </notes>
       <segment>
@@ -11094,7 +11110,7 @@
     <unit id="6166785695326182482">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:99</note>
-        <note category="location">src/app/features/task-views/models/task-query-copy.ts:12</note>
+        <note category="location">src/app/features/queries/models/task-query-copy.ts:12</note>
         <note category="description">Operator used in an automation condition</note>
       </notes>
       <segment>
@@ -11333,8 +11349,8 @@
     </unit>
     <unit id="7565716024468232322">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:219</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:193</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:192</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:192</note>
         <note category="description">Tab listing the tasks this one links to</note>
       </notes>
       <segment>
@@ -11357,15 +11373,6 @@
       </notes>
       <segment>
         <source>The user whose change ran the rule</source>
-      </segment>
-    </unit>
-    <unit id="4493603856796380932">
-      <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:390</note>
-        <note category="description">Confirmation that a view was saved</note>
-      </notes>
-      <segment>
-        <source>View saved</source>
       </segment>
     </unit>
     <unit id="4497346320249564712">
@@ -11393,15 +11400,6 @@
       </notes>
       <segment>
         <source>Chosen workspace roles</source>
-      </segment>
-    </unit>
-    <unit id="8733170707271532124">
-      <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:113,115</note>
-        <note category="description">Button that saves a view</note>
-      </notes>
-      <segment>
-        <source>Save view</source>
       </segment>
     </unit>
     <unit id="517909520157314265">
@@ -11528,7 +11526,7 @@
     </unit>
     <unit id="7612675227076281553">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:107,109</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:108,110</note>
         <note category="description">Accessible name of the group of relationship choices</note>
       </notes>
       <segment>
@@ -11836,15 +11834,6 @@
         <source>runs</source>
       </segment>
     </unit>
-    <unit id="740511649555229880">
-      <notes>
-        <note category="location">src/app/features/task-views/components/task-view-card.component.ts:111,113</note>
-        <note category="description">Accessible label for the button that deletes a view</note>
-      </notes>
-      <segment>
-        <source>Delete view</source>
-      </segment>
-    </unit>
     <unit id="7408548108482203185">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:486</note>
@@ -11899,6 +11888,17 @@
         <source>of <ph id="0" equiv="cap" disp="formatCurrency(cap)"/></source>
       </segment>
     </unit>
+    <unit id="886427234962285326">
+      <notes>
+        <note category="location">src/app/features/queries/queries.routes.ts:19</note>
+        <note category="location">src/app/features/queries/queries.routes.ts:27</note>
+        <note category="location">src/app/features/queries/queries.routes.ts:35</note>
+        <note category="description">Link back to the query list from a single query</note>
+      </notes>
+      <segment>
+        <source>Back to Queries</source>
+      </segment>
+    </unit>
     <unit id="8864329926850607537">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:538</note>
@@ -11908,13 +11908,13 @@
         <source><ph id="0" equiv="FIELD" disp="field"/> has any change</source>
       </segment>
     </unit>
-    <unit id="800784845234570870">
+    <unit id="6751184028476524554">
       <notes>
-        <note category="location">src/app/features/task-views/models/task-query-copy.ts:25</note>
-        <note category="description">Shown in the view editor when a query has no conditions, which is why the view cannot be saved</note>
+        <note category="location">src/app/features/queries/models/task-query-copy.ts:25</note>
+        <note category="description">Shown in the query editor when a query has no conditions, which is why the query cannot be saved</note>
       </notes>
       <segment>
-        <source>Add at least one condition before this view can be saved.</source>
+        <source>Add at least one condition before this query can be saved.</source>
       </segment>
     </unit>
     <unit id="8008785386100703750">
@@ -12237,7 +12237,7 @@
     </unit>
     <unit id="5840053709154100532">
       <notes>
-        <note category="location">src/app/features/task-views/models/task-query-copy.ts:10</note>
+        <note category="location">src/app/features/queries/models/task-query-copy.ts:10</note>
         <note category="description">Query operator matching the start of a field</note>
       </notes>
       <segment>
@@ -12545,10 +12545,10 @@
     <unit id="7585826646011739428">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:111,114</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:106,109</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:204</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:186</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:219</note>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:103,106</note>
         <note category="description">Button that edits the automation</note>
       </notes>
       <segment>
@@ -12608,10 +12608,10 @@
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:82,84</note>
         <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:39,42</note>
         <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:61,63</note>
+        <note category="location">src/app/features/queries/views/queries-view/queries-view.component.ts:64,66</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:103,105</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:109,111</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:90,92</note>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:64,66</note>
         <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:77,79</note>
         <note category="description">Advice shown when a page fails to load</note>
       </notes>
@@ -12646,13 +12646,13 @@
         <source> Fix the underlying problem before enabling it again, or it will be disabled once more. </source>
       </segment>
     </unit>
-    <unit id="253720644207702428">
+    <unit id="8079275177893504270">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:160,161</note>
-        <note category="description">Shown when a saved view matches no tasks</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:165,166</note>
+        <note category="description">Shown when a saved query matches no tasks</note>
       </notes>
       <segment>
-        <source>No tasks match this view.</source>
+        <source>No tasks match this query.</source>
       </segment>
     </unit>
     <unit id="8451136300262007554">
@@ -12895,15 +12895,6 @@
       </notes>
       <segment>
         <source> Cancel </source>
-      </segment>
-    </unit>
-    <unit id="2330979404051267952">
-      <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:138</note>
-        <note category="description">Button that opens the create-view form</note>
-      </notes>
-      <segment>
-        <source>Create View</source>
       </segment>
     </unit>
     <unit id="4930506384627295710">
@@ -13361,7 +13352,7 @@
     </unit>
     <unit id="6996270126255502228">
       <notes>
-        <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:143,145</note>
+        <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:144,146</note>
         <note category="description">Button that adds a task to this board group</note>
       </notes>
       <segment>
@@ -13379,8 +13370,8 @@
     </unit>
     <unit id="6839573905580765842">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:404</note>
-        <note category="description">Default name for a copy of somebody else&apos;s view</note>
+        <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:408</note>
+        <note category="description">Default name for a copy of somebody else&apos;s query</note>
       </notes>
       <segment>
         <source><ph id="0" equiv="viewName" disp="name"/> (copy)</source>
@@ -13708,7 +13699,7 @@
     <unit id="397098723873502323">
       <notes>
         <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:348,353</note>
-        <note category="location">src/app/features/task-views/components/task-view-details-drawer.component.ts:63,67</note>
+        <note category="location">src/app/features/queries/components/query-details-drawer.component.ts:63,67</note>
         <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:91,93</note>
         <note category="description">Closes a dialog once the user has finished</note>
       </notes>
@@ -13727,7 +13718,7 @@
     </unit>
     <unit id="3105441486807085959">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:384</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:385</note>
         <note category="description">Describes the single link that will be created</note>
       </notes>
       <segment>
@@ -13773,7 +13764,7 @@
     </unit>
     <unit id="103862121239127059">
       <notes>
-        <note category="location">src/app/features/task-views/models/task-query-copy.ts:17</note>
+        <note category="location">src/app/features/queries/models/task-query-copy.ts:17</note>
         <note category="description">Query operator matching a range</note>
       </notes>
       <segment>
@@ -13950,8 +13941,8 @@
     </unit>
     <unit id="7107218117130409950">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:218</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:194</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:191</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:193</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:253</note>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:37</note>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:46,49</note>
@@ -14066,8 +14057,8 @@
     </unit>
     <unit id="3415268673952706297">
       <notes>
-        <note category="location">src/app/features/task-views/components/task-view-card.component.ts:178</note>
-        <note category="description">Button that adds a view to the sidebar</note>
+        <note category="location">src/app/features/queries/components/query-card.component.ts:181</note>
+        <note category="description">Button that adds a query to the sidebar</note>
       </notes>
       <segment>
         <source>Pin to sidebar</source>
@@ -14141,8 +14132,8 @@
     <unit id="4237605958853876047">
       <notes>
         <note category="location">src/app/features/calendar/components/calendar-selected-day-table/calendar-selected-day-table.component.ts:34,35</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:164</note>
         <note category="location">src/app/features/roadmap/components/roadmap-unscheduled.component.ts:44,45</note>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:159</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:123</note>
         <note category="location">src/app/static/components/task-table.component.ts:97</note>
         <note category="description">Plural noun for tasks, used in the selection summary</note>
@@ -14153,7 +14144,7 @@
     </unit>
     <unit id="8713562282465902356">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:387</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:388</note>
         <note category="description">Describes the links that will be created</note>
       </notes>
       <segment>
@@ -14433,13 +14424,13 @@
         <source><ph id="0" equiv="FIELD" disp="label"/> rewritten</source>
       </segment>
     </unit>
-    <unit id="7072343265709417707">
+    <unit id="4038680856485182668">
       <notes>
-        <note category="location">src/app/features/task-views/models/task-query-copy.ts:23</note>
+        <note category="location">src/app/features/queries/models/task-query-copy.ts:23</note>
         <note category="description">Summary shown when a query has no conditions and therefore matches nothing</note>
       </notes>
       <segment>
-        <source>No conditions yet, so this view matches no tasks.</source>
+        <source>No conditions yet, so this query matches no tasks.</source>
       </segment>
     </unit>
     <unit id="7076328347552597132">
@@ -14647,7 +14638,7 @@
     </unit>
     <unit id="4557203537565915133">
       <notes>
-        <note category="location">src/app/features/task-views/models/task-query-copy.ts:13</note>
+        <note category="location">src/app/features/queries/models/task-query-copy.ts:13</note>
         <note category="description">Query operator matching values above a number or date</note>
       </notes>
       <segment>
@@ -14800,15 +14791,6 @@
         <source>Tasks by status</source>
       </segment>
     </unit>
-    <unit id="3874723711759777451">
-      <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:205</note>
-        <note category="description">Default name of a new saved task view</note>
-      </notes>
-      <segment>
-        <source>Untitled view</source>
-      </segment>
-    </unit>
     <unit id="3878950936097270792">
       <notes>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-summary.ts:69</note>
@@ -14908,13 +14890,13 @@
         <source> Delete </source>
       </segment>
     </unit>
-    <unit id="4951986255869916102">
+    <unit id="4188373865140182407">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:158</note>
-        <note category="description">Body of the delete-view confirmation</note>
+        <note category="location">src/app/features/queries/views/queries-view/queries-view.component.ts:158</note>
+        <note category="description">Body of the delete-query confirmation</note>
       </notes>
       <segment>
-        <source>This removes the view for everyone it is shared with. The tasks it lists are not affected.</source>
+        <source>This removes the query for everyone it is shared with. The tasks it lists are not affected.</source>
       </segment>
     </unit>
     <unit id="4953883075448493084">
@@ -14973,7 +14955,7 @@
     </unit>
     <unit id="3511613860007553891">
       <notes>
-        <note category="location">src/app/features/task-views/models/task-query-copy.ts:18</note>
+        <note category="location">src/app/features/queries/models/task-query-copy.ts:18</note>
         <note category="description">Query operator matching a date within the coming days</note>
       </notes>
       <segment>
@@ -15136,8 +15118,8 @@
     </unit>
     <unit id="1297926277686322973">
       <notes>
-        <note category="location">src/app/features/task-views/components/task-view-details-drawer.component.ts:41,44</note>
-        <note category="description">Label of the view visibility field</note>
+        <note category="location">src/app/features/queries/components/query-details-drawer.component.ts:41,44</note>
+        <note category="description">Label of the query visibility field</note>
       </notes>
       <segment>
         <source> Visibility </source>
@@ -15366,7 +15348,7 @@
     </unit>
     <unit id="2198416125360313173">
       <notes>
-        <note category="location">src/app/features/task-views/models/task-query-copy.ts:6</note>
+        <note category="location">src/app/features/queries/models/task-query-copy.ts:6</note>
         <note category="description">Query operator matching any of several values</note>
       </notes>
       <segment>
@@ -16062,15 +16044,6 @@
       </notes>
       <segment>
         <source>with the next recorded change</source>
-      </segment>
-    </unit>
-    <unit id="4105895757984243460">
-      <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:174</note>
-        <note category="description">Confirmation that a view was deleted</note>
-      </notes>
-      <segment>
-        <source>View deleted</source>
       </segment>
     </unit>
     <unit id="4107438817414896014">
@@ -16917,13 +16890,13 @@
         <source>Filter roadmap by sprint</source>
       </segment>
     </unit>
-    <unit id="2432489152925764943">
+    <unit id="8399348873560087928">
       <notes>
-        <note category="location">src/app/features/task-views/components/task-view-details-drawer.component.ts:70,76</note>
+        <note category="location">src/app/features/queries/components/query-details-drawer.component.ts:70,76</note>
         <note category="description">Explains why the share control is unavailable to this user</note>
       </notes>
       <segment>
-        <source> Sharing a view with the workspace needs the shared-views permission. </source>
+        <source> Sharing a query with the workspace needs the shared-queries permission. </source>
       </segment>
     </unit>
     <unit id="2434944824726929798">
@@ -16993,17 +16966,6 @@
       </notes>
       <segment>
         <source>Next date range</source>
-      </segment>
-    </unit>
-    <unit id="7877652424749844964">
-      <notes>
-        <note category="location">src/app/features/task-views/task-views.routes.ts:19</note>
-        <note category="location">src/app/features/task-views/task-views.routes.ts:27</note>
-        <note category="location">src/app/features/task-views/task-views.routes.ts:35</note>
-        <note category="description">Link back to the view list from a single view</note>
-      </notes>
-      <segment>
-        <source>Back to Views</source>
       </segment>
     </unit>
     <unit id="1286983255645370171">
@@ -17168,7 +17130,7 @@
     </unit>
     <unit id="1125364152850958195">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-list.component.ts:128,130</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-list.component.ts:134,136</note>
         <note category="description">Shown while more rows load</note>
       </notes>
       <segment>
@@ -17344,8 +17306,8 @@
     </unit>
     <unit id="5992426859749036765">
       <notes>
-        <note category="location">src/app/features/task-views/components/task-view-card.component.ts:197</note>
-        <note category="description">Shown on a saved view with exactly one filter</note>
+        <note category="location">src/app/features/queries/components/query-card.component.ts:200</note>
+        <note category="description">Shown on a saved query with exactly one filter</note>
       </notes>
       <segment>
         <source>1 filter</source>
@@ -17504,13 +17466,13 @@
         <source>Assistant</source>
       </segment>
     </unit>
-    <unit id="436231775780502366">
+    <unit id="8650746495893602781">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:88,89</note>
-        <note category="description">Explains what saved task views do, on the empty state</note>
+        <note category="location">src/app/features/queries/views/queries-view/queries-view.component.ts:88,89</note>
+        <note category="description">Explains what saved queries do, on the empty state</note>
       </notes>
       <segment>
-        <source>A view pairs a saved query with the columns and sort you want to read it in, and can be kept private or shared with the workspace.</source>
+        <source>A query pairs a set of conditions with the columns and sort you want to read it in, and can be kept private or shared with the workspace.</source>
       </segment>
     </unit>
     <unit id="4363498861095963216">
@@ -17758,7 +17720,7 @@
     <unit id="6724823079373170961">
       <notes>
         <note category="location">src/app/features/boards/components/board-pinned-banner/board-pinned-banner.component.ts:87,89</note>
-        <note category="location">src/app/features/task-views/components/task-view-card.component.ts:80,82</note>
+        <note category="location">src/app/features/queries/components/query-card.component.ts:80,82</note>
         <note category="description">Label on the board&apos;s pinned task bar</note>
       </notes>
       <segment>
@@ -17790,6 +17752,15 @@
       </notes>
       <segment>
         <source>Name and describe the service account.</source>
+      </segment>
+    </unit>
+    <unit id="6130263703623895683">
+      <notes>
+        <note category="location">src/app/features/queries/views/queries-view/queries-view.component.ts:138</note>
+        <note category="description">Button that opens the create-query form</note>
+      </notes>
+      <segment>
+        <source>Create Query</source>
       </segment>
     </unit>
     <unit id="6131179082252661684">
@@ -18121,6 +18092,15 @@
         <source>Switch board</source>
       </segment>
     </unit>
+    <unit id="4587531734717759061">
+      <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:256</note>
+        <note category="description">Name of a workspace permission</note>
+      </notes>
+      <segment>
+        <source>Delete Queries</source>
+      </segment>
+    </unit>
     <unit id="4588288891937968440">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:247,250</note>
@@ -18141,7 +18121,7 @@
     </unit>
     <unit id="7430110226379673413">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-list.component.ts:227</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-list.component.ts:243</note>
         <note category="description">Counts the task rows loaded so far out of the matching total</note>
       </notes>
       <segment>
@@ -18243,7 +18223,7 @@
     </unit>
     <unit id="3108656642361487095">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:97,101</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:98,102</note>
         <note category="description">Heading over the choices for how two tasks relate to each other</note>
       </notes>
       <segment>
@@ -18429,9 +18409,9 @@
     </unit>
     <unit id="892073694820881630">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:309</note>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:353</note>
-        <note category="description">Confirmation that a shareable view link was copied</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:314</note>
+        <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:357</note>
+        <note category="description">Confirmation that a shareable query link was copied</note>
       </notes>
       <segment>
         <source>Link copied</source>
@@ -18485,7 +18465,7 @@
     </unit>
     <unit id="4481497787765929776">
       <notes>
-        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:82,84</note>
+        <note category="location">src/app/features/queries/components/query-display-menu.component.ts:82,84</note>
         <note category="description">Descending sort direction</note>
       </notes>
       <segment>
@@ -18611,7 +18591,7 @@
     </unit>
     <unit id="5771961292761992273">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:350</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:351</note>
         <note category="description">Explains that links picked here are saved with the new task</note>
       </notes>
       <segment>
@@ -19025,7 +19005,7 @@
     </unit>
     <unit id="1932018563020322214">
       <notes>
-        <note category="location">src/app/features/task-views/models/task-query-copy.ts:20</note>
+        <note category="location">src/app/features/queries/models/task-query-copy.ts:20</note>
         <note category="description">Query operator matching tasks past their due date</note>
       </notes>
       <segment>
@@ -19260,11 +19240,11 @@
     </unit>
     <unit id="5607669932062416162">
       <notes>
+        <note category="location">src/app/features/queries/components/query-display-menu.component.ts:61,64</note>
+        <note category="location">src/app/features/queries/components/query-display-menu.component.ts:163</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:156,159</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:294</note>
-        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:61,64</note>
-        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:163</note>
-        <note category="description">Model option that defers to the server default</note>
+        <note category="description">Option leaving a query on its default sort</note>
       </notes>
       <segment>
         <source>Default</source>
@@ -19272,7 +19252,7 @@
     </unit>
     <unit id="3281640360025639314">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:358</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:359</note>
         <note category="description">Heading over the list of links waiting to be created</note>
       </notes>
       <segment>
@@ -19403,15 +19383,6 @@
       </notes>
       <segment>
         <source>Show detail</source>
-      </segment>
-    </unit>
-    <unit id="2919237623258423230">
-      <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:161,163</note>
-        <note category="description">Tab showing what has happened to a task</note>
-      </notes>
-      <segment>
-        <source> History </source>
       </segment>
     </unit>
     <unit id="2929655947743447381">
@@ -19626,7 +19597,7 @@
     </unit>
     <unit id="8991032674812724530">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:157,159</note>
+        <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:157,159</note>
         <note category="description">Shown when a query preview matches no tasks</note>
       </notes>
       <segment>
@@ -19790,7 +19761,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:90,92</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:94,95</note>
-        <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:163,168</note>
+        <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:164,169</note>
         <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:144</note>
         <note category="description">Tooltip on the button that takes a task off a board</note>
       </notes>
@@ -19845,7 +19816,7 @@
     </unit>
     <unit id="1712670864734983091">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:344</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:345</note>
         <note category="description">Title of the dialog for linking tasks to the task named</note>
       </notes>
       <segment>
@@ -19859,6 +19830,17 @@
       </notes>
       <segment>
         <source><ph id="0" equiv="APPLIED" disp="applied"/> of <ph id="1" equiv="TOTAL" disp="total"/> applied. <ph id="2" equiv="FAILED" disp="failed"/> failed.</source>
+      </segment>
+    </unit>
+    <unit id="6922994998696471598">
+      <notes>
+        <note category="location">src/app/features/queries/views/queries-view/queries-view.component.ts:48,49</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:220</note>
+        <note category="location">src/app/workspace.routes.ts:42</note>
+        <note category="description">Page title for the saved query list</note>
+      </notes>
+      <segment>
+        <source>Queries</source>
       </segment>
     </unit>
     <unit id="7431603051236116456">
@@ -20036,13 +20018,13 @@
         <source>No people</source>
       </segment>
     </unit>
-    <unit id="8211774880361154235">
+    <unit id="8211525718695785113">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:98,100</note>
-        <note category="description">Button that opens the create-view form</note>
+        <note category="location">src/app/features/queries/views/queries-view/queries-view.component.ts:84,86</note>
+        <note category="description">Heading of the empty saved query list</note>
       </notes>
       <segment>
-        <source> Create View </source>
+        <source>No queries yet</source>
       </segment>
     </unit>
     <unit id="8212177249756365917">
@@ -20122,7 +20104,7 @@
     </unit>
     <unit id="502293220231043244">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-list.component.ts:106,107</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-list.component.ts:112,113</note>
         <note category="description">Marks a task that is already linked</note>
       </notes>
       <segment>
@@ -20150,8 +20132,8 @@
     </unit>
     <unit id="5028777105388019087">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:87,91</note>
-        <note category="description">Button that opens the view details drawer</note>
+        <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:87,91</note>
+        <note category="description">Button that opens the query details drawer</note>
       </notes>
       <segment>
         <source>Details</source>
@@ -20178,7 +20160,7 @@
     </unit>
     <unit id="5034825036213860607">
       <notes>
-        <note category="location">src/app/features/task-views/models/task-query-copy.ts:7</note>
+        <note category="location">src/app/features/queries/models/task-query-copy.ts:7</note>
         <note category="description">Query operator excluding several values</note>
       </notes>
       <segment>
@@ -20464,7 +20446,7 @@
     </unit>
     <unit id="8351984771338841955">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:401</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:402</note>
         <note category="description">Button that creates several task links</note>
       </notes>
       <segment>
@@ -20518,7 +20500,7 @@
     </unit>
     <unit id="580124269805283452">
       <notes>
-        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:84,87</note>
+        <note category="location">src/app/features/queries/components/query-display-menu.component.ts:84,87</note>
         <note category="description">Ascending sort direction</note>
       </notes>
       <segment>
@@ -20593,7 +20575,7 @@
     </unit>
     <unit id="7475074345924337144">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:362</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:363</note>
         <note category="description">Heading over a single link waiting to be created</note>
       </notes>
       <segment>
@@ -20630,9 +20612,9 @@
     </unit>
     <unit id="7036284206110282007">
       <notes>
+        <note category="location">src/app/features/queries/models/task-query-builder.ts:56</note>
         <note category="location">src/app/features/reporting/components/sprint-burndown-table.component.ts:24,26</note>
-        <note category="location">src/app/features/task-views/models/task-query-builder.ts:56</note>
-        <note category="description">Plural noun for burndown days, used in the row summary</note>
+        <note category="description">Unit after a relative day count in a query summary</note>
       </notes>
       <segment>
         <source>days</source>
@@ -20659,7 +20641,8 @@
     </unit>
     <unit id="186236568870281953">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:195</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:195</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:194</note>
         <note category="description">Tab showing what has happened to a task</note>
       </notes>
       <segment>
@@ -20687,7 +20670,7 @@
     <unit id="4475093671158329161">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:227</note>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:91,95</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:94,98</note>
         <note category="description">Label on the control that pins a task</note>
       </notes>
       <segment>
@@ -20869,7 +20852,7 @@
     </unit>
     <unit id="2467702290618186989">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:117,119</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:115,117</note>
         <note category="description">Button that links this task to another</note>
       </notes>
       <segment>
@@ -21206,7 +21189,7 @@
     </unit>
     <unit id="2306215569541621501">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:381</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:382</note>
         <note category="description">Stands in for a task that has not been created yet</note>
       </notes>
       <segment>
@@ -21350,7 +21333,7 @@
     </unit>
     <unit id="6387682075038243709">
       <notes>
-        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:131,133</note>
+        <note category="location">src/app/features/queries/components/query-display-menu.component.ts:131,133</note>
         <note category="description">Accessible label for the button that moves a column later</note>
       </notes>
       <segment>
@@ -21473,7 +21456,7 @@
     </unit>
     <unit id="3323062521847000288">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:138,140</note>
+        <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:138,140</note>
         <note category="description">Prefix of the plain-language query summary</note>
       </notes>
       <segment>
@@ -22202,8 +22185,8 @@
     </unit>
     <unit id="5797079666713956753">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:87,89</note>
-        <note category="description">Button that removes a view from the sidebar</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:90,92</note>
+        <note category="description">Button that removes a query from the sidebar</note>
       </notes>
       <segment>
         <source> Unpin </source>
@@ -22602,20 +22585,20 @@
     </unit>
     <unit id="6499373490791057157">
       <notes>
-        <note category="location">src/app/features/task-views/models/task-query-copy.ts:19</note>
+        <note category="location">src/app/features/queries/models/task-query-copy.ts:19</note>
         <note category="description">Query operator matching a date within the past days</note>
       </notes>
       <segment>
         <source>is in the last</source>
       </segment>
     </unit>
-    <unit id="6499828313169795693">
+    <unit id="8647359343296851129">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:62,63</note>
-        <note category="description">Shown when the saved view list fails to load</note>
+        <note category="location">src/app/features/queries/views/queries-view/queries-view.component.ts:62,63</note>
+        <note category="description">Shown when the saved query list fails to load</note>
       </notes>
       <segment>
-        <source>Views could not be loaded</source>
+        <source>Queries could not be loaded</source>
       </segment>
     </unit>
     <unit id="4191696363237060749">
@@ -22749,7 +22732,7 @@
     </unit>
     <unit id="114923036829185897">
       <notes>
-        <note category="location">src/app/features/task-views/models/task-query-copy.ts:15</note>
+        <note category="location">src/app/features/queries/models/task-query-copy.ts:15</note>
         <note category="description">Query operator matching values below a number or date</note>
       </notes>
       <segment>
@@ -22921,7 +22904,7 @@
     </unit>
     <unit id="3676095562960762035">
       <notes>
-        <note category="location">src/app/features/task-views/models/task-query-copy.ts:4</note>
+        <note category="location">src/app/features/queries/models/task-query-copy.ts:4</note>
         <note category="description">Query operator matching an exact value</note>
       </notes>
       <segment>
@@ -22955,13 +22938,13 @@
         <source>More sprint actions</source>
       </segment>
     </unit>
-    <unit id="7975467617398451139">
+    <unit id="4456085616461233101">
       <notes>
-        <note category="location">src/app/features/task-views/components/task-view-details-drawer.component.ts:78,84</note>
-        <note category="description">Shown when editing a shared view the user cannot change</note>
+        <note category="location">src/app/features/queries/components/query-details-drawer.component.ts:79,85</note>
+        <note category="description">Shown when editing a shared query the user cannot change</note>
       </notes>
       <segment>
-        <source> You cannot change this shared view, so saving creates your own copy of it. </source>
+        <source> You cannot change this shared query, so saving creates your own copy of it. </source>
       </segment>
     </unit>
     <unit id="3844444380870280621">
@@ -23149,7 +23132,7 @@
     </unit>
     <unit id="4866997247833302800">
       <notes>
-        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:118,120</note>
+        <note category="location">src/app/features/queries/components/query-display-menu.component.ts:118,120</note>
         <note category="description">Accessible label for the button that moves a column earlier</note>
       </notes>
       <segment>
@@ -23397,6 +23380,15 @@
         <source> No tags </source>
       </segment>
     </unit>
+    <unit id="4440938864523766003">
+      <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:251</note>
+        <note category="description">Name of a workspace permission</note>
+      </notes>
+      <segment>
+        <source>Edit Queries</source>
+      </segment>
+    </unit>
     <unit id="4441315923889220660">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:331</note>
@@ -23554,7 +23546,7 @@
     </unit>
     <unit id="5892104910054813459">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:398</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:399</note>
         <note category="description">Button that creates one task link</note>
       </notes>
       <segment>

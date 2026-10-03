@@ -2,27 +2,27 @@ import { HttpClient } from '@angular/common/http';
 import { Service, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { unwrapClientResponse } from '@core/util/rxjs-operators';
-import { SaveTaskViewRequest, TaskView } from '../models/task-view.models';
+import { SaveQueryRequest, SavedQuery } from '../models/saved-query.models';
 
 @Service()
-export class TaskViewsService {
+export class SavedQueriesService {
   private http = inject(HttpClient);
 
   get(slug: string) {
     return this.http
-      .get<ClientResponse<TaskView>>(`api/task-views/${slug}`)
+      .get<ClientResponse<SavedQuery>>(`api/task-views/${slug}`)
       .pipe(unwrapClientResponse());
   }
 
-  create(request: SaveTaskViewRequest) {
+  create(request: SaveQueryRequest) {
     return this.http
-      .post<ClientResponse<TaskView>>('api/task-views', request)
+      .post<ClientResponse<SavedQuery>>('api/task-views', request)
       .pipe(unwrapClientResponse());
   }
 
-  update(request: SaveTaskViewRequest) {
+  update(request: SaveQueryRequest) {
     return this.http
-      .put<ClientResponse<TaskView>>('api/task-views', request)
+      .put<ClientResponse<SavedQuery>>('api/task-views', request)
       .pipe(unwrapClientResponse());
   }
 

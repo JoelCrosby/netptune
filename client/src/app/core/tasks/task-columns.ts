@@ -285,7 +285,7 @@ export function taskColumnsFromPreferences<T extends TaskColumnRow>(
   return taskColumns<T>([...ordered, ...added], options);
 }
 
-// Only the columns a saved view chose to show, in the order it stored them.
+// Only the columns a saved query chose to show, in the order it stored them.
 export function visibleTaskColumns<T extends TaskColumnRow>(
   preferences: readonly DatatableColumnPreference[],
   options: TaskColumnOptions<T> = {}

@@ -1,7 +1,7 @@
 import { LucideIconInput } from '@lucide/angular';
 
 /**
- * Editing vocabulary for the query builder. Saved views and automation rules project their own
+ * Editing vocabulary for the query builder. Saved queries and automation rules project their own
  * field and operator enums onto these types, so a catalog describes every operator it offers and
  * the builder never knows one by name. Operator-level overrides win over the field's own.
  */

@@ -3,10 +3,10 @@ import { httpResource } from '@angular/common/http';
 import { Signal, debounced } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import {
-  DEFAULT_VIEW_PAGE_SIZE,
+  DEFAULT_QUERY_PAGE_SIZE,
   TaskQueryGroup,
-  TaskViewResult,
-} from '../models/task-view.models';
+  SavedQueryResult,
+} from '../models/saved-query.models';
 
 export interface TaskQueryPreviewRequest {
   query: TaskQueryGroup;
@@ -16,10 +16,10 @@ export interface TaskQueryPreviewRequest {
   sortDirection?: string | null;
 }
 
-const emptyResult: TaskViewResult = {
+const emptyResult: SavedQueryResult = {
   items: [],
   page: 1,
-  pageSize: DEFAULT_VIEW_PAGE_SIZE,
+  pageSize: DEFAULT_QUERY_PAGE_SIZE,
   totalCount: 0,
   totalPages: 0,
   errors: [],
@@ -30,7 +30,7 @@ export const taskQueryPreviewResource = (
 ) => {
   const settled = debounced(request, 350);
 
-  return httpResource<ClientResponse<TaskViewResult>>(
+  return httpResource<ClientResponse<SavedQueryResult>>(
     requestFrom(settled.value, (body) => ({
       url: 'api/task-views/preview',
       method: 'POST',
@@ -38,7 +38,7 @@ export const taskQueryPreviewResource = (
     })),
     {
       defaultValue: { isSuccess: true, payload: emptyResult },
-      parse: (response) => response as ClientResponse<TaskViewResult>,
+      parse: (response) => response as ClientResponse<SavedQueryResult>,
     }
   );
 };

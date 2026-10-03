@@ -19,7 +19,7 @@ import {
   TaskQueryField,
   TaskQueryGroup,
   TaskQueryOptionSource,
-} from '../models/task-view.models';
+} from '../models/saved-query.models';
 
 export interface QueryFieldOption {
   value: string;

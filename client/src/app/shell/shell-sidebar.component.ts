@@ -3,8 +3,8 @@ import { SessionService } from '@core/services/session.service';
 import { hasPermission } from '@core/auth/has-permission';
 import { Workspace } from '@core/models/workspace';
 import { currentSprintsResource } from '@core/resources/sprint.resource';
-import { PinnedViewsService } from '@app/features/task-views/services/pinned-views.service';
-import { taskViewsResource } from '@app/features/task-views/resources/task-view.resource';
+import { PinnedQueriesService } from '@app/features/queries/services/pinned-queries.service';
+import { savedQueriesResource } from '@app/features/queries/resources/saved-query.resource';
 import { pinnedTasksResource } from '@core/resources/task-pin.resource';
 import { TaskPin, TaskPinScope } from '@core/models/task-pin';
 import { pinScopeGroupName, pinScopeIcons } from '@core/util/pin-scope';
@@ -107,9 +107,9 @@ export class ShellSidebarComponent {
   };
 
   private readonly currentSprintsRef = currentSprintsResource();
-  private readonly taskViewsRef = taskViewsResource();
+  private readonly savedQueriesRef = savedQueriesResource();
   private readonly pinnedTasksRef = pinnedTasksResource();
-  private readonly pinnedViews = inject(PinnedViewsService);
+  private readonly pinnedQueries = inject(PinnedQueriesService);
 
   currentSprints = this.currentSprintsRef.value;
 
@@ -129,7 +129,7 @@ export class ShellSidebarComponent {
   canReadStorage = hasPermission(PERMISSIONS.storage.read);
   canReadSprints = hasPermission(PERMISSIONS.sprints.read);
   canReadAutomations = hasPermission(PERMISSIONS.automations.read);
-  canReadTaskViews = hasPermission(PERMISSIONS.taskViews.read);
+  canReadQueries = hasPermission(PERMISSIONS.queries.read);
   canRestoreTasks = hasPermission(PERMISSIONS.tasks.restore);
   canReadAssistantConversations = hasPermission(
     PERMISSIONS.assistant.readAllConversations
@@ -215,12 +215,12 @@ export class ShellSidebarComponent {
       }
     );
 
-    if (this.canReadTaskViews()) {
+    if (this.canReadQueries()) {
       links.push({
-        label: $localize`:Sidebar link to the saved task view list:Views`,
-        value: ['./views'],
+        label: $localize`:Sidebar link to the saved query list:Queries`,
+        value: ['./queries'],
         icon: LucideListFilter,
-        children: this.pinnedViewLinks(),
+        children: this.pinnedQueryLinks(),
       });
     }
 
@@ -288,19 +288,19 @@ export class ShellSidebarComponent {
     return links.length ? links : undefined;
   }
 
-  // A view somebody unshared or deleted disappears from the sidebar on the next load rather than
+  // A query somebody unshared or deleted disappears from the sidebar on the next load rather than
   // leaving a link that 404s, because the pinned ids are matched against what the list actually returns.
-  private pinnedViewLinks(): ShellMenuLink[] | undefined {
-    const pinnedIds = this.pinnedViews.pinnedIds();
+  private pinnedQueryLinks(): ShellMenuLink[] | undefined {
+    const pinnedIds = this.pinnedQueries.pinnedIds();
 
     if (!pinnedIds.length) return undefined;
 
-    const links = this.taskViewsRef
+    const links = this.savedQueriesRef
       .value()
-      .filter((view) => pinnedIds.includes(view.id))
-      .map((view) => ({
-        label: view.name,
-        value: ['./views', view.slug],
+      .filter((savedQuery) => pinnedIds.includes(savedQuery.id))
+      .map((savedQuery) => ({
+        label: savedQuery.name,
+        value: ['./queries', savedQuery.slug],
         icon: LucideListFilter,
       }));
 

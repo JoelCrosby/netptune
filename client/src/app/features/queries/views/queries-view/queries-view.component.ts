@@ -13,18 +13,18 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
 import { PanelComponent } from '@static/components/panel.component';
 import { SkeletonCardGridComponent } from '@static/components/skeleton/skeleton-card-grid.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
-import { TaskViewCardComponent } from '../../components/task-view-card.component';
-import { PinnedViewsService } from '../../services/pinned-views.service';
-import { TaskViewsService } from '../../services/task-views.service';
-import { TaskView } from '../../models/task-view.models';
+import { QueryCardComponent } from '../../components/query-card.component';
+import { PinnedQueriesService } from '../../services/pinned-queries.service';
+import { SavedQueriesService } from '../../services/saved-queries.service';
+import { SavedQuery } from '../../models/saved-query.models';
 import {
   taskQueryCatalogResource,
-  taskViewsResource,
-} from '../../resources/task-view.resource';
+  savedQueriesResource,
+} from '../../resources/saved-query.resource';
 import { EMPTY, switchMap } from 'rxjs';
 
 @Component({
-  selector: 'app-task-views-view',
+  selector: 'app-queries-view',
   imports: [
     RouterLink,
     PageBodyComponent,
@@ -35,7 +35,7 @@ import { EMPTY, switchMap } from 'rxjs';
     EmptyStateComponent,
     FlatButtonComponent,
     SkeletonCardGridComponent,
-    TaskViewCardComponent,
+    QueryCardComponent,
     LucidePlus,
     LucideListFilter,
   ],
@@ -43,8 +43,8 @@ import { EMPTY, switchMap } from 'rxjs';
     <app-page-container layout="list">
       <app-page-header
         toolbar
-        i18n-title="Page title for the saved task view list"
-        title="Views"
+        i18n-title="Page title for the saved query list"
+        title="Queries"
         [actionTitle]="createLabel()"
         [count]="count()"
         (actionClick)="onCreate()" />
@@ -54,38 +54,38 @@ import { EMPTY, switchMap } from 'rxjs';
           <app-skeleton-card-grid
             [cards]="6"
             [gridClass]="gridClass"
-            i18n-label="Accessible label while the saved view list loads"
-            label="Loading views" />
+            i18n-label="Accessible label while the saved query list loads"
+            label="Loading queries" />
         } @else if (error()) {
           <app-error-state
-            i18n-title="Shown when the saved view list fails to load"
-            title="Views could not be loaded"
+            i18n-title="Shown when the saved query list fails to load"
+            title="Queries could not be loaded"
             i18n-description="Advice shown when a page fails to load"
             description="Check your connection and try again."
             (retry)="reload()" />
-        } @else if (views().length) {
+        } @else if (savedQueries().length) {
           <ul [class]="gridClass">
-            @for (view of views(); track view.id) {
+            @for (savedQuery of savedQueries(); track savedQuery.id) {
               <li class="min-w-0">
-                <app-task-view-card
-                  [view]="view"
+                <app-query-card
+                  [savedQuery]="savedQuery"
                   [catalog]="catalog()"
-                  [pinned]="isPinned(view.id)"
+                  [pinned]="isPinned(savedQuery.id)"
                   [canDelete]="canDelete()"
-                  (pinToggled)="onTogglePin(view)"
-                  (deleted)="onDelete(view)" />
+                  (pinToggled)="onTogglePin(savedQuery)"
+                  (deleted)="onDelete(savedQuery)" />
               </li>
             }
           </ul>
         } @else {
           <app-panel surface="card">
             <app-empty-state
-              i18n-title="Heading of the empty saved view list"
-              title="No views yet"
+              i18n-title="Heading of the empty saved query list"
+              title="No queries yet"
               i18n-description="
-                Explains what saved task views do, on the empty state
+                Explains what saved queries do, on the empty state
               "
-              description="A view pairs a saved query with the columns and sort you want to read it in, and can be kept private or shared with the workspace.">
+              description="A query pairs a set of conditions with the columns and sort you want to read it in, and can be kept private or shared with the workspace.">
               <svg emptyStateIcon lucideListFilter class="h-8 w-8"></svg>
               @if (canCreate()) {
                 <a
@@ -94,8 +94,8 @@ import { EMPTY, switchMap } from 'rxjs';
                   color="primary"
                   [routerLink]="['new']">
                   <svg lucidePlus class="h-4 w-4"></svg>
-                  <span i18n="Button that opens the create-view form">
-                    Create View
+                  <span i18n="Button that opens the create-query form">
+                    Create Query
                   </span>
                 </a>
               }
@@ -106,83 +106,83 @@ import { EMPTY, switchMap } from 'rxjs';
     </app-page-container>
   `,
 })
-export class TaskViewsViewComponent {
+export class QueriesViewComponent {
   private readonly confirmation = inject(ConfirmationService);
   private readonly snackbar = inject(SnackbarService);
-  private readonly service = inject(TaskViewsService);
-  private readonly pinned = inject(PinnedViewsService);
+  private readonly service = inject(SavedQueriesService);
+  private readonly pinned = inject(PinnedQueriesService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
   // Shared by the card list and its skeleton so the two do not lay out differently.
   protected readonly gridClass = 'grid gap-4 md:grid-cols-2 xl:grid-cols-3';
 
-  private readonly viewsRef = taskViewsResource();
+  private readonly savedQueriesRef = savedQueriesResource();
   private readonly catalogRef = taskQueryCatalogResource();
 
-  readonly views = this.viewsRef.value;
+  readonly savedQueries = this.savedQueriesRef.value;
   readonly catalog = this.catalogRef.value;
   readonly loading = computed(() => {
-    return this.viewsRef.isLoading() || this.catalogRef.isLoading();
+    return this.savedQueriesRef.isLoading() || this.catalogRef.isLoading();
   });
-  readonly error = computed(() => Boolean(this.viewsRef.error()));
+  readonly error = computed(() => Boolean(this.savedQueriesRef.error()));
   readonly count = computed(() => {
-    return this.loading() ? null : this.views().length;
+    return this.loading() ? null : this.savedQueries().length;
   });
 
-  readonly canCreate = hasPermission(PERMISSIONS.taskViews.create);
-  readonly canDelete = hasPermission(PERMISSIONS.taskViews.delete);
+  readonly canCreate = hasPermission(PERMISSIONS.queries.create);
+  readonly canDelete = hasPermission(PERMISSIONS.queries.delete);
 
   readonly createLabel = computed(() => {
     return this.canCreate()
-      ? $localize`:Button that opens the create-view form:Create View`
+      ? $localize`:Button that opens the create-query form:Create Query`
       : null;
   });
 
-  isPinned(viewId: number): boolean {
-    return this.pinned.isPinned(viewId);
+  isPinned(queryId: number): boolean {
+    return this.pinned.isPinned(queryId);
   }
 
-  onTogglePin(view: TaskView) {
-    this.pinned.toggle(view.id);
+  onTogglePin(savedQuery: SavedQuery) {
+    this.pinned.toggle(savedQuery.id);
   }
 
   onCreate() {
     void this.router.navigate(['new'], { relativeTo: this.route });
   }
 
-  onDelete(view: TaskView) {
+  onDelete(savedQuery: SavedQuery) {
     this.confirmation
       .open({
-        title: $localize`:Title of the delete-view confirmation:Delete view?`,
-        message: $localize`:Body of the delete-view confirmation:This removes the view for everyone it is shared with. The tasks it lists are not affected.`,
-        acceptLabel: $localize`:Button that confirms deleting a view:Delete`,
+        title: $localize`:Title of the delete-query confirmation:Delete query?`,
+        message: $localize`:Body of the delete-query confirmation:This removes the query for everyone it is shared with. The tasks it lists are not affected.`,
+        acceptLabel: $localize`:Button that confirms deleting a query:Delete`,
         color: 'warn',
       })
       .pipe(
         switchMap((confirmed) => {
           if (!confirmed) return EMPTY;
 
-          return this.service.delete(view.slug);
+          return this.service.delete(savedQuery.slug);
         })
       )
       .subscribe({
         next: () => {
-          this.pinned.unpin(view.id);
-          this.viewsRef.reload();
+          this.pinned.unpin(savedQuery.id);
+          this.savedQueriesRef.reload();
           this.snackbar.success(
-            $localize`:Confirmation that a view was deleted:View deleted`
+            $localize`:Confirmation that a query was deleted:Query deleted`
           );
         },
         error: () => {
           this.snackbar.error(
-            $localize`:Shown when a view could not be deleted:View could not be deleted`
+            $localize`:Shown when a query could not be deleted:Query could not be deleted`
           );
         },
       });
   }
 
   reload() {
-    this.viewsRef.reload();
+    this.savedQueriesRef.reload();
   }
 }

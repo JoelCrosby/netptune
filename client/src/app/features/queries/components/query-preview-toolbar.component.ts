@@ -4,16 +4,16 @@ import {
   DatatableColumn,
   DatatableColumnPreference,
 } from '@static/components/datatable/datatable.types';
-import { TaskQueryField } from '../models/task-view.models';
-import { TaskViewDisplayMenuComponent } from './task-view-display-menu.component';
+import { TaskQueryField } from '../models/saved-query.models';
+import { QueryDisplayMenuComponent } from './query-display-menu.component';
 
 /**
  * Strip between the query bar and the preview table: how many tasks the query matches on the
  * left, the display controls on the right.
  */
 @Component({
-  selector: 'app-task-view-preview-toolbar',
-  imports: [TaskViewDisplayMenuComponent],
+  selector: 'app-query-preview-toolbar',
+  imports: [QueryDisplayMenuComponent],
   host: {
     class:
       'border-border bg-card-header flex shrink-0 items-center gap-3 border-x border-t px-4 py-2.5',
@@ -36,7 +36,7 @@ import { TaskViewDisplayMenuComponent } from './task-view-display-menu.component
       }
     </p>
 
-    <app-task-view-display-menu
+    <app-query-display-menu
       class="ml-auto"
       [columns]="availableColumns()"
       [sortableFields]="sortableFields()"
@@ -45,7 +45,7 @@ import { TaskViewDisplayMenuComponent } from './task-view-display-menu.component
       [(sortDirection)]="sortDirection" />
   `,
 })
-export class TaskViewPreviewToolbarComponent {
+export class QueryPreviewToolbarComponent {
   readonly loading = input(false);
   readonly count = input(0);
   readonly availableColumns =

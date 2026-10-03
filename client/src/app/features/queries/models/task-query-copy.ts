@@ -1,4 +1,4 @@
-import { TaskQueryOperator } from './task-view.models';
+import { TaskQueryOperator } from './saved-query.models';
 
 export const taskQueryOperatorLabels: Record<TaskQueryOperator, string> = {
   [TaskQueryOperator.equals]: $localize`:Query operator matching an exact value:is`,
@@ -20,9 +20,9 @@ export const taskQueryOperatorLabels: Record<TaskQueryOperator, string> = {
   [TaskQueryOperator.isOverdue]: $localize`:Query operator matching tasks past their due date:is overdue`,
 };
 
-export const emptyTaskQueryMessage = $localize`:Summary shown when a query has no conditions and therefore matches nothing:No conditions yet, so this view matches no tasks.`;
+export const emptyTaskQueryMessage = $localize`:Summary shown when a query has no conditions and therefore matches nothing:No conditions yet, so this query matches no tasks.`;
 
-export const taskQueryConditionRequiredMessage = $localize`:Shown in the view editor when a query has no conditions, which is why the view cannot be saved:Add at least one condition before this view can be saved.`;
+export const taskQueryConditionRequiredMessage = $localize`:Shown in the query editor when a query has no conditions, which is why the query cannot be saved:Add at least one condition before this query can be saved.`;
 
 export function operatorArity(operator: TaskQueryOperator): number {
   switch (operator) {

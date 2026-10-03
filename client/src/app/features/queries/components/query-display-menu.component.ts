@@ -17,7 +17,7 @@ import {
 import { DropdownButtonComponent } from '@static/components/dropdown-menu/dropdown-button.component';
 import { MenuCheckboxItemComponent } from '@static/components/dropdown-menu/menu-checkbox-item.component';
 import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
-import { TaskQueryField } from '../models/task-view.models';
+import { TaskQueryField } from '../models/saved-query.models';
 
 interface ColumnRow {
   id: string;
@@ -28,7 +28,7 @@ interface ColumnRow {
 }
 
 @Component({
-  selector: 'app-task-view-display-menu',
+  selector: 'app-query-display-menu',
   imports: [
     DropdownButtonComponent,
     IconButtonComponent,
@@ -58,7 +58,7 @@ interface ColumnRow {
         type="button"
         [class.text-primary]="!sortBy()"
         (click)="sortBy.set('')">
-        <span i18n="Option leaving a view on its default sort">Default</span>
+        <span i18n="Option leaving a query on its default sort">Default</span>
       </button>
 
       @for (field of sortableFields(); track field.key) {
@@ -91,7 +91,7 @@ interface ColumnRow {
       color="neutral"
       panelRole="dialog"
       buttonClass="h-9"
-      i18n-menuLabel="Heading of the view column picker"
+      i18n-menuLabel="Heading of the query column picker"
       menuLabel="Columns"
       [label]="columnsLabel()">
       <svg buttonPrefix lucideColumns3 class="h-3.5 w-3.5 shrink-0"></svg>
@@ -137,7 +137,7 @@ interface ColumnRow {
     </app-dropdown-button>
   `,
 })
-export class TaskViewDisplayMenuComponent {
+export class QueryDisplayMenuComponent {
   readonly columns = input.required<DatatableColumn<TaskViewModel>[]>();
   readonly sortableFields = input.required<TaskQueryField[]>();
 
@@ -160,7 +160,7 @@ export class TaskViewDisplayMenuComponent {
 
     return (
       match?.name ??
-      $localize`:Option leaving a view on its default sort:Default`
+      $localize`:Option leaving a query on its default sort:Default`
     );
   });
 
@@ -171,7 +171,7 @@ export class TaskViewDisplayMenuComponent {
   protected readonly columnsLabel = computed(() => {
     const count = this.visibleCount();
 
-    return $localize`:Toolbar button showing how many columns a view shows. COUNT is how many:${count}:COUNT: columns`;
+    return $localize`:Toolbar button showing how many columns a query shows. COUNT is how many:${count}:COUNT: columns`;
   });
 
   readonly rows = computed<ColumnRow[]>(() => {
@@ -216,8 +216,8 @@ export class TaskViewDisplayMenuComponent {
     this.preferences.set(next);
   }
 
-  // A column added to the catalog since the view was saved is appended switched off, so the
-  // picker lists everything the table can render without changing what the view shows.
+  // A column added to the catalog since the query was saved is appended switched off, so the
+  // picker lists everything the table can render without changing what the query shows.
   private ordered(): DatatableColumnPreference[] {
     return reconcileColumnPreferences(this.columns(), this.preferences(), {
       newColumnsVisible: false,

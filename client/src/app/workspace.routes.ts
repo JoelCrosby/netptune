@@ -36,10 +36,10 @@ export const routes: Routes = [
         data: { title: $localize`:Page title for the task list:Tasks` },
       },
       {
-        path: 'views',
-        loadChildren: () => import('./features/task-views/task-views.routes').then((m) => m.routes),
+        path: 'queries',
+        loadChildren: () => import('./features/queries/queries.routes').then((m) => m.routes),
         runGuardsAndResolvers: 'always',
-        data: { title: $localize`:Page title for the saved task view list:Views` },
+        data: { title: $localize`:Page title for the saved query list:Queries` },
       },
       {
         path: 'pinned',

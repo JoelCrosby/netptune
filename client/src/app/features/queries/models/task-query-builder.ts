@@ -22,11 +22,11 @@ import {
   TaskQueryGroupOperator,
   TaskQueryOperator,
   TaskQueryValueType,
-} from './task-view.models';
+} from './saved-query.models';
 
 // Projects the server's task-query catalog onto the shared builder vocabulary. The operator enum
 // travels as a name rather than its number so a query in mid-edit stays readable, and so the
-// builder never has to know that saved views number their operators at all.
+// builder never has to know that saved queries number their operators at all.
 const operatorKeys: Record<TaskQueryOperator, string> = {
   [TaskQueryOperator.equals]: 'equals',
   [TaskQueryOperator.notEquals]: 'notEquals',

@@ -16,14 +16,14 @@ import { IconButtonComponent } from '@static/components/button/icon-button.compo
 import { IconTileComponent } from '@static/components/icon-tile.component';
 import {
   TaskQueryCatalog,
-  TaskView,
+  SavedQuery,
   countQueryConditions,
-} from '../models/task-view.models';
+} from '../models/saved-query.models';
 import { QueryFieldOptionsService } from '../services/query-field-options.service';
 import { PanelComponent } from '@static/components/panel.component';
 
 @Component({
-  selector: 'app-task-view-card',
+  selector: 'app-query-card',
   imports: [
     AvatarComponent,
     BadgeComponent,
@@ -48,26 +48,26 @@ import { PanelComponent } from '@static/components/panel.component';
       <header
         class="border-border flex items-start justify-between gap-2 border-b px-5 py-4">
         <div class="flex min-w-0 items-start gap-3">
-          <app-icon-tile [icon]="viewIcon" />
+          <app-icon-tile [icon]="queryIcon" />
 
           <div class="min-w-0">
             <a
               class="font-overpass text-foreground block truncate text-base font-semibold hover:underline"
-              [routerLink]="[view().slug]">
-              {{ view().name }}
+              [routerLink]="[savedQuery().slug]">
+              {{ savedQuery().name }}
             </a>
 
             <div class="mt-1 flex flex-wrap items-center gap-1.5">
-              @if (view().isShared) {
+              @if (savedQuery().isShared) {
                 <app-badge color="info" class="gap-1">
                   <svg lucideUsers class="h-3 w-3"></svg>
-                  <span i18n="Badge marking a view shared with the workspace">
+                  <span i18n="Badge marking a query shared with the workspace">
                     Shared
                   </span>
                 </app-badge>
               } @else {
                 <app-badge>
-                  <span i18n="Badge marking a view only its owner can see">
+                  <span i18n="Badge marking a query only its owner can see">
                     Private
                   </span>
                 </app-badge>
@@ -76,7 +76,7 @@ import { PanelComponent } from '@static/components/panel.component';
               @if (pinned()) {
                 <app-badge color="primary" class="gap-1">
                   <svg lucidePin class="h-3 w-3"></svg>
-                  <span i18n="Badge marking a view pinned to the sidebar">
+                  <span i18n="Badge marking a query pinned to the sidebar">
                     Pinned
                   </span>
                 </app-badge>
@@ -100,15 +100,15 @@ import { PanelComponent } from '@static/components/panel.component';
             }
           </button>
 
-          @if (canDelete() && view().canEdit) {
+          @if (canDelete() && savedQuery().canEdit) {
             <button
               app-icon-button
               color="warn"
               type="button"
               i18n-aria-label="
-                Accessible label for the button that deletes a view
+                Accessible label for the button that deletes a query
               "
-              aria-label="Delete view"
+              aria-label="Delete query"
               (click)="deleted.emit()">
               <svg lucideTrash2 class="h-4 w-4"></svg>
             </button>
@@ -117,9 +117,9 @@ import { PanelComponent } from '@static/components/panel.component';
       </header>
 
       <div class="flex flex-1 flex-col gap-4 px-5 py-4">
-        @if (view().description) {
+        @if (savedQuery().description) {
           <p class="text-muted line-clamp-2 text-sm">
-            {{ view().description }}
+            {{ savedQuery().description }}
           </p>
         }
 
@@ -147,22 +147,25 @@ import { PanelComponent } from '@static/components/panel.component';
 
       <footer
         class="border-border text-muted flex flex-wrap items-center gap-x-2 gap-y-1 border-t px-5 py-3 text-xs">
-        @if (view().createdByDisplayName; as author) {
+        @if (savedQuery().createdByDisplayName; as author) {
           <app-avatar size="xs" [name]="author" />
           <span class="min-w-0 truncate">{{ author }}</span>
           <span aria-hidden="true">·</span>
         }
         <span>
-          {{ view().updatedAt ?? view().createdAt | date: 'mediumDate' }}
+          {{
+            savedQuery().updatedAt ?? savedQuery().createdAt
+              | date: 'mediumDate'
+          }}
         </span>
       </footer>
     </article>
   `,
 })
-export class TaskViewCardComponent {
+export class QueryCardComponent {
   private readonly fieldOptions = inject(QueryFieldOptionsService);
 
-  readonly view = input.required<TaskView>();
+  readonly savedQuery = input.required<SavedQuery>();
   readonly catalog = input.required<TaskQueryCatalog>();
   readonly pinned = input(false);
   readonly canDelete = input(false);
@@ -170,16 +173,16 @@ export class TaskViewCardComponent {
   readonly pinToggled = output();
   readonly deleted = output();
 
-  protected readonly viewIcon = LucideListFilter;
+  protected readonly queryIcon = LucideListFilter;
 
   protected readonly pinLabel = computed(() => {
     return this.pinned()
-      ? $localize`:Button that removes a view from the sidebar:Unpin from sidebar`
-      : $localize`:Button that adds a view to the sidebar:Pin to sidebar`;
+      ? $localize`:Button that removes a query from the sidebar:Unpin from sidebar`
+      : $localize`:Button that adds a query to the sidebar:Pin to sidebar`;
   });
 
   protected readonly summary = computed(() => {
-    const query = this.view().definition?.query;
+    const query = this.savedQuery().definition?.query;
 
     if (!query) return '';
 
@@ -187,24 +190,24 @@ export class TaskViewCardComponent {
   });
 
   protected readonly filterLabel = computed(() => {
-    const count = countQueryConditions(this.view().definition?.query);
+    const count = countQueryConditions(this.savedQuery().definition?.query);
 
     if (count === 0) {
-      return $localize`:Shown on a saved view that filters nothing out:No filters`;
+      return $localize`:Shown on a saved query that filters nothing out:No filters`;
     }
 
     return count === 1
-      ? $localize`:Shown on a saved view with exactly one filter:1 filter`
-      : $localize`:Number of filters on a saved view. COUNT is how many there are:${count}:COUNT: filters`;
+      ? $localize`:Shown on a saved query with exactly one filter:1 filter`
+      : $localize`:Number of filters on a saved query. COUNT is how many there are:${count}:COUNT: filters`;
   });
 
   protected readonly columnLabel = computed(() => {
     const count = visibleTaskColumnIds(
-      this.view().definition?.display?.columns ?? []
+      this.savedQuery().definition?.display?.columns ?? []
     ).length;
 
     return count === 1
-      ? $localize`:Shown on a saved view that displays one column:1 column`
-      : $localize`:Number of columns a saved view displays. COUNT is how many there are:${count}:COUNT: columns`;
+      ? $localize`:Shown on a saved query that displays one column:1 column`
+      : $localize`:Number of columns a saved query displays. COUNT is how many there are:${count}:COUNT: columns`;
   });
 }

@@ -41,7 +41,7 @@ const valuesByOperator: Record<QueryBuilderGroupOperator, GroupOperatorValue> =
  * Flat query builder: the whole query reads as one line of tokens. Conditions are chips, nested
  * groups are indented chip clusters, and every editor lives in a popover so the query never pushes
  * what it filters off screen. The catalog decides which fields and operators exist, so the same
- * component edits a saved view's query and an automation rule's conditions.
+ * component edits a saved query's conditions and an automation rule's conditions.
  */
 @Component({
   selector: 'app-query-chip-bar',

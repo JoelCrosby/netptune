@@ -80,7 +80,7 @@ export interface DatatableRemoteDataSource<
 }
 
 // Rows are already resolved by the host. Used where the request the table would
-// otherwise make is not a plain paginated GET, such as the POST-backed task view
+// otherwise make is not a plain paginated GET, such as the POST-backed saved query
 // preview. Paging is the host's business, so the pager is hidden.
 export interface DatatableLocalDataSource<
   T = unknown,

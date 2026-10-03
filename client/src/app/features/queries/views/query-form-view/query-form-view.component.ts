@@ -16,14 +16,14 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import {
-  DEFAULT_VIEW_PAGE_SIZE,
-  SaveTaskViewRequest,
+  DEFAULT_QUERY_PAGE_SIZE,
+  SaveQueryRequest,
   TaskQueryGroup,
   TaskQueryValidationError,
-  TaskViewResult,
+  SavedQueryResult,
   countQueryConditions,
   emptyQueryGroup,
-} from '../../models/task-view.models';
+} from '../../models/saved-query.models';
 import { taskQueryConditionRequiredMessage } from '../../models/task-query-copy';
 import {
   fromBuilderGroup,
@@ -31,11 +31,11 @@ import {
 } from '../../models/task-query-builder';
 import {
   taskQueryCatalogResource,
-  taskViewResource,
-} from '../../resources/task-view.resource';
+  savedQueryResource,
+} from '../../resources/saved-query.resource';
 import { QueryFieldOptionsService } from '../../services/query-field-options.service';
 import { taskQueryPreviewResource } from '../../resources/task-query-preview.resource';
-import { TaskViewsService } from '../../services/task-views.service';
+import { SavedQueriesService } from '../../services/saved-queries.service';
 import { decodeQuery, encodeQuery } from '../../util/query-url';
 import {
   allTaskColumns,
@@ -43,16 +43,16 @@ import {
   visibleTaskColumns,
 } from '@core/tasks/task-columns';
 import { TaskTableComponent } from '@static/components/task-table.component';
-import { TaskViewDetailsDrawerComponent } from '../../components/task-view-details-drawer.component';
-import { TaskViewPreviewToolbarComponent } from '../../components/task-view-preview-toolbar.component';
+import { QueryDetailsDrawerComponent } from '../../components/query-details-drawer.component';
+import { QueryPreviewToolbarComponent } from '../../components/query-preview-toolbar.component';
 
 /**
  * One-column editor: query on top, results underneath. The split/stacked layout toggle is gone —
- * the query bar is short enough that the preview is always on screen — and the view's own details
+ * the query bar is short enough that the preview is always on screen — and the query's own details
  * live in a drawer rather than a permanent form.
  */
 @Component({
-  selector: 'app-task-view-form-view',
+  selector: 'app-query-form-view',
   imports: [
     PageBodyComponent,
     PageContainerComponent,
@@ -62,8 +62,8 @@ import { TaskViewPreviewToolbarComponent } from '../../components/task-view-prev
     FlatButtonComponent,
     StrokedButtonComponent,
     TaskTableComponent,
-    TaskViewDetailsDrawerComponent,
-    TaskViewPreviewToolbarComponent,
+    QueryDetailsDrawerComponent,
+    QueryPreviewToolbarComponent,
     LucideLink,
     LucideSave,
     LucideSettings2,
@@ -84,7 +84,7 @@ import { TaskViewPreviewToolbarComponent } from '../../components/task-view-prev
           [class.text-primary]="detailsOpen()"
           (click)="detailsOpen.set(!detailsOpen())">
           <svg lucideSettings2 class="h-4 w-4"></svg>
-          <span i18n="Button that opens the view details drawer">Details</span>
+          <span i18n="Button that opens the query details drawer">Details</span>
         </button>
 
         <button
@@ -110,7 +110,7 @@ import { TaskViewPreviewToolbarComponent } from '../../components/task-view-prev
           [disabled]="!canSave()"
           (click)="onSave()">
           <svg lucideSave class="h-4 w-4"></svg>
-          <span i18n="Button that saves a view">Save view</span>
+          <span i18n="Button that saves a query">Save query</span>
         </button>
       </app-page-header>
 
@@ -119,7 +119,7 @@ import { TaskViewPreviewToolbarComponent } from '../../components/task-view-prev
           <app-page-loading />
         } @else {
           @if (detailsOpen()) {
-            <app-task-view-details-drawer
+            <app-query-details-drawer
               class="shrink-0"
               [(description)]="description"
               [(isShared)]="isShared"
@@ -139,7 +139,7 @@ import { TaskViewPreviewToolbarComponent } from '../../components/task-view-prev
               (groupChange)="setQuery($event)" />
           </div>
 
-          <app-task-view-preview-toolbar
+          <app-query-preview-toolbar
             [loading]="previewLoading()"
             [count]="previewCount()"
             [availableColumns]="availableColumns"
@@ -165,16 +165,16 @@ import { TaskViewPreviewToolbarComponent } from '../../components/task-view-prev
     </app-page-container>
   `,
 })
-export class TaskViewFormViewComponent {
+export class QueryFormViewComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly snackbar = inject(SnackbarService);
-  private readonly service = inject(TaskViewsService);
+  private readonly service = inject(SavedQueriesService);
   private readonly fieldOptions = inject(QueryFieldOptionsService);
 
   readonly availableColumns = allTaskColumns<TaskViewModel>();
 
-  // The preview renders exactly what the saved view will, so it uses the same
+  // The preview renders exactly what the saved query will, so it uses the same
   // catalog columns filtered to the ones the editor has switched on.
   readonly previewColumns = computed(() => {
     return visibleTaskColumns<TaskViewModel>(this.columns());
@@ -189,26 +189,26 @@ export class TaskViewFormViewComponent {
     initialValue: {} as Params,
   });
 
-  readonly viewSlug = computed<string | undefined>(() => {
+  readonly querySlug = computed<string | undefined>(() => {
     return this.routeParams()['slug'] || undefined;
   });
 
-  private readonly viewRef = taskViewResource(this.viewSlug);
+  private readonly savedQueryRef = savedQueryResource(this.querySlug);
   private readonly catalogRef = taskQueryCatalogResource();
 
   readonly catalog = this.catalogRef.value;
   readonly loading = computed(() => {
-    return this.catalogRef.isLoading() || this.viewRef.isLoading();
+    return this.catalogRef.isLoading() || this.savedQueryRef.isLoading();
   });
 
   readonly name = signal(
-    $localize`:Default name of a new saved task view:Untitled view`
+    $localize`:Default name of a new saved query:Untitled query`
   );
   readonly description = signal('');
   readonly isShared = signal(false);
   readonly query = signal<TaskQueryGroup>(emptyQueryGroup());
 
-  // The chip bar speaks the shared builder vocabulary, so the view's own query crosses over on the
+  // The chip bar speaks the shared builder vocabulary, so the saved conditions cross over on the
   // way in and back again on every edit.
   readonly builderCatalog = computed(() => {
     return this.fieldOptions.builderCatalog(this.catalog());
@@ -222,9 +222,9 @@ export class TaskViewFormViewComponent {
   readonly sortBy = signal('');
   readonly sortDirection = signal('desc');
 
-  readonly canManageShared = hasPermission(PERMISSIONS.taskViews.manageShared);
+  readonly canManageShared = hasPermission(PERMISSIONS.queries.manageShared);
 
-  // Opening somebody else's shared view without the rights to change it turns the editor into a
+  // Opening somebody else's shared query without the rights to change it turns the editor into a
   // "save your own copy" flow rather than a form whose save button is guaranteed to be refused.
   readonly savesAsCopy = signal(false);
 
@@ -232,7 +232,7 @@ export class TaskViewFormViewComponent {
     return this.catalog().fields.filter((field) => field.isSortable);
   });
 
-  // A view that filters nothing is not a view, so the query has to carry at least one condition
+  // A query that filters nothing is not worth saving, so it has to carry at least one condition
   // before it can be saved — nested groups count, so an outer group holding only groups is empty.
   readonly hasConditions = computed(() => {
     return countQueryConditions(this.query()) > 0;
@@ -253,7 +253,7 @@ export class TaskViewFormViewComponent {
     return {
       query,
       page: 1,
-      pageSize: DEFAULT_VIEW_PAGE_SIZE,
+      pageSize: DEFAULT_QUERY_PAGE_SIZE,
       sortBy: this.sortBy() || null,
       sortDirection: this.sortDirection(),
     };
@@ -263,9 +263,11 @@ export class TaskViewFormViewComponent {
 
   readonly previewLoading = this.previewRef.isLoading;
 
-  private readonly previewPayload = computed<TaskViewResult | undefined>(() => {
-    return this.previewRef.value()?.payload;
-  });
+  private readonly previewPayload = computed<SavedQueryResult | undefined>(
+    () => {
+      return this.previewRef.value()?.payload;
+    }
+  );
 
   readonly previewRows = computed<TaskViewModel[]>(() => {
     return this.previewPayload()?.items ?? [];
@@ -294,26 +296,28 @@ export class TaskViewFormViewComponent {
 
   constructor() {
     effect(() => {
-      const view = this.viewRef.value()?.payload;
+      const savedQuery = this.savedQueryRef.value()?.payload;
 
-      if (!view) return;
+      if (!savedQuery) return;
 
-      const isCopy = !view.canEdit;
+      const isCopy = !savedQuery.canEdit;
 
-      this.name.set(isCopy ? copyName(view.name) : view.name);
-      this.description.set(view.description ?? '');
-      this.isShared.set(isCopy ? false : view.isShared);
+      this.name.set(isCopy ? copyName(savedQuery.name) : savedQuery.name);
+      this.description.set(savedQuery.description ?? '');
+      this.isShared.set(isCopy ? false : savedQuery.isShared);
       this.savesAsCopy.set(isCopy);
-      this.query.set(view.definition?.query ?? emptyQueryGroup());
-      this.sortBy.set(view.definition?.display.sortBy ?? '');
-      this.sortDirection.set(view.definition?.display.sortDirection ?? 'desc');
+      this.query.set(savedQuery.definition?.query ?? emptyQueryGroup());
+      this.sortBy.set(savedQuery.definition?.display.sortBy ?? '');
+      this.sortDirection.set(
+        savedQuery.definition?.display.sortDirection ?? 'desc'
+      );
 
-      const saved = view.definition?.display.columns ?? [];
+      const saved = savedQuery.definition?.display.columns ?? [];
 
       this.columns.set(saved.length ? saved : defaultTaskColumnPreferences());
     });
 
-    // A q parameter replaces the query outright, whether the editor was opened on a saved view or
+    // A q parameter replaces the query outright, whether the editor was opened on a saved query or
     // on a blank one, so a link always shows the query it carries rather than merging into a saved one.
     effect(() => {
       const decoded = decodeQuery(this.queryParams()['q'] ?? null);
@@ -339,8 +343,8 @@ export class TaskViewFormViewComponent {
       return;
     }
 
-    // The link points at a blank editor rather than this view, so a colleague who cannot see the
-    // saved view can still open the query it carries.
+    // The link points at a blank editor rather than this query, so a colleague who cannot see the
+    // saved query can still open the query it carries.
     const tree = this.router.createUrlTree(['../new'], {
       relativeTo: this.route,
       queryParams: { q: encoded },
@@ -362,10 +366,10 @@ export class TaskViewFormViewComponent {
   }
 
   onSave() {
-    const request: SaveTaskViewRequest = {
+    const request: SaveQueryRequest = {
       id: this.savesAsCopy()
         ? null
-        : (this.viewRef.value()?.payload?.id ?? null),
+        : (this.savedQueryRef.value()?.payload?.id ?? null),
       name: this.name().trim(),
       description: this.description().trim() || null,
       isShared: this.isShared(),
@@ -376,7 +380,7 @@ export class TaskViewFormViewComponent {
           columns: this.columns(),
           sortBy: this.sortBy() || null,
           sortDirection: this.sortDirection(),
-          pageSize: DEFAULT_VIEW_PAGE_SIZE,
+          pageSize: DEFAULT_QUERY_PAGE_SIZE,
         },
       },
     };
@@ -385,11 +389,11 @@ export class TaskViewFormViewComponent {
       : this.service.create(request);
 
     save.subscribe({
-      next: (view) => {
+      next: (savedQuery) => {
         this.snackbar.success(
-          $localize`:Confirmation that a view was saved:View saved`
+          $localize`:Confirmation that a query was saved:Query saved`
         );
-        void this.router.navigate(['../', view.slug], {
+        void this.router.navigate(['../', savedQuery.slug], {
           relativeTo: this.route,
         });
       },
@@ -401,5 +405,5 @@ export class TaskViewFormViewComponent {
 }
 
 function copyName(name: string): string {
-  return $localize`:Default name for a copy of somebody else's view:${name}:viewName: (copy)`;
+  return $localize`:Default name for a copy of somebody else's query:${name}:viewName: (copy)`;
 }

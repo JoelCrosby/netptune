@@ -31,16 +31,16 @@ import { TaskCommandsService } from '@core/services/task-commands.service';
 import { TaskSelectionService } from '@core/services/task-selection.service';
 import { TaskSelectionActionsComponent } from '@shared/components/task-selection-actions/task-selection-actions.component';
 import { QueryFieldOptionsService } from '../../services/query-field-options.service';
-import { PinnedViewsService } from '../../services/pinned-views.service';
-import { TaskQueryValidationError } from '../../models/task-view.models';
+import { PinnedQueriesService } from '../../services/pinned-queries.service';
+import { TaskQueryValidationError } from '../../models/saved-query.models';
 import {
   taskQueryCatalogResource,
-  taskViewResource,
-} from '../../resources/task-view.resource';
+  savedQueryResource,
+} from '../../resources/saved-query.resource';
 import { findStaleReferences } from '../../util/stale-references';
 
 @Component({
-  selector: 'app-task-view-detail-view',
+  selector: 'app-query-detail-view',
   imports: [
     RouterLink,
     PageBodyComponent,
@@ -60,8 +60,11 @@ import { findStaleReferences } from '../../util/stale-references';
   ],
   template: `
     <app-page-container layout="list">
-      @if (view(); as view) {
-        <app-page-header toolbar [title]="view.name" [count]="totalCount()">
+      @if (savedQuery(); as savedQuery) {
+        <app-page-header
+          toolbar
+          [title]="savedQuery.name"
+          [count]="totalCount()">
           <button
             pageHeaderActions
             app-stroked-button
@@ -69,7 +72,7 @@ import { findStaleReferences } from '../../util/stale-references';
             type="button"
             (click)="onCopyLink()">
             <svg lucideLink class="h-4 w-4"></svg>
-            <span i18n="Button that copies a shareable link to a view">
+            <span i18n="Button that copies a shareable link to a query">
               Copy link
             </span>
           </button>
@@ -83,16 +86,16 @@ import { findStaleReferences } from '../../util/stale-references';
             (click)="onTogglePin()">
             @if (isPinned()) {
               <svg lucidePin class="text-primary h-4 w-4"></svg>
-              <span i18n="Button that removes a view from the sidebar">
+              <span i18n="Button that removes a query from the sidebar">
                 Unpin
               </span>
             } @else {
               <svg lucidePinOff class="h-4 w-4"></svg>
-              <span i18n="Button that adds a view to the sidebar">Pin</span>
+              <span i18n="Button that adds a query to the sidebar">Pin</span>
             }
           </button>
 
-          @if (view.canEdit && canUpdate()) {
+          @if (savedQuery.canEdit && canUpdate()) {
             <a
               pageHeaderActions
               app-flat-button
@@ -100,7 +103,7 @@ import { findStaleReferences } from '../../util/stale-references';
               class="gap-2"
               [routerLink]="['edit']">
               <svg lucidePencil class="h-4 w-4"></svg>
-              <span i18n="Button that opens the edit-view form">Edit</span>
+              <span i18n="Button that opens the edit-query form">Edit</span>
             </a>
           }
         </app-page-header>
@@ -111,14 +114,16 @@ import { findStaleReferences } from '../../util/stale-references';
           <app-page-loading />
         } @else if (notFound()) {
           <app-error-state
-            i18n-title="Shown when a saved view cannot be found"
-            title="This view could not be found"
-            i18n-description="Advice shown when a saved view is missing"
+            i18n-title="Shown when a saved query cannot be found"
+            title="This query could not be found"
+            i18n-description="Advice shown when a saved query is missing"
             description="It may have been deleted, or it may be private to somebody else." />
-        } @else if (view(); as view) {
+        } @else if (savedQuery(); as savedQuery) {
           <div class="mb-4 flex shrink-0 flex-col gap-2">
-            @if (view.description) {
-              <p class="text-foreground/60 text-sm">{{ view.description }}</p>
+            @if (savedQuery.description) {
+              <p class="text-foreground/60 text-sm">
+                {{ savedQuery.description }}
+              </p>
             }
 
             <p class="text-foreground/50 text-sm">
@@ -135,8 +140,8 @@ import { findStaleReferences } from '../../util/stale-references';
                 color="warn"
                 role="alert"
                 [icon]="warningIcon"
-                i18n-title="Heading shown when a saved view no longer compiles"
-                title="This view needs attention">
+                i18n-title="Heading shown when a saved query no longer compiles"
+                title="This query needs attention">
                 <ul class="text-foreground/70 mt-1 list-disc pl-4">
                   @for (error of errors(); track error.path) {
                     <li>{{ error.message }}</li>
@@ -156,8 +161,8 @@ import { findStaleReferences } from '../../util/stale-references';
             #table
             i18n-itemLabel="Plural noun for tasks, used in the row summary"
             itemLabel="tasks"
-            i18n-emptyMessage="Shown when a saved view matches no tasks"
-            emptyMessage="No tasks match this view."
+            i18n-emptyMessage="Shown when a saved query matches no tasks"
+            emptyMessage="No tasks match this query."
             tableClass="md:min-w-[860px] table-fixed"
             [key]="tableKey()"
             [url]="tableUrl()"
@@ -174,12 +179,12 @@ import { findStaleReferences } from '../../util/stale-references';
     </app-page-container>
   `,
 })
-export class TaskViewDetailViewComponent {
+export class QueryDetailViewComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly snackbar = inject(SnackbarService);
   private readonly fieldOptions = inject(QueryFieldOptionsService);
-  private readonly pinned = inject(PinnedViewsService);
+  private readonly pinned = inject(PinnedQueriesService);
   private readonly taskCommands = inject(TaskCommandsService);
   private readonly taskSelection = inject(TaskSelectionService);
 
@@ -187,24 +192,24 @@ export class TaskViewDetailViewComponent {
     initialValue: {} as Params,
   });
 
-  readonly viewSlug = computed<string | undefined>(() => {
+  readonly querySlug = computed<string | undefined>(() => {
     return this.routeParams()['slug'] || undefined;
   });
 
-  private readonly viewRef = taskViewResource(this.viewSlug);
+  private readonly savedQueryRef = savedQueryResource(this.querySlug);
   private readonly catalogRef = taskQueryCatalogResource();
 
-  readonly view = computed(() => this.viewRef.value()?.payload);
-  readonly loading = computed(() => this.viewRef.isLoading());
+  readonly savedQuery = computed(() => this.savedQueryRef.value()?.payload);
+  readonly loading = computed(() => this.savedQueryRef.isLoading());
   readonly notFound = computed(() => {
-    return !this.loading() && !this.view();
+    return !this.loading() && !this.savedQuery();
   });
 
   private readonly table = viewChild(TaskTableComponent<TaskViewModel>);
   readonly totalCount = computed(() => this.table()?.loadedCount() ?? null);
 
   readonly errors = computed<TaskQueryValidationError[]>(() => {
-    const query = this.view()?.definition?.query;
+    const query = this.savedQuery()?.definition?.query;
 
     if (!query) return [];
 
@@ -215,7 +220,7 @@ export class TaskViewDetailViewComponent {
     );
   });
 
-  readonly canUpdate = hasPermission(PERMISSIONS.taskViews.update);
+  readonly canUpdate = hasPermission(PERMISSIONS.queries.update);
   readonly canDeleteTasks = hasPermission(PERMISSIONS.tasks.delete);
 
   readonly selectedCount = computed(() => this.taskSelection.tasks().length);
@@ -233,7 +238,7 @@ export class TaskViewDetailViewComponent {
   protected readonly warningIcon = LucideTriangleAlert;
 
   readonly summary = computed(() => {
-    const query = this.view()?.definition?.query;
+    const query = this.savedQuery()?.definition?.query;
 
     if (!query) return '';
 
@@ -241,22 +246,22 @@ export class TaskViewDetailViewComponent {
   });
 
   readonly params = computed(() => {
-    const display = this.view()?.definition?.display;
+    const display = this.savedQuery()?.definition?.display;
     const sortBy = display?.sortBy ?? undefined;
     const sortDirection = display?.sortDirection ?? undefined;
 
     return { sortBy, sortDirection };
   });
 
-  readonly tableKey = computed(() => `task-view-${this.viewSlug()}`);
+  readonly tableKey = computed(() => `task-view-${this.querySlug()}`);
 
   readonly tableUrl = computed(() => {
-    return `api/task-views/${this.viewSlug()}/tasks`;
+    return `api/task-views/${this.querySlug()}/tasks`;
   });
 
   readonly columns = computed<DatatableColumn<TaskViewModel>[]>(() => {
     return visibleTaskColumns<TaskViewModel>(
-      this.view()?.definition?.display.columns ?? [],
+      this.savedQuery()?.definition?.display.columns ?? [],
       {
         overrides: {
           name: taskNameCell<TaskViewModel>({
@@ -271,7 +276,7 @@ export class TaskViewDetailViewComponent {
     this.taskSelection.clear();
 
     effect(() => {
-      this.viewSlug();
+      this.querySlug();
       this.taskSelection.clear();
     });
 
@@ -287,13 +292,13 @@ export class TaskViewDetailViewComponent {
   }
 
   isPinned(): boolean {
-    const id = this.view()?.id;
+    const id = this.savedQuery()?.id;
 
     return id !== undefined && this.pinned.isPinned(id);
   }
 
   onTogglePin() {
-    const id = this.view()?.id;
+    const id = this.savedQuery()?.id;
 
     if (id === undefined) return;
 
@@ -306,12 +311,12 @@ export class TaskViewDetailViewComponent {
     void navigator.clipboard.writeText(url.toString()).then(
       () => {
         this.snackbar.success(
-          $localize`:Confirmation that a shareable view link was copied:Link copied`
+          $localize`:Confirmation that a shareable query link was copied:Link copied`
         );
       },
       () => {
         this.snackbar.error(
-          $localize`:Shown when a shareable view link could not be copied:Link could not be copied`
+          $localize`:Shown when a shareable query link could not be copied:Link could not be copied`
         );
       }
     );

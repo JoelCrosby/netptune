@@ -51,7 +51,7 @@ const groupLabels: Record<string, string> = {
   boards: 'Boards',
   boardGroups: 'Board groups',
   tasks: 'Tasks',
-  taskViews: 'Task views',
+  queries: 'Queries',
   data: 'Data',
   sprints: 'Sprints',
   comments: 'Comments',

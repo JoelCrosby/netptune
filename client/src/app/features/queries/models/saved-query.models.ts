@@ -77,27 +77,27 @@ export interface TaskQueryCatalog {
   maximumConditionCount: number;
 }
 
-export interface TaskViewDisplay {
+export interface SavedQueryDisplay {
   columns: DatatableColumnPreference[];
   sortBy?: string | null;
   sortDirection?: string | null;
   pageSize: number;
 }
 
-export interface TaskViewDefinition {
+export interface SavedQueryDefinition {
   version: number;
   query: TaskQueryGroup;
-  display: TaskViewDisplay;
+  display: SavedQueryDisplay;
 }
 
-export interface TaskView {
+export interface SavedQuery {
   id: number;
   name: string;
   description?: string | null;
   slug: string;
   icon?: string | null;
   isShared: boolean;
-  definition: TaskViewDefinition | null;
+  definition: SavedQueryDefinition | null;
   createdByUserId?: string | null;
   createdByDisplayName?: string | null;
   isOwn: boolean;
@@ -112,7 +112,7 @@ export interface TaskQueryValidationError {
   field?: string | null;
 }
 
-export interface TaskViewResult {
+export interface SavedQueryResult {
   items: TaskViewModel[];
   page: number;
   pageSize: number;
@@ -121,16 +121,16 @@ export interface TaskViewResult {
   errors: TaskQueryValidationError[];
 }
 
-export interface SaveTaskViewRequest {
+export interface SaveQueryRequest {
   id?: number | null;
   name: string;
   description?: string | null;
   icon?: string | null;
   isShared: boolean;
-  definition: TaskViewDefinition;
+  definition: SavedQueryDefinition;
 }
 
-export const DEFAULT_VIEW_PAGE_SIZE = 25;
+export const DEFAULT_QUERY_PAGE_SIZE = 25;
 
 export function emptyQueryGroup(): TaskQueryGroup {
   return {
@@ -140,11 +140,11 @@ export function emptyQueryGroup(): TaskQueryGroup {
   };
 }
 
-export function emptyViewDefinition(): TaskViewDefinition {
+export function emptyQueryDefinition(): SavedQueryDefinition {
   return {
     version: 1,
     query: emptyQueryGroup(),
-    display: { columns: [], pageSize: DEFAULT_VIEW_PAGE_SIZE },
+    display: { columns: [], pageSize: DEFAULT_QUERY_PAGE_SIZE },
   };
 }
 

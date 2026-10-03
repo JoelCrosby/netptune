@@ -45,7 +45,7 @@ export const PERMISSIONS = {
     import: 'tasks.import',
     pinWorkspace: 'tasks.pin_workspace',
   },
-  taskViews: {
+  queries: {
     read: 'task_views.read',
     create: 'task_views.create',
     update: 'task_views.update',

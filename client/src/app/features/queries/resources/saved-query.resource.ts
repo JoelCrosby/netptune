@@ -5,28 +5,28 @@ import {
   permissionResource,
   requestFrom,
 } from '@core/resources/permission.resource';
-import { TaskQueryCatalog, TaskView } from '../models/task-view.models';
+import { TaskQueryCatalog, SavedQuery } from '../models/saved-query.models';
 
 export const taskQueryCatalogResource = () => {
   return permissionResource<TaskQueryCatalog>({
-    permission: PERMISSIONS.taskViews.read,
+    permission: PERMISSIONS.queries.read,
     request: () => ({ url: 'api/task-views/fields' }),
     defaultValue: { fields: [], maximumDepth: 4, maximumConditionCount: 50 },
   });
 };
 
-export const taskViewsResource = () => {
-  return permissionResource<TaskView[]>({
-    permission: PERMISSIONS.taskViews.read,
+export const savedQueriesResource = () => {
+  return permissionResource<SavedQuery[]>({
+    permission: PERMISSIONS.queries.read,
     request: () => ({ url: 'api/task-views' }),
     defaultValue: [],
     refreshOn: ['tasks'],
   });
 };
 
-export const taskViewResource = (slug: Signal<string | undefined>) => {
-  return permissionResource<ClientResponse<TaskView>>({
-    permission: PERMISSIONS.taskViews.read,
+export const savedQueryResource = (slug: Signal<string | undefined>) => {
+  return permissionResource<ClientResponse<SavedQuery>>({
+    permission: PERMISSIONS.queries.read,
     request: requestFrom(slug, (key) => ({ url: `api/task-views/${key}` })),
   });
 };

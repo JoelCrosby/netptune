@@ -3,9 +3,9 @@ import {
   TaskQueryCatalog,
   TaskQueryGroup,
   TaskQueryValidationError,
-} from '../models/task-view.models';
+} from '../models/saved-query.models';
 
-// The server rejects a stale reference when the view runs, but the detail page has the catalog and
+// The server rejects a stale reference when the query runs, but the detail page has the catalog and
 // the option lists already loaded, so it can say which condition is broken without a second request.
 export function findStaleReferences(
   group: TaskQueryGroup,
@@ -25,7 +25,7 @@ export function findStaleReferences(
       errors.push({
         path: conditionPath,
         field: condition.field,
-        message: $localize`:Shown when a saved view names a field the workspace no longer has:'${condition.field}:fieldKey:' is no longer a task field.`,
+        message: $localize`:Shown when a saved query names a field the workspace no longer has:'${condition.field}:fieldKey:' is no longer a task field.`,
       });
 
       return;
@@ -42,7 +42,7 @@ export function findStaleReferences(
       errors.push({
         path: conditionPath,
         field: field.key,
-        message: $localize`:Shown when a saved view references an entity that has been deleted:${field.name}:fieldName: no longer has an option for '${value}:value:'.`,
+        message: $localize`:Shown when a saved query references an entity that has been deleted:${field.name}:fieldName: no longer has an option for '${value}:value:'.`,
       });
     }
   });
