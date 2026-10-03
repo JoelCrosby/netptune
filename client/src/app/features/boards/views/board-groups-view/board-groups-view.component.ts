@@ -75,6 +75,7 @@ import { InlineEditHeadingComponent } from '@static/components/inline-edit-headi
 import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { SkeletonBoardComponent } from '@static/components/skeleton/skeleton-board.component';
+import { SkeletonComponent } from '@static/components/skeleton/skeleton.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directive';
 
@@ -104,6 +105,7 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
   providers: [],
   imports: [
     SkeletonBoardComponent,
+    SkeletonComponent,
     PageBodyComponent,
     PageContainerComponent,
     PageHeaderComponent,
@@ -139,6 +141,24 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
           <div class="flex flex-wrap items-center gap-3">
             <app-board-group-header />
           </div>
+        </app-page-header>
+      } @else if (showSkeleton()) {
+        <app-page-header toolbar aria-hidden="true">
+          <app-skeleton titleSuffix class="h-7 w-40" />
+
+          <div class="flex flex-wrap items-center gap-3">
+            <app-skeleton class="h-9 w-25" />
+            <div class="flex items-center gap-1">
+              <app-skeleton class="h-8 w-8 rounded-full" />
+              <app-skeleton class="h-8 w-8 rounded-full" />
+              <app-skeleton class="h-8 w-8 rounded-full" />
+            </div>
+            @for (icon of toolbarIconRange; track $index) {
+              <app-skeleton class="h-8 w-8" />
+            }
+          </div>
+
+          <app-skeleton pageHeaderActions class="h-9 w-9" />
         </app-page-header>
       }
 
@@ -261,6 +281,7 @@ export class BoardGroupsViewComponent implements OnDestroy {
   isAuthenticated = inject(SessionService).isAuthenticated;
   readonly notificationScope = NotificationScope;
   readonly dragStartDelay = BOARD_DRAG_START_DELAY;
+  readonly toolbarIconRange = Array.from({ length: 5 });
 
   private readonly isMobileView = inject(LayoutService).isMobileView;
   readonly groupDragging = signal(false);
