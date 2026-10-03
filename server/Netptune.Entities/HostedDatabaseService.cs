@@ -3,9 +3,6 @@ using Microsoft.Extensions.Hosting;
 
 using Netptune.Entities.Contexts;
 
-using Polly;
-using Polly.Contrib.WaitAndRetry;
-
 namespace Netptune.Entities;
 
 public class HostedDatabaseService : IHostedService
@@ -22,12 +19,8 @@ public class HostedDatabaseService : IHostedService
         using var scope = ScopeFactory.CreateScope();
 
         var context = scope.ServiceProvider.GetRequiredService<DataContext>();
-        var delay = Backoff.DecorrelatedJitterBackoffV2(medianFirstRetryDelay: TimeSpan.FromSeconds(2), retryCount: 5);
 
-        await Policy
-            .Handle<Exception>()
-            .WaitAndRetry(delay)
-            .Execute(() => context.Database.EnsureCreatedAsync(cancellationToken));
+        await DatabaseSchema.EnsureCreatedAsync(context, cancellationToken);
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

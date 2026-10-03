@@ -40,7 +40,11 @@ public static class NetptuneEntitiesConfiguration
 
         services.Configure(configuration);
 
-        services.AddHostedService<HostedDatabaseService>();
+        if (netptuneEntitiesOptions.EnsureCreatedOnStartup)
+        {
+            services.AddHostedService<HostedDatabaseService>();
+        }
+
         services.AddDbContextPool<DataContext>(options =>
         {
             options

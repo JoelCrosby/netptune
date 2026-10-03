@@ -6,4 +6,6 @@ public class NetptuneEntitiesOptions
 {
     [Required]
     public string ConnectionString { get; set; } = null!;
+
+    public bool EnsureCreatedOnStartup { get; set; } = true;
 }

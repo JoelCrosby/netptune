@@ -28,7 +28,7 @@ public static class SeedDataExtensions
         services.AddSingleton<ISeeder, SprintReportingSeeder>();
         services.AddSingleton<ISeeder, NotificationSeeder>();
 
-        services.AddHostedService<SeedDataService>();
+        services.AddSingleton<SeedDataRunner>();
 
         return services;
     }

@@ -32,7 +32,8 @@ var meilisearch = builder
 
 var seedData = builder
     .AddProject<Projects.Netptune_SeedData>("seed-data")
-    .WithPostgres(postgresdb);
+    .WithPostgres(postgresdb)
+    .WithParentRelationship(postgresdb);
 
 var jobs = builder
     .AddProject<Projects.Netptune_JobServer>("jobs")

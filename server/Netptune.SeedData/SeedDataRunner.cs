@@ -3,24 +3,25 @@ using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Authorization;
+using Netptune.Entities;
 using Netptune.Entities.Contexts;
 
 namespace Netptune.SeedData;
 
-public sealed class SeedDataService : IHostedService
+public sealed class SeedDataRunner
 {
     private readonly IServiceProvider ServiceProvider;
-    private readonly ILogger<SeedDataService> Logger;
+    private readonly ILogger<SeedDataRunner> Logger;
 
-    public SeedDataService(IServiceProvider serviceProvider, ILogger<SeedDataService> logger)
+    public SeedDataRunner(IServiceProvider serviceProvider, ILogger<SeedDataRunner> logger)
     {
         ServiceProvider = serviceProvider;
         Logger = logger;
     }
 
-    public async Task StartAsync(CancellationToken ct)
+    public async Task RunAsync(CancellationToken ct)
     {
-        Logger.LogInformation("{Service} starting data seed execution", nameof(SeedDataService));
+        Logger.LogInformation("{Service} starting data seed execution", nameof(SeedDataRunner));
 
         var timer = Stopwatch.StartNew();
 
@@ -28,12 +29,12 @@ public sealed class SeedDataService : IHostedService
         var dbContext = scope.ServiceProvider.GetRequiredService<DataContext>();
         var seeders = scope.ServiceProvider.GetServices<ISeeder>();
 
-        await dbContext.Database.EnsureCreatedAsync(ct);
+        await DatabaseSchema.EnsureCreatedAsync(dbContext, ct);
 
         if (await dbContext.Users.AnyAsync(ct))
         {
             await SyncOwnerPermissions(dbContext, ct);
-            Logger.LogInformation("{Service} data already present, skipping seed", nameof(SeedDataService));
+            Logger.LogInformation("{Service} data already present, skipping seed", nameof(SeedDataRunner));
             return;
         }
 
@@ -67,7 +68,7 @@ public sealed class SeedDataService : IHostedService
 
         timer.Stop();
 
-        Logger.LogInformation("{Service} finished execution in {Elapsed}", nameof(SeedDataService), $"{timer.ElapsedMilliseconds:N}ms");
+        Logger.LogInformation("{Service} finished execution in {Elapsed}", nameof(SeedDataRunner), $"{timer.ElapsedMilliseconds:N}ms");
     }
 
     private static async Task SyncOwnerPermissions(DataContext dbContext, CancellationToken ct)
@@ -84,6 +85,4 @@ public sealed class SeedDataService : IHostedService
 
         await dbContext.SaveChangesAsync(ct);
     }
-
-    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 }
