@@ -6,6 +6,7 @@ using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Activity;
+using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Handlers.Boards.Commands;
 
@@ -22,10 +23,11 @@ public class CreateBoardCommandHandlerTests
     private readonly CreateBoardCommandHandler Handler;
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
 
     public CreateBoardCommandHandlerTests()
     {
-        Handler = new(UnitOfWork, Activity);
+        Handler = new(UnitOfWork, Activity, Identity);
         UnitOfWork.Statuses
             .GetAllInWorkspace(Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
             .Returns([]);
@@ -40,7 +42,7 @@ public class CreateBoardCommandHandlerTests
         var project = AutoFixtures.Project;
 
         UnitOfWork.Boards.AddAsync(Arg.Any<Board>(), TestContext.Current.CancellationToken).Returns(x => x.Arg<Board>());
-        UnitOfWork.Projects.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(project);
+        UnitOfWork.Projects.GetInWorkspace(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(project);
 
         var result = await Handler.Handle(new CreateBoardCommand(request), TestContext.Current.CancellationToken);
 
@@ -59,7 +61,7 @@ public class CreateBoardCommandHandlerTests
             .Create();
 
         UnitOfWork.Boards.AddAsync(Arg.Any<Board>(), TestContext.Current.CancellationToken).Returns(x => x.Arg<Board>());
-        UnitOfWork.Projects.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.Project);
+        UnitOfWork.Projects.GetInWorkspace(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.Project);
 
         await Handler.Handle(new CreateBoardCommand(request), TestContext.Current.CancellationToken);
 
@@ -74,7 +76,7 @@ public class CreateBoardCommandHandlerTests
             .Create();
 
         UnitOfWork.Boards.AddAsync(Arg.Any<Board>(), TestContext.Current.CancellationToken).Returns(x => x.Arg<Board>());
-        UnitOfWork.Projects.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
+        UnitOfWork.Projects.GetInWorkspace(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new CreateBoardCommand(request), TestContext.Current.CancellationToken);
 

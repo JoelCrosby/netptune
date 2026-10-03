@@ -35,6 +35,7 @@ public sealed class ReassignTasksCommandHandler : IRequestHandler<ReassignTasksC
     public async ValueTask<ClientResponse> Handle(ReassignTasksCommand request, CancellationToken cancellationToken)
     {
         var req = request.Request;
+        var workspaceId = await Identity.GetWorkspaceId();
         var assigneeIds = req.AssigneeIds
             .Where(id => !string.IsNullOrWhiteSpace(id))
             .Distinct(StringComparer.Ordinal)
@@ -42,7 +43,6 @@ public sealed class ReassignTasksCommandHandler : IRequestHandler<ReassignTasksC
 
         if (assigneeIds.Count > 0)
         {
-            var workspaceId = await Identity.GetWorkspaceId();
             var assignees = await UnitOfWork.Users.IsUserInWorkspaceRange(assigneeIds, workspaceId, cancellationToken);
             var validAssigneeIds = assignees.Select(assignee => assignee.Id).ToHashSet(StringComparer.Ordinal);
             var missingAssigneeIds = assigneeIds.Where(id => !validAssigneeIds.Contains(id)).ToList();
@@ -53,7 +53,7 @@ public sealed class ReassignTasksCommandHandler : IRequestHandler<ReassignTasksC
             }
         }
 
-        var taskIdsInBoard = await UnitOfWork.Tasks.GetTaskIdsInBoard(req.BoardId, cancellationToken);
+        var taskIdsInBoard = await UnitOfWork.Tasks.GetTaskIdsInBoard(req.BoardId, workspaceId, cancellationToken);
         var taskIds = req.TaskIds.Where(taskIdsInBoard.Contains).ToList();
         var replacedUserIds = await UnitOfWork.Tasks.ReplaceTaskAssignees(taskIds, assigneeIds, cancellationToken);
 

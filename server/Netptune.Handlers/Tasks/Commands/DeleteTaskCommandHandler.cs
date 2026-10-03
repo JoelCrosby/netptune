@@ -29,6 +29,10 @@ public sealed class DeleteTaskCommandHandler : IRequestHandler<DeleteTaskCommand
     public async ValueTask<ClientResponse> Handle(DeleteTaskCommand request, CancellationToken cancellationToken)
     {
         var userId = Identity.GetCurrentUserId();
+        var workspaceId = await Identity.GetWorkspaceId();
+        var workspaceTaskIds = await UnitOfWork.Tasks.GetValidTaskIdsInWorkspace([request.Id], workspaceId, cancellationToken);
+
+        if (workspaceTaskIds.Count == 0) return ClientResponse.NotFound;
 
         var affected = await UnitOfWork.Tasks.SoftDelete(request.Id, userId, cancellationToken);
 

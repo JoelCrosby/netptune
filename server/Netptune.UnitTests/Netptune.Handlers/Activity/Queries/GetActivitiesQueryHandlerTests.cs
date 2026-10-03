@@ -34,7 +34,7 @@ public class GetActivitiesQueryHandlerTests
     [Fact]
     public async Task GetActivities_ShouldReturnCorrectly_WhenValidId()
     {
-        UnitOfWork.EventRecords.GetActivities(Arg.Any<EntityType>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(new List<ActivityViewModel>
+        UnitOfWork.EventRecords.GetActivities(Arg.Any<EntityType>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<int?>(), Arg.Any<string?>(), TestContext.Current.CancellationToken).Returns(new List<ActivityViewModel>
             {
                 Fixture.Build<ActivityViewModel>()
                     .Without(x => x.Meta)
@@ -59,7 +59,7 @@ public class GetActivitiesQueryHandlerTests
     {
         const string userId = "user-id-1";
 
-        UnitOfWork.EventRecords.GetActivities(Arg.Any<EntityType>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(new List<ActivityViewModel>
+        UnitOfWork.EventRecords.GetActivities(Arg.Any<EntityType>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<int?>(), Arg.Any<string?>(), TestContext.Current.CancellationToken).Returns(new List<ActivityViewModel>
             {
                 Fixture.Build<ActivityViewModel>()
                     .Without(x => x.Meta)

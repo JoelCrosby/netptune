@@ -5,6 +5,7 @@ using FluentAssertions;
 using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Activity;
+using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Handlers.BoardGroups.Commands;
 
@@ -21,10 +22,11 @@ public class CreateBoardGroupCommandHandlerTests
     private readonly CreateBoardGroupCommandHandler Handler;
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
 
     public CreateBoardGroupCommandHandlerTests()
     {
-        Handler = new(UnitOfWork, Activity);
+        Handler = new(UnitOfWork, Activity, Identity);
     }
 
     [Fact]
@@ -33,7 +35,7 @@ public class CreateBoardGroupCommandHandlerTests
         var request = Fixture.Build<AddBoardGroupRequest>().Without(p => p.StatusId).Create();
         var board = AutoFixtures.Board;
 
-        UnitOfWork.Boards.GetAsync(request.BoardId!.Value, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(board);
+        UnitOfWork.Boards.GetInWorkspace(request.BoardId!.Value, Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(board);
         UnitOfWork.BoardGroups.AddAsync(Arg.Any<BoardGroup>(), TestContext.Current.CancellationToken).Returns(x => x.Arg<BoardGroup>());
         UnitOfWork.BoardGroups.GetBoardGroupDefaultSortOrder(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(0);
 
@@ -51,7 +53,7 @@ public class CreateBoardGroupCommandHandlerTests
     {
         var request = Fixture.Build<AddBoardGroupRequest>().Without(p => p.StatusId).Create();
 
-        UnitOfWork.Boards.GetAsync(request.BoardId!.Value, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.Board);
+        UnitOfWork.Boards.GetInWorkspace(request.BoardId!.Value, Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.Board);
         UnitOfWork.BoardGroups.AddAsync(Arg.Any<BoardGroup>(), TestContext.Current.CancellationToken).Returns(x => x.Arg<BoardGroup>());
         UnitOfWork.BoardGroups.GetBoardGroupDefaultSortOrder(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(0);
 
@@ -65,7 +67,7 @@ public class CreateBoardGroupCommandHandlerTests
     {
         var request = Fixture.Build<AddBoardGroupRequest>().With(p => p.StatusId, 5).Create();
 
-        UnitOfWork.Boards.GetAsync(request.BoardId!.Value, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.Board);
+        UnitOfWork.Boards.GetInWorkspace(request.BoardId!.Value, Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.Board);
         UnitOfWork.BoardGroups.AddAsync(Arg.Any<BoardGroup>(), TestContext.Current.CancellationToken).Returns(x => x.Arg<BoardGroup>());
         UnitOfWork.BoardGroups.GetBoardGroupDefaultSortOrder(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(0);
         UnitOfWork.Statuses.GetInWorkspace(5, Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken)
@@ -82,7 +84,7 @@ public class CreateBoardGroupCommandHandlerTests
     {
         var request = Fixture.Build<AddBoardGroupRequest>().With(p => p.StatusId, 5).Create();
 
-        UnitOfWork.Boards.GetAsync(request.BoardId!.Value, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.Board);
+        UnitOfWork.Boards.GetInWorkspace(request.BoardId!.Value, Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.Board);
         UnitOfWork.Statuses.GetInWorkspace(5, Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new CreateBoardGroupCommand(request), TestContext.Current.CancellationToken);
@@ -95,7 +97,7 @@ public class CreateBoardGroupCommandHandlerTests
     {
         var request = Fixture.Build<AddBoardGroupRequest>().Without(p => p.StatusId).Create();
 
-        UnitOfWork.Boards.GetAsync(request.BoardId!.Value, Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
+        UnitOfWork.Boards.GetInWorkspace(request.BoardId!.Value, Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
         UnitOfWork.BoardGroups.AddAsync(Arg.Any<BoardGroup>(), TestContext.Current.CancellationToken).Returns(x => x.Arg<BoardGroup>());
         UnitOfWork.BoardGroups.GetBoardGroupDefaultSortOrder(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(0);
 

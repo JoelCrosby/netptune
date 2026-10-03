@@ -1,6 +1,7 @@
 using FluentAssertions;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Handlers.Boards.Queries;
 
@@ -14,10 +15,11 @@ public class GetBoardsInProjectQueryHandlerTests
 {
     private readonly GetBoardsInProjectQueryHandler Handler;
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
 
     public GetBoardsInProjectQueryHandlerTests()
     {
-        Handler = new(UnitOfWork);
+        Handler = new(UnitOfWork, Identity);
     }
 
     [Fact]
@@ -25,6 +27,7 @@ public class GetBoardsInProjectQueryHandlerTests
     {
         var boards = new List<Board> { AutoFixtures.Board };
 
+        UnitOfWork.Projects.GetInWorkspace(1, Arg.Any<int>(), true, TestContext.Current.CancellationToken).Returns(AutoFixtures.Project);
         UnitOfWork.Boards.GetBoardsInProject(1, Arg.Any<bool>(), cancellationToken: TestContext.Current.CancellationToken).Returns(boards);
 
         var result = await Handler.Handle(new GetBoardsInProjectQuery(1), TestContext.Current.CancellationToken);

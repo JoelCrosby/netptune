@@ -32,14 +32,15 @@ public sealed class GetActivitiesQueryHandler : IRequestHandler<GetActivitiesQue
 
     public async ValueTask<ClientResponse<List<ActivityViewModel>>> Handle(GetActivitiesQuery request, CancellationToken cancellationToken)
     {
+        var workspaceId = await Identity.GetWorkspaceId();
         var activities = await UnitOfWork.EventRecords.GetActivities(
             request.EntityType,
             request.EntityId,
-            cancellationToken,
+            workspaceId,
             request.Take,
-            request.Cursor);
+            request.Cursor,
+            cancellationToken);
 
-        var workspaceId = await Identity.GetWorkspaceId();
         var assigneeIds = GetAssigneeIds(activities).ToHashSet();
         var avatars = await UnitOfWork.Users.GetUserAvatars(assigneeIds, workspaceId, cancellationToken);
         var avatarMap = avatars.ToDictionary(k => k.Id, v => v);

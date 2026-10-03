@@ -38,7 +38,9 @@ public sealed class DeleteTasksCommandHandler : IRequestHandler<DeleteTasksComma
         }
 
         var userId = Identity.GetCurrentUserId();
-        var deletedIds = await UnitOfWork.Tasks.SoftDelete(ids, userId, cancellationToken);
+        var workspaceId = await Identity.GetWorkspaceId();
+        var workspaceTaskIds = await UnitOfWork.Tasks.GetValidTaskIdsInWorkspace(ids, workspaceId, cancellationToken);
+        var deletedIds = await UnitOfWork.Tasks.SoftDelete(workspaceTaskIds, userId, cancellationToken);
 
         Activity.LogMany(options =>
         {

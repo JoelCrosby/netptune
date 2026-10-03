@@ -4,6 +4,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
@@ -16,11 +17,13 @@ public sealed class CreateBoardGroupCommandHandler : IRequestHandler<CreateBoard
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IActivityLogger Activity;
+    private readonly IIdentityService Identity;
 
-    public CreateBoardGroupCommandHandler(INetptuneUnitOfWork unitOfWork, IActivityLogger activity)
+    public CreateBoardGroupCommandHandler(INetptuneUnitOfWork unitOfWork, IActivityLogger activity, IIdentityService identity)
     {
         UnitOfWork = unitOfWork;
         Activity = activity;
+        Identity = identity;
     }
 
     public async ValueTask<ClientResponse<BoardGroupViewModel>> Handle(CreateBoardGroupCommand request, CancellationToken cancellationToken)
@@ -28,7 +31,8 @@ public sealed class CreateBoardGroupCommandHandler : IRequestHandler<CreateBoard
         var req = request.Request;
         var boardId = req.BoardId ?? throw new ArgumentNullException(nameof(req.BoardId));
 
-        var board = await UnitOfWork.Boards.GetAsync(boardId, cancellationToken: cancellationToken);
+        var workspaceId = await Identity.GetWorkspaceId();
+        var board = await UnitOfWork.Boards.GetInWorkspace(boardId, workspaceId, cancellationToken: cancellationToken);
 
         if (board is null) return ClientResponse<BoardGroupViewModel>.NotFound;
 

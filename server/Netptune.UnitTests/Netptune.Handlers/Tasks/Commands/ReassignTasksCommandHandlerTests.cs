@@ -58,7 +58,7 @@ public class ReassignTasksCommandHandlerTests
     public async Task ReassignTasks_ShouldReturnCorrectly_WhenInputValid()
     {
         var request = Fixture.Build<ReassignTasksRequest>().Create();
-        UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId, TestContext.Current.CancellationToken).Returns(new List<int>());
+        UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId, Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(new List<int>());
         UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<IEnumerable<int>>(), cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTasks);
 
         var result = await Handler.Handle(new ReassignTasksCommand(request), TestContext.Current.CancellationToken);
@@ -70,7 +70,7 @@ public class ReassignTasksCommandHandlerTests
     public async Task ReassignTasks_ShouldCallCompleteAsync_WhenInputValid()
     {
         var request = Fixture.Build<ReassignTasksRequest>().Create();
-        UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId, TestContext.Current.CancellationToken).Returns(new List<int>());
+        UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId, Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(new List<int>());
         UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<IEnumerable<int>>(), cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTasks);
 
         await Handler.Handle(new ReassignTasksCommand(request), TestContext.Current.CancellationToken);
@@ -82,7 +82,7 @@ public class ReassignTasksCommandHandlerTests
     public async Task ReassignTasks_ShouldLogActivity_WhenValidId()
     {
         var request = Fixture.Build<ReassignTasksRequest>().With(r => r.AssigneeIds, ["user-1"]).Create();
-        UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId, TestContext.Current.CancellationToken).Returns(new List<int>());
+        UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId, Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(new List<int>());
         UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<IEnumerable<int>>(), cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTasks);
 
         await Handler.Handle(new ReassignTasksCommand(request), TestContext.Current.CancellationToken);
@@ -97,7 +97,7 @@ public class ReassignTasksCommandHandlerTests
         var request = Fixture.Build<ReassignTasksRequest>().With(r => r.TaskIds, [1, 2, 3]).Create();
 
         UnitOfWork.Tasks
-            .GetTaskIdsInBoard(request.BoardId, TestContext.Current.CancellationToken)
+            .GetTaskIdsInBoard(request.BoardId, Arg.Any<int>(), TestContext.Current.CancellationToken)
             .Returns(new List<int> { 1, 2 });
 
         await Handler.Handle(new ReassignTasksCommand(request), TestContext.Current.CancellationToken);
@@ -128,7 +128,7 @@ public class ReassignTasksCommandHandlerTests
             .Create();
 
         UnitOfWork.Tasks
-            .GetTaskIdsInBoard(request.BoardId, TestContext.Current.CancellationToken)
+            .GetTaskIdsInBoard(request.BoardId, Arg.Any<int>(), TestContext.Current.CancellationToken)
             .Returns(new List<int> { 1, 2 });
 
         var result = await Handler.Handle(new ReassignTasksCommand(request), TestContext.Current.CancellationToken);
@@ -154,7 +154,7 @@ public class ReassignTasksCommandHandlerTests
             .Create();
 
         UnitOfWork.Tasks
-            .GetTaskIdsInBoard(request.BoardId, TestContext.Current.CancellationToken)
+            .GetTaskIdsInBoard(request.BoardId, Arg.Any<int>(), TestContext.Current.CancellationToken)
             .Returns(new List<int> { 1 });
         UnitOfWork.Tasks
             .ReplaceTaskAssignees(
@@ -202,7 +202,7 @@ public class ReassignTasksCommandHandlerTests
             .Create();
 
         UnitOfWork.Tasks
-            .GetTaskIdsInBoard(request.BoardId, TestContext.Current.CancellationToken)
+            .GetTaskIdsInBoard(request.BoardId, Arg.Any<int>(), TestContext.Current.CancellationToken)
             .Returns(new List<int> { 1 });
 
         var result = await Handler.Handle(new ReassignTasksCommand(request), TestContext.Current.CancellationToken);

@@ -7,6 +7,7 @@ using Netptune.Core.Meta;
 using Netptune.Core.Onboarding.Templates;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
@@ -20,11 +21,13 @@ public sealed class CreateBoardCommandHandler : IRequestHandler<CreateBoardComma
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IActivityLogger Activity;
+    private readonly IIdentityService Identity;
 
-    public CreateBoardCommandHandler(INetptuneUnitOfWork unitOfWork, IActivityLogger activity)
+    public CreateBoardCommandHandler(INetptuneUnitOfWork unitOfWork, IActivityLogger activity, IIdentityService identity)
     {
         UnitOfWork = unitOfWork;
         Activity = activity;
+        Identity = identity;
     }
 
     public async ValueTask<ClientResponse<BoardViewModel>> Handle(CreateBoardCommand request, CancellationToken cancellationToken)
@@ -36,7 +39,8 @@ public sealed class CreateBoardCommandHandler : IRequestHandler<CreateBoardComma
             throw new Exception($"{nameof(req.ProjectId)} is required");
         }
 
-        var project = await UnitOfWork.Projects.GetAsync(req.ProjectId.Value, true, cancellationToken);
+        var currentWorkspaceId = await Identity.GetWorkspaceId();
+        var project = await UnitOfWork.Projects.GetInWorkspace(req.ProjectId.Value, currentWorkspaceId, true, cancellationToken);
 
         if (project is null) return ClientResponse<BoardViewModel>.NotFound;
 

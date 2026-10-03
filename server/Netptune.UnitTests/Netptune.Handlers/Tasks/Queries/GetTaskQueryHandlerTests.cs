@@ -1,5 +1,6 @@
 using FluentAssertions;
 
+using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Handlers.Tasks.Queries;
 
@@ -13,10 +14,11 @@ public class GetTaskQueryHandlerTests
 {
     private readonly GetTaskQueryHandler Handler;
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
 
     public GetTaskQueryHandlerTests()
     {
-        Handler = new(UnitOfWork);
+        Handler = new(UnitOfWork, Identity);
     }
 
     [Fact]
@@ -24,6 +26,7 @@ public class GetTaskQueryHandlerTests
     {
         var task = AutoFixtures.TaskViewModel;
         UnitOfWork.Tasks.GetTaskViewModel(1, TestContext.Current.CancellationToken).Returns(task);
+        Identity.GetWorkspaceId().Returns(task.WorkspaceId ?? 0);
 
         var result = await Handler.Handle(new GetTaskQuery(1), TestContext.Current.CancellationToken);
 

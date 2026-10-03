@@ -837,12 +837,12 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         }
     }
 
-    public async Task<List<int>> GetTaskIdsInBoard(string boardIdentifier, CancellationToken cancellationToken = default)
+    public async Task<List<int>> GetTaskIdsInBoard(string boardIdentifier, int workspaceId, CancellationToken cancellationToken = default)
     {
         using var connection = ConnectionFactory.StartConnection();
 
         var results = await connection.QueryAsync<int>(new CommandDefinition(
-            SqlScripts.GetTaskIdsInBoard, new { boardIdentifier }, cancellationToken: cancellationToken));
+            SqlScripts.GetTaskIdsInBoard, new { boardIdentifier, workspaceId }, cancellationToken: cancellationToken));
 
         return results.ToList();
     }

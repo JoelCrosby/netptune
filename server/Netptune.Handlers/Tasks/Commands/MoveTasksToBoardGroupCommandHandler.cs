@@ -82,7 +82,7 @@ public sealed class MoveTasksToBoardGroupCommandHandler : IRequestHandler<MoveTa
         BoardGroupTaskTarget target,
         CancellationToken cancellationToken)
     {
-        var taskIdsInBoard = await UnitOfWork.Tasks.GetTaskIdsInBoard(target.BoardIdentifier!, cancellationToken);
+        var taskIdsInBoard = await UnitOfWork.Tasks.GetTaskIdsInBoard(target.BoardIdentifier!, target.WorkspaceId, cancellationToken);
         var missingTaskIds = taskIds.Distinct().Where(taskId => !taskIdsInBoard.Contains(taskId)).ToList();
 
         if (missingTaskIds.Count == 0)

@@ -45,14 +45,15 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
     public async ValueTask<ClientResponse> Handle(MoveTasksToGroupCommand request, CancellationToken cancellationToken)
     {
         var req = request.Request;
+        var workspaceId = await Identity.GetWorkspaceId();
         var boardGroup = await UnitOfWork.BoardGroups.GetTaskTarget(req.NewGroupId!.Value, cancellationToken);
 
-        if (boardGroup is null)
+        if (boardGroup is null || boardGroup.WorkspaceId != workspaceId)
         {
-            return ClientResponse.Failed();
+            return ClientResponse.NotFound;
         }
 
-        var taskIdsInBoard = await UnitOfWork.Tasks.GetTaskIdsInBoard(req.BoardId, cancellationToken);
+        var taskIdsInBoard = await UnitOfWork.Tasks.GetTaskIdsInBoard(req.BoardId, workspaceId, cancellationToken);
         var taskIds = req.TaskIds.Where(id => taskIdsInBoard.Contains(id)).ToList();
 
         var oldTasks = boardGroup.StatusId.HasValue

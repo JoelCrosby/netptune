@@ -36,6 +36,7 @@ public class MoveTasksToGroupCommandHandlerTests
     {
         Identity.GetCurrentUserId().Returns("user-1");
         Identity.GetWorkspaceKey().Returns("workspace");
+        Identity.GetWorkspaceId().Returns(1);
         Handler = new(
             UnitOfWork,
             Activity,
@@ -58,7 +59,7 @@ public class MoveTasksToGroupCommandHandlerTests
                 WorkspaceId = 1,
                 StatusId = groupStatusId,
             });
-        UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId, TestContext.Current.CancellationToken).Returns(request.TaskIds);
+        UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId, Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(request.TaskIds);
         UnitOfWork.ProjectTasksInGroups
             .GetPlacementGroupsOnBoard(Arg.Any<IReadOnlyCollection<int>>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
             .Returns(new Dictionary<int, int>());

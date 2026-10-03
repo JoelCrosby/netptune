@@ -55,7 +55,7 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
         await db.SaveChangesAsync(CancellationToken);
 
         var activities = await fixture.CreateRepository(db)
-            .GetActivities(EntityType.Task, entityId, CancellationToken);
+            .GetActivities(EntityType.Task, entityId, fixture.WorkspaceId, cancellationToken: CancellationToken);
 
         activities.Should().HaveCount(1);
 
@@ -91,7 +91,7 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
         await db.SaveChangesAsync(CancellationToken);
 
         var activities = await fixture.CreateRepository(db)
-            .GetActivities(EntityType.Task, entityId, CancellationToken);
+            .GetActivities(EntityType.Task, entityId, fixture.WorkspaceId, cancellationToken: CancellationToken);
 
         activities.Should().HaveCount(1);
         activities[0].Type.Should().Be(ActivityType.ModifyDescription);
@@ -131,7 +131,7 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
 
         var repository = fixture.CreateRepository(db);
 
-        var feed = await repository.GetActivities(EntityType.Task, entityId, CancellationToken);
+        var feed = await repository.GetActivities(EntityType.Task, entityId, fixture.WorkspaceId, cancellationToken: CancellationToken);
 
         feed.Should().HaveCount(1);
         feed[0].RevisionCount.Should().Be(12);
@@ -326,7 +326,7 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
         await db.SaveChangesAsync(CancellationToken);
 
         var activities = await fixture.CreateRepository(db)
-            .GetActivities(EntityType.Task, entityId, CancellationToken);
+            .GetActivities(EntityType.Task, entityId, fixture.WorkspaceId, cancellationToken: CancellationToken);
 
         activities.Should().BeEmpty();
     }
@@ -416,9 +416,10 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
             var items = await repository.GetActivities(
                 EntityType.Task,
                 entityId,
-                CancellationToken,
+                fixture.WorkspaceId,
                 take: 2,
-                cursor: cursor);
+                cursor: cursor,
+                cancellationToken: CancellationToken);
 
             items.Should().HaveCount(2);
 
@@ -430,9 +431,10 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
         (await repository.GetActivities(
             EntityType.Task,
             entityId,
-            CancellationToken,
+            fixture.WorkspaceId,
             take: 2,
-            cursor: cursor))
+            cursor: cursor,
+            cancellationToken: CancellationToken))
             .Should().BeEmpty("six entries read two at a time is exactly three pages");
 
         var ids = pages.SelectMany(page => page).Select(activity => activity.Id).ToList();

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using Netptune.Core.Authorization;
+using Netptune.Core.Entities;
 using Netptune.Entities.Contexts;
 
 namespace Netptune.IntegrationTests.TestServices;
@@ -29,6 +30,10 @@ public sealed class TestAuthenticationHandler : AuthenticationHandler<Authentica
 
     public const string AnonymousHeader = "x-test-anonymous";
 
+    // Signs the request in as the user with this email instead of the netptune Owner, so tests can
+    // check what other members are denied.
+    public const string UserHeader = "x-test-user";
+
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
         var isAnonymousRequest = Request.Headers.ContainsKey(AnonymousHeader);
@@ -38,15 +43,10 @@ public sealed class TestAuthenticationHandler : AuthenticationHandler<Authentica
             return AuthenticateResult.NoResult();
         }
 
-        var user = await DataContext.WorkspaceAppUsers
-            .Include(u => u.Workspace)
-            .Include(u => u.User)
-            .Where(u => u.Workspace.Slug == "netptune" && u.User.UserType == AppUserType.User)
-            .OrderBy(u => u.Role == WorkspaceRole.Owner ? 0 : 1)
-            .ThenBy(u => u.UserId)
-            .Select(u => u.User)
-            .FirstOrDefaultAsync();
-
+        var hasRequestedUser = Request.Headers.TryGetValue(UserHeader, out var requestedEmail);
+        var user = hasRequestedUser
+            ? await DataContext.Users.FirstOrDefaultAsync(u => u.Email == requestedEmail.ToString())
+            : await GetDefaultUser();
 
         if (user is null)
         {
@@ -58,7 +58,7 @@ public sealed class TestAuthenticationHandler : AuthenticationHandler<Authentica
             new (ClaimTypes.Name, user.DisplayName),
             new (ClaimTypes.NameIdentifier, user.Id),
             new (ClaimTypes.Email, user.Email!),
-            new (NetptuneClaims.ActorType, AppUserType.User.ToString()),
+            new (NetptuneClaims.ActorType, user.UserType.ToString()),
         };
 
         if (Request.Headers.TryGetValue("workspace", out var workspace))
@@ -71,5 +71,17 @@ public sealed class TestAuthenticationHandler : AuthenticationHandler<Authentica
         var ticket = new AuthenticationTicket(principal, AuthenticationScheme);
 
         return AuthenticateResult.Success(ticket);
+    }
+
+    private Task<AppUser?> GetDefaultUser()
+    {
+        return DataContext.WorkspaceAppUsers
+            .Include(u => u.Workspace)
+            .Include(u => u.User)
+            .Where(u => u.Workspace.Slug == "netptune" && u.User.UserType == AppUserType.User)
+            .OrderBy(u => u.Role == WorkspaceRole.Owner ? 0 : 1)
+            .ThenBy(u => u.UserId)
+            .Select(u => u.User)
+            .FirstOrDefaultAsync();
     }
 }

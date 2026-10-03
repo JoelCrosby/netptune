@@ -4,6 +4,7 @@ using FluentAssertions;
 
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Activity;
+using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Handlers.BoardGroups.Commands;
 
@@ -20,10 +21,11 @@ public class UpdateBoardGroupCommandHandlerTests
     private readonly UpdateBoardGroupCommandHandler Handler;
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
 
     public UpdateBoardGroupCommandHandlerTests()
     {
-        Handler = new(UnitOfWork, Activity);
+        Handler = new(UnitOfWork, Activity, Identity);
     }
 
     [Fact]
@@ -32,7 +34,7 @@ public class UpdateBoardGroupCommandHandlerTests
         var request = Fixture.Build<UpdateBoardGroupRequest>().Without(p => p.StatusId).With(p => p.ClearStatus, false).Create();
         var boardGroup = AutoFixtures.BoardGroup;
 
-        UnitOfWork.BoardGroups.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(boardGroup);
+        UnitOfWork.BoardGroups.GetInWorkspace(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(boardGroup);
 
         var result = await Handler.Handle(new UpdateBoardGroupCommand(request), TestContext.Current.CancellationToken);
 
@@ -47,7 +49,7 @@ public class UpdateBoardGroupCommandHandlerTests
     public async Task Update_ShouldCallCompleteAsync_WhenInputValid()
     {
         var request = Fixture.Build<UpdateBoardGroupRequest>().Without(p => p.StatusId).With(p => p.ClearStatus, false).Create();
-        UnitOfWork.BoardGroups.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
+        UnitOfWork.BoardGroups.GetInWorkspace(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
 
         await Handler.Handle(new UpdateBoardGroupCommand(request), TestContext.Current.CancellationToken);
 
@@ -59,7 +61,7 @@ public class UpdateBoardGroupCommandHandlerTests
     {
         var request = Fixture.Build<UpdateBoardGroupRequest>().With(p => p.StatusId, 5).With(p => p.ClearStatus, false).Create();
 
-        UnitOfWork.BoardGroups.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
+        UnitOfWork.BoardGroups.GetInWorkspace(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
         UnitOfWork.Statuses.GetInWorkspace(5, Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken)
             .Returns(AutoFixtures.TaskStatus with { Id = 5 });
 
@@ -76,7 +78,7 @@ public class UpdateBoardGroupCommandHandlerTests
         var boardGroup = AutoFixtures.BoardGroup;
         boardGroup.StatusId = 9;
 
-        UnitOfWork.BoardGroups.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(boardGroup);
+        UnitOfWork.BoardGroups.GetInWorkspace(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(boardGroup);
 
         var result = await Handler.Handle(new UpdateBoardGroupCommand(request), TestContext.Current.CancellationToken);
 
@@ -89,7 +91,7 @@ public class UpdateBoardGroupCommandHandlerTests
     {
         var request = Fixture.Build<UpdateBoardGroupRequest>().With(p => p.StatusId, 5).With(p => p.ClearStatus, false).Create();
 
-        UnitOfWork.BoardGroups.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
+        UnitOfWork.BoardGroups.GetInWorkspace(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
         UnitOfWork.Statuses.GetInWorkspace(5, Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new UpdateBoardGroupCommand(request), TestContext.Current.CancellationToken);
@@ -101,7 +103,7 @@ public class UpdateBoardGroupCommandHandlerTests
     public async Task Update_ShouldReturnFailure_WhenNotFound()
     {
         var request = Fixture.Build<UpdateBoardGroupRequest>().Create();
-        UnitOfWork.BoardGroups.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
+        UnitOfWork.BoardGroups.GetInWorkspace(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new UpdateBoardGroupCommand(request), TestContext.Current.CancellationToken);
 

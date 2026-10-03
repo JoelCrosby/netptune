@@ -86,9 +86,10 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
     public async Task<List<ActivityViewModel>> GetActivities(
         EntityType entityType,
         int entityId,
-        CancellationToken cancellationToken = default,
+        int workspaceId,
         int? take = null,
-        string? cursor = null)
+        string? cursor = null,
+        CancellationToken cancellationToken = default)
     {
         var limit = Math.Clamp(take ?? PaginationDefaults.DefaultPageSize, 1, PaginationDefaults.MaxPageSize);
 
@@ -108,7 +109,7 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
         var hasCursor = cursorRequest.TryGetCursor(out var cursorOccurredAt, out var cursorId);
 
         var query = Context.Set<ActivityEntry>()
-            .Where(x => !x.IsDeleted && x.EntityType == entityType)
+            .Where(x => !x.IsDeleted && x.EntityType == entityType && x.WorkspaceId == workspaceId)
             .Where(predicate);
 
         if (hasCursor)

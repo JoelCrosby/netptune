@@ -34,10 +34,12 @@ public sealed class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectC
 
     public async ValueTask<ClientResponse<ProjectViewModel>> Handle(UpdateProjectCommand request, CancellationToken cancellationToken)
     {
+        var workspaceId = await Identity.GetWorkspaceId();
         var project = await UnitOfWork.Projects.GetWithIncludes(request.Request.Id!.Value, cancellationToken);
         var user = await Identity.GetCurrentUser();
+        var isInWorkspace = project?.WorkspaceId == workspaceId;
 
-        if (project is null) return ClientResponse<ProjectViewModel>.NotFound;
+        if (project is null || !isInWorkspace) return ClientResponse<ProjectViewModel>.NotFound;
 
         project.Name = request.Request.Name ?? project.Name;
         project.Description = request.Request.Description ?? project.Description;

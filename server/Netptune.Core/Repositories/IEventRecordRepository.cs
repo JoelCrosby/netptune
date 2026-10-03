@@ -12,7 +12,7 @@ public interface IEventRecordRepository : IRepository<EventRecord, long>
 {
     Task<EventRecord> AppendAsync(EventRecord record, bool publish, CancellationToken cancellationToken = default);
 
-    Task<List<ActivityViewModel>> GetActivities(EntityType entityType, int entityId, CancellationToken cancellationToken = default, int? take = null, string? cursor = null);
+    Task<List<ActivityViewModel>> GetActivities(EntityType entityType, int entityId, int workspaceId, int? take = null, string? cursor = null, CancellationToken cancellationToken = default);
 
     Task<HashSet<Guid>> GetExistingEventIds(IEnumerable<Guid> eventIds, CancellationToken cancellationToken = default);
 

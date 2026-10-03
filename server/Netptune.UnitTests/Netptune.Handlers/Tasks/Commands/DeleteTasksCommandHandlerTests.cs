@@ -23,6 +23,9 @@ public class DeleteTasksCommandHandlerTests
     public DeleteTasksCommandHandlerTests()
     {
         Handler = new(UnitOfWork, Identity, Activity, EventPublisher);
+        UnitOfWork.Tasks
+            .GetValidTaskIdsInWorkspace(Arg.Any<IEnumerable<int>>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(call => call.Arg<IEnumerable<int>>().ToList());
     }
 
     [Fact]

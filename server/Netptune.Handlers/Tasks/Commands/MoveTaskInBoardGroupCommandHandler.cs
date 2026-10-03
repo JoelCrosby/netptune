@@ -45,6 +45,15 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
     public async ValueTask<ClientResponse> Handle(MoveTaskInBoardGroupCommand request, CancellationToken cancellationToken)
     {
         var req = request.Request;
+        var workspaceId = await Identity.GetWorkspaceId();
+        var task = await UnitOfWork.Tasks.GetInWorkspace(req.TaskId, workspaceId, true, cancellationToken);
+        var newGroup = await UnitOfWork.BoardGroups.GetInWorkspace(req.NewGroupId, workspaceId, true, cancellationToken);
+        var isInWorkspace = task is not null && newGroup is not null;
+
+        if (!isInWorkspace)
+        {
+            return ClientResponse.NotFound;
+        }
 
         var response = req.OldGroupId == req.NewGroupId
             ? await MoveTaskInGroup(req, cancellationToken)

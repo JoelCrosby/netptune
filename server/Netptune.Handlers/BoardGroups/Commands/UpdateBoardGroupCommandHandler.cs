@@ -3,6 +3,7 @@ using Mediator;
 using Netptune.Core.Enums;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
@@ -15,17 +16,20 @@ public sealed class UpdateBoardGroupCommandHandler : IRequestHandler<UpdateBoard
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IActivityLogger Activity;
+    private readonly IIdentityService Identity;
 
-    public UpdateBoardGroupCommandHandler(INetptuneUnitOfWork unitOfWork, IActivityLogger activity)
+    public UpdateBoardGroupCommandHandler(INetptuneUnitOfWork unitOfWork, IActivityLogger activity, IIdentityService identity)
     {
         UnitOfWork = unitOfWork;
         Activity = activity;
+        Identity = identity;
     }
 
     public async ValueTask<ClientResponse<BoardGroupViewModel>> Handle(UpdateBoardGroupCommand request, CancellationToken cancellationToken)
     {
         var req = request.Request;
-        var result = await UnitOfWork.BoardGroups.GetAsync(req.BoardGroupId!.Value, cancellationToken: cancellationToken);
+        var workspaceId = await Identity.GetWorkspaceId();
+        var result = await UnitOfWork.BoardGroups.GetInWorkspace(req.BoardGroupId!.Value, workspaceId, cancellationToken: cancellationToken);
 
         if (result is null) return ClientResponse<BoardGroupViewModel>.NotFound;
 

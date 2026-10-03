@@ -32,6 +32,12 @@ public class MoveTaskInBoardGroupCommandHandlerTests
     public MoveTaskInBoardGroupCommandHandlerTests()
     {
         Identity.GetCurrentUserId().Returns("user-1");
+        UnitOfWork.Tasks
+            .GetInWorkspace(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .Returns(AutoFixtures.ProjectTask);
+        UnitOfWork.BoardGroups
+            .GetInWorkspace(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .Returns(AutoFixtures.BoardGroup);
         Handler = new(
             UnitOfWork,
             Activity,
