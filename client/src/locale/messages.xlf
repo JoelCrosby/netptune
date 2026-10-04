@@ -214,6 +214,15 @@
         <source> of <ph id="0" equiv="LIMIT" disp="{{ usage.limitBytes | fileSize // i18n(ph=&quot;LIMIT&quot;) }}"/> </source>
       </segment>
     </unit>
+    <unit id="5275140550656322156">
+      <notes>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:114,115</note>
+        <note category="description">Advice shown when the board filter matches nothing</note>
+      </notes>
+      <segment>
+        <source>Try a project name, or create a new board.</source>
+      </segment>
+    </unit>
     <unit id="5276810742763015515">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:87,89</note>
@@ -636,7 +645,7 @@
     <unit id="7884294193521928458">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:229</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:362</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:383</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1842,7 +1851,7 @@
     <unit id="8878271828886295802">
       <notes>
         <note category="location">src/app/core/services/board-commands.service.ts:67</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:377</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:398</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment>
@@ -3361,7 +3370,7 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-project-field.component.ts:31</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:224</note>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:75</note>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:64,65</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:68,69</note>
         <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:26,29</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:85</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:371</note>
@@ -3591,7 +3600,7 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:163,164</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:115,117</note>
         <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:254,259</note>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:84,86</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:88,90</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:61,62</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:395,399</note>
         <note category="location">src/app/static/components/dialog/dialog-header.component.ts:31</note>
@@ -4447,7 +4456,7 @@
         <note category="location">src/app/entry/dialogs/status-dialog/status-dialog.component.ts:70,73</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:110,113</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:159,161</note>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:75,77</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:79,81</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:97,100</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:176,179</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:222</note>
@@ -4479,7 +4488,7 @@
     </unit>
     <unit id="9013345619407100866">
       <notes>
-        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:57,64</note>
+        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:64,71</note>
         <note category="description">Explains what the set password card does for accounts created through an external provider</note>
       </notes>
       <segment>
@@ -4581,7 +4590,7 @@
     </unit>
     <unit id="3098241202730749011">
       <notes>
-        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:119</note>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:117</note>
         <note category="description">Explains why an import cannot leave the source step</note>
       </notes>
       <segment>
@@ -5717,7 +5726,7 @@
     <unit id="6807439652660785540">
       <notes>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:290</note>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:161</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:169</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:185</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
@@ -5728,7 +5737,7 @@
     <unit id="8398928552891290802">
       <notes>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:295</note>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:166</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:174</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment>
@@ -6379,6 +6388,7 @@
         <note category="location">src/app/core/util/pin-scope.ts:78</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:228</note>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:92</note>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:129,130</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:373</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:21</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:41</note>
@@ -6712,8 +6722,8 @@
       <notes>
         <note category="location">src/app/features/auth/components/login/login.component.ts:92,95</note>
         <note category="location">src/app/features/auth/components/register/register.component.ts:107,109</note>
-        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:42,44</note>
-        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:146</note>
+        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:49,51</note>
+        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:153</note>
         <note category="description">Label of the password field on the login form</note>
       </notes>
       <segment>
@@ -6840,6 +6850,15 @@
         <source>Date format</source>
       </segment>
     </unit>
+    <unit id="3738320398918300569">
+      <notes>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:147,149</note>
+        <note category="description">Button that loads the next page of boards</note>
+      </notes>
+      <segment>
+        <source> Load more boards </source>
+      </segment>
+    </unit>
     <unit id="3739723885372225796">
       <notes>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:379</note>
@@ -6961,7 +6980,7 @@
     </unit>
     <unit id="3241357959735682038">
       <notes>
-        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:85,88</note>
+        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:92,95</note>
         <note category="description">Label of the password confirmation field</note>
       </notes>
       <segment>
@@ -7130,7 +7149,7 @@
     </unit>
     <unit id="1221596867309460035">
       <notes>
-        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:143</note>
+        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:150</note>
         <note category="description">Label of the new password field</note>
       </notes>
       <segment>
@@ -10425,7 +10444,7 @@
     </unit>
     <unit id="5218793950357608759">
       <notes>
-        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:100,103</note>
+        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:107,110</note>
         <note category="description">Button that sets a password on the account</note>
       </notes>
       <segment>
@@ -10960,6 +10979,15 @@
         <source>Delete task</source>
       </segment>
     </unit>
+    <unit id="4511711706564412782">
+      <notes>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:110,111</note>
+        <note category="description">Heading shown when the board filter matches nothing</note>
+      </notes>
+      <segment>
+        <source>No boards match “<ph id="0" equiv="INTERPOLATION" disp="{{ query() }}"/>”</source>
+      </segment>
+    </unit>
     <unit id="451487510499915796">
       <notes>
         <note category="location">src/app/features/reporting/components/sprint-burndown-table.component.ts:21,22</note>
@@ -11143,6 +11171,15 @@
       </notes>
       <segment>
         <source>removed</source>
+      </segment>
+    </unit>
+    <unit id="5874794238234631522">
+      <notes>
+        <note category="location">src/app/static/components/entity-list/entity-list.component.ts:47</note>
+        <note category="description">Column heading for the people involved with a list item</note>
+      </notes>
+      <segment>
+        <source>People</source>
       </segment>
     </unit>
     <unit id="5877588706047001067">
@@ -12558,7 +12595,7 @@
     <unit id="2650015568553587457">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:121,122</note>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:304</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:300</note>
         <note category="description">Shown when a single automation fails to load</note>
       </notes>
       <segment>
@@ -12702,7 +12739,7 @@
     </unit>
     <unit id="5042522818852325305">
       <notes>
-        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:330</note>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:328</note>
         <note category="description">Shown when an import has no file or destination</note>
       </notes>
       <segment>
@@ -12927,7 +12964,7 @@
     </unit>
     <unit id="428134870314022743">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:453</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:449</note>
         <note category="description">Error after failing to save an automation</note>
       </notes>
       <segment>
@@ -13425,7 +13462,7 @@
     </unit>
     <unit id="6904866445262015585">
       <notes>
-        <note category="location">src/app/features/boards/components/boards-grid/boards-grid-card.component.ts:103</note>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:133,134</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:39</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:53</note>
         <note category="location">src/app/features/reporting/components/workload-table.component.ts:49</note>
@@ -13435,7 +13472,7 @@
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:83</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:151</note>
         <note category="location">src/app/workspace.routes.ts:36</note>
-        <note category="description">Stat label for the number of tasks on a board</note>
+        <note category="description">Column heading for the number of tasks on a board</note>
       </notes>
       <segment>
         <source>Tasks</source>
@@ -13453,8 +13490,8 @@
     </unit>
     <unit id="3553216189604488439">
       <notes>
-        <note category="location">src/app/features/boards/components/boards-grid/boards-grid-card.component.ts:107</note>
-        <note category="description">Stat label for when a board was last changed</note>
+        <note category="location">src/app/static/components/entity-list/entity-list.component.ts:50</note>
+        <note category="description">Column heading for when a list item was last changed</note>
       </notes>
       <segment>
         <source>Modified</source>
@@ -13489,7 +13526,7 @@
     </unit>
     <unit id="5787327883657253628">
       <notes>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:50,51</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:54,55</note>
         <note category="description">Label of the board name field</note>
       </notes>
       <segment>
@@ -13498,7 +13535,7 @@
     </unit>
     <unit id="1611891243024655805">
       <notes>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:56,58</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:60,62</note>
         <note category="description">Label of the board URL identifier field</note>
       </notes>
       <segment>
@@ -13508,7 +13545,7 @@
     <unit id="5810814854864452102">
       <notes>
         <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:72,75</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:349</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:370</note>
         <note category="description">Title of the edit-board dialog</note>
       </notes>
       <segment>
@@ -13535,9 +13572,9 @@
     </unit>
     <unit id="5254986591758472931">
       <notes>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:43,46</note>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:87,91</note>
-        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:38,40</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:47,50</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:91,95</note>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:211</note>
         <note category="description">Title of the create-board dialog</note>
       </notes>
       <segment>
@@ -13556,7 +13593,7 @@
     </unit>
     <unit id="8257779685263061072">
       <notes>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:123</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:131</note>
         <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:95,98</note>
         <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:178</note>
         <note category="description">Field name used inside validation messages, e.g. &quot;Board name is required.&quot;</note>
@@ -13567,7 +13604,7 @@
     </unit>
     <unit id="2534295129536831583">
       <notes>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:130</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:138</note>
         <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:185</note>
         <note category="description">Field name used inside validation messages, e.g. &quot;Board identifier is required.&quot;</note>
       </notes>
@@ -13818,7 +13855,7 @@
     </unit>
     <unit id="2231567984326326581">
       <notes>
-        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:384</note>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:382</note>
         <note category="description">Shown when an import file could not be read</note>
       </notes>
       <segment>
@@ -13847,7 +13884,7 @@
     </unit>
     <unit id="7239336941262974806">
       <notes>
-        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:505</note>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:503</note>
         <note category="description">Shown when an import preview could not be built</note>
       </notes>
       <segment>
@@ -13868,7 +13905,7 @@
     </unit>
     <unit id="9210705833797356375">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:213,214</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:233,234</note>
         <note category="description">Tooltip on the button that edits a board group</note>
       </notes>
       <segment>
@@ -13896,7 +13933,7 @@
     <unit id="989480357041643523">
       <notes>
         <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:304,307</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:225,226</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:245,246</note>
         <note category="description">Menu item that deletes a board group</note>
       </notes>
       <segment>
@@ -13914,7 +13951,7 @@
     </unit>
     <unit id="1779801045860441380">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:354</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:375</note>
         <note category="description">Overflow action that opens the manage-groups dialog</note>
       </notes>
       <segment>
@@ -13923,7 +13960,7 @@
     </unit>
     <unit id="6413760592493508393">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:370</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:391</note>
         <note category="description">Overflow action that downloads the board tasks as CSV</note>
       </notes>
       <segment>
@@ -13944,8 +13981,7 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:191</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:193</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:253</note>
-        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:37</note>
-        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:46,49</note>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:64</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:71,72</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:86</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:165</note>
@@ -13958,7 +13994,7 @@
     </unit>
     <unit id="1274285614133216742">
       <notes>
-        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:57,59</note>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:85,87</note>
         <note category="description">Heading of the empty board list</note>
       </notes>
       <segment>
@@ -13985,7 +14021,7 @@
     </unit>
     <unit id="7864156617362454936">
       <notes>
-        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:61,64</note>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:89,92</note>
         <note category="description">Explains what a board is for, on the empty board list</note>
       </notes>
       <segment>
@@ -14012,7 +14048,7 @@
     </unit>
     <unit id="8077962914491228902">
       <notes>
-        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:72,74</note>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:100,102</note>
         <note category="description">Button that opens the create-board dialog</note>
       </notes>
       <segment>
@@ -15010,7 +15046,7 @@
     </unit>
     <unit id="1846542227840529109">
       <notes>
-        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:71,74</note>
+        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:78,81</note>
         <note category="description">Label of the existing password field</note>
       </notes>
       <segment>
@@ -15019,7 +15055,7 @@
     </unit>
     <unit id="1481645236299803925">
       <notes>
-        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:96,98</note>
+        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:103,105</note>
         <note category="description">Button that changes the account password</note>
       </notes>
       <segment>
@@ -15037,7 +15073,7 @@
     </unit>
     <unit id="1543538730036692975">
       <notes>
-        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:169</note>
+        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:176</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment>
@@ -15757,8 +15793,8 @@
     </unit>
     <unit id="5652735137625845954">
       <notes>
-        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:197</note>
-        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:208</note>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:195</note>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:206</note>
         <note category="description">Shown when a started import could not be reopened</note>
       </notes>
       <segment>
@@ -16522,6 +16558,15 @@
         <source>Workload could not be loaded</source>
       </segment>
     </unit>
+    <unit id="8320933431578706321">
+      <notes>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:244</note>
+        <note category="description">Row that opens the create-board dialog for one project</note>
+      </notes>
+      <segment>
+        <source>Create board in <ph id="0" equiv="projectName" disp="projectName"/></source>
+      </segment>
+    </unit>
     <unit id="8322685192229295037">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:95,98</note>
@@ -16581,7 +16626,7 @@
     </unit>
     <unit id="4800829567095869045">
       <notes>
-        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:421</note>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:419</note>
         <note category="description">Shown when the assistant could not improve a mapping</note>
       </notes>
       <segment>
@@ -16622,6 +16667,15 @@
       </notes>
       <segment>
         <source>Set for every workspace</source>
+      </segment>
+    </unit>
+    <unit id="4811493670430490256">
+      <notes>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:65,66</note>
+        <note category="description">Accessible name of the board list filter row</note>
+      </notes>
+      <segment>
+        <source>Filter boards</source>
       </segment>
     </unit>
     <unit id="6054889078801449309">
@@ -17206,7 +17260,7 @@
     </unit>
     <unit id="8241813984684687145">
       <notes>
-        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:532</note>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:530</note>
         <note category="description">Shown when an import could not be started</note>
       </notes>
       <segment>
@@ -17477,7 +17531,7 @@
     </unit>
     <unit id="4363498861095963216">
       <notes>
-        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:356</note>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:354</note>
         <note category="description">Shown when an import file could not be uploaded</note>
       </notes>
       <segment>
@@ -17558,7 +17612,7 @@
     </unit>
     <unit id="3054751514444960309">
       <notes>
-        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:414</note>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:412</note>
         <note category="description">Reports how many assistant suggestions were rejected</note>
       </notes>
       <segment>
@@ -17663,6 +17717,7 @@
     <unit id="7619560701830330401">
       <notes>
         <note category="location">src/app/static/components/skeleton/skeleton-card-grid.component.ts:38</note>
+        <note category="location">src/app/static/components/skeleton/skeleton-entity-list.component.ts:48</note>
         <note category="description">Accessible label while a grid of cards loads</note>
       </notes>
       <segment>
@@ -18537,7 +18592,7 @@
     </unit>
     <unit id="1005293436477635392">
       <notes>
-        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:48,50</note>
+        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:55,57</note>
         <note category="description">Explains what the change password card does</note>
       </notes>
       <segment>
@@ -18968,7 +19023,7 @@
     </unit>
     <unit id="241133425066737749">
       <notes>
-        <note category="location">src/app/core/util/branding.ts:45</note>
+        <note category="location">src/app/core/util/branding.ts:43</note>
         <note category="description">Validation error when a chosen image is too large. SIZE is a formatted byte limit</note>
       </notes>
       <segment>
@@ -19714,7 +19769,7 @@
     </unit>
     <unit id="8207875327947940735">
       <notes>
-        <note category="location">src/app/core/util/branding.ts:39</note>
+        <note category="location">src/app/core/util/branding.ts:37</note>
         <note category="description">Validation error when a chosen file is not a supported image</note>
       </notes>
       <segment>
@@ -20660,7 +20715,7 @@
     </unit>
     <unit id="446781622622565068">
       <notes>
-        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:604</note>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:602</note>
         <note category="description">Shown when an import could not be undone</note>
       </notes>
       <segment>
@@ -22028,6 +22083,15 @@
         <source>Loading settings</source>
       </segment>
     </unit>
+    <unit id="2624825133881874384">
+      <notes>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:238</note>
+        <note category="description">Total tasks across the boards in a project group</note>
+      </notes>
+      <segment>
+        <source><ph id="0" equiv="count" disp="count"/> tasks</source>
+      </segment>
+    </unit>
     <unit id="2627358752486456707">
       <notes>
         <note category="location">src/app/shell/global-commands.service.ts:86</note>
@@ -22558,7 +22622,7 @@
     </unit>
     <unit id="6496945047527833233">
       <notes>
-        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:114</note>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:112</note>
         <note category="description">Explains why an import cannot leave the upload step</note>
       </notes>
       <segment>
@@ -23040,7 +23104,7 @@
     </unit>
     <unit id="6398639872378040675">
       <notes>
-        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:479</note>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:477</note>
         <note category="description">Shown when an import mapping was rejected</note>
       </notes>
       <segment>
