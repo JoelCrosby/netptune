@@ -15,7 +15,6 @@ export const brandingImageAcceptTypes = [
 
 export const brandingImageAccept = brandingImageAcceptTypes.join(',');
 
-// The interceptor only prefixes requests it routes; an <img> src has to be absolute itself.
 export function brandingImageUrl(
   workspaceSlug: string | undefined,
   fileId: string | null | undefined
@@ -31,7 +30,6 @@ export function isBrandingImageType(file: File): boolean {
   return brandingImageAcceptTypes.includes(file.type.toLowerCase());
 }
 
-// The message to show for a file that cannot be used as an image, or '' when it can.
 export function brandingImageError(file: File) {
   const isSupportedType = isBrandingImageType(file);
 

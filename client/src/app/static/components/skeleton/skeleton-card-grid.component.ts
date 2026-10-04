@@ -29,7 +29,7 @@ import { SkeletonComponent } from './skeleton.component';
 })
 export class SkeletonCardGridComponent {
   readonly cards = input(6);
-  // Defaults to the card grid the boards page uses; a page laying its cards out differently
+  // Defaults to a four-up card grid; a page laying its cards out differently
   // passes its own so the skeleton does not reflow when the content arrives.
   readonly gridClass = input(
     'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'

@@ -1,4 +1,4 @@
-import { DialogRef } from '@angular/cdk/dialog';
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import {
   Component,
   computed,
@@ -35,6 +35,10 @@ import { firstValueFrom } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SetupTemplatePickerComponent } from '@app/entry/components/setup-template-picker/setup-template-picker.component';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
+
+export interface CreateBoardDialogData {
+  projectId?: number;
+}
 
 @Component({
   selector: 'app-create-board',
@@ -108,11 +112,15 @@ export class CreateBoardComponent {
 
   dialogRef = inject<DialogRef<CreateBoardComponent>>(DialogRef);
 
+  private readonly data = inject<CreateBoardDialogData | null>(DIALOG_DATA, {
+    optional: true,
+  });
+
   boardFormModel = signal({
     name: '',
     identifier: '',
     color: '',
-    projectId: null as number | null,
+    projectId: this.data?.projectId ?? (null as number | null),
     templateKey: 'software',
   });
 
