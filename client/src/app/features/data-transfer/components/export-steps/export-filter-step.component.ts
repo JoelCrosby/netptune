@@ -114,7 +114,6 @@ export class ExportFilterStepComponent {
   protected readonly boardOptions = computed(() => {
     return this.boards
       .value()
-      .flatMap((group) => group.boards)
       .map((board) => ({ value: board.identifier, label: board.name }));
   });
 

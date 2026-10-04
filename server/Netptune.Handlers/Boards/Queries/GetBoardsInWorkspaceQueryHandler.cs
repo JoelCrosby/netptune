@@ -1,15 +1,16 @@
 using Mediator;
 
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
 
 namespace Netptune.Handlers.Boards.Queries;
 
-public sealed record GetBoardsInWorkspaceQuery(PageRequest? Page = null) : IRequest<List<BoardsViewModel>?>;
+public sealed record GetBoardsInWorkspaceQuery(BoardFilter Filter) : IRequest<ClientResponse<PagedResponse<BoardViewModel>>>;
 
-public sealed class GetBoardsInWorkspaceQueryHandler : IRequestHandler<GetBoardsInWorkspaceQuery, List<BoardsViewModel>?>
+public sealed class GetBoardsInWorkspaceQueryHandler : IRequestHandler<GetBoardsInWorkspaceQuery, ClientResponse<PagedResponse<BoardViewModel>>>
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
@@ -20,13 +21,18 @@ public sealed class GetBoardsInWorkspaceQueryHandler : IRequestHandler<GetBoards
         Identity = identity;
     }
 
-    public async ValueTask<List<BoardsViewModel>?> Handle(GetBoardsInWorkspaceQuery request, CancellationToken cancellationToken)
+    public async ValueTask<ClientResponse<PagedResponse<BoardViewModel>>> Handle(GetBoardsInWorkspaceQuery request, CancellationToken cancellationToken)
     {
         var workspaceKey = Identity.GetWorkspaceKey();
         var workspaceExists = await UnitOfWork.Workspaces.Exists(workspaceKey, cancellationToken);
 
-        if (!workspaceExists) return null;
+        if (!workspaceExists)
+        {
+            return ClientResponse<PagedResponse<BoardViewModel>>.NotFound;
+        }
 
-        return await UnitOfWork.Boards.GetBoardViewModels(workspaceKey, cancellationToken, request.Page);
+        var page = await UnitOfWork.Boards.GetBoardsPage(workspaceKey, request.Filter, cancellationToken);
+
+        return ClientResponse<PagedResponse<BoardViewModel>>.Success(page);
     }
 }

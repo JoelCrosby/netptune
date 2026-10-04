@@ -1,5 +1,7 @@
 using FluentAssertions;
 
+using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
@@ -25,26 +27,27 @@ public class GetBoardsInWorkspaceQueryHandlerTests
     [Fact]
     public async Task GetBoardsInWorkspace_ShouldReturnCorrectly_WhenValidId()
     {
-        var viewModels = new List<BoardsViewModel> { AutoFixtures.BoardsViewModel };
+        var filter = new BoardFilter { Search = "neo" };
+        var page = new PagedResponse<BoardViewModel>([AutoFixtures.BoardViewModel], 1, 50, 1);
 
         Identity.GetWorkspaceKey().Returns("key");
         UnitOfWork.Workspaces.Exists("key", TestContext.Current.CancellationToken).Returns(true);
-        UnitOfWork.Boards.GetBoardViewModels("key", TestContext.Current.CancellationToken).Returns(viewModels);
+        UnitOfWork.Boards.GetBoardsPage("key", filter, TestContext.Current.CancellationToken).Returns(page);
 
-        var result = await Handler.Handle(new GetBoardsInWorkspaceQuery(), TestContext.Current.CancellationToken);
+        var result = await Handler.Handle(new GetBoardsInWorkspaceQuery(filter), TestContext.Current.CancellationToken);
 
-        result.Should().NotBeEmpty();
-        result.Should().BeEquivalentTo(viewModels);
+        result.IsSuccess.Should().BeTrue();
+        result.Payload.Should().BeEquivalentTo(page);
     }
 
     [Fact]
-    public async Task GetBoardsInWorkspace_ShouldReturnNull_WhenWorkspaceNotExists()
+    public async Task GetBoardsInWorkspace_ShouldReturnNotFound_WhenWorkspaceNotExists()
     {
         Identity.GetWorkspaceKey().Returns("key");
         UnitOfWork.Workspaces.Exists("key", TestContext.Current.CancellationToken).Returns(false);
 
-        var result = await Handler.Handle(new GetBoardsInWorkspaceQuery(), TestContext.Current.CancellationToken);
+        var result = await Handler.Handle(new GetBoardsInWorkspaceQuery(new BoardFilter()), TestContext.Current.CancellationToken);
 
-        result.Should().BeNull();
+        result.IsNotFound.Should().BeTrue();
     }
 }

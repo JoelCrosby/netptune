@@ -1,13 +1,20 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  linkedSignal,
+  signal,
+} from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import {
   CreateBoardComponent,
   CreateBoardDialogData,
 } from '@boards/components/create-board/create-board.component';
-import { workspaceBoardsResource } from '@core/resources/board.resource';
+import { workspaceBoardsPageResource } from '@core/resources/board.resource';
 import { DialogService } from '@core/services/dialog.service';
 import { delayedLoading } from '@core/util/delayed-loading';
-import { BoardsViewModel } from '@core/models/view-models/boards-view-model';
+import { BoardViewModel } from '@core/models/view-models/board-view-model';
+import { hasNextPage, Page } from '@core/models/pagination';
 import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { SkeletonEntityListComponent } from '@static/components/skeleton/skeleton-entity-list.component';
@@ -15,6 +22,7 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
 import { PERMISSIONS } from '@core/auth/permissions';
 import { LucideKanban, LucidePlus, LucideSearchX } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
+import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { SearchInputComponent } from '@static/components/search-input/search-input.component';
 import { CollapsibleGroupComponent } from '@static/components/collapsible-group/collapsible-group.component';
@@ -39,6 +47,7 @@ interface BoardGroup {
     PageHeaderComponent,
     EmptyStateComponent,
     FlatButtonComponent,
+    StrokedButtonComponent,
     SearchInputComponent,
     CollapsibleGroupComponent,
     EntityListComponent,
@@ -57,7 +66,7 @@ interface BoardGroup {
         [actionTitle]="canCreateBoards() ? createBoardLabel : null"
         [count]="count()"
         (actionClick)="onCreateBoardClicked()">
-        @if (hasBoards()) {
+        @if (hasBoards() || query()) {
           <app-search-input
             pageHeaderFilters
             [term]="query()"
@@ -66,11 +75,11 @@ interface BoardGroup {
       </app-page-header>
 
       <app-page-body scroll>
-        @if (loading()) {
+        @if (initialLoad()) {
           @if (showSkeleton()) {
             <app-skeleton-entity-list />
           }
-        } @else if (!hasBoards()) {
+        } @else if (!hasBoards() && !query()) {
           <app-empty-state
             i18n-title="Heading of the empty board list"
             title="There are currently no boards."
@@ -93,12 +102,12 @@ interface BoardGroup {
               </button>
             }
           </app-empty-state>
-        } @else if (groups().length === 0) {
+        } @else if (!hasBoards()) {
           <app-empty-state
             outlined
             compact
             i18n-title="Heading shown when the board filter matches nothing"
-            title="No boards match “{{ query().trim() }}”"
+            title="No boards match “{{ query() }}”"
             i18n-description="
               Advice shown when the board filter matches nothing
             "
@@ -126,6 +135,19 @@ interface BoardGroup {
                   (actionClick)="onCreateBoardClicked(group.projectId)" />
               </app-collapsible-group>
             }
+
+            @if (hasMore()) {
+              <button
+                app-stroked-button
+                type="button"
+                class="self-center"
+                [disabled]="loading()"
+                (click)="loadMore()">
+                <span i18n="Button that loads the next page of boards">
+                  Load more boards
+                </span>
+              </button>
+            }
           </div>
         }
       </app-page-body>
@@ -136,42 +158,67 @@ export class BoardsViewComponent {
   private dialog = inject(DialogService);
   private readonly workspaceSlug = inject(CurrentWorkspaceService).slug;
 
-  readonly boardsResource = workspaceBoardsResource();
+  readonly query = signal('');
 
-  loading = this.boardsResource.isLoading;
-  showSkeleton = delayedLoading(this.loading);
-  boards = this.boardsResource.value;
+  // Back to the first page whenever the search or the workspace changes.
+  readonly page = linkedSignal(() => {
+    this.query();
+    this.workspaceSlug();
 
-  count = computed(() => {
-    if (this.loading()) return null;
-
-    return this.boards().reduce(
-      (total, group) => total + group.boards.length,
-      0
-    );
+    return 1;
   });
 
+  readonly boardsResource = workspaceBoardsPageResource(this.query, this.page);
+
+  loading = this.boardsResource.isLoading;
+
+  // The last page to arrive, kept while the next one loads so the list does
+  // not blank out between searches.
+  private readonly lastPage = linkedSignal<
+    Page<BoardViewModel> | undefined,
+    Page<BoardViewModel> | undefined
+  >({
+    source: () => this.boardsResource.value()?.payload,
+    computation: (page, previous) => page ?? previous?.value,
+  });
+
+  // Every page loaded so far for the current search. The first page replaces
+  // the list; later pages append to it.
+  private readonly boards = linkedSignal<
+    Page<BoardViewModel> | undefined,
+    BoardViewModel[]
+  >({
+    source: () => this.boardsResource.value()?.payload,
+    computation: (page, previous) => {
+      const loaded = previous?.value ?? [];
+
+      if (!page) return loaded;
+      if (page.page === 1) return page.items;
+
+      return mergeBoards(loaded, page.items);
+    },
+  });
+
+  initialLoad = computed(() => this.loading() && !this.lastPage());
+  showSkeleton = delayedLoading(this.initialLoad);
+
+  count = computed(() => this.lastPage()?.totalCount ?? null);
   hasBoards = computed(() => (this.count() ?? 0) > 0);
+  hasMore = computed(() => hasNextPage(this.lastPage()));
 
   canCreateBoards = hasPermission(PERMISSIONS.boards.create);
 
   readonly createBoardLabel = $localize`:Button that opens the create-board dialog:Create Board`;
 
-  readonly query = signal('');
   readonly collapsed = signal<ReadonlySet<number>>(new Set());
 
   readonly groups = computed(() => {
-    const term = this.query().trim().toLowerCase();
-    const workspaceSlug = this.workspaceSlug();
-
-    if (!workspaceSlug) {
-      return [];
-    }
-
-    return this.boards()
-      .map((group) => toBoardGroup(group, term, workspaceSlug))
-      .filter((group) => group.items.length > 0);
+    return groupByProject(this.boards(), this.workspaceSlug());
   });
+
+  loadMore() {
+    this.page.update((page) => page + 1);
+  }
 
   setExpanded(projectId: number, expanded: boolean) {
     this.collapsed.update((collapsed) => {
@@ -207,26 +254,38 @@ export class BoardsViewComponent {
   }
 }
 
-function toBoardGroup(
-  group: BoardsViewModel,
-  term: string,
+// The API orders boards by project, so each project's boards arrive together.
+function groupByProject(
+  boards: readonly BoardViewModel[],
   workspaceSlug: string | undefined
-): BoardGroup {
-  const projectMatches = group.projectName.toLowerCase().includes(term);
+): BoardGroup[] {
+  const groups = new Map<number, BoardGroup>();
 
-  const boards = group.boards.filter((board) => {
-    if (!term || projectMatches) return true;
+  for (const board of boards) {
+    const group = groups.get(board.projectId) ?? {
+      projectId: board.projectId,
+      projectName: board.projectName,
+      items: [],
+      taskCount: 0,
+    };
 
-    const name = board.name.toLowerCase();
-    const identifier = board.identifier.toLowerCase();
+    group.items.push(toBoardListItem(board, workspaceSlug));
+    group.taskCount += board.taskCount;
 
-    return name.includes(term) || identifier.includes(term);
-  });
+    groups.set(board.projectId, group);
+  }
 
-  return {
-    projectId: group.projectId,
-    projectName: group.projectName,
-    items: boards.map((board) => toBoardListItem(board, workspaceSlug)),
-    taskCount: boards.reduce((total, board) => total + board.taskCount, 0),
-  };
+  return [...groups.values()];
+}
+
+// A reload of a later page can return boards already on the list; the newer
+// copy wins.
+function mergeBoards(
+  loaded: readonly BoardViewModel[],
+  incoming: readonly BoardViewModel[]
+): BoardViewModel[] {
+  const incomingIds = new Set(incoming.map((board) => board.id));
+  const kept = loaded.filter((board) => !incomingIds.has(board.id));
+
+  return [...kept, ...incoming];
 }

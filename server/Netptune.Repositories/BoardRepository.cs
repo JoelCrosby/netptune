@@ -9,6 +9,7 @@ using Netptune.Core.Meta;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Boards;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
@@ -70,30 +71,53 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<List<BoardsViewModel>> GetBoardViewModels(string slug, CancellationToken cancellationToken = default, PageRequest? pageRequest = null)
+    public async Task<PagedResponse<BoardViewModel>> GetBoardsPage(string slug, BoardFilter filter, CancellationToken cancellationToken = default)
     {
-        pageRequest ??= new PageRequest();
-        var pagination = pageRequest.GetPagination();
+        var search = filter.Search?.Trim().ToLower() ?? string.Empty;
+        var pagination = filter.GetPagination();
 
+        var rows = await QueryBoardRows(slug, null, search, pagination, cancellationToken);
+        var items = rows.ConvertAll(ToBoardViewModel);
+        var totalCount = rows.Count > 0 ? (int)rows[0].Total_Count : 0;
+
+        return new PagedResponse<BoardViewModel>(items, pagination.Page, pagination.PageSize, totalCount);
+    }
+
+    public async Task<BoardViewModel?> GetWorkspaceBoardViewModel(string slug, int boardId, CancellationToken cancellationToken = default)
+    {
+        var pagination = new PageRequest { PageSize = 1 }.GetPagination();
+        var rows = await QueryBoardRows(slug, boardId, string.Empty, pagination, cancellationToken);
+
+        return rows.Count > 0 ? ToBoardViewModel(rows[0]) : null;
+    }
+
+    private async Task<List<BoardViewModelRowMap>> QueryBoardRows(
+        string slug,
+        int? boardId,
+        string search,
+        Pagination pagination,
+        CancellationToken cancellationToken)
+    {
         using var connection = ConnectionFactory.StartConnection();
 
         var command = new CommandDefinition(SqlScripts.GetWorkspaceBoards, new
         {
             slug,
+            boardId,
+            search,
+            searchPattern = $"%{search}%",
             skip = pagination.Skip,
             pageSize = pagination.PageSize,
         }, cancellationToken: cancellationToken);
 
         var rows = await connection.QueryAsync<BoardViewModelRowMap>(command);
 
-        static BoardMeta GetMetaInfo(BoardViewModelRowMap board)
-        {
-            return !string.IsNullOrEmpty(board.Meta_Info)
-                ? JsonSerializer.Deserialize<BoardMeta>(board.Meta_Info) ?? new()
-                : new();
-        }
+        return rows.AsList();
+    }
 
-        return rows.Select(board => new BoardViewModel
+    private static BoardViewModel ToBoardViewModel(BoardViewModelRowMap board)
+    {
+        return new BoardViewModel
         {
             Id = board.Id,
             Name = board.Name,
@@ -108,32 +132,14 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
             TaskCount = board.Task_Count,
             LastUpdated = board.Last_Updated ?? board.Created_At,
             Assignees = BoardViewAssigneeRowMap.ParseList(board.Assignees),
-        })
-            .Aggregate(new List<BoardsViewModel>(), (prev, board) =>
-            {
-                var last = prev.Count > 0 ? prev[^1] : null;
+        };
+    }
 
-                if (last?.ProjectId == board.ProjectId)
-                {
-                    last.Boards.Add(board);
+    private static BoardMeta GetMetaInfo(BoardViewModelRowMap board)
+    {
+        if (string.IsNullOrEmpty(board.Meta_Info)) return new();
 
-                    return prev;
-                }
-
-                if (last is null || last.ProjectId != board.ProjectId)
-                {
-                    prev.Add(new BoardsViewModel
-                    {
-                        ProjectId = board.ProjectId,
-                        ProjectName = board.ProjectName,
-                        Boards = new List<BoardViewModel> { board },
-                    });
-                }
-
-                return prev;
-            })
-
-            .ToList();
+        return JsonSerializer.Deserialize<BoardMeta>(board.Meta_Info) ?? new();
     }
 
     public Task<int?> GetIdByIdentifier(string identifier, int workspaceId, CancellationToken cancellationToken = default)

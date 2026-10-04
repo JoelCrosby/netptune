@@ -13,10 +13,9 @@ internal static class AiBoardLookup
         int boardId,
         CancellationToken cancellationToken)
     {
-        var projects = await mediator.Send(new GetBoardsInWorkspaceQuery(), cancellationToken);
-        var boards = projects?.SelectMany(project => project.Boards);
+        var result = await mediator.Send(new GetBoardQuery(boardId), cancellationToken);
 
-        return boards?.FirstOrDefault(board => board.Id == boardId);
+        return result.IsSuccess ? result.Payload : null;
     }
 
     public static async Task<BoardGroupOptionViewModel?> FindGroup(
@@ -29,8 +28,6 @@ internal static class AiBoardLookup
         return options.FirstOrDefault(option => option.Id == boardGroupId);
     }
 
-    // The options query orders groups by sort order within a board, so this list is the column
-    // order the user sees on the board.
     public static async Task<List<BoardGroupOptionViewModel>> FindGroupsInBoard(
         IMediator mediator,
         int boardId,

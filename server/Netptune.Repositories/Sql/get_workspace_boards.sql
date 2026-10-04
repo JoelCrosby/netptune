@@ -1,5 +1,8 @@
--- Boards in a workspace for BoardRepository.GetBoardViewModels, with per-board task stats and the
--- distinct users assigned to the board's tasks (busiest first) pre-aggregated as JSON.
+-- Boards in a workspace for BoardRepository.GetBoardsPage and GetWorkspaceBoardViewModel, with
+-- per-board task stats and the distinct users assigned to the board's tasks (busiest first)
+-- pre-aggregated as JSON. A null @boardId and an empty @search match every board; otherwise
+-- @searchPattern is matched against the board name, identifier and project name.
+-- count(*) OVER () carries the unpaged total on every row.
 SELECT b.id,
        b.name,
        b.identifier,
@@ -14,7 +17,8 @@ SELECT b.id,
        p.name AS project_name,
        task_stats.task_count,
        task_stats.last_updated,
-       board_assignees.assignees
+       board_assignees.assignees,
+       count(*) OVER () AS total_count
 FROM boards AS b
          INNER JOIN projects AS p ON b.project_id = p.id AND NOT p.is_deleted
          INNER JOIN workspaces AS w ON p.workspace_id = w.id AND NOT w.is_deleted
@@ -47,6 +51,12 @@ FROM boards AS b
                       INNER JOIN users AS au ON au.id = assigned.user_id
          ) AS board_assignees ON TRUE
 WHERE w.slug = @slug AND NOT b.is_deleted
+  AND (@boardId IS NULL OR b.id = @boardId)
+  AND (@search = '' OR (
+      LOWER(b.name) LIKE @searchPattern
+      OR LOWER(b.identifier) LIKE @searchPattern
+      OR LOWER(p.name) LIKE @searchPattern
+  ))
 ORDER BY COALESCE(p.updated_at, p.created_at) DESC, p.id DESC, COALESCE(b.updated_at, b.created_at) DESC, b.id DESC
 OFFSET @skip
 LIMIT @pageSize

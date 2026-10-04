@@ -93,12 +93,10 @@ export class QueryFieldOptionsService {
 
     sources.set(
       'boards',
-      this.boards().flatMap((project) => {
-        return project.boards.map((board) => ({
-          value: String(board.id),
-          label: board.name,
-        }));
-      })
+      this.boards().map((board) => ({
+        value: String(board.id),
+        label: board.name,
+      }))
     );
 
     sources.set('relation-types', this.relationTypeOptions());

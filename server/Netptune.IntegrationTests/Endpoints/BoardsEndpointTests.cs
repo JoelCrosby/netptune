@@ -149,15 +149,36 @@ public sealed class BoardsEndpointTests
     }
 
     [Fact]
-    public async Task GetBoardsInWorkspace_ShouldReturnCorrectly_WhenInputValid()
+    public async Task GetBoardsInWorkspace_ShouldReturnAPagedEnvelope_WhenInputValid()
     {
-        var response = await Client.GetAsync("api/boards/workspace");
+        var response = await Client.GetAsync("api/boards?page=1&pageSize=1");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var result = await response.Content.ReadFromJsonAsync<List<BoardViewModel>>();
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<BoardViewModel>>>();
 
-        result!.Should().NotBeEmpty();
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Page.Should().Be(1);
+        result.Payload.PageSize.Should().Be(1);
+        result.Payload.Items.Should().ContainSingle();
+        result.Payload.TotalCount.Should().BeGreaterThan(1);
+    }
+
+    [Fact]
+    public async Task GetBoardsInWorkspace_ShouldOnlyMatchTheSearchTerm_WhenSearchProvided()
+    {
+        var response = await Client.GetAsync("api/boards?search=NEOV");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<BoardViewModel>>>();
+
+        result.Payload!.Items.Should().Contain(board => board.Identifier == "neovim");
+        result.Payload.Items.Should().OnlyContain(board =>
+            board.Name.Contains("neov", StringComparison.OrdinalIgnoreCase)
+            || board.Identifier.Contains("neov", StringComparison.OrdinalIgnoreCase)
+            || board.ProjectName.Contains("neov", StringComparison.OrdinalIgnoreCase));
+        result.Payload.TotalCount.Should().Be(result.Payload.Items.Count);
     }
 
     [Fact]
@@ -166,11 +187,11 @@ public sealed class BoardsEndpointTests
         var assignee = SeedData.Users.ElementAt(0);
         await SeedBoardTask("workspace assignees", [], assignee.Id);
 
-        var result = await Client.GetFromJsonAsync<List<BoardsViewModel>>(
-            "api/boards/workspace",
+        var result = await Client.GetFromJsonAsync<ClientResponse<PagedResponse<BoardViewModel>>>(
+            "api/boards?search=neovim",
             TestContext.Current.CancellationToken);
 
-        var board = result!.SelectMany(group => group.Boards).Single(board => board.Identifier == "neovim");
+        var board = result.Payload!.Items.Single(board => board.Identifier == "neovim");
 
         board.Assignees.Should().ContainSingle(user => user.Id == assignee.Id);
     }

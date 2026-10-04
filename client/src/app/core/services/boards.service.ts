@@ -6,7 +6,6 @@ import { appendPageParams, MAX_PAGE_SIZE } from '@core/models/pagination';
 import { AddBoardRequest } from '@core/models/requests/add-board-request';
 import { UpdateBoardRequest } from '@core/models/requests/update-board-request';
 import { BoardViewModel } from '@core/models/view-models/board-view-model';
-import { BoardsViewModel } from '@core/models/view-models/boards-view-model';
 
 @Service()
 export class BoardsService {
@@ -14,12 +13,6 @@ export class BoardsService {
 
   get(projectId: number) {
     return this.http.get<BoardViewModel[]>(`api/boards/project/${projectId}`, {
-      params: appendPageParams(new HttpParams(), { pageSize: MAX_PAGE_SIZE }),
-    });
-  }
-
-  getByWorkspace() {
-    return this.http.get<BoardsViewModel[]>(`api/boards/workspace`, {
       params: appendPageParams(new HttpParams(), { pageSize: MAX_PAGE_SIZE }),
     });
   }

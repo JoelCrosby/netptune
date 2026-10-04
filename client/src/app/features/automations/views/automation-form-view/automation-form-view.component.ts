@@ -227,11 +227,7 @@ export class AutomationFormViewComponent {
   readonly projectsResource = projectResource();
   readonly workspaceBoardsResource = workspaceBoardsResource();
 
-  readonly workspaceBoards = computed(() => {
-    return this.workspaceBoardsResource
-      .value()
-      .flatMap((project) => project.boards);
-  });
+  readonly workspaceBoards = this.workspaceBoardsResource.value;
   readonly ruleResource = automationRuleResource<AutomationRule>(this.ruleId);
 
   readonly taskStatuses = this.taskStatusesResource.value;

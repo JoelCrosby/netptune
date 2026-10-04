@@ -121,10 +121,6 @@ public static class AutoFixtures
         .Build<BoardViewModel>()
         .Create();
 
-    public static BoardsViewModel BoardsViewModel => Fixture
-        .Build<BoardsViewModel>()
-        .Create();
-
     public static Tag Tag => Fixture
         .Build<Tag>()
         .Without(p => p.Tasks)

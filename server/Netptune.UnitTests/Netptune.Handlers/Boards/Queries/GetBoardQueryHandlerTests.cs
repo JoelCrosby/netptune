@@ -13,7 +13,7 @@ namespace Netptune.UnitTests.Netptune.Handlers.Boards.Queries;
 
 public class GetBoardQueryHandlerTests
 {
-    private const int WorkspaceId = 7;
+    private const string WorkspaceKey = "workspace";
 
     private readonly GetBoardQueryHandler Handler;
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
@@ -21,7 +21,7 @@ public class GetBoardQueryHandlerTests
 
     public GetBoardQueryHandlerTests()
     {
-        Identity.GetWorkspaceId().Returns(WorkspaceId);
+        Identity.GetWorkspaceKey().Returns(WorkspaceKey);
 
         Handler = new(UnitOfWork, Identity);
     }
@@ -29,33 +29,20 @@ public class GetBoardQueryHandlerTests
     [Fact]
     public async Task GetBoard_ShouldReturnCorrectly_WhenInputValid()
     {
-        var board = AutoFixtures.Board;
-        board.IsDeleted = false;
+        var board = AutoFixtures.BoardViewModel;
 
-        UnitOfWork.Boards.GetInWorkspace(Arg.Any<int>(), WorkspaceId, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(board);
+        UnitOfWork.Boards.GetWorkspaceBoardViewModel(WorkspaceKey, 1, TestContext.Current.CancellationToken).Returns(board);
 
         var result = await Handler.Handle(new GetBoardQuery(1), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
-    }
-
-    [Fact]
-    public async Task GetBoard_ShouldReturnNotFound_WhenTheBoardIsDeleted()
-    {
-        var board = AutoFixtures.Board;
-        board.IsDeleted = true;
-
-        UnitOfWork.Boards.GetInWorkspace(Arg.Any<int>(), WorkspaceId, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(board);
-
-        var result = await Handler.Handle(new GetBoardQuery(1), TestContext.Current.CancellationToken);
-
-        result.IsNotFound.Should().BeTrue();
+        result.Payload.Should().BeEquivalentTo(board);
     }
 
     [Fact]
     public async Task GetBoard_ShouldReturnFailure_WhenNotFound()
     {
-        UnitOfWork.Boards.GetInWorkspace(Arg.Any<int>(), WorkspaceId, Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
+        UnitOfWork.Boards.GetWorkspaceBoardViewModel(WorkspaceKey, Arg.Any<int>(), TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new GetBoardQuery(1), TestContext.Current.CancellationToken);
 

@@ -32,12 +32,3 @@ public class BoardViewModel
 
     public List<AssigneeViewModel> Assignees { get; set; } = new();
 }
-
-public class BoardsViewModel
-{
-    public int ProjectId { get; set; }
-
-    public string ProjectName { get; set; } = null!;
-
-    public List<BoardViewModel> Boards { get; set; } = null!;
-}

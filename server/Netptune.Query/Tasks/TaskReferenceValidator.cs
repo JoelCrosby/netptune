@@ -105,8 +105,7 @@ public sealed class TaskReferenceValidator
 
             case QueryOptionSources.Boards:
                 {
-                    var projectBoards = await UnitOfWork.Boards.GetBoardViewModels(scope.WorkspaceKey, cancellationToken);
-                    var boards = projectBoards.SelectMany(project => project.Boards);
+                    var boards = await UnitOfWork.Boards.GetBoards(scope.WorkspaceKey, true, cancellationToken);
 
                     return boards.Select(board => board.Id.ToString()).ToHashSet();
                 }

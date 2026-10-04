@@ -284,16 +284,13 @@ public class BoardToolTests
             TaskCount = 4,
         };
 
-        var project = new BoardsViewModel
-        {
-            ProjectId = 3,
-            ProjectName = "Netptune",
-            Boards = [board],
-        };
+        Mediator
+            .Send(Arg.Is<GetBoardQuery>(query => query.Id == BoardId), Arg.Any<CancellationToken>())
+            .Returns(ClientResponse<BoardViewModel>.Success(board));
 
         Mediator
-            .Send(Arg.Any<GetBoardsInWorkspaceQuery>(), Arg.Any<CancellationToken>())
-            .Returns(new List<BoardsViewModel> { project });
+            .Send(Arg.Is<GetBoardQuery>(query => query.Id != BoardId), Arg.Any<CancellationToken>())
+            .Returns(ClientResponse<BoardViewModel>.NotFound);
     }
 
     private void GivenBoardGroups()

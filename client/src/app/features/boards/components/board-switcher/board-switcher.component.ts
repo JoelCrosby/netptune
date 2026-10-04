@@ -71,13 +71,11 @@ export class BoardSwitcherComponent {
   protected readonly searchPlaceholder = $localize`:Placeholder in the box that narrows the list of boards:Search boards`;
 
   protected readonly options = computed<FilterOption<string>[]>(() => {
-    return this.boards.value().flatMap((group) => {
-      return group.boards.map((board) => ({
-        value: board.identifier,
-        label: board.name,
-        hint: group.projectName,
-      }));
-    });
+    return this.boards.value().map((board) => ({
+      value: board.identifier,
+      label: board.name,
+      hint: board.projectName,
+    }));
   });
 
   protected readonly selected = computed(() => {

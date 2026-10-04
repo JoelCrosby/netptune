@@ -73,16 +73,20 @@ public static class BoardsEndpoints
             return boardsInProject is null ? TypedResults.NotFound() : TypedResults.Ok(boardsInProject);
         }
 
-        var groupedBoards = await mediator.Send(new GetBoardsInWorkspaceQuery(page), cancellationToken);
+        var filter = new BoardFilter
+        {
+            Page = page.Page,
+            PageSize = page.PageSize,
+        };
 
-        if (groupedBoards is null)
+        var result = await mediator.Send(new GetBoardsInWorkspaceQuery(filter), cancellationToken);
+
+        if (!result.IsSuccess || result.Payload is null)
         {
             return TypedResults.NotFound();
         }
 
-        var boards = groupedBoards.SelectMany(project => project.Boards).ToList();
-
-        return TypedResults.Ok(boards);
+        return TypedResults.Ok(result.Payload.Items.ToList());
     }
 
     private static async Task<Results<Ok<BoardViewModel>, NotFound>> GetBoard(

@@ -74,9 +74,7 @@ export class ImportWizardService {
   private pollHandle: ReturnType<typeof setInterval> | null = null;
   private lastProgressAt = 0;
 
-  readonly boards = computed(() => {
-    return this.boardsResource.value().flatMap((group) => group.boards);
-  });
+  readonly boards = this.boardsResource.value;
 
   readonly fileName = computed(() => {
     return this.file()?.name ?? this.session()?.originalName ?? null;

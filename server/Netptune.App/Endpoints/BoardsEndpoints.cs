@@ -17,7 +17,7 @@ public static class BoardsEndpoints
         var group = builder.MapGroup("boards");
 
         group.MapGet("/{id}", HandleGet).RequireAuthorization(NetptunePermissions.Boards.Read);
-        group.MapGet("/workspace", HandleGetBoardsInWorkspace).RequireAuthorization(NetptunePermissions.Boards.Read);
+        group.MapGet("/", HandleGetBoardsInWorkspace).RequireAuthorization(NetptunePermissions.Boards.Read);
         group.MapGet("/project/{projectId}", HandleGetBoardsInProject).RequireAuthorization(NetptunePermissions.Boards.Read);
         group.MapGet("/view/{identifier}", HandleGetBoardView).RequireAuthorization(NetptunePermissions.Boards.Read);
         group.MapPut("/", HandlePut).RequireAuthorization(NetptunePermissions.Boards.Update)
@@ -40,14 +40,12 @@ public static class BoardsEndpoints
 
     public static async Task<IResult> HandleGetBoardsInWorkspace(
         IMediator mediator,
-        [AsParameters] PageRequest page,
+        [AsParameters] BoardFilter filter,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetBoardsInWorkspaceQuery(page), cancellationToken);
+        var result = await mediator.Send(new GetBoardsInWorkspaceQuery(filter), cancellationToken);
 
-        if (result is null) return Results.NotFound();
-
-        return Results.Ok(result);
+        return result.ToResult();
     }
 
     public static async Task<IResult> HandleGetBoardsInProject(

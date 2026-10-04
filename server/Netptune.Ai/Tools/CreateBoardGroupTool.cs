@@ -101,10 +101,7 @@ public sealed class CreateBoardGroupTool : IAiTool
             return AiParentLookup.Board(ChangeSet, arguments, null, null);
         }
 
-        var groups = await Mediator.Send(new GetBoardsInWorkspaceQuery(), cancellationToken);
-        var board = groups?
-            .SelectMany(group => group.Boards)
-            .FirstOrDefault(item => item.Id == boardId!.Value);
+        var board = await AiBoardLookup.FindBoard(Mediator, boardId!.Value, cancellationToken);
 
         if (board is null)
         {

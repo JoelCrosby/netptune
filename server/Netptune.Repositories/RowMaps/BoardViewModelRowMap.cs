@@ -31,4 +31,6 @@ public class BoardViewModelRowMap
     public DateTime? Last_Updated { get; set; }
 
     public string Assignees { get; set; } = "[]";
+
+    public long Total_Count { get; set; }
 }
