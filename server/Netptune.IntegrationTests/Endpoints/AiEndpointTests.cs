@@ -12,9 +12,12 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Models.Ai;
+using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Realtime;
 using Netptune.Core.ViewModels.Ai;
+using Netptune.Core.ViewModels.Boards;
+using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Entities.Contexts;
 using Netptune.IntegrationTests.TestServices;
 
@@ -589,6 +592,123 @@ public sealed class AiEndpointTests
             await cancellation.CancelAsync();
             await RemoveSeed(seed.ConversationId);
         }
+    }
+
+    [Fact]
+    public async Task ApplyChangeSet_ShouldMoveATaskOntoAnotherBoardInItsProject()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var placed = await CreatePlacedTask(client);
+        var target = await CreateSecondBoard(client, placed.ProjectId);
+        var proposal = new AiProposedChangeSeed
+        {
+            ToolName = "propose_move_task_to_board_group",
+            EntityType = "task",
+            Summary = "Move the task to the second board",
+            Payload = JsonDocument.Parse($$"""{"taskId":{{placed.TaskId}},"boardGroupId":{{target.GroupId}},"boardIdentifier":"{{target.Identifier}}"}"""),
+        };
+
+        var seed = await SeedPendingChangeSet(proposal);
+
+        try
+        {
+            var result = await ApplyChangeSet(client, seed.ChangeSetId, TestContext.Current.CancellationToken);
+
+            var outcome = result.Results.Should().ContainSingle().Subject;
+
+            outcome.Error.Should().BeNull();
+            outcome.Status.Should().Be(AiChangeApplyStatus.Applied);
+
+            var groupIds = await ReadPlacementGroupIds(placed.TaskId);
+
+            groupIds.Should().Contain(target.GroupId, "the move has to land on the other board, not report success and drop it");
+            groupIds.Should().Contain(placed.GroupId, "the task keeps its place on the board it was already on");
+        }
+        finally
+        {
+            await RemoveSeed(seed.ConversationId);
+            await RemoveBoard(target.BoardId);
+        }
+    }
+
+    private sealed record PlacedTask(int TaskId, int ProjectId, int GroupId);
+
+    private sealed record SeededBoard(int BoardId, string Identifier, int GroupId);
+
+    private async Task<PlacedTask> CreatePlacedTask(HttpClient client)
+    {
+        var request = new AddProjectTaskRequest
+        {
+            Name = $"Cross board move {Guid.NewGuid():N}",
+            ProjectId = 1,
+        };
+
+        var response = await client.PostAsJsonAsync("api/tasks", request, TestContext.Current.CancellationToken);
+        var created = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>(TestContext.Current.CancellationToken);
+        var task = created!.Payload!;
+
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var groupId = await context.ProjectTaskInBoardGroups
+            .Where(item => item.ProjectTaskId == task.Id)
+            .Select(item => item.BoardGroupId)
+            .FirstAsync(TestContext.Current.CancellationToken);
+
+        return new PlacedTask(task.Id, task.ProjectId!.Value, groupId);
+    }
+
+    private async Task<SeededBoard> CreateSecondBoard(HttpClient client, int projectId)
+    {
+        var request = new AddBoardRequest
+        {
+            Name = "Second board",
+            Identifier = $"second-board-{Guid.NewGuid():N}",
+            ProjectId = projectId,
+        };
+
+        var response = await client.PostAsJsonAsync("api/boards", request, TestContext.Current.CancellationToken);
+        var created = await response.Content.ReadFromJsonAsync<ClientResponse<BoardViewModel>>(TestContext.Current.CancellationToken);
+        var board = created!.Payload!;
+
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var groupId = await context.BoardGroups
+            .Where(item => item.BoardId == board.Id)
+            .OrderBy(item => item.SortOrder)
+            .Select(item => item.Id)
+            .FirstAsync(TestContext.Current.CancellationToken);
+
+        return new SeededBoard(board.Id, board.Identifier, groupId);
+    }
+
+    private async Task<List<int>> ReadPlacementGroupIds(int taskId)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        return await context.ProjectTaskInBoardGroups
+            .Where(item => item.ProjectTaskId == taskId)
+            .Select(item => item.BoardGroupId)
+            .ToListAsync(TestContext.Current.CancellationToken);
+    }
+
+    private async Task RemoveBoard(int boardId)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var placements = await context.ProjectTaskInBoardGroups
+            .Where(item => item.BoardGroup!.BoardId == boardId)
+            .ToListAsync(TestContext.Current.CancellationToken);
+        var groups = await context.BoardGroups
+            .Where(item => item.BoardId == boardId)
+            .ToListAsync(TestContext.Current.CancellationToken);
+        var board = await context.Boards.FirstAsync(item => item.Id == boardId, TestContext.Current.CancellationToken);
+
+        context.ProjectTaskInBoardGroups.RemoveRange(placements);
+        context.BoardGroups.RemoveRange(groups);
+        context.Boards.Remove(board);
+
+        await context.SaveChangesAsync(TestContext.Current.CancellationToken);
     }
 
     private static async Task<List<AiApplyProgress>> StreamChangeSetApply(

@@ -73,6 +73,8 @@ public class MoveTasksToGroupCommandHandlerTests
                 Status = AutoFixtures.TaskStatus with { Id = 1 },
             }).ToList());
         UnitOfWork.BoardGroups.GetMaxTaskSortOrder(request.NewGroupId.Value, TestContext.Current.CancellationToken).Returns(7D);
+        UnitOfWork.Statuses.GetAllByIdAsync(Arg.Any<IEnumerable<int>>(), true, TestContext.Current.CancellationToken)
+            .Returns([AutoFixtures.TaskStatus with { Id = 1 }]);
     }
 
     [Fact]

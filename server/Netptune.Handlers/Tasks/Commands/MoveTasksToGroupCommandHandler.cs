@@ -65,6 +65,7 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
         var oldTasks = boardGroup.StatusId.HasValue
             ? await UnitOfWork.Tasks.GetAllByIdAsync(taskIds, true, cancellationToken)
             : [];
+        var oldStatusCategories = await GetStatusCategories(oldTasks, cancellationToken);
 
         // Read before the placement rows are replaced, so the columns the tasks came from survive
         // into the activity these moves log.
@@ -118,7 +119,7 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
                                 Field = "status",
                                 OldValue = oldTask.StatusId.ToString(),
                                 NewValue = newStatus.Id.ToString(),
-                                OldCategory = oldTask.Status!.Category.ToString(),
+                                OldCategory = oldStatusCategories.GetValueOrDefault(oldTask.StatusId),
                                 NewCategory = newStatus.Category.ToString(),
                             },
                             References = references,
@@ -154,6 +155,21 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
 
     // LogWithMany shares one meta across every task it logs, so the tasks are grouped by the column
     // they came from: one bulk move can drag cards out of several columns at once.
+    private async Task<Dictionary<int, string>> GetStatusCategories(
+        List<ProjectTask> tasks,
+        CancellationToken cancellationToken)
+    {
+        if (tasks.Count == 0)
+        {
+            return [];
+        }
+
+        var statusIds = tasks.Select(task => task.StatusId).Distinct();
+        var statuses = await UnitOfWork.Statuses.GetAllByIdAsync(statusIds, true, cancellationToken);
+
+        return statuses.ToDictionary(status => status.Id, status => status.Category.ToString());
+    }
+
     private void LogMoves(
         List<int> taskIds,
         Dictionary<int, int> groupsBeforeMove,

@@ -78,6 +78,33 @@ public class TaskInGroupRepository : Repository<DataContext, ProjectTaskInBoardG
         await Entities
             .Where(entity => taskIdList.Contains(entity.ProjectTaskId) && entity.BoardGroup!.BoardId == boardId)
             .ExecuteDeleteAsync(cancellationToken);
+
+        await DetachDeletedPlacements(taskIdList, boardId, cancellationToken);
+    }
+
+    // ExecuteDelete bypasses the change tracker, so a placement this context already tracks would
+    // survive as a stale entry and collide with the replacement row on the (group, task) key.
+    private async Task DetachDeletedPlacements(List<int> taskIds, int boardId, CancellationToken cancellationToken)
+    {
+        var trackedPlacements = Context.ChangeTracker
+            .Entries<ProjectTaskInBoardGroup>()
+            .Where(entry => taskIds.Contains(entry.Entity.ProjectTaskId))
+            .ToList();
+
+        if (trackedPlacements.Count == 0)
+        {
+            return;
+        }
+
+        var boardGroupIds = await Context.BoardGroups
+            .Where(group => group.BoardId == boardId)
+            .Select(group => group.Id)
+            .ToListAsync(cancellationToken);
+
+        foreach (var entry in trackedPlacements.Where(entry => boardGroupIds.Contains(entry.Entity.BoardGroupId)))
+        {
+            entry.State = EntityState.Detached;
+        }
     }
 
     public async Task MovePlacementsToGroup(int fromGroupId, int toGroupId, double baseSortOrder, CancellationToken cancellationToken = default)
