@@ -15,7 +15,7 @@ using Netptune.Services.Onboarding;
 
 namespace Netptune.Handlers.Boards.Commands;
 
-public sealed record CreateBoardCommand(AddBoardRequest Request) : IRequest<ClientResponse<BoardViewModel>>;
+public sealed record CreateBoardCommand(AddBoardRequest Request, bool SeedDefaultGroups = true) : IRequest<ClientResponse<BoardViewModel>>;
 
 public sealed class CreateBoardCommandHandler : IRequestHandler<CreateBoardCommand, ClientResponse<BoardViewModel>>
 {
@@ -61,11 +61,9 @@ public sealed class CreateBoardCommandHandler : IRequestHandler<CreateBoardComma
             WorkspaceId = workspaceId,
         };
 
-        var groups = await WorkspaceSetupTemplateApplicator.ResolveBoardGroupsAsync(
-            template,
-            workspaceId,
-            UnitOfWork,
-            cancellationToken);
+        var groups = request.SeedDefaultGroups
+            ? await WorkspaceSetupTemplateApplicator.ResolveBoardGroupsAsync(template, workspaceId, UnitOfWork, cancellationToken)
+            : [];
 
         foreach (var group in groups)
         {

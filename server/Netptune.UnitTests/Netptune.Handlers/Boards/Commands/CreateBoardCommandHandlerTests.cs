@@ -69,6 +69,22 @@ public class CreateBoardCommandHandlerTests
     }
 
     [Fact]
+    public async Task Create_ShouldSeedTheTemplateGroups_ByDefault()
+    {
+        var board = await CreateCapturingBoard(seedDefaultGroups: true);
+
+        board.BoardGroups.Should().NotBeEmpty();
+    }
+
+    [Fact]
+    public async Task Create_ShouldLeaveTheBoardWithoutGroups_WhenDefaultsAreNotWanted()
+    {
+        var board = await CreateCapturingBoard(seedDefaultGroups: false);
+
+        board.BoardGroups.Should().BeEmpty();
+    }
+
+    [Fact]
     public async Task Create_ShouldReturnFailure_WhenProjectNotFound()
     {
         var request = Fixture.Build<AddBoardRequest>()
@@ -81,5 +97,20 @@ public class CreateBoardCommandHandlerTests
         var result = await Handler.Handle(new CreateBoardCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
+    }
+
+    private async Task<Board> CreateCapturingBoard(bool seedDefaultGroups)
+    {
+        var request = Fixture.Build<AddBoardRequest>()
+            .Without(item => item.TemplateKey)
+            .Create();
+        Board? added = null;
+
+        UnitOfWork.Boards.AddAsync(Arg.Do<Board>(board => added = board), TestContext.Current.CancellationToken).Returns(x => x.Arg<Board>());
+        UnitOfWork.Projects.GetInWorkspace(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.Project);
+
+        await Handler.Handle(new CreateBoardCommand(request, seedDefaultGroups), TestContext.Current.CancellationToken);
+
+        return added!;
     }
 }

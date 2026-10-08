@@ -14,6 +14,7 @@ using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.Boards;
 using Netptune.Handlers.BoardGroups.Commands;
 using Netptune.Handlers.BoardGroups.Queries;
+using Netptune.Handlers.Boards.Commands;
 
 using NSubstitute;
 
@@ -111,6 +112,93 @@ public class BoardChangeHandlerTests
 
         request.ClearStatus.Should().BeTrue();
         request.SortOrder.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task CreateBoard_ShouldSkipTheDefaultGroups_WhenTheBatchCreatesGroupsForIt()
+    {
+        GivenCreateBoardSucceeds();
+
+        var board = CreateBoardChange("board-1");
+        var group = CreateGroupChange("""{"boardRef":"board-1","name":"Backlog"}""");
+        var context = new AiChangeApplyContext
+        {
+            Change = board,
+            ResolvedRefs = new Dictionary<string, int>(StringComparer.Ordinal),
+            Batch = [board, group],
+        };
+
+        await new CreateBoardChangeHandler(Mediator).Apply(context, TestContext.Current.CancellationToken);
+
+        await Mediator.Received(1).Send(
+            Arg.Is<CreateBoardCommand>(command => !command.SeedDefaultGroups),
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task CreateBoard_ShouldSeedTheDefaultGroups_WhenTheBatchCreatesNoGroupsForIt()
+    {
+        GivenCreateBoardSucceeds();
+
+        var board = CreateBoardChange("board-1");
+        var otherBoardsGroup = CreateGroupChange("""{"boardRef":"board-2","name":"Backlog"}""");
+        var context = new AiChangeApplyContext
+        {
+            Change = board,
+            ResolvedRefs = new Dictionary<string, int>(StringComparer.Ordinal),
+            Batch = [board, otherBoardsGroup],
+        };
+
+        await new CreateBoardChangeHandler(Mediator).Apply(context, TestContext.Current.CancellationToken);
+
+        await Mediator.Received(1).Send(
+            Arg.Is<CreateBoardCommand>(command => command.SeedDefaultGroups),
+            Arg.Any<CancellationToken>());
+    }
+
+    private void GivenCreateBoardSucceeds()
+    {
+        Mediator
+            .Send(Arg.Any<CreateBoardCommand>(), Arg.Any<CancellationToken>())
+            .Returns(ClientResponse<BoardViewModel>.Success(new BoardViewModel
+            {
+                Id = 7,
+                Name = "Slash Commands",
+                Identifier = "slash-commands",
+            }));
+    }
+
+    private static AiProposedChange CreateBoardChange(string refKey)
+    {
+        return new AiProposedChange
+        {
+            Id = 1,
+            ChangeSetId = Guid.NewGuid(),
+            Sequence = 1,
+            ToolName = "propose_create_board",
+            EntityType = "board",
+            RefKey = refKey,
+            Summary = "Create a board",
+            Payload = JsonDocument.Parse("""{"name":"Slash Commands","identifier":"slash-commands","projectId":1}"""),
+            ValidationStatus = AiChangeValidationStatus.Valid,
+            ApplyStatus = AiChangeApplyStatus.Pending,
+        };
+    }
+
+    private static AiProposedChange CreateGroupChange(string payload)
+    {
+        return new AiProposedChange
+        {
+            Id = 2,
+            ChangeSetId = Guid.NewGuid(),
+            Sequence = 2,
+            ToolName = "propose_create_board_group",
+            EntityType = "board",
+            Summary = "Add a group",
+            Payload = JsonDocument.Parse(payload),
+            ValidationStatus = AiChangeValidationStatus.Valid,
+            ApplyStatus = AiChangeApplyStatus.Pending,
+        };
     }
 
     private List<UpdateBoardGroupRequest> CapturedUpdates()

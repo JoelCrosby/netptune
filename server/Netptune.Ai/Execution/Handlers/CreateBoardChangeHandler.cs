@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Entities;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -43,7 +44,9 @@ public sealed class CreateBoardChangeHandler : IAiChangeHandler
             ProjectId = projectId,
         };
 
-        var response = await Mediator.Send(new CreateBoardCommand(request), cancellationToken);
+        var suppliesGroups = HasGroupsInBatch(context);
+        var command = new CreateBoardCommand(request, SeedDefaultGroups: !suppliesGroups);
+        var response = await Mediator.Send(command, cancellationToken);
 
         if (!response.IsSuccess)
         {
@@ -51,5 +54,25 @@ public sealed class CreateBoardChangeHandler : IAiChangeHandler
         }
 
         return AiChangePayload.Applied(change, response.Payload?.Id);
+    }
+
+    private static bool HasGroupsInBatch(AiChangeApplyContext context)
+    {
+        var refKey = context.Change.RefKey;
+
+        if (refKey is null)
+        {
+            return false;
+        }
+
+        return context.Batch.Any(other => IsGroupForBoard(other, refKey));
+    }
+
+    private static bool IsGroupForBoard(AiProposedChange change, string boardRefKey)
+    {
+        var isGroup = change.ToolName == "propose_create_board_group";
+        var boardRef = AiChangePayload.ReadString(change.Payload.RootElement, "boardRef")?.Trim();
+
+        return isGroup && string.Equals(boardRef, boardRefKey, StringComparison.Ordinal);
     }
 }

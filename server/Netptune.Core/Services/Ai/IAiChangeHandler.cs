@@ -8,6 +8,8 @@ public sealed record AiChangeApplyContext
     public required AiProposedChange Change { get; init; }
 
     public required IReadOnlyDictionary<string, int> ResolvedRefs { get; init; }
+
+    public IReadOnlyList<AiProposedChange> Batch { get; init; } = [];
 }
 
 public interface IAiChangeHandler

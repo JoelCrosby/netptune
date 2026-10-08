@@ -265,6 +265,65 @@ public class BoardToolTests
         ChangeSet.Changes.Should().BeEmpty();
     }
 
+    [Fact]
+    public async Task CreateBoardGroup_ShouldFail_WhenTheBoardAlreadyHasAGroupWithThatName()
+    {
+        var tool = new CreateBoardGroupTool(Mediator, ChangeSet);
+        var result = await Execute(tool, $$"""{"boardId":{{BoardId}},"name":"backlog"}""");
+
+        result.IsError.Should().BeTrue();
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task CreateBoardGroup_ShouldFail_WhenTheSameGroupIsAlreadyProposedForTheBoard()
+    {
+        var tool = new CreateBoardGroupTool(Mediator, ChangeSet);
+
+        await Execute(tool, $$"""{"boardId":{{BoardId}},"name":"Review"}""");
+        var result = await Execute(tool, $$"""{"boardId":{{BoardId}},"name":"Review"}""");
+
+        result.IsError.Should().BeTrue();
+        ChangeSet.Changes.Should().ContainSingle();
+    }
+
+    [Fact]
+    public async Task CreateBoardGroup_ShouldFail_WhenTheSameGroupIsAlreadyProposedForAPendingBoard()
+    {
+        GivenPendingBoard("board-1");
+
+        var tool = new CreateBoardGroupTool(Mediator, ChangeSet);
+
+        await Execute(tool, """{"boardRef":"board-1","name":"Todo"}""");
+        var result = await Execute(tool, """{"boardRef":"board-1","name":"todo"}""");
+
+        result.IsError.Should().BeTrue();
+        ChangeSet.Changes.Should().HaveCount(2);
+    }
+
+    [Fact]
+    public async Task CreateBoardGroup_ShouldPropose_WhenTheNameIsNewToTheBoard()
+    {
+        var tool = new CreateBoardGroupTool(Mediator, ChangeSet);
+        var result = await Execute(tool, $$"""{"boardId":{{BoardId}},"name":"Review"}""");
+
+        result.IsError.Should().BeFalse();
+        ChangeSet.Changes.Should().ContainSingle(change => change.ToolName == "propose_create_board_group");
+    }
+
+    private void GivenPendingBoard(string refKey)
+    {
+        ChangeSet.Add(new AiChangeDraft
+        {
+            ToolName = "propose_create_board",
+            EntityType = "board",
+            RefKey = refKey,
+            Summary = "Create board Slash Commands",
+            Fields = [new AiChangeField { Name = "name", After = "Slash Commands" }],
+            Payload = JsonDocument.Parse("""{"name":"Slash Commands","identifier":"slash-commands","projectId":3}"""),
+        });
+    }
+
     private static async Task<AiToolExecution> Execute(IAiTool tool, string json)
     {
         var arguments = JsonDocument.Parse(json).RootElement;

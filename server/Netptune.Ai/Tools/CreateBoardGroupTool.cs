@@ -6,6 +6,7 @@ using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
+using Netptune.Handlers.BoardGroups.Queries;
 using Netptune.Handlers.Boards.Queries;
 using Netptune.Handlers.Statuses.Queries;
 
@@ -61,6 +62,13 @@ public sealed class CreateBoardGroupTool : IAiTool
         }
 
         var board = parent.Parent!;
+        var isDuplicate = await HasGroupNamed(name!, arguments, board, cancellationToken);
+
+        if (isDuplicate)
+        {
+            return AiToolExecution.Failed($"{board.Name} already has a group called \"{name}\". Use that group instead.");
+        }
+
         var fields = new List<AiChangeField>
         {
             new() { Name = "name", After = name },
@@ -88,6 +96,44 @@ public sealed class CreateBoardGroupTool : IAiTool
         return AiToolExecution.Success(
             $"Proposed adding group \"{name}\" to {board.Name}. "
             + "Nothing has been applied yet — the user must review and apply the change.");
+    }
+
+    private async Task<bool> HasGroupNamed(
+        string name,
+        JsonElement arguments,
+        AiParent board,
+        CancellationToken cancellationToken)
+    {
+        var boardRef = AiPendingReference.Read(arguments, "boardRef");
+        var proposedNames = ChangeSet.Changes
+            .Where(draft => draft.ToolName == Name && IsSameBoard(draft.Payload.RootElement, board.Id, boardRef))
+            .Select(draft => AiToolSchema.GetString(draft.Payload.RootElement, "name")?.Trim());
+        var existingNames = board.Id.HasValue
+            ? await GetGroupNames(board.Id.Value, cancellationToken)
+            : [];
+        var takenNames = existingNames.Concat(proposedNames);
+
+        return takenNames.Any(taken => string.Equals(taken, name, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static bool IsSameBoard(JsonElement payload, int? boardId, string? boardRef)
+    {
+        if (boardRef is not null)
+        {
+            return string.Equals(AiPendingReference.Read(payload, "boardRef"), boardRef, StringComparison.Ordinal);
+        }
+
+        return boardId.HasValue && AiToolSchema.GetInt(payload, "boardId") == boardId;
+    }
+
+    private async Task<List<string?>> GetGroupNames(int boardId, CancellationToken cancellationToken)
+    {
+        var options = await Mediator.Send(new GetBoardGroupOptionsQuery(), cancellationToken);
+
+        return options
+            .Where(option => option.BoardId == boardId)
+            .Select(option => (string?)option.Name)
+            .ToList();
     }
 
     private async Task<AiParentResult> ResolveBoard(JsonElement arguments, CancellationToken cancellationToken)

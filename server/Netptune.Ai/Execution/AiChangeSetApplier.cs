@@ -161,7 +161,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
 
             await Report(onProgress, AiApplyProgress.ChangeStarted(change.Id, results.Count, ordered.Count));
 
-            var result = await ApplyOrSkip(change, resolvedRefs, cancellationToken);
+            var result = await ApplyOrSkip(change, ordered, resolvedRefs, cancellationToken);
 
             // A change interrupted part way through is left for StopRemaining to account for,
             // which is the only honest thing to say about work that never finished.
@@ -178,6 +178,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
 
     private async Task<AiAppliedChangeResult?> ApplyOrSkip(
         AiProposedChange change,
+        IReadOnlyList<AiProposedChange> batch,
         Dictionary<string, int> resolvedRefs,
         CancellationToken cancellationToken)
     {
@@ -190,7 +191,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
 
         try
         {
-            return await ApplyChange(change, resolvedRefs, cancellationToken);
+            return await ApplyChange(change, batch, resolvedRefs, cancellationToken);
         }
         catch (OperationCanceledException)
         {
@@ -484,6 +485,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
 
     private async Task<AiAppliedChangeResult> ApplyChange(
         AiProposedChange change,
+        IReadOnlyList<AiProposedChange> batch,
         Dictionary<string, int> resolvedRefs,
         CancellationToken cancellationToken)
     {
@@ -501,7 +503,12 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
                 return unsupported;
             }
 
-            var applyContext = new AiChangeApplyContext { Change = change, ResolvedRefs = resolvedRefs };
+            var applyContext = new AiChangeApplyContext
+            {
+                Change = change,
+                ResolvedRefs = resolvedRefs,
+                Batch = batch,
+            };
 
             await CaptureUndo(handler, applyContext, cancellationToken);
 
@@ -789,7 +796,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
             {
                 var blocker = FindUnmetReference(change, resolvedRefs);
                 var result = blocker is null
-                    ? await ApplyChange(change, resolvedRefs, cancellationToken)
+                    ? await ApplyChange(change, ordered, resolvedRefs, cancellationToken)
                     : SkipChange(change, blocker);
 
                 results.Add(result);
