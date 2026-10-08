@@ -101,7 +101,7 @@ public sealed class GetTaskTool : IAiTool
 
         var detail = JsonSerializer.SerializeToNode(new
         {
-            id = task.Id,
+            taskId = task.Id,
             systemId = task.SystemId,
             name = task.Name,
             description = task.Description,

@@ -27,7 +27,7 @@ public sealed class SearchTasksTool : IAiTool
     public string Description =>
         "Search tasks in the current workspace. Filter by free text, project, sprint, status, assignee or tags. "
         + "Use hasTags false to find untagged tasks, and hasAssignee false to find unassigned tasks. "
-        + "Returns task id, name, status, assignee, tags and dates.";
+        + "Returns taskId, systemId, name, status, assignee, tags and dates.";
 
     public AiToolKind Kind => AiToolKind.Read;
 
@@ -102,7 +102,7 @@ public sealed class SearchTasksTool : IAiTool
         var tasks = result.Payload?.Items ?? [];
         var summaries = tasks.Select(task => new
         {
-            id = task.Id,
+            taskId = task.Id,
             systemId = task.SystemId,
             name = task.Name,
             status = task.StatusName,

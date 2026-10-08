@@ -59,7 +59,7 @@ public sealed class GetCurrentSprintTool : IAiTool
             },
             tasks = sprint.Tasks.Take(MaximumTasks).Select(task => new
             {
-                id = task.Id,
+                taskId = task.Id,
                 systemId = task.SystemId,
                 name = task.Name,
                 status = task.StatusName,

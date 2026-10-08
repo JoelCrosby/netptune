@@ -60,7 +60,8 @@ public sealed class AiSystemPromptBuilder : IAiSystemPromptBuilder
         prompt.AppendLine();
         prompt.AppendLine("Reference workspace entities with [[type:id|name]] so the client can link them.");
         prompt.AppendLine("Use task, project, sprint or board as the type, for example [[task:NPT-42|Fix the login page]].");
-        prompt.AppendLine("Tasks use their systemId, everything else uses its numeric id, both exactly as a tool returned them.");
+        prompt.AppendLine("Tasks use their systemId string, never the numeric taskId. Everything else uses its numeric id.");
+        prompt.AppendLine("Copy each id exactly as a tool returned it; never build one from a project key and a number.");
         prompt.AppendLine("Only reference ids a tool returned in this conversation, and write ordinary prose everywhere else.");
         prompt.AppendLine();
         prompt.AppendLine("A <viewing> block on a message says what the user has on screen right now.");
