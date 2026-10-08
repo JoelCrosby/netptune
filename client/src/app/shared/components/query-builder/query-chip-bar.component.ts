@@ -68,6 +68,7 @@ const valuesByOperator: Record<QueryBuilderGroupOperator, GroupOperatorValue> =
           </span>
 
           <app-segmented-control
+            variant="outlined"
             [options]="operatorOptions"
             i18n-ariaLabel="Accessible name of the query group operator control"
             ariaLabel="Query group logic"
