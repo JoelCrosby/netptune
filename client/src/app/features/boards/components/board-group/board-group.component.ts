@@ -40,7 +40,7 @@ import {
 } from '@core/models/view-models/board-view';
 import { DialogService } from '@core/services/dialog.service';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
-import { LucideKanban, LucideTrash2 } from '@lucide/angular';
+import { LucideKanban, LucidePlus, LucideTrash2 } from '@lucide/angular';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
 import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
 import { ScrollShadowVericalDirective } from '@static/directives/scroll-shadow-vertical.directive';
@@ -90,6 +90,7 @@ import { MenuSeparatorComponent } from '@static/components/dropdown-menu/menu-se
     DropdownMenuComponent,
     MenuItemComponent,
     LucideKanban,
+    LucidePlus,
     LucideTrash2,
   ],
   template: `
@@ -138,10 +139,11 @@ import { MenuSeparatorComponent } from '@static/components/dropdown-menu/menu-se
               <button
                 app-stroked-button
                 color="primary"
-                class="block w-full"
+                class="w-full"
                 (click)="onAddTaskClicked()">
+                <svg lucidePlus class="h-4 w-4 shrink-0"></svg>
                 <span i18n="Button that adds a task to this board group">
-                  CREATE TASK
+                  Create Task
                 </span>
               </button>
             </div>

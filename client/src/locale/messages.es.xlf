@@ -12112,7 +12112,7 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:227,229</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:145,147</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:85</note>
-        <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:180,183</note>
+        <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:182,185</note>
         <note category="description">Accessible label for the button that deletes the task</note>
       </notes>
       <segment state="translated">
@@ -14791,16 +14791,6 @@
         <target>está viendo este tablero</target>
       </segment>
     </unit>
-    <unit id="6996270126255502228">
-      <notes>
-        <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:144,146</note>
-        <note category="description">Button that adds a task to this board group</note>
-      </notes>
-      <segment state="translated">
-        <source> CREATE TASK </source>
-        <target>CREAR UNA TAREA</target>
-      </segment>
-    </unit>
     <unit id="6838555747958902386">
       <notes>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:132</note>
@@ -17163,8 +17153,9 @@
     </unit>
     <unit id="2630272244920413702">
       <notes>
+        <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:146,148</note>
         <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:73,75</note>
-        <note category="description">Button that opens the create-task dialog</note>
+        <note category="description">Button that adds a task to this board group</note>
       </notes>
       <segment state="translated">
         <source> Create Task </source>
@@ -21904,7 +21895,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:90,92</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:94,95</note>
-        <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:164,169</note>
+        <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:166,171</note>
         <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:144</note>
         <note category="description">Tooltip on the button that takes a task off a board</note>
       </notes>
