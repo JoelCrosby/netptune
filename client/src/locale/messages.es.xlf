@@ -827,6 +827,7 @@
     <unit id="3148280808384999851">
       <notes>
         <note category="location">src/app/core/util/pin-scope.ts:67</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:150</note>
         <note category="description">Heading of the group of tasks you pinned for yourself</note>
       </notes>
       <segment state="translated">
@@ -2805,16 +2806,6 @@
         <target>Cargando consultas</target>
       </segment>
     </unit>
-    <unit id="4137345330647893937">
-      <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:150</note>
-        <note category="description">Pinned task filter showing every pin. COUNT is how many</note>
-      </notes>
-      <segment state="translated">
-        <source>All <ph id="0" equiv="COUNT" disp="all"/></source>
-        <target>Todas <ph id="0" equiv="COUNT" disp="all"/></target>
-      </segment>
-    </unit>
     <unit id="4139152446081980203">
       <notes>
         <note category="location">src/app/features/dashboard/components/sprint-burndown-sparkline.component.ts:41</note>
@@ -3724,7 +3715,7 @@
         <note category="location">src/app/core/util/pin-scope.ts:80</note>
         <note category="location">src/app/entry/components/setup-creation-summary/setup-creation-summary.component.ts:59</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:69</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:170,172</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:167,169</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-project-field.component.ts:31</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:224</note>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:75</note>
@@ -3929,7 +3920,7 @@
         <note category="location">src/app/core/tasks/task-columns.ts:104</note>
         <note category="location">src/app/entry/dialogs/board-group-dialog/board-group-dialog.component.ts:52</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:34</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:74,76</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:71,73</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/pickers/task-status-segments.component.ts:24,28</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:193</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:58,59</note>
@@ -4092,7 +4083,7 @@
       <notes>
         <note category="location">src/app/core/tasks/task-columns.ts:121</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:39</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:115,117</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:112,114</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-priority-field.component.ts:44</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:102,104</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:75,77</note>
@@ -4122,7 +4113,7 @@
         <note category="location">src/app/core/tasks/task-columns.ts:91</note>
         <note category="location">src/app/core/util/ai-client-context.ts:29</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:74</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:185,187</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:182,184</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-sprint-field.component.ts:33</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:187,188</note>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:109</note>
@@ -8493,12 +8484,13 @@
     </unit>
     <unit id="1616102757855967475">
       <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:145</note>
         <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:75</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:71</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:169</note>
         <note category="location">src/app/shared/components/query-builder/query-builder.models.ts:72</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:582</note>
-        <note category="description">Notification filter showing every event</note>
+        <note category="description">Pinned task filter showing every pin</note>
       </notes>
       <segment state="translated">
         <source>All</source>
@@ -8759,8 +8751,8 @@
     <unit id="2413171611497962745">
       <notes>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:44</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:142,143</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:144,147</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:139,140</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:141,144</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-date-field.component.ts:48</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-date-field.component.ts:49</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:153,154</note>
@@ -10478,16 +10470,6 @@
         <target> Activa esta automatización para que se ejecute automáticamente. </target>
       </segment>
     </unit>
-    <unit id="7535535162299319294">
-      <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:158</note>
-        <note category="description">Pinned task filter showing only shared pins. COUNT is how many</note>
-      </notes>
-      <segment state="translated">
-        <source>Shared <ph id="0" equiv="COUNT" disp="shared"/></source>
-        <target>Compartidas <ph id="0" equiv="COUNT" disp="shared"/></target>
-      </segment>
-    </unit>
     <unit id="3897348120591552265">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:164</note>
@@ -10751,16 +10733,6 @@
       <segment state="translated">
         <source>Set estimate</source>
         <target>Establecer estimación</target>
-      </segment>
-    </unit>
-    <unit id="4964594717711354420">
-      <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:154</note>
-        <note category="description">Pinned task filter showing only your own pins. COUNT is how many</note>
-      </notes>
-      <segment state="translated">
-        <source>Yours <ph id="0" equiv="COUNT" disp="yours"/></source>
-        <target>Tuyas <ph id="0" equiv="COUNT" disp="yours"/></target>
       </segment>
     </unit>
     <unit id="4965562695253171955">
@@ -11049,8 +11021,8 @@
     </unit>
     <unit id="888341446683346521">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:130,131</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:132,136</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:127,128</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:129,133</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-date-field.component.ts:42</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-date-field.component.ts:43</note>
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:397</note>
@@ -11940,7 +11912,7 @@
     </unit>
     <unit id="462619135400272658">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:51,54</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:52,55</note>
         <note category="description">Description of the dashboard card listing pinned tasks</note>
       </notes>
       <segment state="translated">
@@ -12031,7 +12003,7 @@
     </unit>
     <unit id="1845447508284521819">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:157,161</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:154,158</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-estimate-field.component.ts:40</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:169,171</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:72</note>
@@ -12856,7 +12828,7 @@
     </unit>
     <unit id="8224724288725812333">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:98,102</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:95,99</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-assignee-field.component.ts:49</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:81,85</note>
         <note category="location">src/app/features/reporting/components/workload-table.component.ts:41</note>
@@ -12900,8 +12872,9 @@
     </unit>
     <unit id="5739581984228459958">
       <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:155</note>
         <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:92</note>
-        <note category="description">Label for tasks assigned to more than one person</note>
+        <note category="description">Pinned task filter showing only shared pins</note>
       </notes>
       <segment state="translated">
         <source>Shared</source>
@@ -18472,16 +18445,6 @@
         <target>Unidad seleccionada</target>
       </segment>
     </unit>
-    <unit id="7674792449907070045">
-      <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:57,60</note>
-        <note category="description">Accessible label for the pinned task scope filter</note>
-      </notes>
-      <segment state="translated">
-        <source>Filter pinned tasks</source>
-        <target>Filtrar tareas fijadas</target>
-      </segment>
-    </unit>
     <unit id="7676264272581225206">
       <notes>
         <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:107,109</note>
@@ -23400,7 +23363,7 @@
     <unit id="5743757503664322992">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:224</note>
-        <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:48,49</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:49,50</note>
         <note category="location">src/app/features/pins/views/pinned-view/pinned-view.component.ts:65,67</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:231</note>
         <note category="location">src/app/workspace.routes.ts:48</note>

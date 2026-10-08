@@ -15,9 +15,9 @@ import { BadgeComponent } from '@static/components/badge/badge.component';
 import { PanelComponent } from '@static/components/panel.component';
 import { PanelHeaderComponent } from '@static/components/panel-header.component';
 import {
-  SegmentedControlComponent,
-  SegmentedOption,
-} from '@static/components/segmented-control/segmented-control.component';
+  TabGroupComponent,
+  type TabItem,
+} from '@static/components/tab-group/tab-group.component';
 import { TaskCompactRowComponent } from '@static/components/task-compact-row.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 
@@ -35,13 +35,14 @@ const isPersonal = (pin: TaskPin): boolean => pin.scope === TaskPinScope.user;
     LucidePinOff,
     PanelComponent,
     PanelHeaderComponent,
-    SegmentedControlComponent,
+    TabGroupComponent,
     TaskCompactRowComponent,
   ],
   template: `
     @if (pinnedTasks().length) {
-      <app-panel>
+      <app-panel surface="card">
         <app-panel-header
+          density="comfortable"
           [icon]="pinIcon"
           i18n-heading="Heading of the dashboard card listing pinned tasks"
           heading="Pinned"
@@ -49,12 +50,11 @@ const isPersonal = (pin: TaskPin): boolean => pin.scope === TaskPinScope.user;
             Description of the dashboard card listing pinned tasks
           "
           description="Tasks you and your team are keeping in view">
-          <app-segmented-control
+          <app-tab-group
             panelHeaderActions
-            [options]="filterOptions()"
-            [(value)]="filter"
-            i18n-ariaLabel="Accessible label for the pinned task scope filter"
-            ariaLabel="Filter pinned tasks" />
+            variant="island"
+            [tabs]="filterTabs()"
+            [(value)]="filter" />
         </app-panel-header>
 
         @for (pinned of visible(); track pinned.task.id; let first = $first) {
@@ -138,28 +138,25 @@ export class DashboardPinnedCardComponent {
     }
   });
 
-  protected readonly filterOptions = computed<SegmentedOption<PinnedFilter>[]>(
-    () => {
-      const all = this.pinnedTasks().length;
-      const yours = this.yours().length;
-      const shared = this.shared().length;
-
-      return [
-        {
-          value: 'all',
-          label: $localize`:Pinned task filter showing every pin. COUNT is how many:All ${all}:COUNT:`,
-        },
-        {
-          value: 'yours',
-          label: $localize`:Pinned task filter showing only your own pins. COUNT is how many:Yours ${yours}:COUNT:`,
-        },
-        {
-          value: 'shared',
-          label: $localize`:Pinned task filter showing only shared pins. COUNT is how many:Shared ${shared}:COUNT:`,
-        },
-      ];
-    }
-  );
+  protected readonly filterTabs = computed<TabItem[]>(() => {
+    return [
+      {
+        value: 'all',
+        label: $localize`:Pinned task filter showing every pin:All`,
+        count: this.pinnedTasks().length,
+      },
+      {
+        value: 'yours',
+        label: $localize`:Pinned task filter showing only your own pins:Yours`,
+        count: this.yours().length,
+      },
+      {
+        value: 'shared',
+        label: $localize`:Pinned task filter showing only shared pins:Shared`,
+        count: this.shared().length,
+      },
+    ];
+  });
 
   protected badgeLabel(pin: TaskPin) {
     return pinScopeBadgeLabel(pin.scope, pin.scopeName);
