@@ -77,13 +77,13 @@ const MINIMUM_REPORTED_DURATION = 1000;
     @if (isUser()) {
       @if (entry().answer; as answer) {
         <p
-          class="bg-hover max-w-[85%] rounded-2xl px-4 py-2.5 text-sm whitespace-pre-wrap">
+          class="bg-primary/20 border-primary/25 max-w-[85%] rounded-2xl border px-4 py-2.5 text-sm whitespace-pre-wrap">
           {{ describeAnswer(answer) }}
         </p>
       } @else if (changeSet(); as applied) {
         <button
           type="button"
-          class="bg-hover hover:border-border flex max-w-[85%] items-center gap-2.5 rounded-2xl border border-transparent px-4 py-2.5 text-left text-sm transition-colors"
+          class="bg-primary/20 border-primary/15 hover:border-primary/30 flex max-w-[85%] items-center gap-2.5 rounded-2xl border px-4 py-2.5 text-left text-sm transition-colors"
           (click)="showChanges(applied)">
           <svg lucideListChecks class="text-primary h-4 w-4 shrink-0"></svg>
           <span>{{ changeSummary() }}</span>
@@ -95,7 +95,7 @@ const MINIMUM_REPORTED_DURATION = 1000;
         </button>
       } @else {
         <p
-          class="bg-hover max-w-[85%] rounded-2xl px-4 py-2.5 text-sm whitespace-pre-wrap">
+          class="bg-primary/20 border-primary/15 max-w-[85%] rounded-2xl border px-4 py-2.5 text-sm whitespace-pre-wrap">
           {{ entry().text }}
         </p>
       }
