@@ -32,16 +32,6 @@
         <target>Beziehungen konnten nicht geladen werden.</target>
       </segment>
     </unit>
-    <unit id="8048507441601477448">
-      <notes>
-        <note category="location">src/app/core/util/pin-scope.ts:41</note>
-        <note category="description">Tooltip on the marker for a task pinned to a project. NAME is the project name</note>
-      </notes>
-      <segment state="translated">
-        <source>Pinned in <ph id="0" equiv="NAME" disp="scopeName"/></source>
-        <target>Angeheftet in <ph id="0" equiv="NAME" disp="scopeName"/></target>
-      </segment>
-    </unit>
     <unit id="8048771922869370314">
       <notes>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:253</note>
@@ -827,7 +817,7 @@
     <unit id="3148280808384999851">
       <notes>
         <note category="location">src/app/core/util/pin-scope.ts:67</note>
-        <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:150</note>
+        <note category="location">src/app/core/util/pinned-task-filter.ts:45</note>
         <note category="description">Heading of the group of tasks you pinned for yourself</note>
       </notes>
       <segment state="translated">
@@ -1018,7 +1008,6 @@
     <unit id="814119606645168656">
       <notes>
         <note category="location">src/app/core/util/pin-scope.ts:23</note>
-        <note category="location">src/app/core/util/pin-scope.ts:37</note>
         <note category="location">src/app/core/util/pin-scope.ts:51</note>
         <note category="description">Badge on a task pinned only for the person looking at it</note>
       </notes>
@@ -1532,8 +1521,9 @@
     </unit>
     <unit id="8605077135608842345">
       <notes>
+        <note category="location">src/app/features/boards/components/board-pinned-banner/board-pinned-banner.component.ts:104,107</note>
         <note category="location">src/app/features/pins/views/pinned-view/pinned-view.component.ts:125,126</note>
-        <note category="description">Empty state title for the pinned task list</note>
+        <note category="description">Shown when a pinned task filter matches nothing</note>
       </notes>
       <segment state="translated">
         <source>Nothing pinned</source>
@@ -2357,8 +2347,8 @@
     </unit>
     <unit id="311004371875198775">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:114</note>
         <note category="location">src/app/features/pins/views/pinned-view/pinned-view.component.ts:140</note>
+        <note category="location">src/app/shared/components/pinned-task-row/pinned-task-row.component.ts:125</note>
         <note category="description">Tooltip on a pin the caller is not allowed to remove</note>
       </notes>
       <segment state="translated">
@@ -6768,16 +6758,6 @@
         <target>Schemaversion</target>
       </segment>
     </unit>
-    <unit id="1510294409493084948">
-      <notes>
-        <note category="location">src/app/features/boards/components/board-pinned-banner/board-pinned-banner.component.ts:191</note>
-        <note category="description">Tooltip on the pill standing in for the pinned tasks the bar could not fit</note>
-      </notes>
-      <segment state="translated">
-        <source><ph id="0" equiv="COUNT" disp="count"/> more pinned</source>
-        <target><ph id="0" equiv="COUNT" disp="count"/> weitere angeheftet</target>
-      </segment>
-    </unit>
     <unit id="7556340900290410206">
       <notes>
         <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:44,45</note>
@@ -8484,7 +8464,7 @@
     </unit>
     <unit id="1616102757855967475">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:145</note>
+        <note category="location">src/app/core/util/pinned-task-filter.ts:40</note>
         <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:75</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:71</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:169</note>
@@ -11912,7 +11892,7 @@
     </unit>
     <unit id="462619135400272658">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:52,55</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:33,36</note>
         <note category="description">Description of the dashboard card listing pinned tasks</note>
       </notes>
       <segment state="translated">
@@ -12665,7 +12645,7 @@
     </unit>
     <unit id="942705677413808169">
       <notes>
-        <note category="location">src/app/features/boards/components/board-pinned-banner/board-pinned-banner.component.ts:185</note>
+        <note category="location">src/app/features/boards/components/board-pinned-banner/board-pinned-banner.component.ts:153</note>
         <note category="description">Label on the collapsed pinned task bar. COUNT is the number of pinned tasks</note>
       </notes>
       <segment state="translated">
@@ -12872,7 +12852,7 @@
     </unit>
     <unit id="5739581984228459958">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:155</note>
+        <note category="location">src/app/core/util/pinned-task-filter.ts:50</note>
         <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:92</note>
         <note category="description">Pinned task filter showing only shared pins</note>
       </notes>
@@ -19630,7 +19610,7 @@
     </unit>
     <unit id="6724823079373170961">
       <notes>
-        <note category="location">src/app/features/boards/components/board-pinned-banner/board-pinned-banner.component.ts:87,89</note>
+        <note category="location">src/app/features/boards/components/board-pinned-banner/board-pinned-banner.component.ts:80,82</note>
         <note category="location">src/app/features/queries/components/query-card.component.ts:80,82</note>
         <note category="description">Label on the board&apos;s pinned task bar</note>
       </notes>
@@ -20945,6 +20925,8 @@
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:103,105</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:107,108</note>
+        <note category="location">src/app/shared/components/pinned-task-row/pinned-task-row.component.ts:86,88</note>
+        <note category="location">src/app/shared/components/pinned-task-row/pinned-task-row.component.ts:90,91</note>
         <note category="description">Tooltip on the link that opens the task&apos;s own page</note>
       </notes>
       <segment state="translated">
@@ -22232,7 +22214,7 @@
     </unit>
     <unit id="472397707555472731">
       <notes>
-        <note category="location">src/app/features/boards/components/board-pinned-banner/board-pinned-banner.component.ts:81,83</note>
+        <note category="location">src/app/features/boards/components/board-pinned-banner/board-pinned-banner.component.ts:74,75</note>
         <note category="description">Accessible label for the board&apos;s pinned task bar</note>
       </notes>
       <segment state="translated">
@@ -22312,16 +22294,6 @@
       <segment state="translated">
         <source>Details</source>
         <target>Details</target>
-      </segment>
-    </unit>
-    <unit id="5030466719559682940">
-      <notes>
-        <note category="location">src/app/core/util/pin-scope.ts:39</note>
-        <note category="description">Tooltip on the marker for a task pinned to a board. NAME is the board name</note>
-      </notes>
-      <segment state="translated">
-        <source>Pinned to <ph id="0" equiv="NAME" disp="scopeName"/></source>
-        <target>Angeheftet an <ph id="0" equiv="NAME" disp="scopeName"/></target>
       </segment>
     </unit>
     <unit id="5031687880128878913">
@@ -23354,7 +23326,7 @@
     <unit id="5743757503664322992">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:224</note>
-        <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:49,50</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:30,31</note>
         <note category="location">src/app/features/pins/views/pinned-view/pinned-view.component.ts:65,67</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:231</note>
         <note category="location">src/app/workspace.routes.ts:48</note>
@@ -24877,9 +24849,8 @@
     </unit>
     <unit id="4929778113156900100">
       <notes>
-        <note category="location">src/app/features/boards/components/board-pinned-banner/board-pinned-banner.component.ts:158</note>
         <note category="location">src/app/shell/shell-sidebar-collapse.component.ts:38,43</note>
-        <note category="description">Tooltip on the control that collapses the pinned task bar</note>
+        <note category="description">Label on the control that collapses the sidebar</note>
       </notes>
       <segment state="translated">
         <source>Collapse</source>
@@ -24955,7 +24926,6 @@
     </unit>
     <unit id="5168722514225572606">
       <notes>
-        <note category="location">src/app/core/util/pin-scope.ts:43</note>
         <note category="location">src/app/core/util/pin-scope.ts:57</note>
         <note category="description">Tooltip on the marker for a task pinned for the whole workspace</note>
       </notes>
@@ -25660,7 +25630,6 @@
         <note category="location">src/app/static/components/branding-preview/branding-preview.component.ts:46,49</note>
         <note category="location">src/app/static/components/form-select-tags/form-select-tags.component.ts:74,77</note>
         <note category="location">src/app/static/components/image-upload/image-upload.component.ts:93,96</note>
-        <note category="location">src/app/static/components/task-chip.component.ts:59</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
@@ -25847,9 +25816,8 @@
     </unit>
     <unit id="7425524211157837406">
       <notes>
-        <note category="location">src/app/features/boards/components/board-pinned-banner/board-pinned-banner.component.ts:159</note>
-        <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:113</note>
         <note category="location">src/app/features/pins/views/pinned-view/pinned-view.component.ts:139</note>
+        <note category="location">src/app/shared/components/pinned-task-row/pinned-task-row.component.ts:124</note>
         <note category="description">Tooltip on the control that removes a pin</note>
       </notes>
       <segment state="translated">

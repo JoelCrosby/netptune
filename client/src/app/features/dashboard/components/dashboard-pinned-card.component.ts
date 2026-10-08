@@ -1,42 +1,23 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { PinnedTask, TaskPin, TaskPinScope } from '@core/models/task-pin';
+import { Component, computed, inject } from '@angular/core';
+import { PinnedTask, TaskPin } from '@core/models/task-pin';
 import { pinnedTasksResource } from '@core/resources/task-pin.resource';
 import { DialogService } from '@core/services/dialog.service';
 import { PinCommandsService } from '@core/services/pin-commands.service';
-import { pinScopeBadgeLabel, pinScopeIcons } from '@core/util/pin-scope';
+import { pinnedTaskFilter } from '@core/util/pinned-task-filter';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
-import {
-  LucideDynamicIcon,
-  LucideLock,
-  LucidePin,
-  LucidePinOff,
-} from '@lucide/angular';
-import { BadgeComponent } from '@static/components/badge/badge.component';
+import { LucidePin } from '@lucide/angular';
+import { PinnedTaskRowComponent } from '@shared/components/pinned-task-row/pinned-task-row.component';
 import { PanelComponent } from '@static/components/panel.component';
 import { PanelHeaderComponent } from '@static/components/panel-header.component';
-import {
-  TabGroupComponent,
-  type TabItem,
-} from '@static/components/tab-group/tab-group.component';
-import { TaskCompactRowComponent } from '@static/components/task-compact-row.component';
-import { IconButtonComponent } from '@static/components/button/icon-button.component';
-
-type PinnedFilter = 'all' | 'yours' | 'shared';
-
-const isPersonal = (pin: TaskPin): boolean => pin.scope === TaskPinScope.user;
+import { TabGroupComponent } from '@static/components/tab-group/tab-group.component';
 
 @Component({
   selector: 'app-dashboard-pinned-card',
   imports: [
-    BadgeComponent,
-    IconButtonComponent,
-    LucideDynamicIcon,
-    LucideLock,
-    LucidePinOff,
     PanelComponent,
     PanelHeaderComponent,
+    PinnedTaskRowComponent,
     TabGroupComponent,
-    TaskCompactRowComponent,
   ],
   template: `
     @if (pinnedTasks().length) {
@@ -53,50 +34,21 @@ const isPersonal = (pin: TaskPin): boolean => pin.scope === TaskPinScope.user;
           <app-tab-group
             panelHeaderActions
             variant="island"
-            [tabs]="filterTabs()"
-            [(value)]="filter" />
+            [tabs]="filter.tabs()"
+            [(value)]="filter.filter" />
         </app-panel-header>
 
-        @for (pinned of visible(); track pinned.task.id; let first = $first) {
-          <div
-            class="hover:bg-foreground/3 flex items-center gap-3 pr-4 transition-colors"
+        @for (
+          pinned of filter.visible();
+          track pinned.task.id;
+          let first = $first
+        ) {
+          <app-pinned-task-row
             [class.border-t]="!first"
-            [class.border-border]="!first">
-            <app-task-compact-row
-              class="min-w-0 flex-1 cursor-pointer"
-              [task]="pinned.task"
-              (click)="onTaskClicked(pinned)" />
-
-            <span class="flex flex-none items-center gap-1.5">
-              @for (pin of pinned.pins; track pin.id) {
-                <app-badge
-                  [color]="pin.scope === personalScope ? 'primary' : 'neutral'">
-                  <svg
-                    [lucideIcon]="scopeIcons[pin.scope]"
-                    class="h-3 w-3"></svg>
-                  {{ badgeLabel(pin) }}
-                </app-badge>
-              }
-            </span>
-
-            @if (removablePin(pinned); as pin) {
-              <button
-                type="button"
-                app-icon-button
-                class="text-foreground/35 hover:text-foreground h-7 w-7 flex-none"
-                [title]="unpinLabel"
-                [attr.aria-label]="unpinLabel"
-                (click)="onUnpinClicked(pin)">
-                <svg lucidePinOff class="h-3.75 w-3.75"></svg>
-              </button>
-            } @else {
-              <span
-                class="text-foreground/20 flex h-7 w-7 flex-none items-center justify-center"
-                [title]="lockedLabel">
-                <svg lucideLock class="h-3.5 w-3.5"></svg>
-              </span>
-            }
-          </div>
+            [class.border-border]="!first"
+            [pinned]="pinned"
+            (opened)="onTaskClicked(pinned)"
+            (unpinned)="onUnpinClicked($event)" />
         }
       </app-panel>
     }
@@ -108,63 +60,10 @@ export class DashboardPinnedCardComponent {
   private readonly dialog = inject(DialogService);
 
   protected readonly pinIcon = LucidePin;
-  protected readonly scopeIcons = pinScopeIcons;
-  protected readonly personalScope = TaskPinScope.user;
-  protected readonly unpinLabel = $localize`:Tooltip on the control that removes a pin:Unpin`;
-  protected readonly lockedLabel = $localize`:Tooltip on a pin the caller is not allowed to remove:Only someone who can pin at this scope may remove it`;
-
-  protected readonly filter = signal<PinnedFilter>('all');
 
   protected readonly pinnedTasks = computed(() => this.pinsRef.value() ?? []);
 
-  private readonly yours = computed(() => {
-    return this.pinnedTasks().filter((pinned) => pinned.pins.some(isPersonal));
-  });
-
-  private readonly shared = computed(() => {
-    return this.pinnedTasks().filter((pinned) => {
-      return pinned.pins.some((pin) => !isPersonal(pin));
-    });
-  });
-
-  protected readonly visible = computed(() => {
-    switch (this.filter()) {
-      case 'yours':
-        return this.yours();
-      case 'shared':
-        return this.shared();
-      default:
-        return this.pinnedTasks();
-    }
-  });
-
-  protected readonly filterTabs = computed<TabItem[]>(() => {
-    return [
-      {
-        value: 'all',
-        label: $localize`:Pinned task filter showing every pin:All`,
-        count: this.pinnedTasks().length,
-      },
-      {
-        value: 'yours',
-        label: $localize`:Pinned task filter showing only your own pins:Yours`,
-        count: this.yours().length,
-      },
-      {
-        value: 'shared',
-        label: $localize`:Pinned task filter showing only shared pins:Shared`,
-        count: this.shared().length,
-      },
-    ];
-  });
-
-  protected badgeLabel(pin: TaskPin) {
-    return pinScopeBadgeLabel(pin.scope, pin.scopeName);
-  }
-
-  protected removablePin(pinned: PinnedTask): TaskPin | null {
-    return pinned.pins.find((pin) => pin.canUnpin) ?? null;
-  }
+  protected readonly filter = pinnedTaskFilter(this.pinnedTasks);
 
   protected onUnpinClicked(pin: TaskPin) {
     this.pinCommands.unpin(pin);
