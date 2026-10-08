@@ -24,8 +24,8 @@ export function coerceIconButtonColor(
 }
 
 const buttonSizeVariants = {
-  small: 'h-8 rounded-sm px-3 text-xs font-medium tracking-wide',
-  default: 'h-10 rounded-sm font-medium tracking-wide',
+  small: 'h-8 rounded px-3 text-xs font-medium tracking-wide',
+  default: 'h-10 rounded font-medium tracking-wide',
   large: 'h-11.5 rounded-lg font-bold tracking-[.2px]',
 };
 

@@ -9,7 +9,7 @@ import { CommandPaletteService } from './command-palette.service';
   template: `
     <button
       type="button"
-      class="text-muted bg-secondary-background hover:bg-secondary-background-hover hover:text-foreground flex h-8 w-8 cursor-pointer items-center justify-center gap-2 rounded-md text-xs transition-colors md:w-auto md:min-w-64 md:justify-start md:px-3"
+      class="text-muted bg-secondary-background hover:bg-secondary-background-hover border-border hover:text-foreground flex h-8 w-8 cursor-pointer items-center justify-center gap-2 rounded-md border text-xs transition-colors md:w-auto md:min-w-64 md:justify-start md:px-3"
       (click)="commandPalette.open()"
       i18n-aria-label="
         Accessible label for the button that opens the command palette

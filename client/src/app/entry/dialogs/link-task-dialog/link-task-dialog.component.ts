@@ -88,7 +88,7 @@ interface RelationOption {
         (rangeSelected)="setSelected($event.tasks, $event.selected)" />
 
       <aside
-        class="bg-secondary-background custom-scroll flex flex-col gap-6 p-5 lg:min-h-0 lg:overflow-y-auto">
+        class="bg-foreground/2 custom-scroll flex flex-col gap-6 p-5 lg:min-h-0 lg:overflow-y-auto">
         <section class="flex flex-col gap-2">
           <h2
             appSectionLabel
