@@ -4,7 +4,6 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Models.Ai;
-using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Tasks.Commands;
 
@@ -29,22 +28,14 @@ public sealed class MoveTaskToBoardGroupChangeHandler : IAiChangeHandler, IAiCha
         var payload = change.Payload.RootElement;
         var taskId = AiChangePayload.ResolveTaskId(context);
         var boardGroupId = AiChangePayload.ReadInt(payload, "boardGroupId");
-        var boardIdentifier = AiChangePayload.ReadString(payload, "boardIdentifier");
-        var hasBoard = !string.IsNullOrWhiteSpace(boardIdentifier);
 
-        if (!taskId.HasValue || !boardGroupId.HasValue || !hasBoard)
+        if (!taskId.HasValue || !boardGroupId.HasValue)
         {
             return AiChangePayload.Failure(change, "The task or board group this change refers to could not be resolved.");
         }
 
-        var request = new MoveTasksToGroupRequest
-        {
-            BoardId = boardIdentifier!,
-            TaskIds = [taskId.Value],
-            NewGroupId = boardGroupId,
-        };
-
-        var response = await Mediator.Send(new MoveTasksToGroupCommand(request), cancellationToken);
+        var command = new MoveTasksToBoardGroupCommand([taskId.Value], boardGroupId.Value);
+        var response = await Mediator.Send(command, cancellationToken);
 
         if (!response.IsSuccess)
         {

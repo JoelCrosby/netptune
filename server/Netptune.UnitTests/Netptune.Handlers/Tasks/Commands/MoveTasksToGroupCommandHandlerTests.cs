@@ -171,6 +171,23 @@ public class MoveTasksToGroupCommandHandlerTests
     }
 
     [Fact]
+    public async Task MoveTasksToGroup_ShouldFailWithoutMoving_WhenATaskIsNotOnTheBoard()
+    {
+        var request = Fixture.Build<MoveTasksToGroupRequest>().Create();
+        SetupHandlerDependencies(request);
+        UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId, Arg.Any<int>(), TestContext.Current.CancellationToken)
+            .Returns(request.TaskIds.Skip(1).ToList());
+
+        var result = await Handler.Handle(new MoveTasksToGroupCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        await Placement.DidNotReceive().PlaceMany(
+            Arg.Any<IReadOnlyList<int>>(),
+            Arg.Any<BoardGroupTaskTarget>(),
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task MoveTasksToGroup_ShouldLeavePlacementsOnOtherBoardsIntact_WhenInputValid()
     {
         var request = Fixture.Build<MoveTasksToGroupRequest>().Create();

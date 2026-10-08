@@ -54,7 +54,13 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
         }
 
         var taskIdsInBoard = await UnitOfWork.Tasks.GetTaskIdsInBoard(req.BoardId, workspaceId, cancellationToken);
-        var taskIds = req.TaskIds.Where(id => taskIdsInBoard.Contains(id)).ToList();
+        var taskIds = req.TaskIds.Distinct().ToList();
+        var hasTaskOffBoard = taskIds.Any(id => !taskIdsInBoard.Contains(id));
+
+        if (hasTaskOffBoard)
+        {
+            return ClientResponse.Failed("Only tasks already on this board can be moved between its groups.");
+        }
 
         var oldTasks = boardGroup.StatusId.HasValue
             ? await UnitOfWork.Tasks.GetAllByIdAsync(taskIds, true, cancellationToken)

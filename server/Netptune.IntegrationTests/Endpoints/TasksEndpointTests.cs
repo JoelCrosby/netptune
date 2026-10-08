@@ -888,11 +888,13 @@ public sealed class TasksEndpointTests
     [Fact]
     public async Task MoveTasksToGroup_ShouldReturnSuccess_WhenInputValid()
     {
+        var boardView = await GetBoardView("neovim");
+        var taskIds = boardView.Groups.SelectMany(group => group.Tasks).Take(2).Select(task => task.Id).ToList();
         var request = new MoveTasksToGroupRequest
         {
-            TaskIds = new() { 0, 1 },
+            TaskIds = taskIds,
             BoardId = "neovim",
-            NewGroupId = 1,
+            NewGroupId = boardView.Groups.First().Id,
         };
 
         var response = await Client.PostAsJsonAsync("api/tasks/move-tasks-to-group", request);
@@ -902,6 +904,23 @@ public sealed class TasksEndpointTests
         var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
 
         result.IsSuccess.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task MoveTasksToGroup_ShouldFail_WhenATaskIsNotOnTheBoard()
+    {
+        var boardView = await GetBoardView("neovim");
+        var request = new MoveTasksToGroupRequest
+        {
+            TaskIds = [int.MaxValue],
+            BoardId = "neovim",
+            NewGroupId = boardView.Groups.First().Id,
+        };
+
+        var response = await Client.PostAsJsonAsync("api/tasks/move-tasks-to-group", request);
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
+
+        result!.IsSuccess.Should().BeFalse();
     }
 
     [Fact]
