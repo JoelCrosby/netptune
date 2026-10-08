@@ -19,6 +19,7 @@ import {
   taskChip,
   viewChip,
 } from '@core/util/ai-client-context';
+import { onChange } from '@core/util/signals';
 
 /**
  * The one place that decides what the chat knows about the screen behind it — the
@@ -28,12 +29,16 @@ import {
 export class AiContextService {
   private readonly url = inject(CurrentRouteService).url;
   private readonly workspace = inject(CurrentWorkspaceService).slug;
-  private readonly project = inject(CurrentProjectService).current;
+  private readonly project = inject(CurrentProjectService).open;
   private readonly board = inject(CurrentBoardService).board;
   private readonly sprint = inject(CurrentSprintService).sprint;
   private readonly task = inject(CurrentTaskService).task;
 
   private readonly removed = signal<ReadonlySet<string>>(new Set());
+
+  constructor() {
+    onChange(this.workspace, () => this.restore());
+  }
 
   private readonly available = computed<AiContextChip[]>(() => {
     const workspace = this.workspace() ?? null;

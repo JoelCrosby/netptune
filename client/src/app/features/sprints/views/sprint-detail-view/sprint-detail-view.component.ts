@@ -112,6 +112,7 @@ export class SprintDetailViewComponent {
   readonly sprintId = signal<number | null>(null);
   private readonly sprintCommands = inject(SprintCommandsService);
   private readonly currentSprint = inject(CurrentSprintService);
+  private publishedSprintId: number | undefined;
   private readonly sprintResourceRef = sprintDetailResource(
     computed(() => this.sprintId() ?? undefined)
   );
@@ -141,17 +142,27 @@ export class SprintDetailViewComponent {
         }
       });
 
-    effect(() => this.currentSprint.set(this.sprint()));
+    effect(() => this.publishCurrentSprint());
 
     inject(DestroyRef).onDestroy(() => this.clearCurrentSprint());
   }
 
+  // Reading the value of a failed resource throws, which happens when switching
+  // workspace reloads this sprint under the new one, so check before reading.
+  private publishCurrentSprint() {
+    const resource = this.sprintResourceRef;
+    const sprint = resource.hasValue() ? resource.value() : undefined;
+
+    this.publishedSprintId = sprint?.id;
+    this.currentSprint.set(sprint);
+  }
+
   private clearCurrentSprint() {
-    const sprint = this.sprint();
+    const sprintId = this.publishedSprintId;
 
-    if (!sprint) return;
+    if (sprintId === undefined) return;
 
-    this.currentSprint.clearIfCurrent(sprint.id);
+    this.currentSprint.clearIfCurrent(sprintId);
   }
 
   reload() {

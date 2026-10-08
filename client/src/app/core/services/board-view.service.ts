@@ -82,7 +82,13 @@ export class BoardViewService {
     this.leaveOnLoadFailure();
 
     /* The assistant asks what the user is looking at, from outside this view. */
-    effect(() => this.currentBoard.set(this.board()));
+    // Reading the value of a failed resource throws, which happens when switching
+    // workspace reloads this board under the new one, so check before reading.
+    effect(() => {
+      const loadFailed = !!this.resource.error();
+
+      this.currentBoard.set(loadFailed ? undefined : this.board());
+    });
   }
 
   open(identifier: string) {
