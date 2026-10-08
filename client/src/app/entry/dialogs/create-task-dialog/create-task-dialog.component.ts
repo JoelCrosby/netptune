@@ -49,32 +49,29 @@ import { FileDropzoneComponent } from '@static/components/file-dropzone/file-dro
 import { FileTypeIconComponent } from '@static/components/file-type-icon/file-type-icon.component';
 import { FormErrorsComponent } from '@static/components/form-error/form-errors.component';
 import { FileSizePipe } from '@static/pipes/file-size.pipe';
-import { TaskStatusSegmentsComponent } from '../task-detail-dialog/pickers/task-status-segments.component';
 import { TaskTagRowComponent } from '../task-detail-dialog/pickers/task-tag-row.component';
-import { TaskFilesSectionComponent } from '../task-detail-dialog/parts/task-files-section.component';
-import { TaskLinksSectionComponent } from '../task-detail-dialog/parts/task-links-section.component';
 import {
   TaskRelationListComponent,
   TaskRelationListItem,
 } from '../task-detail-dialog/parts/task-relation-list.component';
-import { AccordionComponent } from '@static/components/accordion/accordion.component';
+import { AvatarComponent } from '@static/components/avatar/avatar.component';
+import { DividerComponent } from '@static/components/divider/divider.component';
+import {
+  TabGroupComponent,
+  type TabItem,
+} from '@static/components/tab-group/tab-group.component';
 import { DialogColumnsComponent } from '@static/components/dialog/dialog-columns.component';
 import { DialogFooterComponent } from '@static/components/dialog/dialog-footer.component';
 import { DialogHeaderComponent } from '@static/components/dialog/dialog-header.component';
-import { DialogRailComponent } from '@static/components/dialog/dialog-rail.component';
 import { DialogSectionComponent } from '@static/components/dialog/dialog-section.component';
 import { HeadingInputDirective } from '@static/components/form-input/heading-input.directive';
 import { UploadProgressComponent } from '@static/components/upload-progress/upload-progress.component';
-import {
-  CreateTaskFieldRowsComponent,
-  CreateTaskReporter,
-} from './create-task-field-rows.component';
+import { CreateTaskPropertyChipsComponent } from './create-task-property-chips.component';
 import {
   LinkTaskDialogComponent,
   LinkTaskDialogData,
   LinkTaskDialogResult,
 } from '../link-task-dialog/link-task-dialog.component';
-import { toggleInSet } from '@core/util/signals';
 
 export interface CreateTaskDialogData {
   projectId?: number;
@@ -93,7 +90,12 @@ interface StagedRelation {
   task: TaskViewModel;
 }
 
-type Section = 'links' | 'files';
+type Tab = 'links' | 'files';
+
+interface CreateTaskReporter {
+  displayName: string;
+  pictureUrl?: string | null;
+}
 
 const archiveContentTypes = new Set([
   'application/zip',
@@ -115,13 +117,13 @@ const documentContentTypes = new Set([
 
 @Component({
   imports: [
-    AccordionComponent,
-    CreateTaskFieldRowsComponent,
+    AvatarComponent,
+    CreateTaskPropertyChipsComponent,
     DialogColumnsComponent,
     DialogFooterComponent,
     DialogHeaderComponent,
-    DialogRailComponent,
     DialogSectionComponent,
+    DividerComponent,
     EditorComponent,
     FileDropzoneComponent,
     FileSizePipe,
@@ -135,10 +137,8 @@ const documentContentTypes = new Set([
     LucideX,
     SectionLabelDirective,
     StrokedButtonComponent,
-    TaskFilesSectionComponent,
-    TaskLinksSectionComponent,
+    TabGroupComponent,
     TaskRelationListComponent,
-    TaskStatusSegmentsComponent,
     TaskTagRowComponent,
     UploadProgressComponent,
   ],
@@ -155,10 +155,12 @@ const documentContentTypes = new Set([
         i18n-heading="Title of the create-task dialog"
         heading="Create Task" />
 
-      <app-dialog-columns>
+      <div
+        class="border-foreground/8 flex shrink-0 flex-col gap-3.5 border-b px-7 pt-5.5 pb-4">
         <div>
           <input
             appHeadingInput
+            class="text-[22px]/[30px] tracking-[-0.01em] md:text-[27px]/[34px]"
             type="text"
             autocomplete="off"
             i18n-placeholder="Placeholder in the empty task summary field"
@@ -169,14 +171,64 @@ const documentContentTypes = new Set([
           <app-form-errors [formField]="taskForm.name" />
         </div>
 
-        @if (canAssignTags()) {
-          <app-task-tag-row
-            [tags]="selectedTags()"
+        <div class="flex flex-wrap items-center gap-2">
+          <app-create-task-property-chips
             [editable]="!busy()"
-            (added)="addTag($event)"
-            (removed)="removeTag($event)" />
-        }
+            [showProject]="!data?.projectId"
+            [showSprint]="!data?.sprintId"
+            [projectInvalid]="projectInvalid()"
+            [estimateType]="estimateType()"
+            [estimateValue]="estimateValue()"
+            [(statusId)]="statusId"
+            [(priority)]="priority"
+            [(projectId)]="projectId"
+            [(sprintId)]="sprintId"
+            [(startDate)]="startDate"
+            [(dueDate)]="dueDate"
+            [(assignees)]="assignees"
+            (estimateChange)="setEstimate($event)" />
 
+          @if (canAssignTags()) {
+            <app-divider
+              orientation="vertical"
+              class="bg-foreground/8 mx-1 h-5" />
+            <app-task-tag-row
+              size="md"
+              [tags]="selectedTags()"
+              [editable]="!busy()"
+              (added)="addTag($event)"
+              (removed)="removeTag($event)" />
+          }
+        </div>
+
+        @if (scheduleInvalid() || projectInvalid()) {
+          <div class="text-warn flex flex-col gap-1 text-xs" role="alert">
+            @if (scheduleInvalid()) {
+              <p>
+                <span
+                  i18n="
+                    Validation error when a task's start date is after its due
+                    date
+                  ">
+                  Start date must be on or before due date.
+                </span>
+              </p>
+            }
+            @if (projectInvalid()) {
+              <p>
+                <span
+                  i18n="
+                    Validation error when no project is selected for a task
+                  ">
+                  Project is required.
+                </span>
+              </p>
+            }
+          </div>
+        }
+      </div>
+
+      <app-dialog-columns bodyClass="px-7 pt-5.5 pb-6">
         <div>
           <div
             appSectionLabel
@@ -197,151 +249,129 @@ const documentContentTypes = new Set([
           <app-form-errors [formField]="taskForm.description" />
         </div>
 
-        @if (canLinkTasks() || canUploadFiles()) {
-          <app-accordion class="mt-auto">
-            @if (canLinkTasks()) {
-              <app-task-links-section
-                canLink
-                [count]="stagedRelations().length"
-                [last]="!canUploadFiles()"
-                [disabled]="busy()"
-                [expanded]="isExpanded('links')"
-                (toggled)="toggle('links')"
-                (linkRequested)="openLinkDialog()">
-                <app-task-relation-list
-                  removable
-                  [items]="relationItems()"
-                  [disabled]="busy()"
-                  (removed)="removeRelation($event)" />
-              </app-task-links-section>
-            }
+        @if (tabItems().length) {
+          <app-dialog-section
+            dialogColumnsFooter
+            divider="top"
+            class="shrink-0">
+            <div class="flex h-[52px] items-center gap-1 px-5">
+              <app-tab-group
+                variant="island"
+                [tabs]="tabItems()"
+                [(value)]="activeTab" />
 
-            @if (canUploadFiles()) {
-              <app-task-files-section
-                last
-                [count]="stagedFiles().length"
-                [expanded]="isExpanded('files')"
-                (toggled)="toggle('files')"
-                (chooseRequested)="expand('files')">
-                <app-file-dropzone
-                  [disabled]="busy()"
-                  [maxBytes]="maxUploadBytes()"
-                  (filesSelected)="addFiles($event)" />
+              <div class="ml-auto">
+                @if (activeTab() === 'links' && canLinkTasks()) {
+                  <button
+                    type="button"
+                    [class]="tabActionClass"
+                    [disabled]="busy()"
+                    (click)="openLinkDialog()">
+                    <span i18n="Button that links this task to another">
+                      Link task
+                    </span>
+                  </button>
+                }
+              </div>
+            </div>
 
-                <ul class="mt-3 flex flex-col gap-2">
-                  @for (file of stagedFiles(); track file.name + file.size) {
-                    <li app-list-row>
-                      <app-file-type-icon
-                        size="small"
-                        [group]="fileGroup(file)" />
-                      <div class="min-w-0 flex-1">
-                        <span class="block truncate font-medium">
-                          {{ file.name }}
-                        </span>
-                        <span class="text-muted text-xs">
-                          {{ file.size | fileSize }}
-                        </span>
-                      </div>
-                      <button
-                        app-icon-button
-                        type="button"
-                        [disabled]="busy()"
-                        i18n-aria-label="
-                          Accessible label for the button that takes a file off
-                          a task that has not been created yet
-                        "
-                        aria-label="Remove file"
-                        (click)="removeFile(file)">
-                        <svg lucideX class="h-4 w-4"></svg>
-                      </button>
-                    </li>
-                  }
-                </ul>
+            <div class="max-h-56 overflow-y-auto px-5 pt-4 pb-4">
+              @if (canLinkTasks()) {
+                <div [class.hidden]="activeTab() !== 'links'">
+                  <app-task-relation-list
+                    removable
+                    [items]="relationItems()"
+                    [disabled]="busy()"
+                    (removed)="removeRelation($event)" />
+                </div>
+              }
 
-                <div class="mt-2 flex flex-col gap-2" aria-live="polite">
-                  @for (upload of uploads(); track upload.id) {
-                    <app-upload-progress
-                      [name]="upload.name"
-                      [progress]="upload.progress"
-                      [error]="upload.error" />
+              @if (canUploadFiles()) {
+                <div [class.hidden]="activeTab() !== 'files'">
+                  <app-file-dropzone
+                    [disabled]="busy()"
+                    [maxBytes]="maxUploadBytes()"
+                    (filesSelected)="addFiles($event)" />
+
+                  <ul class="mt-3 flex flex-col gap-2">
+                    @for (file of stagedFiles(); track file.name + file.size) {
+                      <li app-list-row>
+                        <app-file-type-icon
+                          size="small"
+                          [group]="fileGroup(file)" />
+                        <div class="min-w-0 flex-1">
+                          <span class="block truncate font-medium">
+                            {{ file.name }}
+                          </span>
+                          <span class="text-muted text-xs">
+                            {{ file.size | fileSize }}
+                          </span>
+                        </div>
+                        <button
+                          app-icon-button
+                          type="button"
+                          [disabled]="busy()"
+                          i18n-aria-label="
+                            Accessible label for the button that takes a file
+                            off a task that has not been created yet
+                          "
+                          aria-label="Remove file"
+                          (click)="removeFile(file)">
+                          <svg lucideX class="h-4 w-4"></svg>
+                        </button>
+                      </li>
+                    }
+                  </ul>
+
+                  <div class="mt-2 flex flex-col gap-2" aria-live="polite">
+                    @for (upload of uploads(); track upload.id) {
+                      <app-upload-progress
+                        [name]="upload.name"
+                        [progress]="upload.progress"
+                        [error]="upload.error" />
+                    }
+                  </div>
+
+                  @if (uploadsFailed()) {
+                    <p class="text-warn mt-2 text-sm" role="alert">
+                      <span
+                        i18n="
+                          Shown when a new task was saved but some of its files
+                          did not upload
+                        ">
+                        The task was created, but some files did not upload.
+                        Close this dialog and add them from the task.
+                      </span>
+                    </p>
                   }
                 </div>
-
-                @if (uploadsFailed()) {
-                  <p class="text-warn mt-2 text-sm" role="alert">
-                    <span
-                      i18n="
-                        Shown when a new task was saved but some of its files
-                        did not upload
-                      ">
-                      The task was created, but some files did not upload. Close
-                      this dialog and add them from the task.
-                    </span>
-                  </p>
-                }
-              </app-task-files-section>
-            }
-          </app-accordion>
+              }
+            </div>
+          </app-dialog-section>
         }
-
-        <app-dialog-rail>
-          @if (readStatus()) {
-            <app-dialog-section divider="bottom" class="px-5 pt-4.5 pb-4">
-              <app-task-status-segments
-                [eyebrowId]="statusEyebrowId"
-                [disabled]="busy()"
-                [(value)]="statusId" />
-            </app-dialog-section>
-          }
-
-          <app-create-task-field-rows
-            class="custom-scroll min-h-0 flex-1 overflow-y-auto px-2 pt-2 pb-4"
-            [editable]="!busy()"
-            [reporter]="reporter()"
-            [showProject]="!data?.projectId"
-            [showSprint]="!data?.sprintId"
-            [estimateType]="estimateType()"
-            [estimateValue]="estimateValue()"
-            [(priority)]="priority"
-            [(projectId)]="projectId"
-            [(sprintId)]="sprintId"
-            [(startDate)]="startDate"
-            [(dueDate)]="dueDate"
-            [(assignees)]="assignees"
-            (estimateChange)="setEstimate($event)" />
-
-          @if (scheduleInvalid() || projectInvalid()) {
-            <app-dialog-section
-              divider="top"
-              class="text-warn shrink-0 px-4 py-3 text-xs"
-              role="alert">
-              @if (scheduleInvalid()) {
-                <p>
-                  <span
-                    i18n="
-                      Validation error when a task's start date is after its due
-                      date
-                    ">
-                    Start date must be on or before due date.
-                  </span>
-                </p>
-              }
-              @if (projectInvalid()) {
-                <p>
-                  <span
-                    i18n="
-                      Validation error when no project is selected for a task
-                    ">
-                    Project is required.
-                  </span>
-                </p>
-              }
-            </app-dialog-section>
-          }
-        </app-dialog-rail>
       </app-dialog-columns>
 
       <app-dialog-footer>
+        @if (reporter(); as reporter) {
+          <span class="text-muted mr-auto flex items-center gap-2 text-xs">
+            <app-avatar
+              size="xs"
+              [tooltip]="false"
+              [name]="reporter.displayName"
+              [imageUrl]="reporter.pictureUrl" />
+            <span
+              i18n="
+                Footer line naming who raises the new task. NAME is their
+                display name
+              ">
+              Reported by
+              {{
+                reporter.displayName // i18n(ph="NAME")
+              }}
+            </span>
+          </span>
+        }
+
         <button app-stroked-button type="button" (click)="close()">
           <span i18n="Dismisses a dialog without saving">Close</span>
         </button>
@@ -390,11 +420,14 @@ export class CreateTaskDialogComponent {
   readonly canLinkTasks = hasPermission(PERMISSIONS.tasks.update);
   readonly readStatus = hasPermission(PERMISSIONS.statuses.read);
 
-  readonly statusEyebrowId = 'create-task-status-eyebrow';
-
   readonly labels = {
     description: $localize`:Label of the task description editor:Description`,
+    links: $localize`:Tab listing the tasks this one links to:Links`,
+    files: $localize`:Section heading for files attached to a task:Files`,
   };
+
+  readonly tabActionClass =
+    'border-foreground/8 hover:bg-hover h-[30px] cursor-pointer rounded-[7px] border px-2.5 text-xs font-medium transition-colors disabled:pointer-events-none disabled:opacity-50';
 
   // Picking tags means both listing the workspace's tags and being allowed to attach one.
   readonly canAssignTags = computed(() => {
@@ -418,7 +451,29 @@ export class CreateTaskDialogComponent {
   readonly stagedRelations = signal<StagedRelation[]>([]);
   readonly uploads = this.uploadService.uploads;
 
-  private readonly expanded = signal<ReadonlySet<Section>>(new Set());
+  readonly activeTab = signal<Tab>(this.canLinkTasks() ? 'links' : 'files');
+
+  readonly tabItems = computed<TabItem[]>(() => {
+    const tabs: TabItem[] = [];
+
+    if (this.canLinkTasks()) {
+      tabs.push({
+        value: 'links',
+        label: this.labels.links,
+        count: this.stagedRelations().length,
+      });
+    }
+
+    if (this.canUploadFiles()) {
+      tabs.push({
+        value: 'files',
+        label: this.labels.files,
+        count: this.stagedFiles().length,
+      });
+    }
+
+    return tabs;
+  });
 
   // Set once the task exists, which is also the point the dialog stops accepting edits.
   private readonly createdSystemId = signal<string | null>(null);
@@ -523,31 +578,6 @@ export class CreateTaskDialogComponent {
 
       untracked(() => this.dialogRef.close());
     });
-
-    // A staged file or link is invisible while its section is folded, so adding one opens it.
-    effect(() => {
-      if (!this.stagedFiles().length) return;
-
-      untracked(() => this.expand('files'));
-    });
-
-    effect(() => {
-      if (!this.stagedRelations().length) return;
-
-      untracked(() => this.expand('links'));
-    });
-  }
-
-  isExpanded(section: Section) {
-    return this.expanded().has(section);
-  }
-
-  toggle(section: Section) {
-    toggleInSet(this.expanded, section);
-  }
-
-  expand(section: Section) {
-    toggleInSet(this.expanded, section, true);
   }
 
   addTag(tag: string) {
@@ -653,6 +683,8 @@ export class CreateTaskDialogComponent {
       return;
     }
 
+    // The uploads report their progress on the files tab.
+    this.activeTab.set('files');
     this.createdSystemId.set(created.systemId);
     this.uploadService.upload(created.systemId, files);
   }
