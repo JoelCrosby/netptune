@@ -369,6 +369,19 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         return candidates.Where(task => IsRequested(task, requested)).ToList();
     }
 
+    public Task<List<TaskViewModel>> GetTaskViewModelsByScopeId(int projectScopeId, string workspaceKey, CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .AsNoTracking()
+            .Where(task =>
+                task.Workspace!.Slug == workspaceKey &&
+                !task.IsDeleted &&
+                task.ProjectScopeId == projectScopeId)
+            .OrderBy(task => task.Project!.Key)
+            .Select(TaskToViewModel())
+            .ToListAsync(cancellationToken);
+    }
+
     private static bool IsRequested(TaskViewModel task, HashSet<TaskSystemIdReference> requested)
     {
         var reference = ParseSystemId(task.SystemId);

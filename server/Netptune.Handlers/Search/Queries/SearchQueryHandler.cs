@@ -33,13 +33,12 @@ public sealed class SearchQueryHandler : IRequestHandler<SearchQuery, SearchResp
         var query = new GlobalSearchQuery(request.Q, workspaceSlug, request.Types, limit);
         var response = await Search.SearchAsync(query, cancellationToken);
         var results = await HydrateTaskResults(response.Results, workspaceSlug, cancellationToken);
-        var exactTask = await ResolveExactTask(request, workspaceSlug, cancellationToken);
+        var exactTasks = await ResolveExactTasks(request, workspaceSlug, cancellationToken);
+        var exactTaskIds = exactTasks.Select(task => task.Id).ToHashSet();
+        var exactResults = exactTasks.Select(task => ToSearchResult(task, workspaceSlug));
 
-        if (exactTask is not null)
-        {
-            results.RemoveAll(result => result.Type == "task" && result.Id == exactTask.Id);
-            results.Insert(0, ToSearchResult(exactTask, workspaceSlug));
-        }
+        results.RemoveAll(result => result.Type == "task" && exactTaskIds.Contains(result.Id));
+        results.InsertRange(0, exactResults);
 
         return response with { Results = results };
     }
@@ -94,25 +93,39 @@ public sealed class SearchQueryHandler : IRequestHandler<SearchQuery, SearchResp
         return hydratedResults;
     }
 
-    private async Task<TaskViewModel?> ResolveExactTask(
+    private async Task<List<TaskViewModel>> ResolveExactTasks(
         SearchQuery request,
         string workspaceSlug,
         CancellationToken cancellationToken)
     {
         var includesTasks = request.Types is not { Length: > 0 } || request.Types.Any(IsTaskType);
+
+        if (!includesTasks)
+        {
+            return [];
+        }
+
         var query = request.Q.Trim();
+        var isScopeId = int.TryParse(query, out var projectScopeId);
+
+        if (isScopeId)
+        {
+            return await UnitOfWork.Tasks.GetTaskViewModelsByScopeId(projectScopeId, workspaceSlug, cancellationToken);
+        }
+
         var separatorIndex = query.LastIndexOf('-');
         var hasIdentifierShape = separatorIndex > 0
             && separatorIndex < query.Length - 1
             && int.TryParse(query[(separatorIndex + 1)..], out _);
-        var shouldResolveTask = includesTasks && hasIdentifierShape;
 
-        if (!shouldResolveTask)
+        if (!hasIdentifierShape)
         {
-            return null;
+            return [];
         }
 
-        return await UnitOfWork.Tasks.GetTaskViewModel(query, workspaceSlug, cancellationToken);
+        var task = await UnitOfWork.Tasks.GetTaskViewModel(query, workspaceSlug, cancellationToken);
+
+        return task is null ? [] : [task];
     }
 
     private static bool IsTaskType(string type)

@@ -57,6 +57,27 @@ public sealed class SearchSystemIdTests
     }
 
     [Fact]
+    public async Task Search_ShouldFindTask_WhenQueriedByScopeIdAlone()
+    {
+        var task = await CreateTask();
+
+        var result = await Search(task.ProjectScopeId.ToString());
+
+        result.Results.Should().Contain(item => item.Type == "task" && item.Id == task.Id);
+    }
+
+    [Fact]
+    public async Task Tasks_ShouldFilterByScopeId_WhenSearchTermIsScopeIdAlone()
+    {
+        var task = await CreateTask();
+
+        var response = await Client.GetFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>(
+            $"api/tasks?search={task.ProjectScopeId}");
+
+        response.Payload!.Items.Should().Contain(item => item.Id == task.Id);
+    }
+
+    [Fact]
     public async Task BoardView_ShouldFilterBySystemId_WhenTermIsSystemId()
     {
         var task = await CreateTask();
