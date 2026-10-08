@@ -81,7 +81,7 @@ import {
                 aria-hidden="true"
                 (click)="closeMonthMenu()"></button>
               <div
-                class="border-border bg-background absolute top-full left-1/2 z-20 mt-1 grid w-52 -translate-x-1/2 grid-cols-3 gap-1 rounded-md border p-1 shadow-xl"
+                class="absolute top-full left-1/2 z-20 mt-1 grid w-52 -translate-x-1/2 grid-cols-3 gap-1 rounded-md border border-neutral-200 bg-white p-1 shadow-xl dark:border-neutral-700 dark:bg-neutral-900"
                 role="listbox"
                 i18n-aria-label="Accessible name of the month picker list"
                 aria-label="Month"

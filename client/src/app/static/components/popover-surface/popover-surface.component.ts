@@ -1,4 +1,5 @@
 import { Component, computed, input } from '@angular/core';
+import { cn } from '../button/button.variants';
 
 export type PopoverSurfaceSize = 'compact' | 'sheet' | 'wide';
 
@@ -63,10 +64,7 @@ export type PopoverSurfaceEnterFrom =
     }
   `,
   template: `
-    <div
-      class="custom-scroll border-border bg-background flex flex-col overflow-x-hidden border text-left shadow-xl dark:shadow-black/60"
-      [attr.data-enter-from]="enterFrom()"
-      [class]="surfaceClass()">
+    <div [attr.data-enter-from]="enterFrom()" [class]="className()">
       <ng-content />
     </div>
   `,
@@ -74,6 +72,7 @@ export type PopoverSurfaceEnterFrom =
 export class PopoverSurfaceComponent {
   readonly size = input<PopoverSurfaceSize>('wide');
   readonly enterFrom = input<PopoverSurfaceEnterFrom>('none');
+  readonly panelClass = input('');
 
   /**
    * Plays the exit animation. The owner of the overlay is responsible for
@@ -81,10 +80,15 @@ export class PopoverSurfaceComponent {
    */
   readonly leaving = input(false);
 
-  protected readonly surfaceClass = computed(() => {
+  protected readonly className = computed(() => {
     const animation = this.leaving() ? 'menu-scale-out' : 'menu-scale-in';
 
-    return `${animation} ${this.sizeClass()}`;
+    return cn(
+      'custom-scroll border-border bg-background flex flex-col overflow-x-hidden border text-left shadow-xl dark:shadow-black/60',
+      animation,
+      this.sizeClass(),
+      this.panelClass()
+    );
   });
 
   private readonly sizeClass = computed(() => {

@@ -1,7 +1,7 @@
 import { Component, computed, input } from '@angular/core';
 
 const baseClass =
-  'hover:bg-hover focus-visible:ring-primary flex h-9.5 w-full cursor-pointer items-center gap-2.5 rounded-[5px] px-2 text-left font-[inherit] text-sm focus-visible:ring-2 focus-visible:outline-none';
+  'hover:bg-neutral-100 dark:hover:bg-neutral-800 focus-visible:ring-primary flex h-9.5 w-full cursor-pointer items-center gap-2.5 rounded-[5px] px-2 text-left font-[inherit] text-sm focus-visible:ring-2 focus-visible:outline-none';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -26,7 +26,7 @@ export class WorkspaceSelectOptionComponent {
     }
 
     if (this.active()) {
-      return `${baseClass} bg-hover text-[rgba(var(--foreground-rgb),0.9)]`;
+      return `${baseClass} bg-neutral-100 dark:bg-neutral-800 text-[rgba(var(--foreground-rgb),0.9)]`;
     }
 
     return `${baseClass} text-[rgba(var(--foreground-rgb),0.72)]`;

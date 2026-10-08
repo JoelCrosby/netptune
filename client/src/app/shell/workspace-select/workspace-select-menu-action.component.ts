@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
   template: '<ng-content />',
   host: {
     class:
-      'hover:bg-hover focus-visible:ring-primary flex w-full cursor-pointer items-center gap-2.5 rounded-[5px] px-2 py-1.75 text-left text-[13px] leading-6 tracking-[.225px] focus-visible:ring-2 focus-visible:outline-none',
+      'hover:bg-neutral-100 dark:hover:bg-neutral-800 focus-visible:ring-primary flex w-full cursor-pointer items-center gap-2.5 rounded-[5px] px-2 py-1.75 text-left text-[13px] leading-6 tracking-[.225px] focus-visible:ring-2 focus-visible:outline-none',
   },
 })
 export class WorkspaceSelectMenuActionComponent {}

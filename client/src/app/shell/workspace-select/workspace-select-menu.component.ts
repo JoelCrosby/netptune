@@ -54,9 +54,13 @@ import { WorkspaceSelectOptionComponent } from './workspace-select-option.compon
     </ng-template>
 
     @if (isOpen()) {
-      <app-popover-surface size="sheet" enterFrom="top" [leaving]="leaving()">
+      <app-popover-surface
+        size="sheet"
+        enterFrom="top"
+        panelClass="border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-900"
+        [leaving]="leaving()">
         <div
-          class="border-border flex h-10.5 shrink-0 items-center gap-2.25 border-b px-3">
+          class="border-border/50 flex h-10.5 shrink-0 items-center gap-2.25 border-b px-3">
           <svg
             lucideSearch
             class="h-3.75 w-3.75 shrink-0 text-[rgba(var(--foreground-rgb),0.45)]"
@@ -131,7 +135,7 @@ import { WorkspaceSelectOptionComponent } from './workspace-select-option.compon
           }
         </div>
 
-        <div class="border-border shrink-0 border-t p-1.5">
+        <div class="border-border/50 shrink-0 border-t p-1.5">
           <button
             app-workspace-menu-action
             type="button"

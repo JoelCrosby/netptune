@@ -65,7 +65,7 @@ export type DatePickerAppearance = 'field' | 'flat' | 'bare';
       <div
         cdkTrapFocus
         [cdkTrapFocusAutoCapture]="true"
-        class="menu-scale-in border-border bg-background rounded-md border shadow-xl dark:shadow-black/60"
+        class="menu-scale-in rounded-md border border-neutral-200 bg-white shadow-xl dark:border-neutral-700 dark:bg-neutral-900 dark:shadow-black/60"
         role="dialog"
         [attr.aria-label]="ariaLabel()">
         <app-calendar
