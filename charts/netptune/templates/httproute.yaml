@@ -55,6 +55,29 @@ spec:
       backendRefs:
         - name: app-service
           port: {{ .Values.parameters.app.port_http | int }}
+    # The assistant streams each turn and each change set apply as server sent events, so it
+    # bypasses the buffering middleware for the same reason as the hubs. Request bodies stay
+    # bounded by Kestrel's own limit, and compress already excludes text/event-stream.
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/api/ai/"
+      timeouts:
+        request: 3600s
+      filters:
+        - type: ExtensionRef
+          extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: security-headers
+        - type: ExtensionRef
+          extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: compress
+      backendRefs:
+        - name: app-service
+          port: {{ .Values.parameters.app.port_http | int }}
     - matches:
         - path:
             type: PathPrefix
@@ -146,6 +169,29 @@ spec:
             group: traefik.io
             kind: Middleware
             name: security-headers
+      backendRefs:
+        - name: app-service
+          port: {{ .Values.parameters.app.port_http | int }}
+    # The assistant streams each turn and each change set apply as server sent events, so it
+    # bypasses the buffering middleware for the same reason as the hubs. Request bodies stay
+    # bounded by Kestrel's own limit, and compress already excludes text/event-stream.
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/api/ai/"
+      timeouts:
+        request: 3600s
+      filters:
+        - type: ExtensionRef
+          extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: security-headers
+        - type: ExtensionRef
+          extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: compress
       backendRefs:
         - name: app-service
           port: {{ .Values.parameters.app.port_http | int }}
