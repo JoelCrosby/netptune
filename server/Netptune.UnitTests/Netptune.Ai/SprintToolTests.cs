@@ -437,7 +437,20 @@ public class SprintToolTests
         tool.GetRequiredPermissions(Arguments("""{"action":"delete"}""")).Should().Equal(NetptunePermissions.Sprints.Delete);
         tool.GetRequiredPermissions(Arguments("""{"action":"start"}""")).Should().Equal(NetptunePermissions.Sprints.Update);
         tool.GetChangePermissions(SprintTransitionTool.DeleteChange, payload).Should().Equal(NetptunePermissions.Sprints.Delete);
-        tool.GetChangePermissions(SprintTransitionTool.CancelChange, payload).Should().Equal(NetptunePermissions.Sprints.Update);
+        tool.GetChangePermissions(SprintTransitionTool.StartChange, payload).Should().Equal(NetptunePermissions.Sprints.Update);
+    }
+
+    [Fact]
+    public void SprintTransition_ShouldDemandManageTasks_ForClosingASprint()
+    {
+        var tool = new SprintTransitionTool(Mediator, ChangeSet);
+        var payload = Arguments($$"""{"sprintId":{{SprintId}}}""");
+        var closingPermissions = new[] { NetptunePermissions.Sprints.Update, NetptunePermissions.Sprints.ManageTasks };
+
+        tool.GetRequiredPermissions(Arguments("""{"action":"complete"}""")).Should().BeEquivalentTo(closingPermissions);
+        tool.GetRequiredPermissions(Arguments("""{"action":"cancel"}""")).Should().BeEquivalentTo(closingPermissions);
+        tool.GetChangePermissions(SprintTransitionTool.CompleteChange, payload).Should().BeEquivalentTo(closingPermissions);
+        tool.GetChangePermissions(SprintTransitionTool.CancelChange, payload).Should().BeEquivalentTo(closingPermissions);
     }
 
     [Fact]

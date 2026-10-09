@@ -215,14 +215,14 @@ public static class EventDefinitionRegistry
             [(EventKeys.AssistantConversationDeleted, 1)] = typeof(AssistantConversationDeletedPayload),
         };
 
-    public static void Validate<TPayload>(EventWriteRequest<TPayload> request) where TPayload : class
+    public static void Validate(IEventWriteRequest request)
     {
         if (!Definitions.TryGetValue((request.EventKey, request.SchemaVersion), out var payloadType))
         {
             throw new InvalidOperationException($"Event {request.EventKey} v{request.SchemaVersion} is not registered.");
         }
 
-        if (payloadType != typeof(TPayload))
+        if (payloadType != request.PayloadType)
         {
             throw new InvalidOperationException($"Event {request.EventKey} v{request.SchemaVersion} requires payload {payloadType.Name}.");
         }

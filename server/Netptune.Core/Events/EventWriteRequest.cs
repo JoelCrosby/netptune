@@ -2,7 +2,39 @@ using Netptune.Core.Enums;
 
 namespace Netptune.Core.Events;
 
-public sealed record EventWriteRequest<TPayload> where TPayload : class
+// Lets requests with different payload types travel in one batch to IEventRecordWriter.AppendRange.
+public interface IEventWriteRequest
+{
+    int? WorkspaceId { get; }
+
+    string EventKey { get; }
+
+    short SchemaVersion { get; }
+
+    string? SubjectType { get; }
+
+    string? SubjectId { get; }
+
+    object Payload { get; }
+
+    Type PayloadType { get; }
+
+    IReadOnlyCollection<EventReferenceInput> References { get; }
+
+    string? ActorUserId { get; }
+
+    bool ResolveActorFromIdentity { get; }
+
+    DateTime? OccurredAt { get; }
+
+    Guid? CorrelationId { get; }
+
+    Guid? CausationEventId { get; }
+
+    bool Publish { get; }
+}
+
+public sealed record EventWriteRequest<TPayload> : IEventWriteRequest where TPayload : class
 {
     public int? WorkspaceId { get; init; }
 
@@ -29,6 +61,10 @@ public sealed record EventWriteRequest<TPayload> where TPayload : class
     public Guid? CausationEventId { get; init; }
 
     public bool Publish { get; init; } = true;
+
+    object IEventWriteRequest.Payload => Payload;
+
+    Type IEventWriteRequest.PayloadType => typeof(TPayload);
 }
 
 public sealed record EventReferenceInput

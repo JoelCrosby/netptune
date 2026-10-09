@@ -93,6 +93,8 @@ public sealed class ArchiveRepository(DataContext context) : IArchiveRepository
             .AsAsyncEnumerable();
     }
 
+    // Link sections apply the same liveness rules as the sections they point at. A link to a row the archive
+    // leaves out, such as a task in a deleted project, cannot be resolved on import and is dropped there.
     public IAsyncEnumerable<ProjectTaskAppUser> ReadTaskAssignees(int workspaceId, CancellationToken cancellationToken = default)
     {
         return context.ProjectTaskAppUsers
@@ -100,6 +102,7 @@ public sealed class ArchiveRepository(DataContext context) : IArchiveRepository
             .Include(link => link.ProjectTask).ThenInclude(task => task.Project)
             .Include(link => link.User)
             .Where(link => link.ProjectTask.WorkspaceId == workspaceId && !link.ProjectTask.IsDeleted)
+            .Where(link => link.ProjectTask.Project != null && !link.ProjectTask.Project.IsDeleted)
             .OrderBy(link => link.Id)
             .AsAsyncEnumerable();
     }
@@ -111,6 +114,7 @@ public sealed class ArchiveRepository(DataContext context) : IArchiveRepository
             .Include(link => link.ProjectTask).ThenInclude(task => task!.Project)
             .Include(link => link.Tag)
             .Where(link => link.ProjectTask!.WorkspaceId == workspaceId && !link.ProjectTask.IsDeleted)
+            .Where(link => link.ProjectTask!.Project != null && !link.ProjectTask.Project.IsDeleted)
             .Where(link => !link.Tag!.IsDeleted)
             .OrderBy(link => link.Id)
             .AsAsyncEnumerable();
@@ -123,6 +127,9 @@ public sealed class ArchiveRepository(DataContext context) : IArchiveRepository
             .Include(link => link.ProjectTask).ThenInclude(task => task!.Project)
             .Include(link => link.BoardGroup).ThenInclude(group => group!.Board)
             .Where(link => link.ProjectTask!.WorkspaceId == workspaceId && !link.ProjectTask.IsDeleted)
+            .Where(link => link.ProjectTask!.Project != null && !link.ProjectTask.Project.IsDeleted)
+            .Where(link => !link.BoardGroup!.IsDeleted && !link.BoardGroup.Board!.IsDeleted)
+            .Where(link => link.BoardGroup!.Board!.Project != null && !link.BoardGroup.Board.Project.IsDeleted)
             .OrderBy(link => link.Id)
             .AsAsyncEnumerable();
     }
@@ -142,7 +149,10 @@ public sealed class ArchiveRepository(DataContext context) : IArchiveRepository
             .Include(relation => relation.RelationType)
             .Include(relation => relation.SourceTask).ThenInclude(task => task!.Project)
             .Include(relation => relation.TargetTask).ThenInclude(task => task!.Project)
-            .Where(relation => relation.WorkspaceId == workspaceId)
+            .Where(relation => relation.WorkspaceId == workspaceId && !relation.RelationType!.IsDeleted)
+            .Where(relation => !relation.SourceTask!.IsDeleted && !relation.TargetTask!.IsDeleted)
+            .Where(relation => relation.SourceTask!.Project != null && !relation.SourceTask.Project.IsDeleted)
+            .Where(relation => relation.TargetTask!.Project != null && !relation.TargetTask.Project.IsDeleted)
             .OrderBy(relation => relation.Id)
             .AsAsyncEnumerable();
     }

@@ -8,7 +8,7 @@ public interface ITaskPlacementService
 
     Task PlaceMany(IReadOnlyList<int> taskIds, BoardGroupTaskTarget target, CancellationToken cancellationToken = default);
 
-    Task ReplaceAllPlacements(int taskId, BoardGroupTaskTarget target, CancellationToken cancellationToken = default);
+    Task ReplaceAllPlacements(IReadOnlyList<int> taskIds, BoardGroupTaskTarget target, CancellationToken cancellationToken = default);
 
     Task<bool> RemoveFromBoard(int taskId, int boardId, CancellationToken cancellationToken = default);
 

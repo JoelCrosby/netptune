@@ -36,8 +36,8 @@ public static class SprintsEndpoints
         group.MapPatch("/sprints/{id:int}", UpdateSprint)
             .WithSummary("Update a sprint")
             .WithDescription("Updates the supplied fields on an existing sprint.")
-            .RequireAuthorization(NetptunePermissions.Sprints.Update)
-            .Broadcasts(WorkspaceEventScopes.Sprint);
+            .RequireAuthorization(NetptunePermissions.Sprints.Update, NetptunePermissions.Sprints.ManageTasks)
+            .Broadcasts(WorkspaceEventScopes.Sprint, WorkspaceEventScopes.Task);
 
         group.MapDelete("/sprints/{id:int}", DeleteSprint)
             .WithSummary("Delete a sprint")

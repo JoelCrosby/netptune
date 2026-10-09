@@ -41,10 +41,15 @@ public sealed class TaskPlacementService : ITaskPlacementService
         await AddPlacements(taskIds, target, cancellationToken);
     }
 
-    public async Task ReplaceAllPlacements(int taskId, BoardGroupTaskTarget target, CancellationToken cancellationToken = default)
+    public async Task ReplaceAllPlacements(IReadOnlyList<int> taskIds, BoardGroupTaskTarget target, CancellationToken cancellationToken = default)
     {
-        await UnitOfWork.ProjectTasksInGroups.DeleteAllByTaskId([taskId], cancellationToken);
-        await AddPlacements([taskId], target, cancellationToken);
+        if (taskIds.Count == 0)
+        {
+            return;
+        }
+
+        await UnitOfWork.ProjectTasksInGroups.DeleteAllByTaskId(taskIds, cancellationToken);
+        await AddPlacements(taskIds, target, cancellationToken);
     }
 
     public async Task<bool> RemoveFromBoard(int taskId, int boardId, CancellationToken cancellationToken = default)

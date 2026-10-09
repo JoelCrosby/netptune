@@ -557,6 +557,12 @@ public class EventMessagingTests(NatsEventsFixture fixture) : IClassFixture<Nats
                 {
                     return false;
                 }
+                catch (NatsJSApiNoResponseException)
+                {
+                    // A JetStream API request can go unanswered within the client's request timeout on a
+                    // loaded machine. That means "not yet", like a 404, and the outer deadline still applies.
+                    return false;
+                }
             },
             consumerTask,
             $"consumer {durable} to exist");

@@ -1,5 +1,6 @@
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Events;
 using Netptune.Core.Models.Audit;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Responses.Common;
@@ -11,6 +12,8 @@ namespace Netptune.Core.Repositories;
 public interface IEventRecordRepository : IRepository<EventRecord, long>
 {
     Task<EventRecord> AppendAsync(EventRecord record, bool publish, CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<EventRecord>> AppendRangeAsync(IReadOnlyList<EventRecordAppend> appends, CancellationToken cancellationToken = default);
 
     Task<List<ActivityViewModel>> GetActivities(EntityType entityType, int entityId, int workspaceId, int? take = null, string? cursor = null, CancellationToken cancellationToken = default);
 

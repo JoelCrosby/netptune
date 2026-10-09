@@ -318,20 +318,15 @@ export class SprintCompletionDialogComponent {
   onConfirm() {
     if (!this.sprint.id || this.isCompleting()) return;
 
-    const incompleteTaskIds = this.incompleteTasks().map((t) => t.id);
-    const targetSprintId =
-      this.moveMode() === 'sprint' && incompleteTaskIds.length > 0
+    const carryOverSprintId =
+      this.moveMode() === 'sprint' && this.incompleteTasks().length > 0
         ? (this.targetSprintId() ?? undefined)
         : undefined;
 
     this.setCompleting(true);
 
     this.sprintCommands
-      .completeWithReassignment(
-        this.sprint.id,
-        incompleteTaskIds,
-        targetSprintId
-      )
+      .completeWithCarryOver(this.sprint.id, carryOverSprintId)
       .subscribe({
         next: () => this.dialogRef.close(),
         complete: () => this.setCompleting(false),

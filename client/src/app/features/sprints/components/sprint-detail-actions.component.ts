@@ -127,7 +127,7 @@ import { MenuSeparatorComponent } from '@static/components/dropdown-menu/menu-se
       </button>
     }
 
-    @if (canUpdate() && sprint().status === sprintStatus.active) {
+    @if (canEditSprint() && sprint().status === sprintStatus.active) {
       <button
         app-flat-button
         color="primary"
@@ -177,7 +177,7 @@ import { MenuSeparatorComponent } from '@static/components/dropdown-menu/menu-se
         </button>
       }
 
-      @if (canUpdate()) {
+      @if (canEditSprint()) {
         <button
           app-menu-item
           type="button"
@@ -185,7 +185,9 @@ import { MenuSeparatorComponent } from '@static/components/dropdown-menu/menu-se
           <svg lucideSettings2 class="h-4 w-4 shrink-0"></svg>
           <span i18n="Menu item that edits the sprint">Sprint settings</span>
         </button>
+      }
 
+      @if (canUpdate()) {
         <app-menu-separator />
 
         <button
@@ -235,6 +237,11 @@ export class SprintDetailActionsComponent {
   private readonly canManageTasks = hasPermission(
     PERMISSIONS.sprints.manageTasks
   );
+
+  // Saving or completing a sprint can move its unfinished tasks, so the server asks for both.
+  protected readonly canEditSprint = computed(() => {
+    return this.canUpdate() && this.canManageTasks();
+  });
 
   protected readonly canAddWork = computed(() => {
     return (

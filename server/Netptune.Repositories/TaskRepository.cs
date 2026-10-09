@@ -28,6 +28,8 @@ namespace Netptune.Repositories;
 
 public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask, int>, ITaskRepository
 {
+    private static readonly int[] BacklogExcludedCategories = [(int)StatusCategory.Done, (int)StatusCategory.Inactive];
+
     public TaskRepository(DataContext context, IDbConnectionFactory connectionFactory)
         : base(context, connectionFactory)
     {
@@ -456,6 +458,8 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             excludeSprintId = filter.ExcludeSprintId,
             excludeTaskId = filter.ExcludeTaskId,
             noSprint = filter.NoSprint ?? false,
+            inBacklog = filter.InBacklog ?? false,
+            backlogExcludedCategories = BacklogExcludedCategories,
             hasFlags = filter.HasFlags,
             hasTags = filter.HasTags,
             hasAssignee = filter.HasAssignee,

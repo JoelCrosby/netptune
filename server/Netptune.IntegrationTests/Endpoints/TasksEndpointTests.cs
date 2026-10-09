@@ -679,6 +679,17 @@ public sealed class TasksEndpointTests
         movedTasks.Should().OnlyContain(task => task!.ProjectId == targetProjectId);
         movedTasks.Select(task => task!.ProjectScopeId).Should().OnlyHaveUniqueItems();
         movedTasks.Select(task => task!.SystemId).Should().OnlyHaveUniqueItems();
+
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var placements = await context.ProjectTaskInBoardGroups
+            .Where(placement => taskIds.Contains(placement.ProjectTaskId))
+            .Select(placement => new { placement.ProjectTaskId, placement.SortOrder, placement.BoardGroup!.Board!.ProjectId })
+            .ToListAsync(TestContext.Current.CancellationToken);
+
+        placements.Should().HaveCount(taskIds.Count);
+        placements.Should().OnlyContain(placement => placement.ProjectId == targetProjectId);
+        placements.Select(placement => placement.SortOrder).Should().OnlyHaveUniqueItems();
     }
 
     [Fact]

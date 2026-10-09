@@ -25,9 +25,8 @@ public sealed class GetBacklogTasksQueryHandler : IRequestHandler<GetBacklogTask
     {
         var workspaceKey = Identity.GetWorkspaceKey();
 
-        // Backlog tasks are, by definition, tasks not assigned to any sprint.
-        // Force NoSprint regardless of what the client sends so the endpoint
-        // can never be used to page over sprint-assigned tasks.
+        // Force InBacklog regardless of what the client sends so the endpoint
+        // can never be used to page over tasks planned into an open sprint.
         var filter = new TaskFilter
         {
             ProjectId = request.Filter.ProjectId,
@@ -40,7 +39,7 @@ public sealed class GetBacklogTasksQueryHandler : IRequestHandler<GetBacklogTask
             PageSize = request.Filter.PageSize,
             SortBy = request.Filter.SortBy,
             SortDirection = request.Filter.SortDirection,
-            NoSprint = true,
+            InBacklog = true,
         };
 
         return await UnitOfWork.Tasks.GetTasksAsync(workspaceKey, filter, true, cancellationToken: cancellationToken);

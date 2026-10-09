@@ -190,6 +190,20 @@ internal sealed class RecordingEventRecordWriter : IEventRecordWriter
     public Task<EventRecord> Append<TPayload>(EventWriteRequest<TPayload> request, CancellationToken cancellationToken = default)
         where TPayload : class
     {
+        return Task.FromResult(Record(request));
+    }
+
+    public Task<IReadOnlyList<EventRecord>> AppendRange(
+        IReadOnlyList<IEventWriteRequest> requests,
+        CancellationToken cancellationToken = default)
+    {
+        IReadOnlyList<EventRecord> records = requests.Select(Record).ToList();
+
+        return Task.FromResult(records);
+    }
+
+    private EventRecord Record(IEventWriteRequest request)
+    {
         Events.Add(new RecordedEvent
         {
             EventKey = request.EventKey,
@@ -203,7 +217,7 @@ internal sealed class RecordingEventRecordWriter : IEventRecordWriter
             References = request.References,
         });
 
-        return Task.FromResult(new EventRecord
+        return new EventRecord
         {
             EventKey = request.EventKey,
             WorkspaceId = request.WorkspaceId,
@@ -211,6 +225,6 @@ internal sealed class RecordingEventRecordWriter : IEventRecordWriter
             SubjectId = request.SubjectId,
             OccurredAt = request.OccurredAt ?? DateTime.UtcNow,
             RecordedAt = DateTime.UtcNow,
-        });
+        };
     }
 }

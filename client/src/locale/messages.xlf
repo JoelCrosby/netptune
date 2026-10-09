@@ -321,6 +321,15 @@
         <source>{VAR_PLURAL, plural, =1 {This credential lacks 1 permission the account has:} other {This credential lacks <ph id="0" equiv="INTERPOLATION"/> permissions the account has: }}</source>
       </segment>
     </unit>
+    <unit id="3372842294576593903">
+      <notes>
+        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:94</note>
+        <note category="description">Shown when every unfinished task already belongs to an open sprint</note>
+      </notes>
+      <segment>
+        <source>The backlog is empty — every unfinished task is in a sprint.</source>
+      </segment>
+    </unit>
     <unit id="3373039778816479588">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:128</note>
@@ -1018,7 +1027,7 @@
     <unit id="6120896617621566677">
       <notes>
         <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:167</note>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:358</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:353</note>
         <note category="description">How many tasks a board group holds. COUNT is the number of tasks</note>
       </notes>
       <segment>
@@ -2226,7 +2235,7 @@
     </unit>
     <unit id="721746833097626187">
       <notes>
-        <note category="location">src/app/core/services/sprint-commands.service.ts:52</note>
+        <note category="location">src/app/core/services/sprint-commands.service.ts:42</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -2244,7 +2253,7 @@
     </unit>
     <unit id="6930203756458180911">
       <notes>
-        <note category="location">src/app/core/services/sprint-commands.service.ts:70</note>
+        <note category="location">src/app/core/services/sprint-commands.service.ts:60</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -2272,7 +2281,7 @@
     </unit>
     <unit id="4229930832776293995">
       <notes>
-        <note category="location">src/app/core/services/sprint-commands.service.ts:85</note>
+        <note category="location">src/app/core/services/sprint-commands.service.ts:75</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -2281,7 +2290,7 @@
     </unit>
     <unit id="4604808575920319467">
       <notes>
-        <note category="location">src/app/core/services/sprint-commands.service.ts:113</note>
+        <note category="location">src/app/core/services/sprint-commands.service.ts:103</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -2290,7 +2299,7 @@
     </unit>
     <unit id="5735736609681878695">
       <notes>
-        <note category="location">src/app/core/services/sprint-commands.service.ts:102</note>
+        <note category="location">src/app/core/services/sprint-commands.service.ts:92</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment>
@@ -2299,7 +2308,7 @@
     </unit>
     <unit id="7007888444594131996">
       <notes>
-        <note category="location">src/app/core/services/sprint-commands.service.ts:202</note>
+        <note category="location">src/app/core/services/sprint-commands.service.ts:191</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -2308,7 +2317,7 @@
     </unit>
     <unit id="5256927257860771053">
       <notes>
-        <note category="location">src/app/core/services/sprint-commands.service.ts:176</note>
+        <note category="location">src/app/core/services/sprint-commands.service.ts:162</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail.service.ts:204</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
@@ -2318,7 +2327,7 @@
     </unit>
     <unit id="62571336638745135">
       <notes>
-        <note category="location">src/app/core/services/sprint-commands.service.ts:161</note>
+        <note category="location">src/app/core/services/sprint-commands.service.ts:147</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -2336,7 +2345,7 @@
     </unit>
     <unit id="9054551961119650411">
       <notes>
-        <note category="location">src/app/core/services/sprint-commands.service.ts:191</note>
+        <note category="location">src/app/core/services/sprint-commands.service.ts:177</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail.service.ts:224</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
@@ -7481,7 +7490,7 @@
         <note category="location">src/app/features/automations/components/automation-actions-editor.component.ts:233,234</note>
         <note category="location">src/app/features/automations/models/automation-query-builder.ts:304</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:191</note>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:363</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:358</note>
         <note category="description">Delay unit: hours</note>
       </notes>
       <segment>
@@ -7686,7 +7695,7 @@
         <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:75</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:71</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:169</note>
-        <note category="location">src/app/features/users/views/users-view/users-view.component.ts:52</note>
+        <note category="location">src/app/features/users/views/users-view/users-view.component.ts:51</note>
         <note category="location">src/app/shared/components/query-builder/query-builder.models.ts:72</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:582</note>
         <note category="description">Pinned task filter showing every pin</note>
@@ -11550,7 +11559,7 @@
     <unit id="4416413576346763682">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:181</note>
-        <note category="location">src/app/features/users/views/users-view/users-view.component.ts:62</note>
+        <note category="location">src/app/features/users/views/users-view/users-view.component.ts:61</note>
         <note category="description">Outcome status of a single automation action</note>
       </notes>
       <segment>
@@ -13552,7 +13561,7 @@
     </unit>
     <unit id="5254622645701859101">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:364</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:359</note>
         <note category="description">Stat label for the story points estimated in a sprint</note>
       </notes>
       <segment>
@@ -15544,15 +15553,6 @@
       </notes>
       <segment>
         <source>Archive</source>
-      </segment>
-    </unit>
-    <unit id="1061882657304479894">
-      <notes>
-        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:94</note>
-        <note category="description">Shown when every task already belongs to a sprint</note>
-      </notes>
-      <segment>
-        <source>The backlog is empty — all tasks are assigned to sprints.</source>
       </segment>
     </unit>
     <unit id="2386184427978292327">
@@ -20187,7 +20187,7 @@
     <unit id="5031687880128878913">
       <notes>
         <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:166</note>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:357</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:352</note>
         <note category="description">How many tasks a board group holds</note>
       </notes>
       <segment>

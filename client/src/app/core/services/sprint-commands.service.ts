@@ -11,17 +11,7 @@ import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { getErrorMessage } from '@core/util/error-message';
 import { unwrapClientResponse } from '@core/util/rxjs-operators';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
-import {
-  catchError,
-  defer,
-  EMPTY,
-  finalize,
-  forkJoin,
-  Observable,
-  of,
-  switchMap,
-  tap,
-} from 'rxjs';
+import { catchError, defer, EMPTY, finalize, Observable, tap } from 'rxjs';
 
 @Service()
 export class SprintCommandsService {
@@ -122,21 +112,15 @@ export class SprintCommandsService {
       .subscribe((sprint) => this.onSprintChanged(sprint));
   }
 
-  completeWithReassignment(
+  completeWithCarryOver(
     sprintId: number,
-    incompleteTaskIds: number[],
-    targetSprintId?: number
+    carryOverSprintId?: number
   ): Observable<SprintViewModel> {
     return defer(() => {
       this.updating.set(true);
 
-      return this.reassignIncompleteTasks(
-        sprintId,
-        incompleteTaskIds,
-        targetSprintId
-      );
+      return this.completeSprint(sprintId, carryOverSprintId);
     }).pipe(
-      switchMap(() => this.completeSprint(sprintId)),
       catchError((error: unknown) => {
         this.snackbar.error(
           getErrorMessage(error, COMPLETE_SPRINT_ERROR_FALLBACK)
@@ -194,33 +178,16 @@ export class SprintCommandsService {
       });
   }
 
-  private completeSprint(sprintId: number): Observable<SprintViewModel> {
-    return this.sprints.complete(sprintId).pipe(
+  private completeSprint(
+    sprintId: number,
+    carryOverSprintId?: number
+  ): Observable<SprintViewModel> {
+    return this.sprints.complete(sprintId, carryOverSprintId).pipe(
       unwrapClientResponse(),
       tap(() =>
         this.snackbar.open(
           $localize`:Confirmation shown after an action succeeds:Sprint completed`
         )
-      )
-    );
-  }
-
-  private reassignIncompleteTasks(
-    sprintId: number,
-    taskIds: number[],
-    targetSprintId: number | undefined
-  ): Observable<unknown> {
-    if (taskIds.length === 0) return of(null);
-
-    if (targetSprintId !== undefined) {
-      return this.sprints
-        .addTasks(targetSprintId, { taskIds })
-        .pipe(unwrapClientResponse());
-    }
-
-    return forkJoin(
-      taskIds.map((taskId) =>
-        this.sprints.removeTask(sprintId, taskId).pipe(unwrapClientResponse())
       )
     );
   }

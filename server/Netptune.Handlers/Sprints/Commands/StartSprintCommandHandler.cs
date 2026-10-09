@@ -107,7 +107,7 @@ public sealed class StartSprintCommandHandler : IRequestHandler<StartSprintComma
                 ],
             }, cancellationToken);
 
-            foreach (var task in committedTasks)
+            var committedEvents = committedTasks.ConvertAll(task =>
             {
                 var member = new SprintMember
                 {
@@ -118,10 +118,10 @@ public sealed class StartSprintCommandHandler : IRequestHandler<StartSprintComma
                     EstimateValue = task.EstimateValue,
                 };
 
-                var committed = SprintMemberEvents.Changed(scope, member, SprintMemberChanges.Committed, startedAt);
+                return SprintMemberEvents.Changed(scope, member, SprintMemberChanges.Committed, startedAt);
+            });
 
-                await EventRecords.Append(committed, cancellationToken);
-            }
+            await EventRecords.AppendRange(committedEvents, cancellationToken);
 
             await UnitOfWork.CompleteAsync(cancellationToken);
         });

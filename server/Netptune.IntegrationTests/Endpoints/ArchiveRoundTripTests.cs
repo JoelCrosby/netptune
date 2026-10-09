@@ -5,8 +5,10 @@ using FluentAssertions;
 
 using Microsoft.Extensions.DependencyInjection;
 
+using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.UnitOfWork;
+using Netptune.Core.ViewModels.Projects;
 using Netptune.Import.Archive;
 using Netptune.Transfer;
 using Netptune.Transfer.Archive;
@@ -81,6 +83,32 @@ public sealed class ArchiveRoundTripTests
         // Counted from the archive rather than from workspace 1 as it stands now, for the reason
         // the round trip above compares two archives: a concurrent test adding a task to the source
         // moves the live count out from under a clone that was built before it.
+        var source = await RefsByType(archive);
+
+        placements.Should().Be(source[TransferRecordTypes.TaskPlacement].Count);
+        assignees.Should().Be(source[TransferRecordTypes.TaskAssignee].Count);
+    }
+
+    [Fact]
+    public async Task RoundTrip_ShouldCarryEveryExportedLink_WhenAProjectWithTasksWasDeleted()
+    {
+        var project = await CreateProject();
+
+        await CreateTask(project.Id);
+
+        var deleted = await Client.DeleteAsync($"api/projects/{project.Id}", TestContext.Current.CancellationToken);
+
+        deleted.EnsureSuccessStatusCode();
+
+        var slug = Slug();
+        var archive = await ExportArchive(1);
+        var result = await CloneInto(archive, slug);
+
+        await using var scope = Fixture.Services.CreateAsyncScope();
+
+        var archives = scope.ServiceProvider.GetRequiredService<IArchiveRepository>();
+        var placements = await Count(archives.ReadTaskPlacements(result.WorkspaceId));
+        var assignees = await Count(archives.ReadTaskAssignees(result.WorkspaceId));
         var source = await RefsByType(archive);
 
         placements.Should().Be(source[TransferRecordTypes.TaskPlacement].Count);
@@ -326,6 +354,30 @@ public sealed class ArchiveRoundTripTests
             Mode = ArchiveImportMode.Clone,
             TargetSlug = slug,
         }, TestContext.Current.CancellationToken);
+    }
+
+    private async Task<ProjectViewModel> CreateProject()
+    {
+        var response = await Client.PostAsJsonAsync("api/projects", new AddProjectRequest
+        {
+            Name = $"{Guid.NewGuid():N} Archive Test",
+            Description = "Project deleted before an archive round trip",
+            MetaInfo = new() { Color = "blue" },
+        }, TestContext.Current.CancellationToken);
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<ProjectViewModel>>(TestContext.Current.CancellationToken);
+
+        return result!.Payload!;
+    }
+
+    private async Task CreateTask(int projectId)
+    {
+        var response = await Client.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest
+        {
+            Name = $"Archive task {Guid.NewGuid():N}",
+            ProjectId = projectId,
+        }, TestContext.Current.CancellationToken);
+
+        response.EnsureSuccessStatusCode();
     }
 
     private async Task<string> OwnerId()

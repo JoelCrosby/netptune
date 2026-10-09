@@ -1,12 +1,16 @@
 using FluentAssertions;
 
+using Mediator;
+
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Events.Sprints;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Models.Sprints;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
@@ -225,7 +229,7 @@ public class SprintCommandHandlerTests
 
         result.IsSuccess.Should().BeTrue();
         CaptureCommitment().Select(member => member.TaskId).Should().Equal(231);
-        CountCommittedMemberEvents().Should().Be(1);
+        CountMemberEvents(SprintMemberChanges.Committed).Should().Be(1);
     }
 
     [Fact]
@@ -287,6 +291,109 @@ public class SprintCommandHandlerTests
             && message.EntityType == "sprint"
             && message.EntityIds.Contains(sprint.Id)
             && message.WorkspaceSlug == WorkspaceKey));
+    }
+
+    [Fact]
+    public async Task Complete_ShouldRemoveUnfinishedTasksFromSprint_WhenNoCarryOverSprintGiven()
+    {
+        var handler = CreateCompleteHandler();
+        var sprint = CreateSprint(status: SprintStatus.Active);
+
+        sprint.ProjectTasks =
+        [
+            CreateCommittedTask(id: 241, sprint, new Status { Category = StatusCategory.Active }),
+            CreateCommittedTask(id: 242, sprint, new Status { Category = StatusCategory.Done }),
+        ];
+
+        UnitOfWork.Sprints.GetSprintInWorkspaceAsync(WorkspaceKey, sprint.Id, cancellationToken: TestContext.Current.CancellationToken)
+            .Returns(sprint);
+        UnitOfWork.Sprints.GetSprintDetailAsync(WorkspaceKey, sprint.Id, TestContext.Current.CancellationToken)
+            .Returns(CreateSprintDetailViewModel(sprint.Id, status: SprintStatus.Completed));
+
+        var result = await handler.Handle(new CompleteSprintCommand(sprint.Id), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeTrue();
+        await UnitOfWork.Tasks.Received(1).RemoveTasksFromSprint(
+            Arg.Is<IEnumerable<int>>(ids => ids.SequenceEqual(new[] { 241 })),
+            TestContext.Current.CancellationToken);
+        CountMemberEvents(SprintMemberChanges.Removed).Should().Be(0);
+    }
+
+    [Fact]
+    public async Task Complete_ShouldAppendAddedEvents_WhenCarryingOverToActiveSprint()
+    {
+        var handler = CreateCompleteHandler();
+        var sprint = CreateSprint(status: SprintStatus.Active);
+        var target = new SprintTaskAssignmentTarget(31, SprintStatus.Active, sprint.WorkspaceId, sprint.ProjectId);
+
+        sprint.ProjectTasks =
+        [
+            CreateCommittedTask(id: 251, sprint, new Status { Category = StatusCategory.Todo }),
+            CreateCommittedTask(id: 252, sprint, new Status { Category = StatusCategory.Active }),
+            CreateCommittedTask(id: 253, sprint, new Status { Category = StatusCategory.Done }),
+        ];
+
+        UnitOfWork.Sprints.GetSprintInWorkspaceAsync(WorkspaceKey, sprint.Id, cancellationToken: TestContext.Current.CancellationToken)
+            .Returns(sprint);
+        UnitOfWork.Sprints.GetTaskAssignmentTarget(WorkspaceKey, target.Id, TestContext.Current.CancellationToken)
+            .Returns(target);
+        UnitOfWork.Sprints.GetSprintDetailAsync(WorkspaceKey, sprint.Id, TestContext.Current.CancellationToken)
+            .Returns(CreateSprintDetailViewModel(sprint.Id, status: SprintStatus.Completed));
+
+        var result = await handler.Handle(new CompleteSprintCommand(sprint.Id, target.Id), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeTrue();
+        await UnitOfWork.Tasks.Received(1).AssignTasksToSprint(
+            Arg.Is<IEnumerable<int>>(ids => ids.SequenceEqual(new[] { 251, 252 })),
+            target.Id,
+            TestContext.Current.CancellationToken);
+        CountMemberEvents(SprintMemberChanges.Added).Should().Be(2);
+    }
+
+    [Fact]
+    public async Task Complete_ShouldNotAppendAddedEvents_WhenCarryingOverToPlanningSprint()
+    {
+        var handler = CreateCompleteHandler();
+        var sprint = CreateSprint(status: SprintStatus.Active);
+        var target = new SprintTaskAssignmentTarget(31, SprintStatus.Planning, sprint.WorkspaceId, sprint.ProjectId);
+
+        sprint.ProjectTasks = [CreateCommittedTask(id: 261, sprint, new Status { Category = StatusCategory.Todo })];
+
+        UnitOfWork.Sprints.GetSprintInWorkspaceAsync(WorkspaceKey, sprint.Id, cancellationToken: TestContext.Current.CancellationToken)
+            .Returns(sprint);
+        UnitOfWork.Sprints.GetTaskAssignmentTarget(WorkspaceKey, target.Id, TestContext.Current.CancellationToken)
+            .Returns(target);
+        UnitOfWork.Sprints.GetSprintDetailAsync(WorkspaceKey, sprint.Id, TestContext.Current.CancellationToken)
+            .Returns(CreateSprintDetailViewModel(sprint.Id, status: SprintStatus.Completed));
+
+        var result = await handler.Handle(new CompleteSprintCommand(sprint.Id, target.Id), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeTrue();
+        await UnitOfWork.Tasks.Received(1).AssignTasksToSprint(
+            Arg.Is<IEnumerable<int>>(ids => ids.SequenceEqual(new[] { 261 })),
+            target.Id,
+            TestContext.Current.CancellationToken);
+        CountMemberEvents(SprintMemberChanges.Added).Should().Be(0);
+    }
+
+    [Fact]
+    public async Task Complete_ShouldFail_WhenCarryOverSprintIsInAnotherProject()
+    {
+        var handler = CreateCompleteHandler();
+        var sprint = CreateSprint(status: SprintStatus.Active);
+        var target = new SprintTaskAssignmentTarget(31, SprintStatus.Planning, sprint.WorkspaceId, ProjectId: 99);
+
+        UnitOfWork.Sprints.GetSprintInWorkspaceAsync(WorkspaceKey, sprint.Id, cancellationToken: TestContext.Current.CancellationToken)
+            .Returns(sprint);
+        UnitOfWork.Sprints.GetTaskAssignmentTarget(WorkspaceKey, target.Id, TestContext.Current.CancellationToken)
+            .Returns(target);
+
+        var result = await handler.Handle(new CompleteSprintCommand(sprint.Id, target.Id), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Be("The sprint to carry unfinished tasks over to was not found in this project");
+        sprint.Status.Should().Be(SprintStatus.Active);
+        await UnitOfWork.DidNotReceive().CompleteAsync(Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -485,7 +592,9 @@ public class SprintCommandHandlerTests
             UnitOfWork,
             Identity,
             Activity,
-            EventPublisher);
+            EventPublisher,
+            EventRecords,
+            Substitute.For<IMediator>());
         var sprint = CreateSprint(status: SprintStatus.Planning);
         var request = new UpdateSprintRequest
         {
@@ -528,7 +637,9 @@ public class SprintCommandHandlerTests
             UnitOfWork,
             Identity,
             Activity,
-            EventPublisher);
+            EventPublisher,
+            EventRecords,
+            Substitute.For<IMediator>());
         var sprint = CreateSprint(status: SprintStatus.Completed);
 
         UnitOfWork.Sprints.GetSprintInWorkspaceAsync(WorkspaceKey, sprint.Id, cancellationToken: TestContext.Current.CancellationToken)
@@ -544,6 +655,103 @@ public class SprintCommandHandlerTests
     }
 
     [Fact]
+    public async Task Update_ShouldReleaseUnfinishedTasks_AndAppendRemovedEvents_WhenActiveSprintIsCancelled()
+    {
+        var handler = CreateUpdateHandler(Substitute.For<IMediator>());
+        var sprint = CreateSprint(status: SprintStatus.Active);
+
+        sprint.ProjectTasks =
+        [
+            CreateCommittedTask(id: 271, sprint, new Status { Category = StatusCategory.Todo }),
+            CreateCommittedTask(id: 271, sprint, new Status { Category = StatusCategory.Todo }),
+            CreateCommittedTask(id: 272, sprint, new Status { Category = StatusCategory.Done }),
+        ];
+
+        UnitOfWork.Sprints.GetSprintInWorkspaceAsync(WorkspaceKey, sprint.Id, cancellationToken: TestContext.Current.CancellationToken)
+            .Returns(sprint);
+        UnitOfWork.Sprints.GetSprintDetailAsync(WorkspaceKey, sprint.Id, TestContext.Current.CancellationToken)
+            .Returns(CreateSprintDetailViewModel(sprint.Id, status: SprintStatus.Cancelled));
+
+        var result = await handler.Handle(
+            new UpdateSprintCommand(new UpdateSprintRequest { Id = sprint.Id, Status = SprintStatus.Cancelled }),
+            TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeTrue();
+        sprint.Status.Should().Be(SprintStatus.Cancelled);
+        await UnitOfWork.Tasks.Received(1).RemoveTasksFromSprint(
+            Arg.Is<IEnumerable<int>>(ids => ids.SequenceEqual(new[] { 271 })),
+            TestContext.Current.CancellationToken);
+        CountMemberEvents(SprintMemberChanges.Removed).Should().Be(1);
+    }
+
+    [Fact]
+    public async Task Update_ShouldNotAppendRemovedEvents_WhenPlanningSprintIsCancelled()
+    {
+        var handler = CreateUpdateHandler(Substitute.For<IMediator>());
+        var sprint = CreateSprint(status: SprintStatus.Planning);
+
+        sprint.ProjectTasks = [CreateCommittedTask(id: 281, sprint, new Status { Category = StatusCategory.Todo })];
+
+        UnitOfWork.Sprints.GetSprintInWorkspaceAsync(WorkspaceKey, sprint.Id, cancellationToken: TestContext.Current.CancellationToken)
+            .Returns(sprint);
+        UnitOfWork.Sprints.GetSprintDetailAsync(WorkspaceKey, sprint.Id, TestContext.Current.CancellationToken)
+            .Returns(CreateSprintDetailViewModel(sprint.Id, status: SprintStatus.Cancelled));
+
+        var result = await handler.Handle(
+            new UpdateSprintCommand(new UpdateSprintRequest { Id = sprint.Id, Status = SprintStatus.Cancelled }),
+            TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeTrue();
+        await UnitOfWork.Tasks.Received(1).RemoveTasksFromSprint(
+            Arg.Is<IEnumerable<int>>(ids => ids.SequenceEqual(new[] { 281 })),
+            TestContext.Current.CancellationToken);
+        CountMemberEvents(SprintMemberChanges.Removed).Should().Be(0);
+    }
+
+    [Fact]
+    public async Task Update_ShouldHandOffToCompletion_WithoutSavingFirst_WhenStatusSetToCompleted()
+    {
+        var mediator = Substitute.For<IMediator>();
+        var handler = CreateUpdateHandler(mediator);
+        var sprint = CreateSprint(status: SprintStatus.Active);
+        var completed = ClientResponse<SprintViewModel>.Success(CreateSprintDetailViewModel(sprint.Id, status: SprintStatus.Completed));
+
+        UnitOfWork.Sprints.GetSprintInWorkspaceAsync(WorkspaceKey, sprint.Id, cancellationToken: TestContext.Current.CancellationToken)
+            .Returns(sprint);
+        mediator.Send(Arg.Is<CompleteSprintCommand>(command => command.Id == sprint.Id), TestContext.Current.CancellationToken)
+            .Returns(completed);
+
+        var result = await handler.Handle(
+            new UpdateSprintCommand(new UpdateSprintRequest { Id = sprint.Id, Name = "Renamed", Status = SprintStatus.Completed }),
+            TestContext.Current.CancellationToken);
+
+        result.Should().Be(completed);
+        sprint.Name.Should().Be("Renamed");
+        await UnitOfWork.DidNotReceive().CompleteAsync(Arg.Any<CancellationToken>());
+        CaptureLoggedActivityType().Should().Be(ActivityType.Modify);
+    }
+
+    [Fact]
+    public async Task Update_ShouldNotLogModify_WhenCompletionFails()
+    {
+        var mediator = Substitute.For<IMediator>();
+        var handler = CreateUpdateHandler(mediator);
+        var sprint = CreateSprint(status: SprintStatus.Active);
+
+        UnitOfWork.Sprints.GetSprintInWorkspaceAsync(WorkspaceKey, sprint.Id, cancellationToken: TestContext.Current.CancellationToken)
+            .Returns(sprint);
+        mediator.Send(Arg.Any<CompleteSprintCommand>(), TestContext.Current.CancellationToken)
+            .Returns(ClientResponse<SprintViewModel>.Failed("Completion failed"));
+
+        var result = await handler.Handle(
+            new UpdateSprintCommand(new UpdateSprintRequest { Id = sprint.Id, Name = "Renamed", Status = SprintStatus.Completed }),
+            TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        Activity.DidNotReceive().Log(Arg.Any<Action<ActivityOptions>>());
+    }
+
+    [Fact]
     public async Task GetSprint_ShouldReturnNotFound_WhenSprintDoesNotExist()
     {
         var handler = new GetSprintQueryHandler(UnitOfWork, Identity);
@@ -553,6 +761,27 @@ public class SprintCommandHandlerTests
         var result = await handler.Handle(new GetSprintQuery(10), TestContext.Current.CancellationToken);
 
         result.IsNotFound.Should().BeTrue();
+    }
+
+    private CompleteSprintCommandHandler CreateCompleteHandler()
+    {
+        return new CompleteSprintCommandHandler(
+            UnitOfWork,
+            Identity,
+            Activity,
+            EventPublisher,
+            EventRecords);
+    }
+
+    private UpdateSprintCommandHandler CreateUpdateHandler(IMediator mediator)
+    {
+        return new UpdateSprintCommandHandler(
+            UnitOfWork,
+            Identity,
+            Activity,
+            EventPublisher,
+            EventRecords,
+            mediator);
     }
 
     private static Workspace CreateWorkspace(int id = 1)
@@ -626,11 +855,19 @@ public class SprintCommandHandlerTests
             .Single()
             .Payload.Commitment;
 
-    private int CountCommittedMemberEvents() =>
-        EventRecords.ReceivedCalls()
+    private int CountMemberEvents(string change)
+    {
+        var appendedRequests = EventRecords.ReceivedCalls()
             .Select(call => call.GetArguments()[0])
-            .OfType<EventWriteRequest<ScopeMemberChangedPayload>>()
-            .Count(request => request.Payload.Change == "committed");
+            .SelectMany(argument => argument switch
+            {
+                EventWriteRequest<ScopeMemberChangedPayload> request => [request],
+                IEnumerable<IEventWriteRequest> requests => requests.OfType<EventWriteRequest<ScopeMemberChangedPayload>>(),
+                _ => [],
+            });
+
+        return appendedRequests.Count(request => request.Payload.Change == change);
+    }
 
     private static SprintDetailViewModel CreateSprintDetailViewModel(
         int id = 30,

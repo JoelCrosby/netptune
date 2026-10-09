@@ -91,7 +91,7 @@ export class SprintBacklogViewComponent {
   protected readonly emptyMessage = computed(() => {
     return this.filtersActive()
       ? $localize`:Shown when no backlog task matches the active filters:No backlog tasks match these filters.`
-      : $localize`:Shown when every task already belongs to a sprint:The backlog is empty — all tasks are assigned to sprints.`;
+      : $localize`:Shown when every unfinished task already belongs to an open sprint:The backlog is empty — every unfinished task is in a sprint.`;
   });
 
   private readonly sprintsResource = sprintResource([]);
@@ -115,7 +115,7 @@ export class SprintBacklogViewComponent {
   readonly groups: BacklogGroupConfig[] = [
     {
       label: $localize`:Backlog group heading for tasks not started:New`,
-      categories: [StatusCategory.todo],
+      categories: [StatusCategory.new, StatusCategory.todo],
     },
     {
       label: $localize`:Backlog group heading for tasks being worked on:In Progress`,
@@ -123,11 +123,8 @@ export class SprintBacklogViewComponent {
     },
     {
       label: $localize`:Backlog group heading for tasks in any other status:Other`,
-      categories: [
-        StatusCategory.backlog,
-        StatusCategory.done,
-        StatusCategory.inactive,
-      ],
+      // Done and inactive tasks never reach the backlog, the server leaves them out.
+      categories: [StatusCategory.backlog],
     },
   ];
 

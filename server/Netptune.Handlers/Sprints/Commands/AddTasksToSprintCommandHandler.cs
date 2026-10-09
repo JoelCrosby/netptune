@@ -79,20 +79,23 @@ public sealed class AddTasksToSprintCommandHandler : IRequestHandler<AddTasksToS
         {
             await UnitOfWork.Tasks.AssignTasksToSprint(taskIds, sprint.Id, cancellationToken);
 
-            foreach (var task in tasks.Where(_ => sprint.Status == SprintStatus.Active))
+            if (sprint.Status == SprintStatus.Active)
             {
-                var member = new SprintMember
+                var addedEvents = tasks.ConvertAll(task =>
                 {
-                    TaskId = task.Id,
-                    StatusId = task.StatusId,
-                    StatusCategory = task.StatusCategory.ToString(),
-                    EstimateType = task.EstimateType?.ToString(),
-                    EstimateValue = task.EstimateValue,
-                };
+                    var member = new SprintMember
+                    {
+                        TaskId = task.Id,
+                        StatusId = task.StatusId,
+                        StatusCategory = task.StatusCategory.ToString(),
+                        EstimateType = task.EstimateType?.ToString(),
+                        EstimateValue = task.EstimateValue,
+                    };
 
-                var added = SprintMemberEvents.Changed(scope, member, SprintMemberChanges.Added);
+                    return SprintMemberEvents.Changed(scope, member, SprintMemberChanges.Added);
+                });
 
-                await EventRecords.Append(added, cancellationToken);
+                await EventRecords.AppendRange(addedEvents, cancellationToken);
             }
 
             await UnitOfWork.CompleteAsync(cancellationToken);

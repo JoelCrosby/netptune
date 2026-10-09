@@ -19,6 +19,8 @@ using Netptune.Core.ViewModels.Activity;
 using Netptune.Core.ViewModels.Audit;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
+using Netptune.Repositories.RowMaps;
+using Netptune.Repositories.Sql;
 
 namespace Netptune.Repositories;
 
@@ -33,9 +35,7 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
 
     public async Task<EventRecord> AppendAsync(EventRecord record, bool publish, CancellationToken cancellationToken = default)
     {
-        var hasIdentifiableSubject = record.WorkspaceId.HasValue &&
-            record.SubjectType is not null &&
-            record.SubjectId is not null;
+        var hasIdentifiableSubject = HasIdentifiableSubject(record);
 
         if (hasIdentifiableSubject)
         {
@@ -58,6 +58,72 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
         }
 
         return record;
+    }
+
+    public async Task<IReadOnlyList<EventRecord>> AppendRangeAsync(IReadOnlyList<EventRecordAppend> appends, CancellationToken cancellationToken = default)
+    {
+        var records = appends.Select(append => append.Record).ToList();
+
+        await AllocateSubjectSequences(records, cancellationToken);
+
+        Entities.AddRange(records);
+
+        var outboxEntries = appends
+            .Where(append => append.Publish)
+            .Select(append => new EventOutbox
+            {
+                EventRecord = append.Record,
+                AvailableAt = DateTime.UtcNow,
+            });
+
+        Context.EventOutbox.AddRange(outboxEntries);
+
+        return records;
+    }
+
+    private static bool HasIdentifiableSubject(EventRecord record)
+    {
+        return record.WorkspaceId.HasValue && record.SubjectType is not null && record.SubjectId is not null;
+    }
+
+    private async Task AllocateSubjectSequences(List<EventRecord> records, CancellationToken cancellationToken)
+    {
+        var recordsBySubject = records
+            .Where(HasIdentifiableSubject)
+            .GroupBy(record => new EventSubject(record.WorkspaceId.GetValueOrDefault(), record.SubjectType!, record.SubjectId!))
+            .ToList();
+
+        if (recordsBySubject.Count == 0)
+        {
+            return;
+        }
+
+        var reservation = new
+        {
+            workspaceIds = recordsBySubject.Select(group => group.Key.WorkspaceId).ToArray(),
+            subjectTypes = recordsBySubject.Select(group => group.Key.SubjectType).ToArray(),
+            subjectIds = recordsBySubject.Select(group => group.Key.SubjectId).ToArray(),
+            counts = recordsBySubject.Select(group => (long)group.Count()).ToArray(),
+        };
+
+        using var connection = ConnectionFactory.StartConnection();
+
+        var command = new CommandDefinition(SqlScripts.ReserveEventSubjectSequences, reservation, cancellationToken: cancellationToken);
+        var rows = await connection.QueryAsync<EventSubjectSequenceRow>(command);
+        var lastSequenceBySubject = rows.ToDictionary(
+            row => new EventSubject(row.Workspace_id, row.Subject_type, row.Subject_id),
+            row => row.Current_sequence);
+
+        foreach (var group in recordsBySubject)
+        {
+            var subjectRecords = group.ToList();
+            var firstSequence = lastSequenceBySubject[group.Key] - subjectRecords.Count + 1;
+
+            for (var index = 0; index < subjectRecords.Count; index++)
+            {
+                subjectRecords[index].SubjectSequence = firstSequence + index;
+            }
+        }
     }
 
     private async Task<long> AllocateSubjectSequence(EventSubject subject, CancellationToken cancellationToken)

@@ -41,26 +41,58 @@ public sealed class EventRecordWriter : IEventRecordWriter
         CancellationToken cancellationToken = default)
         where TPayload : class
     {
+        var record = BuildRecord(request);
+        var appendedRecord = await UnitOfWork.EventRecords.AppendAsync(record, request.Publish, cancellationToken);
+
+        CaptureSubject(request);
+
+        return appendedRecord;
+    }
+
+    public async Task<IReadOnlyList<EventRecord>> AppendRange(
+        IReadOnlyList<IEventWriteRequest> requests,
+        CancellationToken cancellationToken = default)
+    {
+        if (requests.Count == 0)
+        {
+            return [];
+        }
+
+        var appends = requests
+            .Select(request => new EventRecordAppend(BuildRecord(request), request.Publish))
+            .ToList();
+        var appendedRecords = await UnitOfWork.EventRecords.AppendRangeAsync(appends, cancellationToken);
+
+        foreach (var request in requests)
+        {
+            CaptureSubject(request);
+        }
+
+        return appendedRecords;
+    }
+
+    private EventRecord BuildRecord(IEventWriteRequest request)
+    {
         EventDefinitionRegistry.Validate(request);
 
         var context = HttpContextAccessor?.HttpContext;
-        var workspaceId = request.WorkspaceId;
         var actorUserId = request.ActorUserId;
 
         if (actorUserId is null && request.ResolveActorFromIdentity)
         {
             actorUserId = Identity?.GetCurrentUserId();
         }
+
         var eventKey = request.EventKey;
         var isAssistantExecution = AiExecution?.IsActive == true;
         var originType = isAssistantExecution ? AiExecution!.OriginType : EventOriginType.User;
         var agent = isAssistantExecution ? AiExecution!.Agent : null;
         var assistantCorrelationId = isAssistantExecution ? AiExecution!.CorrelationId : null;
 
-        var record = new EventRecord
+        return new EventRecord
         {
             EventId = Guid.NewGuid(),
-            WorkspaceId = workspaceId,
+            WorkspaceId = request.WorkspaceId,
             EventKey = eventKey,
             SchemaVersion = request.SchemaVersion,
             SubjectType = request.SubjectType,
@@ -75,7 +107,7 @@ public sealed class EventRecordWriter : IEventRecordWriter
             IpAddress = GetIpAddress(context),
             UserAgent = context?.Request.Headers.UserAgent.ToString(),
             RetentionClass = EventKeys.RetentionFor(eventKey),
-            Payload = JsonSerializer.SerializeToDocument(request.Payload, JsonOptions.Default),
+            Payload = JsonSerializer.SerializeToDocument(request.Payload, request.PayloadType, JsonOptions.Default),
             References = request.References.Select(reference => new EventReference
             {
                 Role = reference.Role,
@@ -83,9 +115,11 @@ public sealed class EventRecordWriter : IEventRecordWriter
                 EntityId = reference.EntityId,
             }).ToHashSet(),
         };
+    }
 
-        var appendedRecord = await UnitOfWork.EventRecords.AppendAsync(record, request.Publish, cancellationToken);
-        var hasWorkspace = workspaceId.HasValue;
+    private void CaptureSubject(IEventWriteRequest request)
+    {
+        var hasWorkspace = request.WorkspaceId.HasValue;
         var hasSubjectType = request.SubjectType is not null;
         var hasSubjectId = request.SubjectId is not null;
         var hasCapturableSubject = hasWorkspace && hasSubjectType && hasSubjectId;
@@ -93,12 +127,10 @@ public sealed class EventRecordWriter : IEventRecordWriter
         if (hasCapturableSubject)
         {
             Capture?.Record(
-                workspaceId.GetValueOrDefault(),
+                request.WorkspaceId.GetValueOrDefault(),
                 request.SubjectType!,
                 request.SubjectId!);
         }
-
-        return appendedRecord;
     }
 
     private static Guid? GetCorrelationId(HttpContext? context)

@@ -91,6 +91,11 @@ WITH filtered_tasks AS (
       AND (@excludeSprintId IS NULL OR pt.sprint_id IS NULL OR pt.sprint_id != @excludeSprintId)
       AND (@excludeTaskId IS NULL OR pt.id != @excludeTaskId)
       AND (@noSprint = FALSE OR pt.sprint_id IS NULL)
+      -- The sprints join already drops deleted sprints, so s.id IS NULL covers a missing sprint too.
+      AND (@inBacklog = FALSE OR (
+          (s.id IS NULL OR s.status IN ('completed', 'cancelled'))
+          AND st.category <> ALL(@backlogExcludedCategories)
+      ))
       AND (@hasFlags IS NULL OR @hasFlags = EXISTS (
           SELECT 1
           FROM flags f_filter

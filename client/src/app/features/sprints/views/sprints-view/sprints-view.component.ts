@@ -124,6 +124,7 @@ export class SprintsViewComponent {
   readonly sprints = this.sprintsResource.value;
   readonly canCreate = hasPermission(PERMISSIONS.sprints.create);
   readonly canUpdate = hasPermission(PERMISSIONS.sprints.update);
+  readonly canManageTasks = hasPermission(PERMISSIONS.sprints.manageTasks);
 
   readonly selectedStatus = signal<StatusFilter>(SprintStatus.active);
 
@@ -214,18 +215,26 @@ export class SprintsViewComponent {
     },
   ];
 
-  private readonly menuItems: DatatableMenuItem<SprintViewModel>[] = [
-    {
-      label: $localize`:Row action that edits the sprint:Edit`,
-      icon: LucideSettings2,
-      onClick: (sprint) => this.onOpenEditDialog(sprint),
-    },
-    {
-      label: $localize`:Row action that deletes the sprint:Delete`,
-      icon: LucideTrash2,
-      onClick: (sprint) => this.onDelete(sprint),
-    },
-  ];
+  private readonly editMenuItem: DatatableMenuItem<SprintViewModel> = {
+    label: $localize`:Row action that edits the sprint:Edit`,
+    icon: LucideSettings2,
+    onClick: (sprint) => this.onOpenEditDialog(sprint),
+  };
+
+  private readonly deleteMenuItem: DatatableMenuItem<SprintViewModel> = {
+    label: $localize`:Row action that deletes the sprint:Delete`,
+    icon: LucideTrash2,
+    onClick: (sprint) => this.onDelete(sprint),
+  };
+
+  // Saving a sprint can move its unfinished tasks, so the server asks for both.
+  private readonly menuItems = computed(() => {
+    if (!this.canUpdate()) return undefined;
+
+    return this.canManageTasks()
+      ? [this.editMenuItem, this.deleteMenuItem]
+      : [this.deleteMenuItem];
+  });
 
   readonly data = computed<DatatableDataSource<SprintViewModel>>(() => ({
     key: 'sprints',
@@ -234,7 +243,7 @@ export class SprintsViewComponent {
     rows: (response) =>
       Array.isArray(response) ? (response as SprintViewModel[]) : [],
     trackBy: (_: number, sprint: SprintViewModel) => sprint.id,
-    menu: this.canUpdate() ? this.menuItems : undefined,
+    menu: this.menuItems(),
     reloadSignal: this.sprints,
   }));
 

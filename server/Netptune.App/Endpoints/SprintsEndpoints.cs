@@ -21,10 +21,14 @@ public static class SprintsEndpoints
         group.MapGet("/backlog", HandleGetBacklog).RequireAuthorization(NetptunePermissions.Sprints.Read);
         group.MapGet("/{id:int}", HandleGetSprint).RequireAuthorization(NetptunePermissions.Sprints.Read);
         group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.Sprints.Create);
-        group.MapPut("/", HandlePut).RequireAuthorization(NetptunePermissions.Sprints.Update);
+        group.MapPut("/", HandlePut)
+            .RequireAuthorization(NetptunePermissions.Sprints.Update, NetptunePermissions.Sprints.ManageTasks)
+            .Broadcasts(WorkspaceEventScopes.Sprint, WorkspaceEventScopes.Task);
         group.MapDelete("/{id:int}", HandleDelete).RequireAuthorization(NetptunePermissions.Sprints.Delete);
         group.MapPost("/{id:int}/start", HandleStart).RequireAuthorization(NetptunePermissions.Sprints.Update);
-        group.MapPost("/{id:int}/complete", HandleComplete).RequireAuthorization(NetptunePermissions.Sprints.Update);
+        group.MapPost("/{id:int}/complete", HandleComplete)
+            .RequireAuthorization(NetptunePermissions.Sprints.Update, NetptunePermissions.Sprints.ManageTasks)
+            .Broadcasts(WorkspaceEventScopes.Sprint, WorkspaceEventScopes.Task);
         group.MapPost("/{id:int}/tasks", HandleAddTasks).RequireAuthorization(NetptunePermissions.Sprints.ManageTasks)
             .Broadcasts(WorkspaceEventScopes.Sprint, WorkspaceEventScopes.Task);
         group.MapDelete("/{id:int}/tasks/{taskId:int}", HandleRemoveTask)
@@ -122,9 +126,10 @@ public static class SprintsEndpoints
     public static async Task<IResult> HandleComplete(
         IMediator mediator,
         int id,
+        CompleteSprintRequest? request,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new CompleteSprintCommand(id), cancellationToken);
+        var result = await mediator.Send(new CompleteSprintCommand(id, request?.CarryOverSprintId), cancellationToken);
 
         return result.ToResult();
     }

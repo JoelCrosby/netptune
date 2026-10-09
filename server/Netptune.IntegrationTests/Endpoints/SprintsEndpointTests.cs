@@ -3,12 +3,18 @@ using System.Net.Http.Json;
 
 using FluentAssertions;
 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+
 using Netptune.Core.Enums;
+using Netptune.Core.Events;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Projects;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Sprints;
+using Netptune.Core.ViewModels.Statuses;
+using Netptune.Entities.Contexts;
 using Netptune.TestData;
 
 using Xunit;
@@ -18,9 +24,11 @@ namespace Netptune.IntegrationTests.Endpoints;
 public sealed class SprintsEndpointTests
 {
     private readonly HttpClient Client;
+    private readonly NetptuneFixture Fixture;
 
     public SprintsEndpointTests(NetptuneFixture fixture)
     {
+        Fixture = fixture;
         Client = fixture.CreateNetptuneClient();
     }
 
@@ -213,6 +221,242 @@ public sealed class SprintsEndpointTests
     }
 
     [Fact]
+    public async Task GetBacklog_ShouldExcludeFinishedTasks()
+    {
+        var project = await CreateProject();
+        var openTask = await CreateTask(project.Id);
+        var doneTask = await CreateTask(project.Id);
+        var doneStatusId = await GetStatusId(StatusCategory.Done);
+
+        var updateResponse = await Client.PutAsJsonAsync("api/tasks", new UpdateProjectTaskRequest
+        {
+            Id = doneTask.Id,
+            StatusId = doneStatusId,
+        });
+        updateResponse.EnsureSuccessStatusCode();
+
+        var backlog = await GetBacklog(project.Id);
+
+        backlog.Should().Contain(item => item.Id == openTask.Id);
+        backlog.Should().NotContain(item => item.Id == doneTask.Id);
+    }
+
+    [Fact]
+    public async Task GetBacklog_ShouldIncludeUnfinishedTasks_LeftOnAClosedSprint()
+    {
+        var project = await CreateProject();
+        var sprint = await CreateSprint(project.Id);
+        var task = await CreateTask(project.Id);
+
+        (await Client.PostAsync($"api/sprints/{sprint.Id}/start", null)).EnsureSuccessStatusCode();
+        (await Client.PostAsync($"api/sprints/{sprint.Id}/complete", null)).EnsureSuccessStatusCode();
+
+        // Completion now hands unfinished tasks back, so strand one the way older completions did.
+        using (var scope = Fixture.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+            await context.ProjectTasks
+                .Where(item => item.Id == task.Id)
+                .ExecuteUpdateAsync(setters => setters.SetProperty(item => item.SprintId, sprint.Id), TestContext.Current.CancellationToken);
+        }
+
+        var backlog = await GetBacklog(project.Id);
+
+        backlog.Should().Contain(item => item.Id == task.Id);
+    }
+
+    [Fact]
+    public async Task Complete_ShouldReturnUnfinishedTasksToTheBacklog_WhenNoCarryOverSprintGiven()
+    {
+        var project = await CreateProject();
+        var sprint = await CreateSprint(project.Id);
+        var task = await CreateTask(project.Id);
+
+        await AddTaskToSprint(sprint.Id, task.Id);
+        (await Client.PostAsync($"api/sprints/{sprint.Id}/start", null)).EnsureSuccessStatusCode();
+
+        var response = await Client.PostAsJsonAsync($"api/sprints/{sprint.Id}/complete", new CompleteSprintRequest());
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var backlog = await GetBacklog(project.Id);
+
+        backlog.Should().ContainSingle(item => item.Id == task.Id)
+            .Which.SprintId.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Complete_ShouldMoveUnfinishedTasks_WhenCarryOverSprintGiven()
+    {
+        var project = await CreateProject();
+        var sprint = await CreateSprint(project.Id);
+        var nextSprint = await CreateSprint(project.Id, "Sprint 2");
+        var task = await CreateTask(project.Id);
+
+        await AddTaskToSprint(sprint.Id, task.Id);
+        (await Client.PostAsync($"api/sprints/{sprint.Id}/start", null)).EnsureSuccessStatusCode();
+
+        var response = await Client.PostAsJsonAsync(
+            $"api/sprints/{sprint.Id}/complete",
+            new CompleteSprintRequest { CarryOverSprintId = nextSprint.Id });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var detail = await Client.GetFromJsonAsync<ClientResponse<SprintDetailViewModel>>($"api/sprints/{nextSprint.Id}");
+
+        detail!.Payload!.Tasks.Should().ContainSingle(item => item.Id == task.Id);
+    }
+
+    [Fact]
+    public async Task Complete_ShouldFail_AndLeaveTheSprintActive_WhenCarryOverSprintIsTheSameSprint()
+    {
+        var project = await CreateProject();
+        var sprint = await CreateSprint(project.Id);
+
+        (await Client.PostAsync($"api/sprints/{sprint.Id}/start", null)).EnsureSuccessStatusCode();
+
+        var response = await Client.PostAsJsonAsync(
+            $"api/sprints/{sprint.Id}/complete",
+            new CompleteSprintRequest { CarryOverSprintId = sprint.Id });
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<SprintViewModel>>();
+        var detail = await Client.GetFromJsonAsync<ClientResponse<SprintDetailViewModel>>($"api/sprints/{sprint.Id}");
+
+        result!.IsSuccess.Should().BeFalse();
+        detail!.Payload!.Status.Should().Be(SprintStatus.Active);
+    }
+
+    [Fact]
+    public async Task Update_ShouldReturnUnfinishedTasksToTheBacklog_WhenSprintIsCancelled()
+    {
+        var project = await CreateProject();
+        var sprint = await CreateSprint(project.Id);
+        var task = await CreateTask(project.Id);
+
+        await AddTaskToSprint(sprint.Id, task.Id);
+
+        var response = await Client.PutAsJsonAsync("api/sprints", new UpdateSprintRequest
+        {
+            Id = sprint.Id,
+            Status = SprintStatus.Cancelled,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var backlog = await GetBacklog(project.Id);
+
+        backlog.Should().ContainSingle(item => item.Id == task.Id)
+            .Which.SprintId.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Update_ShouldGiveEverySprintEventADistinctSequence_WhenActiveSprintIsCancelled()
+    {
+        var project = await CreateProject();
+        var sprint = await CreateSprint(project.Id);
+        var firstTask = await CreateTask(project.Id);
+        var secondTask = await CreateTask(project.Id);
+        var thirdTask = await CreateTask(project.Id);
+
+        await AddTaskToSprint(sprint.Id, firstTask.Id);
+        await AddTaskToSprint(sprint.Id, secondTask.Id);
+        await AddTaskToSprint(sprint.Id, thirdTask.Id);
+        (await Client.PostAsync($"api/sprints/{sprint.Id}/start", null)).EnsureSuccessStatusCode();
+
+        var response = await Client.PutAsJsonAsync("api/sprints", new UpdateSprintRequest
+        {
+            Id = sprint.Id,
+            Status = SprintStatus.Cancelled,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var sprintSubjectType = EventEntityTypes.From(EntityType.Sprint);
+        var sprintSubjectId = sprint.Id.ToString();
+        var sequences = await context.EventRecords
+            .Where(record => record.SubjectType == sprintSubjectType && record.SubjectId == sprintSubjectId)
+            .Select(record => record.SubjectSequence)
+            .ToListAsync(TestContext.Current.CancellationToken);
+        var removedCount = await context.EventRecords
+            .CountAsync(
+                record => record.SubjectType == sprintSubjectType
+                    && record.SubjectId == sprintSubjectId
+                    && record.EventKey == EventKeys.ScopeMemberChanged
+                    && record.Payload.RootElement.GetProperty("change").GetString() == "removed",
+                TestContext.Current.CancellationToken);
+
+        removedCount.Should().Be(3);
+        sequences.Should().OnlyHaveUniqueItems();
+        sequences.Should().BeEquivalentTo(Enumerable.Range(1, sequences.Count).Select(sequence => (long?)sequence));
+    }
+
+    [Fact]
+    public async Task Update_ShouldCompleteThroughCompletion_WhenStatusSetToCompleted()
+    {
+        var project = await CreateProject();
+        var sprint = await CreateSprint(project.Id);
+        var task = await CreateTask(project.Id);
+
+        await AddTaskToSprint(sprint.Id, task.Id);
+        (await Client.PostAsync($"api/sprints/{sprint.Id}/start", null)).EnsureSuccessStatusCode();
+
+        var response = await Client.PutAsJsonAsync("api/sprints", new UpdateSprintRequest
+        {
+            Id = sprint.Id,
+            Name = "Renamed while completing",
+            Status = SprintStatus.Completed,
+        });
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<SprintViewModel>>();
+        var backlog = await GetBacklog(project.Id);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        result!.Payload!.Status.Should().Be(SprintStatus.Completed);
+        result.Payload.Name.Should().Be("Renamed while completing");
+        result.Payload.CompletedAt.Should().NotBeNull();
+        backlog.Should().ContainSingle(item => item.Id == task.Id);
+    }
+
+    [Fact]
+    public async Task Update_ShouldFail_WhenPlanningSprintIsSetToCompleted()
+    {
+        var project = await CreateProject();
+        var sprint = await CreateSprint(project.Id);
+
+        var response = await Client.PutAsJsonAsync("api/sprints", new UpdateSprintRequest
+        {
+            Id = sprint.Id,
+            Status = SprintStatus.Completed,
+        });
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<SprintViewModel>>();
+
+        result!.IsSuccess.Should().BeFalse();
+        result.Message.Should().Be("Only active sprints can be completed");
+    }
+
+    [Fact]
+    public async Task GetById_ShouldCountNewCategoryTasksAsNew()
+    {
+        var project = await CreateProject();
+        var sprint = await CreateSprint(project.Id);
+        var task = await CreateTask(project.Id);
+        var newStatus = await CreateStatus(StatusCategory.New);
+
+        var updateResponse = await Client.PutAsJsonAsync("api/tasks", new UpdateProjectTaskRequest
+        {
+            Id = task.Id,
+            StatusId = newStatus.Id,
+        });
+        updateResponse.EnsureSuccessStatusCode();
+        await AddTaskToSprint(sprint.Id, task.Id);
+
+        var detail = await Client.GetFromJsonAsync<ClientResponse<SprintDetailViewModel>>($"api/sprints/{sprint.Id}");
+
+        detail!.Payload!.NewTaskCount.Should().Be(1);
+    }
+
+    [Fact]
     public async Task Update_ShouldReturnCorrectly_WhenInputValid()
     {
         var project = await CreateProject();
@@ -346,6 +590,56 @@ public sealed class SprintsEndpointTests
 
         listed.Payload!.Items.Should().ContainSingle(item => item.Id == task.Id && item.IsArchived);
         withoutArchived.Payload!.Items.Should().BeEmpty();
+    }
+
+    private async Task AddTaskToSprint(int sprintId, int taskId)
+    {
+        var response = await Client.PostAsJsonAsync(
+            $"api/sprints/{sprintId}/tasks",
+            new AddTasksToSprintRequest { TaskIds = [taskId] });
+
+        response.EnsureSuccessStatusCode();
+    }
+
+    private async Task<List<TaskViewModel>> GetBacklog(int projectId)
+    {
+        var response = await Client.GetAsync($"api/sprints/backlog?projectId={projectId}&pageSize=100");
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>();
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        result!.IsSuccess.Should().BeTrue();
+
+        return result.Payload!.Items.ToList();
+    }
+
+    private async Task<StatusViewModel> CreateStatus(StatusCategory category)
+    {
+        var response = await Client.PostAsJsonAsync("api/statuses", new CreateStatusRequest
+        {
+            Name = $"Sprint status {Guid.NewGuid():N}",
+            Category = category,
+        });
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<StatusViewModel>>();
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        result!.IsSuccess.Should().BeTrue();
+
+        return result.Payload!;
+    }
+
+    private async Task<int> GetStatusId(StatusCategory category)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        return await context.Statuses
+            .Where(status =>
+                status.Workspace!.Slug == "netptune" &&
+                status.EntityType == EntityType.Task &&
+                status.Category == category &&
+                !status.IsDeleted)
+            .Select(status => status.Id)
+            .FirstAsync(TestContext.Current.CancellationToken);
     }
 
     private async Task<ProjectViewModel> CreateProject()

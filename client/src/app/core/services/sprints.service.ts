@@ -71,10 +71,10 @@ export class SprintsService {
     );
   }
 
-  complete(sprintId: number) {
+  complete(sprintId: number, carryOverSprintId?: number) {
     return this.http.post<ClientResponse<SprintViewModel>>(
       `api/sprints/${sprintId}/complete`,
-      null
+      { carryOverSprintId: carryOverSprintId ?? null }
     );
   }
 

@@ -59,11 +59,11 @@ public sealed class DeleteWorkspaceAiConversationsCommandHandler
         foreach (var conversation in conversations)
         {
             conversation.Delete(userId);
-
-            var deletionEvent = BuildDeletionEvent(conversation);
-
-            await EventRecords.Append(deletionEvent, cancellationToken);
         }
+
+        var deletionEvents = conversations.ConvertAll(BuildDeletionEvent);
+
+        await EventRecords.AppendRange(deletionEvents, cancellationToken);
 
         await UnitOfWork.CompleteAsync(cancellationToken);
 

@@ -9,4 +9,6 @@ public interface IEventRecordWriter
         EventWriteRequest<TPayload> request,
         CancellationToken cancellationToken = default)
         where TPayload : class;
+
+    Task<IReadOnlyList<EventRecord>> AppendRange(IReadOnlyList<IEventWriteRequest> requests, CancellationToken cancellationToken = default);
 }

@@ -24,6 +24,9 @@ public sealed class SprintTransitionTool : IAiTool
     private static readonly IReadOnlySet<string> UpdatePermissions =
         new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Sprints.Update };
 
+    private static readonly IReadOnlySet<string> ClosingPermissions =
+        new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Sprints.Update, NetptunePermissions.Sprints.ManageTasks };
+
     private static readonly IReadOnlySet<string> DeletePermissions =
         new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Sprints.Delete };
 
@@ -42,8 +45,8 @@ public sealed class SprintTransitionTool : IAiTool
         "Propose moving a sprint through its lifecycle. "
         + "start makes a planning sprint the project's active sprint; a project has one active sprint, "
         + "so complete or cancel the running one first. "
-        + "complete closes the active sprint, leaving unfinished tasks where they are, and it can no longer be edited. "
-        + "cancel keeps its tasks attached and lets it be deleted afterwards. "
+        + "complete closes the active sprint and sends its unfinished tasks back to the backlog; it can no longer be edited. "
+        + "cancel sends its unfinished tasks back to the backlog and lets it be deleted afterwards. "
         + "delete removes a planning or cancelled sprint and sends its tasks back to the backlog.";
 
     public AiToolKind Kind => AiToolKind.Write;
@@ -80,15 +83,28 @@ public sealed class SprintTransitionTool : IAiTool
     {
         var action = AiToolSchema.GetString(arguments, "action");
         var isDelete = string.Equals(action, "delete", StringComparison.OrdinalIgnoreCase);
+        var isClosing = string.Equals(action, "complete", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(action, "cancel", StringComparison.OrdinalIgnoreCase);
 
-        return isDelete ? DeletePermissions : UpdatePermissions;
+        if (isDelete)
+        {
+            return DeletePermissions;
+        }
+
+        return isClosing ? ClosingPermissions : UpdatePermissions;
     }
 
     public IReadOnlySet<string> GetChangePermissions(string changeName, JsonElement payload)
     {
         var isDelete = changeName == DeleteChange;
+        var isClosing = ClosingChanges.Contains(changeName);
 
-        return isDelete ? DeletePermissions : UpdatePermissions;
+        if (isDelete)
+        {
+            return DeletePermissions;
+        }
+
+        return isClosing ? ClosingPermissions : UpdatePermissions;
     }
 
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
@@ -166,7 +182,8 @@ public sealed class SprintTransitionTool : IAiTool
                 $"Sprint “{sprint.Name}” is {Describe(sprint.Status)} — only active sprints can be completed.");
         }
 
-        var unfinishedCount = sprint.NewTaskCount + sprint.ActiveTaskCount;
+        // Everything not done leaves with completion, Backlog and Inactive tasks included.
+        var unfinishedCount = sprint.TaskCount - sprint.DoneTaskCount;
         var fields = new List<AiChangeField>
         {
             new()

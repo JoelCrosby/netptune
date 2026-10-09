@@ -217,7 +217,7 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
                 });
             }
 
-            await EventRecords.Append(new EventWriteRequest<EntityCreatedPayload>
+            var createdEvent = new EventWriteRequest<EntityCreatedPayload>
             {
                 WorkspaceId = task.WorkspaceId,
                 EventKey = EventKeys.EntityCreated,
@@ -233,7 +233,8 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
                     EstimateValue = task.EstimateValue,
                 },
                 References = creationReferences,
-            }, cancellationToken);
+            };
+            var creationEvents = new List<IEventWriteRequest> { createdEvent };
 
             var assignedUserIds = hasNamedAssignee
                 ? assigneeIds.Where(assigneeId => assigneeId != user.Id)
@@ -241,18 +242,17 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
             var assignmentTemplate = new FieldTransitionedPayload { Field = TaskAssigneeTransitions.Field };
             var assignments = TaskAssigneeTransitions.Split(assignmentTemplate, assignedUserIds, []);
 
-            foreach (var assignment in assignments)
+            var assignmentEvents = assignments.Select(assignment => new EventWriteRequest<FieldTransitionedPayload>
             {
-                await EventRecords.Append(new EventWriteRequest<FieldTransitionedPayload>
-                {
-                    WorkspaceId = task.WorkspaceId,
-                    EventKey = EventKeys.EntityFieldTransitioned,
-                    SubjectType = EventEntityTypes.From(EntityType.Task),
-                    SubjectId = result.Id.ToString(),
-                    Payload = assignment,
-                    References = creationReferences,
-                }, cancellationToken);
-            }
+                WorkspaceId = task.WorkspaceId,
+                EventKey = EventKeys.EntityFieldTransitioned,
+                SubjectType = EventEntityTypes.From(EntityType.Task),
+                SubjectId = result.Id.ToString(),
+                Payload = assignment,
+                References = creationReferences,
+            });
+
+            creationEvents.AddRange(assignmentEvents);
 
             if (task.SprintId.HasValue && targetSprint?.Status == SprintStatus.Active)
             {
@@ -268,8 +268,10 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
 
                 var added = SprintMemberEvents.Changed(scope, member, SprintMemberChanges.Added);
 
-                await EventRecords.Append(added, cancellationToken);
+                creationEvents.Add(added);
             }
+
+            await EventRecords.AppendRange(creationEvents, cancellationToken);
 
             await UnitOfWork.CompleteAsync(cancellationToken);
         });
