@@ -14,9 +14,16 @@ import { SpinnerIconComponent } from '@static/components/spinner/spinner-icon.co
 
 type AiStepState = 'done' | 'running' | 'cancelled' | 'unknown';
 
+interface AiStep {
+  name: string;
+  state: AiStepState;
+  durationMs: number | null;
+}
+
 interface AiStepView {
   key: string;
   name: string;
+  count: number;
   state: AiStepState;
   text: string;
   time: string;
@@ -115,6 +122,9 @@ const stepSeconds = numberFormat({
                 <span
                   class="font-avatar text-foreground/70 truncate text-[11px]">
                   {{ step.name }}
+                  @if (step.count > 1) {
+                    <span class="text-muted">({{ step.count }})</span>
+                  }
                 </span>
                 <span
                   class="truncate"
@@ -145,34 +155,54 @@ export class AiAssistantWorkLogComponent {
 
   protected readonly isExpanded = signal(false);
 
-  protected readonly steps = computed<AiStepView[]>(() => {
+  private readonly calls = computed<AiStep[]>(() => {
     const entry = this.entry();
     const isLive = this.isLive();
     const timed = entry.steps;
 
     if (timed && timed.length > 0) {
-      return timed.map((step, index) => {
-        const state = stepState(step, isLive);
-        const durationMs = step.durationMs;
-
+      return timed.map((step) => {
         return {
-          key: `${index}-${step.name}`,
           name: step.name,
-          state,
-          text: stepText(state),
-          time:
-            durationMs === null ? '' : stepSeconds.format(durationMs / 1000),
+          state: stepState(step, isLive),
+          durationMs: step.durationMs,
         };
       });
     }
 
-    return entry.tools.map((name, index) => {
+    return entry.tools.map((name) => {
+      return { name, state: 'unknown', durationMs: null };
+    });
+  });
+
+  protected readonly steps = computed<AiStepView[]>(() => {
+    const runs: AiStep[][] = [];
+
+    for (const call of this.calls()) {
+      const run = runs.at(-1);
+
+      if (run && run[0].name === call.name) {
+        run.push(call);
+      } else {
+        runs.push([call]);
+      }
+    }
+
+    let index = 0;
+
+    return runs.map((run) => {
+      const key = `${index}-${run[0].name}`;
+      const state = runState(run);
+
+      index += run.length;
+
       return {
-        key: `${index}-${name}`,
-        name,
-        state: 'unknown',
-        text: '',
-        time: '',
+        key,
+        name: run[0].name,
+        count: run.length,
+        state,
+        text: stepText(state),
+        time: runTime(run),
       };
     });
   });
@@ -244,7 +274,7 @@ export class AiAssistantWorkLogComponent {
   protected readonly summary = computed(() => {
     const entry = this.entry();
     const duration = formatElapsed(this.durationMs());
-    const count = this.steps().length;
+    const count = this.calls().length;
     const hasDuration = this.durationMs() >= MINIMUM_REPORTED_DURATION;
 
     if (entry.stopped) {
@@ -274,6 +304,32 @@ function stepState(step: AiToolStep, isLive: boolean): AiStepState {
   }
 
   return isLive ? 'running' : 'cancelled';
+}
+
+function runState(run: AiStep[]): AiStepState {
+  const states = run.map((step) => step.state);
+
+  if (states.includes('running')) {
+    return 'running';
+  }
+
+  if (states.includes('cancelled')) {
+    return 'cancelled';
+  }
+
+  return run[0].state;
+}
+
+function runTime(run: AiStep[]): string {
+  const durations = run.map((step) => step.durationMs);
+
+  if (durations.some((durationMs) => durationMs === null)) {
+    return '';
+  }
+
+  const totalMs = durations.reduce<number>((sum, ms) => sum + (ms ?? 0), 0);
+
+  return stepSeconds.format(totalMs / 1000);
 }
 
 function stepText(state: AiStepState): string {
