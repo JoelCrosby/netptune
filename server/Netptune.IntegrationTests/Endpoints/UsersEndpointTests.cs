@@ -53,6 +53,55 @@ public sealed class UsersEndpointTests
     }
 
     [Fact]
+    public async Task Get_ShouldOnlyReturnMatches_WhenSearchProvided()
+    {
+        var target = SeedData.Users.Last();
+
+        var response = await Client.GetAsync($"api/users?search={target.Lastname}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<WorkspaceUserViewModel>>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Items.Should().ContainSingle(item => item.Id == target.Id);
+        result.Payload.Items.Should().OnlyContain(item => item.DisplayName.Contains(target.Lastname));
+        result.Payload.TotalCount.Should().Be(result.Payload.Items.Count);
+    }
+
+    [Fact]
+    public async Task Get_ShouldOnlyReturnMembersWithRole_WhenRoleProvided()
+    {
+        var response = await Client.GetAsync($"api/users?role={(int)WorkspaceRole.Owner}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<WorkspaceUserViewModel>>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Items.Should().NotBeEmpty();
+        result.Payload.Items.Should().OnlyContain(item => item.Role == WorkspaceRole.Owner && !item.IsPending);
+    }
+
+    [Fact]
+    public async Task Get_ShouldOnlyReturnPendingInvites_WhenIsPendingProvided()
+    {
+        const string inviteEmail = "list-pending-user@gmail.com";
+
+        await Client.PostAsJsonAsync("api/users/invite", new InviteUsersRequest
+        {
+            EmailAddresses = [inviteEmail],
+        });
+
+        var response = await Client.GetAsync("api/users?isPending=true");
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<WorkspaceUserViewModel>>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Items.Should().Contain(item => item.Email == inviteEmail);
+        result.Payload.Items.Should().OnlyContain(item => item.IsPending);
+    }
+
+    [Fact]
     public async Task GetSelectOptions_ShouldReturnWorkspaceMembers_WhenNoSearchProvided()
     {
         var response = await Client.GetAsync("api/users/select");

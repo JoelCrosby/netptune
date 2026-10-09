@@ -3,12 +3,34 @@
     toolbar
     i18n-title="Page title for the workspace member list"
     title="Users"
+    i18n-filtersLabel="Accessible name of the member list filter row"
+    filtersLabel="Filter users"
     i18n-actionTitle="Button that opens the invite dialog"
     actionTitle="Invite Users"
     [count]="userList.count()"
-    (actionClick)="onInviteUsers()" />
+    (actionClick)="onInviteUsers()">
+    <div pageHeaderFilters class="flex flex-row flex-wrap items-center gap-2">
+      <app-search-input
+        [term]="search()"
+        (searchChange)="search.set($event ?? '')" />
+
+      <app-select-menu
+        i18n-prefix="Label ahead of the selected role in the member role filter"
+        prefix="Role"
+        [icon]="roleIcon"
+        i18n-ariaLabel="Accessible label for the member role filter"
+        ariaLabel="Filter by role"
+        [options]="roleOptions"
+        [value]="roleFilter()"
+        [buttonClass]="roleButtonClass()"
+        (valueChange)="roleFilter.set($event)" />
+    </div>
+  </app-page-header>
 
   <app-page-body>
-    <app-user-list #userList />
+    <app-user-list
+      #userList
+      [search]="search()"
+      [roleFilter]="roleFilter()" />
   </app-page-body>
 </app-page-container>

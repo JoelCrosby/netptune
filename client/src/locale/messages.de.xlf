@@ -2827,6 +2827,16 @@
         <target> Zeigt Aufgaben, bei denen </target>
       </segment>
     </unit>
+    <unit id="4145496584631696119">
+      <notes>
+        <note category="location">src/app/features/users/views/users-view/users-view.component.html:20,21</note>
+        <note category="description">Label ahead of the selected role in the member role filter</note>
+      </notes>
+      <segment state="translated">
+        <source>Role</source>
+        <target>Rolle</target>
+      </segment>
+    </unit>
     <unit id="4145619247688235973">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:340</note>
@@ -3400,6 +3410,7 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:237</note>
         <note category="location">src/app/features/automations/components/automation-runs-table.component.ts:237</note>
+        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:125</note>
         <note category="description">Advice shown when filters exclude every row</note>
       </notes>
       <segment state="initial">
@@ -3963,7 +3974,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/board-group-dialog/board-group-dialog.component.ts:69,71</note>
         <note category="location">src/app/entry/dialogs/create-relation-type-dialog/create-relation-type-dialog.component.ts:102,104</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:376,379</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:384,387</note>
         <note category="location">src/app/entry/dialogs/edit-relation-type-dialog/edit-relation-type-dialog.component.ts:89,91</note>
         <note category="location">src/app/entry/dialogs/invite-dialog/invite-dialog.component.ts:65,68</note>
         <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:68,70</note>
@@ -4609,7 +4620,7 @@
     </unit>
     <unit id="6164296601931172481">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:156,159</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:161,164</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:40,41</note>
         <note category="location">src/app/shell/global-commands.service.ts:180</note>
         <note category="description">Title of the create-task dialog</note>
@@ -4644,7 +4655,7 @@
     </unit>
     <unit id="4739818603756173797">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:170</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:175</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:84</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:176</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:52,54</note>
@@ -4657,7 +4668,7 @@
     </unit>
     <unit id="4902817035128594900">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:424</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:432</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:66,67</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:179</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:104,107</note>
@@ -4691,7 +4702,7 @@
     </unit>
     <unit id="533409430255690539">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:245,247</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:253,255</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-description.component.ts:23,25</note>
         <note category="description">Placeholder in the empty task description editor</note>
       </notes>
@@ -4702,7 +4713,7 @@
     </unit>
     <unit id="5681661801164770412">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:213,217</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:221,225</note>
         <note category="description">Validation error when a task&apos;s start date is after its due date</note>
       </notes>
       <segment state="translated">
@@ -4712,7 +4723,7 @@
     </unit>
     <unit id="6672445733608764176">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:223,226</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:231,234</note>
         <note category="description">Validation error when no project is selected for a task</note>
       </notes>
       <segment state="translated">
@@ -4732,7 +4743,7 @@
     </unit>
     <unit id="6346359058786917733">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:384,386</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:392,394</note>
         <note category="description">Button that saves the new task</note>
       </notes>
       <segment state="translated">
@@ -4782,8 +4793,8 @@
     </unit>
     <unit id="8547576940529836596">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:528</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:540</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:538</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:550</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -4813,7 +4824,7 @@
     </unit>
     <unit id="9021131006692744653">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:547</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:557</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -4821,19 +4832,9 @@
         <target>Die Zusammenfassung muss mindestens 4 Zeichen lang sein.</target>
       </segment>
     </unit>
-    <unit id="704019817450663548">
-      <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:554</note>
-        <note category="description">Body of a dialog or validation message</note>
-      </notes>
-      <segment state="translated">
-        <source>Summary cannot exceed 256 characters.</source>
-        <target>Die Zusammenfassung darf 256 Zeichen nicht überschreiten.</target>
-      </segment>
-    </unit>
     <unit id="633922115206256018">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:561</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:571</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -5804,7 +5805,7 @@
     </unit>
     <unit id="4116911651502837995">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:426</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:434</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:193</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:191</note>
         <note category="description">Section heading for files attached to a task</note>
@@ -5994,6 +5995,16 @@
       <segment state="translated">
         <source>Flag could not be updated</source>
         <target>Die Markierung konnte nicht aktualisiert werden</target>
+      </segment>
+    </unit>
+    <unit id="3904814018597094143">
+      <notes>
+        <note category="location">src/app/features/users/views/users-view/users-view.component.html:7,8</note>
+        <note category="description">Accessible name of the member list filter row</note>
+      </notes>
+      <segment state="translated">
+        <source>Filter users</source>
+        <target>Benutzer filtern</target>
       </segment>
     </unit>
     <unit id="3911323019910272488">
@@ -8477,6 +8488,7 @@
         <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:75</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:71</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:169</note>
+        <note category="location">src/app/features/users/views/users-view/users-view.component.ts:52</note>
         <note category="location">src/app/shared/components/query-builder/query-builder.models.ts:72</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:582</note>
         <note category="description">Pinned task filter showing every pin</note>
@@ -8633,6 +8645,16 @@
       <segment state="translated">
         <source>Create Queries</source>
         <target>Abfragen erstellen</target>
+      </segment>
+    </unit>
+    <unit id="8749777108110605114">
+      <notes>
+        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:117</note>
+        <note category="description">Shown when no members match the active filters</note>
+      </notes>
+      <segment state="translated">
+        <source>No users match these filters</source>
+        <target>Keine Benutzer entsprechen diesen Filtern</target>
       </segment>
     </unit>
     <unit id="8754000074916889543">
@@ -12539,7 +12561,7 @@
     </unit>
     <unit id="7565716024468232322">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:425</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:433</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:192</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:192</note>
         <note category="description">Tab listing the tasks this one links to</note>
@@ -12746,6 +12768,7 @@
     <unit id="4416413576346763682">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:181</note>
+        <note category="location">src/app/features/users/views/users-view/users-view.component.ts:62</note>
         <note category="description">Outcome status of a single automation action</note>
       </notes>
       <segment state="translated">
@@ -12781,6 +12804,16 @@
       <segment state="initial">
         <source> Updated <ph id="0" equiv="WHEN" disp="{{ task.updatedAt | fromNow // i18n(ph=&quot;WHEN&quot;) }}"/> </source>
         <target> Aktualisiert <ph id="0" equiv="WHEN" disp="{{ task.updatedAt | fromNow // i18n(ph=&quot;WHEN&quot;) }}"/> </target>
+      </segment>
+    </unit>
+    <unit id="9178333557961675598">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-group-task-inline/board-group-task-inline.component.ts:151</note>
+        <note category="description">Validation message</note>
+      </notes>
+      <segment state="translated">
+        <source>Task summary cannot exceed <ph id="0" equiv="maxLength" disp="TASK_NAME_MAX_LENGTH"/> characters.</source>
+        <target>Der Aufgabentitel darf höchstens <ph id="0" equiv="maxLength" disp="TASK_NAME_MAX_LENGTH"/> Zeichen lang sein.</target>
       </segment>
     </unit>
     <unit id="6019801849755519469">
@@ -13989,6 +14022,16 @@
         <target>Keine Aufgaben entsprechen dieser Abfrage.</target>
       </segment>
     </unit>
+    <unit id="8079320989122636865">
+      <notes>
+        <note category="location">src/app/static/components/character-limit/character-limit.component.ts:19,21</note>
+        <note category="description">Shown under a text field when the text is longer than allowed</note>
+      </notes>
+      <segment state="translated">
+        <source> <ph id="0" equiv="OVER_BY" disp="{{ overBy() | number // i18n(ph=&quot;OVER_BY&quot;) }}"/> characters over the <ph id="1" equiv="MAX_LENGTH" disp="{{ max() | number // i18n(ph=&quot;MAX_LENGTH&quot;) }}"/> character limit </source>
+        <target> <ph id="0" equiv="OVER_BY" disp="{{ overBy() | number // i18n(ph=&quot;OVER_BY&quot;) }}"/> Zeichen über dem Limit von <ph id="1" equiv="MAX_LENGTH" disp="{{ max() | number // i18n(ph=&quot;MAX_LENGTH&quot;) }}"/> Zeichen </target>
+      </segment>
+    </unit>
     <unit id="8451136300262007554">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:160,162</note>
@@ -14710,7 +14753,7 @@
     </unit>
     <unit id="6623551442527699684">
       <notes>
-        <note category="location">src/app/features/boards/components/board-group-task-inline/board-group-task-inline.component.ts:66,70</note>
+        <note category="location">src/app/features/boards/components/board-group-task-inline/board-group-task-inline.component.ts:72,75</note>
         <note category="description">Placeholder in the inline box for adding a task to a board group</note>
       </notes>
       <segment state="translated">
@@ -14740,8 +14783,8 @@
     </unit>
     <unit id="8761140310272472389">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:167,168</note>
-        <note category="location">src/app/features/boards/components/board-group-task-inline/board-group-task-inline.component.ts:127</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:172,173</note>
+        <note category="location">src/app/features/boards/components/board-group-task-inline/board-group-task-inline.component.ts:139</note>
         <note category="description">Placeholder in the empty task summary field</note>
       </notes>
       <segment state="translated">
@@ -17953,6 +17996,16 @@
         <target>Verbleibender Umfang im Vergleich zur idealen Kurve</target>
       </segment>
     </unit>
+    <unit id="6858840114855479494">
+      <notes>
+        <note category="location">src/app/features/users/views/users-view/users-view.component.html:22,24</note>
+        <note category="description">Accessible label for the member role filter</note>
+      </notes>
+      <segment state="translated">
+        <source>Filter by role</source>
+        <target>Nach Rolle filtern</target>
+      </segment>
+    </unit>
     <unit id="7816987675461347822">
       <notes>
         <note category="location">src/app/features/reporting/components/sprint-burndown-table.component.ts:72</note>
@@ -19541,7 +19594,7 @@
     </unit>
     <unit id="4378805774812012692">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:367,371</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:375,379</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-timestamps.component.ts:51,55</note>
         <note category="description">Footer line naming who raises the new task. NAME is their display name</note>
       </notes>
@@ -22335,6 +22388,16 @@
         <target>Ende</target>
       </segment>
     </unit>
+    <unit id="5673648104994903255">
+      <notes>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:564</note>
+        <note category="description">Body of a dialog or validation message</note>
+      </notes>
+      <segment state="translated">
+        <source>Summary cannot exceed <ph id="0" equiv="maxLength" disp="TASK_NAME_MAX_LENGTH"/> characters.</source>
+        <target>Die Zusammenfassung darf höchstens <ph id="0" equiv="maxLength" disp="TASK_NAME_MAX_LENGTH"/> Zeichen lang sein.</target>
+      </segment>
+    </unit>
     <unit id="5674286808255988565">
       <notes>
         <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:122</note>
@@ -23070,7 +23133,7 @@
     </unit>
     <unit id="2467702290618186989">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:271,273</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:279,281</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:115,117</note>
         <note category="description">Button that links this task to another</note>
       </notes>
@@ -23474,7 +23537,7 @@
     </unit>
     <unit id="8263303804952657732">
       <notes>
-        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:31,33</note>
+        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:36,38</note>
         <note category="description">Shown when the member list fails to load</note>
       </notes>
       <segment state="translated">
@@ -23494,7 +23557,7 @@
     </unit>
     <unit id="3458528087553681046">
       <notes>
-        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:68,70</note>
+        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:73,75</note>
         <note category="description">Badge marking an invited member who has not joined</note>
       </notes>
       <segment state="translated">
@@ -23514,7 +23577,7 @@
     </unit>
     <unit id="9193001935256028830">
       <notes>
-        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:75,77</note>
+        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:80,82</note>
         <note category="description">Badge marking the workspace owner</note>
       </notes>
       <segment state="translated">
@@ -23544,7 +23607,7 @@
     </unit>
     <unit id="2993974933777113616">
       <notes>
-        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:86,87</note>
+        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:120</note>
         <note category="description">Empty state for the member list</note>
       </notes>
       <segment state="translated">
@@ -23564,7 +23627,7 @@
     </unit>
     <unit id="2654431555310940196">
       <notes>
-        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:88,90</note>
+        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:128</note>
         <note category="description">Advice on the empty member list</note>
       </notes>
       <segment state="translated">
@@ -23584,7 +23647,7 @@
     </unit>
     <unit id="6381762701019694219">
       <notes>
-        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:130</note>
+        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:175</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment state="translated">
@@ -23623,7 +23686,7 @@
     </unit>
     <unit id="2285158653699607527">
       <notes>
-        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:135</note>
+        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:180</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment state="translated">
@@ -23682,7 +23745,7 @@
     </unit>
     <unit id="1974103468162219781">
       <notes>
-        <note category="location">src/app/features/users/views/users-view/users-view.component.html:7,9</note>
+        <note category="location">src/app/features/users/views/users-view/users-view.component.html:9,11</note>
         <note category="description">Button that opens the invite dialog</note>
       </notes>
       <segment state="translated">
@@ -23914,7 +23977,7 @@
     </unit>
     <unit id="221384062319096861">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:342,346</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:350,354</note>
         <note category="description">Shown when a new task was saved but some of its files did not upload</note>
       </notes>
       <segment state="translated">
@@ -24115,7 +24178,7 @@
     </unit>
     <unit id="6281284727431074654">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:318,321</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:326,329</note>
         <note category="description">Accessible label for the button that takes a file off a task that has not been created yet</note>
       </notes>
       <segment state="translated">

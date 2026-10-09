@@ -36,7 +36,7 @@ public sealed class ListMemberRolesTool : IAiTool
 
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
-        var page = new PageRequest { Page = 1, PageSize = DefaultPageSize };
+        var page = new WorkspaceUserFilter { Page = 1, PageSize = DefaultPageSize };
         var result = await Mediator.Send(new GetWorkspaceUsersQuery(page), cancellationToken);
 
         if (!result.IsSuccess || result.Payload is null)

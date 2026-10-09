@@ -34,6 +34,9 @@ export interface SelectMenuOption<T> {
         @if (icon(); as buttonIcon) {
           <svg [lucideIcon]="buttonIcon" class="h-4 w-4 shrink-0"></svg>
         }
+        @if (prefix(); as buttonPrefix) {
+          <span class="text-foreground/60">{{ buttonPrefix }}</span>
+        }
       </span>
 
       @for (option of options(); track $index) {
@@ -59,6 +62,8 @@ export class SelectMenuComponent<T> {
   readonly value = input.required<T>();
   readonly ariaLabel = input<string>();
   readonly icon = input<LucideIconInput>();
+  // Muted text ahead of the selected value, naming what the menu picks, e.g. "Role".
+  readonly prefix = input<string>();
   readonly color = input<FlatButtonColor>('neutral');
   readonly buttonClass = input('');
   readonly xPosition = input<DropdownMenuXPosition>('after');

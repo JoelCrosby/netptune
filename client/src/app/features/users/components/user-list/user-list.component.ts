@@ -1,6 +1,6 @@
-import { Component, computed, inject, signal, viewChild } from '@angular/core';
+import { Component, computed, inject, input, viewChild } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
-import { RouterLink } from '@angular/router';
+import { Params, RouterLink } from '@angular/router';
 import { PERMISSIONS } from '@app/core/auth/permissions';
 import { WorkspaceAppUser } from '@core/models/appuser';
 import { UserCommandsService } from '@core/services/user-commands.service';
@@ -10,8 +10,12 @@ import { BadgeComponent } from '@static/components/badge/badge.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
+import { DatatableEmptyDirective } from '@static/components/datatable/datatable-empty.directive';
 import { DatatableDataSource } from '@static/components/datatable/datatable.types';
 import { WorkspaceRole, workspaceRoleLabels } from '@core/enums/workspace-role';
+import { debouncedSignal, onChange } from '@core/util/signals';
+
+export type UserRoleFilter = WorkspaceRole | 'pending';
 
 @Component({
   selector: 'app-user-list',
@@ -22,6 +26,7 @@ import { WorkspaceRole, workspaceRoleLabels } from '@core/enums/workspace-role';
     BadgeComponent,
     DatatableComponent,
     DatatableCellTemplateDirective,
+    DatatableEmptyDirective,
     EmptyStateComponent,
   ],
   template: `
@@ -82,10 +87,8 @@ import { WorkspaceRole, workspaceRoleLabels } from '@core/enums/workspace-role';
       <ng-template appDatatableEmpty>
         <app-empty-state
           compact
-          i18n-title="Empty state for the member list"
-          title="No users to show"
-          i18n-description="Advice on the empty member list"
-          description="Invite people to this workspace to see them here." />
+          [title]="emptyTitle()"
+          [description]="emptyDescription()" />
       </ng-template>
     </app-datatable>
   `,
@@ -99,6 +102,48 @@ export class UserListComponent {
   readonly workspaceRole = WorkspaceRole;
 
   canReadUsers = hasPermission(PERMISSIONS.members.read);
+
+  readonly search = input('');
+  readonly roleFilter = input<UserRoleFilter | null>(null);
+
+  private readonly debouncedSearch = debouncedSignal(this.search);
+
+  private readonly filtersActive = computed(() => {
+    return !!this.debouncedSearch().trim() || this.roleFilter() !== null;
+  });
+
+  readonly emptyTitle = computed(() => {
+    if (this.filtersActive()) {
+      return $localize`:Shown when no members match the active filters:No users match these filters`;
+    }
+
+    return $localize`:Empty state for the member list:No users to show`;
+  });
+
+  readonly emptyDescription = computed(() => {
+    if (this.filtersActive()) {
+      return $localize`:Advice shown when filters exclude every row:Try a different search or filter.`;
+    }
+
+    return $localize`:Advice on the empty member list:Invite people to this workspace to see them here.`;
+  });
+
+  private readonly resourceParams = computed<Params>(() => {
+    const search = this.debouncedSearch().trim();
+    const roleFilter = this.roleFilter();
+
+    return {
+      ...(search ? { search } : {}),
+      ...(roleFilter === 'pending' ? { isPending: true } : {}),
+      ...(roleFilter !== null && roleFilter !== 'pending'
+        ? { role: roleFilter }
+        : {}),
+    };
+  });
+
+  constructor() {
+    onChange(this.resourceParams, () => this.table()?.goToPage(1));
+  }
 
   readonly userData: DatatableDataSource<WorkspaceAppUser> = {
     key: 'user-list',
@@ -121,7 +166,7 @@ export class UserListComponent {
     ],
     resource: {
       url: 'api/users',
-      params: signal({}),
+      params: this.resourceParams,
     },
     rows: (response) => response?.payload?.items ?? [],
     trackBy: (_: number, user: WorkspaceAppUser) => user.id,

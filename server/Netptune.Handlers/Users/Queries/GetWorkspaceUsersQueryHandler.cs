@@ -8,7 +8,7 @@ using Netptune.Core.ViewModels.Users;
 
 namespace Netptune.Handlers.Users.Queries;
 
-public sealed record GetWorkspaceUsersQuery(PageRequest? Page = null) : IRequest<ClientResponse<PagedResponse<WorkspaceUserViewModel>>>;
+public sealed record GetWorkspaceUsersQuery(WorkspaceUserFilter? Filter = null) : IRequest<ClientResponse<PagedResponse<WorkspaceUserViewModel>>>;
 
 public sealed class GetWorkspaceUsersQueryHandler : IRequestHandler<GetWorkspaceUsersQuery, ClientResponse<PagedResponse<WorkspaceUserViewModel>>>
 {
@@ -24,8 +24,8 @@ public sealed class GetWorkspaceUsersQueryHandler : IRequestHandler<GetWorkspace
     public async ValueTask<ClientResponse<PagedResponse<WorkspaceUserViewModel>>> Handle(GetWorkspaceUsersQuery request, CancellationToken cancellationToken)
     {
         var workspaceKey = Identity.GetWorkspaceKey();
-        var pageRequest = request.Page ?? new PageRequest();
-        var pagination = pageRequest.GetPagination();
+        var filter = request.Filter ?? new WorkspaceUserFilter();
+        var pagination = filter.GetPagination();
 
         var workspace = await UnitOfWork.Workspaces.GetBySlug(workspaceKey, true, cancellationToken);
 
@@ -35,7 +35,7 @@ public sealed class GetWorkspaceUsersQueryHandler : IRequestHandler<GetWorkspace
         }
 
         // Members and pending invites are merged, sorted and paginated in the database.
-        var result = await UnitOfWork.Users.GetWorkspaceUsersPaged(workspace.Id, pageRequest, cancellationToken);
+        var result = await UnitOfWork.Users.GetWorkspaceUsersPaged(workspace.Id, filter, cancellationToken);
 
         return new PagedResponse<WorkspaceUserViewModel>(
             [.. result.Results],

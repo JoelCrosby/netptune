@@ -35,9 +35,11 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<IPagedResult<WorkspaceUserViewModel>> GetWorkspaceUsersPaged(int workspaceId, PageRequest pageRequest, CancellationToken cancellationToken = default)
+    public async Task<IPagedResult<WorkspaceUserViewModel>> GetWorkspaceUsersPaged(int workspaceId, WorkspaceUserFilter filter, CancellationToken cancellationToken = default)
     {
-        var pagination = pageRequest.GetPagination();
+        var pagination = filter.GetPagination();
+        var search = filter.Search?.Trim().ToLowerInvariant() ?? string.Empty;
+        var role = filter.Role?.ToString().ToLowerInvariant() ?? string.Empty;
 
         using var connection = StartConnection();
 
@@ -48,8 +50,12 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
                 workspace_id = workspaceId,
                 limit = pagination.PageSize,
                 offset = pagination.Skip,
-                sort_by = pageRequest.SortBy ?? string.Empty,
-                sort_direction = pageRequest.SortDirection ?? string.Empty,
+                sort_by = filter.SortBy ?? string.Empty,
+                sort_direction = filter.SortDirection ?? string.Empty,
+                search,
+                search_pattern = $"%{search}%",
+                role,
+                is_pending = filter.IsPending,
             },
             cancellationToken: cancellationToken))).AsList();
 

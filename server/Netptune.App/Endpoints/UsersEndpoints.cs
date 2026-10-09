@@ -29,10 +29,10 @@ public static class UsersEndpoints
 
     public static async Task<IResult> HandleGetWorkspaceUsers(
         IMediator mediator,
-        [AsParameters] PageRequest page,
+        [AsParameters] WorkspaceUserFilter filter,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetWorkspaceUsersQuery(page), cancellationToken);
+        var result = await mediator.Send(new GetWorkspaceUsersQuery(filter), cancellationToken);
 
         return Results.Ok(result);
     }

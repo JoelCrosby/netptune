@@ -16,7 +16,7 @@ public interface IUserRepository : IRepository<AppUser, string>
 
     Task<List<AppUser>> GetWorkspaceUsers(string workspaceKey, bool isReadonly = false, CancellationToken cancellationToken = default);
 
-    Task<IPagedResult<WorkspaceUserViewModel>> GetWorkspaceUsersPaged(int workspaceId, PageRequest pageRequest, CancellationToken cancellationToken = default);
+    Task<IPagedResult<WorkspaceUserViewModel>> GetWorkspaceUsersPaged(int workspaceId, WorkspaceUserFilter filter, CancellationToken cancellationToken = default);
 
     Task<IPagedResult<AssigneeViewModel>> GetWorkspaceAssigneesPaged(
         int workspaceId,

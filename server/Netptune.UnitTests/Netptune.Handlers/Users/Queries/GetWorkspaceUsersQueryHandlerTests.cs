@@ -58,11 +58,11 @@ public class GetWorkspaceUsersQueryHandlerTests
         Identity.GetWorkspaceKey().Returns(workspaceKey);
         UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), Arg.Any<CancellationToken>()).Returns(workspace);
         UnitOfWork.Users
-            .GetWorkspaceUsersPaged(workspace.Id, Arg.Any<PageRequest>(), Arg.Any<CancellationToken>())
+            .GetWorkspaceUsersPaged(workspace.Id, Arg.Any<WorkspaceUserFilter>(), Arg.Any<CancellationToken>())
             .Returns(PagedResult([member, pending], currentPage: 2, pageSize: 2, rowCount: 5));
 
         var result = await Handler.Handle(
-            new GetWorkspaceUsersQuery(new PageRequest { Page = 2, PageSize = 2 }),
+            new GetWorkspaceUsersQuery(new WorkspaceUserFilter { Page = 2, PageSize = 2 }),
             TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
@@ -75,16 +75,16 @@ public class GetWorkspaceUsersQueryHandlerTests
     }
 
     [Fact]
-    public async Task GetWorkspaceUsers_ShouldQueryByWorkspaceIdAndPageRequest()
+    public async Task GetWorkspaceUsers_ShouldQueryByWorkspaceIdAndFilter()
     {
         const string workspaceKey = "workspaceKey";
         var workspace = AutoFixtures.Workspace;
-        var pageRequest = new PageRequest { Page = 3, PageSize = 10, SortBy = "email", SortDirection = "desc" };
+        var pageRequest = new WorkspaceUserFilter { Page = 3, PageSize = 10, SortBy = "email", SortDirection = "desc", Search = "ann", Role = WorkspaceRole.Admin };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
         UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), Arg.Any<CancellationToken>()).Returns(workspace);
         UnitOfWork.Users
-            .GetWorkspaceUsersPaged(Arg.Any<int>(), Arg.Any<PageRequest>(), Arg.Any<CancellationToken>())
+            .GetWorkspaceUsersPaged(Arg.Any<int>(), Arg.Any<WorkspaceUserFilter>(), Arg.Any<CancellationToken>())
             .Returns(PagedResult([], currentPage: 3, pageSize: 10, rowCount: 0));
 
         await Handler.Handle(new GetWorkspaceUsersQuery(pageRequest), TestContext.Current.CancellationToken);
@@ -104,6 +104,6 @@ public class GetWorkspaceUsersQueryHandlerTests
 
         result.IsSuccess.Should().BeTrue();
         result.Payload!.Items.Should().BeEmpty();
-        await UnitOfWork.Users.DidNotReceive().GetWorkspaceUsersPaged(Arg.Any<int>(), Arg.Any<PageRequest>(), Arg.Any<CancellationToken>());
+        await UnitOfWork.Users.DidNotReceive().GetWorkspaceUsersPaged(Arg.Any<int>(), Arg.Any<WorkspaceUserFilter>(), Arg.Any<CancellationToken>());
     }
 }

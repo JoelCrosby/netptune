@@ -10,6 +10,10 @@
 --   @offset          rows to skip
 --   @sort_by         'user' | 'email' | anything else => firstname/lastname/id
 --   @sort_direction  'desc' => descending (members only), otherwise ascending
+--   @search          lower-cased search text, '' => no search
+--   @search_pattern  '%' || @search || '%', matched against name, email and username
+--   @role            workspace_role label, '' => any; pending invites never match a role
+--   @is_pending      true => only pending invites, false => only members, null => both
 WITH combined AS (
     SELECT
         u.id                AS id,
@@ -75,6 +79,12 @@ SELECT
     ispending,
     count(*) OVER () AS totalcount
 FROM combined
+WHERE (@search = ''
+       OR lower(displayname) LIKE @search_pattern
+       OR lower(email) LIKE @search_pattern
+       OR lower(username) LIKE @search_pattern)
+  AND (@role = '' OR (NOT ispending AND role::text = @role))
+  AND (@is_pending::boolean IS NULL OR ispending = @is_pending::boolean)
 ORDER BY
     ispending ASC,
     CASE WHEN @sort_by = 'user'  AND @sort_direction <> 'desc' THEN firstname END ASC,
