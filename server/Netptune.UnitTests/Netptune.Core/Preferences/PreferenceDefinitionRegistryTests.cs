@@ -50,10 +50,10 @@ public class PreferenceDefinitionRegistryTests
             item.Key == PreferenceKeys.AppearanceTaskDetailLayout);
 
         preference.ControlType.Should().Be("select");
-        preference.DefaultValue.GetString().Should().Be("summary-rail");
+        preference.DefaultValue.GetString().Should().Be("cockpit");
         preference.AllowedScopes.Should().Equal(PreferenceScopes.Global);
         preference.Options.Select(option => option.Value)
-            .Should().Equal("summary-rail", "cockpit", "document");
+            .Should().Equal("cockpit", "document");
     }
 
     [Fact]

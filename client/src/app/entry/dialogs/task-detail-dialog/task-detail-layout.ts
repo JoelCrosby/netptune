@@ -3,11 +3,11 @@ import { APPEARANCE_TASK_DETAIL_LAYOUT } from '@core/models/user-preferences';
 import { LayoutService } from '@core/services/layout.service';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
 
-export type TaskDetailLayout = 'summary-rail' | 'cockpit' | 'document';
+export type TaskDetailLayout = 'cockpit' | 'document';
 
-export const DEFAULT_TASK_DETAIL_LAYOUT: TaskDetailLayout = 'summary-rail';
+export const DEFAULT_TASK_DETAIL_LAYOUT: TaskDetailLayout = 'cockpit';
 
-const layouts = new Set<string>(['summary-rail', 'cockpit', 'document']);
+const layouts = new Set<string>(['cockpit', 'document']);
 
 function isTaskDetailLayout(value: unknown): value is TaskDetailLayout {
   return typeof value === 'string' && layouts.has(value);

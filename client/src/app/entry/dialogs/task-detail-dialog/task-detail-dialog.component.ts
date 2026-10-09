@@ -3,7 +3,6 @@ import { Component, effect, inject, untracked } from '@angular/core';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { TaskDetailCockpitComponent } from './layouts/task-detail-cockpit.component';
 import { TaskDetailDocumentComponent } from './layouts/task-detail-document.component';
-import { TaskDetailSummaryRailComponent } from './layouts/task-detail-summary-rail.component';
 import { TaskDetailLayoutService } from './task-detail-layout';
 import { TaskDetailService } from './task-detail.service';
 import { TaskDetailSkeletonComponent } from './task-detail-skeleton.component';
@@ -17,14 +16,11 @@ export interface TaskDetailDialogData {
   template: `
     @if (task()) {
       @switch (layout.layout()) {
-        @case ('cockpit') {
-          <app-task-detail-cockpit />
-        }
         @case ('document') {
           <app-task-detail-document />
         }
         @default {
-          <app-task-detail-summary-rail />
+          <app-task-detail-cockpit />
         }
       }
     } @else {
@@ -35,7 +31,6 @@ export interface TaskDetailDialogData {
   imports: [
     TaskDetailCockpitComponent,
     TaskDetailDocumentComponent,
-    TaskDetailSummaryRailComponent,
     TaskDetailSkeletonComponent,
   ],
   providers: [TaskDetailService],

@@ -41,7 +41,6 @@ const clearLabels: Record<string, string> = {
 const selectedBadge = $localize`:Badge on the chosen option tile:Selected`;
 
 const optionCaptions: Record<string, string> = {
-  'summary-rail': $localize`:Caption describing the summary rail task detail layout:Fields as a scannable summary on the right, sections collapsed to one line.`,
   cockpit: $localize`:Caption describing the cockpit task detail layout:Editable chip row under the title, comments docked beside the description.`,
   document: $localize`:Caption describing the document task detail layout:One centred reading column; every field lives behind “All fields”.`,
   centered: $localize`:Caption describing the centered page width:Pages sit in a centred column that stops at a comfortable reading width.`,

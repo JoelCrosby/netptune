@@ -2,7 +2,6 @@ import { Component, effect, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { TaskDetailCockpitComponent } from '@entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component';
 import { TaskDetailDocumentComponent } from '@entry/dialogs/task-detail-dialog/layouts/task-detail-document.component';
-import { TaskDetailSummaryRailComponent } from '@entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component';
 import { TaskDetailLayoutService } from '@entry/dialogs/task-detail-dialog/task-detail-layout';
 import { TaskDetailService } from '@entry/dialogs/task-detail-dialog/task-detail.service';
 import { TaskDetailSkeletonComponent } from '@entry/dialogs/task-detail-dialog/task-detail-skeleton.component';
@@ -15,14 +14,11 @@ import { ErrorStateComponent } from '@static/components/error-state/error-state.
     <app-page-container layout="list" [horizontalPadding]="false">
       @if (task()) {
         @switch (layout.layout()) {
-          @case ('cockpit') {
-            <app-task-detail-cockpit />
-          }
           @case ('document') {
             <app-task-detail-document />
           }
           @default {
-            <app-task-detail-summary-rail />
+            <app-task-detail-cockpit />
           }
         }
       } @else if (loadError(); as error) {
@@ -51,7 +47,6 @@ import { ErrorStateComponent } from '@static/components/error-state/error-state.
     PageContainerComponent,
     TaskDetailCockpitComponent,
     TaskDetailDocumentComponent,
-    TaskDetailSummaryRailComponent,
     TaskDetailSkeletonComponent,
   ],
   providers: [TaskDetailService],

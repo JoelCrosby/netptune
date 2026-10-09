@@ -857,7 +857,7 @@
     </unit>
     <unit id="3386323988375703429">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:253</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:251</note>
         <note category="description">Header of the work log of a reply the user stopped</note>
       </notes>
       <segment state="translated">
@@ -1149,7 +1149,7 @@
     </unit>
     <unit id="5264398089164990230">
       <notes>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:48</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:47</note>
         <note category="description">Caption describing the full page width</note>
       </notes>
       <segment state="translated">
@@ -1638,16 +1638,6 @@
       <segment state="translated">
         <source>XS</source>
         <target>XS</target>
-      </segment>
-    </unit>
-    <unit id="7735505964227370595">
-      <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/task-files-section.component.ts:60</note>
-        <note category="description">Accordion summary counting a task&apos;s attachments. COUNT is how many</note>
-      </notes>
-      <segment state="initial">
-        <source><ph id="0" equiv="COUNT" disp="count"/> files</source>
-        <target><ph id="0" equiv="COUNT" disp="count"/> archivos</target>
       </segment>
     </unit>
     <unit id="3251116876185403930">
@@ -3039,7 +3029,7 @@
     </unit>
     <unit id="962282029591799382">
       <notes>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:45</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:44</note>
         <note category="description">Caption describing the cockpit task detail layout</note>
       </notes>
       <segment state="initial">
@@ -3512,7 +3502,7 @@
     </unit>
     <unit id="2334258665364702698">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:213</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:211</note>
         <note category="description">Assistant progress while a tool runs, naming the tool</note>
       </notes>
       <segment state="translated">
@@ -3623,7 +3613,7 @@
     <unit id="4043049091728011235">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:637</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:279</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:285</note>
         <note category="description">An export a member stopped</note>
       </notes>
       <segment>
@@ -3932,7 +3922,6 @@
         <note category="location">src/app/entry/dialogs/board-group-dialog/board-group-dialog.component.ts:52</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:34</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:71,73</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/pickers/task-status-segments.component.ts:24,28</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:193</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:58,59</note>
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:49,50</note>
@@ -5658,7 +5647,7 @@
     </unit>
     <unit id="239908996088771686">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:243</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:241</note>
         <note category="description">Assistant progress while a reply is being prepared, for example &quot;8s · 12.4k tok&quot;</note>
       </notes>
       <segment state="initial">
@@ -5818,7 +5807,6 @@
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:426</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:193</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:191</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/task-files-section.component.ts:47</note>
         <note category="description">Section heading for files attached to a task</note>
       </notes>
       <segment state="translated">
@@ -6043,7 +6031,6 @@
     </unit>
     <unit id="3802104514603079488">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/task-links-section.component.ts:32,35</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:51,55</note>
         <note category="description">Button that links this task to another</note>
       </notes>
@@ -6383,16 +6370,6 @@
       <segment state="translated">
         <source>Show events</source>
         <target>Mostrar eventos</target>
-      </segment>
-    </unit>
-    <unit id="5200831341853054486">
-      <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:145,147</note>
-        <note category="description">Section heading for a task&apos;s comments</note>
-      </notes>
-      <segment state="initial">
-        <source> Comments </source>
-        <target> Comentarios </target>
       </segment>
     </unit>
     <unit id="5203279511751768967">
@@ -8176,16 +8153,6 @@
         <target>Nombre de la etiqueta</target>
       </segment>
     </unit>
-    <unit id="7575041808886442392">
-      <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/task-links-section.component.ts:62</note>
-        <note category="description">Accordion summary when a task links to one other</note>
-      </notes>
-      <segment state="initial">
-        <source>1 linked task</source>
-        <target>1 tarea vinculada</target>
-      </segment>
-    </unit>
     <unit id="7575333699500892760">
       <notes>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:52</note>
@@ -8355,7 +8322,7 @@
     </unit>
     <unit id="7997648753385248331">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-dialog.component.ts:68</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-dialog.component.ts:63</note>
         <note category="description">Shown when the open task no longer exists</note>
       </notes>
       <segment state="translated">
@@ -9806,7 +9773,7 @@
     </unit>
     <unit id="1527635909232386822">
       <notes>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:46</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:45</note>
         <note category="description">Caption describing the document task detail layout</note>
       </notes>
       <segment state="initial">
@@ -9977,16 +9944,6 @@
         <target>CUANDO</target>
       </segment>
     </unit>
-    <unit id="5550975895729371495">
-      <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/task-links-section.component.ts:58</note>
-        <note category="description">Accordion summary when a task links to nothing</note>
-      </notes>
-      <segment state="initial">
-        <source>None yet</source>
-        <target>Ninguna todavía</target>
-      </segment>
-    </unit>
     <unit id="5551448153793462049">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:56,58</note>
@@ -10144,7 +10101,7 @@
     </unit>
     <unit id="6676914867306973161">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:257</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:255</note>
         <note category="description">Shown above a finished reply, saying how long the assistant worked on it</note>
       </notes>
       <segment state="translated">
@@ -10411,7 +10368,7 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:59,60</note>
         <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:201</note>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:104</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:103</note>
         <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:21</note>
         <note category="description">Label of the scope field</note>
       </notes>
@@ -10797,16 +10754,6 @@
       <segment state="translated">
         <source>tags</source>
         <target>etiquetas</target>
-      </segment>
-    </unit>
-    <unit id="4987947040082180128">
-      <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/task-files-section.component.ts:57</note>
-        <note category="description">Accordion summary when a task has one attachment</note>
-      </notes>
-      <segment state="initial">
-        <source>1 file</source>
-        <target>1 archivo</target>
       </segment>
     </unit>
     <unit id="4993066231165110063">
@@ -11286,7 +11233,7 @@
     </unit>
     <unit id="8318489133130094433">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-skeleton.component.ts:138</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-skeleton.component.ts:149</note>
         <note category="description">Accessible label shown while a task loads</note>
       </notes>
       <segment state="translated">
@@ -12131,11 +12078,10 @@
     </unit>
     <unit id="4510676848705799339">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:227,229</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:145,147</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:85</note>
         <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:182,185</note>
-        <note category="description">Accessible label for the button that deletes the task</note>
+        <note category="description">Menu item that deletes a task</note>
       </notes>
       <segment state="translated">
         <source>Delete task</source>
@@ -15136,9 +15082,8 @@
     </unit>
     <unit id="6381140642359438701">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:162,164</note>
         <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:184,186</note>
-        <note category="description">Expands the comment list over the task body</note>
+        <note category="description">Button that makes every board group visible</note>
       </notes>
       <segment state="translated">
         <source> Show all </source>
@@ -15458,7 +15403,6 @@
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:191</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:193</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:253</note>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:64</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:71,72</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:86</note>
@@ -15759,7 +15703,7 @@
     </unit>
     <unit id="6511066179052107110">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:263</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:261</note>
         <note category="description">Number of tools the assistant used, plural</note>
       </notes>
       <segment state="translated">
@@ -16254,16 +16198,6 @@
         <target> <ph id="0" equiv="DONE" disp="{{ sprint.doneTaskCount // i18n(ph=&quot;DONE&quot;) }}"/> / <ph id="1" equiv="TOTAL" disp="{{ sprint.taskCount // i18n(ph=&quot;TOTAL&quot;) }}"/> tareas </target>
       </segment>
     </unit>
-    <unit id="4563489865947095174">
-      <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:269</note>
-        <note category="description">Accordion summary when a task is not on any board</note>
-      </notes>
-      <segment state="initial">
-        <source>Not on any board</source>
-        <target>En ningún tablero</target>
-      </segment>
-    </unit>
     <unit id="4563965495368336177">
       <notes>
         <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:130</note>
@@ -16449,16 +16383,6 @@
         <target>No hay tareas que mostrar.</target>
       </segment>
     </unit>
-    <unit id="6570079187628586933">
-      <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/pickers/task-status-segments.component.ts:51,53</note>
-        <note category="description">Accessible label for the control that lists the remaining statuses</note>
-      </notes>
-      <segment state="initial">
-        <source>More statuses</source>
-        <target>Más estados</target>
-      </segment>
-    </unit>
     <unit id="6570363013146073520">
       <notes>
         <note category="location">src/app/features/dashboard/views/dashboard-view/dashboard-view.component.ts:40,42</note>
@@ -16546,7 +16470,7 @@
     </unit>
     <unit id="2003333127264395537">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:275</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:281</note>
         <note category="description">Shown beside a tool the assistant is still running</note>
       </notes>
       <segment state="translated">
@@ -18581,16 +18505,6 @@
         <target>Filtros del informe</target>
       </segment>
     </unit>
-    <unit id="8770284726358486659">
-      <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/task-files-section.component.ts:53</note>
-        <note category="description">Prompt on the collapsed files section</note>
-      </notes>
-      <segment state="initial">
-        <source>Drop a file to attach</source>
-        <target>Suelta un archivo para adjuntarlo</target>
-      </segment>
-    </unit>
     <unit id="877780134171662191">
       <notes>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:126,127</note>
@@ -19302,7 +19216,7 @@
     </unit>
     <unit id="9082027484739685780">
       <notes>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:105,107</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:104,106</note>
         <note category="description">Placeholder in the preference scope picker</note>
       </notes>
       <segment state="translated">
@@ -20057,7 +19971,7 @@
     </unit>
     <unit id="2903576963657594650">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:220</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:218</note>
         <note category="description">Shown while the assistant writes out its reply</note>
       </notes>
       <segment state="translated">
@@ -20735,16 +20649,6 @@
       <segment state="translated">
         <source>General Workspace Settings</source>
         <target>Configuración general del espacio de trabajo</target>
-      </segment>
-    </unit>
-    <unit id="5713343516682617780">
-      <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:216,218</note>
-        <note category="description">Button that asks the assistant about this task</note>
-      </notes>
-      <segment state="initial">
-        <source> Ask assistant </source>
-        <target> Preguntar al asistente </target>
       </segment>
     </unit>
     <unit id="5715720410918886861">
@@ -22697,7 +22601,7 @@
     </unit>
     <unit id="8348832067364561502">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:269</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:267</note>
         <note category="description">Header of the work log of a finished reply, for example &quot;Worked for 15s · 3 tool calls&quot;</note>
       </notes>
       <segment state="translated">
@@ -23498,16 +23402,6 @@
         <target>Ningún archivo coincide con los filtros actuales.</target>
       </segment>
     </unit>
-    <unit id="2637348081917147948">
-      <notes>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:44</note>
-        <note category="description">Caption describing the summary rail task detail layout</note>
-      </notes>
-      <segment state="initial">
-        <source>Fields as a scannable summary on the right, sections collapsed to one line.</source>
-        <target>Los campos como un resumen fácil de ojear a la derecha, con las secciones contraídas en una línea.</target>
-      </segment>
-    </unit>
     <unit id="2637409888010075708">
       <notes>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:458</note>
@@ -23658,19 +23552,9 @@
         <target>No hay usuarios que mostrar</target>
       </segment>
     </unit>
-    <unit id="2997922512329830488">
-      <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/task-links-section.component.ts:65</note>
-        <note category="description">Accordion summary counting the tasks this one links to. COUNT is how many</note>
-      </notes>
-      <segment state="initial">
-        <source><ph id="0" equiv="COUNT" disp="count"/> linked tasks</source>
-        <target><ph id="0" equiv="COUNT" disp="count"/> tareas vinculadas</target>
-      </segment>
-    </unit>
     <unit id="2653693004959110818">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:262</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:260</note>
         <note category="description">Number of tools the assistant used, singular</note>
       </notes>
       <segment state="translated">
@@ -23939,7 +23823,7 @@
     </unit>
     <unit id="6631196071533020937">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:217</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:215</note>
         <note category="description">Shown while the assistant is preparing its reply</note>
       </notes>
       <segment state="initial">
@@ -24137,16 +24021,6 @@
       <segment state="translated">
         <source>Results</source>
         <target>Resultados</target>
-      </segment>
-    </unit>
-    <unit id="4911319983039735103">
-      <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/task-links-section.component.ts:52</note>
-        <note category="description">Section heading for links between tasks</note>
-      </notes>
-      <segment state="initial">
-        <source>Linked tasks</source>
-        <target>Tareas vinculadas</target>
       </segment>
     </unit>
     <unit id="4911843450729688319">
@@ -24827,16 +24701,6 @@
         <target>Abrir el menú de <ph id="0" equiv="USER_NAME" disp="name"/></target>
       </segment>
     </unit>
-    <unit id="2049913543296309259">
-      <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-summary-rail.component.ts:158,160</note>
-        <note category="description">Collapses the expanded comment list</note>
-      </notes>
-      <segment state="initial">
-        <source> Show less </source>
-        <target> Mostrar menos </target>
-      </segment>
-    </unit>
     <unit id="4034907872117288202">
       <notes>
         <note category="location">src/app/features/settings/settings.routes.ts:94</note>
@@ -25087,7 +24951,7 @@
     </unit>
     <unit id="6499083639356392647">
       <notes>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:47</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:46</note>
         <note category="description">Caption describing the centered page width</note>
       </notes>
       <segment state="translated">
@@ -25683,7 +25547,6 @@
     </unit>
     <unit id="7927073582775061981">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/task-files-section.component.ts:30,32</note>
         <note category="location">src/app/static/components/file-dropzone/file-dropzone.component.ts:34,36</note>
         <note category="description">Button that opens the file picker</note>
       </notes>

@@ -73,9 +73,9 @@ public sealed class UserPreferencesEndpointTests
 
         preference.ControlType.Should().Be("select");
         preference.AllowedScopes.Should().Equal("global");
-        preference.DefaultValue.GetString().Should().Be("summary-rail");
+        preference.DefaultValue.GetString().Should().Be("cockpit");
         preference.Options.Select(option => option.Value)
-            .Should().Equal("summary-rail", "cockpit", "document");
+            .Should().Equal("cockpit", "document");
     }
 
     [Fact]

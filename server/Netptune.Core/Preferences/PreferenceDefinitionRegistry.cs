@@ -78,11 +78,10 @@ public sealed class PreferenceDefinitionRegistry : IPreferenceDefinitionRegistry
             Label = "Task detail layout",
             ControlType = "select",
             ValueType = "string",
-            DefaultValue = JsonSerializer.SerializeToElement("summary-rail"),
+            DefaultValue = JsonSerializer.SerializeToElement("cockpit"),
             AllowedScopes = [PreferenceScopes.Global],
             Options =
             [
-                new() { Value = "summary-rail", Label = "Summary rail" },
                 new() { Value = "cockpit", Label = "Cockpit" },
                 new() { Value = "document", Label = "Document" },
             ],
