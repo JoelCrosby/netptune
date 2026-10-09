@@ -24,11 +24,11 @@ public static class AiEntityReferenceReader
 
     private const string ListRecordsTool = "list_records";
 
-    // list_projects, list_sprints and list_boards were folded into list_records; they stay so the
-    // conversations stored before that still link what they found.
     private static readonly Dictionary<string, string> TypesByTool = new(StringComparer.Ordinal)
     {
         ["search_tasks"] = Task,
+        ["get_task"] = Task,
+        ["get_current_sprint"] = Task,
         ["list_projects"] = Project,
         ["list_sprints"] = Sprint,
         ["list_boards"] = Board,

@@ -28,6 +28,33 @@ public class AiEntityReferenceReaderTests
     }
 
     [Fact]
+    public void Read_ShouldTakeTheTask_FromGetTask()
+    {
+        const string result =
+            """
+            {"taskId":9,"systemId":"netp-42","name":"Fix the login page","status":"Todo"}
+            """;
+
+        var references = AiEntityReferenceReader.Read("get_task", result);
+
+        references.Should().ContainSingle().Which.RouteId.Should().Be("netp-42");
+    }
+
+    [Fact]
+    public void Read_ShouldTakeTheSprintTasks_FromGetCurrentSprint()
+    {
+        const string result =
+            """
+            {"sprint":{"id":10,"name":"October"},"tasks":[{"taskId":9,"systemId":"netp-42","name":"Fix the login page"},{"taskId":10,"systemId":"netp-43","name":"Tidy the footer"}]}
+            """;
+
+        var references = AiEntityReferenceReader.Read("get_current_sprint", result);
+
+        references.Select(reference => reference.Id).Should().Equal("netp-42", "netp-43");
+        references.Should().OnlyContain(reference => reference.Type == "task", "the sprint itself has no route identifier here");
+    }
+
+    [Fact]
     public void Read_ShouldTakeNumericIds_ForEverythingElse()
     {
         var references = AiEntityReferenceReader.Read("list_projects", """[{"id":4,"name":"Website","key":"WEB"}]""");
