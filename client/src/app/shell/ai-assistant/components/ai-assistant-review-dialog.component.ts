@@ -1,5 +1,13 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  forwardRef,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 import {
@@ -9,7 +17,8 @@ import {
   AiProposedChange,
 } from '@core/models/ai-conversation';
 import { AiAssistantService } from '@core/services/ai-assistant.service';
-import { LucideX } from '@lucide/angular';
+import { AiPanelService } from '@core/services/ai-panel.service';
+import { LucideSparkles, LucideX } from '@lucide/angular';
 import { ButtonComponent } from '@static/components/button/button.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
@@ -38,6 +47,8 @@ import {
 import { AiAssistantReviewListComponent } from './ai-assistant-review-list.component';
 import { SpinnerIconComponent } from '@static/components/spinner/spinner-icon.component';
 import { toggleInSet } from '@core/util/signals';
+import { TooltipDirective } from '@static/directives/tooltip.directive';
+import { AiAssistantPanelComponent } from '../ai-assistant-panel.component';
 
 export type AiReviewFilter =
   'all' | 'created' | 'updated' | 'removed' | 'blocked' | 'failed';
@@ -67,6 +78,7 @@ const pathOf = (url: string): string => {
   },
   imports: [
     SpinnerIconComponent,
+    LucideSparkles,
     LucideX,
     ButtonComponent,
     FlatButtonComponent,
@@ -79,6 +91,9 @@ const pathOf = (url: string): string => {
     SegmentedControlComponent,
     AiAssistantReviewDetailComponent,
     AiAssistantReviewListComponent,
+    // The panel's change set card opens this dialog, so the import is circular.
+    forwardRef(() => AiAssistantPanelComponent),
+    TooltipDirective,
   ],
   template: `
     <header
@@ -106,6 +121,29 @@ const pathOf = (url: string): string => {
             >
           }
         </span>
+      }
+
+      @if (canChat) {
+        <button
+          app-icon-button
+          class="h-10 w-10"
+          type="button"
+          [class.text-primary]="isAssistantOpen()"
+          [attr.aria-pressed]="isAssistantOpen()"
+          i18n-appTooltip="
+            Tooltip on the button that shows or hides the assistant beside the
+            review
+          "
+          appTooltip="Assistant"
+          appTooltipPosition="bottom"
+          i18n-aria-label="
+            Accessible label for the button that shows or hides the assistant
+            beside the review
+          "
+          aria-label="Assistant"
+          (click)="isAssistantOpen.set(!isAssistantOpen())">
+          <svg lucideSparkles class="h-5 w-5"></svg>
+        </button>
       }
 
       <button
@@ -143,273 +181,300 @@ const pathOf = (url: string): string => {
         [ariaLabel]="modeGroupLabel" />
     </div>
 
-    @if (groups().length === 0) {
-      <app-empty-state
-        class="flex flex-1 items-center justify-center"
-        [title]="emptyTitle"
-        [description]="emptyDescription" />
-    } @else {
-      <main class="grid min-h-0 flex-1 grid-cols-[540px_minmax(0,1fr)]">
-        <div class="border-border bg-card flex min-h-0 flex-col border-r">
-          <div
-            class="border-border flex items-center justify-between gap-2 border-b px-4 py-2.5">
-            <span class="text-muted text-sm">{{ listSummary() }}</span>
-            @if (isPending() && !isRunning() && selectableCount() > 1) {
-              <app-button
-                color="neutral"
-                class="-my-1 h-8 px-2.5 text-sm"
-                (click)="toggleAll()">
-                @if (isEveryChangeSelected()) {
-                  <span i18n="Button that clears every selected change">
-                    Select none
-                  </span>
-                } @else {
-                  <span i18n="Button that selects every change"
-                    >Select all</span
-                  >
+    <div class="flex min-h-0 flex-1">
+      <div class="flex min-w-0 flex-1 flex-col">
+        @if (groups().length === 0) {
+          <app-empty-state
+            class="flex flex-1 items-center justify-center"
+            [title]="emptyTitle"
+            [description]="emptyDescription" />
+        } @else {
+          <main class="grid min-h-0 flex-1 grid-cols-[540px_minmax(0,1fr)]">
+            <div class="border-border bg-card flex min-h-0 flex-col border-r">
+              <div
+                class="border-border flex items-center justify-between gap-2 border-b px-4 py-2.5">
+                <span class="text-muted text-sm">{{ listSummary() }}</span>
+                @if (isPending() && !isRunning() && selectableCount() > 1) {
+                  <app-button
+                    color="neutral"
+                    class="-my-1 h-8 px-2.5 text-sm"
+                    (click)="toggleAll()">
+                    @if (isEveryChangeSelected()) {
+                      <span i18n="Button that clears every selected change">
+                        Select none
+                      </span>
+                    } @else {
+                      <span i18n="Button that selects every change"
+                        >Select all</span
+                      >
+                    }
+                  </app-button>
                 }
-              </app-button>
-            }
-          </div>
+              </div>
 
-          <div class="custom-scroll flex-1 overflow-y-auto pb-3">
-            <app-ai-assistant-review-list
-              [groups]="groups()"
-              [excludedChangeIds]="assistant.excludedChangeIds()"
-              [collapsedKeys]="collapsedKeys()"
-              [selectedChangeId]="selectedChangeId()"
-              [isPending]="isPending()"
-              [isApplying]="isRunning()"
-              [applyStatuses]="assistant.applyStatuses()"
-              [applyingChangeId]="assistant.applyingChangeId()"
-              (selected)="selectedChangeId.set($event)"
-              (toggled)="assistant.toggleChange($event)"
-              (groupToggled)="toggleGroup($event)" />
-          </div>
+              <div class="custom-scroll flex-1 overflow-y-auto pb-3">
+                <app-ai-assistant-review-list
+                  [groups]="groups()"
+                  [excludedChangeIds]="assistant.excludedChangeIds()"
+                  [collapsedKeys]="collapsedKeys()"
+                  [selectedChangeId]="selectedChangeId()"
+                  [isPending]="isPending()"
+                  [isApplying]="isRunning()"
+                  [applyStatuses]="assistant.applyStatuses()"
+                  [applyingChangeId]="assistant.applyingChangeId()"
+                  (selected)="selectedChangeId.set($event)"
+                  (toggled)="assistant.toggleChange($event)"
+                  (groupToggled)="toggleGroup($event)" />
+              </div>
 
-          <div
-            class="border-border text-muted flex items-center gap-4 border-t px-4 py-2.5 text-[13px]">
-            <span class="flex items-center gap-1.5">
-              <span
-                class="font-avatar text-change-added font-bold"
-                i18n="
-                  Single letter marking a change that creates something. It
-                  labels the rows in the list, so leave the letter as-is
-                ">
-                A
-              </span>
-              <span i18n="Legend for changes that create something">new</span>
-            </span>
-            <span class="flex items-center gap-1.5">
-              <span
-                class="font-avatar text-change-modified font-bold"
-                i18n="
-                  Single letter marking a change that updates something. It
-                  labels the rows in the list, so leave the letter as-is
-                ">
-                M
-              </span>
-              <span i18n="Legend for changes that update something"
-                >updated</span
-              >
-            </span>
-            <span class="flex items-center gap-1.5">
-              <span
-                class="font-avatar text-change-removed font-bold"
-                i18n="
-                  Single letter marking a change that removes something. It
-                  labels the rows in the list, so leave the letter as-is
-                ">
-                D
-              </span>
-              <span i18n="Legend for changes that remove something"
-                >removed</span
-              >
-            </span>
-          </div>
-        </div>
-
-        @if (selectedChange(); as change) {
-          <app-ai-assistant-review-detail
-            [change]="change"
-            [mode]="mode()"
-            [isPending]="isPending()"
-            [isApplying]="assistant.isApplying()"
-            [canRevise]="!isReadOnly"
-            [workspace]="workspace()"
-            [editingField]="editingField()"
-            [editError]="editError()"
-            [isSaving]="assistant.isEditingChange()"
-            (applied)="applyOne($event)"
-            (editStarted)="startEditing($event)"
-            (editCancelled)="stopEditing()"
-            (saved)="saveEdit(change.id, $event)"
-            (revised)="reviseChange($event)" />
-        }
-      </main>
-    }
-
-    @if (isRunning()) {
-      <app-progress-bar
-        class="h-0.5"
-        [rounded]="false"
-        [value]="assistant.applyPercent()"
-        [mode]="
-          assistant.applyTotal() === 0 ? 'indeterminate' : 'determinate'
-        " />
-    }
-
-    <footer
-      class="border-border bg-card-header flex items-center gap-4 border-t px-4 py-3">
-      @if (isRunning()) {
-        <app-spinner-icon class="shrink-0" />
-        <p class="m-0 shrink-0 text-sm font-medium">{{ applyingCount() }}</p>
-        @if (applyingLabel(); as label) {
-          <p class="text-muted m-0 min-w-0 truncate text-sm" [title]="label">
-            {{ label }}
-          </p>
-        }
-        <span class="flex-1"></span>
-        <button
-          app-stroked-button
-          class="h-12"
-          type="button"
-          [disabled]="isStoppingApply()"
-          (click)="stopApplying()">
-          @if (isStoppingApply()) {
-            <span i18n="Shown on the stop button once a stop was asked for"
-              >Stopping…</span
-            >
-          } @else {
-            <span
-              i18n="Button that stops changes part way through being applied"
-              >Stop</span
-            >
-          }
-        </button>
-      } @else {
-        @if (isPending()) {
-          <div class="text-muted flex items-center gap-4 text-[13px]">
-            <span class="flex items-center gap-1.5">
-              <app-keyboard-key
-                class="min-w-6 px-2 py-1 text-[13px]"
-                i18n="
-                  Keyboard key that moves down the review list. Leave the letter
-                  as-is
-                ">
-                j
-              </app-keyboard-key>
-              <app-keyboard-key
-                class="min-w-6 px-2 py-1 text-[13px]"
-                i18n="
-                  Keyboard key that moves up the review list. Leave the letter
-                  as-is
-                ">
-                k
-              </app-keyboard-key>
-              <span i18n="Keyboard hint for moving through the review list">
-                move
-              </span>
-            </span>
-            <span class="flex items-center gap-1.5">
-              <app-keyboard-key
-                class="min-w-6 px-2 py-1 text-[13px]"
-                i18n="Name of the space bar. Translate it to its local name">
-                space
-              </app-keyboard-key>
-              <span i18n="Keyboard hint for including a change">include</span>
-            </span>
-            <span class="flex items-center gap-1.5">
-              <app-keyboard-key
-                class="min-w-6 px-2 py-1 text-[13px]"
-                i18n="
-                  Keyboard key that edits the selected change. Leave the letter
-                  as-is
-                ">
-                e
-              </app-keyboard-key>
-              <span i18n="Keyboard hint for editing a change">edit</span>
-            </span>
-            <span class="flex items-center gap-1.5">
-              <app-keyboard-key
-                class="min-w-6 px-2 py-1 text-[13px]"
-                i18n="Symbol for the return key. Leave the symbol as-is">
-                &#9166;
-              </app-keyboard-key>
-              <span i18n="Keyboard hint for applying the selected changes">
-                apply selected
-              </span>
-            </span>
-          </div>
-        }
-
-        <span class="flex-1"></span>
-        <p class="text-muted m-0 text-sm">{{ status() }}</p>
-
-        <div class="flex items-center gap-2">
-          @if (isPending()) {
-            <button
-              app-stroked-button
-              class="h-12"
-              type="button"
-              (click)="discard()">
-              <span i18n="Button that discards the proposed changes"
-                >Discard</span
-              >
-            </button>
-            <button
-              app-flat-button
-              class="h-12"
-              type="button"
-              [disabled]="assistant.isApplying() || selectedCount() === 0"
-              (click)="apply()">
-              <span i18n="Button that applies the proposed changes">Apply</span>
-              <span>&nbsp;({{ selectedCount() }})</span>
-            </button>
-          } @else {
-            @if (failedCount() > 0 && !isReadOnly) {
-              <button
-                app-stroked-button
-                class="h-12"
-                type="button"
-                [disabled]="assistant.isApplying()"
-                (click)="retryFailed()">
-                <span i18n="Button that runs the changes that failed again">
-                  Retry failed
+              <div
+                class="border-border text-muted flex items-center gap-4 border-t px-4 py-2.5 text-[13px]">
+                <span class="flex items-center gap-1.5">
+                  <span
+                    class="font-avatar text-change-added font-bold"
+                    i18n="
+                      Single letter marking a change that creates something. It
+                      labels the rows in the list, so leave the letter as-is
+                    ">
+                    A
+                  </span>
+                  <span i18n="Legend for changes that create something"
+                    >new</span
+                  >
                 </span>
-                <span>&nbsp;({{ failedCount() }})</span>
-              </button>
+                <span class="flex items-center gap-1.5">
+                  <span
+                    class="font-avatar text-change-modified font-bold"
+                    i18n="
+                      Single letter marking a change that updates something. It
+                      labels the rows in the list, so leave the letter as-is
+                    ">
+                    M
+                  </span>
+                  <span i18n="Legend for changes that update something"
+                    >updated</span
+                  >
+                </span>
+                <span class="flex items-center gap-1.5">
+                  <span
+                    class="font-avatar text-change-removed font-bold"
+                    i18n="
+                      Single letter marking a change that removes something. It
+                      labels the rows in the list, so leave the letter as-is
+                    ">
+                    D
+                  </span>
+                  <span i18n="Legend for changes that remove something"
+                    >removed</span
+                  >
+                </span>
+              </div>
+            </div>
+
+            @if (selectedChange(); as change) {
+              <app-ai-assistant-review-detail
+                [change]="change"
+                [mode]="mode()"
+                [isPending]="isPending()"
+                [isApplying]="assistant.isApplying()"
+                [canRevise]="!isReadOnly"
+                [workspace]="workspace()"
+                [editingField]="editingField()"
+                [editError]="editError()"
+                [isSaving]="assistant.isEditingChange()"
+                (applied)="applyOne($event)"
+                (editStarted)="startEditing($event)"
+                (editCancelled)="stopEditing()"
+                (saved)="saveEdit(change.id, $event)"
+                (revised)="reviseChange($event)" />
             }
-            @if (canUndo()) {
-              <button
-                app-stroked-button
-                class="h-12"
-                type="button"
-                [disabled]="assistant.isApplying()"
-                (click)="undo()">
-                <span i18n="Button that takes back an applied change set"
-                  >Undo</span
-                >
-              </button>
+          </main>
+        }
+
+        @if (isRunning()) {
+          <app-progress-bar
+            class="h-0.5"
+            [rounded]="false"
+            [value]="assistant.applyPercent()"
+            [mode]="
+              assistant.applyTotal() === 0 ? 'indeterminate' : 'determinate'
+            " />
+        }
+
+        <footer
+          class="border-border bg-card-header flex items-center gap-4 border-t px-4 py-3">
+          @if (isRunning()) {
+            <app-spinner-icon class="shrink-0" />
+            <p class="m-0 shrink-0 text-sm font-medium">
+              {{ applyingCount() }}
+            </p>
+            @if (applyingLabel(); as label) {
+              <p
+                class="text-muted m-0 min-w-0 truncate text-sm"
+                [title]="label">
+                {{ label }}
+              </p>
             }
+            <span class="flex-1"></span>
             <button
               app-stroked-button
               class="h-12"
               type="button"
-              (click)="close()">
-              <span i18n="Button that closes the proposed changes dialog"
-                >Close</span
-              >
+              [disabled]="isStoppingApply()"
+              (click)="stopApplying()">
+              @if (isStoppingApply()) {
+                <span i18n="Shown on the stop button once a stop was asked for"
+                  >Stopping…</span
+                >
+              } @else {
+                <span
+                  i18n="
+                    Button that stops changes part way through being applied
+                  "
+                  >Stop</span
+                >
+              }
             </button>
+          } @else {
+            @if (isPending()) {
+              <div class="text-muted flex items-center gap-4 text-[13px]">
+                <span class="flex items-center gap-1.5">
+                  <app-keyboard-key
+                    class="min-w-6 px-2 py-1 text-[13px]"
+                    i18n="
+                      Keyboard key that moves down the review list. Leave the
+                      letter as-is
+                    ">
+                    j
+                  </app-keyboard-key>
+                  <app-keyboard-key
+                    class="min-w-6 px-2 py-1 text-[13px]"
+                    i18n="
+                      Keyboard key that moves up the review list. Leave the
+                      letter as-is
+                    ">
+                    k
+                  </app-keyboard-key>
+                  <span i18n="Keyboard hint for moving through the review list">
+                    move
+                  </span>
+                </span>
+                <span class="flex items-center gap-1.5">
+                  <app-keyboard-key
+                    class="min-w-6 px-2 py-1 text-[13px]"
+                    i18n="
+                      Name of the space bar. Translate it to its local name
+                    ">
+                    space
+                  </app-keyboard-key>
+                  <span i18n="Keyboard hint for including a change"
+                    >include</span
+                  >
+                </span>
+                <span class="flex items-center gap-1.5">
+                  <app-keyboard-key
+                    class="min-w-6 px-2 py-1 text-[13px]"
+                    i18n="
+                      Keyboard key that edits the selected change. Leave the
+                      letter as-is
+                    ">
+                    e
+                  </app-keyboard-key>
+                  <span i18n="Keyboard hint for editing a change">edit</span>
+                </span>
+                <span class="flex items-center gap-1.5">
+                  <app-keyboard-key
+                    class="min-w-6 px-2 py-1 text-[13px]"
+                    i18n="Symbol for the return key. Leave the symbol as-is">
+                    &#9166;
+                  </app-keyboard-key>
+                  <span i18n="Keyboard hint for applying the selected changes">
+                    apply selected
+                  </span>
+                </span>
+              </div>
+            }
+
+            <span class="flex-1"></span>
+            <p class="text-muted m-0 text-sm">{{ status() }}</p>
+
+            <div class="flex items-center gap-2">
+              @if (isPending()) {
+                <button
+                  app-stroked-button
+                  class="h-12"
+                  type="button"
+                  (click)="discard()">
+                  <span i18n="Button that discards the proposed changes"
+                    >Discard</span
+                  >
+                </button>
+                <button
+                  app-flat-button
+                  class="h-12"
+                  type="button"
+                  [disabled]="assistant.isApplying() || selectedCount() === 0"
+                  (click)="apply()">
+                  <span i18n="Button that applies the proposed changes"
+                    >Apply</span
+                  >
+                  <span>&nbsp;({{ selectedCount() }})</span>
+                </button>
+              } @else {
+                @if (failedCount() > 0 && !isReadOnly) {
+                  <button
+                    app-stroked-button
+                    class="h-12"
+                    type="button"
+                    [disabled]="assistant.isApplying()"
+                    (click)="retryFailed()">
+                    <span i18n="Button that runs the changes that failed again">
+                      Retry failed
+                    </span>
+                    <span>&nbsp;({{ failedCount() }})</span>
+                  </button>
+                }
+                @if (canUndo()) {
+                  <button
+                    app-stroked-button
+                    class="h-12"
+                    type="button"
+                    [disabled]="assistant.isApplying()"
+                    (click)="undo()">
+                    <span i18n="Button that takes back an applied change set"
+                      >Undo</span
+                    >
+                  </button>
+                }
+                <button
+                  app-stroked-button
+                  class="h-12"
+                  type="button"
+                  (click)="close()">
+                  <span i18n="Button that closes the proposed changes dialog"
+                    >Close</span
+                  >
+                </button>
+              }
+            </div>
           }
-        </div>
+        </footer>
+      </div>
+
+      @if (canChat && isAssistantOpen()) {
+        <app-ai-assistant-panel
+          class="border-border shrink-0 border-l"
+          [style.width]="assistantWidth()"
+          variant="review"
+          (closed)="isAssistantOpen.set(false)" />
       }
-    </footer>
+    </div>
   `,
 })
 export class AiAssistantReviewDialogComponent {
   protected readonly assistant = inject(AiAssistantService);
 
+  private readonly panel = inject(AiPanelService);
   private readonly dialogRef = inject<DialogRef<void>>(DialogRef);
   private readonly router = inject(Router);
   private readonly data = inject<AiReviewData | null>(DIALOG_DATA, {
@@ -418,6 +483,16 @@ export class AiAssistantReviewDialogComponent {
 
   /** A change set handed in is history: it is read back, never decided on. */
   protected readonly isReadOnly = !!this.data?.changeSet;
+
+  /** The live review keeps the chat beside it so a revision never leaves the review. */
+  protected readonly canChat = !this.isReadOnly && this.panel.isAvailable();
+  protected readonly isAssistantOpen = signal(this.canChat);
+
+  private readonly assistantPanel = viewChild(AiAssistantPanelComponent);
+
+  protected readonly assistantWidth = computed(() => {
+    return `min(${this.panel.width()}px, 40vw)`;
+  });
 
   protected readonly selectedChangeId = signal<number | null>(null);
   protected readonly filter = signal<AiReviewFilter>(
@@ -780,7 +855,7 @@ export class AiAssistantReviewDialogComponent {
     }
   }
 
-  /** The correction itself is typed in the composer; the change goes with it as context. */
+  /** The correction itself is typed in the docked composer; the change goes with it as context. */
   protected reviseChange(changeId: number) {
     const change = this.changes().find(
       (candidate) => candidate.id === changeId
@@ -797,7 +872,9 @@ export class AiAssistantReviewDialogComponent {
       changeId,
       `${prefix}${changeLetter(change)} ${target} — `
     );
-    this.close();
+    this.isAssistantOpen.set(true);
+
+    setTimeout(() => this.assistantPanel()?.focusComposer());
   }
 
   protected async retryFailed() {
@@ -826,8 +903,9 @@ export class AiAssistantReviewDialogComponent {
     const target = event.target as HTMLElement | null;
     const isTyping =
       target?.tagName === 'INPUT' || target?.tagName === 'TEXTAREA';
+    const isInAssistant = !!target?.closest('app-ai-assistant-panel');
 
-    if (isTyping && event.key !== 'Escape') {
+    if ((isTyping && event.key !== 'Escape') || isInAssistant) {
       return;
     }
 

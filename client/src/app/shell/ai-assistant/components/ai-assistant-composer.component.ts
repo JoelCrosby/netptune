@@ -1,4 +1,11 @@
-import { Component, computed, input, output } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  computed,
+  input,
+  output,
+  viewChild,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AiContextChip } from '@core/models/ai-context';
 import { AiEffort, AiEffortOption } from '@core/models/ai-effort';
@@ -33,6 +40,7 @@ import { AiAssistantModelMenuComponent } from './ai-assistant-model-menu.compone
         }
 
         <textarea
+          #input
           rows="2"
           class="placeholder:text-muted w-full resize-none bg-transparent px-1.5 pt-1.5 pb-0.5 text-[13.5px] leading-normal outline-none"
           [ngModel]="draft()"
@@ -145,6 +153,9 @@ export class AiAssistantComposerComponent {
   readonly contextRemoved = output<AiContextChip>();
   readonly contextRestored = output();
 
+  private readonly input =
+    viewChild.required<ElementRef<HTMLTextAreaElement>>('input');
+
   protected readonly hasContextRow = computed(() => {
     return this.chips().length > 0 || this.hasRemovedContext();
   });
@@ -181,6 +192,20 @@ export class AiAssistantComposerComponent {
 
     event.preventDefault();
     this.send();
+  }
+
+  // Puts the caret at the end so a seeded draft can be finished straight away.
+  // ngModel writes the new draft a tick later, so the caret waits for it.
+  focus() {
+    const textarea = this.input().nativeElement;
+
+    textarea.focus();
+
+    setTimeout(() => {
+      const end = textarea.value.length;
+
+      textarea.setSelectionRange(end, end);
+    });
   }
 
   protected send() {

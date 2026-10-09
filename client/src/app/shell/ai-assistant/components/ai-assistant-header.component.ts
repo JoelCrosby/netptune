@@ -42,9 +42,11 @@ import { AiAssistantModeMenuComponent } from './ai-assistant-mode-menu.component
           <svg lucideHistory class="h-4 w-4"></svg>
         </button>
 
-        <app-ai-assistant-mode-menu
-          [mode]="mode()"
-          (modeChange)="modeChange.emit($event)" />
+        @if (hasModeMenu()) {
+          <app-ai-assistant-mode-menu
+            [mode]="mode()"
+            (modeChange)="modeChange.emit($event)" />
+        }
 
         <button
           app-icon-button
@@ -84,6 +86,7 @@ export class AiAssistantHeaderComponent {
   readonly mode = input.required<AiDisplayMode>();
   readonly contentWidth = input('');
   readonly closable = input(false);
+  readonly hasModeMenu = input(true);
 
   readonly historyToggled = output();
   readonly modeChange = output<AiDisplayMode>();

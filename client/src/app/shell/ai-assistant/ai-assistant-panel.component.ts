@@ -7,6 +7,7 @@ import {
   effect,
   inject,
   input,
+  output,
   viewChild,
 } from '@angular/core';
 import { AiDisplayMode } from '@core/models/ai-display-mode';
@@ -30,7 +31,7 @@ import { AiAssistantResizeHandleComponent } from './components/ai-assistant-resi
   selector: 'app-ai-assistant-panel',
   host: {
     class: 'block h-full min-h-0',
-    '(keydown.escape)': 'stopOnEscape()',
+    '(keydown.escape)': 'stopOnEscape($event)',
   },
   imports: [
     LucideArrowDown,
@@ -64,11 +65,12 @@ import { AiAssistantResizeHandleComponent } from './components/ai-assistant-resi
         [subtitle]="headerSubtitle()"
         [mode]="panel.mode()"
         [contentWidth]="contentWidth()"
-        [closable]="isDrawer()"
+        [closable]="!isPage()"
+        [hasModeMenu]="!isReview()"
         (historyToggled)="toggleHistory()"
         (modeChange)="setMode($event)"
         (newChat)="startNew()"
-        (closed)="panel.close()" />
+        (closed)="close()" />
 
       <div class="relative flex min-h-0 flex-1 flex-col">
         <div
@@ -148,7 +150,7 @@ import { AiAssistantResizeHandleComponent } from './components/ai-assistant-resi
         }
       </div>
 
-      @if (assistant.changeSet(); as proposal) {
+      @if (!isReview() && assistant.changeSet(); as proposal) {
         <app-ai-assistant-change-set
           [changeSet]="proposal"
           [excludedChangeIds]="assistant.excludedChangeIds()"
@@ -192,9 +194,14 @@ import { AiAssistantResizeHandleComponent } from './components/ai-assistant-resi
   `,
 })
 export class AiAssistantPanelComponent {
-  readonly variant = input<'drawer' | 'page'>('drawer');
+  // The review variant docks inside the review dialog, which is itself the
+  // change set's surface, so the proposal card and display modes stay out.
+  readonly variant = input<'drawer' | 'page' | 'review'>('drawer');
+
+  readonly closed = output();
 
   private readonly scroller = viewChild.required(MessageScrollerDirective);
+  private readonly composer = viewChild.required(AiAssistantComposerComponent);
   private readonly injector = inject(Injector);
 
   private anchoredId: string | null = null;
@@ -205,6 +212,7 @@ export class AiAssistantPanelComponent {
 
   protected readonly isDrawer = computed(() => this.variant() === 'drawer');
   protected readonly isPage = computed(() => this.variant() === 'page');
+  protected readonly isReview = computed(() => this.variant() === 'review');
 
   protected readonly isMissingKey = computed(() => {
     return this.assistant.hasCredentials() === false;
@@ -230,7 +238,7 @@ export class AiAssistantPanelComponent {
   });
 
   protected readonly contentWidth = computed(() => {
-    return this.isDrawer() ? '' : 'max-w-3xl';
+    return this.isPage() ? 'max-w-3xl' : '';
   });
 
   protected readonly headerTitle = computed(() => {
@@ -283,12 +291,27 @@ export class AiAssistantPanelComponent {
     afterNextRender(action, { injector: this.injector });
   }
 
-  protected stopOnEscape() {
+  focusComposer() {
+    this.afterRender(() => this.composer().focus());
+  }
+
+  // Escape that stops a reply stops there, so it does not also close a dialog
+  // the panel sits in.
+  protected stopOnEscape(event: Event) {
     const isStreaming = this.assistant.isStreaming();
 
     if (isStreaming) {
+      event.stopPropagation();
       this.assistant.stopTurn();
     }
+  }
+
+  protected close() {
+    if (this.isDrawer()) {
+      this.panel.close();
+    }
+
+    this.closed.emit();
   }
 
   protected apply() {
