@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Service, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { appendPageParams, Page, PageQuery } from '@core/models/pagination';
+import { isNotNullOrUndefined } from '@core/util/nullish';
 import { unwrapClientResponse } from '@core/util/rxjs-operators';
 import {
   AutomationDryRun,
@@ -11,6 +12,8 @@ import {
   AutomationRuleListItem,
   AutomationRuleRequest,
   AutomationRun,
+  AutomationRunFilter,
+  AutomationRunSummary,
 } from '../models/automation.models';
 
 @Service()
@@ -29,10 +32,17 @@ export class AutomationsService {
       .pipe(unwrapClientResponse());
   }
 
-  getRuns(id: number, query?: PageQuery) {
+  getRuns(id: number, query?: PageQuery, filter?: AutomationRunFilter) {
+    let params = appendPageParams(new HttpParams(), query);
+
+    if (filter?.search) params = params.set('search', filter.search);
+    if (isNotNullOrUndefined(filter?.status)) {
+      params = params.set('statuses', filter.status);
+    }
+
     return this.http
       .get<ClientResponse<Page<AutomationRun>>>(`api/automations/${id}/runs`, {
-        params: appendPageParams(new HttpParams(), query),
+        params,
       })
       .pipe(unwrapClientResponse());
   }
@@ -50,6 +60,14 @@ export class AutomationsService {
       .post<ClientResponse<AutomationManualRun>>(`api/automations/${id}/run`, {
         taskIds,
       })
+      .pipe(unwrapClientResponse());
+  }
+
+  getRunSummary(id: number) {
+    return this.http
+      .get<ClientResponse<AutomationRunSummary>>(
+        `api/automations/${id}/runs/summary`
+      )
       .pipe(unwrapClientResponse());
   }
 

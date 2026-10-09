@@ -213,12 +213,27 @@ export interface AutomationRun {
   automationRuleId: number;
   entityId?: number | null;
   entityType?: EntityType | null;
+  taskSystemId?: string | null;
+  taskName?: string | null;
   triggerType: AutomationTriggerType;
   status: AutomationRunStatus;
   idempotencyKey: string;
   message?: string | null;
   createdAt: Date;
   actionResults: AutomationActionResult[];
+}
+
+export interface AutomationRunFilter {
+  search?: string | null;
+  status?: AutomationRunStatus | null;
+}
+
+export interface AutomationRunSummary {
+  totalCount: number;
+  succeededCount: number;
+  skippedCount: number;
+  failedCount: number;
+  lastRunAt?: Date | null;
 }
 
 export interface AutomationActionResult {

@@ -1,9 +1,7 @@
 import { taskPriorityLabels } from '@core/enums/task-priority';
 import { workspaceRoleLabels } from '@core/enums/workspace-role';
 import { WorkspaceAppUser } from '@core/models/appuser';
-import { EntityType } from '@core/models/entity-type';
 import { Status } from '@core/models/status';
-import { entityTypeToString } from '@core/transforms/entity-type';
 import { isNotNullOrUndefined } from '@core/util/nullish';
 import { joinNaturalList, toLowerText } from '@core/util/strings';
 import {
@@ -54,12 +52,6 @@ export const automationTriggerTypes: readonly AutomationTriggerType[] = [
   AutomationTriggerType.sprintStarted,
   AutomationTriggerType.sprintCompleted,
   AutomationTriggerType.sprintEndingSoon,
-];
-
-export const automationRunStatuses: readonly AutomationRunStatus[] = [
-  AutomationRunStatus.succeeded,
-  AutomationRunStatus.failed,
-  AutomationRunStatus.skipped,
 ];
 
 export const taskChangeFieldLabels: Record<TaskChangeField, string> = {
@@ -951,16 +943,4 @@ export function runStatusClass(status: AutomationRunStatus): string {
     case AutomationRunStatus.skipped:
       return 'bg-amber-500/10 text-amber-600 dark:text-amber-400';
   }
-}
-
-export function entityTargetLabel(
-  entityType: EntityType | null | undefined,
-  entityId: number | null | undefined
-): string {
-  if (!isNotNullOrUndefined(entityType)) {
-    return $localize`:The workspace entity, used when no narrower scope applies:Workspace`;
-  }
-
-  const label = entityTypeToString(entityType);
-  return entityId ? `${label} #${entityId}` : label;
 }

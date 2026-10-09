@@ -21,7 +21,6 @@ import { statusResource } from '@core/resources/status.resource';
 import { tagResource } from '@core/resources/tag.resource';
 import { userResource } from '@core/resources/user.resource';
 import { mutation } from '@core/util/mutation';
-import { joinNaturalList, toLowerText } from '@core/util/strings';
 import {
   LucideChevronLeft,
   LucideChevronRight,
@@ -56,11 +55,17 @@ import {
   actionTypeLabels,
   countAutomationConditions,
   describeAutomationActionSegments,
-  describeAutomationConditionsSegments,
-  describeAutomationTrigger,
-  taskChangeFieldLabels,
   triggerTypeLabels,
 } from '../../models/automation-copy';
+import {
+  automationActionKeyword,
+  describeAutomationScope,
+  describeConditionsStepSummary,
+  describeConditionsStepTitle,
+  describeServiceAccountName,
+  describeTriggerStepSummary,
+  resolveAutomationScope,
+} from '../../models/automation-flow-copy';
 import {
   AutomationActionType,
   AutomationDelayUnit,
@@ -529,72 +534,35 @@ export class AutomationFormViewComponent {
   });
 
   readonly runAsName = computed(() => {
-    const userId = this.executionUserId();
-    const account = this.serviceAccounts().find(
-      (serviceAccount) => serviceAccount.userId === userId
-    );
-
-    return (
-      account?.name ??
-      $localize`:Shown in place of the service account an automation runs as when none is chosen:No service account`
+    return describeServiceAccountName(
+      this.serviceAccounts(),
+      this.executionUserId()
     );
   });
 
   readonly scopeSummary = computed(() => {
-    const projectId = this.projectId();
-    const boardId = this.boardId();
-    const sprintId = this.sprintId();
+    const scope = resolveAutomationScope(
+      {
+        projectId: this.projectId(),
+        boardId: this.boardId(),
+        sprintId: this.sprintId(),
+      },
+      {
+        projects: this.projectsResource.value(),
+        boards: this.workspaceBoards(),
+        sprints: this.workspaceSprintsResource.value(),
+      }
+    );
 
-    if (projectId !== null) {
-      const project = this.projectsResource
-        .value()
-        .find((candidate) => candidate.id === projectId);
-
-      return $localize`:Where an automation listens. PROJECT is a project name:Runs on the ${project?.name ?? '…'}:PROJECT: project`;
-    }
-
-    if (boardId !== null) {
-      const board = this.workspaceBoards().find(
-        (candidate) => candidate.id === boardId
-      );
-
-      return $localize`:Where an automation listens. BOARD is a board name:Runs on the ${board?.name ?? '…'}:BOARD: board`;
-    }
-
-    if (sprintId !== null) {
-      const sprint = this.workspaceSprintsResource
-        .value()
-        .find((candidate) => candidate.id === sprintId);
-
-      return $localize`:Where an automation listens. SPRINT is a sprint name:Runs on ${sprint?.name ?? '…'}:SPRINT:`;
-    }
-
-    return $localize`:Where an automation listens when it covers every task:Runs on the whole workspace`;
+    return describeAutomationScope(scope);
   });
 
   readonly triggerTitle = computed(() => {
     return triggerTypeLabels[this.triggerType()];
   });
 
-  // The trigger node describes the event alone, because the conditions have their own node.
-  readonly triggerSummary = computed<AutomationCopySegment[]>(() => {
-    const trigger = { ...this.triggerPreview(), conditionGroup: null };
-
-    if (trigger.type !== AutomationTriggerType.taskChanged) {
-      return [{ type: 'text', text: describeAutomationTrigger(trigger) }];
-    }
-
-    const fields = joinNaturalList(
-      (trigger.fields ?? []).map((field) =>
-        toLowerText(taskChangeFieldLabels[field])
-      ),
-      'and'
-    );
-    const text = fields
-      ? $localize`:Summary of the fields a task-changed trigger watches. FIELDS lists them:Watching ${fields}:FIELDS:`
-      : $localize`:Summary of a task-changed trigger with no watched fields:No fields watched yet`;
-
-    return [{ type: 'text', text }];
+  readonly triggerSummary = computed(() => {
+    return describeTriggerStepSummary(this.triggerPreview());
   });
 
   readonly conditionCount = computed(() => {
@@ -602,28 +570,11 @@ export class AutomationFormViewComponent {
   });
 
   readonly conditionsTitle = computed(() => {
-    const count = this.conditionCount();
-
-    if (count === 0) {
-      return $localize`:Title of the conditions step when it has none:No conditions`;
-    }
-
-    return count === 1
-      ? $localize`:Title of the conditions step with one condition:1 condition`
-      : $localize`:Title of the conditions step. COUNT is greater than one:${count}:COUNT: conditions`;
+    return describeConditionsStepTitle(this.triggerPreview());
   });
 
-  readonly conditionsSummary = computed<AutomationCopySegment[]>(() => {
-    if (!this.conditionCount()) {
-      return [
-        {
-          type: 'text',
-          text: $localize`:Summary of the conditions step when it has none:Every task continues`,
-        },
-      ];
-    }
-
-    return describeAutomationConditionsSegments(
+  readonly conditionsSummary = computed(() => {
+    return describeConditionsStepSummary(
       this.triggerPreview(),
       this.taskStatuses()
     );
@@ -716,9 +667,7 @@ export class AutomationFormViewComponent {
   }
 
   actionKeyword(index: number): string {
-    return index === 0
-      ? $localize`:Heading of the first action in the rule:THEN`
-      : $localize`:Heading of a follow-on action in the rule:AND THEN`;
+    return automationActionKeyword(index);
   }
 
   actionTypeLabel(action: EditableAutomationAction): string {

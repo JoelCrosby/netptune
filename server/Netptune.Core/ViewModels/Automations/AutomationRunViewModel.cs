@@ -12,6 +12,10 @@ public record AutomationRunViewModel
 
     public EntityType? EntityType { get; init; }
 
+    public string? TaskSystemId { get; init; }
+
+    public string? TaskName { get; init; }
+
     public AutomationTriggerType TriggerType { get; init; }
 
     public AutomationRunStatus Status { get; init; }
@@ -23,4 +27,17 @@ public record AutomationRunViewModel
     public DateTime CreatedAt { get; init; }
 
     public List<AutomationActionResultViewModel> ActionResults { get; init; } = [];
+}
+
+public record AutomationRunSummaryViewModel
+{
+    public int TotalCount { get; init; }
+
+    public int SucceededCount { get; init; }
+
+    public int SkippedCount { get; init; }
+
+    public int FailedCount { get; init; }
+
+    public DateTime? LastRunAt { get; init; }
 }

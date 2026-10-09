@@ -1,18 +1,18 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { Component, computed, input, output } from '@angular/core';
 import { LucideDynamicIcon, type LucideIconInput } from '@lucide/angular';
 import { cn } from '@static/components/button/button.variants';
 
-// One step in the editor's flow list. The node carries a keyword and either an icon or the
-// action's position, a title, and whatever summary the caller projects underneath.
+export type AutomationFlowNodeSize = 'default' | 'compact';
+
+// One step in a rule's flow. The node carries a keyword and either an icon or the action's
+// position, a title, and whatever summary the caller projects underneath. The editor makes it a
+// button that selects the step; the detail rail shows it as a static card.
 @Component({
   selector: 'app-automation-flow-node',
-  imports: [LucideDynamicIcon],
+  imports: [LucideDynamicIcon, NgTemplateOutlet],
   template: `
-    <button
-      type="button"
-      [class]="buttonClass()"
-      [attr.aria-current]="selected() ? 'step' : null"
-      (click)="selectNode.emit()">
+    <ng-template #content>
       <span class="flex items-center justify-between gap-2">
         <span
           class="text-primary flex items-center gap-1.5 text-[0.6875rem] font-bold tracking-[0.12em]">
@@ -30,14 +30,26 @@ import { cn } from '@static/components/button/button.variants';
         <ng-content select="[flowNodeAside]" />
       </span>
 
-      <span class="text-foreground text-[15px] font-semibold">
-        {{ title() }}
-      </span>
+      <span [class]="titleClass()">{{ title() }}</span>
 
       <span class="text-foreground/60 text-[13px] leading-[1.45] text-pretty">
         <ng-content />
       </span>
-    </button>
+    </ng-template>
+
+    @if (interactive()) {
+      <button
+        type="button"
+        [class]="nodeClass()"
+        [attr.aria-current]="selected() ? 'step' : null"
+        (click)="selectNode.emit()">
+        <ng-container [ngTemplateOutlet]="content" />
+      </button>
+    } @else {
+      <div [class]="nodeClass()">
+        <ng-container [ngTemplateOutlet]="content" />
+      </div>
+    }
   `,
 })
 export class AutomationFlowNodeComponent {
@@ -46,15 +58,31 @@ export class AutomationFlowNodeComponent {
   readonly icon = input<LucideIconInput | null>(null);
   readonly step = input<number | null>(null);
   readonly selected = input(false);
+  readonly interactive = input(true);
+  readonly size = input<AutomationFlowNodeSize>('default');
 
   readonly selectNode = output();
 
-  protected readonly buttonClass = computed(() => {
+  protected readonly titleClass = computed(() => {
     return cn(
-      'focus-visible:ring-primary flex w-full cursor-pointer flex-col gap-1 rounded-[10px] border px-4 py-3.5 text-left transition-colors focus-visible:ring-2 focus-visible:outline-none',
+      'text-foreground font-semibold',
+      this.size() === 'compact' ? 'text-sm' : 'text-[15px]'
+    );
+  });
+
+  protected readonly nodeClass = computed(() => {
+    const compact = this.size() === 'compact';
+    const interactive = this.interactive();
+
+    return cn(
+      'flex w-full flex-col rounded-[10px] border text-left',
+      compact ? 'gap-0.75 px-3.5 py-3' : 'gap-1 px-4 py-3.5',
+      interactive &&
+        'focus-visible:ring-primary cursor-pointer transition-colors focus-visible:ring-2 focus-visible:outline-none',
       this.selected()
         ? 'border-primary/55 bg-primary/8'
-        : 'border-border bg-card hover:border-primary/35'
+        : 'border-border bg-card',
+      interactive && !this.selected() && 'hover:border-primary/35'
     );
   });
 }

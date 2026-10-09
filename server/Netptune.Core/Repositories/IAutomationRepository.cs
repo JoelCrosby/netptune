@@ -37,6 +37,8 @@ public interface IAutomationRepository : IWorkspaceEntityRepository<AutomationRu
 
     Task<PagedResponse<AutomationRunViewModel>> GetRunsPaged(int ruleId, int workspaceId, AutomationRunFilter filter, CancellationToken cancellationToken = default);
 
+    Task<AutomationRunSummaryViewModel> GetRunSummary(int ruleId, int workspaceId, CancellationToken cancellationToken = default);
+
     Task<List<AutomationRunStats>> GetRunStats(IReadOnlyCollection<int> ruleIds, DateTime since, CancellationToken cancellationToken = default);
 
     Task<int> AutoDisableRules(IReadOnlyCollection<int> ruleIds, string reason, DateTime disabledAt, CancellationToken cancellationToken = default);

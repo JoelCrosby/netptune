@@ -616,6 +616,78 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
         result.IsSuccess.Should().BeTrue();
         result.Payload!.TotalCount.Should().Be(1);
         result.Payload!.Items.Should().ContainSingle(item => item.Id == run);
+
+        var item = result.Payload.Items.Single();
+
+        item.TaskName.Should().Be(task.Name);
+        item.TaskSystemId.Should().Be(task.SystemId);
+    }
+
+    [Fact]
+    public async Task GetRuns_ShouldMatchTheTaskName_WhenSearching()
+    {
+        var matchingTask = await CreateTask("Automation searchable lighthouse");
+        var otherTask = await CreateTask("Automation unrelated harbour");
+        var rule = await CreateRule(NameContains("run search"));
+        var matchingRun = await SeedRun(rule.Id, matchingTask.Id);
+
+        await SeedRun(rule.Id, otherTask.Id);
+
+        var response = await Client.GetAsync($"api/automations/{rule.Id}/runs?search=lighthouse");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<AutomationRunViewModel>>>();
+
+        result.Payload!.Items.Should().ContainSingle(item => item.Id == matchingRun);
+    }
+
+    [Fact]
+    public async Task GetRunSummary_ShouldCountRunsByStatus()
+    {
+        var task = await CreateTask("Automation run summary");
+        var rule = await CreateRule(NameContains("run summary"));
+
+        await SeedRun(rule.Id, task.Id);
+        await SeedRun(rule.Id, task.Id);
+        await SeedRun(rule.Id, task.Id, AutomationRunStatus.Skipped);
+        await SeedRun(rule.Id, task.Id, AutomationRunStatus.Failed);
+
+        var response = await Client.GetAsync($"api/automations/{rule.Id}/runs/summary");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<AutomationRunSummaryViewModel>>();
+        var summary = result.Payload!;
+
+        summary.TotalCount.Should().Be(4);
+        summary.SucceededCount.Should().Be(2);
+        summary.SkippedCount.Should().Be(1);
+        summary.FailedCount.Should().Be(1);
+        summary.LastRunAt.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task GetRunSummary_ShouldReturnZeroCounts_WhenTheRuleHasNotRun()
+    {
+        var rule = await CreateRule(NameContains("never run"));
+
+        var response = await Client.GetAsync($"api/automations/{rule.Id}/runs/summary");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<AutomationRunSummaryViewModel>>();
+
+        result.Payload!.TotalCount.Should().Be(0);
+        result.Payload.LastRunAt.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task GetRunSummary_ShouldReturnNotFound_WhenRuleDoesNotExist()
+    {
+        var response = await Client.GetAsync("api/automations/999999/runs/summary");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -684,7 +756,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
-    private async Task<int> SeedRun(int ruleId, int taskId)
+    private async Task<int> SeedRun(int ruleId, int taskId, AutomationRunStatus status = AutomationRunStatus.Succeeded)
     {
         using var scope = fixture.CreateScope();
 
@@ -695,7 +767,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
             EntityId = taskId,
             EntityType = EntityType.Task,
             TriggerType = AutomationTriggerType.TaskChanged,
-            Status = AutomationRunStatus.Succeeded,
+            Status = status,
             IdempotencyKey = Guid.NewGuid().ToString("N"),
         };
 

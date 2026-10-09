@@ -356,7 +356,7 @@ public class AutomationRepository : WorkspaceEntityRepository<DataContext, Autom
         var runs = await SortRuns(query, filter)
             .Skip(pagination.Skip)
             .Take(pagination.PageSize)
-            .Select(RunProjection)
+            .Select(RunProjection())
             .AsSplitQuery()
             .AsNoTracking()
             .ToListAsync(cancellationToken);
@@ -364,13 +364,41 @@ public class AutomationRepository : WorkspaceEntityRepository<DataContext, Autom
         return new PagedResponse<AutomationRunViewModel>(runs, pagination.Page, pagination.PageSize, totalCount);
     }
 
-    private static Expression<Func<AutomationRun, bool>> RunMessageMatches(string search)
+    public async Task<AutomationRunSummaryViewModel> GetRunSummary(
+        int ruleId,
+        int workspaceId,
+        CancellationToken cancellationToken = default)
+    {
+        var summary = await Context.Set<AutomationRun>()
+            .Where(run => run.AutomationRuleId == ruleId)
+            .Where(run => run.AutomationRule.WorkspaceId == workspaceId)
+            .GroupBy(run => run.AutomationRuleId)
+            .Select(group => new AutomationRunSummaryViewModel
+            {
+                TotalCount = group.Count(),
+                SucceededCount = group.Count(run => run.Status == AutomationRunStatus.Succeeded),
+                SkippedCount = group.Count(run => run.Status == AutomationRunStatus.Skipped),
+                FailedCount = group.Count(run => run.Status == AutomationRunStatus.Failed),
+                LastRunAt = group.Max(run => (DateTime?)run.CreatedAt),
+            })
+            .AsNoTracking()
+            .FirstOrDefaultAsync(cancellationToken);
+
+        return summary ?? new AutomationRunSummaryViewModel();
+    }
+
+    private Expression<Func<AutomationRun, bool>> RunMessageMatches(string search)
     {
         var pattern = $"%{search}%";
+        var tasks = Context.Set<ProjectTask>();
 
         return run =>
             EF.Functions.ILike(run.Message!, pattern) ||
-            run.ActionResults.Any(result => EF.Functions.ILike(result.Message!, pattern));
+            run.ActionResults.Any(result => EF.Functions.ILike(result.Message!, pattern)) ||
+            tasks.Any(task =>
+                run.EntityType == EntityType.Task &&
+                task.Id == run.EntityId &&
+                EF.Functions.ILike(task.Name, pattern));
     }
 
     private static IQueryable<AutomationRun> SortRuns(IQueryable<AutomationRun> query, AutomationRunFilter filter)
@@ -390,13 +418,26 @@ public class AutomationRepository : WorkspaceEntityRepository<DataContext, Autom
         };
     }
 
-    private static readonly Expression<Func<AutomationRun, AutomationRunViewModel>> RunProjection = run =>
-        new AutomationRunViewModel
+    private Expression<Func<AutomationRun, AutomationRunViewModel>> RunProjection()
+    {
+        var tasks = Context.Set<ProjectTask>();
+
+        return run => new AutomationRunViewModel
         {
             Id = run.Id,
             AutomationRuleId = run.AutomationRuleId,
             EntityId = run.EntityId,
             EntityType = run.EntityType,
+            TaskSystemId = tasks
+                .Where(task => run.EntityType == EntityType.Task && task.Id == run.EntityId)
+                .Select(task => task.Project == null
+                    ? task.ProjectScopeId.ToString()
+                    : task.Project.Key + "-" + task.ProjectScopeId.ToString())
+                .FirstOrDefault(),
+            TaskName = tasks
+                .Where(task => run.EntityType == EntityType.Task && task.Id == run.EntityId)
+                .Select(task => task.Name)
+                .FirstOrDefault(),
             TriggerType = run.TriggerType,
             Status = run.Status,
             IdempotencyKey = run.IdempotencyKey,
@@ -420,6 +461,7 @@ public class AutomationRepository : WorkspaceEntityRepository<DataContext, Autom
                 })
                 .ToList(),
         };
+    }
 
     public async Task<List<AutomationRunStats>> GetRunStats(
         IReadOnlyCollection<int> ruleIds,
