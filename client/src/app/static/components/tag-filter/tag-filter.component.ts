@@ -80,6 +80,7 @@ export class TagFilterComponent {
   readonly loaded = input(false);
   readonly selectedCount = input(0);
   readonly untagged = input(false);
+  readonly allowUntagged = input(true);
 
   readonly toggled = output<Selected<Tag>>();
   readonly untaggedChange = output<boolean>();
@@ -100,7 +101,7 @@ export class TagFilterComponent {
       label: tag.name,
     }));
 
-    return [untagged, ...tags];
+    return this.allowUntagged() ? [untagged, ...tags] : tags;
   });
 
   protected readonly selectedValues = computed(() => {

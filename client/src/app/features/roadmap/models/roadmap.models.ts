@@ -52,3 +52,23 @@ export interface RoadmapDisplayTask {
 export type RoadmapScheduleChange = ScheduledTaskChange;
 
 export const roadmapTaskDragType = 'application/x-netptune-roadmap-task';
+
+export interface RoadmapUnscheduledFilters {
+  search: string | null;
+  assigneeIds: string[];
+  tagNames: string[];
+  untagged: boolean;
+  statusIds: number[];
+  flagged: boolean;
+  includeCompleted: boolean;
+}
+
+export const defaultUnscheduledFilters: RoadmapUnscheduledFilters = {
+  search: null,
+  assigneeIds: [],
+  tagNames: [],
+  untagged: false,
+  statusIds: [],
+  flagged: false,
+  includeCompleted: false,
+};

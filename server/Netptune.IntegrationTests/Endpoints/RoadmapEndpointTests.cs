@@ -176,6 +176,114 @@ public sealed class RoadmapEndpointTests
         result.Payload.Items.Should().OnlyContain(task => !task.StartDate.HasValue && !task.DueDate.HasValue);
     }
 
+    [Fact]
+    public async Task GetUnscheduledTasks_ShouldExcludeCompletedTasksUnlessRequested()
+    {
+        var doneStatus = await GetTaskStatus(StatusCategory.Done);
+        var task = await CreateUnscheduledTask("Completed unscheduled roadmap task", doneStatus.Id);
+        var search = "search=completed%20unscheduled%20roadmap";
+
+        var hidden = await GetUnscheduledTasks(search);
+        var included = await GetUnscheduledTasks($"{search}&includeCompleted=true");
+
+        hidden.Items.Should().NotContain(item => item.Id == task.Id);
+        included.Items.Should().Contain(item => item.Id == task.Id);
+    }
+
+    [Fact]
+    public async Task GetUnscheduledTasks_ShouldIncludeCompletedTasks_WhenTheirStatusIsSelected()
+    {
+        var doneStatus = await GetTaskStatus(StatusCategory.Done);
+        var task = await CreateUnscheduledTask("Selected done unscheduled roadmap task", doneStatus.Id);
+
+        var result = await GetUnscheduledTasks(
+            $"search=selected%20done%20unscheduled&statusIds={doneStatus.Id}");
+
+        result.Items.Should().Contain(item => item.Id == task.Id);
+    }
+
+    [Fact]
+    public async Task GetUnscheduledTasks_ShouldFilterByFlags()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var status = await GetTaskStatus();
+        var flagged = await CreateUnscheduledTask("Flagged unscheduled roadmap task", status.Id);
+        var unflagged = await CreateUnscheduledTask("Unflagged unscheduled roadmap task", status.Id);
+
+        using (var scope = Fixture.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+            var task = await context.ProjectTasks.SingleAsync(item => item.Id == flagged.Id, cancellationToken);
+
+            context.Flags.Add(new Flag
+            {
+                WorkspaceId = task.WorkspaceId,
+                EntityType = EntityType.Task,
+                EntityId = task.Id,
+                Name = $"Roadmap flag {Guid.NewGuid():N}",
+                Description = "Requires attention",
+                OwnerId = task.OwnerId,
+                CreatedByUserId = task.OwnerId,
+                CreatedAt = DateTime.UtcNow,
+            });
+
+            await context.SaveChangesAsync(cancellationToken);
+        }
+
+        var result = await GetUnscheduledTasks("search=flagged%20unscheduled%20roadmap&hasFlags=true");
+
+        result.Items.Should().Contain(item => item.Id == flagged.Id);
+        result.Items.Should().NotContain(item => item.Id == unflagged.Id);
+    }
+
+    [Fact]
+    public async Task GetUnscheduledTasks_ShouldFilterToUntaggedTasks()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var status = await GetTaskStatus();
+        var tagged = await CreateUnscheduledTask("Tagged unscheduled roadmap task", status.Id);
+        var untagged = await CreateUnscheduledTask("Untagged unscheduled roadmap task", status.Id);
+
+        var attached = await Client.PostAsJsonAsync("api/tags/task", new AddTagToTaskRequest
+        {
+            Tag = $"Roadmap tag {Guid.NewGuid():N}",
+            SystemId = tagged.SystemId,
+        }, cancellationToken);
+
+        attached.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await GetUnscheduledTasks("search=tagged%20unscheduled%20roadmap&hasTags=false");
+
+        result.Items.Should().Contain(item => item.Id == untagged.Id);
+        result.Items.Should().NotContain(item => item.Id == tagged.Id);
+    }
+
+    private async Task<TaskViewModel> CreateUnscheduledTask(string name, int statusId)
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var response = await Client.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest
+        {
+            Name = name,
+            StatusId = statusId,
+            ProjectId = 1,
+        }, cancellationToken);
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>(cancellationToken);
+
+        return result!.Payload!;
+    }
+
+    private async Task<PagedResponse<RoadmapTaskViewModel>> GetUnscheduledTasks(string query)
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var response = await Client.GetAsync($"api/roadmap/unscheduled-tasks?{query}", cancellationToken);
+        var result = await response.Content
+            .ReadFromJsonAsync<ClientResponse<PagedResponse<RoadmapTaskViewModel>>>(cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        return result!.Payload!;
+    }
+
     private async Task<Status> GetTaskStatus()
     {
         using var scope = Fixture.CreateScope();
@@ -187,6 +295,20 @@ public sealed class RoadmapEndpointTests
                 status.Workspace!.Slug == "netptune" &&
                 status.EntityType == EntityType.Task &&
                 status.Key == "in-progress");
+    }
+
+    private async Task<Status> GetTaskStatus(StatusCategory category)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        return await context.Statuses
+            .Include(status => status.Workspace)
+            .FirstAsync(status =>
+                status.Workspace!.Slug == "netptune" &&
+                status.EntityType == EntityType.Task &&
+                status.Category == category &&
+                !status.IsDeleted);
     }
 
     private async Task<TaskViewModel> CreateTask(string name, int statusId, DateOnly date)

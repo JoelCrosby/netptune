@@ -139,10 +139,6 @@ const defaultTo = addDays(today, 45);
           <app-roadmap-unscheduled
             [projectId]="projectId()"
             [sprintId]="sprintId()"
-            [search]="taskFilters().term ?? undefined"
-            [assigneeIds]="taskFilters().users ?? []"
-            [tagNames]="taskFilters().tags ?? []"
-            [statusIds]="taskFilters().statuses ?? []"
             [canUpdateTasks]="canUpdateTasks()"
             [scheduleDate]="from()"
             [reloadSignal]="unscheduledReload"

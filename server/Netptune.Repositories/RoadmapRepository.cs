@@ -22,6 +22,8 @@ public sealed class RoadmapRepository(IDbConnectionFactory connectionFactory) : 
 {
     private const int ScheduledTaskLimit = 2000;
 
+    private static readonly int[] CompletedCategories = [(int)StatusCategory.Done, (int)StatusCategory.Inactive];
+
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNameCaseInsensitive = true,
@@ -105,6 +107,11 @@ public sealed class RoadmapRepository(IDbConnectionFactory connectionFactory) : 
                 tags,
                 statusIds = filter.StatusIds,
                 assignees,
+                includeCompleted = filter.IncludeCompleted ?? false,
+                completedCategories = CompletedCategories,
+                hasFlags = filter.HasFlags,
+                hasTags = filter.HasTags,
+                taskEntityType = EntityType.Task,
                 pageSize = pagination.PageSize,
                 skip = pagination.Skip,
             },

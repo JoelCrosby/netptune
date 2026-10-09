@@ -36,6 +36,22 @@ WHERE pt.workspace_id = @workspaceId
   AND (CARDINALITY(@projectIds) = 0 OR pt.project_id = ANY(@projectIds))
   AND (CARDINALITY(@sprintIds) = 0 OR pt.sprint_id = ANY(@sprintIds))
   AND (CARDINALITY(@statusIds) = 0 OR pt.status_id = ANY(@statusIds))
+  -- An explicit status selection wins over the completed default.
+  AND (@includeCompleted OR CARDINALITY(@statusIds) > 0 OR st.category <> ALL(@completedCategories))
+  AND (@hasFlags IS NULL OR @hasFlags = EXISTS (
+      SELECT 1
+      FROM flags f_filter
+      WHERE f_filter.workspace_id = pt.workspace_id
+        AND f_filter.entity_type = @taskEntityType
+        AND f_filter.entity_id = pt.id
+        AND NOT f_filter.is_deleted
+  ))
+  AND (@hasTags IS NULL OR @hasTags = EXISTS (
+      SELECT 1
+      FROM project_task_tags ptt_any
+               INNER JOIN tags t_any ON ptt_any.tag_id = t_any.id AND NOT t_any.is_deleted
+      WHERE ptt_any.project_task_id = pt.id
+  ))
   AND (CARDINALITY(@assignees) = 0 OR EXISTS (
       SELECT 1
       FROM project_task_app_users ptau_filter

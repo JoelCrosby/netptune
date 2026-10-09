@@ -1,14 +1,19 @@
 import { toggleValue } from '@core/util/arrays';
 import { Component, computed, input, output } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { Selected } from '@core/models/selected';
 import { Tag } from '@core/models/tag';
 import { statusResource } from '@core/resources/status.resource';
 import { tagResource } from '@core/resources/tag.resource';
 import { userResource } from '@core/resources/user.resource';
+import { LucideFlag } from '@lucide/angular';
 import {
   AvatarFilterComponent,
   AvatarFilterOption,
 } from '@static/components/avatar-filter/avatar-filter.component';
+import { InlineButtonComponent } from '@static/components/button/inline-button.component';
+import { FilterToggleComponent } from '@static/components/filter-toggle/filter-toggle.component';
 import { SearchInputComponent } from '@static/components/search-input/search-input.component';
 import { StatusFilterComponent } from '@static/components/status-filter/status-filter.component';
 import { TagFilterComponent } from '@static/components/tag-filter/tag-filter.component';
@@ -17,6 +22,9 @@ import { TagFilterComponent } from '@static/components/tag-filter/tag-filter.com
   selector: 'app-task-view-filters',
   imports: [
     AvatarFilterComponent,
+    FilterToggleComponent,
+    InlineButtonComponent,
+    LucideFlag,
     SearchInputComponent,
     StatusFilterComponent,
     TagFilterComponent,
@@ -38,13 +46,31 @@ import { TagFilterComponent } from '@static/components/tag-filter/tag-filter.com
         </div>
       }
 
+      @if (supportsFlags() && readFlags()) {
+        <div class="border-border border-l pl-3">
+          <button
+            app-filter-toggle
+            [pressed]="flagged()"
+            (click)="flaggedChanged.emit(!flagged())">
+            <svg lucideFlag size="16" aria-hidden="true"></svg>
+            <span
+              i18n="Indicates a task has one or more flags raised against it">
+              Flagged
+            </span>
+          </button>
+        </div>
+      }
+
       @if (tags.canRead()) {
         <div class="border-border border-l pl-3">
           <app-tag-filter
             [tags]="tagOptions()"
             [loaded]="!tags.isLoading()"
             [selectedCount]="tagNames().length"
-            (toggled)="toggleTag($event)" />
+            [allowUntagged]="supportsUntagged()"
+            [untagged]="untagged()"
+            (toggled)="toggleTag($event)"
+            (untaggedChange)="untaggedChanged.emit($event)" />
         </div>
       }
 
@@ -58,10 +84,14 @@ import { TagFilterComponent } from '@static/components/tag-filter/tag-filter.com
         </div>
       }
 
+      <ng-content />
+
       @if (hasFilters()) {
         <button
-          type="button"
-          class="text-muted-foreground hover:bg-muted hover:text-foreground ml-auto cursor-pointer rounded px-3 py-2 text-sm font-medium transition-colors"
+          app-inline-button
+          color="muted"
+          appearance="soft"
+          class="ml-auto px-3 py-2 text-sm font-medium"
           (click)="cleared.emit()">
           <span i18n="Button that clears every active filter">
             Clear filters
@@ -76,16 +106,26 @@ export class TaskViewFiltersComponent {
   readonly assigneeIds = input<string[]>([]);
   readonly tagNames = input<string[]>([]);
   readonly statusIds = input<number[]>([]);
+  readonly supportsFlags = input(false);
+  readonly flagged = input(false);
+  readonly supportsUntagged = input(false);
+  readonly untagged = input(false);
+  // Lets a caller with controls of its own in the content slot keep the
+  // clear button visible while only those are active.
+  readonly extraFiltersActive = input(false);
 
   readonly searchChanged = output<string | null>();
   readonly assigneeIdsChanged = output<string[]>();
   readonly tagNamesChanged = output<string[]>();
   readonly statusIdsChanged = output<number[]>();
+  readonly flaggedChanged = output<boolean>();
+  readonly untaggedChanged = output<boolean>();
   readonly cleared = output();
 
   readonly users = userResource();
   readonly tags = tagResource();
   readonly statuses = statusResource();
+  readonly readFlags = hasPermission(PERMISSIONS.flags.read);
 
   readonly selectedStatuses = computed(() => new Set(this.statusIds()));
   readonly hasFilters = computed(
@@ -93,7 +133,10 @@ export class TaskViewFiltersComponent {
       !!this.search() ||
       this.assigneeIds().length > 0 ||
       this.tagNames().length > 0 ||
-      this.statusIds().length > 0
+      this.statusIds().length > 0 ||
+      this.flagged() ||
+      this.untagged() ||
+      this.extraFiltersActive()
   );
   readonly assigneeOptions = computed<AvatarFilterOption[]>(() => {
     const selected = new Set(this.assigneeIds());

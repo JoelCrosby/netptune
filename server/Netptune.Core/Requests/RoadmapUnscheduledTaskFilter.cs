@@ -13,4 +13,10 @@ public sealed class RoadmapUnscheduledTaskFilter : PageRequest
     public int[] StatusIds { get; init; } = [];
 
     public string[] Assignees { get; init; } = [];
+
+    public bool? HasFlags { get; init; }
+
+    public bool? HasTags { get; init; }
+
+    public bool? IncludeCompleted { get; init; }
 }
