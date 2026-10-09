@@ -1024,6 +1024,10 @@ public sealed class AiConversationService : IAiConversationService
     {
         var lastTurn = context.Turns.LastOrDefault();
 
+        var earlierUsage = context.Turns
+            .SkipLast(1)
+            .Aggregate(new AiUsage(), (total, turn) => total.Add(turn.Usage));
+
         // Tool calls are left out on purpose: nothing persists the results that would answer them.
         var assistantMessage = new AiChatMessage
         {
@@ -1041,6 +1045,7 @@ public sealed class AiConversationService : IAiConversationService
                 Role = AiMessageRole.Assistant,
                 Turn = lastTurn,
                 ToolsRun = toolsRun,
+                ExtraUsage = earlierUsage,
             },
             cancellationToken);
 

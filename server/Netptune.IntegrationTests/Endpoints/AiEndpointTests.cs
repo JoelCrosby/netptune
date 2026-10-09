@@ -891,6 +891,77 @@ public sealed class AiEndpointTests
         }
     }
 
+    [Fact]
+    public async Task SendMessage_ShouldStoreTheUsageOfEveryProviderCallInTheTurn()
+    {
+        var client = Fixture.CreateNetptuneClient();
+
+        await SaveCredential(client);
+        ScriptToolLoop(
+            new AiUsage { InputTokens = 10, OutputTokens = 20, CacheReadTokens = 1_000, CacheCreationTokens = 12_000 },
+            new AiUsage { InputTokens = 5, OutputTokens = 40, CacheReadTokens = 13_000, CacheCreationTokens = 300 });
+
+        var conversationId = await StartTurnThenDisconnect(client);
+
+        try
+        {
+            var reply = await WaitForAssistantMessage(conversationId);
+
+            reply.Should().NotBeNull("the turn finishes server side after the client disconnects");
+            reply.InputTokens.Should().Be(15);
+            reply.OutputTokens.Should().Be(60);
+            reply.CacheReadTokens.Should().Be(14_000);
+            reply.CacheCreationTokens.Should().Be(
+                12_300,
+                "the first call writes the cache and is billed even though the reply text comes from the last");
+        }
+        finally
+        {
+            await RemoveSeed(conversationId);
+            await DeleteExistingCredentials(client);
+            ResetScript();
+        }
+    }
+
+    private void ScriptToolLoop(AiUsage toolCallUsage, AiUsage answerUsage)
+    {
+        using var scope = Fixture.CreateScope();
+        var script = scope.ServiceProvider.GetRequiredService<TestAiChatScript>();
+
+        script.Reset();
+        script.Enqueue(new AiChatTurn
+        {
+            ToolCalls =
+            [
+                new AiToolCall { Id = "call-1", Name = "list_projects", Arguments = JsonDocument.Parse("{}") },
+            ],
+            Usage = toolCallUsage,
+        });
+        script.Enqueue(new AiChatTurn { Text = "There is one project.", Usage = answerUsage });
+    }
+
+    private async Task<AiMessage?> WaitForAssistantMessage(Guid conversationId)
+    {
+        for (var attempt = 0; attempt < 50; attempt++)
+        {
+            await Task.Delay(100, TestContext.Current.CancellationToken);
+
+            using var scope = Fixture.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+            var message = await context.AiMessages
+                .AsNoTracking()
+                .Where(item => item.ConversationId == conversationId && item.Role == AiMessageRole.Assistant)
+                .FirstOrDefaultAsync(TestContext.Current.CancellationToken);
+
+            if (message is not null)
+            {
+                return message;
+            }
+        }
+
+        return null;
+    }
+
     private async Task<Guid> StartTurnThenDisconnect(HttpClient client)
     {
         using var request = new HttpRequestMessage(HttpMethod.Post, "api/ai/conversations/messages");
