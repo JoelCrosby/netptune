@@ -53,6 +53,7 @@ const ACTIONS: Record<string, string> = {
   propose_update_project: UPDATE,
   propose_update_board: UPDATE,
   propose_update_board_group: UPDATE,
+  propose_update_status: UPDATE,
   propose_update_sprint: UPDATE,
   propose_start_sprint: UPDATE,
   propose_complete_sprint: UPDATE,

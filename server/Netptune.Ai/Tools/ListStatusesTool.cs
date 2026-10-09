@@ -43,6 +43,8 @@ public sealed class ListStatusesTool : IAiTool
             id = status.Id,
             name = status.Name,
             category = status.Category.ToString(),
+            color = status.Color,
+            description = status.Description,
         });
 
         var content = JsonSerializer.Serialize(summaries);
