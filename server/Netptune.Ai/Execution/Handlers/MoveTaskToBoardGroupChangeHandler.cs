@@ -27,7 +27,8 @@ public sealed class MoveTaskToBoardGroupChangeHandler : IAiChangeHandler, IAiCha
         var change = context.Change;
         var payload = change.Payload.RootElement;
         var taskId = AiChangePayload.ResolveTaskId(context);
-        var boardGroupId = AiChangePayload.ReadInt(payload, "boardGroupId");
+        var boardGroupId = AiChangePayload.ReadInt(payload, "boardGroupId")
+            ?? AiChangePayload.ResolveReference(context, "boardGroupRef");
 
         if (!taskId.HasValue || !boardGroupId.HasValue)
         {

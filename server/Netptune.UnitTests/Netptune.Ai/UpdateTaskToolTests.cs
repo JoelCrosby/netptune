@@ -257,6 +257,77 @@ public class UpdateTaskToolTests
         tool.IsAvailable(readOnly).Should().BeFalse();
     }
 
+    [Fact]
+    public async Task Execute_ShouldProposeAMove_IntoABoardGroupPendingInTheSameChangeSet()
+    {
+        GivenTask(CreateTask());
+
+        var groupRef = ProposePendingBoardGroup("""{"projectId":3}""");
+        var result = await Execute($$"""{"taskId":{{TaskId}},"boardGroupRef":"{{groupRef}}"}""");
+
+        result.IsError.Should().BeFalse();
+
+        var change = ChangeSet.Changes.Last();
+
+        change.ToolName.Should().Be("propose_move_task_to_board_group");
+        change.Payload.RootElement.GetProperty("boardGroupRef").GetString().Should().Be(groupRef);
+        change.Fields.Single().After.Should().Be("Slash Commands · Todo");
+    }
+
+    [Fact]
+    public async Task Execute_ShouldFail_WhenThePendingBoardGroupIsInAnotherProject()
+    {
+        GivenTask(CreateTask());
+
+        var groupRef = ProposePendingBoardGroup("""{"projectId":7}""");
+        var result = await Execute($$"""{"taskId":{{TaskId}},"boardGroupRef":"{{groupRef}}"}""");
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("different project");
+    }
+
+    [Fact]
+    public void GetRequiredPermissions_ShouldDemandMove_ForABoardGroupRef()
+    {
+        var tool = new UpdateTaskTool(Mediator, ChangeSet);
+        var arguments = JsonDocument.Parse("""{"taskId":42,"boardGroupRef":"ref:2"}""").RootElement;
+
+        tool.GetRequiredPermissions(arguments).Should().Contain(NetptunePermissions.Tasks.Move);
+    }
+
+    private string ProposePendingBoardGroup(string boardPayload)
+    {
+        var boardRef = ChangeSet.CreateRefKey();
+
+        ChangeSet.Add(new AiChangeDraft
+        {
+            ToolName = "propose_create_board",
+            EntityType = "board",
+            RefKey = boardRef,
+            Summary = "Create board “Slash Commands”",
+            Fields = [new AiChangeField { Name = "name", After = "Slash Commands" }],
+            Payload = JsonDocument.Parse(boardPayload),
+        });
+
+        var groupRef = ChangeSet.CreateRefKey();
+
+        ChangeSet.Add(new AiChangeDraft
+        {
+            ToolName = "propose_create_board_group",
+            EntityType = "boardGroup",
+            RefKey = groupRef,
+            Summary = "Add group “Todo” to Slash Commands",
+            Fields =
+            [
+                new AiChangeField { Name = "name", After = "Todo" },
+                new AiChangeField { Name = "board", After = "Slash Commands" },
+            ],
+            Payload = JsonDocument.Parse($$"""{"name":"Todo","boardRef":"{{boardRef}}"}"""),
+        });
+
+        return groupRef;
+    }
+
     private string ProposePendingTask()
     {
         var refKey = ChangeSet.CreateRefKey();

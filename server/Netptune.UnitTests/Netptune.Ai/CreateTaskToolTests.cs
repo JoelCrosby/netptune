@@ -7,9 +7,12 @@ using Mediator;
 using Netptune.Ai.Execution;
 using Netptune.Ai.Tools;
 using Netptune.Core.Authorization;
+using Netptune.Core.Responses;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.Projects;
 using Netptune.Core.ViewModels.Tags;
+using Netptune.Handlers.Boards.Queries;
 using Netptune.Handlers.Projects.Queries;
 using Netptune.Handlers.Tags.Queries;
 
@@ -30,6 +33,7 @@ public class CreateTaskToolTests
     {
         GivenProject();
         GivenTags("bug");
+        GivenBoardIdentifierIsFree();
     }
 
     [Fact]
@@ -116,6 +120,56 @@ public class CreateTaskToolTests
     }
 
     [Fact]
+    public async Task Execute_ShouldPlaceTheTask_InABoardGroupPendingOnANewBoard()
+    {
+        var boardRef = await GivenProposedBoard($$"""{"name":"Slash Commands","identifier":"slash-commands","projectId":{{ProjectId}}}""");
+        var groupRef = await GivenProposedBoardGroup(boardRef, "Todo");
+
+        var result = await Execute(
+            $$"""{"name":"Add /help","projectId":{{ProjectId}},"boardGroupRef":"{{groupRef}}"}""");
+
+        result.IsError.Should().BeFalse();
+        ChangeSet.Changes.Last().Fields.Single(item => item.Name == "boardGroup").After.Should().Be("Slash Commands · Todo");
+    }
+
+    [Fact]
+    public async Task Execute_ShouldPlaceTheTask_InABoardGroupPendingInANewProject()
+    {
+        var projectRef = await GivenProposedProject("Apollo");
+        var boardRef = await GivenProposedBoard($$"""{"name":"Launch","identifier":"launch","projectRef":"{{projectRef}}"}""");
+        var groupRef = await GivenProposedBoardGroup(boardRef, "Todo");
+
+        var result = await Execute(
+            $$"""{"name":"Draft the brief","projectRef":"{{projectRef}}","boardGroupRef":"{{groupRef}}"}""");
+
+        result.IsError.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Execute_ShouldFail_WhenThePendingBoardGroupIsInAnotherProject()
+    {
+        var projectRef = await GivenProposedProject("Apollo");
+        var boardRef = await GivenProposedBoard($$"""{"name":"Launch","identifier":"launch","projectRef":"{{projectRef}}"}""");
+        var groupRef = await GivenProposedBoardGroup(boardRef, "Todo");
+
+        var result = await Execute(
+            $$"""{"name":"Draft the brief","projectId":{{ProjectId}},"boardGroupRef":"{{groupRef}}"}""");
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("different project");
+    }
+
+    [Fact]
+    public async Task Execute_ShouldFail_WhenTheBoardGroupRefIsNotInTheChangeSet()
+    {
+        var result = await Execute($$"""{"name":"Add /help","projectId":{{ProjectId}},"boardGroupRef":"ref:nope"}""");
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("ref:nope");
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
     public void GetRequiredPermissions_ShouldDemandTagAssignment_OnlyWhenTagsAreRequested()
     {
         var tool = new CreateTaskTool(Mediator, ChangeSet);
@@ -142,6 +196,34 @@ public class CreateTaskToolTests
         await createProject.Execute(arguments, TestContext.Current.CancellationToken);
 
         return ChangeSet.Changes.Last().RefKey!;
+    }
+
+    private async Task<string> GivenProposedBoard(string arguments)
+    {
+        var createBoard = new CreateBoardTool(Mediator, ChangeSet);
+
+        await createBoard.Execute(JsonDocument.Parse(arguments).RootElement, TestContext.Current.CancellationToken);
+
+        return ChangeSet.Changes.Last().RefKey!;
+    }
+
+    private async Task<string> GivenProposedBoardGroup(string boardRef, string name)
+    {
+        var createGroup = new CreateBoardGroupTool(Mediator, ChangeSet);
+        var arguments = JsonDocument.Parse($$"""{"name":"{{name}}","boardRef":"{{boardRef}}"}""").RootElement;
+
+        await createGroup.Execute(arguments, TestContext.Current.CancellationToken);
+
+        return ChangeSet.Changes.Last().RefKey!;
+    }
+
+    private void GivenBoardIdentifierIsFree()
+    {
+        var response = ClientResponse<IsSlugUniqueResponse>.Success(new IsSlugUniqueResponse { IsUnique = true });
+
+        Mediator
+            .Send(Arg.Any<IsBoardIdentifierUniqueQuery>(), Arg.Any<CancellationToken>())
+            .Returns(response);
     }
 
     private void GivenProject()

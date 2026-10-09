@@ -62,6 +62,7 @@ public sealed class CreateTaskTool : IAiTool
           "sprintId": { "type": "integer", "description": "Sprint to put the task in, from list_sprints. Must belong to the same project." },
           "sprintRef": { "type": "string", "description": "Handle of a sprint proposed earlier in this change set, instead of sprintId." },
           "boardGroupId": { "type": "integer", "description": "Board group to place the task in, from list_board_groups." },
+          "boardGroupRef": { "type": "string", "description": "Handle of a board group proposed earlier in this change set, instead of boardGroupId." },
           "tags": {
             "type": "array",
             "items": { "type": "string" },
@@ -286,14 +287,11 @@ public sealed class CreateTaskTool : IAiTool
                 [AiChangeFields.Sprint(sprint.Id, sprint.Name)]));
         }
 
-        var boardGroupId = AiToolSchema.GetInt(arguments, "boardGroupId");
-        var isBoardGroupUnreachable = boardGroupId.HasValue && project.IsPending;
+        var boardGroupError = await AddBoardGroupField(fields, project, arguments, cancellationToken);
 
-        if (isBoardGroupUnreachable)
+        if (boardGroupError is not null)
         {
-            return TaskPlacement.Failed(
-                "A task in a project proposed in this change set cannot join an existing board group. "
-                + "Leave boardGroupId unset and it lands in the new project's default board.");
+            return TaskPlacement.Failed(boardGroupError);
         }
 
         var scheduleError = AddScheduleFields(fields, arguments);
@@ -304,6 +302,67 @@ public sealed class CreateTaskTool : IAiTool
         }
 
         return new TaskPlacement(fields, null);
+    }
+
+    private async Task<string?> AddBoardGroupField(
+        List<AiChangeField> fields,
+        AiParent project,
+        JsonElement arguments,
+        CancellationToken cancellationToken)
+    {
+        var boardGroupId = AiToolSchema.GetInt(arguments, "boardGroupId");
+        var boardGroupRef = AiPendingReference.Read(arguments, "boardGroupRef");
+
+        if (boardGroupRef is not null)
+        {
+            if (boardGroupId.HasValue)
+            {
+                return "Pass boardGroupId or boardGroupRef, not both.";
+            }
+
+            var pending = await AiPendingBoardGroupLookup.Find(Mediator, ChangeSet, boardGroupRef, cancellationToken);
+
+            if (pending.Error is not null)
+            {
+                return pending.Error;
+            }
+
+            var group = pending.Group!;
+            var projectRef = AiPendingReference.Read(arguments, "projectRef");
+            var mismatch = AiPendingBoardGroupLookup.FindProjectMismatch(group, project.Id, projectRef);
+
+            if (mismatch is not null)
+            {
+                return mismatch;
+            }
+
+            fields.Add(new AiChangeField { Name = "boardGroup", After = group.Label });
+
+            return null;
+        }
+
+        if (!boardGroupId.HasValue)
+        {
+            return null;
+        }
+
+        if (project.IsPending)
+        {
+            return "A task in a project proposed in this change set cannot join an existing board group. "
+                + "Pass the boardGroupRef of a group proposed on one of its boards, "
+                + "or leave both unset and it lands in the new project's default board.";
+        }
+
+        var existing = await AiBoardLookup.FindGroup(Mediator, boardGroupId.Value, cancellationToken);
+
+        if (existing is null)
+        {
+            return $"Board group {boardGroupId} is not in this workspace.";
+        }
+
+        fields.Add(new AiChangeField { Name = "boardGroup", After = $"{existing.BoardName} · {existing.Name}" });
+
+        return null;
     }
 
     private static string? AddScheduleFields(List<AiChangeField> fields, JsonElement arguments)

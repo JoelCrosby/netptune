@@ -26,7 +26,7 @@ public sealed class CreateBoardGroupTool : IAiTool
     public string Name => "propose_create_board_group";
 
     public string Description =>
-        "Propose adding a group, the column on a board, to an existing board.";
+        "Propose adding a group, the column on a board, to an existing board or one proposed in this change set.";
 
     public AiToolKind Kind => AiToolKind.Write;
 
@@ -82,11 +82,13 @@ public sealed class CreateBoardGroupTool : IAiTool
             return AiToolExecution.Failed(statusMessage);
         }
 
+        var refKey = ChangeSet.CreateRefKey();
+
         ChangeSet.Add(new AiChangeDraft
         {
             ToolName = Name,
-            EntityType = "board",
-            EntityId = board.Id,
+            EntityType = AiPendingBoardGroupLookup.EntityType,
+            RefKey = refKey,
             Summary = $"Add group “{name}” to {board.Name}",
             Fields = fields,
             Payload = JsonDocument.Parse(arguments.GetRawText()),
@@ -94,7 +96,7 @@ public sealed class CreateBoardGroupTool : IAiTool
         });
 
         return AiToolExecution.Success(
-            $"Proposed adding group \"{name}\" to {board.Name}. "
+            $"Proposed adding group \"{name}\" to {board.Name} as {refKey}. "
             + "Nothing has been applied yet — the user must review and apply the change.");
     }
 

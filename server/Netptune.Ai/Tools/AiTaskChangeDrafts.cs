@@ -199,6 +199,35 @@ internal static class AiTaskChangeDrafts
         });
     }
 
+    // A task can only sit on boards in its own project, and an existing task can never be in a project
+    // this change set has not created yet.
+    public static AiTaskDraftResult PendingBoardGroup(TaskViewModel task, AiPendingBoardGroup group)
+    {
+        var mismatch = AiPendingBoardGroupLookup.FindProjectMismatch(group, task.ProjectId, null);
+
+        if (mismatch is not null)
+        {
+            return AiTaskDraftResult.Failed(mismatch);
+        }
+
+        var payload = new
+        {
+            taskId = task.Id,
+            boardGroupRef = group.RefKey,
+        };
+
+        return AiTaskDraftResult.Proposed(new AiChangeDraft
+        {
+            ToolName = BoardGroupChange,
+            EntityType = "task",
+            EntityId = task.Id,
+            Summary = $"Move “{task.Name}” to {group.Name} on {group.BoardName}",
+            Fields = [new AiChangeField { Name = "boardGroup", After = group.Label }],
+            Payload = JsonSerializer.SerializeToDocument(payload),
+            ValidationStatus = AiChangeValidationStatus.Valid,
+        });
+    }
+
     private static async Task<Dictionary<string, AssigneeViewModel>?> LoadMembers(
         IMediator mediator,
         CancellationToken cancellationToken)

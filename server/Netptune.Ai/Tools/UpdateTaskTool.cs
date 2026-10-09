@@ -105,7 +105,8 @@ public sealed class UpdateTaskTool : IAiTool
             "items": { "type": "string" },
             "description": "The complete set of tag names, existing or proposed with propose_create_tag. An empty array clears them."
           },
-          "boardGroupId": { "type": "integer", "description": "Board group (the column on a board) to move the task into." }
+          "boardGroupId": { "type": "integer", "description": "Board group (the column on a board) to move the task into." },
+          "boardGroupRef": { "type": "string", "description": "Handle of a board group proposed earlier in this change set, instead of boardGroupId." }
         }
         """);
 
@@ -123,7 +124,7 @@ public sealed class UpdateTaskTool : IAiTool
         var changesFields = FieldArguments.Any(name => HasArgument(arguments, name));
         var changesAssignees = HasArgument(arguments, "assigneeIds");
         var changesTags = HasArgument(arguments, "tags");
-        var changesBoardGroup = HasArgument(arguments, "boardGroupId");
+        var changesBoardGroup = ChangesBoardGroup(arguments);
 
         if (changesFields)
         {
@@ -177,10 +178,7 @@ public sealed class UpdateTaskTool : IAiTool
                 ? await AiTaskChangeDrafts.Assignees(Mediator, task, arguments, cancellationToken)
                 : AiTaskDraftResult.Unchanged;
 
-            var boardGroupId = AiToolSchema.GetInt(arguments, "boardGroupId");
-            var boardGroupResult = boardGroupId.HasValue
-                ? await AiTaskChangeDrafts.BoardGroup(Mediator, task, boardGroupId.Value, cancellationToken)
-                : AiTaskDraftResult.Unchanged;
+            var boardGroupResult = await ProposeBoardGroup(task, arguments, cancellationToken);
 
             var taskError = fieldResult.Error ?? assigneeResult.Error ?? boardGroupResult.Error;
 
@@ -261,7 +259,7 @@ public sealed class UpdateTaskTool : IAiTool
 
         var changesFields = FieldArguments.Any(name => HasArgument(arguments, name));
         var changesAssignees = HasArgument(arguments, "assigneeIds");
-        var changesBoardGroup = HasArgument(arguments, "boardGroupId");
+        var changesBoardGroup = ChangesBoardGroup(arguments);
         var changesMoreThanTags = changesFields || changesAssignees || changesBoardGroup;
 
         if (changesMoreThanTags)
@@ -340,6 +338,41 @@ public sealed class UpdateTaskTool : IAiTool
             Payload = CreateFieldPayload(task, arguments),
             ValidationStatus = AiChangeValidationStatus.Valid,
         });
+    }
+
+    private async Task<AiTaskDraftResult> ProposeBoardGroup(
+        TaskViewModel task,
+        JsonElement arguments,
+        CancellationToken cancellationToken)
+    {
+        var boardGroupId = AiToolSchema.GetInt(arguments, "boardGroupId");
+        var boardGroupRef = AiPendingReference.Read(arguments, "boardGroupRef");
+
+        if (boardGroupRef is null)
+        {
+            return boardGroupId.HasValue
+                ? await AiTaskChangeDrafts.BoardGroup(Mediator, task, boardGroupId.Value, cancellationToken)
+                : AiTaskDraftResult.Unchanged;
+        }
+
+        if (boardGroupId.HasValue)
+        {
+            return AiTaskDraftResult.Failed("Pass boardGroupId or boardGroupRef, not both.");
+        }
+
+        var pending = await AiPendingBoardGroupLookup.Find(Mediator, ChangeSet, boardGroupRef, cancellationToken);
+
+        if (pending.Error is not null)
+        {
+            return AiTaskDraftResult.Failed(pending.Error);
+        }
+
+        return AiTaskChangeDrafts.PendingBoardGroup(task, pending.Group!);
+    }
+
+    private static bool ChangesBoardGroup(JsonElement arguments)
+    {
+        return HasArgument(arguments, "boardGroupId") || HasArgument(arguments, "boardGroupRef");
     }
 
     private static JsonDocument CreateFieldPayload(TaskViewModel task, JsonElement arguments)

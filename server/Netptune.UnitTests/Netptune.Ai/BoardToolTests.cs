@@ -311,6 +311,21 @@ public class BoardToolTests
         ChangeSet.Changes.Should().ContainSingle(change => change.ToolName == "propose_create_board_group");
     }
 
+    [Fact]
+    public async Task CreateBoardGroup_ShouldAnswerWithAHandle_SoTasksCanBePlacedInIt()
+    {
+        GivenPendingBoard("board-1");
+
+        var tool = new CreateBoardGroupTool(Mediator, ChangeSet);
+        var result = await Execute(tool, """{"boardRef":"board-1","name":"Todo"}""");
+
+        var change = ChangeSet.Changes.Last();
+
+        change.EntityType.Should().Be("boardGroup");
+        change.RefKey.Should().NotBeNull();
+        result.Content.Should().Contain(change.RefKey);
+    }
+
     private void GivenPendingBoard(string refKey)
     {
         ChangeSet.Add(new AiChangeDraft

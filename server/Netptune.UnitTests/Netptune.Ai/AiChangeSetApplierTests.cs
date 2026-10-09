@@ -19,8 +19,10 @@ using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.UnitOfWork;
+using Netptune.Core.ViewModels.Boards;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Projects;
+using Netptune.Handlers.BoardGroups.Commands;
 using Netptune.Handlers.Projects.Commands;
 using Netptune.Handlers.Tasks.Commands;
 using Netptune.Services.Ai;
@@ -219,6 +221,7 @@ public class AiChangeSetApplierTests
         var tools = new AiToolRegistry([
             new StubWriteTool("propose_create_task", NetptunePermissions.Tasks.Create),
             new StubWriteTool("propose_create_project", NetptunePermissions.Projects.Create),
+            new StubWriteTool("propose_create_board_group", NetptunePermissions.BoardGroups.Create),
         ]);
 
         return new AiChangeSetApplier(
@@ -228,7 +231,11 @@ public class AiChangeSetApplierTests
             new AiExecutionContext(),
             Cancellations,
             NullLogger<AiChangeSetApplier>.Instance,
-            [new CreateTaskChangeHandler(Mediator), new CreateProjectChangeHandler(Mediator)]);
+            [
+                new CreateTaskChangeHandler(Mediator),
+                new CreateProjectChangeHandler(Mediator),
+                new CreateBoardGroupChangeHandler(Mediator),
+            ]);
     }
 
     private void GivenChangeSet(AiChangeSet changeSet, List<AiProposedChange> changes)
@@ -350,6 +357,84 @@ public class AiChangeSetApplierTests
 
         outcome.Status.Should().Be(AiChangeApplyStatus.Skipped);
         outcome.Error.Should().Contain("ref:missing");
+    }
+
+    [Fact]
+    public async Task Apply_ShouldPlaceATaskInTheBoardGroupItsPrerequisiteCreated()
+    {
+        var changeSet = CreateChangeSet();
+        var task = CreateChange(
+            changeSet.Id,
+            "propose_create_task",
+            id: 1,
+            refKey: "ref:task",
+            payload: """{"name":"Add /help","projectId":1,"boardGroupRef":"ref:group"}""");
+
+        var group = CreateChange(
+            changeSet.Id,
+            "propose_create_board_group",
+            id: 2,
+            refKey: "ref:group",
+            payload: """{"name":"Todo","boardId":4}""");
+
+        GivenChangeSet(changeSet, [task, group]);
+        GivenPermissions(NetptunePermissions.Tasks.Create, NetptunePermissions.BoardGroups.Create);
+        GivenCreatedBoardGroup(31);
+        GivenCreatedTask(7);
+
+        var applier = CreateApplier();
+        var result = await applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), null, TestContext.Current.CancellationToken);
+
+        result!.Results.Select(item => item.ChangeId).Should().Equal(group.Id, task.Id);
+
+        await Mediator
+            .Received(1)
+            .Send(
+                Arg.Is<CreateTaskCommand>(command => command.Request.BoardGroupId == 31),
+                Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Apply_ShouldSkipATask_WhenItsBoardGroupFailed()
+    {
+        var changeSet = CreateChangeSet();
+        var task = CreateChange(
+            changeSet.Id,
+            "propose_create_task",
+            id: 1,
+            refKey: "ref:task",
+            payload: """{"name":"Add /help","projectId":1,"boardGroupRef":"ref:group"}""");
+
+        var group = CreateChange(
+            changeSet.Id,
+            "propose_create_board_group",
+            id: 2,
+            refKey: "ref:group",
+            payload: """{"name":"Todo","boardId":4}""");
+
+        GivenChangeSet(changeSet, [task, group]);
+        GivenPermissions(NetptunePermissions.Tasks.Create, NetptunePermissions.BoardGroups.Create);
+        GivenCreatedTask(7);
+
+        Mediator
+            .Send(Arg.Any<CreateBoardGroupCommand>(), Arg.Any<CancellationToken>())
+            .Returns(ClientResponse<BoardGroupViewModel>.Failed("Board 4 is gone."));
+
+        var applier = CreateApplier();
+        var result = await applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), null, TestContext.Current.CancellationToken);
+        var outcome = result!.Results.Single(item => item.ChangeId == task.Id);
+
+        outcome.Status.Should().Be(AiChangeApplyStatus.Skipped);
+        outcome.Error.Should().Contain("ref:group");
+
+        await Mediator.DidNotReceive().Send(Arg.Any<CreateTaskCommand>(), Arg.Any<CancellationToken>());
+    }
+
+    private void GivenCreatedBoardGroup(int boardGroupId)
+    {
+        Mediator
+            .Send(Arg.Any<CreateBoardGroupCommand>(), Arg.Any<CancellationToken>())
+            .Returns(ClientResponse<BoardGroupViewModel>.Success(new BoardGroupViewModel { Id = boardGroupId }));
     }
 
     [Fact]
