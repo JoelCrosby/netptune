@@ -128,9 +128,8 @@ import {
                     [class.bg-diff-del]="row.beforeKind === 'removed'"
                     [class.bg-hover]="row.beforeKind === null">
                     <span
-                      class="text-muted w-7 shrink-0 text-right select-none">
-                      {{ row.beforeNumber }}
-                    </span>
+                      class="text-muted w-7 shrink-0 text-right select-none"
+                      [textContent]="row.beforeNumber"></span>
                     <span class="text-muted min-w-0">{{ row.before }}</span>
                   </div>
                 }
@@ -150,9 +149,8 @@ import {
                     [class.bg-diff-add]="row.afterKind === 'added'"
                     [class.bg-hover]="row.afterKind === null">
                     <span
-                      class="text-muted w-6 shrink-0 text-right select-none">
-                      {{ row.afterNumber }}
-                    </span>
+                      class="text-muted w-6 shrink-0 text-right select-none"
+                      [textContent]="row.afterNumber"></span>
                     <span class="min-w-0">{{ row.after }}</span>
                   </div>
                 }
@@ -170,14 +168,12 @@ import {
                     class="w-3 shrink-0 select-none"
                     [class.text-change-added]="line.kind === 'added'"
                     [class.text-change-removed]="line.kind === 'removed'"
-                    [class.text-transparent]="line.kind === 'context'">
-                    {{ line.mark }}
-                  </span>
+                    [class.text-transparent]="line.kind === 'context'"
+                    [textContent]="line.mark"></span>
                   <span
                     class="min-w-0"
-                    [class.text-muted]="line.kind === 'removed'">
-                    {{ line.text }}
-                  </span>
+                    [class.text-muted]="line.kind === 'removed'"
+                    [textContent]="line.text"></span>
                 </div>
               }
             </div>
@@ -191,9 +187,8 @@ import {
                   [class.bg-diff-add-word]="segment.kind === 'added'"
                   [class.bg-diff-del-word]="segment.kind === 'removed'"
                   [class.text-muted]="segment.kind === 'removed'"
-                  [class.line-through]="segment.kind === 'removed'">
-                  {{ segment.value }}
-                </span>
+                  [class.line-through]="segment.kind === 'removed'"
+                  [textContent]="segment.value"></span>
               }
             </p>
           }
