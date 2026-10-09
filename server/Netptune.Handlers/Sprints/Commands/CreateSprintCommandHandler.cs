@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Search;
@@ -50,6 +51,7 @@ public sealed class CreateSprintCommandHandler : IRequestHandler<CreateSprintCom
         var sprint = new Sprint
         {
             Name = req.Name.Trim(),
+            Identifier = req.Name.ToUrlSlug(appendUniqueId: true, maxLength: Sprint.IdentifierMaxLength),
             Goal = req.Goal,
             StartDate = req.StartDate,
             EndDate = req.EndDate,

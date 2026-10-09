@@ -102,14 +102,13 @@ export const changeRoute = (
     return null;
   }
 
-  const identifier =
-    change.entitySystemId ?? change.appliedEntityId ?? change.entityId;
+  const identifier = change.entityRouteId;
 
   if (!identifier) {
     return null;
   }
 
-  return referenceRoute(workspace, change.entityType, `${identifier}`);
+  return referenceRoute(workspace, change.entityType, identifier);
 };
 
 /**

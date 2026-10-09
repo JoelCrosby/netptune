@@ -37,7 +37,7 @@ WITH notification_feed AS (
             WHEN n.entity_type = @boardType      THEN b.identifier
             WHEN n.entity_type = @boardGroupType THEN gb.identifier
             WHEN n.entity_type = @projectType    THEN p.key
-            WHEN n.entity_type = @sprintType     THEN sp.id::text
+            WHEN n.entity_type = @sprintType     THEN sp.identifier
             WHEN n.entity_type = @statusType     THEN s.id::text
           END AS linkidentifier
     FROM notifications n

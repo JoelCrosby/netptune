@@ -78,7 +78,7 @@ const emptyMessages: Record<SprintStatus, string> = {
           [data]="data()"
           [emptyMessage]="emptyMessage()">
           <ng-template appDatatableCell="name" let-sprint>
-            <a class="font-medium hover:underline" [routerLink]="[sprint.id]">
+            <a class="font-medium hover:underline" [routerLink]="[sprint.identifier]">
               {{ sprint.name }}
             </a>
           </ng-template>

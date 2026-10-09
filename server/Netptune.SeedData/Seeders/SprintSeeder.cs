@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
+using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Entities.Contexts;
@@ -92,6 +93,7 @@ public sealed class SprintSeeder : ISeeder
             var completedSprint = new Sprint
             {
                 Name = plan.Completed.Name,
+                Identifier = plan.Completed.Name.ToUrlSlug(appendUniqueId: true, maxLength: Sprint.IdentifierMaxLength),
                 Goal = plan.Completed.Goal,
                 Status = SprintStatus.Completed,
                 StartDate = completedStart,
@@ -105,6 +107,7 @@ public sealed class SprintSeeder : ISeeder
             var activeSprint = new Sprint
             {
                 Name = plan.Active.Name,
+                Identifier = plan.Active.Name.ToUrlSlug(appendUniqueId: true, maxLength: Sprint.IdentifierMaxLength),
                 Goal = plan.Active.Goal,
                 Status = SprintStatus.Active,
                 StartDate = activeStart,
@@ -219,8 +222,7 @@ public sealed class SprintSeeder : ISeeder
         if (duplicate is not null)
         {
             throw new InvalidOperationException($"Sprint name '{duplicate.Key}' is duplicated in seed data");
-        }
-    }
+        }    }
 
     private static DateTime StartOfWeek(DateTime date)
     {

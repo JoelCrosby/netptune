@@ -160,6 +160,7 @@ public sealed class NotificationSubscriptionFixture : IAsyncLifetime
         var sprint = new Sprint
         {
             Name = "Sprint One",
+            Identifier = "sprint-one",
             Status = SprintStatus.Active,
             StartDate = DateTime.UtcNow.Date,
             EndDate = DateTime.UtcNow.Date.AddDays(14),

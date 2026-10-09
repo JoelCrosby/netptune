@@ -109,12 +109,12 @@ export class SprintDetailViewComponent {
   private dialog = inject(DialogService);
   private confirmation = inject(ConfirmationService);
 
-  readonly sprintId = signal<number | null>(null);
+  readonly identifier = signal<string | null>(null);
   private readonly sprintCommands = inject(SprintCommandsService);
   private readonly currentSprint = inject(CurrentSprintService);
   private publishedSprintId: number | undefined;
   private readonly sprintResourceRef = sprintDetailResource(
-    computed(() => this.sprintId() ?? undefined)
+    computed(() => this.identifier() ?? undefined)
   );
 
   readonly sprint = this.sprintResourceRef.value;
@@ -132,13 +132,13 @@ export class SprintDetailViewComponent {
   constructor() {
     this.route.paramMap
       .pipe(
-        map((params) => Number(params.get('id'))),
+        map((params) => params.get('identifier')),
         distinctUntilChanged(),
         takeUntilDestroyed()
       )
-      .subscribe((sprintId) => {
-        if (Number.isFinite(sprintId) && sprintId > 0) {
-          this.sprintId.set(sprintId);
+      .subscribe((identifier) => {
+        if (identifier) {
+          this.identifier.set(identifier);
         }
       });
 

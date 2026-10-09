@@ -211,12 +211,12 @@ export class AiAssistantMarkdownComponent {
     }
 
     const workspace = this.workspace();
-    const isKnown = this.references().has(referenceKey(part.type, part.id));
+    const reference = this.references().get(referenceKey(part.type, part.id));
 
-    if (!workspace || !isKnown) {
+    if (!workspace || !reference?.routeId) {
       return null;
     }
 
-    return referenceRoute(workspace, part.type, part.id);
+    return referenceRoute(workspace, part.type, reference.routeId);
   }
 }

@@ -398,6 +398,7 @@ public sealed class AutomationExecutionServiceTests
         var sprint = new Sprint
         {
             Name = "Target sprint",
+            Identifier = "target-sprint",
             Workspace = scenario.Workspace,
             Project = scenario.Project,
             Status = SprintStatus.Planning,
@@ -524,6 +525,7 @@ public sealed class AutomationExecutionServiceTests
         var sprint = new Sprint
         {
             Name = "Current sprint",
+            Identifier = "current-sprint",
             Workspace = scenario.Workspace,
             Project = scenario.Project,
             Status = SprintStatus.Planning,

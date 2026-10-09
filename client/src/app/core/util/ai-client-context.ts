@@ -59,13 +59,13 @@ export const viewChip = (view: string): AiContextChip => {
 const routeFor = (
   workspace: string | null,
   kind: AiContextKind,
-  id: string | number
+  id: string
 ): string[] | null => {
   if (workspace === null) {
     return null;
   }
 
-  return referenceRoute(workspace, kind, String(id));
+  return referenceRoute(workspace, kind, id);
 };
 
 export const projectChip = (
@@ -102,7 +102,7 @@ export const sprintChip = (
     kind: 'sprint',
     label: KIND_LABELS.sprint,
     name: sprint.name,
-    route: routeFor(workspace, 'sprint', sprint.id),
+    route: routeFor(workspace, 'sprint', sprint.identifier),
     context: { sprintId: sprint.id, sprintName: sprint.name },
   };
 };

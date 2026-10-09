@@ -80,6 +80,7 @@ export interface AiEntityReference {
   type: string;
   id: string;
   name: string;
+  routeId: string;
 }
 
 export interface AiMessage {
@@ -161,6 +162,7 @@ export interface AiProposedChange {
   applyError?: string | null;
   appliedEntityId?: number | null;
   entitySystemId?: string | null;
+  entityRouteId?: string | null;
   undoneAt?: string | null;
   canUndo: boolean;
 }

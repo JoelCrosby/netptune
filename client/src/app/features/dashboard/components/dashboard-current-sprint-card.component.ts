@@ -70,11 +70,11 @@ import { PanelBodyComponent } from '@static/components/panel-body.component';
             eyebrow="Current sprint"
             [headingLevel]="2"
             [sprint]="sprint"
-            [link]="['../sprints', sprint.id]" />
+            [link]="['../sprints', sprint.identifier]" />
 
           <a
             class="text-primary shrink-0 text-sm font-medium hover:underline"
-            [routerLink]="['../sprints', sprint.id]">
+            [routerLink]="['../sprints', sprint.identifier]">
             <span i18n="Link to the current sprint">View sprint</span>
           </a>
         </header>

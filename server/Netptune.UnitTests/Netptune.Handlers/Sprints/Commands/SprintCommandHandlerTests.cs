@@ -83,6 +83,7 @@ public class SprintCommandHandlerTests
         result.Payload.Should().Be(sprintViewModel);
         addedSprint.Should().NotBeNull();
         addedSprint!.Name.Should().Be("Sprint 1");
+        addedSprint.Identifier.Should().MatchRegex("^sprint-1-[A-Za-z0-9]{12}$");
         addedSprint.Status.Should().Be(SprintStatus.Planning);
         addedSprint.ProjectId.Should().Be(project.Id);
         addedSprint.WorkspaceId.Should().Be(workspace.Id);
@@ -621,6 +622,7 @@ public class SprintCommandHandlerTests
 
         result.IsSuccess.Should().BeTrue();
         sprint.Name.Should().Be("Renamed sprint");
+        sprint.Identifier.Should().Be("sprint", "renaming a sprint keeps its links working");
         sprint.Goal.Should().Be("New goal");
         sprint.StartDate.Should().Be(request.StartDate);
         sprint.EndDate.Should().Be(request.EndDate);
@@ -815,6 +817,7 @@ public class SprintCommandHandlerTests
         {
             Id = id,
             Name = "Sprint",
+            Identifier = "sprint",
             Status = status,
             WorkspaceId = workspaceId,
             ProjectId = projectId,

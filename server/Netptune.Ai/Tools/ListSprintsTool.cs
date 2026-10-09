@@ -44,6 +44,7 @@ public sealed class ListSprintsTool : IAiTool
         {
             id = sprint.Id,
             name = sprint.Name,
+            identifier = sprint.Identifier,
             status = sprint.Status.ToString(),
             projectId = sprint.ProjectId,
             startDate = sprint.StartDate,

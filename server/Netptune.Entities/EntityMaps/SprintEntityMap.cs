@@ -19,6 +19,11 @@ public class SprintEntityMap : WorkspaceEntityMap<Sprint, int>
             .IsRequired();
 
         builder
+            .Property(sprint => sprint.Identifier)
+            .HasMaxLength(Sprint.IdentifierMaxLength)
+            .IsRequired();
+
+        builder
             .Property(sprint => sprint.Goal)
             .HasMaxLength(32768);
 
@@ -68,6 +73,10 @@ public class SprintEntityMap : WorkspaceEntityMap<Sprint, int>
 
         builder
             .HasIndex(sprint => new { sprint.ProjectId, sprint.Name });
+
+        builder
+            .HasIndex(sprint => new { sprint.WorkspaceId, sprint.Identifier })
+            .IsUnique();
 
         builder
             .HasIndex(sprint => sprint.ProjectId)

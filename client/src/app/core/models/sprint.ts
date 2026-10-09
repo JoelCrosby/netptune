@@ -3,6 +3,7 @@ import { Basemodel } from './basemodel';
 
 export interface Sprint extends Basemodel {
   name: string;
+  identifier: string;
   goal?: string | null;
   status: SprintStatus;
   startDate: string;

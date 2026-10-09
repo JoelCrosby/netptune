@@ -8,6 +8,8 @@ public record SprintViewModel
 
     public string Name { get; init; } = null!;
 
+    public string Identifier { get; init; } = null!;
+
     public string? Goal { get; init; }
 
     public SprintStatus Status { get; init; }

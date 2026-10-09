@@ -17,7 +17,7 @@ SELECT
         WHEN ns.scope = @projectScope    THEN p.key
         WHEN ns.scope = @boardScope      THEN b.identifier
         WHEN ns.scope = @boardGroupScope THEN gb.identifier
-        WHEN ns.scope = @sprintScope     THEN s.id::text
+        WHEN ns.scope = @sprintScope     THEN s.identifier
       END AS linkidentifier
 FROM notification_subscriptions ns
 LEFT JOIN projects p      ON ns.scope = @projectScope    AND p.id  = ns.scope_entity_id AND NOT p.is_deleted

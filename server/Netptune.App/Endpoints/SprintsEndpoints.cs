@@ -20,6 +20,7 @@ public static class SprintsEndpoints
         group.MapGet("/current", HandleGetCurrentSprint).RequireAuthorization(NetptunePermissions.Sprints.Read);
         group.MapGet("/backlog", HandleGetBacklog).RequireAuthorization(NetptunePermissions.Sprints.Read);
         group.MapGet("/{id:int}", HandleGetSprint).RequireAuthorization(NetptunePermissions.Sprints.Read);
+        group.MapGet("/identifier/{identifier}", HandleGetSprintByIdentifier).RequireAuthorization(NetptunePermissions.Sprints.Read);
         group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.Sprints.Create);
         group.MapPut("/", HandlePut)
             .RequireAuthorization(NetptunePermissions.Sprints.Update, NetptunePermissions.Sprints.ManageTasks)
@@ -79,6 +80,16 @@ public static class SprintsEndpoints
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new GetSprintQuery(id), cancellationToken);
+
+        return result.ToResult();
+    }
+
+    public static async Task<IResult> HandleGetSprintByIdentifier(
+        IMediator mediator,
+        string identifier,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetSprintByIdentifierQuery(identifier), cancellationToken);
 
         return result.ToResult();
     }

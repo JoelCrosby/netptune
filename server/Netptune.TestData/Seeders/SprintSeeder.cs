@@ -1,3 +1,4 @@
+using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 
@@ -22,9 +23,12 @@ internal static class SprintSeeder
             var start = FirstStart.AddDays(i * 14);
             var status = Statuses[i % Statuses.Length];
 
+            var name = $"{project.Name} Sprint 1";
+
             return new Sprint
             {
-                Name = $"{project.Name} Sprint 1",
+                Name = name,
+                Identifier = name.ToUrlSlug(appendUniqueId: true, maxLength: Sprint.IdentifierMaxLength),
                 Goal = $"Ship the first slice of {project.Name}",
                 Status = status,
                 StartDate = start,

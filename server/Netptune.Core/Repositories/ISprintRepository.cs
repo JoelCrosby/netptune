@@ -16,6 +16,8 @@ public interface ISprintRepository : IWorkspaceEntityRepository<Sprint, int>
 
     Task<SprintDetailViewModel?> GetSprintDetailAsync(string workspaceKey, int sprintId, CancellationToken cancellationToken = default);
 
+    Task<SprintDetailViewModel?> GetSprintDetailAsync(string workspaceKey, string identifier, CancellationToken cancellationToken = default);
+
     Task<SprintDetailViewModel?> GetCurrentSprintAsync(string workspaceKey, CancellationToken cancellationToken = default);
 
     Task<Sprint?> GetSprintInWorkspaceAsync(string workspaceKey, int sprintId, bool isReadonly = false, CancellationToken cancellationToken = default);

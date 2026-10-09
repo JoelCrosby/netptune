@@ -191,7 +191,7 @@ public sealed class MeilisearchService : IMeilisearchService
             Id = hit.SprintId,
             Title = hit.Name,
             Subtitle = hit.Status,
-            Url = $"/{hit.WorkspaceSlug}/sprints/{hit.SprintId}",
+            Url = $"/{hit.WorkspaceSlug}/sprints/{hit.Identifier}",
             Metadata = new Dictionary<string, object?>
             {
                 ["status"] = hit.Status,

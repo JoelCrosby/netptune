@@ -251,6 +251,7 @@ public sealed class SearchSeedService : BackgroundService
                 Id = $"sprint_{s.Id}",
                 SprintId = s.Id,
                 Name = s.Name,
+                Identifier = s.Identifier,
                 Goal = s.Goal,
                 WorkspaceSlug = slug,
                 ProjectId = s.ProjectId,

@@ -9,6 +9,10 @@ public sealed record AiEntityReference
     public required string Id { get; init; }
 
     public required string Name { get; init; }
+
+    // The segment the app routes this entity by: system id for tasks, key for projects and
+    // identifier for boards and sprints.
+    public required string RouteId { get; init; }
 }
 
 public static class AiEntityReferenceReader
@@ -117,8 +121,9 @@ public static class AiEntityReferenceReader
         }
 
         var id = ReadIdentifier(element, type);
+        var routeId = ReadRouteId(element, type, id);
 
-        if (id is null)
+        if (id is null || routeId is null)
         {
             return null;
         }
@@ -128,7 +133,25 @@ public static class AiEntityReferenceReader
             Type = type,
             Id = id,
             Name = name.GetString()!,
+            RouteId = routeId,
         };
+    }
+
+    private static string? ReadRouteId(JsonElement element, string type, string? id)
+    {
+        return type switch
+        {
+            Project => ReadString(element, "key"),
+            Board or Sprint => ReadString(element, "identifier"),
+            _ => id,
+        };
+    }
+
+    private static string? ReadString(JsonElement element, string name)
+    {
+        var hasValue = element.TryGetProperty(name, out var value) && value.ValueKind == JsonValueKind.String;
+
+        return hasValue ? value.GetString() : null;
     }
 
     private static string? ReadIdentifier(JsonElement element, string type)

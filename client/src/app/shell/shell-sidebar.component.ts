@@ -173,7 +173,7 @@ export class ShellSidebarComponent {
         .slice(0, maxSprintLinks)
         .map((sprint) => ({
           label: sprint.name,
-          value: ['./sprints', String(sprint.id)],
+          value: ['./sprints', sprint.identifier],
           icon: LucideCalendarRange,
         }));
 

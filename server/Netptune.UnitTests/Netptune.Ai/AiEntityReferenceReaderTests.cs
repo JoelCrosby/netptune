@@ -21,6 +21,7 @@ public class AiEntityReferenceReaderTests
         references.Should().ContainSingle();
         references[0].Type.Should().Be("task");
         references[0].Id.Should().Be("NPT-42", "task routes are keyed on the system id");
+        references[0].RouteId.Should().Be("NPT-42");
         references[0].Name.Should().Be("Fix the login page");
     }
 
@@ -32,6 +33,38 @@ public class AiEntityReferenceReaderTests
         references.Should().ContainSingle();
         references[0].Type.Should().Be("project");
         references[0].Id.Should().Be("4");
+    }
+
+    [Fact]
+    public void Read_ShouldRouteProjectsByKey()
+    {
+        var references = AiEntityReferenceReader.Read("list_projects", """[{"id":4,"name":"Website","key":"WEB"}]""");
+
+        references.Should().ContainSingle().Which.RouteId.Should().Be("WEB", "the project route is keyed on the project key");
+    }
+
+    [Fact]
+    public void Read_ShouldRouteBoardsByIdentifier()
+    {
+        var references = AiEntityReferenceReader.Read("list_boards", """[{"id":7,"name":"Delivery","identifier":"delivery"}]""");
+
+        references.Should().ContainSingle().Which.RouteId.Should().Be("delivery", "the board route is keyed on the identifier");
+    }
+
+    [Fact]
+    public void Read_ShouldRouteSprintsByIdentifier()
+    {
+        var references = AiEntityReferenceReader.Read("list_sprints", """[{"id":7,"name":"Sprint 7","identifier":"sprint-7"}]""");
+
+        references.Should().ContainSingle().Which.RouteId.Should().Be("sprint-7", "the sprint route is keyed on the identifier");
+    }
+
+    [Fact]
+    public void Read_ShouldSkipEntitiesWithoutASlug()
+    {
+        AiEntityReferenceReader.Read("list_projects", """[{"id":4,"name":"Website"}]""").Should().BeEmpty();
+        AiEntityReferenceReader.Read("list_boards", """[{"id":7,"name":"Delivery"}]""").Should().BeEmpty();
+        AiEntityReferenceReader.Read("list_sprints", """[{"id":7,"name":"Sprint 7"}]""").Should().BeEmpty();
     }
 
     [Fact]
@@ -55,8 +88,8 @@ public class AiEntityReferenceReaderTests
     {
         var results = new List<AiToolResultText>
         {
-            new() { ToolName = "list_projects", Content = """[{"id":4,"name":"Website"}]""" },
-            new() { ToolName = "list_projects", Content = """[{"id":4,"name":"Website"},{"id":5,"name":"Api"}]""" },
+            new() { ToolName = "list_projects", Content = """[{"id":4,"name":"Website","key":"WEB"}]""" },
+            new() { ToolName = "list_projects", Content = """[{"id":4,"name":"Website","key":"WEB"},{"id":5,"name":"Api","key":"API"}]""" },
         };
 
         var references = AiEntityReferenceReader.Read(results);
@@ -70,8 +103,8 @@ public class AiEntityReferenceReaderTests
     {
         var results = new List<AiToolResultText>
         {
-            new() { ToolName = "list_sprints", Content = """[{"id":7,"name":"Sprint 7"}]""" },
-            new() { ToolName = "list_boards", Content = """[{"id":7,"name":"Delivery"}]""" },
+            new() { ToolName = "list_sprints", Content = """[{"id":7,"name":"Sprint 7","identifier":"sprint-7"}]""" },
+            new() { ToolName = "list_boards", Content = """[{"id":7,"name":"Delivery","identifier":"delivery"}]""" },
         };
 
         var references = AiEntityReferenceReader.Read(results);

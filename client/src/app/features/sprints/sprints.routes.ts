@@ -20,7 +20,7 @@ export const routes: Routes = [
     canActivate: [sprintsReadGuard],
   },
   {
-    path: ':id',
+    path: ':identifier',
     loadComponent: () =>
       import('./views/sprint-detail-view/sprint-detail-view.component').then(
         (m) => m.SprintDetailViewComponent

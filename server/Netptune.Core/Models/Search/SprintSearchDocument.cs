@@ -8,6 +8,9 @@ public record SprintSearchDocument
 
     public required string Name { get; init; }
 
+    // Documents indexed before sprints had identifiers lack one until the next reindex.
+    public string? Identifier { get; init; }
+
     public string? Goal { get; init; }
 
     public required string WorkspaceSlug { get; init; }

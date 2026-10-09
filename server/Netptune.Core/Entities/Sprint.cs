@@ -8,7 +8,11 @@ namespace Netptune.Core.Entities;
 
 public record Sprint : WorkspaceEntity<int>
 {
+    public const int IdentifierMaxLength = 128;
+
     public string Name { get; set; } = null!;
+
+    public string Identifier { get; set; } = null!;
 
     public string? Goal { get; set; }
 
@@ -36,6 +40,7 @@ public record Sprint : WorkspaceEntity<int>
         {
             Id = Id,
             Name = Name,
+            Identifier = Identifier,
             Goal = Goal,
             Status = Status,
             StartDate = StartDate,

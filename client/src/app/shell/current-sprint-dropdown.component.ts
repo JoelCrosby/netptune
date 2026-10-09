@@ -94,7 +94,7 @@ import { MenuSeparatorComponent } from '@static/components/dropdown-menu/menu-se
           <button
             app-menu-item
             type="button"
-            (click)="onSprintOpened(selectedSprint.id, sprintMenu)">
+            (click)="onSprintOpened(selectedSprint.identifier, sprintMenu)">
             <svg lucideExternalLink class="h-4 w-4 shrink-0"></svg>
             <span
               class="max-w-64 truncate"
@@ -178,9 +178,9 @@ export class CurrentSprintDropdownComponent {
     this.sprintFilter.set(sprintId);
   }
 
-  onSprintOpened(sprintId: number, menu: DropdownMenuComponent) {
+  onSprintOpened(identifier: string, menu: DropdownMenuComponent) {
     menu.close();
-    void this.router.navigate(['./sprints', sprintId], {
+    void this.router.navigate(['./sprints', identifier], {
       relativeTo: this.route,
     });
   }

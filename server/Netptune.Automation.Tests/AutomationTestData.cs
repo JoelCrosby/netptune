@@ -269,6 +269,7 @@ internal static class AutomationTestData
         var sprint = new Sprint
         {
             Name = name,
+            Identifier = name.ToUrlSlug(appendUniqueId: true, maxLength: Sprint.IdentifierMaxLength),
             Status = status,
             StartDate = new DateTime(2026, 7, 1, 0, 0, 0, DateTimeKind.Utc),
             EndDate = new DateTime(2026, 7, 14, 0, 0, 0, DateTimeKind.Utc),

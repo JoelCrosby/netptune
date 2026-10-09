@@ -48,8 +48,7 @@ public sealed class GetAiConversationChangeSetsQueryHandler
         var changesByChangeSet = changes
             .GroupBy(change => change.ChangeSetId)
             .ToDictionary(group => group.Key, group => group.ToList());
-        var taskIds = AiChangeSetMapper.CollectTaskIds(changes);
-        var tasks = await UnitOfWork.Tasks.GetTaskViewModels(taskIds, cancellationToken);
+        var routeIds = await AiChangeRouteIdReader.Read(UnitOfWork, changes, cancellationToken);
         var models = new List<AiChangeSetViewModel>(changeSets.Count);
 
         foreach (var changeSet in changeSets)
@@ -58,7 +57,7 @@ public sealed class GetAiConversationChangeSetsQueryHandler
             var model = AiChangeSetMapper.ToViewModel(
                 changeSet,
                 hasChanges ? changeSetChanges! : [],
-                tasks,
+                routeIds,
                 UndoCatalog);
 
             models.Add(model);

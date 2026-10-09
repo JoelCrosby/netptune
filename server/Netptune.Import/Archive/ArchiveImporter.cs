@@ -1,3 +1,4 @@
+using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Relationships;
@@ -449,11 +450,14 @@ public sealed class ArchiveImporter : IArchiveImporter
                 return null;
             }
 
+            var name = row.Text("name") ?? row.Ref.Value;
+
             var sprint = new Sprint
             {
                 WorkspaceId = context.WorkspaceId,
                 ProjectId = projectId.Value,
-                Name = row.Text("name") ?? row.Ref.Value,
+                Name = name,
+                Identifier = name.ToUrlSlug(appendUniqueId: true, maxLength: Sprint.IdentifierMaxLength),
                 Goal = row.Text("goal"),
                 Status = row.Enum<SprintStatus>("status") ?? SprintStatus.Planning,
                 StartDate = row.Timestamp("start_date") ?? DateTime.UtcNow,

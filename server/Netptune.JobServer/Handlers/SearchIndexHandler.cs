@@ -124,6 +124,7 @@ public sealed class SearchIndexHandler : IRequestHandler<SearchIndexEvent>
                 Id = $"sprint_{sprint.Id}",
                 SprintId = sprint.Id,
                 Name = sprint.Name,
+                Identifier = sprint.Identifier,
                 Goal = sprint.Goal,
                 WorkspaceSlug = workspaceSlug,
                 ProjectId = sprint.ProjectId,

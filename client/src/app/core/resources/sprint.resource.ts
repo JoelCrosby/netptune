@@ -34,10 +34,12 @@ export const currentSprintsResource = () => {
   });
 };
 
-export const sprintDetailResource = (sprintId: Signal<number | undefined>) => {
+export const sprintDetailResource = (identifier: Signal<string | undefined>) => {
   return permissionResource<SprintDetailViewModel | undefined>({
     permission: PERMISSIONS.sprints.read,
-    request: requestFrom(sprintId, (id) => ({ url: `api/sprints/${id}` })),
+    request: requestFrom(identifier, (value) => ({
+      url: `api/sprints/identifier/${encodeURIComponent(value)}`,
+    })),
     refreshOn: ['sprints', 'tasks'],
     parse: (response) => response.payload,
   });

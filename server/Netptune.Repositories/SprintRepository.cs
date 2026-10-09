@@ -118,6 +118,19 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
             .FirstOrDefaultAsync(cancellationToken);
     }
 
+    public Task<SprintDetailViewModel?> GetSprintDetailAsync(
+        string workspaceKey,
+        string identifier,
+        CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .Where(sprint => sprint.Identifier == identifier && sprint.Workspace!.Slug == workspaceKey && !sprint.IsDeleted)
+            .AsNoTracking()
+            .AsSplitQuery()
+            .Select(SprintToDetailViewModel())
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
     public Task<SprintDetailViewModel?> GetCurrentSprintAsync(
         string workspaceKey,
         CancellationToken cancellationToken = default)
@@ -206,6 +219,7 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
         {
             Id = sprint.Id,
             Name = sprint.Name,
+            Identifier = sprint.Identifier,
             Goal = sprint.Goal,
             Status = sprint.Status,
             StartDate = sprint.StartDate,
@@ -247,6 +261,7 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
         {
             Id = sprint.Id,
             Name = sprint.Name,
+            Identifier = sprint.Identifier,
             Goal = sprint.Goal,
             Status = sprint.Status,
             StartDate = sprint.StartDate,

@@ -48,6 +48,8 @@ public sealed record AiProposedChangeViewModel
 
     public string? EntitySystemId { get; init; }
 
+    public string? EntityRouteId { get; init; }
+
     public DateTime? UndoneAt { get; init; }
 
     public bool CanUndo { get; init; }

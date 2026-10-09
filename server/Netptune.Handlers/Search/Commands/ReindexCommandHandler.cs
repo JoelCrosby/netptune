@@ -101,6 +101,7 @@ public sealed class ReindexCommandHandler : IRequestHandler<ReindexCommand>
             Id = $"sprint_{s.Id}",
             SprintId = s.Id,
             Name = s.Name,
+            Identifier = s.Identifier,
             Goal = s.Goal,
             WorkspaceSlug = workspaceSlug,
             ProjectId = s.ProjectId,

@@ -17,10 +17,11 @@ public static class UrlSlugger
     // multiple hyphens
     private static readonly Regex MultipleHyphens = new("-{2,}", RegexOptions.Compiled);
 
-    public static string ToUrlSlug(this string value, bool appendUniqueId = false)
+    // maxLength bounds the whole result, unique id included, cutting the slug back to make room.
+    public static string ToUrlSlug(this string value, bool appendUniqueId = false, int? maxLength = null)
     {
         // convert to lower case
-        value = value.ToLowerInvariant();
+        value = value.Trim().ToLowerInvariant();
 
         // remove diacritics (accents)
         value = RemoveDiacritics(value);
@@ -36,10 +37,21 @@ public static class UrlSlugger
 
         // trim hyphens (-) from ends
         var result = value.Trim('-');
+        var suffix = appendUniqueId ? $"-{UniqueIdBuilder.Generate()}" : "";
 
-        if (!appendUniqueId) return result;
+        if (maxLength.HasValue)
+        {
+            result = Truncate(result, maxLength.Value - suffix.Length);
+        }
 
-        return $"{result}-{UniqueIdBuilder.Generate()}";
+        return $"{result}{suffix}";
+    }
+
+    private static string Truncate(string slug, int length)
+    {
+        if (slug.Length <= length) return slug;
+
+        return slug[..Math.Max(length, 0)].TrimEnd('-');
     }
 
     private static string RemoveDiacritics(string value)
