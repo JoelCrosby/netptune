@@ -61,6 +61,13 @@ public interface IAiTool
         return GetRequiredPermissions(payload);
     }
 
+    // How a call reads in the assistant's work log. A tool that picks what it does from an argument
+    // names it, so a run of list_records calls still says what each one listed.
+    string DescribeCall(JsonElement arguments)
+    {
+        return Name;
+    }
+
     Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken);
 }
 

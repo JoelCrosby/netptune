@@ -31,7 +31,7 @@ public sealed class SetTaskSprintTool : IAiTool
 
     public string Description =>
         "Propose putting tasks into a sprint, or set backlog to take them out of the sprint they are in. "
-        + "Tasks must belong to the sprint's project. Find sprint ids with list_sprints, "
+        + "Tasks must belong to the sprint's project. Find sprint ids with list_records, "
         + "or pass handles of a sprint or tasks proposed earlier in this change set.";
 
     public AiToolKind Kind => AiToolKind.Write;

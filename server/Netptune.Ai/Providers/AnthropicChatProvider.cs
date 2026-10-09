@@ -250,7 +250,7 @@ public sealed class AnthropicChatProvider : IAiChatProvider
 
         if (!isAssistant)
         {
-            return new MessageParam { Role = Role.User, Content = message.Text ?? string.Empty };
+            return new MessageParam { Role = Role.User, Content = message.PromptText };
         }
 
         var blocks = new List<ContentBlockParam>();

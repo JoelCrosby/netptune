@@ -57,16 +57,16 @@ public sealed class CreateTaskTool : IAiTool
           "projectId": { "type": "integer", "description": "The project the task belongs to." },
           "projectRef": { "type": "string", "description": "Handle of a project proposed earlier in this change set, instead of projectId." },
           "description": { "type": "string", "description": "Optional task description." },
-          "statusId": { "type": "integer", "description": "Status id, from list_statuses. Defaults to the project's first status." },
-          "assigneeId": { "type": "string", "description": "Workspace user id to assign, from list_members." },
-          "sprintId": { "type": "integer", "description": "Sprint to put the task in, from list_sprints. Must belong to the same project." },
+          "statusId": { "type": "integer", "description": "Status id, from list_records. Defaults to the project's first status." },
+          "assigneeId": { "type": "string", "description": "Workspace user id to assign, from list_records members." },
+          "sprintId": { "type": "integer", "description": "Sprint to put the task in, from list_records. Must belong to the same project." },
           "sprintRef": { "type": "string", "description": "Handle of a sprint proposed earlier in this change set, instead of sprintId." },
-          "boardGroupId": { "type": "integer", "description": "Board group to place the task in, from list_board_groups." },
+          "boardGroupId": { "type": "integer", "description": "Board group to place the task in, from list_records." },
           "boardGroupRef": { "type": "string", "description": "Handle of a board group proposed earlier in this change set, instead of boardGroupId." },
           "tags": {
             "type": "array",
             "items": { "type": "string" },
-            "description": "Tag names for the new task, from list_tags or proposed with propose_create_tag."
+            "description": "Tag names for the new task, from list_records or proposed with propose_create_tag."
           },
           "priority": {
             "type": "string",

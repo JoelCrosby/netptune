@@ -5,6 +5,7 @@ using FluentAssertions;
 using Mediator;
 
 using Netptune.Ai.Tools;
+using Netptune.Core.Authorization;
 using Netptune.Core.Models.Reporting;
 using Netptune.Core.Responses.Common;
 using Netptune.Handlers.Reporting.Queries;
@@ -35,9 +36,9 @@ public class ReportingToolTests
                 return ClientResponse<FlowReport>.Success(CreateFlowReport());
             });
 
-        var tool = new GetFlowReportTool(Mediator);
+        var tool = new GetReportTool(Mediator);
         var arguments = Arguments(
-            """{"projectId":3,"from":"2026-01-01","to":"2026-02-01","unit":"storyPoints","grouping":"week"}""");
+            """{"kind":"flow","projectId":3,"from":"2026-01-01","to":"2026-02-01","unit":"storyPoints","grouping":"week"}""");
 
         var result = await tool.Execute(arguments, TestContext.Current.CancellationToken);
 
@@ -57,8 +58,8 @@ public class ReportingToolTests
             .Send(Arg.Any<GetFlowReportQuery>(), Arg.Any<CancellationToken>())
             .Returns(ClientResponse<FlowReport>.Success(CreateFlowReport()));
 
-        var tool = new GetFlowReportTool(Mediator);
-        var result = await tool.Execute(Arguments("{}"), TestContext.Current.CancellationToken);
+        var tool = new GetReportTool(Mediator);
+        var result = await tool.Execute(Arguments("""{"kind":"flow"}"""), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeFalse();
 
@@ -76,8 +77,8 @@ public class ReportingToolTests
             .Send(Arg.Any<GetFlowReportQuery>(), Arg.Any<CancellationToken>())
             .Returns(ClientResponse<FlowReport>.Failed("Bad range"));
 
-        var tool = new GetFlowReportTool(Mediator);
-        var result = await tool.Execute(Arguments("{}"), TestContext.Current.CancellationToken);
+        var tool = new GetReportTool(Mediator);
+        var result = await tool.Execute(Arguments("""{"kind":"flow"}"""), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeTrue();
         result.Content.Should().Contain("Bad range");
@@ -86,8 +87,8 @@ public class ReportingToolTests
     [Fact]
     public async Task Velocity_ShouldFail_WhenNoProjectIsGiven()
     {
-        var tool = new GetVelocityReportTool(Mediator);
-        var result = await tool.Execute(Arguments("{}"), TestContext.Current.CancellationToken);
+        var tool = new GetReportTool(Mediator);
+        var result = await tool.Execute(Arguments("""{"kind":"velocity"}"""), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeTrue();
         result.Content.Should().Contain("projectId");
@@ -96,11 +97,34 @@ public class ReportingToolTests
     [Fact]
     public async Task Burndown_ShouldFail_WhenNoSprintIsGiven()
     {
-        var tool = new GetSprintBurndownTool(Mediator);
-        var result = await tool.Execute(Arguments("{}"), TestContext.Current.CancellationToken);
+        var tool = new GetReportTool(Mediator);
+        var result = await tool.Execute(Arguments("""{"kind":"burndown"}"""), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeTrue();
         result.Content.Should().Contain("sprintId");
+    }
+
+    [Fact]
+    public async Task Report_ShouldFail_WhenTheReportIsUnknown()
+    {
+        var tool = new GetReportTool(Mediator);
+        var result = await tool.Execute(Arguments("""{"kind":"forecast"}"""), TestContext.Current.CancellationToken);
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("flow, burndown, velocity, workload");
+    }
+
+    [Theory]
+    [InlineData("flow", new[] { NetptunePermissions.Tasks.Read })]
+    [InlineData("burndown", new[] { NetptunePermissions.Tasks.Read, NetptunePermissions.Sprints.Read })]
+    [InlineData("velocity", new[] { NetptunePermissions.Tasks.Read, NetptunePermissions.Sprints.Read })]
+    [InlineData("workload", new[] { NetptunePermissions.Tasks.Read, NetptunePermissions.Members.Read })]
+    public void Report_ShouldRequireThePermissionsOfTheReportItReads(string report, string[] expected)
+    {
+        var tool = new GetReportTool(Mediator);
+        var required = tool.GetRequiredPermissions(Arguments($$"""{"kind":"{{report}}"}"""));
+
+        required.Should().BeEquivalentTo(expected);
     }
 
     private sealed record GetFlowReportQueryCaptured(ReportingFilter Filter);

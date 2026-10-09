@@ -27,20 +27,13 @@ public static class NetptuneAiConfiguration
         services.AddSingleton<IAiChatProviderFactory, AiChatProviderFactory>();
         services.AddSingleton<IAiCancellationRegistry, AiCancellationRegistry>();
 
-        services.AddScoped<IAiTool, ListProjectsTool>();
+        services.AddScoped<IAiTool, ListRecordsTool>();
         services.AddScoped<IAiTool, SearchTasksTool>();
-        services.AddScoped<IAiTool, ListStatusesTool>();
-        services.AddScoped<IAiTool, ListMembersTool>();
         services.AddScoped<IAiTool, CreateTaskTool>();
         services.AddScoped<IAiTool, UpdateTaskTool>();
-        services.AddScoped<IAiTool, ListSprintsTool>();
-        services.AddScoped<IAiTool, ListTagsTool>();
         services.AddScoped<IAiTool, AddTaskCommentTool>();
-        services.AddScoped<IAiTool, ListBoardsTool>();
-        services.AddScoped<IAiTool, ListBoardGroupsTool>();
-        services.AddScoped<IAiTool, ListRelationTypesTool>();
         services.AddScoped<IAiTool, CreateProjectTool>();
-        services.AddScoped<IAiTool, CreateBoardTool>();
+        services.AddScoped<IAiTool, BoardChangeTool>();
         services.AddScoped<IAiTool, CreateStatusTool>();
         services.AddScoped<IAiTool, UpdateStatusTool>();
         services.AddScoped<IAiTool, LinkTasksTool>();
@@ -55,21 +48,12 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiTool, ResolveTaskFlagTool>();
         services.AddScoped<IAiTool, CreateTagTool>();
         services.AddScoped<IAiTool, DeleteTaskTool>();
-        services.AddScoped<IAiTool, CreateBoardGroupTool>();
-        services.AddScoped<IAiTool, UpdateBoardTool>();
-        services.AddScoped<IAiTool, DeleteBoardTool>();
-        services.AddScoped<IAiTool, UpdateBoardGroupTool>();
-        services.AddScoped<IAiTool, DeleteBoardGroupTool>();
-        services.AddScoped<IAiTool, ReorderBoardGroupsTool>();
+        services.AddScoped<IAiTool, BoardGroupChangeTool>();
         services.AddScoped<IAiTool, UnlinkTasksTool>();
         services.AddScoped<IAiTool, CreateRelationTypeTool>();
-        services.AddScoped<IAiTool, GetFlowReportTool>();
-        services.AddScoped<IAiTool, GetWorkloadReportTool>();
-        services.AddScoped<IAiTool, GetSprintBurndownTool>();
-        services.AddScoped<IAiTool, GetVelocityReportTool>();
+        services.AddScoped<IAiTool, GetReportTool>();
         services.AddScoped<IAiTool, ListAutomationsTool>();
         services.AddScoped<IAiTool, ListAutomationRunsTool>();
-        services.AddScoped<IAiTool, ListMemberRolesTool>();
         services.AddScoped<IAiTool, ListWorkspaceFilesTool>();
         services.AddScoped<IAiTool, AskQuestionTool>();
 

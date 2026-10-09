@@ -215,21 +215,23 @@ public sealed class AiConversationService : IAiConversationService
             yield break;
         }
 
-        var userMessage = new AiChatMessage
-        {
-            Role = AiMessageRole.User,
-            Text = text,
-            Answer = answer?.Answer,
-        };
+        var revised = await DescribeRevisedChange(request.Revise, userId, workspaceId, cancellationToken);
+        var userMessage = WithContext(
+            new AiChatMessage
+            {
+                Role = AiMessageRole.User,
+                Text = text,
+                Answer = answer?.Answer,
+            },
+            request.Context,
+            revised);
 
         await PersistMessage(
             conversation,
             new AiMessageDraft { Message = userMessage, Role = AiMessageRole.User },
             cancellationToken);
 
-        var revised = await DescribeRevisedChange(request.Revise, userId, workspaceId, cancellationToken);
-
-        history.Add(WithContext(userMessage, request.Context, revised));
+        history.Add(userMessage);
 
         var apiKey = Protector.Unprotect(credential.Secret);
         var language = AiLanguage.Describe(request.Locale);
@@ -298,6 +300,7 @@ public sealed class AiConversationService : IAiConversationService
         {
             ToolName = invocation.ToolName,
             Content = invocation.Result,
+            Arguments = invocation.Arguments,
         }));
 
         if (references.Count > 0)
@@ -400,26 +403,21 @@ public sealed class AiConversationService : IAiConversationService
         string? revised)
     {
         var viewing = DescribeClientContext(clientContext);
-        var text = new StringBuilder(message.Text);
+        var context = new StringBuilder();
 
         if (viewing is not null)
         {
-            text.Append($"\n\n<viewing>\n{viewing}\n</viewing>");
+            context.Append($"\n\n<viewing>\n{viewing}\n</viewing>");
         }
 
         if (revised is not null)
         {
-            text.Append($"\n\n<revising>\n{revised}\n</revising>");
+            context.Append($"\n\n<revising>\n{revised}\n</revising>");
         }
 
-        var hasContext = viewing is not null || revised is not null;
+        var hasContext = context.Length > 0;
 
-        if (!hasContext)
-        {
-            return message;
-        }
-
-        return message with { Text = text.ToString() };
+        return hasContext ? message with { Context = context.ToString() } : message;
     }
 
     // The reviewer picked one proposal off the review surface. Restating what it does, rather than
@@ -455,12 +453,22 @@ public sealed class AiConversationService : IAiConversationService
         }
 
         var proposer = Tools.FindProposer(change.ToolName);
+        var toolName = proposer?.Name ?? change.ToolName;
         var lines = new List<string>
         {
             "The user is asking you to rework this proposal, which you made earlier in this conversation.",
-            $"tool: {proposer?.Name ?? change.ToolName}",
-            $"summary: {change.Summary}",
+            $"tool: {toolName}",
         };
+
+        // A merged tool proposes several kinds of change, and the change name says which one this was.
+        var isMergedTool = toolName != change.ToolName;
+
+        if (isMergedTool)
+        {
+            lines.Add($"change: {change.ToolName}");
+        }
+
+        lines.Add($"summary: {change.Summary}");
 
         AddContextLine(lines, "entity", Describe(change.EntityType, change.EntityId));
 
@@ -959,7 +967,7 @@ public sealed class AiConversationService : IAiConversationService
 
     private static int MeasureMessage(AiChatMessage message)
     {
-        var textLength = message.Text?.Length ?? 0;
+        var textLength = message.PromptText.Length;
         var toolCallLength = message.ToolCalls.Sum(call => call.Arguments.RootElement.GetRawText().Length);
         var toolResultLength = message.ToolResults.Sum(result => result.Content.Length);
 
@@ -1036,7 +1044,7 @@ public sealed class AiConversationService : IAiConversationService
             Question = Questions.Pending,
         };
 
-        var toolsRun = context.Invocations.Select(invocation => invocation.ToolName).ToList();
+        var toolsRun = context.Invocations.Select(invocation => invocation.Label ?? invocation.ToolName).ToList();
         var assistantMessageId = await PersistMessage(
             conversation,
             new AiMessageDraft

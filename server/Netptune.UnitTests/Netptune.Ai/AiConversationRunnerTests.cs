@@ -74,6 +74,28 @@ public class AiConversationRunnerTests
     }
 
     [Fact]
+    public async Task Run_ShouldLabelEachToolCallTheWayTheToolDescribesIt()
+    {
+        var tool = new StubTool("list_things", NetptunePermissions.Tasks.Read) { CallLabel = "list_things · tags" };
+        var runner = CreateRunner([tool]);
+        var context = CreateContext(NetptunePermissions.Tasks.Read);
+
+        Provider.CallToolOnce = "list_things";
+
+        var events = await Drain(runner, context);
+
+        events
+            .Where(item => item.Type is AiStreamEventType.ToolStarted or AiStreamEventType.ToolCompleted)
+            .Select(item => item.ToolName)
+            .Should().Equal("list_things · tags", "list_things · tags");
+
+        var invocation = context.Invocations.Should().ContainSingle().Subject;
+
+        invocation.Label.Should().Be("list_things · tags");
+        invocation.ToolName.Should().Be("list_things", "entity links and the stored invocation key on the real name");
+    }
+
+    [Fact]
     public async Task Run_ShouldStopAndReportError_WhenToolIterationLimitIsReached()
     {
         var tool = new StubTool("allowed_tool", NetptunePermissions.Tasks.Read);
@@ -438,6 +460,13 @@ public class AiConversationRunnerTests
         public IReadOnlySet<string>? CallPermissions { get; set; }
 
         public bool WasExecuted { get; private set; }
+
+        public string? CallLabel { get; init; }
+
+        public string DescribeCall(JsonElement arguments)
+        {
+            return CallLabel ?? Name;
+        }
 
         public IReadOnlySet<string> GetRequiredPermissions(JsonElement arguments)
         {

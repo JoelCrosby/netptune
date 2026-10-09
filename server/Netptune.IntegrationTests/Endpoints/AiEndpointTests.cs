@@ -923,6 +923,98 @@ public sealed class AiEndpointTests
         }
     }
 
+    [Fact]
+    public async Task SendMessage_ShouldReplayEarlierTurnsAsTheyWereSent_SoTheProviderCacheCarriesOver()
+    {
+        var client = Fixture.CreateNetptuneClient();
+
+        await SaveCredential(client);
+        ScriptToolLoop(new AiUsage(), new AiUsage());
+
+        var conversationId = await SendTurn(client, new
+        {
+            text = "Which projects are there?",
+            context = new { view = "board", boardId = 7, boardName = "Delivery" },
+        });
+
+        try
+        {
+            await SendTurn(client, new
+            {
+                conversationId,
+                text = "And which one is busiest?",
+                context = new { view = "task", taskSystemId = "NPT-42", taskName = "Fix the login page" },
+            });
+
+            var requests = ReadSentRequests().Where(request => request.Tools.Count > 0).ToList();
+            var firstTurn = requests.First(request => request.Messages[^1].Text == "Which projects are there?");
+            var secondTurn = requests.First(request => request.Messages[^1].Text == "And which one is busiest?");
+
+            firstTurn.Messages[^1].PromptText.Should().Contain("<viewing>", "the screen is described to the model");
+            secondTurn.SystemPrompt.Should().Be(firstTurn.SystemPrompt);
+            secondTurn.Messages.Count.Should().BeGreaterThan(firstTurn.Messages.Count);
+
+            for (var index = 0; index < firstTurn.Messages.Count; index++)
+            {
+                var sent = firstTurn.Messages[index];
+                var replayed = secondTurn.Messages[index];
+
+                replayed.Role.Should().Be(sent.Role);
+                replayed.PromptText.Should().Be(
+                    sent.PromptText,
+                    "the provider caches the first turn's request, and only an identical prefix reads it back");
+            }
+
+            var stored = await ReadUserMessageTexts(conversationId);
+
+            stored.Should().Equal(
+                ["Which projects are there?", "And which one is busiest?"],
+                "the conversation shows what the user typed, not what was on their screen");
+        }
+        finally
+        {
+            await RemoveSeed(conversationId);
+            await DeleteExistingCredentials(client);
+            ResetScript();
+        }
+    }
+
+    private static async Task<Guid> SendTurn(HttpClient client, object body)
+    {
+        var response = await client.PostAsJsonAsync(
+            "api/ai/conversations/messages",
+            body,
+            TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var stream = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+        var firstFrame = stream.Split('\n').First(line => line.StartsWith("data: ", StringComparison.Ordinal));
+        var payload = JsonDocument.Parse(firstFrame[6..]);
+
+        return payload.RootElement.GetProperty("conversationId").GetGuid();
+    }
+
+    private List<AiChatRequest> ReadSentRequests()
+    {
+        using var scope = Fixture.CreateScope();
+
+        return scope.ServiceProvider.GetRequiredService<TestAiChatScript>().Requests.ToList();
+    }
+
+    private async Task<List<string?>> ReadUserMessageTexts(Guid conversationId)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var messages = await context.AiMessages
+            .AsNoTracking()
+            .Where(item => item.ConversationId == conversationId && item.Role == AiMessageRole.User)
+            .OrderBy(item => item.Sequence)
+            .ToListAsync(TestContext.Current.CancellationToken);
+
+        return messages.Select(message => AiMessageContent.FromJsonDocument(message.Content).Text).ToList();
+    }
+
     private void ScriptToolLoop(AiUsage toolCallUsage, AiUsage answerUsage)
     {
         using var scope = Fixture.CreateScope();
@@ -933,7 +1025,12 @@ public sealed class AiEndpointTests
         {
             ToolCalls =
             [
-                new AiToolCall { Id = "call-1", Name = "list_projects", Arguments = JsonDocument.Parse("{}") },
+                new AiToolCall
+                {
+                    Id = "call-1",
+                    Name = "list_records",
+                    Arguments = JsonDocument.Parse("""{"kind":"projects"}"""),
+                },
             ],
             Usage = toolCallUsage,
         });

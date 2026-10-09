@@ -40,8 +40,8 @@ public sealed class SearchTasksTool : IAiTool
           "search": { "type": "string", "description": "Free text to match against task name and description." },
           "projectId": { "type": "integer", "description": "Restrict results to a single project." },
           "sprintId": { "type": "integer", "description": "Restrict results to a single sprint." },
-          "statusId": { "type": "integer", "description": "Restrict results to a single status, from list_statuses." },
-          "assigneeId": { "type": "string", "description": "Restrict results to one assignee, using a userId from list_members." },
+          "statusId": { "type": "integer", "description": "Restrict results to a single status, from list_records." },
+          "assigneeId": { "type": "string", "description": "Restrict results to one assignee, using a userId from list_records members." },
           "hasAssignee": { "type": "boolean", "description": "True for tasks with at least one assignee, false for tasks nobody is assigned to." },
           "noSprint": { "type": "boolean", "description": "Only tasks that are not in any sprint." },
           "hasFlags": { "type": "boolean", "description": "Only tasks carrying a flag." },
@@ -49,7 +49,7 @@ public sealed class SearchTasksTool : IAiTool
           "tags": {
             "type": "array",
             "items": { "type": "string" },
-            "description": "Only tasks carrying at least one of these tag names, from list_tags."
+            "description": "Only tasks carrying at least one of these tag names, from list_records."
           },
           "pageSize": { "type": "integer", "description": "How many tasks to return, up to 100." }
         }
@@ -73,7 +73,7 @@ public sealed class SearchTasksTool : IAiTool
         if (resolvedTags.Unknown.Count > 0)
         {
             return AiToolExecution.Failed(
-                $"These tags do not exist in this workspace: {string.Join(", ", resolvedTags.Unknown)}. Use list_tags to see the available names.");
+                $"These tags do not exist in this workspace: {string.Join(", ", resolvedTags.Unknown)}. List the tags with list_records to see the available names.");
         }
 
         var filter = new TaskFilter

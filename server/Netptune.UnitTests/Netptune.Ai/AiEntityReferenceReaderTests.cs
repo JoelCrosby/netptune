@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 using FluentAssertions;
 
 using Netptune.Core.Models.Ai;
@@ -112,5 +114,30 @@ public class AiEntityReferenceReaderTests
         references.Should().HaveCount(2, "the same id under two types is two entities");
         references.Should().Contain(reference => reference.Type == "sprint" && reference.Id == "7");
         references.Should().Contain(reference => reference.Type == "board" && reference.Id == "7");
+    }
+
+    [Theory]
+    [InlineData("projects", """[{"id":4,"name":"Website","key":"WEB"}]""", "project", "WEB")]
+    [InlineData("sprints", """[{"id":7,"name":"Sprint 7","identifier":"sprint-7"}]""", "sprint", "sprint-7")]
+    [InlineData("boards", """[{"id":7,"name":"Delivery","identifier":"delivery"}]""", "board", "delivery")]
+    public void Read_ShouldTypeListRecordsByTheKindItListed(string kind, string result, string type, string routeId)
+    {
+        using var arguments = JsonDocument.Parse($$"""{"kind":"{{kind}}"}""");
+
+        var references = AiEntityReferenceReader.Read("list_records", result, arguments);
+
+        references.Should().ContainSingle();
+        references[0].Type.Should().Be(type);
+        references[0].RouteId.Should().Be(routeId);
+    }
+
+    [Fact]
+    public void Read_ShouldLinkNothing_ForListRecordsKindsThatAreNotEntities()
+    {
+        using var tags = JsonDocument.Parse("""{"kind":"tags"}""");
+
+        AiEntityReferenceReader.Read("list_records", """[{"id":1,"name":"bug","key":"BUG"}]""", tags).Should().BeEmpty();
+        AiEntityReferenceReader.Read("list_records", """[{"id":4,"name":"Website","key":"WEB"}]""").Should().BeEmpty(
+            "without its arguments there is no telling what list_records listed");
     }
 }

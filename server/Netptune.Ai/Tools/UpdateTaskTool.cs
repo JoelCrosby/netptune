@@ -73,7 +73,7 @@ public sealed class UpdateTaskTool : IAiTool
           "taskRef": { "type": "string", "description": "Handle of a task proposed earlier in this change set, to tag it." },
           "name": { "type": "string", "description": "New task name." },
           "description": { "type": "string", "description": "New task description." },
-          "statusId": { "type": "integer", "description": "New status id, from list_statuses." },
+          "statusId": { "type": "integer", "description": "New status id, from list_records." },
           "priority": {
             "type": "string",
             "enum": ["None", "Low", "Medium", "High", "Critical"],
@@ -98,7 +98,7 @@ public sealed class UpdateTaskTool : IAiTool
           "assigneeIds": {
             "type": "array",
             "items": { "type": "string" },
-            "description": "The complete set of assignee ids, from list_members. An empty array clears them."
+            "description": "The complete set of assignee ids, from list_records members. An empty array clears them."
           },
           "tags": {
             "type": "array",

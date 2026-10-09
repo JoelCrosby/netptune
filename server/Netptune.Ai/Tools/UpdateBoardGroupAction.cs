@@ -12,38 +12,21 @@ using Netptune.Handlers.Statuses.Queries;
 
 namespace Netptune.Ai.Tools;
 
-public sealed class UpdateBoardGroupTool : IAiTool
+public sealed class UpdateBoardGroupAction : IAiToolAction
 {
     private readonly IMediator Mediator;
     private readonly IAiChangeSetBuilder ChangeSet;
 
-    public UpdateBoardGroupTool(IMediator mediator, IAiChangeSetBuilder changeSet)
+    public UpdateBoardGroupAction(IMediator mediator, IAiChangeSetBuilder changeSet)
     {
         Mediator = mediator;
         ChangeSet = changeSet;
     }
 
-    public string Name => "propose_update_board_group";
-
-    public string Description =>
-        "Propose renaming a board group, the column on a board, or changing the status tasks take when they are "
-        + "moved into it. Pass clearStatus to leave the group without a status of its own.";
-
-    public AiToolKind Kind => AiToolKind.Write;
+    public string ChangeName => "propose_update_board_group";
 
     public IReadOnlySet<string> RequiredPermissions { get; } =
         new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.BoardGroups.Update };
-
-    public JsonDocument InputSchema { get; } = AiToolSchema.Object(
-        """
-        {
-          "boardGroupId": { "type": "integer", "description": "The id of the group to change, from list_board_groups." },
-          "name": { "type": "string", "description": "New group name." },
-          "statusId": { "type": "integer", "description": "Status tasks take when moved into this group." },
-          "clearStatus": { "type": "boolean", "description": "Remove the status the group applies, instead of setting one." }
-        }
-        """,
-        "boardGroupId");
 
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
@@ -109,7 +92,7 @@ public sealed class UpdateBoardGroupTool : IAiTool
 
         ChangeSet.Add(new AiChangeDraft
         {
-            ToolName = Name,
+            ToolName = ChangeName,
             EntityType = "boardGroup",
             EntityId = group.Id,
             Summary = $"Update {changedNames} on “{group.Name}” in {option.BoardName}",

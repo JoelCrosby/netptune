@@ -16,6 +16,7 @@ public static class AiMessageReferences
             {
                 ToolName = invocation.ToolName,
                 Content = ReadResult(invocation.Result),
+                Arguments = invocation.Arguments,
             });
 
             grouped[group.Key] = AiEntityReferenceReader.Read(results);

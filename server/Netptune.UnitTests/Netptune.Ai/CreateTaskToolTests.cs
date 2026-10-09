@@ -200,7 +200,7 @@ public class CreateTaskToolTests
 
     private async Task<string> GivenProposedBoard(string arguments)
     {
-        var createBoard = new CreateBoardTool(Mediator, ChangeSet);
+        var createBoard = new CreateBoardAction(Mediator, ChangeSet);
 
         await createBoard.Execute(JsonDocument.Parse(arguments).RootElement, TestContext.Current.CancellationToken);
 
@@ -209,7 +209,7 @@ public class CreateTaskToolTests
 
     private async Task<string> GivenProposedBoardGroup(string boardRef, string name)
     {
-        var createGroup = new CreateBoardGroupTool(Mediator, ChangeSet);
+        var createGroup = new CreateBoardGroupAction(Mediator, ChangeSet);
         var arguments = JsonDocument.Parse($$"""{"name":"{{name}}","boardRef":"{{boardRef}}"}""").RootElement;
 
         await createGroup.Execute(arguments, TestContext.Current.CancellationToken);

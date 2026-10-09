@@ -27,6 +27,19 @@ public static class AiToolSchema
         return Object("{}");
     }
 
+    // Only a value the tool knows is named, so the work log never repeats whatever the model sent.
+    public static string DescribeCall(
+        string toolName,
+        JsonElement arguments,
+        string argument,
+        IEnumerable<string> knownValues)
+    {
+        var value = GetString(arguments, argument);
+        var isKnown = value is not null && knownValues.Contains(value, StringComparer.Ordinal);
+
+        return isKnown ? $"{toolName} · {value}" : toolName;
+    }
+
     public static string? GetString(JsonElement arguments, string name)
     {
         var hasProperty = arguments.ValueKind == JsonValueKind.Object

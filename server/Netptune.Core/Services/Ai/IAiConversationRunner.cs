@@ -9,6 +9,9 @@ public sealed record AiToolInvocationRecord
 {
     public required string ToolName { get; init; }
 
+    // What the work log shows for the call; see IAiTool.DescribeCall.
+    public string? Label { get; init; }
+
     public required JsonDocument Arguments { get; init; }
 
     public required string Result { get; init; }

@@ -36,7 +36,7 @@ public sealed class UpdateStatusTool : IAiTool
     public JsonDocument InputSchema { get; } = AiToolSchema.Object(
         """
         {
-          "statusId": { "type": "integer", "description": "The id of the status to change, from list_statuses." },
+          "statusId": { "type": "integer", "description": "The id of the status to change, from list_records." },
           "name": { "type": "string", "description": "New status name." },
           "category": {
             "type": "string",

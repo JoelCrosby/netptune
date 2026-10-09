@@ -9,38 +9,21 @@ using Netptune.Handlers.Boards.Queries;
 
 namespace Netptune.Ai.Tools;
 
-public sealed class CreateBoardTool : IAiTool
+public sealed class CreateBoardAction : IAiToolAction
 {
     private readonly IMediator Mediator;
     private readonly IAiChangeSetBuilder ChangeSet;
 
-    public CreateBoardTool(IMediator mediator, IAiChangeSetBuilder changeSet)
+    public CreateBoardAction(IMediator mediator, IAiChangeSetBuilder changeSet)
     {
         Mediator = mediator;
         ChangeSet = changeSet;
     }
 
-    public string Name => "propose_create_board";
-
-    public string Description =>
-        "Propose creating a board in a project.";
-
-    public AiToolKind Kind => AiToolKind.Write;
+    public string ChangeName => "propose_create_board";
 
     public IReadOnlySet<string> RequiredPermissions { get; } =
         new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Boards.Create };
-
-    public JsonDocument InputSchema { get; } = AiToolSchema.Object(
-        """
-        {
-          "name": { "type": "string", "description": "The board name." },
-          "projectId": { "type": "integer", "description": "The project the board belongs to, from list_projects." },
-          "projectRef": { "type": "string", "description": "Handle of a project proposed earlier in this change set, instead of projectId." },
-          "identifier": { "type": "string", "description": "Url identifier for the board, lowercase with dashes." }
-        }
-        """,
-        "name",
-        "identifier");
 
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
@@ -82,7 +65,7 @@ public sealed class CreateBoardTool : IAiTool
 
         ChangeSet.Add(new AiChangeDraft
         {
-            ToolName = Name,
+            ToolName = ChangeName,
             EntityType = "board",
             RefKey = refKey,
             Summary = $"Create board “{name}” in {project.Name}",

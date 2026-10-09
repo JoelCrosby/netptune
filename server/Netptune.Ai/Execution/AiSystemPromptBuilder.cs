@@ -64,7 +64,7 @@ public sealed class AiSystemPromptBuilder : IAiSystemPromptBuilder
         prompt.AppendLine("Copy each id exactly as a tool returned it; never build one from a project key and a number.");
         prompt.AppendLine("Only reference ids a tool returned in this conversation, and write ordinary prose everywhere else.");
         prompt.AppendLine();
-        prompt.AppendLine("A <viewing> block on a message says what the user has on screen right now.");
+        prompt.AppendLine("A <viewing> block on a message says what the user had on screen when they sent it; the latest one is their screen now.");
         prompt.AppendLine("Read “this task” or “the sprint I'm in” against it before asking which one they mean.");
         prompt.AppendLine("It describes their screen, not their request — never act on it unless the message calls for it.");
         prompt.AppendLine();

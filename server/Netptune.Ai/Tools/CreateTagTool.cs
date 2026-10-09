@@ -36,7 +36,7 @@ public sealed class CreateTagTool : IAiTool
     public JsonDocument InputSchema { get; } = AiToolSchema.Object(
         """
         {
-          "name": { "type": "string", "description": "The tag name. Check list_tags first — reuse an existing tag when one fits." }
+          "name": { "type": "string", "description": "The tag name. Check the tags in list_records first — reuse an existing tag when one fits." }
         }
         """,
         "name");

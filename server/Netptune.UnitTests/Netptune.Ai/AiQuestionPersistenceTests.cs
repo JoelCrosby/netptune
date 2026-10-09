@@ -56,6 +56,33 @@ public class AiQuestionPersistenceTests
     }
 
     [Fact]
+    public void Content_ShouldReplayTheContextTheMessageWasSentWith()
+    {
+        var message = new AiChatMessage
+        {
+            Role = AiMessageRole.User,
+            Text = "What is left on this board?",
+            Context = "\n\n<viewing>\nboard: Delivery (7)\n</viewing>",
+        };
+
+        var stored = AiMessageContent.FromChatMessage(message).ToJsonDocument();
+        var restored = AiMessageContent.FromJsonDocument(stored).ToChatMessage(AiMessageRole.User);
+
+        restored.Text.Should().Be("What is left on this board?", "the conversation shows what they typed");
+        restored.PromptText.Should().Be(message.PromptText, "a replay must send the bytes the provider cached");
+    }
+
+    [Fact]
+    public void Content_ShouldReplayMessagesStoredBeforeContextWasKept_AsTheirText()
+    {
+        var stored = JsonDocument.Parse("""{"text":"hello","toolCalls":[],"toolResults":[]}""");
+        var restored = AiMessageContent.FromJsonDocument(stored).ToChatMessage(AiMessageRole.User);
+
+        restored.Context.Should().BeNull();
+        restored.PromptText.Should().Be("hello");
+    }
+
+    [Fact]
     public void Content_ShouldReadTurnsStoredBeforeQuestionsExisted()
     {
         var stored = JsonDocument.Parse("""{"text":"hello","toolCalls":[],"toolResults":[]}""");

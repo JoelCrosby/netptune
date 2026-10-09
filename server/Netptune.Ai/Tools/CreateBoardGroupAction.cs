@@ -12,37 +12,21 @@ using Netptune.Handlers.Statuses.Queries;
 
 namespace Netptune.Ai.Tools;
 
-public sealed class CreateBoardGroupTool : IAiTool
+public sealed class CreateBoardGroupAction : IAiToolAction
 {
     private readonly IMediator Mediator;
     private readonly IAiChangeSetBuilder ChangeSet;
 
-    public CreateBoardGroupTool(IMediator mediator, IAiChangeSetBuilder changeSet)
+    public CreateBoardGroupAction(IMediator mediator, IAiChangeSetBuilder changeSet)
     {
         Mediator = mediator;
         ChangeSet = changeSet;
     }
 
-    public string Name => "propose_create_board_group";
-
-    public string Description =>
-        "Propose adding a group, the column on a board, to an existing board or one proposed in this change set.";
-
-    public AiToolKind Kind => AiToolKind.Write;
+    public string ChangeName => "propose_create_board_group";
 
     public IReadOnlySet<string> RequiredPermissions { get; } =
         new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.BoardGroups.Create };
-
-    public JsonDocument InputSchema { get; } = AiToolSchema.Object(
-        """
-        {
-          "name": { "type": "string", "description": "The group name, such as In progress." },
-          "boardId": { "type": "integer", "description": "The board the group belongs to, from list_boards." },
-          "boardRef": { "type": "string", "description": "Handle of a board proposed earlier in this change set, instead of boardId." },
-          "statusId": { "type": "integer", "description": "Optional status tasks take when moved into this group." }
-        }
-        """,
-        "name");
 
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
@@ -86,7 +70,7 @@ public sealed class CreateBoardGroupTool : IAiTool
 
         ChangeSet.Add(new AiChangeDraft
         {
-            ToolName = Name,
+            ToolName = ChangeName,
             EntityType = AiPendingBoardGroupLookup.EntityType,
             RefKey = refKey,
             Summary = $"Add group “{name}” to {board.Name}",
@@ -108,7 +92,7 @@ public sealed class CreateBoardGroupTool : IAiTool
     {
         var boardRef = AiPendingReference.Read(arguments, "boardRef");
         var proposedNames = ChangeSet.Changes
-            .Where(draft => draft.ToolName == Name && IsSameBoard(draft.Payload.RootElement, board.Id, boardRef))
+            .Where(draft => draft.ToolName == ChangeName && IsSameBoard(draft.Payload.RootElement, board.Id, boardRef))
             .Select(draft => AiToolSchema.GetString(draft.Payload.RootElement, "name")?.Trim());
         var existingNames = board.Id.HasValue
             ? await GetGroupNames(board.Id.Value, cancellationToken)

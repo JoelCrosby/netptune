@@ -6,6 +6,7 @@ using Mediator;
 
 using Netptune.Ai.Execution;
 using Netptune.Ai.Tools;
+using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
@@ -44,7 +45,7 @@ public class BoardToolTests
     [Fact]
     public async Task UpdateBoard_ShouldProposeTheRename_AndLeaveTheIdentifierAlone()
     {
-        var tool = new UpdateBoardTool(Mediator, ChangeSet);
+        var tool = new UpdateBoardAction(Mediator, ChangeSet);
         var result = await Execute(tool, $$"""{"boardId":{{BoardId}},"name":"Delivery"}""");
 
         result.IsError.Should().BeFalse();
@@ -61,7 +62,7 @@ public class BoardToolTests
     [Fact]
     public async Task UpdateBoard_ShouldSlugTheIdentifier()
     {
-        var tool = new UpdateBoardTool(Mediator, ChangeSet);
+        var tool = new UpdateBoardAction(Mediator, ChangeSet);
         var result = await Execute(tool, $$"""{"boardId":{{BoardId}},"identifier":"Team Delivery"}""");
 
         result.IsError.Should().BeFalse();
@@ -73,7 +74,7 @@ public class BoardToolTests
     {
         GivenIdentifierIsTaken();
 
-        var tool = new UpdateBoardTool(Mediator, ChangeSet);
+        var tool = new UpdateBoardAction(Mediator, ChangeSet);
         var result = await Execute(tool, $$"""{"boardId":{{BoardId}},"identifier":"delivery"}""");
 
         result.IsError.Should().BeTrue();
@@ -83,7 +84,7 @@ public class BoardToolTests
     [Fact]
     public async Task UpdateBoard_ShouldFail_WhenNothingWouldChange()
     {
-        var tool = new UpdateBoardTool(Mediator, ChangeSet);
+        var tool = new UpdateBoardAction(Mediator, ChangeSet);
         var result = await Execute(tool, $$"""{"boardId":{{BoardId}},"name":"Netptune","identifier":"netptune"}""");
 
         result.IsError.Should().BeTrue();
@@ -93,7 +94,7 @@ public class BoardToolTests
     [Fact]
     public async Task UpdateBoard_ShouldFail_WhenTheBoardIsNotInTheWorkspace()
     {
-        var tool = new UpdateBoardTool(Mediator, ChangeSet);
+        var tool = new UpdateBoardAction(Mediator, ChangeSet);
         var result = await Execute(tool, """{"boardId":404,"name":"Delivery"}""");
 
         result.IsError.Should().BeTrue();
@@ -103,7 +104,7 @@ public class BoardToolTests
     [Fact]
     public async Task DeleteBoard_ShouldProposeTheDeletion()
     {
-        var tool = new DeleteBoardTool(Mediator, ChangeSet);
+        var tool = new DeleteBoardAction(Mediator, ChangeSet);
         var result = await Execute(tool, $$"""{"boardId":{{BoardId}},"reason":"Replaced by the delivery board"}""");
 
         result.IsError.Should().BeFalse();
@@ -122,7 +123,7 @@ public class BoardToolTests
     {
         GivenBoardGroup(DoingId, "Doing", statusId: null);
 
-        var tool = new UpdateBoardGroupTool(Mediator, ChangeSet);
+        var tool = new UpdateBoardGroupAction(Mediator, ChangeSet);
         var result = await Execute(tool, $$"""{"boardGroupId":{{DoingId}},"name":"In progress","statusId":{{InProgressStatusId}}}""");
 
         result.IsError.Should().BeFalse();
@@ -141,7 +142,7 @@ public class BoardToolTests
     {
         GivenBoardGroup(DoingId, "Doing", InProgressStatusId);
 
-        var tool = new UpdateBoardGroupTool(Mediator, ChangeSet);
+        var tool = new UpdateBoardGroupAction(Mediator, ChangeSet);
         var result = await Execute(tool, $$"""{"boardGroupId":{{DoingId}},"clearStatus":true}""");
 
         result.IsError.Should().BeFalse();
@@ -158,7 +159,7 @@ public class BoardToolTests
     {
         GivenBoardGroup(DoingId, "Doing", statusId: null);
 
-        var tool = new UpdateBoardGroupTool(Mediator, ChangeSet);
+        var tool = new UpdateBoardGroupAction(Mediator, ChangeSet);
         var result = await Execute(tool, $$"""{"boardGroupId":{{DoingId}},"statusId":999}""");
 
         result.IsError.Should().BeTrue();
@@ -170,7 +171,7 @@ public class BoardToolTests
     {
         GivenBoardGroup(DoingId, "Doing", InProgressStatusId);
 
-        var tool = new UpdateBoardGroupTool(Mediator, ChangeSet);
+        var tool = new UpdateBoardGroupAction(Mediator, ChangeSet);
         var result = await Execute(tool, $$"""{"boardGroupId":{{DoingId}},"name":"Doing","statusId":{{InProgressStatusId}}}""");
 
         result.IsError.Should().BeTrue();
@@ -180,7 +181,7 @@ public class BoardToolTests
     [Fact]
     public async Task DeleteBoardGroup_ShouldSayWhereItsTasksGo()
     {
-        var tool = new DeleteBoardGroupTool(Mediator, ChangeSet);
+        var tool = new DeleteBoardGroupAction(Mediator, ChangeSet);
         var result = await Execute(tool, $$"""{"boardGroupId":{{DoingId}}}""");
 
         result.IsError.Should().BeFalse();
@@ -198,7 +199,7 @@ public class BoardToolTests
     {
         GivenBoardGroups(Group(BacklogId, "Backlog"));
 
-        var tool = new DeleteBoardGroupTool(Mediator, ChangeSet);
+        var tool = new DeleteBoardGroupAction(Mediator, ChangeSet);
         var result = await Execute(tool, $$"""{"boardGroupId":{{BacklogId}}}""");
 
         result.IsError.Should().BeTrue();
@@ -208,7 +209,7 @@ public class BoardToolTests
     [Fact]
     public async Task ReorderBoardGroups_ShouldProposeTheNewOrder()
     {
-        var tool = new ReorderBoardGroupsTool(Mediator, ChangeSet);
+        var tool = new ReorderBoardGroupsAction(Mediator, ChangeSet);
         var result = await Execute(tool, $$"""{"boardId":{{BoardId}},"groupIds":[{{DoneId}},{{DoingId}},{{BacklogId}}]}""");
 
         result.IsError.Should().BeFalse();
@@ -226,7 +227,7 @@ public class BoardToolTests
     [Fact]
     public async Task ReorderBoardGroups_ShouldFail_WhenAGroupIsLeftOut()
     {
-        var tool = new ReorderBoardGroupsTool(Mediator, ChangeSet);
+        var tool = new ReorderBoardGroupsAction(Mediator, ChangeSet);
         var result = await Execute(tool, $$"""{"boardId":{{BoardId}},"groupIds":[{{DoneId}},{{BacklogId}}]}""");
 
         result.IsError.Should().BeTrue();
@@ -237,7 +238,7 @@ public class BoardToolTests
     [Fact]
     public async Task ReorderBoardGroups_ShouldFail_WhenAGroupIsListedTwice()
     {
-        var tool = new ReorderBoardGroupsTool(Mediator, ChangeSet);
+        var tool = new ReorderBoardGroupsAction(Mediator, ChangeSet);
         var result = await Execute(tool, $$"""{"boardId":{{BoardId}},"groupIds":[{{DoneId}},{{DoneId}},{{BacklogId}}]}""");
 
         result.IsError.Should().BeTrue();
@@ -247,7 +248,7 @@ public class BoardToolTests
     [Fact]
     public async Task ReorderBoardGroups_ShouldFail_WhenAGroupIsOnAnotherBoard()
     {
-        var tool = new ReorderBoardGroupsTool(Mediator, ChangeSet);
+        var tool = new ReorderBoardGroupsAction(Mediator, ChangeSet);
         var result = await Execute(tool, $$"""{"boardId":{{BoardId}},"groupIds":[{{DoneId}},{{DoingId}},99]}""");
 
         result.IsError.Should().BeTrue();
@@ -258,7 +259,7 @@ public class BoardToolTests
     [Fact]
     public async Task ReorderBoardGroups_ShouldFail_WhenTheOrderIsTheOneItAlreadyHas()
     {
-        var tool = new ReorderBoardGroupsTool(Mediator, ChangeSet);
+        var tool = new ReorderBoardGroupsAction(Mediator, ChangeSet);
         var result = await Execute(tool, $$"""{"boardId":{{BoardId}},"groupIds":[{{BacklogId}},{{DoingId}},{{DoneId}}]}""");
 
         result.IsError.Should().BeTrue();
@@ -268,7 +269,7 @@ public class BoardToolTests
     [Fact]
     public async Task CreateBoardGroup_ShouldFail_WhenTheBoardAlreadyHasAGroupWithThatName()
     {
-        var tool = new CreateBoardGroupTool(Mediator, ChangeSet);
+        var tool = new CreateBoardGroupAction(Mediator, ChangeSet);
         var result = await Execute(tool, $$"""{"boardId":{{BoardId}},"name":"backlog"}""");
 
         result.IsError.Should().BeTrue();
@@ -278,7 +279,7 @@ public class BoardToolTests
     [Fact]
     public async Task CreateBoardGroup_ShouldFail_WhenTheSameGroupIsAlreadyProposedForTheBoard()
     {
-        var tool = new CreateBoardGroupTool(Mediator, ChangeSet);
+        var tool = new CreateBoardGroupAction(Mediator, ChangeSet);
 
         await Execute(tool, $$"""{"boardId":{{BoardId}},"name":"Review"}""");
         var result = await Execute(tool, $$"""{"boardId":{{BoardId}},"name":"Review"}""");
@@ -292,7 +293,7 @@ public class BoardToolTests
     {
         GivenPendingBoard("board-1");
 
-        var tool = new CreateBoardGroupTool(Mediator, ChangeSet);
+        var tool = new CreateBoardGroupAction(Mediator, ChangeSet);
 
         await Execute(tool, """{"boardRef":"board-1","name":"Todo"}""");
         var result = await Execute(tool, """{"boardRef":"board-1","name":"todo"}""");
@@ -304,7 +305,7 @@ public class BoardToolTests
     [Fact]
     public async Task CreateBoardGroup_ShouldPropose_WhenTheNameIsNewToTheBoard()
     {
-        var tool = new CreateBoardGroupTool(Mediator, ChangeSet);
+        var tool = new CreateBoardGroupAction(Mediator, ChangeSet);
         var result = await Execute(tool, $$"""{"boardId":{{BoardId}},"name":"Review"}""");
 
         result.IsError.Should().BeFalse();
@@ -316,7 +317,7 @@ public class BoardToolTests
     {
         GivenPendingBoard("board-1");
 
-        var tool = new CreateBoardGroupTool(Mediator, ChangeSet);
+        var tool = new CreateBoardGroupAction(Mediator, ChangeSet);
         var result = await Execute(tool, """{"boardRef":"board-1","name":"Todo"}""");
 
         var change = ChangeSet.Changes.Last();
@@ -324,6 +325,72 @@ public class BoardToolTests
         change.EntityType.Should().Be("boardGroup");
         change.RefKey.Should().NotBeNull();
         result.Content.Should().Contain(change.RefKey);
+    }
+
+    [Fact]
+    public async Task BoardGroupChange_ShouldProposeUnderTheActionsChangeName_WithoutTheActionInThePayload()
+    {
+        var tool = new BoardGroupChangeTool(Mediator, ChangeSet);
+        var arguments = JsonDocument.Parse($$"""{"action":"create","boardId":{{BoardId}},"name":"Review"}""");
+
+        var result = await tool.Execute(arguments.RootElement, TestContext.Current.CancellationToken);
+
+        result.IsError.Should().BeFalse();
+
+        var change = ChangeSet.Changes.Should().ContainSingle().Subject;
+
+        change.ToolName.Should().Be("propose_create_board_group", "handlers and stored change sets key on the change name");
+        change.Payload.RootElement.TryGetProperty("action", out _).Should().BeFalse(
+            "the payload keeps the shape stored before the tools were merged");
+    }
+
+    [Fact]
+    public async Task BoardChange_ShouldFail_WhenTheActionIsUnknown()
+    {
+        var tool = new BoardChangeTool(Mediator, ChangeSet);
+        var arguments = JsonDocument.Parse($$"""{"action":"archive","boardId":{{BoardId}}}""");
+
+        var result = await tool.Execute(arguments.RootElement, TestContext.Current.CancellationToken);
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("create, update, delete");
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Theory]
+    [InlineData("create", "propose_create_board_group", NetptunePermissions.BoardGroups.Create)]
+    [InlineData("update", "propose_update_board_group", NetptunePermissions.BoardGroups.Update)]
+    [InlineData("delete", "propose_delete_board_group", NetptunePermissions.BoardGroups.Delete)]
+    [InlineData("reorder", "propose_reorder_board_groups", NetptunePermissions.BoardGroups.Update)]
+    public void BoardGroupChange_ShouldAskOnlyForTheActionsPermission(string action, string changeName, string permission)
+    {
+        var tool = new BoardGroupChangeTool(Mediator, ChangeSet);
+        var arguments = JsonDocument.Parse($$"""{"action":"{{action}}"}""").RootElement;
+
+        tool.GetRequiredPermissions(arguments).Should().BeEquivalentTo([permission]);
+        tool.GetChangePermissions(changeName, arguments).Should().BeEquivalentTo(
+            [permission],
+            "applying a change checks the permission of the action that proposed it");
+    }
+
+    [Fact]
+    public void BoardChange_ShouldNameTheActionInTheWorkLog()
+    {
+        var tool = new BoardChangeTool(Mediator, ChangeSet);
+
+        tool.DescribeCall(JsonDocument.Parse("""{"action":"delete"}""").RootElement)
+            .Should().Be("propose_board_change · delete");
+        tool.DescribeCall(JsonDocument.Parse("""{"action":"archive"}""").RootElement)
+            .Should().Be("propose_board_change", "an action the tool does not know is not repeated back");
+    }
+
+    [Fact]
+    public void BoardChange_ShouldBeOffered_WhenAnyActionIsPermitted()
+    {
+        var tool = new BoardChangeTool(Mediator, ChangeSet);
+
+        tool.IsAvailable(new HashSet<string> { NetptunePermissions.Boards.Update }).Should().BeTrue();
+        tool.IsAvailable(new HashSet<string> { NetptunePermissions.BoardGroups.Update }).Should().BeFalse();
     }
 
     private void GivenPendingBoard(string refKey)
@@ -339,7 +406,7 @@ public class BoardToolTests
         });
     }
 
-    private static async Task<AiToolExecution> Execute(IAiTool tool, string json)
+    private static async Task<AiToolExecution> Execute(IAiToolAction tool, string json)
     {
         var arguments = JsonDocument.Parse(json).RootElement;
 

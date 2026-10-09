@@ -21,6 +21,8 @@ public sealed class SprintTransitionTool : IAiTool
 
     private static readonly string[] ClosingChanges = [CompleteChange, CancelChange];
 
+    private static readonly string[] KnownActions = ["start", "complete", "cancel", "delete"];
+
     private static readonly IReadOnlySet<string> UpdatePermissions =
         new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Sprints.Update };
 
@@ -107,6 +109,11 @@ public sealed class SprintTransitionTool : IAiTool
         return isClosing ? ClosingPermissions : UpdatePermissions;
     }
 
+    public string DescribeCall(JsonElement arguments)
+    {
+        return AiToolSchema.DescribeCall(Name, arguments, "action", KnownActions);
+    }
+
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
         var sprintId = AiToolSchema.GetInt(arguments, "sprintId");
@@ -117,7 +124,7 @@ public sealed class SprintTransitionTool : IAiTool
         }
 
         var action = AiToolSchema.GetString(arguments, "action")?.Trim().ToLowerInvariant();
-        var isKnownAction = action is "start" or "complete" or "cancel" or "delete";
+        var isKnownAction = KnownActions.Contains(action);
 
         if (!isKnownAction)
         {

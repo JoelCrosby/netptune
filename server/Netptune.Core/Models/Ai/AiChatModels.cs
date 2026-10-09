@@ -37,6 +37,13 @@ public sealed record AiChatMessage
 
     public string? Text { get; init; }
 
+    // What the user had on screen when they sent this, appended to Text for the model only. It is kept
+    // apart so the conversation shows what they typed, and stored so a replay sends the same bytes the
+    // provider cached.
+    public string? Context { get; init; }
+
+    public string PromptText => $"{Text}{Context}";
+
     public List<AiToolCall> ToolCalls { get; init; } = [];
 
     public List<AiToolResult> ToolResults { get; init; } = [];

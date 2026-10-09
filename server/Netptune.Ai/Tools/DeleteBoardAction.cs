@@ -8,36 +8,21 @@ using Netptune.Core.Services.Ai;
 
 namespace Netptune.Ai.Tools;
 
-public sealed class DeleteBoardTool : IAiTool
+public sealed class DeleteBoardAction : IAiToolAction
 {
     private readonly IMediator Mediator;
     private readonly IAiChangeSetBuilder ChangeSet;
 
-    public DeleteBoardTool(IMediator mediator, IAiChangeSetBuilder changeSet)
+    public DeleteBoardAction(IMediator mediator, IAiChangeSetBuilder changeSet)
     {
         Mediator = mediator;
         ChangeSet = changeSet;
     }
 
-    public string Name => "propose_delete_board";
-
-    public string Description =>
-        "Propose deleting a board and its groups. "
-        + "The board is archived rather than erased, and its tasks stay in the project.";
-
-    public AiToolKind Kind => AiToolKind.Write;
+    public string ChangeName => "propose_delete_board";
 
     public IReadOnlySet<string> RequiredPermissions { get; } =
         new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Boards.Delete };
-
-    public JsonDocument InputSchema { get; } = AiToolSchema.Object(
-        """
-        {
-          "boardId": { "type": "integer", "description": "The id of the board to delete, from list_boards." },
-          "reason": { "type": "string", "description": "Why the board should go, shown to the user in the review." }
-        }
-        """,
-        "boardId");
 
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
@@ -72,7 +57,7 @@ public sealed class DeleteBoardTool : IAiTool
 
         ChangeSet.Add(new AiChangeDraft
         {
-            ToolName = Name,
+            ToolName = ChangeName,
             EntityType = "board",
             EntityId = board.Id,
             Summary = $"Delete board “{board.Name}” in {board.ProjectName}",

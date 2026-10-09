@@ -8,37 +8,21 @@ using Netptune.Core.Services.Ai;
 
 namespace Netptune.Ai.Tools;
 
-public sealed class DeleteBoardGroupTool : IAiTool
+public sealed class DeleteBoardGroupAction : IAiToolAction
 {
     private readonly IMediator Mediator;
     private readonly IAiChangeSetBuilder ChangeSet;
 
-    public DeleteBoardGroupTool(IMediator mediator, IAiChangeSetBuilder changeSet)
+    public DeleteBoardGroupAction(IMediator mediator, IAiChangeSetBuilder changeSet)
     {
         Mediator = mediator;
         ChangeSet = changeSet;
     }
 
-    public string Name => "propose_delete_board_group";
-
-    public string Description =>
-        "Propose deleting a board group, the column on a board. "
-        + "Tasks sitting in the group move to the first remaining group, so nothing is lost. "
-        + "A board keeps its last group — delete the board itself instead.";
-
-    public AiToolKind Kind => AiToolKind.Write;
+    public string ChangeName => "propose_delete_board_group";
 
     public IReadOnlySet<string> RequiredPermissions { get; } =
         new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.BoardGroups.Delete };
-
-    public JsonDocument InputSchema { get; } = AiToolSchema.Object(
-        """
-        {
-          "boardGroupId": { "type": "integer", "description": "The id of the group to delete, from list_board_groups." },
-          "reason": { "type": "string", "description": "Why the group should go, shown to the user in the review." }
-        }
-        """,
-        "boardGroupId");
 
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
@@ -76,7 +60,7 @@ public sealed class DeleteBoardGroupTool : IAiTool
 
         ChangeSet.Add(new AiChangeDraft
         {
-            ToolName = Name,
+            ToolName = ChangeName,
             EntityType = "boardGroup",
             EntityId = group.Id,
             Summary = $"Delete group “{group.Name}” from {group.BoardName}",

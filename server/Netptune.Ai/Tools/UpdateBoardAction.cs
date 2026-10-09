@@ -10,37 +10,21 @@ using Netptune.Handlers.Boards.Queries;
 
 namespace Netptune.Ai.Tools;
 
-public sealed class UpdateBoardTool : IAiTool
+public sealed class UpdateBoardAction : IAiToolAction
 {
     private readonly IMediator Mediator;
     private readonly IAiChangeSetBuilder ChangeSet;
 
-    public UpdateBoardTool(IMediator mediator, IAiChangeSetBuilder changeSet)
+    public UpdateBoardAction(IMediator mediator, IAiChangeSetBuilder changeSet)
     {
         Mediator = mediator;
         ChangeSet = changeSet;
     }
 
-    public string Name => "propose_update_board";
-
-    public string Description =>
-        "Propose renaming a board or changing its url identifier. "
-        + "The identifier keeps its current value unless a new one is passed, so existing links stay valid.";
-
-    public AiToolKind Kind => AiToolKind.Write;
+    public string ChangeName => "propose_update_board";
 
     public IReadOnlySet<string> RequiredPermissions { get; } =
         new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Boards.Update };
-
-    public JsonDocument InputSchema { get; } = AiToolSchema.Object(
-        """
-        {
-          "boardId": { "type": "integer", "description": "The id of the board to change, from list_boards." },
-          "name": { "type": "string", "description": "New board name." },
-          "identifier": { "type": "string", "description": "New url identifier, lowercase with dashes." }
-        }
-        """,
-        "boardId");
 
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
@@ -96,7 +80,7 @@ public sealed class UpdateBoardTool : IAiTool
 
         ChangeSet.Add(new AiChangeDraft
         {
-            ToolName = Name,
+            ToolName = ChangeName,
             EntityType = "board",
             EntityId = board.Id,
             Summary = $"Update {changedNames} on “{board.Name}”",

@@ -22,12 +22,23 @@ public static class AiEntityReferenceReader
     public const string Sprint = "sprint";
     public const string Board = "board";
 
+    private const string ListRecordsTool = "list_records";
+
+    // list_projects, list_sprints and list_boards were folded into list_records; they stay so the
+    // conversations stored before that still link what they found.
     private static readonly Dictionary<string, string> TypesByTool = new(StringComparer.Ordinal)
     {
         ["search_tasks"] = Task,
         ["list_projects"] = Project,
         ["list_sprints"] = Sprint,
         ["list_boards"] = Board,
+    };
+
+    private static readonly Dictionary<string, string> TypesByRecordKind = new(StringComparer.Ordinal)
+    {
+        ["projects"] = Project,
+        ["sprints"] = Sprint,
+        ["boards"] = Board,
     };
 
     public static List<AiEntityReference> Read(IEnumerable<AiToolResultText> results)
@@ -37,7 +48,7 @@ public static class AiEntityReferenceReader
 
         foreach (var result in results)
         {
-            foreach (var reference in Read(result.ToolName, result.Content))
+            foreach (var reference in Read(result.ToolName, result.Content, result.Arguments))
             {
                 var isNew = seen.Add($"{reference.Type}:{reference.Id}");
 
@@ -51,12 +62,12 @@ public static class AiEntityReferenceReader
         return references;
     }
 
-    public static List<AiEntityReference> Read(string toolName, string? resultJson)
+    public static List<AiEntityReference> Read(string toolName, string? resultJson, JsonDocument? arguments = null)
     {
         var hasContent = !string.IsNullOrWhiteSpace(resultJson);
-        var isKnownTool = TypesByTool.TryGetValue(toolName, out var type);
+        var type = ResolveType(toolName, arguments);
 
-        if (!hasContent || !isKnownTool)
+        if (!hasContent || type is null)
         {
             return [];
         }
@@ -67,7 +78,7 @@ public static class AiEntityReferenceReader
         {
             using var document = JsonDocument.Parse(resultJson!);
 
-            Collect(document.RootElement, type!, references);
+            Collect(document.RootElement, type, references);
         }
         catch (JsonException)
         {
@@ -75,6 +86,28 @@ public static class AiEntityReferenceReader
         }
 
         return references;
+    }
+
+    private static string? ResolveType(string toolName, JsonDocument? arguments)
+    {
+        var isListRecords = toolName == ListRecordsTool;
+
+        if (!isListRecords)
+        {
+            return TypesByTool.GetValueOrDefault(toolName);
+        }
+
+        var isObject = arguments?.RootElement.ValueKind == JsonValueKind.Object;
+
+        if (!isObject)
+        {
+            return null;
+        }
+
+        var hasKind = arguments!.RootElement.TryGetProperty("kind", out var kind)
+            && kind.ValueKind == JsonValueKind.String;
+
+        return hasKind ? TypesByRecordKind.GetValueOrDefault(kind.GetString()!) : null;
     }
 
     private static void Collect(JsonElement element, string type, List<AiEntityReference> references)
@@ -178,4 +211,6 @@ public sealed record AiToolResultText
     public required string ToolName { get; init; }
 
     public required string Content { get; init; }
+
+    public JsonDocument? Arguments { get; init; }
 }

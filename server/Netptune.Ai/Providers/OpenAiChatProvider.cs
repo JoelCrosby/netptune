@@ -211,7 +211,7 @@ public sealed class OpenAiChatProvider : IAiChatProvider
 
         if (!isAssistant)
         {
-            return [new UserChatMessage(message.Text ?? string.Empty)];
+            return [new UserChatMessage(message.PromptText)];
         }
 
         var hasToolCalls = message.ToolCalls.Count > 0;

@@ -137,13 +137,16 @@ public sealed class AiConversationRunner : IAiConversationRunner
 
             foreach (var call in turn.ToolCalls)
             {
-                yield return AiStreamEvent.ToolStarted(call.Name);
+                var label = DescribeCall(call, availableTools);
+
+                yield return AiStreamEvent.ToolStarted(label);
 
                 var result = await ExecuteTool(call, availableTools, context.Permissions, cancellationToken);
 
                 context.Invocations.Add(new AiToolInvocationRecord
                 {
                     ToolName = call.Name,
+                    Label = label,
                     Arguments = call.Arguments,
                     Result = result.Content,
                     IsError = result.IsError,
@@ -157,7 +160,7 @@ public sealed class AiConversationRunner : IAiConversationRunner
                     IsError = result.IsError,
                 });
 
-                yield return AiStreamEvent.ToolCompleted(call.Name);
+                yield return AiStreamEvent.ToolCompleted(label);
             }
 
             messages.Add(new AiChatMessage { Role = AiMessageRole.Tool, ToolResults = results });
@@ -209,6 +212,13 @@ public sealed class AiConversationRunner : IAiConversationRunner
         {
             return AiToolExecution.Failed($"Tool {call.Name} failed: {exception.Message}");
         }
+    }
+
+    private static string DescribeCall(AiToolCall call, IReadOnlyList<IAiTool> availableTools)
+    {
+        var tool = availableTools.FirstOrDefault(item => string.Equals(item.Name, call.Name, StringComparison.Ordinal));
+
+        return tool?.DescribeCall(call.Arguments.RootElement) ?? call.Name;
     }
 
     private AiToolExecution Truncate(AiToolExecution execution)

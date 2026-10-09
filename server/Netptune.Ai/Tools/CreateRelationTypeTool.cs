@@ -26,7 +26,7 @@ public sealed class CreateRelationTypeTool : IAiTool
 
     public string Description =>
         "Propose a new relation type tasks can be linked with, for a relationship no existing type covers. "
-        + "Check list_relation_types first — reuse an existing type when one fits. "
+        + "Check the relation_types in list_records first — reuse an existing type when one fits. "
         + "Once proposed, propose_link_tasks may use it in the same change set through the handle it answers with.";
 
     public AiToolKind Kind => AiToolKind.Write;

@@ -22,7 +22,7 @@ public sealed class UpdateSprintTool : IAiTool
     public string Name => "propose_update_sprint";
 
     public string Description =>
-        "Propose changing a sprint's name, goal, start date or end date. Use list_sprints to find sprint ids first.";
+        "Propose changing a sprint's name, goal, start date or end date. Use list_records to find sprint ids first.";
 
     public AiToolKind Kind => AiToolKind.Write;
 

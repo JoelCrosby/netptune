@@ -9,6 +9,7 @@ namespace Netptune.IntegrationTests.TestServices;
 public sealed class TestAiChatScript
 {
     private readonly ConcurrentQueue<AiChatTurn> Turns = new();
+    private readonly ConcurrentQueue<AiChatRequest> SentRequests = new();
 
     public TimeSpan DelayBeforeCompletion { get; set; } = TimeSpan.Zero;
 
@@ -17,9 +18,18 @@ public sealed class TestAiChatScript
         Turns.Enqueue(turn);
     }
 
+    public IReadOnlyList<AiChatRequest> Requests => SentRequests.ToList();
+
+    // The runner keeps appending to the list it sends, so keep the messages as they were at the call.
+    public void Record(AiChatRequest request)
+    {
+        SentRequests.Enqueue(request with { Messages = request.Messages.ToList() });
+    }
+
     public void Reset()
     {
         Turns.Clear();
+        SentRequests.Clear();
         DelayBeforeCompletion = TimeSpan.Zero;
     }
 
@@ -49,6 +59,8 @@ public sealed class TestAiChatProvider : IAiChatProvider
         string apiKey,
         [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken)
     {
+        Script.Record(request);
+
         var turn = Script.Next();
 
         if (!string.IsNullOrEmpty(turn.Text))

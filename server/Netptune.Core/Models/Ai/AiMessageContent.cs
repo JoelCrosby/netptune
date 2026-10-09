@@ -27,6 +27,8 @@ public sealed record AiMessageContent
 {
     public string? Text { get; init; }
 
+    public string? Context { get; init; }
+
     public List<AiMessageContentToolCall> ToolCalls { get; init; } = [];
 
     public List<AiMessageContentToolResult> ToolResults { get; init; } = [];
@@ -48,6 +50,7 @@ public sealed record AiMessageContent
         return new AiMessageContent
         {
             Text = message.Text,
+            Context = message.Context,
             ToolCalls = message.ToolCalls
                 .Select(call => new AiMessageContentToolCall
                 {
@@ -75,6 +78,7 @@ public sealed record AiMessageContent
         {
             Role = role,
             Text = Text,
+            Context = Context,
             ToolCalls = ToolCalls
                 .Select(call => new AiToolCall
                 {

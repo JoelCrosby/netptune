@@ -40,7 +40,7 @@ public sealed class ListRelationsTool : IAiTool
     public JsonDocument InputSchema { get; } = AiToolSchema.Object(
         """
         {
-          "relationTypeId": { "type": "integer", "description": "Restrict to one relation type, from list_relation_types." },
+          "relationTypeId": { "type": "integer", "description": "Restrict to one relation type, from list_records." },
           "relationType": { "type": "string", "description": "Relation type name or key, instead of relationTypeId." },
           "take": { "type": "integer", "description": "How many relations to return. Defaults to 25." }
         }

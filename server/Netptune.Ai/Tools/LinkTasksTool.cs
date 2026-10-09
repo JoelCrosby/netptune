@@ -40,7 +40,7 @@ public sealed class LinkTasksTool : IAiTool
           "relatedTaskId": { "type": "integer", "description": "The id of the task on the other end of the relation." },
           "relatedTaskRef": { "type": "string", "description": "Handle of a task proposed earlier in this change set, instead of relatedTaskId." },
           "relationType": { "type": "string", "description": "The relation type by name, such as \"blocks\" or \"relates to\". Its inverse name, such as \"is blocked by\", states the relation the other way round and swaps the two tasks." },
-          "relationTypeId": { "type": "integer", "description": "The relation type id, from list_relation_types, instead of relationType." },
+          "relationTypeId": { "type": "integer", "description": "The relation type id, from list_records, instead of relationType." },
           "relationTypeRef": { "type": "string", "description": "Handle of a relation type proposed earlier in this change set, instead of relationType." }
         }
         """);
