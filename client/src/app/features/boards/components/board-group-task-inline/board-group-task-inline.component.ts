@@ -22,12 +22,17 @@ import {
   form,
   FormField,
   submit,
+  validate,
 } from '@angular/forms/signals';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { BoardGroupCommandsService } from '@core/services/board-group-commands.service';
 import { BoardComposerService } from '@core/services/board-composer.service';
 import { BoardViewService } from '@core/services/board-view.service';
-import { AddProjectTaskRequest } from '@core/models/project-task';
+import {
+  AddProjectTaskRequest,
+  TASK_NAME_MAX_LENGTH,
+} from '@core/models/project-task';
+import { CharacterLimitComponent } from '@static/components/character-limit/character-limit.component';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { DocumentService } from '@static/services/document.service';
 import { sprintResource } from '@core/resources/sprint.resource';
@@ -42,6 +47,7 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
     FormField,
     A11yModule,
     CdkTextareaAutosize,
+    CharacterLimitComponent,
   ],
   template: `
     <div
@@ -64,6 +70,10 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
           Placeholder in the inline box for adding a task to a board group
         "
         placeholder="What do you need to get done?"></textarea>
+
+      <app-character-limit
+        [length]="taskForm.name().value().trim().length"
+        [max]="nameMaxLength" />
 
       <div>
         @if (message(); as message) {
@@ -116,6 +126,8 @@ export class BoardGroupTaskInlineComponent implements AfterViewInit {
     return this.sprints().find((sprint) => sprint.id === sprintId);
   });
 
+  readonly nameMaxLength = TASK_NAME_MAX_LENGTH;
+
   taskFormModel = signal({
     name: this.content() ?? '',
   });
@@ -125,9 +137,20 @@ export class BoardGroupTaskInlineComponent implements AfterViewInit {
       schema.name,
       requiredTextSchema({
         label: $localize`:Field name used inside validation messages, e.g. "Task summary is required.":Task summary`,
-        maxLength: 256,
       })
     );
+    // Checked here rather than with maxLength(), which would set the native maxlength attribute and
+    // silently cut off long pasted text instead of telling the user it's too long.
+    validate(schema.name, ({ value }) => {
+      const isTooLong = value().trim().length > TASK_NAME_MAX_LENGTH;
+
+      if (!isTooLong) return undefined;
+
+      return {
+        kind: 'maxLength',
+        message: $localize`:Validation message:Task summary cannot exceed ${TASK_NAME_MAX_LENGTH}:maxLength: characters.`,
+      };
+    });
     disabled(schema.name, { when: () => !this.isEditActive() });
     debounce(schema.name, 240);
   });

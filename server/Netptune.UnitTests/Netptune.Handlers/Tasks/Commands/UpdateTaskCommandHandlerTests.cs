@@ -243,6 +243,23 @@ public class UpdateTaskCommandHandlerTests
     }
 
     [Fact]
+    public async Task Update_ShouldReturnFailed_AndKeepName_WhenNameIsTooLong()
+    {
+        var request = new UpdateProjectTaskRequest { Id = 42, Name = new string('a', ProjectTaskName.MaxLength + 1) };
+        var task = BuildTask();
+        var originalName = task.Name;
+        var viewModel = new TaskViewModel { Id = task.Id, Name = task.Name };
+
+        SetupHandlerDependencies(request, task, viewModel);
+
+        var result = await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Be(ProjectTaskName.TooLongMessage);
+        task.Name.Should().Be(originalName);
+    }
+
+    [Fact]
     public async Task Update_ShouldCallTransaction_WhenInputValid()
     {
         var request = Fixture.Build<UpdateProjectTaskRequest>().Create();

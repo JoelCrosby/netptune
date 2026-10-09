@@ -1,13 +1,14 @@
 using System.ComponentModel.DataAnnotations;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Models.ProjectTasks;
 
 namespace Netptune.Core.Requests;
 
 public record AddProjectTaskRequest
 {
     [Required]
-    [MaxLength(256)]
+    [MaxLength(ProjectTaskName.MaxLength)]
     public string Name { get; set; } = null!;
 
     [MaxLength(4096)]

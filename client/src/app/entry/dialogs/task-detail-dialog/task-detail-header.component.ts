@@ -9,6 +9,7 @@ import {
 import { PERMISSIONS } from '@core/auth/permissions';
 import { hasPermission } from '@core/auth/has-permission';
 import { InlineEditHeadingComponent } from '@app/static/components/inline-edit-heading/inline-edit-heading.component';
+import { TASK_NAME_MAX_LENGTH } from '@core/models/project-task';
 import { TaskDetailService } from './task-detail.service';
 
 @Component({
@@ -18,6 +19,7 @@ import { TaskDetailService } from './task-detail.service';
       [textClass]="textClass()"
       (submitted)="updateTask(this.name())"
       [(value)]="name"
+      [maxLength]="nameMaxLength"
       [isReadonly]="isReadOnly()" />
   `,
   imports: [InlineEditHeadingComponent],
@@ -33,6 +35,8 @@ export class TaskDetailHeaderComponent {
   private readonly canUpdate = hasPermission(PERMISSIONS.tasks.update);
 
   isReadOnly = computed(() => !this.canUpdate());
+
+  readonly nameMaxLength = TASK_NAME_MAX_LENGTH;
 
   name = model(this.task()?.name ?? '');
 

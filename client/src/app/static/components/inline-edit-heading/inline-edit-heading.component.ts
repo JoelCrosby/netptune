@@ -9,11 +9,12 @@ import {
   viewChild,
 } from '@angular/core';
 import { AbstractFormValueControl } from '../abstract-form-value-control';
+import { CharacterLimitComponent } from '../character-limit/character-limit.component';
 import { cn } from '../button/button.variants';
 
 @Component({
   selector: 'app-inline-edit-heading',
-  imports: [],
+  imports: [CharacterLimitComponent],
   template: `
     <div
       #editable
@@ -30,6 +31,12 @@ import { cn } from '../button/button.variants';
       (input)="onContentInput($event)"
       (keydown.enter)="onEnter($event)"
       (keydown.escape)="onEscape()"></div>
+
+    @if (maxLength(); as max) {
+      @if (isEditing()) {
+        <app-character-limit [length]="draftLength()" [max]="max" />
+      }
+    }
   `,
 })
 export class InlineEditHeadingComponent extends AbstractFormValueControl {
@@ -37,6 +44,7 @@ export class InlineEditHeadingComponent extends AbstractFormValueControl {
   readonly cancelled = output();
 
   readonly textClass = input('px-4 py-4 text-2xl');
+  readonly maxLength = input<number | null>(null);
 
   protected readonly headingClass = computed(() => {
     return cn(
@@ -52,6 +60,14 @@ export class InlineEditHeadingComponent extends AbstractFormValueControl {
   );
 
   isEditing = signal(false);
+
+  protected readonly draftLength = signal(0);
+
+  private readonly isDraftTooLong = computed(() => {
+    const max = this.maxLength();
+
+    return max !== null && this.draftLength() > max;
+  });
 
   private originalValue = '';
   private clickedIn = false;
@@ -132,11 +148,15 @@ export class InlineEditHeadingComponent extends AbstractFormValueControl {
     }
 
     this.originalValue = this.value() ?? '';
+    this.draftLength.set(this.originalValue.trim().length);
     this.isEditing.set(true);
   }
 
   onContentInput(_: Event) {
     this.touched.set(true);
+
+    const el = this.editableRef()?.nativeElement as HTMLElement | undefined;
+    this.draftLength.set(el?.innerText?.trim().length ?? 0);
   }
 
   onBlur() {
@@ -170,6 +190,11 @@ export class InlineEditHeadingComponent extends AbstractFormValueControl {
   }
 
   private commit(val: string) {
+    // An over-long draft stays in edit mode with the limit showing, so the text isn't lost.
+    if (this.isDraftTooLong()) {
+      return;
+    }
+
     this.value.set(val);
     this.isEditing.set(false);
     this.submitted.emit(val);

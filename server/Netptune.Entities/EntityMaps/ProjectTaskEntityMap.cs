@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Relationships;
 using Netptune.Entities.EntityMaps.BaseMaps;
 
@@ -31,7 +32,7 @@ public class ProjectTaskEntityMap : WorkspaceEntityMap<ProjectTask, int>
 
         builder
             .Property(task => task.Name)
-            .HasMaxLength(256)
+            .HasMaxLength(ProjectTaskName.MaxLength)
             .IsRequired();
 
         builder

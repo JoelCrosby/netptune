@@ -76,6 +76,21 @@ public class CreateTaskCommandHandlerTests
         result.Message.Should().Be(ProjectTaskSchedule.InvalidDateRangeMessage);
     }
 
+    [Fact]
+    public async Task Create_ShouldReturnFailure_WhenNameIsTooLong()
+    {
+        var request = new AddProjectTaskRequest
+        {
+            Name = new string('a', ProjectTaskName.MaxLength + 1),
+            ProjectId = 1,
+        };
+
+        var result = await Handler.Handle(new CreateTaskCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Be(ProjectTaskName.TooLongMessage);
+    }
+
     private IPostprocessComposer<AddProjectTaskRequest> BuildRequest()
     {
         return Fixture.Build<AddProjectTaskRequest>()

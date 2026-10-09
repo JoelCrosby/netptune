@@ -63,6 +63,13 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
             return ClientResponse<TaskViewModel>.Failed(ProjectTaskSchedule.InvalidDateRangeMessage);
         }
 
+        var hasValidName = ProjectTaskName.IsValid(req.Name);
+
+        if (!hasValidName)
+        {
+            return ClientResponse<TaskViewModel>.Failed(ProjectTaskName.TooLongMessage);
+        }
+
         var workspaceKey = Identity.GetWorkspaceKey();
         var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey, cancellationToken);
 

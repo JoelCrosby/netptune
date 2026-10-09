@@ -62,6 +62,13 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
             return ClientResponse<TaskViewModel>.Failed(ProjectTaskSchedule.InvalidDateRangeMessage);
         }
 
+        var hasValidName = ProjectTaskName.IsValid(req.Name);
+
+        if (!hasValidName)
+        {
+            return ClientResponse<TaskViewModel>.Failed(ProjectTaskName.TooLongMessage);
+        }
+
         var status = req.StatusId.HasValue
             ? await StatusResolver.ResolveRequested(req.StatusId.Value, workspaceId, cancellationToken)
             : null;

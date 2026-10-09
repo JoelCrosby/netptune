@@ -24,7 +24,10 @@ import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { EstimateType, TaskEstimate } from '@core/enums/estimate-type';
 import { TaskPriority } from '@core/enums/task-priority';
-import { AddProjectTaskRequest } from '@core/models/project-task';
+import {
+  AddProjectTaskRequest,
+  TASK_NAME_MAX_LENGTH,
+} from '@core/models/project-task';
 import { RelationType } from '@core/models/relation-type';
 import { AddTaskRelationRequest } from '@core/models/task-relation';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
@@ -48,6 +51,7 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
 import { FileDropzoneComponent } from '@static/components/file-dropzone/file-dropzone.component';
 import { FileTypeIconComponent } from '@static/components/file-type-icon/file-type-icon.component';
 import { FormErrorsComponent } from '@static/components/form-error/form-errors.component';
+import { CharacterLimitComponent } from '@static/components/character-limit/character-limit.component';
 import { FileSizePipe } from '@static/pipes/file-size.pipe';
 import { TaskTagRowComponent } from '../task-detail-dialog/pickers/task-tag-row.component';
 import {
@@ -130,6 +134,7 @@ const documentContentTypes = new Set([
     FileTypeIconComponent,
     FlatButtonComponent,
     FormErrorsComponent,
+    CharacterLimitComponent,
     FormField,
     HeadingInputDirective,
     IconButtonComponent,
@@ -169,6 +174,9 @@ const documentContentTypes = new Set([
             aria-label="Summary"
             [formField]="taskForm.name" />
           <app-form-errors [formField]="taskForm.name" />
+          <app-character-limit
+            [length]="taskForm.name().value().trim().length"
+            [max]="nameMaxLength" />
         </div>
 
         <div class="flex flex-wrap items-center gap-2">
@@ -518,6 +526,8 @@ export class CreateTaskDialogComponent {
     }));
   });
 
+  readonly nameMaxLength = TASK_NAME_MAX_LENGTH;
+
   taskFormModel = signal<CreateTaskForm>({
     name: '',
     description: '',
@@ -548,10 +558,10 @@ export class CreateTaskDialogComponent {
         };
       }
 
-      if (name.length > 256) {
+      if (name.length > TASK_NAME_MAX_LENGTH) {
         return {
           kind: 'maxLength',
-          message: $localize`:Body of a dialog or validation message:Summary cannot exceed 256 characters.`,
+          message: $localize`:Body of a dialog or validation message:Summary cannot exceed ${TASK_NAME_MAX_LENGTH}:maxLength: characters.`,
         };
       }
 

@@ -8,6 +8,9 @@ import { Project } from './project';
 import { AddTaskRelationRequest } from './task-relation';
 import { Workspace } from './workspace';
 
+// Mirrors ProjectTaskName.MaxLength on the server.
+export const TASK_NAME_MAX_LENGTH = 1024;
+
 export interface BoardPlacement {
   boardId: number;
   boardName: string;
