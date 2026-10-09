@@ -66,33 +66,34 @@ import { EMPTY, switchMap } from 'rxjs';
         i18n-description="
           Explains what an admin sees on the assistant conversations page
         "
-        description="What members asked the assistant. The record of what changed lives in the audit log." />
-
-      @if (selectedCount() > 0) {
-        <div class="flex h-12 items-center justify-end gap-4 px-4">
-          <span
-            class="text-muted text-sm"
-            i18n="
-              Count of selected rows above a table. COUNT is the number selected
-            ">
-            {{
-              selectedCount() // i18n(ph="COUNT")
-            }}
-            selected
-          </span>
-          <button
-            app-stroked-button
-            type="button"
-            color="warn"
-            (click)="deleteSelected()">
-            <svg lucideTrash2 class="h-4 w-4"></svg>
+        description="What members asked the assistant. The record of what changed lives in the audit log.">
+        @if (selectedCount() > 0) {
+          <div panelHeaderActions class="flex items-center gap-4">
             <span
-              i18n="Button that deletes the selected assistant conversations">
-              Delete
+              class="text-muted text-sm"
+              i18n="
+                Count of selected rows above a table. COUNT is the number
+                selected
+              ">
+              {{
+                selectedCount() // i18n(ph="COUNT")
+              }}
+              selected
             </span>
-          </button>
-        </div>
-      }
+            <button
+              app-stroked-button
+              type="button"
+              color="warn"
+              (click)="deleteSelected()">
+              <svg lucideTrash2 class="h-4 w-4"></svg>
+              <span
+                i18n="Button that deletes the selected assistant conversations">
+                Delete
+              </span>
+            </button>
+          </div>
+        }
+      </app-panel-header>
 
       <app-datatable
         containerClass="border-0"
