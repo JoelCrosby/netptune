@@ -7,30 +7,15 @@ import {
   scopeKindLabels,
 } from '../models/automation-copy';
 import { ServiceAccount } from '@core/models/service-account';
-import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
-import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 
 @Component({
   selector: 'app-automation-settings-editor',
-  imports: [
-    CheckboxComponent,
-    FormInputComponent,
-    FormSelectComponent,
-    FormSelectOptionComponent,
-  ],
+  imports: [FormSelectComponent, FormSelectOptionComponent],
+  host: { class: 'flex flex-col gap-4.5' },
   template: `
-    <div class="grid gap-3.5 sm:grid-cols-3">
-      <app-form-input
-        class="sm:col-span-3"
-        name="name"
-        i18n-label="Label of the name field"
-        label="Name"
-        [noMargin]="true"
-        [required]="true"
-        [(value)]="name" />
-
+    <div>
       <app-form-select
         name="execution-user"
         [noMargin]="true"
@@ -52,10 +37,20 @@ import { FormSelectComponent } from '@static/components/form-select/form-select.
         }
       </app-form-select>
 
+      @if (!serviceAccounts().length) {
+        <p class="text-muted mt-2 text-sm">
+          <span i18n="Warns that a service account is required">
+            Create an enabled service account before saving this automation.
+          </span>
+        </p>
+      }
+    </div>
+
+    <div class="grid gap-3 sm:grid-cols-2">
       <app-form-select
         name="scope-kind"
-        i18n-label="Label of the scope field"
-        label="Scope"
+        i18n-label="Label of the field choosing what an automation applies to"
+        label="Applies to"
         [noMargin]="true"
         [value]="scopeKind()"
         (valueChange)="setScopeKind($event)">
@@ -118,45 +113,7 @@ import { FormSelectComponent } from '@static/components/form-select/form-select.
             }
           </app-form-select>
         }
-        @default {
-          <app-form-select
-            name="scope-workspace"
-            i18n-label="Label of the workspace scope field"
-            label="Workspace"
-            i18n-placeholder="
-              Placeholder text shown when an automation covers the whole
-              workspace
-            "
-            placeholder="Whole workspace"
-            [noMargin]="true"
-            [disabled]="true" />
-        }
       }
-
-      @if (!serviceAccounts().length) {
-        <p class="text-muted text-sm sm:col-span-3">
-          <span i18n="Warns that a service account is required">
-            Create an enabled service account before saving this automation.
-          </span>
-        </p>
-      }
-
-      <div class="sm:col-span-3">
-        <app-checkbox [(checked)]="isEnabled">
-          <span class="flex flex-col">
-            <span
-              class="text-foreground text-sm font-medium"
-              i18n="Marks an automation that is switched on">
-              Enabled
-            </span>
-            <span class="text-muted text-sm">
-              <span i18n="Explains the enabled toggle">
-                Turn this automation on so it runs automatically.
-              </span>
-            </span>
-          </span>
-        </app-checkbox>
-      </div>
     </div>
   `,
 })
@@ -172,8 +129,6 @@ export class AutomationSettingsEditorComponent {
   readonly projects = input<readonly ProjectViewModel[]>([]);
   readonly boards = input<readonly BoardViewModel[]>([]);
   readonly sprints = input<readonly SprintViewModel[]>([]);
-  readonly name = model('');
-  readonly isEnabled = model(true);
   readonly executionUserId = model<string | null>(null);
   readonly projectId = model<number | null>(null);
   readonly boardId = model<number | null>(null);

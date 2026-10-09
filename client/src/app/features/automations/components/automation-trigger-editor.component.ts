@@ -1,5 +1,4 @@
 import { Component, computed, model } from '@angular/core';
-import { LucideZap } from '@lucide/angular';
 import { cn } from '@static/components/button/button.variants';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormSelectSearchComponent } from '@static/components/form-select-search/form-select-search.component';
@@ -12,7 +11,6 @@ import {
   AutomationTriggerType,
   TaskChangeField,
 } from '../models/automation.models';
-import { AutomationFlowCardComponent } from './automation-flow-card.component';
 
 interface DurationCopy {
   label: string;
@@ -21,112 +19,93 @@ interface DurationCopy {
 
 @Component({
   selector: 'app-automation-trigger-editor',
-  imports: [
-    AutomationFlowCardComponent,
-    FormInputComponent,
-    FormSelectSearchComponent,
-  ],
+  imports: [FormInputComponent, FormSelectSearchComponent],
+  host: { class: 'flex flex-col gap-5' },
   template: `
-    <app-automation-flow-card
-      [icon]="triggerIcon"
-      i18n-keyword="Heading of the trigger part of the rule"
-      keyword="WHEN"
-      i18n-heading="Heading above the trigger event"
-      heading="Trigger event"
-      i18n-description="Description of the trigger section"
-      description="Choose what starts this automation.">
-      <div class="max-w-105">
-        <app-form-select-search
-          name="trigger-type"
-          i18n-label="Label of the event field"
-          label="Event"
-          i18n-placeholder="Placeholder in the box that searches trigger events"
-          placeholder="Search events"
-          i18n-emptyMessage="Shown when no trigger event matches the search"
-          emptyMessage="No events found"
-          [noMargin]="true"
-          [options]="triggerTypes"
-          [labelWith]="triggerTypeLabel"
-          [value]="triggerType()"
-          (changed)="triggerType.set($event)" />
-      </div>
+    <app-form-select-search
+      name="trigger-type"
+      i18n-label="Label of the event field"
+      label="Event"
+      i18n-placeholder="Placeholder in the box that searches trigger events"
+      placeholder="Search events"
+      i18n-emptyMessage="Shown when no trigger event matches the search"
+      emptyMessage="No events found"
+      [noMargin]="true"
+      [options]="triggerTypes"
+      [labelWith]="triggerTypeLabel"
+      [value]="triggerType()"
+      (changed)="triggerType.set($event)" />
 
-      @if (triggerType() === automationTriggerType.taskChanged) {
-        <div>
-          <div class="mb-2 flex items-baseline justify-between gap-3">
-            <span class="text-foreground/55 text-xs font-medium">
-              <span
-                i18n="Heading above the fields whose changes trigger the rule">
-                Watched fields
-              </span>
+    @if (triggerType() === automationTriggerType.taskChanged) {
+      <div>
+        <div class="mb-2 flex items-baseline justify-between gap-3">
+          <span class="text-foreground/55 text-xs font-medium">
+            <span
+              i18n="Heading above the fields whose changes trigger the rule">
+              Watched fields
             </span>
-            <span class="text-primary text-xs font-semibold">
-              <span
-                i18n="
-                  How many watched fields are selected. COUNT is that number
-                ">
-                {{
-                  taskFields().length // i18n(ph="COUNT")
-                }}
-                selected
-              </span>
+          </span>
+          <span class="text-primary text-xs font-semibold">
+            <span
+              i18n="How many watched fields are selected. COUNT is that number">
+              {{
+                taskFields().length // i18n(ph="COUNT")
+              }}
+              selected
             </span>
-          </div>
-
-          <div class="flex flex-wrap gap-2">
-            @for (field of taskFieldOptions; track field) {
-              <button
-                type="button"
-                [class]="fieldChipClass(field)"
-                [attr.aria-pressed]="hasTaskField(field)"
-                (click)="toggleTaskField(field)">
-                {{ taskFieldLabel(field) }}
-              </button>
-            }
-          </div>
+          </span>
         </div>
-      } @else if (durationCopy(); as duration) {
-        <div>
-          <label
-            class="text-foreground/55 mb-1.5 block text-xs font-medium"
-            for="durationDays">
-            {{ duration.label }}
-          </label>
-          <div class="flex items-center gap-2.5">
-            <div class="w-24">
-              <app-form-input
-                name="durationDays"
-                type="number"
-                [noMargin]="true"
-                [required]="true"
-                [(value)]="durationDays" />
-            </div>
-            <span class="text-foreground/60 text-sm">{{
-              duration.suffix
-            }}</span>
-          </div>
 
-          @if (triggerType() === automationTriggerType.sprintEndingSoon) {
-            <p class="text-foreground/60 mt-2.5 text-sm">
-              <span i18n="Explains sprint-scoped rule behaviour">
-                Actions run once for every task in the sprint.
-              </span>
-            </p>
+        <div class="flex flex-wrap gap-2">
+          @for (field of taskFieldOptions; track field) {
+            <button
+              type="button"
+              [class]="fieldChipClass(field)"
+              [attr.aria-pressed]="hasTaskField(field)"
+              (click)="toggleTaskField(field)">
+              {{ taskFieldLabel(field) }}
+            </button>
           }
         </div>
-      } @else {
-        <p
-          class="border-border bg-foreground/2 text-foreground/60 rounded-lg border border-dashed px-3 py-2.5 text-[13px]">
-          <span i18n="Shown when a trigger needs no further settings">
-            This event needs no further settings.
-          </span>
-        </p>
-      }
-    </app-automation-flow-card>
+      </div>
+    } @else if (durationCopy(); as duration) {
+      <div>
+        <label
+          class="text-foreground/55 mb-1.5 block text-xs font-medium"
+          for="durationDays">
+          {{ duration.label }}
+        </label>
+        <div class="flex items-center gap-2.5">
+          <div class="w-24">
+            <app-form-input
+              name="durationDays"
+              type="number"
+              [noMargin]="true"
+              [required]="true"
+              [(value)]="durationDays" />
+          </div>
+          <span class="text-foreground/60 text-sm">{{ duration.suffix }}</span>
+        </div>
+
+        @if (triggerType() === automationTriggerType.sprintEndingSoon) {
+          <p class="text-foreground/60 mt-2.5 text-sm">
+            <span i18n="Explains sprint-scoped rule behaviour">
+              Actions run once for every task in the sprint.
+            </span>
+          </p>
+        }
+      </div>
+    } @else {
+      <p
+        class="border-border bg-foreground/2 text-foreground/60 rounded-lg border border-dashed px-3 py-2.5 text-[13px]">
+        <span i18n="Shown when a trigger needs no further settings">
+          This event needs no further settings.
+        </span>
+      </p>
+    }
   `,
 })
 export class AutomationTriggerEditorComponent {
-  readonly triggerIcon = LucideZap;
   readonly automationTriggerType = AutomationTriggerType;
   readonly triggerTypes = automationTriggerTypes;
 

@@ -1,6 +1,5 @@
 import { Component, computed, input, model } from '@angular/core';
 import { Status } from '@core/models/status';
-import { LucideListFilter } from '@lucide/angular';
 import {
   emptyQueryBuilderGroup,
   newQueryCondition,
@@ -14,73 +13,50 @@ import {
   toBuilderGroup,
 } from '../models/automation-query-builder';
 import { AutomationConditionGroup } from '../models/automation.models';
-import { AutomationFlowCardComponent } from './automation-flow-card.component';
 
 @Component({
   selector: 'app-automation-conditions-editor',
-  imports: [
-    AutomationFlowCardComponent,
-    QueryChipBarComponent,
-    StrokedButtonComponent,
-  ],
+  imports: [QueryChipBarComponent, StrokedButtonComponent],
+  host: { class: 'flex flex-col gap-3.5' },
   template: `
-    <app-automation-flow-card
-      [icon]="conditionsIcon"
-      i18n-keyword="Heading of the conditions part of the rule"
-      keyword="IF"
-      i18n-heading="Heading above the conditions"
-      heading="Conditions"
-      i18n-description="Description of the conditions section"
-      description="Restrict which tasks can continue.">
-      <span flowCardActions class="text-foreground/45 text-xs">
-        <span i18n="Marks the conditions section as not required"
-          >optional</span
-        >
-      </span>
+    @if (conditionGroup()) {
+      <app-query-chip-bar
+        [group]="builderGroup()"
+        [catalog]="catalog()"
+        i18n-summaryPrefix="
+          Prefix of the plain-language summary of an automation's conditions
+        "
+        summaryPrefix="Continues only when"
+        [emptySummary]="emptySummary"
+        (groupChange)="setGroup($event)" />
 
-      @if (conditionGroup()) {
-        <button
-          flowCardActions
-          type="button"
-          class="text-foreground/45 hover:bg-foreground/5 hover:text-foreground/70 focus-visible:ring-primary rounded px-2 py-1.5 text-xs font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
-          (click)="conditionGroup.set(null)">
-          <span i18n="Button that removes every condition">
-            Clear conditions
-          </span>
-        </button>
-      }
+      <button
+        type="button"
+        class="text-foreground/45 hover:bg-foreground/5 hover:text-foreground/70 focus-visible:ring-primary -ml-2 self-start rounded px-2 py-1.5 text-xs font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
+        (click)="conditionGroup.set(null)">
+        <span i18n="Button that removes every condition">
+          Clear conditions
+        </span>
+      </button>
+    } @else {
+      <p
+        class="border-border bg-foreground/2 text-foreground/60 rounded-lg border border-dashed px-3 py-2.5 text-[13px]">
+        <span i18n="Shown when a rule has no conditions">
+          No conditions — every task that fires the trigger continues.
+        </span>
+      </p>
 
-      @if (conditionGroup()) {
-        <app-query-chip-bar
-          [group]="builderGroup()"
-          [catalog]="catalog()"
-          i18n-summaryPrefix="
-            Prefix of the plain-language summary of an automation's conditions
-          "
-          summaryPrefix="Continues only when"
-          [emptySummary]="emptySummary"
-          (groupChange)="setGroup($event)" />
-      } @else {
-        <p
-          class="border-border bg-foreground/2 text-foreground/60 rounded-lg border border-dashed px-3 py-2.5 text-[13px]">
-          <span i18n="Shown when a rule has no conditions">
-            No conditions — every task that fires the trigger continues.
-          </span>
-        </p>
-
-        <button
-          app-stroked-button
-          class="self-start"
-          type="button"
-          (click)="addConditionGroup()">
-          <span i18n="Button that starts adding conditions">Add condition</span>
-        </button>
-      }
-    </app-automation-flow-card>
+      <button
+        app-stroked-button
+        class="self-start"
+        type="button"
+        (click)="addConditionGroup()">
+        <span i18n="Button that starts adding conditions">Add condition</span>
+      </button>
+    }
   `,
 })
 export class AutomationConditionsEditorComponent {
-  readonly conditionsIcon = LucideListFilter;
   readonly statuses = input.required<Status[]>();
   readonly supportsChangeOperators = input(false);
   readonly conditionGroup = model<AutomationConditionGroup | null>(null);

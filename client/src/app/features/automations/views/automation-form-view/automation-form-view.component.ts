@@ -20,31 +20,47 @@ import { sprintResource } from '@core/resources/sprint.resource';
 import { statusResource } from '@core/resources/status.resource';
 import { tagResource } from '@core/resources/tag.resource';
 import { userResource } from '@core/resources/user.resource';
+import { mutation } from '@core/util/mutation';
+import { joinNaturalList, toLowerText } from '@core/util/strings';
 import {
+  LucideChevronLeft,
+  LucideChevronRight,
   LucideCircleAlert,
   LucideListFilter,
+  LucidePlus,
+  LucideSettings2,
   LucideZap,
 } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { CalloutComponent } from '@static/components/callout/callout.component';
 import { FormControlShapeDirective } from '@static/components/form-control/form-control.directives';
-import { PageBodyComponent } from '@static/components/page-container/page-body.component';
+import { HeadingInputDirective } from '@static/components/form-input/heading-input.directive';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
-import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
-import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
+import { SnackbarService } from '@static/components/snackbar/snackbar.service';
+import { SwitchComponent } from '@static/components/switch/switch.component';
 import {
-  AutomationActionsEditorComponent,
+  AutomationActionEditorComponent,
   EditableAutomationAction,
   automationActionLimit,
-} from '../../components/automation-actions-editor.component';
+} from '../../components/automation-action-editor.component';
 import { AutomationConditionsEditorComponent } from '../../components/automation-conditions-editor.component';
-import { AutomationFlowStepComponent } from '../../components/automation-flow-step.component';
+import { AutomationDescriptionComponent } from '../../components/automation-description.component';
+import { AutomationFlowNodeComponent } from '../../components/automation-flow-node.component';
 import { AutomationSettingsEditorComponent } from '../../components/automation-settings-editor.component';
-import { AutomationSummaryBarComponent } from '../../components/automation-summary-bar.component';
 import { AutomationTriggerEditorComponent } from '../../components/automation-trigger-editor.component';
-import { describeAutomationOneLine } from '../../models/automation-copy';
+import {
+  AutomationCopySegment,
+  actionTypeDescriptions,
+  actionTypeLabels,
+  countAutomationConditions,
+  describeAutomationActionSegments,
+  describeAutomationConditionsSegments,
+  describeAutomationTrigger,
+  taskChangeFieldLabels,
+  triggerTypeLabels,
+} from '../../models/automation-copy';
 import {
   AutomationActionType,
   AutomationDelayUnit,
@@ -59,142 +75,346 @@ import {
   TaskChangeField,
 } from '../../models/automation.models';
 import { AutomationsService } from '../../services/automations.service';
-import { PanelComponent } from '@static/components/panel.component';
-import { mutation } from '@core/util/mutation';
+
+type AutomationFlowStepKey = 'settings' | 'trigger' | 'conditions' | number;
 
 @Component({
   selector: 'app-automation-form-view',
   imports: [
-    AutomationActionsEditorComponent,
+    AutomationActionEditorComponent,
     AutomationConditionsEditorComponent,
-    AutomationFlowStepComponent,
+    AutomationDescriptionComponent,
+    AutomationFlowNodeComponent,
     AutomationSettingsEditorComponent,
-    AutomationSummaryBarComponent,
     AutomationTriggerEditorComponent,
     CalloutComponent,
     FlatButtonComponent,
     FormControlShapeDirective,
-    PageBodyComponent,
+    HeadingInputDirective,
+    LucideChevronLeft,
+    LucideChevronRight,
+    LucidePlus,
     PageContainerComponent,
-    PageHeaderComponent,
     PageLoadingComponent,
-    PanelComponent,
     RouterLink,
     StrokedButtonComponent,
+    SwitchComponent,
   ],
   template: `
-    <app-page-container layout="list" [stickyFooter]="true">
-      <app-page-header
-        toolbar
-        [title]="isEdit() ? 'Edit Automation' : 'Create Automation'" />
+    <app-page-container layout="list">
+      @if (loading()) {
+        <app-page-loading />
+      } @else {
+        <form
+          appFormShape="rounded"
+          class="flex min-h-0 flex-1 flex-col"
+          (ngSubmit)="onSubmit()">
+          <header
+            class="border-border flex shrink-0 items-center gap-4 border-b px-7 pt-5 pb-4.5 max-md:flex-wrap max-md:px-3 max-md:pt-3">
+            <div class="min-w-0 flex-1 max-md:basis-full">
+              <p class="text-foreground/50 mb-0.5 text-[13px] font-medium">
+                @if (isEdit()) {
+                  <span
+                    i18n="Eyebrow above the name of an automation being edited">
+                    Edit automation
+                  </span>
+                } @else {
+                  <span
+                    i18n="
+                      Eyebrow above the name of an automation being created
+                    ">
+                    Create automation
+                  </span>
+                }
+              </p>
 
-      <app-page-body scroll>
-        @if (loading()) {
-          <app-page-loading />
-        } @else {
-          <form
-            appFormShape="rounded"
-            class="mx-auto flex w-full flex-col gap-4 pb-8"
-            (ngSubmit)="onSubmit()">
-            <app-panel surface="card" class="p-4">
-              <app-automation-settings-editor
-                [serviceAccounts]="enabledServiceAccounts()"
-                [projects]="projectsResource.value()"
-                [boards]="workspaceBoards()"
-                [sprints]="workspaceSprintsResource.value()"
-                [(name)]="name"
-                [(isEnabled)]="isEnabled"
-                [(executionUserId)]="executionUserId"
-                [(projectId)]="projectId"
-                [(boardId)]="boardId"
-                [(sprintId)]="sprintId" />
-            </app-panel>
-
-            <app-automation-summary-bar
-              [trigger]="triggerPreview()"
-              [actions]="actions()"
-              [statuses]="taskStatuses()"
-              [(open)]="summaryOpen" />
-
-            <div class="flex flex-col">
-              <app-automation-flow-step [icon]="triggerIcon">
-                <app-automation-trigger-editor
-                  [(triggerType)]="triggerType"
-                  [(taskFields)]="taskFields"
-                  [(durationDays)]="durationDays" />
-              </app-automation-flow-step>
-
-              <app-automation-flow-step
-                appearance="outline"
-                [icon]="conditionsIcon">
-                <app-automation-conditions-editor
-                  [statuses]="taskStatuses()"
-                  [supportsChangeOperators]="
-                    triggerType() === automationTriggerType.taskChanged
-                  "
-                  [(conditionGroup)]="conditionGroup" />
-              </app-automation-flow-step>
-
-              <app-automation-actions-editor
-                [actions]="actions()"
-                [statuses]="taskStatuses()"
-                [users]="workspaceUsers()"
-                [ruleName]="name()"
-                [tags]="workspaceTagsResource.value()"
-                [sprints]="workspaceSprintsResource.value()"
-                [boardGroups]="workspaceBoardGroupsResource.value()"
-                [relationTypes]="relationTypesResource.value()"
-                [defaultStatusId]="defaultActiveStatusId()"
-                (addAction)="addAction()"
-                (removeAction)="removeAction($event)"
-                (actionTypeChanged)="
-                  onActionTypeChanged($event.clientId, $event.type)
+              <input
+                appHeadingInput
+                class="text-2xl/[30px] font-bold tracking-[-0.3px]"
+                type="text"
+                name="name"
+                autocomplete="off"
+                required
+                i18n-placeholder="
+                  Placeholder in the empty automation name field
                 "
-                (actionUpdated)="updateAction($event.clientId, $event.patch)" />
+                placeholder="Untitled automation"
+                i18n-aria-label="Label of the automation name field"
+                aria-label="Automation name"
+                [value]="name()"
+                (input)="onNameInput($event)" />
             </div>
-          </form>
-        }
-      </app-page-body>
 
-      @if (!loading()) {
-        <div
-          pageFooter
-          class="mx-auto flex w-full max-w-265 flex-col gap-3 py-4">
-          @if (validationError(); as error) {
-            <app-callout color="warn" role="alert" [icon]="errorIcon">
-              {{ error }}
-            </app-callout>
-          }
+            <div
+              class="text-foreground/75 flex shrink-0 items-center gap-2.5 text-sm font-semibold">
+              <app-switch
+                i18n-ariaLabel="
+                  Accessible label of the automation enabled switch
+                "
+                ariaLabel="Enabled"
+                [(checked)]="isEnabled" />
+              <span class="min-w-15">
+                @if (isEnabled()) {
+                  <span i18n="Marks an automation that is switched on">
+                    Enabled
+                  </span>
+                } @else {
+                  <span i18n="Marks an automation that is switched off">
+                    Paused
+                  </span>
+                }
+              </span>
+            </div>
 
-          <div class="flex items-center gap-4">
-            <p
-              class="text-foreground/60 min-w-0 flex-1 text-[13px] text-pretty">
-              {{ oneLine() }}
-            </p>
+            <span
+              class="bg-border h-6 w-px shrink-0 max-md:hidden"
+              aria-hidden="true"></span>
 
-            <a
-              app-stroked-button
-              [routerLink]="cancelLink()"
-              i18n="Dismisses a dialog without acting">
-              Cancel
-            </a>
+            <div class="flex shrink-0 items-center gap-2 max-md:ml-auto">
+              <a
+                app-stroked-button
+                [routerLink]="cancelLink()"
+                i18n="Dismisses a dialog without acting">
+                Cancel
+              </a>
 
-            <button
-              app-flat-button
-              color="primary"
-              type="button"
-              [disabled]="saving.pending()"
-              (click)="onSubmit()">
-              {{ isEdit() ? 'Save Automation' : 'Create Automation' }}
-            </button>
+              <button
+                app-flat-button
+                color="primary"
+                type="button"
+                [disabled]="saving.pending()"
+                (click)="onSubmit()">
+                {{ isEdit() ? 'Save Automation' : 'Create Automation' }}
+              </button>
+            </div>
+          </header>
+
+          <div
+            class="min-h-0 flex-1 overflow-y-auto lg:grid lg:grid-cols-[380px_minmax(0,1fr)] lg:overflow-hidden">
+            <nav
+              class="border-border bg-foreground/2 flex flex-col px-7 pt-6 pb-8 max-lg:border-b max-md:px-3 lg:overflow-y-auto lg:border-r lg:pr-6"
+              i18n-aria-label="Accessible label of the automation steps list"
+              aria-label="Automation steps">
+              <app-automation-flow-node
+                i18n-keyword="Heading of the setup part of the rule"
+                keyword="SETUP"
+                [icon]="setupIcon"
+                [title]="runAsName()"
+                [selected]="selected() === 'settings'"
+                (selectNode)="select('settings')">
+                {{ scopeSummary() }}
+              </app-automation-flow-node>
+
+              <div class="h-5" aria-hidden="true"></div>
+
+              <app-automation-flow-node
+                i18n-keyword="Heading of the trigger part of the rule"
+                keyword="WHEN"
+                [icon]="triggerIcon"
+                [title]="triggerTitle()"
+                [selected]="selected() === 'trigger'"
+                (selectNode)="select('trigger')">
+                <app-automation-description
+                  [segments]="triggerSummary()"
+                  [statuses]="taskStatuses()" />
+              </app-automation-flow-node>
+
+              <div class="bg-border ml-6 h-3 w-px" aria-hidden="true"></div>
+
+              <app-automation-flow-node
+                i18n-keyword="Heading of the conditions part of the rule"
+                keyword="IF"
+                [icon]="conditionsIcon"
+                [title]="conditionsTitle()"
+                [selected]="selected() === 'conditions'"
+                (selectNode)="select('conditions')">
+                @if (!conditionCount()) {
+                  <span
+                    flowNodeAside
+                    class="text-foreground/45 text-xs"
+                    i18n="Marks the conditions section as not required">
+                    Optional
+                  </span>
+                }
+                <app-automation-description
+                  [segments]="conditionsSummary()"
+                  [statuses]="taskStatuses()" />
+              </app-automation-flow-node>
+
+              @for (
+                action of actions();
+                track action.clientId;
+                let index = $index
+              ) {
+                <div class="bg-border ml-6 h-3 w-px" aria-hidden="true"></div>
+
+                <app-automation-flow-node
+                  [keyword]="actionKeyword(index)"
+                  [step]="index + 1"
+                  [title]="actionTypeLabel(action)"
+                  [selected]="selected() === action.clientId"
+                  (selectNode)="select(action.clientId)">
+                  <app-automation-description
+                    [segments]="actionSummary(action)"
+                    [statuses]="taskStatuses()" />
+                </app-automation-flow-node>
+              }
+
+              <div class="bg-border ml-6 h-3 w-px" aria-hidden="true"></div>
+
+              <button
+                type="button"
+                class="border-border text-foreground/60 hover:border-primary hover:text-primary focus-visible:ring-primary flex h-11.5 w-full cursor-pointer items-center gap-2 rounded-[10px] border border-dashed px-4 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                [disabled]="atActionLimit()"
+                (click)="addAction()">
+                <svg lucidePlus class="h-3.5 w-3.5"></svg>
+                <span i18n="Button that adds another automation action">
+                  Add action
+                </span>
+                <span class="text-foreground/45 ml-auto text-xs font-medium">
+                  <span
+                    i18n="
+                      How many automation actions are in use. USED is that
+                      count, LIMIT the maximum
+                    ">
+                    {{
+                      actions().length // i18n(ph="USED")
+                    }}
+                    of
+                    {{
+                      actionLimit // i18n(ph="LIMIT")
+                    }}
+                  </span>
+                </span>
+              </button>
+            </nav>
+
+            <section class="bg-card flex min-h-0 flex-col">
+              <div
+                class="min-h-0 flex-1 px-10 pt-7 pb-9 max-md:px-3 lg:overflow-y-auto">
+                <div class="flex max-w-150 flex-col">
+                  @if (validationError(); as error) {
+                    <app-callout
+                      class="mb-5"
+                      color="warn"
+                      role="alert"
+                      [icon]="errorIcon">
+                      {{ error }}
+                    </app-callout>
+                  }
+
+                  <p class="text-foreground/45 mb-2 text-xs font-semibold">
+                    <span
+                      i18n="
+                        Position of the open step in the automation. STEP is its
+                        number, TOTAL the number of steps
+                      ">
+                      Step
+                      {{
+                        selectedIndex() + 1 // i18n(ph="STEP")
+                      }}
+                      of
+                      {{
+                        flowOrder().length // i18n(ph="TOTAL")
+                      }}
+                    </span>
+                  </p>
+
+                  <div class="mb-5.5">
+                    <h2 class="mb-1 text-lg font-bold">{{ panelTitle() }}</h2>
+                    <p
+                      class="text-foreground/55 text-[13px] leading-normal text-pretty">
+                      {{ panelDescription() }}
+                    </p>
+                  </div>
+
+                  @switch (selected()) {
+                    @case ('settings') {
+                      <app-automation-settings-editor
+                        [serviceAccounts]="enabledServiceAccounts()"
+                        [projects]="projectsResource.value()"
+                        [boards]="workspaceBoards()"
+                        [sprints]="workspaceSprintsResource.value()"
+                        [(executionUserId)]="executionUserId"
+                        [(projectId)]="projectId"
+                        [(boardId)]="boardId"
+                        [(sprintId)]="sprintId" />
+                    }
+                    @case ('trigger') {
+                      <app-automation-trigger-editor
+                        [(triggerType)]="triggerType"
+                        [(taskFields)]="taskFields"
+                        [(durationDays)]="durationDays" />
+                    }
+                    @case ('conditions') {
+                      <app-automation-conditions-editor
+                        [statuses]="taskStatuses()"
+                        [supportsChangeOperators]="
+                          triggerType() === automationTriggerType.taskChanged
+                        "
+                        [(conditionGroup)]="conditionGroup" />
+                    }
+                    @default {
+                      @if (selectedAction(); as action) {
+                        <app-automation-action-editor
+                          [action]="action"
+                          [canRemove]="actions().length > 1"
+                          [statuses]="taskStatuses()"
+                          [users]="workspaceUsers()"
+                          [ruleName]="name()"
+                          [tags]="workspaceTagsResource.value()"
+                          [sprints]="workspaceSprintsResource.value()"
+                          [boardGroups]="workspaceBoardGroupsResource.value()"
+                          [relationTypes]="relationTypesResource.value()"
+                          [defaultStatusId]="defaultActiveStatusId()"
+                          (typeChanged)="
+                            onActionTypeChanged(action.clientId, $event)
+                          "
+                          (patch)="updateAction(action.clientId, $event)"
+                          (remove)="removeAction(action.clientId)" />
+                      }
+                    }
+                  }
+                </div>
+              </div>
+
+              <div
+                class="border-border flex shrink-0 items-center gap-2.5 border-t px-10 py-3 max-md:px-3">
+                @if (previousStep(); as previous) {
+                  <button
+                    app-stroked-button
+                    class="gap-1.5"
+                    type="button"
+                    (click)="select(previous)">
+                    <svg lucideChevronLeft class="h-3.5 w-3.5"></svg>
+                    <span>{{ stepName(previous) }}</span>
+                  </button>
+                }
+
+                <span class="flex-1"></span>
+
+                @if (nextStep(); as next) {
+                  <button
+                    app-stroked-button
+                    class="gap-1.5"
+                    type="button"
+                    (click)="select(next)">
+                    <span>{{ stepName(next) }}</span>
+                    <svg lucideChevronRight class="h-3.5 w-3.5"></svg>
+                  </button>
+                }
+              </div>
+            </section>
           </div>
-        </div>
+        </form>
       }
     </app-page-container>
   `,
 })
 export class AutomationFormViewComponent {
   readonly automationTriggerType = AutomationTriggerType;
+  readonly actionLimit = automationActionLimit;
+  readonly setupIcon = LucideSettings2;
   readonly triggerIcon = LucideZap;
   readonly conditionsIcon = LucideListFilter;
   readonly errorIcon = LucideCircleAlert;
@@ -215,7 +435,7 @@ export class AutomationFormViewComponent {
 
   readonly saving = mutation();
   readonly validationError = signal<string | null>(null);
-  readonly summaryOpen = signal(true);
+  readonly selected = signal<AutomationFlowStepKey>('trigger');
 
   readonly taskStatusesResource = statusResource();
   readonly serviceAccountsResource = serviceAccountResource();
@@ -279,8 +499,164 @@ export class AutomationFormViewComponent {
   readonly boardId = signal<number | null>(null);
   readonly sprintId = signal<number | null>(null);
 
-  readonly oneLine = computed(() => {
-    return describeAutomationOneLine(this.triggerPreview(), this.actions());
+  readonly flowOrder = computed<AutomationFlowStepKey[]>(() => {
+    return [
+      'settings',
+      'trigger',
+      'conditions',
+      ...this.actions().map((action) => action.clientId),
+    ];
+  });
+
+  readonly selectedIndex = computed(() => {
+    return Math.max(0, this.flowOrder().indexOf(this.selected()));
+  });
+
+  readonly previousStep = computed(() => {
+    return this.flowOrder()[this.selectedIndex() - 1] ?? null;
+  });
+
+  readonly nextStep = computed(() => {
+    return this.flowOrder()[this.selectedIndex() + 1] ?? null;
+  });
+
+  readonly selectedAction = computed(() => {
+    const selected = this.selected();
+
+    return (
+      this.actions().find((action) => action.clientId === selected) ?? null
+    );
+  });
+
+  readonly runAsName = computed(() => {
+    const userId = this.executionUserId();
+    const account = this.serviceAccounts().find(
+      (serviceAccount) => serviceAccount.userId === userId
+    );
+
+    return (
+      account?.name ??
+      $localize`:Shown in place of the service account an automation runs as when none is chosen:No service account`
+    );
+  });
+
+  readonly scopeSummary = computed(() => {
+    const projectId = this.projectId();
+    const boardId = this.boardId();
+    const sprintId = this.sprintId();
+
+    if (projectId !== null) {
+      const project = this.projectsResource
+        .value()
+        .find((candidate) => candidate.id === projectId);
+
+      return $localize`:Where an automation listens. PROJECT is a project name:Runs on the ${project?.name ?? '…'}:PROJECT: project`;
+    }
+
+    if (boardId !== null) {
+      const board = this.workspaceBoards().find(
+        (candidate) => candidate.id === boardId
+      );
+
+      return $localize`:Where an automation listens. BOARD is a board name:Runs on the ${board?.name ?? '…'}:BOARD: board`;
+    }
+
+    if (sprintId !== null) {
+      const sprint = this.workspaceSprintsResource
+        .value()
+        .find((candidate) => candidate.id === sprintId);
+
+      return $localize`:Where an automation listens. SPRINT is a sprint name:Runs on ${sprint?.name ?? '…'}:SPRINT:`;
+    }
+
+    return $localize`:Where an automation listens when it covers every task:Runs on the whole workspace`;
+  });
+
+  readonly triggerTitle = computed(() => {
+    return triggerTypeLabels[this.triggerType()];
+  });
+
+  // The trigger node describes the event alone, because the conditions have their own node.
+  readonly triggerSummary = computed<AutomationCopySegment[]>(() => {
+    const trigger = { ...this.triggerPreview(), conditionGroup: null };
+
+    if (trigger.type !== AutomationTriggerType.taskChanged) {
+      return [{ type: 'text', text: describeAutomationTrigger(trigger) }];
+    }
+
+    const fields = joinNaturalList(
+      (trigger.fields ?? []).map((field) =>
+        toLowerText(taskChangeFieldLabels[field])
+      ),
+      'and'
+    );
+    const text = fields
+      ? $localize`:Summary of the fields a task-changed trigger watches. FIELDS lists them:Watching ${fields}:FIELDS:`
+      : $localize`:Summary of a task-changed trigger with no watched fields:No fields watched yet`;
+
+    return [{ type: 'text', text }];
+  });
+
+  readonly conditionCount = computed(() => {
+    return countAutomationConditions(this.conditionGroup());
+  });
+
+  readonly conditionsTitle = computed(() => {
+    const count = this.conditionCount();
+
+    if (count === 0) {
+      return $localize`:Title of the conditions step when it has none:No conditions`;
+    }
+
+    return count === 1
+      ? $localize`:Title of the conditions step with one condition:1 condition`
+      : $localize`:Title of the conditions step. COUNT is greater than one:${count}:COUNT: conditions`;
+  });
+
+  readonly conditionsSummary = computed<AutomationCopySegment[]>(() => {
+    if (!this.conditionCount()) {
+      return [
+        {
+          type: 'text',
+          text: $localize`:Summary of the conditions step when it has none:Every task continues`,
+        },
+      ];
+    }
+
+    return describeAutomationConditionsSegments(
+      this.triggerPreview(),
+      this.taskStatuses()
+    );
+  });
+
+  readonly panelTitle = computed(() => {
+    const action = this.selectedAction();
+
+    if (action) return actionTypeLabels[action.type];
+
+    switch (this.selected()) {
+      case 'settings':
+        return $localize`:Heading of the automation settings step:Settings`;
+      case 'conditions':
+        return $localize`:Heading of the automation conditions step:Conditions`;
+      default:
+        return $localize`:Heading of the automation trigger step:Trigger`;
+    }
+  });
+
+  readonly panelDescription = computed(() => {
+    const action = this.selectedAction();
+
+    if (action) return actionTypeDescriptions[action.type];
+
+    switch (this.selected()) {
+      case 'settings':
+        return $localize`:Description of the automation settings step:Who the automation acts as, and where it listens.`;
+      case 'conditions':
+        return $localize`:Description of the automation conditions step:Optional filters. Tasks that don't match stop here.`;
+      default:
+        return $localize`:Description of the automation trigger step:The event that starts this automation.`;
+    }
   });
 
   constructor() {
@@ -319,12 +695,57 @@ export class AutomationFormViewComponent {
     return ['../'];
   }
 
+  select(step: AutomationFlowStepKey) {
+    this.selected.set(step);
+  }
+
+  stepName(step: AutomationFlowStepKey): string {
+    switch (step) {
+      case 'settings':
+        return $localize`:Name of the automation setup step:Setup`;
+      case 'trigger':
+        return $localize`:Name of the automation trigger step:Trigger`;
+      case 'conditions':
+        return $localize`:Name of the automation conditions step:Conditions`;
+    }
+
+    const position =
+      this.actions().findIndex((action) => action.clientId === step) + 1;
+
+    return $localize`:Name of an automation action step. NUMBER is its position:Action ${position}:NUMBER:`;
+  }
+
+  actionKeyword(index: number): string {
+    return index === 0
+      ? $localize`:Heading of the first action in the rule:THEN`
+      : $localize`:Heading of a follow-on action in the rule:AND THEN`;
+  }
+
+  actionTypeLabel(action: EditableAutomationAction): string {
+    return actionTypeLabels[action.type];
+  }
+
+  actionSummary(action: EditableAutomationAction): AutomationCopySegment[] {
+    return describeAutomationActionSegments(action, this.taskStatuses());
+  }
+
+  atActionLimit(): boolean {
+    return this.actions().length >= automationActionLimit;
+  }
+
+  onNameInput(event: Event) {
+    this.name.set((event.target as HTMLInputElement).value);
+  }
+
   addAction() {
-    if (this.actions().length >= automationActionLimit) {
+    if (this.atActionLimit()) {
       return;
     }
 
-    this.actions.update((actions) => [...actions, this.newNotifyAction()]);
+    const action = this.newNotifyAction();
+
+    this.actions.update((actions) => [...actions, action]);
+    this.selected.set(action.clientId);
   }
 
   removeAction(clientId: number) {
@@ -332,9 +753,15 @@ export class AutomationFormViewComponent {
       return;
     }
 
+    const previous = this.previousStep();
+
     this.actions.update((actions) => {
       return actions.filter((action) => action.clientId !== clientId);
     });
+
+    if (this.selected() === clientId && previous !== null) {
+      this.selected.set(previous);
+    }
   }
 
   onActionTypeChanged(clientId: number, type: AutomationActionType) {
