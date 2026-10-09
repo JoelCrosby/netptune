@@ -1,5 +1,7 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, computed, effect, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router } from '@angular/router';
 import {
   AiChangeApplyStatus,
   AiChangeSet,
@@ -52,6 +54,10 @@ export interface AiReviewData {
 }
 
 const MODE_KEY = 'netptune.ai.review.mode';
+
+const pathOf = (url: string): string => {
+  return url.split(/[?#]/)[0];
+};
 
 @Component({
   selector: 'app-ai-assistant-review-dialog',
@@ -405,6 +411,7 @@ export class AiAssistantReviewDialogComponent {
   protected readonly assistant = inject(AiAssistantService);
 
   private readonly dialogRef = inject<DialogRef<void>>(DialogRef);
+  private readonly router = inject(Router);
   private readonly data = inject<AiReviewData | null>(DIALOG_DATA, {
     optional: true,
   });
@@ -670,6 +677,18 @@ export class AiAssistantReviewDialogComponent {
   });
 
   constructor() {
+    const openedPath = pathOf(this.router.url);
+
+    this.router.events.pipe(takeUntilDestroyed()).subscribe((event) => {
+      const isNewPage =
+        event instanceof NavigationEnd &&
+        pathOf(event.urlAfterRedirects) !== openedPath;
+
+      if (isNewPage) {
+        this.close();
+      }
+    });
+
     effect(() => {
       const isStale = this.filter() === 'failed' && this.failedCount() === 0;
 
