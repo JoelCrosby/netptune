@@ -1,4 +1,12 @@
-import { Component, computed, inject, input, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  signal,
+  untracked,
+} from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { WorkspaceFileViewModel } from '@core/models/view-models/workspace-file-view-model';
@@ -191,6 +199,16 @@ export class TaskDetailFilesComponent {
   readonly canUpload = hasPermission(PERMISSIONS.files.upload);
 
   readonly count = computed(() => this.files().length);
+
+  constructor() {
+    effect(() => {
+      const uploads = this.taskDetail.mediaUploads();
+
+      if (!uploads) return;
+
+      untracked(() => this.filesResource.reload());
+    });
+  }
 
   upload(files: File[]) {
     const systemId = this.systemId();

@@ -37,6 +37,7 @@ export class TaskDetailService {
   private readonly storage = inject(StorageService);
 
   private readonly openSystemId = signal<string | undefined>(undefined);
+  private readonly mediaUploadCount = signal(0);
 
   private readonly resource = taskDetailResource(this.openSystemId);
 
@@ -49,6 +50,7 @@ export class TaskDetailService {
   readonly projectId = computed(() => this.task()?.projectId);
 
   readonly loading = this.resource.isLoading;
+  readonly mediaUploads = this.mediaUploadCount.asReadonly();
   readonly isEditing = this.taskCommands.isEditing;
 
   readonly loadError = computed(() => {
@@ -112,12 +114,18 @@ export class TaskDetailService {
     this.updateTask({ description }, { silent: true, refresh: false });
   }
 
-  // media embedded in the description is linked to the task so it shows in its files.
   uploadMedia(file: File): Promise<EditorUpload | null> {
     const systemId = this.task()?.systemId ?? null;
 
     return firstValueFrom(
-      this.storage.uploadMedia(file, systemId).pipe(unwrapClientResponse())
+      this.storage.uploadMedia(file, systemId).pipe(
+        unwrapClientResponse(),
+        tap(() => {
+          if (systemId) {
+            this.mediaUploadCount.update((count) => count + 1);
+          }
+        })
+      )
     );
   }
 
