@@ -563,6 +563,10 @@ export class AiAssistantService {
     if (event.type === AiStreamEventType.toolCompleted) {
       this.isThinking.set(true);
 
+      if (event.toolName) {
+        this.transcript.completeTool(event.toolName);
+      }
+
       return;
     }
 

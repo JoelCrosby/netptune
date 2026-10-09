@@ -1,90 +1,72 @@
-import { Component, computed, input, output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AiContextChip, contextChipKey } from '@core/models/ai-context';
-import { LucideX } from '@lucide/angular';
+import { LucidePlus, LucideX } from '@lucide/angular';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
-import { InlineButtonComponent } from '@static/components/button/inline-button.component';
 
 @Component({
   selector: 'app-ai-assistant-context',
   host: { class: 'block' },
-  imports: [InlineButtonComponent, LucideX, RouterLink, TooltipDirective],
+  imports: [LucidePlus, LucideX, RouterLink, TooltipDirective],
   template: `
-    @if (hasRow()) {
-      <div
-        class="mx-auto flex w-full flex-wrap items-center gap-1.5 px-5 pb-2"
-        role="group"
-        i18n-aria-label="
-          Accessible name of the row showing what the assistant is told about
-          the screen
-        "
-        aria-label="Sent with your message"
-        [class]="contentWidth()">
-        @for (chip of chips(); track key(chip)) {
-          <span
-            class="bg-hover text-muted flex items-center gap-1 rounded-full py-1 pr-1 pl-2.5 text-xs">
-            <span>{{ chip.label }}</span>
+    <div
+      class="flex flex-wrap items-center gap-1.5"
+      role="group"
+      i18n-aria-label="
+        Accessible name of the row showing what the assistant is told about the
+        screen
+      "
+      aria-label="Sent with your message">
+      @for (chip of chips(); track key(chip)) {
+        <span
+          class="bg-foreground/5 text-foreground/70 flex h-6 items-center gap-1.5 rounded-md pr-1 pl-2 text-[11.5px]">
+          <span class="text-muted">{{ chip.label }}</span>
 
-            @if (chip.route; as route) {
-              <a
-                class="text-foreground max-w-40 truncate hover:underline"
-                [routerLink]="route"
-                [appTooltip]="chip.description">
-                {{ chip.name }}
-              </a>
-            } @else {
-              <span
-                class="text-foreground max-w-40 truncate"
-                [appTooltip]="chip.description">
-                {{ chip.name }}
-              </span>
-            }
-
-            <button
-              type="button"
-              class="hover:text-foreground flex h-4 w-4 items-center justify-center rounded-full transition-colors"
-              [attr.aria-label]="removeLabel(chip)"
-              (click)="removed.emit(chip)">
-              <svg lucideX class="h-3 w-3"></svg>
-            </button>
-          </span>
-        }
-
-        @if (hasRemoved()) {
-          @if (chips().length === 0) {
+          @if (chip.route; as route) {
+            <a
+              class="max-w-40 truncate font-semibold hover:underline"
+              [routerLink]="route"
+              [appTooltip]="chip.description">
+              {{ chip.name }}
+            </a>
+          } @else {
             <span
-              class="text-muted text-xs"
-              i18n="Shown when nothing about the screen is sent with a message">
-              No context
+              class="max-w-40 truncate font-semibold"
+              [appTooltip]="chip.description">
+              {{ chip.name }}
             </span>
           }
 
           <button
             type="button"
-            app-inline-button
-            color="muted"
-            appearance="lift"
-            class="underline"
-            (click)="restored.emit()"
-            i18n="Puts the removed context chips back">
-            Restore
+            class="text-muted hover:bg-foreground/5 hover:text-foreground flex h-4 w-4 items-center justify-center rounded transition-colors"
+            [attr.aria-label]="removeLabel(chip)"
+            (click)="removed.emit(chip)">
+            <svg lucideX class="h-2.5 w-2.5" strokeWidth="2.6"></svg>
           </button>
-        }
-      </div>
-    }
+        </span>
+      }
+
+      @if (hasRemoved()) {
+        <button
+          type="button"
+          class="border-foreground/15 text-muted hover:text-foreground flex h-6 items-center gap-1 rounded-md border border-dashed px-1.5 text-[11.5px] transition-colors"
+          i18n-appTooltip="Tooltip on the button that puts removed context back"
+          appTooltip="Restore removed context"
+          (click)="restored.emit()">
+          <svg lucidePlus class="h-2.75 w-2.75" strokeWidth="2.4"></svg>
+          <span i18n="Puts the removed context chips back">Context</span>
+        </button>
+      }
+    </div>
   `,
 })
 export class AiAssistantContextComponent {
   readonly chips = input.required<readonly AiContextChip[]>();
   readonly hasRemoved = input(false);
-  readonly contentWidth = input('');
 
   readonly removed = output<AiContextChip>();
   readonly restored = output();
-
-  protected readonly hasRow = computed(() => {
-    return this.chips().length > 0 || this.hasRemoved();
-  });
 
   protected key(chip: AiContextChip): string {
     return contextChipKey(chip);

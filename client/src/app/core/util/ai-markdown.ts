@@ -32,36 +32,161 @@ export type AiMarkdownBlock =
   | { kind: 'rule' };
 
 const FENCE = '```';
-const UNCLOSED_MARKERS = ['**', '~~', '`'];
+const CODE_MARK = '`';
+const PAIRED_MARKERS = ['**', '~~'];
+const PARTIAL_LINK_TARGET = /\[([^\]]*)\]\([^)]*$/;
+const PARTIAL_LINK_LABEL = /\[([^\]]*)$/;
+const CODE_SPAN = /`[^`]*`/g;
+const TABLE_ROW = /^\s*\|/;
+const TABLE_DELIMITER = /^\s*\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)*\|?\s*$/;
+const TRAILING_SPACE = /\s*$/;
 
-const dropUnclosedMarker = (text: string, marker: string): string => {
-  const isBalanced = (text.split(marker).length - 1) % 2 === 0;
+interface UnclosedMarker {
+  index: number;
+  marker: string;
+}
+
+const countOf = (text: string, marker: string): number => {
+  return text.split(marker).length - 1;
+};
+
+// Code spans are blanked out at the same length, so marker positions still line up with
+// the real text while markers inside code stop counting.
+const maskCodeSpans = (text: string): string => {
+  return text.replace(CODE_SPAN, (span) => 'x'.repeat(span.length));
+};
+
+const unclosedPair = (masked: string, marker: string): UnclosedMarker[] => {
+  const isBalanced = countOf(masked, marker) % 2 === 0;
 
   if (isBalanced) {
-    return text;
+    return [];
   }
 
-  const opened = text.lastIndexOf(marker);
+  return [{ index: masked.lastIndexOf(marker), marker }];
+};
 
-  return `${text.slice(0, opened)}${text.slice(opened + marker.length)}`;
+// A lone star opens emphasis only when it hugs the word after it, which leaves out list
+// bullets and arithmetic.
+const unclosedStar = (masked: string): UnclosedMarker[] => {
+  const singles = masked.replaceAll('**', 'xx');
+  const openers: number[] = [];
+
+  for (let index = 0; index < singles.length; index++) {
+    const isStar = singles[index] === '*';
+    const before = singles[index - 1] ?? ' ';
+    const after = singles[index + 1] ?? ' ';
+    const isStandalone = /\s/.test(before) && /\s/.test(after);
+    const isBullet = singles.slice(0, index).trim() === '' && after === ' ';
+
+    if (isStar && !isStandalone && !isBullet) {
+      openers.push(index);
+    }
+  }
+
+  const isBalanced = openers.length % 2 === 0;
+
+  if (isBalanced) {
+    return [];
+  }
+
+  return [{ index: openers[openers.length - 1], marker: '*' }];
+};
+
+const unclosedCode = (line: string): UnclosedMarker[] => {
+  const isBalanced = countOf(line, CODE_MARK) % 2 === 0;
+
+  if (isBalanced) {
+    return [];
+  }
+
+  return [{ index: line.lastIndexOf(CODE_MARK), marker: CODE_MARK }];
+};
+
+// The label is worth showing as it arrives; the half-typed address is not.
+const healPartialLink = (line: string): string => {
+  return line
+    .replace(PARTIAL_LINK_TARGET, '$1')
+    .replace(PARTIAL_LINK_LABEL, '$1');
+};
+
+// Closing a span early styles its text from the first word, where dropping the opener
+// would show it plain and then restyle it once the closer arrives.
+const healInline = (line: string): string => {
+  const linked = healPartialLink(line);
+  const code = unclosedCode(linked);
+  const masked = maskCodeSpans(
+    code.length > 0 ? linked.slice(0, code[0].index) : linked
+  );
+  const emphasis = [
+    ...PAIRED_MARKERS.flatMap((marker) => unclosedPair(masked, marker)),
+    ...unclosedStar(masked),
+  ];
+  const unclosed = [...code, ...emphasis].sort((a, b) => b.index - a.index);
+
+  let healed = linked;
+  let closers = '';
+
+  for (const { index, marker } of unclosed) {
+    const content = healed.slice(index + marker.length).trim();
+
+    if (content.length === 0) {
+      healed = `${healed.slice(0, index)}${healed.slice(index + marker.length)}`;
+
+      continue;
+    }
+
+    closers += marker;
+  }
+
+  const trailing = TRAILING_SPACE.exec(healed)?.[0] ?? '';
+
+  return `${healed.trimEnd()}${closers}${trailing}`;
+};
+
+const cellCount = (row: string): number => {
+  return row.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').length;
+};
+
+// A table's header row reads as a line of pipes until the delimiter row under it arrives.
+const holdPartialTable = (lines: string[]): string[] => {
+  let start = lines.length;
+
+  while (start > 0 && TABLE_ROW.test(lines[start - 1])) {
+    start--;
+  }
+
+  const rows = lines.slice(start);
+  const hasRows = rows.length > 0;
+  const hasDelimiter =
+    rows.length > 1 &&
+    TABLE_DELIMITER.test(rows[1]) &&
+    cellCount(rows[1]) === cellCount(rows[0]);
+
+  if (!hasRows || hasDelimiter) {
+    return lines;
+  }
+
+  return lines.slice(0, start);
 };
 
 const closePartialSyntax = (text: string): string => {
-  const fences = text.split(FENCE).length - 1;
-  const isFenceOpen = fences % 2 === 1;
+  const isFenceOpen = countOf(text, FENCE) % 2 === 1;
 
   if (isFenceOpen) {
     return `${text}\n${FENCE}`;
   }
 
-  const lastLineBreak = text.lastIndexOf('\n');
-  const head = text.slice(0, lastLineBreak + 1);
-  const tail = UNCLOSED_MARKERS.reduce(
-    dropUnclosedMarker,
-    text.slice(lastLineBreak + 1)
-  );
+  const lines = holdPartialTable(text.split('\n'));
+  const last = lines.length - 1;
 
-  return `${head}${tail}`;
+  if (last < 0) {
+    return '';
+  }
+
+  lines[last] = healInline(lines[last]);
+
+  return lines.join('\n');
 };
 
 const toInline = (

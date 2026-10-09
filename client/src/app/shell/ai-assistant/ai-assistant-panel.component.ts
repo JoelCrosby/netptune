@@ -18,7 +18,6 @@ import { AiAssistantService } from '@core/services/ai-assistant.service';
 import { AiPanelService } from '@core/services/ai-panel.service';
 import { AiAssistantChangeSetComponent } from './components/ai-assistant-change-set.component';
 import { AiAssistantComposerComponent } from './components/ai-assistant-composer.component';
-import { AiAssistantContextComponent } from './components/ai-assistant-context.component';
 import { AiAssistantEmptyStateComponent } from './components/ai-assistant-empty-state.component';
 import { AiAssistantHeaderComponent } from './components/ai-assistant-header.component';
 import { AiAssistantHistoryComponent } from './components/ai-assistant-history.component';
@@ -26,27 +25,25 @@ import { AiAssistantMessageComponent } from './components/ai-assistant-message.c
 import { AiAssistantMissingKeyComponent } from './components/ai-assistant-missing-key.component';
 import { AiQuestionResponse } from './components/ai-assistant-question.component';
 import { AiAssistantResizeHandleComponent } from './components/ai-assistant-resize-handle.component';
-import { AiAssistantThinkingComponent } from './components/ai-assistant-thinking.component';
-import { AiAssistantUsageComponent } from './components/ai-assistant-usage.component';
 
 @Component({
   selector: 'app-ai-assistant-panel',
-  host: { class: 'block h-full min-h-0' },
+  host: {
+    class: 'block h-full min-h-0',
+    '(keydown.escape)': 'stopOnEscape()',
+  },
   imports: [
     LucideArrowDown,
     MessageScrollerDirective,
     MessageScrollerItemDirective,
     AiAssistantChangeSetComponent,
     AiAssistantComposerComponent,
-    AiAssistantContextComponent,
     AiAssistantEmptyStateComponent,
     AiAssistantHeaderComponent,
     AiAssistantHistoryComponent,
     AiAssistantMessageComponent,
     AiAssistantMissingKeyComponent,
     AiAssistantResizeHandleComponent,
-    AiAssistantThinkingComponent,
-    AiAssistantUsageComponent,
   ],
   template: `
     <div
@@ -64,6 +61,7 @@ import { AiAssistantUsageComponent } from './components/ai-assistant-usage.compo
 
       <app-ai-assistant-header
         [title]="headerTitle()"
+        [subtitle]="headerSubtitle()"
         [mode]="panel.mode()"
         [contentWidth]="contentWidth()"
         [closable]="isDrawer()"
@@ -81,7 +79,7 @@ import { AiAssistantUsageComponent } from './components/ai-assistant-usage.compo
           i18n-aria-label="Accessible name of the assistant transcript"
           aria-label="Conversation">
           <div
-            class="mx-auto flex w-full flex-1 flex-col px-4 py-4"
+            class="mx-auto flex w-full flex-1 flex-col px-4.5 pt-5 pb-3"
             [class]="contentWidth()">
             @if (isMissingKey()) {
               <app-ai-assistant-missing-key
@@ -111,7 +109,7 @@ import { AiAssistantUsageComponent } from './components/ai-assistant-usage.compo
                 </p>
               }
 
-              <div class="flex flex-col gap-5">
+              <div class="flex flex-col gap-4.5">
                 @for (entry of entries(); track $index) {
                   <app-ai-assistant-message
                     [appMessageScrollerItem]="'entry-' + $index"
@@ -122,16 +120,14 @@ import { AiAssistantUsageComponent } from './components/ai-assistant-usage.compo
                     [answers]="assistant.answers()"
                     [workspace]="assistant.workspaceKey()"
                     [isStreaming]="assistant.isStreaming() && $last"
+                    [isThinking]="assistant.isThinking()"
+                    [elapsedMs]="assistant.turnElapsedMs()"
+                    [turnUsage]="assistant.turnUsage()"
+                    [usage]="$last ? spend() : null"
                     [isLast]="$last && !assistant.isStreaming()"
                     (retried)="retry()"
                     (answered)="answer($event)"
                     (edited)="assistant.editLastQuestion()" />
-                }
-
-                @if (isThinking()) {
-                  <app-ai-assistant-thinking
-                    [elapsedMs]="assistant.turnElapsedMs()"
-                    [usage]="assistant.turnUsage()" />
                 }
               </div>
             }
@@ -167,19 +163,6 @@ import { AiAssistantUsageComponent } from './components/ai-assistant-usage.compo
           (stopped)="stopApplying()" />
       }
 
-      @if (spend(); as usage) {
-        <app-ai-assistant-usage
-          [usage]="usage"
-          [contentWidth]="contentWidth()" />
-      }
-
-      <app-ai-assistant-context
-        [chips]="assistant.contextChips()"
-        [hasRemoved]="assistant.hasRemovedContext()"
-        [contentWidth]="contentWidth()"
-        (removed)="assistant.removeContext($event)"
-        (restored)="assistant.restoreContext()" />
-
       <app-ai-assistant-composer
         [disabled]="isMissingKey()"
         [models]="assistant.models()"
@@ -194,6 +177,10 @@ import { AiAssistantUsageComponent } from './components/ai-assistant-usage.compo
         [isAnswering]="assistant.pendingQuestion() !== null"
         [contentWidth]="contentWidth()"
         [draft]="assistant.draft()"
+        [chips]="assistant.contextChips()"
+        [hasRemovedContext]="assistant.hasRemovedContext()"
+        (contextRemoved)="assistant.removeContext($event)"
+        (contextRestored)="assistant.restoreContext()"
         (messageSent)="send($event)"
         [isReplacing]="assistant.isReplacingLastTurn()"
         (draftChanged)="assistant.setDraft($event)"
@@ -233,8 +220,13 @@ export class AiAssistantPanelComponent {
     return usage;
   });
 
-  protected readonly isThinking = computed(() => {
-    return this.assistant.isStreaming() && this.assistant.isThinking();
+  protected readonly headerSubtitle = computed(() => {
+    const names = this.assistant
+      .contextChips()
+      .filter((chip) => chip.kind !== 'view')
+      .map((chip) => chip.name);
+
+    return names.length > 0 ? names.join(' · ') : null;
   });
 
   protected readonly contentWidth = computed(() => {
@@ -289,6 +281,14 @@ export class AiAssistantPanelComponent {
 
   private afterRender(action: () => void) {
     afterNextRender(action, { injector: this.injector });
+  }
+
+  protected stopOnEscape() {
+    const isStreaming = this.assistant.isStreaming();
+
+    if (isStreaming) {
+      this.assistant.stopTurn();
+    }
   }
 
   protected apply() {

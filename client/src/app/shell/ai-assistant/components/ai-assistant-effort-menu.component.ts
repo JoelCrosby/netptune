@@ -13,7 +13,8 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
       [label]="label()"
       i18n-ariaLabel="Accessible label for the assistant effort selector"
       ariaLabel="Assistant effort"
-      buttonClass="h-8 max-w-40 rounded-full px-3 text-xs">
+      color="ghost"
+      buttonClass="text-muted hover:text-foreground h-7 max-w-40 min-w-0 gap-1 rounded-md px-2 text-xs">
       <button
         app-menu-item
         type="button"

@@ -18,17 +18,23 @@ import { AiAssistantModeMenuComponent } from './ai-assistant-mode-menu.component
   ],
   template: `
     <div
-      class="mx-auto flex h-full w-full items-center justify-between gap-3 px-4"
+      class="mx-auto flex h-full w-full items-center justify-between gap-3 pr-2.5 pl-4.5"
       [class]="contentWidth()">
-      <h2 class="font-overpass min-w-0 truncate text-[1.05rem] font-medium">
-        {{ title() }}
-      </h2>
+      <div class="flex min-w-0 flex-col gap-px">
+        <h2 class="truncate text-[14.5px] font-semibold">
+          {{ title() }}
+        </h2>
+        @if (subtitle(); as subtitle) {
+          <span class="text-muted truncate text-[11.5px]">{{ subtitle }}</span>
+        }
+      </div>
 
-      <div class="flex shrink-0 items-center gap-1">
+      <div class="flex shrink-0 items-center gap-0.5">
         <button
           app-icon-button
           type="button"
-          class="rounded-full"
+          color="muted"
+          size="small"
           i18n-appTooltip="Tooltip on the button that lists past conversations"
           appTooltip="Conversation history"
           appTooltipPosition="bottom"
@@ -43,7 +49,8 @@ import { AiAssistantModeMenuComponent } from './ai-assistant-mode-menu.component
         <button
           app-icon-button
           type="button"
-          class="rounded-full"
+          color="muted"
+          size="small"
           i18n-appTooltip="Tooltip on the button that starts a new chat"
           appTooltip="New chat"
           appTooltipPosition="bottom"
@@ -52,10 +59,14 @@ import { AiAssistantModeMenuComponent } from './ai-assistant-mode-menu.component
         </button>
 
         @if (closable()) {
+          <span
+            class="bg-foreground/7 mx-1 h-4.5 w-px"
+            aria-hidden="true"></span>
           <button
             app-icon-button
             type="button"
-            class="rounded-full"
+            color="muted"
+            size="small"
             i18n-appTooltip="Tooltip on the button that closes the assistant"
             appTooltip="Close"
             appTooltipPosition="bottom"
@@ -69,6 +80,7 @@ import { AiAssistantModeMenuComponent } from './ai-assistant-mode-menu.component
 })
 export class AiAssistantHeaderComponent {
   readonly title = input.required<string>();
+  readonly subtitle = input<string | null>(null);
   readonly mode = input.required<AiDisplayMode>();
   readonly contentWidth = input('');
   readonly closable = input(false);

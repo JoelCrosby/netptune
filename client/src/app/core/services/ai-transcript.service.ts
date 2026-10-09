@@ -1,5 +1,5 @@
 import { Service, computed, signal } from '@angular/core';
-import { AiChatEntry } from '@core/models/ai-chat-entry';
+import { AiChatEntry, AiToolStep } from '@core/models/ai-chat-entry';
 import {
   AiChangeSet,
   AiEntityReference,
@@ -86,7 +86,39 @@ export class AiTranscriptService {
   }
 
   appendTool(toolName: string) {
-    this.updateLast((last) => ({ ...last, tools: [...last.tools, toolName] }));
+    const step: AiToolStep = {
+      name: toolName,
+      startedAt: Date.now(),
+      durationMs: null,
+    };
+
+    this.updateLast((last) => {
+      return {
+        ...last,
+        tools: [...last.tools, toolName],
+        steps: [...(last.steps ?? []), step],
+      };
+    });
+  }
+
+  completeTool(toolName: string) {
+    this.updateLast((last) => {
+      const steps = last.steps ?? [];
+      const index = steps.findIndex((step) => {
+        return step.name === toolName && step.durationMs === null;
+      });
+
+      if (index < 0) {
+        return last;
+      }
+
+      const next = [...steps];
+      const step = next[index];
+
+      next[index] = { ...step, durationMs: Date.now() - step.startedAt };
+
+      return { ...last, steps: next };
+    });
   }
 
   attachQuestion(question: AiQuestion) {
@@ -95,7 +127,7 @@ export class AiTranscriptService {
 
   /** The harness discards a reply it caught claiming work it never did. */
   resetLast() {
-    this.updateLast((last) => ({ ...last, text: '', tools: [] }));
+    this.updateLast((last) => ({ ...last, text: '', tools: [], steps: [] }));
   }
 
   failLast(message: string) {

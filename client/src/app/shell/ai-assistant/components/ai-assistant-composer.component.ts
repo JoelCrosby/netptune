@@ -1,30 +1,40 @@
 import { Component, computed, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AiContextChip } from '@core/models/ai-context';
 import { AiEffort, AiEffortOption } from '@core/models/ai-effort';
 import { AiModelOption } from '@core/models/ai-model';
 import { LucideArrowUp, LucideSquare } from '@lucide/angular';
+import { AiAssistantContextComponent } from './ai-assistant-context.component';
 import { AiAssistantEffortMenuComponent } from './ai-assistant-effort-menu.component';
 import { AiAssistantModelMenuComponent } from './ai-assistant-model-menu.component';
-import { IconButtonComponent } from '@static/components/button/icon-button.component';
 
 @Component({
   selector: 'app-ai-assistant-composer',
-  host: { class: 'block p-3' },
+  host: { class: 'block px-4 pb-3.5' },
   imports: [
+    AiAssistantContextComponent,
     AiAssistantEffortMenuComponent,
     AiAssistantModelMenuComponent,
     FormsModule,
-    IconButtonComponent,
     LucideArrowUp,
     LucideSquare,
   ],
   template: `
     <div class="mx-auto w-full" [class]="contentWidth()">
       <div
-        class="bg-hover focus-within:ring-primary/40 rounded-2xl p-2 transition focus-within:ring-2">
+        class="bg-form-field-background border-foreground/15 focus-within:border-primary flex flex-col gap-1 rounded-[14px] border p-2 transition-colors">
+        @if (hasContextRow()) {
+          <app-ai-assistant-context
+            class="px-0.5 pt-0.5"
+            [chips]="chips()"
+            [hasRemoved]="hasRemovedContext()"
+            (removed)="contextRemoved.emit($event)"
+            (restored)="contextRestored.emit()" />
+        }
+
         <textarea
-          rows="3"
-          class="placeholder:text-muted w-full resize-none bg-transparent px-2 py-1.5 text-sm outline-none"
+          rows="2"
+          class="placeholder:text-muted w-full resize-none bg-transparent px-1.5 pt-1.5 pb-0.5 text-[13.5px] leading-normal outline-none"
           [ngModel]="draft()"
           (ngModelChange)="draftChanged.emit($event)"
           (keydown)="onKeydown($event)"
@@ -46,9 +56,9 @@ import { IconButtonComponent } from '@static/components/button/icon-button.compo
           </div>
         }
 
-        <div class="flex items-center justify-between gap-2 pt-1">
+        <div class="flex items-center justify-between gap-2">
           @if (models().length > 0) {
-            <div class="flex min-w-0 items-center gap-2">
+            <div class="flex min-w-0 items-center gap-1">
               <app-ai-assistant-model-menu
                 [models]="models()"
                 [selectedModel]="selectedModel()"
@@ -68,28 +78,39 @@ import { IconButtonComponent } from '@static/components/button/icon-button.compo
           }
 
           @if (isStreaming()) {
+            <span
+              class="text-muted ml-auto text-[11px] whitespace-nowrap"
+              i18n="
+                Hint beside the stop button saying the key that stops a reply
+              ">
+              Esc to stop
+            </span>
             <button
               type="button"
-              class="bg-foreground/15 text-foreground hover:bg-foreground/25 flex h-9 w-9 items-center justify-center rounded-full transition"
+              class="bg-foreground/5 text-foreground ring-foreground/15 hover:bg-foreground/10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full ring-1 transition-colors ring-inset"
               i18n-aria-label="
                 Accessible label for the button that stops the assistant
               "
               aria-label="Stop the assistant"
               (click)="stopped.emit()">
-              <svg lucideSquare class="h-3.5 w-3.5 fill-current"></svg>
+              <svg lucideSquare class="h-3 w-3 fill-current"></svg>
             </button>
           } @else {
             <button
               type="button"
-              app-icon-button
-              class="bg-primary text-primary-foreground hover:bg-primary/88 h-9 w-9 disabled:opacity-40"
+              class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors"
+              [class]="
+                canSend()
+                  ? 'bg-primary text-primary-foreground hover:bg-primary/88'
+                  : 'bg-foreground/5 text-muted'
+              "
               [disabled]="!canSend()"
               i18n-aria-label="
                 Accessible label for the button that sends a message
               "
               aria-label="Send message"
               (click)="send()">
-              <svg lucideArrowUp class="h-4 w-4"></svg>
+              <svg lucideArrowUp class="h-3.75 w-3.75" strokeWidth="2.2"></svg>
             </button>
           }
         </div>
@@ -112,6 +133,8 @@ export class AiAssistantComposerComponent {
   readonly disabled = input(false);
   readonly contentWidth = input('');
   readonly draft = input('');
+  readonly chips = input<readonly AiContextChip[]>([]);
+  readonly hasRemovedContext = input(false);
 
   readonly messageSent = output<string>();
   readonly modelSelected = output<string | null>();
@@ -119,6 +142,12 @@ export class AiAssistantComposerComponent {
   readonly draftChanged = output<string>();
   readonly stopped = output();
   readonly editCancelled = output();
+  readonly contextRemoved = output<AiContextChip>();
+  readonly contextRestored = output();
+
+  protected readonly hasContextRow = computed(() => {
+    return this.chips().length > 0 || this.hasRemovedContext();
+  });
 
   protected readonly canSend = computed(() => {
     const hasDraft = this.draft().trim().length > 0;

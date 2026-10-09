@@ -5,10 +5,18 @@ import {
   AiQuestionAnswer,
 } from '@core/models/ai-conversation';
 
+export interface AiToolStep {
+  name: string;
+  startedAt: number;
+  durationMs: number | null;
+}
+
 export interface AiChatEntry {
   role: 'user' | 'assistant';
   text: string;
   tools: string[];
+  // Only a turn watched live has timings; a stored one keeps just the tool names.
+  steps?: AiToolStep[];
   /** Set on the message recording what applying a change set did, which is shown as a card. */
   changeSetId?: string;
   /** Set on a reply that asked the user something, which is shown as a card of options. */

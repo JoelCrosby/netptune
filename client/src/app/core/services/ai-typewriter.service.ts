@@ -8,6 +8,12 @@ import { AiTranscriptService } from '@core/services/ai-transcript.service';
 const DRAIN_WINDOW_MS = 220;
 const MINIMUM_CHARACTERS_PER_SECOND = 120;
 
+// A word with no space after it may still be arriving, so it waits this long for the rest
+// before showing as it is. The stream ending is never signalled here, so the wait must end.
+const PARTIAL_WORD_HOLD_MS = 150;
+
+const WORD_END = /\s/;
+
 @Service()
 export class AiTypewriterService {
   private readonly transcript = inject(AiTranscriptService);
@@ -19,6 +25,7 @@ export class AiTypewriterService {
   private frame: number | null = null;
   private lastFrameAt = 0;
   private carriedCharacters = 0;
+  private lastPushAt = 0;
 
   push(text: string) {
     if (this.reducedMotion.matches) {
@@ -28,6 +35,7 @@ export class AiTypewriterService {
     }
 
     this.pending += text;
+    this.lastPushAt = performance.now();
     this.start();
   }
 
@@ -83,7 +91,7 @@ export class AiTypewriterService {
     this.lastFrameAt = now;
     this.frame = null;
 
-    const count = this.take(elapsedMs);
+    const count = this.toWordEnd(this.take(elapsedMs), now);
 
     if (count > 0) {
       this.transcript.appendText(this.pending.slice(0, count));
@@ -95,6 +103,30 @@ export class AiTypewriterService {
     if (hasMore) {
       this.schedule();
     }
+  }
+
+  // Revealing whole words keeps half-typed words and unclosed markdown off the screen.
+  private toWordEnd(count: number, now: number): number {
+    if (count === 0) {
+      return 0;
+    }
+
+    const rest = this.pending.slice(count - 1);
+    const boundary = rest.search(WORD_END);
+
+    if (boundary >= 0) {
+      return count + boundary;
+    }
+
+    const hasSettled = now - this.lastPushAt >= PARTIAL_WORD_HOLD_MS;
+
+    if (hasSettled) {
+      return this.pending.length;
+    }
+
+    const lastBoundary = this.pending.slice(0, count).search(/\s\S*$/);
+
+    return lastBoundary >= 0 ? lastBoundary + 1 : 0;
   }
 
   private take(elapsedMs: number): number {

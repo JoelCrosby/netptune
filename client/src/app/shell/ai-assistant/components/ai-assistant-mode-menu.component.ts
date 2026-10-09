@@ -42,7 +42,8 @@ const DISPLAY_MODE_OPTIONS: DisplayModeOption[] = [
       <button
         app-icon-button
         type="button"
-        class="rounded-full"
+        color="muted"
+        size="small"
         aria-haspopup="menu"
         i18n-appTooltip="Tooltip on the assistant display mode selector"
         appTooltip="Display mode"
