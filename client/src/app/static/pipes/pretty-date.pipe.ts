@@ -1,8 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import dayjs from 'dayjs';
-import RelativeTime from 'dayjs/plugin/relativeTime';
-import UTC from 'dayjs/plugin/utc';
-import LocalizedFormat from 'dayjs/plugin/localizedFormat';
+import { prettyDate } from '@core/util/dates';
 
 @Pipe({
   name: 'prettyDate',
@@ -10,14 +7,6 @@ import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 })
 export class PrettyDatePipe implements PipeTransform {
   transform(value: Date | undefined | null): string {
-    if (!value) {
-      return '';
-    }
-
-    dayjs.extend(RelativeTime);
-    dayjs.extend(UTC);
-    dayjs.extend(LocalizedFormat);
-
-    return dayjs.utc(value).local().format('llll');
+    return prettyDate(value);
   }
 }
