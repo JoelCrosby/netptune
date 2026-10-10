@@ -27,7 +27,9 @@ import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown
 import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
 import { MenuSeparatorComponent } from '@static/components/dropdown-menu/menu-separator.component';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
+import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
+import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
@@ -72,255 +74,249 @@ import { AutomationsService } from '../../services/automations.service';
     LucideTriangleAlert,
     MenuItemComponent,
     MenuSeparatorComponent,
+    PageBodyComponent,
     PageContainerComponent,
+    PageHeaderComponent,
     PageLoadingComponent,
     PrettyDatePipe,
     RouterLink,
     StrokedButtonComponent,
   ],
   template: `
-    <app-page-container
-      followsWidthPreference
-      [centerPage]="true"
-      [marginBottom]="true">
-      @if (loading()) {
-        <app-page-loading />
-      } @else if (error()) {
-        <app-error-state
-          i18n-title="Shown when a single automation fails to load"
-          title="Automation could not be loaded"
-          i18n-description="Advice shown when a page fails to load"
-          description="Check your connection and try again."
-          (retry)="load()" />
-      } @else if (rule(); as rule) {
-        <div class="mx-auto flex w-full max-w-310 flex-col gap-7 pt-4">
-          <header class="flex flex-wrap items-start gap-5">
-            <div class="flex min-w-0 flex-1 flex-col gap-1.5">
-              <div class="flex flex-wrap items-center gap-3">
-                <h1 class="text-[26px] font-bold tracking-[-0.4px]">
-                  {{ rule.name }}
-                </h1>
-                @if (rule.isEnabled) {
-                  <app-automation-state-pill tone="success">
-                    <span i18n="Marks an automation that is switched on">
-                      Enabled
-                    </span>
-                  </app-automation-state-pill>
-                } @else {
-                  <app-automation-state-pill>
-                    <span i18n="Marks an automation that is switched off">
-                      Paused
-                    </span>
-                  </app-automation-state-pill>
-                }
-              </div>
+    <app-page-container layout="list">
+      @if (rule(); as rule) {
+        <app-page-header toolbar [title]="rule.name">
+          @if (rule.isEnabled) {
+            <app-automation-state-pill tone="success">
+              <span i18n="Marks an automation that is switched on">
+                Enabled
+              </span>
+            </app-automation-state-pill>
+          } @else {
+            <app-automation-state-pill>
+              <span i18n="Marks an automation that is switched off">
+                Paused
+              </span>
+            </app-automation-state-pill>
+          }
 
-              <p class="text-foreground/55 text-sm leading-normal">
-                {{ runsAs() }}
-                @if (rule.updatedAt) {
-                  <span
-                    i18n="
-                      When an automation was last changed, shown after the
-                      creation date. Keep the leading separator. DATE is a
-                      formatted date
-                    ">
-                    · Updated
-                    {{
-                      rule.updatedAt | prettyDate // i18n(ph="DATE")
-                    }}
-                  </span>
-                }
-              </p>
-            </div>
+          <div pageHeaderActions class="flex flex-wrap items-center gap-2">
+            <button
+              app-stroked-button
+              class="gap-2"
+              type="button"
+              (click)="onDryRun(rule)">
+              <svg lucideFlaskConical class="h-3.75 w-3.75"></svg>
+              <span i18n="Button that tests the automation against a task">
+                Test run
+              </span>
+            </button>
 
-            <div class="flex shrink-0 flex-wrap items-center gap-2.5">
+            @if (canManage()) {
               <button
                 app-stroked-button
-                class="gap-2"
                 type="button"
-                (click)="onDryRun(rule)">
-                <svg lucideFlaskConical class="h-3.75 w-3.75"></svg>
-                <span i18n="Button that tests the automation against a task">
-                  Test run
-                </span>
+                [disabled]="saving.pending()"
+                (click)="onToggle(rule)">
+                @if (rule.isEnabled) {
+                  <span i18n="Button that pauses an automation">Pause</span>
+                } @else {
+                  <span i18n="Button that resumes a paused automation">
+                    Resume
+                  </span>
+                }
               </button>
 
-              @if (canManage()) {
+              <a
+                app-flat-button
+                color="primary"
+                class="gap-2"
+                [routerLink]="['edit']">
+                <svg lucidePencil class="h-3.75 w-3.75"></svg>
+                <span i18n="Button that edits the automation">Edit</span>
+              </a>
+
+              <div #moreAnchor>
                 <button
                   app-stroked-button
+                  class="w-9 px-0"
                   type="button"
+                  i18n-aria-label="
+                    Accessible label of the button that opens more automation
+                    actions
+                  "
+                  aria-label="More actions"
                   [disabled]="saving.pending()"
-                  (click)="onToggle(rule)">
-                  @if (rule.isEnabled) {
-                    <span i18n="Button that pauses an automation">Pause</span>
-                  } @else {
-                    <span i18n="Button that resumes a paused automation">
-                      Resume
-                    </span>
-                  }
+                  (click)="moreMenu.toggle(moreAnchor)">
+                  <svg lucideEllipsis class="h-4 w-4"></svg>
                 </button>
+              </div>
 
-                <a
-                  app-flat-button
-                  color="primary"
-                  class="gap-2"
-                  [routerLink]="['edit']">
-                  <svg lucidePencil class="h-3.75 w-3.75"></svg>
-                  <span i18n="Button that edits the automation">Edit</span>
-                </a>
+              <app-dropdown-menu #moreMenu panelClass="w-50">
+                <button app-menu-item (click)="moreMenu.close(); onClone(rule)">
+                  <svg lucideCopy class="h-3.75 w-3.75"></svg>
+                  <span i18n="Menu item that duplicates an automation">
+                    Duplicate
+                  </span>
+                </button>
+                <app-menu-separator />
+                <button
+                  app-menu-item
+                  color="warn"
+                  (click)="moreMenu.close(); onDelete(rule)">
+                  <svg lucideTrash2 class="h-3.75 w-3.75"></svg>
+                  <span i18n="Menu item that deletes an automation">
+                    Delete automation
+                  </span>
+                </button>
+              </app-dropdown-menu>
+            }
+          </div>
+        </app-page-header>
+      }
 
-                <div #moreAnchor>
-                  <button
-                    app-stroked-button
-                    class="w-9 px-0"
-                    type="button"
-                    i18n-aria-label="
-                      Accessible label of the button that opens more automation
-                      actions
-                    "
-                    aria-label="More actions"
-                    [disabled]="saving.pending()"
-                    (click)="moreMenu.toggle(moreAnchor)">
-                    <svg lucideEllipsis class="h-4 w-4"></svg>
-                  </button>
-                </div>
-
-                <app-dropdown-menu #moreMenu panelClass="w-50">
-                  <button
-                    app-menu-item
-                    (click)="moreMenu.close(); onClone(rule)">
-                    <svg lucideCopy class="h-3.75 w-3.75"></svg>
-                    <span i18n="Menu item that duplicates an automation">
-                      Duplicate
-                    </span>
-                  </button>
-                  <app-menu-separator />
-                  <button
-                    app-menu-item
-                    color="warn"
-                    (click)="moreMenu.close(); onDelete(rule)">
-                    <svg lucideTrash2 class="h-3.75 w-3.75"></svg>
-                    <span i18n="Menu item that deletes an automation">
-                      Delete automation
-                    </span>
-                  </button>
-                </app-dropdown-menu>
-              }
-            </div>
-          </header>
-
-          @if (rule.autoDisabledReason) {
-            <section
-              class="border-warn/40 bg-warn/5 flex flex-col gap-2 rounded-lg border p-4"
-              role="alert">
-              <h2 class="flex items-center gap-2 text-sm font-semibold">
-                <svg lucideTriangleAlert class="text-warn h-4 w-4"></svg>
-                <span i18n="Heading of the auto-disabled warning">
-                  This automation was disabled automatically
-                </span>
-              </h2>
-              <p class="text-sm">{{ rule.autoDisabledReason }}</p>
-              <p class="text-foreground/60 text-sm">
-                <span i18n="Advice on the auto-disabled warning">
-                  Fix the underlying problem before enabling it again, or it
-                  will be disabled once more.
-                </span>
-              </p>
-            </section>
-          }
-
-          @if (rule.warnings.length) {
-            <section
-              class="border-warn/40 bg-warn/5 flex flex-col gap-2 rounded-lg border p-4"
-              role="alert">
-              <h2 class="flex items-center gap-2 text-sm font-semibold">
-                <svg lucideTriangleAlert class="text-warn h-4 w-4"></svg>
-                <span i18n="Heading of the broken-reference warning">
-                  This automation references items that no longer exist
-                </span>
-              </h2>
-              <ul class="ml-6 list-disc text-sm">
-                @for (warning of rule.warnings; track $index) {
-                  <li>{{ warning.message }}</li>
-                }
-              </ul>
-              <p class="text-foreground/60 text-sm">
-                <span i18n="Advice on the broken-reference warning">
-                  Edit the automation to point these at something that still
-                  exists, otherwise its runs will fail.
-                </span>
-              </p>
-            </section>
-          }
-
-          <div
-            class="grid items-start gap-7 lg:grid-cols-[minmax(0,1fr)_320px]">
-            <app-automation-run-history
-              [ruleId]="rule.id"
-              [trigger]="rule.trigger"
-              [summary]="runSummary()"
-              [reloadSignal]="runsReload"
-              (refresh)="refreshRuns()" />
-
-            <aside class="flex flex-col gap-4 lg:sticky lg:top-4">
-              <app-automation-rule-rail
-                [trigger]="rule.trigger"
-                [actions]="rule.actions"
-                [statuses]="statuses()"
-                [editLink]="canManage() ? ['edit'] : null" />
-
-              <dl
-                class="border-border bg-border grid grid-cols-2 gap-px overflow-hidden rounded-xl border">
-                <div class="bg-card px-4 py-3.5">
-                  <dt class="text-foreground/55 mb-0.5 text-xs font-medium">
-                    <span i18n="Stat label for how many times a rule has run">
-                      Runs
-                    </span>
-                  </dt>
-                  <dd class="text-[22px] font-bold">{{ totalRuns() }}</dd>
-                </div>
-                <div class="bg-card px-4 py-3.5">
-                  <dt class="text-foreground/55 mb-0.5 text-xs font-medium">
-                    <span
-                      i18n="Stat label for the share of runs that succeeded">
-                      Succeeded
-                    </span>
-                  </dt>
-                  <dd class="text-[22px] font-bold">{{ successRate() }}</dd>
-                </div>
-                <div class="bg-card col-span-2 px-4 py-3.5">
-                  <dt class="text-foreground/55 mb-0.5 text-xs font-medium">
-                    <span i18n="Stat label for when a rule last ran">
-                      Last run
-                    </span>
-                  </dt>
-                  <dd class="text-[15px] font-semibold">
-                    @if (runSummary()?.lastRunAt; as lastRunAt) {
-                      {{ lastRunAt | prettyDate }}
-                    } @else {
-                      <span i18n="Shown when an automation has never run">
-                        Not run yet
-                      </span>
-                    }
-                  </dd>
-                </div>
-              </dl>
-
-              <p class="text-foreground/50 mx-1 text-[13px] leading-normal">
+      <app-page-body scroll>
+        @if (loading()) {
+          <app-page-loading />
+        } @else if (error()) {
+          <app-error-state
+            i18n-title="Shown when a single automation fails to load"
+            title="Automation could not be loaded"
+            i18n-description="Advice shown when a page fails to load"
+            description="Check your connection and try again."
+            (retry)="load()" />
+        } @else if (rule(); as rule) {
+          <div class="flex flex-col gap-7 pb-16">
+            <p class="text-foreground/55 text-sm leading-normal">
+              {{ runsAs() }}
+              @if (rule.updatedAt) {
                 <span
                   i18n="
-                    When an automation was created. DATE is a formatted date
+                    When an automation was last changed, shown after the
+                    creation date. Keep the leading separator. DATE is a
+                    formatted date
                   ">
-                  Created
+                  · Updated
                   {{
-                    rule.createdAt | prettyDate // i18n(ph="DATE")
+                    rule.updatedAt | prettyDate // i18n(ph="DATE")
                   }}
                 </span>
-              </p>
-            </aside>
+              }
+            </p>
+
+            @if (rule.autoDisabledReason) {
+              <section
+                class="border-warn/40 bg-warn/5 flex flex-col gap-2 rounded-lg border p-4"
+                role="alert">
+                <h2 class="flex items-center gap-2 text-sm font-semibold">
+                  <svg lucideTriangleAlert class="text-warn h-4 w-4"></svg>
+                  <span i18n="Heading of the auto-disabled warning">
+                    This automation was disabled automatically
+                  </span>
+                </h2>
+                <p class="text-sm">{{ rule.autoDisabledReason }}</p>
+                <p class="text-foreground/60 text-sm">
+                  <span i18n="Advice on the auto-disabled warning">
+                    Fix the underlying problem before enabling it again, or it
+                    will be disabled once more.
+                  </span>
+                </p>
+              </section>
+            }
+
+            @if (rule.warnings.length) {
+              <section
+                class="border-warn/40 bg-warn/5 flex flex-col gap-2 rounded-lg border p-4"
+                role="alert">
+                <h2 class="flex items-center gap-2 text-sm font-semibold">
+                  <svg lucideTriangleAlert class="text-warn h-4 w-4"></svg>
+                  <span i18n="Heading of the broken-reference warning">
+                    This automation references items that no longer exist
+                  </span>
+                </h2>
+                <ul class="ml-6 list-disc text-sm">
+                  @for (warning of rule.warnings; track $index) {
+                    <li>{{ warning.message }}</li>
+                  }
+                </ul>
+                <p class="text-foreground/60 text-sm">
+                  <span i18n="Advice on the broken-reference warning">
+                    Edit the automation to point these at something that still
+                    exists, otherwise its runs will fail.
+                  </span>
+                </p>
+              </section>
+            }
+
+            <div
+              class="grid items-start gap-7 lg:grid-cols-[minmax(0,1fr)_320px]">
+              <app-automation-run-history
+                [ruleId]="rule.id"
+                [trigger]="rule.trigger"
+                [summary]="runSummary()"
+                [reloadSignal]="runsReload"
+                (refresh)="refreshRuns()" />
+
+              <aside class="flex flex-col gap-4 lg:sticky lg:top-4">
+                <app-automation-rule-rail
+                  [trigger]="rule.trigger"
+                  [actions]="rule.actions"
+                  [statuses]="statuses()"
+                  [editLink]="canManage() ? ['edit'] : null" />
+
+                <dl
+                  class="border-border bg-border grid grid-cols-2 gap-px overflow-hidden rounded-xl border">
+                  <div class="bg-card px-4 py-3.5">
+                    <dt class="text-foreground/55 mb-0.5 text-xs font-medium">
+                      <span i18n="Stat label for how many times a rule has run">
+                        Runs
+                      </span>
+                    </dt>
+                    <dd class="text-[22px] font-bold">{{ totalRuns() }}</dd>
+                  </div>
+                  <div class="bg-card px-4 py-3.5">
+                    <dt class="text-foreground/55 mb-0.5 text-xs font-medium">
+                      <span
+                        i18n="Stat label for the share of runs that succeeded">
+                        Succeeded
+                      </span>
+                    </dt>
+                    <dd class="text-[22px] font-bold">{{ successRate() }}</dd>
+                  </div>
+                  <div class="bg-card col-span-2 px-4 py-3.5">
+                    <dt class="text-foreground/55 mb-0.5 text-xs font-medium">
+                      <span i18n="Stat label for when a rule last ran">
+                        Last run
+                      </span>
+                    </dt>
+                    <dd class="text-[15px] font-semibold">
+                      @if (runSummary()?.lastRunAt; as lastRunAt) {
+                        {{ lastRunAt | prettyDate }}
+                      } @else {
+                        <span i18n="Shown when an automation has never run">
+                          Not run yet
+                        </span>
+                      }
+                    </dd>
+                  </div>
+                </dl>
+
+                <p class="text-foreground/50 mx-1 text-[13px] leading-normal">
+                  <span
+                    i18n="
+                      When an automation was created. DATE is a formatted date
+                    ">
+                    Created
+                    {{
+                      rule.createdAt | prettyDate // i18n(ph="DATE")
+                    }}
+                  </span>
+                </p>
+              </aside>
+            </div>
           </div>
-        </div>
-      }
+        }
+      </app-page-body>
     </app-page-container>
   `,
 })

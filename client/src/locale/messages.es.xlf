@@ -1796,7 +1796,7 @@
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:201,204</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:142</note>
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:80,82</note>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:502</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:498</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:268</note>
         <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:133,136</note>
         <note category="location">src/app/features/boards/components/move-tasks-dialog/move-tasks-dialog.component.ts:76,79</note>
@@ -2046,7 +2046,7 @@
         <note category="location">src/app/core/services/task-commands.service.ts:235</note>
         <note category="location">src/app/core/services/task-commands.service.ts:243</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:141</note>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:501</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:497</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:267</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:798</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:820</note>
@@ -3469,7 +3469,7 @@
     </unit>
     <unit id="3891285483792199174">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:204,205</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:169,171</note>
         <note category="description">Menu item that deletes an automation</note>
       </notes>
       <segment state="initial">
@@ -3509,7 +3509,7 @@
     </unit>
     <unit id="2069111017680252651">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:284</note>
+        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:283</note>
         <note category="location">src/app/features/users/components/user-list/user-list.component.ts:125</note>
         <note category="description">Advice shown when filters exclude every row</note>
       </notes>
@@ -4460,7 +4460,7 @@
     </unit>
     <unit id="7389084774187811922">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:448</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:444</note>
         <note category="description">Confirmation after pausing an automation</note>
       </notes>
       <segment state="initial">
@@ -8734,7 +8734,7 @@
     <unit id="1616102757855967475">
       <notes>
         <note category="location">src/app/core/util/pinned-task-filter.ts:40</note>
-        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:253</note>
+        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:252</note>
         <note category="location">src/app/features/automations/components/automation-run-history.component.ts:298</note>
         <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:75</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:71</note>
@@ -9231,7 +9231,7 @@
     </unit>
     <unit id="5689076757886798754">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:314,318</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:309,313</note>
         <note category="description">When an automation was created. DATE is a formatted date</note>
       </notes>
       <segment state="initial">
@@ -9251,7 +9251,7 @@
     </unit>
     <unit id="8383145857933967504">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:127,131</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:199,203</note>
         <note category="description">When an automation was last changed, shown after the creation date. Keep the leading separator. DATE is a formatted date</note>
       </notes>
       <segment state="initial">
@@ -9281,7 +9281,7 @@
     </unit>
     <unit id="4754052462239552170">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:431</note>
+        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:430</note>
         <note category="description">Row action that deletes an automation</note>
       </notes>
       <segment state="translated">
@@ -9332,7 +9332,7 @@
     </unit>
     <unit id="685204719815626575">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:294,295</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:289,290</note>
         <note category="description">Stat label for when a rule last ran</note>
       </notes>
       <segment state="initial">
@@ -9462,7 +9462,7 @@
     </unit>
     <unit id="4816216590591222133">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:258</note>
+        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:257</note>
         <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:160,161</note>
         <note category="description">Marks an automation that is switched on</note>
       </notes>
@@ -9493,7 +9493,7 @@
     </unit>
     <unit id="5769292297914455214">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:263</note>
+        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:262</note>
         <note category="description">Marks an automation that is switched off</note>
       </notes>
       <segment state="translated">
@@ -10113,7 +10113,7 @@
     </unit>
     <unit id="409843096950290609">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:449</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:445</note>
         <note category="description">Confirmation after resuming an automation</note>
       </notes>
       <segment state="initial">
@@ -10408,7 +10408,7 @@
     </unit>
     <unit id="8097029888794362295">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:104,106</note>
+        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:103,105</note>
         <note category="description">Shown when the automation list fails to load</note>
       </notes>
       <segment state="translated">
@@ -10428,8 +10428,8 @@
     </unit>
     <unit id="6678152968885144111">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:211,214</note>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:302,303</note>
+        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:210,213</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:297,298</note>
         <note category="description">Shown when an automation has never run</note>
       </notes>
       <segment state="translated">
@@ -10439,7 +10439,7 @@
     </unit>
     <unit id="1083429400694527107">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:421</note>
+        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:420</note>
         <note category="description">Row action that edits an automation</note>
       </notes>
       <segment state="translated">
@@ -10469,7 +10469,7 @@
     </unit>
     <unit id="3021733521983397827">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:426</note>
+        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:425</note>
         <note category="description">Row action that duplicates an automation</note>
       </notes>
       <segment state="translated">
@@ -10749,7 +10749,7 @@
     </unit>
     <unit id="6151416851572883297">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:106,108</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:92,94</note>
         <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:164,166</note>
         <note category="description">Marks an automation that is switched on</note>
       </notes>
@@ -11704,7 +11704,7 @@
     </unit>
     <unit id="1609489409126655033">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:364</note>
+        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:363</note>
         <note category="description">Tooltip on the switch that turns an automation off</note>
       </notes>
       <segment state="translated">
@@ -12089,7 +12089,7 @@
     </unit>
     <unit id="3278358550418950949">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:194,196</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:159,161</note>
         <note category="description">Menu item that duplicates an automation</note>
       </notes>
       <segment state="initial">
@@ -13848,7 +13848,7 @@
     </unit>
     <unit id="8801934014151195584">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:275</note>
+        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:274</note>
         <note category="description">Shown when no automations match the active filters</note>
       </notes>
       <segment state="initial">
@@ -14170,7 +14170,7 @@
     </unit>
     <unit id="5178835502498285703">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:144,146</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:111,114</note>
         <note category="description">Button that tests the automation against a task</note>
       </notes>
       <segment state="initial">
@@ -14210,7 +14210,7 @@
     </unit>
     <unit id="7585826646011739428">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:169,172</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:136,139</note>
         <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:106,109</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:204</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:186</note>
@@ -14224,7 +14224,7 @@
     </unit>
     <unit id="2650015568553587457">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:91,92</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:184,185</note>
         <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:627</note>
         <note category="description">Shown when a single automation fails to load</note>
       </notes>
@@ -14276,7 +14276,7 @@
     </unit>
     <unit id="3660632916771561809">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:93,95</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:186,188</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:81,83</note>
         <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:39,42</note>
         <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:61,63</note>
@@ -14294,7 +14294,7 @@
     </unit>
     <unit id="3202007690147542060">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:219,221</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:214,216</note>
         <note category="description">Heading of the auto-disabled warning</note>
       </notes>
       <segment state="translated">
@@ -14314,7 +14314,7 @@
     </unit>
     <unit id="2536790850571610592">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:225,227</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:220,222</note>
         <note category="description">Advice on the auto-disabled warning</note>
       </notes>
       <segment state="translated">
@@ -14344,7 +14344,7 @@
     </unit>
     <unit id="8451136300262007554">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:239,241</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:234,236</note>
         <note category="description">Heading of the broken-reference warning</note>
       </notes>
       <segment state="translated">
@@ -14384,7 +14384,7 @@
     </unit>
     <unit id="4308895016686267984">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:249,251</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:244,246</note>
         <note category="description">Advice on the broken-reference warning</note>
       </notes>
       <segment state="translated">
@@ -14486,7 +14486,7 @@
     </unit>
     <unit id="976634642400414372">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:455</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:451</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:215</note>
         <note category="description">Error after failing to update an automation</note>
       </notes>
@@ -14497,7 +14497,7 @@
     </unit>
     <unit id="7223592009379733387">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:499</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:495</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:265</note>
         <note category="description">Title of the confirmation dialog for deleting an automation</note>
       </notes>
@@ -14508,7 +14508,7 @@
     </unit>
     <unit id="2841737509665294845">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:515</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:511</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:286</note>
         <note category="description">Confirmation after deleting an automation</note>
       </notes>
@@ -14539,7 +14539,7 @@
     </unit>
     <unit id="3476741388176301769">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:521</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:517</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:292</note>
         <note category="description">Error after failing to delete an automation</note>
       </notes>
@@ -14739,7 +14739,7 @@
     </unit>
     <unit id="9063742557685234950">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:278</note>
+        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:277</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:97,99</note>
         <note category="description">Heading of the empty automation list</note>
       </notes>
@@ -14810,7 +14810,7 @@
     </unit>
     <unit id="6473284394312594965">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:489</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:485</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:253</note>
         <note category="description">Error after failing to clone an automation</note>
       </notes>
@@ -15647,7 +15647,7 @@
     </unit>
     <unit id="987902700013871247">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:96,98</note>
+        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:95,97</note>
         <note category="description">Accessible label of the automation status filter</note>
       </notes>
       <segment state="translated">
@@ -16435,7 +16435,7 @@
     </unit>
     <unit id="3762494602148654040">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:112,114</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:98,100</note>
         <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:168,170</note>
         <note category="description">Marks an automation that is switched off</note>
       </notes>
@@ -17091,7 +17091,7 @@
     <unit id="117068237894470695">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:122,124</note>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:181,183</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:148,150</note>
         <note category="description">Accessible label for the button that opens the task&apos;s other actions</note>
       </notes>
       <segment state="initial">
@@ -21660,7 +21660,7 @@
     </unit>
     <unit id="8678974395823422591">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:182,185</note>
+        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:181,184</note>
         <note category="description">Shown when an automation has no actions</note>
       </notes>
       <segment state="translated">
@@ -23847,7 +23847,7 @@
     </unit>
     <unit id="5742073709766577678">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:277,279</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:272,274</note>
         <note category="description">Stat label for how many times a rule has run</note>
       </notes>
       <segment state="initial">
@@ -25272,7 +25272,7 @@
     </unit>
     <unit id="2607180894778686427">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:286,288</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:281,283</note>
         <note category="description">Stat label for the share of runs that succeeded</note>
       </notes>
       <segment state="initial">
@@ -25332,7 +25332,7 @@
     </unit>
     <unit id="350640362023936582">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:365</note>
+        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:364</note>
         <note category="description">Tooltip on the switch that turns an automation on</note>
       </notes>
       <segment state="translated">
@@ -25590,7 +25590,7 @@
     </unit>
     <unit id="3407056172872902855">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:158,160</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:125,127</note>
         <note category="description">Button that resumes a paused automation</note>
       </notes>
       <segment state="initial">
@@ -26025,7 +26025,7 @@
     </unit>
     <unit id="9042260521669277115">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:155,157</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:122,124</note>
         <note category="description">Button that pauses an automation</note>
       </notes>
       <segment state="initial">
