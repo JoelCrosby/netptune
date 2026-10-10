@@ -41,6 +41,7 @@ public sealed class AiConversationRunner : IAiConversationRunner
         var definitions = availableTools.Select(CreateDefinition).ToList();
         var messages = new List<AiChatMessage>(context.History);
         var iteration = 0;
+        var gatheredCharacters = 0;
         var hasCorrectedClaim = false;
         var spent = new AiUsage();
 
@@ -85,10 +86,11 @@ public sealed class AiConversationRunner : IAiConversationRunner
             spent = spent.Add(turn.Usage);
 
             var hasReportedUsage = spent.TotalTokens > 0;
+            var usage = AiTokenUsageViewModel.From(spent).WithCost(context.Model);
 
             if (hasReportedUsage)
             {
-                yield return AiStreamEvent.TurnUsage(AiTokenUsageViewModel.From(spent).WithCost(context.Model));
+                yield return AiStreamEvent.TurnUsage(usage);
             }
 
             var hasToolCalls = turn.ToolCalls.Count > 0;
@@ -175,9 +177,33 @@ public sealed class AiConversationRunner : IAiConversationRunner
 
                 yield break;
             }
+
+            gatheredCharacters += results.Sum(result => result.Content.Length);
+
+            var isOverTurnBudget = gatheredCharacters >= Options.MaxTurnCharacters;
+
+            if (isOverTurnBudget)
+            {
+                yield return AiStreamEvent.Failed(
+                    "The assistant stopped because the results it gathered for this reply reached their size limit. "
+                    + "Send another message to let it continue.");
+
+                yield break;
+            }
+
+            var isOverSpendCap = context.SpendRemaining is { } remaining && usage.Cost >= remaining;
+
+            if (isOverSpendCap)
+            {
+                yield return AiStreamEvent.Failed(AiSpendMessages.CapReachedDuringTurn);
+
+                yield break;
+            }
         }
 
-        yield return AiStreamEvent.Failed("The assistant stopped after reaching the tool call limit.");
+        yield return AiStreamEvent.Failed(
+            $"The assistant stopped after {Options.MaxToolIterations} rounds of tool calls. "
+            + "Send another message to let it continue.");
     }
 
     private async Task<AiToolExecution> ExecuteTool(

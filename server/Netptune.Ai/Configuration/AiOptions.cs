@@ -15,7 +15,17 @@ public sealed class AiOptions
 
     public bool GenerateTitles { get; set; } = true;
 
-    public int MaxToolIterations { get; set; } = 12;
+    public const int ToolIterationsCeiling = 100;
+
+    public const int TurnTimeoutCeilingSeconds = 3600;
+
+    public int MaxToolIterations { get; set; } = 40;
+
+    public int TurnTimeoutSeconds { get; set; } = 900;
+
+    public TimeSpan TurnTimeout => TimeSpan.FromSeconds(TurnTimeoutSeconds);
+
+    public int MaxTurnCharacters { get; set; } = 400000;
 
     public int MaxOutputTokens { get; set; } = 16000;
 

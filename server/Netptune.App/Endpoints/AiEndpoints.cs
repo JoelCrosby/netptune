@@ -22,8 +22,6 @@ public static class AiEndpoints
 {
     private const string EventStreamContentType = "text/event-stream";
 
-    private static readonly TimeSpan TurnTimeout = TimeSpan.FromMinutes(5);
-
     private static readonly JsonSerializerOptions EventSerializerOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -523,10 +521,11 @@ public static class AiEndpoints
     {
         StartEventStream(context);
 
-        using var turnCancellation = new CancellationTokenSource(TurnTimeout);
         var clientConnected = true;
 
-        await foreach (var streamEvent in service.SendMessage(request, turnCancellation.Token))
+        // Deliberately not tied to RequestAborted: the turn finishes and is stored after a reload, and
+        // the service bounds it with Ai:TurnTimeoutSeconds.
+        await foreach (var streamEvent in service.SendMessage(request, CancellationToken.None))
         {
             if (!clientConnected)
             {

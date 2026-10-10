@@ -34,8 +34,12 @@ import { ConfirmationService } from '@core/services/confirmation.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { firstValueFrom } from 'rxjs';
 
-/** Matches the server's turn timeout — a reply cannot arrive after it. */
-const RESUME_TIMEOUT = 5 * 60 * 1000;
+/**
+ * The server's default turn timeout (Ai:TurnTimeoutSeconds) plus a minute of
+ * grace: the server clock starts after this one and the reply is stored after
+ * it runs out. Raise this too if the server timeout goes higher.
+ */
+const RESUME_TIMEOUT = (15 + 1) * 60 * 1000;
 const RESUME_POLL_INTERVAL = 2000;
 
 @Service()

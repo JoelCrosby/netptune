@@ -37,6 +37,8 @@ public sealed record AiRunContext
 
     public required IReadOnlySet<string> Permissions { get; init; }
 
+    public decimal? SpendRemaining { get; init; }
+
     public List<AiChatTurn> Turns { get; } = [];
 
     public List<AiToolInvocationRecord> Invocations { get; } = [];

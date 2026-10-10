@@ -245,31 +245,23 @@ public sealed class AiConversationService : IAiConversationService
             SystemPrompt = systemPrompt,
             History = history,
             Permissions = membership.Permissions.ToHashSet(StringComparer.Ordinal),
+            SpendRemaining = spend.Remaining,
         };
 
         var assistantText = new StringBuilder();
 
-        using var turnCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        // Only the run itself is timed, so a turn that runs out of time is still stored below.
+        using var turnTimeout = new CancellationTokenSource(Options.TurnTimeout);
+        using var turnCancellation = CancellationTokenSource.CreateLinkedTokenSource(
+            cancellationToken,
+            turnTimeout.Token);
         using var registration = Turns.Register(conversation.Id, turnCancellation);
 
-        var turn = Runner.Run(context, turnCancellation.Token).GetAsyncEnumerator(turnCancellation.Token);
+        var run = Runner.Run(context, turnCancellation.Token);
+        var turn = AiTurnReader.Read(run, Options.TurnTimeout, turnTimeout.Token, turnCancellation.Token);
 
-        bool wasStopped;
-        string? failure;
-
-        while (true)
+        await foreach (var streamEvent in turn)
         {
-            var step = await ReadNext(turn);
-            var streamEvent = step.Event;
-
-            if (streamEvent is null)
-            {
-                wasStopped = turnCancellation.IsCancellationRequested;
-                failure = step.Failure;
-
-                break;
-            }
-
             if (streamEvent.Type == AiStreamEventType.TextDelta && streamEvent.Text is not null)
             {
                 assistantText.Append(streamEvent.Text);
@@ -281,18 +273,6 @@ public sealed class AiConversationService : IAiConversationService
             }
 
             yield return streamEvent;
-        }
-
-        await DisposeTurn(turn);
-
-        if (wasStopped)
-        {
-            yield return AiStreamEvent.Stopped();
-        }
-
-        if (failure is not null)
-        {
-            yield return AiStreamEvent.Failed(failure);
         }
 
         var reply = assistantText.ToString();
@@ -339,40 +319,6 @@ public sealed class AiConversationService : IAiConversationService
         var usage = await UnitOfWork.AiConversations.GetUsage(conversation.Id, cancellationToken);
 
         yield return AiStreamEvent.UsageUpdated(usage.WithCost(conversation.Model));
-    }
-
-    private sealed record TurnStep(AiStreamEvent? Event, string? Failure);
-
-    private static async Task<TurnStep> ReadNext(IAsyncEnumerator<AiStreamEvent> turn)
-    {
-        try
-        {
-            var moved = await turn.MoveNextAsync();
-
-            return new TurnStep(moved ? turn.Current : null, null);
-        }
-        catch (OperationCanceledException)
-        {
-            return new TurnStep(null, null);
-        }
-        catch (Exception exception)
-        {
-            var described = AiProviderErrors.Describe(exception);
-
-            return new TurnStep(null, described ?? "The assistant could not reach the provider.");
-        }
-    }
-
-    private static async Task DisposeTurn(IAsyncEnumerator<AiStreamEvent> turn)
-    {
-        try
-        {
-            await turn.DisposeAsync();
-        }
-        catch (OperationCanceledException)
-        {
-            /* The turn was stopped, so its provider stream ends the same way. */
-        }
     }
 
     private sealed record PersistedTurn(long MessageId, Guid? ChangeSetId);

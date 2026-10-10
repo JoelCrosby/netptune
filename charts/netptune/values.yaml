@@ -347,6 +347,9 @@ config:
     POSTGRESDB_JDBCCONNECTIONSTRING: "jdbc:postgresql://postgres-service:5432/netptune"
     POSTGRESDB_DATABASENAME: "netptune"
     ConnectionStrings__nats: "nats://nats-service:4222"
+    Ai__MaxToolIterations: "40"
+    Ai__TurnTimeoutSeconds: "900"
+    Ai__MaxTurnCharacters: "400000"
   api:
     OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY: "in_memory"
     ASPNETCORE_FORWARDEDHEADERS_ENABLED: "true"

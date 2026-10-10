@@ -108,6 +108,67 @@ public class AiConversationRunnerTests
         var lastEvent = events[^1];
 
         lastEvent.Type.Should().Be(AiStreamEventType.Error);
+        lastEvent.Message.Should().Contain("3 rounds");
+        Provider.RequestCount.Should().Be(3);
+    }
+
+    [Fact]
+    public async Task Run_ShouldStopBetweenToolRounds_WhenGatheredResultsReachTheTurnBudget()
+    {
+        var tool = new StubTool("allowed_tool", NetptunePermissions.Tasks.Read)
+        {
+            Result = new string('x', 400),
+        };
+
+        var runner = CreateRunner([tool], maxTurnCharacters: 1000);
+
+        Provider.AlwaysCallTool = "allowed_tool";
+
+        var context = CreateContext(NetptunePermissions.Tasks.Read);
+        var events = await Drain(runner, context);
+        var lastEvent = events[^1];
+
+        lastEvent.Type.Should().Be(AiStreamEventType.Error);
+        lastEvent.Message.Should().Contain("size limit");
+        Provider.RequestCount.Should().Be(3, "the third round of 400 characters takes the turn past 1000");
+    }
+
+    [Fact]
+    public async Task Run_ShouldStopBetweenToolRounds_WhenTurnCostReachesRemainingSpend()
+    {
+        var tool = new StubTool("allowed_tool", NetptunePermissions.Tasks.Read);
+        var runner = CreateRunner([tool]);
+
+        Provider.AlwaysCallTool = "allowed_tool";
+        Provider.Usage = new AiUsage { InputTokens = 1_000_000 };
+
+        var context = CreateContext(NetptunePermissions.Tasks.Read) with
+        {
+            Model = "claude-sonnet-5",
+            SpendRemaining = 0.01m,
+        };
+
+        var events = await Drain(runner, context);
+        var lastEvent = events[^1];
+
+        lastEvent.Type.Should().Be(AiStreamEventType.Error);
+        lastEvent.Message.Should().Be(AiSpendMessages.CapReachedDuringTurn);
+        Provider.RequestCount.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task Run_ShouldNotLimitSpend_WhenWorkspaceHasNoCap()
+    {
+        var tool = new StubTool("allowed_tool", NetptunePermissions.Tasks.Read);
+        var runner = CreateRunner([tool], maxToolIterations: 3);
+
+        Provider.AlwaysCallTool = "allowed_tool";
+        Provider.Usage = new AiUsage { InputTokens = 1_000_000 };
+
+        var context = CreateContext(NetptunePermissions.Tasks.Read) with { Model = "claude-sonnet-5" };
+
+        await Drain(runner, context);
+
         Provider.RequestCount.Should().Be(3);
     }
 
@@ -336,7 +397,8 @@ public class AiConversationRunnerTests
     private AiConversationRunner CreateRunner(
         IReadOnlyList<IAiTool> tools,
         int maxToolIterations = 12,
-        int maxToolResultCharacters = 32000)
+        int maxToolResultCharacters = 32000,
+        int maxTurnCharacters = 400000)
     {
         var factory = Substitute.For<IAiChatProviderFactory>();
 
@@ -346,6 +408,7 @@ public class AiConversationRunnerTests
         {
             MaxToolIterations = maxToolIterations,
             MaxToolResultCharacters = maxToolResultCharacters,
+            MaxTurnCharacters = maxTurnCharacters,
         });
 
         return new AiConversationRunner(factory, new AiToolRegistry(tools), ChangeSet, Questions, options);

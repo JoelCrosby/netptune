@@ -16,7 +16,18 @@ public static class NetptuneAiConfiguration
     {
         var section = configuration.GetSection(AiOptions.SectionName);
 
-        services.Configure<AiOptions>(section);
+        services.AddOptions<AiOptions>()
+            .Bind(section)
+            .Validate(
+                options => options.MaxToolIterations is >= 1 and <= AiOptions.ToolIterationsCeiling,
+                $"Ai:MaxToolIterations must be between 1 and {AiOptions.ToolIterationsCeiling}.")
+            .Validate(
+                options => options.TurnTimeoutSeconds is >= 60 and <= AiOptions.TurnTimeoutCeilingSeconds,
+                $"Ai:TurnTimeoutSeconds must be between 60 and {AiOptions.TurnTimeoutCeilingSeconds}.")
+            .Validate(
+                options => options.MaxTurnCharacters >= options.MaxToolResultCharacters,
+                "Ai:MaxTurnCharacters must be at least Ai:MaxToolResultCharacters.")
+            .ValidateOnStart();
 
         var webOptions = section.GetSection(nameof(AiOptions.Web)).Get<AiWebOptions>() ?? new AiWebOptions();
 

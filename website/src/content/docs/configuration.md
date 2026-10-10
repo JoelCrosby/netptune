@@ -76,29 +76,31 @@ The current storage options do not expose a custom S3 endpoint variable. AWS S3-
 
 The assistant runs on API keys supplied by users and workspace admins, so no provider key is configured here. These settings only shape how the harness behaves.
 
-| Variable                      | Default         | Description                                                                             |
-| ----------------------------- | --------------- | --------------------------------------------------------------------------------------- |
-| `Ai__AnthropicModel`          | `claude-opus-5` | Model used for conversations started on Anthropic.                                      |
-| `Ai__OpenAiModel`             | `gpt-5.6-sol`   | Model used for conversations started on OpenAI.                                         |
-| `Ai__GenerateTitles`          | `true`          | Names each new conversation with one extra call to a small model after the first reply. |
-| `Ai__MaxToolIterations`       | `12`            | Tool calls allowed in a single turn before the assistant stops and reports the limit.   |
-| `Ai__MaxOutputTokens`         | `16000`         | Output token ceiling per provider request.                                              |
-| `Ai__MaxToolResultCharacters` | `32000`         | Tool results longer than this are truncated before the model sees them.                 |
-| `Ai__MaxHistoryCharacters`    | `120000`        | Conversation replay budget. Older turns are dropped once a conversation exceeds it.     |
-| `RateLimiting__AiPermitLimit` | `20`            | Assistant messages and change-set applies allowed per user per minute.                  |
+| Variable                      | Default         | Description                                                                                                            |
+| ----------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `Ai__AnthropicModel`          | `claude-opus-5` | Model used for conversations started on Anthropic.                                                                     |
+| `Ai__OpenAiModel`             | `gpt-5.6-sol`   | Model used for conversations started on OpenAI.                                                                        |
+| `Ai__GenerateTitles`          | `true`          | Names each new conversation with one extra call to a small model after the first reply.                                |
+| `Ai__MaxToolIterations`       | `40`            | Rounds of tool calls allowed in one reply before the assistant stops and says so. 1–100.                               |
+| `Ai__TurnTimeoutSeconds`      | `900`           | Time one reply may take before it stops and says so. 60–3600. The reply is still saved.                                |
+| `Ai__MaxOutputTokens`         | `16000`         | Output token ceiling per provider request.                                                                             |
+| `Ai__MaxToolResultCharacters` | `32000`         | Tool results longer than this are truncated before the model sees them.                                                |
+| `Ai__MaxTurnCharacters`       | `400000`        | Tool result characters one reply may gather before it stops and says so. Keeps a long reply inside the context window. |
+| `Ai__MaxHistoryCharacters`    | `120000`        | Conversation replay budget. Older turns are dropped once a conversation exceeds it.                                    |
+| `RateLimiting__AiPermitLimit` | `20`            | Assistant messages and change-set applies allowed per user per minute.                                                 |
 
 Web research needs no server configuration. These settings only tune it.
 
-| Variable                          | Default                                            | Description                                                                            |
-| --------------------------------- | -------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `Ai__Web__MaxSearchResults`       | `10`                                               | Upper bound on results per search, whatever the model asks for.                        |
-| `Ai__Web__TimeoutSeconds`         | `20`                                               | Per-request timeout for fetches and searches.                                          |
-| `Ai__Web__MaxResponseBytes`       | `5242880`                                          | Bytes read from a response before the rest is discarded.                               |
-| `Ai__Web__MaxDocumentCharacters`  | `200000`                                           | Readable text kept per page after extraction.                                          |
-| `Ai__Web__MaxRedirects`           | `5`                                                | Redirect hops followed, each re-checked against the egress rules.                      |
-| `Ai__Web__DefaultPageCharacters`  | `6000`                                             | Characters returned per read when the model does not ask for a size.                   |
-| `Ai__Web__MaxPageCharacters`      | `20000`                                            | Ceiling on a single `read_web_document` call.                                          |
-| `Ai__Web__RetentionHours`         | `24`                                               | How long a fetched page stays readable before the job server deletes it.               |
+| Variable                         | Default   | Description                                                              |
+| -------------------------------- | --------- | ------------------------------------------------------------------------ |
+| `Ai__Web__MaxSearchResults`      | `10`      | Upper bound on results per search, whatever the model asks for.          |
+| `Ai__Web__TimeoutSeconds`        | `20`      | Per-request timeout for fetches and searches.                            |
+| `Ai__Web__MaxResponseBytes`      | `5242880` | Bytes read from a response before the rest is discarded.                 |
+| `Ai__Web__MaxDocumentCharacters` | `200000`  | Readable text kept per page after extraction.                            |
+| `Ai__Web__MaxRedirects`          | `5`       | Redirect hops followed, each re-checked against the egress rules.        |
+| `Ai__Web__DefaultPageCharacters` | `6000`    | Characters returned per read when the model does not ask for a size.     |
+| `Ai__Web__MaxPageCharacters`     | `20000`   | Ceiling on a single `read_web_document` call.                            |
+| `Ai__Web__RetentionHours`        | `24`      | How long a fetched page stays readable before the job server deletes it. |
 
 The search provider is not configured here — it is per workspace. An admin picks one under workspace settings → Assistant → Web search, and the choice covers every member. Brave Search takes an API key; Google Programmable Search takes an API key and a search engine id (`cx`); SearXNG takes the base URL of a self-hosted instance and no key at all, because it has none — you will need `json` in that instance's `search.formats`. Keys are encrypted with the same ASP.NET Data Protection purpose as the assistant's provider keys, so the same keyring caveat applies: lose it and the key must be re-entered. With no provider set up, `web_search` tells the model to ask an admin, while `web_fetch` keeps working on links it is given.
 

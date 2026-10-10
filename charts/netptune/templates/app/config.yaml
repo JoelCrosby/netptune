@@ -23,6 +23,9 @@ data:
   POSTGRESDB_JDBCCONNECTIONSTRING: "{{ .Values.config.app.POSTGRESDB_JDBCCONNECTIONSTRING }}"
   POSTGRESDB_DATABASENAME: "{{ .Values.config.app.POSTGRESDB_DATABASENAME }}"
   ConnectionStrings__nats: "{{ .Values.config.app.ConnectionStrings__nats }}"
+  Ai__MaxToolIterations: "{{ .Values.config.app.Ai__MaxToolIterations }}"
+  Ai__TurnTimeoutSeconds: "{{ .Values.config.app.Ai__TurnTimeoutSeconds }}"
+  Ai__MaxTurnCharacters: "{{ .Values.config.app.Ai__MaxTurnCharacters }}"
   TrustedProxies__ClientAddressHeader: "{{ .Values.trustedProxies.clientAddressHeader }}"
 {{- if .Values.secrets.app.edge_authorization_secret }}
   TrustedProxies__EdgeAuthorizationHeader: "{{ .Values.trustedProxies.edgeAuthorizationHeader }}"
