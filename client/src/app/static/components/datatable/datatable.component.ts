@@ -286,17 +286,19 @@ import {
                 }
               </tr>
             } @empty {
-              <tr>
-                <td
-                  [class]="mergedEmptyCellClass()"
-                  [attr.colspan]="emptyColumnSpan()">
-                  @if (emptyTemplate(); as template) {
-                    <ng-container [ngTemplateOutlet]="template" />
-                  } @else {
-                    {{ emptyMessage() }}
-                  }
-                </td>
-              </tr>
+              @if (!awaitingFirstLoad()) {
+                <tr>
+                  <td
+                    [class]="mergedEmptyCellClass()"
+                    [attr.colspan]="emptyColumnSpan()">
+                    @if (emptyTemplate(); as template) {
+                      <ng-container [ngTemplateOutlet]="template" />
+                    } @else {
+                      {{ emptyMessage() }}
+                    }
+                  </td>
+                </tr>
+              }
             }
           }
         </tbody>
@@ -553,6 +555,13 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
     return (
       this.delayedResourceLoading() && this.lastResolvedRows().length === 0
     );
+  });
+
+  // The skeleton waits out the loading delay before it shows, so until the first
+  // request settles the body stays blank rather than flashing the empty state.
+  // Later reloads keep the settled empty state up instead of blanking it.
+  awaitingFirstLoad = computed(() => {
+    return this.resourceLoading() && this.settledCount() === null;
   });
 
   skeletonRowRange = computed(() => {
