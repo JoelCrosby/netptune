@@ -1,8 +1,11 @@
-import { Component, input, output, signal } from '@angular/core';
+import { Component, computed, input, output, signal } from '@angular/core';
 import {
   MAX_AI_PANEL_WIDTH,
   MIN_AI_PANEL_WIDTH,
 } from '@core/models/ai-panel-width';
+
+/** The edge of the resized panel the handle sits on; dragging away from the panel grows it. */
+export type ResizeEdge = 'left' | 'right';
 
 interface ResizeOrigin {
   clientX: number;
@@ -19,14 +22,12 @@ const KEYBOARD_STEP = 24;
       role="separator"
       tabindex="0"
       aria-orientation="vertical"
-      class="group absolute inset-y-0 left-0 z-20 flex w-2 cursor-ew-resize touch-none items-center justify-center focus-visible:outline-none"
-      i18n-aria-label="
-        Accessible name of the handle that resizes the assistant panel
-      "
-      aria-label="Resize assistant panel"
+      class="group absolute inset-y-0 z-20 flex w-2 cursor-ew-resize touch-none items-center justify-center focus-visible:outline-none"
+      [class]="edge() === 'left' ? 'left-0' : '-right-1'"
+      [attr.aria-label]="label()"
       [attr.aria-valuenow]="width()"
-      [attr.aria-valuemin]="minWidth"
-      [attr.aria-valuemax]="maxWidth"
+      [attr.aria-valuemin]="minWidth()"
+      [attr.aria-valuemax]="maxWidth()"
       (pointerdown)="startResize($event)"
       (pointermove)="trackResize($event)"
       (pointerup)="endResize($event)"
@@ -40,11 +41,20 @@ const KEYBOARD_STEP = 24;
 })
 export class AiAssistantResizeHandleComponent {
   readonly width = input.required<number>();
+  readonly edge = input<ResizeEdge>('left');
+  readonly minWidth = input(MIN_AI_PANEL_WIDTH);
+  readonly maxWidth = input(MAX_AI_PANEL_WIDTH);
+  readonly label = input(
+    $localize`:Accessible name of the handle that resizes the assistant panel:Resize assistant panel`
+  );
+
   readonly widthChange = output<number>();
   readonly resizingChange = output<boolean>();
 
-  protected readonly minWidth = MIN_AI_PANEL_WIDTH;
-  protected readonly maxWidth = MAX_AI_PANEL_WIDTH;
+  /** Dragging or pressing toward the left grows a panel whose handle is on its left edge. */
+  private readonly direction = computed(() => {
+    return this.edge() === 'left' ? -1 : 1;
+  });
 
   protected readonly resizing = signal(false);
 
@@ -73,7 +83,9 @@ export class AiAssistantResizeHandleComponent {
       return;
     }
 
-    this.widthChange.emit(origin.width + origin.clientX - event.clientX);
+    const delta = (event.clientX - origin.clientX) * this.direction();
+
+    this.widthChange.emit(origin.width + delta);
   }
 
   protected endResize(event: PointerEvent) {
@@ -110,7 +122,7 @@ export class AiAssistantResizeHandleComponent {
   }
 
   protected adjustWidth(event: KeyboardEvent) {
-    const step = keyboardStep(event.key);
+    const step = keyboardStep(event.key) * this.direction();
 
     if (step === 0) {
       return;
@@ -123,11 +135,11 @@ export class AiAssistantResizeHandleComponent {
 
 function keyboardStep(key: string): number {
   if (key === 'ArrowLeft') {
-    return KEYBOARD_STEP;
+    return -KEYBOARD_STEP;
   }
 
   if (key === 'ArrowRight') {
-    return -KEYBOARD_STEP;
+    return KEYBOARD_STEP;
   }
 
   return 0;

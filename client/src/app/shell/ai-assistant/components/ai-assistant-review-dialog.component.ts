@@ -6,6 +6,7 @@ import {
   forwardRef,
   inject,
   signal,
+  untracked,
   viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -33,18 +34,22 @@ import {
 } from '@static/components/segmented-control/segmented-control.component';
 import {
   AiChangeGroup,
+  batchGroups,
   groupChanges,
   isApplied,
   isTextField,
   isValid,
+  selectableIds,
 } from './ai-assistant-change-group';
 import { changeSummary } from './ai-assistant-change-kind';
 import { AiDiffMode, changeLetter } from './ai-assistant-diff';
 import {
   AiAssistantReviewDetailComponent,
   AiFieldEdit,
+  AiFieldTarget,
 } from './ai-assistant-review-detail.component';
 import { AiAssistantReviewListComponent } from './ai-assistant-review-list.component';
+import { AiAssistantResizeHandleComponent } from './ai-assistant-resize-handle.component';
 import { SpinnerIconComponent } from '@static/components/spinner/spinner-icon.component';
 import { toggleInSet } from '@core/util/signals';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
@@ -65,6 +70,19 @@ export interface AiReviewData {
 }
 
 const MODE_KEY = 'netptune.ai.review.mode';
+const LIST_WIDTH_KEY = 'netptune.ai.review.list-width';
+
+const MIN_LIST_WIDTH = 260;
+const MAX_LIST_WIDTH = 720;
+const DEFAULT_LIST_WIDTH = 440;
+
+const clampListWidth = (width: number): number => {
+  if (!Number.isFinite(width)) {
+    return DEFAULT_LIST_WIDTH;
+  }
+
+  return Math.round(Math.min(MAX_LIST_WIDTH, Math.max(MIN_LIST_WIDTH, width)));
+};
 
 const pathOf = (url: string): string => {
   return url.split(/[?#]/)[0];
@@ -91,9 +109,9 @@ const pathOf = (url: string): string => {
     SegmentedControlComponent,
     AiAssistantReviewDetailComponent,
     AiAssistantReviewListComponent,
-    // The panel's change set card opens this dialog, so the import is circular.
-    forwardRef(() => AiAssistantPanelComponent),
+    AiAssistantResizeHandleComponent,
     TooltipDirective,
+    forwardRef(() => AiAssistantPanelComponent),
   ],
   template: `
     <header
@@ -157,47 +175,59 @@ const pathOf = (url: string): string => {
       </button>
     </header>
 
-    <div class="border-border flex items-center gap-3 border-b px-4 py-2.5">
-      <app-filter-input
-        class="min-w-90"
-        [value]="query()"
-        (valueChange)="query.set($event)"
-        [placeholder]="filterPlaceholder" />
-
-      <app-segmented-control
-        variant="chips"
-        [options]="filters()"
-        [value]="filter()"
-        (valueChange)="filter.set($event)"
-        [ariaLabel]="filterGroupLabel" />
-
-      <span class="flex-1"></span>
-
-      <app-segmented-control
-        variant="outlined"
-        [options]="modes()"
-        [value]="mode()"
-        (valueChange)="setMode($event)"
-        [ariaLabel]="modeGroupLabel" />
-    </div>
-
     <div class="flex min-h-0 flex-1">
-      <div class="flex min-w-0 flex-1 flex-col">
+      <div class="bg-dialog-background flex min-w-0 flex-1 flex-col">
+        <div
+          class="border-border flex h-15 shrink-0 items-center gap-3 border-b px-4">
+          <app-filter-input
+            class="w-56 shrink-0"
+            [value]="query()"
+            (valueChange)="query.set($event)"
+            [placeholder]="filterPlaceholder" />
+
+          <app-segmented-control
+            variant="chips"
+            [options]="filters()"
+            [value]="filter()"
+            (valueChange)="filter.set($event)"
+            [ariaLabel]="filterGroupLabel" />
+
+          <span class="flex-1"></span>
+
+          <app-segmented-control
+            variant="outlined"
+            [options]="modes()"
+            [value]="mode()"
+            (valueChange)="setMode($event)"
+            [ariaLabel]="modeGroupLabel" />
+        </div>
+
         @if (groups().length === 0) {
           <app-empty-state
             class="flex flex-1 items-center justify-center"
             [title]="emptyTitle"
             [description]="emptyDescription" />
         } @else {
-          <main class="grid min-h-0 flex-1 grid-cols-[540px_minmax(0,1fr)]">
-            <div class="border-border bg-card flex min-h-0 flex-col border-r">
+          <main
+            class="grid min-h-0 flex-1"
+            [style.grid-template-columns]="listColumns()">
+            <div class="border-border relative flex min-h-0 flex-col border-r">
+              <app-ai-assistant-resize-handle
+                [edge]="'right'"
+                [width]="listWidth()"
+                [minWidth]="minListWidth"
+                [maxWidth]="maxListWidth"
+                [label]="listResizeLabel"
+                (widthChange)="setListWidth($event)"
+                (resizingChange)="onListResizing($event)" />
+
               <div
-                class="border-border flex items-center justify-between gap-2 border-b px-4 py-2.5">
-                <span class="text-muted text-sm">{{ listSummary() }}</span>
+                class="border-border flex h-11 shrink-0 items-center justify-between gap-2 border-b px-3.5">
+                <span class="text-muted text-[13px]">{{ listSummary() }}</span>
                 @if (isPending() && !isRunning() && selectableCount() > 1) {
                   <app-button
                     color="neutral"
-                    class="-my-1 h-8 px-2.5 text-sm"
+                    class="-my-1 h-7 px-2 text-[13px]"
                     (click)="toggleAll()">
                     @if (isEveryChangeSelected()) {
                       <span i18n="Button that clears every selected change">
@@ -214,66 +244,23 @@ const pathOf = (url: string): string => {
 
               <div class="custom-scroll flex-1 overflow-y-auto pb-3">
                 <app-ai-assistant-review-list
-                  [groups]="groups()"
+                  [groups]="batched()"
                   [excludedChangeIds]="assistant.excludedChangeIds()"
                   [collapsedKeys]="collapsedKeys()"
-                  [selectedChangeId]="selectedChangeId()"
+                  [selectedKey]="selectedGroup()?.key ?? null"
                   [isPending]="isPending()"
                   [isApplying]="isRunning()"
                   [applyStatuses]="assistant.applyStatuses()"
                   [applyingChangeId]="assistant.applyingChangeId()"
-                  (selected)="selectedChangeId.set($event)"
-                  (toggled)="assistant.toggleChange($event)"
+                  (selected)="selectedKey.set($event)"
                   (groupToggled)="toggleGroup($event)" />
-              </div>
-
-              <div
-                class="border-border text-muted flex items-center gap-4 border-t px-4 py-2.5 text-[13px]">
-                <span class="flex items-center gap-1.5">
-                  <span
-                    class="font-avatar text-change-added font-bold"
-                    i18n="
-                      Single letter marking a change that creates something. It
-                      labels the rows in the list, so leave the letter as-is
-                    ">
-                    A
-                  </span>
-                  <span i18n="Legend for changes that create something"
-                    >new</span
-                  >
-                </span>
-                <span class="flex items-center gap-1.5">
-                  <span
-                    class="font-avatar text-change-modified font-bold"
-                    i18n="
-                      Single letter marking a change that updates something. It
-                      labels the rows in the list, so leave the letter as-is
-                    ">
-                    M
-                  </span>
-                  <span i18n="Legend for changes that update something"
-                    >updated</span
-                  >
-                </span>
-                <span class="flex items-center gap-1.5">
-                  <span
-                    class="font-avatar text-change-removed font-bold"
-                    i18n="
-                      Single letter marking a change that removes something. It
-                      labels the rows in the list, so leave the letter as-is
-                    ">
-                    D
-                  </span>
-                  <span i18n="Legend for changes that remove something"
-                    >removed</span
-                  >
-                </span>
               </div>
             </div>
 
-            @if (selectedChange(); as change) {
+            @if (selectedGroup(); as group) {
               <app-ai-assistant-review-detail
-                [change]="change"
+                [group]="group"
+                [excludedChangeIds]="assistant.excludedChangeIds()"
                 [mode]="mode()"
                 [isPending]="isPending()"
                 [isApplying]="assistant.isApplying()"
@@ -282,10 +269,11 @@ const pathOf = (url: string): string => {
                 [editingField]="editingField()"
                 [editError]="editError()"
                 [isSaving]="assistant.isEditingChange()"
-                (applied)="applyOne($event)"
+                (applied)="applyOnly($event)"
+                (toggled)="toggleIncluded($event)"
                 (editStarted)="startEditing($event)"
                 (editCancelled)="stopEditing()"
-                (saved)="saveEdit(change.id, $event)"
+                (saved)="saveEdit($event)"
                 (revised)="reviseChange($event)" />
             }
           </main>
@@ -494,15 +482,24 @@ export class AiAssistantReviewDialogComponent {
     return `min(${this.panel.width()}px, 40vw)`;
   });
 
-  protected readonly selectedChangeId = signal<number | null>(null);
+  protected readonly selectedKey = signal<string | null>(null);
   protected readonly filter = signal<AiReviewFilter>(
     this.data?.filter ?? 'all'
   );
   protected readonly query = signal('');
   protected readonly collapsedKeys = signal<ReadonlySet<string>>(new Set());
-  protected readonly editingField = signal<string | null>(null);
+  protected readonly editingField = signal<AiFieldTarget | null>(null);
   protected readonly editError = signal<string | null>(null);
   protected readonly mode = signal<AiDiffMode>(this.storedMode());
+  protected readonly listWidth = signal(this.storedListWidth());
+
+  protected readonly minListWidth = MIN_LIST_WIDTH;
+  protected readonly maxListWidth = MAX_LIST_WIDTH;
+  protected readonly listResizeLabel = $localize`:Accessible name of the handle that resizes the list of changes in the review:Resize change list`;
+
+  protected readonly listColumns = computed(() => {
+    return `${this.listWidth()}px minmax(0, 1fr)`;
+  });
 
   protected readonly conversationTitle = this.assistant.conversationTitle;
 
@@ -592,17 +589,21 @@ export class AiAssistantReviewDialogComponent {
     return groupChanges(this.visibleChanges());
   });
 
-  /** The list order the keyboard walks, which is the order the groups render in. */
-  private readonly orderedChanges = computed(() => {
-    return this.groups().flatMap((group) => group.changes);
+  protected readonly batched = computed(() => batchGroups(this.groups()));
+
+  /** The list order the keyboard walks, which is the order the rows render in. */
+  private readonly orderedGroups = computed(() => {
+    const { batches, rest } = this.batched();
+
+    return [...batches.flatMap((batch) => batch.groups), ...rest];
   });
 
-  protected readonly selectedChange = computed<AiProposedChange | null>(() => {
-    const ordered = this.orderedChanges();
-    const selectedId = this.selectedChangeId();
+  protected readonly selectedGroup = computed<AiChangeGroup | null>(() => {
+    const ordered = this.orderedGroups();
+    const selectedKey = this.selectedKey();
 
     return (
-      ordered.find((change) => change.id === selectedId) ?? ordered[0] ?? null
+      ordered.find((group) => group.key === selectedKey) ?? ordered[0] ?? null
     );
   });
 
@@ -773,13 +774,17 @@ export class AiAssistantReviewDialogComponent {
     });
 
     effect(() => {
-      const selected = this.selectedChange();
+      const selected = this.selectedGroup();
 
-      if (selected && selected.id !== this.selectedChangeId()) {
-        this.selectedChangeId.set(selected.id);
-        this.editingField.set(null);
-        this.editError.set(null);
+      if (selected && selected.key !== this.selectedKey()) {
+        this.selectedKey.set(selected.key);
       }
+    });
+
+    effect(() => {
+      this.selectedKey();
+
+      untracked(() => this.stopEditing());
     });
   }
 
@@ -792,6 +797,23 @@ export class AiAssistantReviewDialogComponent {
 
     try {
       localStorage.setItem(MODE_KEY, mode);
+    } catch {
+      // Ignore storage failures (private mode, quota, etc.).
+    }
+  }
+
+  protected setListWidth(width: number) {
+    this.listWidth.set(clampListWidth(width));
+  }
+
+  /** A drag writes once when it lets go rather than on every pointer move. */
+  protected onListResizing(isResizing: boolean) {
+    if (isResizing) {
+      return;
+    }
+
+    try {
+      localStorage.setItem(LIST_WIDTH_KEY, String(this.listWidth()));
     } catch {
       // Ignore storage failures (private mode, quota, etc.).
     }
@@ -819,12 +841,13 @@ export class AiAssistantReviewDialogComponent {
     await this.assistant.stopApplying();
   }
 
-  /** Applying one proposal is the whole set with everything else left out. */
-  protected async applyOne(changeId: number) {
+  /** Applying one entity's proposals is the whole set with everything else left out. */
+  protected async applyOnly(changeIds: number[]) {
+    const kept = new Set(changeIds);
     const excluded = this.assistant.excludedChangeIds();
     const changed = this.selectable()
       .filter((change) => {
-        const shouldExclude = change.id !== changeId;
+        const shouldExclude = !kept.has(change.id);
 
         return excluded.has(change.id) !== shouldExclude;
       })
@@ -835,9 +858,18 @@ export class AiAssistantReviewDialogComponent {
     await this.assistant.applyChangeSet();
   }
 
-  protected startEditing(name: string) {
+  /** An entity is in or out as a whole: any change left in means the switch reads as on. */
+  protected toggleIncluded(changeIds: number[]) {
+    const excluded = this.assistant.excludedChangeIds();
+    const isIncluded = changeIds.some((id) => !excluded.has(id));
+    const changed = changeIds.filter((id) => excluded.has(id) !== isIncluded);
+
+    this.assistant.toggleChanges(changed);
+  }
+
+  protected startEditing(target: AiFieldTarget) {
     this.editError.set(null);
-    this.editingField.set(name);
+    this.editingField.set(target);
   }
 
   protected stopEditing() {
@@ -845,8 +877,10 @@ export class AiAssistantReviewDialogComponent {
     this.editingField.set(null);
   }
 
-  protected async saveEdit(changeId: number, edit: AiFieldEdit) {
-    const error = await this.assistant.updateChange(changeId, [edit]);
+  protected async saveEdit({ changeId, name, value }: AiFieldEdit) {
+    const error = await this.assistant.updateChange(changeId, [
+      { name, value },
+    ]);
 
     this.editError.set(error);
 
@@ -923,24 +957,29 @@ export class AiAssistantReviewDialogComponent {
       return;
     }
 
-    const selected = this.selectedChange();
+    const selected = this.selectedGroup();
 
     if (!selected) {
       return;
     }
 
-    if (event.key === ' ' && this.isPending() && isValid(selected)) {
-      this.assistant.toggleChange(selected.id);
+    const ids = selectableIds(selected);
+
+    if (event.key === ' ' && this.isPending() && ids.length > 0) {
+      this.toggleIncluded(ids);
       event.preventDefault();
 
       return;
     }
 
     if (event.key === 'e' && this.isPending()) {
-      const field = selected.fields.find(isTextField);
+      const change = selected.changes.find((candidate) => {
+        return candidate.fields.some(isTextField);
+      });
+      const field = change?.fields.find(isTextField);
 
-      if (field) {
-        this.startEditing(field.name);
+      if (change && field) {
+        this.startEditing({ changeId: change.id, name: field.name });
       }
 
       event.preventDefault();
@@ -955,18 +994,18 @@ export class AiAssistantReviewDialogComponent {
   }
 
   private step(offset: number) {
-    const ordered = this.orderedChanges();
+    const ordered = this.orderedGroups();
 
     if (ordered.length === 0) {
       return;
     }
 
-    const current = ordered.findIndex((change) => {
-      return change.id === this.selectedChangeId();
+    const current = ordered.findIndex((group) => {
+      return group.key === this.selectedKey();
     });
     const next = Math.min(Math.max(current + offset, 0), ordered.length - 1);
 
-    this.selectedChangeId.set(ordered[next].id);
+    this.selectedKey.set(ordered[next].key);
   }
 
   private matchesFilter(
@@ -1004,6 +1043,16 @@ export class AiAssistantReviewDialogComponent {
       stored === 'split' || stored === 'unified' || stored === 'inline';
 
     return isKnown ? stored : 'split';
+  }
+
+  private storedListWidth(): number {
+    try {
+      const stored = localStorage.getItem(LIST_WIDTH_KEY);
+
+      return stored === null ? DEFAULT_LIST_WIDTH : clampListWidth(+stored);
+    } catch {
+      return DEFAULT_LIST_WIDTH;
+    }
   }
 
   private readMode(): string | null {

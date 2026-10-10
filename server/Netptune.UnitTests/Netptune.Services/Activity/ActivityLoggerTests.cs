@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Http;
 
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Events.Tasks;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Services.Activity;
+using Netptune.Services.Ai;
 
 using NSubstitute;
 
@@ -82,5 +84,33 @@ public class ActivityLoggerTests
         });
 
         await EventPublisher.DidNotReceive().Dispatch(Arg.Any<ActivityMessage>());
+    }
+
+    [Fact]
+    public async Task LogWithMany_ShouldRecordTheAgent_WhenTheAssistantIsApplyingChanges()
+    {
+        Identity.GetCurrentUserId().Returns("user-1");
+        var aiExecution = new AiExecutionContext();
+        var logger = new ActivityLogger(
+            EventPublisher,
+            Identity,
+            new HttpContextAccessor(),
+            aiExecution: aiExecution);
+
+        using (aiExecution.Begin("claude", Guid.NewGuid()))
+        {
+            logger.LogWithMany<MoveTaskActivityMeta>(options =>
+            {
+                options.EntityIds = [7, 8];
+                options.WorkspaceId = WorkspaceId;
+                options.EntityType = EntityType.Task;
+                options.Type = ActivityType.Move;
+                options.Meta = new MoveTaskActivityMeta { Group = "Done", GroupId = 3 };
+            });
+        }
+
+        await EventPublisher.Received(1).Dispatch(Arg.Is<ActivityMessage>(message =>
+            message.Events.Count == 2
+            && message.Events.All(activity => activity.Agent == "claude")));
     }
 }

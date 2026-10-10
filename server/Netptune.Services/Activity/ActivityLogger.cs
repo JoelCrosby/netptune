@@ -248,6 +248,8 @@ public class ActivityLogger : IActivityLogger
         options.Invoke(activityOptions);
 
         var workspaceId = GetWorkspaceId(activityOptions.WorkspaceId);
+        var ipAddress = GetIpAddress();
+        var userAgent = GetUserAgent();
 
         var activities = activityOptions.EntityIds
             .Where(entityId => !WasCaptured(workspaceId, activityOptions.EntityType, entityId))
@@ -257,9 +259,12 @@ public class ActivityLogger : IActivityLogger
                 Type = activityOptions.Type,
                 EntityType = activityOptions.EntityType,
                 UserId = activityOptions.UserId,
+                Agent = GetAgent(),
                 EntityId = entityId,
                 WorkspaceId = workspaceId,
                 OccurredAt = DateTime.UtcNow,
+                IpAddress = ipAddress,
+                UserAgent = userAgent,
                 Meta = JsonSerializer.Serialize(activityOptions.Meta, JsonOptions.Default),
                 RecipientUserIds = activityOptions.RecipientUserIds,
             });

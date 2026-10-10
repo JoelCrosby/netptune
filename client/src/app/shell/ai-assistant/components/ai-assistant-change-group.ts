@@ -6,6 +6,14 @@ import {
   AiProposedChange,
 } from '@core/models/ai-conversation';
 import { referenceRoute } from '@core/util/ai-references';
+import { BadgeColor } from '@static/components/badge/badge.component';
+import {
+  changeAction,
+  changeKind,
+  changeSummary,
+  changeTone,
+} from './ai-assistant-change-kind';
+import { changeLetter } from './ai-assistant-diff';
 
 export interface AiChangeGroup {
   key: string;
@@ -138,4 +146,130 @@ export const groupChanges = (changes: AiProposedChange[]): AiChangeGroup[] => {
   }
 
   return [...groups.values()];
+};
+
+/** Entities that all take the same one-field change, reviewed as one block. */
+export interface AiChangeBatch {
+  key: string;
+  field: AiChangeField;
+  sample: AiProposedChange;
+  groups: AiChangeGroup[];
+}
+
+export interface AiBatchedGroups {
+  batches: AiChangeBatch[];
+  rest: AiChangeGroup[];
+}
+
+const batchKey = (group: AiChangeGroup): string | null => {
+  const [change] = group.changes;
+  const isSingleEdit =
+    group.changes.length === 1 &&
+    change.fields.length === 1 &&
+    change.entityId !== null &&
+    change.entityId !== undefined;
+
+  if (!isSingleEdit) {
+    return null;
+  }
+
+  const [field] = change.fields;
+
+  return `${change.toolName}:${field.name}:${field.after ?? ''}`;
+};
+
+/**
+ * Ten tasks moved to the same column read as one decision, so identical single-field
+ * edits to existing entities collapse into a batch. A lone edit stays in the rest.
+ */
+export const batchGroups = (groups: AiChangeGroup[]): AiBatchedGroups => {
+  const candidates = new Map<string, AiChangeGroup[]>();
+
+  for (const group of groups) {
+    const key = batchKey(group);
+
+    if (key === null) {
+      continue;
+    }
+
+    const existing = candidates.get(key);
+
+    if (existing) {
+      existing.push(group);
+    } else {
+      candidates.set(key, [group]);
+    }
+  }
+
+  const batches: AiChangeBatch[] = [];
+  const batched = new Set<string>();
+
+  for (const [key, members] of candidates) {
+    if (members.length < 2) {
+      continue;
+    }
+
+    const sample = members[0].changes[0];
+
+    members.forEach((group) => batched.add(group.key));
+    batches.push({ key, field: sample.fields[0], sample, groups: members });
+  }
+
+  return {
+    batches,
+    rest: groups.filter((group) => !batched.has(group.key)),
+  };
+};
+
+/** A group reads by its task key where it has one, else by what kind of thing it is. */
+export const groupKeyLabel = (group: AiChangeGroup): string => {
+  const [change] = group.changes;
+
+  if (change.entitySystemId) {
+    return change.entitySystemId;
+  }
+
+  const isNew = change.entityId === null || change.entityId === undefined;
+
+  if (isNew && changeKind(change) === 'create') {
+    return $localize`:Key shown on a proposed entity that does not exist yet:New`;
+  }
+
+  return group.label;
+};
+
+export const groupTarget = (group: AiChangeGroup): string => {
+  const [change] = group.changes;
+
+  return changeSummary(change).target ?? change.summary;
+};
+
+export const groupAction = (group: AiChangeGroup): string => {
+  if (group.changes.length === 1) {
+    return changeAction(group.changes[0]);
+  }
+
+  return $localize`:What a proposed change does:Update`;
+};
+
+export const groupTone = (group: AiChangeGroup): BadgeColor => {
+  if (group.changes.length === 1) {
+    return changeTone(group.changes[0]);
+  }
+
+  const letters = group.changes.map(changeLetter);
+
+  if (letters.includes('A')) {
+    return 'success';
+  }
+
+  if (letters.includes('D')) {
+    return 'warn';
+  }
+
+  return 'info';
+};
+
+export const selectableIds = (group: AiChangeGroup): number[] => {
+  return group.changes.filter(isValid).map((change) => change.id);
 };
