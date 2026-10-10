@@ -619,6 +619,16 @@
         <target>Retravailler cette proposition : </target>
       </segment>
     </unit>
+    <unit id="6970177201160204335">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:178</note>
+        <note category="description">Command palette action that navigates to the pinned task list</note>
+      </notes>
+      <segment state="initial">
+        <source>Go to Pinned Tasks</source>
+        <target>Aller aux tâches épinglées</target>
+      </segment>
+    </unit>
     <unit id="6970305243947070538">
       <notes>
         <note category="location">src/app/features/dashboard/components/sprint-burndown-sparkline.component.ts:12,15</note>
@@ -1228,6 +1238,16 @@
         <target>Voir l&apos;activité</target>
       </segment>
     </unit>
+    <unit id="3784176916264881006">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:359</note>
+        <note category="description">Command palette action that switches to the light theme</note>
+      </notes>
+      <segment state="initial">
+        <source>Use Light Theme</source>
+        <target>Utiliser le thème clair</target>
+      </segment>
+    </unit>
     <unit id="7041821873420776665">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:402</note>
@@ -1599,6 +1619,16 @@
       <segment state="translated">
         <source>Upload Files</source>
         <target>Téléverser les fichiers</target>
+      </segment>
+    </unit>
+    <unit id="3977029777747898046">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:323</note>
+        <note category="description">Command palette action that navigates to workspace service account settings</note>
+      </notes>
+      <segment state="initial">
+        <source>Go to Service Accounts</source>
+        <target>Aller aux comptes de service</target>
       </segment>
     </unit>
     <unit id="1847898654428547577">
@@ -2007,6 +2037,16 @@
         <target>Cette requête est introuvable</target>
       </segment>
     </unit>
+    <unit id="1279691093154837242">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:395</note>
+        <note category="description">Command palette action that switches the task detail view to the cockpit layout</note>
+      </notes>
+      <segment state="initial">
+        <source>Use Cockpit Task Layout</source>
+        <target>Utiliser la disposition cockpit des tâches</target>
+      </segment>
+    </unit>
     <unit id="4686852710008865123">
       <notes>
         <note category="location">src/app/core/services/auth-commands.service.ts:198</note>
@@ -2035,6 +2075,16 @@
       <segment state="translated">
         <source>Board Deleted</source>
         <target>Tableau supprimé</target>
+      </segment>
+    </unit>
+    <unit id="5309518457085242318">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:242</note>
+        <note category="description">Command palette action that navigates to the signed-in user&apos;s profile</note>
+      </notes>
+      <segment state="initial">
+        <source>Go to Profile</source>
+        <target>Aller au profil</target>
       </segment>
     </unit>
     <unit id="7022070615528435141">
@@ -2224,6 +2274,16 @@
       <segment state="translated">
         <source> Model for assistant chat </source>
         <target> Modèle pour la discussion avec l&apos;assistant </target>
+      </segment>
+    </unit>
+    <unit id="1718381178086769880">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:296</note>
+        <note category="description">Command palette action that navigates to workspace tag settings</note>
+      </notes>
+      <segment state="initial">
+        <source>Go to Tag Settings</source>
+        <target>Aller aux paramètres des étiquettes</target>
       </segment>
     </unit>
     <unit id="3596210590059423029">
@@ -2609,6 +2669,16 @@
       <segment state="translated">
         <source>Unable to Start Sprint</source>
         <target>Impossible de démarrer le sprint</target>
+      </segment>
+    </unit>
+    <unit id="7006642263471484709">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:169</note>
+        <note category="description">Command palette action that navigates to the saved query list</note>
+      </notes>
+      <segment state="initial">
+        <source>Go to Queries</source>
+        <target>Aller aux requêtes</target>
       </segment>
     </unit>
     <unit id="7007888444594131996">
@@ -3999,7 +4069,7 @@
     </unit>
     <unit id="7480444655465895778">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:153</note>
+        <note category="location">src/app/shell/global-commands.service.ts:417</note>
         <note category="description">Command palette action that opens the AI assistant</note>
       </notes>
       <segment state="translated">
@@ -4371,6 +4441,16 @@
       <segment state="translated">
         <source>Assignees</source>
         <target>Personnes assignées</target>
+      </segment>
+    </unit>
+    <unit id="8851067750279637711">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:368</note>
+        <note category="description">Command palette action that drops the theme choice so the app follows the operating system</note>
+      </notes>
+      <segment state="initial">
+        <source>Use System Theme</source>
+        <target>Utiliser le thème du système</target>
       </segment>
     </unit>
     <unit id="885182347182627513">
@@ -4792,7 +4872,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:161,164</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:40,41</note>
-        <note category="location">src/app/shell/global-commands.service.ts:180</note>
+        <note category="location">src/app/shell/global-commands.service.ts:426</note>
         <note category="description">Title of the create-task dialog</note>
       </notes>
       <segment state="translated">
@@ -5845,6 +5925,16 @@
         <target>Enregistrer le fournisseur</target>
       </segment>
     </unit>
+    <unit id="3881052394638902678">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:233</note>
+        <note category="description">Command palette action that navigates to the workspace audit log</note>
+      </notes>
+      <segment state="initial">
+        <source>Go to Audit Log</source>
+        <target>Aller au journal d'audit</target>
+      </segment>
+    </unit>
     <unit id="3885497195825665706">
       <notes>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:115,116</note>
@@ -6184,6 +6274,16 @@
       <segment state="translated">
         <source>Filter users</source>
         <target>Filtrer les utilisateurs</target>
+      </segment>
+    </unit>
+    <unit id="3905491520406429600">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:278</note>
+        <note category="description">Command palette action that navigates to the personal assistant key settings</note>
+      </notes>
+      <segment state="initial">
+        <source>Go to Assistant Key Settings</source>
+        <target>Aller aux paramètres de clé de l'assistant</target>
       </segment>
     </unit>
     <unit id="3911323019910272488">
@@ -7717,6 +7817,16 @@
         <target>Moyen</target>
       </segment>
     </unit>
+    <unit id="1493770091147271250">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:350</note>
+        <note category="description">Command palette action that switches to the dark theme</note>
+      </notes>
+      <segment state="initial">
+        <source>Use Dark Theme</source>
+        <target>Utiliser le thème sombre</target>
+      </segment>
+    </unit>
     <unit id="1494518490116523821">
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:80,83</note>
@@ -8413,6 +8523,16 @@
         <target>Nom de l’étiquette</target>
       </segment>
     </unit>
+    <unit id="7572709072780766984">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:145</note>
+        <note category="description">Command palette action that navigates to the roadmap timeline</note>
+      </notes>
+      <segment state="initial">
+        <source>Go to Roadmap</source>
+        <target>Aller à la feuille de route</target>
+      </segment>
+    </unit>
     <unit id="7575333699500892760">
       <notes>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:52</note>
@@ -8868,6 +8988,16 @@
       <segment state="translated">
         <source>Chats</source>
         <target>Discussions</target>
+      </segment>
+    </unit>
+    <unit id="8736025615104066664">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:136</note>
+        <note category="description">Command palette action that navigates to the sprint backlog</note>
+      </notes>
+      <segment state="initial">
+        <source>Go to Backlog</source>
+        <target>Aller au backlog</target>
       </segment>
     </unit>
     <unit id="8740036082299980043">
@@ -9980,6 +10110,16 @@
         <target> Supprimer les liens </target>
       </segment>
     </unit>
+    <unit id="3530843538847118284">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:108</note>
+        <note category="description">Command palette action that navigates to the archived task list</note>
+      </notes>
+      <segment state="initial">
+        <source>Go to Archived Tasks</source>
+        <target>Aller aux tâches archivées</target>
+      </segment>
+    </unit>
     <unit id="3531469667047240907">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:528</note>
@@ -10789,6 +10929,16 @@
         <target>Définir la priorité</target>
       </segment>
     </unit>
+    <unit id="2642012433003949544">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:377</note>
+        <note category="description">Command palette action that stretches pages across the full window width</note>
+      </notes>
+      <segment state="initial">
+        <source>Use Full Page Width</source>
+        <target>Utiliser la pleine largeur de page</target>
+      </segment>
+    </unit>
     <unit id="2644471404446242567">
       <notes>
         <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:115</note>
@@ -11278,6 +11428,16 @@
         <target>Rechercher des tableaux</target>
       </segment>
     </unit>
+    <unit id="6542083255352890889">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:305</note>
+        <note category="description">Command palette action that navigates to workspace task status settings</note>
+      </notes>
+      <segment state="initial">
+        <source>Go to Status Settings</source>
+        <target>Aller aux paramètres des statuts</target>
+      </segment>
+    </unit>
     <unit id="6542150205027637766">
       <notes>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:38,40</note>
@@ -11408,6 +11568,16 @@
       <segment state="translated">
         <source>Wait period</source>
         <target>Délai d&apos;attente</target>
+      </segment>
+    </unit>
+    <unit id="9214432864445261604">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:153</note>
+        <note category="description">Command palette action that navigates to the calendar</note>
+      </notes>
+      <segment state="initial">
+        <source>Go to Calendar</source>
+        <target>Aller au calendrier</target>
       </segment>
     </unit>
     <unit id="8505625387835214066">
@@ -15882,6 +16052,16 @@
         <target> +<ph id="0" equiv="COUNT" disp="{{ overflow // i18n(ph=&quot;COUNT&quot;) }}"/> de plus </target>
       </segment>
     </unit>
+    <unit id="1417693373625142806">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:215</note>
+        <note category="description">Command palette action that navigates to the full-page assistant chat</note>
+      </notes>
+      <segment state="initial">
+        <source>Go to Assistant Conversations</source>
+        <target>Aller aux conversations de l'assistant</target>
+      </segment>
+    </unit>
     <unit id="4030757567682873742">
       <notes>
         <note category="location">src/app/features/calendar/components/calendar-planning-month/calendar-planning-month.component.ts:167</note>
@@ -17472,6 +17652,16 @@
       <segment state="translated">
         <source><ph id="0" equiv="APPLIED" disp="applied"/> of <ph id="1" equiv="TOTAL" disp="total"/> applied · <ph id="2" equiv="FAILED" disp="failed"/> failed</source>
         <target><ph id="0" equiv="APPLIED" disp="applied"/> sur <ph id="1" equiv="TOTAL" disp="total"/> appliquées · <ph id="2" equiv="FAILED" disp="failed"/> en échec</target>
+      </segment>
+    </unit>
+    <unit id="8762019541565613143">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:161</note>
+        <note category="description">Command palette action that navigates to the reporting views</note>
+      </notes>
+      <segment state="initial">
+        <source>Go to Reports</source>
+        <target>Aller aux rapports</target>
       </segment>
     </unit>
     <unit id="8762534944604959180">
@@ -19330,6 +19520,16 @@
         <target>Aucune tâche non planifiée ne correspond aux filtres actuels.</target>
       </segment>
     </unit>
+    <unit id="6203693342135702246">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:251</note>
+        <note category="description">Command palette action that navigates to the workspace picker</note>
+      </notes>
+      <segment state="initial">
+        <source>Switch Workspace</source>
+        <target>Changer d'espace de travail</target>
+      </segment>
+    </unit>
     <unit id="6211708336148649092">
       <notes>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:60,62</note>
@@ -20874,6 +21074,16 @@
         <target>Accès public</target>
       </segment>
     </unit>
+    <unit id="684158162620573424">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:332</note>
+        <note category="description">Command palette action that navigates to the workspace assistant settings</note>
+      </notes>
+      <segment state="initial">
+        <source>Go to Workspace Assistant Settings</source>
+        <target>Aller aux paramètres de l'assistant de l'espace de travail</target>
+      </segment>
+    </unit>
     <unit id="6844391301599182097">
       <notes>
         <note category="location">src/app/features/settings/components/workspace-public-access/workspace-public-access.component.ts:30,36</note>
@@ -21026,6 +21236,16 @@
         <target>Visibilité et accès</target>
       </segment>
     </unit>
+    <unit id="2052572547732747214">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:287</note>
+        <note category="description">Command palette action that navigates to general workspace settings</note>
+      </notes>
+      <segment state="initial">
+        <source>Go to Workspace Settings</source>
+        <target>Aller aux paramètres de l'espace de travail</target>
+      </segment>
+    </unit>
     <unit id="2057462794608190902">
       <notes>
         <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:95</note>
@@ -21034,6 +21254,16 @@
       <segment state="translated">
         <source>Untagged</source>
         <target>Sans étiquette</target>
+      </segment>
+    </unit>
+    <unit id="7061746686189484080">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:341</note>
+        <note category="description">Command palette action that navigates to workspace import and export settings</note>
+      </notes>
+      <segment state="initial">
+        <source>Go to Import &amp; Export</source>
+        <target>Aller à l'import et l'export</target>
       </segment>
     </unit>
     <unit id="7068860286643870184">
@@ -22304,6 +22534,16 @@
         <target>Actifs</target>
       </segment>
     </unit>
+    <unit id="8205434857423213542">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:206</note>
+        <note category="description">Command palette action that navigates to the notification list</note>
+      </notes>
+      <segment state="initial">
+        <source>Go to Notifications</source>
+        <target>Aller aux notifications</target>
+      </segment>
+    </unit>
     <unit id="8207875327947940735">
       <notes>
         <note category="location">src/app/core/util/branding.ts:37</note>
@@ -22713,6 +22953,16 @@
       <segment state="initial">
         <source> Import Archive </source>
         <target> Importer l&apos;archive </target>
+      </segment>
+    </unit>
+    <unit id="5017699476642878935">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:269</note>
+        <note category="description">Command palette action that navigates to personal notification preference settings</note>
+      </notes>
+      <segment state="initial">
+        <source>Go to Notification Preferences</source>
+        <target>Aller aux préférences de notification</target>
       </segment>
     </unit>
     <unit id="5018155553239492864">
@@ -23929,6 +24179,16 @@
         <target>Ouvrir le fichier</target>
       </segment>
     </unit>
+    <unit id="8979299419810230617">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:314</note>
+        <note category="description">Command palette action that navigates to workspace task relation type settings</note>
+      </notes>
+      <segment state="initial">
+        <source>Go to Relation Settings</source>
+        <target>Aller aux paramètres des relations</target>
+      </segment>
+    </unit>
     <unit id="8979656408332491985">
       <notes>
         <note category="location">src/app/features/storage/components/storage-list.component.ts:214,215</note>
@@ -24306,6 +24566,16 @@
         <target>Date de fin du rapport</target>
       </segment>
     </unit>
+    <unit id="3335455471343847900">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:406</note>
+        <note category="description">Command palette action that switches the task detail view to the document layout</note>
+      </notes>
+      <segment state="initial">
+        <source>Use Document Task Layout</source>
+        <target>Utiliser la disposition document des tâches</target>
+      </segment>
+    </unit>
     <unit id="3339303141258670173">
       <notes>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:98,101</note>
@@ -24457,6 +24727,16 @@
       <segment state="translated">
         <source> The task was created, but some files did not upload. Close this dialog and add them from the task. </source>
         <target> La tâche a été créée, mais certains fichiers n&apos;ont pas été téléversés. Fermez cette boîte de dialogue et ajoutez-les depuis la tâche. </target>
+      </segment>
+    </unit>
+    <unit id="2214406551817330687">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:386</note>
+        <note category="description">Command palette action that caps pages to a centered readable column</note>
+      </notes>
+      <segment state="initial">
+        <source>Use Centered Page Width</source>
+        <target>Utiliser une largeur de page centrée</target>
       </segment>
     </unit>
     <unit id="2215333818982696562">
@@ -24824,7 +25104,7 @@
     </unit>
     <unit id="2547653457651632153">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:59</note>
+        <note category="location">src/app/shell/global-commands.service.ts:90</note>
         <note category="description">Command palette action that navigates to the project list</note>
       </notes>
       <segment state="translated">
@@ -24865,7 +25145,7 @@
     </unit>
     <unit id="5123189455675344637">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:68</note>
+        <note category="location">src/app/shell/global-commands.service.ts:99</note>
         <note category="description">Command palette action that navigates to the task list</note>
       </notes>
       <segment state="translated">
@@ -24875,7 +25155,7 @@
     </unit>
     <unit id="5086261568382990197">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:77</note>
+        <note category="location">src/app/shell/global-commands.service.ts:117</note>
         <note category="description">Command palette action that navigates to the board list</note>
       </notes>
       <segment state="translated">
@@ -24905,7 +25185,7 @@
     </unit>
     <unit id="2627358752486456707">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:86</note>
+        <note category="location">src/app/shell/global-commands.service.ts:126</note>
         <note category="description">Command palette action that navigates to the sprint list</note>
       </notes>
       <segment state="translated">
@@ -24915,7 +25195,7 @@
     </unit>
     <unit id="178520337056147266">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:103</note>
+        <note category="location">src/app/shell/global-commands.service.ts:80</note>
         <note category="description">Command palette action that navigates to the dashboard</note>
       </notes>
       <segment state="translated">
@@ -24935,7 +25215,7 @@
     </unit>
     <unit id="2117590223216089367">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:112</note>
+        <note category="location">src/app/shell/global-commands.service.ts:187</note>
         <note category="description">Command palette action that navigates to the member list</note>
       </notes>
       <segment state="translated">
@@ -24955,7 +25235,7 @@
     </unit>
     <unit id="7783914774924915188">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:120</note>
+        <note category="location">src/app/shell/global-commands.service.ts:260</note>
         <note category="description">Command palette action that navigates to settings</note>
       </notes>
       <segment state="translated">
@@ -24965,7 +25245,7 @@
     </unit>
     <unit id="5354615118655779282">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:208</note>
+        <note category="location">src/app/shell/global-commands.service.ts:196</note>
         <note category="description">Command palette action that navigates to the automation list</note>
       </notes>
       <segment state="translated">
@@ -25008,7 +25288,7 @@
     </unit>
     <unit id="5387282719521675016">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:234</note>
+        <note category="location">src/app/shell/global-commands.service.ts:224</note>
         <note category="description">Command palette action that navigates to file storage</note>
       </notes>
       <segment state="translated">

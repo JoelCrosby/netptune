@@ -30,6 +30,12 @@ export class UserPreferencesService {
       .find((preference) => preference.definition.key === key)?.effectiveValue;
   }
 
+  sourceFor(key: string): ResolvedPreferenceValue['source'] | undefined {
+    return this.values()
+      ?.groups.flatMap((group) => group.preferences)
+      .find((preference) => preference.definition.key === key)?.source;
+  }
+
   /** Loads the values once, for callers that render outside the app shell. */
   ensureLoaded() {
     if (this.loaded()) return;
