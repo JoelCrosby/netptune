@@ -9,7 +9,9 @@ export const calendarReadGuard: CanActivateFn = (route) => {
     .map((snapshot) => snapshot.params['workspace'])
     .find(Boolean);
 
-  const allowed = hasPermission(PERMISSIONS.tasks.read)();
+  const allowed =
+    hasPermission(PERMISSIONS.calendar.read)() &&
+    hasPermission(PERMISSIONS.tasks.read)();
 
   return (
     allowed ||

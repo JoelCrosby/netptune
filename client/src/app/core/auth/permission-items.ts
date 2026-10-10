@@ -421,6 +421,13 @@ export const netptunePermissionLabels: PermissionLabels = {
       icon: LucideBellDot,
     },
   },
+  calendar: {
+    read: {
+      key: 'calendar.read',
+      label: $localize`:Name of a workspace permission:View Calendar`,
+      icon: LucideCalendarDays,
+    },
+  },
   reports: {
     read: {
       key: 'reports.read',

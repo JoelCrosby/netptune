@@ -12,6 +12,7 @@ public static class CalendarEndpoints
     {
         builder
             .MapGet("calendar/tasks", GetTasks)
+            .RequireAuthorization(NetptunePermissions.Calendar.Read)
             .RequireAuthorization(NetptunePermissions.Tasks.Read);
 
         return builder;

@@ -22,6 +22,9 @@ public static class NetptunePermissions
         Tags.Read,
         Statuses.Read,
         RelationTypes.Read,
+        Calendar.Read,
+        Reports.Read,
+        Automations.Read,
     }.ToFrozenSet();
 
     public static IReadOnlySet<string> ResolvePublicPermissions(IEnumerable<string>? configured)
@@ -163,6 +166,11 @@ public static class NetptunePermissions
     {
         public const string Read = "notifications.read";
         public const string Update = "notifications.update";
+    }
+
+    public static class Calendar
+    {
+        public const string Read = "calendar.read";
     }
 
     public static class Reports

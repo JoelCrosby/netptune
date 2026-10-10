@@ -70,7 +70,7 @@ public sealed class PublicWorkspaceEndpointTests
             NetptunePermissions.Storage.Read,
             NetptunePermissions.Files.Read,
             NetptunePermissions.Workspace.Read,
-            NetptunePermissions.Automations.Read,
+            NetptunePermissions.Automations.Manage,
             NetptunePermissions.ServiceAccounts.Read,
             NetptunePermissions.Flags.Read,
         ]);
@@ -92,10 +92,46 @@ public sealed class PublicWorkspaceEndpointTests
     }
 
     [Theory]
+    [InlineData("api/calendar/tasks?date=2026-07-11")]
+    [InlineData("api/reports/flow")]
+    [InlineData("api/automations")]
+    public async Task AnonymousRequest_ShouldBeAllowed_ForSharedCalendarReportsAndAutomations(string route)
+    {
+        var slug = $"public-{Guid.NewGuid():N}"[..20];
+
+        await CreateWorkspace(slug);
+        await SetVisibility(slug, isPublic: true);
+
+        var anonymous = Fixture.CreateAnonymousNetptuneClient(slug);
+
+        var response = await anonymous.GetAsync(route);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Theory]
+    [InlineData("api/calendar/tasks?date=2026-07-11")]
+    [InlineData("api/reports/flow")]
+    [InlineData("api/automations")]
+    public async Task AnonymousRequest_ShouldBeDenied_ForCalendarReportsAndAutomationsWhenNotShared(string route)
+    {
+        var slug = $"public-{Guid.NewGuid():N}"[..20];
+
+        await CreateWorkspace(slug);
+        await SetVisibility(slug, isPublic: true);
+        await SetPublicPermissions(slug, [NetptunePermissions.Tasks.Read]);
+
+        var anonymous = Fixture.CreateAnonymousNetptuneClient(slug);
+
+        var response = await anonymous.GetAsync(route);
+
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    [Theory]
     [InlineData("api/users")]
     [InlineData("api/audit")]
     [InlineData("api/notifications")]
-    [InlineData("api/automations")]
     [InlineData("api/user-preferences/values")]
     public async Task AnonymousRequest_ShouldBeDenied_ForEndpointsOutsideThePublicAllowlist(string route)
     {

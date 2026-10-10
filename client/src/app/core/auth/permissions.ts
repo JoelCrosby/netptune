@@ -98,6 +98,9 @@ export const PERMISSIONS = {
     read: 'notifications.read',
     update: 'notifications.update',
   },
+  calendar: {
+    read: 'calendar.read',
+  },
   reports: {
     read: 'reports.read',
   },
@@ -150,4 +153,7 @@ export const publicReadablePermissions: Permission[] = [
   PERMISSIONS.tags.read,
   PERMISSIONS.statuses.read,
   PERMISSIONS.relationTypes.read,
+  PERMISSIONS.calendar.read,
+  PERMISSIONS.reports.read,
+  PERMISSIONS.automations.read,
 ];

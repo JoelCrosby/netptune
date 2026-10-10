@@ -18,6 +18,7 @@ public static class WorkspaceRolePermissions
         NetptunePermissions.Comments.Read,
         NetptunePermissions.Tags.Read,
         NetptunePermissions.Activity.Read,
+        NetptunePermissions.Calendar.Read,
         NetptunePermissions.Reports.Read,
         NetptunePermissions.Flags.Read,
         NetptunePermissions.Notifications.Read,

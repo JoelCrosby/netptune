@@ -129,6 +129,7 @@ export class ShellSidebarComponent {
   canReadStorage = hasPermission(PERMISSIONS.storage.read);
   canReadSprints = hasPermission(PERMISSIONS.sprints.read);
   canReadAutomations = hasPermission(PERMISSIONS.automations.read);
+  canReadCalendar = hasPermission(PERMISSIONS.calendar.read);
   canReadReports = hasPermission(PERMISSIONS.reports.read);
   canReadQueries = hasPermission(PERMISSIONS.queries.read);
   canRestoreTasks = hasPermission(PERMISSIONS.tasks.restore);
@@ -203,13 +204,16 @@ export class ShellSidebarComponent {
         label: $localize`:Sidebar link to the roadmap timeline:Roadmap`,
         value: ['./roadmap'],
         icon: LucideChartGantt,
-      },
-      {
+      }
+    );
+
+    if (this.canReadCalendar()) {
+      links.push({
         label: $localize`:Sidebar link to the calendar:Calendar`,
         value: ['./calendar'],
         icon: LucideCalendarDays,
-      }
-    );
+      });
+    }
 
     if (this.canReadReports()) {
       links.push({

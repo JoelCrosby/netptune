@@ -59,6 +59,7 @@ export class GlobalCommandsService implements OnDestroy {
   private canReadQueries = hasPermission(PERMISSIONS.queries.read);
   private canReadMembers = hasPermission(PERMISSIONS.members.read);
   private canReadAutomations = hasPermission(PERMISSIONS.automations.read);
+  private canReadCalendar = hasPermission(PERMISSIONS.calendar.read);
   private canReadReports = hasPermission(PERMISSIONS.reports.read);
   private canReadStorage = hasPermission(PERMISSIONS.storage.read);
   private canReadAudit = hasPermission(PERMISSIONS.audit.read);
@@ -155,6 +156,7 @@ export class GlobalCommandsService implements OnDestroy {
       group: 'navigation',
       icon: 'calendar-days',
       keywords: ['calendar', 'due dates', 'schedule', 'navigate'],
+      available: () => this.canReadCalendar(),
       execute: () => this.navigate('calendar'),
     },
     {
