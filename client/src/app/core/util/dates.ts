@@ -51,3 +51,11 @@ export const prettyDate = (value: Date | undefined | null): string => {
 
   return dayjs.utc(value).local().format('llll');
 };
+
+export const prettyShortDate = (value: Date | undefined | null): string => {
+  if (!value) {
+    return '';
+  }
+
+  return dayjs.utc(value).local().format('ddd, D MMM LT');
+};

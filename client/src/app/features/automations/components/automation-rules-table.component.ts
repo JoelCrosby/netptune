@@ -7,13 +7,13 @@ import {
   Signal,
   viewChild,
 } from '@angular/core';
-import { debouncedSignal, onChange, toggleInSet } from '@core/util/signals';
+import { debouncedSignal, onChange } from '@core/util/signals';
+import { prettyDate, prettyShortDate } from '@core/util/dates';
 import { Params, RouterLink } from '@angular/router';
 import { Status } from '@core/models/status';
 import {
-  LucideCircleDashed,
-  LucideCirclePlay,
   LucideCopy,
+  LucideListFilter,
   LucideSettings2,
   LucideTrash2,
   LucideTriangleAlert,
@@ -24,28 +24,48 @@ import { DatatableComponent } from '@static/components/datatable/datatable.compo
 import { DatatableEmptyDirective } from '@static/components/datatable/datatable-empty.directive';
 import { DatatableDataSource } from '@static/components/datatable/datatable.types';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
-import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
-import { MenuCheckboxItemComponent } from '@static/components/dropdown-menu/menu-checkbox-item.component';
-import { FilterActionButtonComponent } from '@static/components/filter-action-button/filter-action-button.component';
 import { SearchInputComponent } from '@static/components/search-input/search-input.component';
-import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
 import {
+  SegmentedControlComponent,
+  SegmentedOption,
+} from '@static/components/segmented-control/segmented-control.component';
+import { SwitchComponent } from '@static/components/switch/switch.component';
+import { TooltipDirective } from '@static/directives/tooltip.directive';
+import {
+  AutomationActionChip,
   automationRunStatusLabels,
-  automationTriggerTypes,
-  AutomationCopySegment,
-  triggerTypeLabels,
-  describeAutomationActionsSegments,
-  describeAutomationTriggerSegments,
-  runStatusClass,
+  describeAutomationActionChip,
+  describeAutomationConditionChip,
+  describeAutomationTrigger,
+  describeAutomationTriggerChip,
 } from '../models/automation-copy';
 import {
   AutomationRuleListItem,
+  AutomationRun,
   AutomationRunStatus,
-  AutomationTriggerType,
 } from '../models/automation.models';
-import { TooltipDirective } from '@static/directives/tooltip.directive';
-import { AutomationDescriptionComponent } from './automation-description.component';
-import { AutomationEnabledBadgeComponent } from './automation-enabled-badge.component';
+
+export interface AutomationRuleToggle {
+  rule: AutomationRuleListItem;
+  revert: () => void;
+}
+
+export interface AutomationRuleCounts {
+  total: number;
+  enabled: number;
+}
+
+type EnabledFilter = 'all' | 'enabled' | 'disabled';
+
+interface ActionChips {
+  shown: AutomationActionChip[];
+  extra: AutomationActionChip[];
+}
+
+const maxActionChips = 2;
+
+const chipClass =
+  'border-border bg-foreground/[0.015] text-foreground/75 inline-flex h-6.5 min-w-0 items-center gap-1.5 rounded-md border px-2.25 text-[13px] whitespace-nowrap';
 
 @Component({
   selector: 'app-automation-rules-table',
@@ -54,82 +74,44 @@ import { AutomationEnabledBadgeComponent } from './automation-enabled-badge.comp
     DatatableComponent,
     DatatableCellTemplateDirective,
     DatatableEmptyDirective,
-    DropdownMenuComponent,
     EmptyStateComponent,
-    FilterActionButtonComponent,
-    MenuCheckboxItemComponent,
-    PrettyDatePipe,
     SearchInputComponent,
-    AutomationEnabledBadgeComponent,
-    AutomationDescriptionComponent,
+    SegmentedControlComponent,
+    SwitchComponent,
+    LucideListFilter,
     LucideTriangleAlert,
+    LucideZap,
     TooltipDirective,
   ],
   template: `
-    <div class="mb-3 flex flex-row items-center gap-2">
+    <div class="mb-3 flex flex-row flex-wrap items-center gap-3">
       <app-search-input
         [term]="searchInput()"
         (searchChange)="searchInput.set($event ?? '')" />
 
-      <div #statusAnchor>
-        <app-filter-action-button
-          i18n-label="Label on the control that filters automations by status"
-          label="Filter by Status"
-          [icon]="lucideCircleDashed"
-          [color]="enabledFilter().size ? 'primary' : undefined"
-          [count]="enabledFilter().size"
-          (action)="statusMenu.toggle(statusAnchor)" />
-      </div>
-
-      <app-dropdown-menu #statusMenu>
-        <button
-          app-menu-checkbox-item
-          [checked]="enabledFilter().has(true)"
-          (checkedChange)="toggleEnabledFilter(true)">
-          <span i18n="Marks an automation that is switched on">Enabled</span>
-        </button>
-        <button
-          app-menu-checkbox-item
-          [checked]="enabledFilter().has(false)"
-          (checkedChange)="toggleEnabledFilter(false)">
-          <span i18n="Marks an automation that is switched off">Disabled</span>
-        </button>
-      </app-dropdown-menu>
-
-      <div #triggerAnchor>
-        <app-filter-action-button
-          i18n-label="Label on the control that filters automations by trigger"
-          label="Filter by Trigger"
-          [icon]="lucideZap"
-          [color]="triggerFilter().size ? 'primary' : undefined"
-          [count]="triggerFilter().size"
-          (action)="triggerMenu.toggle(triggerAnchor)" />
-      </div>
-
-      <app-dropdown-menu #triggerMenu>
-        @for (trigger of triggerTypes; track trigger) {
-          <button
-            app-menu-checkbox-item
-            [checked]="triggerFilter().has(trigger)"
-            (checkedChange)="toggleTriggerFilter(trigger)">
-            {{ triggerLabel(trigger) }}
-          </button>
-        }
-      </app-dropdown-menu>
+      <app-segmented-control
+        variant="outlined"
+        i18n-ariaLabel="Accessible label of the automation status filter"
+        ariaLabel="Filter by status"
+        [options]="enabledOptions()"
+        [value]="enabledFilter()"
+        (valueChange)="setEnabledFilter($event)" />
     </div>
 
     <app-datatable
       i18n-errorMessage="Shown when the automation list fails to load"
       errorMessage="Automation rules could not be loaded."
       stickyHeader
-      tableClass="md:min-w-[900px]"
+      tableClass="table-fixed md:min-w-[900px]"
       [data]="data()"
       [stickyHeader]="true">
       <ng-template appDatatableCell="name" let-rule>
         <div class="flex min-w-0 items-center gap-2">
           <a
             class="min-w-0 truncate font-semibold hover:underline"
-            [routerLink]="[rule.id]">
+            [class.text-muted]="!rule.isEnabled"
+            [routerLink]="[rule.id]"
+            [appTooltip]="rule.name">
             {{ rule.name }}
           </a>
           @if (rule.warnings.length) {
@@ -142,31 +124,83 @@ import { AutomationEnabledBadgeComponent } from './automation-enabled-badge.comp
       </ng-template>
 
       <ng-template appDatatableCell="isEnabled" let-rule>
-        <app-automation-enabled-badge [enabled]="rule.isEnabled" />
+        <app-switch
+          #toggle
+          [checked]="rule.isEnabled"
+          [disabled]="!canManage()"
+          [ariaLabel]="toggleLabel(rule)"
+          [appTooltip]="toggleLabel(rule)"
+          (changed)="onToggle(rule, toggle)" />
       </ng-template>
 
       <ng-template appDatatableCell="trigger" let-rule>
-        <app-automation-description
-          [segments]="triggerSummary(rule)"
-          [statuses]="statuses()" />
+        @let condition = conditionChip(rule);
+        <div class="flex min-w-0 items-center gap-1.5 overflow-hidden">
+          <span
+            [class]="chipClass + ' max-w-full shrink-0'"
+            [appTooltip]="triggerTooltip(rule)">
+            <svg
+              lucideZap
+              class="text-primary h-3.25 w-3.25 shrink-0"
+              [strokeWidth]="2.2"></svg>
+            <span class="min-w-0 truncate">{{ triggerChip(rule) }}</span>
+          </span>
+          @if (condition) {
+            <span [class]="chipClass" [appTooltip]="condition">
+              <svg
+                lucideListFilter
+                class="text-foreground/50 h-3.25 w-3.25 shrink-0"
+                [strokeWidth]="2.2"></svg>
+              <span class="min-w-0 truncate">{{ condition }}</span>
+            </span>
+          }
+        </div>
       </ng-template>
 
       <ng-template appDatatableCell="actions" let-rule>
-        <app-automation-description
-          [segments]="actionsSummary(rule)"
-          [statuses]="statuses()" />
+        @let chips = actionChips(rule);
+        <div class="flex min-w-0 items-center gap-1.5 overflow-hidden">
+          @for (chip of chips.shown; track $index; let last = $last) {
+            <span
+              [class]="chipClass"
+              [style.max-width]="last ? null : '150px'"
+              [appTooltip]="chip.full">
+              <span class="text-foreground shrink-0 font-semibold">
+                {{ chip.verb }}
+              </span>
+              @if (chip.detail) {
+                <span class="text-foreground/55 min-w-0 truncate">
+                  {{ chip.detail }}
+                </span>
+              }
+            </span>
+          } @empty {
+            <span
+              class="text-muted text-xs"
+              i18n="Shown when an automation has no actions">
+              No actions configured
+            </span>
+          }
+          @if (chips.extra.length) {
+            <span
+              class="bg-foreground/5 text-foreground/60 inline-flex h-6.5 shrink-0 items-center rounded-md px-2 text-xs font-semibold"
+              [appTooltip]="extraActionsTooltip(chips.extra)">
+              +{{ chips.extra.length }}
+            </span>
+          }
+        </div>
       </ng-template>
 
       <ng-template appDatatableCell="lastRun" let-rule>
-        @if (rule.lastRun) {
-          <div class="flex flex-col gap-1">
-            <span class="font-mono text-xs whitespace-nowrap">
-              {{ rule.lastRun.createdAt | prettyDate }}
-            </span>
+        @if (rule.lastRun; as run) {
+          <div
+            class="flex min-w-0 items-center gap-2 whitespace-nowrap"
+            [appTooltip]="runTooltip(run)">
             <span
-              class="w-fit rounded px-2 py-0.5 text-xs font-medium"
-              [class]="runStatusClass(rule.lastRun.status)">
-              {{ runStatusLabel(rule.lastRun.status) }}
+              class="h-1.75 w-1.75 shrink-0 rounded-full"
+              [class]="runDotClass(run.status)"></span>
+            <span class="text-foreground/75 truncate font-mono text-xs">
+              {{ shortDate(run.createdAt) }}
             </span>
           </div>
         } @else {
@@ -190,24 +224,18 @@ import { AutomationEnabledBadgeComponent } from './automation-enabled-badge.comp
 export class AutomationRulesTableComponent {
   readonly canManage = input.required<boolean>();
   readonly statuses = input<Status[]>([]);
+  readonly counts = input<AutomationRuleCounts>({ total: 0, enabled: 0 });
   readonly reloadSignal = input<Signal<unknown>>();
 
-  readonly toggleRule = output<AutomationRuleListItem>();
+  readonly toggleRule = output<AutomationRuleToggle>();
   readonly editRule = output<AutomationRuleListItem>();
   readonly cloneRule = output<AutomationRuleListItem>();
   readonly deleteRule = output<AutomationRuleListItem>();
 
-  readonly runStatusClass = runStatusClass;
-  readonly triggerTypes = automationTriggerTypes;
-
-  readonly lucideCircleDashed = LucideCircleDashed;
-  readonly lucideZap = LucideZap;
+  readonly chipClass = chipClass;
 
   readonly searchInput = signal('');
-  readonly enabledFilter = signal<ReadonlySet<boolean>>(new Set());
-  readonly triggerFilter = signal<ReadonlySet<AutomationTriggerType>>(
-    new Set()
-  );
+  readonly enabledFilter = signal<EnabledFilter>('all');
 
   private readonly search = debouncedSignal(this.searchInput);
 
@@ -215,12 +243,30 @@ export class AutomationRulesTableComponent {
     DatatableComponent<AutomationRuleListItem>
   );
 
+  readonly enabledOptions = computed<SegmentedOption<EnabledFilter>[]>(() => {
+    const { total, enabled } = this.counts();
+
+    return [
+      {
+        value: 'all',
+        label: $localize`:Automation status filter option that shows every rule:All`,
+        count: total,
+      },
+      {
+        value: 'enabled',
+        label: $localize`:Marks an automation that is switched on:Enabled`,
+        count: enabled,
+      },
+      {
+        value: 'disabled',
+        label: $localize`:Marks an automation that is switched off:Disabled`,
+        count: total - enabled,
+      },
+    ];
+  });
+
   readonly filtersActive = computed(() => {
-    return (
-      !!this.search().trim() ||
-      this.enabledFilter().size > 0 ||
-      this.triggerFilter().size > 0
-    );
+    return !!this.search().trim() || this.enabledFilter() !== 'all';
   });
 
   readonly emptyTitle = computed(() => {
@@ -239,14 +285,11 @@ export class AutomationRulesTableComponent {
 
   private readonly resourceParams = computed<Params>(() => {
     const search = this.search().trim();
-    const enabled = [...this.enabledFilter()];
-    const triggers = [...this.triggerFilter()];
-    const isEnabled = enabled.length === 1 ? enabled[0] : null;
+    const filter = this.enabledFilter();
 
     return {
       ...(search ? { search } : {}),
-      ...(isEnabled === null ? {} : { isEnabled }),
-      ...(triggers.length ? { triggerTypes: triggers.join(',') } : {}),
+      ...(filter === 'all' ? {} : { isEnabled: filter === 'enabled' }),
     };
   });
 
@@ -258,14 +301,13 @@ export class AutomationRulesTableComponent {
         header: 'Rule',
         visibleOnMobile: true,
         sortable: true,
-        widthClass: 'w-64',
       },
       {
         id: 'isEnabled',
         header: 'Status',
         visibleOnMobile: true,
         sortable: true,
-        widthClass: 'w-28',
+        widthClass: 'w-32',
       },
       {
         id: 'trigger',
@@ -283,7 +325,7 @@ export class AutomationRulesTableComponent {
         id: 'lastRun',
         header: 'Last run',
         visibleOnMobile: false,
-        widthClass: 'w-44',
+        widthClass: 'w-43',
       },
     ],
     resource: {
@@ -300,38 +342,76 @@ export class AutomationRulesTableComponent {
     onChange(this.search, () => this.goToFirstPage());
   }
 
-  triggerLabel(trigger: AutomationTriggerType): string {
-    return triggerTypeLabels[trigger];
-  }
-
-  toggleEnabledFilter(isEnabled: boolean) {
-    toggleInSet(this.enabledFilter, isEnabled);
+  setEnabledFilter(filter: EnabledFilter) {
+    this.enabledFilter.set(filter);
     this.goToFirstPage();
   }
 
-  toggleTriggerFilter(triggerType: AutomationTriggerType) {
-    toggleInSet(this.triggerFilter, triggerType);
-    this.goToFirstPage();
+  onToggle(rule: AutomationRuleListItem, toggle: SwitchComponent) {
+    this.toggleRule.emit({
+      rule,
+      revert: () => toggle.checked.set(rule.isEnabled),
+    });
   }
 
   private goToFirstPage() {
     this.datatable()?.goToPage(1);
   }
 
-  triggerSummary(rule: AutomationRuleListItem): AutomationCopySegment[] {
-    return describeAutomationTriggerSegments(rule.trigger, this.statuses());
+  toggleLabel(rule: AutomationRuleListItem): string {
+    return rule.isEnabled
+      ? $localize`:Tooltip on the switch that turns an automation off:Disable automation`
+      : $localize`:Tooltip on the switch that turns an automation on:Enable automation`;
   }
 
-  actionsSummary(rule: AutomationRuleListItem): AutomationCopySegment[] {
-    return describeAutomationActionsSegments(rule.actions, this.statuses());
+  triggerChip(rule: AutomationRuleListItem): string {
+    return describeAutomationTriggerChip(rule.trigger);
+  }
+
+  triggerTooltip(rule: AutomationRuleListItem): string {
+    return describeAutomationTrigger(rule.trigger, this.statuses());
+  }
+
+  conditionChip(rule: AutomationRuleListItem): string | null {
+    return describeAutomationConditionChip(rule.trigger, this.statuses());
+  }
+
+  actionChips(rule: AutomationRuleListItem): ActionChips {
+    const chips = rule.actions.map((action) => {
+      return describeAutomationActionChip(action, this.statuses());
+    });
+
+    return {
+      shown: chips.slice(0, maxActionChips),
+      extra: chips.slice(maxActionChips),
+    };
+  }
+
+  extraActionsTooltip(chips: AutomationActionChip[]): string {
+    return chips.map((chip) => chip.full).join('\n');
   }
 
   warningTooltip(rule: AutomationRuleListItem): string {
     return rule.warnings.map((warning) => warning.message).join('\n');
   }
 
-  runStatusLabel(status: AutomationRunStatus): string {
-    return automationRunStatusLabels[status];
+  shortDate(value: Date): string {
+    return prettyShortDate(value);
+  }
+
+  runTooltip(run: AutomationRun): string {
+    return `${automationRunStatusLabels[run.status]} · ${prettyDate(run.createdAt)}`;
+  }
+
+  runDotClass(status: AutomationRunStatus): string {
+    switch (status) {
+      case AutomationRunStatus.succeeded:
+        return 'bg-green-600 dark:bg-green-400';
+      case AutomationRunStatus.failed:
+        return 'bg-warn';
+      case AutomationRunStatus.skipped:
+        return 'bg-amber-500';
+    }
   }
 
   private rowMenu() {
@@ -340,11 +420,6 @@ export class AutomationRulesTableComponent {
         label: $localize`:Row action that edits an automation:Edit rule`,
         icon: LucideSettings2,
         onClick: (rule: AutomationRuleListItem) => this.editRule.emit(rule),
-      },
-      {
-        label: $localize`:Row action that toggles an automation on or off:Enable or disable rule`,
-        icon: LucideCirclePlay,
-        onClick: (rule: AutomationRuleListItem) => this.toggleRule.emit(rule),
       },
       {
         label: $localize`:Row action that duplicates an automation:Clone rule`,

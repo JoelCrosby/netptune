@@ -19,10 +19,10 @@ import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 import { EMPTY, finalize, forkJoin, switchMap } from 'rxjs';
 import {
-  AutomationStat,
-  AutomationStatGridComponent,
-} from '../../components/automation-stat-grid.component';
-import { AutomationRulesTableComponent } from '../../components/automation-rules-table.component';
+  AutomationRuleCounts,
+  AutomationRuleToggle,
+  AutomationRulesTableComponent,
+} from '../../components/automation-rules-table.component';
 import {
   AutomationRuleListItem,
   AutomationRuleSummary,
@@ -47,7 +47,6 @@ import { reloadToken } from '@core/util/signals';
     PageLoadingComponent,
     EmptyStateComponent,
     FlatButtonComponent,
-    AutomationStatGridComponent,
     AutomationRulesTableComponent,
     LucidePlus,
     LucideWorkflow,
@@ -82,17 +81,15 @@ import { reloadToken } from '@core/util/signals';
             description="Check your connection and try again."
             (retry)="load()" />
         } @else if (summary()?.ruleCount) {
-          <div class="flex flex-col gap-4">
-            <app-automation-stat-grid [stats]="stats()" />
-            <app-automation-rules-table
-              [canManage]="canManage()"
-              [statuses]="statuses()"
-              [reloadSignal]="rulesReload"
-              (toggleRule)="onToggle($event)"
-              (editRule)="onEdit($event)"
-              (cloneRule)="onClone($event)"
-              (deleteRule)="onDelete($event)" />
-          </div>
+          <app-automation-rules-table
+            [canManage]="canManage()"
+            [statuses]="statuses()"
+            [counts]="counts()"
+            [reloadSignal]="rulesReload"
+            (toggleRule)="onToggle($event)"
+            (editRule)="onEdit($event)"
+            (cloneRule)="onClone($event)"
+            (deleteRule)="onDelete($event)" />
         } @else {
           <app-panel surface="card">
             <app-empty-state
@@ -144,23 +141,13 @@ export class AutomationsViewComponent {
     this.loading() ? null : (this.summary()?.ruleCount ?? 0)
   );
 
-  readonly stats = computed<AutomationStat[]>(() => {
+  readonly counts = computed<AutomationRuleCounts>(() => {
     const summary = this.summary();
 
-    return [
-      {
-        label: $localize`:Stat label for how many automation rules exist:Rules`,
-        value: summary?.ruleCount ?? 0,
-      },
-      {
-        label: $localize`:Stat label for how many automations are switched on:Enabled`,
-        value: summary?.enabledCount ?? 0,
-      },
-      {
-        label: $localize`:Stat label for recent failed automation runs:Recent failures`,
-        value: summary?.recentFailureCount ?? 0,
-      },
-    ];
+    return {
+      total: summary?.ruleCount ?? 0,
+      enabled: summary?.enabledCount ?? 0,
+    };
   });
 
   constructor() {
@@ -204,7 +191,7 @@ export class AutomationsViewComponent {
       });
   }
 
-  onToggle(rule: AutomationRuleListItem) {
+  onToggle({ rule, revert }: AutomationRuleToggle) {
     this.busyId.set(rule.id);
     const request = rule.isEnabled
       ? this.service.disable(rule.id)
@@ -222,10 +209,12 @@ export class AutomationsViewComponent {
           );
           this.refresh();
         },
-        error: () =>
+        error: () => {
+          revert();
           this.snackbar.error(
             $localize`:Error after failing to update an automation:Automation could not be updated`
-          ),
+          );
+        },
       });
   }
 

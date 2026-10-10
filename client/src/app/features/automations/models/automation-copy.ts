@@ -807,6 +807,17 @@ function describeUpdateTaskAction(
   action: AutomationAction,
   statuses: Status[]
 ): string {
+  const updates = describeTaskUpdates(action, statuses);
+
+  return updates.length
+    ? `Update the task's ${joinNaturalList(updates)}`
+    : $localize`:Automation action summary when no fields are set:Update the task`;
+}
+
+function describeTaskUpdates(
+  action: AutomationAction,
+  statuses: Status[]
+): string[] {
   const updates: string[] = [];
 
   if (isNotNullOrUndefined(action.statusId)) {
@@ -876,9 +887,7 @@ function describeUpdateTaskAction(
     updates.push(`move to board group #${action.boardGroupId}`);
   }
 
-  return updates.length
-    ? `Update the task's ${joinNaturalList(updates)}`
-    : $localize`:Automation action summary when no fields are set:Update the task`;
+  return updates;
 }
 
 function describeDateUpdate(
@@ -943,4 +952,113 @@ export function runStatusClass(status: AutomationRunStatus): string {
     case AutomationRunStatus.skipped:
       return 'bg-amber-500/10 text-amber-600 dark:text-amber-400';
   }
+}
+
+export interface AutomationActionChip {
+  verb: string;
+  detail: string;
+  full: string;
+}
+
+export function describeAutomationTriggerChip(
+  trigger: AutomationTrigger
+): string {
+  if (trigger.type !== AutomationTriggerType.taskChanged) {
+    return triggerTypeLabels[trigger.type];
+  }
+
+  if (!trigger.fields?.length) {
+    return triggerTypeLabels[trigger.type];
+  }
+
+  const fields = trigger.fields.map((field) => taskChangeFieldLabels[field]);
+  const fieldText = joinNaturalList(
+    fields.map((field, index) => (index === 0 ? field : toLowerText(field))),
+    'or'
+  );
+
+  return $localize`:Short automation trigger label. FIELDS is a list of field names:${fieldText}:FIELDS: changes`;
+}
+
+export function describeAutomationConditionChip(
+  trigger: AutomationTrigger,
+  statuses: Status[] = []
+): string | null {
+  if (!trigger.conditionGroup) return null;
+
+  const description = describeConditionGroup(trigger.conditionGroup, statuses);
+
+  return description.charAt(0).toUpperCase() + description.slice(1);
+}
+
+export function describeAutomationActionChip(
+  action: AutomationAction,
+  statuses: Status[] = []
+): AutomationActionChip {
+  return {
+    verb: actionChipVerb(action),
+    detail: actionChipDetail(action, statuses),
+    full: describeAutomationAction(action, statuses),
+  };
+}
+
+function actionChipVerb(action: AutomationAction): string {
+  if (action.type === AutomationActionType.notifyTaskAssignees) {
+    return `Notify ${describeNotificationAudience(action)}`;
+  }
+
+  return actionTypeLabels[action.type];
+}
+
+function actionChipDetail(
+  action: AutomationAction,
+  statuses: Status[]
+): string {
+  switch (action.type) {
+    case AutomationActionType.notifyTaskAssignees:
+      return quoted(action.message);
+    case AutomationActionType.flagTask:
+      return quoted(action.flagName);
+    case AutomationActionType.updateTask:
+      return joinNaturalList(describeTaskUpdates(action, statuses));
+    case AutomationActionType.addComment:
+      return quoted(action.comment);
+    case AutomationActionType.deleteTask:
+      return describeDeleteDelay(action);
+    case AutomationActionType.createTask:
+      return quoted(action.taskName?.trim());
+    case AutomationActionType.manageTaskRelation:
+      return action.relationOperation === AutomationRelationOperation.remove
+        ? $localize`:Short automation action detail:remove configured relations`
+        : $localize`:Short automation action detail:link configured task`;
+  }
+}
+
+function describeDeleteDelay(action: AutomationAction): string {
+  const amount = action.delayAmount ?? 0;
+
+  if (amount <= 0) return '';
+
+  const unit = action.delayUnit ?? AutomationDelayUnit.minutes;
+  const isSingle = amount === 1;
+
+  if (unit === AutomationDelayUnit.hours) {
+    return isSingle
+      ? $localize`:Short automation action detail:after 1 hour`
+      : $localize`:Short automation action detail. COUNT is greater than one:after ${amount}:COUNT: hours`;
+  }
+
+  if (unit === AutomationDelayUnit.days) {
+    return isSingle
+      ? $localize`:Short automation action detail:after 1 day`
+      : $localize`:Short automation action detail. COUNT is greater than one:after ${amount}:COUNT: days`;
+  }
+
+  return isSingle
+    ? $localize`:Short automation action detail:after 1 minute`
+    : $localize`:Short automation action detail. COUNT is greater than one:after ${amount}:COUNT: minutes`;
+}
+
+function quoted(text: string | null | undefined): string {
+  return text ? `"${text}"` : '';
 }
