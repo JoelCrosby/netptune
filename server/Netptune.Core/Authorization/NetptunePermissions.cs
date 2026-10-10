@@ -165,6 +165,11 @@ public static class NetptunePermissions
         public const string Update = "notifications.update";
     }
 
+    public static class Reports
+    {
+        public const string Read = "reports.read";
+    }
+
     public static class Automations
     {
         public const string Read = "automations.read";

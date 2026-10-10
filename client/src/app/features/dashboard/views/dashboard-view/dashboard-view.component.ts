@@ -44,10 +44,12 @@ import { DashboardFlowService } from '../../services/dashboard-flow.service';
 
         <app-dashboard-current-sprint-card />
 
-        <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <app-dashboard-throughput-card />
-          <app-dashboard-cycle-time-card />
-        </div>
+        @if (canReadReports()) {
+          <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <app-dashboard-throughput-card />
+            <app-dashboard-cycle-time-card />
+          </div>
+        }
 
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <app-dashboard-status-breakdown-card />
@@ -71,9 +73,19 @@ import { DashboardFlowService } from '../../services/dashboard-flow.service';
   `,
 })
 export class DashboardViewComponent {
-  protected readonly canSeeWorkload = hasPermission(PERMISSIONS.members.read);
+  protected readonly canReadReports = hasPermission(PERMISSIONS.reports.read);
 
-  protected readonly canSeeVelocity = hasPermission(PERMISSIONS.sprints.read);
+  private readonly canReadMembers = hasPermission(PERMISSIONS.members.read);
+
+  private readonly canReadSprints = hasPermission(PERMISSIONS.sprints.read);
+
+  protected readonly canSeeWorkload = computed(
+    () => this.canReadReports() && this.canReadMembers()
+  );
+
+  protected readonly canSeeVelocity = computed(
+    () => this.canReadReports() && this.canReadSprints()
+  );
 
   protected readonly velocitySpanClass = computed(() =>
     this.canSeeWorkload() ? '' : 'lg:col-span-2'

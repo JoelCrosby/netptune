@@ -9,7 +9,7 @@ export const reportingReadGuard: CanActivateFn = (route) => {
     .map((snapshot) => snapshot.params['workspace'])
     .find(Boolean);
 
-  const allowed = hasPermission(PERMISSIONS.tasks.read)();
+  const allowed = hasPermission(PERMISSIONS.reports.read)();
 
   return (
     allowed ||

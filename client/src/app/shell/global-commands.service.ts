@@ -59,6 +59,7 @@ export class GlobalCommandsService implements OnDestroy {
   private canReadQueries = hasPermission(PERMISSIONS.queries.read);
   private canReadMembers = hasPermission(PERMISSIONS.members.read);
   private canReadAutomations = hasPermission(PERMISSIONS.automations.read);
+  private canReadReports = hasPermission(PERMISSIONS.reports.read);
   private canReadStorage = hasPermission(PERMISSIONS.storage.read);
   private canReadAudit = hasPermission(PERMISSIONS.audit.read);
   private canReadWorkspace = hasPermission(PERMISSIONS.workspace.read);
@@ -162,6 +163,7 @@ export class GlobalCommandsService implements OnDestroy {
       group: 'navigation',
       icon: 'chart-spline',
       keywords: ['reports', 'reporting', 'charts', 'analytics', 'navigate'],
+      available: () => this.canReadReports(),
       execute: () => this.navigate('reports'),
     },
     {

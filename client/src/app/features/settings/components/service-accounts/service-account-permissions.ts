@@ -61,6 +61,7 @@ const groupLabels: Record<string, string> = {
   activity: 'Activity',
   audit: 'Audit',
   notifications: 'Notifications',
+  reports: 'Reports',
   automations: 'Automations',
   assistant: 'Assistant',
   flags: 'Flags',

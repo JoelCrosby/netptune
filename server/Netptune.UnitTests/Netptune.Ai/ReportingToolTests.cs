@@ -115,10 +115,10 @@ public class ReportingToolTests
     }
 
     [Theory]
-    [InlineData("flow", new[] { NetptunePermissions.Tasks.Read })]
-    [InlineData("burndown", new[] { NetptunePermissions.Tasks.Read, NetptunePermissions.Sprints.Read })]
-    [InlineData("velocity", new[] { NetptunePermissions.Tasks.Read, NetptunePermissions.Sprints.Read })]
-    [InlineData("workload", new[] { NetptunePermissions.Tasks.Read, NetptunePermissions.Members.Read })]
+    [InlineData("flow", new[] { NetptunePermissions.Reports.Read, NetptunePermissions.Tasks.Read })]
+    [InlineData("burndown", new[] { NetptunePermissions.Reports.Read, NetptunePermissions.Tasks.Read, NetptunePermissions.Sprints.Read })]
+    [InlineData("velocity", new[] { NetptunePermissions.Reports.Read, NetptunePermissions.Tasks.Read, NetptunePermissions.Sprints.Read })]
+    [InlineData("workload", new[] { NetptunePermissions.Reports.Read, NetptunePermissions.Tasks.Read, NetptunePermissions.Members.Read })]
     public void Report_ShouldRequireThePermissionsOfTheReportItReads(string report, string[] expected)
     {
         var tool = new GetReportTool(Mediator);

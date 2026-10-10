@@ -11,7 +11,7 @@ import { permissionResource, requestFrom } from './permission.resource';
 
 export const flowReportResource = (params: Signal<Params>) => {
   return permissionResource<FlowReport | undefined>({
-    permission: PERMISSIONS.tasks.read,
+    permission: PERMISSIONS.reports.read,
     request: () => ({ url: 'api/reports/flow', params: params() }),
     parse: (response) => response.payload,
   });
@@ -19,7 +19,7 @@ export const flowReportResource = (params: Signal<Params>) => {
 
 export const workloadReportResource = (params: Signal<Params>) => {
   return permissionResource<WorkloadReport | undefined>({
-    permission: PERMISSIONS.members.read,
+    permission: PERMISSIONS.reports.read,
     request: () => ({ url: 'api/reports/workload', params: params() }),
     parse: (response) => response.payload,
   });
@@ -30,7 +30,7 @@ export const sprintBurndownResource = (
   params: Signal<Params>
 ) => {
   return permissionResource<SprintBurndownReport | undefined>({
-    permission: PERMISSIONS.sprints.read,
+    permission: PERMISSIONS.reports.read,
     request: requestFrom(sprintId, (id) => ({
       url: `api/reports/sprints/${id}/burndown`,
       params: params(),
@@ -44,7 +44,7 @@ export const velocityReportResource = (
   params: Signal<Params>
 ) => {
   return permissionResource<VelocityReport | undefined>({
-    permission: PERMISSIONS.sprints.read,
+    permission: PERMISSIONS.reports.read,
     request: requestFrom(projectId, (id) => ({
       url: 'api/reports/velocity',
       params: { projectId: id, ...params() },

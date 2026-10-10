@@ -87,6 +87,7 @@ public sealed class ApiV1EndpointTests
         NetptunePermissions.Tasks.Restore,
         NetptunePermissions.Tasks.Reassign,
         NetptunePermissions.Flags.Read,
+        NetptunePermissions.Reports.Read,
     ];
 
     [Fact]

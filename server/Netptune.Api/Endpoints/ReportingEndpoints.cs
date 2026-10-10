@@ -19,23 +19,27 @@ public static class ReportingEndpoints
             .WithDescription(
                 "Returns throughput, cycle time and work in progress over a date range, grouped by day, week or "
                 + "month.")
+            .RequireAuthorization(NetptunePermissions.Reports.Read)
             .RequireAuthorization(NetptunePermissions.Tasks.Read);
 
         group.MapGet("/reports/workload", GetWorkload)
             .WithSummary("Get the workload report")
             .WithDescription("Returns how much open work each workspace member currently carries.")
+            .RequireAuthorization(NetptunePermissions.Reports.Read)
             .RequireAuthorization(NetptunePermissions.Tasks.Read)
             .RequireAuthorization(NetptunePermissions.Members.Read);
 
         group.MapGet("/reports/sprints/{sprintId:int}/burndown", GetBurndown)
             .WithSummary("Get a sprint burndown report")
             .WithDescription("Returns the remaining and ideal burndown lines for a sprint.")
+            .RequireAuthorization(NetptunePermissions.Reports.Read)
             .RequireAuthorization(NetptunePermissions.Tasks.Read)
             .RequireAuthorization(NetptunePermissions.Sprints.Read);
 
         group.MapGet("/reports/velocity", GetVelocity)
             .WithSummary("Get the velocity report")
             .WithDescription("Returns committed against completed work for a project's recent sprints.")
+            .RequireAuthorization(NetptunePermissions.Reports.Read)
             .RequireAuthorization(NetptunePermissions.Tasks.Read)
             .RequireAuthorization(NetptunePermissions.Sprints.Read);
 

@@ -129,6 +129,7 @@ export class ShellSidebarComponent {
   canReadStorage = hasPermission(PERMISSIONS.storage.read);
   canReadSprints = hasPermission(PERMISSIONS.sprints.read);
   canReadAutomations = hasPermission(PERMISSIONS.automations.read);
+  canReadReports = hasPermission(PERMISSIONS.reports.read);
   canReadQueries = hasPermission(PERMISSIONS.queries.read);
   canRestoreTasks = hasPermission(PERMISSIONS.tasks.restore);
   canReadAssistantConversations = hasPermission(
@@ -207,13 +208,16 @@ export class ShellSidebarComponent {
         label: $localize`:Sidebar link to the calendar:Calendar`,
         value: ['./calendar'],
         icon: LucideCalendarDays,
-      },
-      {
+      }
+    );
+
+    if (this.canReadReports()) {
+      links.push({
         label: $localize`:Sidebar link to the reporting views:Reports`,
         value: ['./reports'],
         icon: LucideChartSpline,
-      }
-    );
+      });
+    }
 
     if (this.canReadQueries()) {
       links.push({

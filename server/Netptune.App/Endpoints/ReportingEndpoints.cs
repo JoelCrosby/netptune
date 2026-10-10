@@ -69,35 +69,44 @@ public static class ReportingEndpoints
         var group = builder.MapGroup("reports");
 
         group.MapGet("/flow", GetFlow)
+            .RequireAuthorization(NetptunePermissions.Reports.Read)
             .RequireAuthorization(NetptunePermissions.Tasks.Read);
 
         group.MapGet("/flow/throughput", GetFlowThroughput)
+            .RequireAuthorization(NetptunePermissions.Reports.Read)
             .RequireAuthorization(NetptunePermissions.Tasks.Read);
 
         group.MapGet("/flow/cycle-time", GetFlowCycleTime)
+            .RequireAuthorization(NetptunePermissions.Reports.Read)
             .RequireAuthorization(NetptunePermissions.Tasks.Read);
 
         group.MapGet("/workload", GetWorkload)
+            .RequireAuthorization(NetptunePermissions.Reports.Read)
             .RequireAuthorization(NetptunePermissions.Tasks.Read)
             .RequireAuthorization(NetptunePermissions.Members.Read);
 
         group.MapGet("/workload/rows", GetWorkloadRows)
+            .RequireAuthorization(NetptunePermissions.Reports.Read)
             .RequireAuthorization(NetptunePermissions.Tasks.Read)
             .RequireAuthorization(NetptunePermissions.Members.Read);
 
         group.MapGet("/sprints/{sprintId:int}/burndown", GetBurndown)
+            .RequireAuthorization(NetptunePermissions.Reports.Read)
             .RequireAuthorization(NetptunePermissions.Tasks.Read)
             .RequireAuthorization(NetptunePermissions.Sprints.Read);
 
         group.MapGet("/sprints/{sprintId:int}/burndown/points", GetBurndownPoints)
+            .RequireAuthorization(NetptunePermissions.Reports.Read)
             .RequireAuthorization(NetptunePermissions.Tasks.Read)
             .RequireAuthorization(NetptunePermissions.Sprints.Read);
 
         group.MapGet("/velocity", GetVelocity)
+            .RequireAuthorization(NetptunePermissions.Reports.Read)
             .RequireAuthorization(NetptunePermissions.Tasks.Read)
             .RequireAuthorization(NetptunePermissions.Sprints.Read);
 
         group.MapGet("/velocity/sprints", GetVelocitySprints)
+            .RequireAuthorization(NetptunePermissions.Reports.Read)
             .RequireAuthorization(NetptunePermissions.Tasks.Read)
             .RequireAuthorization(NetptunePermissions.Sprints.Read);
 

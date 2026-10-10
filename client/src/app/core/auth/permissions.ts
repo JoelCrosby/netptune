@@ -98,6 +98,9 @@ export const PERMISSIONS = {
     read: 'notifications.read',
     update: 'notifications.update',
   },
+  reports: {
+    read: 'reports.read',
+  },
   automations: {
     read: 'automations.read',
     manage: 'automations.manage',

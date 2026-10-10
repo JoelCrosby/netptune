@@ -5,6 +5,7 @@ import {
   LucideBell,
   LucideBellDot,
   LucideCalendarDays,
+  LucideChartSpline,
   LucideCirclePlus,
   LucideClipboardList,
   LucideDownload,
@@ -418,6 +419,13 @@ export const netptunePermissionLabels: PermissionLabels = {
       key: 'notifications.update',
       label: $localize`:Name of a workspace permission:Manage Notifications`,
       icon: LucideBellDot,
+    },
+  },
+  reports: {
+    read: {
+      key: 'reports.read',
+      label: $localize`:Name of a workspace permission:View Reports`,
+      icon: LucideChartSpline,
     },
   },
   automations: {

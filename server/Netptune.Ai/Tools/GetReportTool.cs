@@ -43,7 +43,11 @@ public sealed class GetReportTool : IAiTool
     public AiToolKind Kind => AiToolKind.Read;
 
     public IReadOnlySet<string> RequiredPermissions { get; } =
-        new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Tasks.Read };
+        new HashSet<string>(StringComparer.Ordinal)
+        {
+            NetptunePermissions.Reports.Read,
+            NetptunePermissions.Tasks.Read,
+        };
 
     public JsonDocument InputSchema { get; } = AiToolSchema.Object(
         """
