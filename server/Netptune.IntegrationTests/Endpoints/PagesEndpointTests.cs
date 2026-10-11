@@ -5,9 +5,9 @@ using FluentAssertions;
 
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Pages;
+using Netptune.Core.Requests;
 using Netptune.Core.Requests.Pages;
 using Netptune.Core.Responses.Common;
-using Netptune.Core.Responses;
 using Netptune.Core.ViewModels.Pages;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Tags;
@@ -240,10 +240,7 @@ public sealed class PagesEndpointTests
     [Fact]
     public async Task Save_ShouldRecordMentionsAsLinks_AndExposeBacklinks()
     {
-        var tasks = await Client.GetFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>(
-            "api/tasks?page=1&pageSize=5",
-            TestContext.Current.CancellationToken);
-        var task = tasks.Payload!.Items.First();
+        var task = await CreateTask();
         var target = await Create(new CreatePageRequest { Kind = PageKind.Document, Title = "Linked target" });
         var source = await Create(new CreatePageRequest { Kind = PageKind.Document, Title = "Linking source" });
         var body = $"Tracks [[task:{task.SystemId}]] and see [[page:{target.Id}|the target]].\n\n`[[task:{task.SystemId}]]` in code is ignored. [[task:nope-999]] is dropped.";
@@ -310,6 +307,24 @@ public sealed class PagesEndpointTests
 
         first.StatusCode.Should().Be(HttpStatusCode.OK);
         second.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    // Its own task, because other test classes delete and move tasks while this one runs.
+    private async Task<TaskViewModel> CreateTask()
+    {
+        var request = new AddProjectTaskRequest
+        {
+            Name = $"Mentioned task {Guid.NewGuid():N}",
+            ProjectId = 1,
+        };
+
+        var response = await Client.PostAsJsonAsync("api/tasks", request, TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>(TestContext.Current.CancellationToken);
+
+        return result!.Payload!;
     }
 
     private async Task<PageViewModel> Create(CreatePageRequest request)
