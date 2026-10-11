@@ -54,7 +54,11 @@ public sealed record ArchiveImportResult
     public IReadOnlyDictionary<string, int> CreatedByType { get; init; } = new Dictionary<string, int>();
 
     public IReadOnlyList<string> Warnings { get; init; } = [];
+
+    public IReadOnlyList<ImportedPage> Pages { get; init; } = [];
 }
+
+public sealed record ImportedPage(int Id, string? Body);
 
 public interface IArchiveImporter
 {

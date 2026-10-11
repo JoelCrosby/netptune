@@ -67,4 +67,24 @@ public class PageReferenceParserTests
     {
         PageReferenceParser.Parse(markdown).Should().BeEmpty();
     }
+
+    [Fact]
+    public void RewritePageIds_ShouldMovePageTokensToTheirNewIds_KeepingLabels()
+    {
+        var markdown = "See [[page:4|Runbook]] and [[page:5]], not [[task:NET-4]] or [[page:9]].";
+
+        var rewritten = PageReferenceParser.RewritePageIds(markdown, new Dictionary<int, int> { [4] = 40, [5] = 50 });
+
+        rewritten.Should().Be("See [[page:40|Runbook]] and [[page:50]], not [[task:NET-4]] or [[page:9]].");
+    }
+
+    [Fact]
+    public void RewritePageIds_ShouldLeaveCodeAsWritten()
+    {
+        var markdown = "`[[page:4]]` then [[page:4]]\n```\n[[page:4]]\n```";
+
+        var rewritten = PageReferenceParser.RewritePageIds(markdown, new Dictionary<int, int> { [4] = 40 });
+
+        rewritten.Should().Be("`[[page:4]]` then [[page:40]]\n```\n[[page:4]]\n```");
+    }
 }

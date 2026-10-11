@@ -299,6 +299,63 @@ public static class ArchiveCatalog
         ],
     };
 
+    public static ArchiveRecordDefinition<Page> Page { get; } = new()
+    {
+        Key = TransferRecordTypes.Page,
+        Name = "Page",
+        FileName = "data/pages.ndjson",
+        Ref = page => EntityRefBuilder.ForPage(page),
+        Bindings =
+        [
+            ArchiveField.Text<Page>(TransferRecordTypes.Page, "source_id", "Source id", page => page.Id, TransferValueType.Integer),
+            ArchiveField.Text<Page>(TransferRecordTypes.Page, "kind", "Kind", page => page.Kind, TransferValueType.Enum),
+            ArchiveField.Text<Page>(TransferRecordTypes.Page, "title", "Title", page => page.Title),
+            ArchiveField.Text<Page>(TransferRecordTypes.Page, "slug", "Slug", page => page.Slug),
+            ArchiveField.Text<Page>(TransferRecordTypes.Page, "body", "Body", page => page.Body, TransferValueType.LongText),
+            ArchiveField.Text<Page>(TransferRecordTypes.Page, "icon", "Icon", page => page.Icon),
+            ArchiveField.Text<Page>(TransferRecordTypes.Page, "status", "Status", page => page.Status, TransferValueType.Enum),
+            ArchiveField.Text<Page>(TransferRecordTypes.Page, "sort_order", "Sort order", page => page.SortOrder, TransferValueType.Decimal),
+            ArchiveField.Text<Page>(TransferRecordTypes.Page, "revision", "Revision", page => page.Revision, TransferValueType.Integer),
+            ArchiveField.Text<Page>(TransferRecordTypes.Page, "is_template", "Template", page => page.IsTemplate, TransferValueType.Boolean),
+            ArchiveField.Text<Page>(TransferRecordTypes.Page, "reviewed_at", "Reviewed at", page => page.ReviewedAt, TransferValueType.DateTime),
+            ArchiveField.Text<Page>(TransferRecordTypes.Page, "created_at", "Created at", page => page.CreatedAt, TransferValueType.DateTime),
+            ArchiveField.Reference<Page>(TransferRecordTypes.Page, "parent", "Parent", EntityRefTypes.Page, page => page.Parent is null ? null : EntityRefBuilder.ForPage(page.Parent)),
+            ArchiveField.Reference<Page>(TransferRecordTypes.Page, "project", "Project", EntityRefTypes.Project, page => page.Project is null ? null : EntityRefBuilder.ForProject(page.Project)),
+            ArchiveField.Reference<Page>(TransferRecordTypes.Page, "created_by", "Created by", EntityRefTypes.User, page => AuthorRef(page.CreatedByUser)),
+        ],
+    };
+
+    public static ArchiveRecordDefinition<PageTag> PageTag { get; } = new()
+    {
+        Key = TransferRecordTypes.PageTag,
+        Name = "Page tag",
+        FileName = "data/page-tags.ndjson",
+        Ref = link => new EntityRef(TransferRecordTypes.PageTag, $"{PageRefValue(link.Page)}#{link.Tag?.Name.ToLowerInvariant()}"),
+        Bindings =
+        [
+            ArchiveField.Reference<PageTag>(TransferRecordTypes.PageTag, "page", "Page", EntityRefTypes.Page, link => link.Page is null ? null : EntityRefBuilder.ForPage(link.Page)),
+            ArchiveField.Reference<PageTag>(TransferRecordTypes.PageTag, "tag", "Tag", EntityRefTypes.Tag, link => link.Tag is null ? null : EntityRefBuilder.ForTag(link.Tag)),
+        ],
+    };
+
+    public static ArchiveRecordDefinition<PageVersion> PageVersion { get; } = new()
+    {
+        Key = TransferRecordTypes.PageVersion,
+        Name = "Page version",
+        FileName = "data/page-versions.ndjson",
+        Ref = version => new EntityRef(TransferRecordTypes.PageVersion, $"{PageRefValue(version.Page)}#{version.Revision}"),
+        Bindings =
+        [
+            ArchiveField.Reference<PageVersion>(TransferRecordTypes.PageVersion, "page", "Page", EntityRefTypes.Page, version => version.Page is null ? null : EntityRefBuilder.ForPage(version.Page)),
+            ArchiveField.Text<PageVersion>(TransferRecordTypes.PageVersion, "revision", "Revision", version => version.Revision, TransferValueType.Integer),
+            ArchiveField.Text<PageVersion>(TransferRecordTypes.PageVersion, "title", "Title", version => version.Title),
+            ArchiveField.Text<PageVersion>(TransferRecordTypes.PageVersion, "body", "Body", version => version.Body, TransferValueType.LongText),
+            ArchiveField.Text<PageVersion>(TransferRecordTypes.PageVersion, "summary", "Summary", version => version.Summary),
+            ArchiveField.Text<PageVersion>(TransferRecordTypes.PageVersion, "created_at", "Created at", version => version.CreatedAt, TransferValueType.DateTime),
+            ArchiveField.Reference<PageVersion>(TransferRecordTypes.PageVersion, "author", "Author", EntityRefTypes.User, version => AuthorRef(version.CreatedByUser)),
+        ],
+    };
+
     public static ArchiveRecordDefinition<WorkspaceFile> WorkspaceFile { get; } = new()
     {
         Key = TransferRecordTypes.WorkspaceFile,
@@ -355,6 +412,9 @@ public static class ArchiveCatalog
         Reaction,
         Flag,
         Automation,
+        Page,
+        PageTag,
+        PageVersion,
         WorkspaceFile,
         Event,
     ];
@@ -421,6 +481,11 @@ public static class ArchiveCatalog
         }
 
         return EntityRefBuilder.ForTask(task.Project?.Key ?? EntityRefBuilder.UnnamedSegment, task.ProjectScopeId);
+    }
+
+    private static string PageRefValue(Page? page)
+    {
+        return page is null ? EntityRefBuilder.UnnamedSegment : EntityRefBuilder.ForPage(page).Value;
     }
 
     private static string TaskRefValue(ProjectTask? task)

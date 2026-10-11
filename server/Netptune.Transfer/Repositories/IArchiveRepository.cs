@@ -41,6 +41,12 @@ public interface IArchiveRepository
 
     IAsyncEnumerable<AutomationRule> ReadAutomations(int workspaceId, CancellationToken cancellationToken = default);
 
+    IAsyncEnumerable<Page> ReadPages(int workspaceId, CancellationToken cancellationToken = default);
+
+    IAsyncEnumerable<PageTag> ReadPageTags(int workspaceId, CancellationToken cancellationToken = default);
+
+    IAsyncEnumerable<PageVersion> ReadPageVersions(int workspaceId, CancellationToken cancellationToken = default);
+
     IAsyncEnumerable<WorkspaceFile> ReadFiles(int workspaceId, CancellationToken cancellationToken = default);
 
     IAsyncEnumerable<EventRecord> ReadEvents(int workspaceId, CancellationToken cancellationToken = default);

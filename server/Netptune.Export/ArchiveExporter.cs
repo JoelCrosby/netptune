@@ -139,6 +139,14 @@ public sealed class ArchiveExporter : IArchiveExporter
         sections.Add(Section(ArchiveCatalog.Reaction, Archives.ReadReactions(workspaceId)));
         sections.Add(Section(ArchiveCatalog.Flag, Archives.ReadFlags(workspaceId)));
         sections.Add(Section(ArchiveCatalog.Automation, Archives.ReadAutomations(workspaceId)));
+        sections.Add(Section(ArchiveCatalog.Page, Archives.ReadPages(workspaceId)));
+        sections.Add(Section(ArchiveCatalog.PageTag, Archives.ReadPageTags(workspaceId)));
+
+        if (request.Options.IncludeHistory)
+        {
+            sections.Add(Section(ArchiveCatalog.PageVersion, Archives.ReadPageVersions(workspaceId)));
+        }
+
         sections.Add(Section(ArchiveCatalog.WorkspaceFile, Archives.ReadFiles(workspaceId)));
 
         if (request.Options.IncludeHistory)

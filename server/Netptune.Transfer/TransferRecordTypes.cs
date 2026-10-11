@@ -20,6 +20,9 @@ public static class TransferRecordTypes
     public const string Comment = EntityRefTypes.Comment;
     public const string Flag = "flag";
     public const string Automation = EntityRefTypes.Automation;
+    public const string Page = EntityRefTypes.Page;
+    public const string PageTag = "page-tag";
+    public const string PageVersion = "page-version";
     public const string WorkspaceFile = EntityRefTypes.WorkspaceFile;
     public const string Event = "event";
 }

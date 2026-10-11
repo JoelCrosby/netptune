@@ -178,6 +178,39 @@ public sealed class ArchiveRepository(DataContext context) : IArchiveRepository
             .AsAsyncEnumerable();
     }
 
+    public IAsyncEnumerable<Page> ReadPages(int workspaceId, CancellationToken cancellationToken = default)
+    {
+        return Live(context.Pages, workspaceId)
+            .Include(page => page.Parent)
+            .Include(page => page.Project)
+            .Include(page => page.CreatedByUser)
+            .OrderBy(page => page.Id)
+            .AsAsyncEnumerable();
+    }
+
+    public IAsyncEnumerable<PageTag> ReadPageTags(int workspaceId, CancellationToken cancellationToken = default)
+    {
+        return context.PageTags
+            .AsNoTracking()
+            .Include(link => link.Page)
+            .Include(link => link.Tag)
+            .Where(link => link.Page!.WorkspaceId == workspaceId && !link.Page.IsDeleted && !link.Tag!.IsDeleted)
+            .OrderBy(link => link.Id)
+            .AsAsyncEnumerable();
+    }
+
+    public IAsyncEnumerable<PageVersion> ReadPageVersions(int workspaceId, CancellationToken cancellationToken = default)
+    {
+        return context.PageVersions
+            .AsNoTracking()
+            .Include(version => version.Page)
+            .Include(version => version.CreatedByUser)
+            .Where(version => version.Page!.WorkspaceId == workspaceId && !version.Page.IsDeleted)
+            .OrderBy(version => version.PageId)
+            .ThenBy(version => version.Revision)
+            .AsAsyncEnumerable();
+    }
+
     public IAsyncEnumerable<WorkspaceFile> ReadFiles(int workspaceId, CancellationToken cancellationToken = default)
     {
         return Live(context.WorkspaceFiles, workspaceId)

@@ -1,6 +1,7 @@
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Pages;
 using Netptune.Core.Relationships;
 using Netptune.Core.UnitOfWork;
 using Netptune.Transfer;
@@ -97,6 +98,11 @@ public sealed class ArchiveImporter : IArchiveImporter
             await ImportTaskPlacements(reader, context, cancellationToken);
             await ImportTaskRelations(reader, context, warnings, cancellationToken);
 
+            var pages = await ImportPages(reader, context, cancellationToken);
+
+            await ImportPageTags(reader, context, pages, cancellationToken);
+            await ImportPageVersions(reader, context, pages, cancellationToken);
+
             await UnitOfWork.CompleteAsync(cancellationToken);
 
             return new ArchiveImportResult
@@ -105,6 +111,7 @@ public sealed class ArchiveImporter : IArchiveImporter
                 WorkspaceSlug = workspace.Slug,
                 CreatedByType = context.CreatedByType,
                 Warnings = warnings,
+                Pages = pages.ById.Values.Select(page => new ImportedPage(page.Id, page.Body)).ToList(),
             };
         });
     }
@@ -166,6 +173,13 @@ public sealed class ArchiveImporter : IArchiveImporter
         if (projects.Count > 0)
         {
             blockers.Add("Restore only works into an empty workspace. This one already has projects.");
+        }
+
+        var hasPages = await UnitOfWork.Pages.AnyInWorkspace(request.WorkspaceId.Value, cancellationToken);
+
+        if (hasPages)
+        {
+            blockers.Add("Restore only works into an empty workspace. This one already has pages.");
         }
     }
 
@@ -686,6 +700,155 @@ public sealed class ArchiveImporter : IArchiveImporter
 
         await UnitOfWork.CompleteAsync(cancellationToken);
     }
+
+    private async Task<ImportedPageSet> ImportPages(
+        ArchiveReader reader,
+        ArchiveImportContext context,
+        CancellationToken cancellationToken)
+    {
+        var archived = new List<ArchivedPage>();
+
+        await ImportSection(reader, ArchiveCatalog.Page.FileName, context, async row =>
+        {
+            var kind = row.Enum<PageKind>("kind") ?? PageKind.Document;
+            var title = PageTitle.Normalise(row.Text("title"));
+            var body = kind == PageKind.Document ? row.Text("body") ?? string.Empty : null;
+            var page = new Page
+            {
+                WorkspaceId = context.WorkspaceId,
+                Kind = kind,
+                ProjectId = context.Resolve(row.Reference("project")),
+                Title = title,
+                Slug = row.Text("slug") ?? PageSlug.Create(title, body),
+                Body = body,
+                Icon = row.Text("icon"),
+                Status = row.Enum<PageStatus>("status") ?? PageStatus.Draft,
+                SortOrder = row.Number("sort_order") ?? 0,
+                Revision = Math.Max(row.Integer("revision") ?? 1, 1),
+                IsTemplate = row.Flag("is_template"),
+                ReviewedAt = row.Timestamp("reviewed_at"),
+                CreatedAt = row.Timestamp("created_at") ?? default,
+                CreatedByUserId = context.UserId,
+                OwnerId = context.UserId,
+            };
+
+            await UnitOfWork.Pages.AddAsync(page, cancellationToken);
+
+            archived.Add(new ArchivedPage(page, row.Reference("parent"), row.Integer("source_id")));
+
+            return page;
+        }, page => page.Id, cancellationToken);
+
+        // Parents are linked once every page has its id, since a child can be read in the same batch as its
+        // parent. Bodies are rewritten at the same point, when the new id of every page they mention is known.
+        var newIds = archived
+            .Where(item => item.SourceId.HasValue)
+            .ToDictionary(item => item.SourceId!.Value, item => item.Page.Id);
+
+        foreach (var item in archived)
+        {
+            item.Page.ParentId = context.Resolve(item.ParentRef);
+            item.Page.Body = PageReferenceParser.RewritePageIds(item.Page.Body, newIds);
+        }
+
+        await UnitOfWork.CompleteAsync(cancellationToken);
+
+        return new ImportedPageSet(archived.ToDictionary(item => item.Page.Id, item => item.Page), newIds);
+    }
+
+    private async Task ImportPageTags(
+        ArchiveReader reader,
+        ArchiveImportContext context,
+        ImportedPageSet pages,
+        CancellationToken cancellationToken)
+    {
+        var pending = 0;
+
+        await foreach (var row in reader.ReadSection(ArchiveCatalog.PageTag.FileName, cancellationToken))
+        {
+            var pageId = context.Resolve(row.Reference("page"));
+            var tagId = context.Resolve(row.Reference("tag"));
+            var page = pageId is null ? null : pages.ById.GetValueOrDefault(pageId.Value);
+
+            if (page is null || tagId is null)
+            {
+                continue;
+            }
+
+            page.PageTags.Add(new PageTag { PageId = page.Id, TagId = tagId.Value });
+
+            context.Count(TransferRecordTypes.PageTag);
+
+            pending = await SaveWhenFull(pending + 1, cancellationToken);
+        }
+
+        await UnitOfWork.CompleteAsync(cancellationToken);
+    }
+
+    // History is optional in an archive. A page that arrives without any version still gets one for the
+    // revision it is at, so its history tab and restore points start from what was imported.
+    private async Task ImportPageVersions(
+        ArchiveReader reader,
+        ArchiveImportContext context,
+        ImportedPageSet pages,
+        CancellationToken cancellationToken)
+    {
+        var versioned = new HashSet<int>();
+        var pending = 0;
+
+        await foreach (var row in reader.ReadSection(ArchiveCatalog.PageVersion.FileName, cancellationToken))
+        {
+            var pageId = context.Resolve(row.Reference("page"));
+            var page = pageId is null ? null : pages.ById.GetValueOrDefault(pageId.Value);
+            var revision = row.Integer("revision");
+
+            if (page is null || revision is null)
+            {
+                continue;
+            }
+
+            var body = PageReferenceParser.RewritePageIds(row.Text("body"), pages.NewIdsBySourceId);
+            var version = new PageVersion
+            {
+                PageId = page.Id,
+                Revision = revision.Value,
+                Title = PageTitle.Normalise(row.Text("title")),
+                Body = page.Kind == PageKind.Document ? body ?? string.Empty : null,
+                Summary = row.Text("summary"),
+                CreatedAt = row.Timestamp("created_at") ?? DateTime.UtcNow,
+                CreatedByUserId = context.ResolveUser(row.Reference("author")) ?? context.UserId,
+            };
+
+            await UnitOfWork.PageVersions.AddAsync(version, cancellationToken);
+
+            page.Revision = Math.Max(page.Revision, revision.Value);
+            versioned.Add(page.Id);
+            context.Count(TransferRecordTypes.PageVersion);
+
+            pending = await SaveWhenFull(pending + 1, cancellationToken);
+        }
+
+        var unversioned = pages.ById.Values.Where(page => !versioned.Contains(page.Id)).ToList();
+
+        foreach (var page in unversioned)
+        {
+            await UnitOfWork.PageVersions.AddAsync(new PageVersion
+            {
+                PageId = page.Id,
+                Revision = page.Revision,
+                Title = page.Title,
+                Body = page.Body,
+                CreatedAt = DateTime.UtcNow,
+                CreatedByUserId = context.UserId,
+            }, cancellationToken);
+        }
+
+        await UnitOfWork.CompleteAsync(cancellationToken);
+    }
+
+    private sealed record ArchivedPage(Page Page, EntityRef? ParentRef, int? SourceId);
+
+    private sealed record ImportedPageSet(Dictionary<int, Page> ById, Dictionary<int, int> NewIdsBySourceId);
 
     private async Task<List<string>> UnmatchedMembers(ArchiveReader reader, CancellationToken cancellationToken)
     {

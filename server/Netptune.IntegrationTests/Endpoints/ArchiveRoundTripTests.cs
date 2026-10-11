@@ -3,12 +3,18 @@ using System.Net.Http.Json;
 
 using FluentAssertions;
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
+using Netptune.Core.Enums;
+
 using Netptune.Core.Requests;
+using Netptune.Core.Requests.Pages;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.UnitOfWork;
+using Netptune.Core.ViewModels.Pages;
 using Netptune.Core.ViewModels.Projects;
+using Netptune.Entities.Contexts;
 using Netptune.Import.Archive;
 using Netptune.Transfer;
 using Netptune.Transfer.Archive;
@@ -116,6 +122,51 @@ public sealed class ArchiveRoundTripTests
     }
 
     [Fact]
+    public async Task ArchiveImportEndpoint_ShouldCarryPagesWithTheirTreeTagsHistoryAndMentions()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var marker = Guid.NewGuid().ToString("N")[..8];
+        var folder = await CreatePage(new CreatePageRequest { Kind = PageKind.Folder, Title = $"Archive folder {marker}" });
+        var sibling = await CreatePage(new CreatePageRequest { Kind = PageKind.Document, Title = $"Archive sibling {marker}" });
+        var child = await CreatePage(new CreatePageRequest { Kind = PageKind.Document, Title = $"Archive child {marker}", ParentId = folder.Id });
+        var taskSystemId = await AnyLiveTaskSystemId();
+        var body = $"See [[page:{sibling.Id}|Sibling]] and [[task:{taskSystemId}]]";
+        var saved = await Client.PutAsJsonAsync($"api/pages/{child.Id}", new SavePageRequest { Title = child.Title, Body = body, Revision = child.Revision }, cancellationToken);
+        var tags = await Client.GetFromJsonAsync<List<Netptune.Core.ViewModels.Tags.TagViewModel>>("api/tags/workspace", cancellationToken);
+        var tagged = await Client.PatchAsJsonAsync($"api/pages/{child.Id}", new UpdatePageRequest { TagIds = [tags![0].Id] }, cancellationToken);
+
+        saved.EnsureSuccessStatusCode();
+        tagged.EnsureSuccessStatusCode();
+
+        var slug = Slug();
+        var archive = await ExportArchive(1, includeHistory: true);
+        var response = await PostArchive($"api/import/archive?mode=clone&targetSlug={slug}", archive);
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<ArchiveImportResultViewModel>>(cancellationToken);
+        var workspaceId = result!.Payload!.WorkspaceId;
+
+        await using var scope = Fixture.Services.CreateAsyncScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var pages = await context.Pages
+            .AsNoTracking()
+            .Include(page => page.PageTags)
+            .Where(page => page.WorkspaceId == workspaceId && page.Title.EndsWith(marker))
+            .ToListAsync(cancellationToken);
+        var clonedFolder = pages.Single(page => page.Title == folder.Title);
+        var clonedSibling = pages.Single(page => page.Title == sibling.Title);
+        var clonedChild = pages.Single(page => page.Title == child.Title);
+        var childVersions = await context.PageVersions.CountAsync(version => version.PageId == clonedChild.Id, cancellationToken);
+        var childLinks = await context.PageLinks.AsNoTracking().Where(link => link.PageId == clonedChild.Id).ToListAsync(cancellationToken);
+
+        clonedChild.ParentId.Should().Be(clonedFolder.Id);
+        clonedChild.Body.Should().Be($"See [[page:{clonedSibling.Id}|Sibling]] and [[task:{taskSystemId}]]");
+        clonedChild.PageTags.Should().ContainSingle();
+        childVersions.Should().Be(2);
+        childLinks.Should().Contain(link => link.TargetType == PageLinkTargetType.Page && link.TargetId == clonedSibling.Id.ToString());
+        childLinks.Should().Contain(link => link.TargetType == PageLinkTargetType.Task);
+    }
+
+    [Fact]
     public async Task Clone_ShouldRefuseASlugThatIsAlreadyTaken()
     {
         var archive = await ExportArchive(1);
@@ -187,6 +238,15 @@ public sealed class ArchiveRoundTripTests
 
         result.WasUpgraded.Should().BeFalse();
         result.Applied.Should().BeEmpty();
+        result.ToVersion.Should().Be(ArchiveManifest.CurrentSchemaVersion);
+    }
+
+    [Fact]
+    public void SchemaUpgrader_UpgradesAVersionOneArchive_WhichHasNoPages()
+    {
+        var result = ArchiveSchemaUpgrader.Upgrade(Manifest(1));
+
+        result.WasUpgraded.Should().BeTrue();
         result.ToVersion.Should().Be(ArchiveManifest.CurrentSchemaVersion);
     }
 
@@ -319,7 +379,7 @@ public sealed class ArchiveRoundTripTests
         return count;
     }
 
-    private async Task<MemoryStream> ExportArchive(int workspaceId, string slug = "netptune")
+    private async Task<MemoryStream> ExportArchive(int workspaceId, string slug = "netptune", bool includeHistory = false)
     {
         await using var scope = Fixture.Services.CreateAsyncScope();
 
@@ -328,7 +388,7 @@ public sealed class ArchiveRoundTripTests
         {
             WorkspaceId = workspaceId,
             WorkspaceSlug = slug,
-            Options = new ExportOptionsModel { IncludeMembers = true },
+            Options = new ExportOptionsModel { IncludeMembers = true, IncludeHistory = includeHistory },
         }, (_, _) => Task.CompletedTask, TestContext.Current.CancellationToken);
         var buffer = new MemoryStream();
 
@@ -378,6 +438,29 @@ public sealed class ArchiveRoundTripTests
         }, TestContext.Current.CancellationToken);
 
         response.EnsureSuccessStatusCode();
+    }
+
+    private async Task<PageViewModel> CreatePage(CreatePageRequest request)
+    {
+        var response = await Client.PostAsJsonAsync("api/pages", request, TestContext.Current.CancellationToken);
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PageViewModel>>(TestContext.Current.CancellationToken);
+
+        return result!.Payload!;
+    }
+
+    private async Task<string> AnyLiveTaskSystemId()
+    {
+        await using var scope = Fixture.Services.CreateAsyncScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var task = await context.ProjectTasks
+            .AsNoTracking()
+            .Include(item => item.Project)
+            .Where(item => item.WorkspaceId == 1 && !item.IsDeleted && !item.Project!.IsDeleted)
+            .OrderBy(item => item.Id)
+            .FirstAsync(TestContext.Current.CancellationToken);
+
+        return $"{task.Project!.Key}-{task.ProjectScopeId}";
     }
 
     private async Task<string> OwnerId()

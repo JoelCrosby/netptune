@@ -38,6 +38,9 @@ public static class TransferRedaction
         Exported<ProjectUser>(),
         Exported<EventRecord>(),
         Exported<EventReference>(),
+        Exported<Page>(),
+        Exported<PageTag>(),
+        Exported<PageVersion>(),
 
         ReferenceOnly<AppUser>(TransferRedactionKeys.UserAccounts),
 
@@ -82,10 +85,7 @@ public static class TransferRedaction
         Redacted<ImportDefinition>(TransferRedactionKeys.TransferHistory),
         Redacted<TaskView>(TransferRedactionKeys.SavedViews),
         Redacted<TaskPin>(TransferRedactionKeys.SavedViews),
-        Redacted<Page>(TransferRedactionKeys.Pages),
-        Redacted<PageVersion>(TransferRedactionKeys.Pages),
-        Redacted<PageTag>(TransferRedactionKeys.Pages),
-        Redacted<PageLink>(TransferRedactionKeys.Pages),
+        Redacted<PageLink>(TransferRedactionKeys.DerivedProjections),
         Redacted<PageFavourite>(TransferRedactionKeys.PerUserState),
         Redacted<PageVisit>(TransferRedactionKeys.PerUserState),
     ];

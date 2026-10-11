@@ -62,6 +62,76 @@ public static partial class PageReferenceParser
         return references;
     }
 
+    // Page ids are only meaningful inside one database, so a page carried to another one has its [[page:N]]
+    // tokens moved to the new ids. Code is left as written, the same text the parser skips.
+    public static string? RewritePageIds(string? markdown, IReadOnlyDictionary<int, int> newIds)
+    {
+        if (string.IsNullOrEmpty(markdown) || newIds.Count == 0)
+        {
+            return markdown;
+        }
+
+        var lines = markdown.Split('\n');
+        var insideFence = false;
+
+        for (var index = 0; index < lines.Length; index++)
+        {
+            var isFence = FencePattern().IsMatch(lines[index]);
+
+            if (isFence)
+            {
+                insideFence = !insideFence;
+
+                continue;
+            }
+
+            if (!insideFence)
+            {
+                lines[index] = RewriteOutsideInlineCode(lines[index], newIds);
+            }
+        }
+
+        return string.Join('\n', lines);
+    }
+
+    private static string RewriteOutsideInlineCode(string line, IReadOnlyDictionary<int, int> newIds)
+    {
+        var rewritten = new System.Text.StringBuilder(line.Length);
+        var position = 0;
+
+        foreach (Match code in InlineCodePattern().Matches(line))
+        {
+            rewritten.Append(RewriteTokens(line[position..code.Index], newIds));
+            rewritten.Append(code.Value);
+            position = code.Index + code.Length;
+        }
+
+        rewritten.Append(RewriteTokens(line[position..], newIds));
+
+        return rewritten.ToString();
+    }
+
+    private static string RewriteTokens(string prose, IReadOnlyDictionary<int, int> newIds)
+    {
+        return TokenPattern().Replace(prose, match =>
+        {
+            var kind = ParseKind(match.Groups["kind"].Value);
+            var isPage = kind == PageLinkTargetType.Page;
+            var hasId = int.TryParse(match.Groups["key"].Value, out var oldId);
+            var newId = isPage && hasId ? newIds.GetValueOrDefault(oldId) : 0;
+            var isMapped = newId > 0;
+
+            if (!isMapped)
+            {
+                return match.Value;
+            }
+
+            var label = match.Groups["label"];
+
+            return label.Success ? $"[[page:{newId}|{label.Value}]]" : $"[[page:{newId}]]";
+        });
+    }
+
     private static PageLinkTargetType ParseKind(string kind)
     {
         return kind.ToLowerInvariant() switch

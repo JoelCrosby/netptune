@@ -36,7 +36,7 @@ public sealed record ArchiveContent
 
 public sealed record ArchiveManifest
 {
-    public const int CurrentSchemaVersion = 1;
+    public const int CurrentSchemaVersion = 2;
 
     public const string FileName = "manifest.json";
 

@@ -52,10 +52,12 @@ public static class ArchiveSchemaUpgrader
         };
     }
 
-    private static ArchiveManifest Step(ArchiveManifest _, int fromVersion)
+    private static ArchiveManifest Step(ArchiveManifest manifest, int fromVersion)
     {
         return fromVersion switch
         {
+            // Version 2 added the page sections. A version 1 archive has none, which reads as an empty pages tree.
+            1 => manifest with { SchemaVersion = 2 },
             _ => throw new ArchiveSchemaException($"No upgrade step is defined for schema version {fromVersion}."),
         };
     }

@@ -18,6 +18,7 @@ public static class EntityRefTypes
     public const string Comment = "comment";
     public const string Automation = "automation";
     public const string WorkspaceFile = "workspace-file";
+    public const string Page = "page";
 
     public static IReadOnlySet<string> All { get; } = typeof(EntityRefTypes)
         .GetFields(BindingFlags.Public | BindingFlags.Static)

@@ -74,6 +74,10 @@ public static class EntityRefBuilder
 
     public static EntityRef ForAutomation(AutomationRule rule) => ForAutomation(rule.Name);
 
+    public static EntityRef ForPage(string slug) => new(EntityRefTypes.Page, Key(slug));
+
+    public static EntityRef ForPage(Page page) => ForPage(page.Slug);
+
     public static EntityRef ForWorkspaceFile(string contentId) => new(EntityRefTypes.WorkspaceFile, Key(contentId));
 
     public static EntityRef ForWorkspaceFile(WorkspaceFile file) => ForWorkspaceFile(file.ContentId);
