@@ -4,7 +4,13 @@
 @import "./styles/modals";
 @import "./styles/scroll";
 @import "./styles/menu";
-@import "./styles/editor";
+@import "./styles/editor/base";
+@import "./styles/editor/code";
+@import "./styles/editor/syntax";
+@import "./styles/editor/task-list";
+@import "./styles/editor/document";
+@import "./styles/editor/callout";
+@import "./styles/editor/reference";
 
 @custom-variant dark (&:where(.dark, .dark *));
 @custom-variant touch (@media (pointer: coarse));
@@ -202,6 +208,17 @@
   --diff-del-word: rgba(200, 0, 0, 0.2);
 
   --editor-code-background: #fbfbfb;
+
+  --syntax-comment: #6e7781;
+  --syntax-keyword: #cf222e;
+  --syntax-string: #0a3069;
+  --syntax-number: #0550ae;
+  --syntax-function: #8250df;
+  --syntax-type: #953800;
+  --syntax-tag: #116329;
+  --syntax-attribute: #0550ae;
+  --syntax-addition: #116329;
+  --syntax-deletion: #82071e;
 }
 
 .dark {
@@ -270,6 +287,17 @@
   --diff-del-word: rgba(255, 0, 0, 0.3);
 
   --editor-code-background: #060606;
+
+  --syntax-comment: #8b949e;
+  --syntax-keyword: #ff7b72;
+  --syntax-string: #a5d6ff;
+  --syntax-number: #79c0ff;
+  --syntax-function: #d2a8ff;
+  --syntax-type: #ffa657;
+  --syntax-tag: #7ee787;
+  --syntax-attribute: #79c0ff;
+  --syntax-addition: #aff5b4;
+  --syntax-deletion: #ffdcd7;
 }
 
 html {

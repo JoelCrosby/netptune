@@ -1,0 +1,110 @@
+.editor-content code {
+  background-color: var(--editor-code-background);
+  color: var(--editor-code-color);
+  font-family: var(--monospace);
+  border: 1px solid rgba(var(--foreground-rgb), 0.12);
+  border-radius: var(--border-radius-small);
+  font-size: 0.875em;
+  padding: 0.05em 0.3em;
+}
+
+.editor-content pre {
+  background-color: var(--editor-code-background);
+  border: 1px solid rgba(var(--foreground-rgb), 0.12);
+  border-radius: var(--border-radius-small);
+  padding: 0.75rem 1rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.editor-content pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: inherit;
+  color: var(--foreground);
+}
+
+.editor-code-block {
+  position: relative;
+}
+
+.editor-code-toolbar {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+.editor-code-block:hover .editor-code-toolbar,
+.editor-code-toolbar:focus-within {
+  opacity: 1;
+}
+
+@media (pointer: coarse) {
+  .editor-code-toolbar {
+    opacity: 1;
+  }
+}
+
+.editor-code-language,
+.editor-code-copy {
+  height: 1.625rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background-color: var(--card);
+  color: var(--muted);
+  font-size: 12px;
+  cursor: pointer;
+  transition: color 120ms ease;
+}
+
+.editor-code-language:hover,
+.editor-code-copy:hover {
+  color: var(--foreground);
+}
+
+.editor-code-language:focus-visible,
+.editor-code-copy:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+.editor-code-language {
+  padding: 0 0.4rem;
+}
+
+.editor-code-copy {
+  display: grid;
+  place-items: center;
+  width: 1.625rem;
+}
+
+.editor-code-copy svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.editor-code-copy[data-copied] {
+  color: var(--change-added);
+}
+
+.editor-code-language-label {
+  display: none;
+  color: var(--muted);
+  font-size: 12px;
+  padding: 0 0.25rem;
+}
+
+.ProseMirror[contenteditable='false'] .editor-code-language {
+  display: none;
+}
+
+.ProseMirror[contenteditable='false'] .editor-code-language-label:not(:empty) {
+  display: inline;
+}

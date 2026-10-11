@@ -15,7 +15,6 @@ import { DocumentListItem } from './document-list-item';
     BadgeComponent,
     EmptyStateComponent,
     IconTileComponent,
-    LucidePlus,
   ],
   host: { class: 'block @container' },
   template: `

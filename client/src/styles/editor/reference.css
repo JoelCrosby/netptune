@@ -1,0 +1,22 @@
+.editor-reference {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35em;
+  padding: 0 0.35em;
+  border-radius: 5px;
+  background-color: rgba(var(--primary-rgb), 0.1);
+  color: var(--primary);
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.editor-reference-key {
+  font-family: var(--monospace);
+  font-size: 0.82em;
+}
+
+.editor-reference[data-unresolved] {
+  background-color: rgba(var(--foreground-rgb), 0.06);
+  color: rgba(var(--foreground-rgb), 0.6);
+}

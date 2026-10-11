@@ -227,7 +227,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:204</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:205</note>
-        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:81</note>
+        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:82</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:109,111</note>
         <note category="location">src/app/features/pages/editor/page-reference.controller.ts:224</note>
         <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:381</note>
@@ -715,7 +715,7 @@
     </unit>
     <unit id="6980870776971861351">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:486</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:484</note>
         <note category="description">Byline under a page title naming who last edited it, when, and how long it takes to read</note>
       </notes>
       <segment>
@@ -771,7 +771,7 @@
     </unit>
     <unit id="2285896285181808525">
       <notes>
-        <note category="location">src/app/static/components/editor/editor.component.ts:154</note>
+        <note category="location">src/app/static/components/editor/editor.component.ts:155</note>
         <note category="description">Shown in the slash command menu when nothing matches what was typed</note>
       </notes>
       <segment>
@@ -2994,7 +2994,7 @@
     </unit>
     <unit id="5319992322579592831">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:481</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:479</note>
         <note category="description">Byline under a folder title naming who last edited it and when</note>
       </notes>
       <segment>
@@ -3396,7 +3396,7 @@
     </unit>
     <unit id="2957614501673079633">
       <notes>
-        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:103</note>
+        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:104</note>
         <note category="description">Muted label ahead of the chosen sort in a folder</note>
       </notes>
       <segment>
@@ -3814,7 +3814,7 @@
     </unit>
     <unit id="4058575476871566236">
       <notes>
-        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:239</note>
+        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:249</note>
         <note category="location">src/app/features/pages/components/page-meta-chips.component.ts:26,29</note>
         <note category="description">Status chip on a published page</note>
       </notes>
@@ -4176,7 +4176,7 @@
         <note category="location">src/app/features/automations/models/automation-copy.ts:60</note>
         <note category="location">src/app/features/boards/util/board-task-sort.ts:30</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:450</note>
-        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:139</note>
+        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:144</note>
         <note category="location">src/app/features/settings/settings.routes.ts:81</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:100,103</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:31</note>
@@ -5133,6 +5133,15 @@
         <source>Archived tasks are not counted.</source>
       </segment>
     </unit>
+    <unit id="600600794960032570">
+      <notes>
+        <note category="location">src/app/static/components/editor/editor-code-block.ts:48</note>
+        <note category="description">Button on a code block that copies its code</note>
+      </notes>
+      <segment>
+        <source>Copy code</source>
+      </segment>
+    </unit>
     <unit id="6006142956490189252">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:796</note>
@@ -5208,7 +5217,7 @@
     </unit>
     <unit id="9014422536639985797">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:746</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:749</note>
         <note category="description">Shown when a mentioned sprint or board in a page no longer exists or cannot be opened</note>
       </notes>
       <segment>
@@ -6367,7 +6376,7 @@
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:125</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:66</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:91,92</note>
-        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:141,142</note>
+        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:146,147</note>
         <note category="location">src/app/features/pages/components/page-meta-chips.component.ts:72</note>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:46</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:47</note>
@@ -7051,7 +7060,7 @@
     </unit>
     <unit id="1768476103258443874">
       <notes>
-        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:197</note>
+        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:207</note>
         <note category="description">Hint shown on a folder that holds no pages yet</note>
       </notes>
       <segment>
@@ -7327,7 +7336,7 @@
     </unit>
     <unit id="6411795813390002220">
       <notes>
-        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:243</note>
+        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:253</note>
         <note category="description">Reading time of a page in a folder&apos;s card</note>
       </notes>
       <segment>
@@ -8113,7 +8122,7 @@
     <unit id="3245309402650985859">
       <notes>
         <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:39</note>
-        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:145,148</note>
+        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:150,153</note>
         <note category="description">Sort option that lists the most recently edited pages first</note>
       </notes>
       <segment>
@@ -11570,6 +11579,15 @@
         <source>No options</source>
       </segment>
     </unit>
+    <unit id="4706830505543712420">
+      <notes>
+        <note category="location">src/app/static/components/editor/editor-code-block.ts:50</note>
+        <note category="description">Accessible label for the language picker on a code block</note>
+      </notes>
+      <segment>
+        <source>Code language</source>
+      </segment>
+    </unit>
     <unit id="8304423617415800133">
       <notes>
         <note category="location">src/app/features/pages/components/page-toolbar.component.ts:173,176</note>
@@ -12028,7 +12046,7 @@
     <unit id="5701618810648052610">
       <notes>
         <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:43</note>
-        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:137</note>
+        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:142</note>
         <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:104</note>
         <note category="description">Sort option that lists pages alphabetically by title</note>
       </notes>
@@ -13610,7 +13628,7 @@
     </unit>
     <unit id="1745529455768056024">
       <notes>
-        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:249</note>
+        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:259</note>
         <note category="description">Number of pages inside a folder</note>
       </notes>
       <segment>
@@ -13701,7 +13719,7 @@
     </unit>
     <unit id="7785087016229420818">
       <notes>
-        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:188</note>
+        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:198</note>
         <note category="description">Button that creates the first page inside an empty folder</note>
       </notes>
       <segment>
@@ -14100,7 +14118,7 @@
     </unit>
     <unit id="698904785430129406">
       <notes>
-        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:194</note>
+        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:204</note>
         <note category="description">Shown on a folder that holds no pages yet</note>
       </notes>
       <segment>
@@ -15043,7 +15061,7 @@
     </unit>
     <unit id="1074599325149334297">
       <notes>
-        <note category="location">src/app/static/components/editor/editor.component.ts:170</note>
+        <note category="location">src/app/static/components/editor/editor.component.ts:171</note>
         <note category="description">Accessible label for the raw markdown source of a document</note>
       </notes>
       <segment>
@@ -15230,7 +15248,7 @@
     </unit>
     <unit id="8257661007652110878">
       <notes>
-        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:116,119</note>
+        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:117,120</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:79,81</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:90,92</note>
         <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:192</note>
@@ -17397,7 +17415,7 @@
     </unit>
     <unit id="1057438736171723375">
       <notes>
-        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:92,95</note>
+        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:93,96</note>
         <note category="description">Accessible label for the choice between a table and cards of a folder&apos;s pages</note>
       </notes>
       <segment>
@@ -17821,7 +17839,7 @@
     </unit>
     <unit id="6719888848788752658">
       <notes>
-        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:187</note>
+        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:197</note>
         <note category="description">Button that creates a page inside the folder being viewed</note>
       </notes>
       <segment>
@@ -18624,7 +18642,7 @@
     </unit>
     <unit id="4808589666930368915">
       <notes>
-        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:240</note>
+        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:250</note>
         <note category="location">src/app/features/pages/components/page-meta-chips.component.ts:30,34</note>
         <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:254</note>
         <note category="description">Status chip on a draft page</note>
@@ -19333,7 +19351,7 @@
     </unit>
     <unit id="1489699715204182841">
       <notes>
-        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:104,106</note>
+        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:105,107</note>
         <note category="description">Accessible label for the sort of a folder&apos;s pages</note>
       </notes>
       <segment>
@@ -21127,7 +21145,7 @@
     </unit>
     <unit id="2204774735395514762">
       <notes>
-        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:248</note>
+        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:258</note>
         <note category="description">Number of pages inside a folder when there is exactly one</note>
       </notes>
       <segment>
@@ -22334,8 +22352,8 @@
     </unit>
     <unit id="1088646627026349777">
       <notes>
-        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:125,127</note>
-        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:134,135</note>
+        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:128,130</note>
+        <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:139,140</note>
         <note category="description">Accessible label for the list of pages inside a folder</note>
       </notes>
       <segment>
@@ -24121,6 +24139,15 @@
         <source> Last visited </source>
       </segment>
     </unit>
+    <unit id="4575548601191287684">
+      <notes>
+        <note category="location">src/app/static/components/editor/editor-code-block.ts:51</note>
+        <note category="description">Language option for a code block that is not highlighted</note>
+      </notes>
+      <segment>
+        <source>Plain text</source>
+      </segment>
+    </unit>
     <unit id="5125508136883174617">
       <notes>
         <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:75,76</note>
@@ -24779,6 +24806,7 @@
     <unit id="2115592966120408375">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-message.component.ts:283</note>
+        <note category="location">src/app/static/components/editor/editor-code-block.ts:49</note>
         <note category="description">Confirms the reply was copied to the clipboard</note>
       </notes>
       <segment>
@@ -26138,7 +26166,7 @@
     </unit>
     <unit id="2389097364194442984">
       <notes>
-        <note category="location">src/app/static/components/editor/editor.component.ts:153</note>
+        <note category="location">src/app/static/components/editor/editor.component.ts:154</note>
         <note category="description">Accessible label for the menu of blocks that typing / offers</note>
       </notes>
       <segment>

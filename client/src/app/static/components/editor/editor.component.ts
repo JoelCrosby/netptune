@@ -30,6 +30,7 @@ import { cn } from '../button/button.variants';
 import { EditorBubbleMenuComponent } from './editor-bubble-menu.component';
 import { SuggestionMenuComponent } from '../suggestion-menu/suggestion-menu.component';
 import { Callout } from './editor-callout';
+import { HighlightedCodeBlock } from './editor-code-block';
 import { EditorCommand } from './editor-commands';
 import {
   EditorAnchor,
@@ -484,9 +485,10 @@ export class EditorComponent
       ...slash,
       ...this.extensions(),
       Callout,
+      HighlightedCodeBlock.configure({ languageClassPrefix: 'language-' }),
       StarterKit.configure({
         link: { openOnClick: false, autolink: true, defaultProtocol: 'https' },
-        codeBlock: { languageClassPrefix: 'language-' },
+        codeBlock: false,
         underline: false,
       }),
       TaskList,

@@ -1,0 +1,127 @@
+.editor {
+  --monospace:
+    Cascadia Code,
+    SFMono-Regular,
+    Consolas,
+    Liberation Mono,
+    Menlo,
+    monospace;
+  --heading-font:
+    'Overpass',
+    'Roboto',
+    -apple-system,
+    BlinkMacSystemFont,
+    Segoe UI,
+    Roboto,
+    Noto Sans,
+    Ubuntu,
+    Droid Sans,
+    Helvetica Neue,
+    sans-serif;
+  color: var(--foreground);
+}
+
+.editor-content ::selection {
+  background-color: rgba(var(--primary-rgb), 0.2);
+}
+
+.editor-content > * + * {
+  margin-top: 0.5rem;
+}
+
+.editor-content h1,
+.editor-content h2,
+.editor-content h3,
+.editor-content h4,
+.editor-content h5,
+.editor-content h6 {
+  font-family: var(--heading-font);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.editor-content h1 {
+  font-size: 1.3rem;
+}
+
+.editor-content h2 {
+  font-size: 1.2rem;
+}
+
+.editor-content h3 {
+  font-size: 1.15rem;
+}
+
+.editor-content h4 {
+  font-size: 1.1rem;
+}
+
+.editor-content h5,
+.editor-content h6 {
+  font-size: 1rem;
+}
+
+/* Non-editable islands inside a document (embeds) style their own links. */
+.editor-content a:not([contenteditable='false'] a) {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.editor-content blockquote {
+  margin: 0;
+  border-left: 3px solid rgba(var(--primary-rgb), 0.5);
+  padding-left: 0.85rem;
+  color: rgba(var(--foreground-rgb), 0.8);
+}
+
+.editor-content hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 1rem 0;
+}
+
+.editor-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--border-radius-small);
+}
+
+.editor-content img.ProseMirror-selectednode {
+  outline: 2px solid var(--primary);
+}
+
+.editor-content ul,
+.editor-content ol {
+  padding-left: 1.25rem;
+}
+
+.editor-content ul {
+  list-style: disc;
+}
+
+.editor-content ol {
+  list-style: decimal;
+}
+
+.editor-content li > p {
+  margin: 0;
+}
+
+.editor-content li > ul,
+.editor-content li > ol {
+  margin-top: 0.25rem;
+}
+
+.editor-content p.is-empty::before {
+  content: attr(data-placeholder);
+  color: rgba(var(--foreground-rgb), 0.4);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.ProseMirror-gapcursor::after {
+  border-top-color: var(--foreground);
+}

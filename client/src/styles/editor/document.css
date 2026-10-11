@@ -1,0 +1,34 @@
+.editor-document {
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.editor-document > * + * {
+  margin-top: 1rem;
+}
+
+.editor-document h1 {
+  font-size: 1.6rem;
+  margin-top: 1.75rem;
+}
+
+.editor-document h2 {
+  font-size: 1.4rem;
+  margin-top: 1.75rem;
+}
+
+.editor-document h3 {
+  font-size: 1.15rem;
+  margin-top: 1.25rem;
+}
+
+.editor-document h4,
+.editor-document h5,
+.editor-document h6 {
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+.editor-document > :first-child {
+  margin-top: 0;
+}
