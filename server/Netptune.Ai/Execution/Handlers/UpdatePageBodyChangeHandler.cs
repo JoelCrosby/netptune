@@ -20,9 +20,6 @@ public sealed class UpdatePageBodyChangeHandler : IAiChangeHandler, IAiChangeUnd
     public const string UnresolvedTasksMessage =
         "Some tasks this page should link to were not created, so the page was left as it is.";
 
-    public const string EditedSinceApplyMessage =
-        "The page was edited after this change was applied. Restore an earlier version from its history instead.";
-
     private readonly IMediator Mediator;
 
     public UpdatePageBodyChangeHandler(IMediator mediator)
@@ -86,40 +83,9 @@ public sealed class UpdatePageBodyChangeHandler : IAiChangeHandler, IAiChangeUnd
         return AiPageUndo.Capture(Mediator, pageId, cancellationToken);
     }
 
-    public async Task<AiAppliedChangeResult> Revert(AiChangeUndoContext context, CancellationToken cancellationToken)
+    public Task<AiAppliedChangeResult> Revert(AiChangeUndoContext context, CancellationToken cancellationToken)
     {
-        var change = context.Change;
-        var snapshot = AiPageUndo.ReadSnapshot(change.UndoPayload);
-
-        if (snapshot is null)
-        {
-            return AiChangeUndoResult.Failure(change, "There is nothing recorded to restore.");
-        }
-
-        var current = await AiPageUndo.Read(Mediator, snapshot.PageId, cancellationToken);
-
-        if (current is null)
-        {
-            return AiChangeUndoResult.Failure(change, "The page is no longer in this workspace.");
-        }
-
-        // The apply wrote exactly one revision; anything past it is someone else's edit, which an undo would lose.
-        var editedSinceApply = current.Revision != snapshot.Revision + 1;
-
-        if (editedSinceApply)
-        {
-            return AiChangeUndoResult.Failure(change, EditedSinceApplyMessage);
-        }
-
-        var request = new SavePageRequest { Title = snapshot.Title, Body = snapshot.Body, Revision = current.Revision };
-        var response = await Mediator.Send(new SavePageCommand(snapshot.PageId, request), cancellationToken);
-
-        if (!response.IsSuccess)
-        {
-            return AiChangeUndoResult.Failure(change, response.Message ?? "The page could not be restored.");
-        }
-
-        return AiChangeUndoResult.Undone(change, snapshot.PageId);
+        return AiPageUndo.RevertContent(Mediator, context.Change, cancellationToken);
     }
 
     private async Task<ResolvedPageBody> ResolveTaskHandles(

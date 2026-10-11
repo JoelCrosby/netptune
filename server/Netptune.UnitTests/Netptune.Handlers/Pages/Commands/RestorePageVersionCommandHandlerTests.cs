@@ -117,6 +117,27 @@ public class RestorePageVersionCommandHandlerTests
     }
 
     [Fact]
+    public async Task Handle_ShouldReturnConflict_WhenThePageIsNotAtTheExpectedRevision()
+    {
+        var command = new RestorePageVersionCommand(PageId, VersionId, ExpectedRevision: 6);
+
+        var result = await Handler.Handle(command, TestContext.Current.CancellationToken);
+
+        result.IsConflict.Should().BeTrue();
+        await UnitOfWork.Pages.DidNotReceive().TrySaveContent(Arg.Any<PageContentUpdate>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Handle_ShouldRestore_WhenThePageIsAtTheExpectedRevision()
+    {
+        var command = new RestorePageVersionCommand(PageId, VersionId, ExpectedRevision: 7);
+
+        var result = await Handler.Handle(command, TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Fact]
     public async Task Handle_ShouldReturnNotFound_WhenTheVersionBelongsElsewhere()
     {
         UnitOfWork.PageVersions

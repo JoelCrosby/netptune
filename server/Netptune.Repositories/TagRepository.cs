@@ -201,6 +201,25 @@ public class TagRepository : NamedWorkspaceEntityRepository<DataContext, Tag, in
             .ToListAsync(cancellationToken);
     }
 
+    public Task<List<TagViewModel>> GetViewModelsByNames(int workspaceId, IReadOnlyCollection<string> names, CancellationToken cancellationToken = default)
+    {
+        var loweredNames = names.Select(name => name.ToLowerInvariant()).Distinct().ToList();
+
+        return Entities
+            .AsNoTracking()
+            .Where(tag => !tag.IsDeleted && tag.WorkspaceId == workspaceId && loweredNames.Contains(tag.Name.ToLower()))
+            .OrderBy(tag => tag.CreatedAt)
+            .ThenBy(tag => tag.Id)
+            .Select(tag => new TagViewModel
+            {
+                Id = tag.Id,
+                Name = tag.Name,
+                OwnerId = tag.OwnerId!,
+                OwnerName = tag.Owner!.DisplayName,
+            })
+            .ToListAsync(cancellationToken);
+    }
+
     public Task<int> GetTaskCount(int tagId, CancellationToken cancellationToken = default)
     {
         return Context.ProjectTaskTags

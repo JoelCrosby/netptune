@@ -119,14 +119,7 @@ internal static class AiTaskChangeDrafts
             return AiTaskDraftResult.Unchanged;
         }
 
-        var knownNames = await AiTagVocabulary.Read(mediator, changeSet, cancellationToken);
-
-        if (knownNames is null)
-        {
-            return AiTaskDraftResult.Failed("Workspace tags could not be read.");
-        }
-
-        var unknownError = AiTagVocabulary.FindUnknown(requested, knownNames);
+        var unknownError = await AiTagVocabulary.FindUnknown(mediator, changeSet, requested, cancellationToken);
 
         if (unknownError is not null)
         {

@@ -28,6 +28,8 @@ public interface ITagRepository : INamedWorkspaceEntityRepository<Tag, int>
 
     Task<List<Tag>> GetTagsByValueInWorkspace(int workspaceId, IEnumerable<string> tags, bool isReadonly = false, CancellationToken cancellationToken = default);
 
+    Task<List<TagViewModel>> GetViewModelsByNames(int workspaceId, IReadOnlyCollection<string> names, CancellationToken cancellationToken = default);
+
     Task<int> GetTaskCount(int tagId, CancellationToken cancellationToken = default);
 
     Task<bool> ExistsForTask(int tagId, int taskId, CancellationToken cancellationToken = default);

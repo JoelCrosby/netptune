@@ -157,14 +157,7 @@ public sealed class CreateTaskTool : IAiTool
             return null;
         }
 
-        var knownNames = await AiTagVocabulary.Read(Mediator, ChangeSet, cancellationToken);
-
-        if (knownNames is null)
-        {
-            return "Workspace tags could not be read.";
-        }
-
-        var unknownError = AiTagVocabulary.FindUnknown(tags, knownNames);
+        var unknownError = await AiTagVocabulary.FindUnknown(Mediator, ChangeSet, tags, cancellationToken);
 
         if (unknownError is not null)
         {

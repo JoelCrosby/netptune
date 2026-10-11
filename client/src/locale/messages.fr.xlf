@@ -2129,7 +2129,7 @@
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:61,64</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:164,167</note>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:217</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:281</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:282</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:62,64</note>
         <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:97,99</note>
         <note category="location">src/app/static/components/editor/editor-bubble-menu.component.ts:227</note>
@@ -2403,7 +2403,7 @@
         <note category="location">src/app/features/queries/views/queries-view/queries-view.component.ts:159</note>
         <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:229</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:184</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:318</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:319</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:154</note>
         <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:141</note>
         <note category="location">src/app/features/settings/shared/entity-detail.ts:31</note>
@@ -2411,9 +2411,9 @@
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:192</note>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:216</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:225</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:280</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:281</note>
         <note category="location">src/app/shared/components/task-selection-actions/task-selection-actions.component.ts:32,34</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:36</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:38</note>
         <note category="description">Confirms a destructive action</note>
       </notes>
       <segment state="translated">
@@ -3109,6 +3109,7 @@
         <note category="location">src/app/core/services/task-archive.service.ts:39</note>
         <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:122</note>
         <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:137</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:46</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
@@ -5078,9 +5079,9 @@
       <notes>
         <note category="location">src/app/entry/dialogs/create-relation-type-dialog/create-relation-type-dialog.component.ts:56,57</note>
         <note category="location">src/app/entry/dialogs/status-dialog/status-dialog.component.ts:75,76</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:242</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:243</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:154,155</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:217</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:218</note>
         <note category="description">Label of the relation category field</note>
       </notes>
       <segment state="translated">
@@ -5139,13 +5140,13 @@
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:144</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:147</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:373</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:228</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:229</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:138</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:345</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:210</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:211</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:106</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:270</note>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:132</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:133</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:60,61</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:134</note>
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:43,44</note>
@@ -5670,9 +5671,9 @@
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:79,81</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:97,100</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:176,179</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:222</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:223</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:149,152</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:204</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:205</note>
         <note category="description">Label of the colour picker field</note>
       </notes>
       <segment state="translated">
@@ -6143,7 +6144,7 @@
         <note category="location">src/app/features/pages/components/page-meta-chips.component.ts:46,49</note>
         <note category="location">src/app/features/settings/settings.routes.ts:67</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:83,84</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:38</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:40</note>
         <note category="description">Button that adds or removes tags on a page</note>
       </notes>
       <segment state="translated">
@@ -6174,7 +6175,7 @@
     </unit>
     <unit id="2981219928115418649">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:40</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:42</note>
         <note category="location">src/app/static/components/editor/editor-bubble-menu.component.ts:223</note>
         <note category="description">What a proposed change does</note>
       </notes>
@@ -6316,8 +6317,8 @@
     </unit>
     <unit id="2578732368187466916">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:236</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:193</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:237</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:194</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:132,136</note>
         <note category="description">Column heading for what a conversation cost</note>
       </notes>
@@ -6519,7 +6520,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:124,127</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:60,62</note>
-        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:278</note>
+        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:279</note>
         <note category="description">Button that creates the project</note>
       </notes>
       <segment state="translated">
@@ -6898,7 +6899,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:42,45</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:71,72</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:250</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:251</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:358</note>
         <note category="description">Section heading for links between tasks</note>
       </notes>
@@ -8275,7 +8276,7 @@
     </unit>
     <unit id="4658982717700339898">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:41</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:43</note>
         <note category="description">What a proposed change does</note>
       </notes>
       <segment state="translated">
@@ -9019,8 +9020,8 @@
     </unit>
     <unit id="6452372740127749380">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:216</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:173</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:217</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:174</note>
         <note category="description">Column heading for the number of messages in a conversation</note>
       </notes>
       <segment state="translated">
@@ -9257,7 +9258,7 @@
         <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:69,70</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:32</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:53</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:39</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:41</note>
         <note category="description">Label of the comment field</note>
       </notes>
       <segment state="translated">
@@ -9357,7 +9358,7 @@
     </unit>
     <unit id="7579940623714391431">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:326</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:327</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:39,41</note>
         <note category="description">Title of the dialog that deletes one assistant conversation</note>
       </notes>
@@ -9651,6 +9652,17 @@
       <segment state="translated">
         <source>Field</source>
         <target>Champ</target>
+      </segment>
+    </unit>
+    <unit id="4826315192146469447">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:45</note>
+        <note category="description">What a proposed change does</note>
+        <note category="meaning">verb</note>
+      </notes>
+      <segment state="translated">
+        <source>Archive</source>
+        <target>Archiver</target>
       </segment>
     </unit>
     <unit id="124664468810153826">
@@ -11370,7 +11382,7 @@
     </unit>
     <unit id="5554263124496870226">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:336</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:337</note>
         <note category="description">Title of the dialog that deletes several assistant conversations. COUNT is how many</note>
       </notes>
       <segment state="translated">
@@ -11645,8 +11657,8 @@
     </unit>
     <unit id="4548722462586549001">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:226</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:183</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:227</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:184</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:130,131</note>
         <note category="description">Column heading for the tokens a conversation used</note>
       </notes>
@@ -12372,7 +12384,7 @@
     </unit>
     <unit id="6297950127540572260">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:207</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:208</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-spend-card.component.ts:126,127</note>
         <note category="description">Column heading for the member who held a conversation</note>
       </notes>
@@ -13611,7 +13623,7 @@
     <unit id="5234544449365538384">
       <notes>
         <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:370</note>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:319</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:320</note>
         <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:362</note>
         <note category="description">Shown when a page link could not be copied</note>
       </notes>
@@ -15256,7 +15268,7 @@
     <unit id="584754872792429089">
       <notes>
         <note category="location">src/app/features/sprints/components/sprint-backlog-group.component.ts:126</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:37</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:39</note>
         <note category="description">Column heading for the sprint assign action</note>
       </notes>
       <segment state="translated">
@@ -16566,8 +16578,8 @@
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:53</note>
         <note category="location">src/app/features/reporting/components/workload-table.component.ts:49</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:119,120</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:225</note>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:139</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:226</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:140</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:83</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:155</note>
         <note category="location">src/app/workspace.routes.ts:36</note>
@@ -17833,7 +17845,7 @@
     <unit id="2354817630223808522">
       <notes>
         <note category="location">src/app/features/calendar/dialogs/calendar-move-task-dialog.component.ts:68,73</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:42</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:44</note>
         <note category="description">Button that moves the task to the chosen date</note>
       </notes>
       <segment state="translated">
@@ -19322,7 +19334,7 @@
     </unit>
     <unit id="4439392167302208491">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:337</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:338</note>
         <note category="description">Warns that deleting members&apos; assistant conversations removes them for those members too. OWNERS lists the members who held them</note>
       </notes>
       <segment state="translated">
@@ -20147,8 +20159,8 @@
     </unit>
     <unit id="4717491147966397069">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:199</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:165</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:200</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:166</note>
         <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:82,84</note>
         <note category="description">Column heading for an assistant conversation</note>
       </notes>
@@ -22626,7 +22638,7 @@
     <unit id="892073694820881630">
       <notes>
         <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:369</note>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:314</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:315</note>
         <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:357</note>
         <note category="description">Confirmation that a page link was copied</note>
       </notes>
@@ -23134,7 +23146,7 @@
     </unit>
     <unit id="7118117366674423373">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:235</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:236</note>
         <note category="description">Column heading for the reverse direction of a relation</note>
       </notes>
       <segment state="translated">
@@ -23214,8 +23226,8 @@
     </unit>
     <unit id="220550782947016929">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:259</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:234</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:260</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:235</note>
         <note category="description">Column heading for the sort order</note>
       </notes>
       <segment state="translated">
@@ -23402,7 +23414,7 @@
       <notes>
         <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:126</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:256</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:35</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:37</note>
         <note category="description">Counts records an import would update</note>
       </notes>
       <segment state="translated">
@@ -24898,7 +24910,7 @@
       <notes>
         <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:122</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:95,100</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:34</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:36</note>
         <note category="description">Counts records an import would create</note>
       </notes>
       <segment state="translated">
@@ -25670,7 +25682,7 @@
     </unit>
     <unit id="7605037935086101913">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:327</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:328</note>
         <note category="description">Warns that deleting a member&apos;s assistant conversation removes it for them too. TITLE is the conversation title, OWNER the member who held it</note>
       </notes>
       <segment state="translated">
@@ -25823,7 +25835,7 @@
     <unit id="1152778269115350205">
       <notes>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:214</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:278</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:279</note>
         <note category="description">Title of the confirmation dialog for deleting a sprint</note>
       </notes>
       <segment state="translated">
@@ -28343,7 +28355,7 @@
     </unit>
     <unit id="4505486805842266349">
       <notes>
-        <note category="location">src/app/static/components/datatable/datatable.component.ts:265,268</note>
+        <note category="location">src/app/static/components/datatable/datatable.component.ts:266,269</note>
         <note category="description">Screen-reader label for the checkbox that selects one table row</note>
       </notes>
       <segment state="translated">
@@ -28625,8 +28637,8 @@
     </unit>
     <unit id="4582943253260659127">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:245</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:202</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:246</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:203</note>
         <note category="description">Column heading for when a conversation was last active</note>
       </notes>
       <segment state="translated">

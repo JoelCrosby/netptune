@@ -9,26 +9,31 @@ namespace Netptune.Ai.Tools;
 
 public static class AiTagVocabulary
 {
-    public static async Task<HashSet<string>?> Read(
+    public static async Task<string?> FindUnknown(
         IMediator mediator,
         IAiChangeSetBuilder changeSet,
+        IReadOnlyCollection<string> requested,
         CancellationToken cancellationToken)
     {
-        var workspaceTags = await mediator.Send(new GetTagsForWorkspaceQuery(), cancellationToken);
+        var proposedNames = CreateTagTool.ProposedNames(changeSet).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var notProposed = requested.Where(name => !proposedNames.Contains(name)).ToList();
 
-        if (workspaceTags is null)
+        if (notProposed.Count == 0)
         {
             return null;
         }
 
-        var names = workspaceTags.Select(tag => tag.Name).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var existing = await mediator.Send(new GetTagsByNameQuery(notProposed), cancellationToken);
+        var existingNames = existing.Select(tag => tag.Name).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var unknown = notProposed.Where(name => !existingNames.Contains(name)).ToList();
 
-        foreach (var proposed in CreateTagTool.ProposedNames(changeSet))
+        if (unknown.Count == 0)
         {
-            names.Add(proposed);
+            return null;
         }
 
-        return names;
+        return $"These tags do not exist in this workspace: {string.Join(", ", unknown)}. "
+            + "Use propose_create_tag first if the workspace needs a new one.";
     }
 
     public static List<string> ReadRequested(JsonElement arguments)
@@ -52,18 +57,5 @@ public static class AiTagVocabulary
             .Select(item => item.GetString()!)
             .Where(item => !string.IsNullOrWhiteSpace(item))
             .ToList();
-    }
-
-    public static string? FindUnknown(IReadOnlyCollection<string> requested, HashSet<string> known)
-    {
-        var unknown = requested.Where(tag => !known.Contains(tag)).ToList();
-
-        if (unknown.Count == 0)
-        {
-            return null;
-        }
-
-        return $"These tags do not exist in this workspace: {string.Join(", ", unknown)}. "
-            + "Use propose_create_tag first if the workspace needs a new one.";
     }
 }

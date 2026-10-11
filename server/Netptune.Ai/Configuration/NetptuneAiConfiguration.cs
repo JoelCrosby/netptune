@@ -52,6 +52,8 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiTool, GetTaskTool>();
         services.AddScoped<IAiTool, SearchPagesTool>();
         services.AddScoped<IAiTool, GetPageTool>();
+        services.AddScoped<IAiTool, ListArchivedPagesTool>();
+        services.AddScoped<IAiTool, ListPageVersionsTool>();
         services.AddScoped<IAiTool, ListRelationsTool>();
         services.AddScoped<IAiTool, GetCurrentSprintTool>();
         services.AddScoped<IAiTool, CreateSprintTool>();
@@ -100,6 +102,11 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiChangeHandler, CreatePageChangeHandler>();
         services.AddScoped<IAiChangeHandler, UpdatePageBodyChangeHandler>();
         services.AddScoped<IAiChangeHandler, MovePageChangeHandler>();
+        services.AddScoped<IAiChangeHandler, UpdatePageDetailsChangeHandler>();
+        services.AddScoped<IAiChangeHandler, ArchivePageChangeHandler>();
+        services.AddScoped<IAiChangeHandler, RestorePageChangeHandler>();
+        services.AddScoped<IAiChangeHandler, DeletePageChangeHandler>();
+        services.AddScoped<IAiChangeHandler, RestorePageVersionChangeHandler>();
         services.AddScoped<IAiChangeHandler, DeleteBoardChangeHandler>();
         services.AddScoped<IAiChangeHandler, UpdateBoardGroupChangeHandler>();
         services.AddScoped<IAiChangeHandler, DeleteBoardGroupChangeHandler>();

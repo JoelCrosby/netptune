@@ -12,7 +12,9 @@ using Netptune.Core.Enums;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.Pages;
+using Netptune.Core.ViewModels.Tags;
 using Netptune.Handlers.Pages.Queries;
+using Netptune.Handlers.Tags.Queries;
 
 using NSubstitute;
 
@@ -25,6 +27,9 @@ public class PageChangeToolTests
     private const int FolderId = 10;
     private const int RfcId = 11;
     private const int HandbookId = 13;
+    private const int ArchivedId = 20;
+    private const int OlderVersionId = 30;
+    private const int CurrentVersionId = 31;
 
     private readonly IMediator Mediator = Substitute.For<IMediator>();
     private readonly AiChangeSetBuilder ChangeSet = new();
@@ -43,7 +48,33 @@ public class PageChangeToolTests
                 Kind = PageKind.Document,
                 Body = "# Old",
                 Revision = 4,
+                Status = PageStatus.Draft,
+                Tags = [new PageTagViewModel { Id = 1, Name = "Backend" }],
             }));
+
+        var manyTags = Enumerable.Range(100, 60).Select(id => new TagViewModel { Id = id, Name = $"Tag {id}" });
+        List<TagViewModel> workspaceTags =
+        [
+            new() { Id = 1, Name = "Backend" },
+            new() { Id = 2, Name = "Frontend" },
+            .. manyTags,
+        ];
+
+        AiTestTags.Given(Mediator, workspaceTags);
+
+        Mediator
+            .Send(Arg.Any<GetArchivedPagesQuery>(), Arg.Any<CancellationToken>())
+            .Returns(ClientResponse<List<ArchivedPageViewModel>>.Success(
+            [
+                new ArchivedPageViewModel { Id = ArchivedId, Title = "Old plan", Slug = "old-plan", Kind = PageKind.Document },
+            ]));
+
+        Mediator
+            .Send(Arg.Any<GetPageVersionQuery>(), Arg.Any<CancellationToken>())
+            .Returns(ClientResponse<PageVersionViewModel>.NotFound);
+
+        GivenVersion(OlderVersionId, revision: 2, title: "RFC draft", body: "# Older");
+        GivenVersion(CurrentVersionId, revision: 4, title: "RFC", body: "# Old");
     }
 
     [Fact]
@@ -226,16 +257,287 @@ public class PageChangeToolTests
         result.IsError.Should().BeTrue();
     }
 
+    [Fact]
+    public async Task UpdateDetails_ShouldProposeStatusAndTags_WithWhatTheyWereBefore()
+    {
+        var result = await Execute(
+            new UpdatePageDetailsAction(Mediator, ChangeSet),
+            $$"""{"pageId":{{RfcId}},"status":"published","tags":["Backend","Frontend"]}""");
+
+        result.IsError.Should().BeFalse();
+
+        var change = ChangeSet.Changes.Should().ContainSingle().Subject;
+        var payload = change.Payload.RootElement;
+        var tags = change.Fields.Single(field => field.Name == "tags");
+
+        change.ToolName.Should().Be("propose_update_page_details");
+        change.EntityId.Should().Be(RfcId);
+        change.Fields.Should().Contain(field => field.Name == "status" && field.Before == "draft" && field.After == "published");
+        tags.BeforeValues.Select(value => value.Display).Should().Equal("Backend");
+        tags.AfterValues.Select(value => value.Display).Should().Equal("Backend", "Frontend");
+        payload.GetProperty("status").GetString().Should().Be("published");
+        payload.GetProperty("tags").EnumerateArray().Select(item => item.GetString()).Should().Equal("Backend", "Frontend");
+    }
+
+    [Fact]
+    public async Task UpdateDetails_ShouldLeaveOutTheStatus_WhenItIsAlreadySet()
+    {
+        var result = await Execute(
+            new UpdatePageDetailsAction(Mediator, ChangeSet),
+            $$"""{"pageId":{{RfcId}},"status":"draft","tags":[]}""");
+
+        result.IsError.Should().BeFalse();
+
+        var change = ChangeSet.Changes.Single();
+
+        change.Fields.Select(field => field.Name).Should().Equal("tags");
+        change.Payload.RootElement.TryGetProperty("status", out _).Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task UpdateDetails_ShouldAcceptATagProposedInTheSameSet()
+    {
+        ChangeSet.Add(new AiChangeDraft
+        {
+            ToolName = "propose_create_tag",
+            EntityType = "tag",
+            Summary = "Create tag “Ops”",
+            Payload = JsonDocument.Parse("""{"name":"Ops"}"""),
+        });
+
+        var result = await Execute(new UpdatePageDetailsAction(Mediator, ChangeSet), $$"""{"pageId":{{RfcId}},"tags":["Ops"]}""");
+
+        result.IsError.Should().BeFalse();
+        ChangeSet.Changes.Should().HaveCount(2);
+    }
+
+    [Fact]
+    public async Task UpdateDetails_ShouldAcceptATagBeyondTheFirstPageOfWorkspaceTags()
+    {
+        var result = await Execute(new UpdatePageDetailsAction(Mediator, ChangeSet), $$"""{"pageId":{{RfcId}},"tags":["Tag 157"]}""");
+
+        result.IsError.Should().BeFalse();
+        await Mediator.DidNotReceive().Send(Arg.Any<GetTagsForWorkspaceQuery>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task UpdateDetails_ShouldOnlyLookUpTagsThatAreNotProposedInTheSameSet()
+    {
+        ChangeSet.Add(new AiChangeDraft
+        {
+            ToolName = "propose_create_tag",
+            EntityType = "tag",
+            Summary = "Create tag “Ops”",
+            Payload = JsonDocument.Parse("""{"name":"Ops"}"""),
+        });
+
+        await Execute(new UpdatePageDetailsAction(Mediator, ChangeSet), $$"""{"pageId":{{RfcId}},"tags":["Ops","Frontend"]}""");
+
+        await Mediator.Received(1).Send(
+            Arg.Is<GetTagsByNameQuery>(query => query.Names.SequenceEqual(new[] { "Frontend" })),
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task UpdateDetails_ShouldTargetAPageProposedEarlier_ByItsHandle()
+    {
+        await Execute(new CreatePageAction(Mediator, ChangeSet), """{"title":"RFC-015"}""");
+
+        var pageRef = ChangeSet.Changes[0].RefKey;
+        var result = await Execute(
+            new UpdatePageDetailsAction(Mediator, ChangeSet),
+            $$"""{"pageRef":"{{pageRef}}","status":"published"}""");
+
+        result.IsError.Should().BeFalse();
+
+        var change = ChangeSet.Changes[1];
+
+        change.EntityId.Should().BeNull();
+        change.Payload.RootElement.GetProperty("pageRef").GetString().Should().Be(pageRef);
+        change.Summary.Should().Contain("RFC-015");
+    }
+
+    [Theory]
+    [InlineData("""{"pageId":11,"tags":["Nope"]}""", "do not exist")]
+    [InlineData("""{"pageId":11,"status":"archived"}""", "draft or published")]
+    [InlineData("""{"pageId":11,"tags":"Backend"}""", "array")]
+    [InlineData("""{"pageId":11}""", "status, tags")]
+    [InlineData("""{"pageId":11,"status":"draft","tags":["Backend"]}""", "already has")]
+    [InlineData("""{"pageId":99,"status":"published"}""", "not in this workspace")]
+    [InlineData("""{"pageRef":"ref:9","status":"published"}""", "does not match")]
+    public async Task UpdateDetails_ShouldRefuse_WhatItCannotApply(string arguments, string message)
+    {
+        var result = await Execute(new UpdatePageDetailsAction(Mediator, ChangeSet), arguments);
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain(message);
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Archive_ShouldSayHowManyPagesInsideGoWithIt()
+    {
+        var result = await Execute(new ArchivePageAction(Mediator, ChangeSet), $$"""{"pageId":{{FolderId}}}""");
+
+        result.IsError.Should().BeFalse();
+
+        var change = ChangeSet.Changes.Should().ContainSingle().Subject;
+
+        change.ToolName.Should().Be("propose_archive_page");
+        change.EntityId.Should().Be(FolderId);
+        change.Summary.Should().Be("Archive “Engineering” and the 2 pages inside it");
+        change.Fields.Should().ContainSingle(field => field.Name == "name" && field.Before == "Engineering" && field.After == null);
+    }
+
+    [Fact]
+    public async Task Archive_ShouldNotMentionPagesInside_WhenThereAreNone()
+    {
+        await Execute(new ArchivePageAction(Mediator, ChangeSet), $$"""{"pageId":{{HandbookId}}}""");
+
+        ChangeSet.Changes.Single().Summary.Should().Be("Archive “Handbook”");
+    }
+
+    [Fact]
+    public async Task Archive_ShouldRefuse_APageThatIsNotLive()
+    {
+        var result = await Execute(new ArchivePageAction(Mediator, ChangeSet), $$"""{"pageId":{{ArchivedId}}}""");
+
+        result.IsError.Should().BeTrue();
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Restore_ShouldProposeBringingBackAnArchivedPage()
+    {
+        var result = await Execute(new RestorePageAction(Mediator, ChangeSet), $$"""{"pageId":{{ArchivedId}}}""");
+
+        result.IsError.Should().BeFalse();
+
+        var change = ChangeSet.Changes.Should().ContainSingle().Subject;
+
+        change.ToolName.Should().Be("propose_restore_page");
+        change.EntityId.Should().Be(ArchivedId);
+        change.Fields.Should().ContainSingle(field => field.Name == "name" && field.Before == null && field.After == "Old plan");
+    }
+
+    [Fact]
+    public async Task Restore_ShouldRefuse_APageThatIsNotArchived()
+    {
+        var result = await Execute(new RestorePageAction(Mediator, ChangeSet), $$"""{"pageId":{{RfcId}}}""");
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("list_archived_pages");
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Delete_ShouldSayPlainlyThatItCannotBeUndone()
+    {
+        var result = await Execute(new DeletePageAction(Mediator, ChangeSet), $$"""{"pageId":{{ArchivedId}}}""");
+
+        result.IsError.Should().BeFalse();
+        result.Content.Should().Contain("cannot be undone");
+
+        var change = ChangeSet.Changes.Should().ContainSingle().Subject;
+
+        change.ToolName.Should().Be("propose_delete_page");
+        change.Summary.Should().StartWith("Permanently delete “Old plan”").And.Contain("cannot be undone");
+        change.Payload.RootElement.GetProperty("pageId").GetInt32().Should().Be(ArchivedId);
+    }
+
+    [Fact]
+    public async Task Delete_ShouldRefuse_ALivePage()
+    {
+        var result = await Execute(new DeletePageAction(Mediator, ChangeSet), $$"""{"pageId":{{RfcId}}}""");
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("archive a live page instead");
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task RestoreVersion_ShouldProposeTheVersionsTitleAndBody_AgainstTheCurrentRevision()
+    {
+        var result = await Execute(
+            new RestorePageVersionAction(Mediator, ChangeSet),
+            $$"""{"pageId":{{RfcId}},"versionId":{{OlderVersionId}}}""");
+
+        result.IsError.Should().BeFalse();
+
+        var change = ChangeSet.Changes.Should().ContainSingle().Subject;
+        var payload = change.Payload.RootElement;
+
+        change.ToolName.Should().Be("propose_restore_page_version");
+        change.EntityId.Should().Be(RfcId);
+        change.Fields.Should().Contain(field => field.Name == "name" && field.Before == "RFC" && field.After == "RFC draft");
+        change.Fields.Should().Contain(field => field.Name == "body" && field.Before == "# Old" && field.After == "# Older");
+        payload.GetProperty("versionId").GetInt32().Should().Be(OlderVersionId);
+        payload.GetProperty("revision").GetInt32().Should().Be(4);
+    }
+
+    [Theory]
+    [InlineData(CurrentVersionId, "as it is now")]
+    [InlineData(99, "list_page_versions")]
+    public async Task RestoreVersion_ShouldRefuse_AVersionItCannotRestore(int versionId, string message)
+    {
+        var result = await Execute(
+            new RestorePageVersionAction(Mediator, ChangeSet),
+            $$"""{"pageId":{{RfcId}},"versionId":{{versionId}}}""");
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain(message);
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task RestoreVersion_ShouldRefuse_WithoutAVersionId()
+    {
+        var result = await Execute(new RestorePageVersionAction(Mediator, ChangeSet), $$"""{"pageId":{{RfcId}}}""");
+
+        result.IsError.Should().BeTrue();
+    }
+
     [Theory]
     [InlineData("propose_create_page", NetptunePermissions.Pages.Create)]
     [InlineData("propose_update_page_body", NetptunePermissions.Pages.Update)]
     [InlineData("propose_move_page", NetptunePermissions.Pages.Update)]
+    [InlineData("propose_update_page_details", NetptunePermissions.Pages.Update)]
+    [InlineData("propose_archive_page", NetptunePermissions.Pages.Delete)]
+    [InlineData("propose_restore_page", NetptunePermissions.Pages.Delete)]
+    [InlineData("propose_delete_page", NetptunePermissions.Pages.Delete)]
+    [InlineData("propose_restore_page_version", NetptunePermissions.Pages.Update)]
     public void GetChangePermissions_ShouldAskForWhatEachChangeNeeds(string changeName, string permission)
     {
         var tool = new PageChangeTool(Mediator, ChangeSet);
         var payload = JsonDocument.Parse("{}").RootElement;
 
         tool.GetChangePermissions(changeName, payload).Should().BeEquivalentTo([permission]);
+    }
+
+    [Theory]
+    [InlineData("create", NetptunePermissions.Pages.Create)]
+    [InlineData("update_body", NetptunePermissions.Pages.Update)]
+    [InlineData("move", NetptunePermissions.Pages.Update)]
+    [InlineData("update_details", NetptunePermissions.Pages.Update)]
+    [InlineData("archive", NetptunePermissions.Pages.Delete)]
+    [InlineData("restore", NetptunePermissions.Pages.Delete)]
+    [InlineData("delete", NetptunePermissions.Pages.Delete)]
+    [InlineData("restore_version", NetptunePermissions.Pages.Update)]
+    public void GetRequiredPermissions_ShouldAskForWhatEachActionNeeds(string action, string permission)
+    {
+        var tool = new PageChangeTool(Mediator, ChangeSet);
+        var arguments = JsonDocument.Parse($$"""{"action":"{{action}}"}""").RootElement;
+
+        tool.GetRequiredPermissions(arguments).Should().BeEquivalentTo([permission]);
+    }
+
+    private void GivenVersion(int id, int revision, string title, string body)
+    {
+        var version = new PageVersionViewModel { Id = id, PageId = RfcId, Revision = revision, Title = title, Body = body };
+
+        Mediator
+            .Send(Arg.Is<GetPageVersionQuery>(query => query.PageId == RfcId && query.VersionId == id), Arg.Any<CancellationToken>())
+            .Returns(ClientResponse<PageVersionViewModel>.Success(version));
     }
 
     private static async Task<AiToolExecution> Execute(IAiToolAction action, string arguments)

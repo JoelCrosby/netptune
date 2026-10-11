@@ -138,9 +138,7 @@ public class SearchTasksToolTests
     {
         var tags = names.Select(name => new TagViewModel { Name = name }).ToList();
 
-        Mediator
-            .Send(Arg.Any<GetTagsForWorkspaceQuery>(), Arg.Any<CancellationToken>())
-            .Returns(tags);
+        AiTestTags.Given(Mediator, tags);
     }
 
     private static PagedResponse<TaskViewModel> CreatePage()

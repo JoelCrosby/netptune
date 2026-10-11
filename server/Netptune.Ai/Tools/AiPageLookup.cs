@@ -37,6 +37,49 @@ public static partial class AiPageLookup
         };
     }
 
+    public static async Task<PageViewModel?> Read(IMediator mediator, int pageId, CancellationToken cancellationToken)
+    {
+        var tree = await Tree(mediator, cancellationToken);
+        var node = tree.FirstOrDefault(candidate => candidate.Id == pageId);
+
+        if (node is null)
+        {
+            return null;
+        }
+
+        var result = await mediator.Send(new GetPageQuery(node.Slug), cancellationToken);
+
+        return result.IsSuccess ? result.Payload : null;
+    }
+
+    public static async Task<List<ArchivedPageViewModel>> Archived(IMediator mediator, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetArchivedPagesQuery(), cancellationToken);
+        var hasPages = result.IsSuccess && result.Payload is not null;
+
+        return hasPages ? result.Payload! : [];
+    }
+
+    public static string NotArchivedMessage(int pageId)
+    {
+        return $"Page {pageId} is not in the archive. Find archived pages with list_archived_pages.";
+    }
+
+    public static PageStatus? ParseStatus(string? status)
+    {
+        return status?.Trim().ToLowerInvariant() switch
+        {
+            "draft" => PageStatus.Draft,
+            "published" => PageStatus.Published,
+            _ => null,
+        };
+    }
+
+    public static string DescribeStatus(PageStatus status)
+    {
+        return status.ToString().ToLowerInvariant();
+    }
+
     public static AiPageParentLookup ReadParent(
         IReadOnlyList<PageTreeNodeViewModel> tree,
         IAiChangeSetBuilder changeSet,
@@ -126,6 +169,28 @@ public static partial class AiPageLookup
     public static bool HasLiveChildren(IReadOnlyList<PageTreeNodeViewModel> tree, int pageId)
     {
         return tree.Any(node => node.ParentId == pageId);
+    }
+
+    public static int CountDescendants(IReadOnlyList<PageTreeNodeViewModel> tree, int pageId)
+    {
+        var childIdsByParent = tree
+            .Where(node => node.ParentId.HasValue)
+            .ToLookup(node => node.ParentId!.Value, node => node.Id);
+        var visited = new HashSet<int> { pageId };
+        var pending = new Stack<int>([pageId]);
+
+        while (pending.TryPop(out var parentId))
+        {
+            foreach (var childId in childIdsByParent[parentId])
+            {
+                if (visited.Add(childId))
+                {
+                    pending.Push(childId);
+                }
+            }
+        }
+
+        return visited.Count - 1;
     }
 
     public static bool IsInside(IReadOnlyList<PageTreeNodeViewModel> tree, int candidateId, int ancestorId)

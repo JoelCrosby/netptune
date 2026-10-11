@@ -2,6 +2,8 @@ using System.Net;
 using System.Net.Http.Json;
 
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
+using Netptune.Core.UnitOfWork;
 
 using Netptune.Core.Enums;
 using Netptune.Core.Requests;
@@ -15,11 +17,30 @@ namespace Netptune.IntegrationTests.Endpoints;
 
 public sealed class TagsEndpointTests
 {
+    private readonly NetptuneFixture Fixture;
     private readonly HttpClient Client;
 
     public TagsEndpointTests(NetptuneFixture fixture)
     {
+        Fixture = fixture;
         Client = fixture.CreateNetptuneClient();
+    }
+
+    [Fact]
+    public async Task GetViewModelsByNames_ShouldMatchNamesIgnoringCase_AndSkipUnknownOnes()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var name = $"Mixed Case {Guid.NewGuid():N}"[..20];
+        var created = await Client.PostAsJsonAsync("api/tags", new AddTagRequest { Tag = name }, cancellationToken);
+
+        created.EnsureSuccessStatusCode();
+
+        await using var scope = Fixture.Services.CreateAsyncScope();
+
+        var unitOfWork = scope.ServiceProvider.GetRequiredService<INetptuneUnitOfWork>();
+        var found = await unitOfWork.Tags.GetViewModelsByNames(1, [name.ToUpperInvariant(), "no such tag"], cancellationToken);
+
+        found.Should().ContainSingle().Which.Name.Should().Be(name);
     }
 
     [Fact]

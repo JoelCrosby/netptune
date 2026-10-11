@@ -23,6 +23,8 @@ const KINDS: Record<string, AiChangeKind> = {
   propose_delete_board: 'delete',
   propose_delete_board_group: 'delete',
   propose_remove_task_from_sprint: 'delete',
+  propose_archive_page: 'delete',
+  propose_delete_page: 'delete',
   propose_assign_task: 'collection',
   propose_set_task_tags: 'collection',
   propose_add_tasks_to_sprint: 'collection',
@@ -40,6 +42,8 @@ const COMMENT = $localize`:What a proposed change does:Comment`;
 const LINK = $localize`:What a proposed change does:Link`;
 const UNLINK = $localize`:What a proposed change does:Unlink`;
 const MOVE = $localize`:What a proposed change does:Move`;
+const ARCHIVE = $localize`:verb|What a proposed change does:Archive`;
+const RESTORE = $localize`:What a proposed change does:Restore`;
 
 const ACTIONS: Record<string, string> = {
   propose_create_task: CREATE,
@@ -62,10 +66,15 @@ const ACTIONS: Record<string, string> = {
   propose_cancel_sprint: UPDATE,
   propose_resolve_task_flag: UPDATE,
   propose_update_page_body: UPDATE,
+  propose_update_page_details: UPDATE,
+  propose_restore_page: RESTORE,
+  propose_restore_page_version: RESTORE,
   propose_delete_task: DELETE,
   propose_delete_sprint: DELETE,
   propose_delete_board: DELETE,
   propose_delete_board_group: DELETE,
+  propose_delete_page: DELETE,
+  propose_archive_page: ARCHIVE,
   propose_assign_task: ASSIGN,
   propose_set_task_tags: TAG,
   propose_add_comment: COMMENT,

@@ -65,11 +65,6 @@ public sealed class SearchTasksTool : IAiTool
         var requestedTags = AiTagVocabulary.ReadRequested(arguments);
         var resolvedTags = await ResolveTags(requestedTags, cancellationToken);
 
-        if (resolvedTags is null)
-        {
-            return AiToolExecution.Failed("Workspace tags could not be read.");
-        }
-
         if (resolvedTags.Unknown.Count > 0)
         {
             return AiToolExecution.Failed(
@@ -125,20 +120,14 @@ public sealed class SearchTasksTool : IAiTool
         return AiToolExecution.Success(content);
     }
 
-    private async Task<TagResolution?> ResolveTags(List<string> requested, CancellationToken cancellationToken)
+    private async Task<TagResolution> ResolveTags(List<string> requested, CancellationToken cancellationToken)
     {
         if (requested.Count == 0)
         {
             return new TagResolution([], []);
         }
 
-        var workspaceTags = await Mediator.Send(new GetTagsForWorkspaceQuery(), cancellationToken);
-
-        if (workspaceTags is null)
-        {
-            return null;
-        }
-
+        var workspaceTags = await Mediator.Send(new GetTagsByNameQuery(requested), cancellationToken);
         var knownNames = workspaceTags.Select(tag => tag.Name).ToList();
         var matched = new List<string>();
         var unknown = new List<string>();

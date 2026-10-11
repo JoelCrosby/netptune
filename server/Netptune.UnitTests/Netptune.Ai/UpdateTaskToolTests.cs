@@ -11,7 +11,6 @@ using Netptune.Core.Enums;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Tags;
-using Netptune.Handlers.Tags.Queries;
 using Netptune.Handlers.Tasks.Queries;
 
 using NSubstitute;
@@ -349,9 +348,7 @@ public class UpdateTaskToolTests
     {
         var tags = names.Select(name => new TagViewModel { Name = name }).ToList();
 
-        Mediator
-            .Send(Arg.Any<GetTagsForWorkspaceQuery>(), Arg.Any<CancellationToken>())
-            .Returns(tags);
+        AiTestTags.Given(Mediator, tags);
     }
 
     private async Task<AiToolExecution> Execute(string arguments)

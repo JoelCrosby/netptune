@@ -10,7 +10,7 @@ using Netptune.Core.ViewModels.Pages;
 
 namespace Netptune.Handlers.Pages.Commands;
 
-public sealed record RestorePageVersionCommand(int PageId, int VersionId) : IRequest<ClientResponse<PageViewModel>>;
+public sealed record RestorePageVersionCommand(int PageId, int VersionId, int? ExpectedRevision = null) : IRequest<ClientResponse<PageViewModel>>;
 
 public sealed class RestorePageVersionCommandHandler : IRequestHandler<RestorePageVersionCommand, ClientResponse<PageViewModel>>
 {
@@ -41,6 +41,20 @@ public sealed class RestorePageVersionCommandHandler : IRequestHandler<RestorePa
         if (page is null)
         {
             return ClientResponse<PageViewModel>.NotFound;
+        }
+
+        var changedSinceExpected = request.ExpectedRevision is { } expected && expected != page.Revision;
+
+        if (changedSinceExpected)
+        {
+            var current = await UnitOfWork.Pages.GetViewModel(page.Id, workspaceId, userId, cancellationToken);
+
+            if (current is null)
+            {
+                return ClientResponse<PageViewModel>.NotFound;
+            }
+
+            return ClientResponse<PageViewModel>.Conflict(current, SavePageCommandHandler.ConflictMessage);
         }
 
         var version = await UnitOfWork.PageVersions.GetViewModel(request.VersionId, page.Id, workspaceId, cancellationToken);

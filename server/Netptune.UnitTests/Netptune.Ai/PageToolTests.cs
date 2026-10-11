@@ -97,6 +97,71 @@ public class PageToolTests
         result.Content.Should().Contain("missing");
     }
 
+    [Fact]
+    public async Task ListArchivedPages_ShouldReturnWhoArchivedEachPageAndWhen()
+    {
+        var archivedAt = new DateTime(2026, 10, 1, 9, 0, 0, DateTimeKind.Utc);
+        var archived = new ArchivedPageViewModel
+        {
+            Id = 20,
+            Title = "Old plan",
+            Slug = "old-plan",
+            Kind = PageKind.Folder,
+            ArchivedAt = archivedAt,
+            ArchivedByDisplayName = "Ada",
+        };
+
+        Mediator
+            .Send(Arg.Any<GetArchivedPagesQuery>(), Arg.Any<CancellationToken>())
+            .Returns(ClientResponse<List<ArchivedPageViewModel>>.Success([archived]));
+
+        var result = await Execute(new ListArchivedPagesTool(Mediator), "{}");
+
+        using var content = JsonDocument.Parse(result.Content);
+        var page = content.RootElement.EnumerateArray().Single();
+
+        page.GetProperty("id").GetInt32().Should().Be(20);
+        page.GetProperty("title").GetString().Should().Be("Old plan");
+        page.GetProperty("kind").GetString().Should().Be("folder");
+        page.GetProperty("archivedAt").GetDateTime().Should().Be(archivedAt);
+        page.GetProperty("archivedBy").GetString().Should().Be("Ada");
+    }
+
+    [Fact]
+    public async Task ListPageVersions_ShouldMarkTheVersionThatMatchesThePageNow()
+    {
+        PageTestTree.Given(Mediator);
+        Mediator
+            .Send(Arg.Is<GetPageQuery>(query => query.Slug == "rfc"), Arg.Any<CancellationToken>())
+            .Returns(ClientResponse<PageViewModel>.Success(new PageViewModel { Id = 11, Title = "RFC", Slug = "rfc", Revision = 4 }));
+        Mediator
+            .Send(Arg.Is<GetPageVersionsQuery>(query => query.PageId == 11), Arg.Any<CancellationToken>())
+            .Returns(ClientResponse<List<PageVersionSummaryViewModel>>.Success(
+            [
+                new PageVersionSummaryViewModel { Id = 31, Revision = 4, Title = "RFC", CreatedByDisplayName = "Ada" },
+                new PageVersionSummaryViewModel { Id = 30, Revision = 2, Title = "RFC draft" },
+            ]));
+
+        var result = await Execute(new ListPageVersionsTool(Mediator), """{"pageId":11}""");
+
+        using var content = JsonDocument.Parse(result.Content);
+        var versions = content.RootElement.EnumerateArray().ToList();
+
+        versions.Select(version => version.GetProperty("id").GetInt32()).Should().Equal(31, 30);
+        versions.Select(version => version.GetProperty("isCurrent").GetBoolean()).Should().Equal(true, false);
+        versions[0].GetProperty("author").GetString().Should().Be("Ada");
+    }
+
+    [Fact]
+    public async Task ListPageVersions_ShouldRefuse_APageThatIsNotLive()
+    {
+        PageTestTree.Given(Mediator);
+
+        var result = await Execute(new ListPageVersionsTool(Mediator), """{"pageId":20}""");
+
+        result.IsError.Should().BeTrue();
+    }
+
     private void GivenSearchResults()
     {
         var response = new SearchResponse

@@ -14,7 +14,6 @@ using Netptune.Core.ViewModels.Projects;
 using Netptune.Core.ViewModels.Tags;
 using Netptune.Handlers.Boards.Queries;
 using Netptune.Handlers.Projects.Queries;
-using Netptune.Handlers.Tags.Queries;
 
 using NSubstitute;
 
@@ -239,8 +238,6 @@ public class CreateTaskToolTests
     {
         var tags = names.Select(name => new TagViewModel { Name = name }).ToList();
 
-        Mediator
-            .Send(Arg.Any<GetTagsForWorkspaceQuery>(), Arg.Any<CancellationToken>())
-            .Returns(tags);
+        AiTestTags.Given(Mediator, tags);
     }
 }
