@@ -66,7 +66,7 @@ public sealed class CreateTaskTool : IAiTool
           "tags": {
             "type": "array",
             "items": { "type": "string" },
-            "description": "Tag names for the new task, from list_records or proposed with propose_create_tag."
+            "description": "Tag names for the new task, from list_records or proposed with propose_tag_change."
           },
           "priority": {
             "type": "string",
@@ -256,7 +256,7 @@ public sealed class CreateTaskTool : IAiTool
             {
                 return TaskPlacement.Failed(
                     "A task in a project proposed in this change set cannot join an existing sprint. "
-                    + "Propose the sprint with propose_create_sprint and pass its handle as sprintRef.");
+                    + "Propose the sprint with propose_sprint_change (action create) and pass its handle as sprintRef.");
             }
 
             var sprint = await AiSprintLookup.Find(Mediator, sprintId.Value, cancellationToken);

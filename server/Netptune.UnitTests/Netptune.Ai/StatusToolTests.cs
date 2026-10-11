@@ -39,7 +39,7 @@ public class StatusToolTests
     [Fact]
     public async Task UpdateStatus_ShouldProposeOnlyTheChangedFields()
     {
-        var tool = new UpdateStatusTool(Mediator, ChangeSet);
+        var tool = new UpdateStatusAction(Mediator, ChangeSet);
         var json = $$"""{"statusId":{{InProgressId}},"name":"Doing","category":"Active","color":"#ff0000"}""";
         var result = await Execute(tool, json);
 
@@ -61,7 +61,7 @@ public class StatusToolTests
     [Fact]
     public async Task UpdateStatus_ShouldProposeTheCategory()
     {
-        var tool = new UpdateStatusTool(Mediator, ChangeSet);
+        var tool = new UpdateStatusAction(Mediator, ChangeSet);
         var result = await Execute(tool, $$"""{"statusId":{{InProgressId}},"category":"todo"}""");
 
         result.IsError.Should().BeFalse();
@@ -71,7 +71,7 @@ public class StatusToolTests
     [Fact]
     public async Task UpdateStatus_ShouldFail_WhenTheNameIsTakenByAnotherStatus()
     {
-        var tool = new UpdateStatusTool(Mediator, ChangeSet);
+        var tool = new UpdateStatusAction(Mediator, ChangeSet);
         var result = await Execute(tool, $$"""{"statusId":{{InProgressId}},"name":"done"}""");
 
         result.IsError.Should().BeTrue();
@@ -81,7 +81,7 @@ public class StatusToolTests
     [Fact]
     public async Task UpdateStatus_ShouldFail_WhenTheCategoryIsUnknown()
     {
-        var tool = new UpdateStatusTool(Mediator, ChangeSet);
+        var tool = new UpdateStatusAction(Mediator, ChangeSet);
         var result = await Execute(tool, $$"""{"statusId":{{InProgressId}},"category":"Blocked"}""");
 
         result.IsError.Should().BeTrue();
@@ -91,7 +91,7 @@ public class StatusToolTests
     [Fact]
     public async Task UpdateStatus_ShouldFail_WhenNothingWouldChange()
     {
-        var tool = new UpdateStatusTool(Mediator, ChangeSet);
+        var tool = new UpdateStatusAction(Mediator, ChangeSet);
         var result = await Execute(tool, $$"""{"statusId":{{InProgressId}},"name":"In progress","category":"Active"}""");
 
         result.IsError.Should().BeTrue();
@@ -101,7 +101,7 @@ public class StatusToolTests
     [Fact]
     public async Task UpdateStatus_ShouldFail_WhenTheStatusIsNotInTheWorkspace()
     {
-        var tool = new UpdateStatusTool(Mediator, ChangeSet);
+        var tool = new UpdateStatusAction(Mediator, ChangeSet);
         var result = await Execute(tool, """{"statusId":404,"name":"Doing"}""");
 
         result.IsError.Should().BeTrue();
@@ -148,7 +148,7 @@ public class StatusToolTests
         CapturedUpdates().Should().BeEmpty();
     }
 
-    private static async Task<AiToolExecution> Execute(IAiTool tool, string json)
+    private static async Task<AiToolExecution> Execute(IAiToolAction tool, string json)
     {
         var arguments = JsonDocument.Parse(json).RootElement;
 

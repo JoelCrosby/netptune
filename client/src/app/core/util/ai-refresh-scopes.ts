@@ -9,6 +9,8 @@ import { scopesForEntityType } from '@core/util/entity-refresh-scopes';
 const scopesByToolName: Record<string, RefreshScope[]> = {
   propose_add_comment: ['comments', 'tasks'],
   propose_set_task_tags: ['tasks', 'boardGroups', 'sprints', 'tags'],
+  propose_update_tag: ['tags', 'tasks', 'boardGroups', 'sprints', 'pages'],
+  propose_delete_tag: ['tags', 'tasks', 'boardGroups', 'sprints', 'pages'],
 };
 
 const scopesForChange = (change: AiProposedChange): readonly RefreshScope[] => {

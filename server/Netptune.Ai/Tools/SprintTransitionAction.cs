@@ -10,18 +10,21 @@ using Netptune.Handlers.Sprints.Queries;
 
 namespace Netptune.Ai.Tools;
 
-public sealed class SprintTransitionTool : IAiTool
+public sealed class SprintTransitionAction : IAiToolAction
 {
     public const string StartChange = "propose_start_sprint";
     public const string CompleteChange = "propose_complete_sprint";
     public const string CancelChange = "propose_cancel_sprint";
     public const string DeleteChange = "propose_delete_sprint";
 
+    public const string Start = "start";
+    public const string Complete = "complete";
+    public const string Cancel = "cancel";
+    public const string Delete = "delete";
+
     private const int ActiveSprintLookupTake = 1;
 
     private static readonly string[] ClosingChanges = [CompleteChange, CancelChange];
-
-    private static readonly string[] KnownActions = ["start", "complete", "cancel", "delete"];
 
     private static readonly IReadOnlySet<string> UpdatePermissions =
         new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Sprints.Update };
@@ -34,85 +37,29 @@ public sealed class SprintTransitionTool : IAiTool
 
     private readonly IMediator Mediator;
     private readonly IAiChangeSetBuilder ChangeSet;
+    private readonly string Transition;
 
-    public SprintTransitionTool(IMediator mediator, IAiChangeSetBuilder changeSet)
+    public SprintTransitionAction(IMediator mediator, IAiChangeSetBuilder changeSet, string transition)
     {
         Mediator = mediator;
         ChangeSet = changeSet;
+        Transition = transition;
     }
 
-    public string Name => "propose_sprint_transition";
-
-    public string Description =>
-        "Propose moving a sprint through its lifecycle. "
-        + "start makes a planning sprint the project's active sprint; a project has one active sprint, "
-        + "so complete or cancel the running one first. "
-        + "complete closes the active sprint and sends its unfinished tasks back to the backlog; it can no longer be edited. "
-        + "cancel sends its unfinished tasks back to the backlog and lets it be deleted afterwards. "
-        + "delete removes a planning or cancelled sprint and sends its tasks back to the backlog.";
-
-    public AiToolKind Kind => AiToolKind.Write;
-
-    public IReadOnlySet<string> RequiredPermissions { get; } =
-        new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Sprints.Read };
-
-    public IReadOnlyList<string> ProposedChanges { get; } = [StartChange, CompleteChange, CancelChange, DeleteChange];
-
-    public JsonDocument InputSchema { get; } = AiToolSchema.Object(
-        """
-        {
-          "sprintId": { "type": "integer", "description": "The id of the sprint." },
-          "action": {
-            "type": "string",
-            "enum": ["start", "complete", "cancel", "delete"],
-            "description": "What to do to the sprint."
-          }
-        }
-        """,
-        "sprintId",
-        "action");
-
-    public bool IsAvailable(IReadOnlySet<string> permissions)
+    public string ChangeName => Transition switch
     {
-        var canRead = RequiredPermissions.All(permissions.Contains);
-        var canUpdate = UpdatePermissions.All(permissions.Contains);
-        var canDelete = DeletePermissions.All(permissions.Contains);
+        Start => StartChange,
+        Complete => CompleteChange,
+        Cancel => CancelChange,
+        _ => DeleteChange,
+    };
 
-        return canRead && (canUpdate || canDelete);
-    }
-
-    public IReadOnlySet<string> GetRequiredPermissions(JsonElement arguments)
+    public IReadOnlySet<string> RequiredPermissions => Transition switch
     {
-        var action = AiToolSchema.GetString(arguments, "action");
-        var isDelete = string.Equals(action, "delete", StringComparison.OrdinalIgnoreCase);
-        var isClosing = string.Equals(action, "complete", StringComparison.OrdinalIgnoreCase)
-            || string.Equals(action, "cancel", StringComparison.OrdinalIgnoreCase);
-
-        if (isDelete)
-        {
-            return DeletePermissions;
-        }
-
-        return isClosing ? ClosingPermissions : UpdatePermissions;
-    }
-
-    public IReadOnlySet<string> GetChangePermissions(string changeName, JsonElement payload)
-    {
-        var isDelete = changeName == DeleteChange;
-        var isClosing = ClosingChanges.Contains(changeName);
-
-        if (isDelete)
-        {
-            return DeletePermissions;
-        }
-
-        return isClosing ? ClosingPermissions : UpdatePermissions;
-    }
-
-    public string DescribeCall(JsonElement arguments)
-    {
-        return AiToolSchema.DescribeCall(Name, arguments, "action", KnownActions);
-    }
+        Start => UpdatePermissions,
+        Complete or Cancel => ClosingPermissions,
+        _ => DeletePermissions,
+    };
 
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
@@ -123,14 +70,6 @@ public sealed class SprintTransitionTool : IAiTool
             return AiToolExecution.Failed("A sprintId is required.");
         }
 
-        var action = AiToolSchema.GetString(arguments, "action")?.Trim().ToLowerInvariant();
-        var isKnownAction = KnownActions.Contains(action);
-
-        if (!isKnownAction)
-        {
-            return AiToolExecution.Failed("An action of start, complete, cancel or delete is required.");
-        }
-
         var sprint = await AiSprintLookup.Find(Mediator, sprintId.Value, cancellationToken);
 
         if (sprint is null)
@@ -138,18 +77,18 @@ public sealed class SprintTransitionTool : IAiTool
             return AiToolExecution.Failed($"Sprint {sprintId} is not in this workspace.");
         }
 
-        var execution = action switch
+        var execution = Transition switch
         {
-            "start" => await Start(sprint, cancellationToken),
-            "complete" => Complete(sprint),
-            "cancel" => Cancel(sprint),
-            _ => Delete(sprint),
+            Start => await ProposeStart(sprint, cancellationToken),
+            Complete => ProposeComplete(sprint),
+            Cancel => ProposeCancel(sprint),
+            _ => ProposeDelete(sprint),
         };
 
         return execution;
     }
 
-    private async Task<AiToolExecution> Start(SprintDetailViewModel sprint, CancellationToken cancellationToken)
+    private async Task<AiToolExecution> ProposeStart(SprintDetailViewModel sprint, CancellationToken cancellationToken)
     {
         var isPlanning = sprint.Status == SprintStatus.Planning;
 
@@ -179,7 +118,7 @@ public sealed class SprintTransitionTool : IAiTool
         return Propose(StartChange, sprint, $"Start sprint “{sprint.Name}”", [statusField]);
     }
 
-    private AiToolExecution Complete(SprintDetailViewModel sprint)
+    private AiToolExecution ProposeComplete(SprintDetailViewModel sprint)
     {
         var isActive = sprint.Status == SprintStatus.Active;
 
@@ -211,7 +150,7 @@ public sealed class SprintTransitionTool : IAiTool
         return Propose(CompleteChange, sprint, $"Complete sprint “{sprint.Name}”", fields);
     }
 
-    private AiToolExecution Cancel(SprintDetailViewModel sprint)
+    private AiToolExecution ProposeCancel(SprintDetailViewModel sprint)
     {
         var isAlreadyCancelled = sprint.Status == SprintStatus.Cancelled;
 
@@ -230,7 +169,7 @@ public sealed class SprintTransitionTool : IAiTool
         return Propose(CancelChange, sprint, $"Cancel sprint “{sprint.Name}”", [statusField]);
     }
 
-    private AiToolExecution Delete(SprintDetailViewModel sprint)
+    private AiToolExecution ProposeDelete(SprintDetailViewModel sprint)
     {
         var isDeletable = sprint.Status is SprintStatus.Planning or SprintStatus.Cancelled;
 

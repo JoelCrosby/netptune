@@ -50,7 +50,7 @@ public class CreateTaskToolTests
     [Fact]
     public async Task Execute_ShouldProposeTags_WhenTheyArePendingInTheSameChangeSet()
     {
-        var createTag = new CreateTagTool(Mediator, ChangeSet);
+        var createTag = new CreateTagAction(Mediator, ChangeSet);
         var tagArguments = JsonDocument.Parse("""{"name":"regression"}""").RootElement;
 
         await createTag.Execute(tagArguments, TestContext.Current.CancellationToken);
@@ -68,7 +68,7 @@ public class CreateTaskToolTests
         var result = await Execute($$"""{"name":"Fix the login page","projectId":{{ProjectId}},"tags":["chore"]}""");
 
         result.IsError.Should().BeTrue();
-        result.Content.Should().Contain("propose_create_tag");
+        result.Content.Should().Contain("propose_tag_change");
         ChangeSet.Changes.Should().BeEmpty();
     }
 
@@ -189,7 +189,7 @@ public class CreateTaskToolTests
 
     private async Task<string> GivenProposedProject(string name)
     {
-        var createProject = new CreateProjectTool(Mediator, ChangeSet);
+        var createProject = new CreateProjectAction(Mediator, ChangeSet);
         var arguments = JsonDocument.Parse($$"""{"name":"{{name}}"}""").RootElement;
 
         await createProject.Execute(arguments, TestContext.Current.CancellationToken);

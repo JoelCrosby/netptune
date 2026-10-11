@@ -10,42 +10,21 @@ using Netptune.Handlers.Statuses.Queries;
 
 namespace Netptune.Ai.Tools;
 
-public sealed class CreateStatusTool : IAiTool
+public sealed class CreateStatusAction : IAiToolAction
 {
     private readonly IMediator Mediator;
     private readonly IAiChangeSetBuilder ChangeSet;
 
-    public CreateStatusTool(IMediator mediator, IAiChangeSetBuilder changeSet)
+    public CreateStatusAction(IMediator mediator, IAiChangeSetBuilder changeSet)
     {
         Mediator = mediator;
         ChangeSet = changeSet;
     }
 
-    public string Name => "propose_create_status";
-
-    public string Description =>
-        "Propose creating a task status for the workspace.";
-
-    public AiToolKind Kind => AiToolKind.Write;
+    public string ChangeName => "propose_create_status";
 
     public IReadOnlySet<string> RequiredPermissions { get; } =
         new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Statuses.Manage };
-
-    public JsonDocument InputSchema { get; } = AiToolSchema.Object(
-        """
-        {
-          "name": { "type": "string", "description": "The status name." },
-          "category": {
-            "type": "string",
-            "description": "Which stage the status belongs to.",
-            "enum": ["New", "Backlog", "Todo", "Active", "Done", "Inactive"]
-          },
-          "description": { "type": "string", "description": "Optional status description." },
-          "color": { "type": "string", "description": "Optional colour, as a hex value or a named colour." }
-        }
-        """,
-        "name",
-        "category");
 
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
@@ -87,7 +66,7 @@ public sealed class CreateStatusTool : IAiTool
 
         ChangeSet.Add(new AiChangeDraft
         {
-            ToolName = Name,
+            ToolName = ChangeName,
             EntityType = "status",
             RefKey = refKey,
             Summary = $"Create status “{name}” in {category}",

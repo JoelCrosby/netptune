@@ -9,37 +9,21 @@ using Netptune.Handlers.Relations.Queries;
 
 namespace Netptune.Ai.Tools;
 
-public sealed class UnlinkTasksTool : IAiTool
+public sealed class UnlinkTasksAction : IAiToolAction
 {
     private readonly IMediator Mediator;
     private readonly IAiChangeSetBuilder ChangeSet;
 
-    public UnlinkTasksTool(IMediator mediator, IAiChangeSetBuilder changeSet)
+    public UnlinkTasksAction(IMediator mediator, IAiChangeSetBuilder changeSet)
     {
         Mediator = mediator;
         ChangeSet = changeSet;
     }
 
-    public string Name => "propose_unlink_tasks";
-
-    public string Description =>
-        "Propose removing a relation between two tasks. "
-        + "Read the relation id from get_task with include relations first.";
-
-    public AiToolKind Kind => AiToolKind.Write;
+    public string ChangeName => "propose_unlink_tasks";
 
     public IReadOnlySet<string> RequiredPermissions { get; } =
         new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Tasks.Update };
-
-    public JsonDocument InputSchema { get; } = AiToolSchema.Object(
-        """
-        {
-          "systemId": { "type": "string", "description": "The task's system id, for example NPT-42." },
-          "relationId": { "type": "integer", "description": "The relation id, from get_task with include relations." }
-        }
-        """,
-        "systemId",
-        "relationId");
 
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
@@ -77,7 +61,7 @@ public sealed class UnlinkTasksTool : IAiTool
 
         ChangeSet.Add(new AiChangeDraft
         {
-            ToolName = Name,
+            ToolName = ChangeName,
             EntityType = "task",
             EntityId = relation.RelatedTask.Id,
             Summary = $"Unlink “{systemId}” from “{related}”",

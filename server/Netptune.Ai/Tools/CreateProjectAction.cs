@@ -9,36 +9,21 @@ using Netptune.Handlers.Projects.Queries;
 
 namespace Netptune.Ai.Tools;
 
-public sealed class CreateProjectTool : IAiTool
+public sealed class CreateProjectAction : IAiToolAction
 {
     private readonly IMediator Mediator;
     private readonly IAiChangeSetBuilder ChangeSet;
 
-    public CreateProjectTool(IMediator mediator, IAiChangeSetBuilder changeSet)
+    public CreateProjectAction(IMediator mediator, IAiChangeSetBuilder changeSet)
     {
         Mediator = mediator;
         ChangeSet = changeSet;
     }
 
-    public string Name => "propose_create_project";
-
-    public string Description =>
-        "Propose creating a project.";
-
-    public AiToolKind Kind => AiToolKind.Write;
+    public string ChangeName => "propose_create_project";
 
     public IReadOnlySet<string> RequiredPermissions { get; } =
         new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Projects.Create };
-
-    public JsonDocument InputSchema { get; } = AiToolSchema.Object(
-        """
-        {
-          "name": { "type": "string", "description": "The project name." },
-          "description": { "type": "string", "description": "Optional project description." },
-          "repositoryUrl": { "type": "string", "description": "Optional source repository url." }
-        }
-        """,
-        "name");
 
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
@@ -69,7 +54,7 @@ public sealed class CreateProjectTool : IAiTool
 
         ChangeSet.Add(new AiChangeDraft
         {
-            ToolName = Name,
+            ToolName = ChangeName,
             EntityType = "project",
             RefKey = refKey,
             Summary = $"Create project “{name}”",

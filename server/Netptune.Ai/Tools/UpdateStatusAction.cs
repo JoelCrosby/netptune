@@ -11,43 +11,21 @@ using Netptune.Handlers.Statuses.Queries;
 
 namespace Netptune.Ai.Tools;
 
-public sealed class UpdateStatusTool : IAiTool
+public sealed class UpdateStatusAction : IAiToolAction
 {
     private readonly IMediator Mediator;
     private readonly IAiChangeSetBuilder ChangeSet;
 
-    public UpdateStatusTool(IMediator mediator, IAiChangeSetBuilder changeSet)
+    public UpdateStatusAction(IMediator mediator, IAiChangeSetBuilder changeSet)
     {
         Mediator = mediator;
         ChangeSet = changeSet;
     }
 
-    public string Name => "propose_update_status";
-
-    public string Description =>
-        "Propose renaming a workspace task status or changing its category, colour or description. "
-        + "Fields that are not passed keep their current value.";
-
-    public AiToolKind Kind => AiToolKind.Write;
+    public string ChangeName => "propose_update_status";
 
     public IReadOnlySet<string> RequiredPermissions { get; } =
         new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Statuses.Manage };
-
-    public JsonDocument InputSchema { get; } = AiToolSchema.Object(
-        """
-        {
-          "statusId": { "type": "integer", "description": "The id of the status to change, from list_records." },
-          "name": { "type": "string", "description": "New status name." },
-          "category": {
-            "type": "string",
-            "description": "New stage the status belongs to.",
-            "enum": ["New", "Backlog", "Todo", "Active", "Done", "Inactive"]
-          },
-          "description": { "type": "string", "description": "New status description." },
-          "color": { "type": "string", "description": "New colour, as a hex value or a named colour." }
-        }
-        """,
-        "statusId");
 
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
@@ -116,7 +94,7 @@ public sealed class UpdateStatusTool : IAiTool
 
         ChangeSet.Add(new AiChangeDraft
         {
-            ToolName = Name,
+            ToolName = ChangeName,
             EntityType = "status",
             EntityId = status.Id,
             Summary = $"Update {changedNames} on status “{status.Name}”",

@@ -103,7 +103,7 @@ public sealed class UpdateTaskTool : IAiTool
           "tags": {
             "type": "array",
             "items": { "type": "string" },
-            "description": "The complete set of tag names, existing or proposed with propose_create_tag. An empty array clears them."
+            "description": "The complete set of tag names, existing or proposed with propose_tag_change. An empty array clears them."
           },
           "boardGroupId": { "type": "integer", "description": "Board group (the column on a board) to move the task into." },
           "boardGroupRef": { "type": "string", "description": "Handle of a board group proposed earlier in this change set, instead of boardGroupId." }

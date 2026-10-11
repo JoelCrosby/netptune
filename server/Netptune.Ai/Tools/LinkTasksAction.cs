@@ -10,40 +10,21 @@ using Netptune.Handlers.Tasks.Queries;
 
 namespace Netptune.Ai.Tools;
 
-public sealed class LinkTasksTool : IAiTool
+public sealed class LinkTasksAction : IAiToolAction
 {
     private readonly IMediator Mediator;
     private readonly IAiChangeSetBuilder ChangeSet;
 
-    public LinkTasksTool(IMediator mediator, IAiChangeSetBuilder changeSet)
+    public LinkTasksAction(IMediator mediator, IAiChangeSetBuilder changeSet)
     {
         Mediator = mediator;
         ChangeSet = changeSet;
     }
 
-    public string Name => "propose_link_tasks";
-
-    public string Description =>
-        "Propose linking two tasks with a relation such as blocks or relates to. "
-        + "Name the relation type with relationType — its ids differ between workspaces, so never guess one.";
-
-    public AiToolKind Kind => AiToolKind.Write;
+    public string ChangeName => "propose_link_tasks";
 
     public IReadOnlySet<string> RequiredPermissions { get; } =
         new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Tasks.Update };
-
-    public JsonDocument InputSchema { get; } = AiToolSchema.Object(
-        """
-        {
-          "taskId": { "type": "integer", "description": "The id of the task the relation is stated from." },
-          "taskRef": { "type": "string", "description": "Handle of a task proposed earlier in this change set, instead of taskId." },
-          "relatedTaskId": { "type": "integer", "description": "The id of the task on the other end of the relation." },
-          "relatedTaskRef": { "type": "string", "description": "Handle of a task proposed earlier in this change set, instead of relatedTaskId." },
-          "relationType": { "type": "string", "description": "The relation type by name, such as \"blocks\" or \"relates to\". Its inverse name, such as \"is blocked by\", states the relation the other way round and swaps the two tasks." },
-          "relationTypeId": { "type": "integer", "description": "The relation type id, from list_records, instead of relationType." },
-          "relationTypeRef": { "type": "string", "description": "Handle of a relation type proposed earlier in this change set, instead of relationType." }
-        }
-        """);
 
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
@@ -89,7 +70,7 @@ public sealed class LinkTasksTool : IAiTool
 
         ChangeSet.Add(new AiChangeDraft
         {
-            ToolName = Name,
+            ToolName = ChangeName,
             EntityType = "task",
             EntityId = source.TaskId,
             Summary = $"Link “{source.Label}” {relation.Label.ToLowerInvariant()} “{target.Label}”",

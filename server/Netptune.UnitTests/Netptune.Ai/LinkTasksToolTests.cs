@@ -143,7 +143,7 @@ public class LinkTasksToolTests
 
     private async Task<AiToolExecution> Execute(string json)
     {
-        var tool = new LinkTasksTool(Mediator, ChangeSet);
+        var tool = new LinkTasksAction(Mediator, ChangeSet);
 
         return await tool.Execute(Arguments(json), TestContext.Current.CancellationToken);
     }

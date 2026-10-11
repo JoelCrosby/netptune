@@ -66,7 +66,7 @@ public sealed class PageChangeTool : IAiTool
           "tags": {
             "type": "array",
             "items": { "type": "string" },
-            "description": "update_details: the complete set of tag names, existing or proposed with propose_create_tag. An empty array clears them."
+            "description": "update_details: the complete set of tag names, existing or proposed with propose_tag_change. An empty array clears them."
           },
           "versionId": { "type": "integer", "description": "restore_version: the version to return to, from list_page_versions." }
         }

@@ -8,41 +8,21 @@ using Netptune.Core.Services.Ai;
 
 namespace Netptune.Ai.Tools;
 
-public sealed class CreateSprintTool : IAiTool
+public sealed class CreateSprintAction : IAiToolAction
 {
     private readonly IMediator Mediator;
     private readonly IAiChangeSetBuilder ChangeSet;
 
-    public CreateSprintTool(IMediator mediator, IAiChangeSetBuilder changeSet)
+    public CreateSprintAction(IMediator mediator, IAiChangeSetBuilder changeSet)
     {
         Mediator = mediator;
         ChangeSet = changeSet;
     }
 
-    public string Name => "propose_create_sprint";
-
-    public string Description =>
-        "Propose creating a sprint in a project.";
-
-    public AiToolKind Kind => AiToolKind.Write;
+    public string ChangeName => "propose_create_sprint";
 
     public IReadOnlySet<string> RequiredPermissions { get; } =
         new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Sprints.Create };
-
-    public JsonDocument InputSchema { get; } = AiToolSchema.Object(
-        """
-        {
-          "name": { "type": "string", "description": "The sprint name." },
-          "projectId": { "type": "integer", "description": "The project the sprint belongs to." },
-          "projectRef": { "type": "string", "description": "Handle of a project proposed earlier in this change set, instead of projectId." },
-          "startDate": { "type": "string", "description": "First day of the sprint as YYYY-MM-DD." },
-          "endDate": { "type": "string", "description": "Last day of the sprint as YYYY-MM-DD." },
-          "goal": { "type": "string", "description": "Optional sprint goal." }
-        }
-        """,
-        "name",
-        "startDate",
-        "endDate");
 
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
@@ -92,7 +72,7 @@ public sealed class CreateSprintTool : IAiTool
 
         ChangeSet.Add(new AiChangeDraft
         {
-            ToolName = Name,
+            ToolName = ChangeName,
             EntityType = "sprint",
             RefKey = refKey,
             Summary = $"Create sprint “{name}” in {project.Name}",

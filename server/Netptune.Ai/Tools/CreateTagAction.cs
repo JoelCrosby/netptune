@@ -9,37 +9,23 @@ using Netptune.Handlers.Tags.Queries;
 
 namespace Netptune.Ai.Tools;
 
-public sealed class CreateTagTool : IAiTool
+public sealed class CreateTagAction : IAiToolAction
 {
-    public const string ToolName = "propose_create_tag";
+    public const string Change = "propose_create_tag";
 
     private readonly IMediator Mediator;
     private readonly IAiChangeSetBuilder ChangeSet;
 
-    public CreateTagTool(IMediator mediator, IAiChangeSetBuilder changeSet)
+    public CreateTagAction(IMediator mediator, IAiChangeSetBuilder changeSet)
     {
         Mediator = mediator;
         ChangeSet = changeSet;
     }
 
-    public string Name => ToolName;
-
-    public string Description =>
-        "Propose adding a tag to the workspace vocabulary, for a theme no existing tag covers. "
-        + "Once proposed, propose_create_task and propose_update_task may use it in the same change set.";
-
-    public AiToolKind Kind => AiToolKind.Write;
+    public string ChangeName => Change;
 
     public IReadOnlySet<string> RequiredPermissions { get; } =
         new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Tags.Create };
-
-    public JsonDocument InputSchema { get; } = AiToolSchema.Object(
-        """
-        {
-          "name": { "type": "string", "description": "The tag name. Check the tags in list_records first — reuse an existing tag when one fits." }
-        }
-        """,
-        "name");
 
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
@@ -60,7 +46,7 @@ public sealed class CreateTagTool : IAiTool
         }
 
         var isProposed = ChangeSet.Changes.Any(change =>
-            string.Equals(change.ToolName, ToolName, StringComparison.Ordinal) &&
+            string.Equals(change.ToolName, Change, StringComparison.Ordinal) &&
             string.Equals(ReadProposedName(change), name, StringComparison.OrdinalIgnoreCase));
 
         if (isProposed)
@@ -70,7 +56,7 @@ public sealed class CreateTagTool : IAiTool
 
         ChangeSet.Add(new AiChangeDraft
         {
-            ToolName = Name,
+            ToolName = Change,
             EntityType = "tag",
             Summary = $"Create tag “{name}”",
             Fields = [AiChangeFields.Values("tag", AiChangeValueKind.Tag, [], [AiChangeFields.Tag(name!)])],
@@ -85,7 +71,7 @@ public sealed class CreateTagTool : IAiTool
     public static IEnumerable<string> ProposedNames(IAiChangeSetBuilder changeSet)
     {
         return changeSet.Changes
-            .Where(change => string.Equals(change.ToolName, ToolName, StringComparison.Ordinal))
+            .Where(change => string.Equals(change.ToolName, Change, StringComparison.Ordinal))
             .Select(ReadProposedName)
             .Where(name => !string.IsNullOrWhiteSpace(name))
             .Select(name => name!);

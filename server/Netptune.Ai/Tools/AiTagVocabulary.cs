@@ -15,7 +15,7 @@ public static class AiTagVocabulary
         IReadOnlyCollection<string> requested,
         CancellationToken cancellationToken)
     {
-        var proposedNames = CreateTagTool.ProposedNames(changeSet).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var proposedNames = CreateTagAction.ProposedNames(changeSet).ToHashSet(StringComparer.OrdinalIgnoreCase);
         var notProposed = requested.Where(name => !proposedNames.Contains(name)).ToList();
 
         if (notProposed.Count == 0)
@@ -33,7 +33,7 @@ public static class AiTagVocabulary
         }
 
         return $"These tags do not exist in this workspace: {string.Join(", ", unknown)}. "
-            + "Use propose_create_tag first if the workspace needs a new one.";
+            + "Use propose_tag_change with action create first if the workspace needs a new one.";
     }
 
     public static List<string> ReadRequested(JsonElement arguments)

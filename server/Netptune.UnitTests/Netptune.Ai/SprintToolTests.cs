@@ -38,12 +38,12 @@ public class SprintToolTests
             .Send(Arg.Any<GetProjectsQuery>(), Arg.Any<CancellationToken>())
             .Returns([]);
 
-        var createProject = new CreateProjectTool(Mediator, ChangeSet);
+        var createProject = new CreateProjectAction(Mediator, ChangeSet);
 
         await createProject.Execute(Arguments("""{"name":"Apollo"}"""), TestContext.Current.CancellationToken);
 
         var projectRef = ChangeSet.Changes.Last().RefKey;
-        var tool = new CreateSprintTool(Mediator, ChangeSet);
+        var tool = new CreateSprintAction(Mediator, ChangeSet);
         var arguments = Arguments(
             $$"""{"name":"Sprint 1","projectRef":"{{projectRef}}","startDate":"2026-07-01","endDate":"2026-07-14"}""");
 
@@ -56,7 +56,7 @@ public class SprintToolTests
     [Fact]
     public async Task CreateSprint_ShouldFail_WhenNeitherAProjectIdNorARefIsGiven()
     {
-        var tool = new CreateSprintTool(Mediator, ChangeSet);
+        var tool = new CreateSprintAction(Mediator, ChangeSet);
         var arguments = Arguments("""{"name":"Sprint 1","startDate":"2026-07-01","endDate":"2026-07-14"}""");
 
         var result = await tool.Execute(arguments, TestContext.Current.CancellationToken);
@@ -71,7 +71,7 @@ public class SprintToolTests
     {
         GivenSprint(CreateSprint(SprintStatus.Completed));
 
-        var tool = new UpdateSprintTool(Mediator, ChangeSet);
+        var tool = new UpdateSprintAction(Mediator, ChangeSet);
         var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}},"name":"Sprint 5"}"""), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeTrue();
@@ -84,7 +84,7 @@ public class SprintToolTests
     {
         GivenSprint(CreateSprint());
 
-        var tool = new UpdateSprintTool(Mediator, ChangeSet);
+        var tool = new UpdateSprintAction(Mediator, ChangeSet);
         var arguments = Arguments($$"""{"sprintId":{{SprintId}},"name":"Sprint 4","goal":"Ship sprint tools","endDate":"2026-07-21"}""");
         var result = await tool.Execute(arguments, TestContext.Current.CancellationToken);
 
@@ -104,7 +104,7 @@ public class SprintToolTests
     {
         GivenSprint(CreateSprint());
 
-        var tool = new UpdateSprintTool(Mediator, ChangeSet);
+        var tool = new UpdateSprintAction(Mediator, ChangeSet);
         var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}},"endDate":"2026-06-01"}"""), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeTrue();
@@ -116,7 +116,7 @@ public class SprintToolTests
     {
         GivenSprint(CreateSprint());
 
-        var tool = new UpdateSprintTool(Mediator, ChangeSet);
+        var tool = new UpdateSprintAction(Mediator, ChangeSet);
         var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}},"name":"Sprint 4"}"""), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeTrue();
@@ -129,7 +129,7 @@ public class SprintToolTests
         GivenSprint(CreateSprint());
         GivenActiveSprints([]);
 
-        var tool = new SprintTransitionTool(Mediator, ChangeSet);
+        var tool = new SprintChangeTool(Mediator, ChangeSet);
         var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}},"action":"start"}"""), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeFalse();
@@ -142,7 +142,7 @@ public class SprintToolTests
     {
         GivenSprint(CreateSprint(SprintStatus.Active));
 
-        var tool = new SprintTransitionTool(Mediator, ChangeSet);
+        var tool = new SprintChangeTool(Mediator, ChangeSet);
         var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}},"action":"start"}"""), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeTrue();
@@ -155,7 +155,7 @@ public class SprintToolTests
         GivenSprint(CreateSprint());
         GivenActiveSprints([CreateActiveSprint()]);
 
-        var tool = new SprintTransitionTool(Mediator, ChangeSet);
+        var tool = new SprintChangeTool(Mediator, ChangeSet);
         var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}},"action":"start"}"""), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeTrue();
@@ -170,9 +170,9 @@ public class SprintToolTests
 
         GivenSprint(CreateSprint());
         GivenActiveSprints([active]);
-        GivenProposedClosure(active.Id, SprintTransitionTool.CompleteChange);
+        GivenProposedClosure(active.Id, SprintTransitionAction.CompleteChange);
 
-        var tool = new SprintTransitionTool(Mediator, ChangeSet);
+        var tool = new SprintChangeTool(Mediator, ChangeSet);
         var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}},"action":"start"}"""), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeFalse();
@@ -184,7 +184,7 @@ public class SprintToolTests
     {
         GivenSprint(CreateSprint());
 
-        var tool = new SprintTransitionTool(Mediator, ChangeSet);
+        var tool = new SprintChangeTool(Mediator, ChangeSet);
         var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}},"action":"complete"}"""), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeTrue();
@@ -196,7 +196,7 @@ public class SprintToolTests
     {
         GivenSprint(CreateSprint(SprintStatus.Cancelled));
 
-        var tool = new SprintTransitionTool(Mediator, ChangeSet);
+        var tool = new SprintChangeTool(Mediator, ChangeSet);
         var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}},"action":"cancel"}"""), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeTrue();
@@ -208,7 +208,7 @@ public class SprintToolTests
     {
         GivenSprint(CreateSprint(SprintStatus.Active));
 
-        var tool = new SprintTransitionTool(Mediator, ChangeSet);
+        var tool = new SprintChangeTool(Mediator, ChangeSet);
         var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}},"action":"delete"}"""), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeTrue();
@@ -220,7 +220,7 @@ public class SprintToolTests
     {
         GivenSprint(CreateSprint(SprintStatus.Cancelled));
 
-        var tool = new SprintTransitionTool(Mediator, ChangeSet);
+        var tool = new SprintChangeTool(Mediator, ChangeSet);
         var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}},"action":"delete"}"""), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeFalse();
@@ -318,7 +318,7 @@ public class SprintToolTests
         GivenProjects([]);
         GivenTask(CreateTask(1, ProjectId));
 
-        var createProject = new CreateProjectTool(Mediator, ChangeSet);
+        var createProject = new CreateProjectAction(Mediator, ChangeSet);
 
         await createProject.Execute(Arguments("""{"name":"Apollo"}"""), TestContext.Current.CancellationToken);
 
@@ -409,11 +409,11 @@ public class SprintToolTests
         GivenSprint(CreateSprint());
         GivenActiveSprints([]);
 
-        var tool = new SprintTransitionTool(Mediator, ChangeSet);
+        var tool = new SprintChangeTool(Mediator, ChangeSet);
 
         await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}},"action":"start"}"""), TestContext.Current.CancellationToken);
 
-        ChangeSet.Changes.Single().ToolName.Should().Be(SprintTransitionTool.StartChange);
+        ChangeSet.Changes.Single().ToolName.Should().Be(SprintTransitionAction.StartChange);
     }
 
     [Fact]
@@ -421,7 +421,7 @@ public class SprintToolTests
     {
         GivenSprint(CreateSprint());
 
-        var tool = new SprintTransitionTool(Mediator, ChangeSet);
+        var tool = new SprintChangeTool(Mediator, ChangeSet);
         var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}},"action":"archive"}"""), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeTrue();
@@ -431,32 +431,32 @@ public class SprintToolTests
     [Fact]
     public void SprintTransition_ShouldDemandDeletePermission_OnlyForDeleting()
     {
-        var tool = new SprintTransitionTool(Mediator, ChangeSet);
+        var tool = new SprintChangeTool(Mediator, ChangeSet);
         var payload = Arguments($$"""{"sprintId":{{SprintId}}}""");
 
         tool.GetRequiredPermissions(Arguments("""{"action":"delete"}""")).Should().Equal(NetptunePermissions.Sprints.Delete);
         tool.GetRequiredPermissions(Arguments("""{"action":"start"}""")).Should().Equal(NetptunePermissions.Sprints.Update);
-        tool.GetChangePermissions(SprintTransitionTool.DeleteChange, payload).Should().Equal(NetptunePermissions.Sprints.Delete);
-        tool.GetChangePermissions(SprintTransitionTool.StartChange, payload).Should().Equal(NetptunePermissions.Sprints.Update);
+        tool.GetChangePermissions(SprintTransitionAction.DeleteChange, payload).Should().Equal(NetptunePermissions.Sprints.Delete);
+        tool.GetChangePermissions(SprintTransitionAction.StartChange, payload).Should().Equal(NetptunePermissions.Sprints.Update);
     }
 
     [Fact]
     public void SprintTransition_ShouldDemandManageTasks_ForClosingASprint()
     {
-        var tool = new SprintTransitionTool(Mediator, ChangeSet);
+        var tool = new SprintChangeTool(Mediator, ChangeSet);
         var payload = Arguments($$"""{"sprintId":{{SprintId}}}""");
         var closingPermissions = new[] { NetptunePermissions.Sprints.Update, NetptunePermissions.Sprints.ManageTasks };
 
         tool.GetRequiredPermissions(Arguments("""{"action":"complete"}""")).Should().BeEquivalentTo(closingPermissions);
         tool.GetRequiredPermissions(Arguments("""{"action":"cancel"}""")).Should().BeEquivalentTo(closingPermissions);
-        tool.GetChangePermissions(SprintTransitionTool.CompleteChange, payload).Should().BeEquivalentTo(closingPermissions);
-        tool.GetChangePermissions(SprintTransitionTool.CancelChange, payload).Should().BeEquivalentTo(closingPermissions);
+        tool.GetChangePermissions(SprintTransitionAction.CompleteChange, payload).Should().BeEquivalentTo(closingPermissions);
+        tool.GetChangePermissions(SprintTransitionAction.CancelChange, payload).Should().BeEquivalentTo(closingPermissions);
     }
 
     [Fact]
     public void SprintTransition_ShouldBeAvailable_ToAMemberWhoCanOnlyDelete()
     {
-        var tool = new SprintTransitionTool(Mediator, ChangeSet);
+        var tool = new SprintChangeTool(Mediator, ChangeSet);
         var deleteOnly = new HashSet<string> { NetptunePermissions.Sprints.Read, NetptunePermissions.Sprints.Delete };
         var readOnly = new HashSet<string> { NetptunePermissions.Sprints.Read };
 
@@ -530,7 +530,7 @@ public class SprintToolTests
 
     private async Task<string> ProposeSprint(string json)
     {
-        var tool = new CreateSprintTool(Mediator, ChangeSet);
+        var tool = new CreateSprintAction(Mediator, ChangeSet);
         var result = await tool.Execute(Arguments(json), TestContext.Current.CancellationToken);
 
         result.IsError.Should().BeFalse();

@@ -28,7 +28,7 @@ public class UnlinkTasksToolTests
     {
         GivenRelations([CreateRelation()]);
 
-        var tool = new UnlinkTasksTool(Mediator, ChangeSet);
+        var tool = new UnlinkTasksAction(Mediator, ChangeSet);
         var result = await tool.Execute(
             Arguments($$"""{"systemId":"{{SystemId}}","relationId":{{RelationId}}}"""),
             TestContext.Current.CancellationToken);
@@ -51,7 +51,7 @@ public class UnlinkTasksToolTests
     {
         GivenRelations([CreateRelation()]);
 
-        var tool = new UnlinkTasksTool(Mediator, ChangeSet);
+        var tool = new UnlinkTasksAction(Mediator, ChangeSet);
         var result = await tool.Execute(
             Arguments($$"""{"systemId":"{{SystemId}}","relationId":99}"""),
             TestContext.Current.CancellationToken);
@@ -65,7 +65,7 @@ public class UnlinkTasksToolTests
     {
         GivenRelations(null);
 
-        var tool = new UnlinkTasksTool(Mediator, ChangeSet);
+        var tool = new UnlinkTasksAction(Mediator, ChangeSet);
         var result = await tool.Execute(
             Arguments($$"""{"systemId":"{{SystemId}}","relationId":{{RelationId}}}"""),
             TestContext.Current.CancellationToken);

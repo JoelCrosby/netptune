@@ -9,37 +9,21 @@ using Netptune.Handlers.Projects.Queries;
 
 namespace Netptune.Ai.Tools;
 
-public sealed class UpdateProjectTool : IAiTool
+public sealed class UpdateProjectAction : IAiToolAction
 {
     private readonly IMediator Mediator;
     private readonly IAiChangeSetBuilder ChangeSet;
 
-    public UpdateProjectTool(IMediator mediator, IAiChangeSetBuilder changeSet)
+    public UpdateProjectAction(IMediator mediator, IAiChangeSetBuilder changeSet)
     {
         Mediator = mediator;
         ChangeSet = changeSet;
     }
 
-    public string Name => "propose_update_project";
-
-    public string Description =>
-        "Propose changing a project's name, description or repository url.";
-
-    public AiToolKind Kind => AiToolKind.Write;
+    public string ChangeName => "propose_update_project";
 
     public IReadOnlySet<string> RequiredPermissions { get; } =
         new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Projects.Update };
-
-    public JsonDocument InputSchema { get; } = AiToolSchema.Object(
-        """
-        {
-          "projectId": { "type": "integer", "description": "The id of the project to change." },
-          "name": { "type": "string", "description": "New project name." },
-          "description": { "type": "string", "description": "New project description." },
-          "repositoryUrl": { "type": "string", "description": "New source repository url." }
-        }
-        """,
-        "projectId");
 
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
@@ -73,7 +57,7 @@ public sealed class UpdateProjectTool : IAiTool
 
         ChangeSet.Add(new AiChangeDraft
         {
-            ToolName = Name,
+            ToolName = ChangeName,
             EntityType = "project",
             EntityId = project.Id,
             Summary = $"Update {changedNames} on {project.Name}",

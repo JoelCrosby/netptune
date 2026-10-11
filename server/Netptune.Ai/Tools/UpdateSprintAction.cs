@@ -8,38 +8,21 @@ using Netptune.Core.Services.Ai;
 
 namespace Netptune.Ai.Tools;
 
-public sealed class UpdateSprintTool : IAiTool
+public sealed class UpdateSprintAction : IAiToolAction
 {
     private readonly IMediator Mediator;
     private readonly IAiChangeSetBuilder ChangeSet;
 
-    public UpdateSprintTool(IMediator mediator, IAiChangeSetBuilder changeSet)
+    public UpdateSprintAction(IMediator mediator, IAiChangeSetBuilder changeSet)
     {
         Mediator = mediator;
         ChangeSet = changeSet;
     }
 
-    public string Name => "propose_update_sprint";
-
-    public string Description =>
-        "Propose changing a sprint's name, goal, start date or end date. Use list_records to find sprint ids first.";
-
-    public AiToolKind Kind => AiToolKind.Write;
+    public string ChangeName => "propose_update_sprint";
 
     public IReadOnlySet<string> RequiredPermissions { get; } =
         new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Sprints.Update };
-
-    public JsonDocument InputSchema { get; } = AiToolSchema.Object(
-        """
-        {
-          "sprintId": { "type": "integer", "description": "The id of the sprint to change." },
-          "name": { "type": "string", "description": "New sprint name." },
-          "goal": { "type": "string", "description": "New sprint goal." },
-          "startDate": { "type": "string", "description": "New first day of the sprint as YYYY-MM-DD." },
-          "endDate": { "type": "string", "description": "New last day of the sprint as YYYY-MM-DD." }
-        }
-        """,
-        "sprintId");
 
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
@@ -103,7 +86,7 @@ public sealed class UpdateSprintTool : IAiTool
 
         ChangeSet.Add(new AiChangeDraft
         {
-            ToolName = Name,
+            ToolName = ChangeName,
             EntityType = "sprint",
             EntityId = sprint.Id,
             Summary = $"Update {changedNames} on sprint “{sprint.Name}”",
