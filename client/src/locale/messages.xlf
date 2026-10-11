@@ -22,7 +22,7 @@
     </unit>
     <unit id="6099350082220828678">
       <notes>
-        <note category="location">src/app/features/pages/util/page-templates.ts:40</note>
+        <note category="location">src/app/features/pages/util/page-templates.ts:41</note>
         <note category="description">Template card for meeting notes</note>
       </notes>
       <segment>
@@ -78,7 +78,7 @@
     </unit>
     <unit id="771247888421689623">
       <notes>
-        <note category="location">src/app/features/pages/util/page-templates.ts:47</note>
+        <note category="location">src/app/features/pages/util/page-templates.ts:49</note>
         <note category="description">Description of the RFC template</note>
       </notes>
       <segment>
@@ -205,6 +205,15 @@
         <source>Invite Members</source>
       </segment>
     </unit>
+    <unit id="185582359745220936">
+      <notes>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:241</note>
+        <note category="description">Suggested question on pages home about a page the user opened recently</note>
+      </notes>
+      <segment>
+        <source>Summarise <ph id="0" equiv="TITLE" disp="page.title"/></source>
+      </segment>
+    </unit>
     <unit id="381389385558268687">
       <notes>
         <note category="location">src/app/features/pages/util/page-templates.ts:34</note>
@@ -219,9 +228,9 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:204</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:205</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:109,111</note>
-        <note category="location">src/app/features/pages/editor/page-reference.controller.ts:229</note>
+        <note category="location">src/app/features/pages/editor/page-reference.controller.ts:224</note>
         <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:316</note>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:74</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:71</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:92</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:207</note>
         <note category="location">src/app/workspace.routes.ts:78</note>
@@ -332,7 +341,7 @@
     </unit>
     <unit id="6080220983728679186">
       <notes>
-        <note category="location">src/app/features/pages/util/page-templates.ts:65</note>
+        <note category="location">src/app/features/pages/util/page-templates.ts:70</note>
         <note category="description">Description of the spec template</note>
       </notes>
       <segment>
@@ -430,7 +439,7 @@
     </unit>
     <unit id="1205822916208418969">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:192</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:191</note>
         <note category="description">Body of the dialog confirming a page is archived</note>
       </notes>
       <segment>
@@ -471,6 +480,15 @@
       </notes>
       <segment>
         <source>Tag could not be loaded</source>
+      </segment>
+    </unit>
+    <unit id="8196293883467199481">
+      <notes>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:369</note>
+        <note category="description">Message sent to the assistant when drafting a new page from pages home</note>
+      </notes>
+      <segment>
+        <source>Draft a new page: <ph id="0" equiv="DESCRIPTION" disp="trimmed"/></source>
       </segment>
     </unit>
     <unit id="8198968372594669406">
@@ -687,7 +705,7 @@
     </unit>
     <unit id="6980870776971861351">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:454</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:453</note>
         <note category="description">Byline under a page title naming who last edited it, when, and how long it takes to read</note>
       </notes>
       <segment>
@@ -743,16 +761,25 @@
     </unit>
     <unit id="2285896285181808525">
       <notes>
-        <note category="location">src/app/static/components/editor/editor.component.ts:155</note>
+        <note category="location">src/app/static/components/editor/editor.component.ts:154</note>
         <note category="description">Shown in the slash command menu when nothing matches what was typed</note>
       </notes>
       <segment>
         <source>No matching blocks</source>
       </segment>
     </unit>
+    <unit id="2292068350947207931">
+      <notes>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:382</note>
+        <note category="description">Suggested page for the assistant to draft on pages home</note>
+      </notes>
+      <segment>
+        <source>Release notes for the current sprint</source>
+      </segment>
+    </unit>
     <unit id="2294814638284224013">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:62,63</note>
+        <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:67,68</note>
         <note category="description">Shown when no page is archived</note>
       </notes>
       <segment>
@@ -890,7 +917,7 @@
     </unit>
     <unit id="3140932947697197272">
       <notes>
-        <note category="location">src/app/features/pages/editor/page-editor-commands.ts:40</note>
+        <note category="location">src/app/features/pages/editor/page-editor-commands.ts:39</note>
         <note category="description">Slash command that embeds a live list of a saved query&apos;s tasks</note>
       </notes>
       <segment>
@@ -977,6 +1004,15 @@
       </notes>
       <segment>
         <source>{VAR_PLURAL, plural, =1 {1 task} other {<ph id="0" equiv="INTERPOLATION"/> tasks}}</source>
+      </segment>
+    </unit>
+    <unit id="3389185365103310416">
+      <notes>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:259</note>
+        <note category="description">Heading of the pages home box that asks the assistant a question</note>
+      </notes>
+      <segment>
+        <source>What do you want to know?</source>
       </segment>
     </unit>
     <unit id="338954840845347808">
@@ -1081,7 +1117,7 @@
     </unit>
     <unit id="8826681798176849723">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:186</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:185</note>
         <note category="description">Confirmation shown after an earlier version of a page is restored</note>
       </notes>
       <segment>
@@ -1190,7 +1226,7 @@
     </unit>
     <unit id="4218369478454644471">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:200</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:199</note>
         <note category="description">Body of the dialog confirming a folder is archived</note>
       </notes>
       <segment>
@@ -1245,7 +1281,7 @@
     </unit>
     <unit id="7626227895268344246">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:44,47</note>
+        <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:46,48</note>
         <note category="description">When and by whom an archived page was archived</note>
       </notes>
       <segment>
@@ -1462,7 +1498,7 @@
     </unit>
     <unit id="5864438740024667635">
       <notes>
-        <note category="location">src/app/features/pages/editor/page-editor-commands.ts:64</note>
+        <note category="location">src/app/features/pages/editor/page-editor-commands.ts:63</note>
         <note category="description">Slash command that has the assistant summarise the page above the cursor</note>
       </notes>
       <segment>
@@ -1825,8 +1861,8 @@
         <note category="location">src/app/core/services/board-group-commands.service.ts:324</note>
         <note category="location">src/app/core/services/confirmation.service.ts:12</note>
         <note category="location">src/app/core/services/notification-commands.service.ts:75</note>
-        <note category="location">src/app/core/services/page-commands.service.ts:194</note>
-        <note category="location">src/app/core/services/page-commands.service.ts:202</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:193</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:201</note>
         <note category="location">src/app/core/services/project-commands.service.ts:69</note>
         <note category="location">src/app/core/services/tag-commands.service.ts:78</note>
         <note category="location">src/app/core/services/task-archive.service.ts:40</note>
@@ -1848,8 +1884,8 @@
         <note category="location">src/app/features/calendar/dialogs/calendar-move-task-dialog.component.ts:61,64</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:799</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:821</note>
-        <note category="location">src/app/features/pages/dialogs/query-picker-dialog.component.ts:54,59</note>
-        <note category="location">src/app/features/pages/dialogs/sprint-picker-dialog.component.ts:55,60</note>
+        <note category="location">src/app/features/pages/dialogs/query-picker-dialog.component.ts:53,58</note>
+        <note category="location">src/app/features/pages/dialogs/sprint-picker-dialog.component.ts:54,59</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:214,217</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:348</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:184,187</note>
@@ -1900,7 +1936,7 @@
     </unit>
     <unit id="2184076354694617647">
       <notes>
-        <note category="location">src/app/features/pages/editor/page-transform.controller.ts:64</note>
+        <note category="location">src/app/features/pages/editor/page-transform.controller.ts:62</note>
         <note category="description">Heading of the card showing text the assistant wrote to continue a page</note>
       </notes>
       <segment>
@@ -2008,7 +2044,7 @@
     </unit>
     <unit id="3795755932820482964">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:177</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:176</note>
         <note category="description">Shown after markdown files were imported as pages</note>
       </notes>
       <segment>
@@ -2309,7 +2345,7 @@
     </unit>
     <unit id="8640677495548743141">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:921</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:927</note>
         <note category="description">Asks the user to confirm deleting one of their assistant conversations. TITLE is the conversation title</note>
       </notes>
       <segment>
@@ -2327,7 +2363,7 @@
     </unit>
     <unit id="8643289769990675407">
       <notes>
-        <note category="location">src/app/static/components/editor/editor-commands.ts:27</note>
+        <note category="location">src/app/static/components/editor/editor-commands.ts:25</note>
         <note category="description">Heading over the basic blocks in the slash command menu</note>
       </notes>
       <segment>
@@ -2408,7 +2444,7 @@
     </unit>
     <unit id="7963090857827746198">
       <notes>
-        <note category="location">src/app/features/pages/editor/page-editor-commands.ts:52</note>
+        <note category="location">src/app/features/pages/editor/page-editor-commands.ts:51</note>
         <note category="description">Slash command that has the assistant write the next part of a page</note>
       </notes>
       <segment>
@@ -2694,7 +2730,7 @@
     </unit>
     <unit id="6269606295190909224">
       <notes>
-        <note category="location">src/app/static/components/editor/editor-commands.ts:50</note>
+        <note category="location">src/app/static/components/editor/editor-commands.ts:48</note>
         <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:155</note>
         <note category="description">Slash command that inserts a checklist</note>
       </notes>
@@ -2744,7 +2780,7 @@
     <unit id="6770769801335635194">
       <notes>
         <note category="location">src/app/core/services/task-archive.service.ts:39</note>
-        <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:51,54</note>
+        <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:56,58</note>
         <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:137</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
@@ -2763,7 +2799,7 @@
     </unit>
     <unit id="8468416890049236466">
       <notes>
-        <note category="location">src/app/features/pages/dialogs/sprint-picker-dialog.component.ts:38,43</note>
+        <note category="location">src/app/features/pages/dialogs/sprint-picker-dialog.component.ts:37,42</note>
         <note category="description">Title of the dialog that picks the sprint to write release notes for</note>
       </notes>
       <segment>
@@ -2935,7 +2971,7 @@
     </unit>
     <unit id="4135402603013824809">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:185</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:184</note>
         <note category="description">Error shown when restoring an earlier version of a page fails</note>
       </notes>
       <segment>
@@ -3152,7 +3188,7 @@
     </unit>
     <unit id="955080669037591255">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:913</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:919</note>
         <note category="description">Asks the user to confirm deleting several of their assistant conversations</note>
       </notes>
       <segment>
@@ -3823,6 +3859,7 @@
         <note category="location">src/app/entry/components/setup-creation-summary/setup-creation-summary.component.ts:58</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:220</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:35</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:375</note>
         <note category="location">src/app/features/pins/components/pin-scope-menu.component.ts:160</note>
         <note category="location">src/app/features/settings/components/preference-scope.ts:36</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:447</note>
@@ -3865,15 +3902,6 @@
       </notes>
       <segment>
         <source>Untitled workspace</source>
-      </segment>
-    </unit>
-    <unit id="4603903265515458202">
-      <notes>
-        <note category="location">src/app/features/pages/util/page-templates.ts:76</note>
-        <note category="description">Template card that asks the assistant to draft a page</note>
-      </notes>
-      <segment>
-        <source>Draft with assistant</source>
       </segment>
     </unit>
     <unit id="2646352380246900341">
@@ -3923,7 +3951,7 @@
     </unit>
     <unit id="6371576811194810854">
       <notes>
-        <note category="location">src/app/static/components/text-diff/text-diff.component.ts:105</note>
+        <note category="location">src/app/static/components/text-diff/text-diff.component.ts:104</note>
         <note category="description">Column heading above the later text in a side by side comparison</note>
       </notes>
       <segment>
@@ -4235,15 +4263,6 @@
         <source>Heading 1</source>
       </segment>
     </unit>
-    <unit id="6817458090832912727">
-      <notes>
-        <note category="location">src/app/features/pages/util/page-templates.ts:77</note>
-        <note category="description">Description of the draft-with-assistant template</note>
-      </notes>
-      <segment>
-        <source>Describe it, get a first draft</source>
-      </segment>
-    </unit>
     <unit id="2734022681675842051">
       <notes>
         <note category="location">src/app/core/tasks/task-columns.ts:121</note>
@@ -4404,7 +4423,7 @@
     </unit>
     <unit id="8854317796744293927">
       <notes>
-        <note category="location">src/app/features/pages/editor/query-embed.component.ts:41,44</note>
+        <note category="location">src/app/features/pages/editor/query-embed.component.ts:40,43</note>
         <note category="description">Link from an embedded query to the full query view</note>
       </notes>
       <segment>
@@ -4452,6 +4471,15 @@
       </notes>
       <segment>
         <source>Filter tags</source>
+      </segment>
+    </unit>
+    <unit id="7386303229223377554">
+      <notes>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:118,119</note>
+        <note category="description">Heading over the templates on pages home</note>
+      </notes>
+      <segment>
+        <source>Start from a template</source>
       </segment>
     </unit>
     <unit id="7388001911893689588">
@@ -4654,6 +4682,15 @@
         <source>Are you sure you want to take the selected tasks off this board? They stay on any other board they are on.</source>
       </segment>
     </unit>
+    <unit id="8970106517317640002">
+      <notes>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:106,111</note>
+        <note category="description">Accessible label for the switch between asking the assistant and drafting a page on pages home</note>
+      </notes>
+      <segment>
+        <source>Assistant mode</source>
+      </segment>
+    </unit>
     <unit id="8977816019303133202">
       <notes>
         <note category="location">src/app/entry/dialogs/create-relation-type-dialog/create-relation-type-dialog.component.ts:95,100</note>
@@ -4820,7 +4857,7 @@
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:84</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:176</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:52,54</note>
-        <note category="location">src/app/features/pages/editor/page-transform.controller.ts:61</note>
+        <note category="location">src/app/features/pages/editor/page-transform.controller.ts:59</note>
         <note category="description">Label of the task title field</note>
       </notes>
       <segment>
@@ -5373,7 +5410,7 @@
     </unit>
     <unit id="8393600306605587340">
       <notes>
-        <note category="location">src/app/features/pages/editor/page-editor-commands.ts:20</note>
+        <note category="location">src/app/features/pages/editor/page-editor-commands.ts:19</note>
         <note category="description">Heading over the Netptune blocks in the slash command menu</note>
       </notes>
       <segment>
@@ -5399,15 +5436,6 @@
       </notes>
       <segment>
         <source>Link tasks</source>
-      </segment>
-    </unit>
-    <unit id="3032659922725847563">
-      <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:366</note>
-        <note category="description">Seeds the assistant composer when drafting a new page with the assistant</note>
-      </notes>
-      <segment>
-        <source>Draft a new page about </source>
       </segment>
     </unit>
     <unit id="3034679798924651226">
@@ -5478,7 +5506,7 @@
     </unit>
     <unit id="1822235893198987338">
       <notes>
-        <note category="location">src/app/features/pages/util/page-templates.ts:53</note>
+        <note category="location">src/app/features/pages/util/page-templates.ts:56</note>
         <note category="description">Description of the runbook template</note>
       </notes>
       <segment>
@@ -5914,7 +5942,7 @@
     </unit>
     <unit id="9144010706398835239">
       <notes>
-        <note category="location">src/app/features/pages/util/page-templates.ts:64</note>
+        <note category="location">src/app/features/pages/util/page-templates.ts:69</note>
         <note category="description">Template card for a feature specification</note>
       </notes>
       <segment>
@@ -5979,7 +6007,7 @@
     </unit>
     <unit id="5170889864683436620">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:187</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:186</note>
         <note category="description">Confirmation shown after a page is archived</note>
       </notes>
       <segment>
@@ -6152,7 +6180,7 @@
     </unit>
     <unit id="3912186866996023672">
       <notes>
-        <note category="location">src/app/features/pages/dialogs/query-picker-dialog.component.ts:75</note>
+        <note category="location">src/app/features/pages/dialogs/query-picker-dialog.component.ts:74</note>
         <note category="description">Shown when there are no shared saved queries to embed</note>
       </notes>
       <segment>
@@ -6228,7 +6256,7 @@
     </unit>
     <unit id="5068065680759920980">
       <notes>
-        <note category="location">src/app/features/pages/dialogs/query-picker-dialog.component.ts:66</note>
+        <note category="location">src/app/features/pages/dialogs/query-picker-dialog.component.ts:65</note>
         <note category="description">Placeholder in the box that narrows the saved queries offered for embedding</note>
       </notes>
       <segment>
@@ -6603,6 +6631,15 @@
         <source>Reset</source>
       </segment>
     </unit>
+    <unit id="7808802259664641341">
+      <notes>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:250</note>
+        <note category="description">Placeholder of the pages home box when drafting a page</note>
+      </notes>
+      <segment>
+        <source>e.g. A runbook for rotating the deploy credentials</source>
+      </segment>
+    </unit>
     <unit id="2014694668412418346">
       <notes>
         <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:98,101</note>
@@ -6673,6 +6710,15 @@
       </notes>
       <segment>
         <source> Save Tag </source>
+      </segment>
+    </unit>
+    <unit id="2378730518632679921">
+      <notes>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:228</note>
+        <note category="description">Hint beside the templates on pages home naming the space new pages go in</note>
+      </notes>
+      <segment>
+        <source>Each one opens a new page in <ph id="0" equiv="SPACE" disp="this.spaceName()"/></source>
       </segment>
     </unit>
     <unit id="9037534911513149290">
@@ -6778,7 +6824,7 @@
     </unit>
     <unit id="9126383792072202008">
       <notes>
-        <note category="location">src/app/features/pages/services/page-draft.ts:252</note>
+        <note category="location">src/app/features/pages/services/page-draft.ts:243</note>
         <note category="description">Error shown when a page&apos;s text is over the size limit</note>
       </notes>
       <segment>
@@ -7083,7 +7129,7 @@
     </unit>
     <unit id="8658377241875728158">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:153,155</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:139,141</note>
         <note category="description">Heading over the pages the user opened recently</note>
       </notes>
       <segment>
@@ -7128,7 +7174,7 @@
     </unit>
     <unit id="3071620290019453863">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:344</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:371</note>
         <note category="description">Button that marks a page as still accurate so it leaves needs review</note>
       </notes>
       <segment>
@@ -7275,15 +7321,6 @@
       </notes>
       <segment>
         <source>Stop following <ph id="0" equiv="NAME" disp="name"/></source>
-      </segment>
-    </unit>
-    <unit id="1671844730315718445">
-      <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:126,128</note>
-        <note category="description">Description of the pages home templates card</note>
-      </notes>
-      <segment>
-        <source>A template, release notes from a sprint, or a draft from the assistant</source>
       </segment>
     </unit>
     <unit id="5531875190051704197">
@@ -7435,7 +7472,7 @@
     </unit>
     <unit id="6317126528752584322">
       <notes>
-        <note category="location">src/app/static/components/editor/editor-commands.ts:32</note>
+        <note category="location">src/app/static/components/editor/editor-commands.ts:30</note>
         <note category="description">Slash command that inserts a heading</note>
       </notes>
       <segment>
@@ -7516,7 +7553,7 @@
     </unit>
     <unit id="1479642863135924755">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:184</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:183</note>
         <note category="description">Error shown when adding or removing a page favourite fails</note>
       </notes>
       <segment>
@@ -7821,7 +7858,7 @@
     </unit>
     <unit id="6333335057236774263">
       <notes>
-        <note category="location">src/app/static/components/save-status/save-status.component.ts:64</note>
+        <note category="location">src/app/static/components/save-status/save-status.component.ts:63</note>
         <note category="description">Shown once a document&apos;s latest changes are saved</note>
       </notes>
       <segment>
@@ -7900,6 +7937,15 @@
       </notes>
       <segment>
         <source>An archive always contains every record type. Choose what else to include.</source>
+      </segment>
+    </unit>
+    <unit id="4354588089802697390">
+      <notes>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:384</note>
+        <note category="description">Suggested page for the assistant to draft on pages home</note>
+      </notes>
+      <segment>
+        <source>Postmortem for a production incident</source>
       </segment>
     </unit>
     <unit id="4360072995007239979">
@@ -8431,7 +8477,7 @@
     </unit>
     <unit id="6870893562392932905">
       <notes>
-        <note category="location">src/app/features/pages/editor/page-transform.controller.ts:63</note>
+        <note category="location">src/app/features/pages/editor/page-transform.controller.ts:61</note>
         <note category="description">Heading of the card showing page text translated by the assistant</note>
       </notes>
       <segment>
@@ -8497,9 +8543,18 @@
         <source> The task is only deleted if its status has not changed during the delay. Deleted tasks can be restored from the archive. </source>
       </segment>
     </unit>
+    <unit id="9200330298718156939">
+      <notes>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:260</note>
+        <note category="description">Description under the pages home heading when asking the assistant</note>
+      </notes>
+      <segment>
+        <source>The assistant answers from your pages and links to the pages it used.</source>
+      </segment>
+    </unit>
     <unit id="9203983883403011576">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:169</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:168</note>
         <note category="description">Error shown when archiving a page fails</note>
       </notes>
       <segment>
@@ -9213,7 +9268,7 @@
     </unit>
     <unit id="319428593796731470">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:171</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:170</note>
         <note category="description">Error shown when importing markdown files as pages fails</note>
       </notes>
       <segment>
@@ -9240,7 +9295,7 @@
     </unit>
     <unit id="657898465655880956">
       <notes>
-        <note category="location">src/app/features/pages/dialogs/sprint-picker-dialog.component.ts:66</note>
+        <note category="location">src/app/features/pages/dialogs/sprint-picker-dialog.component.ts:65</note>
         <note category="description">Accessible label for the list of completed sprints offered for release notes</note>
       </notes>
       <segment>
@@ -9286,7 +9341,7 @@
     </unit>
     <unit id="1746908154865482674">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:167,169</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:153,155</note>
         <note category="description">Shown on pages home before the user has opened any page</note>
       </notes>
       <segment>
@@ -9514,7 +9569,7 @@
     </unit>
     <unit id="2319796023581357688">
       <notes>
-        <note category="location">src/app/features/pages/util/page-templates.ts:46</note>
+        <note category="location">src/app/features/pages/util/page-templates.ts:48</note>
         <note category="description">Template card for a request for comments document</note>
       </notes>
       <segment>
@@ -9565,15 +9620,6 @@
       </notes>
       <segment>
         <source>Low</source>
-      </segment>
-    </unit>
-    <unit id="5979682348774061468">
-      <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:124,125</note>
-        <note category="description">Heading over the templates on pages home</note>
-      </notes>
-      <segment>
-        <source>Start a page</source>
       </segment>
     </unit>
     <unit id="5979951160895696674">
@@ -10089,7 +10135,7 @@
     </unit>
     <unit id="6917262024577443751">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:183,184</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:169,170</note>
         <note category="description">Accessible label for the list of pages that need review</note>
       </notes>
       <segment>
@@ -10261,6 +10307,15 @@
       </notes>
       <segment>
         <source> Only the fields you add below are written. Everything else is left alone. </source>
+      </segment>
+    </unit>
+    <unit id="1343094894232587177">
+      <notes>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:249</note>
+        <note category="description">Description under the pages home heading when drafting a page with the assistant</note>
+      </notes>
+      <segment>
+        <source>Describe the page and the assistant writes a first draft for you to review.</source>
       </segment>
     </unit>
     <unit id="5223235322022344945">
@@ -10544,7 +10599,7 @@
     </unit>
     <unit id="7045726305292653146">
       <notes>
-        <note category="location">src/app/features/pages/util/page-templates.ts:70</note>
+        <note category="location">src/app/features/pages/util/page-templates.ts:76</note>
         <note category="description">Template card that writes release notes from a sprint</note>
       </notes>
       <segment>
@@ -10619,7 +10674,7 @@
     </unit>
     <unit id="3898388632413645870">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:163,165</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:149,151</note>
         <note category="description">Accessible label for the list of recently viewed pages</note>
       </notes>
       <segment>
@@ -10877,7 +10932,7 @@
     </unit>
     <unit id="4965562695253171955">
       <notes>
-        <note category="location">src/app/static/components/filter-input/filter-input.component.ts:57,59</note>
+        <note category="location">src/app/static/components/filter-input/filter-input.component.ts:56,58</note>
         <note category="description">Accessible label for the button that clears a filter</note>
       </notes>
       <segment>
@@ -11051,7 +11106,7 @@
     </unit>
     <unit id="6296306197665945980">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:64,70</note>
+        <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:69,73</note>
         <note category="description">Hint on the empty page archive</note>
       </notes>
       <segment>
@@ -11193,7 +11248,7 @@
     </unit>
     <unit id="1831454418982373753">
       <notes>
-        <note category="location">src/app/features/pages/editor/query-embed.component.ts:68,72</note>
+        <note category="location">src/app/features/pages/editor/query-embed.component.ts:67,71</note>
         <note category="description">Shown when an embedded saved query matches no tasks</note>
       </notes>
       <segment>
@@ -11258,6 +11313,15 @@
       </notes>
       <segment>
         <source>Go to Calendar</source>
+      </segment>
+    </unit>
+    <unit id="8505589254065619352">
+      <notes>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:379</note>
+        <note category="description">Option on pages home that has the assistant draft a new page</note>
+      </notes>
+      <segment>
+        <source>Draft a page</source>
       </segment>
     </unit>
     <unit id="8505625387835214066">
@@ -11434,7 +11498,7 @@
     </unit>
     <unit id="1597412352196195331">
       <notes>
-        <note category="location">src/app/features/pages/dialogs/query-picker-dialog.component.ts:37,41</note>
+        <note category="location">src/app/features/pages/dialogs/query-picker-dialog.component.ts:36,40</note>
         <note category="description">Title of the dialog that picks a saved query to embed in a page</note>
       </notes>
       <segment>
@@ -11480,7 +11544,7 @@
     </unit>
     <unit id="6189233648220583946">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:567</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:573</note>
         <note category="description">Shown when the assistant request fails</note>
       </notes>
       <segment>
@@ -11862,7 +11926,7 @@
     </unit>
     <unit id="3887407557138511656">
       <notes>
-        <note category="location">src/app/features/pages/dialogs/query-picker-dialog.component.ts:72</note>
+        <note category="location">src/app/features/pages/dialogs/query-picker-dialog.component.ts:71</note>
         <note category="description">Shown in the saved query picker to someone without access to saved queries</note>
       </notes>
       <segment>
@@ -12262,7 +12326,7 @@
     </unit>
     <unit id="2490468446168750289">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:167</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:166</note>
         <note category="description">Error shown when creating a page fails</note>
       </notes>
       <segment>
@@ -12619,6 +12683,15 @@
         <source>Acme</source>
       </segment>
     </unit>
+    <unit id="4710835816744718690">
+      <notes>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:262</note>
+        <note category="description">Hint in the pages home box saying how many pages the assistant searches</note>
+      </notes>
+      <segment>
+        <source>Searching <ph id="0" equiv="COUNT" disp="this.documentCount()"/> pages</source>
+      </segment>
+    </unit>
     <unit id="4712988804308845169">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:148</note>
@@ -12706,7 +12779,7 @@
     </unit>
     <unit id="8729582342971384106">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:175,176</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:161,162</note>
         <note category="description">Heading over published pages that may be out of date</note>
       </notes>
       <segment>
@@ -13079,15 +13152,6 @@
         <source>Can’t include</source>
       </segment>
     </unit>
-    <unit id="7147229311933170178">
-      <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:94,96</note>
-        <note category="description">Heading of the pages home card that asks the assistant</note>
-      </notes>
-      <segment>
-        <source>Ask your pages</source>
-      </segment>
-    </unit>
     <unit id="7148233672490240354">
       <notes>
         <note category="location">src/app/shell/global-commands.service.ts:152</note>
@@ -13399,7 +13463,7 @@
     </unit>
     <unit id="3212500310580654477">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:50</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:49</note>
         <note category="description">Why a page is listed under needs review</note>
       </notes>
       <segment>
@@ -13408,7 +13472,7 @@
     </unit>
     <unit id="1218334388194408974">
       <notes>
-        <note category="location">src/app/static/components/text-diff/text-diff.component.ts:102</note>
+        <note category="location">src/app/static/components/text-diff/text-diff.component.ts:101</note>
         <note category="description">Column heading above the earlier text in a side by side comparison</note>
       </notes>
       <segment>
@@ -13843,7 +13907,7 @@
     </unit>
     <unit id="6997967012661620403">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:188</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:187</note>
         <note category="description">Confirmation shown after an archived page is restored</note>
       </notes>
       <segment>
@@ -14111,7 +14175,7 @@
     </unit>
     <unit id="5048551055618217661">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:185,187</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:171,173</note>
         <note category="description">Shown when no published page needs review</note>
       </notes>
       <segment>
@@ -14141,7 +14205,7 @@
     </unit>
     <unit id="1103299628984958400">
       <notes>
-        <note category="location">src/app/static/components/editor/editor-commands.ts:91</note>
+        <note category="location">src/app/static/components/editor/editor-commands.ts:89</note>
         <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:156</note>
         <note category="description">Slash command that inserts a quote</note>
       </notes>
@@ -14759,7 +14823,7 @@
     </unit>
     <unit id="1074599325149334297">
       <notes>
-        <note category="location">src/app/static/components/editor/editor.component.ts:171</note>
+        <note category="location">src/app/static/components/editor/editor.component.ts:170</note>
         <note category="description">Accessible label for the raw markdown source of a document</note>
       </notes>
       <segment>
@@ -14806,7 +14870,7 @@
     <unit id="6904866445262015585">
       <notes>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:133,134</note>
-        <note category="location">src/app/features/pages/editor/page-reference.controller.ts:228</note>
+        <note category="location">src/app/features/pages/editor/page-reference.controller.ts:223</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:39</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:53</note>
         <note category="location">src/app/features/reporting/components/workload-table.component.ts:49</note>
@@ -14834,7 +14898,7 @@
     </unit>
     <unit id="3550292608849463679">
       <notes>
-        <note category="location">src/app/features/pages/editor/query-embed.component.ts:57,60</note>
+        <note category="location">src/app/features/pages/editor/query-embed.component.ts:56,59</note>
         <note category="description">Hint shown when an embedded saved query cannot be loaded</note>
       </notes>
       <segment>
@@ -14948,7 +15012,7 @@
       <notes>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:79,81</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:90,92</note>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:206</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:192</note>
         <note category="location">src/app/shell/global-commands.service.ts:454</note>
         <note category="description">Accessible label for the button that creates a page or folder</note>
       </notes>
@@ -14990,7 +15054,7 @@
       <notes>
         <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:44,47</note>
         <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:103,105</note>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:346</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:373</note>
         <note category="location">src/app/features/settings/settings.routes.ts:123</note>
         <note category="description">Page title for the guided import builder</note>
       </notes>
@@ -15064,7 +15128,7 @@
     </unit>
     <unit id="3226430334036368740">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:48</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:47</note>
         <note category="description">Why a page is listed under needs review</note>
       </notes>
       <segment>
@@ -15166,7 +15230,7 @@
     </unit>
     <unit id="1035486904213190837">
       <notes>
-        <note category="location">src/app/features/pages/editor/page-transform.controller.ts:62</note>
+        <note category="location">src/app/features/pages/editor/page-transform.controller.ts:60</note>
         <note category="description">Heading of the card showing page text rewritten shorter by the assistant</note>
       </notes>
       <segment>
@@ -15449,15 +15513,6 @@
         <source> Create Board </source>
       </segment>
     </unit>
-    <unit id="8078092222078220531">
-      <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:99,102</note>
-        <note category="description">Hint beside the pages home question box saying the assistant answers from pages</note>
-      </notes>
-      <segment>
-        <source>Answers cite the pages they use</source>
-      </segment>
-    </unit>
     <unit id="8081187093671904449">
       <notes>
         <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:264,268</note>
@@ -15579,7 +15634,7 @@
     </unit>
     <unit id="4230988579010034650">
       <notes>
-        <note category="location">src/app/features/pages/editor/page-transform.controller.ts:68</note>
+        <note category="location">src/app/features/pages/editor/page-transform.controller.ts:66</note>
         <note category="description">Button that swaps the selected page text for the assistant&apos;s version</note>
       </notes>
       <segment>
@@ -16142,8 +16197,8 @@
     </unit>
     <unit id="3154294923374510663">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:688</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:879</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:694</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:885</note>
         <note category="description">Shown when the assistant reports a failure</note>
       </notes>
       <segment>
@@ -16562,7 +16617,7 @@
     </unit>
     <unit id="1541678370896041349">
       <notes>
-        <note category="location">src/app/features/pages/util/page-templates.ts:58</note>
+        <note category="location">src/app/features/pages/util/page-templates.ts:62</note>
         <note category="description">Template card for a sprint retrospective</note>
       </notes>
       <segment>
@@ -16590,7 +16645,7 @@
     <unit id="1557588537287479588">
       <notes>
         <note category="location">src/app/features/pages/components/page-editor.component.ts:172,174</note>
-        <note category="location">src/app/features/pages/editor/page-editor-commands.ts:28</note>
+        <note category="location">src/app/features/pages/editor/page-editor-commands.ts:27</note>
         <note category="description">Accessible label for the menu of tasks and pages to mention</note>
       </notes>
       <segment>
@@ -16608,7 +16663,7 @@
     </unit>
     <unit id="88441739587887726">
       <notes>
-        <note category="location">src/app/features/pages/editor/page-transform.controller.ts:69</note>
+        <note category="location">src/app/features/pages/editor/page-transform.controller.ts:67</note>
         <note category="description">Button that adds the assistant&apos;s text below the selection or cursor</note>
       </notes>
       <segment>
@@ -17107,8 +17162,8 @@
       <notes>
         <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:66</note>
         <note category="location">src/app/features/pages/components/page-toolbar.component.ts:173,176</note>
-        <note category="location">src/app/features/pages/components/page-tree.component.ts:280</note>
-        <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:30</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:279</note>
+        <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:32,33</note>
         <note category="location">src/app/features/project-tasks/project-tasks.routes.ts:13</note>
         <note category="location">src/app/features/project-tasks/views/archive-view/archive-view.component.ts:21,23</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:161</note>
@@ -17156,7 +17211,7 @@
     </unit>
     <unit id="4223592999227643528">
       <notes>
-        <note category="location">src/app/features/pages/editor/page-transform.controller.ts:74</note>
+        <note category="location">src/app/features/pages/editor/page-transform.controller.ts:72</note>
         <note category="description">Shown when the assistant could not rewrite page text</note>
       </notes>
       <segment>
@@ -17211,7 +17266,7 @@
     </unit>
     <unit id="7847171946828670653">
       <notes>
-        <note category="location">src/app/static/components/editor/editor-commands.ts:67</note>
+        <note category="location">src/app/static/components/editor/editor-commands.ts:65</note>
         <note category="description">Slash command that inserts a numbered list</note>
       </notes>
       <segment>
@@ -17265,7 +17320,7 @@
     </unit>
     <unit id="4433648409065755384">
       <notes>
-        <note category="location">src/app/features/pages/editor/query-embed.component.ts:53,55</note>
+        <note category="location">src/app/features/pages/editor/query-embed.component.ts:52,54</note>
         <note category="description">Shown when an embedded saved query cannot be loaded</note>
       </notes>
       <segment>
@@ -17580,7 +17635,7 @@
     </unit>
     <unit id="8610504659433544583">
       <notes>
-        <note category="location">src/app/features/pages/editor/query-embed.component.ts:38,40</note>
+        <note category="location">src/app/features/pages/editor/query-embed.component.ts:37,39</note>
         <note category="description">Badge on an embedded list that updates as tasks change</note>
       </notes>
       <segment>
@@ -18311,7 +18366,7 @@
     </unit>
     <unit id="4803442795141876084">
       <notes>
-        <note category="location">src/app/features/pages/dialogs/query-picker-dialog.component.ts:65</note>
+        <note category="location">src/app/features/pages/dialogs/query-picker-dialog.component.ts:64</note>
         <note category="description">Accessible label for the list of saved queries that can be embedded</note>
       </notes>
       <segment>
@@ -18330,6 +18385,7 @@
     <unit id="4808589666930368915">
       <notes>
         <note category="location">src/app/features/pages/components/page-meta-chips.component.ts:30,34</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:254</note>
         <note category="description">Status chip on a draft page</note>
       </notes>
       <segment>
@@ -18595,7 +18651,7 @@
     </unit>
     <unit id="7050417113599636550">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:183</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:182</note>
         <note category="description">Error shown when marking a page as reviewed fails</note>
       </notes>
       <segment>
@@ -18851,7 +18907,7 @@
     </unit>
     <unit id="1314562873676673298">
       <notes>
-        <note category="location">src/app/static/components/save-status/save-status.component.ts:62</note>
+        <note category="location">src/app/static/components/save-status/save-status.component.ts:61</note>
         <note category="description">Shown while a document is being saved</note>
       </notes>
       <segment>
@@ -19000,7 +19056,7 @@
     </unit>
     <unit id="8246436377858718644">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:920</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:926</note>
         <note category="description">Title of the confirmation dialog for deleting an assistant conversation</note>
       </notes>
       <segment>
@@ -19063,7 +19119,7 @@
     </unit>
     <unit id="4786531800695286460">
       <notes>
-        <note category="location">src/app/static/components/editor/editor-commands.ts:83</note>
+        <note category="location">src/app/static/components/editor/editor-commands.ts:81</note>
         <note category="description">Slash command that inserts a highlighted callout block</note>
       </notes>
       <segment>
@@ -19096,6 +19152,15 @@
       </notes>
       <segment>
         <source>Due</source>
+      </segment>
+    </unit>
+    <unit id="5990720761138943356">
+      <notes>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:248</note>
+        <note category="description">Heading of the pages home box when drafting a page with the assistant</note>
+      </notes>
+      <segment>
+        <source>What should this page cover?</source>
       </segment>
     </unit>
     <unit id="5992426859749036765">
@@ -19163,7 +19228,7 @@
     </unit>
     <unit id="9080312564183839552">
       <notes>
-        <note category="location">src/app/static/components/editor/editor-commands.ts:59</note>
+        <note category="location">src/app/static/components/editor/editor-commands.ts:57</note>
         <note category="description">Slash command that inserts a bulleted list</note>
       </notes>
       <segment>
@@ -19246,7 +19311,7 @@
     <unit id="4361487192183535591">
       <notes>
         <note category="location">src/app/features/assistant/assistant.routes.ts:12</note>
-        <note category="location">src/app/features/pages/editor/page-editor-commands.ts:21</note>
+        <note category="location">src/app/features/pages/editor/page-editor-commands.ts:20</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:87</note>
         <note category="location">src/app/features/settings/settings.routes.ts:144</note>
         <note category="location">src/app/features/settings/views/personal-assistant-settings-view/personal-assistant-settings-view.component.ts:31,33</note>
@@ -19418,7 +19483,7 @@
     </unit>
     <unit id="939770875389918350">
       <notes>
-        <note category="location">src/app/features/pages/dialogs/sprint-picker-dialog.component.ts:68</note>
+        <note category="location">src/app/features/pages/dialogs/sprint-picker-dialog.component.ts:67</note>
         <note category="description">Shown when no sprint has been completed yet</note>
       </notes>
       <segment>
@@ -19636,7 +19701,7 @@
     </unit>
     <unit id="7306009472583884794">
       <notes>
-        <note category="location">src/app/static/components/editor/editor-commands.ts:99</note>
+        <note category="location">src/app/static/components/editor/editor-commands.ts:97</note>
         <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:158</note>
         <note category="description">Slash command that inserts a horizontal divider</note>
       </notes>
@@ -19754,6 +19819,15 @@
       </notes>
       <segment>
         <source> Select all </source>
+      </segment>
+    </unit>
+    <unit id="1917188133536938125">
+      <notes>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:383</note>
+        <note category="description">Suggested page for the assistant to draft on pages home</note>
+      </notes>
+      <segment>
+        <source>Onboarding guide for new team members</source>
       </segment>
     </unit>
     <unit id="1918603297826248431">
@@ -20123,7 +20197,7 @@
     </unit>
     <unit id="4525703526182627629">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:180</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:179</note>
         <note category="description">Shown after an import that left some files out</note>
       </notes>
       <segment>
@@ -20132,7 +20206,7 @@
     </unit>
     <unit id="1686886160641135190">
       <notes>
-        <note category="location">src/app/features/pages/dialogs/sprint-picker-dialog.component.ts:67</note>
+        <note category="location">src/app/features/pages/dialogs/sprint-picker-dialog.component.ts:66</note>
         <note category="description">Placeholder in the box that narrows the completed sprints</note>
       </notes>
       <segment>
@@ -20871,7 +20945,7 @@
     </unit>
     <unit id="6781617070710024146">
       <notes>
-        <note category="location">src/app/static/components/editor/editor-commands.ts:41</note>
+        <note category="location">src/app/static/components/editor/editor-commands.ts:39</note>
         <note category="description">Slash command that inserts a smaller heading</note>
       </notes>
       <segment>
@@ -20880,7 +20954,7 @@
     </unit>
     <unit id="6787085006953793000">
       <notes>
-        <note category="location">src/app/static/components/save-status/save-status.component.ts:68</note>
+        <note category="location">src/app/static/components/save-status/save-status.component.ts:67</note>
         <note category="description">Shown when saving a document failed</note>
       </notes>
       <segment>
@@ -21000,7 +21074,7 @@
     </unit>
     <unit id="8676025783488152933">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:105,108</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:261</note>
         <note category="description">Placeholder of the box on pages home that asks the assistant about the workspace&apos;s pages</note>
       </notes>
       <segment>
@@ -21072,7 +21146,7 @@
     </unit>
     <unit id="5953425146193292178">
       <notes>
-        <note category="location">src/app/static/components/editor/editor-commands.ts:75</note>
+        <note category="location">src/app/static/components/editor/editor-commands.ts:73</note>
         <note category="description">Slash command that inserts a code block</note>
       </notes>
       <segment>
@@ -21144,7 +21218,7 @@
     </unit>
     <unit id="2457945553331921203">
       <notes>
-        <note category="location">src/app/features/pages/util/page-templates.ts:52</note>
+        <note category="location">src/app/features/pages/util/page-templates.ts:55</note>
         <note category="description">Template card for an operational runbook</note>
       </notes>
       <segment>
@@ -21499,7 +21573,7 @@
     </unit>
     <unit id="2949537818776440189">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:170</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:169</note>
         <note category="description">Error shown when restoring an archived page fails</note>
       </notes>
       <segment>
@@ -21608,7 +21682,7 @@
     </unit>
     <unit id="2821179408673282599">
       <notes>
-        <note category="location">src/app/features/pages/components/page-tree.component.ts:268</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:267</note>
         <note category="description">Link to the pages home</note>
       </notes>
       <segment>
@@ -21855,7 +21929,7 @@
     </unit>
     <unit id="7334697494580878982">
       <notes>
-        <note category="location">src/app/features/pages/util/page-templates.ts:59</note>
+        <note category="location">src/app/features/pages/util/page-templates.ts:63</note>
         <note category="description">Description of the retro template</note>
       </notes>
       <segment>
@@ -22302,7 +22376,7 @@
     </unit>
     <unit id="5674111399527575503">
       <notes>
-        <note category="location">src/app/features/pages/editor/query-embed.component.ts:48,51</note>
+        <note category="location">src/app/features/pages/editor/query-embed.component.ts:47,50</note>
         <note category="description">Shown on an embedded saved query the viewer may not see the tasks of</note>
       </notes>
       <segment>
@@ -22389,7 +22463,7 @@
     </unit>
     <unit id="2670316111000668735">
       <notes>
-        <note category="location">src/app/features/pages/util/page-templates.ts:41</note>
+        <note category="location">src/app/features/pages/util/page-templates.ts:42</note>
         <note category="description">Description of the meeting notes template</note>
       </notes>
       <segment>
@@ -22443,7 +22517,7 @@
     </unit>
     <unit id="818882206456622635">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:110,112</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:264</note>
         <note category="description">Accessible label of the box on pages home that asks the assistant a question</note>
       </notes>
       <segment>
@@ -22720,7 +22794,7 @@
     </unit>
     <unit id="745963961861200833">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:157,160</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:143,146</note>
         <note category="description">Description of the pages home recently viewed card</note>
       </notes>
       <segment>
@@ -23056,7 +23130,7 @@
     </unit>
     <unit id="2468424720649338406">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:49</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:48</note>
         <note category="description">Why a page is listed under needs review</note>
       </notes>
       <segment>
@@ -23074,7 +23148,7 @@
     </unit>
     <unit id="4007403871857119460">
       <notes>
-        <note category="location">src/app/static/components/save-status/save-status.component.ts:66</note>
+        <note category="location">src/app/static/components/save-status/save-status.component.ts:65</note>
         <note category="description">Shown when a document was changed elsewhere before this save</note>
       </notes>
       <segment>
@@ -23173,6 +23247,15 @@
       </notes>
       <segment>
         <source>Sprints</source>
+      </segment>
+    </unit>
+    <unit id="4348734030451828895">
+      <notes>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:253</note>
+        <note category="description">Accessible label of the pages home box when drafting a page</note>
+      </notes>
+      <segment>
+        <source>Describe the page for the assistant to draft</source>
       </segment>
     </unit>
     <unit id="6668584344316209309">
@@ -23339,7 +23422,7 @@
     </unit>
     <unit id="574980856658424744">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:912</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:918</note>
         <note category="description">Title of the confirmation dialog for deleting several assistant conversations. COUNT is how many</note>
       </notes>
       <segment>
@@ -23438,7 +23521,7 @@
     </unit>
     <unit id="230509500346547092">
       <notes>
-        <note category="location">src/app/features/pages/services/page-draft.ts:254</note>
+        <note category="location">src/app/features/pages/services/page-draft.ts:245</note>
         <note category="description">Error shown when saving a page fails</note>
       </notes>
       <segment>
@@ -23492,7 +23575,7 @@
     </unit>
     <unit id="8268730115734666247">
       <notes>
-        <note category="location">src/app/features/pages/util/page-templates.ts:71</note>
+        <note category="location">src/app/features/pages/util/page-templates.ts:77</note>
         <note category="description">Description of the from-a-sprint template</note>
       </notes>
       <segment>
@@ -23706,8 +23789,8 @@
     </unit>
     <unit id="8329380997135897984">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:191</note>
-        <note category="location">src/app/core/services/page-commands.service.ts:193</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:190</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:192</note>
         <note category="description">Title of the dialog confirming a page is archived</note>
       </notes>
       <segment>
@@ -24700,6 +24783,15 @@
         <source>Back to Relations</source>
       </segment>
     </unit>
+    <unit id="4036781966313831213">
+      <notes>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:251</note>
+        <note category="description">Hint in the pages home box saying where an assistant draft is created</note>
+      </notes>
+      <segment>
+        <source>New page in Workspace</source>
+      </segment>
+    </unit>
     <unit id="2601654600106221602">
       <notes>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:143,144</note>
@@ -24720,7 +24812,7 @@
     </unit>
     <unit id="2610280847967679840">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:177,180</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:163,166</note>
         <note category="description">Description of the pages home needs review card</note>
       </notes>
       <segment>
@@ -24792,8 +24884,8 @@
     </unit>
     <unit id="6662135835508534133">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:199</note>
-        <note category="location">src/app/core/services/page-commands.service.ts:201</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:198</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:200</note>
         <note category="description">Title of the dialog confirming a folder is archived</note>
       </notes>
       <segment>
@@ -25410,7 +25502,7 @@
     </unit>
     <unit id="2142361343554969922">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:168</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:167</note>
         <note category="description">Error shown when moving a page in the tree fails</note>
       </notes>
       <segment>
@@ -25740,7 +25832,7 @@
     </unit>
     <unit id="2389097364194442984">
       <notes>
-        <note category="location">src/app/static/components/editor/editor.component.ts:154</note>
+        <note category="location">src/app/static/components/editor/editor.component.ts:153</note>
         <note category="description">Accessible label for the menu of blocks that typing / offers</note>
       </notes>
       <segment>
@@ -25831,7 +25923,8 @@
     </unit>
     <unit id="6441348058745652320">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:116,120</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:265</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:377</note>
         <note category="description">Accessible label of the button that sends a question to the assistant</note>
       </notes>
       <segment>
@@ -25849,7 +25942,7 @@
     </unit>
     <unit id="4440519685247531328">
       <notes>
-        <note category="location">src/app/features/pages/editor/page-transform.controller.ts:72</note>
+        <note category="location">src/app/features/pages/editor/page-transform.controller.ts:70</note>
         <note category="description">Shown when the page text an assistant result was for has been replaced</note>
       </notes>
       <segment>
@@ -26069,7 +26162,7 @@
     </unit>
     <unit id="2034595166058554206">
       <notes>
-        <note category="location">src/app/features/pages/editor/query-embed.component.ts:75,79</note>
+        <note category="location">src/app/features/pages/editor/query-embed.component.ts:74,78</note>
         <note category="description">Link under an embedded query to the tasks it does not show</note>
       </notes>
       <segment>
@@ -26087,7 +26180,7 @@
     </unit>
     <unit id="2037491714599491863">
       <notes>
-        <note category="location">src/app/features/pages/services/page-draft.ts:253</note>
+        <note category="location">src/app/features/pages/services/page-draft.ts:244</note>
         <note category="description">Error shown when changing a page&apos;s status or tags fails</note>
       </notes>
       <segment>

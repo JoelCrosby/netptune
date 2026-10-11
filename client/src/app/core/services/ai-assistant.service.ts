@@ -360,14 +360,22 @@ export class AiAssistantService {
     );
   }
 
-  draftPage() {
-    this.askAbout(
-      $localize`:Seeds the assistant composer when drafting a new page with the assistant:Draft a new page about `
+  draftPage(description: string) {
+    const trimmed = description.trim();
+
+    if (!trimmed) return;
+
+    this.startConversationWith(
+      $localize`:Message sent to the assistant when drafting a new page from pages home:Draft a new page: ${trimmed}:DESCRIPTION:`
     );
   }
 
   askAcrossPages(question: string) {
-    const trimmed = question.trim();
+    this.startConversationWith(question);
+  }
+
+  private startConversationWith(text: string) {
+    const trimmed = text.trim();
 
     if (!this.isAvailable() || !trimmed) {
       return;

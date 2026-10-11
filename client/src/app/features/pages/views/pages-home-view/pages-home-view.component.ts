@@ -3,6 +3,7 @@ import {
   computed,
   ElementRef,
   inject,
+  signal,
   viewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
@@ -17,20 +18,18 @@ import { AiAssistantService } from '@core/services/ai-assistant.service';
 import { DialogService } from '@core/services/dialog.service';
 import { PageCommandsService } from '@core/services/page-commands.service';
 import { fromNow } from '@core/util/dates';
-import {
-  LucideDynamicIcon,
-  LucideFileClock,
-  LucideHistory,
-  LucideLayoutTemplate,
-  LucideSparkles,
-  LucideUpload,
-} from '@lucide/angular';
+import { LucideFileClock, LucideHistory, LucideUpload } from '@lucide/angular';
 import { HeaderAction } from '@core/types/header-action';
-import { ActionCardComponent } from '@static/components/action-card/action-card.component';
 import { ChartCardComponent } from '@static/components/chart-card/chart-card.component';
 import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
-import { PromptInputComponent } from '@static/components/prompt-input/prompt-input.component';
+import { PromptHeroComponent } from '@static/components/prompt-hero/prompt-hero.component';
+import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
+import {
+  SegmentedControlComponent,
+  SegmentedOption,
+} from '@static/components/segmented-control/segmented-control.component';
+import { TemplateCardComponent } from '@static/components/template-card/template-card.component';
 import {
   RowListComponent,
   RowListItem,
@@ -55,12 +54,13 @@ const REVIEW_REASONS: Record<PageReviewReason, string> = {
   imports: [
     PageHeaderComponent,
     PageTreeComponent,
-    PromptInputComponent,
-    ActionCardComponent,
+    PromptHeroComponent,
+    SegmentedControlComponent,
+    SectionHeaderComponent,
+    TemplateCardComponent,
     ChartCardComponent,
     PageBodyComponent,
     RowListComponent,
-    LucideDynamicIcon,
   ],
   host: { class: 'flex min-h-0 flex-1 flex-col' },
   template: `
@@ -86,61 +86,49 @@ const REVIEW_REASONS: Record<PageReviewReason, string> = {
         <app-page-tree class="md:hidden" />
 
         @if (canAsk()) {
-          <app-chart-card
-            [icon]="askIcon"
-            i18n-title="Heading of the pages home card that asks the assistant"
-            title="Ask your pages"
-            i18n-description="
-              Hint beside the pages home question box saying the assistant
-              answers from pages
-            "
-            description="Answers cite the pages they use">
-            <app-prompt-input
-              i18n-placeholder="
-                Placeholder of the box on pages home that asks the assistant
-                about the workspace's pages
-              "
-              placeholder="Ask anything about your pages…"
-              i18n-ariaLabel="
-                Accessible label of the box on pages home that asks the
-                assistant a question
-              "
-              ariaLabel="Ask the assistant about your pages"
-              i18n-submitLabel="
-                Accessible label of the button that sends a question to the
-                assistant
-              "
-              submitLabel="Ask"
-              (submitted)="onAsk($event)" />
-          </app-chart-card>
+          <app-prompt-hero
+            [heading]="hero().heading"
+            [description]="hero().description"
+            [placeholder]="hero().placeholder"
+            [hint]="hero().hint"
+            [suggestions]="hero().suggestions"
+            [ariaLabel]="hero().ariaLabel"
+            [submitLabel]="hero().submitLabel"
+            (submitted)="onPrompt($event)">
+            @if (canCreate()) {
+              <app-segmented-control
+                promptHeroControls
+                class="shrink-0"
+                i18n-ariaLabel="
+                  Accessible label for the switch between asking the assistant
+                  and drafting a page on pages home
+                "
+                ariaLabel="Assistant mode"
+                [options]="modeOptions"
+                [(value)]="mode" />
+            }
+          </app-prompt-hero>
         }
 
         @if (canCreate()) {
-          <app-chart-card
-            [icon]="templatesIcon"
-            i18n-title="Heading over the templates on pages home"
-            title="Start a page"
-            i18n-description="Description of the pages home templates card"
-            description="A template, release notes from a sprint, or a draft from the assistant">
+          <section>
+            <app-section-header
+              appearance="inline"
+              i18n-heading="Heading over the templates on pages home"
+              heading="Start from a template"
+              [description]="templatesDescription()" />
             <div
-              class="grid grid-cols-4 gap-2.5 max-lg:grid-cols-2 max-sm:grid-cols-1">
-              @for (template of templates(); track template.key) {
-                <app-action-card
-                  [variant]="
-                    template.key === 'assistant' ? 'accent' : 'outlined'
-                  "
+              class="grid grid-cols-7 gap-3 max-2xl:grid-cols-4 max-lg:grid-cols-2 max-sm:grid-cols-1">
+              @for (template of templates; track template.key) {
+                <app-template-card
                   [heading]="template.title"
-                  [showChevron]="false"
-                  (activated)="onTemplate(template)">
-                  <svg
-                    actionCardIcon
-                    [lucideIcon]="template.icon"
-                    class="h-4 w-4"></svg>
-                  {{ template.description }}
-                </app-action-card>
+                  [description]="template.description"
+                  [icon]="template.icon"
+                  [tone]="template.tone"
+                  (activated)="onTemplate(template)" />
               }
             </div>
-          </app-chart-card>
+          </section>
         }
 
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -202,8 +190,7 @@ export class PagesHomeViewComponent {
 
   protected readonly canCreate = hasPermission(PERMISSIONS.pages.create);
   protected readonly createLabel = $localize`:Button that creates a page:Create Page`;
-  protected readonly askIcon = LucideSparkles;
-  protected readonly templatesIcon = LucideLayoutTemplate;
+  protected readonly templates = pageTemplates;
   protected readonly recentIcon = LucideHistory;
   protected readonly reviewIcon = LucideFileClock;
   protected readonly blankTemplate = pageTemplates[0];
@@ -227,12 +214,56 @@ export class PagesHomeViewComponent {
     return this.assistant.isAvailable() && this.canUseAssistant();
   });
 
-  protected readonly templates = computed(() => {
-    const canDraft = this.canAsk();
+  protected readonly mode = signal<HeroMode>('ask');
+  protected readonly modeOptions: SegmentedOption<HeroMode>[] = [
+    { value: 'ask', label: askModeLabel },
+    { value: 'draft', label: draftModeLabel },
+  ];
 
-    return pageTemplates.filter(
-      (template) => template.key !== 'assistant' || canDraft
-    );
+  private readonly spaceName = computed(() => {
+    return this.store.activeSpace()?.name ?? workspaceLabel;
+  });
+
+  protected readonly templatesDescription = computed(() => {
+    return $localize`:Hint beside the templates on pages home naming the space new pages go in:Each one opens a new page in ${this.spaceName()}:SPACE:`;
+  });
+
+  private readonly documentCount = computed(() => {
+    return this.store.nodes().filter((node) => node.kind === PageKind.document)
+      .length;
+  });
+
+  private readonly askSuggestions = computed(() => {
+    return this.recent
+      .value()
+      .slice(0, 3)
+      .map((page) => {
+        return $localize`:Suggested question on pages home about a page the user opened recently:Summarise ${page.title}:TITLE:`;
+      });
+  });
+
+  protected readonly hero = computed<HeroCopy>(() => {
+    if (this.mode() === 'draft') {
+      return {
+        heading: $localize`:Heading of the pages home box when drafting a page with the assistant:What should this page cover?`,
+        description: $localize`:Description under the pages home heading when drafting a page with the assistant:Describe the page and the assistant writes a first draft for you to review.`,
+        placeholder: $localize`:Placeholder of the pages home box when drafting a page:e.g. A runbook for rotating the deploy credentials`,
+        hint: $localize`:Hint in the pages home box saying where an assistant draft is created:New page in Workspace`,
+        suggestions: draftSuggestions,
+        ariaLabel: $localize`:Accessible label of the pages home box when drafting a page:Describe the page for the assistant to draft`,
+        submitLabel: $localize`:Accessible label of the button that asks the assistant to draft a page:Draft`,
+      };
+    }
+
+    return {
+      heading: $localize`:Heading of the pages home box that asks the assistant a question:What do you want to know?`,
+      description: $localize`:Description under the pages home heading when asking the assistant:The assistant answers from your pages and links to the pages it used.`,
+      placeholder: $localize`:Placeholder of the box on pages home that asks the assistant about the workspace's pages:Ask anything about your pages…`,
+      hint: $localize`:Hint in the pages home box saying how many pages the assistant searches:Searching ${this.documentCount()}:COUNT: pages`,
+      suggestions: this.askSuggestions(),
+      ariaLabel: $localize`:Accessible label of the box on pages home that asks the assistant a question:Ask the assistant about your pages`,
+      submitLabel: $localize`:Accessible label of the button that sends a question to the assistant:Ask`,
+    };
   });
 
   protected readonly recentItems = computed<RowListItem[]>(() => {
@@ -261,16 +292,16 @@ export class PagesHomeViewComponent {
     });
   });
 
-  protected onAsk(question: string) {
-    this.assistant.askAcrossPages(question);
-  }
-
-  protected async onTemplate(template: PageTemplateOption) {
-    if (template.key === 'assistant') {
-      this.assistant.draftPage();
+  protected onPrompt(text: string) {
+    if (this.mode() === 'draft') {
+      this.assistant.draftPage(text);
       return;
     }
 
+    this.assistant.askAcrossPages(text);
+  }
+
+  protected async onTemplate(template: PageTemplateOption) {
     const request = await this.requestFor(template);
 
     if (!request) return;
@@ -340,3 +371,27 @@ export class PagesHomeViewComponent {
 const markReviewedLabel = $localize`:Button that marks a page as still accurate so it leaves needs review:Mark reviewed`;
 
 const importLabel = $localize`:Button on pages home that imports markdown files as pages:Import`;
+
+const workspaceLabel = $localize`:Name of the workspace's own page space, outside any project:Workspace`;
+
+const askModeLabel = $localize`:Option on pages home that asks the assistant a question:Ask`;
+
+const draftModeLabel = $localize`:Option on pages home that has the assistant draft a new page:Draft a page`;
+
+const draftSuggestions = [
+  $localize`:Suggested page for the assistant to draft on pages home:Release notes for the current sprint`,
+  $localize`:Suggested page for the assistant to draft on pages home:Onboarding guide for new team members`,
+  $localize`:Suggested page for the assistant to draft on pages home:Postmortem for a production incident`,
+];
+
+type HeroMode = 'ask' | 'draft';
+
+interface HeroCopy {
+  heading: string;
+  description: string;
+  placeholder: string;
+  hint: string;
+  suggestions: readonly string[];
+  ariaLabel: string;
+  submitLabel: string;
+}
