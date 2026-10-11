@@ -70,6 +70,7 @@ public sealed class PagesEndpointTests
         result.Payload!.Revision.Should().Be(created.Revision + 1);
         result.Payload.Title.Should().Be("Deploy runbook");
         result.Payload.Body.Should().Be("## Steps");
+        result.Payload.Contributors.Should().ContainSingle().Which.DisplayName.Should().NotBeNullOrEmpty();
     }
 
     [Fact]

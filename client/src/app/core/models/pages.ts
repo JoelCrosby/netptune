@@ -41,6 +41,14 @@ export interface PageDetail {
   createdByDisplayName: string | null;
   modifiedByDisplayName: string | null;
   tags: PageTag[];
+  contributors: PageContributor[];
+}
+
+export interface PageContributor {
+  userId: string;
+  displayName: string;
+  pictureUrl: string | null;
+  lastEditedAt: string;
 }
 
 export interface PageTag {

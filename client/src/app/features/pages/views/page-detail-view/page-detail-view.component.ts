@@ -48,6 +48,7 @@ import { PageDraft } from '../../services/page-draft';
 import { PageDraftFactory } from '../../services/page-draft.factory';
 import { isSamePageSlug } from '../../util/page-slug';
 import { PageContentWidthService } from '../../services/page-content-width.service';
+import { PagePresenceService } from '../../services/page-presence.service';
 import { PageRailService } from '../../services/page-rail.service';
 import { PageTreeStore } from '../../services/page-tree.store';
 
@@ -60,7 +61,7 @@ import { PageTreeStore } from '../../services/page-tree.store';
     PageRailComponent,
     EmptyStateComponent,
   ],
-  providers: [PageDraftFactory],
+  providers: [PageDraftFactory, PagePresenceService],
   host: { class: 'flex min-h-0 flex-1 flex-col' },
   template: `
     @if (detail.value(); as page) {
@@ -79,6 +80,7 @@ import { PageTreeStore } from '../../services/page-tree.store';
               [contentWidth]="contentWidth.width()"
               (contentWidthChange)="contentWidth.set($event)"
               [railCollapsed]="rail.collapsed()"
+              [people]="people()"
               (railCollapsedChange)="rail.setCollapsed($event)"
               (favouriteToggled)="onFavouriteToggled(page, $event)"
               (createInside)="onCreateInside(page)"
@@ -141,6 +143,7 @@ export class PageDetailViewComponent {
   private readonly currentPage = inject(CurrentPageService);
   protected readonly contentWidth = inject(PageContentWidthService);
   protected readonly rail = inject(PageRailService);
+  private readonly presence = inject(PagePresenceService);
 
   private readonly routeParams = toSignal(this.route.params, {
     initialValue: this.route.snapshot.params,
@@ -192,6 +195,12 @@ export class PageDetailViewComponent {
     { equal: (previous, next) => previous?.id === next?.id }
   );
 
+  protected readonly people = computed(() => {
+    const contributors = this.draft()?.latest().contributors ?? [];
+
+    return this.presence.people(contributors);
+  });
+
   protected readonly drafts = computed(() => {
     const draft = this.draft();
 
@@ -234,6 +243,7 @@ export class PageDetailViewComponent {
 
       if (id !== undefined) {
         this.commands.recordVisit(id);
+        this.presence.join(id);
       }
     });
 
@@ -263,6 +273,8 @@ export class PageDetailViewComponent {
 
     inject(DestroyRef).onDestroy(() => {
       const id = untracked(this.draft)?.id;
+
+      this.presence.leave();
 
       if (id !== undefined) {
         this.currentPage.clearIfCurrent(id);

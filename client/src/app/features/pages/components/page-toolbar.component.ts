@@ -1,4 +1,12 @@
-import { Component, computed, input, model, output } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  input,
+  LOCALE_ID,
+  model,
+  output,
+} from '@angular/core';
 import { PageDetail, PageKind, PageStatus } from '@core/models/pages';
 import {
   LucideArchive,
@@ -17,6 +25,10 @@ import {
   BreadcrumbComponent,
   BreadcrumbItem,
 } from '@static/components/breadcrumb/breadcrumb.component';
+import {
+  AvatarStackComponent,
+  AvatarStackItem,
+} from '@static/components/avatar-stack/avatar-stack.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
@@ -39,6 +51,7 @@ import {
   imports: [
     PanelBodyComponent,
     BreadcrumbComponent,
+    AvatarStackComponent,
     SaveStatusComponent,
     SegmentedControlComponent,
     IconButtonComponent,
@@ -70,6 +83,15 @@ import {
         i18n-ariaLabel="Accessible label for the trail of folders above a page"
         ariaLabel="Page location"
         [items]="breadcrumbs()" />
+
+      @if (people().length) {
+        <app-avatar-stack
+          class="shrink-0"
+          role="img"
+          [attr.aria-label]="peopleLabel()"
+          [limit]="4"
+          [avatars]="people()" />
+      }
 
       <app-save-status [state]="saveState()" />
 
@@ -232,6 +254,7 @@ export class PageToolbarComponent {
   readonly mode = model<EditorMode>('rich');
   readonly contentWidth = model<PageContentWidth>('centered');
   readonly railCollapsed = model(false);
+  readonly people = input<readonly AvatarStackItem[]>([]);
 
   readonly favouriteToggled = output<boolean>();
   readonly createInside = output();
@@ -241,6 +264,16 @@ export class PageToolbarComponent {
   readonly historyRequested = output();
 
   protected readonly contentWidthLabel = $localize`:Accessible label for the toggle that lets a page's writing run the full width of the editor:Full width`;
+
+  private readonly listFormat = new Intl.ListFormat(inject(LOCALE_ID), {
+    type: 'conjunction',
+  });
+
+  protected readonly peopleLabel = computed(() => {
+    return this.listFormat.format(
+      this.people().map((person) => person.label ?? person.displayName)
+    );
+  });
 
   protected readonly railLabel = $localize`:Accessible label for the toggle that shows or hides the panel beside a page:Side panel`;
 

@@ -229,7 +229,7 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:205</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:109,111</note>
         <note category="location">src/app/features/pages/editor/page-reference.controller.ts:224</note>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:367</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:379</note>
         <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:71</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:92</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:207</note>
@@ -502,7 +502,7 @@
     </unit>
     <unit id="8198968372594669406">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:180,183</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:202,205</note>
         <note category="description">Menu item that moves a published page back to draft</note>
       </notes>
       <segment>
@@ -714,7 +714,7 @@
     </unit>
     <unit id="6980870776971861351">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:460</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:472</note>
         <note category="description">Byline under a page title naming who last edited it, when, and how long it takes to read</note>
       </notes>
       <segment>
@@ -890,7 +890,7 @@
     </unit>
     <unit id="4394924118608662801">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:243</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:266</note>
         <note category="description">Accessible label for the toggle that lets a page&apos;s writing run the full width of the editor</note>
       </notes>
       <segment>
@@ -2921,7 +2921,7 @@
     </unit>
     <unit id="1613971242435858090">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:108</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:114</note>
         <note category="description">Bubble menu action that has the assistant translate the selected text</note>
       </notes>
       <segment>
@@ -3129,7 +3129,7 @@
     </unit>
     <unit id="2275328567992347600">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:126,128</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:128,130</note>
         <note category="description">Shown when the requested page does not exist or was archived</note>
       </notes>
       <segment>
@@ -3983,7 +3983,7 @@
     </unit>
     <unit id="7440923050870641719">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:82,86</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:104,108</note>
         <note category="description">Accessible label for the switch between the rich and markdown editor</note>
       </notes>
       <segment>
@@ -4822,6 +4822,15 @@
         <source> Create Tag </source>
       </segment>
     </unit>
+    <unit id="3835282080704648284">
+      <notes>
+        <note category="location">src/app/features/pages/services/page-presence.service.ts:59</note>
+        <note category="description">Tooltip on the avatar of someone viewing a page now</note>
+      </notes>
+      <segment>
+        <source><ph id="0" equiv="NAME" disp="displayName"/> is viewing this page</source>
+      </segment>
+    </unit>
     <unit id="3836000317327860441">
       <notes>
         <note category="location">src/app/core/util/ai-client-context.ts:18</note>
@@ -5167,6 +5176,15 @@
         <source> You sign in with a linked account. Set a password to also sign in with your email address. </source>
       </segment>
     </unit>
+    <unit id="9014422536639985797">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:732</note>
+        <note category="description">Shown when a mentioned sprint or board in a page no longer exists or cannot be opened</note>
+      </notes>
+      <segment>
+        <source>That no longer exists, or you can&apos;t open it.</source>
+      </segment>
+    </unit>
     <unit id="3080368134005829146">
       <notes>
         <note category="location">src/app/entry/dialogs/edit-relation-type-dialog/edit-relation-type-dialog.component.ts:93,98</note>
@@ -5242,7 +5260,7 @@
     </unit>
     <unit id="5635560755747598626">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:103</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:109</note>
         <note category="description">Bubble menu action that has the assistant shorten the selected text</note>
       </notes>
       <segment>
@@ -5500,7 +5518,7 @@
     </unit>
     <unit id="4320935807729548621">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:115</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:121</note>
         <note category="description">Bubble menu action that asks the assistant to turn the selected checklist into tasks</note>
       </notes>
       <segment>
@@ -7348,7 +7366,7 @@
     </unit>
     <unit id="1663903229329909090">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:245</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:278</note>
         <note category="description">Accessible label for the toggle that shows or hides the panel beside a page</note>
       </notes>
       <segment>
@@ -10353,7 +10371,7 @@
     </unit>
     <unit id="8666730504824237140">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:266</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:299</note>
         <note category="description">Option that shows a page as formatted text</note>
       </notes>
       <segment>
@@ -11495,7 +11513,7 @@
     </unit>
     <unit id="8304423617415800133">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:151,154</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:173,176</note>
         <note category="description">Menu item that removes a page from favourites</note>
       </notes>
       <segment>
@@ -11549,7 +11567,7 @@
     </unit>
     <unit id="8319982105545010046">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:71,74</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:84,87</note>
         <note category="description">Accessible label for the trail of folders above a page</note>
       </notes>
       <segment>
@@ -12096,7 +12114,7 @@
     </unit>
     <unit id="3787321817465559173">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:155,160</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:177,182</note>
         <note category="description">Menu item that adds a page to favourites</note>
       </notes>
       <segment>
@@ -12319,7 +12337,7 @@
     </unit>
     <unit id="5234544449365538384">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:370</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:382</note>
         <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:320</note>
         <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:362</note>
         <note category="description">Shown when a page link could not be copied</note>
@@ -12495,7 +12513,7 @@
     </unit>
     <unit id="7153255681393081191">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:270</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:303</note>
         <note category="description">Option that shows a page as raw markdown</note>
       </notes>
       <segment>
@@ -12970,7 +12988,7 @@
     </unit>
     <unit id="7253608290099852757">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:258,262</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:264,268</note>
         <note category="description">Button that discards local edits and loads the newer saved page</note>
       </notes>
       <segment>
@@ -14090,7 +14108,7 @@
     <unit id="3640373857486272611">
       <notes>
         <note category="location">src/app/features/pages/components/page-rail.component.ts:103,105</note>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:111,113</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:133,135</note>
         <note category="description">Accessible label for the list of saved versions of a page</note>
       </notes>
       <segment>
@@ -15609,8 +15627,8 @@
     </unit>
     <unit id="7869199587095613616">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:287,288</note>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:368</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:293,294</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:380</note>
         <note category="location">src/app/static/components/branding-preview/branding-preview.component.ts:156</note>
         <note category="description">Placeholder in an empty page title</note>
       </notes>
@@ -15824,7 +15842,7 @@
     </unit>
     <unit id="5116679637427656902">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:167,172</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:189,194</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:201</note>
         <note category="description">Menu item that creates a page inside the open page</note>
       </notes>
@@ -16025,7 +16043,7 @@
     </unit>
     <unit id="1022106416065199935">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:136,138</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:158,160</note>
         <note category="description">Accessible label for the button that opens the page action menu</note>
       </notes>
       <segment>
@@ -16144,7 +16162,7 @@
     </unit>
     <unit id="3823219296477075982">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:200,201</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:206,207</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:397,400</note>
         <note category="description">Accessible label for closing the assistant result card</note>
       </notes>
@@ -16154,7 +16172,7 @@
     </unit>
     <unit id="3823999463060757067">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:98</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:104</note>
         <note category="description">Bubble menu action that has the assistant summarise the selected text</note>
       </notes>
       <segment>
@@ -16396,7 +16414,7 @@
     </unit>
     <unit id="1163860776084272350">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:322,324</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:328,330</note>
         <note category="description">Shown on a folder, which has no text of its own</note>
       </notes>
       <segment>
@@ -16758,7 +16776,7 @@
     </unit>
     <unit id="1557588537287479588">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:173,175</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:179,181</note>
         <note category="location">src/app/features/pages/editor/page-editor-commands.ts:27</note>
         <note category="description">Accessible label for the menu of tasks and pages to mention</note>
       </notes>
@@ -16923,7 +16941,7 @@
     </unit>
     <unit id="933361080941409912">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:289,291</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:295,297</note>
         <note category="description">Accessible label for the page title</note>
       </notes>
       <segment>
@@ -17285,7 +17303,7 @@
     <unit id="1055686627716339120">
       <notes>
         <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:66</note>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:198,201</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:220,223</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:280</note>
         <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:44</note>
         <note category="location">src/app/features/project-tasks/project-tasks.routes.ts:13</note>
@@ -17353,7 +17371,7 @@
     </unit>
     <unit id="9180258231296737289">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:307,309</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:313,315</note>
         <note category="description">Placeholder in an empty page body</note>
       </notes>
       <segment>
@@ -19405,6 +19423,15 @@
         <source><ph id="0" equiv="values" disp="labels .slice(0, 2) .join(&apos;, &apos;)"/> +<ph id="1" equiv="overflowCount" disp="labels.length - 2"/></source>
       </segment>
     </unit>
+    <unit id="9094866589044913282">
+      <notes>
+        <note category="location">src/app/features/pages/services/page-presence.service.ts:60</note>
+        <note category="description">Tooltip on the avatar of someone who edited a page</note>
+      </notes>
+      <segment>
+        <source><ph id="0" equiv="NAME" disp="displayName"/> edited this page</source>
+      </segment>
+    </unit>
     <unit id="9095134843628689709">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:371,373</note>
@@ -20164,7 +20191,7 @@
     </unit>
     <unit id="7430416142942514215">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:184,187</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:206,209</note>
         <note category="description">Menu item that publishes a draft page</note>
       </notes>
       <segment>
@@ -20461,7 +20488,7 @@
     </unit>
     <unit id="892073694820881630">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:369</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:381</note>
         <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:315</note>
         <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:357</note>
         <note category="description">Confirmation that a page link was copied</note>
@@ -20736,7 +20763,7 @@
     </unit>
     <unit id="3164972071980049830">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:240,243</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:246,249</note>
         <note category="description">Title of the notice shown when someone else saved the page first</note>
       </notes>
       <segment>
@@ -20790,7 +20817,7 @@
     </unit>
     <unit id="6652056720487527045">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:177,179</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:183,185</note>
         <note category="description">Shown in the mention menu when nothing matches what was typed</note>
       </notes>
       <segment>
@@ -22721,7 +22748,7 @@
     </unit>
     <unit id="7639811500826292651">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:268,272</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:274,278</note>
         <note category="description">Button that saves local edits over the newer saved page</note>
       </notes>
       <segment>
@@ -22846,7 +22873,7 @@
     </unit>
     <unit id="7419704019640008953">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:123,128</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:145,150</note>
         <note category="description">Button that copies a link to share the open page</note>
       </notes>
       <segment>
@@ -23291,7 +23318,7 @@
     </unit>
     <unit id="4007569097635901294">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:195,197</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:201,203</note>
         <note category="description">Shown while the assistant works on page text</note>
       </notes>
       <segment>
@@ -23727,7 +23754,7 @@
     </unit>
     <unit id="345444628816896468">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:324,329</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:330,335</note>
         <note category="description">Hint shown on a folder page</note>
       </notes>
       <segment>
@@ -24288,7 +24315,7 @@
     </unit>
     <unit id="7530911039577159922">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:208,210</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:214,216</note>
         <note category="description">Accessible label for the language page text is translated into</note>
       </notes>
       <segment>
@@ -25365,7 +25392,7 @@
     </unit>
     <unit id="3487164997301514763">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:128,132</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:130,134</note>
         <note category="description">Hint shown when a page cannot be found</note>
       </notes>
       <segment>
@@ -25582,7 +25609,7 @@
     </unit>
     <unit id="4451682318497650150">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:245,248</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:251,254</note>
         <note category="description">Body of the notice shown when someone else saved the page first</note>
       </notes>
       <segment>

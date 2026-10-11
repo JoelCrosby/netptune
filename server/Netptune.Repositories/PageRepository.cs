@@ -19,6 +19,8 @@ namespace Netptune.Repositories;
 
 public sealed class PageRepository : WorkspaceEntityRepository<DataContext, Page, int>, IPageRepository
 {
+    private const int PageContributorLimit = 20;
+
     public PageRepository(DataContext context, IDbConnectionFactory connectionFactory) : base(context, connectionFactory) { }
 
     public Task<Page?> GetLiveInWorkspace(int id, int workspaceId, bool isReadonly = false, CancellationToken cancellationToken = default)
@@ -70,13 +72,15 @@ public sealed class PageRepository : WorkspaceEntityRepository<DataContext, Page
             .ToListAsync(cancellationToken);
     }
 
-    public Task<PageViewModel?> GetViewModel(int id, int workspaceId, string userId, CancellationToken cancellationToken = default)
+    public async Task<PageViewModel?> GetViewModel(int id, int workspaceId, string userId, CancellationToken cancellationToken = default)
     {
-        return Entities
+        var page = await Entities
             .AsNoTracking()
             .Where(page => page.Id == id && page.WorkspaceId == workspaceId && !page.IsDeleted)
             .Select(ToViewModel(userId))
             .SingleOrDefaultAsync(cancellationToken);
+
+        return await WithContributors(page, cancellationToken);
     }
 
     public async Task<PageViewModel?> GetViewModelBySlug(string slug, int workspaceId, string userId, CancellationToken cancellationToken = default)
@@ -91,17 +95,48 @@ public sealed class PageRepository : WorkspaceEntityRepository<DataContext, Page
 
         if (exact is not null || id is null)
         {
-            return exact;
+            return await WithContributors(exact, cancellationToken);
         }
 
         var idSuffix = $"-{id}";
-
-        return await Entities
+        var renamed = await Entities
             .AsNoTracking()
             .Where(page => page.Slug.EndsWith(idSuffix) && page.WorkspaceId == workspaceId && !page.IsDeleted)
             .OrderBy(page => page.Id)
             .Select(ToViewModel(userId))
             .FirstOrDefaultAsync(cancellationToken);
+
+        return await WithContributors(renamed, cancellationToken);
+    }
+
+    private async Task<PageViewModel?> WithContributors(PageViewModel? page, CancellationToken cancellationToken)
+    {
+        if (page is null)
+        {
+            return null;
+        }
+
+        var contributors = await Context.Set<PageVersion>()
+            .AsNoTracking()
+            .Where(version => version.PageId == page.Id)
+            .GroupBy(version => new
+            {
+                version.CreatedByUserId,
+                version.CreatedByUser!.DisplayName,
+                version.CreatedByUser.PictureUrl,
+            })
+            .Select(group => new PageContributorViewModel
+            {
+                UserId = group.Key.CreatedByUserId,
+                DisplayName = group.Key.DisplayName,
+                PictureUrl = group.Key.PictureUrl,
+                LastEditedAt = group.Max(version => version.CreatedAt),
+            })
+            .OrderByDescending(contributor => contributor.LastEditedAt)
+            .Take(PageContributorLimit)
+            .ToListAsync(cancellationToken);
+
+        return page with { Contributors = contributors };
     }
 
     public Task<List<ArchivedPageViewModel>> GetArchived(int workspaceId, CancellationToken cancellationToken = default)

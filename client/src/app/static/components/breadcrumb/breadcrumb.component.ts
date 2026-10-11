@@ -15,11 +15,16 @@ export interface BreadcrumbItem {
   template: `
     <nav class="min-w-0" [attr.aria-label]="ariaLabel()">
       <ol
-        class="text-foreground/50 flex min-w-0 items-center gap-1.5 text-[13px] whitespace-nowrap">
-        @for (item of items(); track item.id; let last = $last) {
+        class="text-foreground/50 flex min-w-0 items-center gap-1.5 overflow-hidden px-0.5 py-0.5 text-[13px] whitespace-nowrap">
+        @for (
+          item of items();
+          track item.id;
+          let first = $first, last = $last
+        ) {
           <li
             class="flex min-w-0 items-center gap-1.5"
-            [class.shrink-0]="!last">
+            [class.shrink-0]="first && !last"
+            [class.max-w-40]="!last">
             @if (last) {
               <span
                 class="text-foreground truncate font-medium"

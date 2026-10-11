@@ -37,4 +37,6 @@ public sealed record PageViewModel
     public string? ModifiedByDisplayName { get; init; }
 
     public List<PageTagViewModel> Tags { get; init; } = [];
+
+    public List<PageContributorViewModel> Contributors { get; init; } = [];
 }
