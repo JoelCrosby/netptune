@@ -22,6 +22,10 @@ public sealed record AiClientContext
     public string? TaskSystemId { get; init; }
 
     public string? TaskName { get; init; }
+
+    public string? PageSlug { get; init; }
+
+    public string? PageTitle { get; init; }
 }
 
 public sealed record AiAnswerRequest

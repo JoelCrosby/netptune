@@ -73,6 +73,18 @@ public class AiEntityReferenceReaderTests
     }
 
     [Fact]
+    public void Read_ShouldTakePagesByIdAndRouteThemBySlug()
+    {
+        var references = AiEntityReferenceReader.Read("search_pages", """[{"id":12,"slug":"runbook-ab12","name":"Runbook"}]""");
+
+        var page = references.Should().ContainSingle().Subject;
+
+        page.Type.Should().Be("page");
+        page.Id.Should().Be("12");
+        page.RouteId.Should().Be("runbook-ab12");
+    }
+
+    [Fact]
     public void Read_ShouldRouteBoardsByIdentifier()
     {
         var references = AiEntityReferenceReader.Read("list_boards", """[{"id":7,"name":"Delivery","identifier":"delivery"}]""");

@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text.Json.Serialization;
 
 using Meilisearch;
 
@@ -12,6 +13,9 @@ namespace Netptune.Search;
 
 public sealed class MeilisearchService : IMeilisearchService
 {
+    // Words of body around the match that a page result carries, enough to tell two hits apart.
+    private const int PageSnippetWords = 24;
+
     private static readonly string[] AllIndexes = ["tasks", "projects", "boards", "sprints", PageSearchDocuments.IndexName];
 
     private readonly MeilisearchClient Client;
@@ -206,7 +210,15 @@ public sealed class MeilisearchService : IMeilisearchService
     private async Task<IEnumerable<SearchResultViewModel>> SearchPagesAsync(string q, MeiliSearchQuery query, CancellationToken cancellationToken)
     {
         var index = Client.Index(PageSearchDocuments.IndexName);
-        var result = await index.SearchAsync<PageSearchDocument>(q, query, cancellationToken);
+        var pageQuery = new MeiliSearchQuery
+        {
+            Filter = query.Filter,
+            Limit = query.Limit,
+            AttributesToRetrieve = ["pageId", "slug", "title", "path", "kind", "projectId", "workspaceSlug"],
+            AttributesToCrop = ["body"],
+            CropLength = PageSnippetWords,
+        };
+        var result = await index.SearchAsync<PageSearchHit>(q, pageQuery, cancellationToken);
 
         return result.Hits.Select(hit => new SearchResultViewModel
         {
@@ -219,7 +231,9 @@ public sealed class MeilisearchService : IMeilisearchService
             {
                 ["slug"] = hit.Slug,
                 ["kind"] = hit.Kind,
+                ["path"] = hit.Path,
                 ["projectId"] = hit.ProjectId,
+                ["snippet"] = hit.Formatted?.Body,
             },
         });
     }
@@ -299,5 +313,31 @@ public sealed class MeilisearchService : IMeilisearchService
         }, ct);
 
         await WaitForCompletionAsync(update, ct);
+    }
+
+    // The body is cropped around the match rather than returned whole, which keeps a result list small.
+    private sealed record PageSearchHit
+    {
+        public int PageId { get; init; }
+
+        public string Slug { get; init; } = string.Empty;
+
+        public string Title { get; init; } = string.Empty;
+
+        public string? Path { get; init; }
+
+        public string Kind { get; init; } = string.Empty;
+
+        public int? ProjectId { get; init; }
+
+        public string WorkspaceSlug { get; init; } = string.Empty;
+
+        [JsonPropertyName("_formatted")]
+        public PageSearchSnippet? Formatted { get; init; }
+    }
+
+    private sealed record PageSearchSnippet
+    {
+        public string? Body { get; init; }
     }
 }

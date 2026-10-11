@@ -10,8 +10,8 @@ public sealed record AiEntityReference
 
     public required string Name { get; init; }
 
-    // The segment the app routes this entity by: system id for tasks, key for projects and
-    // identifier for boards and sprints.
+    // The segment the app routes this entity by: system id for tasks, key for projects, identifier
+    // for boards and sprints, and slug for pages.
     public required string RouteId { get; init; }
 }
 
@@ -21,6 +21,7 @@ public static class AiEntityReferenceReader
     public const string Project = "project";
     public const string Sprint = "sprint";
     public const string Board = "board";
+    public const string Page = "page";
 
     private const string ListRecordsTool = "list_records";
 
@@ -32,6 +33,8 @@ public static class AiEntityReferenceReader
         ["list_projects"] = Project,
         ["list_sprints"] = Sprint,
         ["list_boards"] = Board,
+        ["search_pages"] = Page,
+        ["get_page"] = Page,
     };
 
     private static readonly Dictionary<string, string> TypesByRecordKind = new(StringComparer.Ordinal)
@@ -176,6 +179,7 @@ public static class AiEntityReferenceReader
         {
             Project => ReadString(element, "key"),
             Board or Sprint => ReadString(element, "identifier"),
+            Page => ReadString(element, "slug"),
             _ => id,
         };
     }

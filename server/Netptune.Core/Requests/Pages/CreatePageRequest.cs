@@ -9,4 +9,7 @@ public sealed record CreatePageRequest
     public int? ParentId { get; init; }
 
     public string? Title { get; init; }
+
+    // Documents only; a page starts empty without it.
+    public string? Body { get; init; }
 }

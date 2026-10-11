@@ -53,6 +53,21 @@ public sealed class CreatePageCommandHandler : IRequestHandler<CreatePageCommand
             return ClientResponse<PageViewModel>.Failed(PageTitle.TooLongMessage);
         }
 
+        var isFolder = input.Kind == PageKind.Folder;
+        var hasBody = !string.IsNullOrEmpty(input.Body);
+
+        if (isFolder && hasBody)
+        {
+            return ClientResponse<PageViewModel>.Failed("Folders have no body.");
+        }
+
+        var bodyTooLarge = PageBody.IsTooLarge(input.Body);
+
+        if (bodyTooLarge)
+        {
+            return ClientResponse<PageViewModel>.Failed(PageBody.TooLargeMessage);
+        }
+
         var workspaceKey = Identity.GetWorkspaceKey();
         var workspaceId = await Identity.GetWorkspaceId();
         var userId = Identity.GetCurrentUserId();
@@ -66,6 +81,7 @@ public sealed class CreatePageCommandHandler : IRequestHandler<CreatePageCommand
 
         var sortOrder = await UnitOfWork.Pages.GetNextSortOrder(workspaceId, input.ParentId, cancellationToken);
         var isDocument = input.Kind == PageKind.Document;
+        var body = isDocument ? input.Body ?? string.Empty : null;
 
         var page = new Page
         {
@@ -74,7 +90,7 @@ public sealed class CreatePageCommandHandler : IRequestHandler<CreatePageCommand
             ProjectId = parent?.ProjectId,
             Title = title,
             Slug = title.ToUrlSlug(true, PageTree.SlugMaxLength),
-            Body = isDocument ? string.Empty : null,
+            Body = body,
             SortOrder = sortOrder,
             Status = PageStatus.Draft,
             Revision = 1,
@@ -100,6 +116,23 @@ public sealed class CreatePageCommandHandler : IRequestHandler<CreatePageCommand
             var version = PageVersionRecorder.ToVersion(firstVersion, DateTime.UtcNow);
 
             await UnitOfWork.PageVersions.AddAsync(version, cancellationToken);
+
+            if (hasBody)
+            {
+                var content = new PageContentUpdate
+                {
+                    PageId = page.Id,
+                    WorkspaceId = workspaceId,
+                    WorkspaceKey = workspaceKey,
+                    ExpectedRevision = page.Revision,
+                    Title = page.Title,
+                    Body = body,
+                    UserId = userId,
+                };
+
+                await PageLinkRebuilder.Rebuild(UnitOfWork, content, cancellationToken);
+            }
+
             await UnitOfWork.CompleteAsync(cancellationToken);
         });
 

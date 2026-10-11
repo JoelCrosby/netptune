@@ -450,6 +450,7 @@ public sealed class AiConversationService : IAiConversationService
         AddContextLine(lines, "board", Describe(clientContext.BoardName, clientContext.BoardId));
         AddContextLine(lines, "sprint", Describe(clientContext.SprintName, clientContext.SprintId));
         AddContextLine(lines, "task", Describe(clientContext.TaskName, clientContext.TaskSystemId));
+        AddContextLine(lines, "page", Describe(clientContext.PageTitle, clientContext.PageSlug));
 
         if (lines.Count == 0)
         {

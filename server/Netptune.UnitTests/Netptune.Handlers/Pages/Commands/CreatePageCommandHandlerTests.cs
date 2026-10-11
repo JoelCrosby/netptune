@@ -91,6 +91,27 @@ public class CreatePageCommandHandlerTests
     }
 
     [Fact]
+    public async Task Handle_ShouldStartTheDocumentWithTheGivenBody()
+    {
+        var result = await Send(new CreatePageRequest { Kind = PageKind.Document, Title = "Runbook", Body = "# Steps" });
+
+        result.IsSuccess.Should().BeTrue();
+        AddedPage!.Body.Should().Be("# Steps");
+        await UnitOfWork.PageVersions.Received(1).AddAsync(
+            Arg.Is<PageVersion>(version => version.Body == "# Steps" && version.Revision == 1),
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Handle_ShouldFail_WhenAFolderIsGivenABody()
+    {
+        var result = await Send(new CreatePageRequest { Kind = PageKind.Folder, Title = "RFCs", Body = "x" });
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Be("Folders have no body.");
+    }
+
+    [Fact]
     public async Task Handle_ShouldFail_WhenTheParentDoesNotExist()
     {
         var result = await Send(new CreatePageRequest { Kind = PageKind.Document, ParentId = 999 });

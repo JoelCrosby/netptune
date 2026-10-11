@@ -13,10 +13,12 @@ using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
+using Netptune.Core.Requests.Pages;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Realtime;
 using Netptune.Core.ViewModels.Ai;
 using Netptune.Core.ViewModels.Boards;
+using Netptune.Core.ViewModels.Pages;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Entities.Contexts;
 using Netptune.IntegrationTests.TestServices;
@@ -629,6 +631,115 @@ public sealed class AiEndpointTests
             await RemoveSeed(seed.ConversationId);
             await RemoveBoard(target.BoardId);
         }
+    }
+
+    [Fact]
+    public async Task ApplyChangeSet_ShouldCreateAFolderAndAPageInsideIt_ByHandle()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var title = $"Assistant page {Guid.NewGuid():N}";
+        var folder = new AiProposedChangeSeed
+        {
+            ToolName = "propose_create_page",
+            EntityType = "page",
+            Summary = "Create folder “RFCs”",
+            RefKey = "ref_1",
+            Payload = JsonDocument.Parse("""{"title":"RFCs","kind":"folder"}"""),
+        };
+        var page = new AiProposedChangeSeed
+        {
+            ToolName = "propose_create_page",
+            EntityType = "page",
+            Summary = "Create document in RFCs",
+            RefKey = "ref_2",
+            Payload = JsonDocument.Parse($$"""{"title":"{{title}}","kind":"document","body":"# Drafted","parentRef":"ref_1"}"""),
+        };
+
+        // Proposed child first, so the apply has to order by the handle rather than by sequence.
+        var seed = await SeedPendingChangeSet([page, folder]);
+
+        try
+        {
+            var result = await ApplyChangeSet(client, seed.ChangeSetId, TestContext.Current.CancellationToken);
+
+            result.Results.Should().OnlyContain(outcome => outcome.Status == AiChangeApplyStatus.Applied);
+
+            using var scope = Fixture.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+            var created = await context.Pages
+                .Include(item => item.Parent)
+                .SingleAsync(item => item.Title == title, TestContext.Current.CancellationToken);
+
+            created.Body.Should().Be("# Drafted");
+            created.Parent!.Title.Should().Be("RFCs");
+        }
+        finally
+        {
+            await RemoveSeed(seed.ConversationId);
+        }
+    }
+
+    [Fact]
+    public async Task UndoChangeSet_ShouldRestoreThePageBodyTheAssistantReplaced()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var page = await CreatePageWithBody(client, "# Before");
+        var proposal = new AiProposedChangeSeed
+        {
+            ToolName = "propose_update_page_body",
+            EntityType = "page",
+            Summary = "Rewrite the page",
+            EntityId = page.Id,
+            Payload = JsonDocument.Parse($$"""{"pageId":{{page.Id}},"title":"{{page.Title}}","body":"# After","revision":{{page.Revision}}}"""),
+        };
+
+        var seed = await SeedPendingChangeSet(proposal);
+
+        try
+        {
+            var applied = await ApplyChangeSet(client, seed.ChangeSetId, TestContext.Current.CancellationToken);
+
+            var appliedBody = await ReadPageBody(page.Id);
+
+            applied.Results.Should().ContainSingle().Which.Status.Should().Be(AiChangeApplyStatus.Applied);
+            appliedBody.Should().Be("# After");
+
+            var undo = await client.PostAsync($"api/ai/change-sets/{seed.ChangeSetId}/undo", null, TestContext.Current.CancellationToken);
+
+            var undoneBody = await ReadPageBody(page.Id);
+
+            undo.StatusCode.Should().Be(HttpStatusCode.OK, await undo.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
+            undoneBody.Should().Be("# Before");
+        }
+        finally
+        {
+            await RemoveSeed(seed.ConversationId);
+        }
+    }
+
+    private static async Task<PageViewModel> CreatePageWithBody(HttpClient client, string body)
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var create = new CreatePageRequest { Kind = PageKind.Document, Title = $"Undo target {Guid.NewGuid():N}" };
+        var created = await client.PostAsJsonAsync("api/pages", create, cancellationToken);
+        var createdResult = await created.Content.ReadFromJsonAsync<ClientResponse<PageViewModel>>(cancellationToken);
+        var page = createdResult!.Payload!;
+        var save = new SavePageRequest { Title = page.Title, Body = body, Revision = page.Revision };
+        var saved = await client.PutAsJsonAsync($"api/pages/{page.Id}", save, cancellationToken);
+        var result = await saved.Content.ReadFromJsonAsync<ClientResponse<PageViewModel>>(cancellationToken);
+
+        return result!.Payload!;
+    }
+
+    private async Task<string?> ReadPageBody(int pageId)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        return await context.Pages
+            .Where(item => item.Id == pageId)
+            .Select(item => item.Body)
+            .SingleAsync(TestContext.Current.CancellationToken);
     }
 
     private sealed record PlacedTask(int TaskId, int ProjectId, int GroupId);
@@ -1333,10 +1444,23 @@ public sealed class AiEndpointTests
         public required JsonDocument Payload { get; init; }
 
         public JsonDocument? Fields { get; init; }
+
+        public string? RefKey { get; init; }
+
+        public int? EntityId { get; init; }
+    }
+
+    private Task<PendingChangeSetSeed> SeedPendingChangeSet(
+        AiProposedChangeSeed? proposal = null,
+        bool isOwnedByCaller = true)
+    {
+        List<AiProposedChangeSeed?> proposals = [proposal];
+
+        return SeedPendingChangeSet(proposals, isOwnedByCaller);
     }
 
     private async Task<PendingChangeSetSeed> SeedPendingChangeSet(
-        AiProposedChangeSeed? proposal = null,
+        IReadOnlyList<AiProposedChangeSeed?> proposals,
         bool isOwnedByCaller = true)
     {
         using var scope = Fixture.CreateScope();
@@ -1393,19 +1517,21 @@ public sealed class AiEndpointTests
             CorrelationId = Guid.NewGuid(),
         };
 
-        var change = new AiProposedChange
+        var changes = proposals.Select((proposal, sequence) => new AiProposedChange
         {
             ChangeSetId = changeSet.Id,
-            Sequence = 0,
+            Sequence = sequence,
             ToolName = proposal?.ToolName ?? "propose_update_sprint",
             EntityType = proposal?.EntityType ?? "sprint",
             Summary = proposal?.Summary ?? "Update name on sprint “Sprint 4”",
             Payload = proposal?.Payload ?? JsonDocument.Parse("{}"),
             Fields = proposal?.Fields ?? JsonDocument.Parse("[]"),
-        };
+            RefKey = proposal?.RefKey,
+            EntityId = proposal?.EntityId,
+        });
 
         await context.AiChangeSets.AddAsync(changeSet, TestContext.Current.CancellationToken);
-        await context.AiProposedChanges.AddAsync(change, TestContext.Current.CancellationToken);
+        await context.AiProposedChanges.AddRangeAsync(changes, TestContext.Current.CancellationToken);
         await context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         return new PendingChangeSetSeed(conversation.Id, changeSet.Id);

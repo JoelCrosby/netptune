@@ -8,6 +8,7 @@ public sealed class AiChangeRouteIds
     public const string Project = "project";
     public const string Board = "board";
     public const string Sprint = "sprint";
+    public const string Page = "page";
 
     public IReadOnlyDictionary<int, string> Tasks { get; init; } = new Dictionary<int, string>();
 
@@ -16,6 +17,8 @@ public sealed class AiChangeRouteIds
     public IReadOnlyDictionary<int, string> Boards { get; init; } = new Dictionary<int, string>();
 
     public IReadOnlyDictionary<int, string> Sprints { get; init; } = new Dictionary<int, string>();
+
+    public IReadOnlyDictionary<int, string> Pages { get; init; } = new Dictionary<int, string>();
 
     public static List<int> CollectIds(IEnumerable<AiProposedChange> changes, string entityType)
     {
@@ -41,6 +44,7 @@ public sealed class AiChangeRouteIds
             Project => Projects,
             Board => Boards,
             Sprint => Sprints,
+            Page => Pages,
             _ => null,
         };
 
