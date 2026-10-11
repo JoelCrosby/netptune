@@ -8,7 +8,7 @@ import {
   LucideUsers,
   type LucideIconInput,
 } from '@lucide/angular';
-import { TemplateCardTone } from '@static/components/template-card/template-card.component';
+import { Tone } from '@static/components/tones';
 
 // Keys match the server's PageTemplates.
 export type PageTemplateKey =
@@ -25,7 +25,7 @@ export interface PageTemplateOption {
   title: string;
   description: string;
   icon: LucideIconInput;
-  tone: TemplateCardTone;
+  tone: Tone;
 }
 
 export const pageTemplates: readonly PageTemplateOption[] = [

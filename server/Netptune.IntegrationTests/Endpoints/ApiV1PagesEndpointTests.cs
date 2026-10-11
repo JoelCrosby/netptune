@@ -409,6 +409,27 @@ public sealed class ApiV1PagesEndpointTests
     }
 
     [Fact]
+    public async Task GetPageChildren_ShouldListTheChildrenInTreeOrder_AndReturnNotFoundForAMissingPage()
+    {
+        var client = await CreateClient();
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var folder = await Create(client, new CreatePageRequest { Kind = PageKind.Folder, Title = $"API folder {Guid.NewGuid():N}" });
+        var first = await Create(client, new CreatePageRequest { ParentId = folder.Id, Title = "First", Body = "Opening line." });
+        var second = await Create(client, new CreatePageRequest { ParentId = folder.Id, Title = "Second" });
+
+        var response = await client.GetFromJsonAsync<List<PageChildViewModel>>($"api/v1/pages/{folder.Id}/children", cancellationToken);
+        var children = response!;
+
+        children.Select(child => child.Id).Should().Equal(first.Id, second.Id);
+        children[0].Excerpt.Should().Be("Opening line.");
+        children[0].ReadMinutes.Should().Be(1);
+
+        var missing = await client.GetAsync("api/v1/pages/999999999/children", cancellationToken);
+
+        missing.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
     public async Task GetPages_ShouldReturnForbidden_WhenTheCredentialCannotReadPages()
     {
         var scopes = new[] { NetptunePermissions.Projects.Read };

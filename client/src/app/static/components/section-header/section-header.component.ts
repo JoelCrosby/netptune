@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { booleanAttribute, Component, computed, input } from '@angular/core';
 
 export type SectionHeaderAppearance = 'default' | 'inline';
 
@@ -11,13 +11,14 @@ export type SectionHeaderAppearance = 'default' | 'inline';
       [class]="headerClass()">
       <div [class]="textClass()">
         <h3 [class]="headingClass()">{{ heading() }}</h3>
+        <ng-content select="[sectionHeaderBadge]" />
 
         @if (description()) {
           <p [class]="descriptionClass()">{{ description() }}</p>
         }
       </div>
 
-      <div class="shrink-0 empty:hidden">
+      <div [class]="actionsClass()">
         <ng-content select="[sectionHeaderActions]" />
       </div>
     </header>
@@ -27,11 +28,18 @@ export class SectionHeaderComponent {
   readonly heading = input.required<string>();
   readonly description = input('');
   readonly appearance = input<SectionHeaderAppearance>('default');
+  readonly wrap = input(false, { transform: booleanAttribute });
 
   private readonly isInline = computed(() => this.appearance() === 'inline');
 
   protected readonly headerClass = computed(() => {
-    return this.isInline() ? 'mb-3' : 'mb-4';
+    const spacing = this.isInline() ? 'mb-3' : 'mb-4';
+
+    return this.wrap() ? `${spacing} flex-wrap` : spacing;
+  });
+
+  protected readonly actionsClass = computed(() => {
+    return this.wrap() ? 'min-w-0 empty:hidden' : 'shrink-0 empty:hidden';
   });
 
   protected readonly textClass = computed(() => {

@@ -1,6 +1,7 @@
 import { Component, computed, input } from '@angular/core';
 import { LucideDynamicIcon, type LucideIconInput } from '@lucide/angular';
 import { cn } from './button/button.variants';
+import { type Tone, toneClasses } from './tones';
 
 export type IconTileSize = 'small' | 'medium' | 'large';
 
@@ -29,11 +30,13 @@ const iconClasses: Record<IconTileSize, string> = {
 export class IconTileComponent {
   readonly icon = input.required<LucideIconInput>();
   readonly size = input<IconTileSize>('medium');
+  readonly tone = input<Tone>('purple');
   readonly class = input('');
 
   protected readonly tileClass = computed(() =>
     cn(
-      'bg-primary/10 text-primary flex shrink-0 items-center justify-center rounded-lg',
+      'flex shrink-0 items-center justify-center rounded-lg',
+      toneClasses[this.tone()],
       sizeClasses[this.size()],
       this.class()
     )

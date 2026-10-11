@@ -1,25 +1,16 @@
 import { Component, computed, input, output, signal } from '@angular/core';
 import { LucideArrowUp } from '@lucide/angular';
 import { cn } from '../button/button.variants';
+import { HeroPanelComponent } from '../hero-panel/hero-panel.component';
 
 let nextHintId = 0;
 
 @Component({
   selector: 'app-prompt-hero',
-  imports: [LucideArrowUp],
+  imports: [HeroPanelComponent, LucideArrowUp],
   host: { '[class]': 'hostClass()' },
   template: `
-    <section
-      class="border-primary/20 bg-primary/5 flex flex-col items-center gap-[18px] rounded-[14px] border px-8 pt-10 pb-[30px] max-md:px-4 max-md:pt-6 max-md:pb-5">
-      <div class="flex flex-col items-center gap-1.5 text-center">
-        <h2 class="text-[26px] font-semibold tracking-[-0.01em] max-md:text-xl">
-          {{ heading() }}
-        </h2>
-        @if (description()) {
-          <p class="text-foreground/65 text-sm">{{ description() }}</p>
-        }
-      </div>
-
+    <app-hero-panel [heading]="heading()" [description]="description()">
       <form
         class="border-primary/40 bg-card focus-within:border-primary shadow-primary/15 flex w-full max-w-[800px] flex-col gap-2.5 rounded-[14px] border-[1.5px] p-3 shadow-lg transition-colors"
         (submit)="$event.preventDefault(); submit()">
@@ -66,7 +57,7 @@ let nextHintId = 0;
           }
         </div>
       }
-    </section>
+    </app-hero-panel>
   `,
 })
 export class PromptHeroComponent {

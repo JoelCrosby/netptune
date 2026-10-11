@@ -13,6 +13,7 @@ import {
   inject,
   input,
   OnInit,
+  output,
   signal,
   untracked,
   viewChild,
@@ -43,7 +44,6 @@ import {
   EditorMode,
 } from '@static/components/editor/editor.component';
 import { MarkdownSyntax } from '@static/components/editor/editor-content';
-import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { InlineSelectComponent } from '@static/components/inline-select/inline-select.component';
 import {
   EditorSelection,
@@ -83,6 +83,7 @@ import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { finalize, Observable } from 'rxjs';
 import { PageTreeStore } from '../services/page-tree.store';
 import { PageDraft } from '../services/page-draft';
+import { PageFolderContentsComponent } from './page-folder-contents.component';
 import { PageMetaChipsComponent } from './page-meta-chips.component';
 
 // One shared instance, so the editor's cached lexer for it is built once for the whole app.
@@ -157,7 +158,7 @@ function tailOf(markdown: string, limit: number): string {
     EditorComponent,
     CalloutComponent,
     InlineButtonComponent,
-    EmptyStateComponent,
+    PageFolderContentsComponent,
     ResultCardComponent,
     InlineSelectComponent,
   ],
@@ -322,12 +323,12 @@ function tailOf(markdown: string, limit: number): string {
           (selectionAction)="onSelectionAction($event)"
           (saved)="draft().commitBody($event)" />
       } @else {
-        <app-empty-state
-          compact
-          i18n-title="Shown on a folder, which has no text of its own"
-          title="This is a folder"
-          i18n-description="Hint shown on a folder page"
-          description="Folders hold pages. Create a page inside it from the tree or the page menu." />
+        <app-page-folder-contents
+          class="mt-2"
+          [folderId]="draft().id"
+          [folderTitle]="draft().title()"
+          [canCreate]="canCreate()"
+          (createRequested)="createInside.emit()" />
       }
     </div>
   `,
@@ -352,9 +353,14 @@ export class PageEditorComponent implements OnInit {
   readonly mode = input<EditorMode>('rich');
   readonly fullWidth = input(false, { transform: booleanAttribute });
   readonly readOnly = input(false);
+  readonly canCreate = input(false);
+
+  readonly createInside = output();
 
   protected readonly columnClass = computed(() => {
-    const width = this.fullWidth() ? 'max-w-none' : 'max-w-[760px]';
+    const width = this.fullWidth()
+      ? 'max-w-none'
+      : readableWidth[this.isDocument() ? 'document' : 'folder'];
 
     return `mx-auto flex w-full ${width} flex-col px-12 pt-10 pb-20 max-md:px-5 max-md:pt-6`;
   });
@@ -468,6 +474,11 @@ export class PageEditorComponent implements OnInit {
     const author =
       page.modifiedByDisplayName ?? page.createdByDisplayName ?? '';
     const edited = fromNow(page.updatedAt ?? page.createdAt);
+
+    if (!this.isDocument()) {
+      return $localize`:Byline under a folder title naming who last edited it and when:${author}:AUTHOR: · Edited ${edited}:EDITED:`;
+    }
+
     const minutes = readingMinutes(this.draft().body());
 
     return $localize`:Byline under a page title naming who last edited it, when, and how long it takes to read:${author}:AUTHOR: · Edited ${edited}:EDITED: · ${minutes}:MINUTES: min read`;
@@ -723,6 +734,11 @@ export class PageEditorComponent implements OnInit {
 }
 
 const wordsPerMinute = 200;
+
+const readableWidth = {
+  document: 'max-w-[760px]',
+  folder: 'max-w-[1040px]',
+};
 
 function readingMinutes(markdown: string): number {
   const words = markdown.split(/\s+/).filter(Boolean).length;

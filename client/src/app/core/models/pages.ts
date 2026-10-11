@@ -44,6 +44,21 @@ export interface PageDetail {
   contributors: PageContributor[];
 }
 
+export interface PageChild {
+  id: number;
+  kind: PageKind;
+  title: string;
+  slug: string;
+  status: PageStatus;
+  excerpt: string | null;
+  tags: PageTag[];
+  updatedAt: string;
+  editorDisplayName: string | null;
+  editorPictureUrl: string | null;
+  readMinutes: number;
+  childCount: number;
+}
+
 export interface PageContributor {
   userId: string;
   displayName: string;

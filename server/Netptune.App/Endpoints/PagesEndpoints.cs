@@ -31,6 +31,7 @@ public static class PagesEndpoints
 
         group.MapGet("/{slug}", HandleGet).RequireAuthorization(NetptunePermissions.Pages.Read);
         group.MapGet("/{id:int}/links", HandleGetLinks).RequireAuthorization(NetptunePermissions.Pages.Read);
+        group.MapGet("/{id:int}/children", HandleGetChildren).RequireAuthorization(NetptunePermissions.Pages.Read);
 
         group.MapPost("/", HandleCreate)
             .RequireAuthorization(NetptunePermissions.Pages.Create)
@@ -129,6 +130,13 @@ public static class PagesEndpoints
     private static async Task<IResult> HandleGetLinks(IMediator mediator, int id, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new GetPageLinksQuery(id), cancellationToken);
+
+        return result.ToResult();
+    }
+
+    private static async Task<IResult> HandleGetChildren(IMediator mediator, int id, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetPageChildrenQuery(id), cancellationToken);
 
         return result.ToResult();
     }

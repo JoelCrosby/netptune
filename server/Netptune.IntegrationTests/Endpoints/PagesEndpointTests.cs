@@ -174,6 +174,63 @@ public sealed class PagesEndpointTests
     }
 
     [Fact]
+    public async Task Children_ShouldListTheLiveDirectChildrenInTreeOrder_WithTheirSummary()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var folder = await Create(new CreatePageRequest { Kind = PageKind.Folder, Title = "Runbooks" });
+        var first = await Create(new CreatePageRequest { ParentId = folder.Id, Title = "Deploy", Body = WordsBody(500) });
+        var nested = await Create(new CreatePageRequest { Kind = PageKind.Folder, ParentId = folder.Id, Title = "Incidents" });
+        var archived = await Create(new CreatePageRequest { ParentId = folder.Id, Title = "Retired" });
+
+        await Create(new CreatePageRequest { ParentId = nested.Id, Title = "Outage" });
+        await Create(new CreatePageRequest { ParentId = first.Id, Title = "Grandchild" });
+        await Move(nested.Id, new MovePageRequest { ParentId = folder.Id, SortOrder = -1 });
+        await Client.DeleteAsync($"api/pages/{archived.Id}", cancellationToken);
+
+        var tags = await Client.GetFromJsonAsync<List<TagViewModel>>("api/tags/workspace", cancellationToken);
+        var tag = tags!.First();
+
+        await Update(first.Id, new UpdatePageRequest { Status = PageStatus.Published, TagIds = [tag.Id] });
+
+        var children = await GetChildren(folder.Id);
+
+        children.Select(child => child.Id).Should().Equal(nested.Id, first.Id);
+
+        var nestedChild = children[0];
+
+        nestedChild.Kind.Should().Be(PageKind.Folder);
+        nestedChild.ChildCount.Should().Be(1);
+        nestedChild.Excerpt.Should().BeNull();
+
+        var document = children[1];
+
+        document.Title.Should().Be("Deploy");
+        document.Slug.Should().Be(first.Slug);
+        document.Status.Should().Be(PageStatus.Published);
+        document.Tags.Should().ContainSingle().Which.Name.Should().Be(tag.Name);
+        document.ReadMinutes.Should().Be(3);
+        document.Excerpt.Should().StartWith("word word").And.EndWith("…");
+        document.ChildCount.Should().Be(1);
+        document.EditorDisplayName.Should().NotBeNullOrEmpty();
+        document.UpdatedAt.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(5));
+    }
+
+    [Fact]
+    public async Task Children_ShouldReturnNotFound_WhenThePageIsNotInTheWorkspace()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var folder = await Create(new CreatePageRequest { Kind = PageKind.Folder, Title = "Archived folder" });
+
+        await Client.DeleteAsync($"api/pages/{folder.Id}", cancellationToken);
+
+        var archivedResponse = await Client.GetAsync($"api/pages/{folder.Id}/children", cancellationToken);
+        var missingResponse = await Client.GetAsync("api/pages/999999999/children", cancellationToken);
+
+        archivedResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        missingResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
     public async Task ArchiveAndRestore_ShouldTakeTheWholeSubtreeOutAndBackIn()
     {
         var folder = await Create(new CreatePageRequest { Kind = PageKind.Folder, Title = "Meeting notes" });
@@ -700,6 +757,15 @@ public sealed class PagesEndpointTests
         return Client.PatchAsJsonAsync($"api/pages/{id}/move", request, TestContext.Current.CancellationToken);
     }
 
+    private async Task<List<PageChildViewModel>> GetChildren(int id)
+    {
+        var result = await Client.GetFromJsonAsync<ClientResponse<List<PageChildViewModel>>>(
+            $"api/pages/{id}/children",
+            TestContext.Current.CancellationToken);
+
+        return result.Payload!;
+    }
+
     private async Task<List<PageTreeNodeViewModel>> GetTree()
     {
         var result = await Client.GetFromJsonAsync<ClientResponse<List<PageTreeNodeViewModel>>>(
@@ -707,5 +773,10 @@ public sealed class PagesEndpointTests
             TestContext.Current.CancellationToken);
 
         return result.Payload!;
+    }
+
+    private static string WordsBody(int count)
+    {
+        return string.Join(' ', Enumerable.Repeat("word", count));
     }
 }

@@ -2,6 +2,7 @@ import { Signal } from '@angular/core';
 import { PERMISSIONS } from '@core/auth/permissions';
 import {
   ArchivedPage,
+  PageChild,
   PageDetail,
   PageLinks,
   PageNeedingReview,
@@ -109,6 +110,15 @@ export const pagesNeedingReviewResource = () => {
     request: () => ({ url: 'api/pages/needs-review' }),
     parse: (response) => response.payload ?? [],
     defaultValue: [],
+    refreshOn: ['pages'],
+  });
+};
+
+export const pageChildrenResource = (pageId: Signal<number | undefined>) => {
+  return stableResource<PageChild[]>({
+    permission: PERMISSIONS.pages.read,
+    request: requestFrom(pageId, (id) => ({ url: `api/pages/${id}/children` })),
+    parse: (response) => response.payload ?? [],
     refreshOn: ['pages'],
   });
 };

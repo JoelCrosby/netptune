@@ -4,8 +4,14 @@ import {
   LucideDynamicIcon,
   type LucideIconInput,
 } from '@lucide/angular';
-import { type FlatButtonColor } from '../button/button.variants';
-import { DropdownButtonComponent } from '../dropdown-menu/dropdown-button.component';
+import {
+  type ButtonSize,
+  type FlatButtonColor,
+} from '../button/button.variants';
+import {
+  DropdownButtonComponent,
+  type DropdownButtonAppearance,
+} from '../dropdown-menu/dropdown-button.component';
 import { type DropdownMenuXPosition } from '../dropdown-menu/dropdown-menu.component';
 import { MenuItemComponent } from '../dropdown-menu/menu-item.component';
 
@@ -28,6 +34,8 @@ export interface SelectMenuOption<T> {
       [label]="selectedLabel()"
       [ariaLabel]="ariaLabel()"
       [color]="color()"
+      [appearance]="appearance()"
+      [size]="size()"
       [buttonClass]="buttonClass()"
       [xPosition]="xPosition()">
       <span buttonPrefix class="contents">
@@ -65,6 +73,8 @@ export class SelectMenuComponent<T> {
   // Muted text ahead of the selected value, naming what the menu picks, e.g. "Role".
   readonly prefix = input<string>();
   readonly color = input<FlatButtonColor>('neutral');
+  readonly appearance = input<DropdownButtonAppearance>('flat');
+  readonly size = input<ButtonSize>('default');
   readonly buttonClass = input('');
   readonly xPosition = input<DropdownMenuXPosition>('after');
 

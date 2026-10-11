@@ -169,6 +169,15 @@ public static class PagesEndpoints
                 + "to it.")
             .RequireAuthorization(NetptunePermissions.Pages.Read);
 
+        group.MapGet("/pages/{id:int}/children", GetPageChildren)
+            .WithSummary("List a page's children")
+            .WithDescription(
+                "Returns the live pages and folders directly inside a page, in tree order (sortOrder, then id). "
+                + "Each carries a short plain-text excerpt of its body, its tags, when and by whom it was last "
+                + "edited, an estimated reading time in minutes (200 words a minute, at least 1) and how many "
+                + "live pages sit directly inside it. Bodies are not included.")
+            .RequireAuthorization(NetptunePermissions.Pages.Read);
+
         return group;
     }
 
@@ -371,6 +380,16 @@ public static class PagesEndpoints
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new GetPageLinksQuery(id), cancellationToken);
+
+        return result.IsNotFound ? TypedResults.NotFound() : TypedResults.Ok(result.Payload);
+    }
+
+    private static async Task<Results<Ok<List<PageChildViewModel>>, NotFound>> GetPageChildren(
+        IMediator mediator,
+        int id,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetPageChildrenQuery(id), cancellationToken);
 
         return result.IsNotFound ? TypedResults.NotFound() : TypedResults.Ok(result.Payload);
     }

@@ -53,5 +53,7 @@ public interface IPageRepository : IWorkspaceEntityRepository<Page, int>
 
     Task<List<PageNeedingReviewViewModel>> GetNeedingReview(PageReviewWindow window, CancellationToken cancellationToken = default);
 
+    Task<List<PageChildViewModel>> GetChildren(int parentId, int workspaceId, CancellationToken cancellationToken = default);
+
     Task<List<int>> GetIdsTaggedWith(IReadOnlyCollection<int> tagIds, int workspaceId, CancellationToken cancellationToken = default);
 }

@@ -95,7 +95,9 @@ import { PageTreeStore } from '../../services/page-tree.store';
                 [links]="links.value()"
                 [mode]="mode()"
                 [fullWidth]="contentWidth.width() === 'full'"
-                [readOnly]="!canUpdate()" />
+                [readOnly]="!canUpdate()"
+                [canCreate]="canCreate()"
+                (createInside)="onCreateInside(page)" />
             </div>
           </div>
 

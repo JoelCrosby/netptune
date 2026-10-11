@@ -371,6 +371,46 @@ public sealed class PageRepository : WorkspaceEntityRepository<DataContext, Page
             .ToList();
     }
 
+    public async Task<List<PageChildViewModel>> GetChildren(int parentId, int workspaceId, CancellationToken cancellationToken = default)
+    {
+        using var connection = ConnectionFactory.StartConnection();
+
+        var parameters = new
+        {
+            ParentId = parentId,
+            WorkspaceId = workspaceId,
+            PageSummary.ExcerptSourceLength,
+        };
+        var command = new CommandDefinition(SqlScripts.GetPageChildren, parameters, cancellationToken: cancellationToken);
+        var results = await connection.QueryMultipleAsync(command);
+        var rows = await results.ReadAsync<PageChildRow>();
+        var tagRows = await results.ReadAsync<PageChildTagRow>();
+        var tagsByPage = tagRows.ToLookup(
+            row => row.Page_id,
+            row => new PageTagViewModel { Id = row.Id, Name = row.Name });
+
+        return rows.Select(row => ToChildViewModel(row, tagsByPage[row.Id])).ToList();
+    }
+
+    private static PageChildViewModel ToChildViewModel(PageChildRow row, IEnumerable<PageTagViewModel> tags)
+    {
+        return new PageChildViewModel
+        {
+            Id = row.Id,
+            Kind = (PageKind)row.Kind,
+            Title = row.Title,
+            Slug = row.Slug,
+            Status = (PageStatus)row.Status,
+            Excerpt = PageSummary.Excerpt(row.Excerpt_source, row.Is_body_truncated),
+            Tags = tags.ToList(),
+            UpdatedAt = row.Updated_at,
+            EditorDisplayName = row.Editor_display_name,
+            EditorPictureUrl = row.Editor_picture_url,
+            ReadMinutes = PageSummary.ReadMinutes(row.Word_count),
+            ChildCount = (int)row.Child_count,
+        };
+    }
+
     public Task<List<int>> GetIdsTaggedWith(IReadOnlyCollection<int> tagIds, int workspaceId, CancellationToken cancellationToken = default)
     {
         return Entities

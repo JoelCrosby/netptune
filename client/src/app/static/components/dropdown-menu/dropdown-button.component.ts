@@ -3,12 +3,16 @@ import { LucideChevronDown } from '@lucide/angular';
 import {
   cn,
   flatButtonVariants,
+  strokedButtonVariants,
+  type ButtonSize,
   type FlatButtonColor,
 } from '../button/button.variants';
 import {
   DropdownMenuComponent,
   type DropdownMenuXPosition,
 } from './dropdown-menu.component';
+
+export type DropdownButtonAppearance = 'flat' | 'stroked';
 
 @Component({
   selector: 'app-dropdown-button',
@@ -46,6 +50,8 @@ export class DropdownButtonComponent {
   readonly label = input.required<string>();
   readonly ariaLabel = input<string>();
   readonly color = input<FlatButtonColor>('neutral');
+  readonly appearance = input<DropdownButtonAppearance>('flat');
+  readonly size = input<ButtonSize>('default');
   readonly disabled = input(false);
   readonly buttonClass = input('');
   readonly xPosition = input<DropdownMenuXPosition>('after');
@@ -55,9 +61,15 @@ export class DropdownButtonComponent {
 
   private readonly menu = viewChild.required(DropdownMenuComponent);
 
-  protected readonly className = computed(() =>
-    cn(flatButtonVariants({ color: this.color() }), this.buttonClass())
-  );
+  protected readonly className = computed(() => {
+    const size = this.size();
+    const variants =
+      this.appearance() === 'stroked'
+        ? strokedButtonVariants({ color: 'neutral', size })
+        : flatButtonVariants({ color: this.color(), size });
+
+    return cn(variants, this.buttonClass());
+  });
 
   close() {
     this.menu().close();
