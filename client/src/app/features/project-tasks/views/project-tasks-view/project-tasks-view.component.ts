@@ -93,7 +93,7 @@ export class ProjectTasksViewComponent implements OnDestroy {
     const identifier = this.workspaceId();
 
     if (identifier) {
-      this.hubService.addToGroup(identifier);
+      this.hubService.addToGroup(`[tasks] ${identifier}`);
     }
   }
 
