@@ -1,7 +1,6 @@
 import { MovePageRequest, PageTreeNode } from '@core/models/pages';
 import { TreeDropPosition } from '@static/components/tree/tree.types';
 
-// Turns a drop on a tree row into the parent and fractional sort order the server stores.
 export function placementFor(
   nodes: readonly PageTreeNode[],
   movedId: number,

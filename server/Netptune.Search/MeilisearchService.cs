@@ -13,7 +13,6 @@ namespace Netptune.Search;
 
 public sealed class MeilisearchService : IMeilisearchService
 {
-    // Words of body around the match that a page result carries, enough to tell two hits apart.
     private const int PageSnippetWords = 24;
 
     private static readonly string[] AllIndexes = ["tasks", "projects", "boards", "sprints", PageSearchDocuments.IndexName];
@@ -315,7 +314,6 @@ public sealed class MeilisearchService : IMeilisearchService
         await WaitForCompletionAsync(update, ct);
     }
 
-    // The body is cropped around the match rather than returned whole, which keeps a result list small.
     private sealed record PageSearchHit
     {
         public int PageId { get; init; }

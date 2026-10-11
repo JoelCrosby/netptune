@@ -11,7 +11,6 @@ public static class PageSearchDocuments
         return $"{SearchIndexEntityTypes.Page}_{pageId}";
     }
 
-    // The outline holds at least the live pages above each source, so each path is walked without a query per page.
     public static List<PageSearchDocument> Build(
         IReadOnlyCollection<PageSearchSource> sources,
         IReadOnlyCollection<PageOutlineEntry> outline,
@@ -54,7 +53,6 @@ public static class PageSearchDocuments
 
         while (currentId is { } id)
         {
-            // A parent loop in bad data would otherwise walk forever.
             var firstVisit = visited.Add(id);
             var isLive = outlineById.TryGetValue(id, out var entry);
 

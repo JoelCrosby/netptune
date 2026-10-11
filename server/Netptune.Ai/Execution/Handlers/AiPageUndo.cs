@@ -64,7 +64,6 @@ public static class AiPageUndo
         return JsonSerializer.SerializeToDocument(snapshot, SerializerOptions);
     }
 
-    // A move only needs the page's place, which the tree alone has, so its body is not read.
     public static async Task<JsonDocument?> CapturePlacement(IMediator mediator, int? pageId, CancellationToken cancellationToken)
     {
         if (!pageId.HasValue)
@@ -101,7 +100,6 @@ public static class AiPageUndo
         return document.RootElement.Deserialize<AiPageSnapshot>(SerializerOptions);
     }
 
-    // Pages are read by slug, and only the tree knows a page's place, so both come from it.
     private static async Task<(PageTreeNodeViewModel? Node, PageViewModel? Page)> ReadWithPlacement(
         IMediator mediator,
         int pageId,

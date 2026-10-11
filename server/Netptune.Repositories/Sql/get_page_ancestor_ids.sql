@@ -1,5 +1,3 @@
--- Returns @PageId and every page above it, nearest first in no guaranteed order.
--- Used to reject a move that would put a page inside its own subtree.
 WITH RECURSIVE ancestors AS (
     SELECT page.id, page.parent_id
     FROM pages page

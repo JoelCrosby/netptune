@@ -62,7 +62,6 @@ public sealed class AiPageTransformer : IAiPageTransformer
         };
     }
 
-    // Text that closes one of the tags above would let a passage pose as instructions.
     private static string Neutralise(string value)
     {
         return value.Replace("</", "<\u200B/", StringComparison.Ordinal);

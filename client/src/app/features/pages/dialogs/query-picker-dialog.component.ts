@@ -16,9 +16,8 @@ import {
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
 
-// Picks the saved query a live task list embed should show; closes with its slug. Only shared queries
-// are offered: a private one returns not found to everyone but its owner, so other readers would see
-// a broken embed.
+// Only shared queries are offered: a private one returns not found to everyone but its owner, so
+// other readers would see a broken embed.
 @Component({
   selector: 'app-query-picker-dialog',
   imports: [

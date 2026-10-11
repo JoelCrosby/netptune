@@ -4,8 +4,6 @@ using Netptune.Core.Enums;
 
 namespace Netptune.Core.Models.Pages;
 
-// Reads the [[kind:key|label]] tokens a page body mentions. The client writes the same grammar, and the
-// assistant's references use it too.
 public static partial class PageReferenceParser
 {
     public const int SnippetMaxLength = 200;

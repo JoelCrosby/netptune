@@ -22,7 +22,6 @@ interface QuerySummary {
   name: string;
 }
 
-// The live task list a {{query:slug}} block shows, drawn from the saved query.
 @Component({
   selector: 'app-query-embed',
   imports: [

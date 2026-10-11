@@ -8,7 +8,6 @@ public sealed record PageIndexScope(int PageId, int WorkspaceId, string Workspac
 
 public static class PageSearchIndex
 {
-    // A page's title is part of the path of every page below it, so a rename re-indexes the subtree.
     public static Task IndexAfterSave(
         INetptuneUnitOfWork unitOfWork,
         IEventPublisher publisher,

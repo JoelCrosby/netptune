@@ -10,7 +10,6 @@ export interface OutlineItem {
 const indentPerLevelPx = 16;
 const baseIndentPx = 8;
 
-// A document's headings as a jump list.
 @Component({
   selector: 'app-outline-list',
   host: { '[class]': 'hostClass()' },

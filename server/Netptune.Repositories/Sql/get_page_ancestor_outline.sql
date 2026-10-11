@@ -1,6 +1,3 @@
--- Returns the live pages above any of @PageIds (id, parent and title), so the search indexer can
--- build each page's folder path without loading the workspace's whole tree.
---
 -- UNION (not UNION ALL) dedupes the frontier, so a corrupted parent loop still terminates.
 WITH RECURSIVE ancestors AS (
     SELECT parent.id, parent.parent_id, parent.title

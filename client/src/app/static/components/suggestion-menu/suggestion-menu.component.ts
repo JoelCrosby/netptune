@@ -29,8 +29,6 @@ interface SuggestionRow {
   groupStart: string | null;
 }
 
-// A keyboard-driven list offered while typing, such as @-mentions or /-commands. The caller owns the
-// active index and the keys; this only shows the list and reports picks.
 @Component({
   selector: 'app-suggestion-menu',
   imports: [LucideDynamicIcon],

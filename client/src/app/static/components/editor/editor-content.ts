@@ -18,9 +18,6 @@ interface Mark {
   attrs?: Record<string, unknown>;
 }
 
-// An inline token a consumer adds on top of markdown, such as [[kind:id|label]]. The lexer reads it
-// before markdown's own inline rules, so code spans, emphasis or links inside it cannot split it, and it
-// is written back verbatim by its node type.
 export interface InlineSyntax {
   nodeType: string;
   pattern: RegExp;
@@ -28,10 +25,8 @@ export interface InlineSyntax {
   toMarkdown: (node: JSONContent) => string;
 }
 
-// A block a consumer adds on top of markdown, written alone on its line, such as {{query:slug}}.
 export interface BlockSyntax {
   nodeType: string;
-  // Matched against a single line.
   pattern: RegExp;
   toNode: (match: RegExpExecArray) => JSONContent;
   toMarkdown: (node: JSONContent) => string;
@@ -261,7 +256,6 @@ function codeBlock(token: Tokens.Code): JSONContent {
 
 const calloutMarkerPattern = /^\[!(\w+)\][ \t]*\n?/;
 
-// GitHub-style alerts: a quote opening with [!NOTE], [!WARNING] and so on. Anything else stays a quote.
 function blockquote(token: Tokens.Blockquote): JSONContent {
   const marker = calloutMarkerPattern.exec(token.text);
   const variant = marker?.[1].toLowerCase();
@@ -678,8 +672,6 @@ function escapeBlockStarts(paragraph: string): string {
     .join('\n');
 }
 
-// Prose that reads exactly like a consumer's block (a line of just {{query:slug}}) would come back as
-// that block, so its opening brace is escaped.
 function escapeBlockSyntax(line: string): string {
   const looksLikeBlock = (activeSyntax.block ?? []).some((syntax) => {
     return wholeLinePattern(syntax).test(line);

@@ -53,7 +53,6 @@ public sealed class UpdateTagCommandHandler : IRequestHandler<UpdateTagCommand, 
 
         await UnitOfWork.CompleteAsync(cancellationToken);
 
-        // Pages index their tags by name, so a rename leaves every tagged page's document stale.
         var taggedPageIds = await UnitOfWork.Pages.GetIdsTaggedWith([tag.Id], workspaceId.Value, cancellationToken);
 
         if (taggedPageIds.Count > 0)

@@ -10,7 +10,6 @@ public record PageSearchDocument
 
     public required string Title { get; init; }
 
-    // The titles of the folders above the page, outermost first, joined with " / ".
     public string? Path { get; init; }
 
     public string? Body { get; init; }

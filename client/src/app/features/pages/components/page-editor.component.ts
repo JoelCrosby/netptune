@@ -384,7 +384,6 @@ export class PageEditorComponent implements OnInit {
     return [...basicEditorCommands, ...pageCommands];
   });
 
-  // Rewrites land through the editor, so only someone who can edit the page is offered them.
   protected readonly selectionActions = computed<EditorSelectionAction[]>(
     () => {
       const canTransform =
@@ -460,8 +459,6 @@ export class PageEditorComponent implements OnInit {
     this.draft().commitBody(body);
   };
 
-  // The embed is an Angular component living inside the editor's DOM, attached to the app so it
-  // updates like any other view and torn down with its node.
   private mountQueryEmbed(slug: string, element: HTMLElement): QueryEmbedMount {
     const embed = createComponent(QueryEmbedComponent, {
       environmentInjector: this.environmentInjector,
@@ -594,7 +591,6 @@ export class PageEditorComponent implements OnInit {
     this.hovered.set({ attrs, element, left: rect.left, top: rect.bottom + 8 });
   }
 
-  // Only the chip that owns the card may clear it, so removing some other chip leaves it alone.
   private onReferenceUnhovered(element: HTMLElement) {
     const ownsCard = this.hovered()?.element === element;
 

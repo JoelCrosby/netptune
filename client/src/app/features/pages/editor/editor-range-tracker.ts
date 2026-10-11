@@ -5,10 +5,6 @@ export interface TrackedRange {
   to: number;
 }
 
-// Follows a range through edits made while something async is pending, such as a dialog or a request,
-// so its result lands where it was asked for even if the document changed in between. A range whose
-// text was deleted, as replacing the whole document does, is lost rather than stretched over what
-// took its place.
 export function trackRange(editor: Editor, start: TrackedRange) {
   let range: TrackedRange | null = { ...start };
 
@@ -34,7 +30,6 @@ export function trackRange(editor: Editor, start: TrackedRange) {
   editor.on('transaction', follow);
 
   return {
-    // Null once the range's text is gone.
     current: (): TrackedRange | null => {
       if (!range) return null;
 

@@ -96,7 +96,6 @@ public sealed class MovePageChangeHandler : IAiChangeHandler, IAiChangeUndoHandl
         return AiChangeUndoResult.Undone(change, snapshot.PageId);
     }
 
-    // A parent given by handle is only known once applied, so only a move to a known parent can be checked.
     private async Task<bool> WasMovedSinceApply(AiProposedChange change, int pageId, CancellationToken cancellationToken)
     {
         var payload = change.Payload.RootElement;

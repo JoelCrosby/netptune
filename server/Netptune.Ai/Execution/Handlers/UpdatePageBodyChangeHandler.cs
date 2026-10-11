@@ -122,8 +122,6 @@ public sealed class UpdatePageBodyChangeHandler : IAiChangeHandler, IAiChangeUnd
         return AiChangeUndoResult.Undone(change, snapshot.PageId);
     }
 
-    // The tasks a rewrite links to were created moments ago in this apply; their handles become system ids.
-    // Handles are read from the body itself, so one added while the change was edited in review counts too.
     private async Task<ResolvedPageBody> ResolveTaskHandles(
         AiChangeApplyContext context,
         string? body,

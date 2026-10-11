@@ -4,9 +4,6 @@ using Netptune.Core.Utilities;
 
 namespace Netptune.Core.Models.Pages;
 
-// Page bodies carry Netptune syntax on top of markdown. Mentions are indexed as the label a reader sees,
-// and embeds and callout markers, which a reader never sees as text, are dropped. Code is left as written,
-// as the editor shows it.
 public static partial class PageSearchText
 {
     public static string? ToPlainText(string? body)

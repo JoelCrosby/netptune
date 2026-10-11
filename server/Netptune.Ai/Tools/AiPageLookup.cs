@@ -37,7 +37,6 @@ public static partial class AiPageLookup
         };
     }
 
-    // Reads parentId or parentRef. Neither means the top level; a parentRef must name a page proposed earlier.
     public static AiPageParentLookup ReadParent(
         IReadOnlyList<PageTreeNodeViewModel> tree,
         IAiChangeSetBuilder changeSet,
@@ -73,8 +72,6 @@ public static partial class AiPageLookup
         return new AiPageParentLookup(new AiPageParent(parent.Id, null, parent.Title), null);
     }
 
-    // Mentions of tasks proposed in the same change set, written [[task:ref:3|name]] until they exist.
-    // Code is left alone, so a page documenting the syntax is not read as linking to anything.
     public static List<string> ReadTaskHandles(string body)
     {
         var code = CodeSpans(body);

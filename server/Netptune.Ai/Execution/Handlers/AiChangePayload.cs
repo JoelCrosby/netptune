@@ -133,7 +133,6 @@ public static class AiChangePayload
                 continue;
             }
 
-            // A change can wait on several handles at once, such as a page linking to tasks created with it.
             var isReferenceList = property.Name.EndsWith("Refs", StringComparison.Ordinal)
                 && property.Value.ValueKind == JsonValueKind.Array;
 

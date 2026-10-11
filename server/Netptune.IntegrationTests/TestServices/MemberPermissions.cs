@@ -10,7 +10,6 @@ using Xunit;
 
 namespace Netptune.IntegrationTests.TestServices;
 
-// Takes a permission away from a member for the length of a test; disposing gives it back if they held it.
 public sealed class MemberPermissions : IAsyncDisposable
 {
     private readonly HttpClient OwnerClient;

@@ -4,7 +4,6 @@ import { cn } from '../button/button.variants';
 import { PopoverSurfaceComponent } from '../popover-surface/popover-surface.component';
 import { TaskStatusPillComponent } from '../task-status-pill.component';
 
-// A short summary of a task, shown on hover over a reference to it.
 @Component({
   selector: 'app-task-preview-card',
   imports: [PopoverSurfaceComponent, TaskStatusPillComponent],

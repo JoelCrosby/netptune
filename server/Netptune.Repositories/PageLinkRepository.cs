@@ -97,8 +97,6 @@ public sealed class PageLinkRepository(DataContext context, IDbConnectionFactory
             .ToListAsync(cancellationToken);
     }
 
-    // Target ids are stored as text so user ids fit the same column; numeric targets are parsed here so
-    // the entity lookups can use their primary keys.
     private async Task<List<int>> GetTargetIds(int pageId, PageLinkTargetType targetType, CancellationToken cancellationToken)
     {
         var targetIds = await Entities

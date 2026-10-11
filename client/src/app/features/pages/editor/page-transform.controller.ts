@@ -19,7 +19,6 @@ import type { Editor } from '@tiptap/core';
 import { firstValueFrom } from 'rxjs';
 import { TrackedRange, trackRange } from './editor-range-tracker';
 
-// Replace swaps the selection for the result; insert puts the result after the block the range ends in.
 export type PageTransformPlacement = 'replace' | 'insert';
 
 export interface PageTransformStart {
@@ -52,7 +51,6 @@ const LANGUAGE_CODES = [
   'ko',
 ];
 
-// Room the card needs below and beside its anchor before it is pulled back on screen.
 const CARD_HEIGHT = 360;
 const CARD_WIDTH = 420;
 const VIEWPORT_GUTTER = 16;
@@ -134,7 +132,6 @@ export class PageTransformController {
     void this.run();
   }
 
-  // Keeps the card beside its text while the page scrolls under it.
   reanchor(anchorFor: (range: TrackedRange) => EditorAnchor) {
     const range = this.tracker?.current();
 
@@ -203,7 +200,6 @@ export class PageTransformController {
         })
       );
 
-      // A later request, or closing the card, makes this answer stale.
       if (generation !== this.generation) return;
 
       if (!response.isSuccess || !response.payload) {

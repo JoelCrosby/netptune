@@ -25,8 +25,6 @@ export interface ResultCardAction {
 
 let nextHeadingId = 0;
 
-// A floating card for generated text: it waits, then shows the text with what can be done with it.
-// Anything that shapes the request, such as a language picker, is projected into its header.
 @Component({
   selector: 'app-result-card',
   imports: [

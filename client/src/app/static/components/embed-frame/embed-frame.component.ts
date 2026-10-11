@@ -2,7 +2,6 @@ import { Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { cn } from '../button/button.variants';
 
-// A framed, read-only view of live data placed inside a document, with a link to its full view.
 @Component({
   selector: 'app-embed-frame',
   imports: [RouterLink],

@@ -8,7 +8,6 @@ import {
   inlineDiff,
 } from './text-diff';
 
-// Two versions of a text, compared side by side, as one column, or word by word.
 @Component({
   selector: 'app-text-diff',
   host: { '[class]': 'hostClass()' },

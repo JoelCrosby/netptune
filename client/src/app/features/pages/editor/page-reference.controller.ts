@@ -31,7 +31,6 @@ export interface PickedTask {
   title: string;
 }
 
-// The @ menu: what has been typed, what matches, which row is active, and inserting the pick.
 @Injectable()
 export class PageReferenceController {
   private readonly store = inject(PageTreeStore);
@@ -40,8 +39,6 @@ export class PageReferenceController {
   readonly open = signal(false);
   readonly position = signal(initialSuggestionMenuPosition);
   readonly activeIndex = signal(0);
-  // Tasks inserted before the next save has linked them, keyed by lower-cased system id, so their
-  // chips can show a title straight away.
   readonly pickedTasks = signal<ReadonlyMap<string, PickedTask>>(new Map());
 
   private readonly query = signal('');
@@ -60,8 +57,6 @@ export class PageReferenceController {
     return { url: 'api/search', params };
   });
 
-  // Pages are local and match by title, so a title that starts with what was typed ranks above the
-  // task search; otherwise tasks lead, as they are mentioned far more often.
   private readonly candidates = computed<Candidate[]>(() => {
     const pages = this.pageCandidates();
     const tasks = this.taskCandidates();

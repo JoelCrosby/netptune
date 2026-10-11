@@ -34,7 +34,6 @@ const EMPTY: DiffOp[] = [];
 // reading has stopped being useful anyway.
 const TABLE_LIMIT = 1_000_000;
 
-// Everything out, everything in: the honest answer when a diff is too big to walk.
 const replaceWhole = (before: string[], after: string[]): DiffOp[] => {
   return [
     ...before.map((value): DiffOp => ({ kind: 'removed', value })),
@@ -42,8 +41,6 @@ const replaceWhole = (before: string[], after: string[]): DiffOp[] => {
   ];
 };
 
-// Longest common subsequence walk, which keeps the diff stable and order preserving. A value long
-// enough to blow the table out falls back to a whole replacement rather than locking the tab up.
 export const diffSequence = (before: string[], after: string[]): DiffOp[] => {
   const rows = before.length;
   const columns = after.length;
@@ -187,8 +184,6 @@ export const unifiedLines = (ops: DiffOp[]): UnifiedLine[] => {
   }));
 };
 
-// Pairs each run of removals with the run of additions that replaced it, so the two columns stay
-// level and a replaced line reads across rather than down.
 export const splitRows = (ops: DiffOp[]): SplitRow[] => {
   const rows: SplitRow[] = [];
   let beforeNumber = 0;

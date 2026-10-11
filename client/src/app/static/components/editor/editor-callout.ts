@@ -1,6 +1,5 @@
 import { Node } from '@tiptap/core';
 
-// GitHub's alert types, plus info, which other markdown tools use for the same thing.
 const calloutVariants: ReadonlySet<string> = new Set([
   'note',
   'info',
@@ -14,7 +13,6 @@ export function isCalloutVariant(variant: string): boolean {
   return calloutVariants.has(variant);
 }
 
-// A highlighted block of prose, written to markdown as a GitHub-style alert.
 export const Callout = Node.create({
   name: 'callout',
   group: 'block',

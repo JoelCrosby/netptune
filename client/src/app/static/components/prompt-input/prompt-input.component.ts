@@ -9,7 +9,6 @@ import { IconButtonComponent } from '../button/icon-button.component';
 
 let nextHintId = 0;
 
-// A single line that asks something, such as a question for the assistant. Enter or the arrow submits it.
 @Component({
   selector: 'app-prompt-input',
   imports: [IconButtonComponent, LucideArrowUp, LucideDynamicIcon],

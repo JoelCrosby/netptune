@@ -7,8 +7,6 @@ namespace Netptune.Handlers.Pages;
 
 public static class PageLinkRebuilder
 {
-    // Turns the mentions in the saved body into link rows. Mentions that no longer resolve (a deleted task,
-    // an archived page) are dropped rather than stored dangling. User mentions are not stored yet.
     public static async Task Rebuild(INetptuneUnitOfWork unitOfWork, PageContentUpdate update, CancellationToken cancellationToken)
     {
         var references = PageReferenceParser.Parse(update.Body);

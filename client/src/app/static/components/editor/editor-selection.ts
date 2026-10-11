@@ -1,6 +1,5 @@
 import type { LucideIconInput } from '@lucide/angular';
 
-// Something the bubble menu offers for the selected text, beyond formatting it.
 export interface EditorSelectionAction {
   id: string;
   label: string;

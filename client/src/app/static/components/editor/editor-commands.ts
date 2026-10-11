@@ -12,8 +12,6 @@ import {
   type LucideIconInput,
 } from '@lucide/angular';
 
-// Something the / menu offers. `run` receives the editor and the range of the typed /query, which it
-// is expected to replace.
 export interface EditorCommand {
   id: string;
   label: string;

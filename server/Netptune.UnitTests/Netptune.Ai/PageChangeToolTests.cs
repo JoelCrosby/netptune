@@ -248,7 +248,6 @@ public class PageChangeToolTests
 
 public static class PageTestTree
 {
-    // Engineering (10) holds RFC (11, order 1) and Other (12, order 4); Handbook (13) sits at the top level.
     public static void Given(IMediator mediator)
     {
         List<PageTreeNodeViewModel> tree =

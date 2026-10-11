@@ -6,7 +6,6 @@ namespace Netptune.Handlers.Ai;
 
 public sealed record AiUsageOrigin(int WorkspaceId, string UserId, string Purpose);
 
-// Books the tokens of an assistant call made outside a conversation, so the spend cap counts it.
 public static class AiUsageRecorder
 {
     public static Task Record(

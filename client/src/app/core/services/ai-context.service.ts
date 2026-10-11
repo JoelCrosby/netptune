@@ -40,10 +40,8 @@ export class AiContextService {
 
   private readonly removed = signal<ReadonlySet<string>>(new Set());
 
-  // Text picked out on a page for one message, such as a checklist to turn into tasks.
   private readonly selection = signal<string | null>(null);
 
-  // What the last message carried, so retrying or editing it sends the same selection again.
   private sentSelection: string | null = null;
 
   private readonly pageId = computed(() => this.page()?.id ?? null);
@@ -54,7 +52,6 @@ export class AiContextService {
       this.clearSelection();
     });
 
-    // A selection belongs to the page it was made on.
     onChange(this.pageId, () => this.clearSelection());
   }
 
@@ -107,7 +104,6 @@ export class AiContextService {
     this.selection.set(text);
   }
 
-  // The context for a message. A retry resends the selection the original message carried.
   contextFor(isRetry: boolean): AiClientContext | null {
     const context = this.context();
     const hasSelection = !!context?.pageSelection;
@@ -119,8 +115,6 @@ export class AiContextService {
     return { ...context, pageSelection: this.sentSelection ?? undefined };
   }
 
-  // Called once a message is accepted: a selection travels with one message only, so it does not
-  // colour every later turn, and a failed send keeps it for the next try.
   markSelectionSent(context: AiClientContext | null) {
     this.sentSelection = context?.pageSelection ?? null;
     this.selection.set(null);

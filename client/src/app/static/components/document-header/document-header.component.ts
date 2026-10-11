@@ -53,7 +53,6 @@ export class DocumentHeaderComponent {
   readonly readOnly = input(false);
 
   readonly committed = output<string>();
-  // Enter in the title hands focus on rather than adding a line break.
   readonly continued = output();
 
   constructor() {

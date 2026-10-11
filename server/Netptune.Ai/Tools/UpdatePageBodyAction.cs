@@ -78,7 +78,6 @@ public sealed class UpdatePageBodyAction : IAiToolAction
             return AiToolExecution.Failed($"Page {pageId} is not in this workspace.");
         }
 
-        // The body was written from what the model read; someone's edit since then would be overwritten unseen.
         var changedSinceRead = page!.Revision != readRevision.Value;
 
         if (changedSinceRead)
@@ -129,7 +128,6 @@ public sealed class UpdatePageBodyAction : IAiToolAction
             fields.Add(AiChangeFields.Text("body", currentBody, body));
         }
 
-        // The revision the model read, so applying after anyone else's edit is a conflict.
         var payload = new Dictionary<string, object>
         {
             ["pageId"] = page.Id,
@@ -138,7 +136,6 @@ public sealed class UpdatePageBodyAction : IAiToolAction
             ["revision"] = readRevision.Value,
         };
 
-        // Named so the applier waits for those tasks, and skips the rewrite if any of them failed.
         if (taskHandles.Count > 0)
         {
             payload["taskRefs"] = taskHandles;

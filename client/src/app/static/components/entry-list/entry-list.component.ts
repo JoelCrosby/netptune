@@ -13,7 +13,6 @@ export interface EntryListItem {
   meta: string;
 }
 
-// A list of entries, each a label over a quieter line of detail; picking one reports its id.
 @Component({
   selector: 'app-entry-list',
   host: { '[class]': 'hostClass()' },
@@ -39,7 +38,6 @@ export interface EntryListItem {
 export class EntryListComponent {
   readonly items = input.required<readonly EntryListItem[]>();
   readonly ariaLabel = input<string | null>(null);
-  // Marks the first entry, such as the current version at the top of a history.
   readonly highlightFirst = input(false, { transform: booleanAttribute });
   readonly class = input('');
 

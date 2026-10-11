@@ -14,7 +14,6 @@ export interface TabItem {
   count?: number | null;
 }
 
-// 'subtle' matches app-segmented-control's subtle variant: a hairline group on the page background.
 export type TabGroupVariant = 'default' | 'island' | 'subtle';
 
 const groupClasses: Record<TabGroupVariant, string> = {
@@ -58,7 +57,6 @@ export class TabGroupComponent {
   readonly tabs = input.required<TabItem[]>();
   readonly value = model<string | number | null>(null);
   readonly variant = input<TabGroupVariant>('default');
-  // Spreads the tabs across the full width in equal shares, as a rail header does.
   readonly stretch = input(false, { transform: booleanAttribute });
   readonly class = input('');
 

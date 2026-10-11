@@ -60,7 +60,6 @@ public sealed class CreatePageChangeHandler : IAiChangeHandler, IAiChangeUndoHan
         return AiChangePayload.Applied(change, page!.Id);
     }
 
-    // Nothing existed before, so the undo only needs the created page.
     public Task<JsonDocument?> Capture(AiChangeApplyContext context, CancellationToken cancellationToken)
     {
         return Task.FromResult<JsonDocument?>(null);

@@ -41,8 +41,6 @@ public sealed class PageTransformEndpointTests
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
-    // No key is configured in the test workspace, so an allowed caller gets as far as the handler and is
-    // refused there rather than by authorization.
     [Fact]
     public async Task Transform_ShouldReachTheHandler_ForACallerWhoMayUseTheAssistant()
     {

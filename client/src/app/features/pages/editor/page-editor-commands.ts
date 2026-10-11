@@ -13,7 +13,6 @@ export interface PageCommandHandlers {
   canEmbedQueries: boolean;
   canUseAssistant: boolean;
   pickQuery(): Promise<string | undefined>;
-  // Works on the page above the position and offers the result to insert there.
   transformAbove(action: 'continue' | 'summarise', position: number): void;
 }
 
@@ -92,7 +91,6 @@ async function insertQueryEmbed(
 
   tracker.stop();
 
-  // The document was replaced while the picker was open, so there is no place left to put the embed.
   if (editor.isDestroyed || !range) return;
 
   const position = range.from;

@@ -18,7 +18,6 @@ namespace Netptune.Ai.Execution;
 
 public sealed class AiConversationService : IAiConversationService
 {
-    // Long enough for a checklist or a few paragraphs; a whole page belongs in get_page.
     private const int MaxSelectionLength = 8000;
 
     private const int MaximumTitleLength = 80;

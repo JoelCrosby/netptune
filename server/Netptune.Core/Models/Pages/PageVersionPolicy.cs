@@ -6,8 +6,6 @@ public static class PageVersionPolicy
 {
     public static readonly TimeSpan CoalesceWindow = TimeSpan.FromMinutes(10);
 
-    // Autosave runs every few seconds; folding a single author's burst of saves into one version keeps
-    // history readable and bounds how many copies of a body the table holds.
     public static bool ShouldCoalesce(PageVersion? latest, string userId, DateTime now)
     {
         if (latest is null)

@@ -655,7 +655,6 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         using (AiExecution.Begin(agent, changeSet.CorrelationId))
         {
             /* A change set is applied in dependency order, so it comes apart in reverse. */
-            // Handles named by a change whose undo failed: what they point at is still in use, so it stays.
             var stillReferenced = new HashSet<string>(StringComparer.Ordinal);
 
             foreach (var change in OrderByDependency(undoable).AsEnumerable().Reverse())
@@ -792,8 +791,6 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         }
 
         var changes = await UnitOfWork.AiChangeSets.GetChanges(changeSet.Id, cancellationToken);
-        // A change skipped because something it named failed can go once that has been retried; one the
-        // user left out is skipped too, but carries no error and stays out.
         var retryable = changes.Where(IsRetryable).ToList();
 
         if (retryable.Count == 0)

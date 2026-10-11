@@ -84,7 +84,6 @@ public sealed class MovePageCommandHandler : IRequestHandler<MovePageCommand, Cl
 
         await UnitOfWork.CompleteAsync(cancellationToken);
 
-        // Only the parent feeds the indexed path; a reorder among siblings changes nothing searchable.
         if (parentChanged)
         {
             var indexScope = new PageIndexScope(page.Id, workspaceId, workspaceKey);

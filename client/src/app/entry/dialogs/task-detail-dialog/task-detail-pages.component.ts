@@ -56,8 +56,6 @@ export class TaskDetailPagesComponent {
 
     if (!page || !workspace) return;
 
-    // Shown inside the task dialog and on the standalone task page; the dialog must close or it would
-    // sit over the page being opened.
     this.dialogRef?.close();
 
     void this.router.navigate(['/', workspace, 'pages', page.slug]);

@@ -11,7 +11,6 @@ public record PageLink : KeyedEntity<int>
 
     public PageLinkTargetType TargetType { get; set; }
 
-    // Task, page, sprint and project targets are integer ids; user targets are AppUser ids.
     public string TargetId { get; set; } = null!;
 
     public string? Snippet { get; set; }

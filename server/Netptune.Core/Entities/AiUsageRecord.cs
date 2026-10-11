@@ -5,8 +5,6 @@ using Netptune.Core.Enums;
 
 namespace Netptune.Core.Entities;
 
-// Tokens spent by an assistant call made outside a conversation, such as rewriting page text. Conversation
-// turns record theirs on their messages; these rows let the spend cap and summary count the rest.
 public sealed record AiUsageRecord : KeyedEntity<long>
 {
     public int WorkspaceId { get; set; }

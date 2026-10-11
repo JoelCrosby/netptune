@@ -18,17 +18,13 @@ export type PageMeta = Pick<PageDetail, 'status' | 'tags'>;
 const conflictStatus = 409;
 const utf8 = new TextEncoder();
 
-// One open page's unsaved title and body. Saves run one at a time, each carrying the
-// revision the last one returned, so a stale write comes back as a conflict.
 export class PageDraft {
   readonly id: number;
   readonly kind: PageKind;
 
   readonly title: WritableSignal<string>;
   readonly body: WritableSignal<string>;
-  // The page as the server last confirmed it, for who-edited-when.
   readonly latest: WritableSignal<PageDetail>;
-  // A freshly loaded page is, by definition, saved.
   readonly state = signal<SaveState>('saved');
   readonly conflict = signal<PageDetail | null>(null);
   readonly errorMessage = signal<string | null>(null);
@@ -70,8 +66,6 @@ export class PageDraft {
     this.save();
   }
 
-  // Shows the change at once and sends it after any still in flight, so a second quick toggle builds on the
-  // first instead of racing it. The text being typed is left alone.
   updateMeta(meta: Partial<PageMeta>) {
     const before = this.currentMeta();
 
@@ -96,7 +90,6 @@ export class PageDraft {
     });
   }
 
-  // The server replaced the content (a restored version); local edits give way to it.
   replaceWith(page: PageDetail) {
     this.revision = page.revision;
     this.savedTitle = page.title;
@@ -136,7 +129,6 @@ export class PageDraft {
     return { status, tags };
   }
 
-  // Takes the other writer's version and drops ours.
   acceptTheirs() {
     const theirs = this.conflict();
 
@@ -151,7 +143,6 @@ export class PageDraft {
     this.state.set('saved');
   }
 
-  // Writes ours on top of the other writer's version.
   keepMine() {
     const theirs = this.conflict();
 

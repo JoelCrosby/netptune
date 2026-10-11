@@ -4,7 +4,6 @@ using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Handlers.Ai;
 
-// The key a one-off assistant call outside a conversation runs on: the caller's own first, then the workspace's.
 public static class AiHandlerCredentials
 {
     public static async Task<AiResolvedCredential?> Resolve(

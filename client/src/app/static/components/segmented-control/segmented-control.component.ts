@@ -17,7 +17,6 @@ export interface SegmentedOption<T extends string = string> {
   color?: string | null;
 }
 
-// 'subtle' sits on the surrounding background: a hairline group with a quiet active segment.
 export type SegmentedVariant = 'pill' | 'outlined' | 'chips' | 'subtle';
 
 const groupVariants = cva('', {

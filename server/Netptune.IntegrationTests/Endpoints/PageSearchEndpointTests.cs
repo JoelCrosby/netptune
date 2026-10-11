@@ -20,7 +20,6 @@ namespace Netptune.IntegrationTests.Endpoints;
 
 public sealed class PageSearchEndpointTests
 {
-    // Each test reindexes the whole workspace, and they run alongside each other on a cold container.
     private static readonly TimeSpan IndexTimeout = TimeSpan.FromSeconds(60);
     private static readonly TimeSpan PollInterval = TimeSpan.FromMilliseconds(250);
 

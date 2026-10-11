@@ -89,8 +89,6 @@ public sealed class SearchSeedService : BackgroundService
     {
         var isEmpty = await SearchService.IsIndexEmptyAsync(indexName, ct);
 
-        // Each index is seeded on its own, so an index added later is filled on the next start without
-        // reseeding the ones that already hold documents.
         if (!isEmpty)
         {
             Logger.LogInformation("[Search] {IndexName} index already contains documents, skipping seed", indexName);

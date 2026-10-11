@@ -10,8 +10,6 @@ public sealed record AiEntityReference
 
     public required string Name { get; init; }
 
-    // The segment the app routes this entity by: system id for tasks, key for projects, identifier
-    // for boards and sprints, and slug for pages.
     public required string RouteId { get; init; }
 }
 

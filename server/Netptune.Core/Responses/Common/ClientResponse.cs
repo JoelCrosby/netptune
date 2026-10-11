@@ -82,7 +82,6 @@ public readonly struct ClientResponse<TPayload>
 
     public static readonly ClientResponse<TPayload> Forbidden = new(false, default, null, ResponseType.Forbidden);
 
-    // Carries the current server state so the caller can show what it collided with.
     public static ClientResponse<TPayload> Conflict(TPayload current, string message)
     {
         return new(false, current, message, ResponseType.Conflict);

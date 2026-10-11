@@ -146,7 +146,6 @@ export class EditorComponent
   // the list itself follows the input.
   readonly commands = input<readonly EditorCommand[]>([]);
 
-  // Offered in the bubble menu beside the formatting buttons; picking one emits selectionAction.
   readonly selectionActions = input<readonly EditorSelectionAction[]>([]);
   readonly selectionAction = output<EditorSelection>();
 
@@ -192,7 +191,6 @@ export class EditorComponent
   private readonly markdownChanged = new Subject<void>();
   private readonly emitSaved = (value: string) => this.saved.emit(value);
 
-  // the source as of the last markdown-mode save, which bypasses the rich editor
   private markdownSaved: string | null = null;
   private previousMode: EditorMode = 'rich';
 
@@ -335,8 +333,6 @@ export class EditorComponent
     editor.chain().focus().insertContentAt({ from, to }, content).run();
   }
 
-  // Lands after the top-level block holding the position, so a list or callout is never split. An empty
-  // paragraph there, as a slash command leaves behind, is filled instead of left above the new text.
   insertMarkdownAfter(position: number, markdown: string) {
     const editor = this.editor();
 

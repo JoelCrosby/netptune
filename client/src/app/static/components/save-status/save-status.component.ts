@@ -9,7 +9,6 @@ import { cn } from '../button/button.variants';
 
 export type SaveState = 'idle' | 'saving' | 'saved' | 'conflict' | 'error';
 
-// Where an autosaving document stands, as a small inline label.
 @Component({
   selector: 'app-save-status',
   imports: [

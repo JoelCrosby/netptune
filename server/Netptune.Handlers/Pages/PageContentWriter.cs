@@ -5,7 +5,6 @@ namespace Netptune.Handlers.Pages;
 
 public static class PageContentWriter
 {
-    // The revision-checked write and its version land together or not at all.
     public static Task<bool> TryWrite(INetptuneUnitOfWork unitOfWork, PageContentUpdate update, CancellationToken cancellationToken)
     {
         return unitOfWork.Transaction(async () =>

@@ -27,8 +27,6 @@ export interface PageReferenceSuggestionHandlers {
   exit(): void;
 }
 
-// What the node needs from the page around it: names for references, and somewhere to send hovers,
-// clicks and the @ menu.
 export interface PageReferenceHost {
   display(attrs: PageReferenceAttrs): PageReferenceDisplay;
   subscribe(listener: () => void): () => void;

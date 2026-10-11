@@ -7,7 +7,6 @@ export interface QueryEmbedMount {
   destroy(): void;
 }
 
-// Draws a saved query's live results into the element it is given; the page supplies it.
 export type QueryEmbedRenderer = (
   slug: string,
   element: HTMLElement

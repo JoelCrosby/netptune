@@ -20,8 +20,6 @@ public sealed record TransformPageTextResult
 
 public sealed record TransformPageTextCommand(TransformPageTextRequest Request) : IRequest<ClientResponse<TransformPageTextResult>>;
 
-// Rewrites a passage of a page with the assistant and hands the text back; nothing is saved, the editor
-// applies it as an ordinary, undoable edit.
 public sealed partial class TransformPageTextCommandHandler
     : IRequestHandler<TransformPageTextCommand, ClientResponse<TransformPageTextResult>>
 {
@@ -147,7 +145,6 @@ public sealed partial class TransformPageTextCommandHandler
         return ClientResponse<TransformPageTextResult>.Success(new TransformPageTextResult { Text = result.Text });
     }
 
-    // The language goes into the instructions, so only a plain language name is accepted.
     private static bool IsLanguageName(string? language)
     {
         var hasLanguage = !string.IsNullOrWhiteSpace(language);
