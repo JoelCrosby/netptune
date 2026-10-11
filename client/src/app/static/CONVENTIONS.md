@@ -24,6 +24,27 @@ Raw `div`s and `span`s outside `static/` are for **layout only** — `flex`, `gr
 <section app-panel surface="card">                                ✓
 ```
 
+## Static first
+
+**A new component is a static component unless it cannot be one.** Static components
+are presentational and reusable: data arrives through `input()`, intent leaves through
+`output()` / `model()`, and the component owns all of its visual styling and variants.
+They contain no business logic — no API or `*-commands` services, no resources, no
+router or `current-*` state, no permission checks, no toasts, no refreshes. Model
+types, enums, pure `core/util` helpers and presentation services such as
+`LayoutService` are fine.
+
+Feature components are containers. They inject resources and commands, map view models
+to static inputs, handle outputs, and lay things out. Their classes are layout and
+positioning only; colour, type scale, borders, radii, shadows and hover states belong to
+a static component.
+
+If a feature component would render a row, card, chip, menu, tree, popover or toolbar
+from plain data, build that piece here with inputs and outputs and keep only a thin
+container in the feature, even when one feature is the only caller today. Domain
+wiring several features need (a hover card that fetches its task) goes in
+`shared/components/` as a container around a static component.
+
 Before hand-rolling anything, search `static/components` for the selector. The library
 is large and under-known — the commonest failure is not knowing `app-panel`,
 `app-badge` or `app-inline-button` exists.
@@ -73,8 +94,10 @@ variant — add the variant to the component instead, so the next caller finds i
 
 ## Adding to the library
 
-Add a component when a surface appears **three times**, or twice in two different
-features. Two occurrences in one file is a local `@for`, not a component.
+For surfaces that already exist inline, extract a component when one appears **three
+times**, or twice in two different features. Two occurrences in one file is a local
+`@for`, not a component. New UI does not wait for that count: it starts here (see
+"Static first").
 
 New variants go on the existing component rather than into a new one. `app-panel`'s
 `surface`, `app-tab-group`'s `variant` and `app-inline-button`'s `appearance` all
