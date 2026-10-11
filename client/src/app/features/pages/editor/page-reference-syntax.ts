@@ -1,7 +1,8 @@
 import type { JSONContent } from '@tiptap/core';
 import { InlineSyntax } from '@static/components/editor/editor-content';
 
-export type PageReferenceKind = 'task' | 'page' | 'user';
+export type PageReferenceKind =
+  'task' | 'page' | 'user' | 'project' | 'sprint' | 'board';
 
 export interface PageReferenceAttrs {
   kind: PageReferenceKind;
@@ -13,7 +14,7 @@ export const pageReferenceNodeType = 'pageReference';
 
 // Same grammar as the server's PageReferenceParser and the assistant's [[task:ID|label]] links.
 const referencePattern =
-  /\[\[(task|page|user):([^\]|\s]+)(?:\|([^\]]*))?\]\]/gi;
+  /\[\[(task|page|user|project|sprint|board):([^\]|\s]+)(?:\|([^\]]*))?\]\]/gi;
 
 export const pageReferenceSyntax: InlineSyntax = {
   nodeType: pageReferenceNodeType,

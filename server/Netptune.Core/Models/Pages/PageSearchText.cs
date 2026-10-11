@@ -75,7 +75,7 @@ public static partial class PageSearchText
     [GeneratedRegex(@"^\s*(```|~~~)")]
     private static partial Regex FencePattern();
 
-    [GeneratedRegex(@"(?<code>`[^`]*`)|\[\[(?<kind>task|page|user):(?<key>[^\]|\s]+)(?:\|(?<label>[^\]]*))?\]\]", RegexOptions.IgnoreCase)]
+    [GeneratedRegex(@"(?<code>`[^`]*`)|\[\[(?<kind>task|page|user|project|sprint|board):(?<key>[^\]|\s]+)(?:\|(?<label>[^\]]*))?\]\]", RegexOptions.IgnoreCase)]
     private static partial Regex ReferenceOrCodePattern();
 
     [GeneratedRegex(@"^[ ]{0,3}\{\{query:[a-zA-Z0-9-]+\}\}[ \t]*\r?$")]

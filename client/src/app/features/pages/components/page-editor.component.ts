@@ -18,6 +18,8 @@ import {
   viewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
+import { BoardsService } from '@core/services/boards.service';
+import { SprintsService } from '@core/services/sprints.service';
 import {
   PageKind,
   PageLinkedTask,
@@ -329,6 +331,8 @@ function tailOf(markdown: string, limit: number): string {
 export class PageEditorComponent implements OnInit {
   private readonly editor = viewChild(EditorComponent);
   private readonly router = inject(Router);
+  private readonly sprints = inject(SprintsService);
+  private readonly boards = inject(BoardsService);
   private readonly dialogs = inject(DialogService);
   private readonly appRef = inject(ApplicationRef);
   private readonly environmentInjector = inject(EnvironmentInjector);
@@ -579,6 +583,15 @@ export class PageEditorComponent implements OnInit {
           resolved: Boolean(page),
         };
       }
+      case 'project': {
+        const project = this.projectById(attrs.key);
+
+        return {
+          key: null,
+          text: project?.name ?? attrs.label ?? attrs.key,
+          resolved: Boolean(project),
+        };
+      }
       default:
         return { key: null, text: attrs.label ?? attrs.key, resolved: true };
     }
@@ -611,6 +624,18 @@ export class PageEditorComponent implements OnInit {
   }
 
   private openReference(attrs: PageReferenceAttrs) {
+    switch (attrs.kind) {
+      case 'project':
+        this.openProject(attrs.key);
+        return;
+      case 'sprint':
+        this.openSprint(attrs.key);
+        return;
+      case 'board':
+        this.openBoard(attrs.key);
+        return;
+    }
+
     if (attrs.kind === 'task') {
       void this.router.navigate([
         '/',
@@ -631,6 +656,52 @@ export class PageEditorComponent implements OnInit {
     if (page) {
       void this.router.navigate(this.store.link(page.slug));
     }
+  }
+
+  private projectById(key: string) {
+    return this.store.spaces().find(({ project }) => String(project.id) === key)
+      ?.project;
+  }
+
+  private openProject(key: string) {
+    const project = this.projectById(key);
+
+    if (!project) return;
+
+    void this.router.navigate(this.workspaceLink('projects', project.key));
+  }
+
+  // Sprint and board pages are addressed by their identifier, which a mention does not carry.
+  private openSprint(key: string) {
+    const sprintId = Number(key);
+
+    if (!Number.isInteger(sprintId)) return;
+
+    this.sprints.detail(sprintId).subscribe((response) => {
+      const identifier = response.payload?.identifier;
+
+      if (identifier) {
+        void this.router.navigate(this.workspaceLink('sprints', identifier));
+      }
+    });
+  }
+
+  private openBoard(key: string) {
+    const boardId = Number(key);
+
+    if (!Number.isInteger(boardId)) return;
+
+    this.boards.detail(boardId).subscribe((response) => {
+      const identifier = response.payload?.identifier;
+
+      if (identifier) {
+        void this.router.navigate(this.workspaceLink('boards', identifier));
+      }
+    });
+  }
+
+  private workspaceLink(section: string, id: string): string[] {
+    return ['/', this.store.workspaceSlug(), section, id];
   }
 
   protected onTagsChanged(tags: PageTag[]) {

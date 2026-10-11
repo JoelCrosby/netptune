@@ -17,6 +17,12 @@ export class BoardsService {
     });
   }
 
+  detail(boardId: number) {
+    return this.http.get<ClientResponse<BoardViewModel>>(
+      `api/boards/${boardId}`
+    );
+  }
+
   post(request: AddBoardRequest) {
     return this.http.post<ClientResponse<BoardViewModel>>(
       'api/boards',

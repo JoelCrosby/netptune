@@ -17,6 +17,14 @@ public class PageSearchTextTests
     }
 
     [Fact]
+    public void ToPlainText_ShouldIndexProjectSprintAndBoardMentionsAsTheirLabels()
+    {
+        var text = PageSearchText.ToPlainText("Sprint: [[sprint:16|End-to-End Observability]] (project [[project:8|Monitoring]]) on [[board:3|Ops]]");
+
+        text.Should().Be("Sprint: End-to-End Observability (project Monitoring) on Ops");
+    }
+
+    [Fact]
     public void ToPlainText_ShouldFallBackToTheKey_WhenAMentionHasNoLabel()
     {
         var text = PageSearchText.ToPlainText("See [[task:NETP-7]].");
