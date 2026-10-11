@@ -226,8 +226,7 @@ function tailOf(markdown: string, limit: number): string {
         [assigneeNames]="card.task.assigneeNames" />
     }
 
-    <div
-      class="mx-auto flex w-full max-w-[760px] flex-col px-12 pt-10 pb-20 max-md:px-5 max-md:pt-6">
+    <div [class]="columnClass()">
       @if (draft().conflict()) {
         <app-callout
           class="mb-6"
@@ -339,6 +338,13 @@ export class PageEditorComponent implements OnInit {
   readonly draft = input.required<PageDraft>();
   readonly links = input<PageLinks | undefined>(undefined);
   readonly mode = input<EditorMode>('rich');
+  readonly fullWidth = input(false);
+
+  protected readonly columnClass = computed(() => {
+    const width = this.fullWidth() ? 'max-w-none' : 'max-w-[760px]';
+
+    return `mx-auto flex w-full ${width} flex-col px-12 pt-10 pb-20 max-md:px-5 max-md:pt-6`;
+  });
   readonly readOnly = input(false);
 
   private readonly referenceListeners = new Set<() => void>();

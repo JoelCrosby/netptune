@@ -1,5 +1,6 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
 import {
+  APPEARANCE_PAGE_CONTENT_WIDTH,
   APPEARANCE_PAGE_WIDTH,
   APPEARANCE_TASK_DETAIL_LAYOUT,
   APPEARANCE_THEME,
@@ -30,6 +31,7 @@ const descriptions: Record<string, string> = {
   [APPEARANCE_THEME]: $localize`:Description of the theme preference:Applies everywhere you sign in.`,
   [APPEARANCE_TASK_DETAIL_LAYOUT]: $localize`:Description of the task detail layout preference:How a task opens in the dialog and on its own page.`,
   [APPEARANCE_PAGE_WIDTH]: $localize`:Description of the page width preference:How far list, dashboard and report pages stretch across the window.`,
+  [APPEARANCE_PAGE_CONTENT_WIDTH]: $localize`:Description of the preference for how wide a page's writing runs in the pages editor:How far the writing on a page stretches in the editor.`,
 };
 
 const resetLabel = $localize`:Button that returns a preference to its default value:Reset to default`;

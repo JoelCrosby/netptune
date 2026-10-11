@@ -46,6 +46,8 @@ import { pageArchiveRights } from '../../util/page-archive-rights';
 import { PageDraft } from '../../services/page-draft';
 import { PageDraftFactory } from '../../services/page-draft.factory';
 import { isSamePageSlug } from '../../util/page-slug';
+import { PageContentWidthService } from '../../services/page-content-width.service';
+import { PageRailService } from '../../services/page-rail.service';
 import { PageTreeStore } from '../../services/page-tree.store';
 
 @Component({
@@ -72,34 +74,44 @@ import { PageTreeStore } from '../../services/page-tree.store';
               [canEdit]="canUpdate()"
               [status]="draft.latest().status"
               [(mode)]="mode"
+              [contentWidth]="contentWidth.width()"
+              (contentWidthChange)="contentWidth.set($event)"
+              [railCollapsed]="rail.collapsed()"
+              (railCollapsedChange)="rail.setCollapsed($event)"
               (favouriteToggled)="onFavouriteToggled(page, $event)"
               (createInside)="onCreateInside(page)"
               (linkCopied)="onCopyLink()"
               (archived)="onArchive(page)"
               (statusChanged)="onStatusChanged(draft, $event)"
-              (historyRequested)="railTab.set('history')" />
+              (historyRequested)="onHistoryRequested()" />
 
             <div class="min-h-0 flex-1 overflow-y-auto">
               <app-page-editor
                 [draft]="draft"
                 [links]="links.value()"
                 [mode]="mode()"
+                [fullWidth]="contentWidth.width() === 'full'"
                 [readOnly]="!canUpdate()" />
             </div>
           </div>
 
           @if (page.kind === documentKind) {
-            <app-page-rail
-              class="w-[300px] shrink-0 max-lg:hidden"
-              [pageId]="draft.id"
-              [(tab)]="railTab"
-              [links]="links.value()"
-              (taskOpened)="onTaskOpened($event)"
-              (pageOpened)="onPageOpened($event)"
-              [revision]="draft.latest().revision"
-              [body]="draft.body()"
-              (headingSelected)="onHeadingSelected($event)"
-              (versionSelected)="onVersionSelected(draft, $event)" />
+            <div
+              [class]="railClass()"
+              [inert]="rail.collapsed()"
+              [attr.aria-hidden]="rail.collapsed() || null">
+              <app-page-rail
+                class="h-full w-[300px]"
+                [pageId]="draft.id"
+                [(tab)]="railTab"
+                [links]="links.value()"
+                (taskOpened)="onTaskOpened($event)"
+                (pageOpened)="onPageOpened($event)"
+                [revision]="draft.latest().revision"
+                [body]="draft.body()"
+                (headingSelected)="onHeadingSelected($event)"
+                (versionSelected)="onVersionSelected(draft, $event)" />
+            </div>
           }
         </div>
       }
@@ -126,6 +138,8 @@ export class PageDetailViewComponent {
   private readonly dialogs = inject(DialogService);
   private readonly editor = viewChild(PageEditorComponent);
   private readonly currentPage = inject(CurrentPageService);
+  protected readonly contentWidth = inject(PageContentWidthService);
+  protected readonly rail = inject(PageRailService);
 
   private readonly routeParams = toSignal(this.route.params, {
     initialValue: this.route.snapshot.params,
@@ -253,6 +267,17 @@ export class PageDetailViewComponent {
         this.currentPage.clearIfCurrent(id);
       }
     });
+  }
+
+  protected readonly railClass = computed(() => {
+    const width = this.rail.collapsed() ? 'w-0' : 'w-[300px]';
+
+    return `${width} shrink-0 overflow-hidden transition-[width] duration-[180ms] ease-out motion-reduce:transition-none max-lg:hidden`;
+  });
+
+  protected onHistoryRequested() {
+    this.rail.setCollapsed(false);
+    this.railTab.set('history');
   }
 
   protected onFavouriteToggled(page: PageDetail, isFavourite: boolean) {

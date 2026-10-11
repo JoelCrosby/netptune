@@ -253,7 +253,7 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:205</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:109,111</note>
         <note category="location">src/app/features/pages/editor/page-reference.controller.ts:224</note>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:316</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:361</note>
         <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:71</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:92</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:207</note>
@@ -546,7 +546,7 @@
     </unit>
     <unit id="8198968372594669406">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:155,158</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:180,183</note>
         <note category="description">Menu item that moves a published page back to draft</note>
       </notes>
       <segment state="translated">
@@ -781,7 +781,7 @@
     </unit>
     <unit id="6980870776971861351">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:453</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:459</note>
         <note category="description">Byline under a page title naming who last edited it, when, and how long it takes to read</note>
       </notes>
       <segment state="translated">
@@ -972,6 +972,16 @@
       <segment state="translated">
         <source> Delete relation type </source>
         <target>Beziehungstyp löschen</target>
+      </segment>
+    </unit>
+    <unit id="4394924118608662801">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:243</note>
+        <note category="description">Accessible label for the toggle that lets a page&apos;s writing run the full width of the editor</note>
+      </notes>
+      <segment state="translated">
+        <source>Full width</source>
+        <target>Volle Breite</target>
       </segment>
     </unit>
     <unit id="4397487264295948754">
@@ -1430,7 +1440,7 @@
     </unit>
     <unit id="5264398089164990230">
       <notes>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:47</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:49</note>
         <note category="description">Caption describing the full page width</note>
       </notes>
       <segment state="translated">
@@ -3427,7 +3437,7 @@
     </unit>
     <unit id="2275328567992347600">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:111,113</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:120,122</note>
         <note category="description">Shown when the requested page does not exist or was archived</note>
       </notes>
       <segment state="translated">
@@ -3547,7 +3557,7 @@
     </unit>
     <unit id="962282029591799382">
       <notes>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:44</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:46</note>
         <note category="description">Caption describing the cockpit task detail layout</note>
       </notes>
       <segment state="initial">
@@ -4349,7 +4359,7 @@
     </unit>
     <unit id="7440923050870641719">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:73,78</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:82,86</note>
         <note category="description">Accessible label for the switch between the rich and markdown editor</note>
       </notes>
       <segment state="translated">
@@ -5719,7 +5729,7 @@
     </unit>
     <unit id="5635155408622268188">
       <notes>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:31</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:32</note>
         <note category="description">Description of the task detail layout preference</note>
       </notes>
       <segment state="initial">
@@ -7533,7 +7543,7 @@
     </unit>
     <unit id="9126383792072202008">
       <notes>
-        <note category="location">src/app/features/pages/services/page-draft.ts:243</note>
+        <note category="location">src/app/features/pages/services/page-draft.ts:252</note>
         <note category="description">Error shown when a page&apos;s text is over the size limit</note>
       </notes>
       <segment state="translated">
@@ -8054,6 +8064,16 @@
       <segment state="translated">
         <source>Loading team workload</source>
         <target>Auslastung des Teams wird geladen</target>
+      </segment>
+    </unit>
+    <unit id="1663903229329909090">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:245</note>
+        <note category="description">Accessible label for the toggle that shows or hides the panel beside a page</note>
+      </notes>
+      <segment state="translated">
+        <source>Side panel</source>
+        <target>Seitenleiste</target>
       </segment>
     </unit>
     <unit id="166657180724463675">
@@ -11072,7 +11092,7 @@
     </unit>
     <unit id="1527635909232386822">
       <notes>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:45</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:47</note>
         <note category="description">Caption describing the document task detail layout</note>
       </notes>
       <segment state="initial">
@@ -11347,7 +11367,7 @@
     </unit>
     <unit id="8666730504824237140">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:212</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:266</note>
         <note category="description">Option that shows a page as formatted text</note>
       </notes>
       <segment state="translated">
@@ -11705,7 +11725,7 @@
     <unit id="5590086849807274701">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:201</note>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:103</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:105</note>
         <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:21</note>
         <note category="description">Label shown in the interface</note>
       </notes>
@@ -12612,7 +12632,7 @@
     </unit>
     <unit id="8304423617415800133">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:126,129</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:151,154</note>
         <note category="description">Menu item that removes a page from favourites</note>
       </notes>
       <segment state="translated">
@@ -12672,7 +12692,7 @@
     </unit>
     <unit id="8319982105545010046">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:62,65</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:71,74</note>
         <note category="description">Accessible label for the trail of folders above a page</note>
       </notes>
       <segment state="translated">
@@ -13269,7 +13289,7 @@
     </unit>
     <unit id="3787321817465559173">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:130,135</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:155,160</note>
         <note category="description">Menu item that adds a page to favourites</note>
       </notes>
       <segment state="translated">
@@ -13516,7 +13536,7 @@
     </unit>
     <unit id="5234544449365538384">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:319</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:364</note>
         <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:319</note>
         <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:362</note>
         <note category="description">Shown when a page link could not be copied</note>
@@ -13711,7 +13731,7 @@
     </unit>
     <unit id="7153255681393081191">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:216</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:270</note>
         <note category="description">Option that shows a page as raw markdown</note>
       </notes>
       <segment state="translated">
@@ -14237,7 +14257,7 @@
     </unit>
     <unit id="7253608290099852757">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:258,262</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:257,261</note>
         <note category="description">Button that discards local edits and loads the newer saved page</note>
       </notes>
       <segment state="translated">
@@ -14586,7 +14606,7 @@
     </unit>
     <unit id="3038936724563079427">
       <notes>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:32</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:33</note>
         <note category="description">Description of the page width preference</note>
       </notes>
       <segment state="translated">
@@ -15478,7 +15498,7 @@
     <unit id="3640373857486272611">
       <notes>
         <note category="location">src/app/features/pages/components/page-rail.component.ts:103,105</note>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:86,88</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:111,113</note>
         <note category="description">Accessible label for the list of saved versions of a page</note>
       </notes>
       <segment state="translated">
@@ -15494,6 +15514,16 @@
       <segment state="translated">
         <source>this month</source>
         <target>diesen Monat</target>
+      </segment>
+    </unit>
+    <unit id="3647628967338848000">
+      <notes>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:34</note>
+        <note category="description">Description of the preference for how wide a page&apos;s writing runs in the pages editor</note>
+      </notes>
+      <segment state="translated">
+        <source>How far the writing on a page stretches in the editor.</source>
+        <target>Wie weit sich der Text einer Seite im Editor ausdehnt.</target>
       </segment>
     </unit>
     <unit id="3649865062920158321">
@@ -17137,8 +17167,8 @@
     </unit>
     <unit id="7869199587095613616">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:287,288</note>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:317</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:286,287</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:362</note>
         <note category="location">src/app/static/components/branding-preview/branding-preview.component.ts:156</note>
         <note category="description">Placeholder in an empty page title</note>
       </notes>
@@ -17375,7 +17405,7 @@
     </unit>
     <unit id="5116679637427656902">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:142,147</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:167,172</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:200</note>
         <note category="description">Menu item that creates a page inside the open page</note>
       </notes>
@@ -17597,7 +17627,7 @@
     </unit>
     <unit id="1022106416065199935">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:111,113</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:136,138</note>
         <note category="description">Accessible label for the button that opens the page action menu</note>
       </notes>
       <segment state="translated">
@@ -17688,7 +17718,7 @@
     </unit>
     <unit id="8630022383790162651">
       <notes>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:30</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:31</note>
         <note category="description">Description of the theme preference</note>
       </notes>
       <segment state="initial">
@@ -18007,7 +18037,7 @@
     </unit>
     <unit id="1163860776084272350">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:322,324</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:321,323</note>
         <note category="description">Shown on a folder, which has no text of its own</note>
       </notes>
       <segment state="translated">
@@ -18590,7 +18620,7 @@
     </unit>
     <unit id="933361080941409912">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:289,291</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:288,290</note>
         <note category="description">Accessible label for the page title</note>
       </notes>
       <segment state="translated">
@@ -18981,7 +19011,7 @@
     <unit id="1055686627716339120">
       <notes>
         <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:66</note>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:173,176</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:198,201</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:279</note>
         <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:32,33</note>
         <note category="location">src/app/features/project-tasks/project-tasks.routes.ts:13</note>
@@ -19056,7 +19086,7 @@
     </unit>
     <unit id="9180258231296737289">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:307,309</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:306,308</note>
         <note category="description">Placeholder in an empty page body</note>
       </notes>
       <segment state="translated">
@@ -19817,7 +19847,7 @@
     </unit>
     <unit id="137009466692838782">
       <notes>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:38</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:40</note>
         <note category="description">Button that drops the theme choice so the app follows the operating system</note>
       </notes>
       <segment state="initial">
@@ -21292,7 +21322,7 @@
     </unit>
     <unit id="9082027484739685780">
       <notes>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:104,106</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:106,108</note>
         <note category="description">Placeholder in the preference scope picker</note>
       </notes>
       <segment state="translated">
@@ -22171,7 +22201,7 @@
     </unit>
     <unit id="7430416142942514215">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:159,162</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:184,187</note>
         <note category="description">Menu item that publishes a draft page</note>
       </notes>
       <segment state="translated">
@@ -22500,7 +22530,7 @@
     </unit>
     <unit id="892073694820881630">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:318</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:363</note>
         <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:314</note>
         <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:357</note>
         <note category="description">Confirmation that a page link was copied</note>
@@ -22805,7 +22835,7 @@
     </unit>
     <unit id="3164972071980049830">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:240,243</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:239,242</note>
         <note category="description">Title of the notice shown when someone else saved the page first</note>
       </notes>
       <segment state="translated">
@@ -25006,7 +25036,7 @@
     </unit>
     <unit id="7639811500826292651">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:268,272</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:267,271</note>
         <note category="description">Button that saves local edits over the newer saved page</note>
       </notes>
       <segment state="translated">
@@ -25145,7 +25175,7 @@
     </unit>
     <unit id="7419704019640008953">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:98,103</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:123,128</note>
         <note category="description">Button that copies a link to share the open page</note>
       </notes>
       <segment state="translated">
@@ -26029,7 +26059,7 @@
     </unit>
     <unit id="230509500346547092">
       <notes>
-        <note category="location">src/app/features/pages/services/page-draft.ts:245</note>
+        <note category="location">src/app/features/pages/services/page-draft.ts:254</note>
         <note category="description">Error shown when saving a page fails</note>
       </notes>
       <segment state="translated">
@@ -26099,7 +26129,7 @@
     </unit>
     <unit id="345444628816896468">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:324,329</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:323,328</note>
         <note category="description">Hint shown on a folder page</note>
       </notes>
       <segment state="translated">
@@ -27693,7 +27723,7 @@
     </unit>
     <unit id="648306878592239743">
       <notes>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:35</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:37</note>
         <note category="description">Button that returns a preference to its default value</note>
       </notes>
       <segment state="initial">
@@ -27723,7 +27753,7 @@
     </unit>
     <unit id="6499083639356392647">
       <notes>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:46</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:48</note>
         <note category="description">Caption describing the centered page width</note>
       </notes>
       <segment state="translated">
@@ -27916,7 +27946,7 @@
     </unit>
     <unit id="3487164997301514763">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:113,117</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:122,126</note>
         <note category="description">Hint shown when a page cannot be found</note>
       </notes>
       <segment state="translated">
@@ -28157,7 +28187,7 @@
     </unit>
     <unit id="4451682318497650150">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:245,248</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:244,247</note>
         <note category="description">Body of the notice shown when someone else saved the page first</note>
       </notes>
       <segment state="translated">
@@ -28247,7 +28277,7 @@
     </unit>
     <unit id="9041444200911417888">
       <notes>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:41</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:43</note>
         <note category="location">src/app/static/components/date-picker/calendar.component.ts:295</note>
         <note category="description">Badge on the chosen option tile</note>
       </notes>
@@ -28978,7 +29008,7 @@
     </unit>
     <unit id="2037491714599491863">
       <notes>
-        <note category="location">src/app/features/pages/services/page-draft.ts:244</note>
+        <note category="location">src/app/features/pages/services/page-draft.ts:253</note>
         <note category="description">Error shown when changing a page&apos;s status or tags fails</note>
       </notes>
       <segment state="translated">

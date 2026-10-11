@@ -6,8 +6,12 @@ import {
   LucideFileCheck,
   LucideFilePen,
   LucideFilePlus,
+  LucideFoldHorizontal,
   LucideHistory,
+  LucidePanelRightClose,
+  LucidePanelRightOpen,
   LucideStar,
+  LucideUnfoldHorizontal,
 } from '@lucide/angular';
 import {
   BreadcrumbComponent,
@@ -20,6 +24,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
 import { MenuSeparatorComponent } from '@static/components/dropdown-menu/menu-separator.component';
 import { EditorMode } from '@static/components/editor/editor.component';
 import { PanelBodyComponent } from '@static/components/panel-body.component';
+import { PageContentWidth } from '../services/page-content-width.service';
 import {
   SaveState,
   SaveStatusComponent,
@@ -47,6 +52,10 @@ import {
     LucideFilePlus,
     LucideHistory,
     LucideArchive,
+    LucideFoldHorizontal,
+    LucideUnfoldHorizontal,
+    LucidePanelRightClose,
+    LucidePanelRightOpen,
     StrokedButtonComponent,
   ],
   host: { class: 'block' },
@@ -73,6 +82,22 @@ import {
           ariaLabel="Editor mode"
           [options]="modeOptions"
           [(value)]="mode" />
+
+        <button
+          app-icon-button
+          type="button"
+          color="muted"
+          size="small"
+          [attr.aria-pressed]="isFullWidth()"
+          [ariaLabel]="contentWidthLabel"
+          [title]="contentWidthLabel"
+          (click)="contentWidth.set(isFullWidth() ? 'centered' : 'full')">
+          @if (isFullWidth()) {
+            <svg lucideFoldHorizontal class="h-4 w-4"></svg>
+          } @else {
+            <svg lucideUnfoldHorizontal class="h-4 w-4"></svg>
+          }
+        </button>
       }
 
       <button
@@ -174,6 +199,25 @@ import {
           </button>
         }
       </app-dropdown-menu>
+
+      @if (isDocument()) {
+        <button
+          app-icon-button
+          type="button"
+          color="muted"
+          size="small"
+          class="max-lg:hidden"
+          [attr.aria-pressed]="!railCollapsed()"
+          [ariaLabel]="railLabel"
+          [title]="railLabel"
+          (click)="railCollapsed.set(!railCollapsed())">
+          @if (railCollapsed()) {
+            <svg lucidePanelRightOpen class="h-4 w-4"></svg>
+          } @else {
+            <svg lucidePanelRightClose class="h-4 w-4"></svg>
+          }
+        </button>
+      }
     </header>
   `,
 })
@@ -186,6 +230,8 @@ export class PageToolbarComponent {
   readonly canEdit = input(false);
   readonly status = input.required<PageStatus>();
   readonly mode = model<EditorMode>('rich');
+  readonly contentWidth = model<PageContentWidth>('centered');
+  readonly railCollapsed = model(false);
 
   readonly favouriteToggled = output<boolean>();
   readonly createInside = output();
@@ -193,6 +239,14 @@ export class PageToolbarComponent {
   readonly archived = output();
   readonly statusChanged = output<PageStatus>();
   readonly historyRequested = output();
+
+  protected readonly contentWidthLabel = $localize`:Accessible label for the toggle that lets a page's writing run the full width of the editor:Full width`;
+
+  protected readonly railLabel = $localize`:Accessible label for the toggle that shows or hides the panel beside a page:Side panel`;
+
+  protected readonly isFullWidth = computed(() => {
+    return this.contentWidth() === 'full';
+  });
 
   protected readonly isPublished = computed(() => {
     return this.status() === PageStatus.published;
