@@ -15,9 +15,18 @@ const visibleFromRatio = 0.9;
         [class.text-foreground/50]="!isOver()"
         aria-live="polite">
         @if (isOver()) {
-          <span i18n="Shown under a text field when the text is longer than allowed">
-            {{ overBy() | number // i18n(ph="OVER_BY") }} characters over the
-            {{ max() | number // i18n(ph="MAX_LENGTH") }} character limit
+          <span
+            i18n="
+              Shown under a text field when the text is longer than allowed
+            ">
+            {{
+              overBy() | number // i18n(ph="OVER_BY")
+            }}
+            characters over the
+            {{
+              max() | number // i18n(ph="MAX_LENGTH")
+            }}
+            character limit
           </span>
         } @else {
           {{ length() | number }} / {{ max() | number }}

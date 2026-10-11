@@ -39,10 +39,7 @@ import { TaskFlagBadgeComponent } from './task-flag-badge.component';
     <ng-template #content>
       <span class="truncate">{{ name() }}</span>
       @if (archived()) {
-        <app-badge
-          class="shrink-0"
-          shape="rounded"
-          i18n="Marks a deleted task">
+        <app-badge class="shrink-0" shape="rounded" i18n="Marks a deleted task">
           Archived
         </app-badge>
       }
