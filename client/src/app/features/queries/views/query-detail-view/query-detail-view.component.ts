@@ -38,6 +38,7 @@ import {
   savedQueryResource,
 } from '../../resources/saved-query.resource';
 import { findStaleReferences } from '../../util/stale-references';
+import { injectBreadcrumbs } from '@core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-query-detail-view',
@@ -274,6 +275,11 @@ export class QueryDetailViewComponent {
   });
 
   constructor() {
+    injectBreadcrumbs(
+      () => this.savedQuery()?.name,
+      () => this.loading()
+    );
+
     this.taskSelection.clear();
 
     effect(() => {

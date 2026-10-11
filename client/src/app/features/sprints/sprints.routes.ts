@@ -18,6 +18,9 @@ export const routes: Routes = [
         (m) => m.SprintBacklogViewComponent
       ),
     canActivate: [sprintsReadGuard],
+    data: {
+      breadcrumb: $localize`:Breadcrumb for the sprint backlog:Backlog`,
+    },
   },
   {
     path: ':identifier',
@@ -26,8 +29,5 @@ export const routes: Routes = [
         (m) => m.SprintDetailViewComponent
       ),
     canActivate: [sprintsReadGuard],
-    data: {
-      back: $localize`:Link back to the sprint list from a single sprint:Back to Sprints`,
-    },
   },
 ];

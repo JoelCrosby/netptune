@@ -34,7 +34,7 @@
     </unit>
     <unit id="8047164699399437846">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:254,255</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:255,256</note>
         <note category="description">Shown when the relation list fails to load</note>
       </notes>
       <segment state="translated">
@@ -199,7 +199,7 @@
     </unit>
     <unit id="8109676390252768717">
       <notes>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:156,157</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:157,158</note>
         <note category="description">Heading above the tasks using a tag</note>
       </notes>
       <segment state="translated">
@@ -254,7 +254,6 @@
         <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:82</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:109,111</note>
         <note category="location">src/app/features/pages/editor/page-reference.controller.ts:224</note>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:381</note>
         <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:71</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:92</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:207</note>
@@ -537,7 +536,7 @@
     </unit>
     <unit id="1577576942644957924">
       <notes>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:88,89</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:89,90</note>
         <note category="description">Shown when a tag detail page fails to load</note>
       </notes>
       <segment state="translated">
@@ -557,7 +556,7 @@
     </unit>
     <unit id="8198968372594669406">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:202,205</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:193,196</note>
         <note category="description">Menu item that moves a published page back to draft</note>
       </notes>
       <segment state="translated">
@@ -926,7 +925,7 @@
     <unit id="7884294193521928458">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:232</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:383</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:384</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -977,7 +976,7 @@
     </unit>
     <unit id="4393155387750539833">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:203,204</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:204,205</note>
         <note category="description">Button that deletes a relation type</note>
       </notes>
       <segment state="translated">
@@ -987,7 +986,7 @@
     </unit>
     <unit id="4394924118608662801">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:266</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:256</note>
         <note category="description">Accessible label for the toggle that lets a page&apos;s writing run the full width of the editor</note>
       </notes>
       <segment state="translated">
@@ -1764,7 +1763,7 @@
     </unit>
     <unit id="1622181844113244655">
       <notes>
-        <note category="location">src/app/features/settings/settings.routes.ts:25</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:28</note>
         <note category="description">Page title for personal notification settings</note>
       </notes>
       <segment state="translated">
@@ -1965,7 +1964,7 @@
     </unit>
     <unit id="7729368131710513135">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:235,237</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:236,238</note>
         <note category="description">Explains that links to archived tasks are still listed</note>
       </notes>
       <segment state="translated">
@@ -2025,9 +2024,9 @@
     </unit>
     <unit id="1955280138914914248">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:218,219</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:201,202</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:143,144</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:219,220</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:202,203</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:144,145</note>
         <note category="description">Heading above the list of things using an item</note>
       </notes>
       <segment state="translated">
@@ -2102,7 +2101,7 @@
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:201,204</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:142</note>
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:80,82</note>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:498</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:501</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:268</note>
         <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:133,136</note>
         <note category="location">src/app/features/boards/components/move-tasks-dialog/move-tasks-dialog.component.ts:76,79</note>
@@ -2129,7 +2128,7 @@
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:70,73</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:61,64</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:164,167</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:217</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:220</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:282</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:62,64</note>
         <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:97,99</note>
@@ -2143,9 +2142,9 @@
     </unit>
     <unit id="3491624179126991098">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:221,224</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:204,207</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:146,149</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:222,225</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:205,208</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:147,150</note>
         <note category="description">Description of the list of things using an item</note>
       </notes>
       <segment state="translated">
@@ -2327,7 +2326,7 @@
     </unit>
     <unit id="1277566644129121082">
       <notes>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:118,119</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:119,120</note>
         <note category="description">Shown when a saved query cannot be found</note>
       </notes>
       <segment state="translated">
@@ -2394,7 +2393,7 @@
         <note category="location">src/app/core/services/task-commands.service.ts:235</note>
         <note category="location">src/app/core/services/task-commands.service.ts:243</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:141</note>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:497</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:500</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:267</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:798</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:820</note>
@@ -2402,7 +2401,7 @@
         <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:167</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:249</note>
         <note category="location">src/app/features/queries/views/queries-view/queries-view.component.ts:159</note>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:229</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:230</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:184</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:319</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:154</note>
@@ -2410,7 +2409,7 @@
         <note category="location">src/app/features/settings/shared/entity-detail.ts:31</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:210</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:192</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:216</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:219</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:225</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:281</note>
         <note category="location">src/app/shared/components/task-selection-actions/task-selection-actions.component.ts:32,34</note>
@@ -2445,7 +2444,7 @@
     <unit id="8878271828886295802">
       <notes>
         <note category="location">src/app/core/services/board-commands.service.ts:67</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:398</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:399</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -3097,7 +3096,7 @@
       <notes>
         <note category="location">src/app/core/services/tag-commands.service.ts:77</note>
         <note category="location">src/app/core/services/tag-commands.service.ts:80</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:361</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:364</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
@@ -3372,7 +3371,7 @@
     <unit id="4140474966837806672">
       <notes>
         <note category="location">src/app/features/queries/components/query-card.component.ts:130,132</note>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:133,135</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:134,136</note>
         <note category="description">Eyebrow above the plain-language query summary</note>
       </notes>
       <segment state="translated">
@@ -3512,8 +3511,9 @@
     </unit>
     <unit id="4855605839328547425">
       <notes>
-        <note category="location">src/app/features/settings/settings.routes.ts:137</note>
-        <note category="description">Page title for resuming a started import</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:163</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:164</note>
+        <note category="description">Breadcrumb for resuming a started import</note>
       </notes>
       <segment state="initial">
         <source>Resume Import</source>
@@ -3982,7 +3982,7 @@
     </unit>
     <unit id="3891285483792199174">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:169,171</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:170,172</note>
         <note category="description">Menu item that deletes an automation</note>
       </notes>
       <segment state="initial">
@@ -4076,7 +4076,7 @@
     </unit>
     <unit id="3516718364454168290">
       <notes>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:144,145</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:145,146</note>
         <note category="description">Heading shown when a saved query no longer compiles</note>
       </notes>
       <segment state="translated">
@@ -4196,6 +4196,7 @@
         <note category="location">src/app/entry/components/notification-bell/notification-bell.component.ts:50,52</note>
         <note category="location">src/app/features/notifications/notifications.routes.ts:12</note>
         <note category="location">src/app/features/notifications/views/notifications-view/notifications-view.component.ts:29,30</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:27</note>
         <note category="location">src/app/features/settings/views/personal-notification-settings-view/personal-notification-settings-view.component.ts:22,24</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:417</note>
         <note category="location">src/app/workspace.routes.ts:102</note>
@@ -4359,6 +4360,7 @@
         <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:375</note>
         <note category="location">src/app/features/pins/components/pin-scope-menu.component.ts:160</note>
         <note category="location">src/app/features/settings/components/preference-scope.ts:36</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:46</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:447</note>
         <note category="description">Badge on a task pinned for the whole workspace</note>
       </notes>
@@ -4379,11 +4381,11 @@
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:224</note>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:70</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:68,69</note>
-        <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:26,29</note>
+        <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:27,30</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:85</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:371</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:385</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:305</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:386</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:306</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:47</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:27</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:49</note>
@@ -4436,7 +4438,7 @@
     </unit>
     <unit id="7440923050870641719">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:104,108</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:95,99</note>
         <note category="description">Accessible label for the switch between the rich and markdown editor</note>
       </notes>
       <segment state="translated">
@@ -4618,8 +4620,8 @@
         <note category="location">src/app/features/boards/util/board-task-sort.ts:30</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:450</note>
         <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:144</note>
-        <note category="location">src/app/features/settings/settings.routes.ts:81</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:100,103</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:96</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:101,104</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:31</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:40</note>
         <note category="description">Column heading for the task status</note>
@@ -4842,7 +4844,7 @@
         <note category="location">src/app/features/reporting/components/sprint-velocity-table.component.ts:53</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:140</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:377</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:55,58</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:56,59</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:28</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:48</note>
         <note category="description">Column heading for the task sprint</note>
@@ -4933,8 +4935,8 @@
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:166,168</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:61</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:119</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:393</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:313</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:394</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:314</note>
         <note category="description">Column heading for the task assignees</note>
       </notes>
       <segment state="translated">
@@ -5059,7 +5061,7 @@
     </unit>
     <unit id="7389084774187811922">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:444</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:447</note>
         <note category="description">Confirmation after pausing an automation</note>
       </notes>
       <segment state="initial">
@@ -5113,7 +5115,7 @@
         <note category="location">src/app/entry/dialogs/create-relation-type-dialog/create-relation-type-dialog.component.ts:56,57</note>
         <note category="location">src/app/entry/dialogs/status-dialog/status-dialog.component.ts:75,76</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:243</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:154,155</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:155,156</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:218</note>
         <note category="description">Label of the relation category field</note>
       </notes>
@@ -5171,14 +5173,14 @@
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:209</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:74,76</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:144</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:147</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:373</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:148</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:374</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:229</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:138</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:345</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:139</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:346</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:211</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:106</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:270</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:107</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:271</note>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:133</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:60,61</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:134</note>
@@ -5237,7 +5239,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/create-relation-type-dialog/create-relation-type-dialog.component.ts:91,93</note>
         <note category="location">src/app/entry/dialogs/edit-relation-type-dialog/edit-relation-type-dialog.component.ts:77,82</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:163,167</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:164,168</note>
         <note category="description">Label of the field for the reverse direction of a relation</note>
       </notes>
       <segment state="translated">
@@ -5480,8 +5482,8 @@
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:106,108</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:63,65</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:91,94</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:170,173</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:143,146</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:171,174</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:144,147</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:39</note>
         <note category="description">Label of the task description editor</note>
       </notes>
@@ -5655,8 +5657,8 @@
     </unit>
     <unit id="6001895196013252405">
       <notes>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:216,218</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:158,160</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:217,219</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:159,161</note>
         <note category="description">Explains that archived tasks are left out</note>
       </notes>
       <segment state="translated">
@@ -5707,7 +5709,7 @@
     <unit id="8406721537832870070">
       <notes>
         <note category="location">src/app/entry/dialogs/edit-relation-type-dialog/edit-relation-type-dialog.component.ts:56,61</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:134,139</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:135,140</note>
         <note category="description">Explains that a relation type&apos;s category cannot be changed. CATEGORY is the category name</note>
       </notes>
       <segment state="translated">
@@ -5723,9 +5725,9 @@
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:159,161</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:79,81</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:97,100</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:176,179</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:177,180</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:223</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:149,152</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:150,153</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:205</note>
         <note category="description">Label of the colour picker field</note>
       </notes>
@@ -5767,7 +5769,7 @@
     <unit id="3080368134005829146">
       <notes>
         <note category="location">src/app/entry/dialogs/edit-relation-type-dialog/edit-relation-type-dialog.component.ts:93,98</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:187,189</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:188,190</note>
         <note category="description">Button that saves changes to the relation type</note>
       </notes>
       <segment state="translated">
@@ -5879,7 +5881,7 @@
     <unit id="3095755724292513950">
       <notes>
         <note category="location">src/app/core/transforms/entity-type.ts:24</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:94,97</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:95,98</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:33</note>
         <note category="description">Name of the relation type entity in activity and audit logs</note>
       </notes>
@@ -6122,7 +6124,7 @@
     <unit id="3034679798924651226">
       <notes>
         <note category="location">src/app/features/automations/components/automation-relation-editor.component.ts:47,49</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:401</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:402</note>
         <note category="description">Label of the relation field</note>
       </notes>
       <segment state="translated">
@@ -6162,7 +6164,7 @@
     </unit>
     <unit id="432834967329800065">
       <notes>
-        <note category="location">src/app/features/settings/settings.routes.ts:20</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:22</note>
         <note category="description">Page title for general personal settings</note>
       </notes>
       <segment state="translated">
@@ -6205,8 +6207,8 @@
     <unit id="1825829511397926879">
       <notes>
         <note category="location">src/app/features/pages/components/page-meta-chips.component.ts:46,49</note>
-        <note category="location">src/app/features/settings/settings.routes.ts:67</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:83,84</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:76</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:84,85</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:40</note>
         <note category="description">Button that adds or removes tags on a page</note>
       </notes>
@@ -6338,8 +6340,8 @@
     </unit>
     <unit id="5898235959611677094">
       <notes>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:280,282</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:221,223</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:281,283</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:222,224</note>
         <note category="description">Heading of an empty task list on a usage page</note>
       </notes>
       <segment state="translated">
@@ -6626,7 +6628,7 @@
     </unit>
     <unit id="4315644716788167441">
       <notes>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:362</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:365</note>
         <note category="description">Asks the user to confirm deleting a tag. NAME is the tag name, COUNT is how many tasks carry it</note>
       </notes>
       <segment state="translated">
@@ -6961,6 +6963,7 @@
     <unit id="3915858391862498397">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:42,45</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:103</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:71,72</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:251</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:358</note>
@@ -7040,6 +7043,7 @@
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:91,92</note>
         <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:146,147</note>
         <note category="location">src/app/features/pages/components/page-meta-chips.component.ts:72</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:63</note>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:46</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:47</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:90</note>
@@ -7353,7 +7357,7 @@
         <note category="location">src/app/features/audit/components/audit-filters/audit-date-range.component.ts:14</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:97</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:43</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:395</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:396</note>
         <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:105,106</note>
         <note category="description">Label of the start-date filter</note>
       </notes>
@@ -7397,7 +7401,7 @@
         <note category="location">src/app/features/audit/components/audit-filters/audit-date-range.component.ts:36</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:106</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:52</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:407</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:408</note>
         <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:113,114</note>
         <note category="description">Label of the end-date filter</note>
       </notes>
@@ -7498,16 +7502,6 @@
         <target>Trier par</target>
       </segment>
     </unit>
-    <unit id="1428367413098223987">
-      <notes>
-        <note category="location">src/app/features/settings/settings.routes.ts:66</note>
-        <note category="description">Link back to the tag list from a single tag</note>
-      </notes>
-      <segment state="translated">
-        <source>Back to Tags</source>
-        <target>Retour aux étiquettes</target>
-      </segment>
-    </unit>
     <unit id="2373398189346663368">
       <notes>
         <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:45,47</note>
@@ -7520,7 +7514,7 @@
     </unit>
     <unit id="2374414794557761478">
       <notes>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:117,118</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:118,119</note>
         <note category="description">Button that saves changes to the tag</note>
       </notes>
       <segment state="translated">
@@ -7600,7 +7594,7 @@
     </unit>
     <unit id="5984576492523544263">
       <notes>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:186,187</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:187,188</note>
         <note category="description">Button that deletes a status</note>
       </notes>
       <segment state="translated">
@@ -7937,7 +7931,7 @@
     </unit>
     <unit id="6143795228406387052">
       <notes>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:76,80</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:77,81</note>
         <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:100,104</note>
         <note category="description">Button that copies a shareable link to a query</note>
       </notes>
@@ -8197,7 +8191,7 @@
     </unit>
     <unit id="1663903229329909090">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:278</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:268</note>
         <note category="description">Accessible label for the toggle that shows or hides the panel beside a page</note>
       </notes>
       <segment state="translated">
@@ -9137,8 +9131,8 @@
     <unit id="2176659033176029418">
       <notes>
         <note category="location">src/app/core/tasks/task-columns.ts:55</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:369</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:289</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:370</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:290</note>
         <note category="description">Column heading for the task reference</note>
       </notes>
       <segment state="translated">
@@ -9294,18 +9288,6 @@
       <segment state="translated">
         <source>The security check failed. Refresh the page or try a different browser.</source>
         <target>Le contrôle de sécurité a échoué. Rafraîchissez la page ou essayez un autre navigateur.</target>
-      </segment>
-    </unit>
-    <unit id="8613935261539062093">
-      <notes>
-        <note category="location">src/app/features/automations/automations.routes.ts:23</note>
-        <note category="location">src/app/features/automations/automations.routes.ts:34</note>
-        <note category="location">src/app/features/automations/automations.routes.ts:45</note>
-        <note category="description">Link back to the automation list from a single automation</note>
-      </notes>
-      <segment state="translated">
-        <source>Back to Automations</source>
-        <target>Retour aux automatisations</target>
       </segment>
     </unit>
     <unit id="8614260097416227361">
@@ -9505,7 +9487,7 @@
     </unit>
     <unit id="6864532272110873850">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:231,233</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:232,234</note>
         <note category="description">Heading above the task links using a relation type</note>
       </notes>
       <segment state="translated">
@@ -10330,7 +10312,7 @@
     </unit>
     <unit id="5689076757886798754">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:309,313</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:310,314</note>
         <note category="description">When an automation was created. DATE is a formatted date</note>
       </notes>
       <segment state="initial">
@@ -10350,7 +10332,7 @@
     </unit>
     <unit id="8383145857933967504">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:199,203</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:200,204</note>
         <note category="description">When an automation was last changed, shown after the creation date. Keep the leading separator. DATE is a formatted date</note>
       </notes>
       <segment state="initial">
@@ -10441,7 +10423,7 @@
     </unit>
     <unit id="685204719815626575">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:289,290</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:290,291</note>
         <note category="description">Stat label for when a rule last ran</note>
       </notes>
       <segment state="initial">
@@ -11080,6 +11062,16 @@
         <target>Effacez la recherche et triez par Ordre pour réorganiser</target>
       </segment>
     </unit>
+    <unit id="1283241409166703000">
+      <notes>
+        <note category="location">src/app/features/settings/settings.routes.ts:11</note>
+        <note category="description">Breadcrumb for the personal settings section</note>
+      </notes>
+      <segment state="translated">
+        <source>Personal</source>
+        <target>Personnel</target>
+      </segment>
+    </unit>
     <unit id="1283895920974679461">
       <notes>
         <note category="location">src/app/features/automations/components/automation-relation-editor.component.ts:29,31</note>
@@ -11172,7 +11164,7 @@
     </unit>
     <unit id="3542436707982684146">
       <notes>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:107,108</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:108,109</note>
         <note category="description">Shown when a status detail page fails to load</note>
       </notes>
       <segment state="translated">
@@ -11273,7 +11265,7 @@
     </unit>
     <unit id="409843096950290609">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:445</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:448</note>
         <note category="description">Confirmation after resuming an automation</note>
       </notes>
       <segment state="initial">
@@ -11538,7 +11530,7 @@
     </unit>
     <unit id="8666730504824237140">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:299</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:289</note>
         <note category="description">Option that shows a page as formatted text</note>
       </notes>
       <segment state="translated">
@@ -11639,7 +11631,7 @@
     <unit id="6678152968885144111">
       <notes>
         <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:210,213</note>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:297,298</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:298,299</note>
         <note category="description">Shown when an automation has never run</note>
       </notes>
       <segment state="translated">
@@ -11709,8 +11701,8 @@
     </unit>
     <unit id="8497552253509503838">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:274,275</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:299,300</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:275,276</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:300,301</note>
         <note category="location">src/app/static/components/task-name.component.ts:43,45</note>
         <note category="description">Marks a deleted task</note>
       </notes>
@@ -11969,7 +11961,7 @@
     </unit>
     <unit id="6151416851572883297">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:92,94</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:93,95</note>
         <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:164,166</note>
         <note category="description">Marks an automation that is switched on</note>
       </notes>
@@ -12813,7 +12805,7 @@
     </unit>
     <unit id="8304423617415800133">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:173,176</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:164,167</note>
         <note category="description">Menu item that removes a page from favourites</note>
       </notes>
       <segment state="translated">
@@ -12869,16 +12861,6 @@
       <segment state="translated">
         <source>Boards changed</source>
         <target>Tableaux modifiés</target>
-      </segment>
-    </unit>
-    <unit id="8319982105545010046">
-      <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:84,87</note>
-        <note category="description">Accessible label for the trail of folders above a page</note>
-      </notes>
-      <segment state="translated">
-        <source>Page location</source>
-        <target>Emplacement de la page</target>
       </segment>
     </unit>
     <unit id="1583399193111493692">
@@ -13024,7 +13006,7 @@
     </unit>
     <unit id="862315084299301566">
       <notes>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:120,121</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:121,122</note>
         <note category="description">Advice shown when a saved query is missing</note>
       </notes>
       <segment state="translated">
@@ -13452,7 +13434,7 @@
     </unit>
     <unit id="3278358550418950949">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:159,161</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:160,162</note>
         <note category="description">Menu item that duplicates an automation</note>
       </notes>
       <segment state="initial">
@@ -13482,7 +13464,7 @@
     </unit>
     <unit id="3787321817465559173">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:177,182</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:168,173</note>
         <note category="description">Menu item that adds a page to favourites</note>
       </notes>
       <segment state="translated">
@@ -13729,8 +13711,8 @@
     </unit>
     <unit id="5234544449365538384">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:384</note>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:320</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:379</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:323</note>
         <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:362</note>
         <note category="description">Shown when a page link could not be copied</note>
       </notes>
@@ -13924,7 +13906,7 @@
     </unit>
     <unit id="7153255681393081191">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:303</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:293</note>
         <note category="description">Option that shows a page as raw markdown</note>
       </notes>
       <segment state="translated">
@@ -13975,7 +13957,7 @@
     </unit>
     <unit id="7984607742745700304">
       <notes>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:214,215</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:215,216</note>
         <note category="description">Heading above the tasks using a status</note>
       </notes>
       <segment state="translated">
@@ -14047,7 +14029,7 @@
     </unit>
     <unit id="5877588706047001067">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:109,110</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:110,111</note>
         <note category="description">Heading above the relation type edit form</note>
       </notes>
       <segment state="translated">
@@ -14406,8 +14388,8 @@
     </unit>
     <unit id="483004486856869707">
       <notes>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:238,240</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:179,181</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:239,241</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:180,182</note>
         <note category="description">Link that opens the task list filtered to one item</note>
       </notes>
       <segment state="translated">
@@ -14947,18 +14929,6 @@
         <target>sur <ph id="0" equiv="cap" disp="formatCurrency(cap)"/></target>
       </segment>
     </unit>
-    <unit id="886427234962285326">
-      <notes>
-        <note category="location">src/app/features/queries/queries.routes.ts:19</note>
-        <note category="location">src/app/features/queries/queries.routes.ts:27</note>
-        <note category="location">src/app/features/queries/queries.routes.ts:35</note>
-        <note category="description">Link back to the query list from a single query</note>
-      </notes>
-      <segment state="translated">
-        <source>Back to Queries</source>
-        <target>Retour aux requêtes</target>
-      </segment>
-    </unit>
     <unit id="8864329926850607537">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:505</note>
@@ -14967,6 +14937,16 @@
       <segment state="translated">
         <source><ph id="0" equiv="FIELD" disp="field"/> has any change</source>
         <target><ph id="0" equiv="FIELD" disp="field"/> a une modification quelconque</target>
+      </segment>
+    </unit>
+    <unit id="8864483484119944646">
+      <notes>
+        <note category="location">src/app/features/automations/automations.routes.ts:23</note>
+        <note category="description">Breadcrumb for the page that builds a new automation</note>
+      </notes>
+      <segment state="translated">
+        <source>New Automation</source>
+        <target>Nouvelle automatisation</target>
       </segment>
     </unit>
     <unit id="6751184028476524554">
@@ -15303,7 +15283,7 @@
     </unit>
     <unit id="880144039825111570">
       <notes>
-        <note category="location">src/app/features/settings/settings.routes.ts:109</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:136</note>
         <note category="description">Page title for workspace import and export</note>
       </notes>
       <segment>
@@ -15655,7 +15635,7 @@
     </unit>
     <unit id="5178835502498285703">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:111,114</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:112,115</note>
         <note category="description">Button that tests the automation against a task</note>
       </notes>
       <segment state="initial">
@@ -15695,8 +15675,8 @@
     </unit>
     <unit id="7585826646011739428">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:136,139</note>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:106,109</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:137,140</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:107,110</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:204</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:186</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:219</note>
@@ -15709,7 +15689,7 @@
     </unit>
     <unit id="2650015568553587457">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:184,185</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:185,186</note>
         <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:627</note>
         <note category="description">Shown when a single automation fails to load</note>
       </notes>
@@ -15721,7 +15701,7 @@
     <unit id="3640373857486272611">
       <notes>
         <note category="location">src/app/features/pages/components/page-rail.component.ts:103,105</note>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:133,135</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:124,126</note>
         <note category="description">Accessible label for the list of saved versions of a page</note>
       </notes>
       <segment state="translated">
@@ -15782,14 +15762,14 @@
     </unit>
     <unit id="3660632916771561809">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:186,188</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:187,189</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:81,83</note>
         <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:39,42</note>
-        <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:61,63</note>
+        <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:62,64</note>
         <note category="location">src/app/features/queries/views/queries-view/queries-view.component.ts:64,66</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:103,105</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:109,111</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:90,92</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:104,106</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:110,112</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:91,93</note>
         <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:77,79</note>
         <note category="description">Advice shown when a page fails to load</note>
       </notes>
@@ -15800,7 +15780,7 @@
     </unit>
     <unit id="3202007690147542060">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:214,216</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:215,217</note>
         <note category="description">Heading of the auto-disabled warning</note>
       </notes>
       <segment state="translated">
@@ -15820,7 +15800,7 @@
     </unit>
     <unit id="2536790850571610592">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:220,222</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:221,223</note>
         <note category="description">Advice on the auto-disabled warning</note>
       </notes>
       <segment state="translated">
@@ -15830,7 +15810,7 @@
     </unit>
     <unit id="8079275177893504270">
       <notes>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:165,166</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:166,167</note>
         <note category="description">Shown when a saved query matches no tasks</note>
       </notes>
       <segment state="translated">
@@ -15850,7 +15830,7 @@
     </unit>
     <unit id="8451136300262007554">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:234,236</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:235,237</note>
         <note category="description">Heading of the broken-reference warning</note>
       </notes>
       <segment state="translated">
@@ -15891,7 +15871,7 @@
     </unit>
     <unit id="4308895016686267984">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:244,246</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:245,247</note>
         <note category="description">Advice on the broken-reference warning</note>
       </notes>
       <segment state="translated">
@@ -16004,7 +15984,7 @@
     </unit>
     <unit id="976634642400414372">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:451</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:454</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:215</note>
         <note category="description">Error after failing to update an automation</note>
       </notes>
@@ -16015,7 +15995,7 @@
     </unit>
     <unit id="7223592009379733387">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:495</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:498</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:265</note>
         <note category="description">Title of the confirmation dialog for deleting an automation</note>
       </notes>
@@ -16026,7 +16006,7 @@
     </unit>
     <unit id="2841737509665294845">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:511</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:514</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:286</note>
         <note category="description">Confirmation after deleting an automation</note>
       </notes>
@@ -16057,7 +16037,7 @@
     </unit>
     <unit id="3476741388176301769">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:517</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:520</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:292</note>
         <note category="description">Error after failing to delete an automation</note>
       </notes>
@@ -16157,7 +16137,7 @@
     </unit>
     <unit id="611603307113213973">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:111,113</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:112,114</note>
         <note category="description">Description of the relation type edit form</note>
       </notes>
       <segment state="translated">
@@ -16338,7 +16318,7 @@
     </unit>
     <unit id="6473284394312594965">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:485</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:488</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:253</note>
         <note category="description">Error after failing to clone an automation</note>
       </notes>
@@ -16367,16 +16347,6 @@
       <segment state="translated">
         <source>Page</source>
         <target>Page</target>
-      </segment>
-    </unit>
-    <unit id="1411214360177743011">
-      <notes>
-        <note category="location">src/app/features/boards/boards.routes.ts:20</note>
-        <note category="description">Link back to the board list from a single board</note>
-      </notes>
-      <segment state="translated">
-        <source>Back to Boards</source>
-        <target>Retour aux tableaux</target>
       </segment>
     </unit>
     <unit id="1411404971171105228">
@@ -16699,6 +16669,7 @@
     <unit id="146442697456175258">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:107,110</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:130</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:382</note>
         <note category="description">Page title for the workspace import and export page</note>
       </notes>
@@ -16788,6 +16759,16 @@
         <target>Aucun import pour l&apos;instant</target>
       </segment>
     </unit>
+    <unit id="7172610509240246759">
+      <notes>
+        <note category="location">src/app/shell/shell-navbar.component.ts:56,59</note>
+        <note category="description">Accessible label for the trail of links to the current page</note>
+      </notes>
+      <segment state="translated">
+        <source>Breadcrumb</source>
+        <target>Fil d&apos;Ariane</target>
+      </segment>
+    </unit>
     <unit id="5787327883657253628">
       <notes>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:54,55</note>
@@ -16811,7 +16792,7 @@
     <unit id="5810814854864452102">
       <notes>
         <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:72,75</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:370</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:371</note>
         <note category="description">Title of the edit-board dialog</note>
       </notes>
       <segment state="translated">
@@ -16914,7 +16895,8 @@
         <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:44,47</note>
         <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:103,105</note>
         <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:373</note>
-        <note category="location">src/app/features/settings/settings.routes.ts:123</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:149</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:150</note>
         <note category="description">Page title for the guided import builder</note>
       </notes>
       <segment state="translated">
@@ -17097,8 +17079,8 @@
     </unit>
     <unit id="1034048203718173888">
       <notes>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:225,228</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:166,169</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:226,229</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:167,170</note>
         <note category="description">Number of tasks using a status. COUNT is the number of tasks</note>
       </notes>
       <segment state="translated">
@@ -17234,7 +17216,7 @@
     </unit>
     <unit id="9210705833797356375">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:233,234</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:234,235</note>
         <note category="description">Tooltip on the button that edits a board group</note>
       </notes>
       <segment state="translated">
@@ -17275,7 +17257,7 @@
     <unit id="989480357041643523">
       <notes>
         <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:304,307</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:245,246</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:246,247</note>
         <note category="description">Menu item that deletes a board group</note>
       </notes>
       <segment state="translated">
@@ -17295,7 +17277,7 @@
     </unit>
     <unit id="1779801045860441380">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:375</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:376</note>
         <note category="description">Overflow action that opens the manage-groups dialog</note>
       </notes>
       <segment state="translated">
@@ -17305,7 +17287,7 @@
     </unit>
     <unit id="6413760592493508393">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:391</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:392</note>
         <note category="description">Overflow action that downloads the board tasks as CSV</note>
       </notes>
       <segment state="translated">
@@ -17351,7 +17333,7 @@
     </unit>
     <unit id="7856854208950034768">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:486</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:489</note>
         <note category="description">Title of the confirmation dialog for deleting a relation type</note>
       </notes>
       <segment state="translated">
@@ -17402,7 +17384,7 @@
     <unit id="7869199587095613616">
       <notes>
         <note category="location">src/app/features/pages/components/page-editor.component.ts:294,295</note>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:382</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:377</note>
         <note category="location">src/app/static/components/branding-preview/branding-preview.component.ts:156</note>
         <note category="description">Placeholder in an empty page title</note>
       </notes>
@@ -17566,7 +17548,7 @@
     <unit id="4237605958853876047">
       <notes>
         <note category="location">src/app/features/calendar/components/calendar-selected-day-table/calendar-selected-day-table.component.ts:34,35</note>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:164</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:165</note>
         <note category="location">src/app/features/roadmap/components/roadmap-unscheduled.component.ts:86,87</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:126</note>
         <note category="location">src/app/static/components/task-table.component.ts:97</note>
@@ -17609,7 +17591,7 @@
     </unit>
     <unit id="5101518177835903830">
       <notes>
-        <note category="location">src/app/features/settings/settings.routes.ts:95</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:116</note>
         <note category="description">Page title for a single workspace relation type</note>
       </notes>
       <segment state="translated">
@@ -17639,7 +17621,7 @@
     </unit>
     <unit id="5116679637427656902">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:189,194</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:180,185</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:201</note>
         <note category="description">Menu item that creates a page inside the open page</note>
       </notes>
@@ -17861,7 +17843,7 @@
     </unit>
     <unit id="1022106416065199935">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:158,160</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:149,151</note>
         <note category="description">Accessible label for the button that opens the page action menu</note>
       </notes>
       <segment state="translated">
@@ -18106,7 +18088,7 @@
     </unit>
     <unit id="3762494602148654040">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:98,100</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:99,101</note>
         <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:168,170</note>
         <note category="description">Marks an automation that is switched off</note>
       </notes>
@@ -18589,6 +18571,16 @@
         <target>Marquer comme lu</target>
       </segment>
     </unit>
+    <unit id="7590720382336782873">
+      <notes>
+        <note category="location">src/app/features/automations/automations.routes.ts:34</note>
+        <note category="description">Breadcrumb for the page that edits an automation</note>
+      </notes>
+      <segment state="translated">
+        <source>Edit Automation</source>
+        <target>Modifier l&apos;automatisation</target>
+      </segment>
+    </unit>
     <unit id="7593555694782789615">
       <notes>
         <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:190</note>
@@ -18795,7 +18787,7 @@
     <unit id="117068237894470695">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:122,124</note>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:148,150</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:149,151</note>
         <note category="description">Accessible label for the button that opens the task&apos;s other actions</note>
       </notes>
       <segment state="initial">
@@ -18815,7 +18807,7 @@
     </unit>
     <unit id="4878739351848976503">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:309,311</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:310,312</note>
         <note category="description">Heading of an empty relation list on a usage page</note>
       </notes>
       <segment state="translated">
@@ -19212,8 +19204,8 @@
     <unit id="8762534944604959180">
       <notes>
         <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:39,42</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:247,248</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:188,189</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:248,249</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:189,190</note>
         <note category="location">src/app/static/components/task-table.component.ts:94</note>
         <note category="description">Shown when the task list fails to load</note>
       </notes>
@@ -19246,8 +19238,9 @@
     <unit id="1055686627716339120">
       <notes>
         <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:66</note>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:220,223</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:211,214</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:280</note>
+        <note category="location">src/app/features/pages/pages.routes.ts:13</note>
         <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:44</note>
         <note category="location">src/app/features/project-tasks/project-tasks.routes.ts:13</note>
         <note category="location">src/app/features/project-tasks/views/archive-view/archive-view.component.ts:21,23</note>
@@ -19279,16 +19272,6 @@
         <target>Détail de la tâche</target>
       </segment>
     </unit>
-    <unit id="5051311493526387933">
-      <notes>
-        <note category="location">src/app/features/settings/settings.routes.ts:80</note>
-        <note category="description">Link back to the status list from a single status</note>
-      </notes>
-      <segment state="translated">
-        <source>Back to Statuses</source>
-        <target>Retour aux statuts</target>
-      </segment>
-    </unit>
     <unit id="5058483321290632814">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:220,222</note>
@@ -19317,16 +19300,6 @@
       <segment state="translated">
         <source>The assistant could not do that just now. Try again.</source>
         <target>L&apos;assistant n&apos;a pas pu le faire pour le moment. Réessayez.</target>
-      </segment>
-    </unit>
-    <unit id="422694794697932786">
-      <notes>
-        <note category="location">src/app/features/project-tasks/project-tasks.routes.ts:24</note>
-        <note category="description">Link back to the task list from a single task</note>
-      </notes>
-      <segment state="translated">
-        <source>Back to Tasks</source>
-        <target>Retour aux tâches</target>
       </segment>
     </unit>
     <unit id="9180258231296737289">
@@ -19450,16 +19423,6 @@
         <target> Les exécutions d&apos;automatisation n&apos;ont pas pu être chargées. </target>
       </segment>
     </unit>
-    <unit id="4435324863259316135">
-      <notes>
-        <note category="location">src/app/features/projects/projects.routes.ts:20</note>
-        <note category="description">Link back to the project list from a single project</note>
-      </notes>
-      <segment state="translated">
-        <source>Back to Projects</source>
-        <target>Retour aux projets</target>
-      </segment>
-    </unit>
     <unit id="4435645098786961170">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-transcript.component.ts:49,50</note>
@@ -19493,7 +19456,7 @@
     </unit>
     <unit id="3953140809261219704">
       <notes>
-        <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:59,60</note>
+        <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:60,61</note>
         <note category="description">Shown when a project fails to load</note>
       </notes>
       <segment state="translated">
@@ -19589,7 +19552,7 @@
     </unit>
     <unit id="565444447916223977">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-layout-view/pages-layout-view.component.ts:38,40</note>
+        <note category="location">src/app/features/pages/views/pages-layout-view/pages-layout-view.component.ts:39,42</note>
         <note category="description">Accessible name of the handle that resizes the pages sidebar</note>
       </notes>
       <segment state="translated">
@@ -19660,8 +19623,8 @@
     </unit>
     <unit id="4663393004124331220">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:119,120</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:125,126</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:120,121</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:126,127</note>
         <note category="description">Marks a built-in item</note>
       </notes>
       <segment state="translated">
@@ -20240,19 +20203,6 @@
       <segment state="translated">
         <source>Connect web search</source>
         <target>Connecter la recherche web</target>
-      </segment>
-    </unit>
-    <unit id="6793067934389787615">
-      <notes>
-        <note category="location">src/app/features/settings/settings.routes.ts:115</note>
-        <note category="location">src/app/features/settings/settings.routes.ts:122</note>
-        <note category="location">src/app/features/settings/settings.routes.ts:129</note>
-        <note category="location">src/app/features/settings/settings.routes.ts:136</note>
-        <note category="description">Link back to the data page from the export wizard</note>
-      </notes>
-      <segment>
-        <source>Back to Data</source>
-        <target>Retour aux données</target>
       </segment>
     </unit>
     <unit id="6796520629267981972">
@@ -21160,8 +21110,8 @@
         <note category="location">src/app/core/util/ai-client-context.ts:32</note>
         <note category="location">src/app/features/automations/components/automation-run-history.component.ts:129,130</note>
         <note category="location">src/app/features/roadmap/components/roadmap-timeline.component.ts:72,73</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:377</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:297</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:378</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:298</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:26</note>
         <note category="description">Column heading for the task name</note>
       </notes>
@@ -21172,8 +21122,9 @@
     </unit>
     <unit id="6731619174977978883">
       <notes>
-        <note category="location">src/app/features/settings/settings.routes.ts:31</note>
-        <note category="description">Page title for the personal assistant key settings</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:34</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:35</note>
+        <note category="description">Breadcrumb for the personal assistant key settings</note>
       </notes>
       <segment state="translated">
         <source>Assistant Keys</source>
@@ -21324,7 +21275,7 @@
     </unit>
     <unit id="5249135576117895248">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:243,246</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:244,247</note>
         <note category="description">Number of task links using a relation type. COUNT is the number of links</note>
       </notes>
       <segment state="translated">
@@ -21468,7 +21419,8 @@
     <unit id="4789305091394342628">
       <notes>
         <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:59,63</note>
-        <note category="location">src/app/features/settings/settings.routes.ts:130</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:156</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:157</note>
         <note category="description">Page title for the workspace archive import</note>
       </notes>
       <segment state="initial">
@@ -21528,7 +21480,7 @@
     </unit>
     <unit id="5750579446813656351">
       <notes>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:96,97</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:97,98</note>
         <note category="description">Heading above the tag edit form</note>
       </notes>
       <segment state="translated">
@@ -21617,9 +21569,9 @@
     </unit>
     <unit id="9092123752727924180">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:313,315</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:284,285</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:225,226</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:314,316</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:285,286</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:226,227</note>
         <note category="description">Explains that nothing currently uses the item being viewed</note>
       </notes>
       <segment state="translated">
@@ -21682,7 +21634,8 @@
         <note category="location">src/app/features/assistant/assistant.routes.ts:12</note>
         <note category="location">src/app/features/pages/editor/page-editor-commands.ts:20</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:87</note>
-        <note category="location">src/app/features/settings/settings.routes.ts:144</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:172</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:173</note>
         <note category="location">src/app/features/settings/views/personal-assistant-settings-view/personal-assistant-settings-view.component.ts:31,33</note>
         <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:52,54</note>
         <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:42,45</note>
@@ -22487,7 +22440,7 @@
     </unit>
     <unit id="7430416142942514215">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:206,209</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:197,200</note>
         <note category="description">Menu item that publishes a draft page</note>
       </notes>
       <segment state="translated">
@@ -22756,7 +22709,7 @@
     </unit>
     <unit id="7331635054649292901">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:101,102</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:102,103</note>
         <note category="description">Shown when a relation type detail page fails to load</note>
       </notes>
       <segment state="translated">
@@ -22816,8 +22769,8 @@
     </unit>
     <unit id="892073694820881630">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:383</note>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:315</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:378</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:318</note>
         <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:357</note>
         <note category="description">Confirmation that a page link was copied</note>
       </notes>
@@ -23141,7 +23094,7 @@
     </unit>
     <unit id="5712909673292266004">
       <notes>
-        <note category="location">src/app/features/settings/settings.routes.ts:53</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:58</note>
         <note category="description">Page title for general workspace settings</note>
       </notes>
       <segment state="translated">
@@ -23191,7 +23144,7 @@
     </unit>
     <unit id="6654135033505153591">
       <notes>
-        <note category="location">src/app/features/settings/settings.routes.ts:60</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:69</note>
         <note category="description">Page title for workspace tag settings</note>
       </notes>
       <segment state="translated">
@@ -23212,7 +23165,7 @@
     </unit>
     <unit id="1354796016404134182">
       <notes>
-        <note category="location">src/app/features/settings/settings.routes.ts:74</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:89</note>
         <note category="description">Page title for workspace task status settings</note>
       </notes>
       <segment state="translated">
@@ -23222,7 +23175,7 @@
     </unit>
     <unit id="6017786801241064671">
       <notes>
-        <note category="location">src/app/features/settings/settings.routes.ts:88</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:109</note>
         <note category="description">Page title for workspace task relation type settings</note>
       </notes>
       <segment state="translated">
@@ -23232,7 +23185,7 @@
     </unit>
     <unit id="161640666417709222">
       <notes>
-        <note category="location">src/app/features/settings/settings.routes.ts:102</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:125</note>
         <note category="description">Page title for workspace service account settings</note>
       </notes>
       <segment state="translated">
@@ -23449,7 +23402,7 @@
     </unit>
     <unit id="6828663359167389620">
       <notes>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:115,116</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:116,117</note>
         <note category="description">Heading above the status edit form</note>
       </notes>
       <segment state="translated">
@@ -23469,7 +23422,7 @@
     </unit>
     <unit id="6830953190149975920">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:155,157</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:156,158</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:128,131</note>
         <note category="description">Shown when a relation reads the same in both directions</note>
       </notes>
@@ -24755,7 +24708,7 @@
     </unit>
     <unit id="108935827638897170">
       <notes>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:130,132</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:131,133</note>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:121</note>
         <note category="description">Button that deletes a tag</note>
       </notes>
@@ -25014,7 +24967,7 @@
     <unit id="5027851135384593485">
       <notes>
         <note category="location">src/app/entry/dialogs/status-dialog/status-dialog.component.ts:91,94</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:170,171</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:171,172</note>
         <note category="description">Button that saves changes to the status</note>
       </notes>
       <segment state="translated">
@@ -25341,6 +25294,16 @@
         <target>Terminer le sprint</target>
       </segment>
     </unit>
+    <unit id="7638327707799228635">
+      <notes>
+        <note category="location">src/app/features/queries/queries.routes.ts:27</note>
+        <note category="description">Breadcrumb for the page that edits a saved query</note>
+      </notes>
+      <segment state="translated">
+        <source>Edit Query</source>
+        <target>Modifier la requête</target>
+      </segment>
+    </unit>
     <unit id="7639811500826292651">
       <notes>
         <note category="location">src/app/features/pages/components/page-editor.component.ts:275,279</note>
@@ -25482,7 +25445,7 @@
     </unit>
     <unit id="7419704019640008953">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:145,150</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:136,141</note>
         <note category="description">Button that copies a link to share the open page</note>
       </notes>
       <segment state="translated">
@@ -25584,7 +25547,8 @@
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:457</note>
         <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:66,69</note>
-        <note category="location">src/app/features/settings/settings.routes.ts:116</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:142</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:143</note>
         <note category="description">Column heading for what an export contains</note>
       </notes>
       <segment>
@@ -25722,22 +25686,12 @@
     <unit id="4475093671158329161">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:227</note>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:94,98</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:95,99</note>
         <note category="description">Label on the control that pins a task</note>
       </notes>
       <segment state="translated">
         <source>Pin</source>
         <target>Épingler</target>
-      </segment>
-    </unit>
-    <unit id="3410379442094172650">
-      <notes>
-        <note category="location">src/app/features/sprints/sprints.routes.ts:30</note>
-        <note category="description">Link back to the sprint list from a single sprint</note>
-      </notes>
-      <segment state="translated">
-        <source>Back to Sprints</source>
-        <target>Retour aux sprints</target>
       </segment>
     </unit>
     <unit id="3410846701889928256">
@@ -25793,6 +25747,7 @@
     <unit id="5194912054053114732">
       <notes>
         <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:101</note>
+        <note category="location">src/app/features/sprints/sprints.routes.ts:22</note>
         <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:46,48</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:190</note>
         <note category="description">Heading above the backlog tasks leaving a sprint</note>
@@ -26044,7 +25999,7 @@
     </unit>
     <unit id="1152778269115350205">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:214</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:217</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:279</note>
         <note category="description">Title of the confirmation dialog for deleting a sprint</note>
       </notes>
@@ -26189,7 +26144,7 @@
     </unit>
     <unit id="5416102266216743499">
       <notes>
-        <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:33,35</note>
+        <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:34,36</note>
         <note category="description">Accessible label while a project loads</note>
       </notes>
       <segment state="translated">
@@ -26263,7 +26218,7 @@
     </unit>
     <unit id="5742073709766577678">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:272,274</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:273,275</note>
         <note category="description">Stat label for how many times a rule has run</note>
       </notes>
       <segment state="initial">
@@ -26367,7 +26322,7 @@
     </unit>
     <unit id="2637409888010075708">
       <notes>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:458</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:461</note>
         <note category="description">Title of the confirmation dialog for deleting a status</note>
       </notes>
       <segment state="translated">
@@ -26634,16 +26589,6 @@
         <target>Archiver ses propres pages</target>
       </segment>
     </unit>
-    <unit id="90761460509166634">
-      <notes>
-        <note category="location">src/app/features/users/users.routes.ts:20</note>
-        <note category="description">Link back to the member list from a single member</note>
-      </notes>
-      <segment state="translated">
-        <source>Back to Users</source>
-        <target>Retour aux utilisateurs</target>
-      </segment>
-    </unit>
     <unit id="1940273102394006005">
       <notes>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:114,117</note>
@@ -26665,7 +26610,7 @@
     </unit>
     <unit id="8839963009744223515">
       <notes>
-        <note category="location">src/app/features/users/views/user-detail-view/user-detail-view.component.ts:30,31</note>
+        <note category="location">src/app/features/users/views/user-detail-view/user-detail-view.component.ts:31,32</note>
         <note category="description">Shown when a member fails to load</note>
       </notes>
       <segment state="translated">
@@ -26675,7 +26620,7 @@
     </unit>
     <unit id="8327886049061327137">
       <notes>
-        <note category="location">src/app/features/users/views/user-detail-view/user-detail-view.component.ts:32,35</note>
+        <note category="location">src/app/features/users/views/user-detail-view/user-detail-view.component.ts:33,36</note>
         <note category="description">Explains why a member may fail to load</note>
       </notes>
       <segment state="translated">
@@ -26805,7 +26750,7 @@
     </unit>
     <unit id="3339303141258670173">
       <notes>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:98,101</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:99,102</note>
         <note category="description">Description of the tag edit form</note>
       </notes>
       <segment state="translated">
@@ -26898,7 +26843,7 @@
     </unit>
     <unit id="8431630160711052087">
       <notes>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:117,119</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:118,120</note>
         <note category="description">Description of the status edit form</note>
       </notes>
       <segment state="translated">
@@ -27220,8 +27165,8 @@
     </unit>
     <unit id="628468315033128728">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:487</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:459</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:490</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:462</note>
         <note category="description">Asks the user to confirm deleting a relation type. NAME is the relation type name</note>
       </notes>
       <segment state="translated">
@@ -27627,7 +27572,7 @@
     </unit>
     <unit id="5797079666713956753">
       <notes>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:90,92</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:91,93</note>
         <note category="description">Button that removes a query from the sidebar</note>
       </notes>
       <segment state="translated">
@@ -27789,16 +27734,6 @@
         <target>Ouvrir le menu de <ph id="0" equiv="USER_NAME" disp="name"/></target>
       </segment>
     </unit>
-    <unit id="4034907872117288202">
-      <notes>
-        <note category="location">src/app/features/settings/settings.routes.ts:94</note>
-        <note category="description">Link back to the relation type list from a single relation type</note>
-      </notes>
-      <segment state="translated">
-        <source>Back to Relations</source>
-        <target>Retour aux relations</target>
-      </segment>
-    </unit>
     <unit id="4036781966313831213">
       <notes>
         <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:251</note>
@@ -27821,7 +27756,7 @@
     </unit>
     <unit id="2607180894778686427">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:281,283</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:282,284</note>
         <note category="description">Stat label for the share of runs that succeeded</note>
       </notes>
       <segment state="initial">
@@ -27943,7 +27878,7 @@
     <unit id="6663783128602596673">
       <notes>
         <note category="location">src/app/features/auth/components/register/register.component.ts:62,67</note>
-        <note category="location">src/app/shell/shell-navbar.component.ts:70,77</note>
+        <note category="location">src/app/shell/shell-navbar.component.ts:75,82</note>
         <note category="description">Link from the registration form back to the login form</note>
       </notes>
       <segment state="translated">
@@ -28005,11 +27940,13 @@
     </unit>
     <unit id="6439365426343089851">
       <notes>
+        <note category="location">src/app/features/settings/settings.routes.ts:21</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:57</note>
         <note category="location">src/app/features/settings/views/personal-general-settings-view/personal-general-settings-view.component.ts:32,35</note>
         <note category="location">src/app/features/settings/views/workspace-general-settings-view/workspace-general-settings-view.component.ts:21,24</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:334</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:412</note>
-        <note category="description">Page title for general personal settings</note>
+        <note category="description">Breadcrumb for general personal settings</note>
       </notes>
       <segment state="translated">
         <source>General</source>
@@ -28019,6 +27956,7 @@
     <unit id="5168008278809915722">
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:80,82</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:83</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:66,67</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:88</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:350</note>
@@ -28042,8 +27980,9 @@
     </unit>
     <unit id="788903633413068121">
       <notes>
+        <note category="location">src/app/features/settings/settings.routes.ts:124</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:366</note>
-        <note category="description">Sidebar link to workspace service account settings</note>
+        <note category="description">Breadcrumb for workspace service account settings</note>
       </notes>
       <segment state="translated">
         <source>Service Accounts</source>
@@ -28132,7 +28071,7 @@
     </unit>
     <unit id="4191696363237060749">
       <notes>
-        <note category="location">src/app/core/services/navigation.service.ts:72</note>
+        <note category="location">src/app/core/services/navigation.service.ts:68</note>
         <note category="description">Browser tab title. WORKSPACE is the name of the open workspace, PAGE is the name of the current page</note>
       </notes>
       <segment state="translated">
@@ -28162,7 +28101,7 @@
     </unit>
     <unit id="3407056172872902855">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:125,127</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:126,128</note>
         <note category="description">Button that resumes a paused automation</note>
       </notes>
       <segment state="initial">
@@ -28371,6 +28310,16 @@
       <segment state="initial">
         <source>Notify me about <ph id="0" equiv="NAME" disp="name"/></source>
         <target>Me notifier à propos de <ph id="0" equiv="NAME" disp="name"/></target>
+      </segment>
+    </unit>
+    <unit id="7915786442718084882">
+      <notes>
+        <note category="location">src/app/features/queries/queries.routes.ts:19</note>
+        <note category="description">Breadcrumb for the page that builds a new query</note>
+      </notes>
+      <segment state="translated">
+        <source>New Query</source>
+        <target>Nouvelle requête</target>
       </segment>
     </unit>
     <unit id="7923105806433235005">
@@ -28647,7 +28596,7 @@
     </unit>
     <unit id="9042260521669277115">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:122,124</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:123,125</note>
         <note category="description">Button that pauses an automation</note>
       </notes>
       <segment state="initial">
@@ -28834,7 +28783,7 @@
     </unit>
     <unit id="2652512399456369728">
       <notes>
-        <note category="location">src/app/shell/shell-navbar.component.ts:42,45</note>
+        <note category="location">src/app/shell/shell-navbar.component.ts:43,46</note>
         <note category="description">Accessible label for the button that opens the sidebar on small screens</note>
       </notes>
       <segment state="translated">

@@ -56,6 +56,7 @@ import {
   AutomationRunSummary,
 } from '../../models/automation.models';
 import { AutomationsService } from '../../services/automations.service';
+import { injectBreadcrumbs } from '@core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-automation-detail-view',
@@ -377,6 +378,11 @@ export class AutomationDetailViewComponent {
   });
 
   constructor() {
+    injectBreadcrumbs(
+      () => this.rule()?.name,
+      () => this.loading()
+    );
+
     this.load();
   }
 

@@ -16,7 +16,7 @@ export const routes: Routes = [
     canActivate: [queriesReadGuard, queriesWriteGuard],
     loadComponent: () => import('./views/query-form-view/query-form-view.component').then((m) => m.QueryFormViewComponent),
     data: {
-      back: $localize`:Link back to the query list from a single query:Back to Queries`,
+      breadcrumb: $localize`:Breadcrumb for the page that builds a new query:New Query`,
     },
   },
   {
@@ -24,15 +24,12 @@ export const routes: Routes = [
     canActivate: [queriesReadGuard, queriesWriteGuard],
     loadComponent: () => import('./views/query-form-view/query-form-view.component').then((m) => m.QueryFormViewComponent),
     data: {
-      back: $localize`:Link back to the query list from a single query:Back to Queries`,
+      breadcrumb: $localize`:Breadcrumb for the page that edits a saved query:Edit Query`,
     },
   },
   {
     path: ':slug',
     canActivate: [queriesReadGuard],
     loadComponent: () => import('./views/query-detail-view/query-detail-view.component').then((m) => m.QueryDetailViewComponent),
-    data: {
-      back: $localize`:Link back to the query list from a single query:Back to Queries`,
-    },
   },
 ];

@@ -78,6 +78,7 @@ import { SkeletonBoardComponent } from '@static/components/skeleton/skeleton-boa
 import { SkeletonComponent } from '@static/components/skeleton/skeleton.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directive';
+import { injectBreadcrumbs } from '@core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-board-groups-view',
@@ -404,6 +405,11 @@ export class BoardGroupsViewComponent implements OnDestroy {
   });
 
   constructor() {
+    injectBreadcrumbs(
+      () => this.board()?.name,
+      () => this.loading()
+    );
+
     // Navigating between boards reuses this component, so the open board has to
     // follow the input rather than be claimed once on the way in.
     effect(() => {

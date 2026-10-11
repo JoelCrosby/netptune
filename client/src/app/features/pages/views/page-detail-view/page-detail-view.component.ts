@@ -24,6 +24,7 @@ import { CurrentPageService } from '@core/services/current-page.service';
 import { DialogService } from '@core/services/dialog.service';
 import { PageCommandsService } from '@core/services/page-commands.service';
 import { BreadcrumbItem } from '@static/components/breadcrumb/breadcrumb.component';
+import { injectBreadcrumbs } from '@core/services/breadcrumb.service';
 import { EditorMode } from '@static/components/editor/editor.component';
 import { SidePanelComponent } from '@static/components/side-panel/side-panel.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
@@ -70,7 +71,6 @@ import { PageTreeStore } from '../../services/page-tree.store';
           <div class="flex min-w-0 flex-1 flex-col">
             <app-page-toolbar
               [page]="page"
-              [breadcrumbs]="breadcrumbs()"
               [saveState]="draft.state()"
               [canCreate]="canCreate()"
               [canArchive]="canArchive()"
@@ -219,7 +219,7 @@ export class PageDetailViewComponent {
 
   protected readonly links = pageLinksResource(this.linksKey);
 
-  protected readonly breadcrumbs = computed<BreadcrumbItem[]>(() => {
+  private readonly breadcrumbs = computed<BreadcrumbItem[]>(() => {
     const draft = this.draft();
 
     if (!draft) return [];
@@ -230,16 +230,15 @@ export class PageDetailViewComponent {
       link: this.store.link(ancestor.slug),
     }));
 
-    const root: BreadcrumbItem = {
-      id: 'pages',
-      label: pagesRootLabel,
-      link: this.store.homeLink(),
-    };
-
-    return [root, ...ancestors, { id: draft.id, label: titleOf(draft) }];
+    return [...ancestors, { id: draft.id, label: titleOf(draft) }];
   });
 
   constructor() {
+    injectBreadcrumbs(
+      () => this.breadcrumbs(),
+      () => this.detail.isLoading()
+    );
+
     effect(() => {
       const id = this.draft()?.id;
 
@@ -378,7 +377,6 @@ function versionHeading(version: PageVersionSummary): string {
   return `${label} · ${when}`;
 }
 
-const pagesRootLabel = $localize`:First crumb in a page's location, linking to the pages home:Pages`;
 const untitled = $localize`:Name shown for a page without a title:Untitled`;
 const linkCopied = $localize`:Confirmation that a page link was copied:Link copied`;
 const linkNotCopied = $localize`:Shown when a page link could not be copied:Link could not be copied`;

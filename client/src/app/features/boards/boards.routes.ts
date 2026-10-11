@@ -16,9 +16,6 @@ export const routes: Routes = [
         (m) => m.BoardGroupsViewComponent
       ),
     runGuardsAndResolvers: 'always',
-    data: {
-      back: $localize`:Link back to the board list from a single board:Back to Boards`,
-    },
   },
   {
     path: '**',

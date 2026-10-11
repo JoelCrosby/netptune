@@ -31,6 +31,7 @@ import { EditSprintDialogComponent } from '../../dialogs/edit-sprint-dialog.comp
 import { SprintAddTaskDialogComponent } from '../../dialogs/sprint-add-task-dialog.component';
 import { SprintCompletionDialogComponent } from '../../dialogs/sprint-completion-dialog.component';
 import { PanelComponent } from '@static/components/panel.component';
+import { injectBreadcrumbs } from '@core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-sprint-detail-view',
@@ -130,6 +131,11 @@ export class SprintDetailViewComponent {
   readonly canManageTasks = hasPermission(PERMISSIONS.sprints.manageTasks);
 
   constructor() {
+    injectBreadcrumbs(
+      () => this.sprint()?.name,
+      () => this.loading()
+    );
+
     this.route.paramMap
       .pipe(
         map((params) => params.get('identifier')),

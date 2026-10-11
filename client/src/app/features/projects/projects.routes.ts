@@ -16,8 +16,5 @@ export const routes: Routes = [
         (m) => m.ProjectDetailViewComponent
       ),
     canActivate: [projectDetailGuard],
-    data: {
-      back: $localize`:Link back to the project list from a single project:Back to Projects`,
-    },
   },
 ];

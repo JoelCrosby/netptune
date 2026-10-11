@@ -7,6 +7,7 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
 import { SkeletonComponent } from '@static/components/skeleton/skeleton.component';
 import { PanelComponent } from '@static/components/panel.component';
 import { PanelBodyComponent } from '@static/components/panel-body.component';
+import { injectBreadcrumbs } from '@core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-project-detail-view',
@@ -73,4 +74,11 @@ export class ProjectDetailViewComponent {
   project = projectDetailResource(this.id);
 
   protected readonly skeletonRows = Array.from({ length: 4 });
+
+  constructor() {
+    injectBreadcrumbs(
+      () => this.project.value()?.name,
+      () => this.project.isLoading()
+    );
+  }
 }

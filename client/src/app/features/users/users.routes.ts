@@ -16,8 +16,5 @@ export const routes: Routes = [
         (m) => m.UserDetailViewComponent
       ),
     canActivate: [userDetailGuard],
-    data: {
-      back: $localize`:Link back to the member list from a single member:Back to Users`,
-    },
   },
 ];

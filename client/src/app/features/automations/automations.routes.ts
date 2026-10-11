@@ -20,7 +20,7 @@ export const routes: Routes = [
         (m) => m.AutomationFormViewComponent
       ),
     data: {
-      back: $localize`:Link back to the automation list from a single automation:Back to Automations`,
+      breadcrumb: $localize`:Breadcrumb for the page that builds a new automation:New Automation`,
     },
   },
   {
@@ -31,7 +31,7 @@ export const routes: Routes = [
         (m) => m.AutomationFormViewComponent
       ),
     data: {
-      back: $localize`:Link back to the automation list from a single automation:Back to Automations`,
+      breadcrumb: $localize`:Breadcrumb for the page that edits an automation:Edit Automation`,
     },
   },
   {
@@ -41,8 +41,5 @@ export const routes: Routes = [
       import('./views/automation-detail-view/automation-detail-view.component').then(
         (m) => m.AutomationDetailViewComponent
       ),
-    data: {
-      back: $localize`:Link back to the automation list from a single automation:Back to Automations`,
-    },
   },
 ];

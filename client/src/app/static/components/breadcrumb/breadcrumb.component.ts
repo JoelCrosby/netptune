@@ -1,30 +1,36 @@
 import { computed, Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { LucideIconInput } from '@lucide/angular';
+import { IconTileComponent } from '../icon-tile.component';
 import { cn } from '../button/button.variants';
 
 export interface BreadcrumbItem {
   id: string | number;
   label: string;
   link?: string[] | null;
+  icon?: LucideIconInput | null;
 }
 
 @Component({
   selector: 'app-breadcrumb',
-  imports: [RouterLink],
+  imports: [RouterLink, IconTileComponent],
   host: { '[class]': 'hostClass()' },
   template: `
     <nav class="min-w-0" [attr.aria-label]="ariaLabel()">
       <ol
-        class="text-foreground/50 flex min-w-0 items-center gap-1.5 overflow-hidden px-0.5 py-0.5 text-[13px] whitespace-nowrap">
+        class="text-foreground/50 flex min-w-0 items-center gap-2 overflow-hidden px-0.5 py-0.5 text-sm whitespace-nowrap">
         @for (
           item of items();
           track item.id;
           let first = $first, last = $last
         ) {
           <li
-            class="flex min-w-0 items-center gap-1.5"
+            class="flex min-w-0 items-center gap-2"
             [class.shrink-0]="first && !last"
-            [class.max-w-40]="!last">
+            [class.max-w-48]="!last">
+            @if (item.icon) {
+              <app-icon-tile class="mr-0.5" [icon]="item.icon" />
+            }
             @if (last) {
               <span
                 class="text-foreground truncate font-medium"

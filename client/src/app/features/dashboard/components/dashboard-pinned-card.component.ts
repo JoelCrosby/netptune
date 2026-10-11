@@ -19,6 +19,7 @@ import { TabGroupComponent } from '@static/components/tab-group/tab-group.compon
     PinnedTaskRowComponent,
     TabGroupComponent,
   ],
+  host: { '[class.hidden]': '!pinnedTasks().length' },
   template: `
     @if (pinnedTasks().length) {
       <app-panel surface="card">

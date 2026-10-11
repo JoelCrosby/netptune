@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { ActivatedRoute, Routes } from '@angular/router';
 import { tasksRestoreGuard } from './guards/tasks-restore.guard';
 
 export const routes: Routes = [
@@ -21,7 +21,7 @@ export const routes: Routes = [
       ),
     data: {
       title: $localize`:Page title for a single task detail view:Task Detail`,
-      back: $localize`:Link back to the task list from a single task:Back to Tasks`,
+      breadcrumb: (route: ActivatedRoute) => route.snapshot.params['systemId'],
     },
   },
   {

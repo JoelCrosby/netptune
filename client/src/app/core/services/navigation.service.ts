@@ -27,8 +27,6 @@ export class NavigationService {
   private readonly currentWorkspace = inject(CurrentWorkspaceService);
   private readonly pageTitle = signal<string | null>(null);
 
-  back = signal<string | null>(null);
-
   constructor() {
     effect(() => this.applyTitle());
   }
@@ -48,8 +46,6 @@ export class NavigationService {
           if (route.snapshot.data['title']) {
             routeTitle = route.snapshot.data['title'];
           }
-
-          this.back.set(route?.snapshot.data['back'] ?? null);
 
           return routeTitle;
         })

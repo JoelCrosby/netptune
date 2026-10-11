@@ -57,6 +57,7 @@ import { PageContainerComponent } from '@static/components/page-container/page-c
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { EntityUsagePanelComponent } from '../../components/entity-usage-panel.component';
 import { entityDelete, entitySave } from '../../shared/entity-detail';
+import { injectBreadcrumbs } from '@core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-relation-type-detail-view',
@@ -426,6 +427,11 @@ export class RelationTypeDetailViewComponent {
   );
 
   constructor() {
+    injectBreadcrumbs(
+      () => this.name(),
+      () => this.usage.isLoading()
+    );
+
     effect(() => {
       const current = this.relationType();
 

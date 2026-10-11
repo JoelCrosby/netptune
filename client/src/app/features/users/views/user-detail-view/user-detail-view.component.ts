@@ -8,6 +8,7 @@ import { PageContainerComponent } from '@static/components/page-container/page-c
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 import { UserDetailComponent } from '../../components/user-detail/user-detail.component';
+import { injectBreadcrumbs } from '@core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-user-detail-view',
@@ -49,6 +50,13 @@ export class UserDetailViewComponent {
   readonly user = this.userResource.value;
   readonly loading = this.userResource.isLoading;
   readonly loadError = this.userResource.error;
+
+  constructor() {
+    injectBreadcrumbs(
+      () => this.user()?.displayName,
+      () => this.loading()
+    );
+  }
 
   reload() {
     this.userResource.reload();

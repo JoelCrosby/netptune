@@ -22,10 +22,6 @@ import {
   LucideUnfoldHorizontal,
 } from '@lucide/angular';
 import {
-  BreadcrumbComponent,
-  BreadcrumbItem,
-} from '@static/components/breadcrumb/breadcrumb.component';
-import {
   AvatarStackComponent,
   AvatarStackItem,
 } from '@static/components/avatar-stack/avatar-stack.component';
@@ -50,7 +46,6 @@ import {
   selector: 'app-page-toolbar',
   imports: [
     PanelBodyComponent,
-    BreadcrumbComponent,
     AvatarStackComponent,
     SaveStatusComponent,
     SegmentedControlComponent,
@@ -78,11 +73,7 @@ import {
       padding="none"
       divider="bottom"
       class="flex h-12 items-center gap-2.5 pr-3 pl-5">
-      <app-breadcrumb
-        class="min-w-0 flex-1"
-        i18n-ariaLabel="Accessible label for the trail of folders above a page"
-        ariaLabel="Page location"
-        [items]="breadcrumbs()" />
+      <div class="flex-1"></div>
 
       @if (people().length) {
         <app-avatar-stack
@@ -245,7 +236,6 @@ import {
 })
 export class PageToolbarComponent {
   readonly page = input.required<PageDetail>();
-  readonly breadcrumbs = input.required<readonly BreadcrumbItem[]>();
   readonly saveState = input.required<SaveState>();
   readonly canCreate = input(false);
   readonly canArchive = input(false);

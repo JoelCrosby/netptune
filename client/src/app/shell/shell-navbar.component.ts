@@ -1,7 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { SessionService } from '@core/services/session.service';
 import { RouterLink } from '@angular/router';
-import { PageHeaderBackLinkComponent } from '@app/static/components/page-header/page-header-back-link.component';
+import { BreadcrumbService } from '@core/services/breadcrumb.service';
+import { BreadcrumbComponent } from '@static/components/breadcrumb/breadcrumb.component';
 import { ButtonLinkComponent } from '@static/components/button/button-link.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { LayoutService } from '@core/services/layout.service';
@@ -16,7 +17,7 @@ import { AiAssistantButtonComponent } from './ai-assistant/ai-assistant-button.c
 @Component({
   selector: 'app-shell-navbar',
   imports: [
-    PageHeaderBackLinkComponent,
+    BreadcrumbComponent,
     NotificationBellComponent,
     CurrentSprintDropdownComponent,
     ProfileMenuComponent,
@@ -47,9 +48,13 @@ import { AiAssistantButtonComponent } from './ai-assistant/ai-assistant-button.c
         </button>
       }
 
-      <div class="h-6 min-w-0">
-        <app-page-header-back-link />
-      </div>
+      <app-breadcrumb
+        class="min-w-0 flex-1"
+        i18n-ariaLabel="
+          Accessible label for the trail of links to the current page
+        "
+        ariaLabel="Breadcrumb"
+        [items]="breadcrumbs()" />
 
       <div class="ml-auto flex items-center justify-end gap-2 py-2 md:gap-3">
         <app-current-sprint-dropdown class="hidden md:block" />
@@ -77,6 +82,14 @@ import { AiAssistantButtonComponent } from './ai-assistant/ai-assistant-button.c
 export class ShellNavbarComponent {
   shell = inject(ShellService);
   layout = inject(LayoutService);
+
+  private readonly breadcrumb = inject(BreadcrumbService);
+
+  protected readonly breadcrumbs = computed(() => {
+    const items = this.breadcrumb.items();
+
+    return this.shell.isDrawer() ? items.slice(-2) : items;
+  });
 
   readonly authenticated = inject(SessionService).isAuthenticated;
 }
