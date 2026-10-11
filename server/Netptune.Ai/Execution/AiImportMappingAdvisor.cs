@@ -74,6 +74,7 @@ public sealed class AiImportMappingAdvisor : IAiImportMappingAdvisor
             DiscardedBindings = validated.DiscardedBindings,
             DiscardReasons = validated.DiscardReasons,
             Notes = validated.Notes,
+            Model = chatRequest.Model,
             Usage = usage,
         };
     }

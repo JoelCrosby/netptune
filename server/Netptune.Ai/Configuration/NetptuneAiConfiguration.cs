@@ -45,10 +45,13 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiTool, AddTaskCommentTool>();
         services.AddScoped<IAiTool, CreateProjectTool>();
         services.AddScoped<IAiTool, BoardChangeTool>();
+        services.AddScoped<IAiTool, PageChangeTool>();
         services.AddScoped<IAiTool, CreateStatusTool>();
         services.AddScoped<IAiTool, UpdateStatusTool>();
         services.AddScoped<IAiTool, LinkTasksTool>();
         services.AddScoped<IAiTool, GetTaskTool>();
+        services.AddScoped<IAiTool, SearchPagesTool>();
+        services.AddScoped<IAiTool, GetPageTool>();
         services.AddScoped<IAiTool, ListRelationsTool>();
         services.AddScoped<IAiTool, GetCurrentSprintTool>();
         services.AddScoped<IAiTool, CreateSprintTool>();
@@ -94,6 +97,9 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiChangeHandler, DeleteTaskChangeHandler>();
         services.AddScoped<IAiChangeHandler, CreateBoardGroupChangeHandler>();
         services.AddScoped<IAiChangeHandler, UpdateBoardChangeHandler>();
+        services.AddScoped<IAiChangeHandler, CreatePageChangeHandler>();
+        services.AddScoped<IAiChangeHandler, UpdatePageBodyChangeHandler>();
+        services.AddScoped<IAiChangeHandler, MovePageChangeHandler>();
         services.AddScoped<IAiChangeHandler, DeleteBoardChangeHandler>();
         services.AddScoped<IAiChangeHandler, UpdateBoardGroupChangeHandler>();
         services.AddScoped<IAiChangeHandler, DeleteBoardGroupChangeHandler>();
@@ -108,6 +114,7 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiSystemPromptBuilder, AiSystemPromptBuilder>();
         services.AddScoped<IAiTitleGenerator, AiTitleGenerator>();
         services.AddScoped<IAiImportMappingAdvisor, AiImportMappingAdvisor>();
+        services.AddScoped<IAiPageTransformer, AiPageTransformer>();
         services.AddScoped<IAiSpendService, AiSpendService>();
         services.AddScoped<IAiConversationService, AiConversationService>();
         services.AddScoped<IAiChangeSetApplier, AiChangeSetApplier>();

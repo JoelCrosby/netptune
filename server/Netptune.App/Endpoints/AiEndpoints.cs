@@ -12,9 +12,11 @@ using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Requests.Ai;
+using Netptune.Core.Requests.Pages;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Ai.Commands;
 using Netptune.Handlers.Ai.Queries;
+using Netptune.Handlers.Pages.Commands;
 
 namespace Netptune.App.Endpoints;
 
@@ -130,7 +132,22 @@ public static class AiEndpoints
             .RequireAuthorization(NetptunePermissions.Assistant.Use)
             .RequireRateLimiting(RateLimiterConfiguration.AiPolicyName);
 
+        group
+            .MapPost("/pages/transform", HandleTransformPageText)
+            .RequireAuthorization(NetptunePermissions.Pages.Read, NetptunePermissions.Assistant.Use)
+            .RequireRateLimiting(RateLimiterConfiguration.AiPolicyName);
+
         return group;
+    }
+
+    private static async Task<IResult> HandleTransformPageText(
+        TransformPageTextRequest request,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new TransformPageTextCommand(request), cancellationToken);
+
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleGetCredentials(IMediator mediator, CancellationToken cancellationToken)

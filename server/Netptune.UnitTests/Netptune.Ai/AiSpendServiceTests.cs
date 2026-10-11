@@ -19,10 +19,30 @@ public class AiSpendServiceTests
 
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IAiConversationRepository Conversations = Substitute.For<IAiConversationRepository>();
+    private readonly IAiUsageRecordRepository UsageRecords = Substitute.For<IAiUsageRecordRepository>();
 
     public AiSpendServiceTests()
     {
         UnitOfWork.AiConversations.Returns(Conversations);
+        UnitOfWork.AiUsageRecords.Returns(UsageRecords);
+
+        UsageRecords.GetModelTokens(Arg.Any<int>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns([]);
+        UsageRecords.GetSpendSlices(Arg.Any<int>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns([]);
+    }
+
+    [Fact]
+    public async Task GetStatus_ShouldCountUsageFromOutsideConversations_TowardTheCap()
+    {
+        GivenModelTokens(inputTokens: 500_000);
+        UsageRecords
+            .GetModelTokens(WorkspaceId, Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+            .Returns([new AiModelTokens { Model = Model, InputTokens = 500_000 }]);
+
+        var service = new AiSpendService(UnitOfWork);
+        var status = await service.GetStatus(CreateWorkspace(3m), TestContext.Current.CancellationToken);
+
+        status.MonthToDate.Should().Be(3m);
+        status.IsOverCap.Should().BeTrue();
     }
 
     [Fact]

@@ -56,6 +56,7 @@ public static class TransferRedaction
         Redacted<WorkspaceAiCredential>(TransferRedactionKeys.AiCredentials),
         Redacted<AiConversation>(TransferRedactionKeys.AiConversations),
         Redacted<AiMessage>(TransferRedactionKeys.AiConversations),
+        Redacted<AiUsageRecord>(TransferRedactionKeys.AiConversations),
         Redacted<AiToolInvocation>(TransferRedactionKeys.AiConversations),
         Redacted<AiChangeSet>(TransferRedactionKeys.AiConversations),
         Redacted<AiProposedChange>(TransferRedactionKeys.AiConversations),

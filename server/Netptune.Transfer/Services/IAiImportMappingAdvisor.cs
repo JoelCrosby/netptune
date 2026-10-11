@@ -33,6 +33,8 @@ public sealed record AiImportMappingResult
 
     public string? Notes { get; init; }
 
+    public string Model { get; init; } = string.Empty;
+
     public AiUsage Usage { get; init; } = new();
 }
 

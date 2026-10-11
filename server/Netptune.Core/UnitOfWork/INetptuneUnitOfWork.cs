@@ -75,6 +75,8 @@ public interface INetptuneUnitOfWork : IUnitOfWork
 
     IAiConversationRepository AiConversations { get; }
 
+    IAiUsageRecordRepository AiUsageRecords { get; }
+
     IAiWebDocumentRepository AiWebDocuments { get; }
 
     IWorkspaceSearchCredentialRepository WorkspaceSearchCredentials { get; }

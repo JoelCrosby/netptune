@@ -3,12 +3,14 @@ using System.Text.Json;
 using Mediator;
 
 using Netptune.Core.Encoding;
+using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.UnitOfWork;
+using Netptune.Handlers.Ai;
 using Netptune.Transfer.Mapping;
 using Netptune.Transfer.Repositories;
 using Netptune.Transfer.Services;
@@ -93,7 +95,8 @@ public sealed class ImproveImportMappingCommandHandler
             return ClientResponse<ImproveImportMappingResult>.Failed("Inspect the file before asking the assistant.");
         }
 
-        var credential = await ResolveCredential(workspaceId, cancellationToken);
+        var userId = Identity.GetCurrentUserId();
+        var credential = await AiHandlerCredentials.Resolve(UnitOfWork, userId, workspaceId, cancellationToken);
 
         if (credential is null)
         {
@@ -113,15 +116,18 @@ public sealed class ImproveImportMappingCommandHandler
             AllowDataSampling = workspace.AllowAssistantDataSampling,
         };
         var suggestion = await Assistant.Suggest(advisorRequest, cancellationToken);
+        var origin = new AiUsageOrigin(workspaceId, userId, AiUsagePurposes.ImportMapping);
+
+        // Booked whatever came back: the tokens were spent either way.
+        await AiUsageRecorder.Record(UnitOfWork, origin, credential, suggestion.Model, suggestion.Usage, cancellationToken);
+        await AiHandlerCredentials.MarkUsed(UnitOfWork, credential, cancellationToken);
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
         if (suggestion.Mapping.Bindings.Count == 0)
         {
             return ClientResponse<ImproveImportMappingResult>.Failed(
                 "The assistant did not propose a usable mapping. The suggested mapping is unchanged.");
         }
-
-        await MarkCredentialUsed(credential, cancellationToken);
-        await UnitOfWork.CompleteAsync(cancellationToken);
 
         return ClientResponse<ImproveImportMappingResult>.Success(new ImproveImportMappingResult
         {
@@ -131,36 +137,5 @@ public sealed class ImproveImportMappingCommandHandler
             Notes = suggestion.Notes,
             UsedDataSampling = workspace.AllowAssistantDataSampling,
         });
-    }
-
-    private async Task<AiResolvedCredential?> ResolveCredential(int workspaceId, CancellationToken cancellationToken)
-    {
-        var userId = Identity.GetCurrentUserId();
-        var userCredentials = await UnitOfWork.AiCredentials.GetForUser(userId, cancellationToken);
-        var workspaceCredentials = await UnitOfWork.WorkspaceAiCredentials.GetForWorkspace(workspaceId, cancellationToken);
-
-        return AiCredentialResolution.Resolve(userCredentials, workspaceCredentials).FirstOrDefault();
-    }
-
-    private async Task MarkCredentialUsed(AiResolvedCredential credential, CancellationToken cancellationToken)
-    {
-        if (credential.Source == AiCredentialSource.Workspace)
-        {
-            var workspaceCredential = await UnitOfWork.WorkspaceAiCredentials.GetAsync(credential.Id, cancellationToken: cancellationToken);
-
-            if (workspaceCredential is not null)
-            {
-                workspaceCredential.LastUsedAt = DateTime.UtcNow;
-            }
-
-            return;
-        }
-
-        var userCredential = await UnitOfWork.AiCredentials.GetAsync(credential.Id, cancellationToken: cancellationToken);
-
-        if (userCredential is not null)
-        {
-            userCredential.LastUsedAt = DateTime.UtcNow;
-        }
     }
 }

@@ -43,6 +43,8 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
     public IAiCredentialRepository AiCredentials { get; }
     public IWorkspaceAiCredentialRepository WorkspaceAiCredentials { get; }
     public IAiConversationRepository AiConversations { get; }
+
+    public IAiUsageRecordRepository AiUsageRecords { get; }
     public IAiWebDocumentRepository AiWebDocuments { get; }
     public IWorkspaceSearchCredentialRepository WorkspaceSearchCredentials { get; }
     public IAiChangeSetRepository AiChangeSets { get; }
@@ -91,6 +93,7 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
         AiCredentials = new AiCredentialRepository(context, connectionFactory);
         WorkspaceAiCredentials = new WorkspaceAiCredentialRepository(context, connectionFactory);
         AiConversations = new AiConversationRepository(context, connectionFactory);
+        AiUsageRecords = new AiUsageRecordRepository(context, connectionFactory);
         AiWebDocuments = new AiWebDocumentRepository(context, connectionFactory);
         WorkspaceSearchCredentials = new WorkspaceSearchCredentialRepository(context, connectionFactory);
         AiChangeSets = new AiChangeSetRepository(context, connectionFactory);

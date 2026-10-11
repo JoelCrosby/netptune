@@ -25,8 +25,9 @@ public sealed class AiSpendService : IAiSpendService
         }
 
         var periodStart = CurrentPeriodStart();
-        var tokens = await UnitOfWork.AiConversations.GetModelTokens(workspace.Id, periodStart, cancellationToken);
-        var monthToDate = tokens.Sum(CostOf);
+        var conversationTokens = await UnitOfWork.AiConversations.GetModelTokens(workspace.Id, periodStart, cancellationToken);
+        var otherTokens = await UnitOfWork.AiUsageRecords.GetModelTokens(workspace.Id, periodStart, cancellationToken);
+        var monthToDate = conversationTokens.Concat(otherTokens).Sum(CostOf);
 
         return new AiSpendStatus
         {
@@ -38,7 +39,9 @@ public sealed class AiSpendService : IAiSpendService
     public async Task<AiSpendViewModel> GetSummary(Workspace workspace, CancellationToken cancellationToken = default)
     {
         var periodStart = CurrentPeriodStart();
-        var slices = await UnitOfWork.AiConversations.GetSpendSlices(workspace.Id, periodStart, cancellationToken);
+        var conversationSlices = await UnitOfWork.AiConversations.GetSpendSlices(workspace.Id, periodStart, cancellationToken);
+        var otherSlices = await UnitOfWork.AiUsageRecords.GetSpendSlices(workspace.Id, periodStart, cancellationToken);
+        var slices = conversationSlices.Concat(otherSlices).ToList();
         var counts = await UnitOfWork.AiConversations.GetConversationCounts(workspace.Id, periodStart, cancellationToken);
         var usage = TotalUsage(slices);
         var daily = DailySeries(slices, periodStart);

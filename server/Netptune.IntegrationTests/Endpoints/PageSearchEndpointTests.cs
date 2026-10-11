@@ -5,13 +5,13 @@ using FluentAssertions;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
-using Netptune.Core.Requests;
 using Netptune.Core.Requests.Pages;
 using Netptune.Core.Requests.ServiceAccounts;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Pages;
 using Netptune.Core.ViewModels.Search;
 using Netptune.Core.ViewModels.ServiceAccounts;
+using Netptune.IntegrationTests.TestServices;
 using Netptune.TestData;
 
 using Xunit;
@@ -20,7 +20,8 @@ namespace Netptune.IntegrationTests.Endpoints;
 
 public sealed class PageSearchEndpointTests
 {
-    private static readonly TimeSpan IndexTimeout = TimeSpan.FromSeconds(30);
+    // Each test reindexes the whole workspace, and they run alongside each other on a cold container.
+    private static readonly TimeSpan IndexTimeout = TimeSpan.FromSeconds(60);
     private static readonly TimeSpan PollInterval = TimeSpan.FromMilliseconds(250);
 
     private readonly NetptuneFixture Fixture;
@@ -47,6 +48,7 @@ public sealed class PageSearchEndpointTests
         hit.Title.Should().Be("Runbook");
         hit.Url.Should().Be($"/netptune/pages/{page.Slug}");
         hit.Subtitle.Should().Be(folder.Title);
+        hit.Metadata["snippet"]!.ToString().Should().Contain($"{term}keys");
     }
 
     [Fact]
@@ -58,30 +60,21 @@ public sealed class PageSearchEndpointTests
         await ReindexAndWaitForPage(term, page.Id);
 
         var member = SeedData.Users.ElementAt(2);
-        var restorePagesRead = await RevokePagesRead(member.Id);
 
-        try
-        {
-            var memberClient = Fixture.CreateNetptuneClientAs(member.Email);
-            var cancellationToken = TestContext.Current.CancellationToken;
+        await using var revoked = await MemberPermissions.Revoke(Client, member.Id, NetptunePermissions.Pages.Read);
 
-            var everything = await memberClient.GetFromJsonAsync<SearchResponse>(
-                $"api/search?q={term}",
-                cancellationToken);
-            var pagesOnly = await memberClient.GetFromJsonAsync<SearchResponse>(
-                $"api/search?q={term}&types=pages",
-                cancellationToken);
+        var memberClient = Fixture.CreateNetptuneClientAs(member.Email);
+        var cancellationToken = TestContext.Current.CancellationToken;
 
-            everything!.Results.Should().NotContain(item => item.Type == "page");
-            pagesOnly!.Results.Should().BeEmpty();
-        }
-        finally
-        {
-            if (restorePagesRead)
-            {
-                await TogglePermission(member.Id, NetptunePermissions.Pages.Read);
-            }
-        }
+        var everything = await memberClient.GetFromJsonAsync<SearchResponse>(
+            $"api/search?q={term}",
+            cancellationToken);
+        var pagesOnly = await memberClient.GetFromJsonAsync<SearchResponse>(
+            $"api/search?q={term}&types=pages",
+            cancellationToken);
+
+        everything!.Results.Should().NotContain(item => item.Type == "page");
+        pagesOnly!.Results.Should().BeEmpty();
     }
 
     [Fact]
@@ -153,32 +146,6 @@ public sealed class PageSearchEndpointTests
         var response = await Client.PutAsJsonAsync($"api/pages/{page.Id}", request, TestContext.Current.CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-    }
-
-    // Returns whether the member held pages.read before, so the caller can give it back.
-    private async Task<bool> RevokePagesRead(string userId)
-    {
-        var afterFirstToggle = await TogglePermission(userId, NetptunePermissions.Pages.Read);
-        var heldPagesRead = !afterFirstToggle.Contains(NetptunePermissions.Pages.Read);
-
-        if (!heldPagesRead)
-        {
-            await TogglePermission(userId, NetptunePermissions.Pages.Read);
-        }
-
-        return heldPagesRead;
-    }
-
-    private async Task<List<string>> TogglePermission(string userId, string permission)
-    {
-        var request = new ToggleUserPermissionRequest { UserId = userId, Permission = permission };
-        var response = await Client.PostAsJsonAsync("api/users/toggle-permission", request, TestContext.Current.CancellationToken);
-
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-
-        var result = await response.Content.ReadFromJsonAsync<ClientResponse<List<string>>>(TestContext.Current.CancellationToken);
-
-        return result!.Payload!;
     }
 
     private async Task<string> CreateApiKey(string[] scopes)
