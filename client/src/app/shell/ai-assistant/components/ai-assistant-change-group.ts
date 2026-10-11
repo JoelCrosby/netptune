@@ -31,6 +31,7 @@ const ENTITY_LABELS: Record<string, string> = {
   status: $localize`:Entity a proposed change targets:Status`,
   comment: $localize`:Entity a proposed change targets:Comment`,
   relationType: $localize`:Entity a proposed change targets:Relation type`,
+  page: $localize`:Entity a proposed change targets:Page`,
 };
 
 const FIELD_LABELS: Record<string, string> = {
@@ -52,6 +53,9 @@ const FIELD_LABELS: Record<string, string> = {
   comment: $localize`:Field of a proposed change:Comment`,
   flag: $localize`:Field of a proposed change:Flag`,
   repositoryUrl: $localize`:Field of a proposed change:Repository URL`,
+  body: $localize`:Field of a proposed change, the text of a page:Body`,
+  kind: $localize`:Field of a proposed change, whether a page is a document or a folder:Kind`,
+  parent: $localize`:Field of a proposed change, the folder a page sits in:Location`,
 };
 
 /** camelCase field names are internal; anything unmapped still has to read as prose. */
@@ -72,7 +76,7 @@ export const entityLabel = (entityType: string): string => {
 };
 
 /** Prose reads better stacked under its label than inline beside it. */
-const DETAIL_FIELDS = new Set(['description', 'goal', 'comment']);
+const DETAIL_FIELDS = new Set(['description', 'goal', 'comment', 'body']);
 
 const INLINE_VALUE_LIMIT = 80;
 

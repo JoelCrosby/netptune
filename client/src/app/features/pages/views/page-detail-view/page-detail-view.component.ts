@@ -1,9 +1,11 @@
 import {
   Component,
   computed,
+  DestroyRef,
   effect,
   inject,
   signal,
+  untracked,
   viewChild,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -17,6 +19,7 @@ import {
   PageVersionSummary,
 } from '@core/models/pages';
 import { prettyShortDate } from '@core/util/dates';
+import { CurrentPageService } from '@core/services/current-page.service';
 import { DialogService } from '@core/services/dialog.service';
 import { PageCommandsService } from '@core/services/page-commands.service';
 import { BreadcrumbItem } from '@static/components/breadcrumb/breadcrumb.component';
@@ -120,6 +123,7 @@ export class PageDetailViewComponent {
   private readonly snackbar = inject(SnackbarService);
   private readonly dialogs = inject(DialogService);
   private readonly editor = viewChild(PageEditorComponent);
+  private readonly currentPage = inject(CurrentPageService);
 
   private readonly routeParams = toSignal(this.route.params, {
     initialValue: this.route.snapshot.params,
@@ -198,6 +202,24 @@ export class PageDetailViewComponent {
 
       if (id !== undefined) {
         this.commands.recordVisit(id);
+      }
+    });
+
+    effect(() => {
+      const draft = this.draft();
+
+      if (!draft) return;
+
+      const slug = draft.latest().slug;
+
+      this.currentPage.set({ id: draft.id, slug, title: titleOf(draft) });
+    });
+
+    inject(DestroyRef).onDestroy(() => {
+      const id = untracked(this.draft)?.id;
+
+      if (id !== undefined) {
+        this.currentPage.clearIfCurrent(id);
       }
     });
   }

@@ -17,6 +17,7 @@ const KINDS: Record<string, AiChangeKind> = {
   propose_create_status: 'create',
   propose_create_tag: 'create',
   propose_create_relation_type: 'create',
+  propose_create_page: 'create',
   propose_delete_task: 'delete',
   propose_delete_sprint: 'delete',
   propose_delete_board: 'delete',
@@ -49,6 +50,7 @@ const ACTIONS: Record<string, string> = {
   propose_create_status: CREATE,
   propose_create_tag: CREATE,
   propose_create_relation_type: CREATE,
+  propose_create_page: CREATE,
   propose_update_task: UPDATE,
   propose_update_project: UPDATE,
   propose_update_board: UPDATE,
@@ -59,6 +61,7 @@ const ACTIONS: Record<string, string> = {
   propose_complete_sprint: UPDATE,
   propose_cancel_sprint: UPDATE,
   propose_resolve_task_flag: UPDATE,
+  propose_update_page_body: UPDATE,
   propose_delete_task: DELETE,
   propose_delete_sprint: DELETE,
   propose_delete_board: DELETE,
@@ -73,6 +76,7 @@ const ACTIONS: Record<string, string> = {
   propose_reorder_board_groups: MOVE,
   propose_add_tasks_to_sprint: MOVE,
   propose_remove_task_from_sprint: MOVE,
+  propose_move_page: MOVE,
 };
 
 const KIND_ACTIONS: Record<AiChangeKind, string> = {

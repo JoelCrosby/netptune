@@ -89,6 +89,7 @@ const ENTITY_PLURALS: Record<string, string> = {
   comment: $localize`:Plural of the entity a proposed change targets:Comments`,
   tag: $localize`:Plural of the entity a proposed change targets:Tags`,
   relationType: $localize`:Plural of the entity a proposed change targets:Relation types`,
+  page: $localize`:Plural of the entity a proposed change targets:Pages`,
 };
 
 /**
@@ -113,6 +114,8 @@ const FIELD_PHRASES: Record<string, string> = {
   goal: $localize`:Digest phrase for rewritten goals:Goals rewritten`,
   comment: $localize`:Digest phrase for added comments:Comments added`,
   flag: $localize`:Digest phrase for resolved flags:Flags resolved`,
+  body: $localize`:Digest phrase for rewritten pages:Pages rewritten`,
+  parent: $localize`:Digest phrase for pages moved to another folder:Pages moved`,
 };
 
 /**
@@ -129,6 +132,7 @@ const ENTITY_COUNTS: Record<string, string> = {
   comment: $localize`:Plural of the entity a digest row counts, mid sentence:comments`,
   tag: $localize`:Plural of the entity a digest row counts, mid sentence:tags`,
   relationType: $localize`:Plural of the entity a digest row counts, mid sentence:relation types`,
+  page: $localize`:Plural of the entity a digest row counts, mid sentence:pages`,
 };
 
 /** The only fields that name a place every change in a row could share. */

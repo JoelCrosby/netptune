@@ -5,13 +5,14 @@ export type AiTextSegment =
   | { kind: 'reference'; type: string; id: string; label: string };
 
 const REFERENCE_PATTERN =
-  /\[\[(task|project|sprint|board):([^\]|]+)(?:\|([^\]]+))?\]\]/g;
+  /\[\[(task|project|sprint|board|page):([^\]|]+)(?:\|([^\]]+))?\]\]/g;
 
 const ROUTES: Record<string, string> = {
   task: 'tasks',
   project: 'projects',
   sprint: 'sprints',
   board: 'boards',
+  page: 'pages',
 };
 
 export const referenceKey = (type: string, id: string): string => {

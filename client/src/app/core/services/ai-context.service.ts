@@ -6,6 +6,7 @@ import {
 } from '@core/models/ai-context';
 import { CurrentRouteService } from '@core/router/current-route.service';
 import { CurrentBoardService } from '@core/services/current-board.service';
+import { CurrentPageService } from '@core/services/current-page.service';
 import { CurrentProjectService } from '@core/services/current-project.service';
 import { CurrentSprintService } from '@core/services/current-sprint.service';
 import { CurrentTaskService } from '@core/services/current-task.service';
@@ -13,6 +14,7 @@ import { CurrentWorkspaceService } from '@core/services/current-workspace.servic
 import {
   boardChip,
   buildClientContext,
+  pageChip,
   projectChip,
   readView,
   sprintChip,
@@ -33,6 +35,7 @@ export class AiContextService {
   private readonly board = inject(CurrentBoardService).board;
   private readonly sprint = inject(CurrentSprintService).sprint;
   private readonly task = inject(CurrentTaskService).task;
+  private readonly page = inject(CurrentPageService).page;
 
   private readonly removed = signal<ReadonlySet<string>>(new Set());
 
@@ -49,8 +52,10 @@ export class AiContextService {
     const board = this.board();
     const sprint = this.sprint();
     const project = this.project();
+    const page = this.page();
 
     if (view) chips.push(viewChip(view));
+    if (page) chips.push(pageChip(page, workspace));
     if (task) chips.push(taskChip(task, workspace));
     if (board) chips.push(boardChip(board, workspace));
     if (sprint) chips.push(sprintChip(sprint, workspace));

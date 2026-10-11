@@ -7,6 +7,7 @@ import { BoardViewModel } from '@core/models/view-models/board-view-model';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
+import { CurrentPage } from '@core/services/current-page.service';
 import { referenceRoute } from '@core/util/ai-references';
 
 const SECTIONS: Record<string, string> = {
@@ -20,6 +21,7 @@ const SECTIONS: Record<string, string> = {
   roadmap: $localize`:Names the screen the user is on:roadmap`,
   automations: $localize`:Names the screen the user is on:automations`,
   assistant: $localize`:Names the screen the user is on:assistant`,
+  pages: $localize`:Names the screen the user is on:pages`,
 };
 
 const KIND_LABELS: Record<AiContextKind, string> = {
@@ -28,6 +30,7 @@ const KIND_LABELS: Record<AiContextKind, string> = {
   board: $localize`:Names the kind of thing a context chip points at:Board`,
   sprint: $localize`:Names the kind of thing a context chip points at:Sprint`,
   task: $localize`:Names the kind of thing a context chip points at:Task`,
+  page: $localize`:Names the kind of thing a context chip points at:Page`,
 };
 
 /** The first segment is the workspace slug, so the section is the one after it. */
@@ -118,6 +121,19 @@ export const taskChip = (
     description: task.name,
     route: routeFor(workspace, 'task', task.systemId),
     context: { taskSystemId: task.systemId, taskName: task.name },
+  };
+};
+
+export const pageChip = (
+  page: CurrentPage,
+  workspace: string | null
+): AiContextChip => {
+  return {
+    kind: 'page',
+    label: KIND_LABELS.page,
+    name: page.title,
+    route: routeFor(workspace, 'page', page.slug),
+    context: { pageSlug: page.slug, pageTitle: page.title },
   };
 };
 

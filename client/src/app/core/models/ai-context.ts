@@ -8,9 +8,12 @@ export interface AiClientContext {
   sprintName?: string;
   taskSystemId?: string;
   taskName?: string;
+  pageSlug?: string;
+  pageTitle?: string;
 }
 
-export type AiContextKind = 'view' | 'project' | 'board' | 'sprint' | 'task';
+export type AiContextKind =
+  'view' | 'project' | 'board' | 'sprint' | 'task' | 'page';
 
 export interface AiContextChip {
   kind: AiContextKind;
