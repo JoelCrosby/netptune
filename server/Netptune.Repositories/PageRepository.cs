@@ -11,6 +11,7 @@ using Netptune.Core.Repositories.Common;
 using Netptune.Core.ViewModels.Pages;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
+using Netptune.Repositories.RowMaps;
 using Netptune.Repositories.Sql;
 
 namespace Netptune.Repositories;
@@ -175,6 +176,74 @@ public sealed class PageRepository : WorkspaceEntityRepository<DataContext, Page
 
         return ids.ToList();
     }
+
+    public Task<List<PageSearchSource>> GetSearchSources(IReadOnlyCollection<int> ids, string workspaceKey, CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .AsNoTracking()
+            .Where(page => ids.Contains(page.Id) && page.Workspace!.Slug == workspaceKey && !page.IsDeleted && !page.IsTemplate)
+            .Select(ToSearchSource)
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<List<PageSearchSource>> GetAllSearchSources(string workspaceKey, CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .AsNoTracking()
+            .Where(page => page.Workspace!.Slug == workspaceKey && !page.IsDeleted && !page.IsTemplate)
+            .Select(ToSearchSource)
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<List<PageOutlineEntry>> GetOutline(string workspaceKey, CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .AsNoTracking()
+            .Where(page => page.Workspace!.Slug == workspaceKey && !page.IsDeleted && !page.IsTemplate)
+            .Select(page => new PageOutlineEntry(page.Id, page.ParentId, page.Title))
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<List<PageOutlineEntry>> GetAncestorOutline(IReadOnlyCollection<int> pageIds, string workspaceKey, CancellationToken cancellationToken = default)
+    {
+        using var connection = ConnectionFactory.StartConnection();
+
+        var command = new CommandDefinition(
+            SqlScripts.GetPageAncestorOutline,
+            new { PageIds = pageIds.ToArray(), WorkspaceKey = workspaceKey },
+            cancellationToken: cancellationToken);
+
+        var rows = await connection.QueryAsync<PageOutlineRow>(command);
+
+        return rows.Select(row => new PageOutlineEntry(row.Id, row.Parent_id, row.Title)).ToList();
+    }
+
+    public Task<List<int>> GetIdsTaggedWith(IReadOnlyCollection<int> tagIds, int workspaceId, CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .AsNoTracking()
+            .Where(page => page.WorkspaceId == workspaceId && !page.IsDeleted && !page.IsTemplate)
+            .Where(page => page.PageTags.Any(pageTag => tagIds.Contains(pageTag.TagId)))
+            .Select(page => page.Id)
+            .ToListAsync(cancellationToken);
+    }
+
+    private static readonly Expression<Func<Page, PageSearchSource>> ToSearchSource = page => new PageSearchSource
+    {
+        Id = page.Id,
+        ParentId = page.ParentId,
+        Kind = page.Kind,
+        Title = page.Title,
+        Slug = page.Slug,
+        Body = page.Body,
+        Status = page.Status,
+        ProjectId = page.ProjectId,
+        Tags = page.PageTags
+            .Where(pageTag => pageTag.Tag != null && !pageTag.Tag.IsDeleted)
+            .Select(pageTag => pageTag.Tag!.Name)
+            .ToList(),
+        UpdatedAt = page.UpdatedAt ?? page.CreatedAt,
+    };
 
     private Expression<Func<Page, PageViewModel>> ToViewModel(string userId)
     {

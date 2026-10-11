@@ -12,7 +12,7 @@ namespace Netptune.Search;
 
 public sealed class MeilisearchService : IMeilisearchService
 {
-    private static readonly string[] AllIndexes = ["tasks", "projects", "boards", "sprints"];
+    private static readonly string[] AllIndexes = ["tasks", "projects", "boards", "sprints", PageSearchDocuments.IndexName];
 
     private readonly MeilisearchClient Client;
 
@@ -57,11 +57,13 @@ public sealed class MeilisearchService : IMeilisearchService
         await EnsureIndexExistsAsync("projects", cancellationToken);
         await EnsureIndexExistsAsync("boards", cancellationToken);
         await EnsureIndexExistsAsync("sprints", cancellationToken);
+        await EnsureIndexExistsAsync(PageSearchDocuments.IndexName, cancellationToken);
 
         await EnsureTasksIndexAsync(cancellationToken);
         await EnsureProjectsIndexAsync(cancellationToken);
         await EnsureBoardsIndexAsync(cancellationToken);
         await EnsureSprintsIndexAsync(cancellationToken);
+        await EnsurePagesIndexAsync(cancellationToken);
     }
 
     private async Task EnsureIndexExistsAsync(string indexName, CancellationToken ct)
@@ -86,7 +88,7 @@ public sealed class MeilisearchService : IMeilisearchService
     {
         var sw = Stopwatch.StartNew();
 
-        var indexes = ResolveIndexes(query.Types);
+        var indexes = ResolveIndexes(query.Types, query.IncludePages);
         var filter = $"workspaceSlug = \"{EscapeFilterValue(query.WorkspaceSlug)}\"";
         var meiliQuery = new MeiliSearchQuery { Filter = filter, Limit = query.Limit };
 
@@ -117,6 +119,7 @@ public sealed class MeilisearchService : IMeilisearchService
                 "projects" => await SearchProjectsAsync(q, meiliQuery, cancellationToken),
                 "boards" => await SearchBoardsAsync(q, meiliQuery, cancellationToken),
                 "sprints" => await SearchSprintsAsync(q, meiliQuery, cancellationToken),
+                PageSearchDocuments.IndexName => await SearchPagesAsync(q, meiliQuery, cancellationToken),
                 _ => [],
             };
         }
@@ -200,13 +203,36 @@ public sealed class MeilisearchService : IMeilisearchService
         });
     }
 
-    private static IReadOnlyList<string> ResolveIndexes(string[]? types)
+    private async Task<IEnumerable<SearchResultViewModel>> SearchPagesAsync(string q, MeiliSearchQuery query, CancellationToken cancellationToken)
     {
-        if (types is not { Length: > 0 }) return AllIndexes;
+        var index = Client.Index(PageSearchDocuments.IndexName);
+        var result = await index.SearchAsync<PageSearchDocument>(q, query, cancellationToken);
 
-        return types
-            .Select(t => t.ToLowerInvariant())
-            .Where(t => AllIndexes.Contains(t))
+        return result.Hits.Select(hit => new SearchResultViewModel
+        {
+            Type = "page",
+            Id = hit.PageId,
+            Title = hit.Title,
+            Subtitle = hit.Path ?? "Page",
+            Url = $"/{hit.WorkspaceSlug}/pages/{hit.Slug}",
+            Metadata = new Dictionary<string, object?>
+            {
+                ["slug"] = hit.Slug,
+                ["kind"] = hit.Kind,
+                ["projectId"] = hit.ProjectId,
+            },
+        });
+    }
+
+    private static IReadOnlyList<string> ResolveIndexes(string[]? types, bool includePages)
+    {
+        var requested = types is { Length: > 0 }
+            ? types.Select(t => t.ToLowerInvariant()).Where(t => AllIndexes.Contains(t))
+            : AllIndexes;
+
+        return requested
+            .Where(index => includePages || index != PageSearchDocuments.IndexName)
+            .Distinct()
             .ToList();
     }
 
@@ -256,6 +282,19 @@ public sealed class MeilisearchService : IMeilisearchService
         {
             SearchableAttributes = ["name", "goal"],
             FilterableAttributes = ["workspaceSlug", "projectId", "status"],
+            SortableAttributes = ["updatedAt"],
+        }, ct);
+
+        await WaitForCompletionAsync(update, ct);
+    }
+
+    private async Task EnsurePagesIndexAsync(CancellationToken ct)
+    {
+        var index = Client.Index(PageSearchDocuments.IndexName);
+        var update = await index.UpdateSettingsAsync(new Settings
+        {
+            SearchableAttributes = ["title", "tags", "path", "body"],
+            FilterableAttributes = ["workspaceSlug", "projectId", "kind", "status"],
             SortableAttributes = ["updatedAt"],
         }, ct);
 

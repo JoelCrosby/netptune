@@ -8,7 +8,7 @@ using Netptune.Core.ViewModels.Search;
 
 namespace Netptune.Handlers.Search.Queries;
 
-public sealed record SearchQuery(string Q, string[]? Types = null, int Limit = 20) : IRequest<SearchResponse>;
+public sealed record SearchQuery(string Q, string[]? Types = null, int Limit = 20, bool IncludePages = false) : IRequest<SearchResponse>;
 
 public sealed class SearchQueryHandler : IRequestHandler<SearchQuery, SearchResponse>
 {
@@ -30,7 +30,7 @@ public sealed class SearchQueryHandler : IRequestHandler<SearchQuery, SearchResp
     {
         var workspaceSlug = Identity.GetWorkspaceKey();
         var limit = Math.Clamp(request.Limit, 1, MaximumLimit);
-        var query = new GlobalSearchQuery(request.Q, workspaceSlug, request.Types, limit);
+        var query = new GlobalSearchQuery(request.Q, workspaceSlug, request.Types, limit, request.IncludePages);
         var response = await Search.SearchAsync(query, cancellationToken);
         var results = await HydrateTaskResults(response.Results, workspaceSlug, cancellationToken);
         var exactTasks = await ResolveExactTasks(request, workspaceSlug, cancellationToken);

@@ -2,6 +2,7 @@ using FluentAssertions;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Requests.Pages;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -22,15 +23,18 @@ public class MovePageCommandHandlerTests
     private const int PageId = 42;
     private const int ParentId = 50;
     private const string UserId = "user-1";
+    private const string WorkspaceKey = "workspace";
 
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+    private readonly IEventPublisher EventPublisher = Substitute.For<IEventPublisher>();
     private readonly Page MovedPage = new() { Id = PageId, WorkspaceId = WorkspaceId, Title = "RFC-014", Slug = "rfc-014" };
     private readonly MovePageCommandHandler Handler;
 
     public MovePageCommandHandlerTests()
     {
+        Identity.GetWorkspaceKey().Returns(WorkspaceKey);
         Identity.GetWorkspaceId().Returns(WorkspaceId);
         Identity.GetCurrentUserId().Returns(UserId);
 
@@ -41,12 +45,13 @@ public class MovePageCommandHandlerTests
             .Returns(new Page { Id = ParentId, WorkspaceId = WorkspaceId, Kind = PageKind.Folder, Title = "RFCs", Slug = "rfcs" });
 
         UnitOfWork.Pages.GetAncestorIds(ParentId, WorkspaceId, Arg.Any<CancellationToken>()).Returns([ParentId, 10]);
+        UnitOfWork.Pages.GetSubtreeIds(PageId, WorkspaceId, false, Arg.Any<CancellationToken>()).Returns([PageId, 43]);
 
         UnitOfWork.Pages
             .GetViewModel(PageId, WorkspaceId, UserId, Arg.Any<CancellationToken>())
             .Returns(new PageViewModel { Id = PageId, Title = "RFC-014", Slug = "rfc-014" });
 
-        Handler = new MovePageCommandHandler(UnitOfWork, Identity, Activity);
+        Handler = new MovePageCommandHandler(UnitOfWork, Identity, Activity, EventPublisher);
     }
 
     [Fact]
@@ -59,6 +64,7 @@ public class MovePageCommandHandlerTests
         MovedPage.SortOrder.Should().Be(2.5);
         MovedPage.ModifiedByUserId.Should().Be(UserId);
         await UnitOfWork.Received(1).CompleteAsync(Arg.Any<CancellationToken>());
+        await EventPublisher.ReceivedPageIndexEvent(SearchIndexOperation.Index, PageId, 43);
     }
 
     [Fact]
@@ -71,6 +77,7 @@ public class MovePageCommandHandlerTests
         result.IsSuccess.Should().BeFalse();
         result.Message.Should().Be("A page cannot be moved inside itself.");
         await UnitOfWork.DidNotReceive().CompleteAsync(Arg.Any<CancellationToken>());
+        await EventPublisher.DidNotReceivePageIndexEvent();
     }
 
     [Fact]
@@ -115,6 +122,18 @@ public class MovePageCommandHandlerTests
         var result = await Send(new MovePageRequest { ParentId = null, SortOrder = double.NaN });
 
         result.Message.Should().Be("The sort order must be a number.");
+    }
+
+    [Fact]
+    public async Task Handle_ShouldNotReindex_WhenThePageIsOnlyReorderedAmongItsSiblings()
+    {
+        MovedPage.ParentId = ParentId;
+
+        var result = await Send(new MovePageRequest { ParentId = ParentId, SortOrder = 7 });
+
+        result.IsSuccess.Should().BeTrue();
+        MovedPage.SortOrder.Should().Be(7);
+        await EventPublisher.DidNotReceivePageIndexEvent();
     }
 
     [Fact]

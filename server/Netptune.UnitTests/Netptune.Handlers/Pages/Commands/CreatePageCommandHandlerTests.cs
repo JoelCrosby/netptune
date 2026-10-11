@@ -3,6 +3,7 @@ using FluentAssertions;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Pages;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Requests.Pages;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -22,15 +23,18 @@ public class CreatePageCommandHandlerTests
     private const int WorkspaceId = 7;
     private const int ParentId = 50;
     private const string UserId = "user-1";
+    private const string WorkspaceKey = "workspace";
 
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+    private readonly IEventPublisher EventPublisher = Substitute.For<IEventPublisher>();
     private readonly CreatePageCommandHandler Handler;
     private Page? AddedPage;
 
     public CreatePageCommandHandlerTests()
     {
+        Identity.GetWorkspaceKey().Returns(WorkspaceKey);
         Identity.GetWorkspaceId().Returns(WorkspaceId);
         Identity.GetCurrentUserId().Returns(UserId);
         UnitOfWork.InvokeTransaction();
@@ -49,7 +53,7 @@ public class CreatePageCommandHandlerTests
             .GetViewModel(Arg.Any<int>(), WorkspaceId, UserId, Arg.Any<CancellationToken>())
             .Returns(new PageViewModel { Title = "Untitled", Slug = "untitled" });
 
-        Handler = new CreatePageCommandHandler(UnitOfWork, Identity, Activity);
+        Handler = new CreatePageCommandHandler(UnitOfWork, Identity, Activity, EventPublisher);
     }
 
     [Fact]
@@ -65,6 +69,7 @@ public class CreatePageCommandHandlerTests
         AddedPage.Body.Should().BeEmpty();
         AddedPage.Slug.Should().StartWith("untitled-");
         AddedPage.CreatedByUserId.Should().Be(UserId);
+        await EventPublisher.ReceivedPageIndexEvent(SearchIndexOperation.Index, AddedPage.Id);
     }
 
     [Fact]

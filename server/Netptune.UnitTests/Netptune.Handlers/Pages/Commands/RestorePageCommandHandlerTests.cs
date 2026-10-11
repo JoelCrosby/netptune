@@ -4,6 +4,7 @@ using Netptune.Core.Authorization;
 using Netptune.Core.Cache;
 using Netptune.Core.Entities;
 using Netptune.Core.Models;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
@@ -30,6 +31,7 @@ public class RestorePageCommandHandlerTests
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IWorkspacePermissionCache PermissionCache = Substitute.For<IWorkspacePermissionCache>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+    private readonly IEventPublisher EventPublisher = Substitute.For<IEventPublisher>();
     private readonly Page ArchivedPage = new()
     {
         Id = PageId,
@@ -63,7 +65,7 @@ public class RestorePageCommandHandlerTests
 
         GrantMember([NetptunePermissions.Pages.Delete]);
 
-        Handler = new RestorePageCommandHandler(UnitOfWork, Identity, PermissionCache, Activity);
+        Handler = new RestorePageCommandHandler(UnitOfWork, Identity, PermissionCache, Activity, EventPublisher);
     }
 
     [Fact]
@@ -77,6 +79,7 @@ public class RestorePageCommandHandlerTests
             Arg.Is<IEnumerable<int>>(ids => ids.SequenceEqual(new[] { PageId, 43 })),
             Arg.Any<CancellationToken>());
         await UnitOfWork.DidNotReceive().CompleteAsync(Arg.Any<CancellationToken>());
+        await EventPublisher.ReceivedPageIndexEvent(SearchIndexOperation.Index, PageId, 43);
     }
 
     [Fact]

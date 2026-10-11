@@ -2,6 +2,7 @@ using Mediator;
 
 using Netptune.Core.Cache;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
@@ -17,17 +18,20 @@ public sealed class ArchivePageCommandHandler : IRequestHandler<ArchivePageComma
     private readonly IIdentityService Identity;
     private readonly IWorkspacePermissionCache PermissionCache;
     private readonly IActivityLogger Activity;
+    private readonly IEventPublisher EventPublisher;
 
     public ArchivePageCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
         IWorkspacePermissionCache permissionCache,
-        IActivityLogger activity)
+        IActivityLogger activity,
+        IEventPublisher eventPublisher)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         PermissionCache = permissionCache;
         Activity = activity;
+        EventPublisher = eventPublisher;
     }
 
     public async ValueTask<ClientResponse> Handle(ArchivePageCommand request, CancellationToken cancellationToken)
@@ -64,6 +68,7 @@ public sealed class ArchivePageCommandHandler : IRequestHandler<ArchivePageComma
         }
 
         await UnitOfWork.Pages.SoftDelete(subtreeIds, userId, cancellationToken);
+        await EventPublisher.RemovePages(subtreeIds, workspaceKey);
 
         Activity.Log(options =>
         {

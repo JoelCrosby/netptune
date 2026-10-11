@@ -57,13 +57,7 @@ public sealed class SearchSeedService : BackgroundService
         Logger.LogInformation("[Search] ensuring index settings");
         await SearchService.EnsureIndexSettingsAsync(stoppingToken);
 
-        if (!await SearchService.IsIndexEmptyAsync("tasks", stoppingToken))
-        {
-            Logger.LogInformation("[Search] indexes already contain documents, skipping seed");
-            return;
-        }
-
-        Logger.LogInformation("[Search] seeding indexes");
+        Logger.LogInformation("[Search] seeding empty indexes");
 
         var unitOfWork = scope.ServiceProvider.GetRequiredService<INetptuneUnitOfWork>();
 
@@ -76,18 +70,33 @@ public sealed class SearchSeedService : BackgroundService
         var projectCount = await SeedIndexAsync("projects", () => IndexProjectsAsync(unitOfWork, slugs, stoppingToken), stoppingToken);
         var boardCount = await SeedIndexAsync("boards", () => IndexBoardsAsync(unitOfWork, slugs, stoppingToken), stoppingToken);
         var sprintCount = await SeedIndexAsync("sprints", () => IndexSprintsAsync(unitOfWork, slugs, stoppingToken), stoppingToken);
+        var pageCount = await SeedIndexAsync(
+            PageSearchDocuments.IndexName,
+            () => IndexPagesAsync(unitOfWork, slugs, stoppingToken),
+            stoppingToken);
 
         Logger.LogInformation(
-            "[Search] seeding complete in {ElapsedMs}ms: {TaskCount} tasks, {ProjectCount} projects, {BoardCount} boards, {SprintCount} sprints",
+            "[Search] seeding complete in {ElapsedMs}ms: {TaskCount} tasks, {ProjectCount} projects, {BoardCount} boards, {SprintCount} sprints, {PageCount} pages",
             timer.ElapsedMilliseconds,
             taskCount,
             projectCount,
             boardCount,
-            sprintCount);
+            sprintCount,
+            pageCount);
     }
 
     private async Task<int> SeedIndexAsync(string indexName, Func<Task<int>> seedIndex, CancellationToken ct)
     {
+        var isEmpty = await SearchService.IsIndexEmptyAsync(indexName, ct);
+
+        // Each index is seeded on its own, so an index added later is filled on the next start without
+        // reseeding the ones that already hold documents.
+        if (!isEmpty)
+        {
+            Logger.LogInformation("[Search] {IndexName} index already contains documents, skipping seed", indexName);
+            return 0;
+        }
+
         var timer = Stopwatch.StartNew();
 
         Logger.LogInformation("[Search] seeding {IndexName} index", indexName);
@@ -262,6 +271,25 @@ public sealed class SearchSeedService : BackgroundService
 
         Logger.LogInformation("[Search] loaded {DocumentCount} sprint documents", docs.Count);
         await IndexBatchesAsync("sprints", docs, ct);
+
+        return docs.Count;
+    }
+
+    private async Task<int> IndexPagesAsync(INetptuneUnitOfWork unitOfWork, List<string> slugs, CancellationToken ct)
+    {
+        var docs = new List<PageSearchDocument>();
+
+        foreach (var slug in slugs)
+        {
+            Logger.LogInformation("[Search] loading page documents for workspace {WorkspaceSlug}", slug);
+            var sources = await unitOfWork.Pages.GetAllSearchSources(slug, ct);
+            var outline = await unitOfWork.Pages.GetOutline(slug, ct);
+
+            docs.AddRange(PageSearchDocuments.Build(sources, outline, slug));
+        }
+
+        Logger.LogInformation("[Search] loaded {DocumentCount} page documents", docs.Count);
+        await IndexBatchesAsync(PageSearchDocuments.IndexName, docs, ct);
 
         return docs.Count;
     }

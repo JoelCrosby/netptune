@@ -2,7 +2,7 @@ using Netptune.Core.ViewModels.Search;
 
 namespace Netptune.Core.Services.Search;
 
-public record GlobalSearchQuery(string Q, string WorkspaceSlug, string[]? Types = null, int Limit = 20);
+public record GlobalSearchQuery(string Q, string WorkspaceSlug, string[]? Types = null, int Limit = 20, bool IncludePages = false);
 
 public interface IMeilisearchService
 {

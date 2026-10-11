@@ -2,6 +2,7 @@ using FluentAssertions;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests.Pages;
 using Netptune.Core.Responses.Common;
@@ -22,15 +23,18 @@ public class UpdatePageCommandHandlerTests
     private const int WorkspaceId = 7;
     private const int PageId = 42;
     private const string UserId = "user-1";
+    private const string WorkspaceKey = "workspace";
 
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+    private readonly IEventPublisher EventPublisher = Substitute.For<IEventPublisher>();
     private readonly Page TaggedPage;
     private readonly UpdatePageCommandHandler Handler;
 
     public UpdatePageCommandHandlerTests()
     {
+        Identity.GetWorkspaceKey().Returns(WorkspaceKey);
         Identity.GetWorkspaceId().Returns(WorkspaceId);
         Identity.GetCurrentUserId().Returns(UserId);
 
@@ -53,7 +57,7 @@ public class UpdatePageCommandHandlerTests
             .GetViewModel(PageId, WorkspaceId, UserId, Arg.Any<CancellationToken>())
             .Returns(new PageViewModel { Id = PageId, Title = "RFC", Slug = "rfc" });
 
-        Handler = new UpdatePageCommandHandler(UnitOfWork, Identity, Activity);
+        Handler = new UpdatePageCommandHandler(UnitOfWork, Identity, Activity, EventPublisher);
     }
 
     [Fact]
@@ -65,6 +69,7 @@ public class UpdatePageCommandHandlerTests
         TaggedPage.PageTags.Select(pageTag => pageTag.TagId).Should().BeEquivalentTo([11, 12]);
         TaggedPage.PageTags.Single(pageTag => pageTag.TagId == 11).Id.Should().Be(2);
         await UnitOfWork.Received(1).CompleteAsync(Arg.Any<CancellationToken>());
+        await EventPublisher.ReceivedPageIndexEvent(SearchIndexOperation.Index, TaggedPage.Id);
     }
 
     [Fact]

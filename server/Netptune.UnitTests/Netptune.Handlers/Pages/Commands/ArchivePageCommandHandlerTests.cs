@@ -4,6 +4,7 @@ using Netptune.Core.Authorization;
 using Netptune.Core.Cache;
 using Netptune.Core.Entities;
 using Netptune.Core.Models;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
@@ -28,6 +29,7 @@ public class ArchivePageCommandHandlerTests
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IWorkspacePermissionCache PermissionCache = Substitute.For<IWorkspacePermissionCache>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+    private readonly IEventPublisher EventPublisher = Substitute.For<IEventPublisher>();
     private readonly ArchivePageCommandHandler Handler;
 
     public ArchivePageCommandHandlerTests()
@@ -38,7 +40,7 @@ public class ArchivePageCommandHandlerTests
 
         UnitOfWork.Pages.GetSubtreeIds(PageId, WorkspaceId, false, Arg.Any<CancellationToken>()).Returns([PageId, 43, 44]);
 
-        Handler = new ArchivePageCommandHandler(UnitOfWork, Identity, PermissionCache, Activity);
+        Handler = new ArchivePageCommandHandler(UnitOfWork, Identity, PermissionCache, Activity, EventPublisher);
     }
 
     [Fact]
@@ -54,6 +56,7 @@ public class ArchivePageCommandHandlerTests
             Arg.Is<IEnumerable<int>>(ids => ids.SequenceEqual(new[] { PageId, 43, 44 })),
             UserId,
             Arg.Any<CancellationToken>());
+        await EventPublisher.ReceivedPageIndexEvent(SearchIndexOperation.Delete, PageId, 43, 44);
     }
 
     [Fact]

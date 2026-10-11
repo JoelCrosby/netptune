@@ -56,6 +56,9 @@ public sealed class SearchIndexHandler : IRequestHandler<SearchIndexEvent>
             case "sprint":
                 await IndexSprintsAsync(request.EntityIds, request.WorkspaceSlug, ct);
                 break;
+            case "page":
+                await IndexPagesAsync(request.EntityIds, request.WorkspaceSlug, ct);
+                break;
         }
     }
 
@@ -138,6 +141,21 @@ public sealed class SearchIndexHandler : IRequestHandler<SearchIndexEvent>
         await SearchService.IndexDocumentsAsync("sprints", documents, ct);
     }
 
+    private async Task IndexPagesAsync(IReadOnlyList<int> pageIds, string workspaceSlug, CancellationToken ct)
+    {
+        var sources = await UnitOfWork.Pages.GetSearchSources(pageIds, workspaceSlug, ct);
+
+        if (sources.Count == 0)
+        {
+            return;
+        }
+
+        var outline = await UnitOfWork.Pages.GetAncestorOutline(pageIds, workspaceSlug, ct);
+        var documents = PageSearchDocuments.Build(sources, outline, workspaceSlug);
+
+        await SearchService.IndexDocumentsAsync(PageSearchDocuments.IndexName, documents, ct);
+    }
+
     private static string GetIndexName(string entityType)
     {
         return entityType switch
@@ -146,6 +164,7 @@ public sealed class SearchIndexHandler : IRequestHandler<SearchIndexEvent>
             "project" => "projects",
             "board" => "boards",
             "sprint" => "sprints",
+            "page" => PageSearchDocuments.IndexName,
             _ => throw new ArgumentException($"Unknown entity type: {entityType}", nameof(entityType)),
         };
     }

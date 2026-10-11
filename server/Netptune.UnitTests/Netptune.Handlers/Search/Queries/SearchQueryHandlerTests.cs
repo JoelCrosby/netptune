@@ -52,6 +52,22 @@ public sealed class SearchQueryHandlerTests
         task.Metadata["projectKey"].Should().Be("NEW");
     }
 
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task Search_ShouldPassThroughWhetherPagesMayBeSearched(bool includePages)
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
+        Search.SearchAsync(Arg.Any<GlobalSearchQuery>(), cancellationToken).Returns(SearchResponse());
+
+        await Handler.Handle(new SearchQuery("roadmap", IncludePages: includePages), cancellationToken);
+
+        await Search.Received(1).SearchAsync(
+            Arg.Is<GlobalSearchQuery>(query => query.IncludePages == includePages),
+            cancellationToken);
+    }
+
     [Fact]
     public async Task Search_ShouldMergeCurrentExactSystemIdWithoutDuplicates()
     {

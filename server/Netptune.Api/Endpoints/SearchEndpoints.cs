@@ -35,6 +35,7 @@ public static class SearchEndpoints
             return TypedResults.BadRequest("A search term is required.");
         }
 
+        // Pages are not part of the public API yet, so v1 leaves them out of search too.
         var query = new SearchQuery(q, types, limit ?? SearchQueryHandler.DefaultLimit);
         var result = await mediator.Send(query, cancellationToken);
 

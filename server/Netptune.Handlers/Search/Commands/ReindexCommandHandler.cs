@@ -34,6 +34,7 @@ public sealed class ReindexCommandHandler : IRequestHandler<ReindexCommand>
         await IndexProjectsAsync(workspaceSlug, cancellationToken);
         await IndexBoardsAsync(workspaceSlug, cancellationToken);
         await IndexSprintsAsync(workspaceSlug, cancellationToken);
+        await IndexPagesAsync(workspaceSlug, cancellationToken);
 
         return default;
     }
@@ -112,6 +113,18 @@ public sealed class ReindexCommandHandler : IRequestHandler<ReindexCommand>
         foreach (var batch in documents.Chunk(BatchSize))
         {
             await Search.IndexDocumentsAsync("sprints", batch, ct);
+        }
+    }
+
+    private async Task IndexPagesAsync(string workspaceSlug, CancellationToken ct)
+    {
+        var sources = await UnitOfWork.Pages.GetAllSearchSources(workspaceSlug, ct);
+        var outline = await UnitOfWork.Pages.GetOutline(workspaceSlug, ct);
+        var documents = PageSearchDocuments.Build(sources, outline, workspaceSlug);
+
+        foreach (var batch in documents.Chunk(BatchSize))
+        {
+            await Search.IndexDocumentsAsync(PageSearchDocuments.IndexName, batch, ct);
         }
     }
 }

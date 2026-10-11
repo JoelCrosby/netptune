@@ -1,5 +1,7 @@
 using Mediator;
 
+using Microsoft.AspNetCore.Authorization;
+
 using Netptune.Core.Authorization;
 using Netptune.Handlers.Search.Commands;
 using Netptune.Handlers.Search.Queries;
@@ -20,6 +22,8 @@ public static class SearchEndpoints
 
     public static async Task<IResult> HandleSearch(
         IMediator mediator,
+        IAuthorizationService authorization,
+        HttpContext context,
         string? q,
         [Microsoft.AspNetCore.Mvc.FromQuery(Name = "types")] string[]? types,
         int limit = SearchQueryHandler.DefaultLimit,
@@ -27,7 +31,9 @@ public static class SearchEndpoints
     {
         if (string.IsNullOrWhiteSpace(q)) return Results.Ok(new { results = Array.Empty<object>(), processingTimeMs = 0 });
 
-        var result = await mediator.Send(new SearchQuery(q, types, limit), cancellationToken);
+        var pagesAccess = await authorization.AuthorizeAsync(context.User, NetptunePermissions.Pages.Read);
+        var query = new SearchQuery(q, types, limit, pagesAccess.Succeeded);
+        var result = await mediator.Send(query, cancellationToken);
 
         return Results.Ok(result);
     }

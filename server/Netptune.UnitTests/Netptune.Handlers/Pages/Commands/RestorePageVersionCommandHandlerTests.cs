@@ -3,6 +3,7 @@ using FluentAssertions;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Pages;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
@@ -22,14 +23,17 @@ public class RestorePageVersionCommandHandlerTests
     private const int PageId = 42;
     private const int VersionId = 5;
     private const string UserId = "user-1";
+    private const string WorkspaceKey = "workspace";
 
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+    private readonly IEventPublisher EventPublisher = Substitute.For<IEventPublisher>();
     private readonly RestorePageVersionCommandHandler Handler;
 
     public RestorePageVersionCommandHandlerTests()
     {
+        Identity.GetWorkspaceKey().Returns(WorkspaceKey);
         Identity.GetWorkspaceId().Returns(WorkspaceId);
         Identity.GetCurrentUserId().Returns(UserId);
 
@@ -46,7 +50,7 @@ public class RestorePageVersionCommandHandlerTests
             .GetViewModel(PageId, WorkspaceId, UserId, Arg.Any<CancellationToken>())
             .Returns(new PageViewModel { Id = PageId, Title = "Old title", Slug = "rfc", Revision = 8 });
 
-        Handler = new RestorePageVersionCommandHandler(UnitOfWork, Identity, Activity);
+        Handler = new RestorePageVersionCommandHandler(UnitOfWork, Identity, Activity, EventPublisher);
     }
 
     [Fact]
@@ -67,6 +71,16 @@ public class RestorePageVersionCommandHandlerTests
         await UnitOfWork.PageVersions.Received(1).AddAsync(
             Arg.Is<PageVersion>(version => version.RestoredFromVersionId == VersionId && version.Revision == 8),
             Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Handle_ShouldIndexThePagesBelow_WhenTheVersionHadAnotherTitle()
+    {
+        UnitOfWork.Pages.GetSubtreeIds(PageId, WorkspaceId, false, Arg.Any<CancellationToken>()).Returns([PageId, 43]);
+
+        await Send();
+
+        await EventPublisher.ReceivedPageIndexEvent(SearchIndexOperation.Index, PageId, 43);
     }
 
     [Fact]

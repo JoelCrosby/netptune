@@ -17,12 +17,18 @@ public sealed class MovePageCommandHandler : IRequestHandler<MovePageCommand, Cl
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IActivityLogger Activity;
+    private readonly IEventPublisher EventPublisher;
 
-    public MovePageCommandHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity, IActivityLogger activity)
+    public MovePageCommandHandler(
+        INetptuneUnitOfWork unitOfWork,
+        IIdentityService identity,
+        IActivityLogger activity,
+        IEventPublisher eventPublisher)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Activity = activity;
+        EventPublisher = eventPublisher;
     }
 
     public async ValueTask<ClientResponse<PageViewModel>> Handle(MovePageCommand request, CancellationToken cancellationToken)
@@ -35,6 +41,7 @@ public sealed class MovePageCommandHandler : IRequestHandler<MovePageCommand, Cl
             return ClientResponse<PageViewModel>.Failed("The sort order must be a number.");
         }
 
+        var workspaceKey = Identity.GetWorkspaceKey();
         var workspaceId = await Identity.GetWorkspaceId();
         var userId = Identity.GetCurrentUserId();
         var page = await UnitOfWork.Pages.GetLiveInWorkspace(request.Id, workspaceId, cancellationToken: cancellationToken);
@@ -69,11 +76,21 @@ public sealed class MovePageCommandHandler : IRequestHandler<MovePageCommand, Cl
             }
         }
 
+        var parentChanged = page.ParentId != input.ParentId;
+
         page.ParentId = input.ParentId;
         page.SortOrder = input.SortOrder;
         page.ModifiedByUserId = userId;
 
         await UnitOfWork.CompleteAsync(cancellationToken);
+
+        // Only the parent feeds the indexed path; a reorder among siblings changes nothing searchable.
+        if (parentChanged)
+        {
+            var indexScope = new PageIndexScope(page.Id, workspaceId, workspaceKey);
+
+            await PageSearchIndex.IndexSubtree(UnitOfWork, EventPublisher, indexScope, cancellationToken);
+        }
 
         var viewModel = await UnitOfWork.Pages.GetViewModel(page.Id, workspaceId, userId, cancellationToken);
 

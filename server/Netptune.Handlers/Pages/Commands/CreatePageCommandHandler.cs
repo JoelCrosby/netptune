@@ -4,6 +4,7 @@ using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Pages;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Requests.Pages;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -20,12 +21,18 @@ public sealed class CreatePageCommandHandler : IRequestHandler<CreatePageCommand
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IActivityLogger Activity;
+    private readonly IEventPublisher EventPublisher;
 
-    public CreatePageCommandHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity, IActivityLogger activity)
+    public CreatePageCommandHandler(
+        INetptuneUnitOfWork unitOfWork,
+        IIdentityService identity,
+        IActivityLogger activity,
+        IEventPublisher eventPublisher)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Activity = activity;
+        EventPublisher = eventPublisher;
     }
 
     public async ValueTask<ClientResponse<PageViewModel>> Handle(CreatePageCommand request, CancellationToken cancellationToken)
@@ -46,6 +53,7 @@ public sealed class CreatePageCommandHandler : IRequestHandler<CreatePageCommand
             return ClientResponse<PageViewModel>.Failed(PageTitle.TooLongMessage);
         }
 
+        var workspaceKey = Identity.GetWorkspaceKey();
         var workspaceId = await Identity.GetWorkspaceId();
         var userId = Identity.GetCurrentUserId();
         var parent = await ResolveParent(input.ParentId, workspaceId, cancellationToken);
@@ -94,6 +102,8 @@ public sealed class CreatePageCommandHandler : IRequestHandler<CreatePageCommand
             await UnitOfWork.PageVersions.AddAsync(version, cancellationToken);
             await UnitOfWork.CompleteAsync(cancellationToken);
         });
+
+        await EventPublisher.IndexPages([page.Id], workspaceKey);
 
         var viewModel = await UnitOfWork.Pages.GetViewModel(page.Id, workspaceId, userId, cancellationToken);
 

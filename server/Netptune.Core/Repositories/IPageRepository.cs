@@ -32,4 +32,14 @@ public interface IPageRepository : IWorkspaceEntityRepository<Page, int>
     Task<bool> AnyCreatedByOthers(IReadOnlyCollection<int> ids, string userId, CancellationToken cancellationToken = default);
 
     Task<List<int>> GetAncestorIds(int pageId, int workspaceId, CancellationToken cancellationToken = default);
+
+    Task<List<PageSearchSource>> GetSearchSources(IReadOnlyCollection<int> ids, string workspaceKey, CancellationToken cancellationToken = default);
+
+    Task<List<PageSearchSource>> GetAllSearchSources(string workspaceKey, CancellationToken cancellationToken = default);
+
+    Task<List<PageOutlineEntry>> GetOutline(string workspaceKey, CancellationToken cancellationToken = default);
+
+    Task<List<PageOutlineEntry>> GetAncestorOutline(IReadOnlyCollection<int> pageIds, string workspaceKey, CancellationToken cancellationToken = default);
+
+    Task<List<int>> GetIdsTaggedWith(IReadOnlyCollection<int> tagIds, int workspaceId, CancellationToken cancellationToken = default);
 }

@@ -20,12 +20,18 @@ public sealed class SavePageCommandHandler : IRequestHandler<SavePageCommand, Cl
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IActivityLogger Activity;
+    private readonly IEventPublisher EventPublisher;
 
-    public SavePageCommandHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity, IActivityLogger activity)
+    public SavePageCommandHandler(
+        INetptuneUnitOfWork unitOfWork,
+        IIdentityService identity,
+        IActivityLogger activity,
+        IEventPublisher eventPublisher)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Activity = activity;
+        EventPublisher = eventPublisher;
     }
 
     public async ValueTask<ClientResponse<PageViewModel>> Handle(SavePageCommand request, CancellationToken cancellationToken)
@@ -87,6 +93,11 @@ public sealed class SavePageCommandHandler : IRequestHandler<SavePageCommand, Cl
         {
             return ClientResponse<PageViewModel>.Conflict(viewModel, ConflictMessage);
         }
+
+        var indexScope = new PageIndexScope(page.Id, workspaceId, workspaceKey);
+        var renamed = page.Title != title;
+
+        await PageSearchIndex.IndexAfterSave(UnitOfWork, EventPublisher, indexScope, renamed, cancellationToken);
 
         Activity.Log(options =>
         {

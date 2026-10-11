@@ -11,6 +11,8 @@ public static class SearchIndexEntityTypes
     public const string Project = "project";
 
     public const string Sprint = "sprint";
+
+    public const string Page = "page";
 }
 
 public static class SearchIndexEvents
@@ -38,6 +40,16 @@ public static class SearchIndexEvents
     public static Task IndexProjects(this IEventPublisher publisher, IReadOnlyList<int> projectIds, string workspaceSlug)
     {
         return Dispatch(publisher, SearchIndexOperation.Index, SearchIndexEntityTypes.Project, projectIds, workspaceSlug);
+    }
+
+    public static Task IndexPages(this IEventPublisher publisher, IReadOnlyList<int> pageIds, string workspaceSlug)
+    {
+        return Dispatch(publisher, SearchIndexOperation.Index, SearchIndexEntityTypes.Page, pageIds, workspaceSlug);
+    }
+
+    public static Task RemovePages(this IEventPublisher publisher, IReadOnlyList<int> pageIds, string workspaceSlug)
+    {
+        return Dispatch(publisher, SearchIndexOperation.Delete, SearchIndexEntityTypes.Page, pageIds, workspaceSlug);
     }
 
     private static Task Dispatch(

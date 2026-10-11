@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -17,12 +18,18 @@ public sealed class UpdateTagCommandHandler : IRequestHandler<UpdateTagCommand, 
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IActivityLogger Activity;
+    private readonly IEventPublisher EventPublisher;
 
-    public UpdateTagCommandHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity, IActivityLogger activity)
+    public UpdateTagCommandHandler(
+        INetptuneUnitOfWork unitOfWork,
+        IIdentityService identity,
+        IActivityLogger activity,
+        IEventPublisher eventPublisher)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Activity = activity;
+        EventPublisher = eventPublisher;
     }
 
     public async ValueTask<ClientResponse<TagViewModel>> Handle(UpdateTagCommand request, CancellationToken cancellationToken)
@@ -45,6 +52,14 @@ public sealed class UpdateTagCommandHandler : IRequestHandler<UpdateTagCommand, 
         tag.Name = request.Request.NewValue.Trim();
 
         await UnitOfWork.CompleteAsync(cancellationToken);
+
+        // Pages index their tags by name, so a rename leaves every tagged page's document stale.
+        var taggedPageIds = await UnitOfWork.Pages.GetIdsTaggedWith([tag.Id], workspaceId.Value, cancellationToken);
+
+        if (taggedPageIds.Count > 0)
+        {
+            await EventPublisher.IndexPages(taggedPageIds, workspaceKey);
+        }
 
         Activity.Log(options =>
         {

@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests.Pages;
 using Netptune.Core.Responses.Common;
@@ -18,12 +19,18 @@ public sealed class UpdatePageCommandHandler : IRequestHandler<UpdatePageCommand
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IActivityLogger Activity;
+    private readonly IEventPublisher EventPublisher;
 
-    public UpdatePageCommandHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity, IActivityLogger activity)
+    public UpdatePageCommandHandler(
+        INetptuneUnitOfWork unitOfWork,
+        IIdentityService identity,
+        IActivityLogger activity,
+        IEventPublisher eventPublisher)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Activity = activity;
+        EventPublisher = eventPublisher;
     }
 
     public async ValueTask<ClientResponse<PageViewModel>> Handle(UpdatePageCommand request, CancellationToken cancellationToken)
@@ -36,6 +43,7 @@ public sealed class UpdatePageCommandHandler : IRequestHandler<UpdatePageCommand
             return ClientResponse<PageViewModel>.Failed("Unknown page status.");
         }
 
+        var workspaceKey = Identity.GetWorkspaceKey();
         var workspaceId = await Identity.GetWorkspaceId();
         var userId = Identity.GetCurrentUserId();
         var page = await UnitOfWork.Pages.GetLiveWithTags(request.Id, workspaceId, cancellationToken);
@@ -69,6 +77,7 @@ public sealed class UpdatePageCommandHandler : IRequestHandler<UpdatePageCommand
         page.ModifiedByUserId = userId;
 
         await UnitOfWork.CompleteAsync(cancellationToken);
+        await EventPublisher.IndexPages([page.Id], workspaceKey);
 
         var viewModel = await UnitOfWork.Pages.GetViewModel(page.Id, workspaceId, userId, cancellationToken);
 

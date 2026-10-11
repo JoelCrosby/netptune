@@ -4,6 +4,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Models.Pages;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Requests.Pages;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -23,14 +24,17 @@ public class SavePageCommandHandlerTests
     private const int WorkspaceId = 7;
     private const int PageId = 42;
     private const string UserId = "user-1";
+    private const string WorkspaceKey = "workspace";
 
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+    private readonly IEventPublisher EventPublisher = Substitute.For<IEventPublisher>();
     private readonly SavePageCommandHandler Handler;
 
     public SavePageCommandHandlerTests()
     {
+        Identity.GetWorkspaceKey().Returns(WorkspaceKey);
         Identity.GetWorkspaceId().Returns(WorkspaceId);
         Identity.GetCurrentUserId().Returns(UserId);
 
@@ -43,7 +47,7 @@ public class SavePageCommandHandlerTests
 
         UnitOfWork.Pages.TrySaveContent(Arg.Any<PageContentUpdate>(), Arg.Any<CancellationToken>()).Returns(true);
 
-        Handler = new SavePageCommandHandler(UnitOfWork, Identity, Activity);
+        Handler = new SavePageCommandHandler(UnitOfWork, Identity, Activity, EventPublisher);
     }
 
     [Fact]
@@ -104,6 +108,30 @@ public class SavePageCommandHandlerTests
         result.Message.Should().Be(SavePageCommandHandler.ConflictMessage);
         result.Payload!.Revision.Should().Be(4);
         Activity.DidNotReceive().Log(Arg.Any<Action<ActivityOptions>>());
+        await EventPublisher.DidNotReceivePageIndexEvent();
+    }
+
+    [Fact]
+    public async Task Handle_ShouldIndexOnlyThePage_WhenTheTitleIsUnchanged()
+    {
+        await Send(new SavePageRequest { Title = "Current", Body = "edited", Revision = 3 });
+
+        await EventPublisher.ReceivedPageIndexEvent(SearchIndexOperation.Index, PageId);
+        await UnitOfWork.Pages.DidNotReceive().GetSubtreeIds(
+            Arg.Any<int>(),
+            Arg.Any<int>(),
+            Arg.Any<bool>(),
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Handle_ShouldIndexThePagesBelow_WhenThePageIsRenamed()
+    {
+        UnitOfWork.Pages.GetSubtreeIds(PageId, WorkspaceId, false, Arg.Any<CancellationToken>()).Returns([PageId, 43, 44]);
+
+        await Send(new SavePageRequest { Title = "Renamed", Body = "edited", Revision = 3 });
+
+        await EventPublisher.ReceivedPageIndexEvent(SearchIndexOperation.Index, PageId, 43, 44);
     }
 
     [Fact]

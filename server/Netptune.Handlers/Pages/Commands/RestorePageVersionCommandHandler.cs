@@ -17,12 +17,18 @@ public sealed class RestorePageVersionCommandHandler : IRequestHandler<RestorePa
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IActivityLogger Activity;
+    private readonly IEventPublisher EventPublisher;
 
-    public RestorePageVersionCommandHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity, IActivityLogger activity)
+    public RestorePageVersionCommandHandler(
+        INetptuneUnitOfWork unitOfWork,
+        IIdentityService identity,
+        IActivityLogger activity,
+        IEventPublisher eventPublisher)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Activity = activity;
+        EventPublisher = eventPublisher;
     }
 
     public async ValueTask<ClientResponse<PageViewModel>> Handle(RestorePageVersionCommand request, CancellationToken cancellationToken)
@@ -71,6 +77,11 @@ public sealed class RestorePageVersionCommandHandler : IRequestHandler<RestorePa
         {
             return ClientResponse<PageViewModel>.Conflict(viewModel, SavePageCommandHandler.ConflictMessage);
         }
+
+        var indexScope = new PageIndexScope(page.Id, workspaceId, workspaceKey);
+        var renamed = page.Title != version.Title;
+
+        await PageSearchIndex.IndexAfterSave(UnitOfWork, EventPublisher, indexScope, renamed, cancellationToken);
 
         Activity.Log(options =>
         {
