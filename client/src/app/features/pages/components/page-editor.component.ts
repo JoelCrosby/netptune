@@ -728,6 +728,10 @@ export class PageEditorComponent implements OnInit {
     this.draft().updateMeta({ tags });
   }
 
+  flush() {
+    this.editor()?.flush();
+  }
+
   scrollToHeading(index: number) {
     this.editor()?.scrollToHeading(index);
   }

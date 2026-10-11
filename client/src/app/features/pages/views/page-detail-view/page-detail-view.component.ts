@@ -43,6 +43,7 @@ import { PageToolbarComponent } from '../../components/page-toolbar.component';
 import {
   pageDetailResource,
   pageLinksResource,
+  pageUpdatesResource,
 } from '../../resources/pages.resource';
 import { pageArchiveRights } from '../../util/page-archive-rights';
 import { PageDraft } from '../../services/page-draft';
@@ -173,6 +174,7 @@ export class PageDetailViewComponent {
   });
 
   protected readonly detail = pageDetailResource(this.slug);
+  private readonly updates = pageUpdatesResource(this.slug);
   protected readonly mode = signal<EditorMode>('rich');
   protected readonly railTab = signal<string | number | null>('outline');
   protected readonly documentKind = PageKind.document;
@@ -240,6 +242,14 @@ export class PageDetailViewComponent {
     );
 
     effect(() => {
+      const page = this.updates.hasValue() ? this.updates.value() : undefined;
+
+      if (page) {
+        untracked(() => this.applyRemote(page));
+      }
+    });
+
+    effect(() => {
       const id = this.draft()?.id;
 
       if (id !== undefined) {
@@ -281,6 +291,20 @@ export class PageDetailViewComponent {
         this.currentPage.clearIfCurrent(id);
       }
     });
+  }
+
+  private applyRemote(page: PageDetail) {
+    const draft = this.draft();
+
+    if (draft?.id !== page.id) return;
+
+    const isNewer = page.revision > draft.latest().revision;
+
+    if (isNewer) {
+      this.editor()?.flush();
+    }
+
+    draft.applyRemote(page);
   }
 
   protected onHistoryRequested() {

@@ -101,6 +101,26 @@ export class PageDraft {
     this.state.set('saved');
   }
 
+  applyRemote(page: PageDetail) {
+    const isBusy =
+      this.inFlight ||
+      this.queued ||
+      this.pendingMeta > 0 ||
+      this.conflict() !== null;
+
+    if (isBusy || page.revision < this.revision) return;
+
+    if (page.revision === this.revision) {
+      this.latest.set(page);
+      return;
+    }
+
+    const previous = this.latest();
+
+    this.replaceWith(page);
+    this.announceRename(previous, page);
+  }
+
   private onMetaSaved(response: ClientResponse<PageDetail>) {
     this.pendingMeta--;
 

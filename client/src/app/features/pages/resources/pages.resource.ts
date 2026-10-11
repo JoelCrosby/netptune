@@ -1,4 +1,4 @@
-import { Signal } from '@angular/core';
+import { inject, linkedSignal, Signal, untracked } from '@angular/core';
 import { PERMISSIONS } from '@core/auth/permissions';
 import {
   ArchivedPage,
@@ -16,6 +16,7 @@ import {
   requestFrom,
 } from '@core/resources/permission.resource';
 import { stableResource } from '@core/resources/stable.resource';
+import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 
 export const pageTreeResource = () => {
   return stableResource<PageTreeNode[]>({
@@ -26,12 +27,34 @@ export const pageTreeResource = () => {
   });
 };
 
-// Not refreshed on 'pages': a reload would replace a body the user is still typing into.
-// Edits made elsewhere surface as a conflict on the next save instead.
+// Not refreshed on 'pages': a failed reload would swap the open editor for the not-found state.
+// Edits made elsewhere arrive through pageUpdatesResource instead.
 export const pageDetailResource = (slug: Signal<string | undefined>) => {
   return permissionResource<PageDetail | undefined>({
     permission: PERMISSIONS.pages.read,
     request: requestFrom(slug, (key) => ({ url: `api/pages/${key}` })),
+    parse: (response) => response.payload,
+  });
+};
+
+// Idle until 'pages' is refreshed after the page loads, so opening a page fetches it only once.
+export const pageUpdatesResource = (slug: Signal<string | undefined>) => {
+  const pagesVersion = inject(WorkspaceRefreshService).version('pages');
+  const loadedAtVersion = linkedSignal({
+    source: slug,
+    computation: () => untracked(pagesVersion),
+  });
+
+  return permissionResource<PageDetail | undefined>({
+    permission: PERMISSIONS.pages.read,
+    request: () => {
+      const key = slug();
+      const version = pagesVersion();
+
+      if (!key || version === loadedAtVersion()) return undefined;
+
+      return { url: `api/pages/${key}` };
+    },
     parse: (response) => response.payload,
   });
 };

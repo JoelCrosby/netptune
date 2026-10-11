@@ -409,6 +409,10 @@ export class EditorComponent
     this.setValue(this.value());
   }
 
+  flush() {
+    this.persistCurrentMode(this.emitSaved);
+  }
+
   private persistCurrentMode(deliver: (value: string) => void) {
     if (this.mode() === 'markdown') {
       this.persistMarkdown(deliver);
