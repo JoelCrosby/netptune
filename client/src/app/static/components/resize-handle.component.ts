@@ -1,8 +1,4 @@
 import { Component, computed, input, output, signal } from '@angular/core';
-import {
-  MAX_AI_PANEL_WIDTH,
-  MIN_AI_PANEL_WIDTH,
-} from '@core/models/ai-panel-width';
 
 /** The edge of the resized panel the handle sits on; dragging away from the panel grows it. */
 export type ResizeEdge = 'left' | 'right';
@@ -15,7 +11,7 @@ interface ResizeOrigin {
 const KEYBOARD_STEP = 24;
 
 @Component({
-  selector: 'app-ai-assistant-resize-handle',
+  selector: 'app-resize-handle',
   host: { class: 'contents' },
   template: `
     <div
@@ -39,19 +35,16 @@ const KEYBOARD_STEP = 24;
     </div>
   `,
 })
-export class AiAssistantResizeHandleComponent {
+export class ResizeHandleComponent {
   readonly width = input.required<number>();
   readonly edge = input<ResizeEdge>('left');
-  readonly minWidth = input(MIN_AI_PANEL_WIDTH);
-  readonly maxWidth = input(MAX_AI_PANEL_WIDTH);
-  readonly label = input(
-    $localize`:Accessible name of the handle that resizes the assistant panel:Resize assistant panel`
-  );
+  readonly minWidth = input.required<number>();
+  readonly maxWidth = input.required<number>();
+  readonly label = input.required<string>();
 
   readonly widthChange = output<number>();
   readonly resizingChange = output<boolean>();
 
-  /** Dragging or pressing toward the left grows a panel whose handle is on its left edge. */
   private readonly direction = computed(() => {
     return this.edge() === 'left' ? -1 : 1;
   });

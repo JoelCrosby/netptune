@@ -49,7 +49,7 @@ import {
   AiFieldTarget,
 } from './ai-assistant-review-detail.component';
 import { AiAssistantReviewListComponent } from './ai-assistant-review-list.component';
-import { AiAssistantResizeHandleComponent } from './ai-assistant-resize-handle.component';
+import { ResizeHandleComponent } from '@static/components/resize-handle.component';
 import { SpinnerIconComponent } from '@static/components/spinner/spinner-icon.component';
 import { toggleInSet } from '@core/util/signals';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
@@ -109,7 +109,7 @@ const pathOf = (url: string): string => {
     SegmentedControlComponent,
     AiAssistantReviewDetailComponent,
     AiAssistantReviewListComponent,
-    AiAssistantResizeHandleComponent,
+    ResizeHandleComponent,
     TooltipDirective,
     forwardRef(() => AiAssistantPanelComponent),
   ],
@@ -212,7 +212,7 @@ const pathOf = (url: string): string => {
             class="grid min-h-0 flex-1"
             [style.grid-template-columns]="listColumns()">
             <div class="border-border relative flex min-h-0 flex-col border-r">
-              <app-ai-assistant-resize-handle
+              <app-resize-handle
                 [edge]="'right'"
                 [width]="listWidth()"
                 [minWidth]="minListWidth"

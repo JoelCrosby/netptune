@@ -25,7 +25,11 @@ import { AiAssistantHistoryComponent } from './components/ai-assistant-history.c
 import { AiAssistantMessageComponent } from './components/ai-assistant-message.component';
 import { AiAssistantMissingKeyComponent } from './components/ai-assistant-missing-key.component';
 import { AiQuestionResponse } from './components/ai-assistant-question.component';
-import { AiAssistantResizeHandleComponent } from './components/ai-assistant-resize-handle.component';
+import {
+  MAX_AI_PANEL_WIDTH,
+  MIN_AI_PANEL_WIDTH,
+} from '@core/models/ai-panel-width';
+import { ResizeHandleComponent } from '@static/components/resize-handle.component';
 
 @Component({
   selector: 'app-ai-assistant-panel',
@@ -44,7 +48,7 @@ import { AiAssistantResizeHandleComponent } from './components/ai-assistant-resi
     AiAssistantHistoryComponent,
     AiAssistantMessageComponent,
     AiAssistantMissingKeyComponent,
-    AiAssistantResizeHandleComponent,
+    ResizeHandleComponent,
   ],
   template: `
     <div
@@ -54,8 +58,14 @@ import { AiAssistantResizeHandleComponent } from './components/ai-assistant-resi
       aria-label="AI assistant"
       [class.bg-card]="!isPage()">
       @if (isDrawer()) {
-        <app-ai-assistant-resize-handle
+        <app-resize-handle
+          i18n-label="
+            Accessible name of the handle that resizes the assistant panel
+          "
+          label="Resize assistant panel"
           [width]="panel.width()"
+          [minWidth]="minPanelWidth"
+          [maxWidth]="maxPanelWidth"
           (widthChange)="panel.setWidth($event)"
           (resizingChange)="panel.setResizing($event)" />
       }
@@ -208,6 +218,8 @@ export class AiAssistantPanelComponent {
 
   protected readonly assistant = inject(AiAssistantService);
   protected readonly panel = inject(AiPanelService);
+  protected readonly minPanelWidth = MIN_AI_PANEL_WIDTH;
+  protected readonly maxPanelWidth = MAX_AI_PANEL_WIDTH;
   protected readonly entries = computed(() => this.assistant.entries());
 
   protected readonly isDrawer = computed(() => this.variant() === 'drawer');

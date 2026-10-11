@@ -141,7 +141,7 @@
     </unit>
     <unit id="3563415301877713192">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:109,114</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:119,124</note>
         <note category="description">Shown when older messages were left out of what the assistant can see</note>
       </notes>
       <segment>
@@ -1891,9 +1891,9 @@
         <note category="location">src/app/core/services/task-commands.service.ts:227</note>
         <note category="location">src/app/core/services/task-commands.service.ts:236</note>
         <note category="location">src/app/core/services/task-commands.service.ts:244</note>
-        <note category="location">src/app/core/services/workspace-commands.service.ts:215</note>
-        <note category="location">src/app/core/services/workspace-commands.service.ts:225</note>
-        <note category="location">src/app/core/services/workspace-commands.service.ts:235</note>
+        <note category="location">src/app/core/services/workspace-commands.service.ts:219</note>
+        <note category="location">src/app/core/services/workspace-commands.service.ts:229</note>
+        <note category="location">src/app/core/services/workspace-commands.service.ts:239</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:337,340</note>
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:201,204</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:142</note>
@@ -2131,7 +2131,7 @@
     </unit>
     <unit id="4688472285214998498">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-resize-handle.component.ts:48</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:65,68</note>
         <note category="description">Accessible name of the handle that resizes the assistant panel</note>
       </notes>
       <segment>
@@ -3121,7 +3121,7 @@
     </unit>
     <unit id="5589864608128781435">
       <notes>
-        <note category="location">src/app/core/services/workspace-commands.service.ts:71</note>
+        <note category="location">src/app/core/services/workspace-commands.service.ts:75</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -3130,7 +3130,7 @@
     </unit>
     <unit id="2273088133016853024">
       <notes>
-        <note category="location">src/app/core/services/workspace-commands.service.ts:214</note>
+        <note category="location">src/app/core/services/workspace-commands.service.ts:218</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment>
@@ -3157,7 +3157,7 @@
     </unit>
     <unit id="141527660815930501">
       <notes>
-        <note category="location">src/app/core/services/workspace-commands.service.ts:216</note>
+        <note category="location">src/app/core/services/workspace-commands.service.ts:220</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment>
@@ -3166,7 +3166,7 @@
     </unit>
     <unit id="4854172748547351453">
       <notes>
-        <note category="location">src/app/core/services/workspace-commands.service.ts:217</note>
+        <note category="location">src/app/core/services/workspace-commands.service.ts:221</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment>
@@ -3184,7 +3184,7 @@
     </unit>
     <unit id="1293575230061580250">
       <notes>
-        <note category="location">src/app/core/services/workspace-commands.service.ts:224</note>
+        <note category="location">src/app/core/services/workspace-commands.service.ts:228</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment>
@@ -3193,7 +3193,7 @@
     </unit>
     <unit id="8763068601818287275">
       <notes>
-        <note category="location">src/app/core/services/workspace-commands.service.ts:226</note>
+        <note category="location">src/app/core/services/workspace-commands.service.ts:230</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment>
@@ -3219,7 +3219,7 @@
     </unit>
     <unit id="950348144194379022">
       <notes>
-        <note category="location">src/app/core/services/workspace-commands.service.ts:227</note>
+        <note category="location">src/app/core/services/workspace-commands.service.ts:231</note>
         <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:161</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
@@ -3285,7 +3285,7 @@
     </unit>
     <unit id="8871304628791267226">
       <notes>
-        <note category="location">src/app/core/services/workspace-commands.service.ts:234</note>
+        <note category="location">src/app/core/services/workspace-commands.service.ts:238</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment>
@@ -3294,7 +3294,7 @@
     </unit>
     <unit id="4501389782873056968">
       <notes>
-        <note category="location">src/app/core/services/workspace-commands.service.ts:236</note>
+        <note category="location">src/app/core/services/workspace-commands.service.ts:240</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment>
@@ -3303,7 +3303,7 @@
     </unit>
     <unit id="5832945231912845990">
       <notes>
-        <note category="location">src/app/core/services/workspace-commands.service.ts:237</note>
+        <note category="location">src/app/core/services/workspace-commands.service.ts:241</note>
         <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:160</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
@@ -10652,7 +10652,7 @@
     </unit>
     <unit id="2527613524061523304">
       <notes>
-        <note category="location">src/app/core/services/workspace-commands.service.ts:209</note>
+        <note category="location">src/app/core/services/workspace-commands.service.ts:213</note>
         <note category="description">Error shown after an action fails</note>
       </notes>
       <segment>
@@ -12573,7 +12573,7 @@
     </unit>
     <unit id="7151632936989469818">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:251</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:263</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:57,59</note>
         <note category="description">Header of a conversation that has not started yet</note>
       </notes>
@@ -17709,6 +17709,15 @@
         <source>This import could not be reopened.</source>
       </segment>
     </unit>
+    <unit id="565444447916223977">
+      <notes>
+        <note category="location">src/app/features/pages/views/pages-layout-view/pages-layout-view.component.ts:38,40</note>
+        <note category="description">Accessible name of the handle that resizes the pages sidebar</note>
+      </notes>
+      <segment>
+        <source>Resize pages sidebar</source>
+      </segment>
+    </unit>
     <unit id="5654547208168525627">
       <notes>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:146</note>
@@ -18360,7 +18369,7 @@
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:200</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:166</note>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:82,84</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:92,94</note>
         <note category="description">Column heading for an assistant conversation</note>
       </notes>
       <segment>
@@ -23054,7 +23063,7 @@
     </unit>
     <unit id="3259201493560941662">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:146,148</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:156,158</note>
         <note category="description">Accessible label for the button that scrolls to the newest message</note>
       </notes>
       <segment>
@@ -24287,7 +24296,7 @@
     </unit>
     <unit id="8426796922329733141">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:54,56</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:58,60</note>
         <note category="description">Accessible name of the AI assistant panel</note>
       </notes>
       <segment>
