@@ -8,7 +8,7 @@ import { getErrorMessage } from '@core/util/error-message';
 import { SaveState } from '@static/components/save-status/save-status.component';
 
 export interface PageDraftHooks {
-  renamed(page: PageDetail): void;
+  renamed(page: PageDetail, titleChanged: boolean): void;
   metaSaved(): void;
   failed(message: string): void;
 }
@@ -134,6 +134,8 @@ export class PageDraft {
 
     if (!theirs) return;
 
+    const previous = this.latest();
+
     this.revision = theirs.revision;
     this.savedTitle = editableTitle(theirs.title);
     this.latest.set(theirs);
@@ -141,6 +143,16 @@ export class PageDraft {
     this.body.set(theirs.body ?? '');
     this.conflict.set(null);
     this.state.set('saved');
+    this.announceRename(previous, theirs);
+  }
+
+  private announceRename(previous: PageDetail, next: PageDetail) {
+    const titleChanged = next.title !== previous.title;
+    const slugChanged = next.slug !== previous.slug;
+
+    if (titleChanged || slugChanged) {
+      this.hooks.renamed(next, titleChanged);
+    }
   }
 
   keepMine() {
@@ -198,18 +210,13 @@ export class PageDraft {
       return;
     }
 
-    const renamed =
-      editableTitle(saved.title) !== this.savedTitle ||
-      saved.slug !== this.latest().slug;
+    const previous = this.latest();
 
     this.revision = saved.revision;
     this.savedTitle = editableTitle(saved.title);
     this.latest.set(saved);
     this.state.set('saved');
-
-    if (renamed) {
-      this.hooks.renamed(saved);
-    }
+    this.announceRename(previous, saved);
 
     this.runQueued();
   }
@@ -246,7 +253,6 @@ const tooLargeMessage = $localize`:Error shown when a page's text is over the si
 const updateFailedMessage = $localize`:Error shown when changing a page's status or tags fails:The page couldn't be updated.`;
 const saveFailedMessage = $localize`:Error shown when saving a page fails:The page couldn't be saved.`;
 
-// The server stores a blank title as PageTitle.Untitled; the editor shows it empty so the placeholder reads instead.
 const serverUntitled = 'Untitled';
 
 function editableTitle(title: string): string {

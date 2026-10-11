@@ -74,6 +74,16 @@ public class RestorePageVersionCommandHandlerTests
     }
 
     [Fact]
+    public async Task Handle_ShouldMoveTheSlugToTheRestoredTitle_KeepingItsId()
+    {
+        await Send();
+
+        await UnitOfWork.Pages.Received(1).TrySaveContent(
+            Arg.Is<PageContentUpdate>(update => update.Slug == "old-title-abcdefGHIJ12"),
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task Handle_ShouldIndexThePagesBelow_WhenTheVersionHadAnotherTitle()
     {
         UnitOfWork.Pages.GetSubtreeIds(PageId, WorkspaceId, false, Arg.Any<CancellationToken>()).Returns([PageId, 43]);
@@ -123,7 +133,7 @@ public class RestorePageVersionCommandHandlerTests
     {
         UnitOfWork.Pages
             .GetLiveInWorkspace(PageId, WorkspaceId, true, Arg.Any<CancellationToken>())
-            .Returns(new Page { Id = PageId, WorkspaceId = WorkspaceId, Kind = kind, Title = "RFC", Slug = "rfc", Revision = 7 });
+            .Returns(new Page { Id = PageId, WorkspaceId = WorkspaceId, Kind = kind, Title = "RFC", Slug = "rfc-abcdefGHIJ12", Revision = 7 });
     }
 
     private Task<ClientResponse<PageViewModel>> Send()

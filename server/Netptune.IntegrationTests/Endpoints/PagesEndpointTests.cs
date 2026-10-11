@@ -90,6 +90,38 @@ public sealed class PagesEndpointTests
     }
 
     [Fact]
+    public async Task GetBySlug_ShouldNotFindAnArchivedPage_ByItsOldSlug()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var created = await Create(new CreatePageRequest { Kind = PageKind.Document });
+
+        await Save(created.Id, new SavePageRequest { Title = "Retired notes", Revision = created.Revision });
+        await Client.DeleteAsync($"api/pages/{created.Id}", cancellationToken);
+
+        var response = await Client.GetAsync($"api/pages/{created.Slug}", cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task GetBySlug_ShouldNotFindAPage_FromAnotherWorkspaceByItsOldSlug()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var created = await Create(new CreatePageRequest { Kind = PageKind.Document });
+
+        await Save(created.Id, new SavePageRequest { Title = "Private plans", Revision = created.Revision });
+
+        using var otherWorkspaceClient = Fixture.CreateNetptuneClient();
+
+        otherWorkspaceClient.DefaultRequestHeaders.Remove("workspace");
+        otherWorkspaceClient.DefaultRequestHeaders.Add("workspace", "linux");
+
+        var response = await otherWorkspaceClient.GetAsync($"api/pages/{created.Slug}", cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
     public async Task Save_ShouldReturnConflictWithTheCurrentPage_WhenTheRevisionIsStale()
     {
         var created = await Create(new CreatePageRequest { Kind = PageKind.Document, Title = "Shared notes" });

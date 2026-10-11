@@ -15,9 +15,12 @@ export class PageDraftFactory {
 
   create(page: PageDetail): PageDraft {
     return new PageDraft(page, this.pages, {
-      renamed: ({ id, title, slug }) => {
+      renamed: ({ id, title, slug }, titleChanged) => {
         this.treeStore.renameLocally(id, title, slug);
-        this.workspaceRefresh.refresh(['pages']);
+
+        if (titleChanged) {
+          this.workspaceRefresh.refresh(['pages']);
+        }
       },
       metaSaved: () => this.workspaceRefresh.refresh(['pages']),
       failed: (message) => this.snackbar.error(message),

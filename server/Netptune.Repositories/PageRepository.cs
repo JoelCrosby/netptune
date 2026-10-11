@@ -99,6 +99,7 @@ public sealed class PageRepository : WorkspaceEntityRepository<DataContext, Page
         return await Entities
             .AsNoTracking()
             .Where(page => page.Slug.EndsWith(idSuffix) && page.WorkspaceId == workspaceId && !page.IsDeleted)
+            .OrderBy(page => page.Id)
             .Select(ToViewModel(userId))
             .FirstOrDefaultAsync(cancellationToken);
     }

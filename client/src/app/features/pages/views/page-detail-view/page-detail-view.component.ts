@@ -137,16 +137,18 @@ export class PageDetailViewComponent {
     return typeof slug === 'string' ? slug : undefined;
   });
 
-  private readonly openSlug = signal<string | undefined>(undefined);
   // The address follows the open page's slug as its title changes; reloading it then would replace a body
-  // the user is still typing into, so the page keeps the slug it was loaded by.
+  // the user is still typing into, so a new slug for the same page keeps the one it was loaded by.
   private readonly slug = linkedSignal<string | undefined, string | undefined>({
     source: this.routeSlug,
     computation: (routeSlug, previous) => {
-      const followsOpenPage =
-        previous !== undefined && routeSlug === untracked(this.openSlug);
+      const loadedSlug = previous?.value;
+      const isSamePage =
+        routeSlug !== undefined &&
+        loadedSlug !== undefined &&
+        isSamePageSlug(routeSlug, loadedSlug);
 
-      return followsOpenPage ? previous.value : routeSlug;
+      return isSamePage ? loadedSlug : routeSlug;
     },
   });
 
@@ -230,7 +232,6 @@ export class PageDetailViewComponent {
         isSamePageSlug(slug, routeSlug);
 
       if (isStale) {
-        this.openSlug.set(slug);
         void this.router.navigate(this.store.link(slug), { replaceUrl: true });
       }
     });
