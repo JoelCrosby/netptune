@@ -112,6 +112,10 @@ public sealed class ArchiveImporter : IArchiveImporter
                 WorkspaceSlug = workspace.Slug,
                 CreatedByType = context.CreatedByType,
                 Warnings = warnings,
+                TaskIds = context.CreatedIdsOf(TransferRecordTypes.Task),
+                ProjectIds = context.CreatedIdsOf(TransferRecordTypes.Project),
+                BoardIds = context.CreatedIdsOf(TransferRecordTypes.Board),
+                SprintIds = context.CreatedIdsOf(TransferRecordTypes.Sprint),
                 PageIds = [.. pages.ById.Keys],
             };
         });

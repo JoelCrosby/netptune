@@ -9,6 +9,7 @@ public sealed class ArchiveImportContext
     private readonly Dictionary<string, int> IdsByRef = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, string> UserIdsByRef = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, int> Created = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, List<int>> CreatedIds = new(StringComparer.OrdinalIgnoreCase);
     private readonly List<(string Type, int SourceId, Func<int> NewId)> Sources = [];
 
     public ArchiveImportContext(int workspaceId, string userId)
@@ -23,14 +24,31 @@ public sealed class ArchiveImportContext
 
     public IReadOnlyDictionary<string, int> CreatedByType => Created;
 
+    public IReadOnlyList<int> CreatedIdsOf(string type)
+    {
+        return CreatedIds.GetValueOrDefault(type) ?? [];
+    }
+
     public void Register(EntityRef entityRef, int id)
     {
         if (id > 0)
         {
             IdsByRef[entityRef.ToString()] = id;
+            AddCreatedId(entityRef.Type, id);
         }
 
         Count(entityRef.Type);
+    }
+
+    private void AddCreatedId(string type, int id)
+    {
+        if (!CreatedIds.TryGetValue(type, out var ids))
+        {
+            ids = [];
+            CreatedIds[type] = ids;
+        }
+
+        ids.Add(id);
     }
 
     public void RegisterUser(EntityRef entityRef, string userId)

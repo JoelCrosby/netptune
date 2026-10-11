@@ -79,6 +79,8 @@ public sealed class ArchiveRoundTripTests
 
         result.CreatedByType.Should().ContainKey(TransferRecordTypes.Task)
             .WhoseValue.Should().BeGreaterThan(0, "an archive without tasks cannot rebuild a workspace");
+        result.TaskIds.Should().HaveCount(result.CreatedByType[TransferRecordTypes.Task], "every imported task is handed to search");
+        result.ProjectIds.Should().HaveCount(result.CreatedByType[TransferRecordTypes.Project], "every imported project is handed to search");
 
         await using var scope = Fixture.Services.CreateAsyncScope();
 

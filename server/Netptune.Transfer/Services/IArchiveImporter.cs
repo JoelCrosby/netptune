@@ -55,6 +55,14 @@ public sealed record ArchiveImportResult
 
     public IReadOnlyList<string> Warnings { get; init; } = [];
 
+    public IReadOnlyList<int> TaskIds { get; init; } = [];
+
+    public IReadOnlyList<int> ProjectIds { get; init; } = [];
+
+    public IReadOnlyList<int> BoardIds { get; init; } = [];
+
+    public IReadOnlyList<int> SprintIds { get; init; } = [];
+
     public IReadOnlyList<int> PageIds { get; init; } = [];
 }
 

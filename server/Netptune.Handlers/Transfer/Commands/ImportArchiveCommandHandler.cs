@@ -16,6 +16,8 @@ public sealed record ImportArchiveCommand(ImportArchiveRequest Request)
 public sealed class ImportArchiveCommandHandler
     : IRequestHandler<ImportArchiveCommand, ClientResponse<ArchiveImportResultViewModel>>
 {
+    private const int IndexBatchSize = 1000;
+
     private readonly IArchiveImporter Importer;
     private readonly IIdentityService Identity;
     private readonly IEventPublisher EventPublisher;
@@ -40,7 +42,7 @@ public sealed class ImportArchiveCommandHandler
         {
             var result = await Importer.Import(built, cancellationToken);
 
-            await IndexPages(result);
+            await IndexImported(result);
 
             return ClientResponse<ArchiveImportResultViewModel>.Success(ArchiveImportResultViewModel.From(result));
         }
@@ -50,13 +52,21 @@ public sealed class ImportArchiveCommandHandler
         }
     }
 
-    private async Task IndexPages(ArchiveImportResult result)
+    private async Task IndexImported(ArchiveImportResult result)
     {
-        if (result.PageIds.Count == 0)
-        {
-            return;
-        }
+        var slug = result.WorkspaceSlug;
 
-        await EventPublisher.IndexPages(result.PageIds, result.WorkspaceSlug);
+        await IndexInBatches(result.TaskIds, ids => EventPublisher.IndexTasks(ids, slug));
+        await IndexInBatches(result.ProjectIds, ids => EventPublisher.IndexProjects(ids, slug));
+        await IndexInBatches(result.BoardIds, ids => EventPublisher.IndexBoards(ids, slug));
+        await IndexInBatches(result.SprintIds, ids => EventPublisher.IndexSprints(ids, slug));
+        await IndexInBatches(result.PageIds, ids => EventPublisher.IndexPages(ids, slug));
+    }
+
+    private static Task IndexInBatches(IReadOnlyList<int> ids, Func<IReadOnlyList<int>, Task> index)
+    {
+        var batches = ids.Chunk(IndexBatchSize).Select(batch => index(batch));
+
+        return Task.WhenAll(batches);
     }
 }
