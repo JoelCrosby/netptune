@@ -4,6 +4,10 @@ namespace Netptune.Core.Services.Search;
 
 public record GlobalSearchQuery(string Q, string WorkspaceSlug, string[]? Types = null, int Limit = 20, bool IncludePages = false);
 
+public record TaskIdSearchQuery(string Q, string WorkspaceSlug, int Limit, int? ProjectId = null, string? AssigneeId = null);
+
+public record TaskIdSearchResult(IReadOnlyList<int> TaskIds, int EstimatedTotalHits);
+
 public interface IMeilisearchService
 {
     Task IndexDocumentsAsync<T>(string indexName, IEnumerable<T> docs, CancellationToken cancellationToken = default);
@@ -15,4 +19,6 @@ public interface IMeilisearchService
     Task<bool> IsIndexEmptyAsync(string indexName, CancellationToken cancellationToken = default);
 
     Task<SearchResponse> SearchAsync(GlobalSearchQuery query, CancellationToken cancellationToken = default);
+
+    Task<TaskIdSearchResult?> SearchTaskIdsAsync(TaskIdSearchQuery query, CancellationToken cancellationToken = default);
 }

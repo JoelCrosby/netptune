@@ -14,6 +14,12 @@ public class TaskFilter : PageRequest
 
     public string? Search { get; init; }
 
+    public int[] TaskIds { get; init; } = [];
+
+    public int? BoardGroupId { get; init; }
+
+    public int? NotInBoardGroupId { get; init; }
+
     public string[] Tags { get; init; } = [];
 
     public int[] StatusIds { get; init; } = [];

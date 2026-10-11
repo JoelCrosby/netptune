@@ -107,6 +107,41 @@ public sealed class MeilisearchService : IMeilisearchService
         };
     }
 
+    public async Task<TaskIdSearchResult?> SearchTaskIdsAsync(TaskIdSearchQuery query, CancellationToken cancellationToken = default)
+    {
+        var filters = new List<string> { $"workspaceSlug = \"{EscapeFilterValue(query.WorkspaceSlug)}\"" };
+
+        if (query.ProjectId.HasValue)
+        {
+            filters.Add($"projectId = {query.ProjectId.Value}");
+        }
+
+        if (!string.IsNullOrWhiteSpace(query.AssigneeId))
+        {
+            filters.Add($"assigneeIds = \"{EscapeFilterValue(query.AssigneeId)}\"");
+        }
+
+        var meiliQuery = new MeiliSearchQuery
+        {
+            Filter = string.Join(" AND ", filters),
+            Limit = query.Limit,
+            AttributesToRetrieve = ["taskId"],
+        };
+
+        try
+        {
+            var result = await Client.Index("tasks").SearchAsync<TaskIdHit>(query.Q, meiliQuery, cancellationToken);
+            var taskIds = result.Hits.Select(hit => hit.TaskId).ToList();
+            var estimatedTotalHits = result is SearchResult<TaskIdHit> searchResult ? searchResult.EstimatedTotalHits : taskIds.Count;
+
+            return new TaskIdSearchResult(taskIds, estimatedTotalHits);
+        }
+        catch (Exception exception) when (exception is MeilisearchApiError or MeilisearchCommunicationError or HttpRequestException)
+        {
+            return null;
+        }
+    }
+
     private static string EscapeFilterValue(string value)
     {
         return value.Replace("\\", "\\\\").Replace("\"", "\\\"");
@@ -312,6 +347,11 @@ public sealed class MeilisearchService : IMeilisearchService
         }, ct);
 
         await WaitForCompletionAsync(update, ct);
+    }
+
+    private sealed record TaskIdHit
+    {
+        public int TaskId { get; init; }
     }
 
     private sealed record PageSearchHit

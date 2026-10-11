@@ -115,6 +115,19 @@ WITH filtered_tasks AS (
           FROM project_task_app_users ptau_any
           WHERE ptau_any.project_task_id = pt.id
       ))
+      AND (CARDINALITY(@taskIds) = 0 OR pt.id = ANY(@taskIds))
+      AND (@boardGroupId IS NULL OR EXISTS (
+          SELECT 1
+          FROM project_task_in_board_groups ptbg_in
+          WHERE ptbg_in.project_task_id = pt.id
+            AND ptbg_in.board_group_id = @boardGroupId
+      ))
+      AND (@notInBoardGroupId IS NULL OR NOT EXISTS (
+          SELECT 1
+          FROM project_task_in_board_groups ptbg_out
+          WHERE ptbg_out.project_task_id = pt.id
+            AND ptbg_out.board_group_id = @notInBoardGroupId
+      ))
       AND (CARDINALITY(@statusIds) = 0 OR pt.status_id = ANY(@statusIds))
       AND (CARDINALITY(@statusCategories) = 0 OR st.category = ANY(@statusCategories))
       AND (CARDINALITY(@priorities) = 0
