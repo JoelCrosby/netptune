@@ -1,8 +1,10 @@
 using Mediator;
 
+using Netptune.App.Configuration;
 using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
+using Netptune.Core.Services.Realtime;
 using Netptune.Handlers.Projects.Commands;
 using Netptune.Handlers.Projects.Queries;
 
@@ -16,9 +18,12 @@ public static class ProjectsEndpoints
 
         group.MapGet("/", HandleGetProjects).RequireAuthorization(NetptunePermissions.Projects.Read);
         group.MapGet("/{key}", HandleGetProject).RequireAuthorization(NetptunePermissions.Projects.Read);
-        group.MapPut("/", HandlePut).RequireAuthorization(NetptunePermissions.Projects.Update);
-        group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.Projects.Create);
-        group.MapDelete("/{id}", HandleDelete).RequireAuthorization(NetptunePermissions.Projects.Delete);
+        group.MapPut("/", HandlePut).RequireAuthorization(NetptunePermissions.Projects.Update)
+            .Broadcasts(WorkspaceEventScopes.Project);
+        group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.Projects.Create)
+            .Broadcasts(WorkspaceEventScopes.Project);
+        group.MapDelete("/{id}", HandleDelete).RequireAuthorization(NetptunePermissions.Projects.Delete)
+            .Broadcasts(WorkspaceEventScopes.Project, WorkspaceEventScopes.Board, WorkspaceEventScopes.Task);
 
         return group;
     }

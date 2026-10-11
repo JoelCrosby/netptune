@@ -18,17 +18,20 @@ public static class TagsEndpoints
     {
         var group = builder.MapGroup("tags");
 
-        group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.Tags.Create);
+        group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.Tags.Create)
+            .Broadcasts(WorkspaceEventScopes.Tag);
         group.MapPost("/task", HandlePostTaskTag).RequireAuthorization(NetptunePermissions.Tags.Assign)
             .Broadcasts(WorkspaceEventScopes.Tag, WorkspaceEventScopes.Task);
         group.MapGet("/task/{systemId}", HandleGetTagsForTask).RequireAuthorization(NetptunePermissions.Tags.Read);
         group.MapGet("/workspace", HandleGetTagsForWorkspace).RequireAuthorization(NetptunePermissions.Tags.Read);
         group.MapGet("/page", HandleGetTagsPage).RequireAuthorization(NetptunePermissions.Tags.Read);
         group.MapGet("/{id:int}/usage", HandleGetTagUsage).RequireAuthorization(NetptunePermissions.Tags.Read);
-        group.MapDelete("/", HandleDelete).RequireAuthorization(NetptunePermissions.Tags.Delete);
+        group.MapDelete("/", HandleDelete).RequireAuthorization(NetptunePermissions.Tags.Delete)
+            .Broadcasts(WorkspaceEventScopes.Tag, WorkspaceEventScopes.Task);
         group.MapDelete("/task", HandleDeleteFromTask).RequireAuthorization(NetptunePermissions.Tags.Assign)
             .Broadcasts(WorkspaceEventScopes.Tag, WorkspaceEventScopes.Task);
-        group.MapPatch("/", HandleUpdateTag).RequireAuthorization(NetptunePermissions.Tags.Update);
+        group.MapPatch("/", HandleUpdateTag).RequireAuthorization(NetptunePermissions.Tags.Update)
+            .Broadcasts(WorkspaceEventScopes.Tag, WorkspaceEventScopes.Task);
 
         return builder;
     }

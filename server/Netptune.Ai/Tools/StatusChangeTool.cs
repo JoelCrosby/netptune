@@ -18,14 +18,16 @@ public sealed class StatusChangeTool : IAiTool
         {
             ["create"] = new CreateStatusAction(mediator, changeSet),
             ["update"] = new UpdateStatusAction(mediator, changeSet),
+            ["delete"] = new DeleteStatusAction(mediator, changeSet),
         });
     }
 
     public string Name => ToolName;
 
     public string Description =>
-        "Propose creating a workspace task status, or renaming one or changing its category, colour or description. "
-        + "On update, fields that are not passed keep their current value.";
+        "Propose creating, updating or deleting a workspace task status. "
+        + "On update, fields that are not passed keep their current value. "
+        + "System statuses, and statuses still used by tasks or as a project's default, cannot be deleted.";
 
     public AiToolKind Kind => AiToolKind.Write;
 
@@ -36,8 +38,8 @@ public sealed class StatusChangeTool : IAiTool
     public JsonDocument InputSchema { get; } = AiToolSchema.Object(
         """
         {
-          "action": { "type": "string", "enum": ["create", "update"] },
-          "statusId": { "type": "integer", "description": "Update: the status, from list_records." },
+          "action": { "type": "string", "enum": ["create", "update", "delete"] },
+          "statusId": { "type": "integer", "description": "Update and delete: the status, from list_records." },
           "name": { "type": "string", "description": "Create: the status name. Update: a new name." },
           "category": {
             "type": "string",
@@ -45,7 +47,8 @@ public sealed class StatusChangeTool : IAiTool
             "enum": ["New", "Backlog", "Todo", "Active", "Done", "Inactive"]
           },
           "description": { "type": "string", "description": "Optional status description." },
-          "color": { "type": "string", "description": "Optional colour, as a hex value or a named colour." }
+          "color": { "type": "string", "description": "Optional colour, as a hex value or a named colour." },
+          "reason": { "type": "string", "description": "Delete: why the status should go, shown in the review." }
         }
         """,
         "action");

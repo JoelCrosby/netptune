@@ -121,7 +121,7 @@ public sealed class LinkTasksAction : IAiToolAction
                 return LinkRelation.Failed(AiPendingReference.Missing(relationTypeRef, "relation type"));
             }
 
-            var proposedName = CreateRelationTypeTool.ReadProposedName(pending);
+            var proposedName = CreateRelationTypeAction.ReadProposedName(pending);
 
             return new LinkRelation { RefKey = relationTypeRef, Label = proposedName ?? "related to" };
         }

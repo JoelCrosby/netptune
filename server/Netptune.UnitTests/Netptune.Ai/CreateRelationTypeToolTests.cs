@@ -88,7 +88,7 @@ public class CreateRelationTypeToolTests
 
     private async Task<AiToolExecution> Execute(string json)
     {
-        var tool = new CreateRelationTypeTool(Mediator, ChangeSet);
+        var tool = new CreateRelationTypeAction(Mediator, ChangeSet);
 
         return await tool.Execute(Arguments(json), TestContext.Current.CancellationToken);
     }

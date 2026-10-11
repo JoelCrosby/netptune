@@ -9,47 +9,23 @@ using Netptune.Handlers.RelationTypes.Queries;
 
 namespace Netptune.Ai.Tools;
 
-public sealed class CreateRelationTypeTool : IAiTool
+public sealed class CreateRelationTypeAction : IAiToolAction
 {
-    public const string ToolName = "propose_create_relation_type";
+    public const string Change = "propose_create_relation_type";
 
     private readonly IMediator Mediator;
     private readonly IAiChangeSetBuilder ChangeSet;
 
-    public CreateRelationTypeTool(IMediator mediator, IAiChangeSetBuilder changeSet)
+    public CreateRelationTypeAction(IMediator mediator, IAiChangeSetBuilder changeSet)
     {
         Mediator = mediator;
         ChangeSet = changeSet;
     }
 
-    public string Name => ToolName;
-
-    public string Description =>
-        "Propose a new relation type tasks can be linked with, for a relationship no existing type covers. "
-        + "Check the relation_types in list_records first — reuse an existing type when one fits. "
-        + "Once proposed, propose_task_link_change may use it in the same change set through the handle it answers with.";
-
-    public AiToolKind Kind => AiToolKind.Write;
+    public string ChangeName => Change;
 
     public IReadOnlySet<string> RequiredPermissions { get; } =
         new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.RelationTypes.Manage };
-
-    public JsonDocument InputSchema { get; } = AiToolSchema.Object(
-        """
-        {
-          "name": { "type": "string", "description": "What the link is called read from the first task, for example \"Blocks\"." },
-          "inverseName": { "type": "string", "description": "What it is called read from the other task, for example \"Is Blocked By\". A related type reads the same both ways and ignores this." },
-          "category": {
-            "type": "string",
-            "description": "How the link behaves. Hierarchy gives each task one parent and forbids cycles, dependency forbids cycles, related reads the same both ways, duplicate marks the same work twice over.",
-            "enum": ["Hierarchy", "Dependency", "Related", "Duplicate"]
-          },
-          "description": { "type": "string", "description": "Optional description of what the link means." },
-          "color": { "type": "string", "description": "Optional colour, as a hex value or a named colour." }
-        }
-        """,
-        "name",
-        "category");
 
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
@@ -86,7 +62,7 @@ public sealed class CreateRelationTypeTool : IAiTool
         }
 
         var isProposed = ChangeSet.Changes.Any(change =>
-            string.Equals(change.ToolName, ToolName, StringComparison.Ordinal) &&
+            string.Equals(change.ToolName, Change, StringComparison.Ordinal) &&
             string.Equals(ReadProposedName(change), name, StringComparison.OrdinalIgnoreCase));
 
         if (isProposed)
@@ -109,7 +85,7 @@ public sealed class CreateRelationTypeTool : IAiTool
 
         ChangeSet.Add(new AiChangeDraft
         {
-            ToolName = Name,
+            ToolName = Change,
             EntityType = AiRelationTypeLookup.EntityType,
             RefKey = refKey,
             Summary = $"Create relation type “{name}”",

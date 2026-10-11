@@ -114,7 +114,7 @@ public class LinkTasksToolTests
     {
         GivenRelationTypes();
 
-        var create = new CreateRelationTypeTool(Mediator, ChangeSet);
+        var create = new CreateRelationTypeAction(Mediator, ChangeSet);
         var proposal = await create.Execute(
             Arguments("""{"name":"Duplicates","inverseName":"Is Duplicated By","category":"Duplicate"}"""),
             TestContext.Current.CancellationToken);

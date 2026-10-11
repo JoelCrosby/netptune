@@ -21,12 +21,15 @@ public static class SprintsEndpoints
         group.MapGet("/backlog", HandleGetBacklog).RequireAuthorization(NetptunePermissions.Sprints.Read);
         group.MapGet("/{id:int}", HandleGetSprint).RequireAuthorization(NetptunePermissions.Sprints.Read);
         group.MapGet("/identifier/{identifier}", HandleGetSprintByIdentifier).RequireAuthorization(NetptunePermissions.Sprints.Read);
-        group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.Sprints.Create);
+        group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.Sprints.Create)
+            .Broadcasts(WorkspaceEventScopes.Sprint);
         group.MapPut("/", HandlePut)
             .RequireAuthorization(NetptunePermissions.Sprints.Update, NetptunePermissions.Sprints.ManageTasks)
             .Broadcasts(WorkspaceEventScopes.Sprint, WorkspaceEventScopes.Task);
-        group.MapDelete("/{id:int}", HandleDelete).RequireAuthorization(NetptunePermissions.Sprints.Delete);
-        group.MapPost("/{id:int}/start", HandleStart).RequireAuthorization(NetptunePermissions.Sprints.Update);
+        group.MapDelete("/{id:int}", HandleDelete).RequireAuthorization(NetptunePermissions.Sprints.Delete)
+            .Broadcasts(WorkspaceEventScopes.Sprint, WorkspaceEventScopes.Task);
+        group.MapPost("/{id:int}/start", HandleStart).RequireAuthorization(NetptunePermissions.Sprints.Update)
+            .Broadcasts(WorkspaceEventScopes.Sprint, WorkspaceEventScopes.Task);
         group.MapPost("/{id:int}/complete", HandleComplete)
             .RequireAuthorization(NetptunePermissions.Sprints.Update, NetptunePermissions.Sprints.ManageTasks)
             .Broadcasts(WorkspaceEventScopes.Sprint, WorkspaceEventScopes.Task);

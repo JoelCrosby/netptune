@@ -1,4 +1,4 @@
-import { Component, inject, viewChild } from '@angular/core';
+import { Component, computed, inject, viewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   RelationCategory,
@@ -8,6 +8,7 @@ import {
 } from '@core/models/relation-type';
 import { SortMoveDirection } from '@core/models/sort-move-direction';
 import { DialogService } from '@core/services/dialog.service';
+import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import { RelationTypesService } from '@core/services/relation-types.service';
 import { fallbackColor } from '@core/util/colors/colors';
 import {
@@ -192,6 +193,14 @@ import { orderableEntityList } from '../../shared/orderable-entity-list';
 export class RelationTypesViewComponent {
   private readonly relationTypesService = inject(RelationTypesService);
   private readonly dialog = inject(DialogService);
+  private readonly workspaceRefresh = inject(WorkspaceRefreshService);
+
+  private readonly reloadSignal = computed(() => {
+    return [
+      this.list.reloadToken(),
+      this.workspaceRefresh.version('relationTypes')(),
+    ];
+  });
 
   readonly SortMoveDirection = SortMoveDirection;
 
@@ -270,7 +279,7 @@ export class RelationTypesViewComponent {
     rows: (response) => response?.payload?.items ?? [],
     trackBy: (_: number, relationType: RelationType) => relationType.id,
     menu: this.menu,
-    reloadSignal: this.list.reloadToken,
+    reloadSignal: this.reloadSignal,
   };
 
   async openCreateDialog() {

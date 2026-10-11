@@ -1,8 +1,10 @@
 using Mediator;
 
+using Netptune.App.Configuration;
 using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
+using Netptune.Core.Services.Realtime;
 using Netptune.Handlers.RelationTypes.Commands;
 using Netptune.Handlers.RelationTypes.Queries;
 
@@ -18,11 +20,16 @@ public static class RelationTypesEndpoints
         group.MapGet("/page", HandleGetPage).RequireAuthorization(NetptunePermissions.RelationTypes.Read);
         group.MapGet("/{id:int}/usage", HandleGetUsage).RequireAuthorization(NetptunePermissions.RelationTypes.Read);
         group.MapGet("/{id:int}/relations", HandleGetRelations).RequireAuthorization(NetptunePermissions.RelationTypes.Read);
-        group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.RelationTypes.Manage);
-        group.MapPut("/", HandlePut).RequireAuthorization(NetptunePermissions.RelationTypes.Manage);
-        group.MapDelete("/{id:int}", HandleDelete).RequireAuthorization(NetptunePermissions.RelationTypes.Manage);
-        group.MapPost("/reorder", HandleReorder).RequireAuthorization(NetptunePermissions.RelationTypes.Manage);
-        group.MapPost("/move", HandleMove).RequireAuthorization(NetptunePermissions.RelationTypes.Manage);
+        group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.RelationTypes.Manage)
+            .Broadcasts(WorkspaceEventScopes.RelationType);
+        group.MapPut("/", HandlePut).RequireAuthorization(NetptunePermissions.RelationTypes.Manage)
+            .Broadcasts(WorkspaceEventScopes.RelationType, WorkspaceEventScopes.Task);
+        group.MapDelete("/{id:int}", HandleDelete).RequireAuthorization(NetptunePermissions.RelationTypes.Manage)
+            .Broadcasts(WorkspaceEventScopes.RelationType);
+        group.MapPost("/reorder", HandleReorder).RequireAuthorization(NetptunePermissions.RelationTypes.Manage)
+            .Broadcasts(WorkspaceEventScopes.RelationType);
+        group.MapPost("/move", HandleMove).RequireAuthorization(NetptunePermissions.RelationTypes.Manage)
+            .Broadcasts(WorkspaceEventScopes.RelationType);
 
         return builder;
     }

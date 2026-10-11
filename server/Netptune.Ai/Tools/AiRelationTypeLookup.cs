@@ -46,7 +46,7 @@ internal static class AiRelationTypeLookup
     {
         if (relationTypes.Count == 0)
         {
-            return "This workspace has no relation types. Propose one with propose_create_relation_type first.";
+            return "This workspace has no relation types. Propose one with propose_relation_type_change first.";
         }
 
         var described = relationTypes.Select(Summarize);

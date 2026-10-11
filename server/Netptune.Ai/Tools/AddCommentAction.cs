@@ -9,38 +9,25 @@ using Netptune.Handlers.Tasks.Queries;
 
 namespace Netptune.Ai.Tools;
 
-public sealed class AddTaskCommentTool : IAiTool
+public sealed class AddCommentAction : IAiToolAction
 {
-    private const int MaximumCommentLength = 4000;
+    public const string Change = "propose_add_comment";
+
+    public const int MaximumCommentLength = 4000;
 
     private readonly IMediator Mediator;
     private readonly IAiChangeSetBuilder ChangeSet;
 
-    public AddTaskCommentTool(IMediator mediator, IAiChangeSetBuilder changeSet)
+    public AddCommentAction(IMediator mediator, IAiChangeSetBuilder changeSet)
     {
         Mediator = mediator;
         ChangeSet = changeSet;
     }
 
-    public string Name => "propose_add_comment";
-
-    public string Description =>
-        "Propose adding a comment to a task. The comment is posted under the user's own name.";
-
-    public AiToolKind Kind => AiToolKind.Write;
+    public string ChangeName => Change;
 
     public IReadOnlySet<string> RequiredPermissions { get; } =
         new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Comments.Create };
-
-    public JsonDocument InputSchema { get; } = AiToolSchema.Object(
-        """
-        {
-          "taskId": { "type": "integer", "description": "The id of the task to comment on." },
-          "taskRef": { "type": "string", "description": "Handle of a task proposed earlier in this change set, instead of taskId." },
-          "comment": { "type": "string", "description": "The comment body." }
-        }
-        """,
-        "comment");
 
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
@@ -78,7 +65,7 @@ public sealed class AddTaskCommentTool : IAiTool
 
         ChangeSet.Add(new AiChangeDraft
         {
-            ToolName = Name,
+            ToolName = ChangeName,
             EntityType = "task",
             EntityId = task?.Id,
             Summary = $"Comment on “{task?.Name ?? pending!.Summary}”",

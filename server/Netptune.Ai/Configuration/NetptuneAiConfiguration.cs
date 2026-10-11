@@ -42,7 +42,7 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiTool, SearchTasksTool>();
         services.AddScoped<IAiTool, CreateTaskTool>();
         services.AddScoped<IAiTool, UpdateTaskTool>();
-        services.AddScoped<IAiTool, AddTaskCommentTool>();
+        services.AddScoped<IAiTool, CommentChangeTool>();
         services.AddScoped<IAiTool, ProjectChangeTool>();
         services.AddScoped<IAiTool, BoardChangeTool>();
         services.AddScoped<IAiTool, PageChangeTool>();
@@ -61,7 +61,7 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiTool, TagChangeTool>();
         services.AddScoped<IAiTool, DeleteTaskTool>();
         services.AddScoped<IAiTool, BoardGroupChangeTool>();
-        services.AddScoped<IAiTool, CreateRelationTypeTool>();
+        services.AddScoped<IAiTool, RelationTypeChangeTool>();
         services.AddScoped<IAiTool, GetReportTool>();
         services.AddScoped<IAiTool, ListAutomationsTool>();
         services.AddScoped<IAiTool, ListAutomationRunsTool>();
@@ -110,6 +110,12 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiChangeHandler, ReorderBoardGroupsChangeHandler>();
         services.AddScoped<IAiChangeHandler, UnlinkTasksChangeHandler>();
         services.AddScoped<IAiChangeHandler, CreateRelationTypeChangeHandler>();
+        services.AddScoped<IAiChangeHandler, UpdateRelationTypeChangeHandler>();
+        services.AddScoped<IAiChangeHandler, DeleteRelationTypeChangeHandler>();
+        services.AddScoped<IAiChangeHandler, DeleteStatusChangeHandler>();
+        services.AddScoped<IAiChangeHandler, DeleteProjectChangeHandler>();
+        services.AddScoped<IAiChangeHandler, UpdateCommentChangeHandler>();
+        services.AddScoped<IAiChangeHandler, DeleteCommentChangeHandler>();
         services.AddScoped<IAiChangeSetBuilder, AiChangeSetBuilder>();
         services.AddScoped<IAiQuestionSink, AiQuestionSink>();
         services.AddScoped<IAiToolRegistry, AiToolRegistry>();

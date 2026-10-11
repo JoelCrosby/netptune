@@ -13,6 +13,7 @@ using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.Statuses;
+using Netptune.Core.ViewModels.Usage;
 using Netptune.Handlers.Statuses.Commands;
 using Netptune.Handlers.Statuses.Queries;
 
@@ -146,6 +147,68 @@ public class StatusToolTests
 
         result.Status.Should().Be(AiChangeApplyStatus.Failed);
         CapturedUpdates().Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task DeleteStatus_ShouldFail_WithTheReasonItIsInUse()
+    {
+        GivenUsage(InProgressId, canDelete: false, "Status is used by 4 tasks and cannot be deleted.");
+
+        var tool = new StatusChangeTool(Mediator, ChangeSet);
+        var arguments = JsonDocument.Parse($$"""{"action":"delete","statusId":{{InProgressId}}}""").RootElement;
+        var result = await tool.Execute(arguments, TestContext.Current.CancellationToken);
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("4 tasks");
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task DeleteStatus_ShouldPropose_WhenTheStatusIsUnused()
+    {
+        GivenUsage(DoneId, canDelete: true, null);
+
+        var tool = new StatusChangeTool(Mediator, ChangeSet);
+        var arguments = JsonDocument.Parse($$"""{"action":"delete","statusId":{{DoneId}}}""").RootElement;
+        var result = await tool.Execute(arguments, TestContext.Current.CancellationToken);
+
+        result.IsError.Should().BeFalse();
+
+        var change = ChangeSet.Changes.Should().ContainSingle().Subject;
+
+        change.ToolName.Should().Be(DeleteStatusAction.Change);
+        change.EntityId.Should().Be(DoneId);
+    }
+
+    [Fact]
+    public async Task ApplyDeleteStatus_ShouldSendTheDeleteCommand()
+    {
+        Mediator
+            .Send(Arg.Any<DeleteStatusCommand>(), Arg.Any<CancellationToken>())
+            .Returns(ClientResponse.Success);
+
+        var handler = new DeleteStatusChangeHandler(Mediator);
+        var context = CreateContext($$"""{"statusId":{{DoneId}}}""");
+        var result = await handler.Apply(context, TestContext.Current.CancellationToken);
+
+        result.Status.Should().Be(AiChangeApplyStatus.Applied);
+        await Mediator.Received(1).Send(Arg.Is<DeleteStatusCommand>(command => command.Id == DoneId), Arg.Any<CancellationToken>());
+    }
+
+    private void GivenUsage(int id, bool canDelete, string? blockedReason)
+    {
+        var usage = new EntityUsageViewModel
+        {
+            Id = id,
+            Kind = UsageSubjectKind.Status,
+            Name = "Status",
+            CanDelete = canDelete,
+            BlockedReason = blockedReason,
+        };
+
+        Mediator
+            .Send(Arg.Is<GetStatusUsageQuery>(query => query.Id == id), Arg.Any<CancellationToken>())
+            .Returns(usage);
     }
 
     private static async Task<AiToolExecution> Execute(IAiToolAction tool, string json)

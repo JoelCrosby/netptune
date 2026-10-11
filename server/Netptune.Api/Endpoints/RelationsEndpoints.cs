@@ -45,25 +45,25 @@ public static class RelationsEndpoints
             .WithSummary("Create a relation type")
             .WithDescription("Adds a relation type to the credential's workspace.")
             .RequireAuthorization(NetptunePermissions.RelationTypes.Manage)
-            .Broadcasts(WorkspaceEventScopes.Task);
+            .Broadcasts(WorkspaceEventScopes.RelationType, WorkspaceEventScopes.Task);
 
         group.MapPatch("/relation-types/{id:int}", UpdateRelationType)
             .WithSummary("Update a relation type")
             .WithDescription("Updates the supplied fields on an existing relation type.")
             .RequireAuthorization(NetptunePermissions.RelationTypes.Manage)
-            .Broadcasts(WorkspaceEventScopes.Task);
+            .Broadcasts(WorkspaceEventScopes.RelationType, WorkspaceEventScopes.Task);
 
         group.MapDelete("/relation-types/{id:int}", DeleteRelationType)
             .WithSummary("Delete a relation type")
             .WithDescription("Deletes a relation type and the task links created with it.")
             .RequireAuthorization(NetptunePermissions.RelationTypes.Manage)
-            .Broadcasts(WorkspaceEventScopes.Task);
+            .Broadcasts(WorkspaceEventScopes.RelationType, WorkspaceEventScopes.Task);
 
         group.MapPost("/relation-types/reorder", ReorderRelationTypes)
             .WithSummary("Reorder relation types")
             .WithDescription("Replaces the display order of the workspace's relation types with the supplied order.")
             .RequireAuthorization(NetptunePermissions.RelationTypes.Manage)
-            .Broadcasts(WorkspaceEventScopes.Task);
+            .Broadcasts(WorkspaceEventScopes.RelationType, WorkspaceEventScopes.Task);
 
         group.MapGet("/tasks/{id:int}/relations", GetTaskRelations)
             .WithSummary("List the tasks linked to a task")

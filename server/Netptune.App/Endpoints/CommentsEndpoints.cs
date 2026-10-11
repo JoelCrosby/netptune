@@ -1,9 +1,11 @@
 using Mediator;
 
+using Netptune.App.Configuration;
 using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services.Realtime;
 using Netptune.Core.ViewModels.Comments;
 using Netptune.Handlers.Comments.Commands;
 using Netptune.Handlers.Comments.Queries;
@@ -17,11 +19,16 @@ public static class CommentsEndpoints
         var group = builder.MapGroup("comments");
 
         group.MapGet("/task/{systemId}", HandleGetCommentsForTask).RequireAuthorization(NetptunePermissions.Comments.Read);
-        group.MapPost("/task", HandlePostTaskComment).RequireAuthorization(NetptunePermissions.Comments.Create);
-        group.MapPut("/{id:int}", HandleUpdate).RequireAuthorization(NetptunePermissions.Comments.Create);
-        group.MapDelete("/{id:int}", HandleDelete).RequireAuthorization(NetptunePermissions.Comments.Read);
-        group.MapPost("/{id:int}/reactions", HandleAddReaction).RequireAuthorization(NetptunePermissions.Comments.Create);
-        group.MapDelete("/{id:int}/reactions", HandleRemoveReaction).RequireAuthorization(NetptunePermissions.Comments.Create);
+        group.MapPost("/task", HandlePostTaskComment).RequireAuthorization(NetptunePermissions.Comments.Create)
+            .Broadcasts(WorkspaceEventScopes.Comment, WorkspaceEventScopes.Task);
+        group.MapPut("/{id:int}", HandleUpdate).RequireAuthorization(NetptunePermissions.Comments.Create)
+            .Broadcasts(WorkspaceEventScopes.Comment);
+        group.MapDelete("/{id:int}", HandleDelete).RequireAuthorization(NetptunePermissions.Comments.Read)
+            .Broadcasts(WorkspaceEventScopes.Comment, WorkspaceEventScopes.Task);
+        group.MapPost("/{id:int}/reactions", HandleAddReaction).RequireAuthorization(NetptunePermissions.Comments.Create)
+            .Broadcasts(WorkspaceEventScopes.Comment);
+        group.MapDelete("/{id:int}/reactions", HandleRemoveReaction).RequireAuthorization(NetptunePermissions.Comments.Create)
+            .Broadcasts(WorkspaceEventScopes.Comment);
 
         return group;
     }

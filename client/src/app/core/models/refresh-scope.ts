@@ -6,6 +6,7 @@ export const allRefreshScopes = [
   'projects',
   'tags',
   'statuses',
+  'relationTypes',
   'comments',
   'users',
   'notifications',

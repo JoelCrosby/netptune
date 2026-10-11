@@ -4,6 +4,7 @@ using System.Text.Json.Nodes;
 using Mediator;
 
 using Netptune.Core.Authorization;
+using Netptune.Core.Services;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Comments.Queries;
 using Netptune.Handlers.Relations.Queries;
@@ -21,17 +22,19 @@ public sealed class GetTaskTool : IAiTool
     private static readonly string[] KnownIncludes = [IncludeComments, IncludeRelations, IncludeFiles];
 
     private readonly IMediator Mediator;
+    private readonly IIdentityService Identity;
 
-    public GetTaskTool(IMediator mediator)
+    public GetTaskTool(IMediator mediator, IIdentityService identity)
     {
         Mediator = mediator;
+        Identity = identity;
     }
 
     public string Name => "get_task";
 
     public string Description =>
         "Read one task in full by its systemId: description, assignees, tags, dates, estimate and flags. "
-        + "Add include to read its comments (oldest first), the tasks it is linked to and by which relation, "
+        + "Add include to read its 50 most recent comments (newest first), the tasks it is linked to and by which relation, "
         + "or its attached files. File contents cannot be read — only what is attached.";
 
     public AiToolKind Kind => AiToolKind.Read;
@@ -159,10 +162,12 @@ public sealed class GetTaskTool : IAiTool
     private async Task<JsonNode?> ReadComments(string systemId, CancellationToken cancellationToken)
     {
         var comments = await Mediator.Send(new GetCommentsForTaskQuery(systemId), cancellationToken);
+        var currentUserId = Identity.GetCurrentUserId();
         var summaries = (comments ?? []).Select(comment => new
         {
             id = comment.Id,
             author = comment.UserDisplayName,
+            isYours = comment.UserId == currentUserId,
             body = comment.Body,
             createdAt = comment.CreatedAt,
         });

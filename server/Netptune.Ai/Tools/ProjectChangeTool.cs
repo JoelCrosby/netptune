@@ -18,14 +18,16 @@ public sealed class ProjectChangeTool : IAiTool
         {
             ["create"] = new CreateProjectAction(mediator, changeSet),
             ["update"] = new UpdateProjectAction(mediator, changeSet),
+            ["delete"] = new DeleteProjectAction(mediator, changeSet),
         });
     }
 
     public string Name => ToolName;
 
     public string Description =>
-        "Propose creating a project, or changing a project's name, description or repository url. "
-        + "On update, fields that are not passed keep their current value.";
+        "Propose creating, updating or deleting a project. "
+        + "On update, fields that are not passed keep their current value. "
+        + "Deleting a project cannot be undone from the assistant.";
 
     public AiToolKind Kind => AiToolKind.Write;
 
@@ -36,11 +38,12 @@ public sealed class ProjectChangeTool : IAiTool
     public JsonDocument InputSchema { get; } = AiToolSchema.Object(
         """
         {
-          "action": { "type": "string", "enum": ["create", "update"] },
-          "projectId": { "type": "integer", "description": "Update: the project, from list_records." },
+          "action": { "type": "string", "enum": ["create", "update", "delete"] },
+          "projectId": { "type": "integer", "description": "Update and delete: the project, from list_records." },
           "name": { "type": "string", "description": "Create: the project name. Update: a new name." },
           "description": { "type": "string", "description": "Optional project description." },
-          "repositoryUrl": { "type": "string", "description": "Optional source repository url." }
+          "repositoryUrl": { "type": "string", "description": "Optional source repository url." },
+          "reason": { "type": "string", "description": "Delete: why the project should go, shown in the review." }
         }
         """,
         "action");

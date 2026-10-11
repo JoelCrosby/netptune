@@ -516,6 +516,38 @@ public sealed class ApiV1EndpointTests
     }
 
     [Fact]
+    public async Task CreateRelationType_ShouldBroadcastARelationTypeEvent()
+    {
+        var client = await CreateClient();
+        RelationTypeViewModel? created = null;
+
+        try
+        {
+            var published = await WorkspaceEventProbe.Published(Fixture.ApiServices, "api", WorkspaceEventScopes.RelationType, async () =>
+            {
+                var response = await client.PostAsJsonAsync("api/v1/relation-types", new CreateRelationTypeRequest
+                {
+                    Name = $"API broadcast {Guid.NewGuid():N}"[..40],
+                    InverseName = "API broadcast from",
+                }, TestContext.Current.CancellationToken);
+
+                response.StatusCode.Should().Be(HttpStatusCode.Created, await response.Content.ReadAsStringAsync());
+
+                created = await response.Content.ReadFromJsonAsync<RelationTypeViewModel>(TestContext.Current.CancellationToken);
+            });
+
+            published.Should().BeTrue("creating a relation type should refresh open relation type views");
+        }
+        finally
+        {
+            if (created is not null)
+            {
+                await client.DeleteAsync($"api/v1/relation-types/{created.Id}", TestContext.Current.CancellationToken);
+            }
+        }
+    }
+
+    [Fact]
     public async Task OpenApiDocument_ShouldDescribeEveryPublishedRoute()
     {
         var client = Fixture.CreateUnauthenticatedApiClient();

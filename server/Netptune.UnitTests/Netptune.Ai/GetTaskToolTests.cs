@@ -6,6 +6,7 @@ using Mediator;
 
 using Netptune.Ai.Tools;
 using Netptune.Core.Authorization;
+using Netptune.Core.Services;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.Comments;
 using Netptune.Core.ViewModels.ProjectTasks;
@@ -23,6 +24,7 @@ public class GetTaskToolTests
     private const string SystemId = "NPT-42";
 
     private readonly IMediator Mediator = Substitute.For<IMediator>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
 
     [Fact]
     public async Task Execute_ShouldLeaveOutWhatWasNotIncluded()
@@ -71,7 +73,7 @@ public class GetTaskToolTests
     [Fact]
     public void GetRequiredPermissions_ShouldDemandTheReadPermissionOfEachInclude()
     {
-        var tool = new GetTaskTool(Mediator);
+        var tool = new GetTaskTool(Mediator, Identity);
         var plain = JsonDocument.Parse($$"""{"systemId":"{{SystemId}}"}""").RootElement;
         var withExtras = JsonDocument.Parse($$"""{"systemId":"{{SystemId}}","include":["comments","files"]}""").RootElement;
 
@@ -83,7 +85,7 @@ public class GetTaskToolTests
 
     private async Task<AiToolExecution> Execute(string arguments)
     {
-        var tool = new GetTaskTool(Mediator);
+        var tool = new GetTaskTool(Mediator, Identity);
         var element = JsonDocument.Parse(arguments).RootElement;
 
         return await tool.Execute(element, TestContext.Current.CancellationToken);

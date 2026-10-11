@@ -7,6 +7,7 @@ using Netptune.Core.Colors;
 using Netptune.Core.Enums;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services.Realtime;
 using Netptune.Core.ViewModels.Relations;
 using Netptune.Core.ViewModels.RelationTypes;
 using Netptune.Core.ViewModels.Usage;
@@ -335,6 +336,31 @@ public sealed class RelationTypesEndpointTests
         var response = await client.GetAsync("api/relation-types/999999/relations");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task Update_ShouldBroadcastARelationTypeEvent_SoOpenClientsSeeIt()
+    {
+        var client = await CreateClient();
+        var relationType = await CreateRelationType();
+        var sourceClientId = Guid.NewGuid().ToString("N");
+
+        client.DefaultRequestHeaders.Add(WorkspaceEventProbe.RealtimeClientHeader, sourceClientId);
+
+        var published = await WorkspaceEventProbe.Published(Fixture.Services, sourceClientId, WorkspaceEventScopes.RelationType, async () =>
+        {
+            var name = $"Broadcast {Guid.NewGuid():N}";
+            var response = await client.PutAsJsonAsync("api/relation-types", new UpdateRelationTypeRequest
+            {
+                Id = relationType.Id,
+                Name = name,
+                InverseName = $"Inverse {name}",
+            });
+
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+        });
+
+        published.Should().BeTrue("updating a relation type should publish a relation type workspace event");
     }
 
     private async Task<HttpClient> CreateClient()

@@ -49,6 +49,16 @@ public class CommentRepository : WorkspaceEntityRepository<DataContext, Comment,
             .FirstOrDefaultAsync(cancellationToken);
     }
 
+    public Task<CommentViewModel?> GetTaskCommentViewModel(int taskId, int commentId, CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .Where(x => x.Id == commentId && !x.IsDeleted && x.EntityType == EntityType.Task && x.EntityId == taskId)
+            .AsNoTracking()
+            .AsSplitQuery()
+            .Select(ToViewModel())
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
     public Task<Comment?> GetCommentForUpdate(int id, int workspaceId, CancellationToken cancellationToken = default)
     {
         return Entities

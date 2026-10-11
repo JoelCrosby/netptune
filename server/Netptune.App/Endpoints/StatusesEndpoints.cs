@@ -1,8 +1,10 @@
 using Mediator;
 
+using Netptune.App.Configuration;
 using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
+using Netptune.Core.Services.Realtime;
 using Netptune.Handlers.Statuses.Commands;
 using Netptune.Handlers.Statuses.Queries;
 
@@ -17,11 +19,16 @@ public static class StatusesEndpoints
         group.MapGet("/", HandleGet).RequireAuthorization(NetptunePermissions.Statuses.Read);
         group.MapGet("/page", HandleGetPage).RequireAuthorization(NetptunePermissions.Statuses.Read);
         group.MapGet("/{id:int}/usage", HandleGetUsage).RequireAuthorization(NetptunePermissions.Statuses.Read);
-        group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.Statuses.Manage);
-        group.MapPut("/", HandlePut).RequireAuthorization(NetptunePermissions.Statuses.Manage);
-        group.MapDelete("/{id:int}", HandleDelete).RequireAuthorization(NetptunePermissions.Statuses.Manage);
-        group.MapPost("/reorder", HandleReorder).RequireAuthorization(NetptunePermissions.Statuses.Manage);
-        group.MapPost("/move", HandleMove).RequireAuthorization(NetptunePermissions.Statuses.Manage);
+        group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.Statuses.Manage)
+            .Broadcasts(WorkspaceEventScopes.Status);
+        group.MapPut("/", HandlePut).RequireAuthorization(NetptunePermissions.Statuses.Manage)
+            .Broadcasts(WorkspaceEventScopes.Status, WorkspaceEventScopes.Task);
+        group.MapDelete("/{id:int}", HandleDelete).RequireAuthorization(NetptunePermissions.Statuses.Manage)
+            .Broadcasts(WorkspaceEventScopes.Status, WorkspaceEventScopes.Task);
+        group.MapPost("/reorder", HandleReorder).RequireAuthorization(NetptunePermissions.Statuses.Manage)
+            .Broadcasts(WorkspaceEventScopes.Status);
+        group.MapPost("/move", HandleMove).RequireAuthorization(NetptunePermissions.Statuses.Manage)
+            .Broadcasts(WorkspaceEventScopes.Status);
 
         return builder;
     }

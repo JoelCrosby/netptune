@@ -27,5 +27,6 @@ export const relationTypeUsageResource = (id: Signal<number | null>) => {
     request: requestFrom(id, (relationTypeId) => ({
       url: `api/relation-types/${relationTypeId}/usage`,
     })),
+    refreshOn: ['relationTypes', 'tasks'],
   });
 };

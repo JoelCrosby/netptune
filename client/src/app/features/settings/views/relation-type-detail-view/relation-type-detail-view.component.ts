@@ -28,6 +28,7 @@ import {
   relationCategoryLabels,
 } from '@core/models/relation-type';
 import { RelationTypeRelation } from '@core/models/task-relation';
+import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import { RelationTypesService } from '@core/services/relation-types.service';
 import { fallbackColor } from '@core/util/colors/colors';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
@@ -324,6 +325,7 @@ import { injectBreadcrumbs } from '@core/services/breadcrumb.service';
 })
 export class RelationTypeDetailViewComponent {
   private readonly relationTypesService = inject(RelationTypesService);
+  private readonly workspaceRefresh = inject(WorkspaceRefreshService);
 
   readonly id = input.required<string>();
 
@@ -478,8 +480,7 @@ export class RelationTypeDetailViewComponent {
 
       if (!saved) return;
 
-      this.relationTypes.reload();
-      this.usage.reload();
+      this.workspaceRefresh.refresh(['relationTypes']);
     });
   }
 
@@ -492,6 +493,7 @@ export class RelationTypeDetailViewComponent {
       title: $localize`:Title of the confirmation dialog for deleting a relation type:Delete Relation Type`,
       message: $localize`:Asks the user to confirm deleting a relation type. NAME is the relation type name:Delete "${relationType.name}:NAME:"? This cannot be undone.`,
       request: () => this.relationTypesService.delete(relationType.id),
+      onDeleted: () => this.workspaceRefresh.refresh(['relationTypes']),
       onFailed: () => this.usage.reload(),
     });
   }

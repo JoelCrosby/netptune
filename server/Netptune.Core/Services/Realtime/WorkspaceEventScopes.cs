@@ -17,4 +17,6 @@ public static class WorkspaceEventScopes
     public const string Comment = "comment";
 
     public const string Page = "page";
+
+    public const string RelationType = "relationType";
 }
