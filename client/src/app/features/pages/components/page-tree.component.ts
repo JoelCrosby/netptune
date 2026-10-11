@@ -178,10 +178,11 @@ function spaceRowId(projectId: number): number {
       app-panel-body
       padding="none"
       divider="top"
-      class="flex h-14 shrink-0 flex-col justify-center px-2">
+      class="flex h-14 shrink-0 flex-col p-2">
       <app-tree
         i18n-ariaLabel="Accessible label for the page tree footer links"
         ariaLabel="More pages"
+        size="large"
         [nodes]="footerNodes()"
         [selectedId]="store.footerSelectedId()" />
     </div>

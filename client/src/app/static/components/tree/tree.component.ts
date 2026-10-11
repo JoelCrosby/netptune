@@ -22,6 +22,8 @@ import { TreeDropPosition, TreeMove, TreeNode, TreeRow } from './tree.types';
 const indentPerLevelPx = 14;
 const baseIndentPx = 4;
 const flatIndentPx = 8;
+
+export type TreeSize = 'default' | 'large';
 const edgeDropZone = 0.25;
 
 interface DropTarget {
@@ -66,7 +68,8 @@ interface DropTarget {
 
           <a
             data-tree-link
-            class="flex h-full min-w-0 flex-1 items-center gap-2 outline-none"
+            class="flex h-full min-w-0 flex-1 items-center outline-none"
+            [class]="isLarge() ? 'gap-3' : 'gap-2'"
             [routerLink]="row.node.link"
             [queryParams]="row.node.queryParams ?? null"
             [draggable]="draggable()"
@@ -77,7 +80,7 @@ interface DropTarget {
             (dragend)="onDragEnd()">
             <svg
               [lucideIcon]="row.node.icon"
-              class="h-4 w-4 shrink-0"
+              class="shrink-0"
               [class]="iconClass(row)"></svg>
             <span class="min-w-0 flex-1 truncate">{{ row.node.label }}</span>
             @if (row.childCount && !row.expanded) {
@@ -116,12 +119,15 @@ export class TreeComponent {
   readonly draggable = input(false, { transform: booleanAttribute });
   readonly ariaLabel = input<string | null>(null);
   readonly addLabel = input<string | null>(null);
+  readonly size = input<TreeSize>('default');
 
   readonly move = output<TreeMove>();
   readonly add = output<number>();
 
   protected readonly expandLabel = $localize`:Accessible label for the button that shows a tree item's children:Expand`;
   protected readonly collapseLabel = $localize`:Accessible label for the button that hides a tree item's children:Collapse`;
+
+  protected readonly isLarge = computed(() => this.size() === 'large');
 
   protected readonly focusIndex = signal(0);
   private readonly draggingId = signal<number | null>(null);
@@ -149,7 +155,8 @@ export class TreeComponent {
     const isTarget = target?.id === row.node.id;
 
     return cn(
-      'group text-foreground/75 hover:bg-foreground/5 relative flex h-8 items-center gap-1 rounded-md pr-1.5 text-sm',
+      'group text-foreground/75 hover:bg-foreground/5 relative flex items-center gap-1 rounded-md pr-1.5 text-sm',
+      this.isLarge() ? 'h-9' : 'h-8',
       selected &&
         'bg-primary/10 text-primary hover:bg-primary/15 font-semibold',
       isTarget &&
@@ -168,7 +175,10 @@ export class TreeComponent {
   protected iconClass(row: TreeRow): string {
     const selected = row.node.id === this.selectedId();
 
-    return selected ? 'text-primary' : 'text-foreground/50';
+    const size = this.isLarge() ? 'h-5 w-5' : 'h-4 w-4';
+    const colour = selected ? 'text-primary' : 'text-foreground/50';
+
+    return `${size} ${colour}`;
   }
 
   protected onToggle(row: TreeRow) {
