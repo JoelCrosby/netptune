@@ -7,7 +7,7 @@ public sealed record PageArchiveRights(bool Any, bool Own);
 
 public static class PagePermissions
 {
-    public const string OthersPagesInsideMessage = "Some pages inside were created by other people. Only they or an admin can archive or restore them.";
+    public const string OthersPagesInsideMessage = "Some pages inside were created by other people. Only they or an admin can archive, restore or delete them.";
 
     public static async Task<PageArchiveRights> GetArchiveRights(IWorkspacePermissionCache permissionCache, string userId, string workspaceKey)
     {

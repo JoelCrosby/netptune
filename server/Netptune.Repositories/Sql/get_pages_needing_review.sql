@@ -12,7 +12,7 @@ WITH candidates AS (
                 LEFT JOIN project_tasks task ON task.id = CASE WHEN link.target_type = 0 THEN link.target_id::int END
                 LEFT JOIN pages target ON target.id = CASE WHEN link.target_type = 1 THEN link.target_id::int END
                 WHERE link.page_id = page.id
-                  AND (task.is_deleted OR target.is_deleted)
+                  AND (task.is_deleted OR target.is_deleted OR (link.target_type = 1 AND target.id IS NULL))
             ) THEN 2
             WHEN GREATEST(
                 COALESCE(page.reviewed_at, page.created_at),

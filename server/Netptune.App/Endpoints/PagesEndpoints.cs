@@ -68,6 +68,10 @@ public static class PagesEndpoints
             .RequireAuthorization(NetptunePermissions.Pages.Delete)
             .Broadcasts(WorkspaceEventScopes.Page);
 
+        group.MapDelete("/{id:int}/permanent", HandleDeleteArchived)
+            .RequireAuthorization(NetptunePermissions.Pages.Delete)
+            .Broadcasts(WorkspaceEventScopes.Page);
+
         group.MapPost("/{id:int}/reviewed", HandleMarkReviewed)
             .RequireAuthorization(NetptunePermissions.Pages.Update)
             .Broadcasts(WorkspaceEventScopes.Page);
@@ -233,6 +237,13 @@ public static class PagesEndpoints
     private static async Task<IResult> HandleRestore(IMediator mediator, int id, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new RestorePageCommand(id), cancellationToken);
+
+        return result.ToResult();
+    }
+
+    private static async Task<IResult> HandleDeleteArchived(IMediator mediator, int id, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new DeleteArchivedPageCommand(id), cancellationToken);
 
         return result.ToResult();
     }

@@ -150,6 +150,26 @@ public sealed class PageRepository : WorkspaceEntityRepository<DataContext, Page
         return affected == 1;
     }
 
+    public async Task<List<int>> DeleteArchived(IReadOnlyCollection<int> ids, int workspaceId, CancellationToken cancellationToken = default)
+    {
+        var archivedIds = await Entities
+            .Where(page => ids.Contains(page.Id) && page.WorkspaceId == workspaceId && page.IsDeleted)
+            .Select(page => page.Id)
+            .ToListAsync(cancellationToken);
+
+        // The parent key restricts deletes, so links into the deleted pages are cut first, both within the
+        // subtree and from any page outside it that still sits underneath.
+        await Entities
+            .Where(page => page.ParentId != null && archivedIds.Contains(page.ParentId.Value))
+            .ExecuteUpdateAsync(setters => setters.SetProperty(page => page.ParentId, (int?)null), cancellationToken);
+
+        await Entities
+            .Where(page => archivedIds.Contains(page.Id))
+            .ExecuteDeleteAsync(cancellationToken);
+
+        return archivedIds;
+    }
+
     public Task<bool> AnyLiveInWorkspace(int workspaceId, CancellationToken cancellationToken = default)
     {
         return Entities.AnyAsync(page => page.WorkspaceId == workspaceId && !page.IsDeleted, cancellationToken);

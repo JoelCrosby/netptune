@@ -202,6 +202,47 @@ public sealed class PagesEndpointTests
     }
 
     [Fact]
+    public async Task DeletePermanently_ShouldRemoveTheArchivedSubtree_AndFlagPagesThatLinkedToIt()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var folder = await Create(new CreatePageRequest { Kind = PageKind.Folder, Title = "Old notes" });
+        var child = await Create(new CreatePageRequest { Kind = PageKind.Document, ParentId = folder.Id, Title = "Old retro" });
+        var linking = await Create(new CreatePageRequest { Kind = PageKind.Document, Title = "Links to old retro" });
+
+        await Save(linking.Id, new SavePageRequest { Title = linking.Title, Body = $"See [[page:{child.Id}|Old retro]]", Revision = linking.Revision });
+        await Update(linking.Id, new UpdatePageRequest { Status = PageStatus.Published });
+        await Client.DeleteAsync($"api/pages/{folder.Id}", cancellationToken);
+
+        var deleted = await Client.DeleteAsync($"api/pages/{folder.Id}/permanent", cancellationToken);
+
+        deleted.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var archived = await Client.GetFromJsonAsync<ClientResponse<List<ArchivedPageViewModel>>>("api/pages/archived", cancellationToken);
+        var flagged = await GetNeedingReview();
+
+        using var scope = Fixture.CreateScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var remaining = await context.Pages.CountAsync(page => page.Id == folder.Id || page.Id == child.Id, cancellationToken);
+        var versions = await context.PageVersions.CountAsync(version => version.PageId == child.Id, cancellationToken);
+
+        archived!.Payload.Should().NotContain(page => page.Id == folder.Id);
+        remaining.Should().Be(0);
+        versions.Should().Be(0);
+        flagged.Should().Contain(page => page.Id == linking.Id && page.Reason == PageReviewReason.BrokenLinks);
+    }
+
+    [Fact]
+    public async Task DeletePermanently_ShouldRefuseAPageThatIsNotArchived()
+    {
+        var live = await Create(new CreatePageRequest { Kind = PageKind.Document, Title = "Still here" });
+
+        var response = await Client.DeleteAsync($"api/pages/{live.Id}/permanent", TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
     public async Task Restore_ShouldLeaveAChildArchivedOnItsOwnBeforeTheParentInTheArchive()
     {
         var folder = await Create(new CreatePageRequest { Kind = PageKind.Folder, Title = "Runbooks" });

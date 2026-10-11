@@ -1,5 +1,6 @@
 import { inject, Service } from '@angular/core';
 import {
+  ArchivedPage,
   CreatePageRequest,
   MovePageRequest,
   PageDetail,
@@ -91,6 +92,28 @@ export class PageCommandsService {
         catchError((error: unknown) => this.report(error, archiveFailed))
       );
     });
+  }
+
+  deletePermanently(page: Pick<ArchivedPage, 'id' | 'kind'>) {
+    const options =
+      page.kind === PageKind.folder
+        ? DELETE_FOLDER_CONFIRMATION
+        : DELETE_PAGE_CONFIRMATION;
+
+    this.confirmation
+      .open(options)
+      .pipe(
+        switchMap((confirmed) => {
+          if (!confirmed) return EMPTY;
+
+          return this.pages.deletePermanently(page.id).pipe(requireSuccess());
+        }),
+        catchError((error: unknown) => this.report(error, deleteFailed))
+      )
+      .subscribe(() => {
+        this.snackbar.success(deletedPermanently);
+        this.refresh();
+      });
   }
 
   restore(id: number) {
@@ -189,12 +212,30 @@ const favouriteFailed = $localize`:Error shown when adding or removing a page fa
 const restoreVersionFailed = $localize`:Error shown when restoring an earlier version of a page fails:That version couldn't be restored.`;
 const versionRestored = $localize`:Confirmation shown after an earlier version of a page is restored:Version restored`;
 const archived = $localize`:Confirmation shown after a page is archived:Page archived`;
+const deletedPermanently = $localize`:Confirmation shown after an archived page is deleted for good:Page deleted`;
+const deleteFailed = $localize`:Error shown when deleting an archived page for good fails:The page couldn't be deleted.`;
 const restored = $localize`:Confirmation shown after an archived page is restored:Page restored`;
 
 const ARCHIVE_PAGE_CONFIRMATION: ConfirmDialogOptions = {
   title: $localize`:Title of the dialog confirming a page is archived:Archive Page`,
   message: $localize`:Body of the dialog confirming a page is archived:The page and any pages inside it move to the archive. You can restore them later.`,
   acceptLabel: $localize`:Confirms archiving a page:Archive Page`,
+  cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
+  color: 'warn',
+};
+
+const DELETE_PAGE_CONFIRMATION: ConfirmDialogOptions = {
+  title: $localize`:Title of the dialog confirming an archived page is deleted for good:Delete Page`,
+  message: $localize`:Body of the dialog confirming an archived page is deleted for good:The page, its history and any archived pages inside it are deleted for good. This cannot be undone.`,
+  acceptLabel: $localize`:Confirms deleting an archived page for good:Delete Page`,
+  cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
+  color: 'warn',
+};
+
+const DELETE_FOLDER_CONFIRMATION: ConfirmDialogOptions = {
+  title: $localize`:Title of the dialog confirming an archived folder is deleted for good:Delete Folder`,
+  message: $localize`:Body of the dialog confirming an archived folder is deleted for good:The folder and every archived page inside it are deleted for good, with their history. This cannot be undone.`,
+  acceptLabel: $localize`:Confirms deleting an archived folder for good:Delete Folder`,
   cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
   color: 'warn',
 };

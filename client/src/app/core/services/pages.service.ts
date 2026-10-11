@@ -52,6 +52,10 @@ export class PagesService {
     return this.http.delete<ClientResponse>(`api/pages/${id}`);
   }
 
+  deletePermanently(id: number) {
+    return this.http.delete<ClientResponse>(`api/pages/${id}/permanent`);
+  }
+
   restore(id: number) {
     return this.http.post<ClientResponse<PageDetail>>(
       `api/pages/${id}/restore`,
