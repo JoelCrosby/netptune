@@ -14,4 +14,5 @@ public enum EntityType
     Status,
     RelationType,
     WorkspaceFile,
+    Page,
 }

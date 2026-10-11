@@ -80,4 +80,14 @@ public interface INetptuneUnitOfWork : IUnitOfWork
     IWorkspaceSearchCredentialRepository WorkspaceSearchCredentials { get; }
 
     IAiChangeSetRepository AiChangeSets { get; }
+
+    IPageRepository Pages { get; }
+
+    IPageFavouriteRepository PageFavourites { get; }
+
+    IPageVersionRepository PageVersions { get; }
+
+    IPageLinkRepository PageLinks { get; }
+
+    IPageVisitRepository PageVisits { get; }
 }

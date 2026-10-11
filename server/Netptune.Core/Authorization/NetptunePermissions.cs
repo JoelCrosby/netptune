@@ -151,6 +151,15 @@ public static class NetptunePermissions
         public const string ManageShared = "task_views.manage_shared";
     }
 
+    public static class Pages
+    {
+        public const string Read = "pages.read";
+        public const string Create = "pages.create";
+        public const string Update = "pages.update";
+        public const string Delete = "pages.delete";
+        public const string DeleteAny = "pages.delete_any";
+    }
+
     public static class Activity
     {
         public const string Read = "activity.read";

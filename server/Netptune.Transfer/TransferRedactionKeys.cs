@@ -18,6 +18,7 @@ public static class TransferRedactionKeys
     public const string PendingInvites = "pending-invites";
     public const string TransferHistory = "transfer-history";
     public const string SavedViews = "saved-views";
+    public const string Pages = "pages";
     public const string EncryptionKeys = "encryption-keys";
 
     public static IReadOnlySet<string> All { get; } = typeof(TransferRedactionKeys)

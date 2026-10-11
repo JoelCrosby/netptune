@@ -54,6 +54,13 @@ public class DataContext : IdentityDbContext<AppUser>, IDataProtectionKeyContext
     public DbSet<ScheduledAutomationAction> ScheduledAutomationActions { get; set; } = null!;
     public DbSet<WorkspaceFile> WorkspaceFiles { get; set; } = null!;
 
+    // Pages
+    public DbSet<Page> Pages { get; set; } = null!;
+    public DbSet<PageVersion> PageVersions { get; set; } = null!;
+    public DbSet<PageLink> PageLinks { get; set; } = null!;
+    public DbSet<PageFavourite> PageFavourites { get; set; } = null!;
+    public DbSet<PageVisit> PageVisits { get; set; } = null!;
+
     // Data transfer
     public DbSet<ExportJob> ExportJobs { get; set; } = null!;
     public DbSet<ExportDefinition> ExportDefinitions { get; set; } = null!;
@@ -84,6 +91,7 @@ public class DataContext : IdentityDbContext<AppUser>, IDataProtectionKeyContext
     public DbSet<ProjectUser> ProjectUsers { get; set; } = null!;
     public DbSet<ProjectTaskInBoardGroup> ProjectTaskInBoardGroups { get; set; } = null!;
     public DbSet<ProjectTaskTag> ProjectTaskTags { get; set; } = null!;
+    public DbSet<PageTag> PageTags { get; set; } = null!;
     public DbSet<ProjectTaskRelation> ProjectTaskRelations { get; set; } = null!;
     public DbSet<ProjectTaskAppUser> ProjectTaskAppUsers { get; set; } = null!;
     public DbSet<WorkspaceInvite> WorkspaceInvites { get; set; } = null!;

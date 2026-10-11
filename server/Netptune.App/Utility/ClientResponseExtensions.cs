@@ -65,6 +65,11 @@ public static class ClientResponseExtensions
             return Results.NotFound(response);
         }
 
+        if (response.IsConflict)
+        {
+            return Results.Conflict(response);
+        }
+
         if (response.IsForbidden)
         {
             return Results.Forbid();

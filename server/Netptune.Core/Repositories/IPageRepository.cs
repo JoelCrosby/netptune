@@ -1,0 +1,35 @@
+using Netptune.Core.Entities;
+using Netptune.Core.Models.Pages;
+using Netptune.Core.Repositories.Common;
+using Netptune.Core.ViewModels.Pages;
+
+namespace Netptune.Core.Repositories;
+
+public interface IPageRepository : IWorkspaceEntityRepository<Page, int>
+{
+    Task<Page?> GetLiveInWorkspace(int id, int workspaceId, bool isReadonly = false, CancellationToken cancellationToken = default);
+
+    Task<Page?> GetLiveWithTags(int id, int workspaceId, CancellationToken cancellationToken = default);
+
+    Task<Page?> GetArchivedInWorkspace(int id, int workspaceId, CancellationToken cancellationToken = default);
+
+    Task<List<PageTreeNodeViewModel>> GetTree(int workspaceId, string userId, CancellationToken cancellationToken = default);
+
+    Task<PageViewModel?> GetViewModel(int id, int workspaceId, string userId, CancellationToken cancellationToken = default);
+
+    Task<PageViewModel?> GetViewModelBySlug(string slug, int workspaceId, string userId, CancellationToken cancellationToken = default);
+
+    Task<List<ArchivedPageViewModel>> GetArchived(int workspaceId, CancellationToken cancellationToken = default);
+
+    Task<double> GetNextSortOrder(int workspaceId, int? parentId, CancellationToken cancellationToken = default);
+
+    Task<bool> TrySaveContent(PageContentUpdate update, CancellationToken cancellationToken = default);
+
+    Task<List<int>> GetSubtreeIds(int pageId, int workspaceId, bool includeArchived, CancellationToken cancellationToken = default);
+
+    Task<List<int>> GetArchivedTogetherIds(Page root, CancellationToken cancellationToken = default);
+
+    Task<bool> AnyCreatedByOthers(IReadOnlyCollection<int> ids, string userId, CancellationToken cancellationToken = default);
+
+    Task<List<int>> GetAncestorIds(int pageId, int workspaceId, CancellationToken cancellationToken = default);
+}

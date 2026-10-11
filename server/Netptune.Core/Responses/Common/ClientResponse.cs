@@ -56,6 +56,8 @@ public readonly struct ClientResponse<TPayload>
 
     public bool IsForbidden => ResponseType == ResponseType.Forbidden;
 
+    public bool IsConflict => ResponseType == ResponseType.Conflict;
+
     public static ClientResponse<TPayload> Success(string? message = null)
     {
         return new(true, message: message);
@@ -79,6 +81,12 @@ public readonly struct ClientResponse<TPayload>
     public static readonly ClientResponse<TPayload> NotFound = new(false, default, null, ResponseType.NotFound);
 
     public static readonly ClientResponse<TPayload> Forbidden = new(false, default, null, ResponseType.Forbidden);
+
+    // Carries the current server state so the caller can show what it collided with.
+    public static ClientResponse<TPayload> Conflict(TPayload current, string message)
+    {
+        return new(false, current, message, ResponseType.Conflict);
+    }
 
     public static implicit operator ClientResponse<TPayload>(TPayload payload) => new(isSuccess: true, payload: payload, message: null);
 }

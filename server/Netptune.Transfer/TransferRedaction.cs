@@ -81,6 +81,12 @@ public static class TransferRedaction
         Redacted<ImportDefinition>(TransferRedactionKeys.TransferHistory),
         Redacted<TaskView>(TransferRedactionKeys.SavedViews),
         Redacted<TaskPin>(TransferRedactionKeys.SavedViews),
+        Redacted<Page>(TransferRedactionKeys.Pages),
+        Redacted<PageVersion>(TransferRedactionKeys.Pages),
+        Redacted<PageTag>(TransferRedactionKeys.Pages),
+        Redacted<PageLink>(TransferRedactionKeys.Pages),
+        Redacted<PageFavourite>(TransferRedactionKeys.PerUserState),
+        Redacted<PageVisit>(TransferRedactionKeys.PerUserState),
     ];
 
     private static readonly FrozenDictionary<Type, TransferEntityClassification> ClassificationsByType =

@@ -15,4 +15,6 @@ public static class WorkspaceEventScopes
     public const string Status = "status";
 
     public const string Comment = "comment";
+
+    public const string Page = "page";
 }
