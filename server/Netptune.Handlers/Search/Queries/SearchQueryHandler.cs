@@ -79,6 +79,7 @@ public sealed class SearchQueryHandler : IRequestHandler<SearchQuery, SearchResp
             var metadata = new Dictionary<string, object?>(result.Metadata)
             {
                 ["projectKey"] = reference.ProjectKey,
+                ["systemId"] = reference.SystemId,
             };
             var status = metadata.GetValueOrDefault("status")?.ToString() ?? string.Empty;
 

@@ -46,6 +46,11 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
     public IAiWebDocumentRepository AiWebDocuments { get; }
     public IWorkspaceSearchCredentialRepository WorkspaceSearchCredentials { get; }
     public IAiChangeSetRepository AiChangeSets { get; }
+    public IPageRepository Pages { get; }
+    public IPageFavouriteRepository PageFavourites { get; }
+    public IPageVersionRepository PageVersions { get; }
+    public IPageLinkRepository PageLinks { get; }
+    public IPageVisitRepository PageVisits { get; }
 
     public NetptuneUnitOfWork(
         DataContext context,
@@ -89,5 +94,10 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
         AiWebDocuments = new AiWebDocumentRepository(context, connectionFactory);
         WorkspaceSearchCredentials = new WorkspaceSearchCredentialRepository(context, connectionFactory);
         AiChangeSets = new AiChangeSetRepository(context, connectionFactory);
+        Pages = new PageRepository(context, connectionFactory);
+        PageFavourites = new PageFavouriteRepository(context, connectionFactory);
+        PageVersions = new PageVersionRepository(context, connectionFactory);
+        PageLinks = new PageLinkRepository(context, connectionFactory);
+        PageVisits = new PageVisitRepository(connectionFactory);
     }
 }

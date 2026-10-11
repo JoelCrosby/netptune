@@ -168,6 +168,7 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
             EntityType.BoardGroup => x => x.EntityId == entityId || x.BoardGroupId == entityId,
             EntityType.Sprint => x => x.EntityId == entityId,
             EntityType.Status => x => x.EntityId == entityId,
+            EntityType.Page => x => x.EntityId == entityId,
             _ => _ => true,
         };
 
