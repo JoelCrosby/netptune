@@ -42,7 +42,11 @@ export class WorkspaceCommandsService {
         catchError(() => EMPTY),
         finalize(() => this.creating.set(false))
       )
-      .subscribe(() => this.list.reload());
+      .subscribe((workspace) => {
+        this.list.reload();
+        this.workspace.setWorkspace(workspace.slug);
+        void this.router.navigate(['/', workspace.slug, 'projects']);
+      });
   }
 
   edit(request: UpdateWorkspaceRequest) {
