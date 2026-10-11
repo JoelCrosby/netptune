@@ -171,12 +171,17 @@ const importFailed = $localize`:Error shown when importing markdown files as pag
 
 function importedMessage(result: ImportPagesResult): string {
   const skipped = result.skipped.length;
+  const isOnePage = result.created === 1;
 
   if (!skipped) {
-    return $localize`:Shown after markdown files were imported as pages:Imported ${result.created}:COUNT: pages`;
+    return isOnePage
+      ? $localize`:Shown after a single markdown file was imported as a page:Imported 1 page`
+      : $localize`:Shown after markdown files were imported as pages:Imported ${result.created}:COUNT: pages`;
   }
 
-  return $localize`:Shown after an import that left some files out:Imported ${result.created}:COUNT: pages, skipped ${skipped}:SKIPPED: files`;
+  return isOnePage
+    ? $localize`:Shown after an import of a single page that left some files out:Imported 1 page, skipped ${skipped}:SKIPPED: files`
+    : $localize`:Shown after an import that left some files out:Imported ${result.created}:COUNT: pages, skipped ${skipped}:SKIPPED: files`;
 }
 
 const reviewFailed = $localize`:Error shown when marking a page as reviewed fails:The page couldn't be marked as reviewed.`;

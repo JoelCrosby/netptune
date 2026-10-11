@@ -63,6 +63,84 @@ public class PageImportReaderTests
         read.Error.Should().Be("The zip file could not be read.");
     }
 
+    [Fact]
+    public async Task Read_ShouldCountOversizeReadsTowardTheTotal_WhenTheirLengthIsNotDeclared()
+    {
+        var oversize = PageBody.MaxBytes + 10;
+        var uploadCount = (int)(PageImportReader.MaxTotalBytes / PageBody.MaxBytes) + 1;
+        var uploads = Enumerable.Range(0, uploadCount)
+            .Select(index => new PageImportUpload($"big-{index}.md", new UnseekableStream(oversize)))
+            .ToList();
+
+        var read = await PageImportReader.Read(uploads, TestContext.Current.CancellationToken);
+
+        read.Error.Should().Be("The files add up to more than 30 MB.");
+    }
+
+    [Fact]
+    public async Task Read_ShouldRefuse_AZipWithMoreEntriesThanItExamines()
+    {
+        var entries = Enumerable.Range(0, PageImportReader.MaxEntries + 1)
+            .Select(index => ($"folder-{index}/", ""))
+            .ToArray();
+        using var zip = CreateZip(entries);
+
+        var read = await PageImportReader.Read([new PageImportUpload("many.zip", zip)], TestContext.Current.CancellationToken);
+
+        read.Error.Should().Be($"A zip file can hold at most {PageImportReader.MaxEntries} entries.");
+    }
+
+    [Fact]
+    public async Task Read_ShouldListTheFirstSkippedFiles_AndCountTheRest()
+    {
+        var unlisted = 10;
+        var entries = Enumerable.Range(0, PageImportReader.MaxSkippedListed + unlisted)
+            .Select(index => ($"image-{index:D3}.png", "png"))
+            .ToArray();
+        using var zip = CreateZip(entries);
+
+        var read = await PageImportReader.Read([new PageImportUpload("images.zip", zip)], TestContext.Current.CancellationToken);
+
+        read.Skipped.Should().HaveCount(PageImportReader.MaxSkippedListed + 1);
+        read.Skipped[0].Should().StartWith("image-000.png");
+        read.Skipped[^1].Should().Be($"and {unlisted} more");
+    }
+
+    [Fact]
+    public async Task Read_ShouldReportAnEncryptedZipAsUnreadable()
+    {
+        using var zip = CreateZip(("secret.md", "# Secret"));
+
+        MarkEncrypted(zip);
+
+        var read = await PageImportReader.Read([new PageImportUpload("secret.zip", zip)], TestContext.Current.CancellationToken);
+
+        read.Error.Should().Be(PageImportReader.UnreadableZipMessage);
+    }
+
+    private static void MarkEncrypted(MemoryStream zip)
+    {
+        const int encryptedFlag = 0x1;
+        const int localHeaderFlagOffset = 6;
+        const int centralHeaderFlagOffset = 8;
+        var bytes = zip.GetBuffer();
+        var length = (int)zip.Length;
+
+        for (var offset = 0; offset < length - 4; offset++)
+        {
+            var signature = BitConverter.ToUInt32(bytes, offset);
+
+            if (signature == 0x04034b50)
+            {
+                bytes[offset + localHeaderFlagOffset] |= encryptedFlag;
+            }
+            else if (signature == 0x02014b50)
+            {
+                bytes[offset + centralHeaderFlagOffset] |= encryptedFlag;
+            }
+        }
+    }
+
     private static MemoryStream CreateZip(params (string Path, string Content)[] entries)
     {
         var stream = new MemoryStream();
@@ -82,5 +160,44 @@ public class PageImportReaderTests
         stream.Position = 0;
 
         return stream;
+    }
+
+    private sealed class UnseekableStream(long length) : Stream
+    {
+        private long Remaining = length;
+
+        public override bool CanRead => true;
+
+        public override bool CanSeek => false;
+
+        public override bool CanWrite => false;
+
+        public override long Length => throw new NotSupportedException();
+
+        public override long Position
+        {
+            get => throw new NotSupportedException();
+            set => throw new NotSupportedException();
+        }
+
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            var read = (int)Math.Min(count, Remaining);
+
+            buffer.AsSpan(offset, read).Fill((byte)'a');
+            Remaining -= read;
+
+            return read;
+        }
+
+        public override void Flush()
+        {
+        }
+
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+
+        public override void SetLength(long value) => throw new NotSupportedException();
+
+        public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
     }
 }

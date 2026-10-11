@@ -23,6 +23,14 @@ public class PageTemplatesTests
     }
 
     [Fact]
+    public void ReleaseNotesTitle_ShouldFitTheTitleLimit_ForALongSprintName()
+    {
+        var title = PageTemplates.ReleaseNotesTitle(new string('s', 256));
+
+        title.Length.Should().Be(PageTitle.MaxLength);
+    }
+
+    [Fact]
     public void ReleaseNotes_ShouldSaySo_WhenNothingWasCompleted()
     {
         var body = PageTemplates.ReleaseNotes("Sprint 11", []);

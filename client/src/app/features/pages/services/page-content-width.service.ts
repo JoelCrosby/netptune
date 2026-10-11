@@ -22,7 +22,6 @@ export class PageContentWidthService {
     return isPageContentWidth(value) ? value : 'centered';
   });
 
-  // Flips straight away rather than after the preference round trip.
   readonly width = linkedSignal(() => this.saved());
 
   constructor() {

@@ -69,10 +69,9 @@ export class SprintPickerDialogComponent {
   protected readonly sprints = sprintResource([SprintStatus.completed]);
 
   protected readonly options = computed<FilterOption<number>[]>(() => {
-    return this.sprints.value().map((sprint) => ({
-      value: sprint.id,
-      label: sprint.name,
-    }));
+    return this.sprints.value().map((sprint) => {
+      return { value: sprint.id, label: sprint.name };
+    });
   });
 
   constructor() {

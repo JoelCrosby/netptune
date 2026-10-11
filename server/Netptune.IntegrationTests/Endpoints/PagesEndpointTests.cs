@@ -403,7 +403,7 @@ public sealed class PagesEndpointTests
 
         response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync(cancellationToken));
 
-        var result = await response.Content.ReadFromJsonAsync<ClientResponse<ImportPagesResult>>(cancellationToken);
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<ImportPagesResultViewModel>>(cancellationToken);
         var tree = await GetTree();
         var root = tree.Single(node => node.Title == folder);
         var onCall = tree.Single(node => node.ParentId == root.Id && node.Title == "On-call");
@@ -556,6 +556,14 @@ public sealed class PagesEndpointTests
         var afterReview = await GetNeedingReview();
 
         afterReview.Should().NotContain(page => page.Id == stale.Id);
+
+        using var verifyScope = Fixture.CreateScope();
+
+        var verifyContext = verifyScope.ServiceProvider.GetRequiredService<DataContext>();
+        var reviewedPage = await verifyContext.Pages.AsNoTracking().SingleAsync(page => page.Id == stale.Id, cancellationToken);
+
+        reviewedPage.UpdatedAt.Should().BeBefore(DateTime.UtcNow.AddYears(-1));
+        reviewedPage.ReviewedAt.Should().NotBeNull();
     }
 
     private async Task<List<PageNeedingReviewViewModel>> GetNeedingReview()

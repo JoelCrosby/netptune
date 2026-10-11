@@ -25,6 +25,8 @@ public interface IPageRepository : IWorkspaceEntityRepository<Page, int>
 
     Task<bool> TrySaveContent(PageContentUpdate update, CancellationToken cancellationToken = default);
 
+    Task<bool> MarkReviewed(int id, int workspaceId, string userId, CancellationToken cancellationToken = default);
+
     Task<List<int>> GetSubtreeIds(int pageId, int workspaceId, bool includeArchived, CancellationToken cancellationToken = default);
 
     Task<List<int>> GetArchivedTogetherIds(Page root, CancellationToken cancellationToken = default);

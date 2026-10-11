@@ -1,7 +1,10 @@
 using FluentAssertions;
 
+using Netptune.Core.Authorization;
+using Netptune.Core.Cache;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Models;
 using Netptune.Core.Models.Pages;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Requests.Pages;
@@ -29,6 +32,7 @@ public class CreatePageCommandHandlerTests
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
     private readonly IEventPublisher EventPublisher = Substitute.For<IEventPublisher>();
+    private readonly IWorkspacePermissionCache PermissionCache = Substitute.For<IWorkspacePermissionCache>();
     private readonly CreatePageCommandHandler Handler;
     private Page? AddedPage;
 
@@ -53,7 +57,9 @@ public class CreatePageCommandHandlerTests
             .GetViewModel(Arg.Any<int>(), WorkspaceId, UserId, Arg.Any<CancellationToken>())
             .Returns(new PageViewModel { Title = "Untitled", Slug = "untitled" });
 
-        Handler = new CreatePageCommandHandler(UnitOfWork, Identity, Activity, EventPublisher);
+        Grant(NetptunePermissions.Sprints.Read, NetptunePermissions.Tasks.Read);
+
+        Handler = new CreatePageCommandHandler(UnitOfWork, Identity, Activity, EventPublisher, PermissionCache);
     }
 
     [Fact]
@@ -134,6 +140,17 @@ public class CreatePageCommandHandlerTests
     }
 
     [Fact]
+    public async Task Handle_ShouldRefuseReleaseNotes_WhenTheCallerCannotReadSprints()
+    {
+        Grant(NetptunePermissions.Tasks.Read);
+
+        var result = await Send(new CreatePageRequest { Kind = PageKind.Document, TemplateKey = PageTemplates.FromSprint, SprintId = 3 });
+
+        result.IsSuccess.Should().BeFalse();
+        await UnitOfWork.Sprints.DidNotReceive().GetSprintDetailAsync(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task Handle_ShouldStartAPageInAProjectSpace_WhenTheProjectIsInTheWorkspace()
     {
         UnitOfWork.Projects
@@ -199,5 +216,16 @@ public class CreatePageCommandHandlerTests
     private Task<ClientResponse<PageViewModel>> Send(CreatePageRequest request)
     {
         return Handler.Handle(new CreatePageCommand(request), TestContext.Current.CancellationToken).AsTask();
+    }
+
+    private void Grant(params string[] permissions)
+    {
+        PermissionCache.GetUserPermissions(UserId, WorkspaceKey).Returns(new UserPermissions
+        {
+            UserId = UserId,
+            WorkspaceKey = WorkspaceKey,
+            Role = WorkspaceRole.Member,
+            Permissions = [.. permissions],
+        });
     }
 }

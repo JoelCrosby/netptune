@@ -2,6 +2,7 @@ import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
 import {
   ApplicationRef,
+  booleanAttribute,
   Component,
   DestroyRef,
   createComponent,
@@ -338,14 +339,14 @@ export class PageEditorComponent implements OnInit {
   readonly draft = input.required<PageDraft>();
   readonly links = input<PageLinks | undefined>(undefined);
   readonly mode = input<EditorMode>('rich');
-  readonly fullWidth = input(false);
+  readonly fullWidth = input(false, { transform: booleanAttribute });
+  readonly readOnly = input(false);
 
   protected readonly columnClass = computed(() => {
     const width = this.fullWidth() ? 'max-w-none' : 'max-w-[760px]';
 
     return `mx-auto flex w-full ${width} flex-col px-12 pt-10 pb-20 max-md:px-5 max-md:pt-6`;
   });
-  readonly readOnly = input(false);
 
   private readonly referenceListeners = new Set<() => void>();
   private readonly hovered = signal<HoveredReference | null>(null);

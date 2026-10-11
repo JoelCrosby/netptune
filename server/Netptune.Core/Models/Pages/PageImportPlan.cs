@@ -23,6 +23,7 @@ public static partial class PageImportPlan
 {
     public static List<PageImportNode> Build(IReadOnlyList<PageImportFile> files)
     {
+        var keys = new UniqueKeys();
         var folders = new Dictionary<string, PageImportNode>(StringComparer.OrdinalIgnoreCase);
         var documents = new List<PageImportNode>();
 
@@ -35,12 +36,13 @@ public static partial class PageImportPlan
                 continue;
             }
 
-            var parentKey = AddFolders(folders, segments[..^1]);
+            var parentKey = AddFolders(folders, keys, segments[..^1]);
             var (title, body) = ReadTitle(file.Content, segments[^1]);
+            var path = string.Join('/', segments);
 
             documents.Add(new PageImportNode
             {
-                Key = string.Join('/', segments),
+                Key = keys.Claim(path),
                 ParentKey = parentKey,
                 Kind = PageKind.Document,
                 Title = title,
@@ -60,23 +62,28 @@ public static partial class PageImportPlan
             .ToList();
     }
 
-    private static string? AddFolders(Dictionary<string, PageImportNode> folders, List<string> directories)
+    private static string? AddFolders(Dictionary<string, PageImportNode> folders, UniqueKeys keys, List<string> directories)
     {
         string? parentKey = null;
 
         for (var depth = 0; depth < directories.Count; depth++)
         {
-            var key = string.Join('/', directories.Take(depth + 1));
+            var path = string.Join('/', directories.Take(depth + 1));
 
-            folders.TryAdd(key, new PageImportNode
+            if (!folders.TryGetValue(path, out var folder))
             {
-                Key = key,
-                ParentKey = parentKey,
-                Kind = PageKind.Folder,
-                Title = Fit(directories[depth]),
-            });
+                folder = new PageImportNode
+                {
+                    Key = keys.Claim(path),
+                    ParentKey = parentKey,
+                    Kind = PageKind.Folder,
+                    Title = Fit(directories[depth]),
+                };
 
-            parentKey = key;
+                folders.Add(path, folder);
+            }
+
+            parentKey = folder.Key;
         }
 
         return parentKey;
@@ -105,6 +112,23 @@ public static partial class PageImportPlan
         var normalised = PageTitle.Normalise(title);
 
         return PageTitle.IsTooLong(normalised) ? normalised[..PageTitle.MaxLength] : normalised;
+    }
+
+    private sealed class UniqueKeys
+    {
+        private readonly HashSet<string> Taken = new(StringComparer.OrdinalIgnoreCase);
+
+        public string Claim(string path)
+        {
+            var key = path;
+
+            for (var copy = 2; !Taken.Add(key); copy++)
+            {
+                key = $"{path} ({copy})";
+            }
+
+            return key;
+        }
     }
 
     [GeneratedRegex(@"\A\s*#[ \t]+(?<title>[^\n]+?)[ \t#]*(\n|\z)")]

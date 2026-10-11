@@ -4,32 +4,18 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Pages;
 using Netptune.Core.Models.Search;
+using Netptune.Core.Requests.Pages;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
+using Netptune.Core.ViewModels.Pages;
 
 namespace Netptune.Handlers.Pages.Commands;
 
-public sealed record ImportPagesRequest
-{
-    public int? ParentId { get; init; }
+public sealed record ImportPagesCommand(ImportPagesRequest Request, PageImportRead Upload) : IRequest<ClientResponse<ImportPagesResultViewModel>>;
 
-    public int? ProjectId { get; init; }
-}
-
-public sealed record ImportPagesResult
-{
-    public int Created { get; init; }
-
-    public List<string> Skipped { get; init; } = [];
-
-    public string? FirstSlug { get; init; }
-}
-
-public sealed record ImportPagesCommand(ImportPagesRequest Request, PageImportRead Upload) : IRequest<ClientResponse<ImportPagesResult>>;
-
-public sealed class ImportPagesCommandHandler : IRequestHandler<ImportPagesCommand, ClientResponse<ImportPagesResult>>
+public sealed class ImportPagesCommandHandler : IRequestHandler<ImportPagesCommand, ClientResponse<ImportPagesResultViewModel>>
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
@@ -48,18 +34,18 @@ public sealed class ImportPagesCommandHandler : IRequestHandler<ImportPagesComma
         EventPublisher = eventPublisher;
     }
 
-    public async ValueTask<ClientResponse<ImportPagesResult>> Handle(ImportPagesCommand request, CancellationToken cancellationToken)
+    public async ValueTask<ClientResponse<ImportPagesResultViewModel>> Handle(ImportPagesCommand request, CancellationToken cancellationToken)
     {
         var upload = request.Upload;
 
         if (upload.Error is not null)
         {
-            return ClientResponse<ImportPagesResult>.Failed(upload.Error);
+            return ClientResponse<ImportPagesResultViewModel>.Failed(upload.Error);
         }
 
         if (upload.Files.Count == 0)
         {
-            return ClientResponse<ImportPagesResult>.Failed("There were no markdown files to import.");
+            return ClientResponse<ImportPagesResultViewModel>.Failed("There were no markdown files to import.");
         }
 
         var workspaceKey = Identity.GetWorkspaceKey();
@@ -70,7 +56,7 @@ public sealed class ImportPagesCommandHandler : IRequestHandler<ImportPagesComma
 
         if (placement.Error is not null)
         {
-            return ClientResponse<ImportPagesResult>.Failed(placement.Error);
+            return ClientResponse<ImportPagesResultViewModel>.Failed(placement.Error);
         }
 
         var nodes = PageImportPlan.Build(upload.Files);
@@ -83,6 +69,7 @@ public sealed class ImportPagesCommandHandler : IRequestHandler<ImportPagesComma
             FirstSortOrder = firstSortOrder,
         };
         var pages = CreatePages(nodes, origin);
+        var linkScope = new PageLinkScope(workspaceId, workspaceKey);
 
         await UnitOfWork.Transaction(async () =>
         {
@@ -90,8 +77,13 @@ public sealed class ImportPagesCommandHandler : IRequestHandler<ImportPagesComma
             await UnitOfWork.CompleteAsync(cancellationToken);
 
             var versions = pages.Select(page => ToFirstVersion(page, userId)).ToList();
+            var linkSources = pages
+                .Where(page => page.Kind == PageKind.Document)
+                .Select(page => new PageLinkSource(page.Id, page.Body))
+                .ToList();
 
             await UnitOfWork.PageVersions.AddRangeAsync(versions, cancellationToken);
+            await PageLinkRebuilder.BuildForNewPages(UnitOfWork, linkSources, linkScope, cancellationToken);
             await UnitOfWork.CompleteAsync(cancellationToken);
         });
 
@@ -108,7 +100,7 @@ public sealed class ImportPagesCommandHandler : IRequestHandler<ImportPagesComma
 
         var opens = pages.Count == 1 ? pages[0] : pages.FirstOrDefault(page => page.Parent is null);
 
-        return ClientResponse<ImportPagesResult>.Success(new ImportPagesResult
+        return ClientResponse<ImportPagesResultViewModel>.Success(new ImportPagesResultViewModel
         {
             Created = pages.Count,
             Skipped = upload.Skipped,
@@ -120,6 +112,7 @@ public sealed class ImportPagesCommandHandler : IRequestHandler<ImportPagesComma
     {
         var pagesByKey = new Dictionary<string, Page>(StringComparer.OrdinalIgnoreCase);
         var siblingCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        var pages = new List<Page>();
 
         foreach (var node in nodes)
         {
@@ -150,10 +143,11 @@ public sealed class ImportPagesCommandHandler : IRequestHandler<ImportPagesComma
                 OwnerId = origin.UserId,
             };
 
-            pagesByKey[node.Key] = page;
+            pagesByKey.Add(node.Key, page);
+            pages.Add(page);
         }
 
-        return [.. pagesByKey.Values];
+        return pages;
     }
 
     private static PageVersion ToFirstVersion(Page page, string userId)

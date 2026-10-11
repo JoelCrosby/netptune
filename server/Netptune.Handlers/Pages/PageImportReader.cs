@@ -19,7 +19,10 @@ public sealed record PageImportRead
 public static class PageImportReader
 {
     public const int MaxFiles = 300;
+    public const int MaxEntries = 2000;
     public const long MaxTotalBytes = 30L * 1024 * 1024;
+    public const int MaxSkippedListed = 50;
+    public const string UnreadableZipMessage = "The zip file could not be read.";
 
     private static readonly HashSet<string> MarkdownExtensions = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -61,6 +64,11 @@ public static class PageImportReader
         {
             await using var archive = new ZipArchive(content, ZipArchiveMode.Read, leaveOpen: true);
 
+            if (archive.Entries.Count > MaxEntries)
+            {
+                return collector.Fail($"A zip file can hold at most {MaxEntries} entries.");
+            }
+
             foreach (var entry in archive.Entries)
             {
                 var isDirectory = entry.FullName.EndsWith('/');
@@ -68,6 +76,12 @@ public static class PageImportReader
                 if (isDirectory)
                 {
                     continue;
+                }
+
+                // ZipCrypto entries open without error and would read back as ciphertext.
+                if (entry.IsEncrypted)
+                {
+                    return collector.Fail(UnreadableZipMessage);
                 }
 
                 await using var entryStream = await entry.OpenAsync(cancellationToken);
@@ -80,9 +94,9 @@ public static class PageImportReader
                 }
             }
         }
-        catch (InvalidDataException)
+        catch (Exception exception) when (exception is InvalidDataException or NotSupportedException)
         {
-            return collector.Fail("The zip file could not be read.");
+            return collector.Fail(UnreadableZipMessage);
         }
 
         return collector.Finish();
@@ -97,6 +111,7 @@ public static class PageImportReader
     {
         private readonly List<PageImportFile> Files = [];
         private readonly List<string> Skipped = [];
+        private int UnlistedSkips;
         private long TotalBytes;
 
         public async Task<string?> Add(string path, Stream content, long? declaredLength, CancellationToken cancellationToken)
@@ -113,7 +128,8 @@ public static class PageImportReader
 
             if (!isMarkdown)
             {
-                Skipped.Add($"{path}: not a markdown file");
+                Skip($"{path}: not a markdown file");
+
                 return null;
             }
 
@@ -121,7 +137,8 @@ public static class PageImportReader
 
             if (isTooLarge)
             {
-                Skipped.Add($"{path}: larger than 1 MB");
+                Skip($"{path}: larger than 1 MB");
+
                 return null;
             }
 
@@ -130,20 +147,25 @@ public static class PageImportReader
                 return $"An import can hold at most {MaxFiles} files.";
             }
 
-            var text = await ReadBounded(content, cancellationToken);
+            using var bytes = await ReadBounded(content, cancellationToken);
 
-            if (text is null)
-            {
-                Skipped.Add($"{path}: larger than 1 MB");
-                return null;
-            }
-
-            TotalBytes += Encoding.UTF8.GetByteCount(text);
+            TotalBytes += bytes.Length;
 
             if (TotalBytes > MaxTotalBytes)
             {
                 return "The files add up to more than 30 MB.";
             }
+
+            var isOverBodyLimit = bytes.Length > PageBody.MaxBytes;
+
+            if (isOverBodyLimit)
+            {
+                Skip($"{path}: larger than 1 MB");
+
+                return null;
+            }
+
+            var text = await Decode(bytes, cancellationToken);
 
             Files.Add(new PageImportFile(path, text));
 
@@ -152,16 +174,40 @@ public static class PageImportReader
 
         public PageImportRead Finish()
         {
-            return new PageImportRead { Files = Files, Skipped = Skipped };
+            return new PageImportRead { Files = Files, Skipped = ListSkipped() };
         }
 
         public PageImportRead Fail(string error)
         {
-            return new PageImportRead { Skipped = Skipped, Error = error };
+            return new PageImportRead { Skipped = ListSkipped(), Error = error };
+        }
+
+        private void Skip(string reason)
+        {
+            var hasRoomToList = Skipped.Count < MaxSkippedListed;
+
+            if (hasRoomToList)
+            {
+                Skipped.Add(reason);
+            }
+            else
+            {
+                UnlistedSkips++;
+            }
+        }
+
+        private List<string> ListSkipped()
+        {
+            if (UnlistedSkips == 0)
+            {
+                return Skipped;
+            }
+
+            return [.. Skipped, $"and {UnlistedSkips} more"];
         }
 
         // A declared size can lie, so reading stops one byte past the limit whatever the header said.
-        private static async Task<string?> ReadBounded(Stream content, CancellationToken cancellationToken)
+        private static async Task<MemoryStream> ReadBounded(Stream content, CancellationToken cancellationToken)
         {
             var buffer = new MemoryStream();
             var chunk = new byte[81920];
@@ -179,14 +225,14 @@ public static class PageImportReader
                 buffer.Write(chunk, 0, read);
             }
 
-            if (buffer.Length > PageBody.MaxBytes)
-            {
-                return null;
-            }
-
             buffer.Position = 0;
 
-            using var reader = new StreamReader(buffer, Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
+            return buffer;
+        }
+
+        private static async Task<string> Decode(MemoryStream bytes, CancellationToken cancellationToken)
+        {
+            using var reader = new StreamReader(bytes, Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
 
             return await reader.ReadToEndAsync(cancellationToken);
         }

@@ -9,8 +9,8 @@ WITH candidates AS (
             WHEN EXISTS (
                 SELECT 1
                 FROM page_links link
-                LEFT JOIN project_tasks task ON link.target_type = 0 AND task.id::text = link.target_id
-                LEFT JOIN pages target ON link.target_type = 1 AND target.id::text = link.target_id
+                LEFT JOIN project_tasks task ON task.id = CASE WHEN link.target_type = 0 THEN link.target_id::int END
+                LEFT JOIN pages target ON target.id = CASE WHEN link.target_type = 1 THEN link.target_id::int END
                 WHERE link.page_id = page.id
                   AND (task.is_deleted OR target.is_deleted)
             ) THEN 2

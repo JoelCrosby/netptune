@@ -1,5 +1,8 @@
 using Mediator;
 
+using Netptune.Core.Authorization;
+using Netptune.Core.Cache;
+
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Pages;
@@ -21,17 +24,20 @@ public sealed class CreatePageCommandHandler : IRequestHandler<CreatePageCommand
     private readonly IIdentityService Identity;
     private readonly IActivityLogger Activity;
     private readonly IEventPublisher EventPublisher;
+    private readonly IWorkspacePermissionCache PermissionCache;
 
     public CreatePageCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
         IActivityLogger activity,
-        IEventPublisher eventPublisher)
+        IEventPublisher eventPublisher,
+        IWorkspacePermissionCache permissionCache)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Activity = activity;
         EventPublisher = eventPublisher;
+        PermissionCache = permissionCache;
     }
 
     public async ValueTask<ClientResponse<PageViewModel>> Handle(CreatePageCommand request, CancellationToken cancellationToken)
@@ -196,6 +202,13 @@ public sealed class CreatePageCommandHandler : IRequestHandler<CreatePageCommand
             return new PageStart(null, null, "Choose the sprint to write release notes for.");
         }
 
+        var canReadSprint = await CanReadSprintTasks();
+
+        if (!canReadSprint)
+        {
+            return new PageStart(null, null, "You need access to sprints and tasks to write release notes.");
+        }
+
         var workspaceKey = Identity.GetWorkspaceKey();
         var sprint = await UnitOfWork.Sprints.GetSprintDetailAsync(workspaceKey, sprintId.Value, cancellationToken);
 
@@ -212,6 +225,16 @@ public sealed class CreatePageCommandHandler : IRequestHandler<CreatePageCommand
         var body = PageTemplates.ReleaseNotes(sprint.Name, completed);
 
         return new PageStart(title, body, null);
+    }
+
+    private async Task<bool> CanReadSprintTasks()
+    {
+        var userId = Identity.GetCurrentUserId();
+        var workspaceKey = Identity.GetWorkspaceKey();
+        var permissions = await PermissionCache.GetUserPermissions(userId, workspaceKey);
+        var granted = permissions?.Permissions ?? [];
+
+        return granted.Contains(NetptunePermissions.Sprints.Read) && granted.Contains(NetptunePermissions.Tasks.Read);
     }
 
     private sealed record PageStart(string? Title, string? Body, string? Error);

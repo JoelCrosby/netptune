@@ -24,6 +24,6 @@ function writeCollapsed(collapsed: boolean) {
   try {
     localStorage.setItem(storageKey, String(collapsed));
   } catch {
-    // Storage can be unavailable (private mode, quota); the rail just won't stay collapsed.
+    return;
   }
 }

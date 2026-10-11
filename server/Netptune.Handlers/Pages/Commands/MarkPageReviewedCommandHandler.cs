@@ -27,21 +27,16 @@ public sealed class MarkPageReviewedCommandHandler : IRequestHandler<MarkPageRev
     {
         var workspaceId = await Identity.GetWorkspaceId();
         var userId = Identity.GetCurrentUserId();
-        var page = await UnitOfWork.Pages.GetLiveInWorkspace(request.Id, workspaceId, false, cancellationToken);
+        var marked = await UnitOfWork.Pages.MarkReviewed(request.Id, workspaceId, userId, cancellationToken);
 
-        if (page is null)
+        if (!marked)
         {
             return ClientResponse.NotFound;
         }
 
-        page.ReviewedAt = DateTime.UtcNow;
-        page.ReviewedByUserId = userId;
-
-        await UnitOfWork.CompleteAsync(cancellationToken);
-
         Activity.Log(options =>
         {
-            options.EntityId = page.Id;
+            options.EntityId = request.Id;
             options.EntityType = EntityType.Page;
             options.Type = ActivityType.Modify;
         });

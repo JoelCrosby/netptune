@@ -28,12 +28,12 @@ interface ExpansionSource {
 
 const homePattern = /^\/[^/?#]+\/pages\/?(?:[?#].*)?$/;
 const spaceParam = 'space';
+const pageSegmentPattern = /^\/[^/?#]+\/pages\/([^/?#]+)/;
 
 export interface PageSpace {
   project: ProjectViewModel;
   pageCount: number;
 }
-const pageSegmentPattern = /^\/[^/?#]+\/pages\/([^/?#]+)/;
 
 @Injectable()
 export class PageTreeStore {
@@ -85,7 +85,8 @@ export class PageTreeStore {
     const projects = this.projects.value();
 
     if (selectedId !== null) {
-      const projectId = this.find(selectedId)?.projectId ?? null;
+      const selected = this.find(selectedId);
+      const projectId = selected ? this.spaceIdOf(selected) : null;
 
       return projects.find((project) => project.id === projectId) ?? null;
     }
@@ -100,7 +101,7 @@ export class PageTreeStore {
   readonly spaceNodes = computed(() => {
     const spaceId = this.activeSpaceId();
 
-    return this.nodes().filter((node) => (node.projectId ?? null) === spaceId);
+    return this.nodes().filter((node) => this.spaceIdOf(node) === spaceId);
   });
 
   readonly spaces = computed<PageSpace[]>(() => {
@@ -115,6 +116,10 @@ export class PageTreeStore {
     return this.projects.value().map((project) => {
       return { project, pageCount: counts.get(project.id) ?? 0 };
     });
+  });
+
+  private readonly knownProjectIds = computed(() => {
+    return new Set(this.projects.value().map((project) => project.id));
   });
 
   readonly footerSelectedId = computed(() => {
@@ -153,6 +158,16 @@ export class PageTreeStore {
 
   spaceQuery(project: ProjectViewModel | null): Record<string, string> | null {
     return project ? { [spaceParam]: project.key } : null;
+  }
+
+  // A page whose project was deleted, or that the user cannot see, falls back to the workspace's own pages.
+  private spaceIdOf(node: PageTreeNode): number | null {
+    const projectId = node.projectId ?? null;
+    const isVisibleProject =
+      projectId !== null &&
+      (this.projects.isLoading() || this.knownProjectIds().has(projectId));
+
+    return isVisibleProject ? projectId : null;
   }
 
   find(id: number | null): PageTreeNode | undefined {

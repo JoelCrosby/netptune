@@ -25,6 +25,7 @@ import { DialogService } from '@core/services/dialog.service';
 import { PageCommandsService } from '@core/services/page-commands.service';
 import { BreadcrumbItem } from '@static/components/breadcrumb/breadcrumb.component';
 import { EditorMode } from '@static/components/editor/editor.component';
+import { SidePanelComponent } from '@static/components/side-panel/side-panel.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import {
@@ -53,6 +54,7 @@ import { PageTreeStore } from '../../services/page-tree.store';
 @Component({
   selector: 'app-page-detail-view',
   imports: [
+    SidePanelComponent,
     PageToolbarComponent,
     PageEditorComponent,
     PageRailComponent,
@@ -96,12 +98,11 @@ import { PageTreeStore } from '../../services/page-tree.store';
           </div>
 
           @if (page.kind === documentKind) {
-            <div
-              [class]="railClass()"
-              [inert]="rail.collapsed()"
-              [attr.aria-hidden]="rail.collapsed() || null">
+            <app-side-panel
+              class="max-lg:hidden"
+              [collapsed]="rail.collapsed()">
               <app-page-rail
-                class="h-full w-[300px]"
+                class="h-full"
                 [pageId]="draft.id"
                 [(tab)]="railTab"
                 [links]="links.value()"
@@ -111,7 +112,7 @@ import { PageTreeStore } from '../../services/page-tree.store';
                 [body]="draft.body()"
                 (headingSelected)="onHeadingSelected($event)"
                 (versionSelected)="onVersionSelected(draft, $event)" />
-            </div>
+            </app-side-panel>
           }
         </div>
       }
@@ -268,12 +269,6 @@ export class PageDetailViewComponent {
       }
     });
   }
-
-  protected readonly railClass = computed(() => {
-    const width = this.rail.collapsed() ? 'w-0' : 'w-[300px]';
-
-    return `${width} shrink-0 overflow-hidden transition-[width] duration-[180ms] ease-out motion-reduce:transition-none max-lg:hidden`;
-  });
 
   protected onHistoryRequested() {
     this.rail.setCollapsed(false);

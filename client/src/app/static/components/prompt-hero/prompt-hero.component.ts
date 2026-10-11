@@ -21,7 +21,7 @@ let nextHintId = 0;
       </div>
 
       <form
-        class="border-primary/40 bg-card focus-within:border-primary flex w-full max-w-[800px] flex-col gap-2.5 rounded-[14px] border-[1.5px] p-3 shadow-[0_6px_20px_rgba(120,60,200,0.12)] transition-colors"
+        class="border-primary/40 bg-card focus-within:border-primary shadow-primary/15 flex w-full max-w-[800px] flex-col gap-2.5 rounded-[14px] border-[1.5px] p-3 shadow-lg transition-colors"
         (submit)="$event.preventDefault(); submit()">
         <input
           type="text"
@@ -56,7 +56,7 @@ let nextHintId = 0;
 
       @if (suggestions().length) {
         <div class="flex flex-wrap justify-center gap-2">
-          @for (suggestion of suggestions(); track suggestion) {
+          @for (suggestion of suggestions(); track $index) {
             <button
               type="button"
               class="border-primary/25 bg-card text-foreground/80 hover:border-primary hover:text-primary focus-visible:ring-primary h-[30px] max-w-full cursor-pointer truncate rounded-full border px-3 text-[13px] transition-colors focus-visible:ring-2 focus-visible:outline-none"

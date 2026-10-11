@@ -109,7 +109,10 @@ public static class PageTemplates
 
     public static string ReleaseNotesTitle(string sprintName)
     {
-        return $"Release notes: {sprintName}";
+        var title = $"Release notes: {sprintName}";
+        var isTooLong = PageTitle.IsTooLong(title);
+
+        return isTooLong ? title[..PageTitle.MaxLength].TrimEnd() : title;
     }
 
     public static string ReleaseNotes(string sprintName, IReadOnlyCollection<ReleaseNoteTask> completed)

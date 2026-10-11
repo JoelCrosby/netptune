@@ -150,6 +150,17 @@ public sealed class PageRepository : WorkspaceEntityRepository<DataContext, Page
         return affected == 1;
     }
 
+    public async Task<bool> MarkReviewed(int id, int workspaceId, string userId, CancellationToken cancellationToken = default)
+    {
+        var affected = await Entities
+            .Where(page => page.Id == id && page.WorkspaceId == workspaceId && !page.IsDeleted)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(page => page.ReviewedAt, DateTime.UtcNow)
+                .SetProperty(page => page.ReviewedByUserId, userId), cancellationToken);
+
+        return affected == 1;
+    }
+
     public async Task<List<int>> GetSubtreeIds(int pageId, int workspaceId, bool includeArchived, CancellationToken cancellationToken = default)
     {
         using var connection = ConnectionFactory.StartConnection();
