@@ -7,6 +7,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Pages;
 using Netptune.Core.Requests;
@@ -18,6 +19,8 @@ using Netptune.Core.ViewModels.Sprints;
 using Netptune.Core.ViewModels.Tags;
 using Netptune.Entities.Contexts;
 using Netptune.Handlers.Pages.Commands;
+using Netptune.IntegrationTests.TestServices;
+using Netptune.TestData;
 
 using Xunit;
 
@@ -322,6 +325,27 @@ public sealed class PagesEndpointTests
 
         retagged.Status.Should().Be(PageStatus.Published);
         retagged.Tags.Select(tag => tag.Id).Should().Equal(firstTwo[1]);
+    }
+
+    [Fact]
+    public async Task Update_ShouldForbidTags_WhenTheMemberCannotAssignTags()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var created = await Create(new CreatePageRequest { Kind = PageKind.Document, Title = "Member tags" });
+        var tags = await Client.GetFromJsonAsync<List<TagViewModel>>("api/tags/workspace", cancellationToken);
+        var member = SeedData.Users.ElementAt(2);
+
+        await using var revoked = await MemberPermissions.Revoke(Client, member.Id, NetptunePermissions.Tags.Assign);
+
+        var memberClient = Fixture.CreateNetptuneClientAs(member.Email);
+        var tagRequest = new UpdatePageRequest { TagIds = [tags!.First().Id] };
+        var statusRequest = new UpdatePageRequest { Status = PageStatus.Published };
+
+        var tagResponse = await memberClient.PatchAsJsonAsync($"api/pages/{created.Id}", tagRequest, cancellationToken);
+        var statusResponse = await memberClient.PatchAsJsonAsync($"api/pages/{created.Id}", statusRequest, cancellationToken);
+
+        tagResponse.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        statusResponse.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
     [Fact]

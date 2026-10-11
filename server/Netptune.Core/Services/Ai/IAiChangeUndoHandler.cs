@@ -14,6 +14,8 @@ public interface IAiChangeUndoHandler
 {
     IReadOnlySet<string> UndoPermissions { get; }
 
+    IReadOnlySet<string> GetUndoPermissions(JsonElement payload) => UndoPermissions;
+
     Task<JsonDocument?> Capture(AiChangeApplyContext context, CancellationToken cancellationToken);
 
     Task<AiAppliedChangeResult> Revert(AiChangeUndoContext context, CancellationToken cancellationToken);

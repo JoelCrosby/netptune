@@ -740,7 +740,9 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
             return true;
         }
 
-        return handler.UndoPermissions.All(permissions.Contains);
+        var undoPermissions = handler.GetUndoPermissions(change.Payload.RootElement);
+
+        return undoPermissions.All(permissions.Contains);
     }
 
     private async Task RecordUndo(

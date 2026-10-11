@@ -4,6 +4,7 @@ using System.Security.Claims;
 
 using Microsoft.AspNetCore.Http;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Cache;
 using Netptune.Core.Entities;
 using Netptune.Core.Services;
@@ -107,6 +108,20 @@ public class IdentityService : IIdentityService
         }
 
         return id.Value;
+    }
+
+    public bool IsRestrictedByCredential(string permission)
+    {
+        var user = Context.HttpContext?.User;
+
+        if (user is null || !user.HasClaim(claim => claim.Type == NetptuneClaims.CredentialId))
+        {
+            return false;
+        }
+
+        var hasScope = user.HasClaim(NetptuneClaims.CredentialScope, permission);
+
+        return !hasScope;
     }
 
     private bool TryGetClaimValue(string type, [MaybeNullWhen(false)] out string value)

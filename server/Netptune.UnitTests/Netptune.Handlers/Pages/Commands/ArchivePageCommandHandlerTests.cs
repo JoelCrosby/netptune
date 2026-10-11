@@ -83,6 +83,19 @@ public class ArchivePageCommandHandlerTests
     }
 
     [Fact]
+    public async Task Handle_ShouldForbid_WhenTheMemberCanArchiveAnyPageButTheCredentialCannot()
+    {
+        GivenPageCreatedBy("someone-else");
+        GrantMember([NetptunePermissions.Pages.Delete, NetptunePermissions.Pages.DeleteAny]);
+        Identity.IsRestrictedByCredential(NetptunePermissions.Pages.DeleteAny).Returns(true);
+
+        var result = await Send();
+
+        result.IsForbidden.Should().BeTrue();
+        await UnitOfWork.Pages.DidNotReceive().SoftDelete(Arg.Any<IEnumerable<int>>(), Arg.Any<string>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task Handle_ShouldRefuse_WhenAMembersOwnFolderHoldsSomeoneElsesPage()
     {
         GivenPageCreatedBy(UserId);

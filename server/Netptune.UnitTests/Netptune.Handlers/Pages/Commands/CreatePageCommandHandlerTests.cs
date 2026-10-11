@@ -150,6 +150,21 @@ public class CreatePageCommandHandlerTests
         await UnitOfWork.Sprints.DidNotReceive().GetSprintDetailAsync(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<CancellationToken>());
     }
 
+    [Theory]
+    [InlineData(NetptunePermissions.Sprints.Read)]
+    [InlineData(NetptunePermissions.Tasks.Read)]
+    public async Task Handle_ShouldRefuseReleaseNotes_WhenTheCredentialLacksAReadScope(string missingScope)
+    {
+        Grant(NetptunePermissions.Sprints.Read, NetptunePermissions.Tasks.Read);
+        Identity.IsRestrictedByCredential(missingScope).Returns(true);
+
+        var result = await Send(new CreatePageRequest { Kind = PageKind.Document, TemplateKey = PageTemplates.FromSprint, SprintId = 3 });
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Be("You need access to sprints and tasks to write release notes.");
+        await UnitOfWork.Sprints.DidNotReceive().GetSprintDetailAsync(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<CancellationToken>());
+    }
+
     [Fact]
     public async Task Handle_ShouldStartAPageInAProjectSpace_WhenTheProjectIsInTheWorkspace()
     {

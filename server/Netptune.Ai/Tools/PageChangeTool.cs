@@ -85,7 +85,7 @@ public sealed class PageChangeTool : IAiTool
 
     public IReadOnlySet<string> GetChangePermissions(string changeName, JsonElement payload)
     {
-        return Actions.GetChangePermissions(changeName);
+        return Actions.GetChangePermissions(changeName, payload);
     }
 
     public string DescribeCall(JsonElement arguments)

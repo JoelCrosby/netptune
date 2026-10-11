@@ -531,6 +531,35 @@ public class PageChangeToolTests
         tool.GetRequiredPermissions(arguments).Should().BeEquivalentTo([permission]);
     }
 
+    [Fact]
+    public void GetRequiredPermissions_ShouldAskForTagsAssign_WhenUpdateDetailsSetsTags()
+    {
+        var tool = new PageChangeTool(Mediator, ChangeSet);
+        var arguments = JsonDocument.Parse("""{"action":"update_details","pageId":11,"tags":["Backend"]}""").RootElement;
+
+        tool.GetRequiredPermissions(arguments).Should().BeEquivalentTo([NetptunePermissions.Pages.Update, NetptunePermissions.Tags.Assign]);
+    }
+
+    [Fact]
+    public void GetChangePermissions_ShouldAskForTagsAssign_WhenTheDetailsChangeSetsTags()
+    {
+        var tool = new PageChangeTool(Mediator, ChangeSet);
+        var payload = JsonDocument.Parse("""{"pageId":11,"tags":[]}""").RootElement;
+
+        tool.GetChangePermissions("propose_update_page_details", payload)
+            .Should().BeEquivalentTo([NetptunePermissions.Pages.Update, NetptunePermissions.Tags.Assign]);
+    }
+
+    [Fact]
+    public void IsAvailable_ShouldStillOfferStatusChanges_WithoutTagsAssign()
+    {
+        var tool = new PageChangeTool(Mediator, ChangeSet);
+        var permissions = new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Pages.Update };
+
+        tool.IsAvailable(permissions).Should().BeTrue();
+        tool.RequiredPermissions.Should().NotContain(NetptunePermissions.Tags.Assign);
+    }
+
     private void GivenVersion(int id, int revision, string title, string body)
     {
         var version = new PageVersionViewModel { Id = id, PageId = RfcId, Revision = revision, Title = title, Body = body };

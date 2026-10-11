@@ -13,6 +13,10 @@ public interface IAiToolAction
 
     IReadOnlySet<string> RequiredPermissions { get; }
 
+    IReadOnlySet<string> GetRequiredPermissions(JsonElement arguments) => RequiredPermissions;
+
+    IReadOnlySet<string> GetChangePermissions(JsonElement payload) => RequiredPermissions;
+
     Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken);
 }
 
@@ -47,15 +51,15 @@ public sealed class AiToolActions
     {
         var action = Find(arguments);
 
-        return action?.RequiredPermissions ?? new HashSet<string>(StringComparer.Ordinal);
+        return action?.GetRequiredPermissions(arguments) ?? new HashSet<string>(StringComparer.Ordinal);
     }
 
     // A change this tool never proposes asks for every permission, so it cannot slip through.
-    public IReadOnlySet<string> GetChangePermissions(string changeName)
+    public IReadOnlySet<string> GetChangePermissions(string changeName, JsonElement payload)
     {
         var action = ActionsByName.Values.FirstOrDefault(item => item.ChangeName == changeName);
 
-        return action?.RequiredPermissions ?? AllPermissions;
+        return action?.GetChangePermissions(payload) ?? AllPermissions;
     }
 
     public string DescribeCall(string toolName, JsonElement arguments)

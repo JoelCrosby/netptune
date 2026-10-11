@@ -538,6 +538,8 @@ public sealed class ApiV1EndpointTests
             "/api/v1/relation-types",
             "/api/v1/comments/{id}",
             "/api/v1/search",
+            "/api/v1/pages",
+            "/api/v1/pages/{id}/content",
             "/api/v1/reports/flow",
         ]);
     }
@@ -748,6 +750,37 @@ public sealed class ApiV1EndpointTests
         var deleteResponse = await client.DeleteAsync($"api/v1/comments/{comment.Id}", TestContext.Current.CancellationToken);
 
         deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent, await deleteResponse.Content.ReadAsStringAsync());
+    }
+
+    [Theory]
+    [InlineData(false, HttpStatusCode.Forbidden)]
+    [InlineData(true, HttpStatusCode.NoContent)]
+    public async Task DeleteComment_ShouldNeedTheDeleteAnyScope_ForSomeoneElsesComment(bool scopeGranted, HttpStatusCode expected)
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var ownClient = await CreateClient();
+        var task = await CreateTask(ownClient);
+        var appClient = Fixture.CreateNetptuneClient();
+        var commentRequest = new AddCommentRequest { Comment = "Written by a person.", SystemId = task.SystemId };
+        var commentResponse = await appClient.PostAsJsonAsync("api/comments/task", commentRequest, cancellationToken);
+        var commentResult = await commentResponse.Content.ReadFromJsonAsync<ClientResponse<CommentViewModel>>(cancellationToken);
+        var comment = commentResult.Payload!;
+
+        string[] memberPermissions =
+        [
+            NetptunePermissions.Comments.Read,
+            NetptunePermissions.Comments.DeleteOwn,
+            NetptunePermissions.Comments.DeleteAny,
+        ];
+        var scopes = scopeGranted
+            ? memberPermissions
+            : memberPermissions.Where(permission => permission != NetptunePermissions.Comments.DeleteAny).ToArray();
+        var apiKey = await CreateApiKey(memberPermissions, scopes);
+        var client = Fixture.CreateApiClient(apiKey);
+
+        var response = await client.DeleteAsync($"api/v1/comments/{comment.Id}", cancellationToken);
+
+        response.StatusCode.Should().Be(expected, await response.Content.ReadAsStringAsync(cancellationToken));
     }
 
     [Fact]
@@ -1074,13 +1107,18 @@ public sealed class ApiV1EndpointTests
 
     private async Task<string> CreateApiKey()
     {
+        return await CreateApiKey(Permissions, Permissions);
+    }
+
+    private async Task<string> CreateApiKey(string[] memberPermissions, string[] scopes)
+    {
         var client = Fixture.CreateNetptuneClient();
 
         var accountResponse = await client.PostAsJsonAsync("api/service-accounts", new CreateServiceAccountRequest
         {
             Name = $"API agent {Guid.NewGuid():N}",
             Description = "Created by the API integration test.",
-            Permissions = Permissions,
+            Permissions = memberPermissions,
         });
 
         accountResponse.StatusCode.Should().Be(HttpStatusCode.OK, await accountResponse.Content.ReadAsStringAsync());
@@ -1094,7 +1132,7 @@ public sealed class ApiV1EndpointTests
             new CreateApiCredentialRequest
             {
                 Name = "API integration credential",
-                Scopes = Permissions,
+                Scopes = scopes,
             });
 
         credentialResponse.StatusCode.Should().Be(HttpStatusCode.OK, await credentialResponse.Content.ReadAsStringAsync());

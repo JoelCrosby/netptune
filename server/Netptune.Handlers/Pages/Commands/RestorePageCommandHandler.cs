@@ -48,7 +48,7 @@ public sealed class RestorePageCommandHandler : IRequestHandler<RestorePageComma
             return ClientResponse<PageViewModel>.NotFound;
         }
 
-        var rights = await PagePermissions.GetArchiveRights(PermissionCache, userId, workspaceKey);
+        var rights = await PagePermissions.GetArchiveRights(PermissionCache, Identity, userId, workspaceKey);
         var isOwnPage = page.CreatedByUserId == userId;
         var mayRestoreRoot = rights.Any || (rights.Own && isOwnPage);
 

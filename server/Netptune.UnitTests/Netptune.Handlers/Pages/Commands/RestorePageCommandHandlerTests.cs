@@ -127,6 +127,32 @@ public class RestorePageCommandHandlerTests
         result.IsNotFound.Should().BeTrue();
     }
 
+    [Fact]
+    public async Task Handle_ShouldForbid_WhenTheMemberMayRestoreAnyButTheCredentialMayNot()
+    {
+        ArchivedPage.CreatedByUserId = "someone-else";
+        GrantMember([NetptunePermissions.Pages.Delete, NetptunePermissions.Pages.DeleteAny]);
+        Identity.IsRestrictedByCredential(NetptunePermissions.Pages.DeleteAny).Returns(true);
+
+        var result = await Send();
+
+        result.IsForbidden.Should().BeTrue();
+        await UnitOfWork.Pages.DidNotReceive().Restore(Arg.Any<IEnumerable<int>>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Handle_ShouldRefuse_WhenTheCredentialMayNotRestoreAnyAndTheSetHoldsOthersPages()
+    {
+        GrantMember([NetptunePermissions.Pages.Delete, NetptunePermissions.Pages.DeleteAny]);
+        Identity.IsRestrictedByCredential(NetptunePermissions.Pages.DeleteAny).Returns(true);
+        UnitOfWork.Pages.AnyCreatedByOthers(Arg.Any<IReadOnlyCollection<int>>(), UserId, Arg.Any<CancellationToken>()).Returns(true);
+
+        var result = await Send();
+
+        result.Message.Should().Be(PagePermissions.OthersPagesInsideMessage);
+        await UnitOfWork.Pages.DidNotReceive().Restore(Arg.Any<IEnumerable<int>>(), Arg.Any<CancellationToken>());
+    }
+
     private void GrantMember(string[] permissions)
     {
         PermissionCache.GetUserPermissions(UserId, WorkspaceKey).Returns(new UserPermissions

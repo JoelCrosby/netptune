@@ -28,6 +28,30 @@ public sealed class UpdatePageDetailsAction : IAiToolAction
     public IReadOnlySet<string> RequiredPermissions { get; } =
         new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Pages.Update };
 
+    public static IReadOnlySet<string> PermissionsFor(JsonElement argumentsOrPayload)
+    {
+        var permissions = new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Pages.Update };
+        var isObject = argumentsOrPayload.ValueKind == JsonValueKind.Object;
+        var setsTags = isObject && argumentsOrPayload.TryGetProperty("tags", out _);
+
+        if (setsTags)
+        {
+            permissions.Add(NetptunePermissions.Tags.Assign);
+        }
+
+        return permissions;
+    }
+
+    public IReadOnlySet<string> GetRequiredPermissions(JsonElement arguments)
+    {
+        return PermissionsFor(arguments);
+    }
+
+    public IReadOnlySet<string> GetChangePermissions(JsonElement payload)
+    {
+        return PermissionsFor(payload);
+    }
+
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
         var rawStatus = AiToolSchema.GetString(arguments, "status");

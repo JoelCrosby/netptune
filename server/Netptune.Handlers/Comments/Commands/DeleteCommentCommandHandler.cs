@@ -62,16 +62,14 @@ public sealed class DeleteCommentCommandHandler : IRequestHandler<DeleteCommentC
     private async Task<bool> CanDelete(string? ownerId, string userId)
     {
         var permissions = await PermissionCache.GetUserPermissions(userId, Identity.TryGetWorkspaceKey());
-
-        if (permissions?.Role is WorkspaceRole.Owner or WorkspaceRole.Admin)
-        {
-            return true;
-        }
-
         var permission = ownerId == userId
             ? NetptunePermissions.Comments.DeleteOwn
             : NetptunePermissions.Comments.DeleteAny;
+        var credentialAllows = !Identity.IsRestrictedByCredential(permission);
+        var isAdministrator = permissions?.Role is WorkspaceRole.Owner or WorkspaceRole.Admin;
+        var memberHoldsPermission = permissions?.Permissions.Contains(permission) == true;
+        var memberAllows = isAdministrator || memberHoldsPermission;
 
-        return permissions?.Permissions.Contains(permission) == true;
+        return memberAllows && credentialAllows;
     }
 }

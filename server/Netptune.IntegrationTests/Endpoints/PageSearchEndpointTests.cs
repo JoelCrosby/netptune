@@ -77,7 +77,7 @@ public sealed class PageSearchEndpointTests
     }
 
     [Fact]
-    public async Task Search_ShouldLeavePagesOutOfThePublicApi_EvenWhenTheCredentialCanReadPages()
+    public async Task Search_ShouldIncludePagesInThePublicApi_WhenTheCredentialCanReadPages()
     {
         var term = UniqueTerm();
         var page = await Create(new CreatePageRequest { Kind = PageKind.Document, Title = $"Onboarding {term}" });
@@ -85,6 +85,24 @@ public sealed class PageSearchEndpointTests
         await ReindexAndWaitForPage(term, page.Id);
 
         var scopes = new[] { NetptunePermissions.Projects.Read, NetptunePermissions.Pages.Read };
+        var apiClient = Fixture.CreateApiClient(await CreateApiKey(scopes));
+
+        var result = await apiClient.GetFromJsonAsync<SearchResponse>(
+            $"api/v1/search?q={term}",
+            TestContext.Current.CancellationToken);
+
+        result!.Results.Should().Contain(item => item.Type == "page" && item.Id == page.Id);
+    }
+
+    [Fact]
+    public async Task Search_ShouldLeavePagesOutOfThePublicApi_WhenTheCredentialCannotReadPages()
+    {
+        var term = UniqueTerm();
+        var page = await Create(new CreatePageRequest { Kind = PageKind.Document, Title = $"Offboarding {term}" });
+
+        await ReindexAndWaitForPage(term, page.Id);
+
+        var scopes = new[] { NetptunePermissions.Projects.Read };
         var apiClient = Fixture.CreateApiClient(await CreateApiKey(scopes));
 
         var result = await apiClient.GetFromJsonAsync<SearchResponse>(

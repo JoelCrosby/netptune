@@ -233,8 +233,11 @@ public sealed class CreatePageCommandHandler : IRequestHandler<CreatePageCommand
         var workspaceKey = Identity.GetWorkspaceKey();
         var permissions = await PermissionCache.GetUserPermissions(userId, workspaceKey);
         var granted = permissions?.Permissions ?? [];
+        var memberCanRead = granted.Contains(NetptunePermissions.Sprints.Read) && granted.Contains(NetptunePermissions.Tasks.Read);
+        var credentialRestricts = Identity.IsRestrictedByCredential(NetptunePermissions.Sprints.Read)
+            || Identity.IsRestrictedByCredential(NetptunePermissions.Tasks.Read);
 
-        return granted.Contains(NetptunePermissions.Sprints.Read) && granted.Contains(NetptunePermissions.Tasks.Read);
+        return memberCanRead && !credentialRestricts;
     }
 
     private sealed record PageStart(string? Title, string? Body, string? Error);

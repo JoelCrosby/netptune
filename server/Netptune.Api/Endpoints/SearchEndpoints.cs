@@ -1,5 +1,6 @@
 using Mediator;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 using Netptune.Core.Authorization;
@@ -16,6 +17,7 @@ public static class SearchEndpoints
             .WithSummary("Search the workspace")
             .WithDescription(
                 "Searches tasks, projects, boards and other entities in the credential's workspace. "
+                + "Pages are included only when the credential holds pages.read. "
                 + "Supply types to restrict the search to particular entity types. "
                 + $"limit defaults to {SearchQueryHandler.DefaultLimit} and is capped at {SearchQueryHandler.MaximumLimit}.")
             .RequireAuthorization(NetptunePermissions.Projects.Read);
@@ -25,6 +27,8 @@ public static class SearchEndpoints
 
     private static async Task<Results<Ok<SearchResponse>, BadRequest<string>>> Search(
         IMediator mediator,
+        IAuthorizationService authorization,
+        HttpContext http,
         string q,
         string[]? types,
         int? limit,
@@ -35,8 +39,8 @@ public static class SearchEndpoints
             return TypedResults.BadRequest("A search term is required.");
         }
 
-        // Pages are not part of the public API yet, so v1 leaves them out of search too.
-        var query = new SearchQuery(q, types, limit ?? SearchQueryHandler.DefaultLimit);
+        var pagesAccess = await authorization.AuthorizeAsync(http.User, NetptunePermissions.Pages.Read);
+        var query = new SearchQuery(q, types, limit ?? SearchQueryHandler.DefaultLimit, pagesAccess.Succeeded);
         var result = await mediator.Send(query, cancellationToken);
 
         return TypedResults.Ok(result);

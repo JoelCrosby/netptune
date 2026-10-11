@@ -60,6 +60,24 @@ public class DeleteCommentCommandHandlerTests
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
 
+    [Theory]
+    [InlineData(WorkspaceRole.Member)]
+    [InlineData(WorkspaceRole.Admin)]
+    public async Task Delete_ShouldReturnForbidden_WhenTheCredentialLacksDeleteAny(WorkspaceRole role)
+    {
+        var comment = NewComment("another-user");
+        UnitOfWork.Comments.GetCommentForUpdate(comment.Id, WorkspaceId, TestContext.Current.CancellationToken)
+            .Returns(comment);
+        PermissionCache.GetUserPermissions(UserId, WorkspaceKey)
+            .Returns(Permissions(role, NetptunePermissions.Comments.DeleteOwn, NetptunePermissions.Comments.DeleteAny));
+        Identity.IsRestrictedByCredential(NetptunePermissions.Comments.DeleteAny).Returns(true);
+
+        var result = await Handler.Handle(new DeleteCommentCommand(comment.Id), TestContext.Current.CancellationToken);
+
+        result.IsForbidden.Should().BeTrue();
+        await UnitOfWork.DidNotReceive().CompleteAsync(Arg.Any<CancellationToken>());
+    }
+
     [Fact]
     public async Task Delete_ShouldReturnForbidden_WhenDeletingAnotherUsersCommentWithoutDeleteAny()
     {

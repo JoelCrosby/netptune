@@ -302,7 +302,7 @@ function tailOf(markdown: string, limit: number): string {
           documentChips
           [status]="draft().latest().status"
           [tags]="draft().latest().tags"
-          [canEdit]="!readOnly()"
+          [canEdit]="!readOnly() && canAssignTags()"
           (tagsChanged)="onTagsChanged($event)" />
       </app-document-header>
 
@@ -386,6 +386,7 @@ export class PageEditorComponent implements OnInit {
   private readonly canReadQueries = hasPermission(PERMISSIONS.queries.read);
   private readonly canUseAssistant = hasPermission(PERMISSIONS.assistant.use);
   private readonly canCreateTasks = hasPermission(PERMISSIONS.tasks.create);
+  protected readonly canAssignTags = hasPermission(PERMISSIONS.tags.assign);
   private readonly assistant = inject(AiAssistantService);
   protected readonly transform = inject(PageTransformController);
 

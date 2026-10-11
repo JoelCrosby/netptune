@@ -17,6 +17,8 @@ public sealed class UpdatePageDetailsChangeHandler : IAiChangeHandler, IAiChange
     public const string ChangedSinceMessage =
         "The page's status or tags have changed since this change was applied, so they were left as they are now.";
 
+    private const string UnknownTagsHint = "Was the change that creates them applied?";
+
     private readonly IMediator Mediator;
 
     public UpdatePageDetailsChangeHandler(IMediator mediator)
@@ -30,6 +32,11 @@ public sealed class UpdatePageDetailsChangeHandler : IAiChangeHandler, IAiChange
     {
         NetptunePermissions.Pages.Update,
     };
+
+    public IReadOnlySet<string> GetUndoPermissions(JsonElement payload)
+    {
+        return UpdatePageDetailsAction.PermissionsFor(payload);
+    }
 
     public async Task<AiAppliedChangeResult> Apply(AiChangeApplyContext context, CancellationToken cancellationToken)
     {
@@ -135,30 +142,15 @@ public sealed class UpdatePageDetailsChangeHandler : IAiChangeHandler, IAiChange
     private async Task<ResolvedTagIds> ResolveTagIds(JsonElement payload, CancellationToken cancellationToken)
     {
         var names = AiChangePayload.ReadStringArray(payload, "tags");
+        var resolution = await Mediator.Send(new ResolveTagIdsByNameQuery(names), cancellationToken);
+        var hasUnknownNames = resolution.UnknownNames.Count > 0;
 
-        if (names.Count == 0)
+        if (hasUnknownNames)
         {
-            return new ResolvedTagIds([], null);
+            return new ResolvedTagIds([], $"{resolution.Error} {UnknownTagsHint}");
         }
 
-        var existingTags = await Mediator.Send(new GetTagsByNameQuery(names), cancellationToken);
-        var idsByName = existingTags
-            .GroupBy(tag => tag.Name, StringComparer.OrdinalIgnoreCase)
-            .ToDictionary(group => group.Key, group => group.First().Id, StringComparer.OrdinalIgnoreCase);
-        var missing = names.Where(name => !idsByName.ContainsKey(name)).ToList();
-
-        if (missing.Count > 0)
-        {
-            var missingNames = string.Join(", ", missing);
-
-            return new ResolvedTagIds(
-                [],
-                $"These tags do not exist in this workspace: {missingNames}. Was the change that creates them applied?");
-        }
-
-        var ids = names.Select(name => idsByName[name]).Distinct().ToList();
-
-        return new ResolvedTagIds(ids, null);
+        return new ResolvedTagIds(resolution.Ids, resolution.Error);
     }
 
     private sealed record ResolvedTagIds(List<int> Ids, string? Error);

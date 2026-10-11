@@ -110,6 +110,32 @@ public class DeleteArchivedPageCommandHandlerTests
         result.IsSuccess.Should().BeTrue();
     }
 
+    [Fact]
+    public async Task Handle_ShouldForbid_WhenTheMemberMayDeleteAnyButTheCredentialMayNot()
+    {
+        GivenArchivedPage("someone-else");
+        GrantMember([NetptunePermissions.Pages.Delete, NetptunePermissions.Pages.DeleteAny]);
+        Identity.IsRestrictedByCredential(NetptunePermissions.Pages.DeleteAny).Returns(true);
+
+        var result = await Send();
+
+        result.IsForbidden.Should().BeTrue();
+        await UnitOfWork.Pages.DidNotReceive().DeleteArchived(Arg.Any<IReadOnlyCollection<int>>(), Arg.Any<int>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Handle_ShouldRefuse_WhenTheCredentialMayNotDeleteAnyAndTheSubtreeHoldsOthersPages()
+    {
+        GrantMember([NetptunePermissions.Pages.Delete, NetptunePermissions.Pages.DeleteAny]);
+        Identity.IsRestrictedByCredential(NetptunePermissions.Pages.DeleteAny).Returns(true);
+        UnitOfWork.Pages.AnyCreatedByOthers(Arg.Any<IReadOnlyCollection<int>>(), UserId, Arg.Any<CancellationToken>()).Returns(true);
+
+        var result = await Send();
+
+        result.Message.Should().Be(PagePermissions.OthersPagesInsideMessage);
+        await UnitOfWork.Pages.DidNotReceive().DeleteArchived(Arg.Any<IReadOnlyCollection<int>>(), Arg.Any<int>(), Arg.Any<CancellationToken>());
+    }
+
     private void GivenArchivedPage(string creatorId)
     {
         UnitOfWork.Pages

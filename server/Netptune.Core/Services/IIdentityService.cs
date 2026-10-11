@@ -23,4 +23,6 @@ public interface IIdentityService
     string? TryGetWorkspaceKey();
 
     Task<int> GetWorkspaceId();
+
+    bool IsRestrictedByCredential(string permission);
 }

@@ -272,7 +272,7 @@ public class PageChangeHandlerTests
         await Mediator.Received(1).Send(
             Arg.Is<UpdatePageCommand>(command => command.Request.Status == PageStatus.Draft && command.Request.TagIds == null),
             Arg.Any<CancellationToken>());
-        await Mediator.DidNotReceive().Send(Arg.Any<GetTagsByNameQuery>(), Arg.Any<CancellationToken>());
+        await Mediator.DidNotReceive().Send(Arg.Any<ResolveTagIdsByNameQuery>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -301,7 +301,7 @@ public class PageChangeHandlerTests
         var result = await new UpdatePageDetailsChangeHandler(Mediator).Apply(context, TestContext.Current.CancellationToken);
 
         result.Status.Should().Be(AiChangeApplyStatus.Failed);
-        result.Error.Should().Be("These tags do not exist in this workspace: Gone. Was the change that creates them applied?");
+        result.Error.Should().Be("Tags were not found in the workspace: Gone. Was the change that creates them applied?");
         await Mediator.DidNotReceive().Send(Arg.Any<UpdatePageCommand>(), Arg.Any<CancellationToken>());
     }
 
@@ -321,13 +321,23 @@ public class PageChangeHandlerTests
         var result = await handler.Revert(new AiChangeUndoContext { Change = change }, TestContext.Current.CancellationToken);
 
         result.Status.Should().Be(AiChangeApplyStatus.Applied);
-        handler.UndoPermissions.Should().BeEquivalentTo([NetptunePermissions.Pages.Update]);
         await Mediator.Received(1).Send(
             Arg.Is<UpdatePageCommand>(command =>
                 command.Id == RfcId
                 && command.Request.Status == PageStatus.Draft
                 && command.Request.TagIds!.SequenceEqual(new List<int> { 1 })),
             Arg.Any<CancellationToken>());
+    }
+
+    [Theory]
+    [InlineData("""{"pageId":11,"status":"published"}""", new[] { NetptunePermissions.Pages.Update })]
+    [InlineData("""{"pageId":11,"tags":[]}""", new[] { NetptunePermissions.Pages.Update, NetptunePermissions.Tags.Assign })]
+    public void UpdateDetails_Undo_ShouldNeedTagsAssign_OnlyWhenTheChangeSetTags(string payload, string[] expected)
+    {
+        IAiChangeUndoHandler handler = new UpdatePageDetailsChangeHandler(Mediator);
+        var element = JsonDocument.Parse(payload).RootElement;
+
+        handler.GetUndoPermissions(element).Should().BeEquivalentTo(expected);
     }
 
     [Fact]
@@ -378,7 +388,7 @@ public class PageChangeHandlerTests
 
         result.Status.Should().Be(AiChangeApplyStatus.Applied);
         await Mediator.Received(1).Send(
-            Arg.Is<GetTagsByNameQuery>(query => query.Names.SequenceEqual(new[] { "tag 157" })),
+            Arg.Is<ResolveTagIdsByNameQuery>(query => query.Names.SequenceEqual(new[] { "tag 157" })),
             Arg.Any<CancellationToken>());
         await Mediator.DidNotReceive().Send(Arg.Any<GetTagsForWorkspaceQuery>(), Arg.Any<CancellationToken>());
         await Mediator.Received(1).Send(

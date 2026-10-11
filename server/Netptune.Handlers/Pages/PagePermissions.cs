@@ -1,5 +1,6 @@
 using Netptune.Core.Authorization;
 using Netptune.Core.Cache;
+using Netptune.Core.Services;
 
 namespace Netptune.Handlers.Pages;
 
@@ -9,7 +10,11 @@ public static class PagePermissions
 {
     public const string OthersPagesInsideMessage = "Some pages inside were created by other people. Only they or an admin can archive, restore or delete them.";
 
-    public static async Task<PageArchiveRights> GetArchiveRights(IWorkspacePermissionCache permissionCache, string userId, string workspaceKey)
+    public static async Task<PageArchiveRights> GetArchiveRights(
+        IWorkspacePermissionCache permissionCache,
+        IIdentityService identity,
+        string userId,
+        string workspaceKey)
     {
         var permissions = await permissionCache.GetUserPermissions(userId, workspaceKey);
 
@@ -19,8 +24,12 @@ public static class PagePermissions
         }
 
         var isAdministrator = permissions.Role is WorkspaceRole.Owner or WorkspaceRole.Admin;
-        var canArchiveAny = isAdministrator || permissions.Permissions.Contains(NetptunePermissions.Pages.DeleteAny);
-        var canArchiveOwn = permissions.Permissions.Contains(NetptunePermissions.Pages.Delete);
+        var memberCanArchiveAny = isAdministrator || permissions.Permissions.Contains(NetptunePermissions.Pages.DeleteAny);
+        var memberCanArchiveOwn = permissions.Permissions.Contains(NetptunePermissions.Pages.Delete);
+        var credentialAllowsAny = !identity.IsRestrictedByCredential(NetptunePermissions.Pages.DeleteAny);
+        var credentialAllowsOwn = !identity.IsRestrictedByCredential(NetptunePermissions.Pages.Delete);
+        var canArchiveAny = memberCanArchiveAny && credentialAllowsAny;
+        var canArchiveOwn = memberCanArchiveOwn && credentialAllowsOwn;
 
         return new PageArchiveRights(canArchiveAny, canArchiveOwn);
     }

@@ -1,5 +1,6 @@
 using Mediator;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using Netptune.App.Configuration;
@@ -192,8 +193,24 @@ public static class PagesEndpoints
         return result.ToResult();
     }
 
-    private static async Task<IResult> HandleUpdate(IMediator mediator, int id, UpdatePageRequest request, CancellationToken cancellationToken)
+    private static async Task<IResult> HandleUpdate(
+        IMediator mediator,
+        IAuthorizationService authorization,
+        HttpContext context,
+        int id,
+        UpdatePageRequest request,
+        CancellationToken cancellationToken)
     {
+        if (request.TagIds is not null)
+        {
+            var canAssignTags = await authorization.AuthorizeAsync(context.User, NetptunePermissions.Tags.Assign);
+
+            if (!canAssignTags.Succeeded)
+            {
+                return Results.Forbid();
+            }
+        }
+
         var result = await mediator.Send(new UpdatePageCommand(id, request), cancellationToken);
 
         return result.ToResult();

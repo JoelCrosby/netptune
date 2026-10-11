@@ -25,6 +25,7 @@ public static class ApiV1Endpoints
         group.MapRelationsEndpoints();
         group.MapTasksEndpoints();
         group.MapCommentsEndpoints();
+        group.MapPagesEndpoints();
         group.MapSearchEndpoints();
         group.MapReportingEndpoints();
 
