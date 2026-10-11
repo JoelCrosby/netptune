@@ -3,6 +3,7 @@ import { inject, Service } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import {
   CreatePageRequest,
+  ImportPagesResult,
   MovePageRequest,
   PageDetail,
   SavePageRequest,
@@ -63,6 +64,27 @@ export class PagesService {
       'api/ai/pages/transform',
       request
     );
+  }
+
+  import(files: readonly File[], projectId: number | null) {
+    const form = new FormData();
+
+    for (const file of files) {
+      form.append('files', file, file.name);
+    }
+
+    const params: Record<string, number> =
+      projectId === null ? {} : { projectId };
+
+    return this.http.post<ClientResponse<ImportPagesResult>>(
+      'api/pages/import',
+      form,
+      { params }
+    );
+  }
+
+  markReviewed(id: number) {
+    return this.http.post<ClientResponse>(`api/pages/${id}/reviewed`, null);
   }
 
   favourite(id: number) {

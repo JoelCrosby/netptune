@@ -360,7 +360,12 @@ export class AiAssistantService {
     );
   }
 
-  // A fresh conversation, so a question asked from pages home is not read against an unrelated earlier chat.
+  draftPage() {
+    this.askAbout(
+      $localize`:Seeds the assistant composer when drafting a new page with the assistant:Draft a new page about `
+    );
+  }
+
   askAcrossPages(question: string) {
     const trimmed = question.trim();
 

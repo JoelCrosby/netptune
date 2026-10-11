@@ -5,6 +5,7 @@ using Dapper;
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Models.Pages;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
@@ -57,6 +58,7 @@ public sealed class PageRepository : WorkspaceEntityRepository<DataContext, Page
             {
                 Id = page.Id,
                 ParentId = page.ParentId,
+                ProjectId = page.ProjectId,
                 Kind = page.Kind,
                 Title = page.Title,
                 Slug = page.Slug,
@@ -216,6 +218,58 @@ public sealed class PageRepository : WorkspaceEntityRepository<DataContext, Page
         var rows = await connection.QueryAsync<PageOutlineRow>(command);
 
         return rows.Select(row => new PageOutlineEntry(row.Id, row.Parent_id, row.Title)).ToList();
+    }
+
+    public Task<List<RecentPageViewModel>> GetRecentlyVisited(int workspaceId, string userId, int take, CancellationToken cancellationToken = default)
+    {
+        var pages = Entities.Where(page => page.WorkspaceId == workspaceId && !page.IsDeleted && !page.IsTemplate);
+
+        return Context.Set<PageVisit>()
+            .AsNoTracking()
+            .Where(visit => visit.UserId == userId)
+            .Join(pages, visit => visit.PageId, page => page.Id, (visit, page) => new { visit, page })
+            .OrderByDescending(pair => pair.visit.VisitedAt)
+            .Take(take)
+            .Select(pair => new RecentPageViewModel
+            {
+                Id = pair.page.Id,
+                ParentId = pair.page.ParentId,
+                Title = pair.page.Title,
+                Slug = pair.page.Slug,
+                VisitedAt = pair.visit.VisitedAt,
+                UpdatedAt = pair.page.UpdatedAt ?? pair.page.CreatedAt,
+                UpdatedByDisplayName = pair.page.ModifiedByUser == null
+                    ? pair.page.CreatedByUser == null ? null : pair.page.CreatedByUser.DisplayName
+                    : pair.page.ModifiedByUser.DisplayName,
+            })
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<List<PageNeedingReviewViewModel>> GetNeedingReview(PageReviewWindow window, CancellationToken cancellationToken = default)
+    {
+        using var connection = ConnectionFactory.StartConnection();
+
+        var parameters = new
+        {
+            window.WorkspaceId,
+            window.StaleBefore,
+            window.UnvisitedBefore,
+            window.Take,
+        };
+        var command = new CommandDefinition(SqlScripts.GetPagesNeedingReview, parameters, cancellationToken: cancellationToken);
+        var rows = await connection.QueryAsync<PageNeedingReviewRow>(command);
+
+        return rows
+            .Select(row => new PageNeedingReviewViewModel
+            {
+                Id = row.Id,
+                ParentId = row.Parent_id,
+                Title = row.Title,
+                Slug = row.Slug,
+                UpdatedAt = row.Updated_at,
+                Reason = (PageReviewReason)row.Reason,
+            })
+            .ToList();
     }
 
     public Task<List<int>> GetIdsTaggedWith(IReadOnlyCollection<int> tagIds, int workspaceId, CancellationToken cancellationToken = default)

@@ -9,8 +9,10 @@ import {
   LucideFilePlus,
   LucideFileText,
   LucideFolder,
+  LucideFolderKanban,
   LucideFolderPlus,
   LucideHouse,
+  LucideLayers,
   LucidePlus,
   LucideStar,
 } from '@lucide/angular';
@@ -29,6 +31,14 @@ import {
   PageTreeStore,
 } from '../services/page-tree.store';
 
+const workspaceSpaceRowId = -3;
+const workspaceSpaceLabel = $localize`:Heading over the workspace's own pages, outside any project:Workspace`;
+
+// Space rows live beside page ids in one tree, so they take negative ids clear of the fixed rows.
+function spaceRowId(projectId: number): number {
+  return -1000 - projectId;
+}
+
 @Component({
   selector: 'app-page-tree',
   imports: [
@@ -46,7 +56,7 @@ import {
   ],
   host: { class: 'flex min-h-0 flex-col' },
   template: `
-    <div class="flex items-center gap-1.5 px-3 pt-3 pb-1">
+    <div class="flex items-center gap-1.5 px-2 pt-3 pb-1.5">
       <app-filter-input
         appearance="compact"
         class="min-w-0 flex-1"
@@ -128,10 +138,7 @@ import {
             [selectedId]="store.selectedId()" />
         }
 
-        <app-list-group-header
-          appearance="plain"
-          i18n-label="Heading over the workspace page tree"
-          label="Workspace" />
+        <app-list-group-header appearance="plain" [label]="spaceLabel()" />
 
         @if (treeNodes().length) {
           <app-tree
@@ -151,6 +158,18 @@ import {
             title="No pages yet"
             i18n-description="Hint under the empty page tree"
             description="Create a page to start writing." />
+        }
+
+        @if (spaceRows().length > 1) {
+          <app-list-group-header
+            appearance="plain"
+            i18n-label="Heading over the project spaces in the page tree"
+            label="Project spaces" />
+          <app-tree
+            i18n-ariaLabel="Accessible label for the list of page spaces"
+            ariaLabel="Page spaces"
+            [nodes]="spaceRows()"
+            [selectedId]="store.homeSelected() ? selectedSpaceRowId() : null" />
         }
       }
     </nav>
@@ -183,7 +202,39 @@ export class PageTreeComponent {
   protected readonly filter = signal('');
 
   protected readonly treeNodes = computed(() => {
-    return this.store.nodes().map((node) => this.toTreeNode(node));
+    return this.store.spaceNodes().map((node) => this.toTreeNode(node));
+  });
+
+  protected readonly spaceLabel = computed(() => {
+    return this.store.activeSpace()?.name ?? workspaceSpaceLabel;
+  });
+
+  protected readonly spaceRows = computed<TreeNode[]>(() => {
+    const workspaceRow: TreeNode = {
+      id: workspaceSpaceRowId,
+      parentId: null,
+      label: workspaceSpaceLabel,
+      icon: LucideLayers,
+      link: this.store.homeLink(),
+    };
+    const projectRows = this.store.spaces().map(({ project, pageCount }) => {
+      return {
+        id: spaceRowId(project.id),
+        parentId: null,
+        label: pageCount ? `${project.name} · ${pageCount}` : project.name,
+        icon: LucideFolderKanban,
+        link: this.store.homeLink(),
+        queryParams: this.store.spaceQuery(project),
+      };
+    });
+
+    return [workspaceRow, ...projectRows];
+  });
+
+  protected readonly selectedSpaceRowId = computed(() => {
+    const spaceId = this.store.activeSpaceId();
+
+    return spaceId === null ? workspaceSpaceRowId : spaceRowId(spaceId);
   });
 
   protected readonly favouriteNodes = computed(() => {
@@ -237,7 +288,9 @@ export class PageTreeComponent {
   }
 
   protected onCreate(parentId: number | null, kind: PageKind) {
-    this.commands.create({ kind, parentId }).subscribe((page) => {
+    const projectId = parentId === null ? this.store.activeSpaceId() : null;
+
+    this.commands.create({ kind, parentId, projectId }).subscribe((page) => {
       if (parentId !== null) {
         this.store.expand(parentId);
       }

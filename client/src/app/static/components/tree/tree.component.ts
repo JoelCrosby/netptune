@@ -21,6 +21,7 @@ import { TreeDropPosition, TreeMove, TreeNode, TreeRow } from './tree.types';
 
 const indentPerLevelPx = 14;
 const baseIndentPx = 4;
+const flatIndentPx = 8;
 const edgeDropZone = 0.25;
 
 interface DropTarget {
@@ -28,8 +29,6 @@ interface DropTarget {
   position: TreeDropPosition;
 }
 
-// A navigable, collapsible hierarchy built from a flat node list. Knows ids and
-// parents, not what the nodes are.
 @Component({
   selector: 'app-tree',
   imports: [RouterLink, LucideChevronRight, LucideDynamicIcon, LucidePlus],
@@ -50,23 +49,26 @@ interface DropTarget {
           (dragover)="onDragOver($event, row)"
           (dragleave)="onDragLeave(row)"
           (drop)="onDrop($event, row)">
-          <button
-            type="button"
-            tabindex="-1"
-            class="text-foreground/45 hover:text-foreground flex h-5 w-5 shrink-0 items-center justify-center rounded"
-            [class.invisible]="!row.childCount"
-            [attr.aria-label]="row.expanded ? collapseLabel : expandLabel"
-            (click)="onToggle(row)">
-            <svg
-              lucideChevronRight
-              class="h-3 w-3 transition-transform duration-150"
-              [class.rotate-90]="row.expanded"></svg>
-          </button>
+          @if (isNested()) {
+            <button
+              type="button"
+              tabindex="-1"
+              class="text-foreground/45 hover:text-foreground flex h-5 w-5 shrink-0 items-center justify-center rounded"
+              [class.invisible]="!row.childCount"
+              [attr.aria-label]="row.expanded ? collapseLabel : expandLabel"
+              (click)="onToggle(row)">
+              <svg
+                lucideChevronRight
+                class="h-3 w-3 transition-transform duration-150"
+                [class.rotate-90]="row.expanded"></svg>
+            </button>
+          }
 
           <a
             data-tree-link
             class="flex h-full min-w-0 flex-1 items-center gap-2 outline-none"
             [routerLink]="row.node.link"
+            [queryParams]="row.node.queryParams ?? null"
             [draggable]="draggable()"
             [attr.tabindex]="index === focusIndex() ? 0 : -1"
             (focus)="focusIndex.set(index)"
@@ -75,7 +77,7 @@ interface DropTarget {
             (dragend)="onDragEnd()">
             <svg
               [lucideIcon]="row.node.icon"
-              class="h-[15px] w-[15px] shrink-0"
+              class="h-4 w-4 shrink-0"
               [class]="iconClass(row)"></svg>
             <span class="min-w-0 flex-1 truncate">{{ row.node.label }}</span>
             @if (row.childCount && !row.expanded) {
@@ -113,7 +115,6 @@ export class TreeComponent {
   readonly expanded = model<readonly number[]>([]);
   readonly draggable = input(false, { transform: booleanAttribute });
   readonly ariaLabel = input<string | null>(null);
-  // Shows a per-row button that asks to add a child; its text is the button's label.
   readonly addLabel = input<string | null>(null);
 
   readonly move = output<TreeMove>();
@@ -132,7 +133,13 @@ export class TreeComponent {
     return buildTreeRows(this.nodes(), expandedIds);
   });
 
+  protected readonly isNested = computed(() => {
+    return this.nodes().some((node) => node.parentId !== null);
+  });
+
   protected indent(row: TreeRow): number {
+    if (!this.isNested()) return flatIndentPx;
+
     return baseIndentPx + row.depth * indentPerLevelPx;
   }
 
@@ -142,7 +149,7 @@ export class TreeComponent {
     const isTarget = target?.id === row.node.id;
 
     return cn(
-      'group text-foreground/75 hover:bg-foreground/5 relative flex h-[30px] items-center gap-1 rounded-md pr-1.5 text-[13.5px]',
+      'group text-foreground/75 hover:bg-foreground/5 relative flex h-8 items-center gap-1 rounded-md pr-1.5 text-sm',
       selected &&
         'bg-primary/10 text-primary hover:bg-primary/15 font-semibold',
       isTarget &&

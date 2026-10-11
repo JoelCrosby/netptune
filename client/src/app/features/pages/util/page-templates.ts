@@ -1,0 +1,80 @@
+import {
+  LucideBookOpen,
+  LucideCalendarCheck,
+  LucideCode,
+  LucideFileText,
+  LucideListChecks,
+  LucideRefreshCw,
+  LucideSparkles,
+  LucideUsers,
+  type LucideIconInput,
+} from '@lucide/angular';
+
+// Built-in keys match the server's PageTemplates; the last two are handled on the client.
+export type PageTemplateKey =
+  | 'blank'
+  | 'meeting-notes'
+  | 'rfc'
+  | 'runbook'
+  | 'retro'
+  | 'spec'
+  | 'from-sprint'
+  | 'assistant';
+
+export interface PageTemplateOption {
+  key: PageTemplateKey;
+  title: string;
+  description: string;
+  icon: LucideIconInput;
+}
+
+export const pageTemplates: readonly PageTemplateOption[] = [
+  {
+    key: 'blank',
+    title: $localize`:Template card for an empty page:Blank`,
+    description: $localize`:Description of the blank page template:Start from an empty page`,
+    icon: LucideFileText,
+  },
+  {
+    key: 'meeting-notes',
+    title: $localize`:Template card for meeting notes:Meeting notes`,
+    description: $localize`:Description of the meeting notes template:Agenda, notes, action items`,
+    icon: LucideUsers,
+  },
+  {
+    key: 'rfc',
+    title: $localize`:Template card for a request for comments document:RFC`,
+    description: $localize`:Description of the RFC template:Problem, proposal, open questions`,
+    icon: LucideCode,
+  },
+  {
+    key: 'runbook',
+    title: $localize`:Template card for an operational runbook:Runbook`,
+    description: $localize`:Description of the runbook template:Steps, rollback, owners`,
+    icon: LucideBookOpen,
+  },
+  {
+    key: 'retro',
+    title: $localize`:Template card for a sprint retrospective:Retro`,
+    description: $localize`:Description of the retro template:Went well, didn't, actions`,
+    icon: LucideRefreshCw,
+  },
+  {
+    key: 'spec',
+    title: $localize`:Template card for a feature specification:Spec`,
+    description: $localize`:Description of the spec template:Goals, requirements, linked tasks`,
+    icon: LucideListChecks,
+  },
+  {
+    key: 'from-sprint',
+    title: $localize`:Template card that writes release notes from a sprint:From a sprint`,
+    description: $localize`:Description of the from-a-sprint template:Release notes from completed work`,
+    icon: LucideCalendarCheck,
+  },
+  {
+    key: 'assistant',
+    title: $localize`:Template card that asks the assistant to draft a page:Draft with assistant`,
+    description: $localize`:Description of the draft-with-assistant template:Describe it, get a first draft`,
+    icon: LucideSparkles,
+  },
+];

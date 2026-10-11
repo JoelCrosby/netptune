@@ -112,6 +112,64 @@ public class CreatePageCommandHandlerTests
     }
 
     [Fact]
+    public async Task Handle_ShouldStartFromTheTemplate_WhenNoTitleOrBodyIsGiven()
+    {
+        var result = await Send(new CreatePageRequest { Kind = PageKind.Document, TemplateKey = "retro" });
+
+        result.IsSuccess.Should().BeTrue();
+        AddedPage!.Title.Should().Be("Retro");
+        AddedPage.Body.Should().Contain("## What went well");
+    }
+
+    [Theory]
+    [InlineData("nope", PageKind.Document, null)]
+    [InlineData("retro", PageKind.Folder, null)]
+    [InlineData(PageTemplates.FromSprint, PageKind.Document, null)]
+    public async Task Handle_ShouldFail_WhenTheTemplateCannotBeUsed(string key, PageKind kind, int? sprintId)
+    {
+        var result = await Send(new CreatePageRequest { Kind = kind, TemplateKey = key, SprintId = sprintId });
+
+        result.IsSuccess.Should().BeFalse();
+        await UnitOfWork.Pages.DidNotReceive().AddAsync(Arg.Any<Page>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Handle_ShouldStartAPageInAProjectSpace_WhenTheProjectIsInTheWorkspace()
+    {
+        UnitOfWork.Projects
+            .GetAsync(9, true, Arg.Any<CancellationToken>())
+            .Returns(new Project { Id = 9, WorkspaceId = WorkspaceId, Name = "Mobile", Key = "MOB" });
+
+        var result = await Send(new CreatePageRequest { Kind = PageKind.Document, ProjectId = 9 });
+
+        result.IsSuccess.Should().BeTrue();
+        AddedPage!.ProjectId.Should().Be(9);
+    }
+
+    [Fact]
+    public async Task Handle_ShouldFail_WhenTheProjectIsInAnotherWorkspace()
+    {
+        UnitOfWork.Projects
+            .GetAsync(9, true, Arg.Any<CancellationToken>())
+            .Returns(new Project { Id = 9, WorkspaceId = 99, Name = "Other", Key = "OTH" });
+
+        var result = await Send(new CreatePageRequest { Kind = PageKind.Document, ProjectId = 9 });
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Be("The project does not exist.");
+    }
+
+    [Fact]
+    public async Task Handle_ShouldIgnoreTheRequestedProject_WhenThePageHasAParent()
+    {
+        var result = await Send(new CreatePageRequest { Kind = PageKind.Document, ParentId = ParentId, ProjectId = 42 });
+
+        result.IsSuccess.Should().BeTrue();
+        AddedPage!.ProjectId.Should().Be(3, "a page joins its parent's space");
+        await UnitOfWork.Projects.DidNotReceive().GetAsync(Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task Handle_ShouldFail_WhenTheParentDoesNotExist()
     {
         var result = await Send(new CreatePageRequest { Kind = PageKind.Document, ParentId = 999 });

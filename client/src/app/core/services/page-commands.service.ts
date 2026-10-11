@@ -4,6 +4,7 @@ import {
   MovePageRequest,
   PageDetail,
   PageKind,
+  ImportPagesResult,
 } from '@core/models/pages';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { PagesService } from '@core/services/pages.service';
@@ -69,7 +70,6 @@ export class PageCommandsService {
     });
   }
 
-  // Emits once the page is archived; completes without emitting when cancelled.
   archive(page: Pick<PageDetail, 'id' | 'kind'>): Observable<void> {
     const options =
       page.kind === PageKind.folder
@@ -104,6 +104,32 @@ export class PageCommandsService {
         this.snackbar.success(restored);
         this.refresh();
       });
+  }
+
+  importPages(
+    files: readonly File[],
+    projectId: number | null
+  ): Observable<ImportPagesResult> {
+    return defer(() => {
+      return this.pages.import(files, projectId).pipe(
+        unwrapClientResponse(),
+        tap((result) => {
+          this.refresh();
+          this.snackbar.success(importedMessage(result));
+        }),
+        catchError((error: unknown) => this.report(error, importFailed))
+      );
+    });
+  }
+
+  markReviewed(id: number) {
+    this.pages
+      .markReviewed(id)
+      .pipe(
+        requireSuccess(),
+        catchError((error: unknown) => this.report(error, reviewFailed))
+      )
+      .subscribe(() => this.refresh());
   }
 
   setFavourite(id: number, isFavourite: boolean) {
@@ -141,6 +167,19 @@ const createFailed = $localize`:Error shown when creating a page fails:The page 
 const moveFailed = $localize`:Error shown when moving a page in the tree fails:The page couldn't be moved.`;
 const archiveFailed = $localize`:Error shown when archiving a page fails:The page couldn't be archived.`;
 const restoreFailed = $localize`:Error shown when restoring an archived page fails:The page couldn't be restored.`;
+const importFailed = $localize`:Error shown when importing markdown files as pages fails:The files couldn't be imported.`;
+
+function importedMessage(result: ImportPagesResult): string {
+  const skipped = result.skipped.length;
+
+  if (!skipped) {
+    return $localize`:Shown after markdown files were imported as pages:Imported ${result.created}:COUNT: pages`;
+  }
+
+  return $localize`:Shown after an import that left some files out:Imported ${result.created}:COUNT: pages, skipped ${skipped}:SKIPPED: files`;
+}
+
+const reviewFailed = $localize`:Error shown when marking a page as reviewed fails:The page couldn't be marked as reviewed.`;
 const favouriteFailed = $localize`:Error shown when adding or removing a page favourite fails:Favourites couldn't be updated.`;
 const restoreVersionFailed = $localize`:Error shown when restoring an earlier version of a page fails:That version couldn't be restored.`;
 const versionRestored = $localize`:Confirmation shown after an earlier version of a page is restored:Version restored`;

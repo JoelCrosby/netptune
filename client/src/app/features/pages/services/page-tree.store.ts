@@ -8,6 +8,8 @@ import {
 import { PageTreeNode } from '@core/models/pages';
 import { CurrentRouteService } from '@core/router/current-route.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
+import { ProjectViewModel } from '@core/models/view-models/project-view-model';
+import { projectResource } from '@core/resources/project.resource';
 import { PageCommandsService } from '@core/services/page-commands.service';
 import { TreeMove } from '@static/components/tree/tree.types';
 import { pageTreeResource } from '../resources/pages.resource';
@@ -25,15 +27,21 @@ interface ExpansionSource {
 }
 
 const homePattern = /^\/[^/?#]+\/pages\/?(?:[?#].*)?$/;
+const spaceParam = 'space';
+
+export interface PageSpace {
+  project: ProjectViewModel;
+  pageCount: number;
+}
 const pageSegmentPattern = /^\/[^/?#]+\/pages\/([^/?#]+)/;
 
-// The workspace page tree, shared by the sidebar and the page views under one layout.
 @Injectable()
 export class PageTreeStore {
   private readonly currentWorkspace = inject(CurrentWorkspaceService);
   private readonly currentRoute = inject(CurrentRouteService);
   private readonly commands = inject(PageCommandsService);
   private readonly tree = pageTreeResource();
+  private readonly projects = projectResource();
 
   readonly workspaceSlug = computed(() => this.currentWorkspace.slug() ?? '');
   readonly nodes = computed(() => this.tree.value() ?? []);
@@ -64,6 +72,51 @@ export class PageTreeStore {
     return selected?.id ?? null;
   });
 
+  private readonly requestedSpaceKey = computed(() => {
+    if (!this.homeSelected()) return null;
+
+    const query = this.currentRoute.url().split('?')[1] ?? '';
+
+    return new URLSearchParams(query).get(spaceParam);
+  });
+
+  readonly activeSpace = computed<ProjectViewModel | null>(() => {
+    const selectedId = this.selectedId();
+    const projects = this.projects.value();
+
+    if (selectedId !== null) {
+      const projectId = this.find(selectedId)?.projectId ?? null;
+
+      return projects.find((project) => project.id === projectId) ?? null;
+    }
+
+    const key = this.requestedSpaceKey();
+
+    return projects.find((project) => project.key === key) ?? null;
+  });
+
+  readonly activeSpaceId = computed(() => this.activeSpace()?.id ?? null);
+
+  readonly spaceNodes = computed(() => {
+    const spaceId = this.activeSpaceId();
+
+    return this.nodes().filter((node) => (node.projectId ?? null) === spaceId);
+  });
+
+  readonly spaces = computed<PageSpace[]>(() => {
+    const counts = new Map<number, number>();
+
+    for (const node of this.nodes()) {
+      if (node.projectId == null) continue;
+
+      counts.set(node.projectId, (counts.get(node.projectId) ?? 0) + 1);
+    }
+
+    return this.projects.value().map((project) => {
+      return { project, pageCount: counts.get(project.id) ?? 0 };
+    });
+  });
+
   readonly footerSelectedId = computed(() => {
     return this.archiveSelected() ? archiveNodeId : null;
   });
@@ -76,7 +129,6 @@ export class PageTreeStore {
     return `${expandedStoragePrefix}${this.workspaceSlug()}`;
   });
 
-  // Reloads from storage when the workspace changes, and always opens the way to the open page.
   readonly expanded = linkedSignal<ExpansionSource, readonly number[]>({
     source: () => ({ key: this.storageKey(), openId: this.selectedId() }),
     computation: (source, previous) => {
@@ -99,13 +151,16 @@ export class PageTreeStore {
     return ['/', this.workspaceSlug(), 'pages'];
   }
 
+  spaceQuery(project: ProjectViewModel | null): Record<string, string> | null {
+    return project ? { [spaceParam]: project.key } : null;
+  }
+
   find(id: number | null): PageTreeNode | undefined {
     if (id === null) return undefined;
 
     return this.nodesById().get(id);
   }
 
-  // Root first, ending with the page's parent.
   ancestorsOf(id: number): PageTreeNode[] {
     const ancestors: PageTreeNode[] = [];
     const visited = new Set<number>();

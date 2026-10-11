@@ -4,9 +4,11 @@ import {
   ArchivedPage,
   PageDetail,
   PageLinks,
+  PageNeedingReview,
   PageTreeNode,
   PageVersion,
   PageVersionSummary,
+  RecentPage,
 } from '@core/models/pages';
 import {
   permissionResource,
@@ -85,6 +87,26 @@ export const archivedPagesResource = () => {
   return permissionResource<ArchivedPage[]>({
     permission: PERMISSIONS.pages.read,
     request: () => ({ url: 'api/pages/archived' }),
+    parse: (response) => response.payload ?? [],
+    defaultValue: [],
+    refreshOn: ['pages'],
+  });
+};
+
+export const recentPagesResource = () => {
+  return permissionResource<RecentPage[]>({
+    permission: PERMISSIONS.pages.read,
+    request: () => ({ url: 'api/pages/recent' }),
+    parse: (response) => response.payload ?? [],
+    defaultValue: [],
+    refreshOn: ['pages'],
+  });
+};
+
+export const pagesNeedingReviewResource = () => {
+  return permissionResource<PageNeedingReview[]>({
+    permission: PERMISSIONS.pages.read,
+    request: () => ({ url: 'api/pages/needs-review' }),
     parse: (response) => response.payload ?? [],
     defaultValue: [],
     refreshOn: ['pages'],

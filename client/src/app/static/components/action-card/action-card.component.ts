@@ -6,19 +6,22 @@ import {
   output,
 } from '@angular/core';
 import { LucideChevronRight } from '@lucide/angular';
+import { cn } from '../button/button.variants';
 
-/**
- * A row that reads as a card: leading icon, heading, description and a chevron.
- * The click target covers the whole card, so anything projected into the
- * trailing slot is inert until it opts back in with `pointer-events-auto`.
- */
+export type ActionCardVariant = 'filled' | 'outlined' | 'accent';
+
+const SURFACES: Record<ActionCardVariant, string> = {
+  filled: 'bg-hover hover:bg-foreground/10',
+  outlined: 'bg-card border-border hover:border-primary/60 border',
+  accent: 'bg-primary/5 border-primary/30 hover:border-primary/60 border',
+};
+
 @Component({
   selector: 'app-action-card',
   host: { class: 'block' },
   imports: [LucideChevronRight],
   template: `
-    <div
-      class="bg-hover hover:bg-foreground/10 relative flex items-start gap-3 rounded-xl px-4 py-3 transition-colors">
+    <div [class]="surfaceClass()">
       <button
         type="button"
         class="focus-visible:ring-primary absolute inset-0 rounded-xl focus-visible:ring-2 focus-visible:outline-none"
@@ -52,8 +55,16 @@ export class ActionCardComponent {
   readonly heading = input.required<string>();
   readonly ariaLabel = input<string | null>(null);
   readonly showChevron = input(true, { transform: booleanAttribute });
+  readonly variant = input<ActionCardVariant>('filled');
 
   readonly activated = output();
+
+  protected readonly surfaceClass = computed(() => {
+    return cn(
+      'relative flex h-full items-start gap-3 rounded p-5 transition-colors',
+      SURFACES[this.variant()]
+    );
+  });
 
   protected readonly accessibleLabel = computed(() => {
     return this.ariaLabel() ?? this.heading();

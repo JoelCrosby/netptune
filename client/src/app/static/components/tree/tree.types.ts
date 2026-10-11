@@ -6,6 +6,7 @@ export interface TreeNode {
   label: string;
   icon: LucideIconInput;
   link: string[];
+  queryParams?: Record<string, string> | null;
 }
 
 export type TreeDropPosition = 'before' | 'after' | 'inside';

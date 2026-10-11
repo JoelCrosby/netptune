@@ -12,7 +12,6 @@ import { KeyboardKeyComponent } from '../keyboard-key/keyboard-key.component';
 import { FormControlFieldComponent } from '../form-control/form-control-field.component';
 import { FormControlInputDirective } from '../form-control/form-control.directives';
 
-// 'compact' is a short field for dense side panels.
 export type FilterInputAppearance = 'field' | 'bare' | 'compact';
 
 @Component({
@@ -67,7 +66,7 @@ export type FilterInputAppearance = 'field' | 'bare' | 'compact';
 
     @if (appearance() === 'compact') {
       <div
-        class="border-foreground/15 bg-form-field-background focus-within:border-primary/60 flex h-[30px] items-center gap-2 rounded-[7px] border px-2.5">
+        class="border-foreground/15 bg-form-field-background focus-within:border-primary/60 flex h-8 items-center gap-2 rounded-lg border px-2.5">
         <ng-container [ngTemplateOutlet]="content" />
       </div>
     } @else if (appearance() === 'bare') {

@@ -41,5 +41,9 @@ public interface IPageRepository : IWorkspaceEntityRepository<Page, int>
 
     Task<List<PageOutlineEntry>> GetAncestorOutline(IReadOnlyCollection<int> pageIds, string workspaceKey, CancellationToken cancellationToken = default);
 
+    Task<List<RecentPageViewModel>> GetRecentlyVisited(int workspaceId, string userId, int take, CancellationToken cancellationToken = default);
+
+    Task<List<PageNeedingReviewViewModel>> GetNeedingReview(PageReviewWindow window, CancellationToken cancellationToken = default);
+
     Task<List<int>> GetIdsTaggedWith(IReadOnlyCollection<int> tagIds, int workspaceId, CancellationToken cancellationToken = default);
 }

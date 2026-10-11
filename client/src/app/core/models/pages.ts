@@ -13,6 +13,7 @@ export enum PageStatus {
 export interface PageTreeNode {
   id: number;
   parentId: number | null;
+  projectId?: number | null;
   kind: PageKind;
   title: string;
   slug: string;
@@ -119,6 +120,34 @@ export interface CreatePageRequest {
   kind: PageKind;
   parentId?: number | null;
   title?: string | null;
+  templateKey?: string | null;
+  sprintId?: number | null;
+  projectId?: number | null;
+}
+
+export interface RecentPage {
+  id: number;
+  parentId?: number | null;
+  title: string;
+  slug: string;
+  visitedAt: string;
+  updatedAt: string;
+  updatedByDisplayName?: string | null;
+}
+
+export enum PageReviewReason {
+  stale = 0,
+  unvisited = 1,
+  brokenLinks = 2,
+}
+
+export interface PageNeedingReview {
+  id: number;
+  parentId?: number | null;
+  title: string;
+  slug: string;
+  updatedAt: string;
+  reason: PageReviewReason;
 }
 
 export interface SavePageRequest {
@@ -147,4 +176,10 @@ export interface TransformPageTextRequest {
 
 export interface TransformPageTextResult {
   text: string;
+}
+
+export interface ImportPagesResult {
+  created: number;
+  skipped: string[];
+  firstSlug?: string | null;
 }

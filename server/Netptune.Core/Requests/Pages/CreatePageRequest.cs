@@ -8,8 +8,13 @@ public sealed record CreatePageRequest
 
     public int? ParentId { get; init; }
 
+    public int? ProjectId { get; init; }
+
     public string? Title { get; init; }
 
-    // Documents only; a page starts empty without it.
     public string? Body { get; init; }
+
+    public string? TemplateKey { get; init; }
+
+    public int? SprintId { get; init; }
 }

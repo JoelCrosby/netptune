@@ -1,7 +1,11 @@
+using System.IO.Compression;
 using System.Net;
 using System.Net.Http.Json;
 
 using FluentAssertions;
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Pages;
@@ -10,7 +14,9 @@ using Netptune.Core.Requests.Pages;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Pages;
 using Netptune.Core.ViewModels.ProjectTasks;
+using Netptune.Core.ViewModels.Sprints;
 using Netptune.Core.ViewModels.Tags;
+using Netptune.Entities.Contexts;
 using Netptune.Handlers.Pages.Commands;
 
 using Xunit;
@@ -20,10 +26,12 @@ namespace Netptune.IntegrationTests.Endpoints;
 [Collection(WorkspaceMutationCollection.Name)]
 public sealed class PagesEndpointTests
 {
+    private readonly NetptuneFixture Fixture;
     private readonly HttpClient Client;
 
     public PagesEndpointTests(NetptuneFixture fixture)
     {
+        Fixture = fixture;
         Client = fixture.CreateNetptuneClient();
     }
 
@@ -307,6 +315,207 @@ public sealed class PagesEndpointTests
 
         first.StatusCode.Should().Be(HttpStatusCode.OK);
         second.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task Create_ShouldPutAPageInAProjectSpace_AndItsChildrenWithIt()
+    {
+        var space = await Create(new CreatePageRequest { Kind = PageKind.Folder, Title = "Mobile docs", ProjectId = 1 });
+        var child = await Create(new CreatePageRequest { Kind = PageKind.Document, Title = "Release checklist", ParentId = space.Id });
+
+        var tree = await GetTree();
+
+        tree.Single(node => node.Id == space.Id).ProjectId.Should().Be(1);
+        tree.Single(node => node.Id == child.Id).ProjectId.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task Import_ShouldCreateTheFolderTreeOfAZip_AsPagesInOneGo()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var folder = $"Handbook {Guid.NewGuid():N}"[..17];
+        var zip = new MemoryStream();
+
+        using (var archive = new ZipArchive(zip, ZipArchiveMode.Create, leaveOpen: true))
+        {
+            WriteEntry(archive, $"{folder}/on-call.md", "# On-call\n\nPage the owner.");
+            WriteEntry(archive, $"{folder}/Runbooks/deploy.md", "Steps to deploy.");
+            WriteEntry(archive, $"{folder}/diagram.png", "png");
+        }
+
+        zip.Position = 0;
+
+        using var content = new MultipartFormDataContent();
+        using var file = new StreamContent(zip);
+
+        content.Add(file, "files", "handbook.zip");
+
+        var response = await Client.PostAsync("api/pages/import?projectId=1", content, cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync(cancellationToken));
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<ImportPagesResult>>(cancellationToken);
+        var tree = await GetTree();
+        var root = tree.Single(node => node.Title == folder);
+        var onCall = tree.Single(node => node.ParentId == root.Id && node.Title == "On-call");
+        var runbooks = tree.Single(node => node.ParentId == root.Id && node.Title == "Runbooks");
+        var deploy = tree.Single(node => node.ParentId == runbooks.Id && node.Title == "deploy");
+
+        result!.Payload!.Created.Should().Be(4);
+        result.Payload.Skipped.Should().ContainSingle(skipped => skipped.Contains("diagram.png"));
+        result.Payload.FirstSlug.Should().Be(root.Slug);
+        root.ProjectId.Should().Be(1);
+        deploy.ProjectId.Should().Be(1);
+
+        var page = await Client.GetFromJsonAsync<ClientResponse<PageViewModel>>($"api/pages/{onCall.Slug}", cancellationToken);
+
+        page!.Payload!.Body.Should().Be("Page the owner.");
+    }
+
+    private static void WriteEntry(ZipArchive archive, string path, string text)
+    {
+        var entry = archive.CreateEntry(path);
+
+        using var writer = new StreamWriter(entry.Open());
+
+        writer.Write(text);
+    }
+
+    [Fact]
+    public async Task Create_ShouldStartFromATemplate_WithItsTitleAndBody()
+    {
+        var page = await Create(new CreatePageRequest { Kind = PageKind.Document, TemplateKey = "rfc" });
+
+        page.Title.Should().Be("RFC");
+        page.Body.Should().Contain("## Problem").And.Contain("## Open questions");
+    }
+
+    [Fact]
+    public async Task Create_ShouldRefuse_AnUnknownTemplate()
+    {
+        var request = new CreatePageRequest { Kind = PageKind.Document, TemplateKey = "nope" };
+        var response = await Client.PostAsJsonAsync("api/pages", request, TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task Create_ShouldWriteReleaseNotes_FromASprintsCompletedTasks()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var done = await CreateTask();
+        var open = await CreateTask();
+        var sprintRequest = new AddSprintRequest
+        {
+            Name = $"Release {Guid.NewGuid():N}"[..20],
+            StartDate = DateTime.UtcNow.Date.AddYears(6),
+            EndDate = DateTime.UtcNow.Date.AddYears(6).AddDays(14),
+            ProjectId = 1,
+        };
+        var sprintResponse = await Client.PostAsJsonAsync("api/sprints", sprintRequest, cancellationToken);
+        var sprintResult = await sprintResponse.Content.ReadFromJsonAsync<ClientResponse<SprintViewModel>>(cancellationToken);
+        var sprint = sprintResult!.Payload!;
+
+        using (var scope = Fixture.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+            var tasks = await context.ProjectTasks.Where(task => task.Id == done.Id || task.Id == open.Id).ToListAsync(cancellationToken);
+            var doneStatus = await context.Statuses.FirstAsync(
+                status => status.WorkspaceId == tasks[0].WorkspaceId
+                    && status.EntityType == EntityType.Task
+                    && status.Category == StatusCategory.Done
+                    && !status.IsDeleted,
+                cancellationToken);
+
+            foreach (var task in tasks)
+            {
+                task.SprintId = sprint.Id;
+            }
+
+            tasks.Single(task => task.Id == done.Id).StatusId = doneStatus.Id;
+
+            await context.SaveChangesAsync(cancellationToken);
+        }
+
+        var notes = await Create(new CreatePageRequest
+        {
+            Kind = PageKind.Document,
+            TemplateKey = PageTemplates.FromSprint,
+            SprintId = sprint.Id,
+        });
+
+        notes.Title.Should().Be($"Release notes: {sprint.Name}");
+        notes.Body.Should().Contain($"[[task:{done.SystemId}|");
+        notes.Body.Should().NotContain(open.SystemId);
+    }
+
+    [Fact]
+    public async Task Recent_ShouldListThePagesTheCallerVisited_LatestFirst()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var first = await Create(new CreatePageRequest { Kind = PageKind.Document, Title = "Visited first" });
+        var second = await Create(new CreatePageRequest { Kind = PageKind.Document, Title = "Visited second" });
+
+        await Client.PostAsync($"api/pages/{first.Id}/visits", null, cancellationToken);
+        await Task.Delay(20, cancellationToken);
+        await Client.PostAsync($"api/pages/{second.Id}/visits", null, cancellationToken);
+
+        var recent = await Client.GetFromJsonAsync<ClientResponse<List<RecentPageViewModel>>>("api/pages/recent", cancellationToken);
+        var ids = recent!.Payload!.Select(page => page.Id).ToList();
+
+        ids.IndexOf(second.Id).Should().BeLessThan(ids.IndexOf(first.Id));
+    }
+
+    [Fact]
+    public async Task NeedsReview_ShouldFlagStaleAndBrokenPages_UntilTheyAreMarkedReviewed()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var task = await CreateTask();
+        var stale = await Create(new CreatePageRequest { Kind = PageKind.Document, Title = "Old runbook" });
+        var broken = await Create(new CreatePageRequest { Kind = PageKind.Document, Title = "Linking page" });
+
+        await Save(broken.Id, new SavePageRequest { Title = broken.Title, Body = $"Tracks [[task:{task.SystemId}]]", Revision = broken.Revision });
+        await Update(stale.Id, new UpdatePageRequest { Status = PageStatus.Published });
+        await Update(broken.Id, new UpdatePageRequest { Status = PageStatus.Published });
+
+        using (var scope = Fixture.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+            var old = DateTime.UtcNow.AddYears(-2);
+            var stalePage = await context.Pages.SingleAsync(page => page.Id == stale.Id, cancellationToken);
+            var deletedTask = await context.ProjectTasks.SingleAsync(item => item.Id == task.Id, cancellationToken);
+
+            stalePage.CreatedAt = old;
+            stalePage.UpdatedAt = old;
+            deletedTask.IsDeleted = true;
+
+            await context.SaveChangesAsync(cancellationToken);
+            await context.Pages
+                .Where(page => page.Id == stale.Id)
+                .ExecuteUpdateAsync(setters => setters.SetProperty(page => page.UpdatedAt, old), cancellationToken);
+        }
+
+        var flagged = await GetNeedingReview();
+
+        flagged.Should().Contain(page => page.Id == broken.Id && page.Reason == PageReviewReason.BrokenLinks);
+        flagged.Should().Contain(page => page.Id == stale.Id && page.Reason == PageReviewReason.Stale);
+
+        var reviewed = await Client.PostAsync($"api/pages/{stale.Id}/reviewed", null, cancellationToken);
+
+        reviewed.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var afterReview = await GetNeedingReview();
+
+        afterReview.Should().NotContain(page => page.Id == stale.Id);
+    }
+
+    private async Task<List<PageNeedingReviewViewModel>> GetNeedingReview()
+    {
+        var result = await Client.GetFromJsonAsync<ClientResponse<List<PageNeedingReviewViewModel>>>(
+            "api/pages/needs-review",
+            TestContext.Current.CancellationToken);
+
+        return result!.Payload!;
     }
 
     // Its own task, because other test classes delete and move tasks while this one runs.

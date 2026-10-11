@@ -45,7 +45,14 @@ public sealed class CreatePageCommandHandler : IRequestHandler<CreatePageCommand
             return ClientResponse<PageViewModel>.Failed("Unknown page kind.");
         }
 
-        var title = PageTitle.Normalise(input.Title);
+        var start = await ResolveTemplate(input, cancellationToken);
+
+        if (start.Error is not null)
+        {
+            return ClientResponse<PageViewModel>.Failed(start.Error);
+        }
+
+        var title = PageTitle.Normalise(input.Title ?? start.Title);
         var titleTooLong = PageTitle.IsTooLong(title);
 
         if (titleTooLong)
@@ -53,15 +60,16 @@ public sealed class CreatePageCommandHandler : IRequestHandler<CreatePageCommand
             return ClientResponse<PageViewModel>.Failed(PageTitle.TooLongMessage);
         }
 
+        var requestedBody = input.Body ?? start.Body;
         var isFolder = input.Kind == PageKind.Folder;
-        var hasBody = !string.IsNullOrEmpty(input.Body);
+        var hasBody = !string.IsNullOrEmpty(requestedBody);
 
         if (isFolder && hasBody)
         {
             return ClientResponse<PageViewModel>.Failed("Folders have no body.");
         }
 
-        var bodyTooLarge = PageBody.IsTooLarge(input.Body);
+        var bodyTooLarge = PageBody.IsTooLarge(requestedBody);
 
         if (bodyTooLarge)
         {
@@ -71,23 +79,23 @@ public sealed class CreatePageCommandHandler : IRequestHandler<CreatePageCommand
         var workspaceKey = Identity.GetWorkspaceKey();
         var workspaceId = await Identity.GetWorkspaceId();
         var userId = Identity.GetCurrentUserId();
-        var parent = await ResolveParent(input.ParentId, workspaceId, cancellationToken);
-        var parentIsMissing = input.ParentId.HasValue && parent is null;
+        var placementRequest = new PagePlacementRequest(input.ParentId, input.ProjectId, workspaceId);
+        var placement = await PagePlacement.Resolve(UnitOfWork, placementRequest, cancellationToken);
 
-        if (parentIsMissing)
+        if (placement.Error is not null)
         {
-            return ClientResponse<PageViewModel>.Failed("The parent page does not exist.");
+            return ClientResponse<PageViewModel>.Failed(placement.Error);
         }
 
         var sortOrder = await UnitOfWork.Pages.GetNextSortOrder(workspaceId, input.ParentId, cancellationToken);
         var isDocument = input.Kind == PageKind.Document;
-        var body = isDocument ? input.Body ?? string.Empty : null;
+        var body = isDocument ? requestedBody ?? string.Empty : null;
 
         var page = new Page
         {
             Kind = input.Kind,
             ParentId = input.ParentId,
-            ProjectId = parent?.ProjectId,
+            ProjectId = placement.ProjectId,
             Title = title,
             Slug = title.ToUrlSlug(true, PageTree.SlugMaxLength),
             Body = body,
@@ -150,13 +158,61 @@ public sealed class CreatePageCommandHandler : IRequestHandler<CreatePageCommand
         return ClientResponse<PageViewModel>.Success(viewModel!);
     }
 
-    private async Task<Page?> ResolveParent(int? parentId, int workspaceId, CancellationToken cancellationToken)
+    private async Task<PageStart> ResolveTemplate(CreatePageRequest input, CancellationToken cancellationToken)
     {
-        if (parentId is null)
+        var key = input.TemplateKey;
+
+        if (key is null)
         {
-            return null;
+            return new PageStart(null, null, null);
         }
 
-        return await UnitOfWork.Pages.GetLiveInWorkspace(parentId.Value, workspaceId, true, cancellationToken);
+        if (input.Kind != PageKind.Document)
+        {
+            return new PageStart(null, null, "Templates make documents, not folders.");
+        }
+
+        var isFromSprint = string.Equals(key, PageTemplates.FromSprint, StringComparison.Ordinal);
+
+        if (isFromSprint)
+        {
+            return await ResolveReleaseNotes(input.SprintId, cancellationToken);
+        }
+
+        var template = PageTemplates.Find(key);
+
+        if (template is null)
+        {
+            return new PageStart(null, null, PageTemplates.UnknownMessage);
+        }
+
+        return new PageStart(template.Title, template.Body, null);
     }
+
+    private async Task<PageStart> ResolveReleaseNotes(int? sprintId, CancellationToken cancellationToken)
+    {
+        if (!sprintId.HasValue)
+        {
+            return new PageStart(null, null, "Choose the sprint to write release notes for.");
+        }
+
+        var workspaceKey = Identity.GetWorkspaceKey();
+        var sprint = await UnitOfWork.Sprints.GetSprintDetailAsync(workspaceKey, sprintId.Value, cancellationToken);
+
+        if (sprint is null)
+        {
+            return new PageStart(null, null, "The sprint does not exist.");
+        }
+
+        var completed = sprint.Tasks
+            .Where(task => task.StatusCategory == StatusCategory.Done)
+            .Select(task => new ReleaseNoteTask(task.SystemId, task.Name))
+            .ToList();
+        var title = PageTemplates.ReleaseNotesTitle(sprint.Name);
+        var body = PageTemplates.ReleaseNotes(sprint.Name, completed);
+
+        return new PageStart(title, body, null);
+    }
+
+    private sealed record PageStart(string? Title, string? Body, string? Error);
 }

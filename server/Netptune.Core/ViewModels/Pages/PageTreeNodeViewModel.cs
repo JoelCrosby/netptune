@@ -8,6 +8,8 @@ public sealed record PageTreeNodeViewModel
 
     public int? ParentId { get; init; }
 
+    public int? ProjectId { get; init; }
+
     public PageKind Kind { get; init; }
 
     public required string Title { get; init; }

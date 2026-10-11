@@ -18,8 +18,8 @@ import { StrokedButtonComponent } from '../button/stroked-button.component';
     <div [class]="containerClass()">
       @for (action of secondaryActions(); track action) {
         <button
-          app-flat-button
-          class="ml-3 rounded-[6rem]"
+          app-stroked-button
+          [class]="secondaryButtonClass()"
           (click)="action.click && action.click()">
           {{ action.label }}
         </button>
@@ -92,6 +92,12 @@ export class PageHeaderActionsComponent {
     if (!this.compact()) return '';
 
     return 'h-[34px] w-[34px] min-w-0 rounded px-0 text-foreground/75';
+  });
+
+  protected readonly secondaryButtonClass = computed(() => {
+    if (!this.compact()) return '';
+
+    return 'h-[34px] min-w-0 rounded px-4 text-[13.5px] tracking-[0.02em]';
   });
 
   protected readonly primaryButtonClass = computed(() => {
