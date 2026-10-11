@@ -6,6 +6,8 @@ import {
   MovePageRequest,
   PageDetail,
   SavePageRequest,
+  TransformPageTextRequest,
+  TransformPageTextResult,
   UpdatePageRequest,
 } from '@core/models/pages';
 
@@ -53,6 +55,13 @@ export class PagesService {
     return this.http.post<ClientResponse<PageDetail>>(
       `api/pages/${id}/restore`,
       null
+    );
+  }
+
+  transform(request: TransformPageTextRequest) {
+    return this.http.post<ClientResponse<TransformPageTextResult>>(
+      'api/ai/pages/transform',
+      request
     );
   }
 

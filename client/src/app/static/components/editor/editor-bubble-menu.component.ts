@@ -5,6 +5,7 @@ import {
   ElementRef,
   inject,
   input,
+  output,
   signal,
   viewChild,
 } from '@angular/core';
@@ -19,9 +20,11 @@ import {
   LucideLink,
   LucideStrikethrough,
   LucideUnlink,
+  LucideDynamicIcon,
   LucideX,
 } from '@lucide/angular';
 import type { Editor } from '@tiptap/core';
+import { EditorSelectionAction } from './editor-selection';
 import {
   editorMenuButton,
   editorMenuIcon,
@@ -52,6 +55,7 @@ const inactive = {
     LucideStrikethrough,
     LucideUnlink,
     LucideX,
+    LucideDynamicIcon,
   ],
   host: { class: 'absolute invisible z-50' },
   template: `
@@ -169,6 +173,21 @@ const inactive = {
             (click)="openLink(editor)">
             <svg lucideLink [class]="iconClass"></svg>
           </button>
+
+          @if (actions().length) {
+            <span [class]="separatorClass"></span>
+
+            @for (action of actions(); track action.id) {
+              <button
+                type="button"
+                [class]="buttonClass"
+                [attr.aria-label]="action.label"
+                [title]="action.label"
+                (click)="actionPicked.emit(action.id)">
+                <svg [lucideIcon]="action.icon" [class]="iconClass"></svg>
+              </button>
+            }
+          }
         }
       </div>
     }
@@ -179,6 +198,9 @@ export class EditorBubbleMenuComponent {
 
   readonly editor = input<Editor | null>(null);
   readonly revision = input(0);
+  readonly actions = input<readonly EditorSelectionAction[]>([]);
+
+  readonly actionPicked = output<string>();
 
   protected readonly surfaceClass = editorMenuSurface;
   protected readonly buttonClass = editorMenuButton;

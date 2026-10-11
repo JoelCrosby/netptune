@@ -134,3 +134,17 @@ export interface MovePageRequest {
 
 // Mirrors PageBody.MaxBytes on the server.
 export const pageBodyMaxBytes = 1024 * 1024;
+
+export type PageTransformAction =
+  'summarise' | 'tighten' | 'translate' | 'continue';
+
+export interface TransformPageTextRequest {
+  pageId: number;
+  action: PageTransformAction;
+  text: string;
+  language?: string;
+}
+
+export interface TransformPageTextResult {
+  text: string;
+}

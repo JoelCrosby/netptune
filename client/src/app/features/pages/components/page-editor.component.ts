@@ -3,6 +3,7 @@ import { PERMISSIONS } from '@core/auth/permissions';
 import {
   ApplicationRef,
   Component,
+  DestroyRef,
   createComponent,
   EnvironmentInjector,
   Injector,
@@ -21,9 +22,15 @@ import {
   PageLinkedTask,
   PageLinks,
   PageTag,
+  PageTransformAction,
 } from '@core/models/pages';
 import { fromNow } from '@core/util/dates';
-import { LucideTriangleAlert } from '@lucide/angular';
+import {
+  LucideLanguages,
+  LucideScissors,
+  LucideTextQuote,
+  LucideTriangleAlert,
+} from '@lucide/angular';
 import { InlineButtonComponent } from '@static/components/button/inline-button.component';
 import { CalloutComponent } from '@static/components/callout/callout.component';
 import { DocumentHeaderComponent } from '@static/components/document-header/document-header.component';
@@ -33,6 +40,12 @@ import {
 } from '@static/components/editor/editor.component';
 import { MarkdownSyntax } from '@static/components/editor/editor-content';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
+import { InlineSelectComponent } from '@static/components/inline-select/inline-select.component';
+import {
+  EditorSelection,
+  EditorSelectionAction,
+} from '@static/components/editor/editor-selection';
+import { ResultCardComponent } from '@static/components/result-card/result-card.component';
 import { SuggestionMenuComponent } from '@static/components/suggestion-menu/suggestion-menu.component';
 import { TaskPreviewCardComponent } from '@static/components/task-preview-card/task-preview-card.component';
 import { QueryEmbedComponent } from '../editor/query-embed.component';
@@ -49,6 +62,7 @@ import { DialogService } from '@core/services/dialog.service';
 import { QueryPickerDialogComponent } from '../dialogs/query-picker-dialog.component';
 import { createPageEditorCommands } from '../editor/page-editor-commands';
 import { PageReferenceController } from '../editor/page-reference.controller';
+import { PageTransformController } from '../editor/page-transform.controller';
 import {
   createPageReferenceExtension,
   PageReferenceDisplay,
@@ -75,6 +89,49 @@ interface HoveredReference {
   top: number;
 }
 
+const selectionActions: EditorSelectionAction[] = [
+  {
+    id: 'summarise',
+    label: $localize`:Bubble menu action that has the assistant summarise the selected text:Summarise`,
+    icon: LucideTextQuote,
+  },
+  {
+    id: 'tighten',
+    label: $localize`:Bubble menu action that has the assistant shorten the selected text:Tighten`,
+    icon: LucideScissors,
+  },
+  {
+    id: 'translate',
+    label: $localize`:Bubble menu action that has the assistant translate the selected text:Translate`,
+    icon: LucideLanguages,
+  },
+];
+
+type SelectionTransform = Extract<
+  PageTransformAction,
+  'summarise' | 'tighten' | 'translate'
+>;
+
+const selectionTransforms: ReadonlySet<string> = new Set(
+  selectionActions.map((action) => action.id)
+);
+
+function isSelectionTransform(id: string): id is SelectionTransform {
+  return selectionTransforms.has(id);
+}
+
+// The server reads up to 20,000 characters; the end of the page matters most for what comes next.
+const TEXT_ABOVE_LIMIT = 18_000;
+
+function tailOf(markdown: string, limit: number): string {
+  if (markdown.length <= limit) return markdown;
+
+  const tail = markdown.slice(-limit);
+  const blockStart = tail.indexOf('\n\n');
+
+  return blockStart >= 0 ? tail.slice(blockStart + 2) : tail;
+}
+
 @Component({
   selector: 'app-page-editor',
   imports: [
@@ -86,8 +143,10 @@ interface HoveredReference {
     CalloutComponent,
     InlineButtonComponent,
     EmptyStateComponent,
+    ResultCardComponent,
+    InlineSelectComponent,
   ],
-  providers: [PageReferenceController],
+  providers: [PageReferenceController, PageTransformController],
   host: {
     class: 'block',
     '(window:wheel)': 'clearHover()',
@@ -111,6 +170,38 @@ interface HoveredReference {
         [activeIndex]="references.activeIndex()"
         (picked)="references.pick($event)"
         (hovered)="references.activeIndex.set($event)" />
+    }
+
+    @if (transform.open()) {
+      <app-result-card
+        class="fixed z-50"
+        [style.left.px]="transform.position().left"
+        [style.top.px]="transform.position().top"
+        [heading]="transform.heading()"
+        [status]="transform.status()"
+        [text]="transform.text()"
+        [error]="transform.error()"
+        [actions]="transform.actions()"
+        i18n-loadingLabel="Shown while the assistant works on page text"
+        loadingLabel="Working on it…"
+        i18n-dismissLabel="
+          Accessible label for closing the assistant result card
+        "
+        dismissLabel="Discard"
+        (acted)="onTransformAccepted($event)"
+        (dismissed)="transform.close()">
+        @if (transform.action() === 'translate') {
+          <app-inline-select
+            resultCardControls
+            i18n-ariaLabel="
+              Accessible label for the language page text is translated into
+            "
+            ariaLabel="Translate into"
+            [options]="transform.languageOptions"
+            [value]="transform.language()"
+            (changed)="transform.setLanguage($event)" />
+        }
+      </app-result-card>
     }
 
     @if (hoveredTask(); as card) {
@@ -213,6 +304,8 @@ interface HoveredReference {
           [extensions]="extensions"
           [syntax]="syntax"
           [commands]="commands()"
+          [selectionActions]="selectionActions()"
+          (selectionAction)="onSelectionAction($event)"
           (saved)="draft().commitBody($event)" />
       } @else {
         <app-empty-state
@@ -265,15 +358,30 @@ export class PageEditorComponent implements OnInit {
   protected readonly syntax = pageSyntax;
 
   private readonly canReadQueries = hasPermission(PERMISSIONS.queries.read);
+  private readonly canUseAssistant = hasPermission(PERMISSIONS.assistant.use);
+  protected readonly transform = inject(PageTransformController);
 
   protected readonly commands = computed<readonly EditorCommand[]>(() => {
     const pageCommands = createPageEditorCommands({
       canEmbedQueries: this.canReadQueries(),
+      canUseAssistant: this.canUseAssistant(),
       pickQuery: () => this.pickQuery(),
+      transformAbove: (action, position) => {
+        this.transformAbove(action, position);
+      },
     });
 
     return [...basicEditorCommands, ...pageCommands];
   });
+
+  // Rewrites land through the editor, so only someone who can edit the page is offered them.
+  protected readonly selectionActions = computed<EditorSelectionAction[]>(
+    () => {
+      const canTransform = this.canUseAssistant() && !this.readOnly();
+
+      return canTransform ? selectionActions : [];
+    }
+  );
 
   protected readonly hoveredTask = computed(() => {
     const hovered = this.hovered();
@@ -295,6 +403,16 @@ export class PageEditorComponent implements OnInit {
       untracked(() => {
         this.referenceListeners.forEach((listener) => listener());
       });
+    });
+
+    // Captured, because the page scrolls inside its own container rather than the window.
+    const onScroll = () => {
+      this.transform.reanchor((range) => this.anchorFor(range.to));
+    };
+
+    document.addEventListener('scroll', onScroll, true);
+    inject(DestroyRef).onDestroy(() => {
+      document.removeEventListener('scroll', onScroll, true);
     });
   }
 
@@ -343,6 +461,62 @@ export class PageEditorComponent implements OnInit {
         embed.destroy();
       },
     };
+  }
+
+  protected onSelectionAction(selection: EditorSelection) {
+    const editor = this.editor()?.editor();
+    const action = selection.actionId;
+
+    if (!editor || !isSelectionTransform(action)) return;
+
+    this.transform.start({
+      editor,
+      pageId: this.draft().id,
+      action,
+      text: selection.markdown,
+      range: { from: selection.from, to: selection.to },
+      anchor: selection.anchor,
+      placements: ['replace', 'insert'],
+    });
+  }
+
+  protected onTransformAccepted(placement: string) {
+    const host = this.editor();
+    const accepted = this.transform.accept(placement);
+
+    if (!host || !accepted) return;
+
+    if (accepted.placement === 'replace') {
+      host.replaceWithMarkdown(
+        accepted.range.from,
+        accepted.range.to,
+        accepted.text
+      );
+      return;
+    }
+
+    host.insertMarkdownAfter(accepted.range.to, accepted.text);
+  }
+
+  private transformAbove(action: 'continue' | 'summarise', position: number) {
+    const host = this.editor();
+    const editor = host?.editor();
+
+    if (!host || !editor) return;
+
+    this.transform.start({
+      editor,
+      pageId: this.draft().id,
+      action,
+      text: tailOf(host.markdownBefore(position), TEXT_ABOVE_LIMIT),
+      range: { from: position, to: position },
+      anchor: host.anchorAt(position),
+      placements: ['insert'],
+    });
+  }
+
+  private anchorFor(position: number) {
+    return this.editor()?.anchorAt(position) ?? { left: 0, top: 0 };
   }
 
   private pickQuery(): Promise<string | undefined> {

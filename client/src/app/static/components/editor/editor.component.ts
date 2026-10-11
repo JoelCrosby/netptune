@@ -31,6 +31,11 @@ import { EditorBubbleMenuComponent } from './editor-bubble-menu.component';
 import { SuggestionMenuComponent } from '../suggestion-menu/suggestion-menu.component';
 import { Callout } from './editor-callout';
 import { EditorCommand } from './editor-commands';
+import {
+  EditorAnchor,
+  EditorSelection,
+  EditorSelectionAction,
+} from './editor-selection';
 import { createSlashExtension, SlashMenu } from './editor-slash';
 import {
   documentToMarkdown,
@@ -90,7 +95,11 @@ export type EditorUploader = (file: File) => Promise<EditorUpload | null>;
         (hovered)="slash.activeIndex.set($event)" />
     }
 
-    <app-editor-bubble-menu [editor]="editor()" [revision]="revision()" />
+    <app-editor-bubble-menu
+      [editor]="editor()"
+      [revision]="revision()"
+      [actions]="selectionActions()"
+      (actionPicked)="onSelectionAction($event)" />
 
     <app-editor-floating-menu
       [editor]="editor()"
@@ -136,6 +145,10 @@ export class EditorComponent
   // What the / menu offers. Whether the menu exists at all is read once, when the editor is created;
   // the list itself follows the input.
   readonly commands = input<readonly EditorCommand[]>([]);
+
+  // Offered in the bubble menu beside the formatting buttons; picking one emits selectionAction.
+  readonly selectionActions = input<readonly EditorSelectionAction[]>([]);
+  readonly selectionAction = output<EditorSelection>();
 
   protected readonly slash = new SlashMenu();
   protected readonly slashLabel = $localize`:Accessible label for the menu of blocks that typing / offers:Insert a block`;
@@ -292,6 +305,78 @@ export class EditorComponent
     if (next && holder.contains(next)) return;
 
     this.persistCurrentMode(this.emitSaved);
+  }
+
+  markdownBefore(position: number): string {
+    const editor = this.editor();
+
+    if (!editor) return '';
+
+    return this.markdownBetween(editor, 0, position);
+  }
+
+  anchorAt(position: number): EditorAnchor {
+    const editor = this.editor();
+
+    if (!editor) return { left: 0, top: 0 };
+
+    const coords = editor.view.coordsAtPos(position);
+
+    return { left: coords.left, top: coords.bottom + 8 };
+  }
+
+  replaceWithMarkdown(from: number, to: number, markdown: string) {
+    const editor = this.editor();
+
+    if (!editor || editor.isDestroyed) return;
+
+    const content = this.toInsertableContent(markdown);
+
+    editor.chain().focus().insertContentAt({ from, to }, content).run();
+  }
+
+  // Lands after the top-level block holding the position, so a list or callout is never split. An empty
+  // paragraph there, as a slash command leaves behind, is filled instead of left above the new text.
+  insertMarkdownAfter(position: number, markdown: string) {
+    const editor = this.editor();
+
+    if (!editor || editor.isDestroyed) return;
+
+    const doc = editor.state.doc;
+    const $position = doc.resolve(Math.min(position, doc.content.size));
+    const blocks = this.toDocument(markdown).content ?? [];
+
+    if ($position.depth === 0) {
+      editor.chain().focus().insertContentAt(doc.content.size, blocks).run();
+      return;
+    }
+
+    const block = $position.node(1);
+    const isEmptyParagraph =
+      block.type.name === 'paragraph' && block.content.size === 0;
+    const range = isEmptyParagraph
+      ? { from: $position.before(1), to: $position.after(1) }
+      : $position.after(1);
+
+    editor.chain().focus().insertContentAt(range, blocks).run();
+  }
+
+  protected onSelectionAction(actionId: string) {
+    const editor = this.editor();
+
+    if (!editor) return;
+
+    const { from, to } = editor.state.selection;
+
+    if (from === to) return;
+
+    this.selectionAction.emit({
+      actionId,
+      from,
+      to,
+      markdown: this.markdownBetween(editor, from, to),
+      anchor: this.anchorAt(to),
+    });
   }
 
   scrollToHeading(index: number) {
@@ -542,6 +627,26 @@ export class EditorComponent
     editor.chain().focus().insertContentAt(at, content).run();
 
     return editor.state.selection.to;
+  }
+
+  private markdownBetween(editor: Editor, from: number, to: number): string {
+    const slice = editor.state.doc.slice(from, to);
+    const nodes = (slice.content.toJSON() as JSONContent[] | null) ?? [];
+
+    // A selection inside one block slices to its bare text, which only serialises inside a paragraph.
+    const isInline = slice.content.firstChild?.isInline ?? false;
+    const content = isInline ? [{ type: 'paragraph', content: nodes }] : nodes;
+
+    return this.toMarkdown({ type: 'doc', content });
+  }
+
+  // A single paragraph goes in as its text, so a rewritten phrase stays inside its sentence.
+  private toInsertableContent(markdown: string): JSONContent[] {
+    const blocks = this.toDocument(markdown).content ?? [];
+    const onlyBlock = blocks.length === 1 ? blocks[0] : null;
+    const isSingleParagraph = onlyBlock?.type === 'paragraph';
+
+    return isSingleParagraph ? (onlyBlock.content ?? []) : blocks;
   }
 
   private toDocument(markdown: string | null | undefined): JSONContent {
