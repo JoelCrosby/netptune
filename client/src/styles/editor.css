@@ -61,7 +61,8 @@
   font-size: 1rem;
 }
 
-.editor-content a {
+/* Non-editable islands inside a document (embeds) style their own links. */
+.editor-content a:not([contenteditable='false'] a) {
   color: var(--primary);
   text-decoration: underline;
   text-underline-offset: 2px;
@@ -203,4 +204,80 @@
 
 .ProseMirror-gapcursor::after {
   border-top-color: var(--foreground);
+}
+
+.editor-document {
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.editor-document > * + * {
+  margin-top: 1rem;
+}
+
+.editor-document h1 {
+  font-size: 1.6rem;
+  margin-top: 1.75rem;
+}
+
+.editor-document h2 {
+  font-size: 1.4rem;
+  margin-top: 1.75rem;
+}
+
+.editor-document h3 {
+  font-size: 1.15rem;
+  margin-top: 1.25rem;
+}
+
+.editor-document h4,
+.editor-document h5,
+.editor-document h6 {
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+.editor-document > :first-child {
+  margin-top: 0;
+}
+
+.editor-callout {
+  border: 1px solid rgba(var(--foreground-rgb), 0.08);
+  border-left: 3px solid var(--primary);
+  border-radius: var(--border-radius-small);
+  background-color: rgba(var(--primary-rgb), 0.07);
+  padding: 0.6rem 0.85rem;
+}
+
+.editor-callout[data-callout='warning'],
+.editor-callout[data-callout='caution'] {
+  border-left-color: var(--warn);
+  background-color: color-mix(in srgb, var(--warn) 8%, transparent);
+}
+
+.editor-callout > * + * {
+  margin-top: 0.4rem;
+}
+
+.editor-reference {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35em;
+  padding: 0 0.35em;
+  border-radius: 5px;
+  background-color: rgba(var(--primary-rgb), 0.1);
+  color: var(--primary);
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.editor-reference-key {
+  font-family: var(--monospace);
+  font-size: 0.82em;
+}
+
+.editor-reference[data-unresolved] {
+  background-color: rgba(var(--foreground-rgb), 0.06);
+  color: rgba(var(--foreground-rgb), 0.6);
 }

@@ -10,11 +10,12 @@ import {
   OnDestroy,
   output,
   signal,
+  untracked,
   viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { reloadToken } from '@core/util/signals';
-import { Editor } from '@tiptap/core';
+import { AnyExtension, Editor, JSONContent } from '@tiptap/core';
 import { BubbleMenu } from '@tiptap/extension-bubble-menu';
 import { FloatingMenu } from '@tiptap/extension-floating-menu';
 import { Image } from '@tiptap/extension-image';
@@ -27,12 +28,22 @@ import { debounceTime } from 'rxjs/operators';
 import { AbstractFormValueControl } from '../abstract-form-value-control';
 import { cn } from '../button/button.variants';
 import { EditorBubbleMenuComponent } from './editor-bubble-menu.component';
-import { documentToMarkdown, markdownToDocument } from './editor-content';
+import { SuggestionMenuComponent } from '../suggestion-menu/suggestion-menu.component';
+import { Callout } from './editor-callout';
+import { EditorCommand } from './editor-commands';
+import { createSlashExtension, SlashMenu } from './editor-slash';
+import {
+  documentToMarkdown,
+  markdownToDocument,
+  MarkdownSyntax,
+} from './editor-content';
 import { EditorFloatingMenuComponent } from './editor-floating-menu.component';
 
 const saveDebounceMs = 2400;
 
-export type EditorAppearance = 'boxed' | 'flat';
+export type EditorAppearance = 'boxed' | 'flat' | 'document';
+
+export type EditorMode = 'rich' | 'markdown';
 
 export interface EditorUpload {
   name: string;
@@ -43,9 +54,41 @@ export type EditorUploader = (file: File) => Promise<EditorUpload | null>;
 
 @Component({
   selector: 'app-editor',
-  imports: [EditorBubbleMenuComponent, EditorFloatingMenuComponent],
+  imports: [
+    EditorBubbleMenuComponent,
+    EditorFloatingMenuComponent,
+    SuggestionMenuComponent,
+  ],
   template: `
-    <div class="editor w-full rounded" #editorHost></div>
+    <div
+      class="editor w-full rounded"
+      [class.hidden]="mode() === 'markdown'"
+      #editorHost></div>
+
+    @if (mode() === 'markdown') {
+      <textarea
+        class="text-foreground/75 field-sizing-content min-h-[50vh] w-full resize-none border-0 bg-transparent p-0 font-mono text-[13px] leading-[1.75] whitespace-pre-wrap outline-none"
+        spellcheck="false"
+        [value]="value()"
+        [readOnly]="isReadOnly()"
+        [attr.aria-label]="markdownLabel"
+        (input)="onMarkdownInput(markdownInput.value)"
+        #markdownInput></textarea>
+    }
+
+    @if (slash.open() && mode() === 'rich') {
+      <app-suggestion-menu
+        class="fixed z-50"
+        [class.-translate-y-full]="slash.position().above"
+        [style.left.px]="slash.position().left"
+        [style.top.px]="slash.position().top"
+        [ariaLabel]="slashLabel"
+        [emptyLabel]="slashEmptyLabel"
+        [items]="slash.items()"
+        [activeIndex]="slash.activeIndex()"
+        (picked)="slash.pick($event)"
+        (hovered)="slash.activeIndex.set($event)" />
+    }
 
     <app-editor-bubble-menu [editor]="editor()" [revision]="revision()" />
 
@@ -63,7 +106,7 @@ export type EditorUploader = (file: File) => Promise<EditorUpload | null>;
       (change)="onFilesPicked(filePicker)" />
   `,
   host: {
-    class: 'relative flex overflow-visible max-h-[600px]',
+    class: 'relative flex overflow-visible',
     '[class]': 'appearanceClass()',
     '(focusout)': 'onFocusOut($event)',
   },
@@ -84,19 +127,35 @@ export class EditorComponent
   readonly placeholder = input('');
   readonly isReadOnly = input(false);
   readonly appearance = input<EditorAppearance>('boxed');
+  readonly mode = input<EditorMode>('rich');
   readonly hostClass = input('');
   readonly uploader = input<EditorUploader | null>(null);
+  // Read once, when the editor is created.
+  readonly extensions = input<readonly AnyExtension[]>([]);
+  readonly syntax = input<MarkdownSyntax | undefined>(undefined);
+  // What the / menu offers. Whether the menu exists at all is read once, when the editor is created;
+  // the list itself follows the input.
+  readonly commands = input<readonly EditorCommand[]>([]);
+
+  protected readonly slash = new SlashMenu();
+  protected readonly slashLabel = $localize`:Accessible label for the menu of blocks that typing / offers:Insert a block`;
+  protected readonly slashEmptyLabel = $localize`:Shown in the slash command menu when nothing matches what was typed:No matching blocks`;
 
   protected readonly appearanceClass = computed(() => {
-    if (this.appearance() !== 'flat') {
-      return cn(
-        'bg-form-field-background mb-4 border-foreground/30 mt-2 rounded-sm border-2 px-4 py-1',
-        this.hostClass()
-      );
+    switch (this.appearance()) {
+      case 'document':
+        return cn('flex-col', this.hostClass());
+      case 'flat':
+        return cn('-mx-1 max-h-[600px] rounded-lg px-1', this.hostClass());
+      default:
+        return cn(
+          'bg-form-field-background mb-4 border-foreground/30 mt-2 max-h-[600px] rounded-sm border-2 px-4 py-1',
+          this.hostClass()
+        );
     }
-
-    return cn('-mx-1 rounded-lg px-1', this.hostClass());
   });
+
+  protected readonly markdownLabel = $localize`:Accessible label for the raw markdown source of a document:Markdown source`;
 
   readonly loaded = output();
   readonly saved = output<string>();
@@ -117,7 +176,12 @@ export class EditorComponent
   private savedContent: string | null = null;
   private destroyed = false;
   private readonly changed = new Subject<void>();
+  private readonly markdownChanged = new Subject<void>();
   private readonly emitSaved = (value: string) => this.saved.emit(value);
+
+  // the source as of the last markdown-mode save, which bypasses the rich editor
+  private markdownSaved: string | null = null;
+  private previousMode: EditorMode = 'rich';
 
   constructor() {
     super();
@@ -126,16 +190,39 @@ export class EditorComponent
       .pipe(debounceTime(saveDebounceMs), takeUntilDestroyed())
       .subscribe(() => this.persist(this.emitSaved));
 
+    this.markdownChanged
+      .pipe(debounceTime(saveDebounceMs), takeUntilDestroyed())
+      .subscribe(() => this.persistMarkdown(this.emitSaved));
+
     afterNextRender(() => {
       this.createEditor();
 
       effect(
         () => {
           const value = this.value();
+          const editingSource = untracked(this.mode) === 'markdown';
 
-          if (value === this.editorValue) return;
+          if (value === this.editorValue || editingSource) return;
 
           this.setValue(value);
+        },
+        { injector: this.injector }
+      );
+
+      effect(
+        () => {
+          const mode = this.mode();
+
+          untracked(() => this.onModeChanged(mode));
+        },
+        { injector: this.injector }
+      );
+
+      effect(
+        () => {
+          const commands = this.commands();
+
+          this.slash.setCommands(commands);
         },
         { injector: this.injector }
       );
@@ -160,7 +247,7 @@ export class EditorComponent
     if (!editor) return;
 
     if (deliver) {
-      this.persist(deliver);
+      this.persistCurrentMode(deliver);
     }
 
     editor.destroy();
@@ -188,7 +275,7 @@ export class EditorComponent
 
     if (!editor || editor.isDestroyed) return null;
 
-    const serialised = documentToMarkdown(editor.getJSON());
+    const serialised = this.toMarkdown(editor.getJSON());
 
     if (serialised === this.savedContent) return null;
 
@@ -204,7 +291,59 @@ export class EditorComponent
 
     if (next && holder.contains(next)) return;
 
-    this.persist(this.emitSaved);
+    this.persistCurrentMode(this.emitSaved);
+  }
+
+  scrollToHeading(index: number) {
+    const headings = this.el().nativeElement.querySelectorAll(
+      'h1, h2, h3, h4, h5, h6'
+    );
+
+    headings
+      .item(index)
+      ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  protected onMarkdownInput(source: string) {
+    this.value.set(source);
+    this.markdownChanged.next();
+  }
+
+  private onModeChanged(mode: EditorMode) {
+    const previous = this.previousMode;
+
+    this.previousMode = mode;
+
+    if (mode === previous) return;
+
+    if (mode === 'markdown') {
+      this.persist(this.emitSaved);
+      this.markdownSaved = this.value();
+
+      return;
+    }
+
+    this.persistMarkdown(this.emitSaved);
+    this.setValue(this.value());
+  }
+
+  private persistCurrentMode(deliver: (value: string) => void) {
+    if (this.mode() === 'markdown') {
+      this.persistMarkdown(deliver);
+
+      return;
+    }
+
+    this.persist(deliver);
+  }
+
+  private persistMarkdown(deliver: (value: string) => void) {
+    const source = this.value();
+
+    if (source === this.markdownSaved) return;
+
+    this.markdownSaved = source;
+    deliver(source);
   }
 
   setValue(value?: string) {
@@ -224,19 +363,19 @@ export class EditorComponent
 
     this.editorValue = value ?? null;
 
-    editor.commands.setContent(markdownToDocument(value), {
+    editor.commands.setContent(this.toDocument(value), {
       emitUpdate: false,
     });
 
-    this.savedContent = documentToMarkdown(editor.getJSON());
+    this.savedContent = this.toMarkdown(editor.getJSON());
   }
 
   private createEditor() {
     const editor = new Editor({
       element: this.el().nativeElement,
-      content: markdownToDocument(this.value()),
+      content: this.toDocument(this.value()),
       editable: !this.isReadOnly(),
-      extensions: this.extensions(),
+      extensions: this.allExtensions(),
       editorProps: {
         attributes: this.contentAttributes(),
         handlePaste: (_view, event) => this.onPaste(event),
@@ -250,13 +389,20 @@ export class EditorComponent
     });
 
     this.editorValue = this.value();
-    this.savedContent = documentToMarkdown(editor.getJSON());
+    this.savedContent = this.toMarkdown(editor.getJSON());
 
     this.editor.set(editor);
   }
 
-  private extensions() {
+  private allExtensions() {
+    const slash = this.commands().length
+      ? [createSlashExtension(this.slash)]
+      : [];
+
     return [
+      ...slash,
+      ...this.extensions(),
+      Callout,
       StarterKit.configure({
         link: { openOnClick: false, autolink: true, defaultProtocol: 'https' },
         codeBlock: { languageClassPrefix: 'language-' },
@@ -296,10 +442,9 @@ export class EditorComponent
   }
 
   private contentAttributes(): Record<string, string> {
-    const minHeight =
-      this.appearance() === 'flat' ? 'min-h-6' : 'min-h-[100px]';
+    const contentClass = contentClassFor(this.appearance());
     const attributes: Record<string, string> = {
-      class: `editor-content w-full outline-none ${minHeight}`,
+      class: `editor-content w-full outline-none ${contentClass}`,
       role: 'textbox',
       'aria-multiline': 'true',
     };
@@ -314,7 +459,7 @@ export class EditorComponent
   }
 
   private onUpdate(editor: Editor) {
-    const serialised = documentToMarkdown(editor.getJSON());
+    const serialised = this.toMarkdown(editor.getJSON());
 
     this.editorValue = serialised;
     this.value.set(serialised);
@@ -397,5 +542,24 @@ export class EditorComponent
     editor.chain().focus().insertContentAt(at, content).run();
 
     return editor.state.selection.to;
+  }
+
+  private toDocument(markdown: string | null | undefined): JSONContent {
+    return markdownToDocument(markdown, this.syntax());
+  }
+
+  private toMarkdown(document: JSONContent): string {
+    return documentToMarkdown(document, this.syntax());
+  }
+}
+
+function contentClassFor(appearance: EditorAppearance): string {
+  switch (appearance) {
+    case 'document':
+      return 'editor-document min-h-[50vh]';
+    case 'flat':
+      return 'min-h-6';
+    default:
+      return 'min-h-[100px]';
   }
 }

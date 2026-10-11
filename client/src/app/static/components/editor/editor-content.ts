@@ -1,5 +1,12 @@
 import type { JSONContent } from '@tiptap/core';
-import { marked, type Token, type Tokens } from 'marked';
+import { isCalloutVariant } from './editor-callout';
+import {
+  marked,
+  Marked,
+  type Token,
+  type TokenizerExtension,
+  type Tokens,
+} from 'marked';
 
 // Descriptions are stored as markdown, so the editor parses one on the way in and writes one back
 // out. Only the marks markdown can express are enabled on the editor, so nothing is lost in between.
@@ -11,25 +18,176 @@ interface Mark {
   attrs?: Record<string, unknown>;
 }
 
+// An inline token a consumer adds on top of markdown, such as [[kind:id|label]]. The lexer reads it
+// before markdown's own inline rules, so code spans, emphasis or links inside it cannot split it, and it
+// is written back verbatim by its node type.
+export interface InlineSyntax {
+  nodeType: string;
+  pattern: RegExp;
+  toNode: (match: RegExpExecArray) => JSONContent;
+  toMarkdown: (node: JSONContent) => string;
+}
+
+// A block a consumer adds on top of markdown, written alone on its line, such as {{query:slug}}.
+export interface BlockSyntax {
+  nodeType: string;
+  // Matched against a single line.
+  pattern: RegExp;
+  toNode: (match: RegExpExecArray) => JSONContent;
+  toMarkdown: (node: JSONContent) => string;
+}
+
+export interface MarkdownSyntax {
+  inline: readonly InlineSyntax[];
+  block?: readonly BlockSyntax[];
+}
+
+interface SyntaxToken extends Tokens.Generic {
+  match: RegExpExecArray;
+}
+
+const noSyntax: MarkdownSyntax = { inline: [] };
+const lexers = new WeakMap<MarkdownSyntax, Marked>();
+
+// The converters below are synchronous, so the syntax for the current call is held here rather than
+// threaded through every helper. Each call restores what it found, so a nested conversion is safe.
+let activeSyntax: MarkdownSyntax = noSyntax;
+
 export function markdownToDocument(
-  markdown: string | null | undefined
+  markdown: string | null | undefined,
+  syntax: MarkdownSyntax = noSyntax
 ): JSONContent {
   if (!markdown?.trim()) {
     return { type: 'doc', content: [{ type: 'paragraph' }] };
   }
 
-  const tokens = marked.lexer(markdown, lexerOptions);
-  const content = toBlocks(tokens);
+  return withActiveSyntax(syntax, () => {
+    const content = toBlocks(lex(markdown));
 
-  if (!content.length) {
-    return { type: 'doc', content: [{ type: 'paragraph' }] };
-  }
+    if (!content.length) {
+      return { type: 'doc', content: [{ type: 'paragraph' }] };
+    }
 
-  return { type: 'doc', content };
+    return { type: 'doc', content };
+  });
 }
 
-export function documentToMarkdown(document: JSONContent): string {
-  return blocksToMarkdown(document.content ?? []).trim();
+export function documentToMarkdown(
+  document: JSONContent,
+  syntax: MarkdownSyntax = noSyntax
+): string {
+  return withActiveSyntax(syntax, () => {
+    return blocksToMarkdown(document.content ?? []).trim();
+  });
+}
+
+function withActiveSyntax<T>(syntax: MarkdownSyntax, convert: () => T): T {
+  const previous = activeSyntax;
+
+  activeSyntax = syntax;
+
+  try {
+    return convert();
+  } finally {
+    activeSyntax = previous;
+  }
+}
+
+function lex(markdown: string): Token[] {
+  const hasSyntax =
+    activeSyntax.inline.length > 0 || (activeSyntax.block?.length ?? 0) > 0;
+
+  if (!hasSyntax) {
+    return marked.lexer(markdown, lexerOptions);
+  }
+
+  return lexerFor(activeSyntax).lexer(markdown);
+}
+
+function lexerFor(syntax: MarkdownSyntax): Marked {
+  const cached = lexers.get(syntax);
+
+  if (cached) return cached;
+
+  const inline = syntax.inline.map(toTokenizer);
+  const block = (syntax.block ?? []).map(toBlockTokenizer);
+  const extensions = [...block, ...inline];
+  const lexer = new Marked({ ...lexerOptions, extensions });
+
+  lexers.set(syntax, lexer);
+
+  return lexer;
+}
+
+function toBlockTokenizer(syntax: BlockSyntax): TokenizerExtension {
+  const flags = syntax.pattern.flags.replace(/[gm]/g, '');
+  // Up to three spaces of indent, as CommonMark allows before any block. marked calls start() with
+  // the paragraph minus its first character, so only a match after a newline is a real line start;
+  // a block at the current position is caught by the tokenizer itself.
+  const afterNewline = new RegExp(
+    `\\n {0,3}(?:${syntax.pattern.source})[ \\t]*(\\n|$)`,
+    flags
+  );
+  const atStart = new RegExp(
+    `^ {0,3}(?:${syntax.pattern.source})[ \\t]*(?:\\n|$)`,
+    flags
+  );
+  const lineOnly = new RegExp(`^ {0,3}(?:${syntax.pattern.source})`, flags);
+
+  return {
+    name: syntax.nodeType,
+    level: 'block',
+    start: (source) => {
+      const match = afterNewline.exec(source);
+
+      if (!match) return undefined;
+
+      return match.index + 1;
+    },
+    tokenizer: (source) => {
+      const whole = atStart.exec(source);
+
+      if (!whole) return undefined;
+
+      const match = lineOnly.exec(whole[0]) as RegExpExecArray;
+      const token: SyntaxToken = {
+        type: syntax.nodeType,
+        raw: whole[0],
+        match,
+      };
+
+      return token;
+    },
+  };
+}
+
+function toTokenizer(syntax: InlineSyntax): TokenizerExtension {
+  const flags = syntax.pattern.flags.replace('g', '');
+  const anywhere = new RegExp(syntax.pattern.source, flags);
+  const atStart = new RegExp(`^(?:${syntax.pattern.source})`, flags);
+
+  return {
+    name: syntax.nodeType,
+    level: 'inline',
+    start: (source) => {
+      const index = source.search(anywhere);
+
+      return index < 0 ? undefined : index;
+    },
+    tokenizer: (source) => {
+      const match = atStart.exec(source);
+
+      if (!match) return undefined;
+
+      const token: SyntaxToken = {
+        type: syntax.nodeType,
+        raw: match[0],
+        match,
+      };
+
+      return token;
+    },
+  };
 }
 
 function toBlocks(tokens: Token[]): JSONContent[] {
@@ -67,7 +225,7 @@ function toBlock(token: Token): JSONContent[] | null {
     case 'html':
       return [paragraph([text((token as Tokens.HTML).raw.trim())])];
     default:
-      return null;
+      return blockSyntaxNode(token);
   }
 }
 
@@ -101,7 +259,25 @@ function codeBlock(token: Tokens.Code): JSONContent {
   return block;
 }
 
+const calloutMarkerPattern = /^\[!(\w+)\][ \t]*\n?/;
+
+// GitHub-style alerts: a quote opening with [!NOTE], [!WARNING] and so on. Anything else stays a quote.
 function blockquote(token: Tokens.Blockquote): JSONContent {
+  const marker = calloutMarkerPattern.exec(token.text);
+  const variant = marker?.[1].toLowerCase();
+  const isCallout = variant !== undefined && isCalloutVariant(variant);
+
+  if (marker && isCallout) {
+    const inner = token.text.slice(marker[0].length);
+    const calloutContent = toBlocks(lex(inner));
+
+    return {
+      type: 'callout',
+      attrs: { variant },
+      content: calloutContent.length ? calloutContent : [{ type: 'paragraph' }],
+    };
+  }
+
   const content = toBlocks(token.tokens);
 
   return {
@@ -267,8 +443,28 @@ function inlineToken(token: Token, marks: Mark[]): JSONContent[] {
     case 'html':
       return [text((token as Tokens.HTML).raw, marks)];
     default:
-      return [];
+      return syntaxNode(token);
   }
+}
+
+function blockSyntaxNode(token: Token): JSONContent[] | null {
+  const syntax = activeSyntax.block?.find((candidate) => {
+    return candidate.nodeType === token.type;
+  });
+
+  if (!syntax) return null;
+
+  return [syntax.toNode((token as SyntaxToken).match)];
+}
+
+function syntaxNode(token: Token): JSONContent[] {
+  const syntax = activeSyntax.inline.find((candidate) => {
+    return candidate.nodeType === token.type;
+  });
+
+  if (!syntax) return [];
+
+  return [syntax.toNode((token as SyntaxToken).match)];
 }
 
 function link(token: Tokens.Link, marks: Mark[]): JSONContent[] {
@@ -321,6 +517,8 @@ function blockToMarkdown(block: JSONContent): string {
       return codeBlockToMarkdown(block);
     case 'blockquote':
       return quoteToMarkdown(block);
+    case 'callout':
+      return calloutToMarkdown(block);
     case 'horizontalRule':
       return '---';
     case 'image':
@@ -330,8 +528,18 @@ function blockToMarkdown(block: JSONContent): string {
     case 'taskList':
       return listToMarkdown(block, 0);
     default:
-      return blocksToMarkdown(block.content ?? []);
+      return (
+        blockSyntaxMarkdown(block) ?? blocksToMarkdown(block.content ?? [])
+      );
   }
+}
+
+function blockSyntaxMarkdown(block: JSONContent): string | null {
+  const syntax = activeSyntax.block?.find((candidate) => {
+    return candidate.nodeType === block.type;
+  });
+
+  return syntax ? syntax.toMarkdown(block) : null;
 }
 
 function headingToMarkdown(block: JSONContent): string {
@@ -354,6 +562,16 @@ function quoteToMarkdown(block: JSONContent): string {
     .split('\n')
     .map((line) => (line.length ? `> ${line}` : '>'))
     .join('\n');
+}
+
+function calloutToMarkdown(block: JSONContent): string {
+  const variant = (block.attrs?.['variant'] as string | undefined) ?? 'note';
+  const inner = blocksToMarkdown(block.content ?? []);
+  const lines = inner
+    .split('\n')
+    .map((line) => (line.length ? `> ${line}` : '>'));
+
+  return [`> [!${variant.toUpperCase()}]`, ...lines].join('\n');
 }
 
 function imageToMarkdown(block: JSONContent): string {
@@ -421,6 +639,12 @@ function inlineNodeToMarkdown(node: JSONContent): string {
 
   if (node.type === 'image') return imageToMarkdown(node);
 
+  const syntax = activeSyntax.inline.find((candidate) => {
+    return candidate.nodeType === node.type;
+  });
+
+  if (syntax) return syntax.toMarkdown(node);
+
   if (node.type !== 'text') return inlineToMarkdown(node.content);
 
   const marks = new Set((node.marks ?? []).map((mark) => mark.type));
@@ -450,8 +674,24 @@ function escapeText(value: string): string {
 function escapeBlockStarts(paragraph: string): string {
   return paragraph
     .split('\n')
-    .map((line) => line.replace(blockStartPattern, '$1\\$2'))
+    .map((line) => escapeBlockSyntax(line.replace(blockStartPattern, '$1\\$2')))
     .join('\n');
+}
+
+// Prose that reads exactly like a consumer's block (a line of just {{query:slug}}) would come back as
+// that block, so its opening brace is escaped.
+function escapeBlockSyntax(line: string): string {
+  const looksLikeBlock = (activeSyntax.block ?? []).some((syntax) => {
+    return wholeLinePattern(syntax).test(line);
+  });
+
+  return looksLikeBlock ? line.replace('{', '\\{') : line;
+}
+
+function wholeLinePattern(syntax: BlockSyntax): RegExp {
+  const flags = syntax.pattern.flags.replace(/[gm]/g, '');
+
+  return new RegExp(`^ {0,3}(?:${syntax.pattern.source})[ \\t]*$`, flags);
 }
 
 const blockStartPattern =
