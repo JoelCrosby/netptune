@@ -1,9 +1,8 @@
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
-using Netptune.Core.Models.Pages;
 using Netptune.Core.UnitOfWork;
 
-namespace Netptune.Handlers.Pages;
+namespace Netptune.Core.Models.Pages;
 
 public sealed record PageLinkSource(int PageId, string? Body);
 

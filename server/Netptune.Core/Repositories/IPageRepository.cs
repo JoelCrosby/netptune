@@ -25,7 +25,9 @@ public interface IPageRepository : IWorkspaceEntityRepository<Page, int>
 
     Task<bool> TrySaveContent(PageContentUpdate update, CancellationToken cancellationToken = default);
 
-    Task<bool> AnyInWorkspace(int workspaceId, CancellationToken cancellationToken = default);
+    Task<bool> AnyLiveInWorkspace(int workspaceId, CancellationToken cancellationToken = default);
+
+    Task<HashSet<string>> GetSlugs(int workspaceId, CancellationToken cancellationToken = default);
 
     Task<bool> MarkReviewed(int id, int workspaceId, string userId, CancellationToken cancellationToken = default);
 

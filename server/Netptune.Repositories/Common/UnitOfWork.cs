@@ -25,6 +25,14 @@ public abstract class UnitOfWork<TContext, TDbConnectionFactory> : IUnitOfWork
         return await Context.SaveChangesAsync(cancellationToken);
     }
 
+    public void Detach(IEnumerable<object> entities)
+    {
+        foreach (var entity in entities)
+        {
+            Context.Entry(entity).State = EntityState.Detached;
+        }
+    }
+
     public async Task Transaction(Func<Task> callback, bool disableChangeDetection = false)
     {
         var strategy = Context.Database.CreateExecutionStrategy();

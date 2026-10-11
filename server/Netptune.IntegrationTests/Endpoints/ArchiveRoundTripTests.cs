@@ -7,13 +7,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Enums;
-
 using Netptune.Core.Requests;
 using Netptune.Core.Requests.Pages;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Pages;
 using Netptune.Core.ViewModels.Projects;
+using Netptune.Core.ViewModels.Tags;
 using Netptune.Entities.Contexts;
 using Netptune.Import.Archive;
 using Netptune.Transfer;
@@ -132,7 +132,7 @@ public sealed class ArchiveRoundTripTests
         var taskSystemId = await AnyLiveTaskSystemId();
         var body = $"See [[page:{sibling.Id}|Sibling]] and [[task:{taskSystemId}]]";
         var saved = await Client.PutAsJsonAsync($"api/pages/{child.Id}", new SavePageRequest { Title = child.Title, Body = body, Revision = child.Revision }, cancellationToken);
-        var tags = await Client.GetFromJsonAsync<List<Netptune.Core.ViewModels.Tags.TagViewModel>>("api/tags/workspace", cancellationToken);
+        var tags = await Client.GetFromJsonAsync<List<TagViewModel>>("api/tags/workspace", cancellationToken);
         var tagged = await Client.PatchAsJsonAsync($"api/pages/{child.Id}", new UpdatePageRequest { TagIds = [tags![0].Id] }, cancellationToken);
 
         saved.EnsureSuccessStatusCode();
@@ -164,6 +164,66 @@ public sealed class ArchiveRoundTripTests
         childVersions.Should().Be(2);
         childLinks.Should().Contain(link => link.TargetType == PageLinkTargetType.Page && link.TargetId == clonedSibling.Id.ToString());
         childLinks.Should().Contain(link => link.TargetType == PageLinkTargetType.Task);
+    }
+
+    [Fact]
+    public async Task Clone_ShouldGiveEachPageOneVersion_AndDropADeletedProject_WhenHistoryIsLeftOut()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var marker = Guid.NewGuid().ToString("N")[..8];
+        var project = await CreateProject();
+        var page = await CreatePage(new CreatePageRequest { Kind = PageKind.Document, Title = $"Project page {marker}", ProjectId = project.Id });
+        var deleted = await Client.DeleteAsync($"api/projects/{project.Id}", cancellationToken);
+
+        deleted.EnsureSuccessStatusCode();
+
+        var archive = await ExportArchive(1);
+        var result = await CloneInto(archive, Slug());
+
+        await using var scope = Fixture.Services.CreateAsyncScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var cloned = await context.Pages.AsNoTracking().SingleAsync(item => item.WorkspaceId == result.WorkspaceId && item.Title == page.Title, cancellationToken);
+        var revisionsByPage = await context.PageVersions
+            .AsNoTracking()
+            .Where(version => version.Page!.WorkspaceId == result.WorkspaceId)
+            .GroupBy(version => version.PageId)
+            .Select(group => new { Count = group.Count(), Revision = group.Max(version => version.Revision), Current = group.Max(version => version.Page!.Revision) })
+            .ToListAsync(cancellationToken);
+
+        cloned.ProjectId.Should().BeNull();
+        revisionsByPage.Should().NotBeEmpty();
+        revisionsByPage.Should().OnlyContain(item => item.Count == 1 && item.Revision == item.Current);
+    }
+
+    [Fact]
+    public async Task Restore_ShouldRefuseLivePages_ButNotArchivedOnes()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
+        await CreatePage(new CreatePageRequest { Kind = PageKind.Document, Title = $"Restore page {Guid.NewGuid():N}" });
+
+        var archive = await ExportArchive(1);
+        var target = await CloneInto(archive, Slug());
+
+        await using var scope = Fixture.Services.CreateAsyncScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        await context.Projects
+            .Where(project => project.WorkspaceId == target.WorkspaceId)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(project => project.IsDeleted, true), cancellationToken);
+
+        var withLivePages = await PreviewRestore(archive, target.WorkspaceId);
+
+        await context.Pages
+            .Where(page => page.WorkspaceId == target.WorkspaceId)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(page => page.IsDeleted, true), cancellationToken);
+
+        var withArchivedPages = await PreviewRestore(archive, target.WorkspaceId);
+
+        withLivePages.Blockers.Should().ContainSingle(blocker => blocker.Contains("already has pages"));
+        withArchivedPages.Blockers.Should().BeEmpty();
     }
 
     [Fact]
@@ -413,6 +473,23 @@ public sealed class ArchiveRoundTripTests
             UserId = await OwnerId(),
             Mode = ArchiveImportMode.Clone,
             TargetSlug = slug,
+        }, TestContext.Current.CancellationToken);
+    }
+
+    private async Task<ArchiveImportPreview> PreviewRestore(Stream archive, int workspaceId)
+    {
+        archive.Seek(0, SeekOrigin.Begin);
+
+        await using var scope = Fixture.Services.CreateAsyncScope();
+
+        var importer = scope.ServiceProvider.GetRequiredService<IArchiveImporter>();
+
+        return await importer.Preview(new ArchiveImportRequest
+        {
+            Archive = archive,
+            UserId = await OwnerId(),
+            Mode = ArchiveImportMode.Restore,
+            WorkspaceId = workspaceId,
         }, TestContext.Current.CancellationToken);
     }
 

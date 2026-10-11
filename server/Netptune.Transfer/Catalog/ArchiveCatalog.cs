@@ -320,7 +320,7 @@ public static class ArchiveCatalog
             ArchiveField.Text<Page>(TransferRecordTypes.Page, "reviewed_at", "Reviewed at", page => page.ReviewedAt, TransferValueType.DateTime),
             ArchiveField.Text<Page>(TransferRecordTypes.Page, "created_at", "Created at", page => page.CreatedAt, TransferValueType.DateTime),
             ArchiveField.Reference<Page>(TransferRecordTypes.Page, "parent", "Parent", EntityRefTypes.Page, page => page.Parent is null ? null : EntityRefBuilder.ForPage(page.Parent)),
-            ArchiveField.Reference<Page>(TransferRecordTypes.Page, "project", "Project", EntityRefTypes.Project, page => page.Project is null ? null : EntityRefBuilder.ForProject(page.Project)),
+            ArchiveField.Reference<Page>(TransferRecordTypes.Page, "project", "Project", EntityRefTypes.Project, page => LiveProjectRef(page.Project)),
             ArchiveField.Reference<Page>(TransferRecordTypes.Page, "created_by", "Created by", EntityRefTypes.User, page => AuthorRef(page.CreatedByUser)),
         ],
     };
@@ -481,6 +481,14 @@ public static class ArchiveCatalog
         }
 
         return EntityRefBuilder.ForTask(task.Project?.Key ?? EntityRefBuilder.UnnamedSegment, task.ProjectScopeId);
+    }
+
+    // A page in a deleted project shows among the workspace's own pages, so it travels without that project.
+    private static EntityRef? LiveProjectRef(Project? project)
+    {
+        var isLive = project is not null && !project.IsDeleted;
+
+        return isLive ? EntityRefBuilder.ForProject(project!) : null;
     }
 
     private static string PageRefValue(Page? page)

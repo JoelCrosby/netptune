@@ -102,6 +102,7 @@ public sealed class ArchiveImporter : IArchiveImporter
 
             await ImportPageTags(reader, context, pages, cancellationToken);
             await ImportPageVersions(reader, context, pages, cancellationToken);
+            await BuildPageLinks(workspace, pages, cancellationToken);
 
             await UnitOfWork.CompleteAsync(cancellationToken);
 
@@ -111,7 +112,7 @@ public sealed class ArchiveImporter : IArchiveImporter
                 WorkspaceSlug = workspace.Slug,
                 CreatedByType = context.CreatedByType,
                 Warnings = warnings,
-                Pages = pages.ById.Values.Select(page => new ImportedPage(page.Id, page.Body)).ToList(),
+                PageIds = [.. pages.ById.Keys],
             };
         });
     }
@@ -175,7 +176,7 @@ public sealed class ArchiveImporter : IArchiveImporter
             blockers.Add("Restore only works into an empty workspace. This one already has projects.");
         }
 
-        var hasPages = await UnitOfWork.Pages.AnyInWorkspace(request.WorkspaceId.Value, cancellationToken);
+        var hasPages = await UnitOfWork.Pages.AnyLiveInWorkspace(request.WorkspaceId.Value, cancellationToken);
 
         if (hasPages)
         {
@@ -708,18 +709,25 @@ public sealed class ArchiveImporter : IArchiveImporter
     {
         var archived = new List<ArchivedPage>();
 
+        // Restoring keeps archived pages, whose slugs stay taken, so an imported page that would collide takes a new one.
+        var takenSlugs = await UnitOfWork.Pages.GetSlugs(context.WorkspaceId, cancellationToken);
+
         await ImportSection(reader, ArchiveCatalog.Page.FileName, context, async row =>
         {
             var kind = row.Enum<PageKind>("kind") ?? PageKind.Document;
             var title = PageTitle.Normalise(row.Text("title"));
             var body = kind == PageKind.Document ? row.Text("body") ?? string.Empty : null;
+            var archivedSlug = row.Text("slug");
+            var isSlugFree = archivedSlug is not null && !takenSlugs.Contains(archivedSlug);
+            var slug = isSlugFree ? archivedSlug! : PageSlug.Create(title, body);
+            var author = context.ResolveUser(row.Reference("created_by")) ?? context.UserId;
             var page = new Page
             {
                 WorkspaceId = context.WorkspaceId,
                 Kind = kind,
                 ProjectId = context.Resolve(row.Reference("project")),
                 Title = title,
-                Slug = row.Text("slug") ?? PageSlug.Create(title, body),
+                Slug = slug,
                 Body = body,
                 Icon = row.Text("icon"),
                 Status = row.Enum<PageStatus>("status") ?? PageStatus.Draft,
@@ -728,9 +736,11 @@ public sealed class ArchiveImporter : IArchiveImporter
                 IsTemplate = row.Flag("is_template"),
                 ReviewedAt = row.Timestamp("reviewed_at"),
                 CreatedAt = row.Timestamp("created_at") ?? default,
-                CreatedByUserId = context.UserId,
-                OwnerId = context.UserId,
+                CreatedByUserId = author,
+                OwnerId = author,
             };
+
+            takenSlugs.Add(slug);
 
             await UnitOfWork.Pages.AddAsync(page, cancellationToken);
 
@@ -785,8 +795,6 @@ public sealed class ArchiveImporter : IArchiveImporter
         await UnitOfWork.CompleteAsync(cancellationToken);
     }
 
-    // History is optional in an archive. A page that arrives without any version still gets one for the
-    // revision it is at, so its history tab and restore points start from what was imported.
     private async Task ImportPageVersions(
         ArchiveReader reader,
         ArchiveImportContext context,
@@ -794,7 +802,7 @@ public sealed class ArchiveImporter : IArchiveImporter
         CancellationToken cancellationToken)
     {
         var versioned = new HashSet<int>();
-        var pending = 0;
+        var batch = new List<PageVersion>(BatchSize);
 
         await foreach (var row in reader.ReadSection(ArchiveCatalog.PageVersion.FileName, cancellationToken))
         {
@@ -819,20 +827,20 @@ public sealed class ArchiveImporter : IArchiveImporter
                 CreatedByUserId = context.ResolveUser(row.Reference("author")) ?? context.UserId,
             };
 
-            await UnitOfWork.PageVersions.AddAsync(version, cancellationToken);
-
+            batch.Add(version);
             page.Revision = Math.Max(page.Revision, revision.Value);
             versioned.Add(page.Id);
             context.Count(TransferRecordTypes.PageVersion);
 
-            pending = await SaveWhenFull(pending + 1, cancellationToken);
+            if (batch.Count >= BatchSize)
+            {
+                await SaveVersions(batch, cancellationToken);
+            }
         }
 
-        var unversioned = pages.ById.Values.Where(page => !versioned.Contains(page.Id)).ToList();
-
-        foreach (var page in unversioned)
-        {
-            await UnitOfWork.PageVersions.AddAsync(new PageVersion
+        var unversioned = pages.ById.Values
+            .Where(page => !versioned.Contains(page.Id))
+            .Select(page => new PageVersion
             {
                 PageId = page.Id,
                 Revision = page.Revision,
@@ -840,10 +848,39 @@ public sealed class ArchiveImporter : IArchiveImporter
                 Body = page.Body,
                 CreatedAt = DateTime.UtcNow,
                 CreatedByUserId = context.UserId,
-            }, cancellationToken);
+            });
+
+        foreach (var version in unversioned)
+        {
+            batch.Add(version);
+            context.Count(TransferRecordTypes.PageVersion);
         }
 
+        await SaveVersions(batch, cancellationToken);
+    }
+
+    // Version bodies are the bulk of an archive's history, so each batch is let go once it is written rather
+    // than held by the change tracker until the import ends.
+    private async Task SaveVersions(List<PageVersion> batch, CancellationToken cancellationToken)
+    {
+        if (batch.Count == 0)
+        {
+            return;
+        }
+
+        await UnitOfWork.PageVersions.AddRangeAsync(batch, cancellationToken);
         await UnitOfWork.CompleteAsync(cancellationToken);
+
+        UnitOfWork.Detach(batch);
+        batch.Clear();
+    }
+
+    private async Task BuildPageLinks(Workspace workspace, ImportedPageSet pages, CancellationToken cancellationToken)
+    {
+        var sources = pages.ById.Values.Select(page => new PageLinkSource(page.Id, page.Body)).ToList();
+        var scope = new PageLinkScope(workspace.Id, workspace.Slug);
+
+        await PageLinkRebuilder.BuildForNewPages(UnitOfWork, sources, scope, cancellationToken);
     }
 
     private sealed record ArchivedPage(Page Page, EntityRef? ParentRef, int? SourceId);

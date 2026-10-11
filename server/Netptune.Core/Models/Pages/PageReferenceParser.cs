@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.RegularExpressions;
 
 using Netptune.Core.Enums;
@@ -62,11 +63,11 @@ public static partial class PageReferenceParser
         return references;
     }
 
-    // Page ids are only meaningful inside one database, so a page carried to another one has its [[page:N]]
-    // tokens moved to the new ids. Code is left as written, the same text the parser skips.
+    // Code is left as written, the same text the parser skips. A page id with no new id would point at
+    // whatever page has that id in the other database, so the mention is reduced to its label.
     public static string? RewritePageIds(string? markdown, IReadOnlyDictionary<int, int> newIds)
     {
-        if (string.IsNullOrEmpty(markdown) || newIds.Count == 0)
+        if (string.IsNullOrEmpty(markdown))
         {
             return markdown;
         }
@@ -96,7 +97,7 @@ public static partial class PageReferenceParser
 
     private static string RewriteOutsideInlineCode(string line, IReadOnlyDictionary<int, int> newIds)
     {
-        var rewritten = new System.Text.StringBuilder(line.Length);
+        var rewritten = new StringBuilder(line.Length);
         var position = 0;
 
         foreach (Match code in InlineCodePattern().Matches(line))
@@ -118,17 +119,22 @@ public static partial class PageReferenceParser
             var kind = ParseKind(match.Groups["kind"].Value);
             var isPage = kind == PageLinkTargetType.Page;
             var hasId = int.TryParse(match.Groups["key"].Value, out var oldId);
-            var newId = isPage && hasId ? newIds.GetValueOrDefault(oldId) : 0;
-            var isMapped = newId > 0;
 
-            if (!isMapped)
+            if (!isPage || !hasId)
             {
                 return match.Value;
             }
 
-            var label = match.Groups["label"];
+            var newId = newIds.GetValueOrDefault(oldId);
+            var isMapped = newId > 0;
+            var label = match.Groups["label"].Value;
 
-            return label.Success ? $"[[page:{newId}|{label.Value}]]" : $"[[page:{newId}]]";
+            if (!isMapped)
+            {
+                return label;
+            }
+
+            return label.Length > 0 ? $"[[page:{newId}|{label}]]" : $"[[page:{newId}]]";
         });
     }
 

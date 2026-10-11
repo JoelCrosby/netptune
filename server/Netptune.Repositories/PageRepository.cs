@@ -150,9 +150,20 @@ public sealed class PageRepository : WorkspaceEntityRepository<DataContext, Page
         return affected == 1;
     }
 
-    public Task<bool> AnyInWorkspace(int workspaceId, CancellationToken cancellationToken = default)
+    public Task<bool> AnyLiveInWorkspace(int workspaceId, CancellationToken cancellationToken = default)
     {
-        return Entities.AnyAsync(page => page.WorkspaceId == workspaceId, cancellationToken);
+        return Entities.AnyAsync(page => page.WorkspaceId == workspaceId && !page.IsDeleted, cancellationToken);
+    }
+
+    public async Task<HashSet<string>> GetSlugs(int workspaceId, CancellationToken cancellationToken = default)
+    {
+        var slugs = await Entities
+            .AsNoTracking()
+            .Where(page => page.WorkspaceId == workspaceId)
+            .Select(page => page.Slug)
+            .ToListAsync(cancellationToken);
+
+        return [.. slugs];
     }
 
     public async Task<bool> MarkReviewed(int id, int workspaceId, string userId, CancellationToken cancellationToken = default)

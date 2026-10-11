@@ -55,10 +55,8 @@ public sealed record ArchiveImportResult
 
     public IReadOnlyList<string> Warnings { get; init; } = [];
 
-    public IReadOnlyList<ImportedPage> Pages { get; init; } = [];
+    public IReadOnlyList<int> PageIds { get; init; } = [];
 }
-
-public sealed record ImportedPage(int Id, string? Body);
 
 public interface IArchiveImporter
 {
