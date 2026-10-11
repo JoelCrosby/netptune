@@ -16,6 +16,7 @@ import {
   LucideChartNoAxesColumn,
   LucideChartGantt,
   LucideChartSpline,
+  LucideFileText,
   LucideCog,
   LucideGitFork,
   LucideLayoutDashboard,
@@ -132,6 +133,7 @@ export class ShellSidebarComponent {
   canReadCalendar = hasPermission(PERMISSIONS.calendar.read);
   canReadReports = hasPermission(PERMISSIONS.reports.read);
   canReadQueries = hasPermission(PERMISSIONS.queries.read);
+  canReadPages = hasPermission(PERMISSIONS.pages.read);
   canRestoreTasks = hasPermission(PERMISSIONS.tasks.restore);
   canReadAssistantConversations = hasPermission(
     PERMISSIONS.assistant.readAllConversations
@@ -194,18 +196,25 @@ export class ShellSidebarComponent {
       });
     }
 
-    links.push(
-      {
-        label: $localize`:Sidebar link to the project list:Projects`,
-        value: ['./projects'],
-        icon: LucideChartNoAxesColumn,
-      },
-      {
-        label: $localize`:Sidebar link to the roadmap timeline:Roadmap`,
-        value: ['./roadmap'],
-        icon: LucideChartGantt,
-      }
-    );
+    links.push({
+      label: $localize`:Sidebar link to the project list:Projects`,
+      value: ['./projects'],
+      icon: LucideChartNoAxesColumn,
+    });
+
+    if (this.canReadPages()) {
+      links.push({
+        label: $localize`:Sidebar link to the workspace pages:Pages`,
+        value: ['./pages'],
+        icon: LucideFileText,
+      });
+    }
+
+    links.push({
+      label: $localize`:Sidebar link to the roadmap timeline:Roadmap`,
+      value: ['./roadmap'],
+      icon: LucideChartGantt,
+    });
 
     if (this.canReadCalendar()) {
       links.push({

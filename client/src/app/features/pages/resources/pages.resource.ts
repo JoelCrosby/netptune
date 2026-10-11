@@ -1,0 +1,92 @@
+import { Signal } from '@angular/core';
+import { PERMISSIONS } from '@core/auth/permissions';
+import {
+  ArchivedPage,
+  PageDetail,
+  PageLinks,
+  PageTreeNode,
+  PageVersion,
+  PageVersionSummary,
+} from '@core/models/pages';
+import {
+  permissionResource,
+  requestFrom,
+} from '@core/resources/permission.resource';
+import { stableResource } from '@core/resources/stable.resource';
+
+export const pageTreeResource = () => {
+  return stableResource<PageTreeNode[]>({
+    permission: PERMISSIONS.pages.read,
+    request: () => ({ url: 'api/pages/tree' }),
+    parse: (response) => response.payload ?? [],
+    refreshOn: ['pages'],
+  });
+};
+
+// Not refreshed on 'pages': a reload would replace a body the user is still typing into.
+// Edits made elsewhere surface as a conflict on the next save instead.
+export const pageDetailResource = (slug: Signal<string | undefined>) => {
+  return permissionResource<PageDetail | undefined>({
+    permission: PERMISSIONS.pages.read,
+    request: requestFrom(slug, (key) => ({ url: `api/pages/${key}` })),
+    parse: (response) => response.payload,
+  });
+};
+
+export interface PageVersionsKey {
+  pageId: number;
+  revision: number;
+}
+
+// Keyed on the revision too, so the list follows saves while the history tab is open.
+export const pageVersionsResource = (
+  key: Signal<PageVersionsKey | undefined>
+) => {
+  return permissionResource<PageVersionSummary[]>({
+    permission: PERMISSIONS.pages.read,
+    request: requestFrom(key, ({ pageId, revision }) => ({
+      url: `api/pages/${pageId}/versions`,
+      params: { revision },
+    })),
+    parse: (response) => response.payload ?? [],
+    defaultValue: [],
+  });
+};
+
+export const pageVersionResource = (
+  key: Signal<{ pageId: number; versionId: number } | undefined>
+) => {
+  return permissionResource<PageVersion | undefined>({
+    permission: PERMISSIONS.pages.read,
+    request: requestFrom(key, ({ pageId, versionId }) => ({
+      url: `api/pages/${pageId}/versions/${versionId}`,
+    })),
+    parse: (response) => response.payload,
+  });
+};
+
+// Keyed on the revision so links follow this page's saves, and refreshed with pages and tasks so
+// backlinks and task names follow everyone else's. Stable, so chips keep their names while it reloads.
+const noLinks: PageLinks = { tasks: [], pages: [], backlinks: [] };
+
+export const pageLinksResource = (key: Signal<PageVersionsKey | undefined>) => {
+  return stableResource<PageLinks>({
+    permission: PERMISSIONS.pages.read,
+    request: requestFrom(key, ({ pageId, revision }) => ({
+      url: `api/pages/${pageId}/links`,
+      params: { revision },
+    })),
+    parse: (response) => response.payload ?? noLinks,
+    refreshOn: ['pages', 'tasks'],
+  });
+};
+
+export const archivedPagesResource = () => {
+  return permissionResource<ArchivedPage[]>({
+    permission: PERMISSIONS.pages.read,
+    request: () => ({ url: 'api/pages/archived' }),
+    parse: (response) => response.payload ?? [],
+    defaultValue: [],
+    refreshOn: ['pages'],
+  });
+};

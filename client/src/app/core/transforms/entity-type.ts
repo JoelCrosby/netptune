@@ -20,6 +20,12 @@ export const entityTypeToString = (value: EntityType): string => {
       return 'User';
     case EntityType.workspace:
       return 'Workspace';
+    case EntityType.relationType:
+      return $localize`:Name of the relation type entity in activity and audit logs:Relation type`;
+    case EntityType.workspaceFile:
+      return $localize`:Name of the workspace file entity in activity and audit logs:File`;
+    case EntityType.page:
+      return $localize`:Name of the page entity in activity and audit logs:Page`;
     default:
       return '[UNKNOWN ENTITY TYPE]';
   }

@@ -1,0 +1,219 @@
+import { Component, computed, input, model, output } from '@angular/core';
+import { PageDetail, PageKind, PageStatus } from '@core/models/pages';
+import {
+  LucideArchive,
+  LucideEllipsis,
+  LucideFileCheck,
+  LucideFilePen,
+  LucideFilePlus,
+  LucideHistory,
+  LucideStar,
+} from '@lucide/angular';
+import {
+  BreadcrumbComponent,
+  BreadcrumbItem,
+} from '@static/components/breadcrumb/breadcrumb.component';
+import { IconButtonComponent } from '@static/components/button/icon-button.component';
+import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
+import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
+import { MenuSeparatorComponent } from '@static/components/dropdown-menu/menu-separator.component';
+import { EditorMode } from '@static/components/editor/editor.component';
+import { PanelBodyComponent } from '@static/components/panel-body.component';
+import {
+  SaveState,
+  SaveStatusComponent,
+} from '@static/components/save-status/save-status.component';
+import {
+  SegmentedControlComponent,
+  SegmentedOption,
+} from '@static/components/segmented-control/segmented-control.component';
+
+@Component({
+  selector: 'app-page-toolbar',
+  imports: [
+    PanelBodyComponent,
+    BreadcrumbComponent,
+    SaveStatusComponent,
+    SegmentedControlComponent,
+    IconButtonComponent,
+    DropdownMenuComponent,
+    MenuItemComponent,
+    MenuSeparatorComponent,
+    LucideStar,
+    LucideEllipsis,
+    LucideFileCheck,
+    LucideFilePen,
+    LucideFilePlus,
+    LucideHistory,
+    LucideArchive,
+    StrokedButtonComponent,
+  ],
+  host: { class: 'block' },
+  template: `
+    <header
+      app-panel-body
+      padding="none"
+      divider="bottom"
+      class="flex h-12 items-center gap-2.5 pr-3 pl-5">
+      <app-breadcrumb
+        class="min-w-0 flex-1"
+        i18n-ariaLabel="Accessible label for the trail of folders above a page"
+        ariaLabel="Page location"
+        [items]="breadcrumbs()" />
+
+      <app-save-status [state]="saveState()" />
+
+      @if (isDocument()) {
+        <app-segmented-control
+          variant="subtle"
+          i18n-ariaLabel="
+            Accessible label for the switch between the rich and markdown editor
+          "
+          ariaLabel="Editor mode"
+          [options]="modeOptions"
+          [(value)]="mode" />
+      }
+
+      <button
+        app-icon-button
+        type="button"
+        color="muted"
+        size="small"
+        i18n-ariaLabel="
+          Accessible label for the button that shows a page's version history
+        "
+        ariaLabel="Version history"
+        (click)="historyRequested.emit()">
+        <svg lucideHistory class="h-4 w-4"></svg>
+      </button>
+
+      <button
+        app-stroked-button
+        type="button"
+        color="neutral"
+        size="small"
+        (click)="linkCopied.emit()">
+        <span i18n="Button that copies a link to share the open page"
+          >Share</span
+        >
+      </button>
+
+      <button
+        app-icon-button
+        type="button"
+        color="muted"
+        size="small"
+        aria-haspopup="menu"
+        i18n-ariaLabel="
+          Accessible label for the button that opens the page action menu
+        "
+        ariaLabel="More page actions"
+        (click)="moreMenu.toggle($any($event.currentTarget))">
+        <svg lucideEllipsis class="h-4 w-4"></svg>
+      </button>
+
+      <app-dropdown-menu #moreMenu xPosition="before" panelClass="w-56 p-1">
+        <button
+          app-menu-item
+          type="button"
+          (click)="
+            moreMenu.close(); favouriteToggled.emit(!page().isFavourite)
+          ">
+          <svg lucideStar class="h-4 w-4 shrink-0"></svg>
+          @if (page().isFavourite) {
+            <span i18n="Menu item that removes a page from favourites"
+              >Remove from favourites</span
+            >
+          } @else {
+            <span i18n="Menu item that adds a page to favourites"
+              >Add to favourites</span
+            >
+          }
+        </button>
+
+        @if (canCreate()) {
+          <button
+            app-menu-item
+            type="button"
+            (click)="moreMenu.close(); createInside.emit()">
+            <svg lucideFilePlus class="h-4 w-4 shrink-0"></svg>
+            <span i18n="Menu item that creates a page inside the open page"
+              >Create Page inside</span
+            >
+          </button>
+        }
+
+        @if (canEdit()) {
+          <button
+            app-menu-item
+            type="button"
+            (click)="moreMenu.close(); statusChanged.emit(nextStatus())">
+            @if (isPublished()) {
+              <svg lucideFilePen class="h-4 w-4 shrink-0"></svg>
+              <span i18n="Menu item that moves a published page back to draft"
+                >Mark as draft</span
+              >
+            } @else {
+              <svg lucideFileCheck class="h-4 w-4 shrink-0"></svg>
+              <span i18n="Menu item that publishes a draft page">Publish</span>
+            }
+          </button>
+        }
+
+        @if (canArchive()) {
+          <app-menu-separator />
+
+          <button
+            app-menu-item
+            type="button"
+            color="warn"
+            (click)="moreMenu.close(); archived.emit()">
+            <svg lucideArchive class="h-4 w-4 shrink-0"></svg>
+            <span i18n="Menu item that archives the open page">Archive</span>
+          </button>
+        }
+      </app-dropdown-menu>
+    </header>
+  `,
+})
+export class PageToolbarComponent {
+  readonly page = input.required<PageDetail>();
+  readonly breadcrumbs = input.required<readonly BreadcrumbItem[]>();
+  readonly saveState = input.required<SaveState>();
+  readonly canCreate = input(false);
+  readonly canArchive = input(false);
+  readonly canEdit = input(false);
+  readonly status = input.required<PageStatus>();
+  readonly mode = model<EditorMode>('rich');
+
+  readonly favouriteToggled = output<boolean>();
+  readonly createInside = output();
+  readonly linkCopied = output();
+  readonly archived = output();
+  readonly statusChanged = output<PageStatus>();
+  readonly historyRequested = output();
+
+  protected readonly isPublished = computed(() => {
+    return this.status() === PageStatus.published;
+  });
+
+  protected readonly nextStatus = computed(() => {
+    return this.isPublished() ? PageStatus.draft : PageStatus.published;
+  });
+
+  protected readonly isDocument = computed(() => {
+    return this.page().kind === PageKind.document;
+  });
+
+  protected readonly modeOptions: SegmentedOption<EditorMode>[] = [
+    {
+      value: 'rich',
+      label: $localize`:Option that shows a page as formatted text:Rich`,
+    },
+    {
+      value: 'markdown',
+      label: $localize`:Option that shows a page as raw markdown:Markdown`,
+    },
+  ];
+}

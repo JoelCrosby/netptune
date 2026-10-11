@@ -72,6 +72,12 @@ export const routes: Routes = [
         data: { title: $localize`:Page title for the workspace reporting views:Reports` },
       },
       {
+        path: 'pages',
+        loadChildren: () => import('./features/pages/pages.routes').then((m) => m.routes),
+        runGuardsAndResolvers: 'always',
+        data: { title: $localize`:Page title for the workspace pages:Pages` },
+      },
+      {
         path: 'roadmap',
         loadChildren: () => import('./features/roadmap/roadmap.routes').then((m) => m.routes),
         runGuardsAndResolvers: 'always',

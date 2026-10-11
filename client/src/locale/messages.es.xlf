@@ -14,7 +14,7 @@
     </unit>
     <unit id="6097221033230214756">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:60</note>
+        <note category="location">src/app/core/auth/permission-items.ts:62</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -44,7 +44,7 @@
     </unit>
     <unit id="8049735056636703804">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:65</note>
+        <note category="location">src/app/core/auth/permission-items.ts:67</note>
         <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:147</note>
         <note category="location">src/app/shell/workspace-select/workspace-select.component.ts:392</note>
         <note category="description">Name of a workspace permission</note>
@@ -56,7 +56,7 @@
     </unit>
     <unit id="8228130641173001405">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:70</note>
+        <note category="location">src/app/core/auth/permission-items.ts:72</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -106,7 +106,7 @@
     </unit>
     <unit id="8576643134711566154">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:75</note>
+        <note category="location">src/app/core/auth/permission-items.ts:77</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -126,7 +126,7 @@
     </unit>
     <unit id="3561573022652726148">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:80</note>
+        <note category="location">src/app/core/auth/permission-items.ts:82</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -146,7 +146,7 @@
     </unit>
     <unit id="1761054140906700185">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:87</note>
+        <note category="location">src/app/core/auth/permission-items.ts:89</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -199,7 +199,7 @@
     </unit>
     <unit id="185504950006603388">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:92</note>
+        <note category="location">src/app/core/auth/permission-items.ts:94</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -207,9 +207,26 @@
         <target>Invitar los miembros</target>
       </segment>
     </unit>
+    <unit id="3817498941817715969">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:204</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:205</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:99,101</note>
+        <note category="location">src/app/features/pages/editor/page-reference.controller.ts:229</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:294</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:21</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:207</note>
+        <note category="location">src/app/workspace.routes.ts:78</note>
+        <note category="description">Tab listing the pages that mention a task</note>
+      </notes>
+      <segment state="translated">
+        <source>Pages</source>
+        <target>Páginas</target>
+      </segment>
+    </unit>
     <unit id="3817505261985538845">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:97</note>
+        <note category="location">src/app/core/auth/permission-items.ts:99</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -249,7 +266,7 @@
     </unit>
     <unit id="5277744923448150585">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:102</note>
+        <note category="location">src/app/core/auth/permission-items.ts:104</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -269,7 +286,7 @@
     </unit>
     <unit id="2799785023614626500">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:107</note>
+        <note category="location">src/app/core/auth/permission-items.ts:109</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -279,7 +296,7 @@
     </unit>
     <unit id="3798028332869343379">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:112</note>
+        <note category="location">src/app/core/auth/permission-items.ts:114</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -299,7 +316,7 @@
     </unit>
     <unit id="6075892571566060535">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:119</note>
+        <note category="location">src/app/core/auth/permission-items.ts:121</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -349,7 +366,7 @@
     </unit>
     <unit id="1726548551961127827">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:124</note>
+        <note category="location">src/app/core/auth/permission-items.ts:126</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -378,7 +395,7 @@
     </unit>
     <unit id="3373039778816479588">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:129</note>
+        <note category="location">src/app/core/auth/permission-items.ts:131</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -398,7 +415,7 @@
     </unit>
     <unit id="1204089050920081335">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:134</note>
+        <note category="location">src/app/core/auth/permission-items.ts:136</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -416,6 +433,16 @@
         <target>personas asignadas</target>
       </segment>
     </unit>
+    <unit id="1205822916208418969">
+      <notes>
+        <note category="location">src/app/core/services/page-commands.service.ts:152</note>
+        <note category="description">Body of the dialog confirming a page is archived</note>
+      </notes>
+      <segment state="translated">
+        <source>The page and any pages inside it move to the archive. You can restore them later.</source>
+        <target>La página y todas las páginas que contiene pasan al archivo. Podrás restaurarlas más tarde.</target>
+      </segment>
+    </unit>
     <unit id="1570107404481300948">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:273,274</note>
@@ -428,12 +455,22 @@
     </unit>
     <unit id="1575435135569882153">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:141</note>
+        <note category="location">src/app/core/auth/permission-items.ts:143</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
         <source>View Boards</source>
         <target>Ver los tableros</target>
+      </segment>
+    </unit>
+    <unit id="1576787664013138461">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:110,114</note>
+        <note category="description">Shown when no page title matches the tree filter</note>
+      </notes>
+      <segment state="translated">
+        <source>No matching pages</source>
+        <target>No hay páginas que coincidan</target>
       </segment>
     </unit>
     <unit id="1577576942644957924">
@@ -446,9 +483,19 @@
         <target>No se ha podido cargar la etiqueta</target>
       </segment>
     </unit>
+    <unit id="8198968372594669406">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:155,158</note>
+        <note category="description">Menu item that moves a published page back to draft</note>
+      </notes>
+      <segment state="translated">
+        <source>Mark as draft</source>
+        <target>Marcar como borrador</target>
+      </segment>
+    </unit>
     <unit id="8199152735148472244">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:146</note>
+        <note category="location">src/app/core/auth/permission-items.ts:148</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -458,7 +505,7 @@
     </unit>
     <unit id="8888203649499721040">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:151</note>
+        <note category="location">src/app/core/auth/permission-items.ts:153</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -468,7 +515,7 @@
     </unit>
     <unit id="551552314018962417">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:156</note>
+        <note category="location">src/app/core/auth/permission-items.ts:158</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -508,12 +555,23 @@
     </unit>
     <unit id="2819959485156980302">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:163</note>
+        <note category="location">src/app/core/auth/permission-items.ts:165</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
         <source>View Board Groups</source>
         <target>Ver los grupos del tablero</target>
+      </segment>
+    </unit>
+    <unit id="5320007980265950916">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:118,119</note>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:149</note>
+        <note category="description">Accessible label for the list of a page&apos;s headings</note>
+      </notes>
+      <segment state="translated">
+        <source>Outline</source>
+        <target>Esquema</target>
       </segment>
     </unit>
     <unit id="5321164057411888974">
@@ -530,7 +588,7 @@
     </unit>
     <unit id="5322626006494247041">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:168</note>
+        <note category="location">src/app/core/auth/permission-items.ts:170</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -540,7 +598,7 @@
     </unit>
     <unit id="5322873861888163184">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:105,107</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:108,110</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:52,55</note>
         <note category="description">Button that puts this task on another board</note>
       </notes>
@@ -561,7 +619,7 @@
     </unit>
     <unit id="6390571285331619884">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:173</note>
+        <note category="location">src/app/core/auth/permission-items.ts:175</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -571,7 +629,7 @@
     </unit>
     <unit id="4529090892145486687">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:178</note>
+        <note category="location">src/app/core/auth/permission-items.ts:180</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -589,9 +647,19 @@
         <target>Publica un comentario como la cuenta de servicio.</target>
       </segment>
     </unit>
+    <unit id="6329053745200289910">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:153,158</note>
+        <note category="description">Hint under the empty page tree</note>
+      </notes>
+      <segment state="translated">
+        <source>Create a page to start writing.</source>
+        <target>Crea una página para empezar a escribir.</target>
+      </segment>
+    </unit>
     <unit id="6329198644372548025">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:185</note>
+        <note category="location">src/app/core/auth/permission-items.ts:187</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -601,7 +669,7 @@
     </unit>
     <unit id="2736232235410300078">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:190</note>
+        <note category="location">src/app/core/auth/permission-items.ts:192</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -621,7 +689,7 @@
     </unit>
     <unit id="6970177201160204335">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:182</note>
+        <note category="location">src/app/shell/global-commands.service.ts:196</note>
         <note category="description">Command palette action that navigates to the pinned task list</note>
       </notes>
       <segment state="initial">
@@ -650,9 +718,19 @@
         <target>Reemplaza todas las etiquetas existentes de las <ph id="0" equiv="TOTAL" disp="tasks.length"/> tareas por estas <ph id="1" equiv="COUNT" disp="selectedCount"/></target>
       </segment>
     </unit>
+    <unit id="6980870776971861351">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:318</note>
+        <note category="description">Byline under a page title naming who last edited it, when, and how long it takes to read</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="AUTHOR" disp="author"/> · Edited <ph id="1" equiv="EDITED" disp="edited"/> · <ph id="2" equiv="MINUTES" disp="minutes"/> min read</source>
+        <target><ph id="0" equiv="AUTHOR" disp="author"/> · Editada <ph id="1" equiv="EDITED" disp="edited"/> · <ph id="2" equiv="MINUTES" disp="minutes"/> min de lectura</target>
+      </segment>
+    </unit>
     <unit id="6985320992724229617">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:195</note>
+        <note category="location">src/app/core/auth/permission-items.ts:197</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -662,7 +740,7 @@
     </unit>
     <unit id="7985187851588850736">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:200</note>
+        <note category="location">src/app/core/auth/permission-items.ts:202</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -672,7 +750,7 @@
     </unit>
     <unit id="8433465645307144784">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:205</note>
+        <note category="location">src/app/core/auth/permission-items.ts:207</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -694,7 +772,7 @@
     </unit>
     <unit id="22852633810459681">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:210</note>
+        <note category="location">src/app/core/auth/permission-items.ts:212</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -702,9 +780,29 @@
         <target>Restaurar las tareas</target>
       </segment>
     </unit>
+    <unit id="2285896285181808525">
+      <notes>
+        <note category="location">src/app/static/components/editor/editor.component.ts:142</note>
+        <note category="description">Shown in the slash command menu when nothing matches what was typed</note>
+      </notes>
+      <segment state="translated">
+        <source>No matching blocks</source>
+        <target>No hay bloques que coincidan</target>
+      </segment>
+    </unit>
+    <unit id="2294814638284224013">
+      <notes>
+        <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:62,63</note>
+        <note category="description">Shown when no page is archived</note>
+      </notes>
+      <segment state="translated">
+        <source>Nothing archived</source>
+        <target>Nada archivado</target>
+      </segment>
+    </unit>
     <unit id="7528868572765139441">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:215</note>
+        <note category="location">src/app/core/auth/permission-items.ts:217</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -724,7 +822,7 @@
     </unit>
     <unit id="8992597512682859829">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:220</note>
+        <note category="location">src/app/core/auth/permission-items.ts:222</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -734,7 +832,7 @@
     </unit>
     <unit id="2145525847134662630">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:225</note>
+        <note category="location">src/app/core/auth/permission-items.ts:227</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:85</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
@@ -745,7 +843,7 @@
     </unit>
     <unit id="7884294193521928458">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:230</note>
+        <note category="location">src/app/core/auth/permission-items.ts:232</note>
         <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:383</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
@@ -756,7 +854,7 @@
     </unit>
     <unit id="886870364473177759">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:296</note>
+        <note category="location">src/app/core/auth/permission-items.ts:325</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -766,7 +864,7 @@
     </unit>
     <unit id="4382007774315374200">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:301</note>
+        <note category="location">src/app/core/auth/permission-items.ts:330</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -837,12 +935,32 @@
     </unit>
     <unit id="5179126202645575816">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:306</note>
+        <note category="location">src/app/core/auth/permission-items.ts:335</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
         <source>Edit Sprints</source>
         <target>Editar los sprints</target>
+      </segment>
+    </unit>
+    <unit id="3140301883580563682">
+      <notes>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:35,39</note>
+        <note category="description">Hint on the pages home</note>
+      </notes>
+      <segment state="translated">
+        <source>Or create one to start writing. Pages can be nested inside folders and other pages.</source>
+        <target>O crea una para empezar a escribir. Las páginas pueden anidarse dentro de carpetas y de otras páginas.</target>
+      </segment>
+    </unit>
+    <unit id="3140932947697197272">
+      <notes>
+        <note category="location">src/app/features/pages/editor/page-editor-commands.ts:30</note>
+        <note category="description">Slash command that embeds a live list of a saved query&apos;s tasks</note>
+      </notes>
+      <segment state="translated">
+        <source>Live task list</source>
+        <target>Lista de tareas en vivo</target>
       </segment>
     </unit>
     <unit id="3148185478683979722">
@@ -868,7 +986,7 @@
     </unit>
     <unit id="31482867150839515">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:311</note>
+        <note category="location">src/app/core/auth/permission-items.ts:340</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -898,7 +1016,7 @@
     </unit>
     <unit id="3002689292416921946">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:316</note>
+        <note category="location">src/app/core/auth/permission-items.ts:345</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -957,7 +1075,7 @@
     </unit>
     <unit id="3398156745191610421">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:323</note>
+        <note category="location">src/app/core/auth/permission-items.ts:352</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -967,7 +1085,7 @@
     </unit>
     <unit id="5157376787376464663">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:328</note>
+        <note category="location">src/app/core/auth/permission-items.ts:357</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1008,7 +1126,7 @@
     </unit>
     <unit id="8823075031689391120">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:333</note>
+        <note category="location">src/app/core/auth/permission-items.ts:362</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1036,9 +1154,19 @@
         <target> y </target>
       </segment>
     </unit>
+    <unit id="8826681798176849723">
+      <notes>
+        <note category="location">src/app/core/services/page-commands.service.ts:146</note>
+        <note category="description">Confirmation shown after an earlier version of a page is restored</note>
+      </notes>
+      <segment state="translated">
+        <source>Version restored</source>
+        <target>Versión restaurada</target>
+      </segment>
+    </unit>
     <unit id="8933548881178191171">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:338</note>
+        <note category="location">src/app/core/auth/permission-items.ts:367</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1048,7 +1176,7 @@
     </unit>
     <unit id="5659725016755840642">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:345</note>
+        <note category="location">src/app/core/auth/permission-items.ts:374</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1058,7 +1186,7 @@
     </unit>
     <unit id="5800916510887895585">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:350</note>
+        <note category="location">src/app/core/auth/permission-items.ts:379</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1109,7 +1237,7 @@
     </unit>
     <unit id="8144780536536072093">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:355</note>
+        <note category="location">src/app/core/auth/permission-items.ts:384</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1119,7 +1247,7 @@
     </unit>
     <unit id="7216658744747223519">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:360</note>
+        <note category="location">src/app/core/auth/permission-items.ts:389</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1129,7 +1257,7 @@
     </unit>
     <unit id="3949141401593763883">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:365</note>
+        <note category="location">src/app/core/auth/permission-items.ts:394</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1139,12 +1267,22 @@
     </unit>
     <unit id="4217244185667688873">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:372</note>
+        <note category="location">src/app/core/auth/permission-items.ts:401</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
         <source>View Statuses</source>
         <target>Ver los estados</target>
+      </segment>
+    </unit>
+    <unit id="4218369478454644471">
+      <notes>
+        <note category="location">src/app/core/services/page-commands.service.ts:160</note>
+        <note category="description">Body of the dialog confirming a folder is archived</note>
+      </notes>
+      <segment state="translated">
+        <source>The folder and everything inside it move to the archive. You can restore them later.</source>
+        <target>La carpeta y todo su contenido pasan al archivo. Podrás restaurarlos más tarde.</target>
       </segment>
     </unit>
     <unit id="4218500950798659393">
@@ -1159,7 +1297,7 @@
     </unit>
     <unit id="2967407594735372079">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:377</note>
+        <note category="location">src/app/core/auth/permission-items.ts:406</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1169,7 +1307,7 @@
     </unit>
     <unit id="6120183880516360710">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:384</note>
+        <note category="location">src/app/core/auth/permission-items.ts:413</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1190,12 +1328,22 @@
     </unit>
     <unit id="5258368564796629743">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:389</note>
+        <note category="location">src/app/core/auth/permission-items.ts:418</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
         <source>Manage Relation Types</source>
         <target>Gestionar los tipos de relación</target>
+      </segment>
+    </unit>
+    <unit id="7626227895268344246">
+      <notes>
+        <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:44,47</note>
+        <note category="description">When and by whom an archived page was archived</note>
+      </notes>
+      <segment state="translated">
+        <source>Archived <ph id="0" equiv="INTERPOLATION" disp="{{ page.archivedAt | fromNow }}"/> by <ph id="1" equiv="INTERPOLATION_1" disp="{{ page.archivedByDisplayName }}"/></source>
+        <target>Archivada <ph id="0" equiv="INTERPOLATION" disp="{{ page.archivedAt | fromNow }}"/> por <ph id="1" equiv="INTERPOLATION_1" disp="{{ page.archivedByDisplayName }}"/></target>
       </segment>
     </unit>
     <unit id="5264398089164990230">
@@ -1230,7 +1378,7 @@
     </unit>
     <unit id="3781527988196646385">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:396</note>
+        <note category="location">src/app/core/auth/permission-items.ts:425</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1240,7 +1388,7 @@
     </unit>
     <unit id="3784176916264881006">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:363</note>
+        <note category="location">src/app/shell/global-commands.service.ts:377</note>
         <note category="description">Command palette action that switches to the light theme</note>
       </notes>
       <segment state="initial">
@@ -1250,7 +1398,7 @@
     </unit>
     <unit id="7041821873420776665">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:403</note>
+        <note category="location">src/app/core/auth/permission-items.ts:432</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1270,7 +1418,7 @@
     </unit>
     <unit id="4885466789264460695">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:408</note>
+        <note category="location">src/app/core/auth/permission-items.ts:437</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1300,7 +1448,7 @@
     </unit>
     <unit id="3223868158732972286">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:415</note>
+        <note category="location">src/app/core/auth/permission-items.ts:444</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1310,7 +1458,7 @@
     </unit>
     <unit id="4288759217931050376">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:420</note>
+        <note category="location">src/app/core/auth/permission-items.ts:449</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1320,7 +1468,7 @@
     </unit>
     <unit id="3510542800119420038">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:441</note>
+        <note category="location">src/app/core/auth/permission-items.ts:470</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1340,7 +1488,7 @@
     </unit>
     <unit id="5307305327820813211">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:446</note>
+        <note category="location">src/app/core/auth/permission-items.ts:475</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1350,7 +1498,7 @@
     </unit>
     <unit id="7544555877603826527">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:475</note>
+        <note category="location">src/app/core/auth/permission-items.ts:504</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1381,7 +1529,7 @@
     </unit>
     <unit id="9018075259180774811">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:480</note>
+        <note category="location">src/app/core/auth/permission-items.ts:509</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1391,7 +1539,7 @@
     </unit>
     <unit id="2122122363042197554">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:487</note>
+        <note category="location">src/app/core/auth/permission-items.ts:516</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1421,7 +1569,7 @@
     </unit>
     <unit id="5867014445190639814">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:492</note>
+        <note category="location">src/app/core/auth/permission-items.ts:521</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1441,7 +1589,7 @@
     </unit>
     <unit id="3664214651312931514">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:497</note>
+        <note category="location">src/app/core/auth/permission-items.ts:526</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1462,7 +1610,7 @@
     </unit>
     <unit id="2839504544577956852">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:502</note>
+        <note category="location">src/app/core/auth/permission-items.ts:531</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1472,7 +1620,7 @@
     </unit>
     <unit id="1618471987006077444">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:507</note>
+        <note category="location">src/app/core/auth/permission-items.ts:536</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1522,7 +1670,7 @@
     </unit>
     <unit id="6572526459338060111">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:514</note>
+        <note category="location">src/app/core/auth/permission-items.ts:543</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1532,7 +1680,7 @@
     </unit>
     <unit id="2248388072026596689">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:519</note>
+        <note category="location">src/app/core/auth/permission-items.ts:548</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1552,7 +1700,7 @@
     </unit>
     <unit id="5162962829978601498">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:524</note>
+        <note category="location">src/app/core/auth/permission-items.ts:553</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1572,7 +1720,7 @@
     </unit>
     <unit id="6247029488700953689">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:529</note>
+        <note category="location">src/app/core/auth/permission-items.ts:558</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1582,7 +1730,7 @@
     </unit>
     <unit id="8604673556809626581">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:269</note>
+        <note category="location">src/app/core/auth/permission-items.ts:298</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="initial">
@@ -1592,7 +1740,7 @@
     </unit>
     <unit id="8604924961258321909">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:536</note>
+        <note category="location">src/app/core/auth/permission-items.ts:565</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1613,7 +1761,7 @@
     </unit>
     <unit id="3975259698791708574">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:541</note>
+        <note category="location">src/app/core/auth/permission-items.ts:570</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1623,7 +1771,7 @@
     </unit>
     <unit id="3977029777747898046">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:327</note>
+        <note category="location">src/app/shell/global-commands.service.ts:341</note>
         <note category="description">Command palette action that navigates to workspace service account settings</note>
       </notes>
       <segment state="initial">
@@ -1643,7 +1791,7 @@
     </unit>
     <unit id="1848580203082626434">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:546</note>
+        <note category="location">src/app/core/auth/permission-items.ts:575</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1673,7 +1821,7 @@
     </unit>
     <unit id="734924568623984342">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:551</note>
+        <note category="location">src/app/core/auth/permission-items.ts:580</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1805,7 +1953,7 @@
     </unit>
     <unit id="2159130950882492111">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:308</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:312</note>
         <note category="location">src/app/core/services/auth-commands.service.ts:197</note>
         <note category="location">src/app/core/services/board-commands.service.ts:65</note>
         <note category="location">src/app/core/services/board-group-commands.service.ts:310</note>
@@ -1813,6 +1961,8 @@
         <note category="location">src/app/core/services/board-group-commands.service.ts:324</note>
         <note category="location">src/app/core/services/confirmation.service.ts:12</note>
         <note category="location">src/app/core/services/notification-commands.service.ts:75</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:154</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:162</note>
         <note category="location">src/app/core/services/project-commands.service.ts:69</note>
         <note category="location">src/app/core/services/tag-commands.service.ts:78</note>
         <note category="location">src/app/core/services/task-archive.service.ts:40</note>
@@ -1834,6 +1984,7 @@
         <note category="location">src/app/features/calendar/dialogs/calendar-move-task-dialog.component.ts:61,64</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:799</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:821</note>
+        <note category="location">src/app/features/pages/dialogs/query-picker-dialog.component.ts:54,59</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:214,217</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:348</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:184,187</note>
@@ -2019,7 +2170,7 @@
     </unit>
     <unit id="468065363989009115">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:81,83</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:77,79</note>
         <note category="description">Accessible label for the field that rewrites a proposed value</note>
       </notes>
       <segment state="translated">
@@ -2039,7 +2190,7 @@
     </unit>
     <unit id="1279691093154837242">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:399</note>
+        <note category="location">src/app/shell/global-commands.service.ts:413</note>
         <note category="description">Command palette action that switches the task detail view to the cockpit layout</note>
       </notes>
       <segment state="initial">
@@ -2079,7 +2230,7 @@
     </unit>
     <unit id="5309518457085242318">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:246</note>
+        <note category="location">src/app/shell/global-commands.service.ts:260</note>
         <note category="description">Command palette action that navigates to the signed-in user&apos;s profile</note>
       </notes>
       <segment state="initial">
@@ -2089,7 +2240,7 @@
     </unit>
     <unit id="7022070615528435141">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:307</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:311</note>
         <note category="location">src/app/core/services/board-commands.service.ts:64</note>
         <note category="location">src/app/core/services/board-group-commands.service.ts:309</note>
         <note category="location">src/app/core/services/notification-commands.service.ts:74</note>
@@ -2278,7 +2429,7 @@
     </unit>
     <unit id="1718381178086769880">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:300</note>
+        <note category="location">src/app/shell/global-commands.service.ts:314</note>
         <note category="description">Command palette action that navigates to workspace tag settings</note>
       </notes>
       <segment state="initial">
@@ -2318,7 +2469,7 @@
     </unit>
     <unit id="8640677495548743141">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:879</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:883</note>
         <note category="description">Asks the user to confirm deleting one of their assistant conversations. TITLE is the conversation title</note>
       </notes>
       <segment state="translated">
@@ -2334,6 +2485,16 @@
       <segment state="initial">
         <source> Schema upgrades </source>
         <target> Actualizaciones de esquema </target>
+      </segment>
+    </unit>
+    <unit id="8643289769990675407">
+      <notes>
+        <note category="location">src/app/static/components/editor/editor-commands.ts:27</note>
+        <note category="description">Heading over the basic blocks in the slash command menu</note>
+      </notes>
+      <segment state="translated">
+        <source>Basic</source>
+        <target>Básico</target>
       </segment>
     </unit>
     <unit id="1935533427606827690">
@@ -2562,7 +2723,7 @@
     </unit>
     <unit id="8842362805354087257">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:50,53</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:46,49</note>
         <note category="description">Shown on the field of a change while its value is rewritten</note>
       </notes>
       <segment state="translated">
@@ -2673,7 +2834,7 @@
     </unit>
     <unit id="7006642263471484709">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:173</note>
+        <note category="location">src/app/shell/global-commands.service.ts:187</note>
         <note category="description">Command palette action that navigates to the saved query list</note>
       </notes>
       <segment state="initial">
@@ -2712,10 +2873,22 @@
         <target>Tareas añadidas al sprint</target>
       </segment>
     </unit>
+    <unit id="625751865795648832">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:54,55</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:56,60</note>
+        <note category="description">Placeholder in the box that filters the page tree</note>
+      </notes>
+      <segment state="translated">
+        <source>Filter pages</source>
+        <target>Filtrar páginas</target>
+      </segment>
+    </unit>
     <unit id="6269606295190909224">
       <notes>
+        <note category="location">src/app/static/components/editor/editor-commands.ts:50</note>
         <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:155</note>
-        <note category="description">Accessible label for the editor&apos;s checklist button</note>
+        <note category="description">Slash command that inserts a checklist</note>
       </notes>
       <segment state="translated">
         <source>Checklist</source>
@@ -2731,6 +2904,16 @@
       <segment state="translated">
         <source>Task removed from sprint</source>
         <target>Tarea eliminada del sprint</target>
+      </segment>
+    </unit>
+    <unit id="9054755428836810112">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:269</note>
+        <note category="description">Who saved a page version and when</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="AUTHOR" disp="author"/> · <ph id="1" equiv="WHEN" disp="when"/></source>
+        <target><ph id="0" equiv="AUTHOR" disp="author"/> · <ph id="1" equiv="WHEN" disp="when"/></target>
       </segment>
     </unit>
     <unit id="8567121476280593410">
@@ -2758,6 +2941,7 @@
     <unit id="6770769801335635194">
       <notes>
         <note category="location">src/app/core/services/task-archive.service.ts:39</note>
+        <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:51,54</note>
         <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:137</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
@@ -2947,6 +3131,16 @@
         <target>Cargando consultas</target>
       </segment>
     </unit>
+    <unit id="4135402603013824809">
+      <notes>
+        <note category="location">src/app/core/services/page-commands.service.ts:145</note>
+        <note category="description">Error shown when restoring an earlier version of a page fails</note>
+      </notes>
+      <segment state="translated">
+        <source>That version couldn&apos;t be restored.</source>
+        <target>No se pudo restaurar esa versión.</target>
+      </segment>
+    </unit>
     <unit id="4139152446081980203">
       <notes>
         <note category="location">src/app/features/dashboard/components/sprint-burndown-sparkline.component.ts:41</note>
@@ -3078,6 +3272,16 @@
         <target> Eliminar foto </target>
       </segment>
     </unit>
+    <unit id="2275328567992347600">
+      <notes>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:108,110</note>
+        <note category="description">Shown when the requested page does not exist or was archived</note>
+      </notes>
+      <segment state="translated">
+        <source>Page not found</source>
+        <target>Página no encontrada</target>
+      </segment>
+    </unit>
     <unit id="141527660815930501">
       <notes>
         <note category="location">src/app/core/services/workspace-commands.service.ts:216</note>
@@ -3170,7 +3374,7 @@
     </unit>
     <unit id="955080669037591255">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:871</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:875</note>
         <note category="description">Asks the user to confirm deleting several of their assistant conversations</note>
       </notes>
       <segment state="translated">
@@ -3249,6 +3453,17 @@
       <segment state="translated">
         <source>Mark Workspace as Private</source>
         <target>Marcar el espacio de trabajo como privado</target>
+      </segment>
+    </unit>
+    <unit id="5833343911271171142">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:75,77</note>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:81,83</note>
+        <note category="description">Heading over the pages that mention this page</note>
+      </notes>
+      <segment state="translated">
+        <source>Backlinks</source>
+        <target>Retroenlaces</target>
       </segment>
     </unit>
     <unit id="8900337902731807937">
@@ -3334,7 +3549,7 @@
     </unit>
     <unit id="2957627656155649168">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:235</note>
+        <note category="location">src/app/core/auth/permission-items.ts:237</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -3414,8 +3629,8 @@
     </unit>
     <unit id="6746571899700014633">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:76,78</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:85,87</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:78,80</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:87,89</note>
         <note category="description">Opens the full list of a task&apos;s fields</note>
       </notes>
       <segment state="initial">
@@ -3743,8 +3958,8 @@
         <note category="location">src/app/features/notifications/notifications.routes.ts:12</note>
         <note category="location">src/app/features/notifications/views/notifications-view/notifications-view.component.ts:29,30</note>
         <note category="location">src/app/features/settings/views/personal-notification-settings-view/personal-notification-settings-view.component.ts:22,24</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:408</note>
-        <note category="location">src/app/workspace.routes.ts:96</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:417</note>
+        <note category="location">src/app/workspace.routes.ts:102</note>
         <note category="description">Accessible label for the notifications button</note>
       </notes>
       <segment state="translated">
@@ -3761,6 +3976,16 @@
       <segment state="translated">
         <source> Notifications </source>
         <target>Notificaciones</target>
+      </segment>
+    </unit>
+    <unit id="4058575476871566236">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-meta-chips.component.ts:26,29</note>
+        <note category="description">Status chip on a published page</note>
+      </notes>
+      <segment state="translated">
+        <source>Published</source>
+        <target>Publicada</target>
       </segment>
     </unit>
     <unit id="6642900695427911796">
@@ -3890,9 +4115,10 @@
         <note category="location">src/app/core/util/pin-scope.ts:69</note>
         <note category="location">src/app/entry/components/setup-creation-summary/setup-creation-summary.component.ts:58</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:220</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:134,137</note>
         <note category="location">src/app/features/pins/components/pin-scope-menu.component.ts:160</note>
         <note category="location">src/app/features/settings/components/preference-scope.ts:36</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:438</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:447</note>
         <note category="description">Badge on a task pinned for the whole workspace</note>
       </notes>
       <segment state="translated">
@@ -3967,6 +4193,16 @@
         <target>Flujo del tablero</target>
       </segment>
     </unit>
+    <unit id="7440923050870641719">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:73,78</note>
+        <note category="description">Accessible label for the switch between the rich and markdown editor</note>
+      </notes>
+      <segment state="translated">
+        <source>Editor mode</source>
+        <target>Modo del editor</target>
+      </segment>
+    </unit>
     <unit id="7443604971157177608">
       <notes>
         <note category="location">src/app/features/automations/components/automation-run-history.component.ts:391</note>
@@ -3977,14 +4213,14 @@
         <target>Tarea eliminada</target>
       </segment>
     </unit>
-    <unit id="7444877482175970639">
+    <unit id="6371576811194810854">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:144,146</note>
-        <note category="description">Column heading above the proposed value of a field</note>
+        <note category="location">src/app/static/components/text-diff/text-diff.component.ts:105</note>
+        <note category="description">Column heading above the later text in a side by side comparison</note>
       </notes>
       <segment state="translated">
-        <source> After </source>
-        <target> Después </target>
+        <source>After</source>
+        <target>Después</target>
       </segment>
     </unit>
     <unit id="7446913075218839308">
@@ -4057,6 +4293,16 @@
         <target>No se han podido cargar las vistas previas de las plantillas</target>
       </segment>
     </unit>
+    <unit id="4033785320232635352">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:139,141</note>
+        <note category="description">Accessible label for the workspace page tree</note>
+      </notes>
+      <segment state="translated">
+        <source>Workspace pages</source>
+        <target>Páginas del espacio de trabajo</target>
+      </segment>
+    </unit>
     <unit id="4033905995366228703">
       <notes>
         <note category="location">src/app/entry/components/setup-template-picker/setup-template-picker.component.ts:42,46</note>
@@ -4069,7 +4315,7 @@
     </unit>
     <unit id="7480444655465895778">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:421</note>
+        <note category="location">src/app/shell/global-commands.service.ts:435</note>
         <note category="description">Command palette action that opens the AI assistant</note>
       </notes>
       <segment state="translated">
@@ -4175,6 +4421,7 @@
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:115,117</note>
         <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:254,259</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:88,90</note>
+        <note category="location">src/app/features/pages/dialogs/page-version-dialog.component.ts:76,78</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:74,75</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:443,446</note>
         <note category="location">src/app/static/components/dialog/dialog-header.component.ts:31</note>
@@ -4232,7 +4479,7 @@
     </unit>
     <unit id="3769715950462623259">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:427</note>
+        <note category="location">src/app/core/auth/permission-items.ts:456</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -4455,7 +4702,7 @@
     </unit>
     <unit id="8851067750279637711">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:372</note>
+        <note category="location">src/app/shell/global-commands.service.ts:386</note>
         <note category="description">Command palette action that drops the theme choice so the app follows the operating system</note>
       </notes>
       <segment state="initial">
@@ -4481,6 +4728,16 @@
       <segment state="translated">
         <source>No statuses yet.</source>
         <target>Aún no hay estados.</target>
+      </segment>
+    </unit>
+    <unit id="8854317796744293927">
+      <notes>
+        <note category="location">src/app/features/pages/editor/query-embed.component.ts:41,44</note>
+        <note category="description">Link from an embedded query to the full query view</note>
+      </notes>
+      <segment state="translated">
+        <source>Open in Queries</source>
+        <target>Abrir en consultas</target>
       </segment>
     </unit>
     <unit id="8855483263700906757">
@@ -4868,6 +5125,16 @@
         <target>Cuándo</target>
       </segment>
     </unit>
+    <unit id="3198215594515009353">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:94,96</note>
+        <note category="description">Hint in the empty links tab of a page</note>
+      </notes>
+      <segment state="translated">
+        <source>Type @ to mention a task or another page.</source>
+        <target>Escribe @ para mencionar una tarea u otra página.</target>
+      </segment>
+    </unit>
     <unit id="3198502471902188050">
       <notes>
         <note category="location">src/app/features/automations/components/automation-run-history.component.ts:323</note>
@@ -4882,7 +5149,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:161,164</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:40,41</note>
-        <note category="location">src/app/shell/global-commands.service.ts:430</note>
+        <note category="location">src/app/shell/global-commands.service.ts:444</note>
         <note category="description">Title of the create-task dialog</note>
       </notes>
       <segment state="translated">
@@ -4930,7 +5197,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:432</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:66,67</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:179</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:188</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:104,107</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:153,156</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:48,50</note>
@@ -5308,9 +5575,10 @@
     </unit>
     <unit id="3095755724292513950">
       <notes>
+        <note category="location">src/app/core/transforms/entity-type.ts:24</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:94,97</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:33</note>
-        <note category="description">Page title for a single workspace relation type</note>
+        <note category="description">Name of the relation type entity in activity and audit logs</note>
       </notes>
       <segment state="translated">
         <source>Relation type</source>
@@ -5515,6 +5783,16 @@
         <target>Ningún grupo coincide con ese filtro.</target>
       </segment>
     </unit>
+    <unit id="8393600306605587340">
+      <notes>
+        <note category="location">src/app/features/pages/editor/page-editor-commands.ts:11</note>
+        <note category="description">Heading over the Netptune blocks in the slash command menu</note>
+      </notes>
+      <segment state="translated">
+        <source>Netptune</source>
+        <target>Netptune</target>
+      </segment>
+    </unit>
     <unit id="8394008335792720695">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-apply-progress.component.ts:120</note>
@@ -5603,10 +5881,11 @@
     </unit>
     <unit id="1825829511397926879">
       <notes>
+        <note category="location">src/app/features/pages/components/page-meta-chips.component.ts:46,49</note>
         <note category="location">src/app/features/settings/settings.routes.ts:67</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:83,84</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:37</note>
-        <note category="description">Page title for a single workspace tag</note>
+        <note category="description">Button that adds or removes tags on a page</note>
       </notes>
       <segment state="translated">
         <source>Tag</source>
@@ -5663,6 +5942,16 @@
       <segment state="translated">
         <source> Something else </source>
         <target>Otra cosa</target>
+      </segment>
+    </unit>
+    <unit id="2688547031134197193">
+      <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:291</note>
+        <note category="description">Name of a workspace permission</note>
+      </notes>
+      <segment state="translated">
+        <source>Archive Any Page</source>
+        <target>Archivar cualquier página</target>
       </segment>
     </unit>
     <unit id="2689632431015509581">
@@ -5758,7 +6047,7 @@
     </unit>
     <unit id="2575054327998237831">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:468</note>
+        <note category="location">src/app/core/auth/permission-items.ts:497</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -5855,7 +6144,7 @@
     </unit>
     <unit id="5631710543421517153">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:453</note>
+        <note category="location">src/app/core/auth/permission-items.ts:482</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -5937,7 +6226,7 @@
     </unit>
     <unit id="3881052394638902678">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:237</note>
+        <note category="location">src/app/shell/global-commands.service.ts:251</note>
         <note category="description">Command palette action that navigates to the workspace audit log</note>
       </notes>
       <segment state="initial">
@@ -5992,8 +6281,8 @@
     </unit>
     <unit id="3807699453257291879">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:194</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:190</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:205</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:200</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:89</note>
         <note category="description">Section heading for a task&apos;s comments</note>
       </notes>
@@ -6074,7 +6363,7 @@
     </unit>
     <unit id="4112448628063511508">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:262</note>
+        <note category="location">src/app/core/auth/permission-items.ts:264</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -6085,8 +6374,8 @@
     <unit id="4116911651502837995">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:434</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:193</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:191</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:203</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:201</note>
         <note category="description">Section heading for files attached to a task</note>
       </notes>
       <segment state="translated">
@@ -6122,6 +6411,16 @@
       <segment state="translated">
         <source>Full page</source>
         <target>Página completa</target>
+      </segment>
+    </unit>
+    <unit id="5170889864683436620">
+      <notes>
+        <note category="location">src/app/core/services/page-commands.service.ts:147</note>
+        <note category="description">Confirmation shown after a page is archived</note>
+      </notes>
+      <segment state="translated">
+        <source>Page archived</source>
+        <target>Página archivada</target>
       </segment>
     </unit>
     <unit id="5171192616638755303">
@@ -6288,7 +6587,7 @@
     </unit>
     <unit id="3905491520406429600">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:282</note>
+        <note category="location">src/app/shell/global-commands.service.ts:296</note>
         <note category="description">Command palette action that navigates to the personal assistant key settings</note>
       </notes>
       <segment state="initial">
@@ -6306,6 +6605,16 @@
         <target>Cualquiera que pueda exportar podrá usarlo.</target>
       </segment>
     </unit>
+    <unit id="3912186866996023672">
+      <notes>
+        <note category="location">src/app/features/pages/dialogs/query-picker-dialog.component.ts:75</note>
+        <note category="description">Shown when there are no shared saved queries to embed</note>
+      </notes>
+      <segment state="translated">
+        <source>No shared queries yet. Only shared queries can be embedded, so everyone reading the page sees the same tasks.</source>
+        <target>Aún no hay consultas compartidas. Solo se pueden insertar consultas compartidas, para que todos los que lean la página vean las mismas tareas.</target>
+      </segment>
+    </unit>
     <unit id="3915681373731822227">
       <notes>
         <note category="location">src/app/core/services/board-group-commands.service.ts:147</note>
@@ -6321,7 +6630,7 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:42,45</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:71,72</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:250</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:349</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:358</note>
         <note category="description">Section heading for links between tasks</note>
       </notes>
       <segment state="translated">
@@ -6380,16 +6689,27 @@
         <target>Enlace eliminado</target>
       </segment>
     </unit>
+    <unit id="5068065680759920980">
+      <notes>
+        <note category="location">src/app/features/pages/dialogs/query-picker-dialog.component.ts:66</note>
+        <note category="description">Placeholder in the box that narrows the saved queries offered for embedding</note>
+      </notes>
+      <segment state="translated">
+        <source>Search saved queries</source>
+        <target>Buscar consultas guardadas</target>
+      </segment>
+    </unit>
     <unit id="7886570921510760899">
       <notes>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:59</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:125</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:66</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:91,92</note>
+        <note category="location">src/app/features/pages/components/page-meta-chips.component.ts:72</note>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:46</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:46</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:90</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:333</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:342</note>
         <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:53,54</note>
         <note category="description">Label of the tags field</note>
       </notes>
@@ -6448,6 +6768,17 @@
         <target>1 cambio</target>
       </segment>
     </unit>
+    <unit id="4158925728608139729">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:123,125</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:126,128</note>
+        <note category="description">Heading over the user&apos;s favourite pages</note>
+      </notes>
+      <segment state="translated">
+        <source>Favourites</source>
+        <target>Favoritos</target>
+      </segment>
+    </unit>
     <unit id="4164796296331721280">
       <notes>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:94,96</note>
@@ -6466,8 +6797,9 @@
     </unit>
     <unit id="4166637194006456845">
       <notes>
+        <note category="location">src/app/features/pages/dialogs/page-version-dialog.component.ts:51,54</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:508</note>
-        <note category="description">Accessible label for the diff layout switch</note>
+        <note category="description">Accessible label for the switch between diff layouts</note>
       </notes>
       <segment state="translated">
         <source>Diff layout</source>
@@ -6964,6 +7296,16 @@
         <target>En curso</target>
       </segment>
     </unit>
+    <unit id="9126383792072202008">
+      <notes>
+        <note category="location">src/app/features/pages/services/page-draft.ts:252</note>
+        <note category="description">Error shown when a page&apos;s text is over the size limit</note>
+      </notes>
+      <segment state="translated">
+        <source>Pages can be at most 1 MB of text.</source>
+        <target>Las páginas pueden tener como máximo 1 MB de texto.</target>
+      </segment>
+    </unit>
     <unit id="9127604588498960753">
       <notes>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:65,67</note>
@@ -7107,6 +7449,16 @@
         <target>Versión del esquema</target>
       </segment>
     </unit>
+    <unit id="7550887575678493407">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:165,167</note>
+        <note category="description">Accessible label for the page tree footer links</note>
+      </notes>
+      <segment state="translated">
+        <source>More pages</source>
+        <target>Más páginas</target>
+      </segment>
+    </unit>
     <unit id="7556340900290410206">
       <notes>
         <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:30,31</note>
@@ -7158,6 +7510,16 @@
         <target>Registrado</target>
       </segment>
     </unit>
+    <unit id="7516585616197582984">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:37,40</note>
+        <note category="description">Accessible label for the page side rail</note>
+      </notes>
+      <segment state="translated">
+        <source>Page details</source>
+        <target>Detalles de la página</target>
+      </segment>
+    </unit>
     <unit id="751924494549380962">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:139,141</note>
@@ -7166,6 +7528,17 @@
       <segment state="translated">
         <source> Base URL </source>
         <target> URL base </target>
+      </segment>
+    </unit>
+    <unit id="7622219570715945608">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:64,66</note>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:67,69</note>
+        <note category="description">Heading over the pages a page mentions</note>
+      </notes>
+      <segment state="translated">
+        <source>Linked pages</source>
+        <target>Páginas vinculadas</target>
       </segment>
     </unit>
     <unit id="762390656450107985">
@@ -7491,8 +7864,8 @@
     <unit id="1678559204833619774">
       <notes>
         <note category="location">src/app/features/audit/views/audit-view/audit-view.component.ts:27,28</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:389</note>
-        <note category="location">src/app/workspace.routes.ts:108</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:398</note>
+        <note category="location">src/app/workspace.routes.ts:114</note>
         <note category="description">Page title for the workspace audit log</note>
       </notes>
       <segment state="translated">
@@ -7571,6 +7944,16 @@
         <target>Ya existe una cuenta de Netptune para <ph id="0" equiv="EMAIL" disp="{{ link.email // i18n(ph=&quot;EMAIL&quot;) }}"/>. Inicia sesión en esa cuenta antes de conectar <ph id="1" equiv="PROVIDER" disp="{{ link.provider // i18n(ph=&quot;PROVIDER&quot;) }}"/>.</target>
       </segment>
     </unit>
+    <unit id="4655283754161670601">
+      <notes>
+        <note category="location">src/app/features/pages/dialogs/page-version-dialog.component.ts:85,91</note>
+        <note category="description">Button that restores the page to the version shown</note>
+      </notes>
+      <segment state="translated">
+        <source>Restore this version</source>
+        <target>Restaurar esta versión</target>
+      </segment>
+    </unit>
     <unit id="4658982717700339898">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:40</note>
@@ -7591,6 +7974,16 @@
         <target>No se han podido cargar los datos de velocidad.</target>
       </segment>
     </unit>
+    <unit id="6311995465990730419">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:255</note>
+        <note category="description">History entry for a version that restored an earlier one</note>
+      </notes>
+      <segment state="translated">
+        <source>Restored the version from <ph id="0" equiv="WHEN" disp="restoredFrom"/></source>
+        <target>Se restauró la versión de <ph id="0" equiv="WHEN" disp="restoredFrom"/></target>
+      </segment>
+    </unit>
     <unit id="631526687542702213">
       <notes>
         <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:70,75</note>
@@ -7599,6 +7992,16 @@
       <segment state="translated">
         <source> This provider link is missing or expired. Start the provider sign-in again. </source>
         <target>Este enlace del proveedor no existe o ha caducado. Vuelve a iniciar el acceso con el proveedor.</target>
+      </segment>
+    </unit>
+    <unit id="6317126528752584322">
+      <notes>
+        <note category="location">src/app/static/components/editor/editor-commands.ts:32</note>
+        <note category="description">Slash command that inserts a heading</note>
+      </notes>
+      <segment state="translated">
+        <source>Heading</source>
+        <target>Encabezado</target>
       </segment>
     </unit>
     <unit id="6317506174396184653">
@@ -7629,6 +8032,16 @@
       <segment state="initial">
         <source>1 empty field — <ph id="0" equiv="FIELD" disp="list"/></source>
         <target>1 campo vacío — <ph id="0" equiv="FIELD" disp="list"/></target>
+      </segment>
+    </unit>
+    <unit id="9153313578755352192">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:151,152</note>
+        <note category="description">Shown in the page tree before any page exists</note>
+      </notes>
+      <segment state="translated">
+        <source>No pages yet</source>
+        <target>Aún no hay páginas</target>
       </segment>
     </unit>
     <unit id="9155608366859514313">
@@ -7669,6 +8082,26 @@
       <segment state="translated">
         <source>provider</source>
         <target>proveedor</target>
+      </segment>
+    </unit>
+    <unit id="1479642863135924755">
+      <notes>
+        <note category="location">src/app/core/services/page-commands.service.ts:144</note>
+        <note category="description">Error shown when adding or removing a page favourite fails</note>
+      </notes>
+      <segment state="translated">
+        <source>Favourites couldn&apos;t be updated.</source>
+        <target>No se pudieron actualizar los favoritos.</target>
+      </segment>
+    </unit>
+    <unit id="1479707136034431936">
+      <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:281</note>
+        <note category="description">Name of a workspace permission</note>
+      </notes>
+      <segment state="translated">
+        <source>Edit Pages</source>
+        <target>Editar páginas</target>
       </segment>
     </unit>
     <unit id="9108390059687067634">
@@ -7829,7 +8262,7 @@
     </unit>
     <unit id="1493770091147271250">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:354</note>
+        <note category="location">src/app/shell/global-commands.service.ts:368</note>
         <note category="description">Command palette action that switches to the dark theme</note>
       </notes>
       <segment state="initial">
@@ -7909,6 +8342,16 @@
         <target>Dejarlas donde están</target>
       </segment>
     </unit>
+    <unit id="3731100517020238424">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-pages.component.ts:20,22</note>
+        <note category="description">Accessible label for the pages that mention a task</note>
+      </notes>
+      <segment state="translated">
+        <source>Pages mentioning this task</source>
+        <target>Páginas que mencionan esta tarea</target>
+      </segment>
+    </unit>
     <unit id="3733378544613473393">
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:66,68</note>
@@ -7979,6 +8422,16 @@
         <target>Esta importación lleva un rato sin avanzar. Se ejecuta en el servidor de tareas: comprueba que esté en marcha.</target>
       </segment>
     </unit>
+    <unit id="6333335057236774263">
+      <notes>
+        <note category="location">src/app/static/components/save-status/save-status.component.ts:64</note>
+        <note category="description">Shown once a document&apos;s latest changes are saved</note>
+      </notes>
+      <segment state="translated">
+        <source>Saved</source>
+        <target>Guardado</target>
+      </segment>
+    </unit>
     <unit id="6335842502353691526">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:231</note>
@@ -8033,7 +8486,7 @@
     </unit>
     <unit id="3577508648825979912">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:434</note>
+        <note category="location">src/app/core/auth/permission-items.ts:463</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -8103,7 +8556,7 @@
     </unit>
     <unit id="3160376611740224455">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:342</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:346</note>
         <note category="description">Seeds the assistant composer with a question about a sprint</note>
       </notes>
       <segment state="translated">
@@ -8545,7 +8998,7 @@
     </unit>
     <unit id="7572709072780766984">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:147</note>
+        <note category="location">src/app/shell/global-commands.service.ts:161</note>
         <note category="description">Command palette action that navigates to the roadmap timeline</note>
       </notes>
       <segment state="initial">
@@ -8708,6 +9161,16 @@
       <segment state="initial">
         <source> The task is only deleted if its status has not changed during the delay. Deleted tasks can be restored from the archive. </source>
         <target> La tarea solo se eliminará si su estado no ha cambiado durante el retraso. Las tareas eliminadas pueden restaurarse desde el archivo. </target>
+      </segment>
+    </unit>
+    <unit id="9203983883403011576">
+      <notes>
+        <note category="location">src/app/core/services/page-commands.service.ts:142</note>
+        <note category="description">Error shown when archiving a page fails</note>
+      </notes>
+      <segment state="translated">
+        <source>The page couldn&apos;t be archived.</source>
+        <target>No se pudo archivar la página.</target>
       </segment>
     </unit>
     <unit id="920686338780570649">
@@ -9012,7 +9475,7 @@
     </unit>
     <unit id="8736025615104066664">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:138</note>
+        <note category="location">src/app/shell/global-commands.service.ts:143</note>
         <note category="description">Command palette action that navigates to the sprint backlog</note>
       </notes>
       <segment state="initial">
@@ -9041,7 +9504,7 @@
     </unit>
     <unit id="8748180536879356854">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:247</note>
+        <note category="location">src/app/core/auth/permission-items.ts:249</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -9128,6 +9591,16 @@
       <segment state="translated">
         <source> None </source>
         <target>Ninguno</target>
+      </segment>
+    </unit>
+    <unit id="3740112420485576878">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:112,115</note>
+        <note category="description">Shown in the history tab before a page has saved versions</note>
+      </notes>
+      <segment state="translated">
+        <source>No versions yet</source>
+        <target>Aún no hay versiones</target>
       </segment>
     </unit>
     <unit id="3741232987566177563">
@@ -9312,6 +9785,16 @@
       <segment state="translated">
         <source> Review all </source>
         <target> Revisar todo </target>
+      </segment>
+    </unit>
+    <unit id="2408149066831973826">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:124,125</note>
+        <note category="description">Shown in the outline before a page has headings</note>
+      </notes>
+      <segment state="translated">
+        <source>No headings yet</source>
+        <target>Aún no hay encabezados</target>
       </segment>
     </unit>
     <unit id="2409078062655081027">
@@ -9512,7 +9995,8 @@
     </unit>
     <unit id="1746074439662851135">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:238</note>
+        <note category="location">src/app/features/pages/dialogs/page-version-dialog.component.ts:116</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:154</note>
         <note category="description">Names the side by side diff layout</note>
       </notes>
       <segment state="translated">
@@ -9919,8 +10403,8 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-notify-editor.component.ts:45</note>
         <note category="location">src/app/features/users/views/users-view/users-view.component.html:6</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:249</note>
-        <note category="location">src/app/workspace.routes.ts:102</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:258</note>
+        <note category="location">src/app/workspace.routes.ts:108</note>
         <note category="description">Label of the users field</note>
       </notes>
       <segment state="translated">
@@ -10132,7 +10616,7 @@
     </unit>
     <unit id="3530843538847118284">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:110</note>
+        <note category="location">src/app/shell/global-commands.service.ts:115</note>
         <note category="description">Command palette action that navigates to the archived task list</note>
       </notes>
       <segment state="initial">
@@ -10506,6 +10990,16 @@
         <target>ENTONCES</target>
       </segment>
     </unit>
+    <unit id="8666730504824237140">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:212</note>
+        <note category="description">Option that shows a page as formatted text</note>
+      </notes>
+      <segment state="translated">
+        <source>Rich</source>
+        <target>Enriquecido</target>
+      </segment>
+    </unit>
     <unit id="8668810212312203956">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:259</note>
@@ -10649,7 +11143,7 @@
     </unit>
     <unit id="8493682611789857374">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:242</note>
+        <note category="location">src/app/core/auth/permission-items.ts:244</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -10661,7 +11155,7 @@
       <notes>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:274,275</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:299,300</note>
-        <note category="location">src/app/static/components/task-name.component.ts:46,48</note>
+        <note category="location">src/app/static/components/task-name.component.ts:43,45</note>
         <note category="description">Marks a deleted task</note>
       </notes>
       <segment state="translated">
@@ -10951,7 +11445,7 @@
     </unit>
     <unit id="2642012433003949544">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:381</note>
+        <note category="location">src/app/shell/global-commands.service.ts:395</note>
         <note category="description">Command palette action that stretches pages across the full window width</note>
       </notes>
       <segment state="initial">
@@ -11206,7 +11700,7 @@
     </unit>
     <unit id="4965562695253171955">
       <notes>
-        <note category="location">src/app/static/components/filter-input/filter-input.component.ts:56,58</note>
+        <note category="location">src/app/static/components/filter-input/filter-input.component.ts:57,59</note>
         <note category="description">Accessible label for the button that clears a filter</note>
       </notes>
       <segment state="translated">
@@ -11275,6 +11769,16 @@
       <segment state="translated">
         <source>Move to sprint</source>
         <target>Mover a un sprint</target>
+      </segment>
+    </unit>
+    <unit id="3008573030448240863">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:262</note>
+        <note category="description">History entry for an ordinary edit of a page</note>
+      </notes>
+      <segment state="translated">
+        <source>Edited</source>
+        <target>Editada</target>
       </segment>
     </unit>
     <unit id="6096337112846411396">
@@ -11387,6 +11891,16 @@
         <target> Días naturales relativos </target>
       </segment>
     </unit>
+    <unit id="6296306197665945980">
+      <notes>
+        <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:64,70</note>
+        <note category="description">Hint on the empty page archive</note>
+      </notes>
+      <segment state="translated">
+        <source>Archived pages appear here, ready to be restored.</source>
+        <target>Las páginas archivadas aparecen aquí, listas para restaurarse.</target>
+      </segment>
+    </unit>
     <unit id="6297950127540572260">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:207</note>
@@ -11450,7 +11964,7 @@
     </unit>
     <unit id="6542083255352890889">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:309</note>
+        <note category="location">src/app/shell/global-commands.service.ts:323</note>
         <note category="description">Command palette action that navigates to workspace task status settings</note>
       </notes>
       <segment state="initial">
@@ -11534,6 +12048,16 @@
         <target>Todavía no hay nada en curso. Completa los pasos anteriores y pulsa Importar.</target>
       </segment>
     </unit>
+    <unit id="1831454418982373753">
+      <notes>
+        <note category="location">src/app/features/pages/editor/query-embed.component.ts:68,72</note>
+        <note category="description">Shown when an embedded saved query matches no tasks</note>
+      </notes>
+      <segment state="translated">
+        <source>No tasks match this query</source>
+        <target>Ninguna tarea coincide con esta consulta</target>
+      </segment>
+    </unit>
     <unit id="1838131741653693713">
       <notes>
         <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:135,137</note>
@@ -11592,7 +12116,7 @@
     </unit>
     <unit id="9214432864445261604">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:155</note>
+        <note category="location">src/app/shell/global-commands.service.ts:169</note>
         <note category="description">Command palette action that navigates to the calendar</note>
       </notes>
       <segment state="initial">
@@ -11691,6 +12215,16 @@
         <target>Sin opciones</target>
       </segment>
     </unit>
+    <unit id="8304423617415800133">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:126,129</note>
+        <note category="description">Menu item that removes a page from favourites</note>
+      </notes>
+      <segment state="translated">
+        <source>Remove from favourites</source>
+        <target>Quitar de favoritos</target>
+      </segment>
+    </unit>
     <unit id="8305060666501284978">
       <notes>
         <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:93,96</note>
@@ -11741,6 +12275,16 @@
         <target>Tableros modificados</target>
       </segment>
     </unit>
+    <unit id="8319982105545010046">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:62,65</note>
+        <note category="description">Accessible label for the trail of folders above a page</note>
+      </notes>
+      <segment state="translated">
+        <source>Page location</source>
+        <target>Ubicación de la página</target>
+      </segment>
+    </unit>
     <unit id="1583399193111493692">
       <notes>
         <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:79,80</note>
@@ -11769,6 +12313,16 @@
       <segment>
         <source> Re-read the file </source>
         <target> Volver a leer el archivo </target>
+      </segment>
+    </unit>
+    <unit id="1597412352196195331">
+      <notes>
+        <note category="location">src/app/features/pages/dialogs/query-picker-dialog.component.ts:37,41</note>
+        <note category="description">Title of the dialog that picks a saved query to embed in a page</note>
+      </notes>
+      <segment state="translated">
+        <source> Embed a saved query </source>
+        <target> Insertar una consulta guardada </target>
       </segment>
     </unit>
     <unit id="6950619760420375155">
@@ -11814,7 +12368,7 @@
     </unit>
     <unit id="6189233648220583946">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:525</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:529</note>
         <note category="description">Shown when the assistant request fails</note>
       </notes>
       <segment state="translated">
@@ -12236,6 +12790,16 @@
         <target>¡Buenas noches, <ph id="0" equiv="name" disp="name"/>!</target>
       </segment>
     </unit>
+    <unit id="3887407557138511656">
+      <notes>
+        <note category="location">src/app/features/pages/dialogs/query-picker-dialog.component.ts:72</note>
+        <note category="description">Shown in the saved query picker to someone without access to saved queries</note>
+      </notes>
+      <segment state="translated">
+        <source>You don&apos;t have access to saved queries</source>
+        <target>No tienes acceso a las consultas guardadas</target>
+      </segment>
+    </unit>
     <unit id="388762281941632822">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:29</note>
@@ -12268,9 +12832,10 @@
     </unit>
     <unit id="3278205153911408159">
       <notes>
+        <note category="location">src/app/features/pages/dialogs/page-version-dialog.component.ts:112</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:712</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:242</note>
-        <note category="description">Diff layout with one column</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:158</note>
+        <note category="description">Names the single column diff layout</note>
       </notes>
       <segment state="translated">
         <source>Unified</source>
@@ -12307,6 +12872,16 @@
         <target>La tarea permanece inactiva</target>
       </segment>
     </unit>
+    <unit id="3787321817465559173">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:130,135</note>
+        <note category="description">Menu item that adds a page to favourites</note>
+      </notes>
+      <segment state="translated">
+        <source>Add to favourites</source>
+        <target>Añadir a favoritos</target>
+      </segment>
+    </unit>
     <unit id="3789467879740818380">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:33</note>
@@ -12319,7 +12894,7 @@
     </unit>
     <unit id="8805582001022257690">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:101,103</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:103,105</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:135,137</note>
         <note category="description">Button that asks the assistant about this task</note>
       </notes>
@@ -12360,7 +12935,7 @@
     </unit>
     <unit id="8375416460166159043">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:289</note>
+        <note category="location">src/app/core/auth/permission-items.ts:318</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="initial">
@@ -12546,9 +13121,10 @@
     </unit>
     <unit id="5234544449365538384">
       <notes>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:297</note>
         <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:319</note>
         <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:362</note>
-        <note category="description">Shown when a shareable query link could not be copied</note>
+        <note category="description">Shown when a page link could not be copied</note>
       </notes>
       <segment state="translated">
         <source>Link could not be copied</source>
@@ -12657,6 +13233,16 @@
         <target>Los archivos añaden unos</target>
       </segment>
     </unit>
+    <unit id="2490468446168750289">
+      <notes>
+        <note category="location">src/app/core/services/page-commands.service.ts:140</note>
+        <note category="description">Error shown when creating a page fails</note>
+      </notes>
+      <segment state="translated">
+        <source>The page couldn&apos;t be created.</source>
+        <target>No se pudo crear la página.</target>
+      </segment>
+    </unit>
     <unit id="2490742431400447774">
       <notes>
         <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:169</note>
@@ -12726,6 +13312,16 @@
       <segment state="initial">
         <source>Skip this change when applying</source>
         <target>Omitir este cambio al aplicar</target>
+      </segment>
+    </unit>
+    <unit id="7153255681393081191">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:216</note>
+        <note category="description">Option that shows a page as raw markdown</note>
+      </notes>
+      <segment state="translated">
+        <source>Markdown</source>
+        <target>Markdown</target>
       </segment>
     </unit>
     <unit id="7159058201233906638">
@@ -13069,8 +13665,9 @@
     <unit id="7565716024468232322">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:433</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:192</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:192</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:202</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:202</note>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:153</note>
         <note category="description">Tab listing the tasks this one links to</note>
       </notes>
       <segment state="initial">
@@ -13221,6 +13818,16 @@
       <segment state="translated">
         <source>Succeeded</source>
         <target>Correcta</target>
+      </segment>
+    </unit>
+    <unit id="7253608290099852757">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:159,163</note>
+        <note category="description">Button that discards local edits and loads the newer saved page</note>
+      </notes>
+      <segment state="translated">
+        <source>Load their version</source>
+        <target>Cargar su versión</target>
       </segment>
     </unit>
     <unit id="7256395947475975935">
@@ -13520,6 +14127,16 @@
       <segment state="initial">
         <source>Can’t include</source>
         <target>No se puede incluir</target>
+      </segment>
+    </unit>
+    <unit id="7148233672490240354">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:152</note>
+        <note category="description">Command palette action that navigates to the workspace pages</note>
+      </notes>
+      <segment state="translated">
+        <source>Go to Pages</source>
+        <target>Ir a Páginas</target>
       </segment>
     </unit>
     <unit id="7148367907089369595">
@@ -13855,14 +14472,14 @@
         <target>Conectado</target>
       </segment>
     </unit>
-    <unit id="3212983257499034193">
+    <unit id="1218334388194408974">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:123,125</note>
-        <note category="description">Column heading above the current value of a field</note>
+        <note category="location">src/app/static/components/text-diff/text-diff.component.ts:102</note>
+        <note category="description">Column heading above the earlier text in a side by side comparison</note>
       </notes>
       <segment state="translated">
-        <source> Before </source>
-        <target> Antes </target>
+        <source>Before</source>
+        <target>Antes</target>
       </segment>
     </unit>
     <unit id="6197183619710382830">
@@ -14338,6 +14955,16 @@
         <target><ph id="0" equiv="OFFSET" disp="update.offset ?? 0"/> días naturales desde la fecha de ejecución</target>
       </segment>
     </unit>
+    <unit id="6997967012661620403">
+      <notes>
+        <note category="location">src/app/core/services/page-commands.service.ts:148</note>
+        <note category="description">Confirmation shown after an archived page is restored</note>
+      </notes>
+      <segment state="translated">
+        <source>Page restored</source>
+        <target>Página restaurada</target>
+      </segment>
+    </unit>
     <unit id="6765436849411220761">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:905</note>
@@ -14421,6 +15048,17 @@
       <segment state="translated">
         <source>Automation could not be loaded</source>
         <target>No se pudo cargar la automatización</target>
+      </segment>
+    </unit>
+    <unit id="3640373857486272611">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:103,105</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:86,88</note>
+        <note category="description">Accessible label for the list of saved versions of a page</note>
+      </notes>
+      <segment state="translated">
+        <source>Version history</source>
+        <target>Historial de versiones</target>
       </segment>
     </unit>
     <unit id="3646053136746522210">
@@ -14524,7 +15162,7 @@
     </unit>
     <unit id="8079320989122636865">
       <notes>
-        <note category="location">src/app/static/components/character-limit/character-limit.component.ts:19,21</note>
+        <note category="location">src/app/static/components/character-limit/character-limit.component.ts:22,30</note>
         <note category="description">Shown under a text field when the text is longer than allowed</note>
       </notes>
       <segment state="translated">
@@ -14544,8 +15182,9 @@
     </unit>
     <unit id="8455204924704616723">
       <notes>
+        <note category="location">src/app/core/transforms/entity-type.ts:26</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:520</note>
-        <note category="description">Column heading for the file an import came from</note>
+        <note category="description">Name of the workspace file entity in activity and audit logs</note>
       </notes>
       <segment state="initial">
         <source>File</source>
@@ -14637,8 +15276,9 @@
     </unit>
     <unit id="1103299628984958400">
       <notes>
+        <note category="location">src/app/static/components/editor/editor-commands.ts:91</note>
         <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:156</note>
-        <note category="description">Accessible label for the editor&apos;s quote button</note>
+        <note category="description">Slash command that inserts a quote</note>
       </notes>
       <segment state="translated">
         <source>Quote</source>
@@ -14752,7 +15392,7 @@
     <unit id="2330577642930707695">
       <notes>
         <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:183,186</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:99,101</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:95,97</note>
         <note category="location">src/app/static/components/comments-list/comments-list.component.ts:153,155</note>
         <note category="description">Dismisses a dialog without acting</note>
       </notes>
@@ -14764,8 +15404,8 @@
     <unit id="4930506384627295710">
       <notes>
         <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:590</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:452</note>
-        <note category="location">src/app/workspace.routes.ts:120</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:461</note>
+        <note category="location">src/app/workspace.routes.ts:126</note>
         <note category="description">Heading of the automation settings step</note>
       </notes>
       <segment state="translated">
@@ -14818,7 +15458,7 @@
       <notes>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:60,61</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:69,73</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:257</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:266</note>
         <note category="location">src/app/workspace.routes.ts:54</note>
         <note category="description">Page title for the automation list</note>
       </notes>
@@ -14938,6 +15578,16 @@
         <target>Aún no hay automatizaciones</target>
       </segment>
     </unit>
+    <unit id="9064023436778901868">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-pages.component.ts:27,28</note>
+        <note category="description">Shown on a task that no page mentions</note>
+      </notes>
+      <segment state="translated">
+        <source>No pages mention this task</source>
+        <target>Ninguna página menciona esta tarea</target>
+      </segment>
+    </unit>
     <unit id="7327883206054172578">
       <notes>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:101,102</note>
@@ -15019,6 +15669,16 @@
         <target> Usar otro correo electrónico </target>
       </segment>
     </unit>
+    <unit id="1407560924967345762">
+      <notes>
+        <note category="location">src/app/core/transforms/entity-type.ts:28</note>
+        <note category="description">Name of the page entity in activity and audit logs</note>
+      </notes>
+      <segment state="translated">
+        <source>Page</source>
+        <target>Página</target>
+      </segment>
+    </unit>
     <unit id="1411214360177743011">
       <notes>
         <note category="location">src/app/features/boards/boards.routes.ts:20</note>
@@ -15043,8 +15703,8 @@
       <notes>
         <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:135,137</note>
         <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:139,143</note>
-        <note category="location">src/app/static/components/task-name.component.ts:56,57</note>
-        <note category="location">src/app/static/components/task-name.component.ts:58,61</note>
+        <note category="location">src/app/static/components/task-name.component.ts:53,54</note>
+        <note category="location">src/app/static/components/task-name.component.ts:55,58</note>
         <note category="description">Accessible label for the icon marking a task that has comments</note>
       </notes>
       <segment state="translated">
@@ -15094,7 +15754,7 @@
     </unit>
     <unit id="3132998863898047908">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:336</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:340</note>
         <note category="description">Seeds the assistant composer with a question about a task</note>
       </notes>
       <segment state="translated">
@@ -15296,6 +15956,16 @@
         <target> Salir del espacio de trabajo </target>
       </segment>
     </unit>
+    <unit id="1074599325149334297">
+      <notes>
+        <note category="location">src/app/static/components/editor/editor.component.ts:158</note>
+        <note category="description">Accessible label for the raw markdown source of a document</note>
+      </notes>
+      <segment state="translated">
+        <source>Markdown source</source>
+        <target>Código Markdown</target>
+      </segment>
+    </unit>
     <unit id="1075015891055978279">
       <notes>
         <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:165</note>
@@ -15329,7 +15999,7 @@
     <unit id="146442697456175258">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:107,110</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:373</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:382</note>
         <note category="description">Page title for the workspace import and export page</note>
       </notes>
       <segment>
@@ -15340,6 +16010,7 @@
     <unit id="6904866445262015585">
       <notes>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:133,134</note>
+        <note category="location">src/app/features/pages/editor/page-reference.controller.ts:228</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:39</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:53</note>
         <note category="location">src/app/features/reporting/components/workload-table.component.ts:49</note>
@@ -15347,7 +16018,7 @@
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:225</note>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:139</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:83</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:153</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:155</note>
         <note category="location">src/app/workspace.routes.ts:36</note>
         <note category="description">Column heading for the number of tasks on a board</note>
       </notes>
@@ -15365,6 +16036,16 @@
       <segment state="translated">
         <source>conversations</source>
         <target>conversaciones</target>
+      </segment>
+    </unit>
+    <unit id="3550292608849463679">
+      <notes>
+        <note category="location">src/app/features/pages/editor/query-embed.component.ts:57,60</note>
+        <note category="description">Hint shown when an embedded saved query cannot be loaded</note>
+      </notes>
+      <segment state="translated">
+        <source>It may have been deleted, or you may not have access to it.</source>
+        <target>Puede que se haya eliminado o que no tengas acceso.</target>
       </segment>
     </unit>
     <unit id="3553216189604488439">
@@ -15479,6 +16160,19 @@
       <segment state="translated">
         <source>Save Changes</source>
         <target>Guardar los cambios</target>
+      </segment>
+    </unit>
+    <unit id="8257661007652110878">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:69,71</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:80,82</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:45</note>
+        <note category="location">src/app/shell/global-commands.service.ts:454</note>
+        <note category="description">Accessible label for the button that creates a page or folder</note>
+      </notes>
+      <segment state="translated">
+        <source>Create Page</source>
+        <target>Crear página</target>
       </segment>
     </unit>
     <unit id="8257779685263061072">
@@ -15785,6 +16479,7 @@
         <note category="location">src/app/features/boards/util/board-task-sort.ts:32</note>
         <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:98</note>
         <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:349</note>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:259</note>
         <note category="description">Sort option ordering by creation date</note>
       </notes>
       <segment state="translated">
@@ -15908,12 +16603,12 @@
     </unit>
     <unit id="7107218117130409950">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:191</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:193</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:201</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:203</note>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:64</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:71,72</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:86</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:167</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:169</note>
         <note category="location">src/app/workspace.routes.ts:60</note>
         <note category="description">Section heading for the boards a task appears on</note>
       </notes>
@@ -15940,6 +16635,16 @@
       <segment state="translated">
         <source>Delete Relation Type</source>
         <target>Eliminar tipo de relación</target>
+      </segment>
+    </unit>
+    <unit id="7857104024284312513">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:126,130</note>
+        <note category="description">Hint in the empty page outline</note>
+      </notes>
+      <segment state="translated">
+        <source>Headings you add appear here.</source>
+        <target>Los encabezados que añadas aparecen aquí.</target>
       </segment>
     </unit>
     <unit id="7859140891394548585">
@@ -15974,8 +16679,10 @@
     </unit>
     <unit id="7869199587095613616">
       <notes>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:188,189</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:295</note>
         <note category="location">src/app/static/components/branding-preview/branding-preview.component.ts:156</note>
-        <note category="description">Preview title when no name is entered</note>
+        <note category="description">Placeholder in an empty page title</note>
       </notes>
       <segment state="translated">
         <source>Untitled</source>
@@ -16074,7 +16781,7 @@
     </unit>
     <unit id="1417693373625142806">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:219</note>
+        <note category="location">src/app/shell/global-commands.service.ts:233</note>
         <note category="description">Command palette action that navigates to the full-page assistant chat</note>
       </notes>
       <segment state="initial">
@@ -16196,6 +16903,17 @@
       <segment state="initial">
         <source>Send reset link</source>
         <target>Enviar enlace de restablecimiento</target>
+      </segment>
+    </unit>
+    <unit id="5116679637427656902">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:142,147</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:181</note>
+        <note category="description">Menu item that creates a page inside the open page</note>
+      </notes>
+      <segment state="translated">
+        <source>Create Page inside</source>
+        <target>Crear página dentro</target>
       </segment>
     </unit>
     <unit id="5120712365000996416">
@@ -16368,7 +17086,7 @@
     </unit>
     <unit id="3620188369327429839">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:109,111</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:105,107</note>
         <note category="description">Button that keeps an edit to a proposed value</note>
       </notes>
       <segment state="translated">
@@ -16407,6 +17125,16 @@
       <segment state="translated">
         <source>The provider could not be removed.</source>
         <target>No se ha podido eliminar el proveedor.</target>
+      </segment>
+    </unit>
+    <unit id="1022106416065199935">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:111,113</note>
+        <note category="description">Accessible label for the button that opens the page action menu</note>
+      </notes>
+      <segment state="translated">
+        <source>More page actions</source>
+        <target>Más acciones de la página</target>
       </segment>
     </unit>
     <unit id="1022758522914475161">
@@ -16554,8 +17282,8 @@
     <unit id="3825802286872185103">
       <notes>
         <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:61,64</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:212</note>
-        <note category="location">src/app/workspace.routes.ts:84</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:221</note>
+        <note category="location">src/app/workspace.routes.ts:90</note>
         <note category="description">Page title for the calendar</note>
       </notes>
       <segment state="translated">
@@ -16707,8 +17435,8 @@
     </unit>
     <unit id="3154294923374510663">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:646</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:837</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:650</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:841</note>
         <note category="description">Shown when the assistant reports a failure</note>
       </notes>
       <segment state="translated">
@@ -16796,6 +17524,16 @@
       <segment state="translated">
         <source>Completed</source>
         <target>Completados</target>
+      </segment>
+    </unit>
+    <unit id="1163860776084272350">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:221,223</note>
+        <note category="description">Shown on a folder, which has no text of its own</note>
+      </notes>
+      <segment state="translated">
+        <source>This is a folder</source>
+        <target>Esto es una carpeta</target>
       </segment>
     </unit>
     <unit id="1164332617862004960">
@@ -16901,6 +17639,7 @@
     <unit id="3445720584036648434">
       <notes>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:375</note>
+        <note category="location">src/app/features/pages/components/page-meta-chips.component.ts:73</note>
         <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:50,51</note>
         <note category="description">Placeholder in the box that searches tags</note>
       </notes>
@@ -16935,7 +17674,7 @@
     <unit id="6570363013146073520">
       <notes>
         <note category="location">src/app/features/dashboard/views/dashboard-view/dashboard-view.component.ts:40,42</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:145</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:147</note>
         <note category="location">src/app/workspace.routes.ts:25</note>
         <note category="description">Page title for the dashboard</note>
       </notes>
@@ -17178,6 +17917,17 @@
         <target>Vigilando <ph id="0" equiv="FIELDS" disp="fields"/></target>
       </segment>
     </unit>
+    <unit id="1557588537287479588">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:105,107</note>
+        <note category="location">src/app/features/pages/editor/page-editor-commands.ts:18</note>
+        <note category="description">Accessible label for the menu of tasks and pages to mention</note>
+      </notes>
+      <segment state="translated">
+        <source>Mention a task or page</source>
+        <target>Mencionar una tarea o página</target>
+      </segment>
+    </unit>
     <unit id="1562584780596394495">
       <notes>
         <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:32</note>
@@ -17339,6 +18089,16 @@
         <target> Nueva respuesta del asistente </target>
       </segment>
     </unit>
+    <unit id="933361080941409912">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:190,192</note>
+        <note category="description">Accessible label for the page title</note>
+      </notes>
+      <segment state="translated">
+        <source>Page title</source>
+        <target>Título de la página</target>
+      </segment>
+    </unit>
     <unit id="935836356119933355">
       <notes>
         <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:83,86</note>
@@ -17352,8 +18112,8 @@
     <unit id="4915431133669985304">
       <notes>
         <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:30,33</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:105</note>
-        <note category="location">src/app/workspace.routes.ts:126</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:106</note>
+        <note category="location">src/app/workspace.routes.ts:132</note>
         <note category="description">Page title for the user profile</note>
       </notes>
       <segment state="translated">
@@ -17413,7 +18173,8 @@
     </unit>
     <unit id="3565310608022478316">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:245</note>
+        <note category="location">src/app/features/pages/dialogs/page-version-dialog.component.ts:120</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:161</note>
         <note category="description">Names the diff layout that highlights changed words</note>
       </notes>
       <segment state="translated">
@@ -17676,7 +18437,7 @@
     </unit>
     <unit id="8762019541565613143">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:164</note>
+        <note category="location">src/app/shell/global-commands.service.ts:178</note>
         <note category="description">Command palette action that navigates to the reporting views</note>
       </notes>
       <segment state="initial">
@@ -17721,9 +18482,12 @@
     <unit id="1055686627716339120">
       <notes>
         <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:66</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:173,176</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:228</note>
+        <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:30</note>
         <note category="location">src/app/features/project-tasks/project-tasks.routes.ts:13</note>
         <note category="location">src/app/features/project-tasks/views/archive-view/archive-view.component.ts:21,23</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:159</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:161</note>
         <note category="description">Heading of the archive file panel</note>
       </notes>
       <segment state="translated">
@@ -17781,6 +18545,16 @@
         <target>Volver a las tareas</target>
       </segment>
     </unit>
+    <unit id="9180258231296737289">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:208,210</note>
+        <note category="description">Placeholder in an empty page body</note>
+      </notes>
+      <segment state="translated">
+        <source>Start writing…</source>
+        <target>Empieza a escribir…</target>
+      </segment>
+    </unit>
     <unit id="9187323536893515910">
       <notes>
         <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:85,87</note>
@@ -17810,6 +18584,16 @@
       <segment state="translated">
         <source>board groups</source>
         <target>grupos del tablero</target>
+      </segment>
+    </unit>
+    <unit id="7847171946828670653">
+      <notes>
+        <note category="location">src/app/static/components/editor/editor-commands.ts:67</note>
+        <note category="description">Slash command that inserts a numbered list</note>
+      </notes>
+      <segment state="translated">
+        <source>Numbered list</source>
+        <target>Lista numerada</target>
       </segment>
     </unit>
     <unit id="8202154820002793003">
@@ -17850,6 +18634,16 @@
       <segment state="initial">
         <source>Delete this import</source>
         <target>Eliminar esta importación</target>
+      </segment>
+    </unit>
+    <unit id="4433648409065755384">
+      <notes>
+        <note category="location">src/app/features/pages/editor/query-embed.component.ts:53,55</note>
+        <note category="description">Shown when an embedded saved query cannot be loaded</note>
+      </notes>
+      <segment state="translated">
+        <source>This query couldn&apos;t be loaded</source>
+        <target>No se pudo cargar esta consulta</target>
       </segment>
     </unit>
     <unit id="7976143439488282742">
@@ -17929,7 +18723,7 @@
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:58,59</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:67,71</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:84</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:199</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:200</note>
         <note category="location">src/app/workspace.routes.ts:30</note>
         <note category="description">Filter heading for projects</note>
       </notes>
@@ -17966,6 +18760,16 @@
       <segment state="translated">
         <source>Create your first project to organise related boards and tasks.</source>
         <target>Crea tu primer proyecto para organizar los tableros y las tareas relacionados.</target>
+      </segment>
+    </unit>
+    <unit id="6575856042354307949">
+      <notes>
+        <note category="location">src/app/features/pages/dialogs/page-version-dialog.component.ts:107</note>
+        <note category="description">Column heading above the page version being viewed</note>
+      </notes>
+      <segment state="translated">
+        <source>This version</source>
+        <target>Esta versión</target>
       </segment>
     </unit>
     <unit id="4921087619298848078">
@@ -18179,6 +18983,16 @@
       <segment state="translated">
         <source>Current open tasks</source>
         <target>Tareas abiertas actualmente</target>
+      </segment>
+    </unit>
+    <unit id="8610504659433544583">
+      <notes>
+        <note category="location">src/app/features/pages/editor/query-embed.component.ts:38,40</note>
+        <note category="description">Badge on an embedded list that updates as tasks change</note>
+      </notes>
+      <segment state="translated">
+        <source>Live</source>
+        <target>En vivo</target>
       </segment>
     </unit>
     <unit id="8610729415808550096">
@@ -18679,7 +19493,7 @@
     </unit>
     <unit id="380334853194915857">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:279</note>
+        <note category="location">src/app/core/auth/permission-items.ts:308</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="initial">
@@ -18972,6 +19786,16 @@
         <target>El asistente no ha podido mejorar esta correspondencia.</target>
       </segment>
     </unit>
+    <unit id="4803442795141876084">
+      <notes>
+        <note category="location">src/app/features/pages/dialogs/query-picker-dialog.component.ts:65</note>
+        <note category="description">Accessible label for the list of saved queries that can be embedded</note>
+      </notes>
+      <segment state="translated">
+        <source>Saved queries</source>
+        <target>Consultas guardadas</target>
+      </segment>
+    </unit>
     <unit id="4807681741561942956">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-question.component.ts:73,76</note>
@@ -18980,6 +19804,16 @@
       <segment state="translated">
         <source>Type your answer</source>
         <target>Escribe tu respuesta</target>
+      </segment>
+    </unit>
+    <unit id="4808589666930368915">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-meta-chips.component.ts:30,34</note>
+        <note category="description">Status chip on a draft page</note>
+      </notes>
+      <segment state="translated">
+        <source>Draft</source>
+        <target>Borrador</target>
       </segment>
     </unit>
     <unit id="4810719754522561546">
@@ -19076,7 +19910,7 @@
     <unit id="1868606282505332204">
       <notes>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:66,68</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:220</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:229</note>
         <note category="location">src/app/workspace.routes.ts:72</note>
         <note category="description">Page title for the reporting views</note>
       </notes>
@@ -19413,6 +20247,16 @@
         <target>Ningún espacio de trabajo coincide con «<ph id="0" equiv="QUERY" disp="query"/>»</target>
       </segment>
     </unit>
+    <unit id="5140329174632274131">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:102,104</note>
+        <note category="description">Accessible label for the filtered page list</note>
+      </notes>
+      <segment state="translated">
+        <source>Matching pages</source>
+        <target>Páginas que coinciden</target>
+      </segment>
+    </unit>
     <unit id="5141352019990967744">
       <notes>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:228</note>
@@ -19530,6 +20374,16 @@
         <target> Tareas sin programar (<ph id="0" equiv="COUNT" disp="{{ totalCount() // i18n(ph=&quot;COUNT&quot;) }}"/>) </target>
       </segment>
     </unit>
+    <unit id="1314562873676673298">
+      <notes>
+        <note category="location">src/app/static/components/save-status/save-status.component.ts:62</note>
+        <note category="description">Shown while a document is being saved</note>
+      </notes>
+      <segment state="translated">
+        <source>Saving…</source>
+        <target>Guardando…</target>
+      </segment>
+    </unit>
     <unit id="1314763293556517482">
       <notes>
         <note category="location">src/app/features/roadmap/components/roadmap-unscheduled.component.ts:83,84</note>
@@ -19542,7 +20396,7 @@
     </unit>
     <unit id="6203693342135702246">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:255</note>
+        <note category="location">src/app/shell/global-commands.service.ts:269</note>
         <note category="description">Command palette action that navigates to the workspace picker</note>
       </notes>
       <segment state="initial">
@@ -19562,8 +20416,8 @@
     <unit id="6215048040341403789">
       <notes>
         <note category="location">src/app/features/roadmap/views/roadmap-view.component.ts:61,64</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:204</note>
-        <note category="location">src/app/workspace.routes.ts:78</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:214</note>
+        <note category="location">src/app/workspace.routes.ts:84</note>
         <note category="description">Page title for the roadmap</note>
       </notes>
       <segment state="translated">
@@ -19687,7 +20541,7 @@
     </unit>
     <unit id="8246436377858718644">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:878</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:882</note>
         <note category="description">Title of the confirmation dialog for deleting an assistant conversation</note>
       </notes>
       <segment state="translated">
@@ -19753,6 +20607,16 @@
       <segment state="translated">
         <source>Workspace name</source>
         <target>Nombre del espacio de trabajo</target>
+      </segment>
+    </unit>
+    <unit id="4786531800695286460">
+      <notes>
+        <note category="location">src/app/static/components/editor/editor-commands.ts:83</note>
+        <note category="description">Slash command that inserts a highlighted callout block</note>
+      </notes>
+      <segment state="translated">
+        <source>Callout</source>
+        <target>Destacado</target>
       </segment>
     </unit>
     <unit id="4789305091394342628">
@@ -19856,6 +20720,16 @@
         <target>Columnas del tablero</target>
       </segment>
     </unit>
+    <unit id="9080312564183839552">
+      <notes>
+        <note category="location">src/app/static/components/editor/editor-commands.ts:59</note>
+        <note category="description">Slash command that inserts a bulleted list</note>
+      </notes>
+      <segment state="translated">
+        <source>Bulleted list</source>
+        <target>Lista con viñetas</target>
+      </segment>
+    </unit>
     <unit id="9081463435738465430">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:685</note>
@@ -19947,9 +20821,9 @@
         <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:42,45</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:155,158</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:161,163</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:365</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:421</note>
-        <note category="location">src/app/workspace.routes.ts:90</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:374</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:430</note>
+        <note category="location">src/app/workspace.routes.ts:96</note>
         <note category="description">Page title for the assistant chat page</note>
       </notes>
       <segment state="translated">
@@ -19985,6 +20859,16 @@
       <segment state="initial">
         <source>Check your inbox</source>
         <target>Revisa tu bandeja de entrada</target>
+      </segment>
+    </unit>
+    <unit id="4368320598560128070">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:92,94</note>
+        <note category="description">Shown in the links tab before a page mentions or is mentioned by anything</note>
+      </notes>
+      <segment state="translated">
+        <source>No links yet</source>
+        <target>Aún no hay enlaces</target>
       </segment>
     </unit>
     <unit id="4368459498761840040">
@@ -20340,8 +21224,9 @@
     </unit>
     <unit id="7306009472583884794">
       <notes>
+        <note category="location">src/app/static/components/editor/editor-commands.ts:99</note>
         <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:158</note>
-        <note category="description">Accessible label for the editor&apos;s divider button</note>
+        <note category="description">Slash command that inserts a horizontal divider</note>
       </notes>
       <segment state="translated">
         <source>Divider</source>
@@ -20391,7 +21276,7 @@
     </unit>
     <unit id="7264838797878508480">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:274</note>
+        <note category="location">src/app/core/auth/permission-items.ts:303</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="initial">
@@ -20655,7 +21540,7 @@
     </unit>
     <unit id="4587531734717759061">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:257</note>
+        <note category="location">src/app/core/auth/permission-items.ts:259</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -20701,6 +21586,16 @@
       <segment state="translated">
         <source>Resets <ph id="0" equiv="date" disp="resets"/>.</source>
         <target>Se reinicia el <ph id="0" equiv="date" disp="resets"/>.</target>
+      </segment>
+    </unit>
+    <unit id="7430416142942514215">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:159,162</note>
+        <note category="description">Menu item that publishes a draft page</note>
+      </notes>
+      <segment state="translated">
+        <source>Publish</source>
+        <target>Publicar</target>
       </segment>
     </unit>
     <unit id="7430680760319628492">
@@ -21004,9 +21899,10 @@
     </unit>
     <unit id="892073694820881630">
       <notes>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:296</note>
         <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:314</note>
         <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:357</note>
-        <note category="description">Confirmation that a shareable query link was copied</note>
+        <note category="description">Confirmation that a page link was copied</note>
       </notes>
       <segment state="translated">
         <source>Link copied</source>
@@ -21096,7 +21992,7 @@
     </unit>
     <unit id="684158162620573424">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:336</note>
+        <note category="location">src/app/shell/global-commands.service.ts:350</note>
         <note category="description">Command palette action that navigates to the workspace assistant settings</note>
       </notes>
       <segment state="initial">
@@ -21258,7 +22154,7 @@
     </unit>
     <unit id="2052572547732747214">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:291</note>
+        <note category="location">src/app/shell/global-commands.service.ts:305</note>
         <note category="description">Command palette action that navigates to general workspace settings</note>
       </notes>
       <segment state="initial">
@@ -21278,7 +22174,7 @@
     </unit>
     <unit id="7061746686189484080">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:345</note>
+        <note category="location">src/app/shell/global-commands.service.ts:359</note>
         <note category="description">Command palette action that navigates to workspace import and export settings</note>
       </notes>
       <segment state="initial">
@@ -21304,6 +22200,16 @@
       <segment state="translated">
         <source> Danger zone </source>
         <target> Zona de peligro </target>
+      </segment>
+    </unit>
+    <unit id="3164972071980049830">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:141,144</note>
+        <note category="description">Title of the notice shown when someone else saved the page first</note>
+      </notes>
+      <segment state="translated">
+        <source>Someone else changed this page</source>
+        <target>Otra persona ha cambiado esta página</target>
       </segment>
     </unit>
     <unit id="3165555119723543121">
@@ -21354,6 +22260,16 @@
       <segment state="initial">
         <source>All actions</source>
         <target>Todas las acciones</target>
+      </segment>
+    </unit>
+    <unit id="6652056720487527045">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:109,111</note>
+        <note category="description">Shown in the mention menu when nothing matches what was typed</note>
+      </notes>
+      <segment state="translated">
+        <source>Type to search tasks and pages</source>
+        <target>Escribe para buscar tareas y páginas</target>
       </segment>
     </unit>
     <unit id="6654135033505153591">
@@ -21560,6 +22476,16 @@
         <target> Añadir una clave en la configuración personal </target>
       </segment>
     </unit>
+    <unit id="2202405455693944225">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:115,117</note>
+        <note category="description">Accessible label for the link to the pages home</note>
+      </notes>
+      <segment state="translated">
+        <source>Pages home</source>
+        <target>Inicio de páginas</target>
+      </segment>
+    </unit>
     <unit id="220550782947016929">
       <notes>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:259</note>
@@ -21643,6 +22569,26 @@
       <segment state="translated">
         <source>Move relation type up</source>
         <target>Subir el tipo de relación</target>
+      </segment>
+    </unit>
+    <unit id="6781617070710024146">
+      <notes>
+        <note category="location">src/app/static/components/editor/editor-commands.ts:41</note>
+        <note category="description">Slash command that inserts a smaller heading</note>
+      </notes>
+      <segment state="translated">
+        <source>Subheading</source>
+        <target>Subencabezado</target>
+      </segment>
+    </unit>
+    <unit id="6787085006953793000">
+      <notes>
+        <note category="location">src/app/static/components/save-status/save-status.component.ts:68</note>
+        <note category="description">Shown when saving a document failed</note>
+      </notes>
+      <segment state="translated">
+        <source>Couldn&apos;t save</source>
+        <target>No se pudo guardar</target>
       </segment>
     </unit>
     <unit id="2207764482815871800">
@@ -21798,6 +22744,16 @@
         <target> Abrir el chat </target>
       </segment>
     </unit>
+    <unit id="5944289423622043161">
+      <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:276</note>
+        <note category="description">Name of a workspace permission</note>
+      </notes>
+      <segment state="translated">
+        <source>Create Pages</source>
+        <target>Crear páginas</target>
+      </segment>
+    </unit>
     <unit id="5945229716887536509">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:99</note>
@@ -21826,6 +22782,16 @@
       <segment state="translated">
         <source> Notify me about </source>
         <target> Notificarme sobre </target>
+      </segment>
+    </unit>
+    <unit id="5953425146193292178">
+      <notes>
+        <note category="location">src/app/static/components/editor/editor-commands.ts:75</note>
+        <note category="description">Slash command that inserts a code block</note>
+      </notes>
+      <segment state="translated">
+        <source>Code block</source>
+        <target>Bloque de código</target>
       </segment>
     </unit>
     <unit id="6197665339164385071">
@@ -21926,6 +22892,16 @@
       <segment state="translated">
         <source>not</source>
         <target>no</target>
+      </segment>
+    </unit>
+    <unit id="8680668052333060120">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-pages.component.ts:29,33</note>
+        <note category="description">Hint on a task that no page mentions</note>
+      </notes>
+      <segment state="translated">
+        <source>Type @ in a page to mention it here.</source>
+        <target>Escribe @ en una página para mencionar esta tarea.</target>
       </segment>
     </unit>
     <unit id="1967521248845505958">
@@ -22262,6 +23238,16 @@
         <target>backlog</target>
       </segment>
     </unit>
+    <unit id="2949537818776440189">
+      <notes>
+        <note category="location">src/app/core/services/page-commands.service.ts:143</note>
+        <note category="description">Error shown when restoring an archived page fails</note>
+      </notes>
+      <segment state="translated">
+        <source>The page couldn&apos;t be restored.</source>
+        <target>No se pudo restaurar la página.</target>
+      </segment>
+    </unit>
     <unit id="7889477161949511803">
       <notes>
         <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:110</note>
@@ -22373,6 +23359,16 @@
         <target>No se ha podido eliminar la cuenta de servicio</target>
       </segment>
     </unit>
+    <unit id="2821179408673282599">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:216</note>
+        <note category="description">Link to the pages home</note>
+      </notes>
+      <segment state="translated">
+        <source>Home</source>
+        <target>Inicio</target>
+      </segment>
+    </unit>
     <unit id="2821548213457034230">
       <notes>
         <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:211</note>
@@ -22452,6 +23448,16 @@
       <segment state="translated">
         <source>Show places</source>
         <target>Mostrar lugares</target>
+      </segment>
+    </unit>
+    <unit id="2812208926273686149">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:88,91</note>
+        <note category="description">Menu item that creates a folder of pages</note>
+      </notes>
+      <segment state="translated">
+        <source>Create Folder</source>
+        <target>Crear carpeta</target>
       </segment>
     </unit>
     <unit id="2815307902323863621">
@@ -22556,7 +23562,7 @@
     </unit>
     <unit id="8205434857423213542">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:210</note>
+        <note category="location">src/app/shell/global-commands.service.ts:224</note>
         <note category="description">Command palette action that navigates to the notification list</note>
       </notes>
       <segment state="initial">
@@ -22576,7 +23582,7 @@
     </unit>
     <unit id="820849383493183708">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:463</note>
+        <note category="location">src/app/core/auth/permission-items.ts:492</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -22690,7 +23696,7 @@
     <unit id="6922994998696471598">
       <notes>
         <note category="location">src/app/features/queries/views/queries-view/queries-view.component.ts:48,49</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:228</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:237</note>
         <note category="location">src/app/workspace.routes.ts:42</note>
         <note category="description">Page title for the saved query list</note>
       </notes>
@@ -22977,7 +23983,7 @@
     </unit>
     <unit id="5017699476642878935">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:273</note>
+        <note category="location">src/app/shell/global-commands.service.ts:287</note>
         <note category="description">Command palette action that navigates to personal notification preference settings</note>
       </notes>
       <segment state="initial">
@@ -23110,6 +24116,16 @@
       <segment state="translated">
         <source>Summary cannot exceed <ph id="0" equiv="maxLength" disp="TASK_NAME_MAX_LENGTH"/> characters.</source>
         <target>El resumen no puede superar los <ph id="0" equiv="maxLength" disp="TASK_NAME_MAX_LENGTH"/> caracteres.</target>
+      </segment>
+    </unit>
+    <unit id="5674111399527575503">
+      <notes>
+        <note category="location">src/app/features/pages/editor/query-embed.component.ts:48,51</note>
+        <note category="description">Shown on an embedded saved query the viewer may not see the tasks of</note>
+      </notes>
+      <segment state="translated">
+        <source>You don&apos;t have access to these tasks</source>
+        <target>No tienes acceso a estas tareas</target>
       </segment>
     </unit>
     <unit id="5674286808255988565">
@@ -23307,6 +24323,16 @@
         <target> Nueva tarea, añadida a este sprint </target>
       </segment>
     </unit>
+    <unit id="7637282929017924402">
+      <notes>
+        <note category="location">src/app/features/pages/dialogs/page-version-dialog.component.ts:106</note>
+        <note category="description">Column heading above the version before the one being viewed</note>
+      </notes>
+      <segment state="translated">
+        <source>Previous version</source>
+        <target>Versión anterior</target>
+      </segment>
+    </unit>
     <unit id="763816024488593537">
       <notes>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:59,61</note>
@@ -23315,6 +24341,16 @@
       <segment state="translated">
         <source> Complete Sprint </source>
         <target>Completar el sprint</target>
+      </segment>
+    </unit>
+    <unit id="7639811500826292651">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:169,173</note>
+        <note category="description">Button that saves local edits over the newer saved page</note>
+      </notes>
+      <segment state="translated">
+        <source>Save mine</source>
+        <target>Guardar la mía</target>
       </segment>
     </unit>
     <unit id="7648635992567747657">
@@ -23446,6 +24482,16 @@
         <target>Mover las tareas sin terminar a otro sprint</target>
       </segment>
     </unit>
+    <unit id="7419704019640008953">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:98,103</note>
+        <note category="description">Button that copies a link to share the open page</note>
+      </notes>
+      <segment state="translated">
+        <source>Share</source>
+        <target>Compartir</target>
+      </segment>
+    </unit>
     <unit id="7522207935236729201">
       <notes>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:105,107</note>
@@ -23464,6 +24510,16 @@
       <segment state="initial">
         <source> Scopes can restrict this credential further than the service account. They are fixed when the credential is created: permissions added to the account later must be added to the credential&apos;s scopes before it can use them. </source>
         <target> Los ámbitos pueden restringir esta credencial más que la cuenta de servicio. Se fijan al crear la credencial: los permisos que se añadan más tarde a la cuenta deben añadirse a sus ámbitos antes de poder usarlos. </target>
+      </segment>
+    </unit>
+    <unit id="752450269478191186">
+      <notes>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:33,35</note>
+        <note category="description">Shown on the pages home before a page is opened</note>
+      </notes>
+      <segment state="translated">
+        <source>Pick a page from the tree</source>
+        <target>Elige una página del árbol</target>
       </segment>
     </unit>
     <unit id="580124269805283452">
@@ -23624,8 +24680,9 @@
     </unit>
     <unit id="186236568870281953">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:195</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:194</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:206</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:204</note>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:157</note>
         <note category="description">Tab showing what has happened to a task</note>
       </notes>
       <segment state="initial">
@@ -23718,7 +24775,7 @@
       <notes>
         <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:101</note>
         <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:46,48</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:188</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:190</note>
         <note category="description">Heading above the backlog tasks leaving a sprint</note>
       </notes>
       <segment state="translated">
@@ -23868,7 +24925,7 @@
     <unit id="2467702290618186989">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:279,281</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:115,117</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:118,120</note>
         <note category="description">Button that links this task to another</note>
       </notes>
       <segment state="initial">
@@ -23884,6 +24941,16 @@
       <segment state="translated">
         <source>Filter by file type</source>
         <target>Filtrar por tipo de archivo</target>
+      </segment>
+    </unit>
+    <unit id="4007403871857119460">
+      <notes>
+        <note category="location">src/app/static/components/save-status/save-status.component.ts:66</note>
+        <note category="description">Shown when a document was changed elsewhere before this save</note>
+      </notes>
+      <segment state="translated">
+        <source>Not saved</source>
+        <target>Sin guardar</target>
       </segment>
     </unit>
     <unit id="6590865873100666446">
@@ -23951,7 +25018,7 @@
       <notes>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:61,62</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:85</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:183</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:185</note>
         <note category="location">src/app/workspace.routes.ts:66</note>
         <note category="description">Page title for the sprint list</note>
       </notes>
@@ -24096,8 +25163,8 @@
     <unit id="57403663622654391">
       <notes>
         <note category="location">src/app/features/storage/views/storage-view.component.ts:22,25</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:381</note>
-        <note category="location">src/app/workspace.routes.ts:114</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:390</note>
+        <note category="location">src/app/workspace.routes.ts:120</note>
         <note category="description">Page title for workspace file storage</note>
       </notes>
       <segment state="translated">
@@ -24130,7 +25197,7 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:224</note>
         <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:30,31</note>
         <note category="location">src/app/features/pins/views/pinned-view/pinned-view.component.ts:65,67</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:239</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:248</note>
         <note category="location">src/app/workspace.routes.ts:48</note>
         <note category="description">Label on the pin control when the task is already pinned</note>
       </notes>
@@ -24141,7 +25208,7 @@
     </unit>
     <unit id="574980856658424744">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:870</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:874</note>
         <note category="description">Title of the confirmation dialog for deleting several assistant conversations. COUNT is how many</note>
       </notes>
       <segment state="translated">
@@ -24201,7 +25268,7 @@
     </unit>
     <unit id="8979299419810230617">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:318</note>
+        <note category="location">src/app/shell/global-commands.service.ts:332</note>
         <note category="description">Command palette action that navigates to workspace task relation type settings</note>
       </notes>
       <segment state="initial">
@@ -24247,6 +25314,16 @@
       <segment state="translated">
         <source>Workspace role</source>
         <target>Rol en el espacio de trabajo</target>
+      </segment>
+    </unit>
+    <unit id="230509500346547092">
+      <notes>
+        <note category="location">src/app/features/pages/services/page-draft.ts:254</note>
+        <note category="description">Error shown when saving a page fails</note>
+      </notes>
+      <segment state="translated">
+        <source>The page couldn&apos;t be saved.</source>
+        <target>No se pudo guardar la página.</target>
       </segment>
     </unit>
     <unit id="2306215569541621501">
@@ -24297,6 +25374,16 @@
       <segment state="translated">
         <source>Members could not be loaded.</source>
         <target>No se pudieron cargar los miembros.</target>
+      </segment>
+    </unit>
+    <unit id="345444628816896468">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:223,228</note>
+        <note category="description">Hint shown on a folder page</note>
+      </notes>
+      <segment state="translated">
+        <source>Folders hold pages. Create a page inside it from the tree or the page menu.</source>
+        <target>Las carpetas contienen páginas. Crea una página dentro desde el árbol o el menú de la página.</target>
       </segment>
     </unit>
     <unit id="3457112670535282063">
@@ -24419,6 +25506,16 @@
         <target>Bajar columna</target>
       </segment>
     </unit>
+    <unit id="6389257776228353794">
+      <notes>
+        <note category="location">src/app/features/pages/dialogs/page-version-dialog.component.ts:68,72</note>
+        <note category="description">Shown when a saved version of a page cannot be loaded</note>
+      </notes>
+      <segment state="translated">
+        <source>This version couldn&apos;t be loaded</source>
+        <target>No se pudo cargar esta versión</target>
+      </segment>
+    </unit>
     <unit id="228120404428462173">
       <notes>
         <note category="location">src/app/features/storage/components/storage-filters.component.ts:133</note>
@@ -24446,6 +25543,16 @@
       <segment state="translated">
         <source>Remove user from workspace</source>
         <target>Eliminar al usuario del espacio de trabajo</target>
+      </segment>
+    </unit>
+    <unit id="9070133908576398128">
+      <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:286</note>
+        <note category="description">Name of a workspace permission</note>
+      </notes>
+      <segment state="translated">
+        <source>Archive Own Pages</source>
+        <target>Archivar páginas propias</target>
       </segment>
     </unit>
     <unit id="90761460509166634">
@@ -24495,6 +25602,17 @@
       <segment state="translated">
         <source>They may have been removed from the workspace, or the request failed.</source>
         <target>Puede que se haya eliminado del espacio de trabajo o que la solicitud haya fallado.</target>
+      </segment>
+    </unit>
+    <unit id="8329380997135897984">
+      <notes>
+        <note category="location">src/app/core/services/page-commands.service.ts:151</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:153</note>
+        <note category="description">Title of the dialog confirming a page is archived</note>
+      </notes>
+      <segment state="translated">
+        <source>Archive Page</source>
+        <target>Archivar página</target>
       </segment>
     </unit>
     <unit id="1974103468162219781">
@@ -24588,7 +25706,7 @@
     </unit>
     <unit id="3335455471343847900">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:410</note>
+        <note category="location">src/app/shell/global-commands.service.ts:424</note>
         <note category="description">Command palette action that switches the task detail view to the document layout</note>
       </notes>
       <segment state="initial">
@@ -24608,7 +25726,7 @@
     </unit>
     <unit id="3341156395496259696">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:284</note>
+        <note category="location">src/app/core/auth/permission-items.ts:313</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="initial">
@@ -24751,7 +25869,7 @@
     </unit>
     <unit id="2214406551817330687">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:390</note>
+        <note category="location">src/app/shell/global-commands.service.ts:404</note>
         <note category="description">Command palette action that caps pages to a centered readable column</note>
       </notes>
       <segment state="initial">
@@ -24860,6 +25978,17 @@
         <target>Resultados</target>
       </segment>
     </unit>
+    <unit id="4911319983039735103">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:53,55</note>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:56,58</note>
+        <note category="description">Heading over the tasks a page mentions</note>
+      </notes>
+      <segment state="translated">
+        <source>Linked tasks</source>
+        <target>Tareas vinculadas</target>
+      </segment>
+    </unit>
     <unit id="4911843450729688319">
       <notes>
         <note category="location">src/app/shell/command-palette/command-palette.component.ts:109,110</note>
@@ -24888,6 +26017,16 @@
       <segment state="translated">
         <source> Recent </source>
         <target>Recientes</target>
+      </segment>
+    </unit>
+    <unit id="7542210616185617551">
+      <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:271</note>
+        <note category="description">Name of a workspace permission</note>
+      </notes>
+      <segment state="translated">
+        <source>View Pages</source>
+        <target>Ver páginas</target>
       </segment>
     </unit>
     <unit id="6036308268629413664">
@@ -25124,7 +26263,7 @@
     </unit>
     <unit id="2547653457651632153">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:92</note>
+        <note category="location">src/app/shell/global-commands.service.ts:97</note>
         <note category="description">Command palette action that navigates to the project list</note>
       </notes>
       <segment state="translated">
@@ -25165,7 +26304,7 @@
     </unit>
     <unit id="5123189455675344637">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:101</note>
+        <note category="location">src/app/shell/global-commands.service.ts:106</note>
         <note category="description">Command palette action that navigates to the task list</note>
       </notes>
       <segment state="translated">
@@ -25175,7 +26314,7 @@
     </unit>
     <unit id="5086261568382990197">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:119</note>
+        <note category="location">src/app/shell/global-commands.service.ts:124</note>
         <note category="description">Command palette action that navigates to the board list</note>
       </notes>
       <segment state="translated">
@@ -25205,7 +26344,7 @@
     </unit>
     <unit id="2627358752486456707">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:128</note>
+        <note category="location">src/app/shell/global-commands.service.ts:133</note>
         <note category="description">Command palette action that navigates to the sprint list</note>
       </notes>
       <segment state="translated">
@@ -25215,7 +26354,7 @@
     </unit>
     <unit id="178520337056147266">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:82</note>
+        <note category="location">src/app/shell/global-commands.service.ts:87</note>
         <note category="description">Command palette action that navigates to the dashboard</note>
       </notes>
       <segment state="translated">
@@ -25235,7 +26374,7 @@
     </unit>
     <unit id="2117590223216089367">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:191</note>
+        <note category="location">src/app/shell/global-commands.service.ts:205</note>
         <note category="description">Command palette action that navigates to the member list</note>
       </notes>
       <segment state="translated">
@@ -25255,7 +26394,7 @@
     </unit>
     <unit id="7783914774924915188">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:264</note>
+        <note category="location">src/app/shell/global-commands.service.ts:278</note>
         <note category="description">Command palette action that navigates to settings</note>
       </notes>
       <segment state="translated">
@@ -25265,7 +26404,7 @@
     </unit>
     <unit id="5354615118655779282">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:200</note>
+        <note category="location">src/app/shell/global-commands.service.ts:214</note>
         <note category="description">Command palette action that navigates to the automation list</note>
       </notes>
       <segment state="translated">
@@ -25288,7 +26427,7 @@
         <note category="location">src/app/features/automations/components/automation-rule-rail.component.ts:47,52</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-message.component.ts:100,104</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-detail.component.ts:130,132</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:61,63</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:57,59</note>
         <note category="description">Link that opens the automation editor</note>
       </notes>
       <segment state="translated">
@@ -25298,7 +26437,7 @@
     </unit>
     <unit id="5383274518270102702">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:458</note>
+        <note category="location">src/app/core/auth/permission-items.ts:487</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -25308,7 +26447,7 @@
     </unit>
     <unit id="5387282719521675016">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:228</note>
+        <note category="location">src/app/shell/global-commands.service.ts:242</note>
         <note category="description">Command palette action that navigates to file storage</note>
       </notes>
       <segment state="translated">
@@ -25650,6 +26789,17 @@
         <target>Expandir el menú <ph id="0" equiv="SECTION" disp="section"/></target>
       </segment>
     </unit>
+    <unit id="6662135835508534133">
+      <notes>
+        <note category="location">src/app/core/services/page-commands.service.ts:159</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:161</note>
+        <note category="description">Title of the dialog confirming a folder is archived</note>
+      </notes>
+      <segment state="translated">
+        <source>Archive Folder</source>
+        <target>Archivar carpeta</target>
+      </segment>
+    </unit>
     <unit id="6662317772987702772">
       <notes>
         <note category="location">src/app/core/services/task-commands.service.ts:230</note>
@@ -25684,6 +26834,7 @@
     <unit id="4929778113156900100">
       <notes>
         <note category="location">src/app/shell/shell-sidebar-collapse.component.ts:38,43</note>
+        <note category="location">src/app/static/components/tree/tree.component.ts:123</note>
         <note category="description">Label on the control that collapses the sidebar</note>
       </notes>
       <segment state="translated">
@@ -25694,6 +26845,7 @@
     <unit id="1359092845802014498">
       <notes>
         <note category="location">src/app/shell/shell-sidebar-collapse.component.ts:49</note>
+        <note category="location">src/app/static/components/tree/tree.component.ts:122</note>
         <note category="description">Tooltip on the control that expands the collapsed sidebar</note>
       </notes>
       <segment state="translated">
@@ -25735,8 +26887,8 @@
       <notes>
         <note category="location">src/app/features/settings/views/personal-general-settings-view/personal-general-settings-view.component.ts:32,35</note>
         <note category="location">src/app/features/settings/views/workspace-general-settings-view/workspace-general-settings-view.component.ts:21,24</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:325</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:403</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:334</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:412</note>
         <note category="description">Page title for general personal settings</note>
       </notes>
       <segment state="translated">
@@ -25749,7 +26901,7 @@
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:80,82</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:66,67</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:88</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:341</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:350</note>
         <note category="location">src/app/static/components/status-filter/status-filter.component.ts:42,43</note>
         <note category="description">Filter heading for statuses</note>
       </notes>
@@ -25770,7 +26922,7 @@
     </unit>
     <unit id="788903633413068121">
       <notes>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:357</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:366</note>
         <note category="description">Sidebar link to workspace service account settings</note>
       </notes>
       <segment state="translated">
@@ -25999,6 +27151,16 @@
       <segment state="translated">
         <source> · edited </source>
         <target> · editado</target>
+      </segment>
+    </unit>
+    <unit id="3487164997301514763">
+      <notes>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:110,114</note>
+        <note category="description">Hint shown when a page cannot be found</note>
+      </notes>
+      <segment state="translated">
+        <source>It may have been archived, or the link is out of date.</source>
+        <target>Puede que se haya archivado o que el enlace esté desactualizado.</target>
       </segment>
     </unit>
     <unit id="1146060538137839536">
@@ -26232,6 +27394,16 @@
         <target>Más acciones del sprint</target>
       </segment>
     </unit>
+    <unit id="4451682318497650150">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:146,149</note>
+        <note category="description">Body of the notice shown when someone else saved the page first</note>
+      </notes>
+      <segment state="translated">
+        <source> Your latest edits aren&apos;t saved. Load their version, or save yours over it. </source>
+        <target> Tus últimos cambios no se han guardado. Carga su versión o guarda la tuya encima. </target>
+      </segment>
+    </unit>
     <unit id="4456085616461233101">
       <notes>
         <note category="location">src/app/features/queries/components/query-details-drawer.component.ts:79,85</note>
@@ -26290,6 +27462,16 @@
       <segment state="initial">
         <source>Your notification settings for that could not be saved.</source>
         <target>No se pudieron guardar tus ajustes de notificaciones para eso.</target>
+      </segment>
+    </unit>
+    <unit id="2142361343554969922">
+      <notes>
+        <note category="location">src/app/core/services/page-commands.service.ts:141</note>
+        <note category="description">Error shown when moving a page in the tree fails</note>
+      </notes>
+      <segment state="translated">
+        <source>The page couldn&apos;t be moved.</source>
+        <target>No se pudo mover la página.</target>
       </segment>
     </unit>
     <unit id="2144933513054352536">
@@ -26647,6 +27829,16 @@
         <target>Reanudar esta importación</target>
       </segment>
     </unit>
+    <unit id="2389097364194442984">
+      <notes>
+        <note category="location">src/app/static/components/editor/editor.component.ts:141</note>
+        <note category="description">Accessible label for the menu of blocks that typing / offers</note>
+      </notes>
+      <segment state="translated">
+        <source>Insert a block</source>
+        <target>Insertar un bloque</target>
+      </segment>
+    </unit>
     <unit id="238958074114617441">
       <notes>
         <note category="location">src/app/static/components/table/table.component.ts:142,150</note>
@@ -26750,7 +27942,7 @@
     </unit>
     <unit id="4440938864523766003">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:252</note>
+        <note category="location">src/app/core/auth/permission-items.ts:254</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -26850,7 +28042,7 @@
     </unit>
     <unit id="2395695896327760676">
       <notes>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:413</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:422</note>
         <note category="description">Sidebar link to personal notification preference settings</note>
       </notes>
       <segment state="translated">
@@ -26982,6 +28174,16 @@
         <target>Filtrar tareas</target>
       </segment>
     </unit>
+    <unit id="2034595166058554206">
+      <notes>
+        <note category="location">src/app/features/pages/editor/query-embed.component.ts:75,79</note>
+        <note category="description">Link under an embedded query to the tasks it does not show</note>
+      </notes>
+      <segment state="translated">
+        <source> and <ph id="0" equiv="COUNT" disp="{{ remaining() // i18n(ph=&quot;COUNT&quot;) }}"/> more </source>
+        <target> y <ph id="0" equiv="COUNT" disp="{{ remaining() // i18n(ph=&quot;COUNT&quot;) }}"/> más </target>
+      </segment>
+    </unit>
     <unit id="2034729730694169160">
       <notes>
         <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:157</note>
@@ -26990,6 +28192,16 @@
       <segment state="translated">
         <source>Code Block</source>
         <target>Bloque de código</target>
+      </segment>
+    </unit>
+    <unit id="2037491714599491863">
+      <notes>
+        <note category="location">src/app/features/pages/services/page-draft.ts:253</note>
+        <note category="description">Error shown when changing a page&apos;s status or tags fails</note>
+      </notes>
+      <segment state="translated">
+        <source>The page couldn&apos;t be updated.</source>
+        <target>No se pudo actualizar la página.</target>
       </segment>
     </unit>
     <unit id="203971007584568092">

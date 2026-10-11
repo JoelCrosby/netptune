@@ -52,6 +52,13 @@ export const PERMISSIONS = {
     delete: 'task_views.delete',
     manageShared: 'task_views.manage_shared',
   },
+  pages: {
+    read: 'pages.read',
+    create: 'pages.create',
+    update: 'pages.update',
+    delete: 'pages.delete',
+    deleteAny: 'pages.delete_any',
+  },
   data: {
     export: 'data.export',
     import: 'data.import',

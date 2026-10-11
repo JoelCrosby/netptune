@@ -4,6 +4,7 @@ import { PERMISSIONS } from '@core/auth/permissions';
 import { TaskDetailBoardsComponent } from '../task-detail-boards.component';
 import { TaskDetailCommentsComponent } from '../task-detail-comments.component';
 import { TaskDetailDescriptionComponent } from '../task-detail-description.component';
+import { TaskDetailPagesComponent } from '../task-detail-pages.component';
 import { TaskDetailFilesComponent } from '../task-detail-files.component';
 import { TaskDetailFlagsComponent } from '../task-detail-flags.component';
 import { TaskDetailHeaderComponent } from '../task-detail-header.component';
@@ -28,6 +29,7 @@ import { DialogSectionComponent } from '@static/components/dialog/dialog-section
 @Component({
   selector: 'app-task-detail-cockpit',
   imports: [
+    TaskDetailPagesComponent,
     DialogColumnsComponent,
     DialogRailComponent,
     DialogSectionComponent,
@@ -89,7 +91,8 @@ import { DialogSectionComponent } from '@static/components/dialog/dialog-section
                 tabItems(
                   task.placements.length,
                   relations.count(),
-                  filesSection()?.count() ?? null
+                  filesSection()?.count() ?? null,
+                  pagesSection()?.count() ?? null
                 )
               "
               [(value)]="activeTab" />
@@ -129,6 +132,11 @@ import { DialogSectionComponent } from '@static/components/dialog/dialog-section
             @if (readFiles()) {
               <div [class.hidden]="activeTab() !== 'files'">
                 <app-task-detail-files />
+              </div>
+            }
+            @if (readPages()) {
+              <div [class.hidden]="activeTab() !== 'pages'">
+                <app-task-detail-pages />
               </div>
             }
           </div>
@@ -171,6 +179,7 @@ export class TaskDetailCockpitComponent {
   readonly comments = inject(TaskDetailCommentsService);
 
   protected readonly filesSection = viewChild(TaskDetailFilesComponent);
+  protected readonly pagesSection = viewChild(TaskDetailPagesComponent);
 
   readonly task = this.taskDetail.task;
   readonly activeTab = signal('boards');
@@ -186,16 +195,23 @@ export class TaskDetailCockpitComponent {
   readonly readFlags = hasPermission(PERMISSIONS.flags.read);
   readonly readComments = hasPermission(PERMISSIONS.comments.read);
   readonly readActivity = hasPermission(PERMISSIONS.activity.read);
+  readonly readPages = hasPermission(PERMISSIONS.pages.read);
 
   private readonly labels = {
     boards: $localize`:Section heading for the boards a task appears on:Boards`,
     links: $localize`:Tab listing the tasks this one links to:Links`,
     files: $localize`:Section heading for files attached to a task:Files`,
+    pages: $localize`:Tab listing the pages that mention a task:Pages`,
     comments: $localize`:Section heading for a task's comments:Comments`,
     history: $localize`:Tab showing what has happened to a task:History`,
   };
 
-  tabItems(boards: number, links: number, files: number | null): TabItem[] {
+  tabItems(
+    boards: number,
+    links: number,
+    files: number | null,
+    pages: number | null
+  ): TabItem[] {
     const tabs: TabItem[] = [
       { value: 'boards', label: this.labels.boards, count: boards },
       { value: 'links', label: this.labels.links, count: links },
@@ -203,6 +219,10 @@ export class TaskDetailCockpitComponent {
 
     if (files !== null) {
       tabs.push({ value: 'files', label: this.labels.files, count: files });
+    }
+
+    if (pages !== null) {
+      tabs.push({ value: 'pages', label: this.labels.pages, count: pages });
     }
 
     return tabs;

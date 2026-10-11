@@ -30,6 +30,8 @@ import {
   TaskDetailLayout,
 } from '@entry/dialogs/task-detail-dialog/task-detail-layout';
 import { CurrentTaskService } from '@core/services/current-task.service';
+import { PageKind } from '@core/models/pages';
+import { PageCommandsService } from '@core/services/page-commands.service';
 import { PinCommandsService } from '@core/services/pin-commands.service';
 import { KeyboardService } from '@static/services/keyboard.service';
 
@@ -51,12 +53,15 @@ export class GlobalCommandsService implements OnDestroy {
   private keyboard = inject(KeyboardService);
   private currentTask = inject(CurrentTaskService);
   private pinCommands = inject(PinCommandsService);
+  private pageCommands = inject(PageCommandsService);
 
   private canCreateTasks = hasPermission(PERMISSIONS.tasks.create);
   private canRestoreTasks = hasPermission(PERMISSIONS.tasks.restore);
   private canExportData = hasPermission(PERMISSIONS.tasks.export);
   private canReadSprints = hasPermission(PERMISSIONS.sprints.read);
   private canReadQueries = hasPermission(PERMISSIONS.queries.read);
+  private canReadPages = hasPermission(PERMISSIONS.pages.read);
+  private canCreatePages = hasPermission(PERMISSIONS.pages.create);
   private canReadMembers = hasPermission(PERMISSIONS.members.read);
   private canReadAutomations = hasPermission(PERMISSIONS.automations.read);
   private canReadCalendar = hasPermission(PERMISSIONS.calendar.read);
@@ -141,6 +146,15 @@ export class GlobalCommandsService implements OnDestroy {
       keywords: ['backlog', 'sprints', 'planning', 'navigate'],
       available: () => this.canReadSprints(),
       execute: () => this.navigate('sprints/backlog'),
+    },
+    {
+      id: 'nav.pages',
+      label: $localize`:Command palette action that navigates to the workspace pages:Go to Pages`,
+      group: 'navigation',
+      icon: 'file-text',
+      keywords: ['pages', 'docs', 'documents', 'wiki', 'notes', 'navigate'],
+      available: () => this.canReadPages(),
+      execute: () => this.navigate('pages'),
     },
     {
       id: 'nav.roadmap',
@@ -435,6 +449,15 @@ export class GlobalCommandsService implements OnDestroy {
       available: () => this.canCreateTasks(),
       execute: () => this.createTask(),
     },
+    {
+      id: 'actions.createPage',
+      label: $localize`:Command palette action that creates a new page:Create Page`,
+      group: 'actions',
+      icon: 'file-plus',
+      keywords: ['create', 'page', 'doc', 'document', 'new', 'add'],
+      available: () => this.canCreatePages(),
+      execute: () => this.createPage(),
+    },
   ];
 
   constructor() {
@@ -540,6 +563,12 @@ export class GlobalCommandsService implements OnDestroy {
       height: CreateTaskDialogComponent.height,
       panelClass: CreateTaskDialogComponent.panelClass,
     });
+  }
+
+  private createPage() {
+    this.pageCommands
+      .create({ kind: PageKind.document })
+      .subscribe((page) => this.navigate(`pages/${page.slug}`));
   }
 
   private navigate(path: string) {

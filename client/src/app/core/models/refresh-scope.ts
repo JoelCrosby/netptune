@@ -12,6 +12,7 @@ export const allRefreshScopes = [
   'notificationSubscriptions',
   'profile',
   'pins',
+  'pages',
 ] as const;
 
 export type RefreshScope = (typeof allRefreshScopes)[number];

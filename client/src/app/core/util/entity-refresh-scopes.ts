@@ -10,6 +10,7 @@ const scopesByEntityType: Record<string, readonly RefreshScope[]> = {
   tag: ['tags', 'tasks'],
   status: ['statuses', 'tasks', 'boardGroups'],
   comment: ['comments', 'tasks'],
+  page: ['pages'],
 };
 
 /**

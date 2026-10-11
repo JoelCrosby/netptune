@@ -164,6 +164,7 @@ export default defineConfig([
             'accept',
             'aria-autocomplete',
             'aria-controls',
+            'aria-current',
             'aria-describedby',
             'aria-haspopup',
             'aria-labelledby',

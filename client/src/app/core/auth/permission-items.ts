@@ -1,5 +1,6 @@
 import {
   LucideActivity,
+  LucideArchive,
   LucideArchiveRestore,
   LucideArrowRightLeft,
   LucideBell,
@@ -12,6 +13,7 @@ import {
   LucideEye,
   LucideFileArchive,
   LucideFilePen,
+  LucideFileText,
   LucideFlag,
   LucideGlobe,
   LucideSparkles,
@@ -261,6 +263,33 @@ export const netptunePermissionLabels: PermissionLabels = {
       key: 'task_views.manage_shared',
       label: $localize`:Name of a workspace permission:Manage Shared Queries`,
       icon: LucideUsers,
+    },
+  },
+  pages: {
+    read: {
+      key: 'pages.read',
+      label: $localize`:Name of a workspace permission:View Pages`,
+      icon: LucideFileText,
+    },
+    create: {
+      key: 'pages.create',
+      label: $localize`:Name of a workspace permission:Create Pages`,
+      icon: LucideCirclePlus,
+    },
+    update: {
+      key: 'pages.update',
+      label: $localize`:Name of a workspace permission:Edit Pages`,
+      icon: LucideFilePen,
+    },
+    delete: {
+      key: 'pages.delete',
+      label: $localize`:Name of a workspace permission:Archive Own Pages`,
+      icon: LucideArchive,
+    },
+    deleteAny: {
+      key: 'pages.delete_any',
+      label: $localize`:Name of a workspace permission:Archive Any Page`,
+      icon: LucideArchive,
     },
   },
   data: {

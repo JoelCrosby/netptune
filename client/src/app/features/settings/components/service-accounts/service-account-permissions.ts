@@ -52,6 +52,7 @@ const groupLabels: Record<string, string> = {
   boardGroups: 'Board groups',
   tasks: 'Tasks',
   queries: 'Queries',
+  pages: 'Pages',
   data: 'Data',
   sprints: 'Sprints',
   comments: 'Comments',

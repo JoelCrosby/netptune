@@ -6,6 +6,7 @@ import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown
 import { TaskDetailBoardsComponent } from '../task-detail-boards.component';
 import { TaskDetailCommentsComponent } from '../task-detail-comments.component';
 import { TaskDetailDescriptionComponent } from '../task-detail-description.component';
+import { TaskDetailPagesComponent } from '../task-detail-pages.component';
 import { TaskDetailFilesComponent } from '../task-detail-files.component';
 import { TaskDetailFlagsComponent } from '../task-detail-flags.component';
 import { TaskDetailHeaderComponent } from '../task-detail-header.component';
@@ -27,6 +28,7 @@ import {
 @Component({
   selector: 'app-task-detail-document',
   imports: [
+    TaskDetailPagesComponent,
     TabGroupComponent,
     DropdownMenuComponent,
     LucideChevronDown,
@@ -125,7 +127,8 @@ import {
                 comments.count(),
                 filesSection()?.count() ?? null,
                 relations.count(),
-                task.placements.length
+                task.placements.length,
+                pagesSection()?.count() ?? null
               )
             "
             [(value)]="activeTab" />
@@ -146,6 +149,11 @@ import {
           <div [class.hidden]="activeTab() !== 'boards'">
             <app-task-detail-boards />
           </div>
+          @if (readPages()) {
+            <div [class.hidden]="activeTab() !== 'pages'">
+              <app-task-detail-pages />
+            </div>
+          }
           @if (readActivity()) {
             <div [class.hidden]="activeTab() !== 'history'">
               <app-task-detail-activity-feed
@@ -171,6 +179,7 @@ export class TaskDetailDocumentComponent {
   readonly comments = inject(TaskDetailCommentsService);
 
   protected readonly filesSection = viewChild(TaskDetailFilesComponent);
+  protected readonly pagesSection = viewChild(TaskDetailPagesComponent);
 
   readonly task = this.taskDetail.task;
   readonly activeTab = signal('comments');
@@ -183,6 +192,7 @@ export class TaskDetailDocumentComponent {
   readonly readFlags = hasPermission(PERMISSIONS.flags.read);
   readonly readComments = hasPermission(PERMISSIONS.comments.read);
   readonly readActivity = hasPermission(PERMISSIONS.activity.read);
+  readonly readPages = hasPermission(PERMISSIONS.pages.read);
 
   readonly canAskAssistant = this.taskDetail.canAskAssistant;
 
@@ -192,13 +202,15 @@ export class TaskDetailDocumentComponent {
     links: $localize`:Tab listing the tasks this one links to:Links`,
     boards: $localize`:Section heading for the boards a task appears on:Boards`,
     history: $localize`:Tab showing what has happened to a task:History`,
+    pages: $localize`:Tab listing the pages that mention a task:Pages`,
   };
 
   tabItems(
     comments: number,
     files: number | null,
     links: number,
-    boards: number
+    boards: number,
+    pages: number | null
   ): TabItem[] {
     const tabs: TabItem[] = [];
 
@@ -216,6 +228,10 @@ export class TaskDetailDocumentComponent {
 
     tabs.push({ value: 'links', label: this.labels.links, count: links });
     tabs.push({ value: 'boards', label: this.labels.boards, count: boards });
+
+    if (pages !== null) {
+      tabs.push({ value: 'pages', label: this.labels.pages, count: pages });
+    }
 
     if (this.readActivity()) {
       tabs.push({ value: 'history', label: this.labels.history, count: null });

@@ -9,4 +9,7 @@ export enum EntityType {
   tag = 7,
   sprint = 8,
   status = 9,
+  relationType = 10,
+  workspaceFile = 11,
+  page = 12,
 }
