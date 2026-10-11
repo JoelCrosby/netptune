@@ -1,6 +1,5 @@
 using Mediator;
 
-using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Pages;
@@ -97,7 +96,7 @@ public sealed class CreatePageCommandHandler : IRequestHandler<CreatePageCommand
             ParentId = input.ParentId,
             ProjectId = placement.ProjectId,
             Title = title,
-            Slug = title.ToUrlSlug(true, PageTree.SlugMaxLength),
+            Slug = PageSlug.Create(title, body),
             Body = body,
             SortOrder = sortOrder,
             Status = PageStatus.Draft,
@@ -134,6 +133,7 @@ public sealed class CreatePageCommandHandler : IRequestHandler<CreatePageCommand
                     WorkspaceKey = workspaceKey,
                     ExpectedRevision = page.Revision,
                     Title = page.Title,
+                    Slug = page.Slug,
                     Body = body,
                     UserId = userId,
                 };

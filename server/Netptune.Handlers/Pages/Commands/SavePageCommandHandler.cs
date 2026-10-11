@@ -70,6 +70,7 @@ public sealed class SavePageCommandHandler : IRequestHandler<SavePageCommand, Cl
             return ClientResponse<PageViewModel>.Failed(PageBody.TooLargeMessage);
         }
 
+        var body = isFolder ? null : input.Body ?? string.Empty;
         var update = new PageContentUpdate
         {
             PageId = page.Id,
@@ -77,7 +78,8 @@ public sealed class SavePageCommandHandler : IRequestHandler<SavePageCommand, Cl
             WorkspaceKey = workspaceKey,
             ExpectedRevision = input.Revision,
             Title = title,
-            Body = isFolder ? null : input.Body ?? string.Empty,
+            Slug = PageSlug.Follow(page.Slug, title, body),
+            Body = body,
             UserId = userId,
         };
 

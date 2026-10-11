@@ -12,6 +12,8 @@ public sealed record PageContentUpdate
 
     public required string Title { get; init; }
 
+    public required string Slug { get; init; }
+
     public string? Body { get; init; }
 
     public required string UserId { get; init; }

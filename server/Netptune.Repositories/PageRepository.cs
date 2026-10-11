@@ -79,13 +79,28 @@ public sealed class PageRepository : WorkspaceEntityRepository<DataContext, Page
             .SingleOrDefaultAsync(cancellationToken);
     }
 
-    public Task<PageViewModel?> GetViewModelBySlug(string slug, int workspaceId, string userId, CancellationToken cancellationToken = default)
+    public async Task<PageViewModel?> GetViewModelBySlug(string slug, int workspaceId, string userId, CancellationToken cancellationToken = default)
     {
-        return Entities
+        var exact = await Entities
             .AsNoTracking()
             .Where(page => page.Slug == slug && page.WorkspaceId == workspaceId && !page.IsDeleted)
             .Select(ToViewModel(userId))
             .SingleOrDefaultAsync(cancellationToken);
+
+        var id = PageSlug.IdOf(slug);
+
+        if (exact is not null || id is null)
+        {
+            return exact;
+        }
+
+        var idSuffix = $"-{id}";
+
+        return await Entities
+            .AsNoTracking()
+            .Where(page => page.Slug.EndsWith(idSuffix) && page.WorkspaceId == workspaceId && !page.IsDeleted)
+            .Select(ToViewModel(userId))
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public Task<List<ArchivedPageViewModel>> GetArchived(int workspaceId, CancellationToken cancellationToken = default)
@@ -125,6 +140,7 @@ public sealed class PageRepository : WorkspaceEntityRepository<DataContext, Page
             .Where(page => page.Id == update.PageId && page.Revision == update.ExpectedRevision && !page.IsDeleted)
             .ExecuteUpdateAsync(setters => setters
                 .SetProperty(page => page.Title, update.Title)
+                .SetProperty(page => page.Slug, update.Slug)
                 .SetProperty(page => page.Body, update.Body)
                 .SetProperty(page => page.Revision, page => page.Revision + 1)
                 .SetProperty(page => page.ModifiedByUserId, update.UserId)

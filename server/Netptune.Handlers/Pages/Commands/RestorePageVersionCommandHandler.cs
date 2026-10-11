@@ -60,6 +60,7 @@ public sealed class RestorePageVersionCommandHandler : IRequestHandler<RestorePa
             WorkspaceKey = workspaceKey,
             ExpectedRevision = page.Revision,
             Title = version.Title,
+            Slug = PageSlug.Follow(page.Slug, version.Title, restoredBody),
             Body = restoredBody,
             UserId = userId,
             RestoredFromVersionId = version.Id,

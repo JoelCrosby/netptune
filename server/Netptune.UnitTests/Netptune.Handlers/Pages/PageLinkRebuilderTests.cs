@@ -90,6 +90,7 @@ public class PageLinkRebuilderTests
             WorkspaceKey = WorkspaceKey,
             ExpectedRevision = 3,
             Title = "RFC",
+            Slug = "rfc-abcdefGHIJ12",
             Body = body,
             UserId = "user-1",
         };

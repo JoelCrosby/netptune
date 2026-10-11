@@ -1,6 +1,5 @@
 using Mediator;
 
-using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Pages;
@@ -129,6 +128,7 @@ public sealed class ImportPagesCommandHandler : IRequestHandler<ImportPagesComma
             var position = siblingCounts.GetValueOrDefault(siblingKey);
             var sortOrder = node.ParentKey is null ? origin.FirstSortOrder + position : position + 1;
             var isDocument = node.Kind == PageKind.Document;
+            var body = isDocument ? node.Body ?? string.Empty : null;
 
             siblingCounts[siblingKey] = position + 1;
 
@@ -140,8 +140,8 @@ public sealed class ImportPagesCommandHandler : IRequestHandler<ImportPagesComma
                 ParentId = importedParent is null ? origin.Placement.Parent?.Id : null,
                 ProjectId = origin.Placement.ProjectId,
                 Title = node.Title,
-                Slug = node.Title.ToUrlSlug(true, PageTree.SlugMaxLength),
-                Body = isDocument ? node.Body ?? string.Empty : null,
+                Slug = PageSlug.Create(node.Title, body),
+                Body = body,
                 SortOrder = sortOrder,
                 Status = PageStatus.Draft,
                 Revision = 1,

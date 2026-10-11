@@ -15,8 +15,8 @@ export class PageDraftFactory {
 
   create(page: PageDetail): PageDraft {
     return new PageDraft(page, this.pages, {
-      renamed: (id, title) => {
-        this.treeStore.renameLocally(id, title);
+      renamed: ({ id, title, slug }) => {
+        this.treeStore.renameLocally(id, title, slug);
         this.workspaceRefresh.refresh(['pages']);
       },
       metaSaved: () => this.workspaceRefresh.refresh(['pages']),

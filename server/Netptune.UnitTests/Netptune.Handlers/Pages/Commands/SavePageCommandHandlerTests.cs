@@ -25,6 +25,7 @@ public class SavePageCommandHandlerTests
     private const int PageId = 42;
     private const string UserId = "user-1";
     private const string WorkspaceKey = "workspace";
+    private const string CurrentSlug = "current-abcdefGHIJ12";
 
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
@@ -71,6 +72,28 @@ public class SavePageCommandHandlerTests
             Arg.Is<PageVersion>(version => version.PageId == PageId && version.Revision == 4 && version.Body == "# Hello"),
             Arg.Any<CancellationToken>());
         await UnitOfWork.Received(1).CompleteAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Handle_ShouldMoveTheSlugToTheNewTitle_KeepingItsId()
+    {
+        await Send(new SavePageRequest { Title = "Roadmap", Body = "text", Revision = 3 });
+
+        await UnitOfWork.Pages.Received(1).TrySaveContent(
+            Arg.Is<PageContentUpdate>(update => update.Slug == "roadmap-abcdefGHIJ12"),
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Handle_ShouldTakeTheSlugFromTheBody_WhenThePageIsUntitled()
+    {
+        await Send(new SavePageRequest { Title = "", Body = "Notes from the offsite\n\nMore", Revision = 3 });
+
+        await UnitOfWork.Pages.Received(1).TrySaveContent(
+            Arg.Is<PageContentUpdate>(update =>
+                update.Title == PageTitle.Untitled &&
+                update.Slug == "notes-from-the-offsite-abcdefGHIJ12"),
+            Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -192,7 +215,7 @@ public class SavePageCommandHandlerTests
     {
         UnitOfWork.Pages
             .GetLiveInWorkspace(PageId, WorkspaceId, true, Arg.Any<CancellationToken>())
-            .Returns(new Page { Id = PageId, WorkspaceId = WorkspaceId, Kind = kind, Title = "Current", Slug = "current", Revision = 3 });
+            .Returns(new Page { Id = PageId, WorkspaceId = WorkspaceId, Kind = kind, Title = "Current", Slug = CurrentSlug, Revision = 3 });
     }
 
     private Task<ClientResponse<PageViewModel>> Send(SavePageRequest request)

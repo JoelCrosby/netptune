@@ -218,9 +218,11 @@ export class PageTreeStore {
     this.commands.move(move.nodeId, placement);
   }
 
-  renameLocally(id: number, title: string) {
+  renameLocally(id: number, title: string, slug: string) {
     this.tree.value.update((nodes) => {
-      return nodes?.map((node) => (node.id === id ? { ...node, title } : node));
+      return nodes?.map((node) => {
+        return node.id === id ? { ...node, title, slug } : node;
+      });
     });
   }
 }

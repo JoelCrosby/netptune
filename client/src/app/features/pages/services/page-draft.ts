@@ -8,7 +8,7 @@ import { getErrorMessage } from '@core/util/error-message';
 import { SaveState } from '@static/components/save-status/save-status.component';
 
 export interface PageDraftHooks {
-  renamed(id: number, title: string): void;
+  renamed(page: PageDetail): void;
   metaSaved(): void;
   failed(message: string): void;
 }
@@ -44,9 +44,9 @@ export class PageDraft {
     this.id = page.id;
     this.kind = page.kind;
     this.revision = page.revision;
-    this.savedTitle = page.title;
+    this.savedTitle = editableTitle(page.title);
     // Built inside a computed, which forbids writes, so the signals start with their values.
-    this.title = signal(page.title);
+    this.title = signal(editableTitle(page.title));
     this.body = signal(page.body ?? '');
     this.latest = signal(page);
   }
@@ -92,9 +92,9 @@ export class PageDraft {
 
   replaceWith(page: PageDetail) {
     this.revision = page.revision;
-    this.savedTitle = page.title;
+    this.savedTitle = editableTitle(page.title);
     this.latest.set(page);
-    this.title.set(page.title);
+    this.title.set(editableTitle(page.title));
     this.body.set(page.body ?? '');
     this.conflict.set(null);
     this.queued = false;
@@ -135,9 +135,9 @@ export class PageDraft {
     if (!theirs) return;
 
     this.revision = theirs.revision;
-    this.savedTitle = theirs.title;
+    this.savedTitle = editableTitle(theirs.title);
     this.latest.set(theirs);
-    this.title.set(theirs.title);
+    this.title.set(editableTitle(theirs.title));
     this.body.set(theirs.body ?? '');
     this.conflict.set(null);
     this.state.set('saved');
@@ -198,15 +198,17 @@ export class PageDraft {
       return;
     }
 
-    const renamed = saved.title !== this.savedTitle;
+    const renamed =
+      editableTitle(saved.title) !== this.savedTitle ||
+      saved.slug !== this.latest().slug;
 
     this.revision = saved.revision;
-    this.savedTitle = saved.title;
+    this.savedTitle = editableTitle(saved.title);
     this.latest.set(saved);
     this.state.set('saved');
 
     if (renamed) {
-      this.hooks.renamed(this.id, saved.title);
+      this.hooks.renamed(saved);
     }
 
     this.runQueued();
@@ -243,3 +245,10 @@ export class PageDraft {
 const tooLargeMessage = $localize`:Error shown when a page's text is over the size limit:Pages can be at most 1 MB of text.`;
 const updateFailedMessage = $localize`:Error shown when changing a page's status or tags fails:The page couldn't be updated.`;
 const saveFailedMessage = $localize`:Error shown when saving a page fails:The page couldn't be saved.`;
+
+// The server stores a blank title as PageTitle.Untitled; the editor shows it empty so the placeholder reads instead.
+const serverUntitled = 'Untitled';
+
+function editableTitle(title: string): string {
+  return title === serverUntitled ? '' : title;
+}

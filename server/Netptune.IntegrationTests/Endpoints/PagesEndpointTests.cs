@@ -73,6 +73,23 @@ public sealed class PagesEndpointTests
     }
 
     [Fact]
+    public async Task Save_ShouldMoveTheSlugToTheNewTitle_WhileTheOldSlugStillFindsThePage()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var created = await Create(new CreatePageRequest { Kind = PageKind.Document });
+        var response = await Save(created.Id, new SavePageRequest { Title = "Incident review", Revision = created.Revision });
+        var saved = await response.Content.ReadFromJsonAsync<ClientResponse<PageViewModel>>(cancellationToken);
+
+        saved!.Payload!.Slug.Should().StartWith("incident-review-");
+        PageSlug.IdOf(saved.Payload.Slug).Should().Be(PageSlug.IdOf(created.Slug));
+
+        var fetched = await Client.GetFromJsonAsync<ClientResponse<PageViewModel>>($"api/pages/{created.Slug}", cancellationToken);
+
+        fetched!.Payload!.Id.Should().Be(created.Id);
+        fetched.Payload.Slug.Should().Be(saved.Payload.Slug);
+    }
+
+    [Fact]
     public async Task Save_ShouldReturnConflictWithTheCurrentPage_WhenTheRevisionIsStale()
     {
         var created = await Create(new CreatePageRequest { Kind = PageKind.Document, Title = "Shared notes" });

@@ -4,6 +4,7 @@ import {
   DestroyRef,
   effect,
   inject,
+  linkedSignal,
   signal,
   untracked,
   viewChild,
@@ -44,6 +45,7 @@ import {
 import { pageArchiveRights } from '../../util/page-archive-rights';
 import { PageDraft } from '../../services/page-draft';
 import { PageDraftFactory } from '../../services/page-draft.factory';
+import { isSamePageSlug } from '../../util/page-slug';
 import { PageTreeStore } from '../../services/page-tree.store';
 
 @Component({
@@ -129,10 +131,23 @@ export class PageDetailViewComponent {
     initialValue: this.route.snapshot.params,
   });
 
-  private readonly slug = computed(() => {
+  private readonly routeSlug = computed(() => {
     const slug: unknown = this.routeParams()['slug'];
 
     return typeof slug === 'string' ? slug : undefined;
+  });
+
+  private readonly openSlug = signal<string | undefined>(undefined);
+  // The address follows the open page's slug as its title changes; reloading it then would replace a body
+  // the user is still typing into, so the page keeps the slug it was loaded by.
+  private readonly slug = linkedSignal<string | undefined, string | undefined>({
+    source: this.routeSlug,
+    computation: (routeSlug, previous) => {
+      const followsOpenPage =
+        previous !== undefined && routeSlug === untracked(this.openSlug);
+
+      return followsOpenPage ? previous.value : routeSlug;
+    },
   });
 
   protected readonly detail = pageDetailResource(this.slug);
@@ -202,6 +217,21 @@ export class PageDetailViewComponent {
 
       if (id !== undefined) {
         this.commands.recordVisit(id);
+      }
+    });
+
+    effect(() => {
+      const slug = this.draft()?.latest().slug;
+      const routeSlug = this.routeSlug();
+      const isStale =
+        slug !== undefined &&
+        routeSlug !== undefined &&
+        slug !== routeSlug &&
+        isSamePageSlug(slug, routeSlug);
+
+      if (isStale) {
+        this.openSlug.set(slug);
+        void this.router.navigate(this.store.link(slug), { replaceUrl: true });
       }
     });
 
