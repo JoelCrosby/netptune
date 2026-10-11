@@ -27,6 +27,7 @@ import {
 import { fromNow } from '@core/util/dates';
 import {
   LucideLanguages,
+  LucideListChecks,
   LucideScissors,
   LucideTextQuote,
   LucideTriangleAlert,
@@ -58,6 +59,7 @@ import {
   basicEditorCommands,
   EditorCommand,
 } from '@static/components/editor/editor-commands';
+import { AiAssistantService } from '@core/services/ai-assistant.service';
 import { DialogService } from '@core/services/dialog.service';
 import { QueryPickerDialogComponent } from '../dialogs/query-picker-dialog.component';
 import { createPageEditorCommands } from '../editor/page-editor-commands';
@@ -106,6 +108,12 @@ const selectionActions: EditorSelectionAction[] = [
     icon: LucideLanguages,
   },
 ];
+
+const turnIntoTasksAction: EditorSelectionAction = {
+  id: 'tasks',
+  label: $localize`:Bubble menu action that asks the assistant to turn the selected checklist into tasks:Turn into tasks`,
+  icon: LucideListChecks,
+};
 
 type SelectionTransform = Extract<
   PageTransformAction,
@@ -359,12 +367,14 @@ export class PageEditorComponent implements OnInit {
 
   private readonly canReadQueries = hasPermission(PERMISSIONS.queries.read);
   private readonly canUseAssistant = hasPermission(PERMISSIONS.assistant.use);
+  private readonly canCreateTasks = hasPermission(PERMISSIONS.tasks.create);
+  private readonly assistant = inject(AiAssistantService);
   protected readonly transform = inject(PageTransformController);
 
   protected readonly commands = computed<readonly EditorCommand[]>(() => {
     const pageCommands = createPageEditorCommands({
       canEmbedQueries: this.canReadQueries(),
-      canUseAssistant: this.canUseAssistant(),
+      canUseAssistant: this.canUseAssistant() && this.assistant.isAvailable(),
       pickQuery: () => this.pickQuery(),
       transformAbove: (action, position) => {
         this.transformAbove(action, position);
@@ -377,9 +387,17 @@ export class PageEditorComponent implements OnInit {
   // Rewrites land through the editor, so only someone who can edit the page is offered them.
   protected readonly selectionActions = computed<EditorSelectionAction[]>(
     () => {
-      const canTransform = this.canUseAssistant() && !this.readOnly();
+      const canTransform =
+        this.canUseAssistant() &&
+        this.assistant.isAvailable() &&
+        !this.readOnly();
+      const canMakeTasks = canTransform && this.canCreateTasks();
 
-      return canTransform ? selectionActions : [];
+      if (!canTransform) return [];
+
+      return canMakeTasks
+        ? [...selectionActions, turnIntoTasksAction]
+        : selectionActions;
     }
   );
 
@@ -466,6 +484,11 @@ export class PageEditorComponent implements OnInit {
   protected onSelectionAction(selection: EditorSelection) {
     const editor = this.editor()?.editor();
     const action = selection.actionId;
+
+    if (action === turnIntoTasksAction.id) {
+      this.assistant.turnSelectionIntoTasks(selection.markdown);
+      return;
+    }
 
     if (!editor || !isSelectionTransform(action)) return;
 

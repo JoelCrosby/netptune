@@ -45,6 +45,8 @@ export class AiStreamService {
 
     this.abort = abort;
 
+    const body = this.createBody(request);
+
     try {
       const response = await fetch(
         `${environment.apiEndpoint}api/ai/conversations/messages`,
@@ -53,13 +55,15 @@ export class AiStreamService {
           credentials: 'include',
           headers: this.createHeaders(),
           signal: abort.signal,
-          body: JSON.stringify(this.createBody(request)),
+          body: JSON.stringify(body),
         }
       );
 
       if (!response.ok || !response.body) {
         return false;
       }
+
+      this.context.markSelectionSent(body.context);
 
       await readEventStream(response.body, onEvent);
 
@@ -118,7 +122,7 @@ export class AiStreamService {
       retry: request.retry,
       answer: request.answer,
       revise: request.revise,
-      context: this.context.context(),
+      context: this.context.contextFor(request.retry),
     };
   }
 

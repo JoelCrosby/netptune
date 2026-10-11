@@ -321,6 +321,7 @@ export class AiAssistantService {
     this.conversation.startNew();
     this.progress.reset();
     this.context.restore();
+    this.context.clearSelection();
   }
 
   removeContext(chip: AiContextChip) {
@@ -345,6 +346,36 @@ export class AiAssistantService {
     this.askAbout(
       $localize`:Seeds the assistant composer with a question about a sprint:About sprint ${sprint.name}:NAME: (id ${sprint.id}:ID:): `
     );
+  }
+
+  // Seeds rather than sends, so the user can say which project the tasks belong in before anything is proposed.
+  turnSelectionIntoTasks(selection: string) {
+    if (!this.isAvailable()) {
+      return;
+    }
+
+    this.context.attachSelection(selection);
+    this.askAbout(
+      $localize`:Seeds the assistant composer when turning a selected page checklist into tasks:Turn the selected items into tasks and link each one back into the page.`
+    );
+  }
+
+  // A fresh conversation, so a question asked from pages home is not read against an unrelated earlier chat.
+  askAcrossPages(question: string) {
+    const trimmed = question.trim();
+
+    if (!this.isAvailable() || !trimmed) {
+      return;
+    }
+
+    // A turn still streaming would otherwise swallow the question and spill its events into the new chat.
+    if (this.isStreaming()) {
+      this.abandonTurn();
+    }
+
+    this.panel.open();
+    this.startNewConversation();
+    void this.send(trimmed);
   }
 
   private askAbout(seed: string) {

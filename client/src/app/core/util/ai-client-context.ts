@@ -31,7 +31,11 @@ const KIND_LABELS: Record<AiContextKind, string> = {
   sprint: $localize`:Names the kind of thing a context chip points at:Sprint`,
   task: $localize`:Names the kind of thing a context chip points at:Task`,
   page: $localize`:Names the kind of thing a context chip points at:Page`,
+  selection: $localize`:Names the kind of thing a context chip points at, text selected on a page:Selection`,
 };
+
+const SELECTION_PREVIEW_LENGTH = 48;
+const SELECTION_TOOLTIP_LENGTH = 280;
 
 /** The first segment is the workspace slug, so the section is the one after it. */
 export const readView = (url: string): string | undefined => {
@@ -134,6 +138,23 @@ export const pageChip = (
     name: page.title,
     route: routeFor(workspace, 'page', page.slug),
     context: { pageSlug: page.slug, pageTitle: page.title },
+  };
+};
+
+export const selectionChip = (text: string): AiContextChip => {
+  const singleLine = text.replace(/\s+/g, ' ').trim();
+  const isLong = singleLine.length > SELECTION_PREVIEW_LENGTH;
+  const preview = isLong
+    ? `${singleLine.slice(0, SELECTION_PREVIEW_LENGTH)}…`
+    : singleLine;
+
+  return {
+    kind: 'selection',
+    label: KIND_LABELS.selection,
+    name: preview,
+    description: singleLine.slice(0, SELECTION_TOOLTIP_LENGTH),
+    route: null,
+    context: { pageSelection: text },
   };
 };
 

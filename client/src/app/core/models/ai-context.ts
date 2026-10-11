@@ -10,10 +10,11 @@ export interface AiClientContext {
   taskName?: string;
   pageSlug?: string;
   pageTitle?: string;
+  pageSelection?: string;
 }
 
 export type AiContextKind =
-  'view' | 'project' | 'board' | 'sprint' | 'task' | 'page';
+  'view' | 'project' | 'board' | 'sprint' | 'task' | 'page' | 'selection';
 
 export interface AiContextChip {
   kind: AiContextKind;

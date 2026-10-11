@@ -194,7 +194,7 @@
         <note category="location">src/app/features/pages/components/page-tree.component.ts:99,101</note>
         <note category="location">src/app/features/pages/editor/page-reference.controller.ts:229</note>
         <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:316</note>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:21</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:29</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:92</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:207</note>
         <note category="location">src/app/workspace.routes.ts:78</note>
@@ -651,7 +651,7 @@
     </unit>
     <unit id="6980870776971861351">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:436</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:451</note>
         <note category="description">Byline under a page title naming who last edited it, when, and how long it takes to read</note>
       </notes>
       <segment>
@@ -854,7 +854,7 @@
     </unit>
     <unit id="3140301883580563682">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:35,39</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:70,74</note>
         <note category="description">Hint on the pages home</note>
       </notes>
       <segment>
@@ -2263,7 +2263,7 @@
     </unit>
     <unit id="8640677495548743141">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:883</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:908</note>
         <note category="description">Asks the user to confirm deleting one of their assistant conversations. TITLE is the conversation title</note>
       </notes>
       <segment>
@@ -2799,7 +2799,7 @@
     </unit>
     <unit id="1613971242435858090">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:105</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:107</note>
         <note category="description">Bubble menu action that has the assistant translate the selected text</note>
       </notes>
       <segment>
@@ -3097,7 +3097,7 @@
     </unit>
     <unit id="955080669037591255">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:875</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:900</note>
         <note category="description">Asks the user to confirm deleting several of their assistant conversations</note>
       </notes>
       <segment>
@@ -5082,7 +5082,7 @@
     </unit>
     <unit id="5635560755747598626">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:100</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:102</note>
         <note category="description">Bubble menu action that has the assistant shorten the selected text</note>
       </notes>
       <segment>
@@ -5336,6 +5336,15 @@
       </notes>
       <segment>
         <source>Relation</source>
+      </segment>
+    </unit>
+    <unit id="4320935807729548621">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:114</note>
+        <note category="description">Bubble menu action that asks the assistant to turn the selected checklist into tasks</note>
+      </notes>
+      <segment>
+        <source>Turn into tasks</source>
       </segment>
     </unit>
     <unit id="4321311470265684813">
@@ -11254,7 +11263,7 @@
     </unit>
     <unit id="6189233648220583946">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:529</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:554</note>
         <note category="description">Shown when the assistant request fails</note>
       </notes>
       <segment>
@@ -12566,7 +12575,7 @@
     </unit>
     <unit id="7253608290099852757">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:250,254</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:258,262</note>
         <note category="description">Button that discards local edits and loads the newer saved page</note>
       </notes>
       <segment>
@@ -14686,7 +14695,7 @@
       <notes>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:69,71</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:80,82</note>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:45</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:87</note>
         <note category="location">src/app/shell/global-commands.service.ts:454</note>
         <note category="description">Accessible label for the button that creates a page or folder</note>
       </notes>
@@ -15159,7 +15168,7 @@
     </unit>
     <unit id="7869199587095613616">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:279,280</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:287,288</note>
         <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:317</note>
         <note category="location">src/app/static/components/branding-preview/branding-preview.component.ts:156</note>
         <note category="description">Placeholder in an empty page title</note>
@@ -15175,6 +15184,15 @@
       </notes>
       <segment>
         <source> Create Board </source>
+      </segment>
+    </unit>
+    <unit id="8078092222078220531">
+      <notes>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:58,64</note>
+        <note category="description">Hint beside the pages home question box saying the assistant answers from pages</note>
+      </notes>
+      <segment>
+        <source>Answers cite the pages they use</source>
       </segment>
     </unit>
     <unit id="8081187093671904449">
@@ -15694,7 +15712,7 @@
     </unit>
     <unit id="3823219296477075982">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:191,192</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:199,200</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:397,400</note>
         <note category="description">Accessible label for closing the assistant result card</note>
       </notes>
@@ -15704,7 +15722,7 @@
     </unit>
     <unit id="3823999463060757067">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:95</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:97</note>
         <note category="description">Bubble menu action that has the assistant summarise the selected text</note>
       </notes>
       <segment>
@@ -15861,8 +15879,8 @@
     </unit>
     <unit id="3154294923374510663">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:650</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:841</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:675</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:866</note>
         <note category="description">Shown when the assistant reports a failure</note>
       </notes>
       <segment>
@@ -15946,7 +15964,7 @@
     </unit>
     <unit id="1163860776084272350">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:314,316</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:322,324</note>
         <note category="description">Shown on a folder, which has no text of its own</note>
       </notes>
       <segment>
@@ -16299,7 +16317,7 @@
     </unit>
     <unit id="1557588537287479588">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:164,166</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:172,174</note>
         <note category="location">src/app/features/pages/editor/page-editor-commands.ts:28</note>
         <note category="description">Accessible label for the menu of tasks and pages to mention</note>
       </notes>
@@ -16463,7 +16481,7 @@
     </unit>
     <unit id="933361080941409912">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:281,283</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:289,291</note>
         <note category="description">Accessible label for the page title</note>
       </notes>
       <segment>
@@ -16884,7 +16902,7 @@
     </unit>
     <unit id="9180258231296737289">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:299,301</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:307,309</note>
         <note category="description">Placeholder in an empty page body</note>
       </notes>
       <segment>
@@ -16953,6 +16971,15 @@
       </notes>
       <segment>
         <source>Go To Board</source>
+      </segment>
+    </unit>
+    <unit id="4431741797734368814">
+      <notes>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:358</note>
+        <note category="description">Seeds the assistant composer when turning a selected page checklist into tasks</note>
+      </notes>
+      <segment>
+        <source>Turn the selected items into tasks and link each one back into the page.</source>
       </segment>
     </unit>
     <unit id="4433209389805860491">
@@ -18692,7 +18719,7 @@
     </unit>
     <unit id="8246436377858718644">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:882</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:907</note>
         <note category="description">Title of the confirmation dialog for deleting an assistant conversation</note>
       </notes>
       <segment>
@@ -20203,7 +20230,7 @@
     </unit>
     <unit id="3164972071980049830">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:232,235</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:240,243</note>
         <note category="description">Title of the notice shown when someone else saved the page first</note>
       </notes>
       <segment>
@@ -20257,7 +20284,7 @@
     </unit>
     <unit id="6652056720487527045">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:168,170</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:176,178</note>
         <note category="description">Shown in the mention menu when nothing matches what was typed</note>
       </notes>
       <segment>
@@ -20661,6 +20688,15 @@
       </notes>
       <segment>
         <source>What members asked the assistant. The record of what changed lives in the audit log.</source>
+      </segment>
+    </unit>
+    <unit id="8676025783488152933">
+      <notes>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:43,46</note>
+        <note category="description">Placeholder of the box on pages home that asks the assistant about the workspace&apos;s pages</note>
+      </notes>
+      <segment>
+        <source>Ask anything about your pages…</source>
       </segment>
     </unit>
     <unit id="7357824854550266974">
@@ -22070,6 +22106,15 @@
         <source>Applies to</source>
       </segment>
     </unit>
+    <unit id="818882206456622635">
+      <notes>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:48,50</note>
+        <note category="description">Accessible label of the box on pages home that asks the assistant a question</note>
+      </notes>
+      <segment>
+        <source>Ask the assistant about your pages</source>
+      </segment>
+    </unit>
     <unit id="7203070746919732368">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:346</note>
@@ -22143,7 +22188,7 @@
     </unit>
     <unit id="7639811500826292651">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:260,264</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:268,272</note>
         <note category="description">Button that saves local edits over the newer saved page</note>
       </notes>
       <segment>
@@ -22295,7 +22340,7 @@
     </unit>
     <unit id="752450269478191186">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:33,35</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:68,70</note>
         <note category="description">Shown on the pages home before a page is opened</note>
       </notes>
       <segment>
@@ -22694,7 +22739,7 @@
     </unit>
     <unit id="4007569097635901294">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:186,188</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:194,196</note>
         <note category="description">Shown while the assistant works on page text</note>
       </notes>
       <segment>
@@ -22950,7 +22995,7 @@
     </unit>
     <unit id="574980856658424744">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:874</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:899</note>
         <note category="description">Title of the confirmation dialog for deleting several assistant conversations. COUNT is how many</note>
       </notes>
       <segment>
@@ -23103,7 +23148,7 @@
     </unit>
     <unit id="345444628816896468">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:316,321</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:324,329</note>
         <note category="description">Hint shown on a folder page</note>
       </notes>
       <segment>
@@ -23664,7 +23709,7 @@
     </unit>
     <unit id="7530911039577159922">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:199,201</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:207,209</note>
         <note category="description">Accessible label for the language page text is translated into</note>
       </notes>
       <segment>
@@ -24637,6 +24682,15 @@
         <source><ph id="0" equiv="NAME" disp="displayName ?? &apos;&apos;"/> <ph id="1" equiv="STATE" disp="state"/></source>
       </segment>
     </unit>
+    <unit id="7135702134770124349">
+      <notes>
+        <note category="location">src/app/core/util/ai-client-context.ts:34</note>
+        <note category="description">Names the kind of thing a context chip points at, text selected on a page</note>
+      </notes>
+      <segment>
+        <source>Selection</source>
+      </segment>
+    </unit>
     <unit id="7136018875175606726">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-transcript.component.ts:47,48</note>
@@ -24931,7 +24985,7 @@
     </unit>
     <unit id="4451682318497650150">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:237,240</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:245,248</note>
         <note category="description">Body of the notice shown when someone else saved the page first</note>
       </notes>
       <segment>
@@ -25411,6 +25465,15 @@
       </notes>
       <segment>
         <source>No fields watched yet</source>
+      </segment>
+    </unit>
+    <unit id="6441348058745652320">
+      <notes>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:54,55</note>
+        <note category="description">Accessible label of the button that sends a question to the assistant</note>
+      </notes>
+      <segment>
+        <source>Ask</source>
       </segment>
     </unit>
     <unit id="6447840555676789898">
