@@ -41,4 +41,19 @@ public class WorkspaceRolePermissionsTests
         WorkspaceRolePermissions.GetDefaultPermissions(WorkspaceRole.Member)
             .Should().Contain([NetptunePermissions.Flags.Read, NetptunePermissions.Flags.Resolve]);
     }
+
+    [Fact]
+    public void PagePermissions_ShouldMatchRoleDefaults()
+    {
+        WorkspaceRolePermissions.GetDefaultPermissions(WorkspaceRole.Viewer)
+            .Should().Contain(NetptunePermissions.Pages.Read)
+            .And.NotContain([NetptunePermissions.Pages.Create, NetptunePermissions.Pages.Update]);
+
+        WorkspaceRolePermissions.GetDefaultPermissions(WorkspaceRole.Member)
+            .Should().Contain([NetptunePermissions.Pages.Create, NetptunePermissions.Pages.Update, NetptunePermissions.Pages.Delete])
+            .And.NotContain(NetptunePermissions.Pages.DeleteAny);
+
+        WorkspaceRolePermissions.GetDefaultPermissions(WorkspaceRole.Admin)
+            .Should().Contain(NetptunePermissions.Pages.DeleteAny);
+    }
 }
