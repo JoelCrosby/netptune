@@ -63,9 +63,9 @@ public static partial class PageReferenceParser
         return references;
     }
 
-    // Code is left as written, the same text the parser skips. A page id with no new id would point at
-    // whatever page has that id in the other database, so the mention is reduced to its label.
-    public static string? RewritePageIds(string? markdown, IReadOnlyDictionary<int, int> newIds)
+    // Code is left as written, the same text the parser skips. An id with no new id would point at whatever
+    // has that id in the other database, so the mention is reduced to its label.
+    public static string? RewriteIds(string? markdown, IReadOnlyDictionary<string, Dictionary<int, int>> newIdsByKind)
     {
         if (string.IsNullOrEmpty(markdown))
         {
@@ -88,44 +88,44 @@ public static partial class PageReferenceParser
 
             if (!insideFence)
             {
-                lines[index] = RewriteOutsideInlineCode(lines[index], newIds);
+                lines[index] = RewriteOutsideInlineCode(lines[index], newIdsByKind);
             }
         }
 
         return string.Join('\n', lines);
     }
 
-    private static string RewriteOutsideInlineCode(string line, IReadOnlyDictionary<int, int> newIds)
+    private static string RewriteOutsideInlineCode(string line, IReadOnlyDictionary<string, Dictionary<int, int>> newIdsByKind)
     {
         var rewritten = new StringBuilder(line.Length);
         var position = 0;
 
         foreach (Match code in InlineCodePattern().Matches(line))
         {
-            rewritten.Append(RewriteTokens(line[position..code.Index], newIds));
+            rewritten.Append(RewriteTokens(line[position..code.Index], newIdsByKind));
             rewritten.Append(code.Value);
             position = code.Index + code.Length;
         }
 
-        rewritten.Append(RewriteTokens(line[position..], newIds));
+        rewritten.Append(RewriteTokens(line[position..], newIdsByKind));
 
         return rewritten.ToString();
     }
 
-    private static string RewriteTokens(string prose, IReadOnlyDictionary<int, int> newIds)
+    private static string RewriteTokens(string prose, IReadOnlyDictionary<string, Dictionary<int, int>> newIdsByKind)
     {
-        return TokenPattern().Replace(prose, match =>
+        return IdTokenPattern().Replace(prose, match =>
         {
-            var kind = ParseKind(match.Groups["kind"].Value);
-            var isPage = kind == PageLinkTargetType.Page;
+            var kind = match.Groups["kind"].Value.ToLowerInvariant();
             var hasId = int.TryParse(match.Groups["key"].Value, out var oldId);
 
-            if (!isPage || !hasId)
+            if (!hasId)
             {
                 return match.Value;
             }
 
-            var newId = newIds.GetValueOrDefault(oldId);
+            var newIds = newIdsByKind.GetValueOrDefault(kind);
+            var newId = newIds?.GetValueOrDefault(oldId) ?? 0;
             var isMapped = newId > 0;
             var label = match.Groups["label"].Value;
 
@@ -134,7 +134,7 @@ public static partial class PageReferenceParser
                 return label;
             }
 
-            return label.Length > 0 ? $"[[page:{newId}|{label}]]" : $"[[page:{newId}]]";
+            return label.Length > 0 ? $"[[{kind}:{newId}|{label}]]" : $"[[{kind}:{newId}]]";
         });
     }
 
@@ -166,6 +166,9 @@ public static partial class PageReferenceParser
 
     [GeneratedRegex(@"\[\[(?<kind>task|page|user):(?<key>[^\]|\s]+)(?:\|(?<label>[^\]]*))?\]\]", RegexOptions.IgnoreCase)]
     private static partial Regex TokenPattern();
+
+    [GeneratedRegex(@"\[\[(?<kind>page|project|sprint|board):(?<key>[^\]|\s]+)(?:\|(?<label>[^\]]*))?\]\]", RegexOptions.IgnoreCase)]
+    private static partial Regex IdTokenPattern();
 
     [GeneratedRegex(@"^\s*(```|~~~)")]
     private static partial Regex FencePattern();

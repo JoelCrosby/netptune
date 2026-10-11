@@ -26,7 +26,8 @@ public sealed class GetPageTool : IAiTool
     public string Description =>
         "Read one page by its slug: title, kind, status, tags, revision and its body as markdown. "
         + "Long bodies come in parts; continue from nextOffset until hasMore is false. "
-        + "Mentions in the body look like [[task:NPT-42|name]] or [[page:12|name]].";
+        + "Mentions in the body look like [[task:NPT-42|name]], [[page:12|name]], [[project:3|name]], "
+        + "[[sprint:7|name]] or [[board:5|name]].";
 
     public AiToolKind Kind => AiToolKind.Read;
 

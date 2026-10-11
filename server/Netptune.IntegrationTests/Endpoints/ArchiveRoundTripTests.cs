@@ -129,8 +129,9 @@ public sealed class ArchiveRoundTripTests
         var folder = await CreatePage(new CreatePageRequest { Kind = PageKind.Folder, Title = $"Archive folder {marker}" });
         var sibling = await CreatePage(new CreatePageRequest { Kind = PageKind.Document, Title = $"Archive sibling {marker}" });
         var child = await CreatePage(new CreatePageRequest { Kind = PageKind.Document, Title = $"Archive child {marker}", ParentId = folder.Id });
-        var taskSystemId = await AnyLiveTaskSystemId();
-        var body = $"See [[page:{sibling.Id}|Sibling]] and [[task:{taskSystemId}]]";
+        var liveTask = await AnyLiveTask();
+        var taskSystemId = liveTask.SystemId;
+        var body = $"See [[page:{sibling.Id}|Sibling]] and [[task:{taskSystemId}]] in [[project:{liveTask.ProjectId}|Project]]";
         var saved = await Client.PutAsJsonAsync($"api/pages/{child.Id}", new SavePageRequest { Title = child.Title, Body = body, Revision = child.Revision }, cancellationToken);
         var tags = await Client.GetFromJsonAsync<List<TagViewModel>>("api/tags/workspace", cancellationToken);
         var tagged = await Client.PatchAsJsonAsync($"api/pages/{child.Id}", new UpdatePageRequest { TagIds = [tags![0].Id] }, cancellationToken);
@@ -157,9 +158,10 @@ public sealed class ArchiveRoundTripTests
         var clonedChild = pages.Single(page => page.Title == child.Title);
         var childVersions = await context.PageVersions.CountAsync(version => version.PageId == clonedChild.Id, cancellationToken);
         var childLinks = await context.PageLinks.AsNoTracking().Where(link => link.PageId == clonedChild.Id).ToListAsync(cancellationToken);
+        var clonedProject = await context.Projects.AsNoTracking().SingleAsync(project => project.WorkspaceId == workspaceId && project.Key == liveTask.ProjectKey, cancellationToken);
 
         clonedChild.ParentId.Should().Be(clonedFolder.Id);
-        clonedChild.Body.Should().Be($"See [[page:{clonedSibling.Id}|Sibling]] and [[task:{taskSystemId}]]");
+        clonedChild.Body.Should().Be($"See [[page:{clonedSibling.Id}|Sibling]] and [[task:{taskSystemId}]] in [[project:{clonedProject.Id}|Project]]");
         clonedChild.PageTags.Should().ContainSingle();
         childVersions.Should().Be(2);
         childLinks.Should().Contain(link => link.TargetType == PageLinkTargetType.Page && link.TargetId == clonedSibling.Id.ToString());
@@ -525,7 +527,9 @@ public sealed class ArchiveRoundTripTests
         return result!.Payload!;
     }
 
-    private async Task<string> AnyLiveTaskSystemId()
+    private sealed record LiveTask(string SystemId, int ProjectId, string ProjectKey);
+
+    private async Task<LiveTask> AnyLiveTask()
     {
         await using var scope = Fixture.Services.CreateAsyncScope();
 
@@ -537,7 +541,7 @@ public sealed class ArchiveRoundTripTests
             .OrderBy(item => item.Id)
             .FirstAsync(TestContext.Current.CancellationToken);
 
-        return $"{task.Project!.Key}-{task.ProjectScopeId}";
+        return new LiveTask($"{task.Project!.Key}-{task.ProjectScopeId}", task.Project.Id, task.Project.Key);
     }
 
     private async Task<string> OwnerId()

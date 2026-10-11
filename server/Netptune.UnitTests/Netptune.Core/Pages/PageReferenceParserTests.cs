@@ -69,32 +69,53 @@ public class PageReferenceParserTests
     }
 
     [Fact]
-    public void RewritePageIds_ShouldMovePageTokensToTheirNewIds_KeepingLabels()
+    public void RewriteIds_ShouldMovePageTokensToTheirNewIds_KeepingLabels()
     {
         var markdown = "See [[page:4|Runbook]] and [[page:5]], not [[task:NET-4]].";
 
-        var rewritten = PageReferenceParser.RewritePageIds(markdown, new Dictionary<int, int> { [4] = 40, [5] = 50 });
+        var rewritten = PageReferenceParser.RewriteIds(markdown, Pages(new Dictionary<int, int> { [4] = 40, [5] = 50 }));
 
         rewritten.Should().Be("See [[page:40|Runbook]] and [[page:50]], not [[task:NET-4]].");
     }
 
     [Fact]
-    public void RewritePageIds_ShouldReduceAMentionOfAPageThatDidNotTravel_ToItsLabel()
+    public void RewriteIds_ShouldReduceAMentionOfAPageThatDidNotTravel_ToItsLabel()
     {
         var markdown = "Was [[page:9|Old plan]] and [[page:8]].";
 
-        var rewritten = PageReferenceParser.RewritePageIds(markdown, new Dictionary<int, int>());
+        var rewritten = PageReferenceParser.RewriteIds(markdown, Pages([]));
 
         rewritten.Should().Be("Was Old plan and .");
     }
 
     [Fact]
-    public void RewritePageIds_ShouldLeaveCodeAsWritten()
+    public void RewriteIds_ShouldLeaveCodeAsWritten()
     {
         var markdown = "`[[page:4]]` then [[page:4]]\n```\n[[page:4]]\n```";
 
-        var rewritten = PageReferenceParser.RewritePageIds(markdown, new Dictionary<int, int> { [4] = 40 });
+        var rewritten = PageReferenceParser.RewriteIds(markdown, Pages(new Dictionary<int, int> { [4] = 40 }));
 
         rewritten.Should().Be("`[[page:4]]` then [[page:40]]\n```\n[[page:4]]\n```");
+    }
+
+    [Fact]
+    public void RewriteIds_ShouldMoveProjectSprintAndBoardMentions_AndLeaveTasksAndUsers()
+    {
+        var markdown = "[[project:8|Monitoring]] [[sprint:16|Sprint 4]] [[board:3|Ops]] [[task:MON-2|Alerts]] [[user:abc|Ann]]";
+        var newIds = new Dictionary<string, Dictionary<int, int>>
+        {
+            ["project"] = new() { [8] = 80 },
+            ["sprint"] = new() { [16] = 160 },
+            ["board"] = new() { [3] = 30 },
+        };
+
+        var rewritten = PageReferenceParser.RewriteIds(markdown, newIds);
+
+        rewritten.Should().Be("[[project:80|Monitoring]] [[sprint:160|Sprint 4]] [[board:30|Ops]] [[task:MON-2|Alerts]] [[user:abc|Ann]]");
+    }
+
+    private static Dictionary<string, Dictionary<int, int>> Pages(Dictionary<int, int> ids)
+    {
+        return new Dictionary<string, Dictionary<int, int>> { ["page"] = ids };
     }
 }

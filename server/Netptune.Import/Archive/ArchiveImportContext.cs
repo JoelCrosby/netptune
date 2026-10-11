@@ -9,6 +9,7 @@ public sealed class ArchiveImportContext
     private readonly Dictionary<string, int> IdsByRef = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, string> UserIdsByRef = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, int> Created = new(StringComparer.OrdinalIgnoreCase);
+    private readonly List<(string Type, int SourceId, Func<int> NewId)> Sources = [];
 
     public ArchiveImportContext(int workspaceId, string userId)
     {
@@ -59,6 +60,25 @@ public sealed class ArchiveImportContext
         var found = UserIdsByRef.TryGetValue(entityRef.Value.ToString(), out var userId);
 
         return found ? userId : null;
+    }
+
+    public void TrackSource(string type, int? sourceId, Func<int> newId)
+    {
+        if (sourceId is { } id)
+        {
+            Sources.Add((type, id, newId));
+        }
+    }
+
+    // Read once every tracked entity has been saved, so each new id is real.
+    public Dictionary<string, Dictionary<int, int>> NewIdsBySourceId()
+    {
+        return Sources
+            .GroupBy(source => source.Type, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(
+                group => group.Key,
+                group => group.ToDictionary(source => source.SourceId, source => source.NewId()),
+                StringComparer.OrdinalIgnoreCase);
     }
 
     public void Count(string type)

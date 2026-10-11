@@ -95,6 +95,7 @@ public static class ArchiveCatalog
         Ref = project => EntityRefBuilder.ForProject(project),
         Bindings =
         [
+            ArchiveField.Text<Project>(TransferRecordTypes.Project, "source_id", "Source id", project => project.Id, TransferValueType.Integer),
             ArchiveField.Text<Project>(TransferRecordTypes.Project, "key", "Key", project => project.Key),
             ArchiveField.Text<Project>(TransferRecordTypes.Project, "name", "Name", project => project.Name),
             ArchiveField.Text<Project>(TransferRecordTypes.Project, "description", "Description", project => project.Description, TransferValueType.LongText),
@@ -113,6 +114,7 @@ public static class ArchiveCatalog
         Ref = board => EntityRefBuilder.ForBoard(board),
         Bindings =
         [
+            ArchiveField.Text<Board>(TransferRecordTypes.Board, "source_id", "Source id", board => board.Id, TransferValueType.Integer),
             ArchiveField.Text<Board>(TransferRecordTypes.Board, "identifier", "Identifier", board => board.Identifier),
             ArchiveField.Text<Board>(TransferRecordTypes.Board, "name", "Name", board => board.Name),
             ArchiveField.Text<Board>(TransferRecordTypes.Board, "board_type", "Type", board => board.BoardType, TransferValueType.Enum),
@@ -144,6 +146,7 @@ public static class ArchiveCatalog
         Ref = sprint => EntityRefBuilder.ForSprint(ProjectKey(sprint.Project), sprint.Name),
         Bindings =
         [
+            ArchiveField.Text<Sprint>(TransferRecordTypes.Sprint, "source_id", "Source id", sprint => sprint.Id, TransferValueType.Integer),
             ArchiveField.Text<Sprint>(TransferRecordTypes.Sprint, "name", "Name", sprint => sprint.Name),
             ArchiveField.Text<Sprint>(TransferRecordTypes.Sprint, "goal", "Goal", sprint => sprint.Goal, TransferValueType.LongText),
             ArchiveField.Text<Sprint>(TransferRecordTypes.Sprint, "status", "Status", sprint => sprint.Status, TransferValueType.Enum),

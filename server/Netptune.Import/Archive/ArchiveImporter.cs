@@ -393,6 +393,8 @@ public sealed class ArchiveImporter : IArchiveImporter
 
             await UnitOfWork.Projects.AddAsync(project, cancellationToken);
 
+            context.TrackSource(TransferRecordTypes.Project, row.Integer("source_id"), () => project.Id);
+
             return project;
         }, project => project.Id, cancellationToken);
     }
@@ -421,6 +423,8 @@ public sealed class ArchiveImporter : IArchiveImporter
             };
 
             await UnitOfWork.Boards.AddAsync(board, cancellationToken);
+
+            context.TrackSource(TransferRecordTypes.Board, row.Integer("source_id"), () => board.Id);
 
             return board;
         }, board => board.Id, cancellationToken);
@@ -484,6 +488,8 @@ public sealed class ArchiveImporter : IArchiveImporter
             };
 
             await UnitOfWork.Sprints.AddAsync(sprint, cancellationToken);
+
+            context.TrackSource(TransferRecordTypes.Sprint, row.Integer("source_id"), () => sprint.Id);
 
             return sprint;
         }, sprint => sprint.Id, cancellationToken);
@@ -744,21 +750,20 @@ public sealed class ArchiveImporter : IArchiveImporter
 
             await UnitOfWork.Pages.AddAsync(page, cancellationToken);
 
-            archived.Add(new ArchivedPage(page, row.Reference("parent"), row.Integer("source_id")));
+            archived.Add(new ArchivedPage(page, row.Reference("parent")));
+            context.TrackSource(TransferRecordTypes.Page, row.Integer("source_id"), () => page.Id);
 
             return page;
         }, page => page.Id, cancellationToken);
 
         // Parents are linked once every page has its id, since a child can be read in the same batch as its
-        // parent. Bodies are rewritten at the same point, when the new id of every page they mention is known.
-        var newIds = archived
-            .Where(item => item.SourceId.HasValue)
-            .ToDictionary(item => item.SourceId!.Value, item => item.Page.Id);
+        // parent. Bodies are rewritten at the same point, when the new id of everything they mention is known.
+        var newIds = context.NewIdsBySourceId();
 
         foreach (var item in archived)
         {
             item.Page.ParentId = context.Resolve(item.ParentRef);
-            item.Page.Body = PageReferenceParser.RewritePageIds(item.Page.Body, newIds);
+            item.Page.Body = PageReferenceParser.RewriteIds(item.Page.Body, newIds);
         }
 
         await UnitOfWork.CompleteAsync(cancellationToken);
@@ -815,7 +820,7 @@ public sealed class ArchiveImporter : IArchiveImporter
                 continue;
             }
 
-            var body = PageReferenceParser.RewritePageIds(row.Text("body"), pages.NewIdsBySourceId);
+            var body = PageReferenceParser.RewriteIds(row.Text("body"), pages.NewIdsBySourceId);
             var version = new PageVersion
             {
                 PageId = page.Id,
@@ -883,9 +888,9 @@ public sealed class ArchiveImporter : IArchiveImporter
         await PageLinkRebuilder.BuildForNewPages(UnitOfWork, sources, scope, cancellationToken);
     }
 
-    private sealed record ArchivedPage(Page Page, EntityRef? ParentRef, int? SourceId);
+    private sealed record ArchivedPage(Page Page, EntityRef? ParentRef);
 
-    private sealed record ImportedPageSet(Dictionary<int, Page> ById, Dictionary<int, int> NewIdsBySourceId);
+    private sealed record ImportedPageSet(Dictionary<int, Page> ById, Dictionary<string, Dictionary<int, int>> NewIdsBySourceId);
 
     private async Task<List<string>> UnmatchedMembers(ArchiveReader reader, CancellationToken cancellationToken)
     {

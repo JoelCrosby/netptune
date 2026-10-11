@@ -77,6 +77,10 @@ import {
   PageReferenceAttrs,
   pageReferenceSyntax,
 } from '../editor/page-reference-syntax';
+import { ClientResponse } from '@core/models/client-response';
+import { unwrapClientResponse } from '@core/util/rxjs-operators';
+import { SnackbarService } from '@static/components/snackbar/snackbar.service';
+import { finalize, Observable } from 'rxjs';
 import { PageTreeStore } from '../services/page-tree.store';
 import { PageDraft } from '../services/page-draft';
 import { PageMetaChipsComponent } from './page-meta-chips.component';
@@ -333,6 +337,9 @@ export class PageEditorComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly sprints = inject(SprintsService);
   private readonly boards = inject(BoardsService);
+  private readonly snackbar = inject(SnackbarService);
+  private readonly openingMentions = new Set<string>();
+  private readonly missingMentions = signal(new Set<string>());
   private readonly dialogs = inject(DialogService);
   private readonly appRef = inject(ApplicationRef);
   private readonly environmentInjector = inject(EnvironmentInjector);
@@ -427,6 +434,7 @@ export class PageEditorComponent implements OnInit {
       this.links();
       this.store.nodes();
       this.references.pickedTasks();
+      this.missingMentions();
 
       untracked(() => {
         this.referenceListeners.forEach((listener) => listener());
@@ -593,7 +601,11 @@ export class PageEditorComponent implements OnInit {
         };
       }
       default:
-        return { key: null, text: attrs.label ?? attrs.key, resolved: true };
+        return {
+          key: null,
+          text: attrs.label ?? attrs.key,
+          resolved: !this.missingMentions().has(mentionKey(attrs)),
+        };
     }
   }
 
@@ -625,33 +637,24 @@ export class PageEditorComponent implements OnInit {
 
   private openReference(attrs: PageReferenceAttrs) {
     switch (attrs.kind) {
+      case 'task':
+        void this.router.navigate(this.workspaceLink('tasks', attrs.key));
+        return;
+      case 'page':
+        this.openPage(attrs.key);
+        return;
       case 'project':
         this.openProject(attrs.key);
         return;
       case 'sprint':
-        this.openSprint(attrs.key);
-        return;
       case 'board':
-        this.openBoard(attrs.key);
+        this.openByIdentifier(attrs);
         return;
     }
+  }
 
-    if (attrs.kind === 'task') {
-      void this.router.navigate([
-        '/',
-        this.store.workspaceSlug(),
-        'tasks',
-        attrs.key,
-      ]);
-
-      return;
-    }
-
-    if (attrs.kind !== 'page') return;
-
-    const page = this.store
-      .nodes()
-      .find((node) => String(node.id) === attrs.key);
+  private openPage(key: string) {
+    const page = this.store.nodes().find((node) => String(node.id) === key);
 
     if (page) {
       void this.router.navigate(this.store.link(page.slug));
@@ -672,32 +675,37 @@ export class PageEditorComponent implements OnInit {
   }
 
   // Sprint and board pages are addressed by their identifier, which a mention does not carry.
-  private openSprint(key: string) {
-    const sprintId = Number(key);
+  private openByIdentifier(attrs: PageReferenceAttrs) {
+    const mention = mentionKey(attrs);
+    const id = Number(attrs.key);
+    const isOpening = this.openingMentions.has(mention);
 
-    if (!Number.isInteger(sprintId)) return;
+    if (isOpening || !Number.isInteger(id)) return;
 
-    this.sprints.detail(sprintId).subscribe((response) => {
-      const identifier = response.payload?.identifier;
+    this.openingMentions.add(mention);
 
-      if (identifier) {
-        void this.router.navigate(this.workspaceLink('sprints', identifier));
-      }
-    });
-  }
+    const lookup: Observable<ClientResponse<{ identifier: string }>> =
+      attrs.kind === 'sprint'
+        ? this.sprints.detail(id)
+        : this.boards.detail(id);
+    const section = attrs.kind === 'sprint' ? 'sprints' : 'boards';
 
-  private openBoard(key: string) {
-    const boardId = Number(key);
-
-    if (!Number.isInteger(boardId)) return;
-
-    this.boards.detail(boardId).subscribe((response) => {
-      const identifier = response.payload?.identifier;
-
-      if (identifier) {
-        void this.router.navigate(this.workspaceLink('boards', identifier));
-      }
-    });
+    lookup
+      .pipe(
+        unwrapClientResponse(),
+        finalize(() => this.openingMentions.delete(mention))
+      )
+      .subscribe({
+        next: ({ identifier }) => {
+          void this.router.navigate(this.workspaceLink(section, identifier));
+        },
+        error: () => {
+          this.missingMentions.update((missing) =>
+            new Set(missing).add(mention)
+          );
+          this.snackbar.error(missingMentionMessage);
+        },
+      });
   }
 
   private workspaceLink(section: string, id: string): string[] {
@@ -719,4 +727,10 @@ function readingMinutes(markdown: string): number {
   const words = markdown.split(/\s+/).filter(Boolean).length;
 
   return Math.max(1, Math.round(words / wordsPerMinute));
+}
+
+const missingMentionMessage = $localize`:Shown when a mentioned sprint or board in a page no longer exists or cannot be opened:That no longer exists, or you can't open it.`;
+
+function mentionKey(attrs: PageReferenceAttrs): string {
+  return `${attrs.kind}:${attrs.key}`;
 }

@@ -12,7 +12,8 @@ export interface PageReferenceAttrs {
 
 export const pageReferenceNodeType = 'pageReference';
 
-// Same grammar as the server's PageReferenceParser and the assistant's [[task:ID|label]] links.
+// The assistant's [[kind:ID|label]] grammar. The server's PageReferenceParser reads only task, page and user, the
+// kinds that record links.
 const referencePattern =
   /\[\[(task|page|user|project|sprint|board):([^\]|\s]+)(?:\|([^\]]*))?\]\]/gi;
 
