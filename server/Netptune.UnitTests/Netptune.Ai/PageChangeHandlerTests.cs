@@ -9,7 +9,6 @@ using Netptune.Ai.Execution.Handlers;
 using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
-using Netptune.Core.Models.Ai;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.Pages;

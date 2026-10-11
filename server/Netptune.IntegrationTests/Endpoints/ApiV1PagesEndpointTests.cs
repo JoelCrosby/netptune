@@ -362,7 +362,7 @@ public sealed class ApiV1PagesEndpointTests
 
         versions.Should().HaveCount(2);
 
-        var original = versions!.Single(version => version.Revision == page.Revision);
+        var original = versions.Single(version => version.Revision == page.Revision);
         var version = await client.GetFromJsonAsync<PageVersionViewModel>(
             $"api/v1/pages/{page.Id}/versions/{original.Id}",
             cancellationToken);

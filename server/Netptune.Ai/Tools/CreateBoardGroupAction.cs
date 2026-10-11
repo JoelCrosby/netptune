@@ -7,7 +7,6 @@ using Netptune.Core.Enums;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.BoardGroups.Queries;
-using Netptune.Handlers.Boards.Queries;
 using Netptune.Handlers.Statuses.Queries;
 
 namespace Netptune.Ai.Tools;

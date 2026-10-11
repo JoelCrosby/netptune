@@ -5,7 +5,6 @@ using System.Text.Json;
 using Microsoft.Extensions.Options;
 
 using Netptune.Ai.Configuration;
-using Netptune.Ai.Providers;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;

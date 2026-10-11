@@ -80,7 +80,6 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
             if (boardGroup.StatusId.HasValue)
             {
                 await UnitOfWork.Tasks.UpdateTaskStatuses(taskIds, boardGroup.StatusId.Value, cancellationToken);
-                var workspaceId = await Identity.GetWorkspaceId();
                 var newStatus = await UnitOfWork.Statuses.GetInWorkspace(boardGroup.StatusId.Value, workspaceId, cancellationToken: cancellationToken);
 
                 if (newStatus is not null)

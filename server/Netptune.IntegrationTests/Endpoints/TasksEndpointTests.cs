@@ -931,7 +931,7 @@ public sealed class TasksEndpointTests
         var response = await Client.PostAsJsonAsync("api/tasks/move-tasks-to-group", request);
         var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
 
-        result!.IsSuccess.Should().BeFalse();
+        result.IsSuccess.Should().BeFalse();
     }
 
     [Fact]

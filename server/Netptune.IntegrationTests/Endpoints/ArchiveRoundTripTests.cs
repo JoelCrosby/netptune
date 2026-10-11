@@ -145,7 +145,7 @@ public sealed class ArchiveRoundTripTests
         var archive = await ExportArchive(1, includeHistory: true);
         var response = await PostArchive($"api/import/archive?mode=clone&targetSlug={slug}", archive);
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<ArchiveImportResultViewModel>>(cancellationToken);
-        var workspaceId = result!.Payload!.WorkspaceId;
+        var workspaceId = result.Payload!.WorkspaceId;
 
         await using var scope = Fixture.Services.CreateAsyncScope();
 
@@ -507,7 +507,7 @@ public sealed class ArchiveRoundTripTests
         }, TestContext.Current.CancellationToken);
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<ProjectViewModel>>(TestContext.Current.CancellationToken);
 
-        return result!.Payload!;
+        return result.Payload!;
     }
 
     private async Task CreateTask(int projectId)
@@ -526,7 +526,7 @@ public sealed class ArchiveRoundTripTests
         var response = await Client.PostAsJsonAsync("api/pages", request, TestContext.Current.CancellationToken);
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<PageViewModel>>(TestContext.Current.CancellationToken);
 
-        return result!.Payload!;
+        return result.Payload!;
     }
 
     private sealed record LiveTask(string SystemId, int ProjectId, string ProjectKey);

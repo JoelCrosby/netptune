@@ -247,7 +247,7 @@ public sealed class AiEndpointTests
             url,
             TestContext.Current.CancellationToken);
 
-        response!.Payload.Should().NotBeNull();
+        response.Payload.Should().NotBeNull();
         response.Payload!.Page.Should().Be(1);
         response.Payload.PageSize.Should().Be(25);
     }
@@ -265,7 +265,7 @@ public sealed class AiEndpointTests
             var response = await client.GetFromJsonAsync<ClientResponse<PagedResponse<AiConversationViewModel>>>(
                 "api/ai/conversations?page=1&pageSize=100",
                 cancellationToken);
-            var ids = response!.Payload!.Items.Select(conversation => conversation.Id).ToList();
+            var ids = response.Payload!.Items.Select(conversation => conversation.Id).ToList();
 
             ids.Should().Contain(own.ConversationId);
             ids.Should().NotContain(others.ConversationId);
@@ -355,7 +355,7 @@ public sealed class AiEndpointTests
                 TestContext.Current.CancellationToken);
 
             detail.StatusCode.Should().Be(HttpStatusCode.NotFound);
-            conversations!.Payload!.Items.Should().NotContain(conversation => conversation.Id == seed.ConversationId);
+            conversations.Payload!.Items.Should().NotContain(conversation => conversation.Id == seed.ConversationId);
         }
         finally
         {
@@ -775,12 +775,12 @@ public sealed class AiEndpointTests
         var create = new CreatePageRequest { Kind = PageKind.Document, Title = $"Undo target {Guid.NewGuid():N}" };
         var created = await client.PostAsJsonAsync("api/pages", create, cancellationToken);
         var createdResult = await created.Content.ReadFromJsonAsync<ClientResponse<PageViewModel>>(cancellationToken);
-        var page = createdResult!.Payload!;
+        var page = createdResult.Payload!;
         var save = new SavePageRequest { Title = page.Title, Body = body, Revision = page.Revision };
         var saved = await client.PutAsJsonAsync($"api/pages/{page.Id}", save, cancellationToken);
         var result = await saved.Content.ReadFromJsonAsync<ClientResponse<PageViewModel>>(cancellationToken);
 
-        return result!.Payload!;
+        return result.Payload!;
     }
 
     private async Task<string?> ReadPageBody(int pageId)
@@ -808,7 +808,7 @@ public sealed class AiEndpointTests
 
         var response = await client.PostAsJsonAsync("api/tasks", request, TestContext.Current.CancellationToken);
         var created = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>(TestContext.Current.CancellationToken);
-        var task = created!.Payload!;
+        var task = created.Payload!;
 
         using var scope = Fixture.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<DataContext>();
@@ -831,7 +831,7 @@ public sealed class AiEndpointTests
 
         var response = await client.PostAsJsonAsync("api/boards", request, TestContext.Current.CancellationToken);
         var created = await response.Content.ReadFromJsonAsync<ClientResponse<BoardViewModel>>(TestContext.Current.CancellationToken);
-        var board = created!.Payload!;
+        var board = created.Payload!;
 
         using var scope = Fixture.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<DataContext>();

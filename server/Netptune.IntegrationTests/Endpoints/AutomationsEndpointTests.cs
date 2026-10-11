@@ -951,7 +951,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
 
         var result = await response.Content
             .ReadFromJsonAsync<ClientResponse<ServiceAccountViewModel>>();
-        var account = result!.Payload;
+        var account = result.Payload;
 
         return account!.UserId;
     }

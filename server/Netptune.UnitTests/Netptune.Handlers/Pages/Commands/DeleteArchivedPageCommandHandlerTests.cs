@@ -3,7 +3,6 @@ using FluentAssertions;
 using Netptune.Core.Authorization;
 using Netptune.Core.Cache;
 using Netptune.Core.Entities;
-using Netptune.Core.Enums;
 using Netptune.Core.Models;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Models.Search;

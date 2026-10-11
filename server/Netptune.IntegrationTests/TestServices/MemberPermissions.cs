@@ -55,6 +55,6 @@ public sealed class MemberPermissions : IAsyncDisposable
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<List<string>>>(TestContext.Current.CancellationToken);
 
-        return result!.Payload!;
+        return result.Payload!;
     }
 }

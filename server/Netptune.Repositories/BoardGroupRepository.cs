@@ -9,7 +9,6 @@ using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.ViewModels.Boards;
-using Netptune.Core.ViewModels.Users;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
 using Netptune.Repositories.RowMaps;

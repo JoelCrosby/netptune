@@ -112,7 +112,7 @@ public sealed class PinsEndpointTests
 
         var result = await response.Content
             .ReadFromJsonAsync<ClientResponse<List<PinnedTaskViewModel>>>();
-        var pinned = result!.Payload;
+        var pinned = result.Payload;
 
         pinned!.Should().Contain(item => item.Task.Id == task.Id);
     }

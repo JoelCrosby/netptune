@@ -84,12 +84,12 @@ public sealed class PagesEndpointTests
         var response = await Save(created.Id, new SavePageRequest { Title = "Incident review", Revision = created.Revision });
         var saved = await response.Content.ReadFromJsonAsync<ClientResponse<PageViewModel>>(cancellationToken);
 
-        saved!.Payload!.Slug.Should().StartWith("incident-review-");
+        saved.Payload!.Slug.Should().StartWith("incident-review-");
         PageSlug.IdOf(saved.Payload.Slug).Should().Be(PageSlug.IdOf(created.Slug));
 
         var fetched = await Client.GetFromJsonAsync<ClientResponse<PageViewModel>>($"api/pages/{created.Slug}", cancellationToken);
 
-        fetched!.Payload!.Id.Should().Be(created.Id);
+        fetched.Payload!.Id.Should().Be(created.Id);
         fetched.Payload.Slug.Should().Be(saved.Payload.Slug);
     }
 
@@ -230,7 +230,7 @@ public sealed class PagesEndpointTests
         var remaining = await context.Pages.CountAsync(page => page.Id == folder.Id || page.Id == child.Id, cancellationToken);
         var versions = await context.PageVersions.CountAsync(version => version.PageId == child.Id, cancellationToken);
 
-        archived!.Payload.Should().NotContain(page => page.Id == folder.Id);
+        archived.Payload.Should().NotContain(page => page.Id == folder.Id);
         remaining.Should().Be(0);
         versions.Should().Be(0);
         flagged.Should().Contain(page => page.Id == linking.Id && page.Reason == PageReviewReason.BrokenLinks);
@@ -476,7 +476,7 @@ public sealed class PagesEndpointTests
         var runbooks = tree.Single(node => node.ParentId == root.Id && node.Title == "Runbooks");
         var deploy = tree.Single(node => node.ParentId == runbooks.Id && node.Title == "deploy");
 
-        result!.Payload!.Created.Should().Be(4);
+        result.Payload!.Created.Should().Be(4);
         result.Payload.Skipped.Should().ContainSingle(skipped => skipped.Contains("diagram.png"));
         result.Payload.FirstSlug.Should().Be(root.Slug);
         root.ProjectId.Should().Be(1);
@@ -484,7 +484,7 @@ public sealed class PagesEndpointTests
 
         var page = await Client.GetFromJsonAsync<ClientResponse<PageViewModel>>($"api/pages/{onCall.Slug}", cancellationToken);
 
-        page!.Payload!.Body.Should().Be("Page the owner.");
+        page.Payload!.Body.Should().Be("Page the owner.");
     }
 
     private static void WriteEntry(ZipArchive archive, string path, string text)
@@ -529,7 +529,7 @@ public sealed class PagesEndpointTests
         };
         var sprintResponse = await Client.PostAsJsonAsync("api/sprints", sprintRequest, cancellationToken);
         var sprintResult = await sprintResponse.Content.ReadFromJsonAsync<ClientResponse<SprintViewModel>>(cancellationToken);
-        var sprint = sprintResult!.Payload!;
+        var sprint = sprintResult.Payload!;
 
         using (var scope = Fixture.CreateScope())
         {
@@ -576,7 +576,7 @@ public sealed class PagesEndpointTests
         await Client.PostAsync($"api/pages/{second.Id}/visits", null, cancellationToken);
 
         var recent = await Client.GetFromJsonAsync<ClientResponse<List<RecentPageViewModel>>>("api/pages/recent", cancellationToken);
-        var ids = recent!.Payload!.Select(page => page.Id).ToList();
+        var ids = recent.Payload!.Select(page => page.Id).ToList();
 
         ids.IndexOf(second.Id).Should().BeLessThan(ids.IndexOf(first.Id));
     }
@@ -638,7 +638,7 @@ public sealed class PagesEndpointTests
             "api/pages/needs-review",
             TestContext.Current.CancellationToken);
 
-        return result!.Payload!;
+        return result.Payload!;
     }
 
     // Its own task, because other test classes delete and move tasks while this one runs.
@@ -656,7 +656,7 @@ public sealed class PagesEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>(TestContext.Current.CancellationToken);
 
-        return result!.Payload!;
+        return result.Payload!;
     }
 
     private async Task<PageViewModel> Create(CreatePageRequest request)

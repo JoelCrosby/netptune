@@ -305,7 +305,7 @@ public sealed class SprintsEndpointTests
 
         var detail = await Client.GetFromJsonAsync<ClientResponse<SprintDetailViewModel>>($"api/sprints/{nextSprint.Id}");
 
-        detail!.Payload!.Tasks.Should().ContainSingle(item => item.Id == task.Id);
+        detail.Payload!.Tasks.Should().ContainSingle(item => item.Id == task.Id);
     }
 
     [Fact]
@@ -322,8 +322,8 @@ public sealed class SprintsEndpointTests
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<SprintViewModel>>();
         var detail = await Client.GetFromJsonAsync<ClientResponse<SprintDetailViewModel>>($"api/sprints/{sprint.Id}");
 
-        result!.IsSuccess.Should().BeFalse();
-        detail!.Payload!.Status.Should().Be(SprintStatus.Active);
+        result.IsSuccess.Should().BeFalse();
+        detail.Payload!.Status.Should().Be(SprintStatus.Active);
     }
 
     [Fact]
@@ -412,7 +412,7 @@ public sealed class SprintsEndpointTests
         var backlog = await GetBacklog(project.Id);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        result!.Payload!.Status.Should().Be(SprintStatus.Completed);
+        result.Payload!.Status.Should().Be(SprintStatus.Completed);
         result.Payload.Name.Should().Be("Renamed while completing");
         result.Payload.CompletedAt.Should().NotBeNull();
         backlog.Should().ContainSingle(item => item.Id == task.Id);
@@ -431,7 +431,7 @@ public sealed class SprintsEndpointTests
         });
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<SprintViewModel>>();
 
-        result!.IsSuccess.Should().BeFalse();
+        result.IsSuccess.Should().BeFalse();
         result.Message.Should().Be("Only active sprints can be completed");
     }
 
@@ -453,7 +453,7 @@ public sealed class SprintsEndpointTests
 
         var detail = await Client.GetFromJsonAsync<ClientResponse<SprintDetailViewModel>>($"api/sprints/{sprint.Id}");
 
-        detail!.Payload!.NewTaskCount.Should().Be(1);
+        detail.Payload!.NewTaskCount.Should().Be(1);
     }
 
     [Fact]
@@ -607,7 +607,7 @@ public sealed class SprintsEndpointTests
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>();
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
 
         return result.Payload!.Items.ToList();
     }
@@ -622,7 +622,7 @@ public sealed class SprintsEndpointTests
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<StatusViewModel>>();
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
 
         return result.Payload!;
     }

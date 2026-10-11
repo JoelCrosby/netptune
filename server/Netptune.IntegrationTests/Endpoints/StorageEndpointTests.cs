@@ -170,7 +170,7 @@ public sealed class StorageEndpointTests
         response.IsSuccessStatusCode.Should().BeTrue(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
 
         var created = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>(TestContext.Current.CancellationToken);
-        var systemId = created!.Payload!.SystemId;
+        var systemId = created.Payload!.SystemId;
 
         var filtered = await Client.GetFromJsonAsync<ClientResponse<PagedResponse<WorkspaceFileViewModel>>>(
             $"api/storage/files?taskSystemId={systemId}&pageSize=100", TestContext.Current.CancellationToken);
@@ -395,7 +395,7 @@ public sealed class StorageEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<UploadResponse>>(TestContext.Current.CancellationToken);
 
-        return result!.Payload!;
+        return result.Payload!;
     }
 
     private async Task<WorkspaceFileViewModel> UploadTaskFile(string systemId, string fileName)

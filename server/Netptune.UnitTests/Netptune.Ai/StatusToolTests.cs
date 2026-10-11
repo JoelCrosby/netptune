@@ -9,7 +9,6 @@ using Netptune.Ai.Execution.Handlers;
 using Netptune.Ai.Tools;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
-using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Ai;

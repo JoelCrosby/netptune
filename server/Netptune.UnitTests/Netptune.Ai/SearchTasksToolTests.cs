@@ -9,7 +9,6 @@ using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Tags;
-using Netptune.Handlers.Tags.Queries;
 using Netptune.Handlers.Tasks.Queries;
 
 using NSubstitute;

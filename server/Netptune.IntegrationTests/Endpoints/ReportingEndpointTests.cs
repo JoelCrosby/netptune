@@ -33,7 +33,7 @@ public sealed class ReportingEndpointTests(NetptuneFixture fixture)
         response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<FlowReport>>();
 
-        result!.Payload.Should().NotBeNull();
+        result.Payload.Should().NotBeNull();
     }
 
     [Fact]
@@ -156,7 +156,7 @@ public sealed class ReportingEndpointTests(NetptuneFixture fixture)
 
         response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<WorkloadReport>>();
-        var report = result!.Payload;
+        var report = result.Payload;
         report.Should().NotBeNull();
         report.UniqueTaskCount.Should().BeGreaterThan(0);
     }
@@ -169,7 +169,7 @@ public sealed class ReportingEndpointTests(NetptuneFixture fixture)
         response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<VelocityReport>>();
 
-        result!.Payload.Should().NotBeNull();
+        result.Payload.Should().NotBeNull();
     }
 
     [Fact]
@@ -183,7 +183,7 @@ public sealed class ReportingEndpointTests(NetptuneFixture fixture)
 
         response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<SprintBurndownReport>>();
-        var report = result!.Payload;
+        var report = result.Payload;
         report.Should().NotBeNull();
         report.SprintId.Should().Be(sprint.Id);
         report.Coverage.IsPartial.Should().BeFalse();
@@ -201,7 +201,7 @@ public sealed class ReportingEndpointTests(NetptuneFixture fixture)
         var response = await Client.GetAsync(
             $"api/reports/sprints/{sprint.Id}/burndown?unit=Tasks&timeZone=UTC");
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<SprintBurndownReport>>();
-        var report = result!.Payload;
+        var report = result.Payload;
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         report.Should().NotBeNull();
@@ -233,7 +233,7 @@ public sealed class ReportingEndpointTests(NetptuneFixture fixture)
         var response = await Client.GetAsync(
             $"api/reports/velocity?projectId={project.Id}&unit=Tasks&take=20");
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<VelocityReport>>();
-        var report = result!.Payload;
+        var report = result.Payload;
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         report.Should().NotBeNull();
@@ -324,7 +324,7 @@ public sealed class ReportingEndpointTests(NetptuneFixture fixture)
 
         var response = await Client.GetAsync($"api/reports/velocity?projectId={project.Id}&unit=Tasks&take=20");
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<VelocityReport>>();
-        var report = result!.Payload;
+        var report = result.Payload;
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         report.Should().NotBeNull();
@@ -422,7 +422,7 @@ public sealed class ReportingEndpointTests(NetptuneFixture fixture)
         response.EnsureSuccessStatusCode();
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<FlowReport>>();
-        var report = result!.Payload;
+        var report = result.Payload;
 
         return report!;
     }
@@ -433,7 +433,7 @@ public sealed class ReportingEndpointTests(NetptuneFixture fixture)
         response.EnsureSuccessStatusCode();
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<WorkloadReport>>();
-        var report = result!.Payload;
+        var report = result.Payload;
 
         return report!;
     }
@@ -444,7 +444,7 @@ public sealed class ReportingEndpointTests(NetptuneFixture fixture)
         response.EnsureSuccessStatusCode();
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<VelocityReport>>();
-        var report = result!.Payload;
+        var report = result.Payload;
 
         return report!;
     }
@@ -455,7 +455,7 @@ public sealed class ReportingEndpointTests(NetptuneFixture fixture)
         response.EnsureSuccessStatusCode();
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<SprintBurndownReport>>();
-        var report = result!.Payload;
+        var report = result.Payload;
 
         return report!;
     }

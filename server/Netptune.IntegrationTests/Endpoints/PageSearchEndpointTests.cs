@@ -154,7 +154,7 @@ public sealed class PageSearchEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<PageViewModel>>(TestContext.Current.CancellationToken);
 
-        return result!.Payload!;
+        return result.Payload!;
     }
 
     private async Task Save(PageViewModel page, string body)
@@ -177,7 +177,7 @@ public sealed class PageSearchEndpointTests
 
         var accountResponse = await Client.PostAsJsonAsync("api/service-accounts", accountRequest, cancellationToken);
         var accountResult = await accountResponse.Content.ReadFromJsonAsync<ClientResponse<ServiceAccountViewModel>>(cancellationToken);
-        var account = accountResult!.Payload!;
+        var account = accountResult.Payload!;
 
         var credentialRequest = new CreateApiCredentialRequest { Name = "Page search credential", Scopes = scopes };
         var credentialResponse = await Client.PostAsJsonAsync(
@@ -187,6 +187,6 @@ public sealed class PageSearchEndpointTests
         var credentialResult = await credentialResponse.Content
             .ReadFromJsonAsync<ClientResponse<ApiCredentialCreatedViewModel>>(cancellationToken);
 
-        return credentialResult!.Payload!.Token;
+        return credentialResult.Payload!.Token;
     }
 }

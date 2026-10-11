@@ -384,7 +384,7 @@ public sealed class PublicWorkspaceEndpointTests
 
         var result = await pins.Content
             .ReadFromJsonAsync<ClientResponse<List<PinnedTaskViewModel>>>();
-        var pinned = result!.Payload;
+        var pinned = result.Payload;
 
         pinned!.Should().Contain(item => item.Task.Id == task.Id);
     }
@@ -517,10 +517,9 @@ public sealed class PublicWorkspaceEndpointTests
 
         image.Headers.ContentType = new("image/png");
 
-        using var form = new MultipartFormDataContent
-        {
-            { image, "image", "logo.png" },
-        };
+        using var form = new MultipartFormDataContent();
+
+        form.Add(image, "image", "logo.png");
 
         var response = await owner.PostAsync("api/workspaces/branding/logo", form);
 
@@ -537,10 +536,9 @@ public sealed class PublicWorkspaceEndpointTests
 
         image.Headers.ContentType = new("image/png");
 
-        using var form = new MultipartFormDataContent
-        {
-            { image, "file", "media.png" },
-        };
+        using var form = new MultipartFormDataContent();
+
+        form.Add(image, "file", "media.png");
 
         var response = await owner.PostAsync("api/storage/media", form);
 
@@ -557,10 +555,9 @@ public sealed class PublicWorkspaceEndpointTests
 
         file.Headers.ContentType = new("application/pdf");
 
-        using var form = new MultipartFormDataContent
-        {
-            { file, "files", "evidence.pdf" },
-        };
+        using var form = new MultipartFormDataContent();
+
+        form.Add(file, "files", "evidence.pdf");
 
         var response = await owner.PostAsync($"api/tasks/{systemId}/files", form);
 

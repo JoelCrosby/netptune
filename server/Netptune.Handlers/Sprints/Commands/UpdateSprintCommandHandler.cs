@@ -2,10 +2,8 @@ using Mediator;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
-using Netptune.Core.Events;
 using Netptune.Core.Events.Sprints;
 using Netptune.Core.Models.Search;
-using Netptune.Core.Models.Sprints;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;

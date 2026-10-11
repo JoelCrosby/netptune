@@ -57,6 +57,6 @@ public sealed class PageTransformEndpointTests
         var response = await Client.PostAsJsonAsync("api/pages", create, TestContext.Current.CancellationToken);
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<PageViewModel>>(TestContext.Current.CancellationToken);
 
-        return result!.Payload!;
+        return result.Payload!;
     }
 }

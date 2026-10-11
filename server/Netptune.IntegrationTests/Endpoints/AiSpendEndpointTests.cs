@@ -79,7 +79,7 @@ public sealed class AiSpendEndpointTests
     {
         var response = await client.GetFromJsonAsync<ClientResponse<AiSpendViewModel>>("api/ai/admin/spend");
 
-        response!.IsSuccess.Should().BeTrue();
+        response.IsSuccess.Should().BeTrue();
 
         return response.Payload!;
     }
@@ -92,7 +92,7 @@ public sealed class AiSpendEndpointTests
 
         var saved = await response.Content.ReadFromJsonAsync<ClientResponse<AiSpendViewModel>>();
 
-        saved!.IsSuccess.Should().BeTrue();
+        saved.IsSuccess.Should().BeTrue();
 
         return saved.Payload!;
     }

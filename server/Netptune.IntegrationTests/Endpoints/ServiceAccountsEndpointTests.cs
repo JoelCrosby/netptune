@@ -43,7 +43,7 @@ public sealed class ServiceAccountsEndpointTests
         response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<ServiceAccountViewModel>>();
-        var updated = result!.Payload;
+        var updated = result.Payload;
 
         updated!.Name.Should().Be(updatedName);
         updated.Description.Should().Be("Updated by the integration test.");
@@ -79,7 +79,7 @@ public sealed class ServiceAccountsEndpointTests
 
         var result = await credentialResponse.Content
             .ReadFromJsonAsync<ClientResponse<ApiCredentialCreatedViewModel>>();
-        var credential = result!.Payload;
+        var credential = result.Payload;
 
         var response = await Client.PutAsJsonAsync(
             $"api/service-accounts/{account.Id}",
@@ -234,7 +234,7 @@ public sealed class ServiceAccountsEndpointTests
         response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<ServiceAccountViewModel>>();
-        var account = result!.Payload;
+        var account = result.Payload;
 
         return account!;
     }
@@ -252,7 +252,7 @@ public sealed class ServiceAccountsEndpointTests
         response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<ApiCredentialCreatedViewModel>>();
-        var credential = result!.Payload;
+        var credential = result.Payload;
 
         return credential!;
     }
@@ -280,7 +280,7 @@ public sealed class ServiceAccountsEndpointTests
         createAccountResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         var accountResult = await createAccountResponse.Content
             .ReadFromJsonAsync<ClientResponse<ServiceAccountViewModel>>();
-        var account = accountResult!.Payload;
+        var account = accountResult.Payload;
         account.Should().NotBeNull();
         account.Name.Should().Be(accountName);
         account.Permissions.Should().Contain(NetptunePermissions.Sprints.Read);
@@ -297,7 +297,7 @@ public sealed class ServiceAccountsEndpointTests
         createCredentialResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         var credentialResult = await createCredentialResponse.Content
             .ReadFromJsonAsync<ClientResponse<ApiCredentialCreatedViewModel>>();
-        var createdCredential = credentialResult!.Payload;
+        var createdCredential = credentialResult.Payload;
         createdCredential.Should().NotBeNull();
         createdCredential.Token.Should().StartWith("ntp_");
 
@@ -330,7 +330,7 @@ public sealed class ServiceAccountsEndpointTests
             });
         var accountResult = await createAccountResponse.Content
             .ReadFromJsonAsync<ClientResponse<ServiceAccountViewModel>>();
-        var account = accountResult!.Payload;
+        var account = accountResult.Payload;
 
         var createCredentialResponse = await Client.PostAsJsonAsync(
             $"api/service-accounts/{account!.Id}/credentials",
@@ -341,7 +341,7 @@ public sealed class ServiceAccountsEndpointTests
             });
         var credentialResult = await createCredentialResponse.Content
             .ReadFromJsonAsync<ClientResponse<ApiCredentialCreatedViewModel>>();
-        var credential = credentialResult!.Payload;
+        var credential = credentialResult.Payload;
 
         var deleteResponse = await Client.DeleteAsync($"api/service-accounts/{account.Id}");
 
