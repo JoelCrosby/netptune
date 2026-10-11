@@ -1,4 +1,4 @@
-export type SearchResultType = 'task' | 'project' | 'board' | 'sprint';
+export type SearchResultType = 'task' | 'project' | 'board' | 'sprint' | 'page';
 
 export interface SearchResult {
   type: SearchResultType;

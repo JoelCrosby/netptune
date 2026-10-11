@@ -1,5 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import {
+  LucideFileText,
   LucideFolderOpen,
   LucideHash,
   LucideKanban,
@@ -12,6 +13,7 @@ import { CommandPaletteItemComponent } from './command-palette-item.component';
 @Component({
   selector: 'app-search-result-item',
   imports: [
+    LucideFileText,
     LucideFolderOpen,
     LucideHash,
     LucideKanban,
@@ -38,6 +40,9 @@ import { CommandPaletteItemComponent } from './command-palette-item.component';
         }
         @case ('sprint') {
           <svg lucideLayers class="h-4 w-4 shrink-0 opacity-50"></svg>
+        }
+        @case ('page') {
+          <svg lucideFileText class="h-4 w-4 shrink-0 opacity-50"></svg>
         }
         @default {
           <svg lucideSearch class="h-4 w-4 shrink-0 opacity-50"></svg>
