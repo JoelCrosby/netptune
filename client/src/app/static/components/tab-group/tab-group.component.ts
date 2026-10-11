@@ -1,4 +1,10 @@
-import { Component, computed, input, model } from '@angular/core';
+import {
+  booleanAttribute,
+  Component,
+  computed,
+  input,
+  model,
+} from '@angular/core';
 import { cn } from '../button/button.variants';
 
 export interface TabItem {
@@ -8,7 +14,16 @@ export interface TabItem {
   count?: number | null;
 }
 
-export type TabGroupVariant = 'default' | 'island';
+// 'subtle' matches app-segmented-control's subtle variant: a hairline group on the page background.
+export type TabGroupVariant = 'default' | 'island' | 'subtle';
+
+const groupClasses: Record<TabGroupVariant, string> = {
+  default: 'border-border border-b',
+  island:
+    'border-border bg-card w-fit max-w-full shrink-0 gap-0.5 rounded-[10px] border p-1',
+  subtle:
+    'border-border w-fit max-w-full shrink-0 gap-0.5 rounded-lg border p-0.5',
+};
 
 @Component({
   selector: 'app-tab-group',
@@ -43,14 +58,15 @@ export class TabGroupComponent {
   readonly tabs = input.required<TabItem[]>();
   readonly value = model<string | number | null>(null);
   readonly variant = input<TabGroupVariant>('default');
+  // Spreads the tabs across the full width in equal shares, as a rail header does.
+  readonly stretch = input(false, { transform: booleanAttribute });
   readonly class = input('');
 
   protected readonly hostClass = computed(() => {
     return cn(
       'flex items-center overflow-x-auto',
-      this.variant() === 'default'
-        ? 'border-border border-b'
-        : 'border-border bg-card w-fit max-w-full shrink-0 gap-0.5 rounded-[10px] border p-1',
+      groupClasses[this.variant()],
+      this.stretch() && 'w-full',
       this.class()
     );
   });
@@ -67,8 +83,19 @@ export class TabGroupComponent {
       );
     }
 
+    if (this.variant() === 'subtle') {
+      return cn(
+        'focus-visible:ring-primary inline-flex h-[26px] shrink-0 cursor-pointer items-center rounded-md px-2.5 text-[12.5px] font-medium transition-colors outline-none focus-visible:ring-2',
+        this.stretch() && 'flex-1 justify-center',
+        isActive
+          ? 'bg-foreground/8 text-foreground'
+          : 'text-foreground/60 hover:text-foreground'
+      );
+    }
+
     return cn(
       'focus-visible:ring-primary inline-flex h-7 shrink-0 cursor-pointer items-center rounded-[7px] border px-2.5 text-[13px] transition-colors outline-none focus-visible:ring-2',
+      this.stretch() && 'flex-1 justify-center',
       isActive
         ? 'border-border bg-hover text-foreground font-semibold'
         : 'border-transparent text-muted hover:bg-hover/60 hover:text-foreground font-medium'

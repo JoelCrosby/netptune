@@ -12,7 +12,8 @@ import { KeyboardKeyComponent } from '../keyboard-key/keyboard-key.component';
 import { FormControlFieldComponent } from '../form-control/form-control-field.component';
 import { FormControlInputDirective } from '../form-control/form-control.directives';
 
-export type FilterInputAppearance = 'field' | 'bare';
+// 'compact' is a short field for dense side panels.
+export type FilterInputAppearance = 'field' | 'bare' | 'compact';
 
 @Component({
   selector: 'app-filter-input',
@@ -64,7 +65,12 @@ export type FilterInputAppearance = 'field' | 'bare';
       <ng-content select="[filterSuffix]" />
     </ng-template>
 
-    @if (appearance() === 'bare') {
+    @if (appearance() === 'compact') {
+      <div
+        class="border-foreground/15 bg-form-field-background focus-within:border-primary/60 flex h-[30px] items-center gap-2 rounded-[7px] border px-2.5">
+        <ng-container [ngTemplateOutlet]="content" />
+      </div>
+    } @else if (appearance() === 'bare') {
       <div
         class="border-border flex h-10.5 shrink-0 items-center gap-2.25 border-b px-3">
         <ng-container [ngTemplateOutlet]="content" />
@@ -95,15 +101,25 @@ export class FilterInputComponent {
     'min-w-0 shrink-0 rounded-sm border-[rgba(var(--foreground-rgb),0.14)] px-[5px] text-[10px] font-normal text-[rgba(var(--foreground-rgb),0.4)]';
 
   protected readonly iconClass = computed(() => {
-    return this.appearance() === 'bare'
-      ? 'h-3.75 w-3.75 shrink-0 text-[rgba(var(--foreground-rgb),0.45)]'
-      : 'text-muted h-4 w-4 shrink-0';
+    switch (this.appearance()) {
+      case 'bare':
+        return 'h-3.75 w-3.75 shrink-0 text-[rgba(var(--foreground-rgb),0.45)]';
+      case 'compact':
+        return 'text-foreground/45 h-3.5 w-3.5 shrink-0';
+      default:
+        return 'text-muted h-4 w-4 shrink-0';
+    }
   });
 
   protected readonly inputClass = computed(() => {
-    return this.appearance() === 'bare'
-      ? 'text-foreground min-w-0 flex-1 p-0 font-[inherit] text-sm leading-none! placeholder:text-[rgba(var(--foreground-rgb),0.4)]'
-      : 'text-sm leading-none!';
+    switch (this.appearance()) {
+      case 'bare':
+        return 'text-foreground min-w-0 flex-1 p-0 font-[inherit] text-sm leading-none! placeholder:text-[rgba(var(--foreground-rgb),0.4)]';
+      case 'compact':
+        return 'text-foreground min-w-0 flex-1 bg-transparent p-0 text-[13px] leading-none! outline-none placeholder:text-[rgba(var(--foreground-rgb),0.45)]';
+      default:
+        return 'text-sm leading-none!';
+    }
   });
 
   focus() {

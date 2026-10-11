@@ -5,7 +5,8 @@ export type ButtonVariant = 'text' | 'filled' | 'outlined';
 export type ButtonColor = 'primary' | 'warn' | 'neutral' | 'contrast';
 export type ButtonColorInput = ButtonColor | '';
 export type FlatButtonColor = ButtonColor | 'ghost';
-export type IconButtonColor = ButtonColor | 'default' | 'muted' | 'solid';
+export type IconButtonColor =
+  ButtonColor | 'default' | 'muted' | 'solid' | 'soft';
 
 export function cn(...inputs: CxOptions): string {
   return twMerge(cx(...inputs));
@@ -278,6 +279,7 @@ export const iconButtonVariants = cva(
           'text-muted hover:bg-hover hover:text-foreground focus-visible:ring-foreground',
         solid:
           'bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-primary',
+        soft: 'bg-primary/10 text-primary hover:bg-primary/16 focus-visible:ring-primary',
       },
     },
     defaultVariants: {

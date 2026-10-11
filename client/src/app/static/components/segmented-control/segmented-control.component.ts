@@ -17,7 +17,8 @@ export interface SegmentedOption<T extends string = string> {
   color?: string | null;
 }
 
-export type SegmentedVariant = 'pill' | 'outlined' | 'chips';
+// 'subtle' sits on the surrounding background: a hairline group with a quiet active segment.
+export type SegmentedVariant = 'pill' | 'outlined' | 'chips' | 'subtle';
 
 const groupVariants = cva('', {
   variants: {
@@ -26,6 +27,8 @@ const groupVariants = cva('', {
       outlined:
         'border-border bg-card flex items-center gap-0.5 rounded-[10px] border p-1 text-sm',
       chips: 'flex items-center gap-1.5 text-sm',
+      subtle:
+        'border-border inline-flex h-[30px] items-center gap-0.5 rounded-lg border p-0.5 text-[12.5px]',
     },
     wrap: {
       true: 'flex-wrap',
@@ -47,6 +50,7 @@ const optionVariants = cva(
         outlined: 'rounded-lg px-3 py-1.5',
         chips:
           'border-border hover:bg-hover inline-flex h-9 items-center rounded-full border px-3.5',
+        subtle: 'h-6 rounded-md px-2.5 font-medium',
       },
       selected: {
         true: '',
@@ -78,6 +82,16 @@ const optionVariants = cva(
       },
       { variant: 'chips', selected: true, class: 'border-primary bg-hover' },
       { variant: 'chips', selected: false, class: 'text-muted' },
+      {
+        variant: 'subtle',
+        selected: true,
+        class: 'bg-foreground/8 text-foreground',
+      },
+      {
+        variant: 'subtle',
+        selected: false,
+        class: 'text-foreground/60 hover:text-foreground',
+      },
     ],
     defaultVariants: {
       variant: 'pill',

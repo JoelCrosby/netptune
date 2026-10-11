@@ -6,7 +6,7 @@ import { cn } from './button/button.variants';
 export type PanelBodyPadding = 'comfortable' | 'compact' | 'snug' | 'none';
 
 // Which edge separates this band from the one next to it.
-export type PanelBodyDivider = 'none' | 'top' | 'bottom';
+export type PanelBodyDivider = 'none' | 'top' | 'bottom' | 'left' | 'right';
 
 const paddingClasses: Record<PanelBodyPadding, string> = {
   comfortable: 'px-6 py-5',
@@ -19,6 +19,8 @@ const dividerClasses: Record<PanelBodyDivider, string> = {
   none: '',
   top: 'border-border border-t',
   bottom: 'border-border border-b',
+  left: 'border-border border-l',
+  right: 'border-border border-r',
 };
 
 @Component({
