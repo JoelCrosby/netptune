@@ -13,6 +13,7 @@ using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.Pages;
 using Netptune.Handlers.Pages.Commands;
 using Netptune.Handlers.Pages.Queries;
+using Netptune.Handlers.Tasks.Queries;
 
 using NSubstitute;
 
@@ -106,6 +107,48 @@ public class PageChangeHandlerTests
 
         result.Status.Should().Be(AiChangeApplyStatus.Failed);
         result.Error.Should().Be(UpdatePageBodyChangeHandler.EditedSinceMessage);
+    }
+
+    [Fact]
+    public async Task UpdateBody_ShouldLinkToTheTasksCreatedBeforeIt_ByTheirSystemIds()
+    {
+        Mediator.Send(Arg.Any<SavePageCommand>(), Arg.Any<CancellationToken>()).Returns(Saved(RfcId));
+        Mediator
+            .Send(Arg.Is<GetTaskSystemIdsQuery>(query => query.TaskIds.SequenceEqual(new List<int> { 99 })), Arg.Any<CancellationToken>())
+            .Returns(new Dictionary<int, string> { [99] = "NPT-9" });
+
+        var payload = """{"pageId":11,"title":"RFC","body":"- [ ] Write docs [[task:ref:1|Write docs]]","revision":4,"taskRefs":["ref:1"]}""";
+        var context = CreateContext("propose_update_page_body", RfcId, payload) with
+        {
+            ResolvedRefs = new Dictionary<string, int>(StringComparer.Ordinal) { ["ref:1"] = 99 },
+        };
+
+        var result = await new UpdatePageBodyChangeHandler(Mediator).Apply(context, TestContext.Current.CancellationToken);
+
+        result.Status.Should().Be(AiChangeApplyStatus.Applied);
+        await Mediator.Received(1).Send(
+            Arg.Is<SavePageCommand>(command => command.Request.Body == "- [ ] Write docs [[task:NPT-9|Write docs]]"),
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task UpdateBody_ShouldFail_RatherThanSaveAHandleThatDidNotResolve()
+    {
+        Mediator
+            .Send(Arg.Any<GetTaskSystemIdsQuery>(), Arg.Any<CancellationToken>())
+            .Returns(new Dictionary<int, string>());
+
+        var payload = """{"pageId":11,"title":"RFC","body":"- [ ] Docs [[task:ref:1|Docs]]","revision":4,"taskRefs":["ref:1"]}""";
+        var context = CreateContext("propose_update_page_body", RfcId, payload) with
+        {
+            ResolvedRefs = new Dictionary<string, int>(StringComparer.Ordinal) { ["ref:1"] = 99 },
+        };
+
+        var result = await new UpdatePageBodyChangeHandler(Mediator).Apply(context, TestContext.Current.CancellationToken);
+
+        result.Status.Should().Be(AiChangeApplyStatus.Failed);
+        result.Error.Should().Be(UpdatePageBodyChangeHandler.UnresolvedTasksMessage);
+        await Mediator.DidNotReceive().Send(Arg.Any<SavePageCommand>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]

@@ -26,6 +26,9 @@ public sealed record AiClientContext
     public string? PageSlug { get; init; }
 
     public string? PageTitle { get; init; }
+
+    // Text the user picked out on the page for this message, as markdown.
+    public string? PageSelection { get; init; }
 }
 
 public sealed record AiAnswerRequest

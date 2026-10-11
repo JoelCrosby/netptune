@@ -406,9 +406,29 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
             .FirstOrDefault(reference => !resolvedRefs.ContainsKey(reference));
     }
 
+    private const string SkippedForReferencePrefix = "Skipped because";
+
+    public const string StillReferencedMessage =
+        "Kept, because a change that depends on it could not be undone.";
+
+    private static bool IsRetryable(AiProposedChange change)
+    {
+        var hasFailed = change.ApplyStatus == AiChangeApplyStatus.Failed;
+
+        return hasFailed || IsSkippedForReference(change);
+    }
+
+    private static bool IsSkippedForReference(AiProposedChange change)
+    {
+        var isSkipped = change.ApplyStatus == AiChangeApplyStatus.Skipped;
+        var namesAReference = change.ApplyError?.StartsWith(SkippedForReferencePrefix, StringComparison.Ordinal) == true;
+
+        return isSkipped && namesAReference;
+    }
+
     private static AiAppliedChangeResult SkipChange(AiProposedChange change, string reference)
     {
-        var error = $"Skipped because {reference} was not created.";
+        var error = $"{SkippedForReferencePrefix} {reference} was not created.";
 
         change.ApplyStatus = AiChangeApplyStatus.Skipped;
         change.ApplyError = error;
@@ -635,9 +655,21 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         using (AiExecution.Begin(agent, changeSet.CorrelationId))
         {
             /* A change set is applied in dependency order, so it comes apart in reverse. */
+            // Handles named by a change whose undo failed: what they point at is still in use, so it stays.
+            var stillReferenced = new HashSet<string>(StringComparer.Ordinal);
+
             foreach (var change in OrderByDependency(undoable).AsEnumerable().Reverse())
             {
-                var result = await UndoChange(change, cancellationToken);
+                var isStillReferenced = change.RefKey is not null && stillReferenced.Contains(change.RefKey);
+                var result = isStillReferenced
+                    ? AiChangeUndoResult.Failure(change, StillReferencedMessage)
+                    : await UndoChange(change, cancellationToken);
+                var undoFailed = result.Status != AiChangeApplyStatus.Applied;
+
+                if (undoFailed)
+                {
+                    stillReferenced.UnionWith(AiChangePayload.ReadReferences(change.Payload.RootElement));
+                }
 
                 results.Add(result);
             }
@@ -760,9 +792,11 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         }
 
         var changes = await UnitOfWork.AiChangeSets.GetChanges(changeSet.Id, cancellationToken);
-        var failed = changes.Where(change => change.ApplyStatus == AiChangeApplyStatus.Failed).ToList();
+        // A change skipped because something it named failed can go once that has been retried; one the
+        // user left out is skipped too, but carries no error and stays out.
+        var retryable = changes.Where(IsRetryable).ToList();
 
-        if (failed.Count == 0)
+        if (retryable.Count == 0)
         {
             throw new InvalidOperationException("There is nothing left to retry in this change set.");
         }
@@ -778,7 +812,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         }
 
         var permissions = membership.Permissions.ToHashSet(StringComparer.Ordinal);
-        var missingPermission = failed.Any(change => !HasPermission(change, permissions));
+        var missingPermission = retryable.Any(change => !HasPermission(change, permissions));
 
         if (missingPermission)
         {
@@ -787,7 +821,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
 
         var resolvedRefs = ReadResolvedRefs(changes);
         var agent = await ResolveAgentName(changeSet, cancellationToken);
-        var ordered = OrderByDependency(failed);
+        var ordered = OrderByDependency(retryable);
         var results = new List<AiAppliedChangeResult>();
 
         using (AiExecution.Begin(agent, changeSet.CorrelationId))

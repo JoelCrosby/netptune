@@ -59,6 +59,14 @@ public sealed class CreatePageAction : IAiToolAction
             return AiToolExecution.Failed("Folders have no body; propose the pages inside it instead.");
         }
 
+        var linksPendingTasks = hasBody && AiPageLookup.ReadTaskHandles(body!).Count > 0;
+
+        if (linksPendingTasks)
+        {
+            return AiToolExecution.Failed(
+                "A new page cannot link to tasks proposed in the same change set. Create it without those links; once it is applied, add them with update_body.");
+        }
+
         var bodyTooLarge = PageBody.IsTooLarge(body);
 
         if (bodyTooLarge)

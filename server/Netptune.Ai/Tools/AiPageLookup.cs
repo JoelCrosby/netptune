@@ -1,3 +1,5 @@
+using System.Text.RegularExpressions;
+
 using Mediator;
 
 using Netptune.Core.Enums;
@@ -11,7 +13,7 @@ public sealed record AiPageParent(int? ParentId, string? ParentRef, string Displ
 
 public sealed record AiPageParentLookup(AiPageParent? Parent, string? Error);
 
-public static class AiPageLookup
+public static partial class AiPageLookup
 {
     public const string EntityType = "page";
 
@@ -70,6 +72,59 @@ public static class AiPageLookup
 
         return new AiPageParentLookup(new AiPageParent(parent.Id, null, parent.Title), null);
     }
+
+    // Mentions of tasks proposed in the same change set, written [[task:ref:3|name]] until they exist.
+    // Code is left alone, so a page documenting the syntax is not read as linking to anything.
+    public static List<string> ReadTaskHandles(string body)
+    {
+        var code = CodeSpans(body);
+
+        return TaskHandlePattern()
+            .Matches(body)
+            .Where(match => !IsInCode(code, match.Index))
+            .Select(match => match.Groups["handle"].Value)
+            .Distinct(StringComparer.Ordinal)
+            .ToList();
+    }
+
+    public static string ReplaceTaskHandles(string body, IReadOnlyDictionary<string, string> systemIdsByHandle)
+    {
+        var code = CodeSpans(body);
+
+        return TaskHandlePattern().Replace(body, match =>
+        {
+            var handle = match.Groups["handle"].Value;
+            var isKnown = systemIdsByHandle.TryGetValue(handle, out var systemId);
+            var isInCode = IsInCode(code, match.Index);
+
+            return isKnown && !isInCode ? $"[[task:{systemId}" : match.Value;
+        });
+    }
+
+    private static List<(int Start, int End)> CodeSpans(string body)
+    {
+        var fences = FencedCodePattern().Matches(body);
+        var inline = InlineCodePattern().Matches(body);
+
+        return fences
+            .Concat(inline)
+            .Select(match => (match.Index, match.Index + match.Length))
+            .ToList();
+    }
+
+    private static bool IsInCode(List<(int Start, int End)> code, int index)
+    {
+        return code.Any(span => index >= span.Start && index < span.End);
+    }
+
+    [GeneratedRegex(@"\[\[task:(?<handle>ref:\d+)(?=[|\]])")]
+    private static partial Regex TaskHandlePattern();
+
+    [GeneratedRegex(@"^[ \t]*(```|~~~).*?^[ \t]*\1", RegexOptions.Multiline | RegexOptions.Singleline)]
+    private static partial Regex FencedCodePattern();
+
+    [GeneratedRegex(@"`[^`\n]*`")]
+    private static partial Regex InlineCodePattern();
 
     public static bool HasLiveChildren(IReadOnlyList<PageTreeNodeViewModel> tree, int pageId)
     {

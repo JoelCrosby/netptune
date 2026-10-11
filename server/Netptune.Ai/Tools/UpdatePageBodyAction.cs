@@ -97,6 +97,17 @@ public sealed class UpdatePageBodyAction : IAiToolAction
             return AiToolExecution.Failed(PageTitle.TooLongMessage);
         }
 
+        var taskHandles = AiPageLookup.ReadTaskHandles(body);
+        var unknownHandle = taskHandles.FirstOrDefault(handle =>
+        {
+            return AiPendingReference.Find(ChangeSet, handle, "task") is null;
+        });
+
+        if (unknownHandle is not null)
+        {
+            return AiToolExecution.Failed(AiPendingReference.Missing(unknownHandle, "task"));
+        }
+
         var currentBody = page.Body ?? string.Empty;
         var isRenamed = !string.Equals(title, page.Title, StringComparison.Ordinal);
         var isRewritten = !string.Equals(body, currentBody, StringComparison.Ordinal);
@@ -126,6 +137,12 @@ public sealed class UpdatePageBodyAction : IAiToolAction
             ["body"] = body,
             ["revision"] = readRevision.Value,
         };
+
+        // Named so the applier waits for those tasks, and skips the rewrite if any of them failed.
+        if (taskHandles.Count > 0)
+        {
+            payload["taskRefs"] = taskHandles;
+        }
 
         ChangeSet.Add(new AiChangeDraft
         {

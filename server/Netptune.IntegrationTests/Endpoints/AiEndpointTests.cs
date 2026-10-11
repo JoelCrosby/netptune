@@ -717,6 +717,58 @@ public sealed class AiEndpointTests
         }
     }
 
+    [Fact]
+    public async Task ApplyChangeSet_ShouldLinkAPageToTheTasksCreatedFromItsChecklist()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var page = await CreatePageWithBody(client, "- [ ] Write the docs");
+        var taskName = $"Write the docs {Guid.NewGuid():N}";
+        var task = new AiProposedChangeSeed
+        {
+            ToolName = "propose_create_task",
+            EntityType = "task",
+            Summary = "Create task",
+            RefKey = "ref:1",
+            Payload = JsonDocument.Parse($$"""{"name":"{{taskName}}","projectId":1}"""),
+        };
+        var rewrite = new AiProposedChangeSeed
+        {
+            ToolName = "propose_update_page_body",
+            EntityType = "page",
+            Summary = "Link the checklist",
+            EntityId = page.Id,
+            Payload = JsonDocument.Parse(
+                $$"""{"pageId":{{page.Id}},"title":"{{page.Title}}","body":"- [ ] Write the docs [[task:ref:1|Write the docs]]","revision":{{page.Revision}},"taskRefs":["ref:1"]}"""),
+        };
+
+        // The rewrite is proposed first, so the apply has to wait for the task it names.
+        var seed = await SeedPendingChangeSet([rewrite, task]);
+
+        try
+        {
+            var result = await ApplyChangeSet(client, seed.ChangeSetId, TestContext.Current.CancellationToken);
+
+            result.Results.Should().OnlyContain(outcome => outcome.Status == AiChangeApplyStatus.Applied);
+
+            using var scope = Fixture.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+            var created = await context.ProjectTasks.SingleAsync(item => item.Name == taskName, TestContext.Current.CancellationToken);
+            var body = await ReadPageBody(page.Id);
+            var linkedTaskIds = await context.PageLinks
+                .Where(link => link.PageId == page.Id && link.TargetType == PageLinkTargetType.Task)
+                .Select(link => link.TargetId)
+                .ToListAsync(TestContext.Current.CancellationToken);
+
+            body.Should().NotContain("ref:1");
+            body.Should().MatchRegex(@"\[\[task:[A-Za-z]+-\d+\|Write the docs\]\]");
+            linkedTaskIds.Should().Contain(created.Id.ToString());
+        }
+        finally
+        {
+            await RemoveSeed(seed.ConversationId);
+        }
+    }
+
     private static async Task<PageViewModel> CreatePageWithBody(HttpClient client, string body)
     {
         var cancellationToken = TestContext.Current.CancellationToken;

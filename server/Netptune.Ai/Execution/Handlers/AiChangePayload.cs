@@ -127,12 +127,28 @@ public static class AiChangePayload
             var isReference = property.Name.EndsWith("Ref", StringComparison.Ordinal)
                 && property.Value.ValueKind == JsonValueKind.String;
 
-            if (!isReference)
+            if (isReference)
+            {
+                yield return property.Value.GetString()!;
+                continue;
+            }
+
+            // A change can wait on several handles at once, such as a page linking to tasks created with it.
+            var isReferenceList = property.Name.EndsWith("Refs", StringComparison.Ordinal)
+                && property.Value.ValueKind == JsonValueKind.Array;
+
+            if (!isReferenceList)
             {
                 continue;
             }
 
-            yield return property.Value.GetString()!;
+            foreach (var item in property.Value.EnumerateArray())
+            {
+                if (item.ValueKind == JsonValueKind.String)
+                {
+                    yield return item.GetString()!;
+                }
+            }
         }
     }
 

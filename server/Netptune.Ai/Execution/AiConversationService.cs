@@ -18,6 +18,9 @@ namespace Netptune.Ai.Execution;
 
 public sealed class AiConversationService : IAiConversationService
 {
+    // Long enough for a checklist or a few paragraphs; a whole page belongs in get_page.
+    private const int MaxSelectionLength = 8000;
+
     private const int MaximumTitleLength = 80;
 
     private const string StubbedToolResult =
@@ -451,6 +454,7 @@ public sealed class AiConversationService : IAiConversationService
         AddContextLine(lines, "sprint", Describe(clientContext.SprintName, clientContext.SprintId));
         AddContextLine(lines, "task", Describe(clientContext.TaskName, clientContext.TaskSystemId));
         AddContextLine(lines, "page", Describe(clientContext.PageTitle, clientContext.PageSlug));
+        AddSelection(lines, clientContext.PageSelection);
 
         if (lines.Count == 0)
         {
@@ -458,6 +462,26 @@ public sealed class AiConversationService : IAiConversationService
         }
 
         return string.Join("\n", lines);
+    }
+
+    private static void AddSelection(List<string> lines, string? selection)
+    {
+        var hasSelection = !string.IsNullOrWhiteSpace(selection);
+
+        if (!hasSelection)
+        {
+            return;
+        }
+
+        var trimmed = selection!.Trim();
+        var isLong = trimmed.Length > MaxSelectionLength;
+        var text = isLong ? trimmed[..MaxSelectionLength] : trimmed;
+
+        // Any closing tag, so selected text can end neither this block nor the <viewing> one around it.
+        var safe = text.Replace("</", "<\u200B/", StringComparison.Ordinal);
+        var truncation = isLong ? "\n(the selection was longer; only its start is shown)" : string.Empty;
+
+        lines.Add($"selected on the page:\n<selection>\n{safe}\n</selection>{truncation}");
     }
 
     private static string? Describe(string? name, object? identifier)

@@ -42,7 +42,7 @@ public sealed class PageChangeTool : IAiTool
           "pageId": { "type": "integer", "description": "update_body and move: the page, from search_pages or get_page." },
           "title": { "type": "string", "description": "Create: the title. update_body: a new title; otherwise the current one stays." },
           "kind": { "type": "string", "enum": ["document", "folder"], "description": "Create: defaults to document." },
-          "body": { "type": "string", "description": "Create: the markdown body of a document. update_body: the whole new body." },
+          "body": { "type": "string", "description": "Create: the markdown body of a document. update_body: the whole new body; link a task proposed earlier in this change set as [[task:<its handle>|name]], such as [[task:ref:3|Write the docs]]." },
           "revision": { "type": "integer", "description": "update_body: the revision get_page returned when you read the page." },
           "parentId": { "type": "integer", "description": "Create and move: the page or folder to put it under. Omit it, and parentRef, for the top level." },
           "parentRef": { "type": "string", "description": "Create and move: handle of a page or folder proposed earlier in this change set, instead of parentId." }

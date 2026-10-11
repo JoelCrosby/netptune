@@ -5,6 +5,7 @@ using FluentAssertions;
 using Mediator;
 
 using Netptune.Ai.Execution;
+using Netptune.Ai.Execution.Handlers;
 using Netptune.Ai.Tools;
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
@@ -77,6 +78,15 @@ public class PageChangeToolTests
     }
 
     [Fact]
+    public async Task Create_ShouldRefuseABody_ThatLinksToTasksProposedInTheSameSet()
+    {
+        var result = await Execute(new CreatePageAction(Mediator, ChangeSet), """{"title":"Plan","body":"- [ ] [[task:ref:1|Docs]]"}""");
+
+        result.IsError.Should().BeTrue();
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
     public async Task Create_ShouldRefuseABody_OnAFolder()
     {
         var result = await Execute(new CreatePageAction(Mediator, ChangeSet), """{"title":"RFCs","kind":"folder","body":"x"}""");
@@ -115,6 +125,62 @@ public class PageChangeToolTests
         var result = await Execute(new UpdatePageBodyAction(Mediator, ChangeSet), $$"""{"pageId":{{RfcId}},"body":"# New"}""");
 
         result.IsError.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task UpdateBody_ShouldWaitForTheTasksItLinksTo_WhenTheyAreProposedInTheSameSet()
+    {
+        ChangeSet.Add(new AiChangeDraft
+        {
+            ToolName = "propose_create_task",
+            EntityType = "task",
+            RefKey = "ref:7",
+            Summary = "Create task “Write docs”",
+            Payload = JsonDocument.Parse("{}"),
+        });
+
+        var result = await Execute(
+            new UpdatePageBodyAction(Mediator, ChangeSet),
+            $$"""{"pageId":{{RfcId}},"body":"- [ ] Write docs [[task:ref:7|Write docs]]","revision":4}""");
+
+        result.IsError.Should().BeFalse();
+
+        var refs = ChangeSet.Changes[1].Payload.RootElement.GetProperty("taskRefs").EnumerateArray().Select(item => item.GetString());
+
+        refs.Should().Equal("ref:7");
+    }
+
+    [Fact]
+    public async Task UpdateBody_ShouldRefuse_WhenItLinksToATaskHandleThatWasNotProposed()
+    {
+        var result = await Execute(
+            new UpdatePageBodyAction(Mediator, ChangeSet),
+            $$"""{"pageId":{{RfcId}},"body":"- [ ] Write docs [[task:ref:9|Write docs]]","revision":4}""");
+
+        result.IsError.Should().BeTrue();
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void TaskHandles_ShouldBeIgnoredInsideCode()
+    {
+        var body = "Write `[[task:ref:1|x]]` to link.\n\n```\n[[task:ref:2|y]]\n```\n- [ ] [[task:ref:3|Docs]]";
+
+        var handles = AiPageLookup.ReadTaskHandles(body);
+        var replaced = AiPageLookup.ReplaceTaskHandles(body, new Dictionary<string, string> { ["ref:1"] = "NPT-1", ["ref:3"] = "NPT-3" });
+
+        handles.Should().Equal("ref:3");
+        replaced.Should().Contain("`[[task:ref:1|x]]`").And.Contain("[[task:NPT-3|Docs]]");
+    }
+
+    [Fact]
+    public void ReadReferences_ShouldIncludeEveryHandleInAListOfRefs()
+    {
+        using var payload = JsonDocument.Parse("""{"parentRef":"ref:1","taskRefs":["ref:2","ref:3"],"name":"x"}""");
+
+        var references = AiChangePayload.ReadReferences(payload.RootElement);
+
+        references.Should().Equal("ref:1", "ref:2", "ref:3");
     }
 
     [Fact]

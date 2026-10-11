@@ -656,6 +656,44 @@ public class AiChangeSetApplierTests
     }
 
     [Fact]
+    public async Task Undo_ShouldKeepAPrerequisite_WhenAChangeThatDependsOnItCouldNotBeUndone()
+    {
+        var changeSet = CreateChangeSet();
+        var prerequisite = CreateChange(changeSet.Id, "propose_create_task", id: 1, refKey: "ref:parent");
+        var dependent = CreateChange(
+            changeSet.Id,
+            "propose_create_task",
+            id: 2,
+            refKey: "ref:child",
+            payload: """{"name":"Child","projectId":1,"sprintRef":"ref:parent"}""");
+
+        prerequisite.ApplyStatus = AiChangeApplyStatus.Applied;
+        prerequisite.AppliedEntityId = 30;
+        dependent.ApplyStatus = AiChangeApplyStatus.Applied;
+        dependent.AppliedEntityId = 31;
+        changeSet.Status = AiChangeSetStatus.Applied;
+        changeSet.AppliedAt = DateTime.UtcNow;
+
+        GivenChangeSet(changeSet, [prerequisite, dependent]);
+        GivenPermissions(NetptunePermissions.Tasks.Delete);
+
+        Mediator
+            .Send(Arg.Is<DeleteTaskCommand>(command => command.Id == 31), Arg.Any<CancellationToken>())
+            .Returns(ClientResponse.Failed("The task is locked."));
+
+        var applier = CreateApplier();
+        var result = await applier.Undo(changeSet.Id, TestContext.Current.CancellationToken);
+        var kept = result!.Results.Single(item => item.ChangeId == prerequisite.Id);
+
+        kept.Status.Should().Be(AiChangeApplyStatus.Failed);
+        kept.Error.Should().Be(AiChangeSetApplier.StillReferencedMessage);
+        prerequisite.UndoneAt.Should().BeNull();
+        await Mediator.DidNotReceive().Send(
+            Arg.Is<DeleteTaskCommand>(command => command.Id == 30),
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task RetryFailed_ShouldRunOnlyTheChangesThatFailed()
     {
         var changeSet = CreateChangeSet();
@@ -711,6 +749,38 @@ public class AiChangeSetApplierTests
         result!.Results.Single().Status.Should().Be(
             AiChangeApplyStatus.Applied,
             "the id its prerequisite created the first time is still good");
+    }
+
+    [Fact]
+    public async Task RetryFailed_ShouldRetryAChangeSkippedForAFailedPrerequisite_ButNotOneLeftOut()
+    {
+        var changeSet = CreateChangeSet();
+        var prerequisite = CreateChange(changeSet.Id, "propose_create_task", id: 1, refKey: "ref:parent");
+        var skipped = CreateChange(
+            changeSet.Id,
+            "propose_create_task",
+            id: 2,
+            refKey: "ref:child",
+            payload: """{"name":"Child","projectId":1,"sprintRef":"ref:parent"}""");
+        var leftOut = CreateChange(changeSet.Id, "propose_create_task", id: 3, refKey: "ref:other");
+
+        prerequisite.ApplyStatus = AiChangeApplyStatus.Failed;
+        skipped.ApplyStatus = AiChangeApplyStatus.Skipped;
+        skipped.ApplyError = "Skipped because ref:parent was not created.";
+        leftOut.ApplyStatus = AiChangeApplyStatus.Skipped;
+        changeSet.Status = AiChangeSetStatus.PartiallyApplied;
+        changeSet.AppliedAt = DateTime.UtcNow;
+
+        GivenChangeSet(changeSet, [prerequisite, skipped, leftOut]);
+        GivenPermissions(NetptunePermissions.Tasks.Create);
+        GivenCreatedTask(40);
+
+        var applier = CreateApplier();
+        var result = await applier.RetryFailed(changeSet.Id, TestContext.Current.CancellationToken);
+
+        result!.Results.Select(item => item.ChangeId).Should().Equal([prerequisite.Id, skipped.Id]);
+        skipped.ApplyStatus.Should().Be(AiChangeApplyStatus.Applied);
+        leftOut.ApplyStatus.Should().Be(AiChangeApplyStatus.Skipped, "a change the user left out stays out");
     }
 
     [Fact]
