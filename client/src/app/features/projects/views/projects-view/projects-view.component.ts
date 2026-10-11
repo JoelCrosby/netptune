@@ -248,6 +248,7 @@ export class ProjectsViewComponent {
   private readonly deleteItem: DatatableMenuItem<ProjectViewModel> = {
     label: $localize`:Row action that deletes the project:Delete`,
     icon: LucideTrash2,
+    color: 'warn',
     onClick: (project) => this.onDelete(project),
   };
 

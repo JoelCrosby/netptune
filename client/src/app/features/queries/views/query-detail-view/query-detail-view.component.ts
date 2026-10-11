@@ -228,6 +228,7 @@ export class QueryDetailViewComponent {
   private readonly deleteMenuItem: DatatableMenuItem<TaskViewModel> = {
     label: $localize`:Row action that deletes a task:Delete`,
     icon: LucideTrash2,
+    color: 'warn',
     onClick: (task) => this.taskCommands.delete(task),
   };
 

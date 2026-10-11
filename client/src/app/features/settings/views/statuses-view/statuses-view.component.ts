@@ -191,6 +191,7 @@ export class StatusesViewComponent {
     {
       label: $localize`:Row action that deletes a status:Delete`,
       icon: LucideTrash2,
+      color: 'warn',
       onClick: (status) => this.delete(status),
       disabled: (status) => status.isSystem || this.list.pending(),
     },

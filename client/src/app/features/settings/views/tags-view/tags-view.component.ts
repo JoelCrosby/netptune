@@ -120,6 +120,7 @@ export class TagsViewComponent {
     {
       label: $localize`:Row action that deletes a tag:Delete tag`,
       icon: LucideX,
+      color: 'warn',
       onClick: (tag) => this.onDeleteClicked(tag),
     },
   ];

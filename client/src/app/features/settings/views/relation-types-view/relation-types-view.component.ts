@@ -209,6 +209,7 @@ export class RelationTypesViewComponent {
     {
       label: $localize`:Row action that deletes a relation type:Delete`,
       icon: LucideTrash2,
+      color: 'warn',
       onClick: (relationType) => this.delete(relationType),
       disabled: (relationType) => relationType.isSystem || this.list.pending(),
     },

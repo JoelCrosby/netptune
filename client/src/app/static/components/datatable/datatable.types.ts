@@ -2,6 +2,7 @@ import { Signal, Type } from '@angular/core';
 import { Params } from '@angular/router';
 import { ClientResponse } from '@app/core/models/client-response';
 import { Page } from '@app/core/models/pagination';
+import { MenuItemColor } from '../dropdown-menu/menu-item.component';
 
 export type DatatableSortDirection = 'asc' | 'desc';
 
@@ -48,6 +49,7 @@ export interface DatatableMenuItem<T = unknown> {
   icon: Type<unknown>;
   onClick: (row: T) => void;
   disabled?: (row: T) => boolean;
+  color?: MenuItemColor;
 }
 
 export interface DatatableLoadSort extends DatatableSort {

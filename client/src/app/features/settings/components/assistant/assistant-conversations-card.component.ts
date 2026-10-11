@@ -183,6 +183,7 @@ export class AssistantConversationsCardComponent {
     {
       label: $localize`:Row action that deletes an assistant conversation:Delete`,
       icon: LucideTrash2,
+      color: 'warn',
       onClick: (conversation) => this.delete([conversation]),
     },
   ];

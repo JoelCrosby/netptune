@@ -235,6 +235,7 @@ import {
                           <button
                             app-menu-item
                             type="button"
+                            [color]="menuItem.color ?? 'default'"
                             [disabled]="menuItem.disabled?.(row) ?? false"
                             (click)="
                               selectMenuItem(menuItem, row, dropdownmenu)

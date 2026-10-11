@@ -224,6 +224,7 @@ export class SprintsViewComponent {
   private readonly deleteMenuItem: DatatableMenuItem<SprintViewModel> = {
     label: $localize`:Row action that deletes the sprint:Delete`,
     icon: LucideTrash2,
+    color: 'warn',
     onClick: (sprint) => this.onDelete(sprint),
   };
 
