@@ -32,7 +32,7 @@ public class AiTurnReaderTests
         using var timeout = new CancellationTokenSource();
         using var turn = CancellationTokenSource.CreateLinkedTokenSource(timeout.Token);
 
-        var events = await Drain(HangsAfterDelta(timeout, cancelledAs: null), timeout, turn);
+        var events = await Drain(HangsAfterDelta(timeout, cancelledAs: null, TestContext.Current.CancellationToken), timeout, turn);
 
         events.Select(item => item.Type).Should().Equal(AiStreamEventType.TextDelta, AiStreamEventType.Error);
         events[^1].Message.Should().Be(AiTurnReader.DescribeTimeout(Timeout));
@@ -44,7 +44,7 @@ public class AiTurnReaderTests
         using var timeout = new CancellationTokenSource();
         using var turn = CancellationTokenSource.CreateLinkedTokenSource(timeout.Token);
 
-        var run = HangsAfterDelta(timeout, cancelledAs: new HttpRequestException("connection closed"));
+        var run = HangsAfterDelta(timeout, cancelledAs: new HttpRequestException("connection closed"), TestContext.Current.CancellationToken);
         var events = await Drain(run, timeout, turn);
 
         events.Where(item => item.Type == AiStreamEventType.Error)
@@ -58,7 +58,7 @@ public class AiTurnReaderTests
         using var timeout = new CancellationTokenSource();
         using var turn = CancellationTokenSource.CreateLinkedTokenSource(timeout.Token);
 
-        var events = await Drain(HangsAfterDelta(turn, cancelledAs: null), timeout, turn);
+        var events = await Drain(HangsAfterDelta(turn, cancelledAs: null, TestContext.Current.CancellationToken), timeout, turn);
 
         events.Select(item => item.Type).Should().Equal(AiStreamEventType.TextDelta, AiStreamEventType.Stopped);
     }

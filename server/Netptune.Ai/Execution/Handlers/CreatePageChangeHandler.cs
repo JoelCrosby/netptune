@@ -47,7 +47,7 @@ public sealed class CreatePageChangeHandler : IAiChangeHandler, IAiChangeUndoHan
             return AiChangePayload.Failure(change, "The page details are missing from this change.");
         }
 
-        var request = new CreatePageRequest { Kind = kind.Value, ParentId = parentId, Title = title, Body = body };
+        var request = new CreatePageRequest { Kind = kind.GetValueOrDefault(), ParentId = parentId, Title = title, Body = body };
         var created = await Mediator.Send(new CreatePageCommand(request), cancellationToken);
         var page = created.Payload;
         var isCreated = created.IsSuccess && page is not null;

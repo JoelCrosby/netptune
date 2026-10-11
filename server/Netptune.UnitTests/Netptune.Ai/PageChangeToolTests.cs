@@ -273,8 +273,8 @@ public class PageChangeToolTests
         change.ToolName.Should().Be("propose_update_page_details");
         change.EntityId.Should().Be(RfcId);
         change.Fields.Should().Contain(field => field.Name == "status" && field.Before == "draft" && field.After == "published");
-        tags.BeforeValues.Select(value => value.Display).Should().Equal("Backend");
-        tags.AfterValues.Select(value => value.Display).Should().Equal("Backend", "Frontend");
+        tags.BeforeValues!.Select(value => value.Display).Should().Equal("Backend");
+        tags.AfterValues!.Select(value => value.Display).Should().Equal("Backend", "Frontend");
         payload.GetProperty("status").GetString().Should().Be("published");
         payload.GetProperty("tags").EnumerateArray().Select(item => item.GetString()).Should().Equal("Backend", "Frontend");
     }

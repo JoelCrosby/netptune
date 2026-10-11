@@ -82,7 +82,7 @@ public sealed class UpdateStatusTool : IAiTool
             }
 
             fields.Add(AiChangeFields.Text("name", status.Name, name));
-            payload["name"] = name;
+            payload["name"] = name!;
         }
 
         var rawCategory = AiToolSchema.GetString(arguments, "category");
