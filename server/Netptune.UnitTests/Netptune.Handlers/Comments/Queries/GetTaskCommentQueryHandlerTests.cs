@@ -48,6 +48,6 @@ public class GetTaskCommentQueryHandlerTests
         var result = await Handler.Handle(new GetTaskCommentQuery("NPT-1", CommentId), TestContext.Current.CancellationToken);
 
         result.Should().BeNull();
-        await UnitOfWork.Comments.DidNotReceiveWithAnyArgs().GetTaskCommentViewModel(default, default, default);
+        await UnitOfWork.Comments.DidNotReceiveWithAnyArgs().GetTaskCommentViewModel(default, default, TestContext.Current.CancellationToken);
     }
 }
