@@ -1,5 +1,7 @@
 import { Service, computed, inject, signal } from '@angular/core';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
+import { AiProvider } from '@core/models/ai-credential';
+import { AiEffort } from '@core/models/ai-effort';
 import { AiModelOption } from '@core/models/ai-model';
 import { AiApiService } from '@core/services/ai-api.service';
 
@@ -31,17 +33,24 @@ export class AiModelCatalogService {
     return $localize`:Model option that lets the server choose:Automatic`;
   });
 
-  /** Automatic resolves to a default model that supports effort, so it keeps the control visible. */
-  readonly supportsEffort = computed(() => {
+  // Mirrors the server, which picks Anthropic for automatic whenever a key for it exists.
+  private readonly automaticModel = computed(() => {
+    const defaults = this.models().filter((option) => option.isDefault);
+    const anthropic = defaults.find(
+      (option) => option.provider === AiProvider.anthropic
+    );
+
+    return anthropic ?? defaults[0];
+  });
+
+  readonly availableEfforts = computed<AiEffort[]>(() => {
     const selected = this.selectedModel();
+    const model =
+      selected === null
+        ? this.automaticModel()
+        : this.models().find((option) => option.id === selected);
 
-    if (selected === null) {
-      return true;
-    }
-
-    const model = this.models().find((option) => option.id === selected);
-
-    return model?.supportsEffort ?? false;
+    return model?.efforts ?? [];
   });
 
   async load() {

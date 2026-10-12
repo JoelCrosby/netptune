@@ -36,6 +36,8 @@ public static class NetptuneAiConfiguration
         services.AddSingleton<IAiChatProvider, AnthropicChatProvider>();
         services.AddSingleton<IAiChatProvider, OpenAiChatProvider>();
         services.AddSingleton<IAiChatProviderFactory, AiChatProviderFactory>();
+        services.AddSingleton<IAiModelEffortSource, AnthropicModelEffortSource>();
+        services.AddSingleton<IAiModelCatalog, AiModelCatalog>();
         services.AddSingleton<IAiCancellationRegistry, AiCancellationRegistry>();
 
         services.AddScoped<IAiTool, ListRecordsTool>();

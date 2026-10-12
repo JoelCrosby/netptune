@@ -40,6 +40,7 @@ public sealed class AiConversationService : IAiConversationService
     private readonly IAiCancellationRegistry Turns;
     private readonly IAiSpendService Spend;
     private readonly IAiToolRegistry Tools;
+    private readonly IAiModelCatalog Models;
     private readonly AiOptions Options;
 
     public AiConversationService(
@@ -55,6 +56,7 @@ public sealed class AiConversationService : IAiConversationService
         IAiCancellationRegistry turns,
         IAiSpendService spend,
         IAiToolRegistry tools,
+        IAiModelCatalog models,
         IOptions<AiOptions> options)
     {
         ChangeSetBuilder = changeSetBuilder;
@@ -63,6 +65,7 @@ public sealed class AiConversationService : IAiConversationService
         Turns = turns;
         Spend = spend;
         Tools = tools;
+        Models = models;
         UnitOfWork = unitOfWork;
         Identity = identity;
         Protector = protector;
@@ -161,7 +164,7 @@ public sealed class AiConversationService : IAiConversationService
         conversation.RequestedModel = requestedModel;
         conversation.RequestedEffort = request.Effort;
 
-        var effort = ResolveEffort(conversation.Model, request.Effort);
+        var effort = await ResolveEffort(credential, conversation.Model, request.Effort, cancellationToken);
 
         yield return AiStreamEvent.ConversationStarted(conversation.Id);
 
@@ -564,16 +567,16 @@ public sealed class AiConversationService : IAiConversationService
         return hasAnthropic ? AiProvider.Anthropic : credentials[0].Provider;
     }
 
-    private AiEffort? ResolveEffort(string model, AiEffort? requested)
+    private async Task<AiEffort?> ResolveEffort(
+        AiResolvedCredential credential,
+        string model,
+        AiEffort? requested,
+        CancellationToken cancellationToken)
     {
-        var supportsEffort = AiModels.SupportsEffort(model);
+        var supported = await Models.EffortsFor(credential, model, cancellationToken);
+        var desired = requested ?? Options.DefaultEffort;
 
-        if (!supportsEffort)
-        {
-            return null;
-        }
-
-        return requested ?? Options.DefaultEffort;
+        return AiModels.ClampEffort(supported, desired);
     }
 
     private async Task<AiTitleResult> TryCreateTitle(

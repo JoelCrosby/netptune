@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 using Netptune.Api.Configuration;
+using Netptune.Ai.Providers;
 using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Services;
@@ -102,6 +103,7 @@ public sealed class NetptuneFixture : IAsyncLifetime
                     services.AddSingleton<TestAiChatScript>();
                     services.AddSingleton<TestAiChatProvider>();
                     services.Replace<IAiChatProviderFactory, TestAiChatProviderFactory>();
+                    services.RemoveAll<IAiModelEffortSource>();
 
                     services.AddAuthorization(options =>
                     {

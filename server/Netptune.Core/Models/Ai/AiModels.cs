@@ -12,13 +12,17 @@ public sealed record AiModelOption
 
     public bool IsDefault { get; init; }
 
-    public bool SupportsEffort { get; init; }
+    public IReadOnlyList<AiEffort> Efforts { get; init; } = [];
 }
 
 public static class AiModels
 {
     public const string AnthropicDefault = "claude-opus-5";
     public const string OpenAiDefault = "gpt-5.6-sol";
+
+    public static readonly IReadOnlyList<AiEffort> AllEfforts = Enum.GetValues<AiEffort>();
+
+    private static readonly IReadOnlyList<AiEffort> OpenAiEfforts = [AiEffort.Low, AiEffort.Medium, AiEffort.High];
 
     public const string AnthropicTitleModel = "claude-haiku-4-5";
     public const string OpenAiTitleModel = "gpt-5.6-luna";
@@ -31,14 +35,14 @@ public static class AiModels
             Id = AnthropicDefault,
             Label = "Claude Opus 5",
             IsDefault = true,
-            SupportsEffort = true,
+            Efforts = AllEfforts,
         },
         new()
         {
             Provider = AiProvider.Anthropic,
             Id = "claude-sonnet-5",
             Label = "Claude Sonnet 5",
-            SupportsEffort = true,
+            Efforts = AllEfforts,
         },
         new()
         {
@@ -52,21 +56,21 @@ public static class AiModels
             Id = OpenAiDefault,
             Label = "GPT-5.6 Sol",
             IsDefault = true,
-            SupportsEffort = true,
+            Efforts = OpenAiEfforts,
         },
         new()
         {
             Provider = AiProvider.OpenAi,
             Id = "gpt-5.6-terra",
             Label = "GPT-5.6 Terra",
-            SupportsEffort = true,
+            Efforts = OpenAiEfforts,
         },
         new()
         {
             Provider = AiProvider.OpenAi,
             Id = OpenAiTitleModel,
             Label = "GPT-5.6 Luna",
-            SupportsEffort = true,
+            Efforts = OpenAiEfforts,
         },
     ];
 
@@ -89,16 +93,36 @@ public static class AiModels
         return Catalog.Any(option => option.Provider == provider && option.Id == model);
     }
 
-    public static bool SupportsEffort(string? model)
+    public static IReadOnlyList<AiEffort> EffortsFor(string? model)
     {
         if (string.IsNullOrWhiteSpace(model))
         {
-            return false;
+            return [];
         }
 
         var option = Catalog.FirstOrDefault(item => item.Id == model);
 
-        return option?.SupportsEffort ?? false;
+        return option?.Efforts ?? [];
+    }
+
+    public static AiEffort? ClampEffort(IReadOnlyList<AiEffort> supported, AiEffort desired)
+    {
+        if (supported.Count == 0)
+        {
+            return null;
+        }
+
+        var isSupported = supported.Contains(desired);
+
+        if (isSupported)
+        {
+            return desired;
+        }
+
+        var lower = supported.Where(effort => effort < desired).ToList();
+        var hasLower = lower.Count > 0;
+
+        return hasLower ? lower.Max() : supported.Min();
     }
 
     public static AiProvider? ProviderFor(string? model)

@@ -98,8 +98,9 @@ export class AiAssistantService {
 
   readonly efforts = this.effort.efforts;
   readonly selectedEffort = this.effort.selectedEffort;
+  readonly effectiveEffort = this.effort.effectiveEffort;
   readonly selectedEffortLabel = this.effort.selectedEffortLabel;
-  readonly supportsEffort = this.catalog.supportsEffort;
+  readonly supportsEffort = computed(() => this.effort.efforts().length > 0);
 
   readonly draft = this.drafts.text;
 

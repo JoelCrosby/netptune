@@ -14,19 +14,43 @@ namespace Netptune.UnitTests.Netptune.Ai;
 public class AiEffortMappingTests
 {
     [Fact]
-    public void SupportsEffort_ShouldRejectAModelThatTheApiWouldError()
+    public void EffortsFor_ShouldOnlyOfferLevelsTheModelAccepts()
     {
-        AiModels.SupportsEffort(AiModels.AnthropicDefault).Should().BeTrue();
-        AiModels.SupportsEffort("claude-sonnet-5").Should().BeTrue();
-        AiModels.SupportsEffort(AiModels.AnthropicTitleModel).Should().BeFalse();
+        AiModels.EffortsFor(AiModels.AnthropicDefault).Should().Contain(AiEffort.Max);
+        AiModels.EffortsFor(AiModels.OpenAiDefault).Should().NotContain([AiEffort.XHigh, AiEffort.Max]);
+        AiModels.EffortsFor(AiModels.AnthropicTitleModel).Should().BeEmpty();
     }
 
     [Fact]
-    public void SupportsEffort_ShouldRejectAnUnknownModel()
+    public void EffortsFor_ShouldOfferNothingForAnUnknownModel()
     {
-        AiModels.SupportsEffort(null).Should().BeFalse();
-        AiModels.SupportsEffort("  ").Should().BeFalse();
-        AiModels.SupportsEffort("claude-not-a-model").Should().BeFalse();
+        AiModels.EffortsFor(null).Should().BeEmpty();
+        AiModels.EffortsFor("  ").Should().BeEmpty();
+        AiModels.EffortsFor("claude-not-a-model").Should().BeEmpty();
+    }
+
+    [Fact]
+    public void ClampEffort_ShouldKeepASupportedLevel()
+    {
+        AiModels.ClampEffort(AiModels.AllEfforts, AiEffort.XHigh).Should().Be(AiEffort.XHigh);
+    }
+
+    [Fact]
+    public void ClampEffort_ShouldFallBackToTheNearestLowerLevel()
+    {
+        AiModels.ClampEffort([AiEffort.Low, AiEffort.Medium, AiEffort.High], AiEffort.Max).Should().Be(AiEffort.High);
+    }
+
+    [Fact]
+    public void ClampEffort_ShouldUseTheLowestLevelWhenNothingIsLower()
+    {
+        AiModels.ClampEffort([AiEffort.High, AiEffort.Max], AiEffort.Low).Should().Be(AiEffort.High);
+    }
+
+    [Fact]
+    public void ClampEffort_ShouldOmitEffortForAModelWithoutIt()
+    {
+        AiModels.ClampEffort([], AiEffort.Medium).Should().BeNull();
     }
 
     [Fact]

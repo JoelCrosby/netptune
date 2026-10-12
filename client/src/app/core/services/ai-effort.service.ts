@@ -1,6 +1,7 @@
 import { Service, computed, inject, signal } from '@angular/core';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
 import { AiEffort, AiEffortOption } from '@core/models/ai-effort';
+import { AiModelCatalogService } from '@core/services/ai-model-catalog.service';
 
 const EFFORT_STORAGE_KEY = 'ai-assistant.effort';
 
@@ -30,15 +31,31 @@ const EFFORT_OPTIONS: AiEffortOption[] = [
 @Service()
 export class AiEffortService {
   private readonly storage = inject(LocalStorageService);
+  private readonly catalog = inject(AiModelCatalogService);
 
-  readonly efforts = EFFORT_OPTIONS;
+  readonly efforts = computed(() => {
+    const available = this.catalog.availableEfforts();
+
+    return EFFORT_OPTIONS.filter((option) => available.includes(option.effort));
+  });
 
   /** The level the user picked, where null means automatic — not the level a conversation resolved to. */
   readonly selectedEffort = signal<AiEffort | null>(this.readPreference());
 
-  readonly selectedEffortLabel = computed(() => {
+  // The server clamps a level the model lacks to the nearest one below, so show what will actually run.
+  readonly effectiveEffort = computed(() => {
     const selected = this.selectedEffort();
-    const option = EFFORT_OPTIONS.find((item) => item.effort === selected);
+
+    if (selected === null) {
+      return null;
+    }
+
+    return clampEffort(this.catalog.availableEfforts(), selected);
+  });
+
+  readonly selectedEffortLabel = computed(() => {
+    const effective = this.effectiveEffort();
+    const option = EFFORT_OPTIONS.find((item) => item.effort === effective);
 
     if (option) {
       return option.label;
@@ -63,4 +80,21 @@ export class AiEffortService {
   private readPreference(): AiEffort | null {
     return this.storage.getItem<AiEffort | null>(EFFORT_STORAGE_KEY) ?? null;
   }
+}
+
+function clampEffort(
+  available: AiEffort[],
+  desired: AiEffort
+): AiEffort | null {
+  if (!available.length) return null;
+
+  const isAvailable = available.includes(desired);
+
+  if (isAvailable) {
+    return desired;
+  }
+
+  const lower = available.filter((effort) => effort < desired);
+
+  return lower.length ? Math.max(...lower) : Math.min(...available);
 }

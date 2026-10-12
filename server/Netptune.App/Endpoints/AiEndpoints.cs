@@ -35,7 +35,8 @@ public static class AiEndpoints
             .WithTags("AI assistant")
             .RequireAuthorization();
 
-        group.MapGet("/models", () => Results.Ok(AiModels.Catalog));
+        group.MapGet("/models", HandleGetModels)
+            .RequireAuthorization(NetptunePermissions.Assistant.Use);
 
         group.MapGet("/credentials", HandleGetCredentials)
             .RequireAuthorization(NetptunePermissions.Assistant.Use);
@@ -175,6 +176,15 @@ public static class AiEndpoints
         var result = await mediator.Send(new DeleteAiCredentialCommand(credentialId), cancellationToken);
 
         return result.ToResult();
+    }
+
+    private static async Task<IResult> HandleGetModels(
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetAiModelsQuery(), cancellationToken);
+
+        return Results.Ok(result);
     }
 
     private static async Task<IResult> HandleGetCredentialAvailability(
