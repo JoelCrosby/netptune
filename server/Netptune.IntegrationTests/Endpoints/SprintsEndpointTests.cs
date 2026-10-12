@@ -554,7 +554,7 @@ public sealed class SprintsEndpointTests
     }
 
     [Fact]
-    public async Task Get_ShouldCountArchivedTasksSeparately_WhenSprintTaskIsArchived()
+    public async Task Get_ShouldKeepArchivedTasksInCounts_WhenSprintTaskIsArchived()
     {
         var project = await CreateProject();
         var sprint = await CreateSprint(project.Id);
@@ -567,7 +567,8 @@ public sealed class SprintsEndpointTests
 
         var detail = await Client.GetFromJsonAsync<ClientResponse<SprintDetailViewModel>>($"api/sprints/{sprint.Id}");
 
-        detail.Payload!.TaskCount.Should().Be(0);
+        detail.Payload!.TaskCount.Should().Be(1);
+        detail.Payload.NewTaskCount.Should().Be(1);
         detail.Payload.ArchivedTaskCount.Should().Be(1);
     }
 

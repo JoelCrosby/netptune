@@ -95,8 +95,8 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
                 ? query.OrderByDescending(sprint => sprint.Goal)
                 : query.OrderBy(sprint => sprint.Goal),
             "taskCount" => descending
-                ? query.OrderByDescending(sprint => sprint.ProjectTasks.Count(task => !task.IsDeleted))
-                : query.OrderBy(sprint => sprint.ProjectTasks.Count(task => !task.IsDeleted)),
+                ? query.OrderByDescending(sprint => sprint.ProjectTasks.Count())
+                : query.OrderBy(sprint => sprint.ProjectTasks.Count()),
             _ => query
                 .OrderByDescending(sprint => sprint.Status == SprintStatus.Active)
                 .ThenByDescending(sprint => sprint.StartDate),
@@ -232,20 +232,17 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
             WorkspaceId = sprint.WorkspaceId,
             CreatedAt = sprint.CreatedAt,
             UpdatedAt = sprint.UpdatedAt,
-            TaskCount = sprint.ProjectTasks.Count(task => !task.IsDeleted),
+            TaskCount = sprint.ProjectTasks.Count(),
             NewTaskCount = sprint.ProjectTasks.Count(task =>
-                !task.IsDeleted &&
-                (task.Status!.Category == StatusCategory.New || task.Status!.Category == StatusCategory.Todo)),
-            ActiveTaskCount = sprint.ProjectTasks.Count(task => !task.IsDeleted && task.Status!.Category == StatusCategory.Active),
-            DoneTaskCount = sprint.ProjectTasks.Count(task => !task.IsDeleted && task.Status!.Category == StatusCategory.Done),
+                task.Status!.Category == StatusCategory.New || task.Status!.Category == StatusCategory.Todo),
+            ActiveTaskCount = sprint.ProjectTasks.Count(task => task.Status!.Category == StatusCategory.Active),
+            DoneTaskCount = sprint.ProjectTasks.Count(task => task.Status!.Category == StatusCategory.Done),
             ArchivedTaskCount = sprint.ProjectTasks.Count(task => task.IsDeleted),
             EstimateType = sprint.ProjectTasks
-                .Where(task => !task.IsDeleted && task.EstimateType.HasValue)
+                .Where(task => task.EstimateType.HasValue)
                 .Select(task => task.EstimateType)
                 .FirstOrDefault(),
-            TotalEstimateValue = sprint.ProjectTasks
-                .Where(task => !task.IsDeleted)
-                .Sum(task => task.EstimateValue),
+            TotalEstimateValue = sprint.ProjectTasks.Sum(task => task.EstimateValue),
             Tasks = sprint.ProjectTasks
                 .Where(task => !task.IsDeleted)
                 .OrderByDescending(task => task.UpdatedAt)
@@ -274,7 +271,7 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
             WorkspaceId = sprint.WorkspaceId,
             CreatedAt = sprint.CreatedAt,
             UpdatedAt = sprint.UpdatedAt,
-            TaskCount = sprint.ProjectTasks.Count(task => !task.IsDeleted),
+            TaskCount = sprint.ProjectTasks.Count(),
         };
     }
 

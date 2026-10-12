@@ -128,8 +128,8 @@ public sealed class SprintTransitionAction : IAiToolAction
                 $"Sprint “{sprint.Name}” is {Describe(sprint.Status)} — only active sprints can be completed.");
         }
 
-        // Everything not done leaves with completion, Backlog and Inactive tasks included.
-        var unfinishedCount = sprint.TaskCount - sprint.DoneTaskCount;
+        // Everything not done leaves with completion, Backlog and Inactive tasks included. Archived tasks stay put.
+        var unfinishedCount = sprint.Tasks.Count(task => task.StatusCategory != StatusCategory.Done);
         var fields = new List<AiChangeField>
         {
             new()

@@ -192,6 +192,30 @@ public class SprintToolTests
     }
 
     [Fact]
+    public async Task SprintTransition_Complete_ShouldCountOnlyListedUnfinishedTasks_WhenArchivedTasksAreInTheTotals()
+    {
+        var sprint = CreateSprint(SprintStatus.Active) with
+        {
+            TaskCount = 5,
+            DoneTaskCount = 1,
+            Tasks =
+            [
+                CreateTask(1, ProjectId, SprintId) with { StatusCategory = StatusCategory.Done },
+                CreateTask(2, ProjectId, SprintId) with { StatusCategory = StatusCategory.Active },
+                CreateTask(3, ProjectId, SprintId) with { StatusCategory = StatusCategory.Todo },
+            ],
+        };
+
+        GivenSprint(sprint);
+
+        var tool = new SprintChangeTool(Mediator, ChangeSet);
+        var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}},"action":"complete"}"""), TestContext.Current.CancellationToken);
+
+        result.IsError.Should().BeFalse();
+        ChangeSet.Changes.Single().Fields.Single(field => field.Name == "unfinishedTasks").After.Should().Be("2");
+    }
+
+    [Fact]
     public async Task SprintTransition_Cancel_ShouldFail_WhenTheSprintIsAlreadyCancelled()
     {
         GivenSprint(CreateSprint(SprintStatus.Cancelled));

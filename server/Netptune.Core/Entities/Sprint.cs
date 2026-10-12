@@ -2,7 +2,6 @@ using System.Text.Json.Serialization;
 
 using Netptune.Core.BaseEntities;
 using Netptune.Core.Enums;
-using Netptune.Core.ViewModels.Sprints;
 
 namespace Netptune.Core.Entities;
 
@@ -33,27 +32,4 @@ public record Sprint : WorkspaceEntity<int>
 
     [JsonIgnore]
     public ICollection<ProjectTask> ProjectTasks { get; set; } = new HashSet<ProjectTask>();
-
-    public SprintViewModel ToViewModel()
-    {
-        return new SprintViewModel
-        {
-            Id = Id,
-            Name = Name,
-            Identifier = Identifier,
-            Goal = Goal,
-            Status = Status,
-            StartDate = StartDate,
-            StartedAt = StartedAt,
-            EndDate = EndDate,
-            CompletedAt = CompletedAt,
-            ProjectId = ProjectId,
-            ProjectName = Project!.Name,
-            ProjectKey = Project.Key,
-            WorkspaceId = WorkspaceId,
-            CreatedAt = CreatedAt,
-            UpdatedAt = UpdatedAt,
-            TaskCount = ProjectTasks.Count(task => !task.IsDeleted),
-        };
-    }
 }

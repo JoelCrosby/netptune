@@ -156,7 +156,6 @@ public sealed class StartSprintCommandHandler : IRequestHandler<StartSprintComma
     private static List<ProjectTask> GetUniqueSprintTasks(Sprint sprint)
     {
         return sprint.ProjectTasks
-            .Where(task => !task.IsDeleted)
             .GroupBy(task => task.Id)
             .Select(group => group.First())
             .ToList();

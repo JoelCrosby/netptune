@@ -146,7 +146,7 @@ interface TargetSprintOption {
               ">
               All
               {{
-                sprint.taskCount // i18n(ph="TOTAL")
+                sprint.tasks.length // i18n(ph="TOTAL")
               }}
               tasks in this sprint are complete.
             </ng-container>
@@ -210,7 +210,7 @@ export class SprintCompletionDialogComponent {
     const stats: StatStripItem[] = [
       {
         label: $localize`:Stat label for finished tasks:Completed`,
-        value: this.sprint.doneTaskCount,
+        value: this.doneTasks().length,
       },
       {
         label: $localize`:Stat label for tasks moving out of a sprint being completed:Carrying over`,
@@ -219,7 +219,7 @@ export class SprintCompletionDialogComponent {
       },
       {
         label: $localize`:Stat label for the total number of tasks in a sprint:Total`,
-        value: this.sprint.taskCount,
+        value: this.sprint.tasks.length,
       },
     ];
 
