@@ -511,7 +511,7 @@ public sealed class ApiV1EndpointTests
         }
         finally
         {
-            await connection.GetSubscriber().UnsubscribeAsync(channel);
+            await queue.UnsubscribeAsync();
         }
     }
 

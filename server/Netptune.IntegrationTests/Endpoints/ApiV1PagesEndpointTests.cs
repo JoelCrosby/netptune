@@ -472,7 +472,7 @@ public sealed class ApiV1PagesEndpointTests
         }
         finally
         {
-            await connection.GetSubscriber().UnsubscribeAsync(channel);
+            await queue.UnsubscribeAsync();
         }
     }
 

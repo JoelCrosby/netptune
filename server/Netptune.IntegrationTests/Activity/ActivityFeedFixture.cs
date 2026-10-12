@@ -2,7 +2,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using Netptune.Core.Entities;
-using Netptune.Entities;
 using Netptune.Entities.Configuration;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories;
@@ -39,12 +38,11 @@ public sealed class ActivityFeedFixture : IAsyncLifetime
 
         Provider = services.BuildServiceProvider();
 
-        await new HostedDatabaseService(Provider.GetRequiredService<IServiceScopeFactory>())
-            .StartAsync(CancellationToken.None);
-
         using var scope = Provider.CreateScope();
 
         var db = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        await db.Database.EnsureCreatedAsync(TestContext.Current.CancellationToken);
 
         var user = new AppUser
         {

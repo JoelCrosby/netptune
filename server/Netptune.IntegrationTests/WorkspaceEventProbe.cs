@@ -51,7 +51,7 @@ public static class WorkspaceEventProbe
         }
         finally
         {
-            await connection.GetSubscriber().UnsubscribeAsync(channel);
+            await queue.UnsubscribeAsync();
         }
     }
 }

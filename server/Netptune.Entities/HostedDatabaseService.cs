@@ -5,7 +5,9 @@ using Netptune.Entities.Contexts;
 
 namespace Netptune.Entities;
 
-public class HostedDatabaseService : IHostedService
+// The schema is created in StartingAsync, which the host runs before any hosted service's StartAsync,
+// because services registered earlier (data protection loading its key ring) read tables at startup.
+public class HostedDatabaseService : IHostedLifecycleService
 {
     private readonly IServiceScopeFactory ScopeFactory;
 
@@ -14,7 +16,7 @@ public class HostedDatabaseService : IHostedService
         ScopeFactory = scopeFactory;
     }
 
-    public async Task StartAsync(CancellationToken cancellationToken)
+    public async Task StartingAsync(CancellationToken cancellationToken)
     {
         using var scope = ScopeFactory.CreateScope();
 
@@ -23,8 +25,13 @@ public class HostedDatabaseService : IHostedService
         await DatabaseSchema.EnsureCreatedAsync(context, cancellationToken);
     }
 
-    public Task StopAsync(CancellationToken cancellationToken)
-    {
-        return Task.CompletedTask;
-    }
+    public Task StartAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+    public Task StartedAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+    public Task StoppingAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+    public Task StoppedAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 }

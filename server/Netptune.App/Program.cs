@@ -47,6 +47,8 @@ var connectionString = configuration.GetNetptuneConnectionString("netptune");
 var redisConnectionString = configuration.GetNetptuneRedisConnectionString();
 var natsConnectionString = configuration.GetNetptuneNatsConnectionString();
 
+builder.AddNetptuneDataProtection();
+
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
@@ -114,8 +116,6 @@ builder.Services.AddHealthChecks()
 
 builder.Services.AddNetptuneRepository(options => options.ConnectionString = connectionString);
 builder.Services.AddNetptuneEntities(options => options.ConnectionString = connectionString);
-
-builder.AddNetptuneDataProtection();
 
 builder.Services.AddNetptuneServices(options =>
 {
