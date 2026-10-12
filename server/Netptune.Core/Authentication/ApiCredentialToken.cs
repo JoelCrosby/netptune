@@ -26,7 +26,7 @@ public sealed record ApiCredentialToken(string Token, string Prefix, byte[] Secr
         credentialId = default;
         secretHash = [];
 
-        var parts = value.Split('_', 3, StringSplitOptions.RemoveEmptyEntries);
+        var parts = value.Split('_', 3);
 
         if (parts.Length != 3
             || parts[0] != TokenMarker

@@ -24,6 +24,23 @@ public class ApiCredentialTokenTests
         CryptographicOperations.FixedTimeEquals(secretHash, generated.SecretHash).Should().BeTrue();
     }
 
+    [Fact]
+    public void TryParse_ShouldAcceptASecretThatStartsWithAnUnderscore()
+    {
+        var credentialId = Guid.NewGuid();
+        var secret = new byte[32];
+        secret[0] = 0xFF;
+        var encodedSecret = Convert.ToBase64String(secret).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+        var token = $"ntp_{credentialId:N}_{encodedSecret}";
+
+        var parsed = ApiCredentialToken.TryParse(token, out var parsedId, out var secretHash);
+
+        encodedSecret.Should().StartWith("_");
+        parsed.Should().BeTrue();
+        parsedId.Should().Be(credentialId);
+        secretHash.Should().Equal(SHA256.HashData(secret));
+    }
+
     [Theory]
     [InlineData("")]
     [InlineData("not-a-token")]
