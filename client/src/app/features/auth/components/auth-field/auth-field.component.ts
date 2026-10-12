@@ -29,7 +29,7 @@ import { FormErrorComponent } from '@static/components/form-error/form-error.com
     <div class="flex w-full flex-col gap-1.5">
       <div class="flex items-baseline justify-between gap-3">
         <label
-          class="text-foreground/70 mb-0 text-[13px] font-semibold"
+          class="text-foreground/70 mb-0 text-[13px] font-medium"
           appFormLabel
           [for]="name()">
           {{ label() }}
@@ -39,12 +39,12 @@ import { FormErrorComponent } from '@static/components/form-error/form-error.com
       </div>
 
       <app-form-control-field
-        class="h-11 rounded-lg"
+        class="h-10 rounded-lg"
         density="compact"
         [disabled]="disabled()"
         [invalid]="touched() && invalid()">
         <input
-          class="px-3.5 leading-none"
+          class="px-3 leading-none"
           appFormInput
           [id]="name()"
           [value]="value()"

@@ -22,6 +22,13 @@ export type PanelHeaderDensity = 'compact' | 'comfortable';
         }
 
         <div class="min-w-0">
+          @if (eyebrow()) {
+            <p
+              class="text-foreground/60 mb-0.5 text-xs font-semibold tracking-[.06em] uppercase">
+              {{ eyebrow() }}
+            </p>
+          }
+
           @if (heading()) {
             <h2 [class]="headingClass()">{{ heading() }}</h2>
           }
@@ -45,6 +52,7 @@ export class PanelHeaderComponent {
   // Either pass the text as inputs, or project a `panelHeading` block when the
   // copy needs control flow of its own.
   readonly heading = input('');
+  readonly eyebrow = input('');
   readonly description = input('');
   readonly icon = input<LucideIconInput | undefined>();
   readonly density = input<PanelHeaderDensity>('compact');

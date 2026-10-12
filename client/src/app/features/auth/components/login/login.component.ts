@@ -9,15 +9,18 @@ import {
   submit,
 } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
-import { LucideCircleAlert } from '@lucide/angular';
+import { LucideCircleAlert, LucideLogIn } from '@lucide/angular';
 import { AuthCommandsService } from '@core/services/auth-commands.service';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { TextLinkComponent } from '@static/components/text-link.component';
 import { CalloutComponent } from '@static/components/callout/callout.component';
 import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
+import { HeaderPromptComponent } from '@static/components/header-prompt.component';
+import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { PanelBodyComponent } from '@static/components/panel-body.component';
 import { AuthFieldComponent } from '../auth-field/auth-field.component';
 import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.component';
-import { AuthPageContainerComponent } from '../auth-page-container/auth-page-container.component';
+import { AuthShellComponent } from '../auth-shell/auth-shell.component';
 import { TurnstileComponent } from '../turnstile/turnstile.component';
 import { TurnstileNoticeComponent } from '../turnstile/turnstile-notice.component';
 import { LoginProvidersComponent } from './login-providers.component';
@@ -25,7 +28,10 @@ import { LoginProvidersComponent } from './login-providers.component';
 @Component({
   selector: 'app-login',
   imports: [
-    AuthPageContainerComponent,
+    AuthShellComponent,
+    HeaderPromptComponent,
+    StrokedButtonComponent,
+    PanelBodyComponent,
     AuthFormPanelComponent,
     AuthFieldComponent,
     CalloutComponent,
@@ -39,121 +45,115 @@ import { LoginProvidersComponent } from './login-providers.component';
     TurnstileNoticeComponent,
   ],
   template: `
-    <app-auth-page-container>
+    <app-auth-shell>
+      <app-header-prompt
+        shellAction
+        i18n-prompt="Sits before the link to the registration form"
+        prompt="No account yet?">
+        <a
+          app-stroked-button
+          color="neutral"
+          size="small"
+          [routerLink]="['/auth/register']"
+          i18n="Link from the login page to the registration form">
+          Create account
+        </a>
+      </app-header-prompt>
+
       <app-auth-form-panel
-        showLogo
         i18n-eyebrow="Label above the heading of the sign-in form"
         eyebrow="Netptune account"
         i18n-heading="Heading of the login form"
         heading="Sign in to continue"
+        [icon]="signInIcon"
         [loading]="loading()"
         (submitted)="login()">
-        <p panelSubtitle>
-          <span i18n="Sits before the link to the registration form">
-            No account yet?
-          </span>
-          <a app-text-link [routerLink]="['/auth/register']">
-            <span i18n="Link from the login form to the registration form">
-              Create one
-            </span>
-          </a>
-        </p>
-
         @if (showLoginError()) {
-          <app-callout
-            class="mt-4.5"
-            color="warn"
-            role="alert"
-            [icon]="alertIcon">
+          <app-callout color="warn" role="alert" [icon]="alertIcon">
             <span i18n="Error shown when login credentials are rejected">
               That email and password do not match an account.
             </span>
           </app-callout>
         }
 
-        <div class="mt-5.5 flex flex-col gap-4">
-          <app-auth-field
-            [formField]="loginForm.email"
-            i18n-label="Label of the e-mail address field on the login form"
-            label="Email"
-            i18n-placeholder="
-              Placeholder of the e-mail address field on auth forms
-            "
-            placeholder="you@company.com"
-            maxLength="128"
-            id="email"
-            type="email"
-            autocomplete="username" />
+        <app-auth-field
+          [formField]="loginForm.email"
+          i18n-label="Label of the e-mail address field on the login form"
+          label="Email"
+          i18n-placeholder="
+            Placeholder of the e-mail address field on auth forms
+          "
+          placeholder="you@company.com"
+          maxLength="128"
+          id="email"
+          type="email"
+          autocomplete="username" />
 
-          <app-auth-field
-            revealable
-            [formField]="loginForm.password"
-            i18n-label="Label of the password field on the login form"
-            label="Password"
-            maxLength="1024"
-            id="password"
-            type="password"
-            autocomplete="current-password">
-            <a
-              app-text-link
-              size="small"
-              fieldAction
-              [routerLink]="['/auth/request-password-reset']">
-              <span
-                i18n="
-                  Link from the login form to the password reset request form
-                ">
-                Forgot password?
-              </span>
-            </a>
-          </app-auth-field>
+        <app-auth-field
+          revealable
+          [formField]="loginForm.password"
+          i18n-label="Label of the password field on the login form"
+          label="Password"
+          maxLength="1024"
+          id="password"
+          type="password"
+          autocomplete="current-password">
+          <a
+            app-text-link
+            size="small"
+            fieldAction
+            [routerLink]="['/auth/request-password-reset']">
+            <span
+              i18n="
+                Link from the login form to the password reset request form
+              ">
+              Forgot password?
+            </span>
+          </a>
+        </app-auth-field>
 
-          <div class="flex items-center justify-between gap-4">
-            <app-checkbox
-              density="compact"
-              [checked]="keepSignedIn()"
-              (changed)="keepSignedIn.set($event)">
-              <ng-container
-                i18n="
-                  Checkbox that keeps the session alive after the browser is
-                  closed
-                ">
-                Keep me signed in
-              </ng-container>
-            </app-checkbox>
+        <app-checkbox
+          density="compact"
+          [checked]="keepSignedIn()"
+          (changed)="keepSignedIn.set($event)">
+          <ng-container
+            i18n="
+              Checkbox that keeps the session alive after the browser is closed
+            ">
+            Keep me signed in
+          </ng-container>
+        </app-checkbox>
 
-            <app-turnstile-notice />
-          </div>
-
+        <div class="flex flex-col">
           <app-turnstile (tokenGenerated)="onTurnstileResult($event)" />
 
-          <button
-            app-flat-button
-            color="primary"
-            size="large"
-            block
-            type="submit">
+          <button app-flat-button color="primary" block type="submit">
             {{ submitLabel() }}
           </button>
         </div>
 
-        <app-login-providers />
+        <app-panel-body divider="top" panelSection>
+          <app-login-providers />
+        </app-panel-body>
 
-        <p panelFootnote>
+        <p class="min-w-0 flex-1" panelFootnote>
           <ng-container
             i18n="
               Legal note in the footer of the sign-in card@@auth.login.legalNote">
             By signing in you agree to the terms and privacy policy.
           </ng-container>
         </p>
+
+        <app-turnstile-notice panelFootnote />
       </app-auth-form-panel>
-    </app-auth-page-container>
+    </app-auth-shell>
   `,
 })
 export class LoginComponent {
   private auth = inject(AuthCommandsService);
 
   protected readonly alertIcon = LucideCircleAlert;
+  protected readonly signInIcon = LucideLogIn;
 
   loading = this.auth.loginLoading;
   showLoginError = this.auth.loginError;

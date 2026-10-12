@@ -1,14 +1,27 @@
 import { booleanAttribute, Component, input, output } from '@angular/core';
-import { BrandLogoComponent } from '@static/components/brand-logo.component';
+import { type LucideIconInput } from '@lucide/angular';
+import { PanelBodyComponent } from '@static/components/panel-body.component';
+import { PanelComponent } from '@static/components/panel.component';
+import { PanelFooterComponent } from '@static/components/panel-footer.component';
+import { PanelHeaderComponent } from '@static/components/panel-header.component';
 import { ProgressBarComponent } from '@static/components/progress-bar/progress-bar.component';
 
 @Component({
   selector: 'app-auth-form-panel',
-  imports: [BrandLogoComponent, ProgressBarComponent],
-  host: { class: 'z-1 block w-full max-w-[27.5rem]' },
+  imports: [
+    PanelComponent,
+    PanelHeaderComponent,
+    PanelBodyComponent,
+    PanelFooterComponent,
+    ProgressBarComponent,
+  ],
+  host: { class: 'relative z-1 block w-full max-w-115' },
   template: `
     <form
-      class="bg-card border-border relative w-full overflow-hidden rounded-xl border p-8 shadow"
+      app-panel
+      surface="card"
+      elevation="floating"
+      class="relative"
       [attr.aria-busy]="loading()"
       (submit)="onSubmit($event)">
       @if (loading()) {
@@ -18,40 +31,31 @@ import { ProgressBarComponent } from '@static/components/progress-bar/progress-b
           [rounded]="false" />
       }
 
-      @if (showLogo()) {
-        <app-brand-logo class="mb-4.5" size="large" />
-      }
+      <app-panel-header
+        density="comfortable"
+        [eyebrow]="eyebrow()"
+        [heading]="heading()"
+        [icon]="icon()" />
 
-      @if (eyebrow(); as eyebrow) {
-        <p
-          class="text-foreground/45 mb-0.5 text-xs font-semibold tracking-[.08em] uppercase">
-          {{ eyebrow }}
-        </p>
-      }
+      <app-panel-body class="flex flex-col gap-4">
+        <ng-content />
+      </app-panel-body>
 
-      <ng-content select="[panelBadge]" />
+      <ng-content select="[panelSection]" />
 
-      <h1 class="text-[1.625rem] font-bold tracking-[-.3px]">
-        {{ heading() }}
-      </h1>
-
-      <div class="text-foreground/50 mt-1.5 text-[13px] leading-relaxed">
-        <ng-content select="[panelSubtitle]" />
-      </div>
-
-      <ng-content />
-
-      <div class="text-foreground/45 mt-5 text-xs leading-relaxed">
+      <app-panel-footer
+        tone="muted"
+        class="flex items-center justify-between gap-3 empty:hidden">
         <ng-content select="[panelFootnote]" />
-      </div>
+      </app-panel-footer>
     </form>
   `,
 })
 export class AuthFormPanelComponent {
   readonly heading = input.required<string>();
-  readonly eyebrow = input<string | null>(null);
+  readonly eyebrow = input('');
+  readonly icon = input.required<LucideIconInput>();
   readonly loading = input(false, { transform: booleanAttribute });
-  readonly showLogo = input(false, { transform: booleanAttribute });
 
   readonly submitted = output();
 

@@ -1,6 +1,7 @@
 import {
   AfterViewInit,
   Component,
+  computed,
   ElementRef,
   inject,
   OnDestroy,
@@ -14,6 +15,7 @@ import { TurnstileLoaderService } from './turnstile-loader.service';
 
 @Component({
   selector: 'app-turnstile',
+  host: { '[class.pb-4]': 'visible()' },
   template: `
     <div class="flex flex-col gap-2">
       <div #turnstileContainer></div>
@@ -38,6 +40,8 @@ export class TurnstileComponent implements AfterViewInit, OnDestroy {
   private turnstileContainer?: ElementRef<HTMLDivElement>;
 
   loadError = signal(false);
+  interactive = signal(false);
+  visible = computed(() => this.interactive() || this.loadError());
   errorMessage = signal(
     $localize`:Shown when the bot-protection widget is blocked by a content blocker. challenges.cloudflare.com is a hostname and must not be translated@@auth.turnstile.blockedByContentBlocker:We could not load the security check. Allow challenges.cloudflare.com in your content blocker, then refresh.`
   );
@@ -68,6 +72,12 @@ export class TurnstileComponent implements AfterViewInit, OnDestroy {
             this.loadError.set(true);
             this.tokenGenerated.emit('');
             return true;
+          },
+          'before-interactive-callback': () => {
+            this.interactive.set(true);
+          },
+          'after-interactive-callback': () => {
+            this.interactive.set(false);
           },
           'expired-callback': () => {
             this.tokenGenerated.emit('');

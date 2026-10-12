@@ -34,7 +34,7 @@
     </unit>
     <unit id="8047164699399437846">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:255,256</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:256,257</note>
         <note category="description">Shown when the relation list fails to load</note>
       </notes>
       <segment state="translated">
@@ -136,7 +136,7 @@
     </unit>
     <unit id="8577589920465745165">
       <notes>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:80,84</note>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:77,81</note>
         <note category="description">Button that sends the password reset email again</note>
       </notes>
       <segment state="initial">
@@ -257,7 +257,7 @@
         <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:71</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:92</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:207</note>
-        <note category="location">src/app/workspace.routes.ts:78</note>
+        <note category="location">src/app/workspace.routes.ts:99</note>
         <note category="description">Tab listing the pages that mention a task</note>
       </notes>
       <segment state="translated">
@@ -303,6 +303,16 @@
       <segment state="translated">
         <source> Added </source>
         <target> Ajoutée </target>
+      </segment>
+    </unit>
+    <unit id="5277739594710154939">
+      <notes>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:60,63</note>
+        <note category="description">Sits before the link to the login form</note>
+      </notes>
+      <segment state="initial">
+        <source>Already have an account?</source>
+        <target>Vous avez déjà un compte ?</target>
       </segment>
     </unit>
     <unit id="5277744923448150585">
@@ -976,7 +986,7 @@
     </unit>
     <unit id="4393155387750539833">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:204,205</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:205,206</note>
         <note category="description">Button that deletes a relation type</note>
       </notes>
       <segment state="translated">
@@ -1006,7 +1016,7 @@
     </unit>
     <unit id="439765603666921129">
       <notes>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:176</note>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:150</note>
         <note category="description">Submit button on the password reset request form while sending</note>
       </notes>
       <segment state="initial">
@@ -1934,7 +1944,7 @@
     </unit>
     <unit id="7347080707073106397">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:180,181</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:181,182</note>
         <note category="description">Heading of an empty relation type list</note>
       </notes>
       <segment state="translated">
@@ -1964,7 +1974,7 @@
     </unit>
     <unit id="7729368131710513135">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:236,238</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:237,239</note>
         <note category="description">Explains that links to archived tasks are still listed</note>
       </notes>
       <segment state="translated">
@@ -2024,7 +2034,7 @@
     </unit>
     <unit id="1955280138914914248">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:219,220</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:220,221</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:202,203</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:144,145</note>
         <note category="description">Heading above the list of things using an item</note>
@@ -2101,7 +2111,7 @@
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:201,204</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:142</note>
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:80,82</note>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:501</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:504</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:268</note>
         <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:133,136</note>
         <note category="location">src/app/features/boards/components/move-tasks-dialog/move-tasks-dialog.component.ts:76,79</note>
@@ -2128,7 +2138,7 @@
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:70,73</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:61,64</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:164,167</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:220</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:223</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:282</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:62,64</note>
         <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:97,99</note>
@@ -2142,7 +2152,7 @@
     </unit>
     <unit id="3491624179126991098">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:222,225</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:223,226</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:205,208</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:147,150</note>
         <note category="description">Description of the list of things using an item</note>
@@ -2272,14 +2282,14 @@
         <target>rapports</target>
       </segment>
     </unit>
-    <unit id="3794536784545139282">
+    <unit id="5849573010227956913">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login.component.ts:53,55</note>
+        <note category="location">src/app/features/auth/components/login/login.component.ts:52,55</note>
         <note category="description">Sits before the link to the registration form</note>
       </notes>
       <segment state="initial">
-        <source> No account yet? </source>
-        <target> Pas encore de compte ? </target>
+        <source>No account yet?</source>
+        <target>Pas encore de compte ?</target>
       </segment>
     </unit>
     <unit id="3795755932820482964">
@@ -2393,7 +2403,7 @@
         <note category="location">src/app/core/services/task-commands.service.ts:235</note>
         <note category="location">src/app/core/services/task-commands.service.ts:243</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:141</note>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:500</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:503</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:267</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:798</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:820</note>
@@ -2407,13 +2417,13 @@
         <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:154</note>
         <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:141</note>
         <note category="location">src/app/features/settings/shared/entity-detail.ts:31</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:210</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:219</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:192</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:219</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:222</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:225</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:281</note>
         <note category="location">src/app/shared/components/task-selection-actions/task-selection-actions.component.ts:32,34</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:38</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:43</note>
         <note category="description">Confirms a destructive action</note>
       </notes>
       <segment state="translated">
@@ -2988,6 +2998,16 @@
         <target>Sprint démarré</target>
       </segment>
     </unit>
+    <unit id="5732804193858946403">
+      <notes>
+        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:78,82</note>
+        <note category="description">Invites a signed-in user to link an external provider. PROVIDER is the provider name</note>
+      </notes>
+      <segment state="initial">
+        <source> Connect <ph id="0" equiv="PROVIDER" disp="{{ link.provider // i18n(ph=&quot;PROVIDER&quot;) }}"/> so you can use it to sign in next time. </source>
+        <target> Connectez <ph id="0" equiv="PROVIDER" disp="{{ link.provider // i18n(ph=&quot;PROVIDER&quot;) }}"/> pour l&apos;utiliser lors de votre prochaine connexion. </target>
+      </segment>
+    </unit>
     <unit id="5735736609681878695">
       <notes>
         <note category="location">src/app/core/services/sprint-commands.service.ts:92</note>
@@ -3096,7 +3116,7 @@
       <notes>
         <note category="location">src/app/core/services/tag-commands.service.ts:77</note>
         <note category="location">src/app/core/services/tag-commands.service.ts:80</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:364</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:367</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
@@ -3119,7 +3139,7 @@
         <note category="location">src/app/core/services/task-archive.service.ts:39</note>
         <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:122</note>
         <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:137</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:46</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:51</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
@@ -3481,7 +3501,7 @@
     </unit>
     <unit id="2275328567992347600">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:130,132</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:131,133</note>
         <note category="description">Shown when the requested page does not exist or was archived</note>
       </notes>
       <segment state="translated">
@@ -3612,9 +3632,9 @@
     </unit>
     <unit id="965218006709575156">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login.component.ts:82,85</note>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:97,100</note>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:125,128</note>
+        <note category="location">src/app/features/auth/components/login/login.component.ts:86,89</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:116,119</note>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:117,120</note>
         <note category="description">Placeholder of the e-mail address field on auth forms</note>
       </notes>
       <segment state="initial">
@@ -4199,7 +4219,7 @@
         <note category="location">src/app/features/settings/settings.routes.ts:27</note>
         <note category="location">src/app/features/settings/views/personal-notification-settings-view/personal-notification-settings-view.component.ts:22,24</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:417</note>
-        <note category="location">src/app/workspace.routes.ts:102</note>
+        <note category="location">src/app/workspace.routes.ts:123</note>
         <note category="description">Accessible label for the notifications button</note>
       </notes>
       <segment state="translated">
@@ -5061,7 +5081,7 @@
     </unit>
     <unit id="7389084774187811922">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:447</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:450</note>
         <note category="description">Confirmation after pausing an automation</note>
       </notes>
       <segment state="initial">
@@ -5114,7 +5134,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/create-relation-type-dialog/create-relation-type-dialog.component.ts:56,57</note>
         <note category="location">src/app/entry/dialogs/status-dialog/status-dialog.component.ts:75,76</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:243</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:252</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:155,156</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:218</note>
         <note category="description">Label of the relation category field</note>
@@ -5173,9 +5193,9 @@
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:209</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:74,76</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:144</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:148</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:374</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:229</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:149</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:376</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:238</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:139</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:346</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:211</note>
@@ -5239,7 +5259,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/create-relation-type-dialog/create-relation-type-dialog.component.ts:91,93</note>
         <note category="location">src/app/entry/dialogs/edit-relation-type-dialog/edit-relation-type-dialog.component.ts:77,82</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:164,168</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:165,169</note>
         <note category="description">Label of the field for the reverse direction of a relation</note>
       </notes>
       <segment state="translated">
@@ -5482,7 +5502,7 @@
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:106,108</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:63,65</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:91,94</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:171,174</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:172,175</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:144,147</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:39</note>
         <note category="description">Label of the task description editor</note>
@@ -5709,7 +5729,7 @@
     <unit id="8406721537832870070">
       <notes>
         <note category="location">src/app/entry/dialogs/edit-relation-type-dialog/edit-relation-type-dialog.component.ts:56,61</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:135,140</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:136,141</note>
         <note category="description">Explains that a relation type&apos;s category cannot be changed. CATEGORY is the category name</note>
       </notes>
       <segment state="translated">
@@ -5725,8 +5745,8 @@
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:159,161</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:79,81</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:97,100</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:177,180</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:223</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:178,181</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:232</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:150,153</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:205</note>
         <note category="description">Label of the colour picker field</note>
@@ -5758,7 +5778,7 @@
     </unit>
     <unit id="9014422536639985797">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:749</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:753</note>
         <note category="description">Shown when a mentioned sprint or board in a page no longer exists or cannot be opened</note>
       </notes>
       <segment state="translated">
@@ -5769,7 +5789,7 @@
     <unit id="3080368134005829146">
       <notes>
         <note category="location">src/app/entry/dialogs/edit-relation-type-dialog/edit-relation-type-dialog.component.ts:93,98</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:188,190</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:189,191</note>
         <note category="description">Button that saves changes to the relation type</note>
       </notes>
       <segment state="translated">
@@ -5881,7 +5901,7 @@
     <unit id="3095755724292513950">
       <notes>
         <note category="location">src/app/core/transforms/entity-type.ts:24</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:95,98</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:96,99</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:33</note>
         <note category="description">Name of the relation type entity in activity and audit logs</note>
       </notes>
@@ -6034,8 +6054,8 @@
       <notes>
         <note category="location">src/app/entry/dialogs/invite-dialog/invite-dialog.component.ts:93</note>
         <note category="location">src/app/features/auth/components/login/login.component.ts:179</note>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:210</note>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:188</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:235</note>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:162</note>
         <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:121</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
@@ -6058,8 +6078,8 @@
       <notes>
         <note category="location">src/app/entry/dialogs/invite-dialog/invite-dialog.component.ts:96</note>
         <note category="location">src/app/features/auth/components/login/login.component.ts:182</note>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:213</note>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:191</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:238</note>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:165</note>
         <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:125</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
@@ -6124,7 +6144,7 @@
     <unit id="3034679798924651226">
       <notes>
         <note category="location">src/app/features/automations/components/automation-relation-editor.component.ts:47,49</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:402</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:404</note>
         <note category="description">Label of the relation field</note>
       </notes>
       <segment state="translated">
@@ -6209,12 +6229,22 @@
         <note category="location">src/app/features/pages/components/page-meta-chips.component.ts:46,49</note>
         <note category="location">src/app/features/settings/settings.routes.ts:76</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:84,85</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:40</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:45</note>
         <note category="description">Button that adds or removes tags on a page</note>
       </notes>
       <segment state="translated">
         <source>Tag</source>
         <target>Étiquette</target>
+      </segment>
+    </unit>
+    <unit id="182622205717568263">
+      <notes>
+        <note category="location">src/app/static/components/theme-toggle-button.component.ts:36</note>
+        <note category="description">Auth page button that switches from the light theme to the dark one</note>
+      </notes>
+      <segment state="initial">
+        <source>Switch to dark theme</source>
+        <target>Passer au thème sombre</target>
       </segment>
     </unit>
     <unit id="1827176903766812596">
@@ -6240,7 +6270,7 @@
     </unit>
     <unit id="2981219928115418649">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:42</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:47</note>
         <note category="location">src/app/static/components/editor/editor-bubble-menu.component.ts:223</note>
         <note category="description">What a proposed change does</note>
       </notes>
@@ -6477,6 +6507,16 @@
         <target>Utiliser l’assistant</target>
       </segment>
     </unit>
+    <unit id="6306948657154116257">
+      <notes>
+        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:90,94</note>
+        <note category="description">Asks a signed-out visitor to sign in before linking an external provider. PROVIDER is the provider name</note>
+      </notes>
+      <segment state="initial">
+        <source> Sign in to that account before connecting <ph id="0" equiv="PROVIDER" disp="{{ link.provider // i18n(ph=&quot;PROVIDER&quot;) }}"/>. </source>
+        <target> Connectez-vous à ce compte avant de connecter <ph id="0" equiv="PROVIDER" disp="{{ link.provider // i18n(ph=&quot;PROVIDER&quot;) }}"/>. </target>
+      </segment>
+    </unit>
     <unit id="6307174276781140101">
       <notes>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:91,93</note>
@@ -6628,7 +6668,7 @@
     </unit>
     <unit id="4315644716788167441">
       <notes>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:365</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:368</note>
         <note category="description">Asks the user to confirm deleting a tag. NAME is the tag name, COUNT is how many tasks carry it</note>
       </notes>
       <segment state="translated">
@@ -6964,8 +7004,8 @@
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:42,45</note>
         <note category="location">src/app/features/settings/settings.routes.ts:103</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:71,72</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:251</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:72,73</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:260</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:358</note>
         <note category="description">Section heading for links between tasks</note>
       </notes>
@@ -7357,7 +7397,7 @@
         <note category="location">src/app/features/audit/components/audit-filters/audit-date-range.component.ts:14</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:97</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:43</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:396</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:398</note>
         <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:105,106</note>
         <note category="description">Label of the start-date filter</note>
       </notes>
@@ -7401,7 +7441,7 @@
         <note category="location">src/app/features/audit/components/audit-filters/audit-date-range.component.ts:36</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:106</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:52</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:408</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:410</note>
         <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:113,114</note>
         <note category="description">Label of the end-date filter</note>
       </notes>
@@ -7646,7 +7686,7 @@
     </unit>
     <unit id="9126383792072202008">
       <notes>
-        <note category="location">src/app/features/pages/services/page-draft.ts:252</note>
+        <note category="location">src/app/features/pages/services/page-draft.ts:272</note>
         <note category="description">Error shown when a page&apos;s text is over the size limit</note>
       </notes>
       <segment state="translated">
@@ -7717,8 +7757,8 @@
     </unit>
     <unit id="2565164139557117651">
       <notes>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:44,47</note>
-        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:50,51</note>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:55,57</note>
+        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:66,67</note>
         <note category="description">Label above the heading of the password reset forms</note>
       </notes>
       <segment state="initial">
@@ -7953,7 +7993,7 @@
     </unit>
     <unit id="9222501301114320323">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:108,111</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:109,112</note>
         <note category="description">Plural noun for relation types, used in the row summary</note>
       </notes>
       <segment state="translated">
@@ -7984,7 +8024,7 @@
     </unit>
     <unit id="8657732847549897278">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:171,172</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:172,173</note>
         <note category="description">Heading shown when a search matches nothing</note>
       </notes>
       <segment state="translated">
@@ -8263,7 +8303,7 @@
       <notes>
         <note category="location">src/app/features/audit/views/audit-view/audit-view.component.ts:27,28</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:398</note>
-        <note category="location">src/app/workspace.routes.ts:114</note>
+        <note category="location">src/app/workspace.routes.ts:135</note>
         <note category="description">Page title for the workspace audit log</note>
       </notes>
       <segment state="translated">
@@ -8321,27 +8361,6 @@
         <target>S’exécute en tant que <ph id="0" equiv="ACCOUNT" disp="account"/> sur le tableau <ph id="1" equiv="BOARD" disp="name"/></target>
       </segment>
     </unit>
-    <unit id="4204889037794993823">
-      <notes>
-        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:40,44</note>
-        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:97,101</note>
-        <note category="description">Heading of the page that links an external sign-in provider to an account. PROVIDER is the provider name, e.g. GitHub</note>
-      </notes>
-      <segment state="translated">
-        <source> Connect <ph id="0" equiv="PROVIDER" disp="{{ provider() // i18n(ph=&quot;PROVIDER&quot;) }}"/> </source>
-        <target>Connecter <ph id="0" equiv="PROVIDER" disp="{{ provider() // i18n(ph=&quot;PROVIDER&quot;) }}"/></target>
-      </segment>
-    </unit>
-    <unit id="4655137338430194907">
-      <notes>
-        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:54,61</note>
-        <note category="description">Explains that the e-mail address of an external provider already belongs to a Netptune account. EMAIL is that address, PROVIDER is the provider name</note>
-      </notes>
-      <segment state="translated">
-        <source> A Netptune account already exists for <ph id="0" equiv="EMAIL" disp="{{ link.email // i18n(ph=&quot;EMAIL&quot;) }}"/>. Sign in to that account before connecting <ph id="1" equiv="PROVIDER" disp="{{ link.provider // i18n(ph=&quot;PROVIDER&quot;) }}"/>. </source>
-        <target>Un compte Netptune existe déjà pour <ph id="0" equiv="EMAIL" disp="{{ link.email // i18n(ph=&quot;EMAIL&quot;) }}"/>. Connectez-vous à ce compte avant de lier <ph id="1" equiv="PROVIDER" disp="{{ link.provider // i18n(ph=&quot;PROVIDER&quot;) }}"/>.</target>
-      </segment>
-    </unit>
     <unit id="4655283754161670601">
       <notes>
         <note category="location">src/app/features/pages/dialogs/page-version-dialog.component.ts:85,91</note>
@@ -8354,7 +8373,7 @@
     </unit>
     <unit id="4658982717700339898">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:43</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:48</note>
         <note category="description">What a proposed change does</note>
       </notes>
       <segment state="translated">
@@ -8382,16 +8401,6 @@
         <target>Version de <ph id="0" equiv="WHEN" disp="restoredFrom"/> restaurée</target>
       </segment>
     </unit>
-    <unit id="631526687542702213">
-      <notes>
-        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:70,75</note>
-        <note category="description">Shown when an external provider link has expired or was not found</note>
-      </notes>
-      <segment state="translated">
-        <source> This provider link is missing or expired. Start the provider sign-in again. </source>
-        <target>Ce lien de fournisseur est introuvable ou a expiré. Relancez la connexion via le fournisseur.</target>
-      </segment>
-    </unit>
     <unit id="6317126528752584322">
       <notes>
         <note category="location">src/app/static/components/editor/editor-commands.ts:30</note>
@@ -8414,7 +8423,7 @@
     </unit>
     <unit id="1287089777017082490">
       <notes>
-        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:110,114</note>
+        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:126,130</note>
         <note category="description">Prompts a signed-out visitor to sign in before linking an external provider. PROVIDER is the provider name</note>
       </notes>
       <segment state="translated">
@@ -8454,7 +8463,8 @@
     </unit>
     <unit id="9155752269182001378">
       <notes>
-        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:121,125</note>
+        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:141,144</note>
+        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:169,173</note>
         <note category="description">Link back to the login form from the provider-link page</note>
       </notes>
       <segment state="translated">
@@ -8474,7 +8484,7 @@
     </unit>
     <unit id="1474607462922806359">
       <notes>
-        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:143</note>
+        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:195</note>
         <note category="description">Stands in for the external sign-in provider&apos;s name when it is unknown</note>
       </notes>
       <segment state="translated">
@@ -8504,7 +8514,7 @@
     </unit>
     <unit id="9108390059687067634">
       <notes>
-        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:165</note>
+        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:228</note>
         <note category="description">Confirmation shown after linking an external sign-in provider. PROVIDER is the provider name</note>
       </notes>
       <segment state="translated">
@@ -8525,7 +8535,7 @@
     </unit>
     <unit id="7935613686723040127">
       <notes>
-        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:170</note>
+        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:233</note>
         <note category="description">Error shown when an external provider link cannot be used</note>
       </notes>
       <segment state="translated">
@@ -8535,7 +8545,7 @@
     </unit>
     <unit id="205893145549690950">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login-providers.component.ts:98</note>
+        <note category="location">src/app/features/auth/components/login/login-providers.component.ts:48</note>
         <note category="description">Accessible label of the button that starts sign-in via GitHub</note>
       </notes>
       <segment state="translated">
@@ -8545,7 +8555,7 @@
     </unit>
     <unit id="3655082891939518750">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login-providers.component.ts:99</note>
+        <note category="location">src/app/features/auth/components/login/login-providers.component.ts:54</note>
         <note category="description">Accessible label of the button that starts sign-in via Google</note>
       </notes>
       <segment state="translated">
@@ -8555,7 +8565,7 @@
     </unit>
     <unit id="7512763792746430085">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login-providers.component.ts:100</note>
+        <note category="location">src/app/features/auth/components/login/login-providers.component.ts:60</note>
         <note category="description">Accessible label of the button that starts sign-in via Microsoft</note>
       </notes>
       <segment state="translated">
@@ -8565,7 +8575,7 @@
     </unit>
     <unit id="5548899014377876749">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login.component.ts:48,50</note>
+        <note category="location">src/app/features/auth/components/login/login.component.ts:67,69</note>
         <note category="description">Heading of the login form</note>
       </notes>
       <segment state="translated">
@@ -8575,8 +8585,8 @@
     </unit>
     <unit id="4768749765465246664">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login.component.ts:79,80</note>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:122,123</note>
+        <note category="location">src/app/features/auth/components/login/login.component.ts:83,84</note>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:114,115</note>
         <note category="description">Label of the e-mail address field on the login form</note>
       </notes>
       <segment state="translated">
@@ -8586,8 +8596,8 @@
     </unit>
     <unit id="1431416938026210429">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login.component.ts:92,95</note>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:107,109</note>
+        <note category="location">src/app/features/auth/components/login/login.component.ts:96,99</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:126,128</note>
         <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:49,51</note>
         <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:153</note>
         <note category="description">Label of the password field on the login form</note>
@@ -8658,6 +8668,17 @@
         <target>Moyen</target>
       </segment>
     </unit>
+    <unit id="3484911220978811433">
+      <notes>
+        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:197</note>
+        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:207</note>
+        <note category="description">Heading of the page that links an external sign-in provider to an account. PROVIDER is the provider name, e.g. GitHub</note>
+      </notes>
+      <segment state="initial">
+        <source>Connect <ph id="0" equiv="PROVIDER" disp="provider"/></source>
+        <target>Connecter <ph id="0" equiv="PROVIDER" disp="provider"/></target>
+      </segment>
+    </unit>
     <unit id="1493770091147271250">
       <notes>
         <note category="location">src/app/shell/global-commands.service.ts:368</note>
@@ -8691,7 +8712,7 @@
     </unit>
     <unit id="5907476126990913307">
       <notes>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:182</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:207</note>
         <note category="description">Submit button on the account registration form</note>
       </notes>
       <segment state="initial">
@@ -8842,7 +8863,7 @@
     </unit>
     <unit id="3035570095838445091">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login.component.ts:106,109</note>
+        <note category="location">src/app/features/auth/components/login/login.component.ts:110,113</note>
         <note category="description">Link from the login form to the password reset request form</note>
       </notes>
       <segment state="initial">
@@ -8873,8 +8894,8 @@
     <unit id="3577237269587081090">
       <notes>
         <note category="location">src/app/features/auth/components/login/login.component.ts:186</note>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:217</note>
-        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:147</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:242</note>
+        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:148</note>
         <note category="description">Validation error when the password field is empty</note>
       </notes>
       <segment state="translated">
@@ -9025,8 +9046,8 @@
     </unit>
     <unit id="5342432350421167093">
       <notes>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:74,77</note>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:198</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:95,98</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:223</note>
         <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:109</note>
         <note category="description">Label of the given-name field on the registration form</note>
       </notes>
@@ -9037,7 +9058,7 @@
     </unit>
     <unit id="3581094312243308441">
       <notes>
-        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:130</note>
+        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:131</note>
         <note category="description">Submit button on the password reset form while saving</note>
       </notes>
       <segment state="initial">
@@ -9047,7 +9068,7 @@
     </unit>
     <unit id="3582180388125532112">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login.component.ts:121,125</note>
+        <note category="location">src/app/features/auth/components/login/login.component.ts:123,127</note>
         <note category="description">Checkbox that keeps the session alive after the browser is closed</note>
       </notes>
       <segment state="initial">
@@ -9067,8 +9088,8 @@
     </unit>
     <unit id="3586674587150281199">
       <notes>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:84,87</note>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:205</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:103,106</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:230</note>
         <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:116</note>
         <note category="description">Label of the family-name field on the registration form</note>
       </notes>
@@ -9079,7 +9100,7 @@
     </unit>
     <unit id="3588415639242079458">
       <notes>
-        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:72,74</note>
+        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:88,90</note>
         <note category="description">Label of the new password field on the password reset form</note>
       </notes>
       <segment state="initial">
@@ -9089,7 +9110,7 @@
     </unit>
     <unit id="8596711597112316583">
       <notes>
-        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:150</note>
+        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:151</note>
         <note category="description">Validation error when the password confirmation field is empty</note>
       </notes>
       <segment state="translated">
@@ -9099,7 +9120,7 @@
     </unit>
     <unit id="6451269955734195952">
       <notes>
-        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:162</note>
+        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:163</note>
         <note category="description">Validation error when the two password fields differ</note>
       </notes>
       <segment state="translated">
@@ -9172,7 +9193,7 @@
     </unit>
     <unit id="8656126574213649581">
       <notes>
-        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:91,95</note>
+        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:107,111</note>
         <note category="description">Label of the new password confirmation field on the password reset form</note>
       </notes>
       <segment state="initial">
@@ -9182,7 +9203,7 @@
     </unit>
     <unit id="auth.login.legalNote">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login.component.ts:146,149</note>
+        <note category="location">src/app/features/auth/components/login/login.component.ts:143,147</note>
         <note category="description">Legal note in the footer of the sign-in card</note>
       </notes>
       <segment state="initial">
@@ -9192,7 +9213,7 @@
     </unit>
     <unit id="auth.passwordReset.intro">
       <notes>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:107,113</note>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:102,107</note>
         <note category="description">Explains what the password reset form does</note>
       </notes>
       <segment state="initial">
@@ -9202,17 +9223,27 @@
     </unit>
     <unit id="auth.passwordReset.sentTo">
       <notes>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:62,67</note>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:66,71</note>
         <note category="description">Confirms that a password reset link was sent. EMAIL is the address it went to</note>
       </notes>
       <segment state="initial">
-        <source> We sent a reset link to <pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong class=&quot;text-foreground font-bold&quot;&gt;" dispEnd="&lt;/strong &gt;"><ph id="1" equiv="EMAIL" disp="{{ sentTo // i18n(ph=&quot;EMAIL&quot;) }}"/></pc>. Check your spam folder if it has not arrived in a few minutes. </source>
+        <source> We sent a reset link to <pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong &gt;"><ph id="1" equiv="EMAIL" disp="{{ sentTo // i18n(ph=&quot;EMAIL&quot;) }}"/></pc>. Check your spam folder if it has not arrived in a few minutes. </source>
         <target> Nous avons envoyé un lien de réinitialisation à <pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong class=&quot;text-foreground font-bold&quot;&gt;" dispEnd="&lt;/strong &gt;"><ph id="1" equiv="EMAIL" disp="{{ sentTo // i18n(ph=&quot;EMAIL&quot;) }}"/></pc>. Vérifiez votre dossier spam s&apos;il n&apos;est pas arrivé au bout de quelques minutes. </target>
+      </segment>
+    </unit>
+    <unit id="auth.register.invited">
+      <notes>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:85,91</note>
+        <note category="description">Shown on the registration form when it was opened from a workspace invitation</note>
+      </notes>
+      <segment state="initial">
+        <source> You were invited to a workspace. Your account will use the invited address. </source>
+        <target> Vous avez été invité dans un espace de travail. Votre compte utilisera l&apos;adresse invitée. </target>
       </segment>
     </unit>
     <unit id="auth.register.inviteNote">
       <notes>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:153,157</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:173,177</note>
         <note category="description">Note in the footer of the registration card</note>
       </notes>
       <segment state="initial">
@@ -9222,7 +9253,7 @@
     </unit>
     <unit id="auth.resetPassword.intro">
       <notes>
-        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:60,65</note>
+        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:77,83</note>
         <note category="description">Explains what the form for choosing a new password does</note>
       </notes>
       <segment state="initial">
@@ -9232,7 +9263,7 @@
     </unit>
     <unit id="auth.turnstile.blockedByContentBlocker">
       <notes>
-        <note category="location">src/app/features/auth/components/turnstile/turnstile.component.ts:42</note>
+        <note category="location">src/app/features/auth/components/turnstile/turnstile.component.ts:46</note>
         <note category="description">Shown when the bot-protection widget is blocked by a content blocker. challenges.cloudflare.com is a hostname and must not be translated</note>
       </notes>
       <segment state="translated">
@@ -9242,7 +9273,7 @@
     </unit>
     <unit id="auth.turnstile.timedOut">
       <notes>
-        <note category="location">src/app/features/auth/components/turnstile/turnstile.component.ts:77</note>
+        <note category="location">src/app/features/auth/components/turnstile/turnstile.component.ts:87</note>
         <note category="description">Shown when the bot-protection check times out</note>
       </notes>
       <segment state="translated">
@@ -9252,7 +9283,7 @@
     </unit>
     <unit id="auth.turnstile.unsupportedBrowser">
       <notes>
-        <note category="location">src/app/features/auth/components/turnstile/turnstile.component.ts:84</note>
+        <note category="location">src/app/features/auth/components/turnstile/turnstile.component.ts:94</note>
         <note category="description">Shown when the browser cannot run the bot-protection check</note>
       </notes>
       <segment state="translated">
@@ -9262,7 +9293,7 @@
     </unit>
     <unit id="auth.turnstile.loadFailed">
       <notes>
-        <note category="location">src/app/features/auth/components/turnstile/turnstile.component.ts:111</note>
+        <note category="location">src/app/features/auth/components/turnstile/turnstile.component.ts:121</note>
         <note category="description">Shown when the bot-protection widget fails to load. challenges.cloudflare.com is a hostname and must not be translated</note>
       </notes>
       <segment state="translated">
@@ -9272,7 +9303,7 @@
     </unit>
     <unit id="auth.turnstile.configFailed">
       <notes>
-        <note category="location">src/app/features/auth/components/turnstile/turnstile.component.ts:115</note>
+        <note category="location">src/app/features/auth/components/turnstile/turnstile.component.ts:125</note>
         <note category="description">Shown when the bot-protection widget is misconfigured</note>
       </notes>
       <segment state="translated">
@@ -9282,7 +9313,7 @@
     </unit>
     <unit id="auth.turnstile.genericFailure">
       <notes>
-        <note category="location">src/app/features/auth/components/turnstile/turnstile.component.ts:118</note>
+        <note category="location">src/app/features/auth/components/turnstile/turnstile.component.ts:128</note>
         <note category="description">Generic bot-protection failure message</note>
       </notes>
       <segment state="translated">
@@ -9335,12 +9366,22 @@
         <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:69,70</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:32</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:53</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:41</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:46</note>
         <note category="description">Label of the comment field</note>
       </notes>
       <segment state="translated">
         <source>Comment</source>
         <target>Commentaire</target>
+      </segment>
+    </unit>
+    <unit id="476009170211765433">
+      <notes>
+        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:66,71</note>
+        <note category="description">Explains that the e-mail address of an external provider already belongs to a Netptune account. EMAIL is that address</note>
+      </notes>
+      <segment state="initial">
+        <source> A Netptune account already exists for <pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong &gt;"><ph id="1" equiv="EMAIL" disp="{{ link.email // i18n(ph=&quot;EMAIL&quot;) }}"/></pc>. </source>
+        <target> Un compte Netptune existe déjà pour <pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong class=&quot;text-foreground font-bold&quot;&gt;" dispEnd="&lt;/strong &gt;"><ph id="1" equiv="EMAIL" disp="{{ link.email // i18n(ph=&quot;EMAIL&quot;) }}"/></pc>. </target>
       </segment>
     </unit>
     <unit id="4762234886950747139">
@@ -9487,7 +9528,7 @@
     </unit>
     <unit id="6864532272110873850">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:232,234</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:233,235</note>
         <note category="description">Heading above the task links using a relation type</note>
       </notes>
       <segment state="translated">
@@ -9733,7 +9774,7 @@
     </unit>
     <unit id="4826315192146469447">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:45</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:50</note>
         <note category="description">What a proposed change does</note>
         <note category="meaning">verb</note>
       </notes>
@@ -10380,6 +10421,16 @@
         <target>Prévisualisé</target>
       </segment>
     </unit>
+    <unit id="4756253901866474176">
+      <notes>
+        <note category="location">src/app/features/auth/components/auth-provider/auth-provider.component.ts:25,29</note>
+        <note category="description">Shown while a provider sign-in completes</note>
+      </notes>
+      <segment state="initial">
+        <source> Completing sign-in with your provider… </source>
+        <target> Finalisation de la connexion avec votre fournisseur… </target>
+      </segment>
+    </unit>
     <unit id="4756842401099167454">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:237</note>
@@ -10892,7 +10943,7 @@
         <note category="location">src/app/features/automations/components/automation-notify-editor.component.ts:45</note>
         <note category="location">src/app/features/users/views/users-view/users-view.component.html:6</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:258</note>
-        <note category="location">src/app/workspace.routes.ts:108</note>
+        <note category="location">src/app/workspace.routes.ts:129</note>
         <note category="description">Label of the users field</note>
       </notes>
       <segment state="translated">
@@ -11265,7 +11316,7 @@
     </unit>
     <unit id="409843096950290609">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:448</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:451</note>
         <note category="description">Confirmation after resuming an automation</note>
       </notes>
       <segment state="initial">
@@ -11701,8 +11752,8 @@
     </unit>
     <unit id="8497552253509503838">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:275,276</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:300,301</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:276,277</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:301,302</note>
         <note category="location">src/app/static/components/task-name.component.ts:43,45</note>
         <note category="description">Marks a deleted task</note>
       </notes>
@@ -11927,16 +11978,6 @@
       <segment state="translated">
         <source>Choose a project</source>
         <target>Choisissez un projet</target>
-      </segment>
-    </unit>
-    <unit id="7047821026526981903">
-      <notes>
-        <note category="location">src/app/features/auth/components/login/login.component.ts:57,61</note>
-        <note category="description">Link from the login form to the registration form</note>
-      </notes>
-      <segment state="initial">
-        <source> Create one </source>
-        <target> Créer un compte </target>
       </segment>
     </unit>
     <unit id="8834069567041134120">
@@ -12181,17 +12222,6 @@
       <segment state="translated">
         <source> Replace assignees </source>
         <target> Remplacer les personnes assignées </target>
-      </segment>
-    </unit>
-    <unit id="4939428286618017421">
-      <notes>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:149,152</note>
-        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:114,117</note>
-        <note category="description">Link back to the login form</note>
-      </notes>
-      <segment state="initial">
-        <source>Back to sign in</source>
-        <target>Retour à la connexion</target>
       </segment>
     </unit>
     <unit id="2784730701772172476">
@@ -12835,7 +12865,7 @@
     </unit>
     <unit id="8316005860907344508">
       <notes>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:228</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:253</note>
         <note category="description">Validation error when the terms of service are not accepted</note>
       </notes>
       <segment state="initial">
@@ -13024,6 +13054,16 @@
         <target>Téléversements</target>
       </segment>
     </unit>
+    <unit id="1605127850147198467">
+      <notes>
+        <note category="location">src/app/features/auth/views/confirm-view/confirm-view.component.ts:32,35</note>
+        <note category="description">Footer note on the email confirmation page</note>
+      </notes>
+      <segment state="initial">
+        <source> You will be taken to your workspaces once this finishes. </source>
+        <target> Vous serez redirigé vers vos espaces de travail une fois terminé. </target>
+      </segment>
+    </unit>
     <unit id="1609489409126655033">
       <notes>
         <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:363</note>
@@ -13066,7 +13106,7 @@
     </unit>
     <unit id="4591169383100169155">
       <notes>
-        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:133</note>
+        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:134</note>
         <note category="description">Submit button on the password reset form</note>
       </notes>
       <segment state="initial">
@@ -13565,7 +13605,7 @@
     </unit>
     <unit id="462619135400272658">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:33,36</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:34,37</note>
         <note category="description">Description of the dashboard card listing pinned tasks</note>
       </notes>
       <segment state="translated">
@@ -13711,8 +13751,8 @@
     </unit>
     <unit id="5234544449365538384">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:379</note>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:323</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:406</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:326</note>
         <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:362</note>
         <note category="description">Shown when a page link could not be copied</note>
       </notes>
@@ -14029,7 +14069,7 @@
     </unit>
     <unit id="5877588706047001067">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:110,111</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:111,112</note>
         <note category="description">Heading above the relation type edit form</note>
       </notes>
       <segment state="translated">
@@ -15303,7 +15343,7 @@
     </unit>
     <unit id="8804757855962270298">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:93,95</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:94,96</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:86,88</note>
         <note category="description">Shown when a change to a relation type could not be saved</note>
       </notes>
@@ -15375,7 +15415,7 @@
     <unit id="584754872792429089">
       <notes>
         <note category="location">src/app/features/sprints/components/sprint-backlog-group.component.ts:126</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:39</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:44</note>
         <note category="description">Column heading for the sprint assign action</note>
       </notes>
       <segment state="translated">
@@ -15613,6 +15653,16 @@
         <target>Page restaurée</target>
       </segment>
     </unit>
+    <unit id="6998887300160305812">
+      <notes>
+        <note category="location">src/app/static/components/theme-toggle-button.component.ts:33</note>
+        <note category="description">Auth page button that switches from the dark theme to the light one</note>
+      </notes>
+      <segment state="initial">
+        <source>Switch to light theme</source>
+        <target>Passer au thème clair</target>
+      </segment>
+    </unit>
     <unit id="6765436849411220761">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:905</note>
@@ -15677,7 +15727,7 @@
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:137,140</note>
         <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:107,110</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:204</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:213</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:186</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:219</note>
         <note category="description">Button that edits the automation</note>
@@ -15731,8 +15781,9 @@
     </unit>
     <unit id="3649865062920158321">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login.component.ts:46,48</note>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:51,52</note>
+        <note category="location">src/app/features/auth/components/auth-provider/auth-provider.component.ts:16,17</note>
+        <note category="location">src/app/features/auth/components/login/login.component.ts:65,67</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:73,74</note>
         <note category="description">Label above the heading of the sign-in form</note>
       </notes>
       <segment state="initial">
@@ -15767,7 +15818,7 @@
         <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:39,42</note>
         <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:62,64</note>
         <note category="location">src/app/features/queries/views/queries-view/queries-view.component.ts:64,66</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:104,106</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:105,107</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:110,112</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:91,93</note>
         <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:77,79</note>
@@ -15879,6 +15930,16 @@
         <target> Modifiez l&apos;automatisation pour les faire pointer vers un élément existant, sinon ses exécutions échoueront. </target>
       </segment>
     </unit>
+    <unit id="5040941334959805672">
+      <notes>
+        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:204</note>
+        <note category="description">Button that links an external provider while the request runs</note>
+      </notes>
+      <segment state="initial">
+        <source>Connecting…</source>
+        <target>Connexion…</target>
+      </segment>
+    </unit>
     <unit id="5042522818852325305">
       <notes>
         <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:328</note>
@@ -15965,7 +16026,7 @@
     </unit>
     <unit id="111405044359500675">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:75,77</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:76,78</note>
         <note category="description">Accessible name of the relation type list filter row</note>
       </notes>
       <segment state="translated">
@@ -15984,7 +16045,7 @@
     </unit>
     <unit id="976634642400414372">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:454</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:457</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:215</note>
         <note category="description">Error after failing to update an automation</note>
       </notes>
@@ -15995,7 +16056,7 @@
     </unit>
     <unit id="7223592009379733387">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:498</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:501</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:265</note>
         <note category="description">Title of the confirmation dialog for deleting an automation</note>
       </notes>
@@ -16006,7 +16067,7 @@
     </unit>
     <unit id="2841737509665294845">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:514</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:517</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:286</note>
         <note category="description">Confirmation after deleting an automation</note>
       </notes>
@@ -16037,7 +16098,7 @@
     </unit>
     <unit id="3476741388176301769">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:520</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:523</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:292</note>
         <note category="description">Error after failing to delete an automation</note>
       </notes>
@@ -16073,7 +16134,7 @@
       <notes>
         <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:590</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:461</note>
-        <note category="location">src/app/workspace.routes.ts:126</note>
+        <note category="location">src/app/workspace.routes.ts:147</note>
         <note category="description">Heading of the automation settings step</note>
       </notes>
       <segment state="translated">
@@ -16127,7 +16188,7 @@
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:60,61</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:69,73</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:266</note>
-        <note category="location">src/app/workspace.routes.ts:54</note>
+        <note category="location">src/app/workspace.routes.ts:75</note>
         <note category="description">Page title for the automation list</note>
       </notes>
       <segment state="translated">
@@ -16137,7 +16198,7 @@
     </unit>
     <unit id="611603307113213973">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:112,114</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:113,115</note>
         <note category="description">Description of the relation type edit form</note>
       </notes>
       <segment state="translated">
@@ -16318,7 +16379,7 @@
     </unit>
     <unit id="6473284394312594965">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:488</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:491</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:253</note>
         <note category="description">Error after failing to clone an automation</note>
       </notes>
@@ -16329,7 +16390,7 @@
     </unit>
     <unit id="1402579729059041118">
       <notes>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:95,101</note>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:92,97</note>
         <note category="description">Button that returns to the form for entering another email address</note>
       </notes>
       <segment state="initial">
@@ -16690,7 +16751,7 @@
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:140</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:83</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:155</note>
-        <note category="location">src/app/workspace.routes.ts:36</note>
+        <note category="location">src/app/workspace.routes.ts:57</note>
         <note category="description">Column heading for the number of tasks on a board</note>
       </notes>
       <segment state="translated">
@@ -17150,7 +17211,7 @@
     </unit>
     <unit id="2224947564116830026">
       <notes>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:53,55</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:75,77</note>
         <note category="description">Heading of the account registration form</note>
       </notes>
       <segment state="initial">
@@ -17313,7 +17374,7 @@
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:71,72</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:86</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:169</note>
-        <note category="location">src/app/workspace.routes.ts:60</note>
+        <note category="location">src/app/workspace.routes.ts:81</note>
         <note category="description">Section heading for the boards a task appears on</note>
       </notes>
       <segment state="translated">
@@ -17333,7 +17394,7 @@
     </unit>
     <unit id="7856854208950034768">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:489</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:493</note>
         <note category="description">Title of the confirmation dialog for deleting a relation type</note>
       </notes>
       <segment state="translated">
@@ -17384,7 +17445,7 @@
     <unit id="7869199587095613616">
       <notes>
         <note category="location">src/app/features/pages/components/page-editor.component.ts:294,295</note>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:377</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:404</note>
         <note category="location">src/app/static/components/branding-preview/branding-preview.component.ts:156</note>
         <note category="description">Placeholder in an empty page title</note>
       </notes>
@@ -17589,6 +17650,16 @@
         <target>Non attribué</target>
       </segment>
     </unit>
+    <unit id="8715987800078163957">
+      <notes>
+        <note category="location">src/app/features/auth/views/confirm-view/confirm-view.component.ts:27,31</note>
+        <note category="description">Shown while an email verification link is checked</note>
+      </notes>
+      <segment state="initial">
+        <source> Checking your verification link… </source>
+        <target> Vérification de votre lien de confirmation… </target>
+      </segment>
+    </unit>
     <unit id="5101518177835903830">
       <notes>
         <note category="location">src/app/features/settings/settings.routes.ts:116</note>
@@ -17611,7 +17682,7 @@
     </unit>
     <unit id="5111842031822965750">
       <notes>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:179</note>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:153</note>
         <note category="description">Submit button on the password reset request form</note>
       </notes>
       <segment state="initial">
@@ -17965,7 +18036,7 @@
     <unit id="2354817630223808522">
       <notes>
         <note category="location">src/app/features/calendar/dialogs/calendar-move-task-dialog.component.ts:68,73</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:44</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:49</note>
         <note category="description">Button that moves the task to the chosen date</note>
       </notes>
       <segment state="translated">
@@ -18008,7 +18079,7 @@
       <notes>
         <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:61,64</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:221</note>
-        <note category="location">src/app/workspace.routes.ts:90</note>
+        <note category="location">src/app/workspace.routes.ts:111</note>
         <note category="description">Page title for the calendar</note>
       </notes>
       <segment state="translated">
@@ -18107,15 +18178,25 @@
         <target> Qui me sont assignées </target>
       </segment>
     </unit>
-    <unit id="130105749950410304">
+    <unit id="3275092002036531968">
       <notes>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:146,148</note>
-        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:111,113</note>
+        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:53,56</note>
+        <note category="description">Label above the heading of the provider-link page</note>
+      </notes>
+      <segment state="initial">
+        <source>Connect provider</source>
+        <target>Connecter un fournisseur</target>
+      </segment>
+    </unit>
+    <unit id="327534766307158513">
+      <notes>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:42,45</note>
+        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:53,56</note>
         <note category="description">Sits before the link back to the login form</note>
       </notes>
       <segment state="initial">
-        <source> Remembered it? </source>
-        <target> Vous vous en souvenez ? </target>
+        <source>Remembered it?</source>
+        <target>Vous vous en souvenez ?</target>
       </segment>
     </unit>
     <unit id="1301232718408636510">
@@ -18390,7 +18471,7 @@
       <notes>
         <note category="location">src/app/features/dashboard/views/dashboard-view/dashboard-view.component.ts:40,42</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:147</note>
-        <note category="location">src/app/workspace.routes.ts:25</note>
+        <note category="location">src/app/workspace.routes.ts:46</note>
         <note category="description">Page title for the dashboard</note>
       </notes>
       <segment state="translated">
@@ -18483,12 +18564,22 @@
     </unit>
     <unit id="2012659005494284050">
       <notes>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:171</note>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:145</note>
         <note category="description">Heading of the password reset request form</note>
       </notes>
       <segment state="initial">
         <source>Forgot your password?</source>
         <target>Mot de passe oublié ?</target>
+      </segment>
+    </unit>
+    <unit id="2012914451599952796">
+      <notes>
+        <note category="location">src/app/features/auth/views/confirm-view/confirm-view.component.ts:18,19</note>
+        <note category="description">Label above the heading of the email confirmation page</note>
+      </notes>
+      <segment state="initial">
+        <source>Email verification</source>
+        <target>Vérification de l&apos;e-mail</target>
       </segment>
     </unit>
     <unit id="2014313920164588286">
@@ -18807,7 +18898,7 @@
     </unit>
     <unit id="4878739351848976503">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:310,312</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:311,313</note>
         <note category="description">Heading of an empty relation list on a usage page</note>
       </notes>
       <segment state="translated">
@@ -18859,7 +18950,7 @@
       <notes>
         <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:30,33</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:106</note>
-        <note category="location">src/app/workspace.routes.ts:132</note>
+        <note category="location">src/app/workspace.routes.ts:153</note>
         <note category="description">Page title for the user profile</note>
       </notes>
       <segment state="translated">
@@ -19001,8 +19092,8 @@
     </unit>
     <unit id="2195844952748654945">
       <notes>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:220</note>
-        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:153</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:245</note>
+        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:154</note>
         <note category="description">Validation error when a new password is too short</note>
       </notes>
       <segment state="initial">
@@ -19481,7 +19572,7 @@
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:67,71</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:84</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:200</note>
-        <note category="location">src/app/workspace.routes.ts:30</note>
+        <note category="location">src/app/workspace.routes.ts:51</note>
         <note category="description">Filter heading for projects</note>
       </notes>
       <segment state="translated">
@@ -19623,7 +19714,7 @@
     </unit>
     <unit id="4663393004124331220">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:120,121</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:121,122</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:126,127</note>
         <note category="description">Marks a built-in item</note>
       </notes>
@@ -20675,7 +20766,7 @@
     </unit>
     <unit id="8591821672433517944">
       <notes>
-        <note category="location">src/app/features/auth/components/auth-provider/auth-provider.component.ts:33</note>
+        <note category="location">src/app/features/auth/components/auth-provider/auth-provider.component.ts:50</note>
         <note category="description">Shown when signing in through an external provider fails</note>
       </notes>
       <segment state="translated">
@@ -20687,7 +20778,7 @@
       <notes>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:66,68</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:229</note>
-        <note category="location">src/app/workspace.routes.ts:72</note>
+        <note category="location">src/app/workspace.routes.ts:93</note>
         <note category="description">Page title for the reporting views</note>
       </notes>
       <segment state="translated">
@@ -20855,6 +20946,16 @@
       <segment state="translated">
         <source>Roadmap filters</source>
         <target>Filtres de la feuille de route</target>
+      </segment>
+    </unit>
+    <unit id="7504752777131062423">
+      <notes>
+        <note category="location">src/app/features/auth/components/login/login.component.ts:59,63</note>
+        <note category="description">Link from the login page to the registration form</note>
+      </notes>
+      <segment state="initial">
+        <source> Create account </source>
+        <target> Créer un compte </target>
       </segment>
     </unit>
     <unit id="7508570474100827037">
@@ -21204,7 +21305,7 @@
       <notes>
         <note category="location">src/app/features/roadmap/views/roadmap-view.component.ts:61,64</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:214</note>
-        <note category="location">src/app/workspace.routes.ts:84</note>
+        <note category="location">src/app/workspace.routes.ts:105</note>
         <note category="description">Page title for the roadmap</note>
       </notes>
       <segment state="translated">
@@ -21244,8 +21345,8 @@
     </unit>
     <unit id="5241223076967248456">
       <notes>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:111,114</note>
-        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:76,79</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:130,133</note>
+        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:92,95</note>
         <note category="description">Placeholder of the password field on the registration form</note>
       </notes>
       <segment state="initial">
@@ -21275,7 +21376,7 @@
     </unit>
     <unit id="5249135576117895248">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:244,247</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:245,248</note>
         <note category="description">Number of task links using a relation type. COUNT is the number of links</note>
       </notes>
       <segment state="translated">
@@ -21569,7 +21670,7 @@
     </unit>
     <unit id="9092123752727924180">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:314,316</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:315,317</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:285,286</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:226,227</note>
         <note category="description">Explains that nothing currently uses the item being viewed</note>
@@ -21643,7 +21744,7 @@
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:161,163</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:374</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:430</note>
-        <note category="location">src/app/workspace.routes.ts:96</note>
+        <note category="location">src/app/workspace.routes.ts:117</note>
         <note category="description">Page title for the assistant chat page</note>
       </notes>
       <segment state="translated">
@@ -21673,7 +21774,7 @@
     </unit>
     <unit id="4365227028908342999">
       <notes>
-        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:168</note>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:142</note>
         <note category="description">Heading shown once the password reset email has been sent</note>
       </notes>
       <segment state="initial">
@@ -22093,16 +22194,6 @@
         <target>Mode d&apos;affichage</target>
       </segment>
     </unit>
-    <unit id="7313867364439733953">
-      <notes>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:58,60</note>
-        <note category="description">Sits before the link to the login form</note>
-      </notes>
-      <segment state="initial">
-        <source> Already have one? </source>
-        <target> Vous en avez déjà un ? </target>
-      </segment>
-    </unit>
     <unit id="7314814725704332646">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:118,119</note>
@@ -22240,7 +22331,7 @@
     </unit>
     <unit id="1882417016002095967">
       <notes>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:179</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:204</note>
         <note category="description">Submit button on the registration form while the account is created</note>
       </notes>
       <segment state="initial">
@@ -22360,7 +22451,7 @@
     </unit>
     <unit id="2904079922768988996">
       <notes>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:129,133</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:147,151</note>
         <note category="description">Checkbox confirming the terms of service on the registration form</note>
       </notes>
       <segment state="initial">
@@ -22709,7 +22800,7 @@
     </unit>
     <unit id="7331635054649292901">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:102,103</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:103,104</note>
         <note category="description">Shown when a relation type detail page fails to load</note>
       </notes>
       <segment state="translated">
@@ -22769,8 +22860,8 @@
     </unit>
     <unit id="892073694820881630">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:378</note>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:318</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:405</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:321</note>
         <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:357</note>
         <note category="description">Confirmation that a page link was copied</note>
       </notes>
@@ -23195,7 +23286,7 @@
     </unit>
     <unit id="15321371811334707">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:173,174</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:174,175</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:148,149</note>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:86,87</note>
         <note category="description">Advice shown when a search matches nothing</note>
@@ -23217,7 +23308,7 @@
     </unit>
     <unit id="5397887234065885154">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:73,74</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:74,75</note>
         <note category="description">Button that opens the create-relation-type dialog</note>
       </notes>
       <segment state="translated">
@@ -23225,19 +23316,19 @@
         <target>Créer un type de relation</target>
       </segment>
     </unit>
-    <unit id="475077506966252387">
+    <unit id="4552823196263551873">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login-providers.component.ts:12,16</note>
-        <note category="description">Separator above the external sign-in provider buttons</note>
+        <note category="location">src/app/features/auth/components/login/login-providers.component.ts:25,28</note>
+        <note category="description">Heading above the external sign-in provider buttons</note>
       </notes>
       <segment state="initial">
-        <source>or continue with</source>
+        <source>Or continue with</source>
         <target>ou continuer avec</target>
       </segment>
     </unit>
     <unit id="400343125846819376">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:104,106</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:105,107</note>
         <note category="description">Shown when the relation type list fails to load</note>
       </notes>
       <segment state="initial">
@@ -23278,7 +23369,7 @@
     </unit>
     <unit id="7118117366674423373">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:236</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:245</note>
         <note category="description">Column heading for the reverse direction of a relation</note>
       </notes>
       <segment state="translated">
@@ -23368,7 +23459,7 @@
     </unit>
     <unit id="220550782947016929">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:260</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:269</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:235</note>
         <note category="description">Column heading for the sort order</note>
       </notes>
@@ -23422,8 +23513,8 @@
     </unit>
     <unit id="6830953190149975920">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:156,158</note>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:128,131</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:157,159</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:129,132</note>
         <note category="description">Shown when a relation reads the same in both directions</note>
       </notes>
       <segment state="translated">
@@ -23443,7 +23534,7 @@
     </unit>
     <unit id="6781548721931982858">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:146,148</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:147,149</note>
         <note category="description">Accessible label for the button that moves a relation type up</note>
       </notes>
       <segment state="translated">
@@ -23503,7 +23594,7 @@
     </unit>
     <unit id="2412502577182752913">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:158,160</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:159,161</note>
         <note category="description">Accessible label for the button that moves a relation type down</note>
       </notes>
       <segment state="translated">
@@ -23556,7 +23647,7 @@
       <notes>
         <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:126</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:256</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:37</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:42</note>
         <note category="description">Counts records an import would update</note>
       </notes>
       <segment state="translated">
@@ -23832,6 +23923,16 @@
       <segment state="translated">
         <source> Projects using it as their default status </source>
         <target>Projets qui l&apos;utilisent comme statut par défaut</target>
+      </segment>
+    </unit>
+    <unit id="7272503549571494469">
+      <notes>
+        <note category="location">src/app/features/auth/views/confirm-view/confirm-view.component.ts:20,22</note>
+        <note category="description">Heading of the page that confirms an email address</note>
+      </notes>
+      <segment state="initial">
+        <source>Confirming your email</source>
+        <target>Confirmation de votre e-mail</target>
       </segment>
     </unit>
     <unit id="72760277315735644">
@@ -24440,6 +24541,16 @@
         <target> Révoqué </target>
       </segment>
     </unit>
+    <unit id="4568335652123587334">
+      <notes>
+        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:152,157</note>
+        <note category="description">Shown when an external provider link has expired or was not found</note>
+      </notes>
+      <segment state="initial">
+        <source> This provider link is missing or expired. </source>
+        <target> Ce lien de fournisseur est manquant ou a expiré. </target>
+      </segment>
+    </unit>
     <unit id="4569295903076125082">
       <notes>
         <note category="location">src/app/features/profile/components/update-profile-image/update-profile-image.component.ts:68,71</note>
@@ -24617,7 +24728,7 @@
       <notes>
         <note category="location">src/app/features/queries/views/queries-view/queries-view.component.ts:48,49</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:237</note>
-        <note category="location">src/app/workspace.routes.ts:42</note>
+        <note category="location">src/app/workspace.routes.ts:63</note>
         <note category="description">Page title for the saved query list</note>
       </notes>
       <segment state="translated">
@@ -24985,6 +25096,16 @@
         <target>Détails</target>
       </segment>
     </unit>
+    <unit id="5029378374390931644">
+      <notes>
+        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:159,163</note>
+        <note category="description">Tells the visitor how to retry an expired provider link</note>
+      </notes>
+      <segment state="initial">
+        <source> Start the provider sign-in again from the sign-in page. </source>
+        <target> Recommencez la connexion via le fournisseur depuis la page de connexion. </target>
+      </segment>
+    </unit>
     <unit id="5031687880128878913">
       <notes>
         <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:166</note>
@@ -25063,7 +25184,7 @@
       <notes>
         <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:122</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:95,100</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:36</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:41</note>
         <note category="description">Counts records an import would create</note>
       </notes>
       <segment state="translated">
@@ -25395,7 +25516,7 @@
     </unit>
     <unit id="8351943591470962982">
       <notes>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:93,95</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:112,114</note>
         <note category="description">Label of the work e-mail field on the registration form</note>
       </notes>
       <segment state="initial">
@@ -25999,7 +26120,7 @@
     </unit>
     <unit id="1152778269115350205">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:217</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:220</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:279</note>
         <note category="description">Title of the confirmation dialog for deleting a sprint</note>
       </notes>
@@ -26033,7 +26154,7 @@
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:61,62</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:85</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:185</note>
-        <note category="location">src/app/workspace.routes.ts:66</note>
+        <note category="location">src/app/workspace.routes.ts:87</note>
         <note category="description">Page title for the sprint list</note>
       </notes>
       <segment state="translated">
@@ -26198,7 +26319,7 @@
       <notes>
         <note category="location">src/app/features/storage/views/storage-view.component.ts:22,25</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:390</note>
-        <note category="location">src/app/workspace.routes.ts:120</note>
+        <note category="location">src/app/workspace.routes.ts:141</note>
         <note category="description">Page title for workspace file storage</note>
       </notes>
       <segment state="translated">
@@ -26229,10 +26350,10 @@
     <unit id="5743757503664322992">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:224</note>
-        <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:30,31</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:31,32</note>
         <note category="location">src/app/features/pins/views/pinned-view/pinned-view.component.ts:65,67</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:248</note>
-        <note category="location">src/app/workspace.routes.ts:48</note>
+        <note category="location">src/app/workspace.routes.ts:69</note>
         <note category="description">Label on the pin control when the task is already pinned</note>
       </notes>
       <segment state="translated">
@@ -26322,7 +26443,7 @@
     </unit>
     <unit id="2637409888010075708">
       <notes>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:461</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:464</note>
         <note category="description">Title of the confirmation dialog for deleting a status</note>
       </notes>
       <segment state="translated">
@@ -26352,7 +26473,7 @@
     </unit>
     <unit id="230509500346547092">
       <notes>
-        <note category="location">src/app/features/pages/services/page-draft.ts:254</note>
+        <note category="location">src/app/features/pages/services/page-draft.ts:274</note>
         <note category="description">Error shown when saving a page fails</note>
       </notes>
       <segment state="translated">
@@ -27165,8 +27286,8 @@
     </unit>
     <unit id="628468315033128728">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:490</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:462</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:494</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:465</note>
         <note category="description">Asks the user to confirm deleting a relation type. NAME is the relation type name</note>
       </notes>
       <segment state="translated">
@@ -27196,7 +27317,7 @@
     </unit>
     <unit id="8282309360961339523">
       <notes>
-        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:52,54</note>
+        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:68,71</note>
         <note category="description">Heading of the form for choosing a new password</note>
       </notes>
       <segment state="initial">
@@ -27257,7 +27378,7 @@
     </unit>
     <unit id="8787158466879133733">
       <notes>
-        <note category="location">src/app/features/auth/components/login/login.component.ts:69,72</note>
+        <note category="location">src/app/features/auth/components/login/login.component.ts:74,77</note>
         <note category="description">Error shown when login credentials are rejected</note>
       </notes>
       <segment state="initial">
@@ -27877,9 +27998,12 @@
     </unit>
     <unit id="6663783128602596673">
       <notes>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:62,67</note>
+        <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:46,49</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:67,71</note>
+        <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:49,51</note>
+        <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:60,62</note>
         <note category="location">src/app/shell/shell-navbar.component.ts:75,82</note>
-        <note category="description">Link from the registration form back to the login form</note>
+        <note category="description">Link to the login form from the provider-link page</note>
       </notes>
       <segment state="translated">
         <source> Sign in </source>
@@ -28174,7 +28298,7 @@
     </unit>
     <unit id="7164517351150345210">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:182,183</note>
+        <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:183,184</note>
         <note category="description">Explains what relation types are for</note>
       </notes>
       <segment state="translated">
@@ -28224,7 +28348,7 @@
     </unit>
     <unit id="3487164997301514763">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:132,136</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:133,137</note>
         <note category="description">Hint shown when a page cannot be found</note>
       </notes>
       <segment state="translated">
@@ -28402,13 +28526,13 @@
         <target> Logo de l&apos;espace de travail </target>
       </segment>
     </unit>
-    <unit id="5671808005389453429">
+    <unit id="4482336764287931226">
       <notes>
-        <note category="location">src/app/features/auth/components/auth-provider/auth-provider.component.ts:17,20</note>
-        <note category="description">Shown while a provider sign-in completes</note>
+        <note category="location">src/app/features/auth/components/auth-provider/auth-provider.component.ts:18,20</note>
+        <note category="description">Heading shown while a provider sign-in completes</note>
       </notes>
-      <segment state="translated">
-        <source> Signing you in… </source>
+      <segment state="initial">
+        <source>Signing you in</source>
         <target> Connexion en cours… </target>
       </segment>
     </unit>
@@ -29306,7 +29430,7 @@
     </unit>
     <unit id="2037491714599491863">
       <notes>
-        <note category="location">src/app/features/pages/services/page-draft.ts:253</note>
+        <note category="location">src/app/features/pages/services/page-draft.ts:273</note>
         <note category="description">Error shown when changing a page&apos;s status or tags fails</note>
       </notes>
       <segment state="translated">
@@ -29392,6 +29516,16 @@
       <segment>
         <source> This export is too large to download directly and will run in the background. </source>
         <target> Cet export est trop volumineux pour un téléchargement direct et sera exécuté en arrière-plan. </target>
+      </segment>
+    </unit>
+    <unit id="1982976783547336625">
+      <notes>
+        <note category="location">src/app/features/auth/components/auth-provider/auth-provider.component.ts:32,35</note>
+        <note category="description">Footer note on the page that completes a provider sign-in</note>
+      </notes>
+      <segment state="initial">
+        <source> If this fails you will be returned to the sign-in page. </source>
+        <target> En cas d&apos;échec, vous serez renvoyé vers la page de connexion. </target>
       </segment>
     </unit>
     <unit id="199641702958317154">

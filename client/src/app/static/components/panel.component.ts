@@ -4,6 +4,8 @@ import { cn } from './button/button.variants';
 // `background` sits flush with the page; `card` reads as a raised surface.
 export type PanelSurface = 'background' | 'card';
 
+export type PanelElevation = 'flat' | 'floating';
+
 // For components that are themselves a panel and carry the surface on their
 // host rather than wrapping their template in one.
 export const panelSurfaceClass =
@@ -22,6 +24,7 @@ export const panelSurfaceClass =
 })
 export class PanelComponent {
   readonly surface = input<PanelSurface>('background');
+  readonly elevation = input<PanelElevation>('flat');
   readonly class = input('');
 
   protected readonly hostClass = computed(() => {
@@ -29,6 +32,8 @@ export class PanelComponent {
       panelSurfaceClass,
       'overflow-hidden',
       this.surface() === 'card' ? 'bg-card' : 'bg-background',
+      this.elevation() === 'floating' &&
+        'shadow-[0_30px_80px_var(--card-shadow)]',
       this.class()
     );
   });

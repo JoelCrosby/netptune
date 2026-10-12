@@ -1,6 +1,6 @@
 import { booleanAttribute, Component, computed, input } from '@angular/core';
 
-export type SectionHeaderAppearance = 'default' | 'inline';
+export type SectionHeaderAppearance = 'default' | 'inline' | 'eyebrow';
 
 @Component({
   selector: 'app-section-header',
@@ -33,7 +33,7 @@ export class SectionHeaderComponent {
   private readonly isInline = computed(() => this.appearance() === 'inline');
 
   protected readonly headerClass = computed(() => {
-    const spacing = this.isInline() ? 'mb-3' : 'mb-4';
+    const spacing = this.appearance() === 'default' ? 'mb-4' : 'mb-3';
 
     return this.wrap() ? `${spacing} flex-wrap` : spacing;
   });
@@ -49,6 +49,10 @@ export class SectionHeaderComponent {
   });
 
   protected readonly headingClass = computed(() => {
+    if (this.appearance() === 'eyebrow') {
+      return 'text-foreground/60 text-xs font-semibold tracking-[.06em] uppercase';
+    }
+
     return this.isInline()
       ? 'text-base font-semibold'
       : 'font-overpass text-[1.4rem] font-normal';
