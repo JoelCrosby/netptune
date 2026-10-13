@@ -1,3 +1,5 @@
+using System.Text.Json.Nodes;
+
 using Microsoft.OpenApi;
 
 namespace Netptune.Api.Configuration;
@@ -5,6 +7,8 @@ namespace Netptune.Api.Configuration;
 public static class ApiOpenApi
 {
     public const string SecuritySchemeName = "ApiKey";
+
+    private const string TagGroupsExtension = "x-tagGroups";
 
     public static IServiceCollection AddApiOpenApi(this IServiceCollection services)
     {
@@ -43,6 +47,13 @@ public static class ApiOpenApi
                     },
                 };
 
+                document.Tags = ApiTags.Groups
+                    .SelectMany(group => group.Tags)
+                    .Select(tag => new OpenApiTag { Name = tag.Name, Description = tag.Description })
+                    .ToHashSet();
+                document.Extensions ??= new Dictionary<string, IOpenApiExtension>();
+                document.Extensions[TagGroupsExtension] = new JsonNodeExtension(TagGroups());
+
                 foreach (var operation in document.Paths.Values
                              .Where(path => path.Operations is not null)
                              .SelectMany(path => path.Operations!.Values))
@@ -59,5 +70,16 @@ public static class ApiOpenApi
         });
 
         return services;
+    }
+
+    private static JsonArray TagGroups()
+    {
+        var groups = ApiTags.Groups.Select(group => new JsonObject
+        {
+            ["name"] = group.Name,
+            ["tags"] = new JsonArray([.. group.Tags.Select(tag => JsonValue.Create(tag.Name))]),
+        });
+
+        return new JsonArray([.. groups]);
     }
 }

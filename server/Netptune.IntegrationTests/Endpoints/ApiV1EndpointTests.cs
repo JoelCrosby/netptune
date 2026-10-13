@@ -1222,6 +1222,38 @@ public sealed class ApiV1EndpointTests
     }
 
     [Fact]
+    public async Task OpenApiDocument_ShouldFileEveryOperationUnderOneGroupedTag()
+    {
+        var client = Fixture.CreateUnauthenticatedApiClient();
+
+        var document = await client.GetFromJsonAsync<JsonElement>("openapi/v1.json", TestContext.Current.CancellationToken);
+        var operations = document.GetProperty("paths").EnumerateObject()
+            .SelectMany(path => path.Value.EnumerateObject())
+            .Where(operation => operation.Value.ValueKind == JsonValueKind.Object)
+            .Where(operation => operation.Value.TryGetProperty("responses", out _))
+            .ToList();
+        var operationTags = operations
+            .Select(operation => operation.Value.GetProperty("tags").EnumerateArray())
+            .Select(tags => tags.Select(tag => tag.GetString()!).ToList())
+            .ToList();
+        var describedTags = document.GetProperty("tags").EnumerateArray()
+            .Where(tag => !string.IsNullOrWhiteSpace(tag.GetProperty("description").GetString()))
+            .Select(tag => tag.GetProperty("name").GetString()!)
+            .ToHashSet();
+        var groupedTags = document.GetProperty("x-tagGroups").EnumerateArray()
+            .SelectMany(group => group.GetProperty("tags").EnumerateArray())
+            .Select(tag => tag.GetString()!)
+            .ToHashSet();
+        var usedTags = operationTags.SelectMany(tags => tags).ToHashSet();
+
+        operations.Should().NotBeEmpty();
+        operationTags.Should().OnlyContain(tags => tags.Count == 1);
+        usedTags.Should().BeSubsetOf(describedTags);
+        usedTags.Should().BeSubsetOf(groupedTags);
+        groupedTags.Should().BeEquivalentTo(usedTags, "an empty section in the sidebar is noise");
+    }
+
+    [Fact]
     public async Task OpenApiDocument_ShouldNotDescribeTaskDatabaseIds()
     {
         var client = Fixture.CreateUnauthenticatedApiClient();
