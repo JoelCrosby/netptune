@@ -1267,6 +1267,19 @@ public sealed class ApiV1EndpointTests
         properties.TryGetProperty("workspaceId", out _).Should().BeFalse();
     }
 
+    [Fact]
+    public async Task OpenApiDocument_ShouldNotDescribeBurndownTaskDatabaseIds()
+    {
+        var client = Fixture.CreateUnauthenticatedApiClient();
+
+        var document = await client.GetFromJsonAsync<JsonElement>("openapi/v1.json", TestContext.Current.CancellationToken);
+        var burndown = document.GetProperty("components").GetProperty("schemas").GetProperty("SprintBurndownReport");
+        var properties = burndown.GetProperty("properties");
+
+        properties.TryGetProperty("addedCount", out _).Should().BeTrue();
+        properties.TryGetProperty("addedTaskIds", out _).Should().BeFalse();
+    }
+
     private async Task<BoardViewModel> CreateBoard(HttpClient client)
     {
         var project = await CreateProject(client);

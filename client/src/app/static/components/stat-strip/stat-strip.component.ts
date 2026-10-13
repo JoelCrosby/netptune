@@ -1,11 +1,14 @@
 import { Component, computed, input } from '@angular/core';
 import { cn } from '../button/button.variants';
+import { SignalTone, signalToneText } from '../tones';
 
 export interface StatStripItem {
   label: string;
   value: string | number;
   suffix?: string;
   valueClass?: string;
+  note?: string;
+  noteTone?: SignalTone;
 }
 
 const columnClasses: Record<number, string> = {
@@ -34,6 +37,11 @@ const columnClasses: Record<number, string> = {
               </span>
             }
           </dd>
+          @if (item.note) {
+            <dd class="mt-0.5 text-xs" [class]="noteClass(item)">
+              {{ item.note }}
+            </dd>
+          }
         </div>
       }
     </dl>
@@ -50,6 +58,10 @@ export class StatStripComponent {
       columns
     );
   });
+
+  protected noteClass(item: StatStripItem): string {
+    return signalToneText[item.noteTone ?? 'muted'];
+  }
 
   protected valueClass(item: StatStripItem): string {
     return cn('mt-1 text-lg font-semibold tabular-nums', item.valueClass ?? '');

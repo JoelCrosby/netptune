@@ -60,6 +60,7 @@ export interface SprintBurndownReport {
   committedCount: number;
   addedCount: number;
   removedCount: number;
+  addedTaskIds: number[];
   missingEstimateCount: number;
   completedCount: number;
   completionPercentage: number;

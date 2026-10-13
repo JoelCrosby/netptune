@@ -8,7 +8,10 @@ import {
 } from '@static/components/datatable/datatable.types';
 import { TaskAssigneesComponent } from '@static/components/task-assignees.component';
 import { TaskDateComponent } from '@static/components/task-date.component';
-import { TaskNameComponent } from '@static/components/task-name.component';
+import {
+  TaskNameBadge,
+  TaskNameComponent,
+} from '@static/components/task-name.component';
 import { TaskPriorityComponent } from '@static/components/task-priority.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 import { TaskSprintComponent } from '@static/components/task-sprint.component';
@@ -200,6 +203,7 @@ export interface TaskNameCellOptions<T extends TaskColumnRow> {
   showComments?: boolean;
   flagNames?: (task: T) => readonly string[];
   archived?: (task: T) => boolean;
+  badges?: (task: T) => readonly TaskNameBadge[];
 }
 
 // The name column is the one cell every surface renders differently, because
@@ -208,19 +212,24 @@ export interface TaskNameCellOptions<T extends TaskColumnRow> {
 export function taskNameCell<T extends TaskColumnRow>(
   options: TaskNameCellOptions<T> = {}
 ): Partial<DatatableColumn<T>> {
-  const { link, action, showComments, flagNames, archived } = options;
+  const { link, action, showComments, flagNames, archived, badges } = options;
 
   return {
     cell: {
       component: TaskNameComponent,
-      inputs: (task) => ({
-        name: task.name,
-        link: link ? link(task) : null,
-        action: action ? () => action(task) : null,
-        hasComments: showComments ? (task.hasComments ?? false) : false,
-        flagNames: flagNames ? flagNames(task) : [],
-        archived: archived ? archived(task) : false,
-      }),
+      inputs: (task) => {
+        const isArchived = archived ? archived(task) : false;
+
+        return {
+          name: task.name,
+          link: link ? link(task) : null,
+          action: action && !isArchived ? () => action(task) : null,
+          hasComments: showComments ? (task.hasComments ?? false) : false,
+          flagNames: flagNames ? flagNames(task) : [],
+          archived: isArchived,
+          badges: badges ? badges(task) : [],
+        };
+      },
     },
   };
 }

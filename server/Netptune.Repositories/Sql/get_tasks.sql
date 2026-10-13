@@ -115,6 +115,7 @@ WITH filtered_tasks AS (
           FROM project_task_app_users ptau_any
           WHERE ptau_any.project_task_id = pt.id
       ))
+      AND (@hasEstimate IS NULL OR @hasEstimate = (pt.estimate_value IS NOT NULL))
       AND (CARDINALITY(@taskIds) = 0 OR pt.id = ANY(@taskIds))
       AND (@boardGroupId IS NULL OR EXISTS (
           SELECT 1

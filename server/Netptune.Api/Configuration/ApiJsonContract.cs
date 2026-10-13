@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Text.Json.Serialization.Metadata;
 
+using Netptune.Core.Models.Reporting;
 using Netptune.Core.ViewModels.Boards;
 using Netptune.Core.ViewModels.Comments;
 using Netptune.Core.ViewModels.Pages;
@@ -21,6 +22,7 @@ public static class ApiJsonContract
         (typeof(RelatedTaskViewModel), [nameof(RelatedTaskViewModel.Id)]),
         (typeof(PageLinkedTaskViewModel), [nameof(PageLinkedTaskViewModel.Id)]),
         (typeof(CommentViewModel), [nameof(CommentViewModel.EntityId)]),
+        (typeof(SprintBurndownReport), [nameof(SprintBurndownReport.AddedTaskIds)]),
     ];
 
     public static IServiceCollection AddApiJsonContract(this IServiceCollection services)

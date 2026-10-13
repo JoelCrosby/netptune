@@ -17,12 +17,11 @@ export interface SegmentedOption<T extends string = string> {
   color?: string | null;
 }
 
-export type SegmentedVariant = 'pill' | 'outlined' | 'chips' | 'subtle';
+export type SegmentedVariant = 'outlined' | 'chips' | 'subtle';
 
 const groupVariants = cva('', {
   variants: {
     variant: {
-      pill: 'bg-hover inline-flex rounded-full p-0.5 text-xs',
       outlined:
         'border-border bg-card flex items-center gap-0.5 rounded-[10px] border p-1 text-sm',
       chips: 'flex items-center gap-1.5 text-sm',
@@ -35,7 +34,7 @@ const groupVariants = cva('', {
     },
   },
   defaultVariants: {
-    variant: 'pill',
+    variant: 'outlined',
     wrap: false,
   },
 });
@@ -45,7 +44,6 @@ const optionVariants = cva(
   {
     variants: {
       variant: {
-        pill: 'rounded-full px-3 py-1.5',
         outlined: 'rounded-lg px-3 py-1.5',
         chips:
           'border-border hover:bg-hover inline-flex h-9 items-center rounded-full border px-3.5',
@@ -57,16 +55,6 @@ const optionVariants = cva(
       },
     },
     compoundVariants: [
-      {
-        variant: 'pill',
-        selected: true,
-        class: 'bg-card text-foreground shadow-sm',
-      },
-      {
-        variant: 'pill',
-        selected: false,
-        class: 'text-muted hover:text-foreground',
-      },
       {
         variant: 'outlined',
         selected: true,
@@ -93,7 +81,7 @@ const optionVariants = cva(
       },
     ],
     defaultVariants: {
-      variant: 'pill',
+      variant: 'outlined',
       selected: false,
     },
   }
@@ -128,7 +116,7 @@ const optionVariants = cva(
 export class SegmentedControlComponent<T extends string = string> {
   readonly options = input.required<SegmentedOption<T>[]>();
   readonly ariaLabel = input<string | null>(null);
-  readonly variant = input<SegmentedVariant>('pill');
+  readonly variant = input<SegmentedVariant>('outlined');
   readonly wrap = input(false, { transform: booleanAttribute });
   readonly class = input('');
 

@@ -3,8 +3,13 @@ import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { LucideMessageSquareText } from '@lucide/angular';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
-import { BadgeComponent } from './badge/badge.component';
+import { BadgeColor, BadgeComponent } from './badge/badge.component';
 import { TaskFlagBadgeComponent } from './task-flag-badge.component';
+
+export interface TaskNameBadge {
+  label: string;
+  color: BadgeColor;
+}
 
 @Component({
   selector: 'app-task-name',
@@ -43,6 +48,11 @@ import { TaskFlagBadgeComponent } from './task-flag-badge.component';
           Archived
         </app-badge>
       }
+      @for (badge of badges(); track badge.label) {
+        <app-badge class="shrink-0" shape="rounded" [color]="badge.color">
+          {{ badge.label }}
+        </app-badge>
+      }
       @if (hasComments()) {
         <svg
           lucideMessageSquareText
@@ -69,4 +79,5 @@ export class TaskNameComponent {
   readonly hasComments = input(false);
   readonly archived = input(false);
   readonly flagNames = input<readonly string[]>([]);
+  readonly badges = input<readonly TaskNameBadge[]>([]);
 }

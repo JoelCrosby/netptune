@@ -48,7 +48,11 @@ const emptyParams: Signal<Params> = computed(() => ({}));
       [projectedCellTemplates]="cellTemplates()"
       [projectedEmptyTemplate]="emptyState()?.templateRef ?? null"
       (selectionChanged)="selectionChanged.emit($event)"
-      (loaded)="loaded.emit($event)" />
+      (loaded)="loaded.emit($event)">
+      <ng-container ngProjectAs="[datatableToolbar]">
+        <ng-content select="[datatableToolbar]" />
+      </ng-container>
+    </app-datatable>
   `,
 })
 export class TaskTableComponent<T extends TaskColumnRow> {

@@ -80,6 +80,11 @@ import {
   host: { class: 'flex min-h-0 flex-col', '[class.flex-1]': 'filling()' },
   template: `
     <div [class]="mergedContainerClass()">
+      <div
+        class="bg-card border-border sticky left-0 flex flex-wrap items-center gap-2.5 border-b px-4 py-3 empty:hidden">
+        <ng-content select="[datatableToolbar]" />
+      </div>
+
       <table [class]="mergedTableClass()">
         <ng-content select="caption" />
         <ng-content select="colgroup" />

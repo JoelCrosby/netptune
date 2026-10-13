@@ -190,13 +190,37 @@ public sealed class ReportingEndpointTests(NetptuneFixture fixture)
     }
 
     [Fact]
+    public async Task Burndown_ShouldDropAnAddedTask_WhenItIsRemovedAgain()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var project = await CreateProject();
+        var sprint = await CreateSprint(project.Id);
+        await CreateTask(project.Id, sprint.Id);
+        (await Client.PostAsync($"api/sprints/{sprint.Id}/start", null, cancellationToken)).EnsureSuccessStatusCode();
+        var addedTask = await CreateTask(project.Id, sprint.Id);
+        (await Client.DeleteAsync($"api/sprints/{sprint.Id}/tasks/{addedTask.Id}", cancellationToken)).EnsureSuccessStatusCode();
+
+        var response = await Client.GetAsync(
+            $"api/reports/sprints/{sprint.Id}/burndown?unit=Tasks&timeZone=UTC",
+            cancellationToken);
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<SprintBurndownReport>>(cancellationToken);
+        var report = result.Payload;
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        report.Should().NotBeNull();
+        report.AddedCount.Should().Be(1);
+        report.RemovedCount.Should().Be(1);
+        report.AddedTaskIds.Should().BeEmpty();
+    }
+
+    [Fact]
     public async Task Burndown_IdealShouldUseStartingCommitment_WhenScopeIsAdded()
     {
         var project = await CreateProject();
         var sprint = await CreateSprint(project.Id);
         await CreateTask(project.Id, sprint.Id);
         (await Client.PostAsync($"api/sprints/{sprint.Id}/start", null)).EnsureSuccessStatusCode();
-        await CreateTask(project.Id, sprint.Id);
+        var addedTask = await CreateTask(project.Id, sprint.Id);
 
         var response = await Client.GetAsync(
             $"api/reports/sprints/{sprint.Id}/burndown?unit=Tasks&timeZone=UTC");
@@ -207,6 +231,7 @@ public sealed class ReportingEndpointTests(NetptuneFixture fixture)
         report.Should().NotBeNull();
         report.CommittedCount.Should().Be(1);
         report.AddedCount.Should().Be(1);
+        report.AddedTaskIds.Should().Equal(addedTask.Id);
         report.Points.Should().ContainSingle();
         report.Points.Single().TotalScope.Should().Be(2);
         report.Points.Single().Ideal.Should().Be(1);

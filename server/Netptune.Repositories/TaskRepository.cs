@@ -602,6 +602,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             hasFlags = filter.HasFlags,
             hasTags = filter.HasTags,
             hasAssignee = filter.HasAssignee,
+            hasEstimate = filter.HasEstimate,
             taskIds = filter.TaskIds,
             boardGroupId = filter.BoardGroupId,
             notInBoardGroupId = filter.NotInBoardGroupId,

@@ -40,5 +40,7 @@ public class TaskFilter : PageRequest
 
     public bool? HasAssignee { get; init; }
 
+    public bool? HasEstimate { get; init; }
+
     public bool? IncludeArchived { get; init; }
 }

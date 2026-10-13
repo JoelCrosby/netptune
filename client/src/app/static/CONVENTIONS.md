@@ -45,6 +45,23 @@ container in the feature, even when one feature is the only caller today. Domain
 wiring several features need (a hover card that fetches its task) goes in
 `shared/components/` as a container around a static component.
 
+## Generic names, generic copy
+
+Static components do not assume the feature that uses them. Name a component after its
+shape, not its caller: `progress-panel`, `meter-list`, `count-chip`, `chip-row`,
+never `sprint-health-panel` or `board-toolbar`. The same applies to the
+folder, selector, class, exported types and input names (`badges`, `entries`, `tone`, not
+`addedMidSprint`).
+
+- Feature wording (headings, labels, empty messages) arrives through inputs or
+  projected content, translated at the call site with `i18n-<input>`.
+- Feature calculations stay in the feature; the static component receives the results.
+- Colours are picked inside the component from a named vocabulary (`tone: SignalTone`,
+  `color: 'primary' | 'faint'`), so callers never pass Tailwind colour classes.
+
+A few older components (`sprint-badge`, `sprint-days-badge`, `sprint-status-badge`, …)
+predate this rule. Do not model new components on them.
+
 Before hand-rolling anything, search `static/components` for the selector. The library
 is large and under-known — the commonest failure is not knowing `app-panel`,
 `app-badge` or `app-inline-button` exists.

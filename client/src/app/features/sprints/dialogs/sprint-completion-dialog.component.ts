@@ -23,7 +23,7 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { SelectableCardComponent } from '@static/components/selectable-card/selectable-card.component';
-import { SprintIdentityComponent } from '@static/components/sprint-identity.component';
+import { SprintIdentityComponent } from '@shared/components/sprint-identity/sprint-identity.component';
 import { StatStripItem } from '@static/components/stat-strip/stat-strip.component';
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';

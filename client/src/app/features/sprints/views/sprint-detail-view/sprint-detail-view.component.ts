@@ -23,14 +23,18 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 import { distinctUntilChanged, map } from 'rxjs/operators';
-import { SprintIdentityComponent } from '@static/components/sprint-identity.component';
+import { SprintIdentityComponent } from '@shared/components/sprint-identity/sprint-identity.component';
 import { SprintDetailActionsComponent } from '../../components/sprint-detail-actions.component';
-import { SprintStatsComponent } from '../../components/sprint-stats.component';
+import { SprintOverviewComponent } from '../../components/sprint-overview.component';
 import { SprintTaskListComponent } from '../../components/sprint-task-list.component';
 import { EditSprintDialogComponent } from '../../dialogs/edit-sprint-dialog.component';
 import { SprintAddTaskDialogComponent } from '../../dialogs/sprint-add-task-dialog.component';
 import { SprintCompletionDialogComponent } from '../../dialogs/sprint-completion-dialog.component';
-import { PanelComponent } from '@static/components/panel.component';
+import { sprintBurndownResource } from '@core/resources/reporting.resource';
+import { hostTimeZone } from '@core/util/dates';
+import { todaySignal } from '@core/util/today';
+import { SprintStatus } from '@core/enums/sprint-status';
+import { sprintHealth } from '../../sprint-health';
 import { injectBreadcrumbs } from '@core/services/breadcrumb.service';
 
 @Component({
@@ -40,10 +44,9 @@ import { injectBreadcrumbs } from '@core/services/breadcrumb.service';
     PageContainerComponent,
     PageHeaderComponent,
     PageLoadingComponent,
-    PanelComponent,
     SprintDetailActionsComponent,
     SprintIdentityComponent,
-    SprintStatsComponent,
+    SprintOverviewComponent,
     SprintTaskListComponent,
   ],
   template: `
@@ -74,15 +77,14 @@ import { injectBreadcrumbs } from '@core/services/breadcrumb.service';
       } @else if (sprint(); as sprint) {
         <section class="flex flex-col gap-6">
           <header
-            app-panel
-            surface="card"
-            class="flex flex-wrap items-start justify-between gap-x-4 gap-y-4 px-6 py-5">
+            class="flex flex-wrap items-start justify-between gap-x-6 gap-y-4">
             <app-sprint-identity
               class="min-w-0 flex-1"
               size="large"
               showGoal
               [headingLevel]="1"
-              [sprint]="sprint" />
+              [sprint]="sprint"
+              [detail]="dayLabel()" />
 
             <app-sprint-detail-actions
               [sprint]="sprint"
@@ -94,10 +96,11 @@ import { injectBreadcrumbs } from '@core/services/breadcrumb.service';
               (deleteSprint)="onDelete(sprint)" />
           </header>
 
-          <app-sprint-stats [sprint]="sprint" />
+          <app-sprint-overview [sprint]="sprint" [burndown]="burndown()" />
 
           <app-sprint-task-list
             [sprint]="sprint"
+            [addedTaskIds]="addedTaskIds()"
             [canManage]="canManageTasks()" />
         </section>
       }
@@ -129,6 +132,45 @@ export class SprintDetailViewComponent {
   });
 
   readonly canManageTasks = hasPermission(PERMISSIONS.sprints.manageTasks);
+
+  private readonly loadedSprint = computed(() => {
+    const resource = this.sprintResourceRef;
+
+    return resource.hasValue() ? resource.value() : undefined;
+  });
+
+  private readonly burndownResource = sprintBurndownResource(
+    computed(() => this.loadedSprint()?.id),
+    signal({ unit: 'Tasks', timeZone: hostTimeZone() })
+  );
+
+  // Fails quietly for a sprint that never started or a viewer without reporting
+  // access, and reading an errored resource throws.
+  readonly burndown = computed(() => {
+    const resource = this.burndownResource;
+
+    return resource.hasValue() ? resource.value() : undefined;
+  });
+
+  readonly addedTaskIds = computed(() => {
+    return new Set(this.burndown()?.addedTaskIds ?? []);
+  });
+
+  private readonly today = todaySignal();
+
+  readonly dayLabel = computed(() => {
+    const sprint = this.loadedSprint();
+
+    if (sprint?.status !== SprintStatus.active) return '';
+
+    const { dayNumber, dayCount } = sprintHealth(
+      sprint,
+      undefined,
+      this.today()
+    );
+
+    return $localize`:Position in an active sprint. DAY and TOTAL are day counts:Day ${Math.min(dayNumber, dayCount)}:DAY: of ${dayCount}:TOTAL:`;
+  });
 
   constructor() {
     injectBreadcrumbs(

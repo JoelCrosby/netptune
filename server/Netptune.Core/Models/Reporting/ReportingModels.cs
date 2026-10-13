@@ -122,6 +122,8 @@ public sealed record SprintBurndownReport
 
     public int RemovedCount { get; init; }
 
+    public IReadOnlyCollection<int> AddedTaskIds { get; init; } = [];
+
     public int MissingEstimateCount { get; init; }
 
     public int CompletedCount { get; init; }

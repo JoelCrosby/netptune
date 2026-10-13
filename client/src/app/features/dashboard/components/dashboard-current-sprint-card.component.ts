@@ -9,7 +9,7 @@ import { hostTimeZone } from '@core/util/dates';
 import { LucideCalendarOff } from '@lucide/angular';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { ProgressBarComponent } from '@static/components/progress-bar/progress-bar.component';
-import { SprintIdentityComponent } from '@static/components/sprint-identity.component';
+import { SprintIdentityComponent } from '@shared/components/sprint-identity/sprint-identity.component';
 import { SkeletonComponent } from '@static/components/skeleton/skeleton.component';
 import {
   StatStripComponent,

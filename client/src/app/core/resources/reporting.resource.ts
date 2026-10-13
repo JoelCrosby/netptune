@@ -35,6 +35,7 @@ export const sprintBurndownResource = (
       url: `api/reports/sprints/${id}/burndown`,
       params: params(),
     })),
+    refreshOn: ['sprints', 'tasks'],
     parse: (response) => response.payload,
   });
 };

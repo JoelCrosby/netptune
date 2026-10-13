@@ -231,6 +231,79 @@ public sealed class TasksEndpointTests
     }
 
     [Fact]
+    public async Task Get_ShouldFilterTasksByEstimatePresence_WhenHasEstimateProvided()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var inProgressStatus = await GetStatus("in-progress");
+        var createResponse = await Client.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest
+        {
+            Name = "Estimate filter test",
+            Description = "Task used to verify estimate filtering",
+            StatusId = inProgressStatus.Id,
+            ProjectId = 1,
+            EstimateType = EstimateType.StoryPoints,
+            EstimateValue = 3,
+        }, cancellationToken);
+
+        createResponse.EnsureSuccessStatusCode();
+
+        var estimatedResponse = await Client.GetAsync("api/tasks?hasEstimate=true&pageSize=100", cancellationToken);
+
+        estimatedResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var estimatedResult = await estimatedResponse.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>(cancellationToken);
+
+        estimatedResult.IsSuccess.Should().BeTrue();
+        estimatedResult.Payload!.Items.Should().Contain(task => task.Name == "Estimate filter test");
+        estimatedResult.Payload.Items.Should().OnlyContain(task => task.EstimateValue != null);
+
+        var unestimatedResponse = await Client.GetAsync("api/tasks?hasEstimate=false&pageSize=100", cancellationToken);
+        var unestimatedResult = await unestimatedResponse.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>(cancellationToken);
+
+        unestimatedResult.IsSuccess.Should().BeTrue();
+        unestimatedResult.Payload!.Items.Should().NotBeEmpty();
+        unestimatedResult.Payload.Items.Should().OnlyContain(task => task.EstimateValue == null);
+
+        var unfilteredResponse = await Client.GetAsync("api/tasks?pageSize=1", cancellationToken);
+        var unfilteredResult = await unfilteredResponse.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>(cancellationToken);
+        var totalCount = unfilteredResult.Payload!.TotalCount;
+
+        unestimatedResult.Payload.TotalCount.Should().Be(totalCount - estimatedResult.Payload.TotalCount);
+    }
+
+    [Fact]
+    public async Task Get_ShouldFilterTasksByPriorityAndStatusCategory_WhenNumericValuesProvided()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var inProgressStatus = await GetStatus("in-progress");
+        var createResponse = await Client.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest
+        {
+            Name = "Priority filter test",
+            Description = "Task used to verify numeric priority filtering",
+            StatusId = inProgressStatus.Id,
+            ProjectId = 1,
+            Priority = TaskPriority.Critical,
+        }, cancellationToken);
+
+        createResponse.EnsureSuccessStatusCode();
+
+        var response = await Client.GetAsync(
+            $"api/tasks?priorities={(int)TaskPriority.High}&priorities={(int)TaskPriority.Critical}"
+            + $"&statusCategories={(int)StatusCategory.Active}&pageSize=100",
+            cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync(cancellationToken));
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>(cancellationToken);
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Items.Should().Contain(task => task.Name == "Priority filter test");
+        result.Payload.Items.Should().OnlyContain(task =>
+            (task.Priority == TaskPriority.High || task.Priority == TaskPriority.Critical) &&
+            task.StatusCategory == StatusCategory.Active);
+    }
+
+    [Fact]
     public async Task GetById_ShouldReturnCorrectly_WhenInputValid()
     {
         var response = await Client.GetAsync("api/tasks/1");

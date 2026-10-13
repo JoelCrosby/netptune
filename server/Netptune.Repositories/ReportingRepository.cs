@@ -240,6 +240,7 @@ public sealed class ReportingRepository : IReportingRepository
         var committed = members.Count;
         var added = 0;
         var removed = 0;
+        var addedTaskIds = new HashSet<string>();
         var startingCommitment = members.Values.Sum(member => UnitValue(member.Unit, member.Value, filter.Unit) ?? 0);
 
         var points = new List<BurndownPoint>();
@@ -264,13 +265,15 @@ public sealed class ReportingRepository : IReportingRepository
 
                 var change = ApplyMemberEvent(record, members);
 
-                if (change == ScopeMemberChange.Added)
+                if (change is { Kind: ScopeMemberChange.Added, MemberId: { } addedId })
                 {
                     added++;
+                    addedTaskIds.Add(addedId);
                 }
-                else if (change == ScopeMemberChange.Removed)
+                else if (change is { Kind: ScopeMemberChange.Removed, MemberId: { } removedId })
                 {
                     removed++;
+                    addedTaskIds.Remove(removedId);
                 }
             }
 
@@ -304,6 +307,7 @@ public sealed class ReportingRepository : IReportingRepository
             CommittedCount = committed,
             AddedCount = added,
             RemovedCount = removed,
+            AddedTaskIds = addedTaskIds.Select(int.Parse).Order().ToList(),
             MissingEstimateCount = missing,
             CompletedCount = completedCount,
             CompletionPercentage = completionPercentage,
@@ -486,7 +490,7 @@ public sealed class ReportingRepository : IReportingRepository
 
     // Replays one ledger event onto a sprint's member set, shared by the burndown timeline and the
     // velocity roll-up so both agree on who was in the sprint and what state they ended in.
-    private static ScopeMemberChange ApplyMemberEvent(EventRecord record, Dictionary<string, Member> members)
+    private static MemberChange ApplyMemberEvent(EventRecord record, Dictionary<string, Member> members)
     {
         var isScopeMembershipChange = record.EventKey == EventKeys.ScopeMemberChanged;
         var isMemberAttributeChange = record.EventKey == EventKeys.ScopeMemberAttributeChanged;
@@ -497,26 +501,26 @@ public sealed class ReportingRepository : IReportingRepository
         {
             ApplyMemberAttributeChange(record, members);
 
-            return ScopeMemberChange.None;
+            return MemberChange.None;
         }
 
         if (isTaskStatusChange)
         {
             ApplyTaskStatusChange(record, members);
 
-            return ScopeMemberChange.None;
+            return MemberChange.None;
         }
 
         if (!isScopeMembershipChange)
         {
-            return ScopeMemberChange.None;
+            return MemberChange.None;
         }
 
         var taskId = ReadString(record.Payload, "memberId");
 
         if (taskId is null)
         {
-            return ScopeMemberChange.None;
+            return MemberChange.None;
         }
 
         var change = ReadString(record.Payload, "change");
@@ -527,17 +531,17 @@ public sealed class ReportingRepository : IReportingRepository
         {
             members[taskId] = ReadMember(record.Payload);
 
-            return ScopeMemberChange.Added;
+            return new MemberChange(ScopeMemberChange.Added, taskId);
         }
 
         if (memberWasRemoved)
         {
             members.Remove(taskId);
 
-            return ScopeMemberChange.Removed;
+            return new MemberChange(ScopeMemberChange.Removed, taskId);
         }
 
-        return ScopeMemberChange.None;
+        return MemberChange.None;
     }
 
     private static void ApplyMemberAttributeChange(
@@ -703,6 +707,11 @@ public sealed class ReportingRepository : IReportingRepository
     }
 
     private sealed record Member(string? Unit, decimal? Value, bool Done);
+
+    private sealed record MemberChange(ScopeMemberChange Kind, string? MemberId)
+    {
+        public static readonly MemberChange None = new(ScopeMemberChange.None, null);
+    }
 
     private enum ScopeMemberChange
     {
