@@ -9,6 +9,7 @@ using Netptune.Core.Models.Sprints;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Sprints;
 using Netptune.Core.ViewModels.Users;
@@ -22,6 +23,31 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
     public SprintRepository(DataContext context, IDbConnectionFactory connectionFactory)
         : base(context, connectionFactory)
     {
+    }
+
+    public async Task<PagedResponse<SprintViewModel>> GetSprintsPage(string workspaceKey, SprintPageFilter filter, CancellationToken cancellationToken = default)
+    {
+        var query = Entities
+            .Where(sprint => sprint.Workspace!.Slug == workspaceKey && !sprint.IsDeleted)
+            .Where(sprint => filter.ProjectId == null || sprint.ProjectId == filter.ProjectId)
+            .AsNoTracking();
+
+        if (!string.IsNullOrWhiteSpace(filter.Search))
+        {
+            var search = filter.Search.Trim();
+
+            query = query.Where(sprint => EF.Functions.ILike(sprint.Name, $"%{search}%"));
+        }
+
+        var totalCount = await query.CountAsync(cancellationToken);
+        var pagination = filter.GetPagination();
+        var items = await ApplySprintOrder(query, filter.SortBy, filter.SortDirection)
+            .Skip(pagination.Skip)
+            .Take(pagination.PageSize)
+            .Select(SprintToViewModel())
+            .ToListAsync(cancellationToken);
+
+        return new PagedResponse<SprintViewModel>(items, pagination.Page, pagination.PageSize, totalCount);
     }
 
     public Task<List<SprintViewModel>> GetSprintsAsync(

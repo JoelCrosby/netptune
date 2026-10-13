@@ -2,12 +2,16 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Sprints;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Sprints;
 
 namespace Netptune.Core.Repositories;
 
 public interface ISprintRepository : IWorkspaceEntityRepository<Sprint, int>
 {
+    Task<PagedResponse<SprintViewModel>> GetSprintsPage(string workspaceKey, SprintPageFilter filter, CancellationToken cancellationToken = default);
+
     Task<List<SprintViewModel>> GetSprintsAsync(string workspaceKey, int? projectId = null, IReadOnlyCollection<SprintStatus>? statuses = null, int? take = null, string? sortBy = null, string? sortDirection = null, CancellationToken cancellationToken = default);
 
     Task<List<SprintViewModel>> GetSprintViewModels(IEnumerable<int> sprintIds, CancellationToken cancellationToken = default);

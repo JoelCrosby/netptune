@@ -2,6 +2,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Boards;
 
 namespace Netptune.Core.Repositories;
@@ -20,6 +21,8 @@ public interface IBoardGroupRepository : IWorkspaceEntityRepository<BoardGroup, 
     Task<BoardGroupTaskTarget?> GetStatusTaskTarget(int boardId, int statusId, CancellationToken cancellationToken = default);
 
     Task<BoardGroupTaskTarget?> GetFallbackTaskTarget(int boardId, int? excludeGroupId = null, CancellationToken cancellationToken = default);
+
+    Task<PagedResponse<BoardGroupOptionViewModel>> GetOptionsPage(int workspaceId, BoardGroupOptionFilter filter, CancellationToken cancellationToken = default);
 
     Task<List<BoardGroupOptionViewModel>> GetOptionsInWorkspace(int workspaceId, CancellationToken cancellationToken = default);
 

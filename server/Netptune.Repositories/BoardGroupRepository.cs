@@ -8,6 +8,7 @@ using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Boards;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
@@ -177,6 +178,49 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                 BoardId = group.BoardId,
                 BoardIdentifier = group.Board != null ? group.Board.Identifier : null,
             });
+    }
+
+    public async Task<PagedResponse<BoardGroupOptionViewModel>> GetOptionsPage(
+        int workspaceId,
+        BoardGroupOptionFilter filter,
+        CancellationToken cancellationToken = default)
+    {
+        var query = Entities
+            .Where(group => group.WorkspaceId == workspaceId && !group.IsDeleted)
+            .Where(group => group.Board != null && !group.Board.IsDeleted && group.Board.Project != null)
+            .Where(group => filter.BoardId == null || group.BoardId == filter.BoardId);
+
+        if (!string.IsNullOrWhiteSpace(filter.Search))
+        {
+            var search = filter.Search.Trim();
+
+            query = query.Where(group =>
+                EF.Functions.ILike(group.Name, $"%{search}%") || EF.Functions.ILike(group.Board!.Name, $"%{search}%"));
+        }
+
+        var totalCount = await query.CountAsync(cancellationToken);
+        var pagination = filter.GetPagination();
+        var items = await query
+            .OrderBy(group => group.Board!.Project!.Name)
+            .ThenBy(group => group.Board!.Name)
+            .ThenBy(group => group.SortOrder)
+            .ThenBy(group => group.Id)
+            .Skip(pagination.Skip)
+            .Take(pagination.PageSize)
+            .AsNoTracking()
+            .Select(group => new BoardGroupOptionViewModel
+            {
+                Id = group.Id,
+                Name = group.Name,
+                BoardId = group.Board!.Id,
+                BoardName = group.Board.Name,
+                BoardIdentifier = group.Board.Identifier,
+                ProjectId = group.Board.ProjectId,
+                ProjectName = group.Board.Project!.Name,
+            })
+            .ToListAsync(cancellationToken);
+
+        return new PagedResponse<BoardGroupOptionViewModel>(items, pagination.Page, pagination.PageSize, totalCount);
     }
 
     public Task<List<BoardGroupOptionViewModel>> GetOptionsInWorkspace(

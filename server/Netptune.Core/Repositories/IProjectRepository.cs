@@ -2,6 +2,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Projects;
 
 namespace Netptune.Core.Repositories;
@@ -9,6 +10,8 @@ namespace Netptune.Core.Repositories;
 public interface IProjectRepository : IWorkspaceEntityRepository<Project, int>
 {
     Task<Project?> GetWithIncludes(int id, CancellationToken cancellationToken = default);
+
+    Task<PagedResponse<ProjectViewModel>> GetProjectsPage(string workspaceKey, ProjectFilter filter, CancellationToken cancellationToken = default);
 
     Task<List<ProjectViewModel>> GetProjects(string workspaceKey, CancellationToken cancellationToken = default, PageRequest? pageRequest = null);
 

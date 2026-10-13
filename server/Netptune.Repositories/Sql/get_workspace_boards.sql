@@ -57,6 +57,9 @@ WHERE w.slug = @slug AND NOT b.is_deleted
       OR LOWER(b.identifier) LIKE @searchPattern
       OR LOWER(p.name) LIKE @searchPattern
   ))
-ORDER BY COALESCE(p.updated_at, p.created_at) DESC, p.id DESC, COALESCE(b.updated_at, b.created_at) DESC, b.id DESC
+ORDER BY
+    CASE WHEN @sortBy = 'name' THEN LOWER(b.name) END ASC,
+    CASE WHEN @sortBy = 'name' THEN b.id END ASC,
+    COALESCE(p.updated_at, p.created_at) DESC, p.id DESC, COALESCE(b.updated_at, b.created_at) DESC, b.id DESC
 OFFSET @skip
 LIMIT @pageSize

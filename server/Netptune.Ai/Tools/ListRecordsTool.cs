@@ -1,9 +1,11 @@
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.BoardGroups.Queries;
 using Netptune.Handlers.Boards.Queries;
@@ -30,8 +32,9 @@ public sealed class ListRecordsTool : IAiTool
     public const string Members = "members";
     public const string MemberRoles = "member_roles";
 
-    private const int MemberPageSize = 50;
-    private const int SprintTake = 25;
+    private const int DefaultPageSize = 50;
+    private const int MaximumPageSize = 100;
+    private const string StableSort = "name";
 
     private static readonly Dictionary<string, string> PermissionsByKind = new(StringComparer.Ordinal)
     {
@@ -56,13 +59,15 @@ public sealed class ListRecordsTool : IAiTool
     public string Name => ToolName;
 
     public string Description =>
-        "List one kind of workspace record. "
-        + "statuses, tags, projects, relation_types (how tasks can be linked, such as blocks) "
-        + "and board_groups (board columns, with their board and project) return everything. "
-        + "boards returns at most 100; search narrows them. "
-        + "sprints returns the active sprint first, then the newest, 25 at most, optionally for one projectId. "
-        + "members are the people work can be assigned to; search filters them by name. "
-        + "member_roles adds each member's role and pending invites, for who owns or administers the workspace.";
+        "List one kind of workspace record, a page at a time: statuses, tags, projects, relation_types "
+        + "(how tasks can be linked, such as blocks), board_groups (board columns, with their board and project; "
+        + "boardId narrows them to one board), boards, sprints (the active sprint first, then the newest; projectId "
+        + "narrows them to one project), members (the people work can be assigned to) and member_roles (each member's "
+        + "role and pending invites, for who owns or administers the workspace). "
+        + "Projects and boards come in name order. search narrows any kind by name. "
+        + "Every kind returns totalCount, page, hasMore and records; ask for the "
+        + "next page until hasMore is false to see them all. omittedForSize counts records on this page that did "
+        + "not fit; ask again with a smaller pageSize.";
 
     public AiToolKind Kind => AiToolKind.Read;
 
@@ -79,8 +84,11 @@ public sealed class ListRecordsTool : IAiTool
             "enum": ["statuses", "tags", "projects", "relation_types", "board_groups", "boards", "sprints", "members", "member_roles"],
             "description": "Which records to list."
           },
-          "search": { "type": "string", "description": "For boards and members: a name fragment to narrow by." },
-          "projectId": { "type": "integer", "description": "For sprints: restrict to one project." }
+          "search": { "type": "string", "description": "A name fragment to narrow the records by." },
+          "projectId": { "type": "integer", "description": "For sprints: restrict to one project." },
+          "boardId": { "type": "integer", "description": "For board_groups: restrict to one board." },
+          "page": { "type": "integer", "description": "Which page of records to return, starting at 1." },
+          "pageSize": { "type": "integer", "description": "How many records to return per page, up to 100. Defaults to 50." }
         }
         """,
         "kind");
@@ -109,32 +117,37 @@ public sealed class ListRecordsTool : IAiTool
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
         var kind = AiToolSchema.GetString(arguments, "kind");
+        var requestedPageSize = AiToolSchema.GetInt(arguments, "pageSize") ?? DefaultPageSize;
+        var query = new RecordQuery
+        {
+            Page = Math.Max(AiToolSchema.GetInt(arguments, "page") ?? 1, 1),
+            PageSize = Math.Clamp(requestedPageSize, 1, MaximumPageSize),
+            Search = AiToolSchema.GetString(arguments, "search")?.Trim(),
+            ProjectId = AiToolSchema.GetInt(arguments, "projectId"),
+            BoardId = AiToolSchema.GetInt(arguments, "boardId"),
+        };
 
         return kind switch
         {
-            Statuses => await ListStatuses(cancellationToken),
-            Tags => await ListTags(cancellationToken),
-            Projects => await ListProjects(cancellationToken),
-            RelationTypes => await ListRelationTypes(cancellationToken),
-            BoardGroups => await ListBoardGroups(cancellationToken),
-            Boards => await ListBoards(arguments, cancellationToken),
-            Sprints => await ListSprints(arguments, cancellationToken),
-            Members => await ListMembers(arguments, cancellationToken),
-            MemberRoles => await ListMemberRoles(cancellationToken),
+            Statuses => await ListStatuses(query, cancellationToken),
+            Tags => await ListTags(query, cancellationToken),
+            Projects => await ListProjects(query, cancellationToken),
+            RelationTypes => await ListRelationTypes(query, cancellationToken),
+            BoardGroups => await ListBoardGroups(query, cancellationToken),
+            Boards => await ListBoards(query, cancellationToken),
+            Sprints => await ListSprints(query, cancellationToken),
+            Members => await ListMembers(query, cancellationToken),
+            MemberRoles => await ListMemberRoles(query, cancellationToken),
             _ => AiToolExecution.Failed($"kind must be one of: {string.Join(", ", PermissionsByKind.Keys)}."),
         };
     }
 
-    private async Task<AiToolExecution> ListStatuses(CancellationToken cancellationToken)
+    private async Task<AiToolExecution> ListStatuses(RecordQuery query, CancellationToken cancellationToken)
     {
-        var statuses = await Mediator.Send(new GetStatusesQuery(new StatusFilter()), cancellationToken);
+        var filter = new StatusPageFilter { Page = query.Page, PageSize = query.PageSize, Search = query.Search };
+        var result = await Mediator.Send(new GetStatusesPageQuery(filter), cancellationToken);
 
-        if (statuses is null)
-        {
-            return AiToolExecution.Failed("Statuses could not be read.");
-        }
-
-        var summaries = statuses.Select(status => new
+        return Render(result, "Statuses could not be read.", status => new
         {
             id = status.Id,
             name = status.Name,
@@ -142,90 +155,91 @@ public sealed class ListRecordsTool : IAiTool
             color = status.Color,
             description = status.Description,
         });
-
-        return AiToolExecution.Success(JsonSerializer.Serialize(summaries));
     }
 
-    private async Task<AiToolExecution> ListTags(CancellationToken cancellationToken)
+    private async Task<AiToolExecution> ListTags(RecordQuery query, CancellationToken cancellationToken)
     {
-        var tags = await Mediator.Send(new GetTagsForWorkspaceQuery(), cancellationToken);
+        var filter = new TagFilter { Page = query.Page, PageSize = query.PageSize, Search = query.Search };
+        var result = await Mediator.Send(new GetTagsPageQuery(filter), cancellationToken);
 
-        if (tags is null)
+        return Render(result, "Tags could not be read.", tag => new
         {
-            return AiToolExecution.Failed("Tags could not be read.");
-        }
-
-        var names = tags.Select(tag => tag.Name);
-
-        return AiToolExecution.Success(JsonSerializer.Serialize(names));
+            id = tag.Id,
+            name = tag.Name,
+        });
     }
 
-    private async Task<AiToolExecution> ListProjects(CancellationToken cancellationToken)
+    private async Task<AiToolExecution> ListProjects(RecordQuery query, CancellationToken cancellationToken)
     {
-        var projects = await Mediator.Send(new GetProjectsQuery(), cancellationToken);
-        var summaries = projects.Select(project => new
+        var filter = new ProjectFilter
+        {
+            Page = query.Page,
+            PageSize = query.PageSize,
+            Search = query.Search,
+            SortBy = StableSort,
+        };
+
+        var result = await Mediator.Send(new GetProjectsPageQuery(filter), cancellationToken);
+
+        return Render(result, "Projects could not be read.", project => new
         {
             id = project.Id,
             name = project.Name,
             key = project.Key,
             repositoryUrl = project.RepositoryUrl,
         });
-
-        return AiToolExecution.Success(JsonSerializer.Serialize(summaries));
     }
 
-    private async Task<AiToolExecution> ListRelationTypes(CancellationToken cancellationToken)
+    private async Task<AiToolExecution> ListRelationTypes(RecordQuery query, CancellationToken cancellationToken)
     {
-        var relationTypes = await Mediator.Send(new GetRelationTypesQuery(), cancellationToken);
+        var filter = new RelationTypeFilter { Page = query.Page, PageSize = query.PageSize, Search = query.Search };
+        var result = await Mediator.Send(new GetRelationTypesPageQuery(filter), cancellationToken);
 
-        if (relationTypes is null)
-        {
-            return AiToolExecution.Failed("Relation types could not be read.");
-        }
-
-        var summaries = relationTypes.Select(relationType => new
+        return Render(result, "Relation types could not be read.", relationType => new
         {
             id = relationType.Id,
             name = relationType.Name,
             inverseName = relationType.InverseName,
             category = relationType.Category.ToString(),
         });
-
-        return AiToolExecution.Success(JsonSerializer.Serialize(summaries));
     }
 
-    private async Task<AiToolExecution> ListBoardGroups(CancellationToken cancellationToken)
+    private async Task<AiToolExecution> ListBoardGroups(RecordQuery query, CancellationToken cancellationToken)
     {
-        var options = await Mediator.Send(new GetBoardGroupOptionsQuery(), cancellationToken);
-        var summaries = options.Select(option => new
+        var filter = new BoardGroupOptionFilter
+        {
+            Page = query.Page,
+            PageSize = query.PageSize,
+            Search = query.Search,
+            BoardId = query.BoardId,
+        };
+
+        var result = await Mediator.Send(new GetBoardGroupOptionsPageQuery(filter), cancellationToken);
+
+        return Render(result, "Board groups could not be read.", option => new
         {
             id = option.Id,
             name = option.Name,
+            boardId = option.BoardId,
             boardName = option.BoardName,
             boardIdentifier = option.BoardIdentifier,
             projectName = option.ProjectName,
         });
-
-        return AiToolExecution.Success(JsonSerializer.Serialize(summaries));
     }
 
-    private async Task<AiToolExecution> ListBoards(JsonElement arguments, CancellationToken cancellationToken)
+    private async Task<AiToolExecution> ListBoards(RecordQuery query, CancellationToken cancellationToken)
     {
         var filter = new BoardFilter
         {
-            Search = AiToolSchema.GetString(arguments, "search"),
-            Page = 1,
-            PageSize = PaginationDefaults.MaxPageSize,
+            Page = query.Page,
+            PageSize = query.PageSize,
+            Search = query.Search,
+            SortBy = StableSort,
         };
 
         var result = await Mediator.Send(new GetBoardsInWorkspaceQuery(filter), cancellationToken);
 
-        if (!result.IsSuccess || result.Payload is null)
-        {
-            return AiToolExecution.Failed(result.Message ?? "Boards could not be read.");
-        }
-
-        var summaries = result.Payload.Items.Select(board => new
+        return Render(result, "Boards could not be read.", board => new
         {
             id = board.Id,
             name = board.Name,
@@ -235,15 +249,21 @@ public sealed class ListRecordsTool : IAiTool
             projectName = board.ProjectName,
             taskCount = board.TaskCount,
         });
-
-        return AiToolExecution.Success(JsonSerializer.Serialize(summaries));
     }
 
-    private async Task<AiToolExecution> ListSprints(JsonElement arguments, CancellationToken cancellationToken)
+    private async Task<AiToolExecution> ListSprints(RecordQuery query, CancellationToken cancellationToken)
     {
-        var projectId = AiToolSchema.GetInt(arguments, "projectId");
-        var sprints = await Mediator.Send(new GetSprintsQuery(projectId, [], SprintTake), cancellationToken);
-        var summaries = sprints.Select(sprint => new
+        var filter = new SprintPageFilter
+        {
+            Page = query.Page,
+            PageSize = query.PageSize,
+            Search = query.Search,
+            ProjectId = query.ProjectId,
+        };
+
+        var result = await Mediator.Send(new GetSprintsPageQuery(filter), cancellationToken);
+
+        return Render(result, "Sprints could not be read.", sprint => new
         {
             id = sprint.Id,
             name = sprint.Name,
@@ -253,47 +273,26 @@ public sealed class ListRecordsTool : IAiTool
             startDate = sprint.StartDate,
             endDate = sprint.EndDate,
         });
-
-        return AiToolExecution.Success(JsonSerializer.Serialize(summaries));
     }
 
-    private async Task<AiToolExecution> ListMembers(JsonElement arguments, CancellationToken cancellationToken)
+    private async Task<AiToolExecution> ListMembers(RecordQuery query, CancellationToken cancellationToken)
     {
-        var filter = new AssigneeFilter
-        {
-            Search = AiToolSchema.GetString(arguments, "search"),
-            Page = 1,
-            PageSize = MemberPageSize,
-        };
-
+        var filter = new AssigneeFilter { Page = query.Page, PageSize = query.PageSize, Search = query.Search };
         var result = await Mediator.Send(new GetAssigneesQuery(filter), cancellationToken);
 
-        if (!result.IsSuccess)
-        {
-            return AiToolExecution.Failed(result.Message ?? "Members could not be read.");
-        }
-
-        var members = result.Payload?.Items ?? [];
-        var summaries = members.Select(member => new
+        return Render(result, "Members could not be read.", member => new
         {
             id = member.Id,
             name = member.DisplayName,
         });
-
-        return AiToolExecution.Success(JsonSerializer.Serialize(summaries));
     }
 
-    private async Task<AiToolExecution> ListMemberRoles(CancellationToken cancellationToken)
+    private async Task<AiToolExecution> ListMemberRoles(RecordQuery query, CancellationToken cancellationToken)
     {
-        var page = new WorkspaceUserFilter { Page = 1, PageSize = MemberPageSize };
-        var result = await Mediator.Send(new GetWorkspaceUsersQuery(page), cancellationToken);
+        var filter = new WorkspaceUserFilter { Page = query.Page, PageSize = query.PageSize, Search = query.Search };
+        var result = await Mediator.Send(new GetWorkspaceUsersQuery(filter), cancellationToken);
 
-        if (!result.IsSuccess || result.Payload is null)
-        {
-            return AiToolExecution.Failed(result.Message ?? "Members could not be read.");
-        }
-
-        var members = result.Payload.Items.Select(member => new
+        return Render(result, "Members could not be read.", member => new
         {
             id = member.Id,
             name = member.DisplayName,
@@ -301,7 +300,49 @@ public sealed class ListRecordsTool : IAiTool
             role = member.Role.ToString(),
             isPending = member.IsPending,
         });
+    }
 
-        return AiToolExecution.Success(JsonSerializer.Serialize(members));
+    private static AiToolExecution Render<T>(
+        ClientResponse<PagedResponse<T>> result,
+        string failureMessage,
+        Func<T, object> toRecord)
+    {
+        var hasPage = result.IsSuccess && result.Payload is not null;
+
+        if (!hasPage)
+        {
+            return AiToolExecution.Failed(result.Message ?? failureMessage);
+        }
+
+        var page = result.Payload!;
+        var hasMore = page.Page * page.PageSize < page.TotalCount;
+        var fitted = AiResultBudget.Fit(page.Items.Select(toRecord));
+        var listing = new JsonObject
+        {
+            ["totalCount"] = page.TotalCount,
+            ["page"] = page.Page,
+            ["hasMore"] = hasMore,
+            ["records"] = fitted.Rows,
+        };
+
+        if (fitted.Omitted > 0)
+        {
+            listing["omittedForSize"] = fitted.Omitted;
+        }
+
+        return AiToolExecution.Success(listing.ToJsonString());
+    }
+
+    private sealed record RecordQuery
+    {
+        public int Page { get; init; }
+
+        public int PageSize { get; init; }
+
+        public string? Search { get; init; }
+
+        public int? ProjectId { get; init; }
+
+        public int? BoardId { get; init; }
     }
 }

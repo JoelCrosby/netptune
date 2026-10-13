@@ -10,6 +10,7 @@ using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Projects;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
@@ -47,6 +48,30 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
             .AsNoTracking()
             .Select(ProjectToViewModel())
             .ToListAsync(cancellationToken);
+    }
+
+    public async Task<PagedResponse<ProjectViewModel>> GetProjectsPage(string workspaceKey, ProjectFilter filter, CancellationToken cancellationToken = default)
+    {
+        var query = Entities.Where(project => project.Workspace!.Slug == workspaceKey && !project.IsDeleted);
+
+        if (!string.IsNullOrWhiteSpace(filter.Search))
+        {
+            var search = filter.Search.Trim();
+
+            query = query.Where(project =>
+                EF.Functions.ILike(project.Name, $"%{search}%") || EF.Functions.ILike(project.Key, $"%{search}%"));
+        }
+
+        var totalCount = await query.CountAsync(cancellationToken);
+        var pagination = filter.GetPagination();
+        var items = await ApplyProjectOrder(query, filter.SortBy, filter.SortDirection)
+            .Skip(pagination.Skip)
+            .Take(pagination.PageSize)
+            .AsNoTracking()
+            .Select(ProjectToViewModel())
+            .ToListAsync(cancellationToken);
+
+        return new PagedResponse<ProjectViewModel>(items, pagination.Page, pagination.PageSize, totalCount);
     }
 
     private static IQueryable<Project> ApplyProjectOrder(IQueryable<Project> query, string? sortBy, string? sortDirection)

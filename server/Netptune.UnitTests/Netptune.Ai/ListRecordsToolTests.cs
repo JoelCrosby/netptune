@@ -6,10 +6,20 @@ using Mediator;
 
 using Netptune.Ai.Tools;
 using Netptune.Core.Authorization;
+using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
+using Netptune.Core.ViewModels.Boards;
+using Netptune.Core.ViewModels.Projects;
 using Netptune.Core.ViewModels.Sprints;
 using Netptune.Core.ViewModels.Tags;
+using Netptune.Handlers.BoardGroups.Queries;
+using Netptune.Handlers.Boards.Queries;
+using Netptune.Handlers.Projects.Queries;
+using Netptune.Handlers.RelationTypes.Queries;
 using Netptune.Handlers.Sprints.Queries;
+using Netptune.Handlers.Statuses.Queries;
 using Netptune.Handlers.Tags.Queries;
+using Netptune.Handlers.Users.Queries;
 
 using NSubstitute;
 
@@ -19,6 +29,19 @@ namespace Netptune.UnitTests.Netptune.Ai;
 
 public class ListRecordsToolTests
 {
+    private static readonly string[] AllKinds =
+    [
+        "statuses",
+        "tags",
+        "projects",
+        "relation_types",
+        "board_groups",
+        "boards",
+        "sprints",
+        "members",
+        "member_roles",
+    ];
+
     private readonly IMediator Mediator = Substitute.For<IMediator>();
 
     [Theory]
@@ -71,40 +94,163 @@ public class ListRecordsToolTests
     }
 
     [Fact]
-    public async Task Execute_ShouldListTagNames()
+    public async Task Execute_ShouldListAPageOfTags_AndSayWhetherThereAreMore()
     {
+        var page = new PagedResponse<TagViewModel>([new TagViewModel { Id = 1, Name = "bug" }], 2, 1, 3);
+
         Mediator
-            .Send(Arg.Any<GetTagsForWorkspaceQuery>(), Arg.Any<CancellationToken>())
-            .Returns([new TagViewModel { Id = 1, Name = "bug" }, new TagViewModel { Id = 2, Name = "ux" }]);
+            .Send(Arg.Any<GetTagsPageQuery>(), Arg.Any<CancellationToken>())
+            .Returns(ClientResponse<PagedResponse<TagViewModel>>.Success(page));
 
         var tool = new ListRecordsTool(Mediator);
-        var result = await tool.Execute(Arguments("""{"kind":"tags"}"""), TestContext.Current.CancellationToken);
+        var arguments = Arguments("""{"kind":"tags","page":2,"pageSize":1,"search":" bu "}""");
+        var result = await tool.Execute(arguments, TestContext.Current.CancellationToken);
 
-        result.IsError.Should().BeFalse();
-        result.Content.Should().Be("""["bug","ux"]""");
+        using var content = JsonDocument.Parse(result.Content);
+        var root = content.RootElement;
+
+        root.GetProperty("totalCount").GetInt32().Should().Be(3);
+        root.GetProperty("page").GetInt32().Should().Be(2);
+        root.GetProperty("hasMore").GetBoolean().Should().BeTrue();
+        root.GetProperty("records").EnumerateArray().Single().GetProperty("name").GetString().Should().Be("bug");
+        await Mediator.Received(1).Send(
+            Arg.Is<GetTagsPageQuery>(query =>
+                query.Filter.Page == 2 && query.Filter.PageSize == 1 && query.Filter.Search == "bu"),
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Execute_ShouldPassThePageAndSearch_ToEveryKindsQuery()
+    {
+        var tool = new ListRecordsTool(Mediator);
+
+        foreach (var kind in AllKinds)
+        {
+            var arguments = Arguments($$"""{"kind":"{{kind}}","page":3,"pageSize":7,"search":"ops"}""");
+
+            await tool.Execute(arguments, TestContext.Current.CancellationToken);
+        }
+
+        await Mediator.Received(1).Send(
+            Arg.Is<GetStatusesPageQuery>(query => IsPage(query.Filter, query.Filter.Search)),
+            Arg.Any<CancellationToken>());
+        await Mediator.Received(1).Send(
+            Arg.Is<GetTagsPageQuery>(query => IsPage(query.Filter, query.Filter.Search)),
+            Arg.Any<CancellationToken>());
+        await Mediator.Received(1).Send(
+            Arg.Is<GetProjectsPageQuery>(query => IsPage(query.Filter, query.Filter.Search)),
+            Arg.Any<CancellationToken>());
+        await Mediator.Received(1).Send(
+            Arg.Is<GetRelationTypesPageQuery>(query => IsPage(query.Filter, query.Filter.Search)),
+            Arg.Any<CancellationToken>());
+        await Mediator.Received(1).Send(
+            Arg.Is<GetBoardGroupOptionsPageQuery>(query => IsPage(query.Filter, query.Filter.Search)),
+            Arg.Any<CancellationToken>());
+        await Mediator.Received(1).Send(
+            Arg.Is<GetBoardsInWorkspaceQuery>(query => IsPage(query.Filter, query.Filter.Search)),
+            Arg.Any<CancellationToken>());
+        await Mediator.Received(1).Send(
+            Arg.Is<GetSprintsPageQuery>(query => IsPage(query.Filter, query.Filter.Search)),
+            Arg.Any<CancellationToken>());
+        await Mediator.Received(1).Send(
+            Arg.Is<GetAssigneesQuery>(query => IsPage(query.Filter, query.Filter.Search)),
+            Arg.Any<CancellationToken>());
+        await Mediator.Received(1).Send(
+            Arg.Is<GetWorkspaceUsersQuery>(query => IsPage(query.Filter!, query.Filter!.Search)),
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Execute_ShouldListProjectsAndBoardsByName_SoPagesStayStable()
+    {
+        var tool = new ListRecordsTool(Mediator);
+
+        await tool.Execute(Arguments("""{"kind":"projects"}"""), TestContext.Current.CancellationToken);
+        await tool.Execute(Arguments("""{"kind":"boards"}"""), TestContext.Current.CancellationToken);
+
+        await Mediator.Received(1).Send(
+            Arg.Is<GetProjectsPageQuery>(query => query.Filter.SortBy == "name"),
+            Arg.Any<CancellationToken>());
+        await Mediator.Received(1).Send(
+            Arg.Is<GetBoardsInWorkspaceQuery>(query => query.Filter.SortBy == "name"),
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Execute_ShouldCapThePageSize()
+    {
+        GivenBoards();
+
+        var tool = new ListRecordsTool(Mediator);
+
+        await tool.Execute(Arguments("""{"kind":"boards","pageSize":500}"""), TestContext.Current.CancellationToken);
+
+        await Mediator.Received(1).Send(
+            Arg.Is<GetBoardsInWorkspaceQuery>(query => query.Filter.Page == 1 && query.Filter.PageSize == 100),
+            Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task Execute_ShouldPassTheProjectThrough_WhenListingSprints()
     {
-        GetSprintsQuery? captured = null;
+        var page = new PagedResponse<SprintViewModel>([], 1, 50, 0);
 
         Mediator
-            .Send(Arg.Any<GetSprintsQuery>(), Arg.Any<CancellationToken>())
-            .Returns(callInfo =>
-            {
-                captured = callInfo.Arg<GetSprintsQuery>();
-
-                return new List<SprintViewModel>();
-            });
+            .Send(Arg.Any<GetSprintsPageQuery>(), Arg.Any<CancellationToken>())
+            .Returns(ClientResponse<PagedResponse<SprintViewModel>>.Success(page));
 
         var tool = new ListRecordsTool(Mediator);
-        var arguments = Arguments("""{"kind":"sprints","projectId":4}""");
 
-        await tool.Execute(arguments, TestContext.Current.CancellationToken);
+        await tool.Execute(Arguments("""{"kind":"sprints","projectId":4}"""), TestContext.Current.CancellationToken);
 
-        captured.Should().NotBeNull();
-        captured!.ProjectId.Should().Be(4);
+        await Mediator.Received(1).Send(
+            Arg.Is<GetSprintsPageQuery>(query => query.Filter.ProjectId == 4),
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Execute_ShouldPassTheBoardThrough_WhenListingBoardGroups()
+    {
+        var page = new PagedResponse<BoardGroupOptionViewModel>([], 1, 50, 0);
+
+        Mediator
+            .Send(Arg.Any<GetBoardGroupOptionsPageQuery>(), Arg.Any<CancellationToken>())
+            .Returns(ClientResponse<PagedResponse<BoardGroupOptionViewModel>>.Success(page));
+
+        var tool = new ListRecordsTool(Mediator);
+
+        await tool.Execute(Arguments("""{"kind":"board_groups","boardId":7}"""), TestContext.Current.CancellationToken);
+
+        await Mediator.Received(1).Send(
+            Arg.Is<GetBoardGroupOptionsPageQuery>(query => query.Filter.BoardId == 7),
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Execute_ShouldFail_WhenThePageCannotBeRead()
+    {
+        Mediator
+            .Send(Arg.Any<GetProjectsPageQuery>(), Arg.Any<CancellationToken>())
+            .Returns(ClientResponse<PagedResponse<ProjectViewModel>>.NotFound);
+
+        var tool = new ListRecordsTool(Mediator);
+        var result = await tool.Execute(Arguments("""{"kind":"projects"}"""), TestContext.Current.CancellationToken);
+
+        result.IsError.Should().BeTrue();
+    }
+
+    private static bool IsPage(PageRequest filter, string? search)
+    {
+        return filter.Page == 3 && filter.PageSize == 7 && search == "ops";
+    }
+
+    private void GivenBoards()
+    {
+        var page = new PagedResponse<BoardViewModel>([], 1, 100, 0);
+
+        Mediator
+            .Send(Arg.Any<GetBoardsInWorkspaceQuery>(), Arg.Any<CancellationToken>())
+            .Returns(ClientResponse<PagedResponse<BoardViewModel>>.Success(page));
     }
 
     private static JsonElement Arguments(string json)

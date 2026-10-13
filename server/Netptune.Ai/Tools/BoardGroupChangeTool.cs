@@ -49,7 +49,7 @@ public sealed class BoardGroupChangeTool : IAiTool
           "groupIds": {
             "type": "array",
             "items": { "type": "integer" },
-            "description": "Reorder: every group id on the board once, left to right. Read them in their current order with list_records first."
+            "description": "Reorder: every group id on the board once, left to right. Read them in their current order with list_records board_groups and boardId first."
           },
           "reason": { "type": "string", "description": "Delete: why the group should go, shown in the review." }
         }

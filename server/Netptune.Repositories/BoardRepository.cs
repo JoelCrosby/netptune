@@ -76,7 +76,8 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
         var search = filter.Search?.Trim().ToLower() ?? string.Empty;
         var pagination = filter.GetPagination();
 
-        var rows = await QueryBoardRows(slug, null, search, pagination, cancellationToken);
+        var query = new BoardRowQuery(search, filter.SortBy ?? string.Empty);
+        var rows = await QueryBoardRows(slug, null, query, pagination, cancellationToken);
         var items = rows.ConvertAll(ToBoardViewModel);
         var totalCount = rows.Count > 0 ? (int)rows[0].Total_Count : 0;
 
@@ -86,7 +87,8 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
     public async Task<BoardViewModel?> GetWorkspaceBoardViewModel(string slug, int boardId, CancellationToken cancellationToken = default)
     {
         var pagination = new PageRequest { PageSize = 1 }.GetPagination();
-        var rows = await QueryBoardRows(slug, boardId, string.Empty, pagination, cancellationToken);
+        var query = new BoardRowQuery(string.Empty, string.Empty);
+        var rows = await QueryBoardRows(slug, boardId, query, pagination, cancellationToken);
 
         return rows.Count > 0 ? ToBoardViewModel(rows[0]) : null;
     }
@@ -94,7 +96,7 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
     private async Task<List<BoardViewModelRowMap>> QueryBoardRows(
         string slug,
         int? boardId,
-        string search,
+        BoardRowQuery query,
         Pagination pagination,
         CancellationToken cancellationToken)
     {
@@ -104,8 +106,9 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
         {
             slug,
             boardId,
-            search,
-            searchPattern = $"%{search}%",
+            search = query.Search,
+            searchPattern = $"%{query.Search}%",
+            sortBy = query.SortBy,
             skip = pagination.Skip,
             pageSize = pagination.PageSize,
         }, cancellationToken: cancellationToken);
@@ -114,6 +117,8 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
 
         return rows.AsList();
     }
+
+    private sealed record BoardRowQuery(string Search, string SortBy);
 
     private static BoardViewModel ToBoardViewModel(BoardViewModelRowMap board)
     {
