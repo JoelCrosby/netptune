@@ -39,9 +39,9 @@ public static class TasksEndpoints
             .WithDescription("Returns how many tasks in the workspace sit in each status.")
             .RequireAuthorization(NetptunePermissions.Tasks.Read);
 
-        group.MapGet("/tasks/{id:int}", GetTask)
+        group.MapGet("/tasks/{systemId}", GetTask)
             .WithSummary("Get a task")
-            .WithDescription("Returns a task by its numeric identifier.")
+            .WithDescription("Returns a task by its system id, such as NPT-42.")
             .RequireAuthorization(NetptunePermissions.Tasks.Read);
 
         group.MapPost("/tasks", CreateTask)
@@ -56,7 +56,7 @@ public static class TasksEndpoints
         group.MapPost("/tasks/bulk-update", BulkUpdateTasks)
             .WithSummary("Bulk update tasks")
             .WithDescription(
-                "Updates the supplied fields on multiple tasks in the credential's workspace. "
+                "Updates the supplied fields on the tasks named by systemIds in the credential's workspace. "
                 + "Supply boardGroupId to move them into a board column, from GET /board-groups. "
                 + "assigneeMode and tagMode choose whether the supplied ids and tag names replace what "
                 + "each task holds or are added to it.")
@@ -66,14 +66,14 @@ public static class TasksEndpoints
 
         group.MapPost("/tasks/restore", RestoreTasks)
             .WithSummary("Restore archived tasks")
-            .WithDescription("Restores previously deleted tasks, returning them to their board.")
+            .WithDescription("Restores the previously deleted tasks named by systemIds, returning them to their board.")
             .RequireAuthorization(NetptunePermissions.Tasks.Restore)
             .Broadcasts(WorkspaceEventScopes.Task);
 
         group.MapPost("/tasks/reassign", ReassignTasks)
             .WithSummary("Reassign tasks")
             .WithDescription(
-                "Replaces the assignees on the supplied tasks with the supplied ones. "
+                "Replaces the assignees on the tasks named by systemIds with the supplied ones. "
                 + "Send an empty assigneeIds to clear every assignee instead.")
             .RequireAuthorization(NetptunePermissions.Tasks.Reassign)
             .Broadcasts(WorkspaceEventScopes.Task);
@@ -81,12 +81,12 @@ public static class TasksEndpoints
         group.MapPost("/tasks/move", MoveTasks)
             .WithSummary("Move tasks between board columns")
             .WithDescription(
-                "Moves the supplied tasks into a board column. Supply sortOrder to place a single task at a "
+                "Moves the tasks named by systemIds into a board column. Supply position to place a single task at a "
                 + "position within the column rather than appending it.")
             .RequireAuthorization(NetptunePermissions.Tasks.Move)
             .Broadcasts(WorkspaceEventScopes.Task);
 
-        group.MapPatch("/tasks/{id:int}", UpdateTask)
+        group.MapPatch("/tasks/{systemId}", UpdateTask)
             .WithSummary("Update a task")
             .WithDescription(
                 "Updates the supplied fields on an existing task. Tag values must already exist in the credential's "
@@ -95,18 +95,18 @@ public static class TasksEndpoints
             .RequireAuthorization(NetptunePermissions.Tasks.Update)
             .Broadcasts(WorkspaceEventScopes.Task);
 
-        group.MapDelete("/tasks/{id:int}", DeleteTask)
+        group.MapDelete("/tasks/{systemId}", DeleteTask)
             .WithSummary("Delete a task")
             .WithDescription("Archives a task. Archived tasks stay restorable through POST /tasks/restore.")
             .RequireAuthorization(NetptunePermissions.Tasks.Delete)
             .Broadcasts(WorkspaceEventScopes.Task);
 
-        group.MapGet("/tasks/{id:int}/flags", GetTaskFlags)
+        group.MapGet("/tasks/{systemId}/flags", GetTaskFlags)
             .WithSummary("List the flags raised on a task")
             .WithDescription("Returns the automation flags raised against a task, resolved and unresolved.")
             .RequireAuthorization(NetptunePermissions.Flags.Read);
 
-        group.MapPut("/tasks/{id:int}/flags/{flagId:int}/resolution", ResolveTaskFlag)
+        group.MapPut("/tasks/{systemId}/flags/{flagId:int}/resolution", ResolveTaskFlag)
             .WithSummary("Resolve a flag on a task")
             .WithDescription("Records how a flag raised against a task was resolved.")
             .RequireAuthorization(NetptunePermissions.Flags.Resolve)
@@ -151,7 +151,14 @@ public static class TasksEndpoints
         PublicTaskIdsRequest request,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new RestoreTasksCommand(request.TaskIds), cancellationToken);
+        var tasks = await PublicTaskReferences.ResolveIncludingArchived(mediator, request.SystemIds, cancellationToken);
+
+        if (tasks.Missing.Count > 0)
+        {
+            return MissingTasks(tasks);
+        }
+
+        var result = await mediator.Send(new RestoreTasksCommand(tasks.Ids), cancellationToken);
 
         if (result.IsNotFound)
         {
@@ -163,10 +170,17 @@ public static class TasksEndpoints
 
     private static async Task<Results<NoContent, NotFound<ClientResponse>, BadRequest<ClientResponse>>> ReassignTasks(
         IMediator mediator,
-        ReassignTasksRequest request,
+        PublicReassignTasksRequest request,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new ReassignTasksCommand(request), cancellationToken);
+        var tasks = await PublicTaskReferences.Resolve(mediator, request.SystemIds, cancellationToken);
+
+        if (tasks.Missing.Count > 0)
+        {
+            return MissingTasks(tasks);
+        }
+
+        var result = await mediator.Send(new ReassignTasksCommand(request.ToRequest(tasks.Ids)), cancellationToken);
 
         if (result.IsNotFound)
         {
@@ -181,8 +195,14 @@ public static class TasksEndpoints
         PublicMoveTasksRequest request,
         CancellationToken cancellationToken)
     {
-        var result = await SendMove(mediator, request, cancellationToken);
+        var tasks = await PublicTaskReferences.Resolve(mediator, request.SystemIds, cancellationToken);
 
+        if (tasks.Missing.Count > 0)
+        {
+            return MissingTasks(tasks);
+        }
+
+        var result = await SendMove(mediator, request, tasks.Ids, cancellationToken);
 
         if (result.IsNotFound)
         {
@@ -194,10 +214,17 @@ public static class TasksEndpoints
 
     private static async Task<Results<NoContent, NotFound<ClientResponse>, BadRequest<ClientResponse>>> DeleteTask(
         IMediator mediator,
-        int id,
+        string systemId,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new DeleteTaskCommand(id), cancellationToken);
+        var id = await PublicTaskReferences.Resolve(mediator, systemId, cancellationToken);
+
+        if (id is null)
+        {
+            return TypedResults.NotFound(ClientResponse.NotFound);
+        }
+
+        var result = await mediator.Send(new DeleteTaskCommand(id.Value), cancellationToken);
 
         if (result.IsNotFound)
         {
@@ -207,24 +234,38 @@ public static class TasksEndpoints
         return result.IsSuccess ? TypedResults.NoContent() : TypedResults.BadRequest(result);
     }
 
-    private static async Task<Ok<ClientResponse<List<TaskFlagViewModel>>>> GetTaskFlags(
+    private static async Task<Results<Ok<ClientResponse<List<TaskFlagViewModel>>>, NotFound>> GetTaskFlags(
         IMediator mediator,
-        int id,
+        string systemId,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetTaskFlagsQuery(id), cancellationToken);
+        var id = await PublicTaskReferences.Resolve(mediator, systemId, cancellationToken);
+
+        if (id is null)
+        {
+            return TypedResults.NotFound();
+        }
+
+        var result = await mediator.Send(new GetTaskFlagsQuery(id.Value), cancellationToken);
 
         return TypedResults.Ok(result);
     }
 
     private static async Task<Results<NoContent, NotFound<ClientResponse>, BadRequest<ClientResponse>>> ResolveTaskFlag(
         IMediator mediator,
-        int id,
+        string systemId,
         int flagId,
         ResolveTaskFlagRequest request,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new ResolveTaskFlagCommand(id, flagId, request), cancellationToken);
+        var id = await PublicTaskReferences.Resolve(mediator, systemId, cancellationToken);
+
+        if (id is null)
+        {
+            return TypedResults.NotFound(ClientResponse.NotFound);
+        }
+
+        var result = await mediator.Send(new ResolveTaskFlagCommand(id.Value, flagId, request), cancellationToken);
 
         if (result.IsNotFound)
         {
@@ -237,18 +278,19 @@ public static class TasksEndpoints
     private static async ValueTask<ClientResponse> SendMove(
         IMediator mediator,
         PublicMoveTasksRequest request,
+        List<int> taskIds,
         CancellationToken cancellationToken)
     {
-        var placesOneTask = request.Position.HasValue && request.TaskIds.Count == 1;
+        var placesOneTask = request.Position.HasValue && taskIds.Count == 1;
 
         if (!placesOneTask)
         {
-            return await mediator.Send(
-                new MoveTasksToBoardGroupCommand(request.TaskIds, request.BoardGroupId),
-                cancellationToken);
+            var move = new MoveTasksToBoardGroupCommand(taskIds, request.BoardGroupId);
+
+            return await mediator.Send(move, cancellationToken);
         }
 
-        var task = await mediator.Send(new GetTaskQuery(request.TaskIds[0]), cancellationToken);
+        var task = await mediator.Send(new GetTaskQuery(taskIds[0]), cancellationToken);
 
         if (task is null)
         {
@@ -256,17 +298,25 @@ public static class TasksEndpoints
         }
 
         var currentBoardGroupId = task.BoardGroupId ?? request.BoardGroupId;
-        var moveInGroup = request.ToMoveInGroupRequest(currentBoardGroupId);
+        var moveInGroup = request.ToMoveInGroupRequest(task.Id, currentBoardGroupId);
 
         return await mediator.Send(new MoveTaskInBoardGroupCommand(moveInGroup), cancellationToken);
     }
 
     private static async Task<Results<Ok<TaskViewModel>, NotFound>> GetTask(
         IMediator mediator,
-        int id,
+        string systemId,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetTaskQuery(id), cancellationToken);
+        var id = await PublicTaskReferences.ResolveIncludingArchived(mediator, systemId, cancellationToken);
+
+        if (id is null)
+        {
+            return TypedResults.NotFound();
+        }
+
+        var result = await mediator.Send(new GetTaskQuery(id.Value), cancellationToken);
+
         return result is null ? TypedResults.NotFound() : TypedResults.Ok(result);
     }
 
@@ -299,7 +349,7 @@ public static class TasksEndpoints
 
         var result = await mediator.Send(new CreateTaskCommand(request), cancellationToken);
         return result.IsSuccess
-            ? TypedResults.Created($"/api/v1/tasks/{result.Payload!.Id}", result.Payload)
+            ? TypedResults.Created($"/api/v1/tasks/{result.Payload!.SystemId}", result.Payload)
             : TypedResults.BadRequest(result);
     }
 
@@ -307,10 +357,19 @@ public static class TasksEndpoints
         IMediator mediator,
         IAuthorizationService authorization,
         HttpContext http,
-        int id,
+        string systemId,
         PublicUpdateTaskRequest request,
         CancellationToken cancellationToken)
     {
+        var resolvedId = await PublicTaskReferences.Resolve(mediator, systemId, cancellationToken);
+
+        if (resolvedId is null)
+        {
+            return TypedResults.NotFound(ClientResponse<TaskViewModel>.NotFound);
+        }
+
+        var id = resolvedId.Value;
+
         if (request.Tags is not null)
         {
             var canAssignTags = await authorization.AuthorizeAsync(
@@ -405,9 +464,14 @@ public static class TasksEndpoints
             }
         }
 
-        var result = await mediator.Send(
-            new BulkUpdateTasksCommand(request.ToRequest()),
-            cancellationToken);
+        var tasks = await PublicTaskReferences.Resolve(mediator, request.SystemIds, cancellationToken);
+
+        if (tasks.Missing.Count > 0)
+        {
+            return MissingTasks(tasks);
+        }
+
+        var result = await mediator.Send(new BulkUpdateTasksCommand(request.ToRequest(tasks.Ids)), cancellationToken);
 
         if (result.IsNotFound)
         {
@@ -425,7 +489,7 @@ public static class TasksEndpoints
         }
 
         var move = await mediator.Send(
-            new MoveTasksToBoardGroupCommand(request.TaskIds, request.BoardGroupId.Value),
+            new MoveTasksToBoardGroupCommand(tasks.Ids, request.BoardGroupId.Value),
             cancellationToken);
 
         if (move.IsNotFound)
@@ -434,5 +498,12 @@ public static class TasksEndpoints
         }
 
         return move.IsSuccess ? TypedResults.NoContent() : TypedResults.BadRequest(move);
+    }
+
+    private static NotFound<ClientResponse> MissingTasks(PublicTaskIdResolution tasks)
+    {
+        var response = ClientResponse.Failed(tasks.MissingMessage);
+
+        return TypedResults.NotFound(response);
     }
 }

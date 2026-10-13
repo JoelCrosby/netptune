@@ -11,7 +11,6 @@ using Netptune.Core.Services.Realtime;
 using Netptune.Core.ViewModels.Tags;
 using Netptune.Handlers.Tags.Commands;
 using Netptune.Handlers.Tags.Queries;
-using Netptune.Handlers.Tasks.Queries;
 
 namespace Netptune.Api.Endpoints;
 
@@ -44,18 +43,18 @@ public static class TagsEndpoints
             .RequireAuthorization(NetptunePermissions.Tags.Delete)
             .Broadcasts(WorkspaceEventScopes.Tag, WorkspaceEventScopes.Task);
 
-        group.MapGet("/tasks/{id:int}/tags", GetTaskTags)
+        group.MapGet("/tasks/{systemId}/tags", GetTaskTags)
             .WithSummary("List the tags on a task")
             .WithDescription("Returns the tags currently applied to a task.")
             .RequireAuthorization(NetptunePermissions.Tags.Read);
 
-        group.MapPut("/tasks/{id:int}/tags/{tag}", AddTagToTask)
+        group.MapPut("/tasks/{systemId}/tags/{tag}", AddTagToTask)
             .WithSummary("Add a tag to a task")
             .WithDescription("Applies a tag to a task, creating the tag in the workspace when it does not exist yet.")
             .RequireAuthorization(NetptunePermissions.Tags.Assign)
             .Broadcasts(WorkspaceEventScopes.Tag, WorkspaceEventScopes.Task);
 
-        group.MapDelete("/tasks/{id:int}/tags/{tag}", RemoveTagFromTask)
+        group.MapDelete("/tasks/{systemId}/tags/{tag}", RemoveTagFromTask)
             .WithSummary("Remove a tag from a task")
             .WithDescription("Removes a tag from a task, leaving the tag in the workspace.")
             .RequireAuthorization(NetptunePermissions.Tags.Assign)
@@ -133,16 +132,9 @@ public static class TagsEndpoints
 
     private static async Task<Results<Ok<List<TagViewModel>>, NotFound>> GetTaskTags(
         IMediator mediator,
-        int id,
+        string systemId,
         CancellationToken cancellationToken)
     {
-        var systemId = await ResolveSystemId(mediator, id, cancellationToken);
-
-        if (systemId is null)
-        {
-            return TypedResults.NotFound();
-        }
-
         var result = await mediator.Send(new GetTagsForTaskQuery(systemId), cancellationToken);
 
         return result is null ? TypedResults.NotFound() : TypedResults.Ok(result);
@@ -150,17 +142,10 @@ public static class TagsEndpoints
 
     private static async Task<Results<Ok<TagViewModel>, NotFound, BadRequest<ClientResponse<TagViewModel>>>> AddTagToTask(
         IMediator mediator,
-        int id,
+        string systemId,
         string tag,
         CancellationToken cancellationToken)
     {
-        var systemId = await ResolveSystemId(mediator, id, cancellationToken);
-
-        if (systemId is null)
-        {
-            return TypedResults.NotFound();
-        }
-
         var request = new AddTagToTaskRequest
         {
             SystemId = systemId,
@@ -179,17 +164,10 @@ public static class TagsEndpoints
 
     private static async Task<Results<NoContent, NotFound, BadRequest<ClientResponse>>> RemoveTagFromTask(
         IMediator mediator,
-        int id,
+        string systemId,
         string tag,
         CancellationToken cancellationToken)
     {
-        var systemId = await ResolveSystemId(mediator, id, cancellationToken);
-
-        if (systemId is null)
-        {
-            return TypedResults.NotFound();
-        }
-
         var request = new DeleteTagFromTaskRequest
         {
             SystemId = systemId,
@@ -204,15 +182,5 @@ public static class TagsEndpoints
         }
 
         return result.IsSuccess ? TypedResults.NoContent() : TypedResults.BadRequest(result);
-    }
-
-    private static async Task<string?> ResolveSystemId(
-        IMediator mediator,
-        int id,
-        CancellationToken cancellationToken)
-    {
-        var task = await mediator.Send(new GetTaskQuery(id), cancellationToken);
-
-        return task?.SystemId;
     }
 }

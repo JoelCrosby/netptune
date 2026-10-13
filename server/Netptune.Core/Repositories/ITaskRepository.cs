@@ -46,6 +46,8 @@ public interface ITaskRepository : IWorkspaceEntityRepository<ProjectTask, int>
 
     Task<ProjectTask?> GetTaskInWorkspace(string systemId, int workspaceId, CancellationToken cancellationToken = default);
 
+    Task<Dictionary<string, int>> GetTaskIdsBySystemIds(IReadOnlyCollection<string> systemIds, string workspaceKey, bool includeArchived, CancellationToken cancellationToken = default);
+
     Task<int?> GetTaskInternalId(string systemId, string workspaceKey, CancellationToken cancellationToken = default);
 
     Task<TaskViewModel?> GetTaskViewModel(string systemId, string workspaceKey, CancellationToken cancellationToken = default);

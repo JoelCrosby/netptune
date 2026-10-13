@@ -11,7 +11,6 @@ using Netptune.Core.Services.Realtime;
 using Netptune.Core.ViewModels.Comments;
 using Netptune.Handlers.Comments.Commands;
 using Netptune.Handlers.Comments.Queries;
-using Netptune.Handlers.Tasks.Queries;
 
 namespace Netptune.Api.Endpoints;
 
@@ -19,12 +18,12 @@ public static class CommentsEndpoints
 {
     public static RouteGroupBuilder MapCommentsEndpoints(this RouteGroupBuilder group)
     {
-        group.MapGet("/tasks/{id:int}/comments", GetTaskComments)
+        group.MapGet("/tasks/{systemId}/comments", GetTaskComments)
             .WithSummary("List the comments on a task")
             .WithDescription("Returns a page of the comments left on a task, oldest first.")
             .RequireAuthorization(NetptunePermissions.Comments.Read);
 
-        group.MapPost("/tasks/{id:int}/comments", CreateTaskComment)
+        group.MapPost("/tasks/{systemId}/comments", CreateTaskComment)
             .WithSummary("Comment on a task")
             .WithDescription(
                 "Adds a comment to a task, authored by the service account the credential belongs to. "
@@ -65,17 +64,10 @@ public static class CommentsEndpoints
 
     private static async Task<Results<Ok<List<CommentViewModel>>, NotFound>> GetTaskComments(
         IMediator mediator,
-        int id,
+        string systemId,
         [AsParameters] PageRequest page,
         CancellationToken cancellationToken)
     {
-        var systemId = await ResolveSystemId(mediator, id, cancellationToken);
-
-        if (systemId is null)
-        {
-            return TypedResults.NotFound();
-        }
-
         var result = await mediator.Send(new GetCommentsForTaskQuery(systemId, page), cancellationToken);
 
         return result is null ? TypedResults.NotFound() : TypedResults.Ok(result);
@@ -83,17 +75,10 @@ public static class CommentsEndpoints
 
     private static async Task<Results<Created<CommentViewModel>, NotFound, BadRequest<ClientResponse<CommentViewModel>>>> CreateTaskComment(
         IMediator mediator,
-        int id,
+        string systemId,
         PublicAddCommentRequest request,
         CancellationToken cancellationToken)
     {
-        var systemId = await ResolveSystemId(mediator, id, cancellationToken);
-
-        if (systemId is null)
-        {
-            return TypedResults.NotFound();
-        }
-
         var addRequest = request.ToRequest(systemId);
         var result = await mediator.Send(new AddCommentToTaskCommand(addRequest), cancellationToken);
 
@@ -187,15 +172,5 @@ public static class CommentsEndpoints
         }
 
         return result.IsSuccess ? TypedResults.Ok(result.Payload) : TypedResults.BadRequest(result);
-    }
-
-    private static async Task<string?> ResolveSystemId(
-        IMediator mediator,
-        int id,
-        CancellationToken cancellationToken)
-    {
-        var task = await mediator.Send(new GetTaskQuery(id), cancellationToken);
-
-        return task?.SystemId;
     }
 }

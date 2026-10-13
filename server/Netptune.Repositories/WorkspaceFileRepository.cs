@@ -185,14 +185,15 @@ public sealed class WorkspaceFileRepository : WorkspaceEntityRepository<DataCont
 
     private Task<int?> ResolveTaskId(int workspaceId, string systemId, CancellationToken cancellationToken)
     {
-        var parts = systemId.Split('-');
+        var separator = systemId.LastIndexOf('-');
+        var scopeText = separator >= 0 ? systemId[(separator + 1)..] : systemId;
 
-        if (!int.TryParse(parts.LastOrDefault(), out var scopeId))
+        if (!int.TryParse(scopeText, out var scopeId))
         {
             return Task.FromResult<int?>(null);
         }
 
-        var projectKey = parts.Length > 1 ? parts[0] : null;
+        var projectKey = separator > 0 ? systemId[..separator] : null;
 
         return Context.ProjectTasks
             .Where(task => task.WorkspaceId == workspaceId && !task.IsDeleted &&

@@ -14,7 +14,6 @@ using Netptune.Handlers.Relations.Commands;
 using Netptune.Handlers.Relations.Queries;
 using Netptune.Handlers.RelationTypes.Commands;
 using Netptune.Handlers.RelationTypes.Queries;
-using Netptune.Handlers.Tasks.Queries;
 
 namespace Netptune.Api.Endpoints;
 
@@ -65,12 +64,12 @@ public static class RelationsEndpoints
             .RequireAuthorization(NetptunePermissions.RelationTypes.Manage)
             .Broadcasts(WorkspaceEventScopes.RelationType, WorkspaceEventScopes.Task);
 
-        group.MapGet("/tasks/{id:int}/relations", GetTaskRelations)
+        group.MapGet("/tasks/{systemId}/relations", GetTaskRelations)
             .WithSummary("List the tasks linked to a task")
             .WithDescription("Returns the relations pointing at and away from a task.")
             .RequireAuthorization(NetptunePermissions.Tasks.Read);
 
-        group.MapPost("/tasks/{id:int}/relations", CreateTaskRelation)
+        group.MapPost("/tasks/{systemId}/relations", CreateTaskRelation)
             .WithSummary("Link a task to another task")
             .WithDescription(
                 "Links a task to another task in the same workspace, naming the related task by its key. "
@@ -186,16 +185,9 @@ public static class RelationsEndpoints
 
     private static async Task<Results<Ok<List<TaskRelationViewModel>>, NotFound>> GetTaskRelations(
         IMediator mediator,
-        int id,
+        string systemId,
         CancellationToken cancellationToken)
     {
-        var systemId = await ResolveSystemId(mediator, id, cancellationToken);
-
-        if (systemId is null)
-        {
-            return TypedResults.NotFound();
-        }
-
         var result = await mediator.Send(new GetTaskRelationsQuery(systemId), cancellationToken);
 
         return result is null ? TypedResults.NotFound() : TypedResults.Ok(result);
@@ -203,17 +195,10 @@ public static class RelationsEndpoints
 
     private static async Task<Results<Created<TaskRelationViewModel>, NotFound, BadRequest<ClientResponse<TaskRelationViewModel>>>> CreateTaskRelation(
         IMediator mediator,
-        int id,
+        string systemId,
         AddTaskRelationRequest request,
         CancellationToken cancellationToken)
     {
-        var systemId = await ResolveSystemId(mediator, id, cancellationToken);
-
-        if (systemId is null)
-        {
-            return TypedResults.NotFound();
-        }
-
         var createRequest = ToCreateRequest(systemId, request);
         var result = await mediator.Send(new CreateTaskRelationCommand(createRequest), cancellationToken);
 
@@ -256,15 +241,5 @@ public static class RelationsEndpoints
             TargetSystemId = target,
             RelationTypeId = request.RelationTypeId,
         };
-    }
-
-    private static async Task<string?> ResolveSystemId(
-        IMediator mediator,
-        int id,
-        CancellationToken cancellationToken)
-    {
-        var task = await mediator.Send(new GetTaskQuery(id), cancellationToken);
-
-        return task?.SystemId;
     }
 }

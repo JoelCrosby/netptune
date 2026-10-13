@@ -153,6 +153,7 @@ public sealed class SearchQueryHandler : IRequestHandler<SearchQuery, SearchResp
                 ["projectId"] = task.ProjectId,
                 ["projectScopeId"] = task.ProjectScopeId,
                 ["projectKey"] = projectKey,
+                ["systemId"] = task.SystemId,
             },
         };
     }

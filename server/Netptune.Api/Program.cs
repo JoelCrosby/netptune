@@ -74,6 +74,7 @@ builder.Services.AddNetptuneQuery();
 builder.Services.AddNetptuneAutomationActions();
 builder.Services.AddApiRateLimiter();
 builder.Services.AddValidation();
+builder.Services.AddApiJsonContract();
 builder.Services.AddApiOpenApi();
 
 var app = builder.Build();

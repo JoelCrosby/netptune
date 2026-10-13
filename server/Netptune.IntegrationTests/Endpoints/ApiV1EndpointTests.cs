@@ -213,11 +213,11 @@ public sealed class ApiV1EndpointTests
         var created = await response.Content.ReadFromJsonAsync<TaskViewModel>();
 
         created!.Name.Should().Be(name);
-        response.Headers.Location!.ToString().Should().Be($"/api/v1/tasks/{created.Id}");
+        response.Headers.Location!.ToString().Should().Be($"/api/v1/tasks/{created.SystemId}");
 
-        var fetched = await client.GetFromJsonAsync<TaskViewModel>($"api/v1/tasks/{created.Id}");
+        var fetched = await client.GetFromJsonAsync<TaskViewModel>($"api/v1/tasks/{created.SystemId}");
 
-        fetched!.Id.Should().Be(created.Id);
+        fetched!.SystemId.Should().Be(created.SystemId);
         fetched.Name.Should().Be(name);
     }
 
@@ -226,7 +226,7 @@ public sealed class ApiV1EndpointTests
     {
         var client = await CreateClient();
 
-        var response = await client.GetAsync("api/v1/tasks/999999");
+        var response = await client.GetAsync("api/v1/tasks/NOPE-999999");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
@@ -238,9 +238,8 @@ public sealed class ApiV1EndpointTests
         var task = await CreateTask(client);
         var name = $"Renamed API task {Guid.NewGuid():N}";
 
-        var response = await client.PatchAsJsonAsync($"api/v1/tasks/{task.Id}", new UpdateProjectTaskRequest
+        var response = await client.PatchAsJsonAsync($"api/v1/tasks/{task.SystemId}", new UpdateProjectTaskRequest
         {
-            Id = task.Id,
             Name = name,
             Description = task.Description,
             StatusId = task.StatusId,
@@ -262,13 +261,13 @@ public sealed class ApiV1EndpointTests
 
         var response = await client.PostAsJsonAsync("api/v1/tasks/bulk-update", new
         {
-            taskIds = new[] { task.Id },
+            systemIds = new[] { task.SystemId },
             priority = TaskPriority.High,
         });
 
         response.StatusCode.Should().Be(HttpStatusCode.NoContent, await response.Content.ReadAsStringAsync());
 
-        var updated = await client.GetFromJsonAsync<TaskViewModel>($"api/v1/tasks/{task.Id}");
+        var updated = await client.GetFromJsonAsync<TaskViewModel>($"api/v1/tasks/{task.SystemId}");
 
         updated!.Priority.Should().Be(TaskPriority.High);
     }
@@ -312,22 +311,22 @@ public sealed class ApiV1EndpointTests
 
         var addTasksResponse = await client.PostAsJsonAsync(
             $"api/v1/sprints/{sprint.Id}/tasks",
-            new AddTasksToSprintRequest { TaskIds = [task.Id] });
+            new { systemIds = new[] { task.SystemId } });
 
         addTasksResponse.StatusCode.Should().Be(HttpStatusCode.OK, await addTasksResponse.Content.ReadAsStringAsync());
         (await addTasksResponse.Content.ReadFromJsonAsync<SprintDetailViewModel>())!
-            .Tasks.Should().Contain(item => item.Id == task.Id);
+            .Tasks.Should().Contain(item => item.SystemId == task.SystemId);
 
         var detail = await client.GetFromJsonAsync<SprintDetailViewModel>($"api/v1/sprints/{sprint.Id}");
 
         detail!.Id.Should().Be(sprint.Id);
-        detail.Tasks.Should().Contain(item => item.Id == task.Id);
+        detail.Tasks.Should().Contain(item => item.SystemId == task.SystemId);
 
-        var removeResponse = await client.DeleteAsync($"api/v1/sprints/{sprint.Id}/tasks/{task.Id}");
+        var removeResponse = await client.DeleteAsync($"api/v1/sprints/{sprint.Id}/tasks/{task.SystemId}");
 
         removeResponse.StatusCode.Should().Be(HttpStatusCode.OK, await removeResponse.Content.ReadAsStringAsync());
         (await removeResponse.Content.ReadFromJsonAsync<SprintDetailViewModel>())!
-            .Tasks.Should().NotContain(item => item.Id == task.Id);
+            .Tasks.Should().NotContain(item => item.SystemId == task.SystemId);
 
         var deleteResponse = await client.DeleteAsync($"api/v1/sprints/{sprint.Id}");
 
@@ -351,7 +350,7 @@ public sealed class ApiV1EndpointTests
     {
         var client = await CreateClient();
 
-        var response = await client.DeleteAsync("api/v1/sprints/999999/tasks/999999");
+        var response = await client.DeleteAsync("api/v1/sprints/999999/tasks/NOPE-999999");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
@@ -380,14 +379,14 @@ public sealed class ApiV1EndpointTests
         var task = await CreateTask(client);
         var target = await FindOtherBoardGroup(client, task);
 
-        var response = await client.PatchAsJsonAsync($"api/v1/tasks/{task.Id}", new
+        var response = await client.PatchAsJsonAsync($"api/v1/tasks/{task.SystemId}", new
         {
             boardGroupId = target.Id,
         });
 
         response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
 
-        var moved = await client.GetFromJsonAsync<TaskViewModel>($"api/v1/tasks/{task.Id}");
+        var moved = await client.GetFromJsonAsync<TaskViewModel>($"api/v1/tasks/{task.SystemId}");
 
         moved!.BoardGroupId.Should().Be(target.Id);
     }
@@ -398,7 +397,7 @@ public sealed class ApiV1EndpointTests
         var client = await CreateClient();
         var task = await CreateTask(client);
 
-        var response = await client.PatchAsJsonAsync($"api/v1/tasks/{task.Id}", new
+        var response = await client.PatchAsJsonAsync($"api/v1/tasks/{task.SystemId}", new
         {
             boardGroupId = 999999,
         });
@@ -415,13 +414,13 @@ public sealed class ApiV1EndpointTests
 
         var response = await client.PostAsJsonAsync("api/v1/tasks/bulk-update", new
         {
-            taskIds = new[] { task.Id },
+            systemIds = new[] { task.SystemId },
             boardGroupId = target.Id,
         });
 
         response.StatusCode.Should().Be(HttpStatusCode.NoContent, await response.Content.ReadAsStringAsync());
 
-        var moved = await client.GetFromJsonAsync<TaskViewModel>($"api/v1/tasks/{task.Id}");
+        var moved = await client.GetFromJsonAsync<TaskViewModel>($"api/v1/tasks/{task.SystemId}");
 
         moved!.BoardGroupId.Should().Be(target.Id);
     }
@@ -704,11 +703,11 @@ public sealed class ApiV1EndpointTests
 
         tags.Should().Contain(item => item.Name == tag);
 
-        var assignResponse = await client.PutAsync($"api/v1/tasks/{task.Id}/tags/{tag}", null, TestContext.Current.CancellationToken);
+        var assignResponse = await client.PutAsync($"api/v1/tasks/{task.SystemId}/tags/{tag}", null, TestContext.Current.CancellationToken);
 
         assignResponse.StatusCode.Should().Be(HttpStatusCode.OK, await assignResponse.Content.ReadAsStringAsync());
 
-        var taskTagsResponse = await client.GetAsync($"api/v1/tasks/{task.Id}/tags", TestContext.Current.CancellationToken);
+        var taskTagsResponse = await client.GetAsync($"api/v1/tasks/{task.SystemId}/tags", TestContext.Current.CancellationToken);
 
         taskTagsResponse.StatusCode.Should().Be(HttpStatusCode.OK, await taskTagsResponse.Content.ReadAsStringAsync());
 
@@ -726,7 +725,7 @@ public sealed class ApiV1EndpointTests
         renameResponse.StatusCode.Should().Be(HttpStatusCode.OK, await renameResponse.Content.ReadAsStringAsync());
 
         var removeResponse = await client.DeleteAsync(
-            $"api/v1/tasks/{task.Id}/tags/{renamed}",
+            $"api/v1/tasks/{task.SystemId}/tags/{renamed}",
             TestContext.Current.CancellationToken);
 
         removeResponse.StatusCode.Should().Be(HttpStatusCode.NoContent, await removeResponse.Content.ReadAsStringAsync());
@@ -742,7 +741,7 @@ public sealed class ApiV1EndpointTests
         var client = await CreateClient();
         var task = await CreateTask(client);
 
-        var createResponse = await client.PostAsJsonAsync($"api/v1/tasks/{task.Id}/comments", new
+        var createResponse = await client.PostAsJsonAsync($"api/v1/tasks/{task.SystemId}/comments", new
         {
             comment = "Created by the API integration test.",
         }, TestContext.Current.CancellationToken);
@@ -751,7 +750,7 @@ public sealed class ApiV1EndpointTests
 
         var comment = (await createResponse.Content.ReadFromJsonAsync<CommentViewModel>(TestContext.Current.CancellationToken))!;
 
-        var listResponse = await client.GetAsync($"api/v1/tasks/{task.Id}/comments", TestContext.Current.CancellationToken);
+        var listResponse = await client.GetAsync($"api/v1/tasks/{task.SystemId}/comments", TestContext.Current.CancellationToken);
 
         listResponse.StatusCode.Should().Be(HttpStatusCode.OK, await listResponse.Content.ReadAsStringAsync());
 
@@ -840,7 +839,7 @@ public sealed class ApiV1EndpointTests
 
         types.Should().Contain(item => item.Id == relationType.Id);
 
-        var linkResponse = await client.PostAsJsonAsync($"api/v1/tasks/{source.Id}/relations", new AddTaskRelationRequest
+        var linkResponse = await client.PostAsJsonAsync($"api/v1/tasks/{source.SystemId}/relations", new AddTaskRelationRequest
         {
             RelatedSystemId = target.SystemId,
             RelationTypeId = relationType.Id,
@@ -850,7 +849,7 @@ public sealed class ApiV1EndpointTests
 
         var relation = (await linkResponse.Content.ReadFromJsonAsync<TaskRelationViewModel>(TestContext.Current.CancellationToken))!;
 
-        var relationsResponse = await client.GetAsync($"api/v1/tasks/{source.Id}/relations", TestContext.Current.CancellationToken);
+        var relationsResponse = await client.GetAsync($"api/v1/tasks/{source.SystemId}/relations", TestContext.Current.CancellationToken);
 
         relationsResponse.StatusCode.Should().Be(HttpStatusCode.OK, await relationsResponse.Content.ReadAsStringAsync());
 
@@ -939,7 +938,7 @@ public sealed class ApiV1EndpointTests
         var client = await CreateClient();
         var task = await CreateTask(client);
 
-        var deleteResponse = await client.DeleteAsync($"api/v1/tasks/{task.Id}", TestContext.Current.CancellationToken);
+        var deleteResponse = await client.DeleteAsync($"api/v1/tasks/{task.SystemId}", TestContext.Current.CancellationToken);
 
         deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent, await deleteResponse.Content.ReadAsStringAsync());
 
@@ -950,16 +949,16 @@ public sealed class ApiV1EndpointTests
         var archived = await archivedResponse.Content
             .ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>(TestContext.Current.CancellationToken);
 
-        archived.Payload!.Items.Should().Contain(item => item.Id == task.Id);
+        archived.Payload!.Items.Should().Contain(item => item.SystemId == task.SystemId);
 
         var restoreResponse = await client.PostAsJsonAsync("api/v1/tasks/restore", new
         {
-            taskIds = new[] { task.Id },
+            systemIds = new[] { task.SystemId },
         }, TestContext.Current.CancellationToken);
 
         restoreResponse.StatusCode.Should().Be(HttpStatusCode.NoContent, await restoreResponse.Content.ReadAsStringAsync());
 
-        (await client.GetAsync($"api/v1/tasks/{task.Id}", TestContext.Current.CancellationToken))
+        (await client.GetAsync($"api/v1/tasks/{task.SystemId}", TestContext.Current.CancellationToken))
             .StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
@@ -972,7 +971,7 @@ public sealed class ApiV1EndpointTests
 
         var response = await client.PostAsJsonAsync("api/v1/tasks/move", new
         {
-            taskIds = new[] { task.Id },
+            systemIds = new[] { task.SystemId },
             boardGroupId = boardGroup.Id,
             position = 0,
         }, TestContext.Current.CancellationToken);
@@ -980,7 +979,7 @@ public sealed class ApiV1EndpointTests
         response.StatusCode.Should().Be(HttpStatusCode.NoContent, await response.Content.ReadAsStringAsync());
 
         var moved = await client.GetFromJsonAsync<TaskViewModel>(
-            $"api/v1/tasks/{task.Id}",
+            $"api/v1/tasks/{task.SystemId}",
             TestContext.Current.CancellationToken);
 
         moved!.Placements.Should().ContainSingle(placement => placement.BoardGroupId == boardGroup.Id);
@@ -1002,7 +1001,7 @@ public sealed class ApiV1EndpointTests
         var client = await CreateClient();
         var task = await CreateTask(client);
 
-        var response = await client.GetAsync($"api/v1/tasks/{task.Id}/flags", TestContext.Current.CancellationToken);
+        var response = await client.GetAsync($"api/v1/tasks/{task.SystemId}/flags", TestContext.Current.CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
     }
@@ -1050,6 +1049,190 @@ public sealed class ApiV1EndpointTests
         var response = await client.GetAsync("api/v1/search?q=public&limit=5", TestContext.Current.CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+    }
+
+    [Fact]
+    public async Task TaskResponses_ShouldIdentifyTasksBySystemId_WithoutTheirDatabaseIds()
+    {
+        var client = await CreateClient();
+        var task = await CreateTask(client);
+        var cancellationToken = TestContext.Current.CancellationToken;
+
+        var single = await client.GetFromJsonAsync<JsonElement>($"api/v1/tasks/{task.SystemId}", cancellationToken);
+        var list = await client.GetFromJsonAsync<JsonElement>("api/v1/tasks?pageSize=5", cancellationToken);
+        var listed = list.GetProperty("payload").GetProperty("items").EnumerateArray().ToList();
+
+        single.GetProperty("systemId").GetString().Should().Be(task.SystemId);
+        single.TryGetProperty("id", out _).Should().BeFalse();
+        single.TryGetProperty("workspaceId", out _).Should().BeFalse();
+        var anyListedId = listed.Any(item => item.TryGetProperty("id", out _));
+
+        listed.Should().NotBeEmpty();
+        anyListedId.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task TaskRoutes_ShouldNotFindATaskByItsDatabaseId()
+    {
+        var client = await CreateClient();
+
+        var response = await client.GetAsync("api/v1/tasks/1", TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task BulkUpdate_ShouldNameTheSystemIdsItCannotFind()
+    {
+        var client = await CreateClient();
+        var task = await CreateTask(client);
+
+        var response = await client.PostAsJsonAsync("api/v1/tasks/bulk-update", new
+        {
+            systemIds = new[] { task.SystemId, "NOPE-999999" },
+            priority = TaskPriority.High,
+        }, TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        (await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken)).Should().Contain("NOPE-999999");
+    }
+
+    [Fact]
+    public async Task ArchivedTasks_ShouldOnlyBeFoundByRoutesThatReadOrRestoreThem()
+    {
+        var client = await CreateClient();
+        var task = await CreateTask(client);
+        var cancellationToken = TestContext.Current.CancellationToken;
+
+        await client.DeleteAsync($"api/v1/tasks/{task.SystemId}", cancellationToken);
+
+        var read = await client.GetAsync($"api/v1/tasks/{task.SystemId}", cancellationToken);
+        var update = await client.PostAsJsonAsync("api/v1/tasks/bulk-update", new
+        {
+            systemIds = new[] { task.SystemId },
+            priority = TaskPriority.High,
+        }, cancellationToken);
+        var updateBody = await update.Content.ReadAsStringAsync(cancellationToken);
+
+        read.StatusCode.Should().Be(HttpStatusCode.OK);
+        update.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        updateBody.Should().Contain(task.SystemId);
+    }
+
+    [Fact]
+    public async Task AddTasksToSprint_ShouldNameATaskFromAnotherProjectBySystemId()
+    {
+        var client = await CreateClient();
+        var setup = await GetSetup();
+        var otherProject = await CreateProject(client);
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var taskResponse = await client.PostAsJsonAsync("api/v1/tasks", new AddProjectTaskRequest
+        {
+            Name = $"Other project task {Guid.NewGuid():N}",
+            ProjectId = otherProject.Id,
+        }, cancellationToken);
+        var task = (await taskResponse.Content.ReadFromJsonAsync<TaskViewModel>(cancellationToken))!;
+        var sprintResponse = await client.PostAsJsonAsync("api/v1/sprints", new AddSprintRequest
+        {
+            Name = $"Sprint {Guid.NewGuid():N}",
+            StartDate = DateTime.UtcNow.Date,
+            EndDate = DateTime.UtcNow.Date.AddDays(14),
+            ProjectId = setup.ProjectId,
+        }, cancellationToken);
+        var sprint = (await sprintResponse.Content.ReadFromJsonAsync<SprintViewModel>(cancellationToken))!;
+
+        var response = await client.PostAsJsonAsync(
+            $"api/v1/sprints/{sprint.Id}/tasks",
+            new { systemIds = new[] { task.SystemId } },
+            cancellationToken);
+        var body = await response.Content.ReadAsStringAsync(cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        body.Should().Contain($"not in the sprint's project: {task.SystemId}");
+    }
+
+    [Fact]
+    public async Task TaskRoutes_ShouldFindTasksInAProjectWhoseKeyHasAHyphen()
+    {
+        var client = await CreateClient();
+        var project = await CreateProject(client);
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var key = $"M-{Guid.NewGuid():N}"[..6].ToUpperInvariant();
+
+        var rename = await client.PatchAsJsonAsync($"api/v1/projects/{project.Id}", new { key }, cancellationToken);
+        var taskResponse = await client.PostAsJsonAsync("api/v1/tasks", new AddProjectTaskRequest
+        {
+            Name = $"Hyphenated key task {Guid.NewGuid():N}",
+            ProjectId = project.Id,
+        }, cancellationToken);
+        var task = (await taskResponse.Content.ReadFromJsonAsync<TaskViewModel>(cancellationToken))!;
+
+        var response = await client.GetAsync($"api/v1/tasks/{task.SystemId}", cancellationToken);
+
+        rename.StatusCode.Should().Be(HttpStatusCode.OK, await rename.Content.ReadAsStringAsync(cancellationToken));
+        task.SystemId.Should().StartWith($"{key}-");
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task CommentsAndRelations_ShouldNotExposeTaskDatabaseIds()
+    {
+        var client = await CreateClient();
+        var source = await CreateTask(client);
+        var target = await CreateTask(client);
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var relationTypes = await client.GetFromJsonAsync<List<RelationTypeViewModel>>("api/v1/relation-types", cancellationToken);
+
+        var commentResponse = await client.PostAsJsonAsync(
+            $"api/v1/tasks/{source.SystemId}/comments",
+            new { comment = "No database ids" },
+            cancellationToken);
+        var relationResponse = await client.PostAsJsonAsync($"api/v1/tasks/{source.SystemId}/relations", new AddTaskRelationRequest
+        {
+            RelatedSystemId = target.SystemId,
+            RelationTypeId = relationTypes!.First().Id,
+        }, cancellationToken);
+
+        var comment = await commentResponse.Content.ReadFromJsonAsync<JsonElement>(cancellationToken);
+        var relation = await relationResponse.Content.ReadFromJsonAsync<JsonElement>(cancellationToken);
+        var relatedTask = relation.GetProperty("relatedTask");
+
+        commentResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+        comment.TryGetProperty("entityId", out _).Should().BeFalse();
+        relationResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+        relatedTask.GetProperty("systemId").GetString().Should().Be(target.SystemId);
+        relatedTask.TryGetProperty("id", out _).Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Search_ShouldIdentifyTaskResultsBySystemId()
+    {
+        var client = await CreateClient();
+        var task = await CreateTask(client);
+
+        var response = await client.GetFromJsonAsync<JsonElement>(
+            $"api/v1/search?q={task.SystemId}&limit=5",
+            TestContext.Current.CancellationToken);
+
+        var taskResult = response.GetProperty("results").EnumerateArray()
+            .First(result => result.GetProperty("type").GetString() == "task");
+
+        taskResult.TryGetProperty("id", out _).Should().BeFalse();
+        taskResult.GetProperty("metadata").GetProperty("systemId").GetString().Should().Be(task.SystemId);
+    }
+
+    [Fact]
+    public async Task OpenApiDocument_ShouldNotDescribeTaskDatabaseIds()
+    {
+        var client = Fixture.CreateUnauthenticatedApiClient();
+
+        var document = await client.GetFromJsonAsync<JsonElement>("openapi/v1.json", TestContext.Current.CancellationToken);
+        var task = document.GetProperty("components").GetProperty("schemas").GetProperty("TaskViewModel");
+        var properties = task.GetProperty("properties");
+
+        properties.TryGetProperty("systemId", out _).Should().BeTrue();
+        properties.TryGetProperty("id", out _).Should().BeFalse();
+        properties.TryGetProperty("workspaceId", out _).Should().BeFalse();
     }
 
     private async Task<BoardViewModel> CreateBoard(HttpClient client)

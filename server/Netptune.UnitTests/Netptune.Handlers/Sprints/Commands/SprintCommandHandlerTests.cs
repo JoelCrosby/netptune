@@ -472,13 +472,15 @@ public class SprintCommandHandlerTests
             sprint.ProjectId,
             TestContext.Current.CancellationToken)
             .Returns([]);
+        UnitOfWork.Tasks.GetTaskSearchReferences(Arg.Any<IEnumerable<int>>(), WorkspaceKey, TestContext.Current.CancellationToken)
+            .Returns([new TaskSearchReference(task.Id, "OPS-10", "OPS")]);
 
         var result = await handler.Handle(
             new AddTasksToSprintCommand(sprint.Id, new AddTasksToSprintRequest { TaskIds = [task.Id] }),
             TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
-        result.Message.Should().Be("Task with id 10 is not in sprint project");
+        result.Message.Should().Be("These tasks are not in the sprint's project: OPS-10");
         task.SprintId.Should().BeNull();
         await UnitOfWork.DidNotReceive().CompleteAsync(Arg.Any<CancellationToken>());
         await UnitOfWork.Tasks.DidNotReceive().AssignTasksToSprint(Arg.Any<IEnumerable<int>>(), Arg.Any<int>(), Arg.Any<CancellationToken>());

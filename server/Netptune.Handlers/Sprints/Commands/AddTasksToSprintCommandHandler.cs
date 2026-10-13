@@ -55,9 +55,11 @@ public sealed class AddTasksToSprintCommandHandler : IRequestHandler<AddTasksToS
         var taskIds = request.Request.TaskIds.Distinct().ToList();
         var taskIdsInWorkspace = await UnitOfWork.Tasks.GetValidTaskIdsInWorkspace(taskIds, sprint.WorkspaceId, cancellationToken);
 
-        foreach (var taskId in taskIds.Except(taskIdsInWorkspace))
+        var hasTasksOutsideWorkspace = taskIds.Except(taskIdsInWorkspace).Any();
+
+        if (hasTasksOutsideWorkspace)
         {
-            return ClientResponse<SprintDetailViewModel>.Failed($"Task with id {taskId} not found");
+            return ClientResponse<SprintDetailViewModel>.Failed("Some of these tasks were not found in the workspace");
         }
 
         var taskIdsInProject = await UnitOfWork.Tasks.GetValidTaskIdsInProject(
@@ -65,10 +67,18 @@ public sealed class AddTasksToSprintCommandHandler : IRequestHandler<AddTasksToS
             sprint.WorkspaceId,
             sprint.ProjectId,
             cancellationToken);
+        var taskIdsOutsideProject = taskIds.Except(taskIdsInProject).ToList();
 
-        foreach (var taskId in taskIds.Except(taskIdsInProject))
+        if (taskIdsOutsideProject.Count > 0)
         {
-            return ClientResponse<SprintDetailViewModel>.Failed($"Task with id {taskId} is not in sprint project");
+            var references = await UnitOfWork.Tasks.GetTaskSearchReferences(
+                taskIdsOutsideProject,
+                workspaceKey,
+                cancellationToken);
+            var systemIds = string.Join(", ", references.Select(reference => reference.SystemId).Order());
+            var message = $"These tasks are not in the sprint's project: {systemIds}";
+
+            return ClientResponse<SprintDetailViewModel>.Failed(message);
         }
 
         var tasks = await UnitOfWork.Tasks.GetTaskViewModels(taskIds, cancellationToken);

@@ -403,14 +403,15 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
 
     public Task<ProjectTask?> GetTaskInWorkspace(string systemId, int workspaceId, CancellationToken cancellationToken = default)
     {
-        var parts = systemId.Split('-');
+        var separator = systemId.LastIndexOf('-');
+        var scopeText = separator >= 0 ? systemId[(separator + 1)..] : systemId;
 
-        if (!int.TryParse(parts.LastOrDefault(), out var scopeId))
+        if (!int.TryParse(scopeText, out var scopeId))
         {
             return Task.FromResult<ProjectTask?>(null);
         }
 
-        var projectKey = parts.Length > 1 ? parts[0] : null;
+        var projectKey = separator > 0 ? systemId[..separator] : null;
 
         return Entities
             .AsNoTracking()
@@ -461,6 +462,49 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         return candidates.Where(task => IsRequested(task, requested)).ToList();
     }
 
+    public async Task<Dictionary<string, int>> GetTaskIdsBySystemIds(
+        IReadOnlyCollection<string> systemIds,
+        string workspaceKey,
+        bool includeArchived,
+        CancellationToken cancellationToken = default)
+    {
+        var references = systemIds
+            .Select(ParseSystemId)
+            .OfType<TaskSystemIdReference>()
+            .Distinct()
+            .ToList();
+
+        if (references.Count == 0)
+        {
+            return [];
+        }
+
+        var projectKeys = references.Select(reference => reference.ProjectKey).Distinct().ToList();
+        var projectScopeIds = references.Select(reference => reference.ProjectScopeId).Distinct().ToList();
+        var candidates = await Entities
+            .AsNoTracking()
+            .Where(task =>
+                task.Workspace!.Slug == workspaceKey &&
+                (includeArchived || !task.IsDeleted) &&
+                projectKeys.Contains(task.Project!.Key.ToLower()) &&
+                projectScopeIds.Contains(task.ProjectScopeId))
+            .Select(task => new { task.Id, ProjectKey = task.Project!.Key.ToLower(), task.ProjectScopeId })
+            .ToListAsync(cancellationToken);
+        var idsByReference = candidates
+            .GroupBy(task => new TaskSystemIdReference(task.ProjectKey, task.ProjectScopeId))
+            .ToDictionary(group => group.Key, group => group.First().Id);
+
+        var found = systemIds
+            .Distinct(StringComparer.Ordinal)
+            .Select(systemId => (SystemId: systemId, Reference: ParseSystemId(systemId)))
+            .Where(entry => entry.Reference is { } reference && idsByReference.ContainsKey(reference));
+
+        return found.ToDictionary(
+            entry => entry.SystemId,
+            entry => idsByReference[entry.Reference!.Value],
+            StringComparer.Ordinal);
+    }
+
     public Task<List<TaskViewModel>> GetTaskViewModelsByScopeId(int projectScopeId, string workspaceKey, CancellationToken cancellationToken = default)
     {
         return Entities
@@ -483,25 +527,30 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
 
     private static TaskSystemIdReference? ParseSystemId(string systemId)
     {
-        var parts = systemId.Split("-");
+        var separator = systemId.LastIndexOf('-');
+        var hasProjectKey = separator > 0;
 
-        if (!int.TryParse(parts.LastOrDefault(), out var projectScopeId))
+        if (!hasProjectKey || !int.TryParse(systemId[(separator + 1)..], out var projectScopeId))
         {
             return null;
         }
 
-        return new TaskSystemIdReference(parts[0].ToLower(), projectScopeId);
+        return new TaskSystemIdReference(systemId[..separator].ToLower(), projectScopeId);
     }
 
     private readonly record struct TaskSystemIdReference(string ProjectKey, int ProjectScopeId);
 
     private IQueryable<ProjectTask>? GetTaskFromSystemId(string systemId, string workspaceKey, bool isReadonly = false)
     {
-        var parts = systemId.Split("-");
+        var reference = ParseSystemId(systemId);
 
-        if (!int.TryParse(parts.LastOrDefault(), out var projectScopeId)) return null;
+        if (reference is null)
+        {
+            return null;
+        }
 
-        var projectKey = parts[0];
+        var projectKey = reference.Value.ProjectKey;
+        var projectScopeId = reference.Value.ProjectScopeId;
 
         var queryable = Entities
             .Where(x =>

@@ -9,18 +9,18 @@ public sealed record PublicMoveTasksRequest
     [Required]
     [MinLength(1)]
     [MaxLength(RequestLimits.MaxBulkIds)]
-    public List<int> TaskIds { get; init; } = [];
+    public List<string> SystemIds { get; init; } = [];
 
     [Required]
     public int BoardGroupId { get; init; }
 
     public int? Position { get; init; }
 
-    internal MoveTaskInGroupRequest ToMoveInGroupRequest(int currentBoardGroupId)
+    internal MoveTaskInGroupRequest ToMoveInGroupRequest(int taskId, int currentBoardGroupId)
     {
         return new MoveTaskInGroupRequest
         {
-            TaskId = TaskIds[0],
+            TaskId = taskId,
             NewGroupId = BoardGroupId,
             OldGroupId = currentBoardGroupId,
             CurrentIndex = Position!.Value,

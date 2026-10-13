@@ -8,7 +8,7 @@ namespace Netptune.Api.Requests;
 public sealed record PublicBulkUpdateTasksRequest
 {
     [MaxLength(RequestLimits.MaxBulkIds)]
-    public List<int> TaskIds { get; init; } = [];
+    public List<string> SystemIds { get; init; } = [];
 
     public int? StatusId { get; init; }
 
@@ -38,11 +38,11 @@ public sealed record PublicBulkUpdateTasksRequest
 
     public int? BoardGroupId { get; init; }
 
-    public BulkUpdateTasksRequest ToRequest()
+    public BulkUpdateTasksRequest ToRequest(List<int> taskIds)
     {
         return new BulkUpdateTasksRequest
         {
-            TaskIds = TaskIds,
+            TaskIds = taskIds,
             StatusId = StatusId,
             Priority = Priority,
             EstimateType = EstimateType,

@@ -3,6 +3,7 @@ using Mediator;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 using Netptune.Api.Configuration;
+using Netptune.Api.Requests;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
@@ -47,11 +48,11 @@ public static class SprintsEndpoints
 
         group.MapPost("/sprints/{id:int}/tasks", AddTasks)
             .WithSummary("Add tasks to a sprint")
-            .WithDescription("Adds existing tasks from the sprint's project to a planning or active sprint.")
+            .WithDescription("Adds the existing tasks named by systemIds, from the sprint's project, to a planning or active sprint.")
             .RequireAuthorization(NetptunePermissions.Sprints.ManageTasks)
             .Broadcasts(WorkspaceEventScopes.Sprint, WorkspaceEventScopes.Task);
 
-        group.MapDelete("/sprints/{id:int}/tasks/{taskId:int}", RemoveTask)
+        group.MapDelete("/sprints/{id:int}/tasks/{systemId}", RemoveTask)
             .WithSummary("Remove a task from a sprint")
             .WithDescription("Removes an existing task from a planning or active sprint.")
             .RequireAuthorization(NetptunePermissions.Sprints.ManageTasks)
@@ -132,12 +133,20 @@ public static class SprintsEndpoints
     private static async Task<Results<Ok<SprintDetailViewModel>, NotFound<ClientResponse<SprintDetailViewModel>>, BadRequest<ClientResponse<SprintDetailViewModel>>>> AddTasks(
         IMediator mediator,
         int id,
-        AddTasksToSprintRequest request,
+        PublicAddTasksToSprintRequest request,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(
-            new AddTasksToSprintCommand(id, request),
-            cancellationToken);
+        var tasks = await PublicTaskReferences.Resolve(mediator, request.SystemIds, cancellationToken);
+
+        if (tasks.Missing.Count > 0)
+        {
+            var missing = ClientResponse<SprintDetailViewModel>.Failed(tasks.MissingMessage);
+
+            return TypedResults.NotFound(missing);
+        }
+
+        var addRequest = new AddTasksToSprintRequest { TaskIds = tasks.Ids };
+        var result = await mediator.Send(new AddTasksToSprintCommand(id, addRequest), cancellationToken);
 
         if (result.IsNotFound)
         {
@@ -150,12 +159,17 @@ public static class SprintsEndpoints
     private static async Task<Results<Ok<SprintDetailViewModel>, NotFound<ClientResponse<SprintDetailViewModel>>, BadRequest<ClientResponse<SprintDetailViewModel>>>> RemoveTask(
         IMediator mediator,
         int id,
-        int taskId,
+        string systemId,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(
-            new RemoveTaskFromSprintCommand(id, taskId),
-            cancellationToken);
+        var taskId = await PublicTaskReferences.Resolve(mediator, systemId, cancellationToken);
+
+        if (taskId is null)
+        {
+            return TypedResults.NotFound(ClientResponse<SprintDetailViewModel>.NotFound);
+        }
+
+        var result = await mediator.Send(new RemoveTaskFromSprintCommand(id, taskId.Value), cancellationToken);
 
         if (result.IsNotFound)
         {
