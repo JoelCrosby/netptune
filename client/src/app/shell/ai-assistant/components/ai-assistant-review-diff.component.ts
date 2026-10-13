@@ -11,11 +11,26 @@ import { ButtonComponent } from '@static/components/button/button.component';
 import { CalloutComponent } from '@static/components/callout/callout.component';
 import { FormControlFieldComponent } from '@static/components/form-control/form-control-field.component';
 import { FormControlInputDirective } from '@static/components/form-control/form-control.directives';
-import { AutofocusDirective } from '@static/directives/autofocus.directive';
-import { fieldLabel } from './ai-assistant-change-group';
-import { diffStat } from '@static/components/text-diff/text-diff';
+import {
+  SegmentedControlComponent,
+  SegmentedOption,
+} from '@static/components/segmented-control/segmented-control.component';
 import { TextDiffComponent } from '@static/components/text-diff/text-diff.component';
+import { AutofocusDirective } from '@static/directives/autofocus.directive';
+import { fieldLabel, isProseField } from './ai-assistant-change-group';
+import { diffStat } from '@static/components/text-diff/text-diff';
+import { valueDiff } from './ai-assistant-change-kind';
+import { AiAssistantChoiceDiffComponent } from './ai-assistant-choice-diff.component';
+import { AiAssistantDateDiffComponent } from './ai-assistant-date-diff.component';
 import { AiDiffMode, lineOps } from './ai-assistant-diff';
+import { AiAssistantEstimateDiffComponent } from './ai-assistant-estimate-diff.component';
+import { fieldDiffKind } from './ai-assistant-field-diff';
+import { AiAssistantMarkdownDiffComponent } from './ai-assistant-markdown-diff.component';
+import { AiAssistantRelationDiffComponent } from './ai-assistant-relation-diff.component';
+import { AiAssistantSetDiffComponent } from './ai-assistant-set-diff.component';
+import { AiAssistantTextDiffComponent } from './ai-assistant-text-diff.component';
+
+type AiMarkdownView = 'rendered' | 'source';
 
 /** One field of a proposed change, rendered as a diff in the reviewer's chosen mode. */
 @Component({
@@ -28,16 +43,26 @@ import { AiDiffMode, lineOps } from './ai-assistant-diff';
     FormControlFieldComponent,
     FormControlInputDirective,
     AutofocusDirective,
+    SegmentedControlComponent,
     TextDiffComponent,
+    AiAssistantChoiceDiffComponent,
+    AiAssistantDateDiffComponent,
+    AiAssistantEstimateDiffComponent,
+    AiAssistantMarkdownDiffComponent,
+    AiAssistantRelationDiffComponent,
+    AiAssistantSetDiffComponent,
+    AiAssistantTextDiffComponent,
   ],
   template: `
     <div class="border-border bg-card overflow-hidden rounded-lg border">
       <div
         class="border-border bg-card-header flex items-center gap-2.5 border-b px-3 py-2">
         <span class="font-avatar text-sm">{{ label() }}</span>
-        <span class="text-muted font-avatar text-[13px]">{{
-          stat().label
-        }}</span>
+        @if (statLabel(); as statLabel) {
+          <span class="text-muted font-avatar text-[13px]">{{
+            statLabel
+          }}</span>
+        }
         <span class="flex-1"></span>
         @if (isEditing()) {
           <span
@@ -46,7 +71,17 @@ import { AiDiffMode, lineOps } from './ai-assistant-diff';
             Editing
           </span>
         } @else {
-          <span class="text-muted text-[13px]">{{ modeLabel() }}</span>
+          @if (usesMode()) {
+            <span class="text-muted text-[13px]">{{ modeLabel() }}</span>
+          }
+          @if (diffKind() === 'markdown') {
+            <app-segmented-control
+              variant="subtle"
+              class="-my-1"
+              [options]="views"
+              [(value)]="view"
+              [ariaLabel]="viewGroupLabel" />
+          }
           @if (canEdit()) {
             <app-button
               color="neutral"
@@ -108,10 +143,38 @@ import { AiDiffMode, lineOps } from './ai-assistant-diff';
           </div>
         </div>
       } @else {
-        <app-text-diff
-          [before]="field().before"
-          [after]="field().after"
-          [mode]="mode()" />
+        @switch (diffKind()) {
+          @case ('markdown') {
+            @if (view() === 'source') {
+              <app-text-diff
+                [before]="field().before"
+                [after]="field().after"
+                [mode]="mode()" />
+            } @else {
+              <app-ai-assistant-markdown-diff
+                [field]="field()"
+                [mode]="mode()" />
+            }
+          }
+          @case ('choice') {
+            <app-ai-assistant-choice-diff [field]="field()" />
+          }
+          @case ('date') {
+            <app-ai-assistant-date-diff [field]="field()" />
+          }
+          @case ('set') {
+            <app-ai-assistant-set-diff [field]="field()" />
+          }
+          @case ('estimate') {
+            <app-ai-assistant-estimate-diff [field]="field()" />
+          }
+          @case ('relation') {
+            <app-ai-assistant-relation-diff [field]="field()" />
+          }
+          @default {
+            <app-ai-assistant-text-diff [field]="field()" [mode]="mode()" />
+          }
+        }
       }
     </div>
   `,
@@ -141,11 +204,51 @@ export class AiAssistantReviewDiffComponent {
 
   protected readonly alertIcon = LucideTriangleAlert;
 
+  protected readonly view = linkedSignal<AiChangeField, AiMarkdownView>({
+    source: this.field,
+    computation: () => 'rendered',
+  });
+
+  protected readonly views: SegmentedOption<AiMarkdownView>[] = [
+    {
+      value: 'rendered',
+      label: $localize`:Shows a markdown diff as formatted text:Rendered`,
+    },
+    {
+      value: 'source',
+      label: $localize`:Raw markdown view|Shows a markdown diff as its raw markdown:Source`,
+    },
+  ];
+
+  protected readonly viewGroupLabel = $localize`:Accessible label for the switch between formatted and raw markdown in a diff:Markdown view`;
+
   protected readonly label = computed(() => fieldLabel(this.field().name));
 
-  private readonly ops = computed(() => lineOps(this.field()));
+  protected readonly diffKind = computed(() => fieldDiffKind(this.field()));
 
-  protected readonly stat = computed(() => diffStat(this.ops()));
+  protected readonly usesMode = computed(() => {
+    const kind = this.diffKind();
+
+    return (
+      kind === 'markdown' || (kind === 'text' && isProseField(this.field()))
+    );
+  });
+
+  protected readonly statLabel = computed(() => {
+    const kind = this.diffKind();
+
+    if (kind === 'text' || kind === 'markdown') {
+      return diffStat(lineOps(this.field())).label;
+    }
+
+    if (kind !== 'set') {
+      return null;
+    }
+
+    const diff = valueDiff(this.field());
+
+    return `+${diff.added.length} \u2212${diff.removed.length}`;
+  });
 
   protected readonly modeLabel = computed(() => {
     const mode = this.mode();

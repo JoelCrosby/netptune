@@ -810,6 +810,16 @@
         <target>Burndown</target>
       </segment>
     </unit>
+    <unit id="6972886777297333032">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-date-diff.component.ts:66</note>
+        <note category="description">How far a change moves a date back</note>
+      </notes>
+      <segment state="initial">
+        <source><ph id="0" equiv="count" disp="count"/> days earlier</source>
+        <target><ph id="0" equiv="count" disp="count"/> días antes</target>
+      </segment>
+    </unit>
     <unit id="6976099455492592498">
       <notes>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-summary.ts:57</note>
@@ -2294,6 +2304,16 @@
         <target>La contraseña se ha restablecido</target>
       </segment>
     </unit>
+    <unit id="6581559318022386664">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-diff.ts:166</note>
+        <note category="description">Unit of an estimate of several story points</note>
+      </notes>
+      <segment state="initial">
+        <source>Story Points</source>
+        <target>Puntos de historia</target>
+      </segment>
+    </unit>
     <unit id="6582448644301340404">
       <notes>
         <note category="location">src/app/core/services/auth-commands.service.ts:143</note>
@@ -2368,7 +2388,7 @@
     </unit>
     <unit id="468065363989009115">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:77,79</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:112,114</note>
         <note category="description">Accessible label for the field that rewrites a proposed value</note>
       </notes>
       <segment state="translated">
@@ -2513,6 +2533,16 @@
       <segment state="translated">
         <source>Task created</source>
         <target>Tarea creada</target>
+      </segment>
+    </unit>
+    <unit id="5888202027646832614">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-date-diff.component.ts:55</note>
+        <note category="description">How far a change moves a date forward</note>
+      </notes>
+      <segment state="initial">
+        <source>1 day later</source>
+        <target>1 día después</target>
       </segment>
     </unit>
     <unit id="2681739147709915312">
@@ -2765,6 +2795,16 @@
         <target>Perfil actualizado</target>
       </segment>
     </unit>
+    <unit id="6949151938064817789">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:215</note>
+        <note category="description">Shows a markdown diff as formatted text</note>
+      </notes>
+      <segment state="initial">
+        <source>Rendered</source>
+        <target>Renderizado</target>
+      </segment>
+    </unit>
     <unit id="6949755576948440615">
       <notes>
         <note category="location">src/app/core/services/profile-commands.service.ts:126</note>
@@ -2951,7 +2991,7 @@
     </unit>
     <unit id="8842362805354087257">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:46,49</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:71,74</note>
         <note category="description">Shown on the field of a change while its value is rewritten</note>
       </notes>
       <segment state="translated">
@@ -3732,6 +3772,16 @@
       <segment state="translated">
         <source>Mark as Private</source>
         <target>Marcar como privado</target>
+      </segment>
+    </unit>
+    <unit id="7606163920237455199">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-estimate-diff.component.ts:23,28</note>
+        <note category="description">Shown in place of an estimate a change removes</note>
+      </notes>
+      <segment state="initial">
+        <source>No estimate</source>
+        <target>Sin estimación</target>
       </segment>
     </unit>
     <unit id="4501389782873056968">
@@ -4590,6 +4640,7 @@
     </unit>
     <unit id="6371576811194810854">
       <notes>
+        <note category="location">src/app/static/components/block-diff/block-diff.component.ts:78</note>
         <note category="location">src/app/static/components/text-diff/text-diff.component.ts:104</note>
         <note category="description">Column heading above the later text in a side by side comparison</note>
       </notes>
@@ -4706,6 +4757,16 @@
       <segment state="translated">
         <source>Workflow template</source>
         <target>Plantilla de flujo de trabajo</target>
+      </segment>
+    </unit>
+    <unit id="7489111235574877566">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-date-diff.component.ts:63</note>
+        <note category="description">How far a change moves a date back</note>
+      </notes>
+      <segment state="initial">
+        <source>1 day earlier</source>
+        <target>1 día antes</target>
       </segment>
     </unit>
     <unit id="7494201798156075724">
@@ -6403,6 +6464,7 @@
     <unit id="2981219928115418649">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:47</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-relation-diff.component.ts:28,30</note>
         <note category="location">src/app/static/components/editor/editor-bubble-menu.component.ts:223</note>
         <note category="description">What a proposed change does</note>
       </notes>
@@ -7022,6 +7084,16 @@
         <target>Añadido por la regla de automatización n.º <ph id="0" equiv="RULE_ID" disp="{{ flag.automationRuleId // i18n(ph=&quot;RULE_ID&quot;) }}"/></target>
       </segment>
     </unit>
+    <unit id="1221823567551333658">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-date-diff.component.ts:59</note>
+        <note category="description">How far a change moves a date forward</note>
+      </notes>
+      <segment state="initial">
+        <source><ph id="0" equiv="count" disp="count"/> days later</source>
+        <target><ph id="0" equiv="count" disp="count"/> días después</target>
+      </segment>
+    </unit>
     <unit id="1224160359892670574">
       <notes>
         <note category="location">src/app/static/components/editor/editor-floating-menu.component.ts:154</note>
@@ -7313,6 +7385,16 @@
       <segment state="translated">
         <source>Identifier</source>
         <target>Identificador</target>
+      </segment>
+    </unit>
+    <unit id="4165850386196559100">
+      <notes>
+        <note category="location">src/app/static/components/block-diff/block-diff.component.ts:81</note>
+        <note category="description">Shown on one side of a diff where the value is empty</note>
+      </notes>
+      <segment state="initial">
+        <source>Empty</source>
+        <target>Vacío</target>
       </segment>
     </unit>
     <unit id="4166637194006456845">
@@ -8538,6 +8620,7 @@
     <unit id="4658982717700339898">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:48</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-relation-diff.component.ts:17,19</note>
         <note category="description">What a proposed change does</note>
       </notes>
       <segment state="translated">
@@ -9746,6 +9829,7 @@
         <note category="location">src/app/features/automations/models/automation-query-builder.ts:304</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:191</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:358</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-diff.ts:170</note>
         <note category="description">Delay unit: hours</note>
       </notes>
       <segment state="translated">
@@ -10040,6 +10124,7 @@
       <notes>
         <note category="location">src/app/features/automations/models/automation-query-builder.ts:284</note>
         <note category="location">src/app/shared/components/query-builder/query-builder.models.ts:74</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-set-diff.component.ts:53,57</note>
         <note category="description">Task priority level, none</note>
       </notes>
       <segment state="translated">
@@ -10700,7 +10785,7 @@
     <unit id="1746074439662851135">
       <notes>
         <note category="location">src/app/features/pages/dialogs/page-version-dialog.component.ts:116</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:154</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:257</note>
         <note category="description">Names the side by side diff layout</note>
       </notes>
       <segment state="translated">
@@ -13712,7 +13797,7 @@
       <notes>
         <note category="location">src/app/features/pages/dialogs/page-version-dialog.component.ts:112</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:712</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:158</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:261</note>
         <note category="description">Names the single column diff layout</note>
       </notes>
       <segment state="translated">
@@ -14140,6 +14225,17 @@
       <segment state="initial">
         <source>Notify me about this</source>
         <target>Notificarme sobre esto</target>
+      </segment>
+    </unit>
+    <unit id="2493952048865975425">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:219</note>
+        <note category="description">Shows a markdown diff as its raw markdown</note>
+        <note category="meaning">Raw markdown view</note>
+      </notes>
+      <segment state="initial">
+        <source>Source</source>
+        <target>Código fuente</target>
       </segment>
     </unit>
     <unit id="2498784210328272403">
@@ -15442,6 +15538,7 @@
     </unit>
     <unit id="1218334388194408974">
       <notes>
+        <note category="location">src/app/static/components/block-diff/block-diff.component.ts:75</note>
         <note category="location">src/app/static/components/text-diff/text-diff.component.ts:101</note>
         <note category="description">Column heading above the earlier text in a side by side comparison</note>
       </notes>
@@ -16441,7 +16538,7 @@
     <unit id="2330577642930707695">
       <notes>
         <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:183,186</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:95,97</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:130,132</note>
         <note category="location">src/app/static/components/comments-list/comments-list.component.ts:153,155</note>
         <note category="description">Dismisses a dialog without acting</note>
       </notes>
@@ -17499,6 +17596,16 @@
         <target>Iniciando sesión…</target>
       </segment>
     </unit>
+    <unit id="1041184075712717008">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:223</note>
+        <note category="description">Accessible label for the switch between formatted and raw markdown in a diff</note>
+      </notes>
+      <segment state="initial">
+        <source>Markdown view</source>
+        <target>Vista de Markdown</target>
+      </segment>
+    </unit>
     <unit id="1043424849189591173">
       <notes>
         <note category="location">src/app/features/boards/components/move-tasks-dialog/move-tasks-dialog.component.ts:85,91</note>
@@ -18201,7 +18308,7 @@
     </unit>
     <unit id="3620188369327429839">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:105,107</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:140,142</note>
         <note category="description">Button that keeps an edit to a proposed value</note>
       </notes>
       <segment state="translated">
@@ -19356,7 +19463,7 @@
     <unit id="3565310608022478316">
       <notes>
         <note category="location">src/app/features/pages/dialogs/page-version-dialog.component.ts:120</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:161</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:264</note>
         <note category="description">Names the diff layout that highlights changed words</note>
       </notes>
       <segment state="translated">
@@ -20527,6 +20634,16 @@
       <segment state="initial">
         <source>Use system theme</source>
         <target>Usar el tema del sistema</target>
+      </segment>
+    </unit>
+    <unit id="1375158393289637367">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-date-diff.component.ts:30,33</note>
+        <note category="description">Shown in place of a date a change removes</note>
+      </notes>
+      <segment state="initial">
+        <source>No date</source>
+        <target>Sin fecha</target>
       </segment>
     </unit>
     <unit id="8611492333162495855">
@@ -24399,6 +24516,16 @@
         <target>Enlaces por crear</target>
       </segment>
     </unit>
+    <unit id="3284697869924237097">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-diff.ts:169</note>
+        <note category="description">Unit of a single hour estimate</note>
+      </notes>
+      <segment state="initial">
+        <source>Hour</source>
+        <target>Hora</target>
+      </segment>
+    </unit>
     <unit id="3285053667163564021">
       <notes>
         <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:216,218</note>
@@ -26875,6 +27002,16 @@
         <target> Contenido incrustado </target>
       </segment>
     </unit>
+    <unit id="7752659744573788389">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-diff.ts:165</note>
+        <note category="description">Unit of a single story point estimate</note>
+      </notes>
+      <segment state="initial">
+        <source>Story Point</source>
+        <target>Punto de historia</target>
+      </segment>
+    </unit>
     <unit id="6225788593340992229">
       <notes>
         <note category="location">src/app/features/storage/components/storage-list.component.ts:179,181</note>
@@ -28058,12 +28195,22 @@
         <note category="location">src/app/features/automations/components/automation-rule-rail.component.ts:47,52</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-message.component.ts:100,104</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-detail.component.ts:130,132</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:57,59</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:92,94</note>
         <note category="description">Link that opens the automation editor</note>
       </notes>
       <segment state="translated">
         <source> Edit </source>
         <target> Editar </target>
+      </segment>
+    </unit>
+    <unit id="5380791860391761311">
+      <notes>
+        <note category="location">src/app/static/components/value-swap/value-swap.component.ts:24</note>
+        <note category="description">Read by screen readers between an old value and the value replacing it</note>
+      </notes>
+      <segment state="initial">
+        <source>changed to</source>
+        <target>cambiado a</target>
       </segment>
     </unit>
     <unit id="5383274518270102702">
@@ -29000,6 +29147,16 @@
       <segment state="translated">
         <source>Workspace Logo</source>
         <target> Logotipo del espacio de trabajo </target>
+      </segment>
+    </unit>
+    <unit id="6342274982298261698">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-choice-diff.component.ts:33,38</note>
+        <note category="description">Shown in place of a value a change clears</note>
+      </notes>
+      <segment state="initial">
+        <source>Cleared</source>
+        <target>Borrado</target>
       </segment>
     </unit>
     <unit id="4482336764287931226">
