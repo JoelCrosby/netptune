@@ -19,15 +19,18 @@ public sealed class UpdateAiProposedChangeCommandHandler
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IAiUndoCatalog UndoCatalog;
+    private readonly IAiChangeEditCatalog EditCatalog;
 
     public UpdateAiProposedChangeCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
-        IAiUndoCatalog undoCatalog)
+        IAiUndoCatalog undoCatalog,
+        IAiChangeEditCatalog editCatalog)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         UndoCatalog = undoCatalog;
+        EditCatalog = editCatalog;
     }
 
     public async ValueTask<ClientResponse<AiChangeSetViewModel>> Handle(
@@ -69,11 +72,7 @@ public sealed class UpdateAiProposedChangeCommandHandler
             return ClientResponse<AiChangeSetViewModel>.Failed("This change has already run, so it cannot be edited.");
         }
 
-        var edit = AiProposedChangeEditor.Apply(
-            change.Summary,
-            change.Fields,
-            change.Payload,
-            command.Request.Fields);
+        var edit = await EditCatalog.Apply(change, changes, command.Request.Fields, cancellationToken);
 
         if (!edit.IsSuccess)
         {
@@ -87,7 +86,7 @@ public sealed class UpdateAiProposedChangeCommandHandler
         await UnitOfWork.CompleteAsync(cancellationToken);
 
         var routeIds = await AiChangeRouteIdReader.Read(UnitOfWork, changes, cancellationToken);
-        var model = AiChangeSetMapper.ToViewModel(changeSet, changes, routeIds, UndoCatalog);
+        var model = AiChangeSetMapper.ToViewModel(changeSet, changes, routeIds, UndoCatalog, EditCatalog);
 
         return ClientResponse<AiChangeSetViewModel>.Success(model);
     }

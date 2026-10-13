@@ -15,7 +15,9 @@ export type AiChangeSetAction = 'apply' | 'retry' | 'undo' | 'discard';
 
 export interface AiChangeFieldEdit {
   name: string;
-  value: string;
+  value?: string | null;
+  values?: string[] | null;
+  number?: number | null;
 }
 
 export interface AiChangeEditResult {

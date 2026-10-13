@@ -6,17 +6,14 @@ import {
   output,
 } from '@angular/core';
 import { AiChangeField } from '@core/models/ai-conversation';
-import { LucidePencil, LucideTriangleAlert } from '@lucide/angular';
+import { AiChangeFieldEdit } from '@core/services/ai-api.service';
+import { LucidePencil } from '@lucide/angular';
 import { ButtonComponent } from '@static/components/button/button.component';
-import { CalloutComponent } from '@static/components/callout/callout.component';
-import { FormControlFieldComponent } from '@static/components/form-control/form-control-field.component';
-import { FormControlInputDirective } from '@static/components/form-control/form-control.directives';
 import {
   SegmentedControlComponent,
   SegmentedOption,
 } from '@static/components/segmented-control/segmented-control.component';
 import { TextDiffComponent } from '@static/components/text-diff/text-diff.component';
-import { AutofocusDirective } from '@static/directives/autofocus.directive';
 import { fieldLabel, isProseField } from './ai-assistant-change-group';
 import { diffStat } from '@static/components/text-diff/text-diff';
 import { valueDiff } from './ai-assistant-change-kind';
@@ -25,6 +22,7 @@ import { AiAssistantDateDiffComponent } from './ai-assistant-date-diff.component
 import { AiDiffMode, lineOps } from './ai-assistant-diff';
 import { AiAssistantEstimateDiffComponent } from './ai-assistant-estimate-diff.component';
 import { fieldDiffKind } from './ai-assistant-field-diff';
+import { AiAssistantFieldEditorComponent } from './ai-assistant-field-editor.component';
 import { AiAssistantMarkdownDiffComponent } from './ai-assistant-markdown-diff.component';
 import { AiAssistantRelationDiffComponent } from './ai-assistant-relation-diff.component';
 import { AiAssistantSetDiffComponent } from './ai-assistant-set-diff.component';
@@ -39,10 +37,7 @@ type AiMarkdownView = 'rendered' | 'source';
   imports: [
     LucidePencil,
     ButtonComponent,
-    CalloutComponent,
-    FormControlFieldComponent,
-    FormControlInputDirective,
-    AutofocusDirective,
+    AiAssistantFieldEditorComponent,
     SegmentedControlComponent,
     TextDiffComponent,
     AiAssistantChoiceDiffComponent,
@@ -97,51 +92,13 @@ type AiMarkdownView = 'rendered' | 'source';
       </div>
 
       @if (isEditing()) {
-        <div class="flex flex-col gap-2 px-2.5 py-2.5">
-          <app-form-control-field class="px-2.5 py-1">
-            <textarea
-              appFormInput
-              appAutofocus
-              rows="5"
-              class="resize-y py-1.5 text-[15px] leading-relaxed!"
-              [value]="draft()"
-              [disabled]="isSaving()"
-              i18n-aria-label="
-                Accessible label for the field that rewrites a proposed value
-              "
-              aria-label="Proposed value"
-              (input)="setDraft($event)"
-              (keydown.escape)="cancel($event)"></textarea>
-          </app-form-control-field>
-
-          @if (error(); as message) {
-            <app-callout color="warn" role="alert" [icon]="alertIcon">
-              <span class="text-sm">{{ message }}</span>
-            </app-callout>
-          }
-
-          <div class="flex items-center justify-end gap-2">
-            <app-button
-              color="neutral"
-              class="h-9 px-3.5 text-sm"
-              [disabled]="isSaving()"
-              (click)="editCancelled.emit()">
-              <span i18n="Button that abandons an edit to a proposed value">
-                Cancel
-              </span>
-            </app-button>
-            <app-button
-              variant="outlined"
-              color="primary"
-              class="h-9 px-3.5 text-sm"
-              [disabled]="isSaving() || !isChanged()"
-              (click)="saved.emit(draft())">
-              <span i18n="Button that keeps an edit to a proposed value">
-                Save
-              </span>
-            </app-button>
-          </div>
-        </div>
+        <app-ai-assistant-field-editor
+          [field]="field()"
+          [proposedTags]="proposedTags()"
+          [isSaving]="isSaving()"
+          [error]="error()"
+          (saved)="saved.emit($event)"
+          (cancelled)="editCancelled.emit()" />
       } @else {
         @switch (diffKind()) {
           @case ('markdown') {
@@ -186,23 +143,11 @@ export class AiAssistantReviewDiffComponent {
   readonly isEditing = input(false);
   readonly isSaving = input(false);
   readonly error = input<string | null>(null);
+  readonly proposedTags = input<string[]>([]);
 
   readonly editStarted = output<string>();
   readonly editCancelled = output();
-  readonly saved = output<string>();
-
-  /** Reopening the editor, or moving to another change, starts from what is proposed now. */
-  protected readonly draft = linkedSignal(() => {
-    this.isEditing();
-
-    return this.field().after ?? '';
-  });
-
-  protected readonly isChanged = computed(() => {
-    return this.draft() !== (this.field().after ?? '');
-  });
-
-  protected readonly alertIcon = LucideTriangleAlert;
+  readonly saved = output<AiChangeFieldEdit>();
 
   protected readonly view = linkedSignal<AiChangeField, AiMarkdownView>({
     source: this.field,
@@ -263,14 +208,4 @@ export class AiAssistantReviewDiffComponent {
 
     return $localize`:Names the diff layout that highlights changed words:Word level`;
   });
-
-  protected setDraft(event: Event) {
-    this.draft.set((event.target as HTMLTextAreaElement).value);
-  }
-
-  /** Escape belongs to the editor while it is open, not to the dialog behind it. */
-  protected cancel(event: Event) {
-    event.stopPropagation();
-    this.editCancelled.emit();
-  }
 }

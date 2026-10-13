@@ -15,6 +15,7 @@ using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Requests.Pages;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services.Ai;
 using Netptune.Core.Services.Realtime;
 using Netptune.Core.ViewModels.Ai;
 using Netptune.Core.ViewModels.Boards;
@@ -1363,6 +1364,7 @@ public sealed class AiEndpointTests
             var change = reread.Payload!.Changes.Single();
 
             change.Fields.Single().After.Should().Be("Corrected by the reviewer");
+            change.Fields.Single().Editor!.Kind.Should().Be(AiChangeEditorKind.Text);
             change.Fields.Single().Before.Should().Be(
                 "Old name",
                 "the reviewer is correcting the proposal, not what the entity says today");
@@ -1447,11 +1449,150 @@ public sealed class AiEndpointTests
         }
     }
 
+    [Fact]
+    public async Task UpdateChange_ShouldPointAStatusEditAtTheWorkspaceStatus()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var status = await ReadTaskStatus();
+        var seed = await SeedEditableChangeSet(new AiProposedChangeSeed
+        {
+            ToolName = "propose_update_task",
+            EntityType = "task",
+            Summary = "Update status on “Task”",
+            Payload = JsonDocument.Parse("""{"taskId":1,"statusId":-1}"""),
+            Fields = JsonDocument.Parse(
+                """[{"name":"status","before":"Todo","after":"Doing","kind":3,"beforeValues":[{"display":"Todo"}],"afterValues":[{"display":"Doing"}]}]"""),
+        });
+
+        try
+        {
+            var response = await client.PatchAsJsonAsync(
+                $"api/ai/change-sets/{seed.ChangeSetId}/changes/{seed.ChangeId}",
+                new { fields = new[] { new { name = "status", value = status.Id.ToString() } } },
+                TestContext.Current.CancellationToken);
+
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var payload = await ReadChangePayload(seed.ChangeId);
+
+            payload.RootElement.GetProperty("statusId").GetInt32().Should().Be(status.Id);
+
+            var reread = await client.GetFromJsonAsync<ClientResponse<AiChangeSetViewModel>>(
+                $"api/ai/change-sets/{seed.ChangeSetId}",
+                TestContext.Current.CancellationToken);
+
+            var field = reread!.Payload!.Changes.Single().Fields.Single();
+
+            field.Editor!.Kind.Should().Be(AiChangeEditorKind.Status);
+            field.AfterValues!.Single().Display.Should().Be(status.Name);
+        }
+        finally
+        {
+            await RemoveSeed(seed.ConversationId);
+        }
+    }
+
+    [Fact]
+    public async Task UpdateChange_ShouldMoveATaskIntoAPickedSprintFromItsProject()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var task = await ReadWorkspaceTask();
+        var sprint = await SeedSprint(task);
+        var seed = await SeedEditableChangeSet(new AiProposedChangeSeed
+        {
+            ToolName = "propose_move_task_to_sprint",
+            EntityType = "task",
+            EntityId = task.Id,
+            Summary = "Move “Task” into sprint “Proposed”",
+            Payload = JsonDocument.Parse($$"""{"taskId":{{task.Id}},"sprintRef":"sprint-1"}"""),
+            Fields = JsonDocument.Parse(
+                """[{"name":"sprint","after":"Proposed","kind":6,"beforeValues":[],"afterValues":[{"display":"Proposed"}]}]"""),
+        });
+
+        try
+        {
+            var response = await client.PatchAsJsonAsync(
+                $"api/ai/change-sets/{seed.ChangeSetId}/changes/{seed.ChangeId}",
+                new { fields = new[] { new { name = "sprint", value = sprint.Id.ToString() } } },
+                TestContext.Current.CancellationToken);
+
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var payload = await ReadChangePayload(seed.ChangeId);
+
+            payload.RootElement.GetProperty("sprintId").GetInt32().Should().Be(sprint.Id);
+            payload.RootElement.TryGetProperty("sprintRef", out _).Should().BeFalse();
+        }
+        finally
+        {
+            await RemoveSeed(seed.ConversationId);
+            await RemoveSprint(sprint.Id);
+        }
+    }
+
+    private async Task<Status> ReadTaskStatus()
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        return await context.Statuses
+            .AsNoTracking()
+            .Where(status =>
+                status.Workspace!.Slug == "netptune" &&
+                status.EntityType == EntityType.Task &&
+                !status.IsDeleted)
+            .OrderBy(status => status.Id)
+            .FirstAsync(TestContext.Current.CancellationToken);
+    }
+
+    private async Task<ProjectTask> ReadWorkspaceTask()
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        return await context.ProjectTasks
+            .AsNoTracking()
+            .Where(task => task.Workspace!.Slug == "netptune" && task.ProjectId != null && !task.IsDeleted)
+            .OrderBy(task => task.Id)
+            .FirstAsync(TestContext.Current.CancellationToken);
+    }
+
+    private async Task<Sprint> SeedSprint(ProjectTask task)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var sprint = new Sprint
+        {
+            Name = "Picked sprint",
+            Identifier = $"picked-{Guid.NewGuid():N}",
+            Status = SprintStatus.Planning,
+            StartDate = DateTime.UtcNow.Date,
+            EndDate = DateTime.UtcNow.Date.AddDays(14),
+            ProjectId = task.ProjectId!.Value,
+            WorkspaceId = task.WorkspaceId,
+        };
+
+        await context.Sprints.AddAsync(sprint, TestContext.Current.CancellationToken);
+        await context.SaveChangesAsync(TestContext.Current.CancellationToken);
+
+        return sprint;
+    }
+
+    private async Task RemoveSprint(int sprintId)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        await context.Sprints
+            .Where(sprint => sprint.Id == sprintId)
+            .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
+    }
+
     private sealed record EditableChangeSetSeed(Guid ConversationId, Guid ChangeSetId, long ChangeId);
 
-    private async Task<EditableChangeSetSeed> SeedEditableChangeSet()
+    private async Task<EditableChangeSetSeed> SeedEditableChangeSet(AiProposedChangeSeed? proposal = null)
     {
-        var proposal = new AiProposedChangeSeed
+        proposal ??= new AiProposedChangeSeed
         {
             ToolName = "propose_update_task",
             EntityType = "task",

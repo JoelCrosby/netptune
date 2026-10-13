@@ -176,6 +176,7 @@ internal static class AiTaskChangeDrafts
         var payload = new
         {
             taskId = task.Id,
+            projectId = task.ProjectId,
             boardGroupId = group.Id,
             boardIdentifier = group.BoardIdentifier,
         };
@@ -186,7 +187,7 @@ internal static class AiTaskChangeDrafts
             EntityType = "task",
             EntityId = task.Id,
             Summary = $"Move “{task.Name}” to {group.Name} on {group.BoardName}",
-            Fields = [new AiChangeField { Name = "boardGroup", After = $"{group.BoardName} · {group.Name}" }],
+            Fields = [AiChangeFields.BoardGroup(group.Id, $"{group.BoardName} · {group.Name}")],
             Payload = JsonSerializer.SerializeToDocument(payload),
             ValidationStatus = AiChangeValidationStatus.Valid,
         });
@@ -206,6 +207,7 @@ internal static class AiTaskChangeDrafts
         var payload = new
         {
             taskId = task.Id,
+            projectId = task.ProjectId,
             boardGroupRef = group.RefKey,
         };
 
@@ -215,7 +217,7 @@ internal static class AiTaskChangeDrafts
             EntityType = "task",
             EntityId = task.Id,
             Summary = $"Move “{task.Name}” to {group.Name} on {group.BoardName}",
-            Fields = [new AiChangeField { Name = "boardGroup", After = group.Label }],
+            Fields = [AiChangeFields.BoardGroup(null, group.Label)],
             Payload = JsonSerializer.SerializeToDocument(payload),
             ValidationStatus = AiChangeValidationStatus.Valid,
         });

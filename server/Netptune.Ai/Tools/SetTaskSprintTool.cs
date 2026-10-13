@@ -227,6 +227,7 @@ public sealed class SetTaskSprintTool : IAiTool
         var payload = new
         {
             taskId = task?.Id,
+            projectId = task?.ProjectId,
             taskRef,
             sprintId = sprint.Id,
             sprintRef = sprint.RefKey,

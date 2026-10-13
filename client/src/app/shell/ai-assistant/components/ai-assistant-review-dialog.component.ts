@@ -37,12 +37,13 @@ import {
   batchGroups,
   groupChanges,
   isApplied,
-  isTextField,
+  isEditableField,
   isValid,
   selectableIds,
 } from './ai-assistant-change-group';
 import { changeSummary } from './ai-assistant-change-kind';
 import { AiDiffMode, changeLetter } from './ai-assistant-diff';
+import { proposedTagNames } from './ai-assistant-field-edit';
 import {
   AiAssistantReviewDetailComponent,
   AiFieldEdit,
@@ -266,6 +267,7 @@ const pathOf = (url: string): string => {
                 [isApplying]="assistant.isApplying()"
                 [canRevise]="!isReadOnly"
                 [workspace]="workspace()"
+                [proposedTags]="proposedTags()"
                 [editingField]="editingField()"
                 [editError]="editError()"
                 [isSaving]="assistant.isEditingChange()"
@@ -565,6 +567,10 @@ export class AiAssistantReviewDialogComponent {
 
   protected readonly changes = computed(() => {
     return this.changeSet()?.changes ?? [];
+  });
+
+  protected readonly proposedTags = computed(() => {
+    return proposedTagNames(this.changes());
   });
 
   protected readonly isPending = computed(() => {
@@ -877,10 +883,8 @@ export class AiAssistantReviewDialogComponent {
     this.editingField.set(null);
   }
 
-  protected async saveEdit({ changeId, name, value }: AiFieldEdit) {
-    const error = await this.assistant.updateChange(changeId, [
-      { name, value },
-    ]);
+  protected async saveEdit({ changeId, edit }: AiFieldEdit) {
+    const error = await this.assistant.updateChange(changeId, [edit]);
 
     this.editError.set(error);
 
@@ -974,9 +978,9 @@ export class AiAssistantReviewDialogComponent {
 
     if (event.key === 'e' && this.isPending()) {
       const change = selected.changes.find((candidate) => {
-        return candidate.fields.some(isTextField);
+        return candidate.fields.some(isEditableField);
       });
-      const field = change?.fields.find(isTextField);
+      const field = change?.fields.find(isEditableField);
 
       if (change && field) {
         this.startEditing({ changeId: change.id, name: field.name });

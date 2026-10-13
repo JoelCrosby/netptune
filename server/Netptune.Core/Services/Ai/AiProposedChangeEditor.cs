@@ -5,11 +5,19 @@ using Netptune.Core.ViewModels.Ai;
 
 namespace Netptune.Core.Services.Ai;
 
-public sealed record AiChangeFieldEdit
+public sealed record AiResolvedFieldEdit
 {
     public required string Name { get; init; }
 
-    public required string Value { get; init; }
+    public string? After { get; init; }
+
+    public List<AiChangeValue>? AfterValues { get; init; }
+
+    public string? Summary { get; init; }
+
+    public Dictionary<string, JsonNode?> Payload { get; init; } = [];
+
+    public IReadOnlyList<string> RemovedPayload { get; init; } = [];
 }
 
 public sealed record AiChangeEditResult
@@ -29,14 +37,13 @@ public sealed record AiChangeEditResult
 // which the handler applies. Editing one without the other would apply something nobody reviewed.
 public static class AiProposedChangeEditor
 {
-    private const int MaximumValueLength = 8000;
     private const int MaximumSummaryLength = 512;
 
     public static AiChangeEditResult Apply(
         string summary,
         JsonDocument fields,
         JsonDocument payload,
-        IReadOnlyList<AiChangeFieldEdit> edits)
+        IReadOnlyList<AiResolvedFieldEdit> edits)
     {
         if (edits.Count == 0)
         {
@@ -63,16 +70,19 @@ public static class AiProposedChangeEditor
             }
 
             var field = current[index];
-            var rejection = Validate(field, edit.Value);
 
-            if (rejection is not null)
+            editedSummary = edit.Summary ?? Requote(editedSummary, field.After, edit.After);
+            current[index] = field with { After = edit.After, AfterValues = edit.AfterValues };
+
+            foreach (var (key, value) in edit.Payload)
             {
-                return Failed(rejection);
+                payloadObject[key] = value;
             }
 
-            editedSummary = Requote(editedSummary, field.After, edit.Value);
-            current[index] = field with { After = edit.Value };
-            payloadObject[edit.Name] = JsonValue.Create(edit.Value);
+            foreach (var key in edit.RemovedPayload)
+            {
+                payloadObject.Remove(key);
+            }
         }
 
         var writtenFields = SerializeFields(current);
@@ -86,34 +96,13 @@ public static class AiProposedChangeEditor
         };
     }
 
-    private static string? Validate(AiChangeFieldViewModel field, string value)
-    {
-        var isText = field.Kind == AiChangeValueKind.Text;
-
-        if (!isText)
-        {
-            return $"“{field.Name}” is not a text value, so it cannot be edited here.";
-        }
-
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            return $"“{field.Name}” cannot be left empty.";
-        }
-
-        if (value.Length > MaximumValueLength)
-        {
-            return $"“{field.Name}” is longer than {MaximumValueLength} characters.";
-        }
-
-        return null;
-    }
-
     // A creation quotes the value it is about to write, so rewriting that value leaves the summary
     // lying. An update quotes the entity as it stands today, which the edit has not touched.
-    private static string Requote(string summary, string? proposed, string value)
+    private static string Requote(string summary, string? proposed, string? value)
     {
         var hasProposed = !string.IsNullOrWhiteSpace(proposed);
-        var quotesProposed = hasProposed && summary.Contains($"“{proposed}”", StringComparison.Ordinal);
+        var hasValue = !string.IsNullOrWhiteSpace(value);
+        var quotesProposed = hasProposed && hasValue && summary.Contains($"“{proposed}”", StringComparison.Ordinal);
 
         if (!quotesProposed)
         {

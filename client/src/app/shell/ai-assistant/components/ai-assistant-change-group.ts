@@ -2,7 +2,6 @@ import {
   AiChangeApplyStatus,
   AiChangeField,
   AiChangeValidationStatus,
-  AiChangeValueKind,
   AiProposedChange,
 } from '@core/models/ai-conversation';
 import { referenceRoute } from '@core/util/ai-references';
@@ -91,8 +90,8 @@ export const isProseField = (field: AiChangeField): boolean => {
   return Math.max(before, after) > INLINE_VALUE_LIMIT;
 };
 
-export const isTextField = (field: AiChangeField): boolean => {
-  return field.kind === AiChangeValueKind.text;
+export const isEditableField = (field: AiChangeField): boolean => {
+  return !!field.editor;
 };
 
 export const isValid = (change: AiProposedChange): boolean => {

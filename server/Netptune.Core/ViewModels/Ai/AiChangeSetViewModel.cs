@@ -16,6 +16,8 @@ public sealed record AiChangeFieldViewModel
     public List<AiChangeValue>? BeforeValues { get; init; }
 
     public List<AiChangeValue>? AfterValues { get; init; }
+
+    public AiChangeFieldEditor? Editor { get; init; }
 }
 
 public sealed record AiProposedChangeViewModel

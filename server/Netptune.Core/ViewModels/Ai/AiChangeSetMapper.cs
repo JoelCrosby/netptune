@@ -1,5 +1,3 @@
-using System.Text.Json;
-
 using Netptune.Core.Entities;
 using Netptune.Core.Services.Ai;
 
@@ -11,7 +9,8 @@ public static class AiChangeSetMapper
         AiChangeSet changeSet,
         List<AiProposedChange> changes,
         AiChangeRouteIds routeIds,
-        IAiUndoCatalog undoCatalog)
+        IAiUndoCatalog undoCatalog,
+        IAiChangeEditCatalog editCatalog)
     {
         return new AiChangeSetViewModel
         {
@@ -20,14 +19,15 @@ public static class AiChangeSetMapper
             Status = changeSet.Status,
             AppliedAt = changeSet.AppliedAt,
             UndoneAt = changeSet.UndoneAt,
-            Changes = changes.Select(change => ToViewModel(change, routeIds, undoCatalog)).ToList(),
+            Changes = changes.Select(change => ToViewModel(change, routeIds, undoCatalog, editCatalog)).ToList(),
         };
     }
 
     private static AiProposedChangeViewModel ToViewModel(
         AiProposedChange change,
         AiChangeRouteIds routeIds,
-        IAiUndoCatalog undoCatalog)
+        IAiUndoCatalog undoCatalog,
+        IAiChangeEditCatalog editCatalog)
     {
         var entityId = change.AppliedEntityId ?? change.EntityId;
 
@@ -40,7 +40,7 @@ public static class AiChangeSetMapper
             EntityId = change.EntityId,
             RefKey = change.RefKey,
             Summary = change.Summary,
-            Fields = ParseFields(change.Fields),
+            Fields = ParseFields(change, editCatalog),
             ValidationStatus = change.ValidationStatus,
             ValidationMessage = change.ValidationMessage,
             ApplyStatus = change.ApplyStatus,
@@ -53,8 +53,12 @@ public static class AiChangeSetMapper
         };
     }
 
-    private static List<AiChangeFieldViewModel> ParseFields(JsonDocument fields)
+    private static List<AiChangeFieldViewModel> ParseFields(AiProposedChange change, IAiChangeEditCatalog editCatalog)
     {
-        return AiChangeFieldSerializer.Deserialize(fields);
+        var fields = AiChangeFieldSerializer.Deserialize(change.Fields);
+
+        return fields
+            .Select(field => field with { Editor = editCatalog.FindEditor(change, field.Name) })
+            .ToList();
     }
 }

@@ -1,6 +1,7 @@
 import { Component, computed, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AiProposedChange } from '@core/models/ai-conversation';
+import { AiChangeFieldEdit } from '@core/services/ai-api.service';
 import {
   LucideCheck,
   LucideExternalLink,
@@ -21,7 +22,7 @@ import {
   groupKeyLabel,
   groupTarget,
   groupTone,
-  isTextField,
+  isEditableField,
   isValid,
   selectableIds,
 } from './ai-assistant-change-group';
@@ -35,8 +36,9 @@ export interface AiFieldTarget {
   name: string;
 }
 
-export interface AiFieldEdit extends AiFieldTarget {
-  value: string;
+export interface AiFieldEdit {
+  changeId: number;
+  edit: AiChangeFieldEdit;
 }
 
 interface AiChangeNotice {
@@ -197,21 +199,16 @@ interface AiChangeNotice {
             <app-ai-assistant-review-diff
               [field]="field"
               [mode]="mode()"
-              [canEdit]="canRevise() && isPending() && isText(field)"
+              [canEdit]="canRevise() && isPending() && isEditable(field)"
               [isEditing]="isEditing(change, field.name)"
               [isSaving]="isSaving()"
               [error]="isEditing(change, field.name) ? editError() : null"
+              [proposedTags]="proposedTags()"
               (editStarted)="
                 editStarted.emit({ changeId: change.id, name: $event })
               "
               (editCancelled)="editCancelled.emit()"
-              (saved)="
-                saved.emit({
-                  changeId: change.id,
-                  name: field.name,
-                  value: $event,
-                })
-              " />
+              (saved)="saved.emit({ changeId: change.id, edit: $event })" />
           } @empty {
             <app-empty-state compact [title]="noFieldsLabel" />
           }
@@ -231,6 +228,7 @@ export class AiAssistantReviewDetailComponent {
   readonly editError = input<string | null>(null);
   readonly isSaving = input(false);
   readonly workspace = input<string | null>(null);
+  readonly proposedTags = input<string[]>([]);
 
   readonly applied = output<number[]>();
   readonly toggled = output<number[]>();
@@ -241,7 +239,7 @@ export class AiAssistantReviewDetailComponent {
 
   protected readonly changeAction = changeAction;
   protected readonly changeTone = changeTone;
-  protected readonly isText = isTextField;
+  protected readonly isEditable = isEditableField;
   protected readonly alertIcon = LucideTriangleAlert;
 
   protected readonly noFieldsLabel = $localize`:Shown when a proposed change carries no field values:This change has no field values to compare.`;
@@ -298,14 +296,13 @@ export class AiAssistantReviewDetailComponent {
     return $localize`:Tooltip on the include switch of a skipped change:Include this change when applying`;
   });
 
-  /** Only prose can be rewritten here; a status or an assignee needs the entity behind it. */
   protected readonly editableField = computed<AiFieldTarget | null>(() => {
     if (!this.isPending()) {
       return null;
     }
 
     for (const change of this.group().changes) {
-      const field = change.fields.find(isTextField);
+      const field = change.fields.find(isEditableField);
 
       if (field) {
         return { changeId: change.id, name: field.name };

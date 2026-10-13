@@ -16,13 +16,16 @@ public sealed class GetPendingAiChangeSetQueryHandler
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IAiUndoCatalog UndoCatalog;
+    private readonly IAiChangeEditCatalog EditCatalog;
 
     public GetPendingAiChangeSetQueryHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
-        IAiUndoCatalog undoCatalog)
+        IAiUndoCatalog undoCatalog,
+        IAiChangeEditCatalog editCatalog)
     {
         UndoCatalog = undoCatalog;
+        EditCatalog = editCatalog;
         UnitOfWork = unitOfWork;
         Identity = identity;
     }
@@ -46,7 +49,7 @@ public sealed class GetPendingAiChangeSetQueryHandler
 
         var changes = await UnitOfWork.AiChangeSets.GetChanges(changeSet.Id, cancellationToken);
         var routeIds = await AiChangeRouteIdReader.Read(UnitOfWork, changes, cancellationToken);
-        var model = AiChangeSetMapper.ToViewModel(changeSet, changes, routeIds, UndoCatalog);
+        var model = AiChangeSetMapper.ToViewModel(changeSet, changes, routeIds, UndoCatalog, EditCatalog);
 
         return ClientResponse<AiChangeSetViewModel>.Success(model);
     }

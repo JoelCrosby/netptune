@@ -13,6 +13,8 @@ namespace Netptune.Ai.Tools;
 
 public sealed class CreateTaskTool : IAiTool
 {
+    public const string ChangeName = "propose_create_task";
+
     private const int MemberLookupTake = 200;
 
     private static readonly string[] DateFields = ["startDate", "dueDate"];
@@ -26,7 +28,7 @@ public sealed class CreateTaskTool : IAiTool
         ChangeSet = changeSet;
     }
 
-    public string Name => "propose_create_task";
+    public string Name => ChangeName;
 
     public string Description =>
         "Propose creating a task, fully formed: assignee, sprint, board group, status, priority, estimate and dates "
@@ -329,7 +331,7 @@ public sealed class CreateTaskTool : IAiTool
                 return mismatch;
             }
 
-            fields.Add(new AiChangeField { Name = "boardGroup", After = group.Label });
+            fields.Add(AiChangeFields.BoardGroup(null, group.Label));
 
             return null;
         }
@@ -353,7 +355,7 @@ public sealed class CreateTaskTool : IAiTool
             return $"Board group {boardGroupId} is not in this workspace.";
         }
 
-        fields.Add(new AiChangeField { Name = "boardGroup", After = $"{existing.BoardName} · {existing.Name}" });
+        fields.Add(AiChangeFields.BoardGroup(existing.Id, $"{existing.BoardName} · {existing.Name}"));
 
         return null;
     }

@@ -131,6 +131,26 @@ export enum AiChangeValueKind {
   sprint = 6,
 }
 
+export enum AiChangeEditorKind {
+  text = 0,
+  markdown = 1,
+  priority = 2,
+  estimate = 3,
+  date = 4,
+  status = 5,
+  user = 6,
+  users = 7,
+  tags = 8,
+  sprint = 9,
+  boardGroup = 10,
+}
+
+export interface AiChangeFieldEditor {
+  kind: AiChangeEditorKind;
+  isClearable: boolean;
+  projectId?: number | null;
+}
+
 export interface AiChangeValue {
   display: string;
   id?: string | null;
@@ -145,6 +165,7 @@ export interface AiChangeField {
   kind: AiChangeValueKind;
   beforeValues?: AiChangeValue[] | null;
   afterValues?: AiChangeValue[] | null;
+  editor?: AiChangeFieldEditor | null;
 }
 
 export interface AiProposedChange {

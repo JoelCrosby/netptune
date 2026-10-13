@@ -70,6 +70,13 @@ public static class AiChangeFields
         return new AiChangeValue { Id = id?.ToString(CultureInfo.InvariantCulture), Display = display };
     }
 
+    public static AiChangeField BoardGroup(int? id, string label)
+    {
+        var value = new AiChangeValue { Id = id?.ToString(CultureInfo.InvariantCulture), Display = label };
+
+        return Values("boardGroup", AiChangeValueKind.Text, [], [value]);
+    }
+
     public static AiChangeValue Sprint(int? id, string name)
     {
         return new AiChangeValue { Id = id?.ToString(CultureInfo.InvariantCulture), Display = name };

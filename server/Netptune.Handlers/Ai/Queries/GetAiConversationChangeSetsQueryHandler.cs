@@ -15,13 +15,16 @@ public sealed class GetAiConversationChangeSetsQueryHandler
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IAiUndoCatalog UndoCatalog;
+    private readonly IAiChangeEditCatalog EditCatalog;
 
     public GetAiConversationChangeSetsQueryHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
-        IAiUndoCatalog undoCatalog)
+        IAiUndoCatalog undoCatalog,
+        IAiChangeEditCatalog editCatalog)
     {
         UndoCatalog = undoCatalog;
+        EditCatalog = editCatalog;
         UnitOfWork = unitOfWork;
         Identity = identity;
     }
@@ -58,7 +61,8 @@ public sealed class GetAiConversationChangeSetsQueryHandler
                 changeSet,
                 hasChanges ? changeSetChanges! : [],
                 routeIds,
-                UndoCatalog);
+                UndoCatalog,
+                EditCatalog);
 
             models.Add(model);
         }

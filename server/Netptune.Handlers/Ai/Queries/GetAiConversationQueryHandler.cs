@@ -17,13 +17,16 @@ public sealed class GetAiConversationQueryHandler
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IAiUndoCatalog UndoCatalog;
+    private readonly IAiChangeEditCatalog EditCatalog;
 
     public GetAiConversationQueryHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
-        IAiUndoCatalog undoCatalog)
+        IAiUndoCatalog undoCatalog,
+        IAiChangeEditCatalog editCatalog)
     {
         UndoCatalog = undoCatalog;
+        EditCatalog = editCatalog;
         UnitOfWork = unitOfWork;
         Identity = identity;
     }
@@ -85,6 +88,6 @@ public sealed class GetAiConversationQueryHandler
         var changes = await UnitOfWork.AiChangeSets.GetChanges(changeSet.Id, cancellationToken);
         var routeIds = await AiChangeRouteIdReader.Read(UnitOfWork, changes, cancellationToken);
 
-        return AiChangeSetMapper.ToViewModel(changeSet, changes, routeIds, UndoCatalog);
+        return AiChangeSetMapper.ToViewModel(changeSet, changes, routeIds, UndoCatalog, EditCatalog);
     }
 }

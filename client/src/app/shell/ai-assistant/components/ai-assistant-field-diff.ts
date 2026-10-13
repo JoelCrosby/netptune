@@ -72,7 +72,7 @@ const PRIORITY_ACCENTS: Record<TaskPriority, ValueChipAccent> = {
   [TaskPriority.critical]: 'red',
 };
 
-const findPriority = (text: string): TaskPriority | null => {
+export const findPriority = (text: string): TaskPriority | null => {
   const normalised = text.trim().toLowerCase();
   const match = Object.entries(taskPriorityLabels).find(([, label]) => {
     return label.toLowerCase() === normalised;
@@ -173,23 +173,36 @@ const ESTIMATE_UNITS: Partial<Record<EstimateType, AiEstimateUnit>> = {
 
 const ESTIMATE_TEXT = /^\s*(\d+(?:\.\d+)?)\s+(.+?)\s*$/;
 
+export interface AiChangeEstimate {
+  type: EstimateType;
+  value: number;
+}
+
 // The server writes an estimate as "<value> <EstimateType name>", e.g. "3 StoryPoints".
-export const formatChangeEstimate = (
+export const parseChangeEstimate = (
   text: string | null | undefined
-): string | null => {
+): AiChangeEstimate | null => {
   const match = text ? ESTIMATE_TEXT.exec(text) : null;
 
   if (!match) {
-    return text ?? null;
+    return null;
   }
 
-  const value = Number(match[1]);
   const type = ESTIMATE_TYPES[match[2].toLowerCase().replace(/[^a-z]/g, '')];
 
-  if (type === undefined) {
+  return type === undefined ? null : { type, value: Number(match[1]) };
+};
+
+export const formatChangeEstimate = (
+  text: string | null | undefined
+): string | null => {
+  const estimate = parseChangeEstimate(text);
+
+  if (!estimate) {
     return text ?? null;
   }
 
+  const { type, value } = estimate;
   const unit = ESTIMATE_UNITS[type];
 
   if (!unit) {

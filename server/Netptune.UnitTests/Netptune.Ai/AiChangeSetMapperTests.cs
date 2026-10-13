@@ -13,6 +13,7 @@ namespace Netptune.UnitTests.Netptune.Ai;
 public class AiChangeSetMapperTests
 {
     private readonly IAiUndoCatalog UndoCatalog = Substitute.For<IAiUndoCatalog>();
+    private readonly IAiChangeEditCatalog EditCatalog = Substitute.For<IAiChangeEditCatalog>();
 
     private readonly AiChangeRouteIds RouteIds = new()
     {
@@ -33,7 +34,7 @@ public class AiChangeSetMapperTests
             Change(4, "sprint", entityId: 4),
         };
 
-        var model = AiChangeSetMapper.ToViewModel(ChangeSet(), changes, RouteIds, UndoCatalog);
+        var model = AiChangeSetMapper.ToViewModel(ChangeSet(), changes, RouteIds, UndoCatalog, EditCatalog);
         var routeIds = model.Changes.Select(change => change.EntityRouteId);
 
         routeIds.Should().Equal("NETP-1", "WEB", "delivery", "sprint-4");
@@ -48,9 +49,23 @@ public class AiChangeSetMapperTests
             Change(2, "project", entityId: 2),
         };
 
-        var model = AiChangeSetMapper.ToViewModel(ChangeSet(), changes, RouteIds, UndoCatalog);
+        var model = AiChangeSetMapper.ToViewModel(ChangeSet(), changes, RouteIds, UndoCatalog, EditCatalog);
 
         model.Changes.Select(change => change.EntitySystemId).Should().Equal("NETP-1", null);
+    }
+
+    [Fact]
+    public void ToViewModel_ShouldGiveEachFieldTheEditorTheCatalogOffers()
+    {
+        var change = Change(1, "task", entityId: 1);
+        var editor = new AiChangeFieldEditor { Kind = AiChangeEditorKind.Status };
+
+        change.Fields = AiChangeFieldSerializer.Serialize([AiChangeFields.Text("status", "Todo", "Doing")]);
+        EditCatalog.FindEditor(change, "status").Returns(editor);
+
+        var model = AiChangeSetMapper.ToViewModel(ChangeSet(), [change], RouteIds, UndoCatalog, EditCatalog);
+
+        model.Changes.Single().Fields.Single().Editor.Should().Be(editor);
     }
 
     private static AiChangeSet ChangeSet()
