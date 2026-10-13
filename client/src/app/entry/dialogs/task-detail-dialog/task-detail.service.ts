@@ -16,6 +16,7 @@ import {
 } from '@core/models/view-models/user-select-option';
 import { taskDetailResource } from '@core/resources/task.resource';
 import { AiAssistantService } from '@core/services/ai-assistant.service';
+import { AiWriterService } from '@core/services/ai-writer.service';
 import { SprintsService } from '@core/services/sprints.service';
 import { StorageService } from '@core/services/storage.service';
 import { CurrentTaskService } from '@core/services/current-task.service';
@@ -24,6 +25,7 @@ import { WorkspaceRefreshService } from '@core/services/workspace-refresh.servic
 import { unwrapClientResponse } from '@core/util/rxjs-operators';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { EditorUpload } from '@static/components/editor/editor.component';
+import { InlinePromptRunner } from '@static/components/editor/editor-inline-prompt';
 import { catchError, EMPTY, firstValueFrom, tap } from 'rxjs';
 
 @Injectable()
@@ -34,6 +36,7 @@ export class TaskDetailService {
   private readonly currentTask = inject(CurrentTaskService);
   private readonly workspaceRefresh = inject(WorkspaceRefreshService);
   private readonly assistant = inject(AiAssistantService);
+  private readonly writer = inject(AiWriterService);
   private readonly storage = inject(StorageService);
 
   private readonly openSystemId = signal<string | undefined>(undefined);
@@ -113,6 +116,16 @@ export class TaskDetailService {
   updateDescription(description: string) {
     this.updateTask({ description }, { silent: true, refresh: false });
   }
+
+  readonly writeDescription: InlinePromptRunner = (request, write, signal) => {
+    const systemId = this.task()?.systemId;
+
+    if (!systemId) {
+      return Promise.reject(new Error());
+    }
+
+    return this.writer.writeTaskDescription(systemId, request, write, signal);
+  };
 
   uploadMedia(file: File): Promise<EditorUpload | null> {
     const systemId = this.task()?.systemId ?? null;

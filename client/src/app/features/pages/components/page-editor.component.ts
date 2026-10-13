@@ -63,6 +63,8 @@ import {
   EditorCommand,
 } from '@static/components/editor/editor-commands';
 import { AiAssistantService } from '@core/services/ai-assistant.service';
+import { AiWriterService } from '@core/services/ai-writer.service';
+import { assistantInlinePrompt } from '@core/util/assistant-inline-prompt';
 import { DialogService } from '@core/services/dialog.service';
 import { QueryPickerDialogComponent } from '../dialogs/query-picker-dialog.component';
 import { createPageEditorCommands } from '../editor/page-editor-commands';
@@ -320,6 +322,7 @@ function tailOf(markdown: string, limit: number): string {
           [syntax]="syntax"
           [commands]="commands()"
           [selectionActions]="selectionActions()"
+          [inlinePrompt]="inlinePrompt()"
           (selectionAction)="onSelectionAction($event)"
           (saved)="draft().commitBody($event)" />
       } @else {
@@ -394,7 +397,23 @@ export class PageEditorComponent implements OnInit {
   private readonly canCreateTasks = hasPermission(PERMISSIONS.tasks.create);
   protected readonly canAssignTags = hasPermission(PERMISSIONS.tags.assign);
   private readonly assistant = inject(AiAssistantService);
+  private readonly writer = inject(AiWriterService);
   protected readonly transform = inject(PageTransformController);
+
+  private readonly assistantPrompt = assistantInlinePrompt(
+    (request, write, signal) => {
+      return this.writer.writePage(this.draft().id, request, write, signal);
+    }
+  );
+
+  protected readonly inlinePrompt = computed(() => {
+    const canWrite =
+      this.canUseAssistant() &&
+      this.assistant.isAvailable() &&
+      !this.readOnly();
+
+    return canWrite ? this.assistantPrompt : null;
+  });
 
   protected readonly commands = computed<readonly EditorCommand[]>(() => {
     const pageCommands = createPageEditorCommands({

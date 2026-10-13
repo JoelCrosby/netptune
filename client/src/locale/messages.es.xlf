@@ -728,6 +728,16 @@
         <target>Eliminar los grupos del tablero</target>
       </segment>
     </unit>
+    <unit id="6320125450857118596">
+      <notes>
+        <note category="location">src/app/core/services/ai-writer.service.ts:22</note>
+        <note category="description">Shown in an editor when the inline assistant reply ends early</note>
+      </notes>
+      <segment state="translated">
+        <source>The assistant stopped before finishing.</source>
+        <target>El asistente se detuvo antes de terminar.</target>
+      </segment>
+    </unit>
     <unit id="6321161718850533847">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:86</note>
@@ -812,7 +822,7 @@
     </unit>
     <unit id="6980870776971861351">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:484</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:503</note>
         <note category="description">Byline under a page title naming who last edited it, when, and how long it takes to read</note>
       </notes>
       <segment state="translated">
@@ -874,7 +884,7 @@
     </unit>
     <unit id="2285896285181808525">
       <notes>
-        <note category="location">src/app/static/components/editor/editor.component.ts:155</note>
+        <note category="location">src/app/static/components/editor/editor.component.ts:179</note>
         <note category="description">Shown in the slash command menu when nothing matches what was typed</note>
       </notes>
       <segment state="translated">
@@ -1852,6 +1862,16 @@
         <target> Eliminar el proveedor </target>
       </segment>
     </unit>
+    <unit id="2387777488304902858">
+      <notes>
+        <note category="location">src/app/core/services/ai-writer.service.ts:20</note>
+        <note category="description">Shown in an editor when the inline assistant request fails before any reply</note>
+      </notes>
+      <segment state="translated">
+        <source>The assistant could not be reached. Try again.</source>
+        <target>No se pudo contactar con el asistente. Inténtalo de nuevo.</target>
+      </segment>
+    </unit>
     <unit id="5162962829978601498">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:553</note>
@@ -2128,6 +2148,7 @@
         <note category="location">src/app/core/services/workspace-commands.service.ts:219</note>
         <note category="location">src/app/core/services/workspace-commands.service.ts:229</note>
         <note category="location">src/app/core/services/workspace-commands.service.ts:239</note>
+        <note category="location">src/app/core/util/assistant-inline-prompt.ts:11</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:337,340</note>
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:201,204</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:142</note>
@@ -3082,7 +3103,7 @@
     <unit id="5256927257860771053">
       <notes>
         <note category="location">src/app/core/services/sprint-commands.service.ts:160</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail.service.ts:212</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail.service.ts:225</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -3125,7 +3146,7 @@
     <unit id="9054551961119650411">
       <notes>
         <note category="location">src/app/core/services/sprint-commands.service.ts:175</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail.service.ts:232</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail.service.ts:245</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -3291,7 +3312,7 @@
     </unit>
     <unit id="1613971242435858090">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:115</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:117</note>
         <note category="description">Bubble menu action that has the assistant translate the selected text</note>
       </notes>
       <segment state="translated">
@@ -3361,7 +3382,7 @@
     </unit>
     <unit id="5319992322579592831">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:479</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:498</note>
         <note category="description">Byline under a folder title naming who last edited it and when</note>
       </notes>
       <segment state="translated">
@@ -5616,7 +5637,7 @@
     <unit id="533409430255690539">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:253,255</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-description.component.ts:23,25</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-description.component.ts:25,27</note>
         <note category="description">Placeholder in the empty task description editor</note>
       </notes>
       <segment state="translated">
@@ -5869,7 +5890,7 @@
     </unit>
     <unit id="9014422536639985797">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:753</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:772</note>
         <note category="description">Shown when a mentioned sprint or board in a page no longer exists or cannot be opened</note>
       </notes>
       <segment state="translated">
@@ -5960,7 +5981,7 @@
     </unit>
     <unit id="5635560755747598626">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:110</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:112</note>
         <note category="description">Bubble menu action that has the assistant shorten the selected text</note>
       </notes>
       <segment state="translated">
@@ -6255,7 +6276,7 @@
     </unit>
     <unit id="4320935807729548621">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:122</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:124</note>
         <note category="description">Bubble menu action that asks the assistant to turn the selected checklist into tasks</note>
       </notes>
       <segment state="translated">
@@ -8674,6 +8695,16 @@
       <segment state="initial">
         <source> Save Export </source>
         <target>Guardar exportación</target>
+      </segment>
+    </unit>
+    <unit id="7934833136974560675">
+      <notes>
+        <note category="location">src/app/core/util/assistant-inline-prompt.ts:13</note>
+        <note category="description">Action that retries a failed inline assistant prompt</note>
+      </notes>
+      <segment state="translated">
+        <source>Retry</source>
+        <target>Reintentar</target>
       </segment>
     </unit>
     <unit id="7935613686723040127">
@@ -13760,6 +13791,16 @@
         <target>Sesión iniciada como <ph id="0" equiv="EMAIL" disp="email"/></target>
       </segment>
     </unit>
+    <unit id="8370918094243082653">
+      <notes>
+        <note category="location">src/app/core/util/assistant-inline-prompt.ts:19</note>
+        <note category="description">Slash command that opens a prompt for the assistant to write at the cursor</note>
+      </notes>
+      <segment state="translated">
+        <source>Ask the assistant</source>
+        <target>Preguntar al asistente</target>
+      </segment>
+    </unit>
     <unit id="8371388720393236934">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:34</note>
@@ -14129,6 +14170,16 @@
       <segment state="translated">
         <source>Turn back on</source>
         <target>Volver a activar</target>
+      </segment>
+    </unit>
+    <unit id="3696853758218662823">
+      <notes>
+        <note category="location">src/app/core/util/assistant-inline-prompt.ts:15</note>
+        <note category="description">Shown in an editor when the assistant could not write a reply</note>
+      </notes>
+      <segment state="translated">
+        <source>The assistant could not write this.</source>
+        <target>El asistente no pudo escribir esto.</target>
       </segment>
     </unit>
     <unit id="3697582909018473071">
@@ -14700,7 +14751,7 @@
     </unit>
     <unit id="7253608290099852757">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:265,269</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:267,271</note>
         <note category="description">Button that discards local edits and loads the newer saved page</note>
       </notes>
       <segment state="translated">
@@ -16958,7 +17009,7 @@
     </unit>
     <unit id="1074599325149334297">
       <notes>
-        <note category="location">src/app/static/components/editor/editor.component.ts:171</note>
+        <note category="location">src/app/static/components/editor/editor.component.ts:195</note>
         <note category="description">Accessible label for the raw markdown source of a document</note>
       </notes>
       <segment state="translated">
@@ -17713,7 +17764,7 @@
     </unit>
     <unit id="7869199587095613616">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:294,295</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:296,297</note>
         <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:404</note>
         <note category="location">src/app/static/components/branding-preview/branding-preview.component.ts:156</note>
         <note category="description">Placeholder in an empty page title</note>
@@ -18325,7 +18376,7 @@
     </unit>
     <unit id="3823219296477075982">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:207,208</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:209,210</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:397,400</note>
         <note category="description">Accessible label for closing the assistant result card</note>
       </notes>
@@ -18336,7 +18387,7 @@
     </unit>
     <unit id="3823999463060757067">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:105</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:107</note>
         <note category="description">Bubble menu action that has the assistant summarise the selected text</note>
       </notes>
       <segment state="translated">
@@ -19039,7 +19090,7 @@
     </unit>
     <unit id="1557588537287479588">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:180,182</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:182,184</note>
         <note category="location">src/app/features/pages/editor/page-editor-commands.ts:27</note>
         <note category="description">Accessible label for the menu of tasks and pages to mention</note>
       </notes>
@@ -19222,7 +19273,7 @@
     </unit>
     <unit id="933361080941409912">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:296,298</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:298,300</note>
         <note category="description">Accessible label for the page title</note>
       </notes>
       <segment state="translated">
@@ -19699,7 +19750,7 @@
     </unit>
     <unit id="9180258231296737289">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:314,316</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:316,318</note>
         <note category="description">Placeholder in an empty page body</note>
       </notes>
       <segment state="translated">
@@ -20569,6 +20620,16 @@
       <segment state="translated">
         <source>Total scope</source>
         <target>Alcance total</target>
+      </segment>
+    </unit>
+    <unit id="3853923863445419630">
+      <notes>
+        <note category="location">src/app/core/util/assistant-inline-prompt.ts:9</note>
+        <note category="description">Placeholder after /ai in an editor, before anything is typed</note>
+      </notes>
+      <segment state="translated">
+        <source>Ask the assistant to write…</source>
+        <target>Pide al asistente que escriba…</target>
       </segment>
     </unit>
     <unit id="3857877369981030045">
@@ -22051,6 +22112,7 @@
     </unit>
     <unit id="4361487192183535591">
       <notes>
+        <note category="location">src/app/core/util/assistant-inline-prompt.ts:20</note>
         <note category="location">src/app/features/assistant/assistant.routes.ts:12</note>
         <note category="location">src/app/features/pages/editor/page-editor-commands.ts:20</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:87</note>
@@ -22064,7 +22126,7 @@
         <note category="location">src/app/shell/shell-sidebar.component.ts:374</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:430</note>
         <note category="location">src/app/workspace.routes.ts:117</note>
-        <note category="description">Page title for the assistant chat page</note>
+        <note category="description">Heading over the assistant actions in the slash command menu</note>
       </notes>
       <segment state="translated">
         <source>Assistant</source>
@@ -22480,6 +22542,16 @@
       <segment state="translated">
         <source>Tracks implementation work in Netptune</source>
         <target>Hace seguimiento del trabajo de implementación en Netptune</target>
+      </segment>
+    </unit>
+    <unit id="7305438510733628954">
+      <notes>
+        <note category="location">src/app/core/services/ai-writer.service.ts:21</note>
+        <note category="description">Shown in an editor when inline assistant requests are being sent too quickly</note>
+      </notes>
+      <segment state="translated">
+        <source>Too many assistant requests. Try again in a minute.</source>
+        <target>Demasiadas solicitudes al asistente. Inténtalo de nuevo en un minuto.</target>
       </segment>
     </unit>
     <unit id="730589419287534524">
@@ -23504,7 +23576,7 @@
     </unit>
     <unit id="3164972071980049830">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:247,250</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:249,252</note>
         <note category="description">Title of the notice shown when someone else saved the page first</note>
       </notes>
       <segment state="translated">
@@ -23564,7 +23636,7 @@
     </unit>
     <unit id="6652056720487527045">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:184,186</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:186,188</note>
         <note category="description">Shown in the mention menu when nothing matches what was typed</note>
       </notes>
       <segment state="translated">
@@ -25798,7 +25870,7 @@
     </unit>
     <unit id="7639811500826292651">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:275,279</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:277,281</note>
         <note category="description">Button that saves local edits over the newer saved page</note>
       </notes>
       <segment state="translated">
@@ -26451,7 +26523,7 @@
     </unit>
     <unit id="4007569097635901294">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:202,204</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:204,206</note>
         <note category="description">Shown while the assistant works on page text</note>
       </notes>
       <segment state="translated">
@@ -27315,6 +27387,7 @@
     </unit>
     <unit id="6631196071533020937">
       <notes>
+        <note category="location">src/app/core/util/assistant-inline-prompt.ts:12</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:245</note>
         <note category="description">Shown while the assistant is preparing its reply</note>
       </notes>
@@ -27548,7 +27621,7 @@
     </unit>
     <unit id="7530911039577159922">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:215,217</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:217,219</note>
         <note category="description">Accessible label for the language page text is translated into</note>
       </notes>
       <segment state="translated">
@@ -28225,6 +28298,16 @@
         <target>Borrar</target>
       </segment>
     </unit>
+    <unit id="6490688569532630280">
+      <notes>
+        <note category="location">src/app/core/util/assistant-inline-prompt.ts:10</note>
+        <note category="description">Action that sends the inline assistant prompt</note>
+      </notes>
+      <segment state="translated">
+        <source>Send</source>
+        <target>Enviar</target>
+      </segment>
+    </unit>
     <unit id="6492831808763156510">
       <notes>
         <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:656</note>
@@ -28678,10 +28761,11 @@
     </unit>
     <unit id="1536087519743707362">
       <notes>
+        <note category="location">src/app/core/util/assistant-inline-prompt.ts:14</note>
         <note category="location">src/app/static/components/anchored-popup/anchored-popup-card.component.ts:31,32</note>
         <note category="location">src/app/static/components/banner/banner.component.ts:36,37</note>
         <note category="location">src/app/static/components/snackbar/snackbar.component.ts:61,62</note>
-        <note category="description">Accessible label for the button that hides a popup notice</note>
+        <note category="description">Action that dismisses a failed inline assistant prompt</note>
       </notes>
       <segment state="translated">
         <source>Dismiss</source>
@@ -29001,7 +29085,7 @@
     </unit>
     <unit id="4451682318497650150">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:252,255</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:254,257</note>
         <note category="description">Body of the notice shown when someone else saved the page first</note>
       </notes>
       <segment state="translated">
@@ -29436,7 +29520,7 @@
     </unit>
     <unit id="2389097364194442984">
       <notes>
-        <note category="location">src/app/static/components/editor/editor.component.ts:154</note>
+        <note category="location">src/app/static/components/editor/editor.component.ts:178</note>
         <note category="description">Accessible label for the menu of blocks that typing / offers</note>
       </notes>
       <segment state="translated">

@@ -2,6 +2,8 @@ import { Component, computed, inject, input, model } from '@angular/core';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { hasPermission } from '@core/auth/has-permission';
 import { TaskViewModel } from '@app/core/models/view-models/project-task-dto';
+import { assistantInlinePrompt } from '@core/util/assistant-inline-prompt';
+import { basicEditorCommands } from '@static/components/editor/editor-commands';
 import {
   EditorAppearance,
   EditorComponent,
@@ -24,6 +26,8 @@ import { TaskDetailService } from './task-detail.service';
       [appearance]="appearance()"
       [hostClass]="textClass()"
       [uploader]="uploadMedia"
+      [commands]="commands"
+      [inlinePrompt]="inlinePrompt()"
       (saved)="updateTask($event)"
       [finalSave]="finalSave()"
       [(value)]="description"
@@ -41,6 +45,8 @@ export class TaskDetailDescriptionComponent {
   readonly task = this.taskDetail.task;
   private readonly canUpdate = hasPermission(PERMISSIONS.tasks.update);
 
+  readonly commands = basicEditorCommands;
+
   readonly eyebrowClass = `${EYEBROW} mb-2.5`;
   readonly labelId = 'task-detail-description-label';
 
@@ -49,6 +55,16 @@ export class TaskDetailDescriptionComponent {
   };
 
   isReadOnly = computed(() => !this.canUpdate());
+
+  private readonly assistantPrompt = assistantInlinePrompt(
+    this.taskDetail.writeDescription
+  );
+
+  readonly inlinePrompt = computed(() => {
+    const canWrite = this.canUpdate() && this.taskDetail.canAskAssistant();
+
+    return canWrite ? this.assistantPrompt : null;
+  });
   description = model(this.task()?.description ?? '');
 
   finalSave = computed(() => {

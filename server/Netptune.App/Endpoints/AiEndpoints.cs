@@ -134,6 +134,22 @@ public static class AiEndpoints
             .RequireRateLimiting(RateLimiterConfiguration.AiPolicyName);
 
         group
+            .MapPost("/tasks/{systemId}/description", HandleWriteTaskDescription)
+            .RequireAuthorization(
+                NetptunePermissions.Tasks.Read,
+                NetptunePermissions.Tasks.Update,
+                NetptunePermissions.Assistant.Use)
+            .RequireRateLimiting(RateLimiterConfiguration.AiPolicyName);
+
+        group
+            .MapPost("/pages/{pageId:int}/write", HandleWritePage)
+            .RequireAuthorization(
+                NetptunePermissions.Pages.Read,
+                NetptunePermissions.Pages.Update,
+                NetptunePermissions.Assistant.Use)
+            .RequireRateLimiting(RateLimiterConfiguration.AiPolicyName);
+
+        group
             .MapPost("/pages/transform", HandleTransformPageText)
             .RequireAuthorization(NetptunePermissions.Pages.Read, NetptunePermissions.Assistant.Use)
             .RequireRateLimiting(RateLimiterConfiguration.AiPolicyName);
@@ -560,6 +576,45 @@ public static class AiEndpoints
             }
 
             clientConnected = await TryWriteEvent(context, streamEvent);
+        }
+    }
+
+    private static Task HandleWriteTaskDescription(
+        string systemId,
+        InlineWriteRequest request,
+        HttpContext context,
+        IAiInlineWriter writer)
+    {
+        var events = writer.WriteTaskDescription(systemId, request, context.RequestAborted);
+
+        return StreamInlineWrite(context, events);
+    }
+
+    private static Task HandleWritePage(
+        int pageId,
+        InlineWriteRequest request,
+        HttpContext context,
+        IAiInlineWriter writer)
+    {
+        var events = writer.WritePage(pageId, request, context.RequestAborted);
+
+        return StreamInlineWrite(context, events);
+    }
+
+    // Tied to RequestAborted, unlike a conversation turn: nothing is stored, so a writer who
+    // cancels or leaves has no use for the rest of the reply.
+    private static async Task StreamInlineWrite(HttpContext context, IAsyncEnumerable<AiStreamEvent> events)
+    {
+        StartEventStream(context);
+
+        await foreach (var streamEvent in events)
+        {
+            var isWritten = await TryWriteEvent(context, streamEvent);
+
+            if (!isWritten)
+            {
+                return;
+            }
         }
     }
 

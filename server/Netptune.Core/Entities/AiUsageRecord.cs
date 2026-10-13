@@ -43,4 +43,8 @@ public static class AiUsagePurposes
     public const string PageTransform = "page_transform";
 
     public const string ImportMapping = "import_mapping";
+
+    public const string TaskDescriptionWrite = "task_description_write";
+
+    public const string PageWrite = "page_write";
 }

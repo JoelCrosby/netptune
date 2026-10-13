@@ -1,142 +1,25 @@
 import { Service, inject } from '@angular/core';
 import { AiTranscriptService } from '@core/services/ai-transcript.service';
-
-/**
- * Draining the backlog over a fixed window rather than at a fixed speed keeps the reveal
- * in step with the stream: a burst types faster, a trickle types at the floor below.
- */
-const DRAIN_WINDOW_MS = 220;
-const MINIMUM_CHARACTERS_PER_SECOND = 120;
-
-// A word with no space after it may still be arriving, so it waits this long for the rest
-// before showing as it is. The stream ending is never signalled here, so the wait must end.
-const PARTIAL_WORD_HOLD_MS = 150;
-
-const WORD_END = /\s/;
+import { Typewriter } from '@core/util/typewriter';
 
 @Service()
 export class AiTypewriterService {
   private readonly transcript = inject(AiTranscriptService);
-  private readonly reducedMotion = matchMedia(
-    '(prefers-reduced-motion: reduce)'
-  );
-
-  private pending = '';
-  private frame: number | null = null;
-  private lastFrameAt = 0;
-  private carriedCharacters = 0;
-  private lastPushAt = 0;
+  private readonly typewriter = new Typewriter((text) => {
+    this.transcript.appendText(text);
+  });
 
   push(text: string) {
-    if (this.reducedMotion.matches) {
-      this.transcript.appendText(text);
-
-      return;
-    }
-
-    this.pending += text;
-    this.lastPushAt = performance.now();
-    this.start();
+    this.typewriter.push(text);
   }
 
   /** Ends the reveal early with everything received, for a turn the user stopped. */
   flush() {
-    this.stop();
-
-    const remaining = this.pending;
-
-    this.pending = '';
-
-    if (remaining.length > 0) {
-      this.transcript.appendText(remaining);
-    }
+    this.typewriter.flush();
   }
 
   /** Drops text whose reply is being discarded or replaced, so it never reaches the transcript. */
   discard() {
-    this.stop();
-    this.pending = '';
-  }
-
-  private start() {
-    const isRunning = this.frame !== null;
-
-    if (isRunning) {
-      return;
-    }
-
-    this.lastFrameAt = performance.now();
-    this.carriedCharacters = 0;
-    this.schedule();
-  }
-
-  private stop() {
-    const frame = this.frame;
-
-    if (frame === null) {
-      return;
-    }
-
-    cancelAnimationFrame(frame);
-    this.frame = null;
-  }
-
-  private schedule() {
-    this.frame = requestAnimationFrame((now) => this.tick(now));
-  }
-
-  private tick(now: number) {
-    const elapsedMs = now - this.lastFrameAt;
-
-    this.lastFrameAt = now;
-    this.frame = null;
-
-    const count = this.toWordEnd(this.take(elapsedMs), now);
-
-    if (count > 0) {
-      this.transcript.appendText(this.pending.slice(0, count));
-      this.pending = this.pending.slice(count);
-    }
-
-    const hasMore = this.pending.length > 0;
-
-    if (hasMore) {
-      this.schedule();
-    }
-  }
-
-  // Revealing whole words keeps half-typed words and unclosed markdown off the screen.
-  private toWordEnd(count: number, now: number): number {
-    if (count === 0) {
-      return 0;
-    }
-
-    const rest = this.pending.slice(count - 1);
-    const boundary = rest.search(WORD_END);
-
-    if (boundary >= 0) {
-      return count + boundary;
-    }
-
-    const hasSettled = now - this.lastPushAt >= PARTIAL_WORD_HOLD_MS;
-
-    if (hasSettled) {
-      return this.pending.length;
-    }
-
-    const lastBoundary = this.pending.slice(0, count).search(/\s\S*$/);
-
-    return lastBoundary >= 0 ? lastBoundary + 1 : 0;
-  }
-
-  private take(elapsedMs: number): number {
-    const catchUpRate = (this.pending.length / DRAIN_WINDOW_MS) * 1000;
-    const perSecond = Math.max(MINIMUM_CHARACTERS_PER_SECOND, catchUpRate);
-    const exact = this.carriedCharacters + (perSecond * elapsedMs) / 1000;
-    const count = Math.floor(exact);
-
-    this.carriedCharacters = exact - count;
-
-    return Math.min(count, this.pending.length);
+    this.typewriter.discard();
   }
 }

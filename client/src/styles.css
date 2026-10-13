@@ -11,6 +11,7 @@
 @import "./styles/editor/document";
 @import "./styles/editor/callout";
 @import "./styles/editor/reference";
+@import "./styles/editor/inline-prompt";
 
 @custom-variant dark (&:where(.dark, .dark *));
 @custom-variant touch (@media (pointer: coarse));

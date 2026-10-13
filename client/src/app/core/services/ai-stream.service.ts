@@ -5,6 +5,7 @@ import { AiEffort } from '@core/models/ai-effort';
 import { AiContextService } from '@core/services/ai-context.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { WorkspaceService } from '@core/services/workspace.service';
+import { aiRequestHeaders } from '@core/util/ai-request-headers';
 import { readEventStream } from '@core/util/event-stream';
 import { environment } from '@env/environment';
 
@@ -127,17 +128,9 @@ export class AiStreamService {
   }
 
   private createHeaders(): Record<string, string> {
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-    };
-
-    const workspaceRoute = this.workspace.getWorkspaceRoute();
-    const workspaceHeader = workspaceRoute ?? this.workspaceId();
-
-    if (workspaceHeader) {
-      headers['workspace'] = workspaceHeader;
-    }
-
-    return headers;
+    return aiRequestHeaders(
+      this.workspace.getWorkspaceRoute(),
+      this.workspaceId()
+    );
   }
 }

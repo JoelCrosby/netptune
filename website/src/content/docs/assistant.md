@@ -15,7 +15,7 @@ It runs on your own Anthropic or OpenAI key. Netptune adds no charge and no key 
 
 Every tool that writes is a proposal. The assistant gathers what it needs, states what it intends to change, and stops. You get a review table with a row per change: what it targets, which fields move, and what each one goes from and to.
 
-Approve the ones you want and apply. Skip a row and it is never touched.
+Approve the ones you want and apply. Skip a row and it is never touched. The one exception is text you ask it to write straight into a task description or a page, covered [below](#writing-in-place), which goes in as you watch and comes out with a single undo.
 
 - **Review in detail.** Every value is carried as a real id, so assignees, statuses and tags render as pills you can read at a glance and dates in your own format — added in green, removed struck through.
 - **Apply partially.** Uncheck anything you disagree with. The rest applies without it.
@@ -54,6 +54,16 @@ Reporting is the one worth calling out. The assistant reads the same flow, workl
 - **Come back later.** Conversations are saved. Reopen one from history and carry on, or reload the page mid-answer — the reply is still written and waiting.
 - **Read it in your language.** Replies come back in the language the app is set to.
 
+## Writing in place
+
+The assistant can also write directly into a task's description or a page, at your cursor.
+
+- **Ask in place.** Type `/ai` at the start of a word, or pick **Ask the assistant** from the `/` menu, then say what you want: a checklist, acceptance criteria, a summary of the notes above. Press Enter to send, Shift+Enter for a new line, or Esc to cancel and put everything back as it was.
+- **Watch it write.** The reply types out where you asked, formatted as it goes — lists, checklists, headings and code blocks included. The rest of the description stays editable meanwhile, and Esc stops it.
+- **Undo in one step.** The finished reply goes in as a single change, so one undo takes it all out. Your text saves once the reply is complete, never halfway through.
+
+It is offered only where you could edit the text yourself, and only to people allowed to use the assistant — the same permissions are checked again when the request runs. In a task it knows the name, status, project, sprint, tags and assignees; in a page, the title. Either way it reads the text around your cursor, so it can continue in place rather than starting over. Unlike the chat, it uses your provider's smaller, faster model.
+
 ## When it asks you something
 
 Where an answer genuinely changes what it would do, the assistant asks instead of guessing. The question arrives as a card of two to four options — pick one and it carries on from there.
@@ -68,7 +78,7 @@ The assistant shows a running total above the message box — tokens used and es
 
 While a reply is being prepared, the thinking line counts up how long the turn has been running and the tokens it has spent so far. The finished reply keeps the time it took.
 
-Workspace administrators see the same figures for the whole workspace, per member and per conversation, on the assistant settings page. Every conversation in the workspace can be read there in full.
+Workspace administrators see the same figures for the whole workspace, per member and per conversation, on the assistant settings page. Text written into descriptions and pages counts towards the same totals and the same spending cap. Every conversation in the workspace can be read there in full.
 
 Nothing is billed through Netptune. The charge lands on whichever API key answered the request.
 

@@ -11,7 +11,8 @@ public static class AiTurnReader
         IAsyncEnumerable<AiStreamEvent> run,
         TimeSpan timeout,
         CancellationToken timeoutToken,
-        [EnumeratorCancellation] CancellationToken cancellationToken)
+        [EnumeratorCancellation] CancellationToken cancellationToken,
+        string? timeoutMessage = null)
     {
         var turn = run.GetAsyncEnumerator(cancellationToken);
 
@@ -39,7 +40,7 @@ public static class AiTurnReader
 
         if (hasTimedOut)
         {
-            yield return AiStreamEvent.Failed(DescribeTimeout(timeout));
+            yield return AiStreamEvent.Failed(timeoutMessage ?? DescribeTimeout(timeout));
 
             yield break;
         }

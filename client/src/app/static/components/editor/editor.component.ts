@@ -44,6 +44,12 @@ import {
   MarkdownSyntax,
 } from './editor-content';
 import { EditorFloatingMenuComponent } from './editor-floating-menu.component';
+import {
+  createInlinePromptExtension,
+  InlinePrompt,
+  InlinePromptConfig,
+  isInlinePromptActive,
+} from './editor-inline-prompt';
 
 const saveDebounceMs = 2400;
 
@@ -67,7 +73,7 @@ export type EditorUploader = (file: File) => Promise<EditorUpload | null>;
   ],
   template: `
     <div
-      class="editor w-full rounded"
+      class="editor relative w-full rounded"
       [class.hidden]="mode() === 'markdown'"
       #editorHost></div>
 
@@ -150,6 +156,24 @@ export class EditorComponent
   readonly selectionActions = input<readonly EditorSelectionAction[]>([]);
   readonly selectionAction = output<EditorSelection>();
 
+  readonly inlinePrompt = input<InlinePromptConfig | null>(null);
+
+  private readonly slashCommands = computed(() => {
+    const commands = this.commands();
+    const config = this.inlinePrompt();
+
+    if (!config || !commands.length) return commands;
+
+    const promptCommand: EditorCommand = {
+      ...config.command,
+      id: 'inline-prompt',
+      hint: config.trigger,
+      run: (_editor, range) => this.prompt.openAt(range.from, range.to),
+    };
+
+    return [...commands, promptCommand];
+  });
+
   protected readonly slash = new SlashMenu();
   protected readonly slashLabel = $localize`:Accessible label for the menu of blocks that typing / offers:Insert a block`;
   protected readonly slashEmptyLabel = $localize`:Shown in the slash command menu when nothing matches what was typed:No matching blocks`;
@@ -195,6 +219,19 @@ export class EditorComponent
   private markdownSaved: string | null = null;
   private previousMode: EditorMode = 'rich';
 
+  private holdingSaves = false;
+
+  private readonly prompt = new InlinePrompt({
+    config: () => this.inlinePrompt(),
+    toDocument: (markdown) => this.toDocument(markdown),
+    markdownBetween: (from, to) => {
+      const editor = this.editor();
+
+      return editor ? this.markdownBetween(editor, from, to) : '';
+    },
+    busyChanged: (busy) => this.onPromptBusyChanged(busy),
+  });
+
   constructor() {
     super();
 
@@ -232,7 +269,7 @@ export class EditorComponent
 
       effect(
         () => {
-          const commands = this.commands();
+          const commands = this.slashCommands();
 
           this.slash.setCommands(commands);
         },
@@ -258,6 +295,8 @@ export class EditorComponent
 
     if (!editor) return;
 
+    this.prompt.cancel();
+
     if (deliver) {
       this.persistCurrentMode(deliver);
     }
@@ -267,6 +306,8 @@ export class EditorComponent
 
   // hands the current document over when it differs from the last save
   private persist(deliver: (value: string) => void) {
+    if (this.holdingSaves) return;
+
     const serialised = this.takePendingEdit();
 
     if (serialised === null) return;
@@ -398,6 +439,8 @@ export class EditorComponent
 
     if (mode === previous) return;
 
+    this.prompt.cancel();
+
     if (mode === 'markdown') {
       this.persist(this.emitSaved);
       this.markdownSaved = this.value();
@@ -436,6 +479,8 @@ export class EditorComponent
     const editor = this.editor();
 
     if (!editor) return;
+
+    this.prompt.cancel();
 
     // an incoming value replaces what is on screen, so hand over any edit the
     // editor still holds before it goes. content the editor was given and never
@@ -487,6 +532,7 @@ export class EditorComponent
 
     return [
       ...slash,
+      createInlinePromptExtension(this.prompt),
       ...this.extensions(),
       Callout,
       HighlightedCodeBlock.configure({ languageClassPrefix: 'language-' }),
@@ -521,7 +567,11 @@ export class EditorComponent
             $anchor.parent.content.size === 0;
 
           return (
-            editor.isEditable && editor.isFocused && empty && onEmptyParagraph
+            editor.isEditable &&
+            editor.isFocused &&
+            empty &&
+            onEmptyParagraph &&
+            !isInlinePromptActive(state)
           );
         },
       }),
@@ -546,11 +596,22 @@ export class EditorComponent
   }
 
   private onUpdate(editor: Editor) {
+    // cancelling a prompt on destroy edits the document after angular tore the model down
+    if (this.destroyed) return;
+
     const serialised = this.toMarkdown(editor.getJSON());
 
     this.editorValue = serialised;
     this.value.set(serialised);
     this.changed.next();
+  }
+
+  private onPromptBusyChanged(busy: boolean) {
+    this.holdingSaves = busy;
+
+    if (busy || this.destroyed) return;
+
+    this.persist(this.emitSaved);
   }
 
   private onPaste(event: ClipboardEvent): boolean {
