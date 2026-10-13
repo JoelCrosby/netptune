@@ -1,4 +1,5 @@
 using Netptune.Core.Entities;
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
@@ -16,6 +17,10 @@ public interface ITaskRepository : IWorkspaceEntityRepository<ProjectTask, int>
     Task<List<TaskSearchReference>> GetTaskSearchReferences(IEnumerable<int> taskIds, string workspaceKey, CancellationToken cancellationToken = default);
 
     Task<List<TaskViewModel>> GetAllTaskViewModels(string workspaceKey, CancellationToken cancellationToken = default);
+
+    Task<PagedResponse<TaskTextViewModel>> GetTexts(int workspaceId, int? projectId, PageRequest page, CancellationToken cancellationToken = default);
+
+    Task<PagedResponse<TaskTextViewModel>> FindByText(int workspaceId, TaskTextSearch search, CancellationToken cancellationToken = default);
 
     Task<ProjectTask?> GetTaskForUpdate(int id, CancellationToken cancellationToken = default);
 

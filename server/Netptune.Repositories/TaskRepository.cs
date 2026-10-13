@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
@@ -57,6 +58,95 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .Include(x => x.ProjectTaskTags)
             .Include(x => x.Status)
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+    }
+
+    public async Task<PagedResponse<TaskTextViewModel>> GetTexts(int workspaceId, int? projectId, PageRequest page, CancellationToken cancellationToken = default)
+    {
+        var query = Entities
+            .AsNoTracking()
+            .Where(task => task.WorkspaceId == workspaceId && !task.IsDeleted)
+            .Where(task => projectId == null || task.ProjectId == projectId);
+
+        var pagination = page.GetPagination();
+        var total = await query.CountAsync(cancellationToken);
+        var items = await ToTextPage(query, pagination.Skip, pagination.PageSize, cancellationToken);
+
+        return new PagedResponse<TaskTextViewModel>(items, pagination.Page, pagination.PageSize, total);
+    }
+
+    public Task<PagedResponse<TaskTextViewModel>> FindByText(int workspaceId, TaskTextSearch search, CancellationToken cancellationToken = default)
+    {
+        var predicates = new List<Expression<Func<ProjectTask, bool>>>();
+
+        if (search.InName)
+        {
+            predicates.Add(TextMatch.On<ProjectTask>(task => task.Name, search.Pattern));
+        }
+
+        if (search.InDescription)
+        {
+            predicates.Add(TextMatch.On<ProjectTask>(task => task.Description, search.Pattern));
+        }
+
+        if (search.InComments)
+        {
+            var matchesBody = TextMatch.On<Comment>(comment => comment.Body, search.Pattern);
+            var commentedTaskIds = Context.Set<Comment>()
+                .Where(comment => comment.WorkspaceId == workspaceId && !comment.IsDeleted && comment.EntityType == EntityType.Task)
+                .Where(matchesBody)
+                .Select(comment => comment.EntityId);
+
+            predicates.Add(task => commentedTaskIds.Contains(task.Id));
+        }
+
+        if (predicates.Count == 0)
+        {
+            var nothing = new PagedResponse<TaskTextViewModel>([], search.Page, search.PageSize, 0);
+
+            return Task.FromResult(nothing);
+        }
+
+        var matchesText = TextMatch.AnyOf(predicates);
+        var query = Entities
+            .AsNoTracking()
+            .Where(task => task.WorkspaceId == workspaceId && !task.IsDeleted)
+            .Where(task => search.ProjectId == null || task.ProjectId == search.ProjectId)
+            .Where(matchesText);
+
+        var skip = (search.Page - 1) * search.PageSize;
+
+        return TextMatch.RunPatternQuery(Context, async () =>
+        {
+            var total = await query.CountAsync(cancellationToken);
+            var items = await ToTextPage(query, skip, search.PageSize, cancellationToken);
+
+            return new PagedResponse<TaskTextViewModel>(items, search.Page, search.PageSize, total);
+        });
+    }
+
+    private static Task<List<TaskTextViewModel>> ToTextPage(
+        IQueryable<ProjectTask> query,
+        int skip,
+        int take,
+        CancellationToken cancellationToken)
+    {
+        return query
+            .OrderBy(task => task.ProjectId)
+            .ThenBy(task => task.ProjectScopeId)
+            .Skip(skip)
+            .Take(take)
+            .Select(task => new TaskTextViewModel
+            {
+                Id = task.Id,
+                SystemId = task.Project == null
+                    ? task.ProjectScopeId.ToString()
+                    : task.Project.Key + "-" + task.ProjectScopeId.ToString(),
+                Name = task.Name,
+                ProjectId = task.ProjectId,
+                ProjectName = task.Project == null ? null : task.Project.Name,
+                Description = task.Description ?? string.Empty,
+            })
+            .ToListAsync(cancellationToken);
     }
 
     public Task<List<ProjectTask>> GetTasksForUpdate(IEnumerable<int> ids, CancellationToken cancellationToken = default)

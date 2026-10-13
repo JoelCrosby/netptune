@@ -35,7 +35,9 @@ public sealed class GetTaskTool : IAiTool
     public string Description =>
         "Read one task in full by its systemId: description, assignees, tags, dates, estimate and flags. "
         + "Add include to read its 50 most recent comments (newest first), the tasks it is linked to and by which relation, "
-        + "or its attached files. File contents cannot be read — only what is attached.";
+        + "or its attached files. File contents cannot be read — only what is attached. "
+        + "descriptionFormat is a format block for the description. "
+        + AiTextFormatJson.Description;
 
     public AiToolKind Kind => AiToolKind.Read;
 
@@ -102,12 +104,14 @@ public sealed class GetTaskTool : IAiTool
             return AiToolExecution.Failed($"Task {systemId} was not found in this workspace.");
         }
 
+        var descriptionFormat = AiTextFormatReader.Read(task.Description ?? string.Empty);
         var detail = JsonSerializer.SerializeToNode(new
         {
             taskId = task.Id,
             systemId = task.SystemId,
             name = task.Name,
             description = task.Description,
+            descriptionFormat = AiTextFormatJson.From(descriptionFormat),
             status = task.StatusName,
             statusId = task.StatusId,
             statusCategory = task.StatusCategory.ToString(),

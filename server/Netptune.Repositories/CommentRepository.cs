@@ -6,6 +6,8 @@ using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Models.ProjectTasks;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
@@ -20,6 +22,38 @@ public class CommentRepository : WorkspaceEntityRepository<DataContext, Comment,
     public CommentRepository(DataContext context, IDbConnectionFactory connectionFactory)
         : base(context, connectionFactory)
     {
+    }
+
+    public Task<TaskCommentMatches> FindTaskCommentsByText(
+        int workspaceId,
+        IReadOnlyCollection<int> taskIds,
+        TextPattern pattern,
+        int take,
+        CancellationToken cancellationToken = default)
+    {
+        var matchesBody = TextMatch.On<Comment>(comment => comment.Body, pattern);
+        var query = Entities
+            .AsNoTracking()
+            .Where(comment => comment.WorkspaceId == workspaceId && !comment.IsDeleted && comment.EntityType == EntityType.Task)
+            .Where(comment => taskIds.Contains(comment.EntityId))
+            .Where(matchesBody);
+
+        return TextMatch.RunPatternQuery(Context, async () =>
+        {
+            var counts = await query
+                .GroupBy(comment => comment.EntityId)
+                .Select(group => new { TaskId = group.Key, Count = group.Count() })
+                .ToDictionaryAsync(group => group.TaskId, group => group.Count, cancellationToken);
+            var comments = await query
+                .OrderBy(comment => comment.EntityId)
+                .ThenBy(comment => comment.CreatedAt)
+                .ThenBy(comment => comment.Id)
+                .Take(take)
+                .Select(comment => new TaskCommentTextViewModel(comment.Id, comment.EntityId, comment.Body))
+                .ToListAsync(cancellationToken);
+
+            return new TaskCommentMatches(comments, counts);
+        });
     }
 
     public Task<List<CommentViewModel>> GetCommentViewModelsForTask(int taskId, CancellationToken cancellationToken = default, PageRequest? pageRequest = null)

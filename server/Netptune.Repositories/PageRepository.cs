@@ -9,6 +9,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Models.Pages;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Pages;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
@@ -137,6 +138,47 @@ public sealed class PageRepository : WorkspaceEntityRepository<DataContext, Page
             .ToListAsync(cancellationToken);
 
         return page with { Contributors = contributors };
+    }
+
+    public Task<List<PageBodyViewModel>> GetBodies(int workspaceId, IReadOnlyCollection<int> ids, CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .AsNoTracking()
+            .Where(page => ids.Contains(page.Id) && page.WorkspaceId == workspaceId && !page.IsDeleted && !page.IsTemplate)
+            .Select(page => new PageBodyViewModel(page.Id, page.Body ?? string.Empty))
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<PagedResponse<PageBodyViewModel>> FindByText(int workspaceId, PageTextSearch search, CancellationToken cancellationToken = default)
+    {
+        var matchesBody = TextMatch.On<Page>(page => page.Body, search.Pattern);
+        var query = Entities
+            .AsNoTracking()
+            .Where(page => page.WorkspaceId == workspaceId && !page.IsDeleted && !page.IsTemplate)
+            .Where(matchesBody);
+
+        if (search.ScopeIds is not null)
+        {
+            var scopeIds = search.ScopeIds;
+
+            query = query.Where(page => scopeIds.Contains(page.Id));
+        }
+
+        var skip = (search.Page - 1) * search.PageSize;
+
+        return TextMatch.RunPatternQuery(Context, async () =>
+        {
+            var total = await query.CountAsync(cancellationToken);
+            var items = await query
+                .OrderBy(page => page.Title)
+                .ThenBy(page => page.Id)
+                .Skip(skip)
+                .Take(search.PageSize)
+                .Select(page => new PageBodyViewModel(page.Id, page.Body ?? string.Empty))
+                .ToListAsync(cancellationToken);
+
+            return new PagedResponse<PageBodyViewModel>(items, search.Page, search.PageSize, total);
+        });
     }
 
     public Task<List<ArchivedPageViewModel>> GetArchived(int workspaceId, CancellationToken cancellationToken = default)

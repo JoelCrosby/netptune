@@ -1,6 +1,7 @@
 using Netptune.Core.Entities;
 using Netptune.Core.Models.Pages;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Pages;
 
 namespace Netptune.Core.Repositories;
@@ -18,6 +19,10 @@ public interface IPageRepository : IWorkspaceEntityRepository<Page, int>
     Task<PageViewModel?> GetViewModel(int id, int workspaceId, string userId, CancellationToken cancellationToken = default);
 
     Task<PageViewModel?> GetViewModelBySlug(string slug, int workspaceId, string userId, CancellationToken cancellationToken = default);
+
+    Task<List<PageBodyViewModel>> GetBodies(int workspaceId, IReadOnlyCollection<int> ids, CancellationToken cancellationToken = default);
+
+    Task<PagedResponse<PageBodyViewModel>> FindByText(int workspaceId, PageTextSearch search, CancellationToken cancellationToken = default);
 
     Task<List<ArchivedPageViewModel>> GetArchived(int workspaceId, CancellationToken cancellationToken = default);
 

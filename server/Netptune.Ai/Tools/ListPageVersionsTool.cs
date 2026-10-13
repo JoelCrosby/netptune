@@ -32,7 +32,7 @@ public sealed class ListPageVersionsTool : IAiTool
     public JsonDocument InputSchema { get; } = AiToolSchema.Object(
         """
         {
-          "pageId": { "type": "integer", "description": "The page, from search_pages or get_page." }
+          "pageId": { "type": "integer", "description": "The page, from list_pages, search_pages, find_in_pages or get_page." }
         }
         """,
         "pageId");

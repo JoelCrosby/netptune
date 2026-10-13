@@ -27,12 +27,17 @@ public static class AiEntityReferenceReader
     {
         ["search_tasks"] = Task,
         ["get_task"] = Task,
+        ["find_in_tasks"] = Task,
+        ["list_task_descriptions"] = Task,
         ["get_current_sprint"] = Task,
         ["list_projects"] = Project,
         ["list_sprints"] = Sprint,
         ["list_boards"] = Board,
         ["search_pages"] = Page,
         ["get_page"] = Page,
+        ["list_pages"] = Page,
+        ["get_pages"] = Page,
+        ["find_in_pages"] = Page,
     };
 
     private static readonly Dictionary<string, string> TypesByRecordKind = new(StringComparer.Ordinal)

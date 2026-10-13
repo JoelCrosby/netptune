@@ -27,6 +27,79 @@ public static partial class AiPageLookup
         return hasTree ? result.Payload! : [];
     }
 
+    public static async Task<Dictionary<int, string>> Bodies(
+        IMediator mediator,
+        IReadOnlyCollection<int> ids,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetPageBodiesQuery(ids), cancellationToken);
+        var hasBodies = result.IsSuccess && result.Payload is not null;
+        var bodies = hasBodies ? result.Payload! : [];
+
+        return bodies.ToDictionary(page => page.Id, page => page.Body);
+    }
+
+    public static List<PageTreeNodeViewModel> InTreeOrder(IReadOnlyList<PageTreeNodeViewModel> tree, int? rootId = null)
+    {
+        var liveIds = tree.Select(node => node.Id).ToHashSet();
+        var childrenByParent = tree
+            .Where(node => node.ParentId is { } parentId && liveIds.Contains(parentId))
+            .ToLookup(node => node.ParentId!.Value);
+        var topLevel = tree.Where(node => node.ParentId is not { } parentId || !liveIds.Contains(parentId));
+        var starts = rootId is { } id ? childrenByParent[id] : topLevel;
+        var ordered = new List<PageTreeNodeViewModel>();
+        var visited = new HashSet<int>();
+        var pending = new Stack<PageTreeNodeViewModel>(starts.OrderByDescending(node => node.SortOrder));
+
+        while (pending.TryPop(out var node))
+        {
+            if (!visited.Add(node.Id))
+            {
+                continue;
+            }
+
+            ordered.Add(node);
+
+            var children = childrenByParent[node.Id].OrderByDescending(child => child.SortOrder);
+
+            foreach (var child in children)
+            {
+                pending.Push(child);
+            }
+        }
+
+        return ordered;
+    }
+
+    public static Dictionary<int, string?> Paths(IReadOnlyList<PageTreeNodeViewModel> tree)
+    {
+        var nodesById = tree.ToDictionary(node => node.Id);
+
+        return tree.ToDictionary(node => node.Id, node => BuildPath(node.ParentId, nodesById));
+    }
+
+    private static string? BuildPath(int? parentId, Dictionary<int, PageTreeNodeViewModel> nodesById)
+    {
+        var titles = new List<string>();
+        var visited = new HashSet<int>();
+        var currentId = parentId;
+
+        while (currentId is { } id && visited.Add(id) && nodesById.TryGetValue(id, out var parent))
+        {
+            titles.Add(parent.Title);
+            currentId = parent.ParentId;
+        }
+
+        if (titles.Count == 0)
+        {
+            return null;
+        }
+
+        titles.Reverse();
+
+        return string.Join(" / ", titles);
+    }
+
     public static PageKind? ParseKind(string? kind)
     {
         return kind?.Trim().ToLowerInvariant() switch

@@ -1,4 +1,6 @@
 using Netptune.Core.Entities;
+using Netptune.Core.Models.ProjectTasks;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
 using Netptune.Core.ViewModels.Comments;
@@ -9,6 +11,8 @@ public interface ICommentRepository : IWorkspaceEntityRepository<Comment, int>
 {
 
     Task<List<CommentViewModel>> GetCommentViewModelsForTask(int taskId, CancellationToken cancellationToken = default, PageRequest? pageRequest = null);
+
+    Task<TaskCommentMatches> FindTaskCommentsByText(int workspaceId, IReadOnlyCollection<int> taskIds, TextPattern pattern, int take, CancellationToken cancellationToken = default);
 
     Task<CommentViewModel?> GetCommentViewModel(int id, CancellationToken cancellationToken = default);
 

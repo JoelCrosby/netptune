@@ -54,7 +54,7 @@ public sealed class PageChangeTool : IAiTool
             "type": "string",
             "enum": ["create", "update_body", "move", "update_details", "archive", "restore", "delete", "restore_version"]
           },
-          "pageId": { "type": "integer", "description": "Every action but create: the page, from search_pages, get_page or list_archived_pages." },
+          "pageId": { "type": "integer", "description": "Every action but create: the page, from list_pages, search_pages, find_in_pages, get_page or list_archived_pages." },
           "pageRef": { "type": "string", "description": "update_details: handle of a page proposed earlier in this change set, instead of pageId." },
           "title": { "type": "string", "description": "Create: the title. update_body: a new title; otherwise the current one stays." },
           "kind": { "type": "string", "enum": ["document", "folder"], "description": "Create: defaults to document." },

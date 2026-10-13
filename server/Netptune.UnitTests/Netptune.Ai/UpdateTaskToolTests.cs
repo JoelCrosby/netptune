@@ -351,6 +351,71 @@ public class UpdateTaskToolTests
         AiTestTags.Given(Mediator, tags);
     }
 
+    [Fact]
+    public async Task Execute_ShouldProposeEveryUpdateInABatch()
+    {
+        GivenTasks(CreateTask(), CreateTask() with { Id = 43, SystemId = "NPT-43", Name = "Tidy the docs" });
+
+        var result = await Execute(
+            """{"updates":[{"taskId":42,"description":"One line."},{"taskId":43,"priority":"High"}]}""");
+
+        result.IsError.Should().BeFalse();
+        ChangeSet.Changes.Select(change => change.EntityId).Should().Equal(42, 43);
+        await Mediator.Received(1).Send(
+            Arg.Is<GetTasksByIdQuery>(query => query.Ids.SequenceEqual(new[] { 42, 43 })),
+            Arg.Any<CancellationToken>());
+        await Mediator.DidNotReceive().Send(Arg.Any<GetTaskQuery>(), Arg.Any<CancellationToken>());
+
+        using var content = JsonDocument.Parse(result.Content);
+
+        content.RootElement.GetProperty("proposed").EnumerateArray().Select(task => task.GetString()).Should().Equal("42", "43");
+        content.RootElement.GetProperty("refused").GetArrayLength().Should().Be(0);
+    }
+
+    [Fact]
+    public async Task Execute_ShouldKeepTheUpdatesThatWork_AndSayWhyTheOthersWereRefused()
+    {
+        GivenTasks(CreateTask());
+
+        var result = await Execute("""{"updates":[{"taskId":42,"priority":"High"},{"taskId":99,"priority":"High"}]}""");
+
+        result.IsError.Should().BeFalse();
+        ChangeSet.Changes.Should().ContainSingle();
+
+        using var content = JsonDocument.Parse(result.Content);
+        var refused = content.RootElement.GetProperty("refused").EnumerateArray().Single();
+
+        refused.GetProperty("task").GetString().Should().Be("99");
+        refused.GetProperty("reason").GetString().Should().Contain("not found");
+    }
+
+    [Theory]
+    [InlineData("""{"updates":[]}""", "empty")]
+    [InlineData("""{"updates":[{"taskId":42,"priority":"High"},{"taskId":42,"name":"x"}]}""", "only once")]
+    [InlineData("""{"taskId":42,"updates":[{"taskId":42,"priority":"High"}]}""", "not both")]
+    [InlineData("""{"updates":[{"taskId":99,"priority":"High"}]}""", "not found")]
+    [InlineData("""{"updates":[{"priority":"High"},{"name":"x"}]}""", "taskId is required")]
+    public async Task Execute_ShouldRefuseABatch_ItCannotPropose(string arguments, string message)
+    {
+        GivenTasks(CreateTask());
+
+        var result = await Execute(arguments);
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain(message);
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void GetRequiredPermissions_ShouldDemandWhatEveryUpdateInABatchChanges()
+    {
+        var tool = new UpdateTaskTool(Mediator, ChangeSet);
+        var arguments = JsonDocument.Parse("""{"updates":[{"taskId":1,"tags":["Ops"]},{"taskId":2,"priority":"High"}]}""").RootElement;
+
+        tool.GetRequiredPermissions(arguments)
+            .Should().BeEquivalentTo([NetptunePermissions.Tags.Assign, NetptunePermissions.Tasks.Update]);
+    }
+
     private async Task<AiToolExecution> Execute(string arguments)
     {
         var tool = new UpdateTaskTool(Mediator, ChangeSet);
@@ -364,6 +429,13 @@ public class UpdateTaskToolTests
         Mediator
             .Send(Arg.Is<GetTaskQuery>(query => query.Id == task.Id), Arg.Any<CancellationToken>())
             .Returns(task);
+    }
+
+    private void GivenTasks(params TaskViewModel[] tasks)
+    {
+        Mediator
+            .Send(Arg.Any<GetTasksByIdQuery>(), Arg.Any<CancellationToken>())
+            .Returns(tasks.ToList());
     }
 
     private static TaskViewModel CreateTask()

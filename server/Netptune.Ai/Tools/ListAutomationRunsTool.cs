@@ -11,7 +11,8 @@ namespace Netptune.Ai.Tools;
 
 public sealed class ListAutomationRunsTool : IAiTool
 {
-    private const int DefaultTake = 20;
+    private const int DefaultPageSize = 20;
+    private const int MaximumPageSize = 100;
 
     private readonly IMediator Mediator;
 
@@ -24,7 +25,8 @@ public sealed class ListAutomationRunsTool : IAiTool
 
     public string Description =>
         "Recent runs of one automation rule, with what triggered each run, whether it succeeded, and what it did. "
-        + "Use this to explain why a rule did or did not fire on a particular task.";
+        + "Use this to explain why a rule did or did not fire on a particular task. "
+        + "Ask for the next page until hasMore is false.";
 
     public AiToolKind Kind => AiToolKind.Read;
 
@@ -35,7 +37,8 @@ public sealed class ListAutomationRunsTool : IAiTool
         """
         {
           "ruleId": { "type": "integer", "description": "The automation rule id, from list_automations." },
-          "take": { "type": "integer", "description": "How many recent runs to return. Defaults to 20." }
+          "page": { "type": "integer", "description": "Which page of runs to return, newest first, starting at 1." },
+          "pageSize": { "type": "integer", "description": "How many runs to return per page, up to 100. Defaults to 20." }
         }
         """,
         "ruleId");
@@ -49,11 +52,13 @@ public sealed class ListAutomationRunsTool : IAiTool
             return AiToolExecution.Failed("A ruleId is required.");
         }
 
-        var take = AiToolSchema.GetInt(arguments, "take") ?? DefaultTake;
+        var requestedPageSize = AiToolSchema.GetInt(arguments, "pageSize") ?? DefaultPageSize;
+        var pageSize = Math.Clamp(requestedPageSize, 1, MaximumPageSize);
+        var page = Math.Max(AiToolSchema.GetInt(arguments, "page") ?? 1, 1);
         var filter = new AutomationRunFilter
         {
-            Page = 1,
-            PageSize = Math.Clamp(take, 1, 100),
+            Page = page,
+            PageSize = pageSize,
         };
 
         var result = await Mediator.Send(new GetAutomationRunsQuery(ruleId.Value, filter), cancellationToken);
@@ -82,6 +87,15 @@ public sealed class ListAutomationRunsTool : IAiTool
                 }),
             });
 
-        return AiToolExecution.Success(JsonSerializer.Serialize(runs));
+        var hasMore = page * pageSize < result.Payload.TotalCount;
+        var listing = new
+        {
+            totalCount = result.Payload.TotalCount,
+            page,
+            hasMore,
+            runs,
+        };
+
+        return AiToolExecution.Success(JsonSerializer.Serialize(listing));
     }
 }

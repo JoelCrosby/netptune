@@ -8,6 +8,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.ProjectTasks;
+using Netptune.Core.ViewModels.Statuses;
 using Netptune.Handlers.Statuses.Queries;
 using Netptune.Handlers.Tasks.Queries;
 
@@ -19,6 +20,7 @@ public sealed class UpdateTaskTool : IAiTool
 
     private const decimal SmallestTShirtSize = 1;
     private const decimal LargestTShirtSize = 5;
+    private const int MaximumBatchSize = 50;
 
     private static readonly string[] ClearableFields = ["startDate", "dueDate"];
 
@@ -57,7 +59,9 @@ public sealed class UpdateTaskTool : IAiTool
     public string Description =>
         "Propose changing an existing task: name, description, status, priority, dates, estimate, "
         + "assignees, tags or board group. Send only what should change. "
-        + "A task proposed earlier in this change set can take tags here by taskRef; set the rest when proposing it.";
+        + "A task proposed earlier in this change set can take tags here by taskRef; set the rest when proposing it. "
+        + "To change many tasks in one call, send updates instead: an array of up to 50 objects, each taking the same "
+        + "fields as a single update. Each task is proposed or refused on its own, and the result says which.";
 
     public AiToolKind Kind => AiToolKind.Write;
 
@@ -106,7 +110,12 @@ public sealed class UpdateTaskTool : IAiTool
             "description": "The complete set of tag names, existing or proposed with propose_tag_change. An empty array clears them."
           },
           "boardGroupId": { "type": "integer", "description": "Board group (the column on a board) to move the task into." },
-          "boardGroupRef": { "type": "string", "description": "Handle of a board group proposed earlier in this change set, instead of boardGroupId." }
+          "boardGroupRef": { "type": "string", "description": "Handle of a board group proposed earlier in this change set, instead of boardGroupId." },
+          "updates": {
+            "type": "array",
+            "items": { "type": "object" },
+            "description": "Several updates at once, each an object with taskId or taskRef and the fields above. Use instead of the top-level fields."
+          }
         }
         """);
 
@@ -119,6 +128,25 @@ public sealed class UpdateTaskTool : IAiTool
     }
 
     public IReadOnlySet<string> GetRequiredPermissions(JsonElement arguments)
+    {
+        var updates = ReadUpdates(arguments);
+
+        if (updates is null)
+        {
+            return GetUpdatePermissions(arguments);
+        }
+
+        var required = new HashSet<string>(StringComparer.Ordinal);
+
+        foreach (var update in updates)
+        {
+            required.UnionWith(GetUpdatePermissions(update));
+        }
+
+        return required;
+    }
+
+    private static IReadOnlySet<string> GetUpdatePermissions(JsonElement arguments)
     {
         var required = new HashSet<string>(StringComparer.Ordinal);
         var changesFields = FieldArguments.Any(name => HasArgument(arguments, name));
@@ -159,7 +187,133 @@ public sealed class UpdateTaskTool : IAiTool
 
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
-        var target = await ResolveTarget(arguments, cancellationToken);
+        var updates = ReadUpdates(arguments);
+
+        if (updates is null)
+        {
+            return await ExecuteUpdate(arguments, new UpdateLookups(), cancellationToken);
+        }
+
+        var targetsTopLevelTask = HasArgument(arguments, "taskId") || HasArgument(arguments, "taskRef");
+
+        if (targetsTopLevelTask)
+        {
+            return AiToolExecution.Failed("Send either one task's fields or updates, not both.");
+        }
+
+        return await ExecuteBatch(updates, cancellationToken);
+    }
+
+    private static List<JsonElement>? ReadUpdates(JsonElement arguments)
+    {
+        var isObject = arguments.ValueKind == JsonValueKind.Object;
+
+        if (!isObject || !arguments.TryGetProperty("updates", out var updates))
+        {
+            return null;
+        }
+
+        var isArray = updates.ValueKind == JsonValueKind.Array;
+
+        return isArray ? [.. updates.EnumerateArray()] : null;
+    }
+
+    private async Task<AiToolExecution> ExecuteBatch(List<JsonElement> updates, CancellationToken cancellationToken)
+    {
+        if (updates.Count == 0)
+        {
+            return AiToolExecution.Failed("updates is empty. Send at least one update.");
+        }
+
+        if (updates.Count > MaximumBatchSize)
+        {
+            return AiToolExecution.Failed($"Send at most {MaximumBatchSize} updates at a time.");
+        }
+
+        var nonObject = updates.Any(update => update.ValueKind != JsonValueKind.Object);
+
+        if (nonObject)
+        {
+            return AiToolExecution.Failed("Every entry in updates must be an object with taskId or taskRef.");
+        }
+
+        var targets = updates.Select(DescribeTarget).ToList();
+        var duplicates = targets
+            .OfType<string>()
+            .GroupBy(target => target, StringComparer.Ordinal)
+            .Where(group => group.Count() > 1)
+            .Select(group => group.Key)
+            .ToList();
+
+        if (duplicates.Count > 0)
+        {
+            return AiToolExecution.Failed(
+                $"Each task can appear in updates only once; combine the changes for {string.Join(", ", duplicates)}.");
+        }
+
+        var lookups = await PreloadLookups(updates, cancellationToken);
+        var proposed = new List<string>();
+        var refused = new List<object>();
+
+        for (var index = 0; index < updates.Count; index++)
+        {
+            var execution = await ExecuteUpdate(updates[index], lookups, cancellationToken);
+            var target = targets[index] ?? $"updates[{index}]";
+
+            if (execution.IsError)
+            {
+                refused.Add(new { task = target, reason = execution.Content });
+
+                continue;
+            }
+
+            proposed.Add(target);
+        }
+
+        var summary = new
+        {
+            proposed,
+            refused,
+            note = "Nothing has been applied yet — the user must review and apply the proposed changes.",
+        };
+
+        var content = JsonSerializer.Serialize(summary);
+
+        if (proposed.Count == 0)
+        {
+            return AiToolExecution.Failed(content);
+        }
+
+        return AiToolExecution.Success(content);
+    }
+
+    private static string? DescribeTarget(JsonElement update)
+    {
+        var taskRef = AiPendingReference.Read(update, "taskRef");
+        var taskId = AiToolSchema.GetInt(update, "taskId");
+
+        return taskRef ?? taskId?.ToString();
+    }
+
+    private async Task<UpdateLookups> PreloadLookups(List<JsonElement> updates, CancellationToken cancellationToken)
+    {
+        var taskIds = updates
+            .Select(update => AiToolSchema.GetInt(update, "taskId"))
+            .OfType<int>()
+            .Distinct()
+            .ToList();
+
+        var tasks = await Mediator.Send(new GetTasksByIdQuery(taskIds), cancellationToken);
+
+        return new UpdateLookups { Tasks = tasks.ToDictionary(task => task.Id) };
+    }
+
+    private async Task<AiToolExecution> ExecuteUpdate(
+        JsonElement arguments,
+        UpdateLookups lookups,
+        CancellationToken cancellationToken)
+    {
+        var target = await ResolveTarget(arguments, lookups, cancellationToken);
 
         if (target.Error is not null)
         {
@@ -172,7 +326,7 @@ public sealed class UpdateTaskTool : IAiTool
 
         if (task is not null)
         {
-            var fieldResult = await ProposeFields(task, arguments, cancellationToken);
+            var fieldResult = await ProposeFields(task, arguments, lookups, cancellationToken);
             var changesAssignees = HasArgument(arguments, "assigneeIds");
             var assigneeResult = changesAssignees
                 ? await AiTaskChangeDrafts.Assignees(Mediator, task, arguments, cancellationToken)
@@ -222,7 +376,17 @@ public sealed class UpdateTaskTool : IAiTool
 
     private sealed record TargetResult(AiTaskTarget? Target, string? Error);
 
-    private async Task<TargetResult> ResolveTarget(JsonElement arguments, CancellationToken cancellationToken)
+    private sealed class UpdateLookups
+    {
+        public Dictionary<int, TaskViewModel>? Tasks { get; init; }
+
+        public List<StatusViewModel>? Statuses { get; set; }
+    }
+
+    private async Task<TargetResult> ResolveTarget(
+        JsonElement arguments,
+        UpdateLookups lookups,
+        CancellationToken cancellationToken)
     {
         var taskRef = AiPendingReference.Read(arguments, "taskRef");
 
@@ -238,7 +402,9 @@ public sealed class UpdateTaskTool : IAiTool
             return new TargetResult(null, "A taskId is required, or a taskRef for a task proposed in this change set.");
         }
 
-        var task = await Mediator.Send(new GetTaskQuery(taskId.Value), cancellationToken);
+        var task = lookups.Tasks is null
+            ? await Mediator.Send(new GetTaskQuery(taskId.Value), cancellationToken)
+            : lookups.Tasks.GetValueOrDefault(taskId.Value);
 
         if (task is null)
         {
@@ -277,6 +443,7 @@ public sealed class UpdateTaskTool : IAiTool
     private async Task<AiTaskDraftResult> ProposeFields(
         TaskViewModel task,
         JsonElement arguments,
+        UpdateLookups lookups,
         CancellationToken cancellationToken)
     {
         var cleared = ReadCleared(arguments);
@@ -314,7 +481,7 @@ public sealed class UpdateTaskTool : IAiTool
             return AiTaskDraftResult.Failed(estimateMessage);
         }
 
-        var statusMessage = await AddStatusField(fields, task, arguments, cancellationToken);
+        var statusMessage = await AddStatusField(fields, task, arguments, lookups, cancellationToken);
 
         if (statusMessage is not null)
         {
@@ -578,6 +745,7 @@ public sealed class UpdateTaskTool : IAiTool
         List<AiChangeField> fields,
         TaskViewModel task,
         JsonElement arguments,
+        UpdateLookups lookups,
         CancellationToken cancellationToken)
     {
         var statusId = AiToolSchema.GetInt(arguments, "statusId");
@@ -587,8 +755,9 @@ public sealed class UpdateTaskTool : IAiTool
             return null;
         }
 
-        var statuses = await Mediator.Send(new GetStatusesQuery(new StatusFilter()), cancellationToken);
-        var status = statuses?.FirstOrDefault(item => item.Id == statusId.Value);
+        lookups.Statuses ??= await Mediator.Send(new GetStatusesQuery(new StatusFilter()), cancellationToken) ?? [];
+
+        var status = lookups.Statuses.FirstOrDefault(item => item.Id == statusId.Value);
 
         if (status is null)
         {

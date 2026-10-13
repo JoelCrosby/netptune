@@ -42,6 +42,8 @@ public static class NetptuneAiConfiguration
 
         services.AddScoped<IAiTool, ListRecordsTool>();
         services.AddScoped<IAiTool, SearchTasksTool>();
+        services.AddScoped<IAiTool, FindInTasksTool>();
+        services.AddScoped<IAiTool, ListTaskDescriptionsTool>();
         services.AddScoped<IAiTool, CreateTaskTool>();
         services.AddScoped<IAiTool, UpdateTaskTool>();
         services.AddScoped<IAiTool, CommentChangeTool>();
@@ -53,6 +55,9 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiTool, GetTaskTool>();
         services.AddScoped<IAiTool, SearchPagesTool>();
         services.AddScoped<IAiTool, GetPageTool>();
+        services.AddScoped<IAiTool, GetPagesTool>();
+        services.AddScoped<IAiTool, ListPagesTool>();
+        services.AddScoped<IAiTool, FindInPagesTool>();
         services.AddScoped<IAiTool, ListArchivedPagesTool>();
         services.AddScoped<IAiTool, ListPageVersionsTool>();
         services.AddScoped<IAiTool, ListRelationsTool>();

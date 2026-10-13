@@ -12,6 +12,7 @@ namespace Netptune.Ai.Tools;
 public sealed class ListWorkspaceFilesTool : IAiTool
 {
     private const int DefaultPageSize = 25;
+    private const int MaximumPageSize = 100;
 
     private readonly IMediator Mediator;
 
@@ -24,7 +25,8 @@ public sealed class ListWorkspaceFilesTool : IAiTool
 
     public string Description =>
         "Search files uploaded anywhere in the workspace, newest first, with the task each one is attached to. "
-        + "File contents cannot be read — this reports what exists, not what is inside.";
+        + "File contents cannot be read — this reports what exists, not what is inside. "
+        + "Ask for the next page until hasMore is false.";
 
     public AiToolKind Kind => AiToolKind.Read;
 
@@ -38,21 +40,24 @@ public sealed class ListWorkspaceFilesTool : IAiTool
           "uploadedByUserId": { "type": "string", "description": "Restrict to files uploaded by one member." },
           "from": { "type": "string", "description": "Only files uploaded on or after this ISO date." },
           "to": { "type": "string", "description": "Only files uploaded on or before this ISO date." },
-          "take": { "type": "integer", "description": "How many files to return. Defaults to 25." }
+          "page": { "type": "integer", "description": "Which page of files to return, starting at 1." },
+          "pageSize": { "type": "integer", "description": "How many files to return per page, up to 100. Defaults to 25." }
         }
         """);
 
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
-        var take = AiToolSchema.GetInt(arguments, "take") ?? DefaultPageSize;
+        var requestedPageSize = AiToolSchema.GetInt(arguments, "pageSize") ?? DefaultPageSize;
+        var pageSize = Math.Clamp(requestedPageSize, 1, MaximumPageSize);
+        var page = Math.Max(AiToolSchema.GetInt(arguments, "page") ?? 1, 1);
         var filter = new WorkspaceFileFilter
         {
             Query = AiToolSchema.GetString(arguments, "query"),
             UploadedByUserId = AiToolSchema.GetString(arguments, "uploadedByUserId"),
             CreatedFrom = AiToolSchema.GetDate(arguments, "from"),
             CreatedTo = AiToolSchema.GetDate(arguments, "to"),
-            Page = 1,
-            PageSize = Math.Clamp(take, 1, 100),
+            Page = page,
+            PageSize = pageSize,
         };
 
         var result = await Mediator.Send(new GetWorkspaceFilesQuery(filter), cancellationToken);
@@ -74,9 +79,12 @@ public sealed class ListWorkspaceFilesTool : IAiTool
             taskName = file.TaskName,
         });
 
+        var hasMore = page * pageSize < result.Payload.TotalCount;
         var summary = new
         {
             totalCount = result.Payload.TotalCount,
+            page,
+            hasMore,
             files,
         };
 

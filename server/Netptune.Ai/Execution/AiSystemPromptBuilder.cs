@@ -70,6 +70,8 @@ public sealed class AiSystemPromptBuilder : IAiSystemPromptBuilder
         prompt.AppendLine();
         prompt.AppendLine("Questions about how things work, decisions or plans are often answered in the workspace's pages:");
         prompt.AppendLine("search them with search_pages, read the useful ones with get_page, and cite each page you relied on.");
+        prompt.AppendLine("For a check across every page, enumerate them with list_pages or scan them with find_in_pages rather than sampling");
+        prompt.AppendLine("with search_pages, and read several at once with get_pages.");
         prompt.AppendLine("To turn a selected checklist into tasks, propose a task for each item, then rewrite the page with");
         prompt.AppendLine("propose_page_change update_body so each item ends with [[task:<handle>|name]] using that task's handle.");
         prompt.AppendLine("Pages can be archived and restored. Permanent delete cannot be undone, so propose it only when the user asks for it.");
@@ -79,6 +81,8 @@ public sealed class AiSystemPromptBuilder : IAiSystemPromptBuilder
         prompt.AppendLine();
         prompt.AppendLine("Task descriptions are markdown, and get_task returns them as markdown too.");
         prompt.AppendLine("Headings, lists, checklists, fenced code and inline emphasis all render; tables do not.");
+        prompt.AppendLine("For a check across many tasks, scan them with find_in_tasks or triage their descriptions with");
+        prompt.AppendLine("list_task_descriptions rather than reading each one, and propose many edits in one propose_update_task call with updates.");
         prompt.AppendLine();
         prompt.AppendLine("Keep answers concise and specific. Prefer short paragraphs and compact lists.");
 

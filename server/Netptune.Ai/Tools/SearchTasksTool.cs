@@ -22,9 +22,6 @@ public sealed class SearchTasksTool : IAiTool
     private const int SearchCandidateLimit = 100;
     private const int ExcerptLength = 160;
 
-    // Below Ai:MaxToolResultCharacters, so the runner never cuts a result off mid-JSON.
-    private const int ResultCharacterBudget = 28_000;
-
     private static readonly JsonSerializerOptions RowOptions = new()
     {
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
@@ -174,36 +171,18 @@ public sealed class SearchTasksTool : IAiTool
         IReadOnlyList<TaskViewModel> tasks,
         bool moreInIndex)
     {
-        var rows = new JsonArray();
-        var usedCharacters = 0;
-
-        foreach (var task in tasks)
-        {
-            var row = JsonSerializer.SerializeToNode(ToRow(task), RowOptions)!;
-            var rowCharacters = row.ToJsonString().Length;
-            var exceedsBudget = usedCharacters + rowCharacters > ResultCharacterBudget;
-
-            if (exceedsBudget)
-            {
-                break;
-            }
-
-            usedCharacters += rowCharacters;
-            rows.Add(row);
-        }
-
-        var omitted = tasks.Count - rows.Count;
+        var fitted = AiResultBudget.Fit(tasks.Select(ToRow), RowOptions);
         var content = new JsonObject
         {
             ["searchMode"] = mode,
             ["totalCount"] = totalCount,
             ["page"] = page,
-            ["returned"] = rows.Count,
+            ["returned"] = fitted.Rows.Count,
         };
 
-        if (omitted > 0)
+        if (fitted.Omitted > 0)
         {
-            content["omittedForSize"] = omitted;
+            content["omittedForSize"] = fitted.Omitted;
         }
 
         if (moreInIndex)
@@ -211,7 +190,7 @@ public sealed class SearchTasksTool : IAiTool
             content["moreMatchesBeyondTop100"] = true;
         }
 
-        content["tasks"] = rows;
+        content["tasks"] = fitted.Rows;
 
         return AiToolExecution.Success(content.ToJsonString());
     }
