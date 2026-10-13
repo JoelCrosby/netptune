@@ -19,6 +19,8 @@ public sealed class ReportingRepository : IReportingRepository
     // Cycle time for a task finished inside the window needs the event that created it, which can sit
     // before the window. That lookback is bounded so it cannot widen into the whole ledger.
     private const int MaxLookbackDays = 366;
+    private const int MaxFlowRangeDays = 366;
+    private const int DefaultFlowRangeDays = 90;
 
     private const int MaxFlowEvents = 200_000;
 
@@ -48,10 +50,9 @@ public sealed class ReportingRepository : IReportingRepository
     {
         var workspaceId = scope.WorkspaceId;
 
-        var (from, to) = ResolveRange(filter);
         var eventScope = new ReportingEventScope(scope, filter.ProjectId);
-
         var coverageStart = await CoverageStart(eventScope, cancellationToken);
+        var (from, to) = ResolveRange(filter, coverageStart);
         var earliestQueryable = from.AddDays(-MaxLookbackDays);
         var requestedStart = coverageStart ?? from;
         var boundedStart = requestedStart < earliestQueryable ? earliestQueryable : requestedStart;
@@ -125,7 +126,7 @@ public sealed class ReportingRepository : IReportingRepository
             .Where(task => task.Status!.Category != StatusCategory.Done && task.Status.Category != StatusCategory.Inactive)
             .CountAsync(cancellationToken);
 
-        return report with { CurrentOpenTaskCount = currentOpenTaskCount };
+        return report with { CurrentOpenTaskCount = currentOpenTaskCount, HistoryStart = coverageStart };
     }
 
     public async Task<WorkloadReport> GetWorkload(ReportingScope scope, ReportingFilter filter, CancellationToken cancellationToken = default)
@@ -608,22 +609,43 @@ public sealed class ReportingRepository : IReportingRepository
         return occurredDuringSprint && isIdentifiableTask && isCompletion;
     }
 
-    private static (DateTime From, DateTime To) ResolveRange(ReportingFilter filter)
+    private static (DateTime From, DateTime To) ResolveRange(ReportingFilter filter, DateTime? historyStart)
     {
         var to = filter.To ?? DateTime.UtcNow;
-        var from = filter.From ?? to.AddDays(-90);
+        var from = filter.From ?? DefaultFrom(filter, to, historyStart);
 
         if (from > to)
         {
             throw new InvalidReportingFilterException("From must be before To.");
         }
 
-        if ((to - from).TotalDays > 366)
+        if ((to - from).TotalDays > MaxFlowRangeDays)
         {
-            throw new InvalidReportingFilterException("Flow reports are limited to 366 days.");
+            throw new InvalidReportingFilterException($"Flow reports are limited to {MaxFlowRangeDays} days.");
         }
 
         return (from, to);
+    }
+
+    private static DateTime DefaultFrom(ReportingFilter filter, DateTime to, DateTime? historyStart)
+    {
+        var recentFrom = to.AddDays(-DefaultFlowRangeDays);
+
+        if (!filter.StartsAtHistory || !historyStart.HasValue)
+        {
+            return recentFrom;
+        }
+
+        var earliestFrom = to.AddDays(-MaxFlowRangeDays);
+        var isHistoryTooOld = historyStart.Value < earliestFrom;
+        var isHistoryAfterWindow = historyStart.Value > to;
+
+        if (isHistoryTooOld)
+        {
+            return earliestFrom;
+        }
+
+        return isHistoryAfterWindow ? to : historyStart.Value;
     }
 
     private static string? ReadString(JsonDocument document, string property)

@@ -21,6 +21,8 @@ public sealed record ReportingFilter
 
     public DateTime? To { get; init; }
 
+    public bool StartsAtHistory { get; init; }
+
     public ReportingUnit Unit { get; init; } = ReportingUnit.Tasks;
 
     public string TimeZone { get; init; } = "UTC";
@@ -50,6 +52,12 @@ public sealed record ReportingCoverage(DateTime? CoverageStart, bool IsPartial);
 
 public sealed record FlowReport
 {
+    public DateTime From { get; init; }
+
+    public DateTime To { get; init; }
+
+    public DateTime? HistoryStart { get; init; }
+
     public IReadOnlyCollection<FlowBucket> Buckets { get; init; } = [];
 
     public int Throughput { get; init; }

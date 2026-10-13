@@ -18,7 +18,8 @@ public static class ReportingEndpoints
             .WithSummary("Get the flow report")
             .WithDescription(
                 "Returns throughput, cycle time and work in progress over a date range, grouped by day, week or "
-                + "month.")
+                + "month. The response names the window it covered and historyStart, the earliest date the "
+                + "requested projects have reporting data for.")
             .RequireAuthorization(NetptunePermissions.Reports.Read)
             .RequireAuthorization(NetptunePermissions.Tasks.Read);
 

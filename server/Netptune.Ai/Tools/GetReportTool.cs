@@ -33,6 +33,8 @@ public sealed class GetReportTool : IAiTool
         "Read a delivery report. "
         + "flow is pace over a date range: tasks completed, cycle time from start to done (median and 85th percentile) "
         + "and how many are still open; for throughput or whether delivery is speeding up. "
+        + "Its result names the window it covered and historyStart, the earliest date the requested projects have data for, "
+        + "so leaving the dates out is the way to find how much history exists. "
         + "burndown is how one sprint tracked against its plan: remaining work per day against the ideal line, "
         + "and what was committed, added, removed and finished; for how a sprint went or whether it is on track. "
         + "velocity is what a project's completed sprints delivered, newest first, committed against completed; "
@@ -64,8 +66,11 @@ public sealed class GetReportTool : IAiTool
             "enum": ["tasks", "storyPoints", "hours"],
             "description": "What to measure. Defaults to tasks."
           },
-          "from": { "type": "string", "description": "Flow only: start of the window as an ISO date, for example 2026-01-01." },
-          "to": { "type": "string", "description": "Flow only: end of the window as an ISO date." },
+          "from": {
+            "type": "string",
+            "description": "Flow only: start of the window as an ISO date, for example 2026-01-01. Omit to start at the earliest recorded history, at most 366 days before to."
+          },
+          "to": { "type": "string", "description": "Flow only: end of the window as an ISO date. Omit to end now." },
           "grouping": {
             "type": "string",
             "enum": ["day", "week"],
@@ -119,11 +124,13 @@ public sealed class GetReportTool : IAiTool
 
     private async Task<AiToolExecution> ReadFlow(JsonElement arguments, CancellationToken cancellationToken)
     {
+        var from = AiToolSchema.GetDate(arguments, "from");
         var filter = new ReportingFilter
         {
             ProjectId = AiToolSchema.GetInt(arguments, "projectId"),
-            From = AiToolSchema.GetDate(arguments, "from"),
+            From = from,
             To = AiToolSchema.GetDate(arguments, "to"),
+            StartsAtHistory = !from.HasValue,
             Unit = AiToolSchema.GetEnum<ReportingUnit>(arguments, "unit") ?? ReportingUnit.Tasks,
             Grouping = AiToolSchema.GetEnum<ReportingGrouping>(arguments, "grouping") ?? ReportingGrouping.Day,
         };
@@ -136,8 +143,13 @@ public sealed class GetReportTool : IAiTool
         }
 
         var report = result.Payload;
+        var hasEarlierHistory = report.HistoryStart < report.From;
         var summary = new
         {
+            from = report.From,
+            to = report.To,
+            historyStart = report.HistoryStart,
+            hasEarlierHistory,
             throughput = report.Throughput,
             medianCycleTimeHours = report.MedianCycleTimeHours,
             p85CycleTimeHours = report.P85CycleTimeHours,

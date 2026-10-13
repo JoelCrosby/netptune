@@ -49,6 +49,49 @@ public class ReportingToolTests
         captured.Filter.To.Should().Be(new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc));
         captured.Filter.Unit.Should().Be(ReportingUnit.StoryPoints);
         captured.Filter.Grouping.Should().Be(ReportingGrouping.Week);
+        captured.Filter.StartsAtHistory.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task FlowReport_ShouldStartAtTheEarliestHistory_WhenNoStartIsGiven()
+    {
+        GetFlowReportQueryCaptured? captured = null;
+
+        Mediator
+            .Send(Arg.Any<GetFlowReportQuery>(), Arg.Any<CancellationToken>())
+            .Returns(callInfo =>
+            {
+                captured = new GetFlowReportQueryCaptured(callInfo.Arg<GetFlowReportQuery>().Filter);
+
+                return ClientResponse<FlowReport>.Success(CreateFlowReport());
+            });
+
+        var tool = new GetReportTool(Mediator);
+
+        await tool.Execute(Arguments("""{"kind":"flow"}"""), TestContext.Current.CancellationToken);
+
+        captured!.Filter.From.Should().BeNull();
+        captured.Filter.To.Should().BeNull();
+        captured.Filter.StartsAtHistory.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task FlowReport_ShouldNameTheWindowAndWhereHistoryBegins()
+    {
+        Mediator
+            .Send(Arg.Any<GetFlowReportQuery>(), Arg.Any<CancellationToken>())
+            .Returns(ClientResponse<FlowReport>.Success(CreateFlowReport()));
+
+        var tool = new GetReportTool(Mediator);
+        var result = await tool.Execute(Arguments("""{"kind":"flow"}"""), TestContext.Current.CancellationToken);
+
+        using var content = JsonDocument.Parse(result.Content);
+        var root = content.RootElement;
+
+        root.GetProperty("from").GetDateTime().Should().Be(new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+        root.GetProperty("to").GetDateTime().Should().Be(new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc));
+        root.GetProperty("historyStart").GetDateTime().Should().Be(new DateTime(2025, 6, 1, 0, 0, 0, DateTimeKind.Utc));
+        root.GetProperty("hasEarlierHistory").GetBoolean().Should().BeTrue();
     }
 
     [Fact]
@@ -133,6 +176,9 @@ public class ReportingToolTests
     {
         return new FlowReport
         {
+            From = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+            To = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc),
+            HistoryStart = new DateTime(2025, 6, 1, 0, 0, 0, DateTimeKind.Utc),
             Throughput = 14,
             MedianCycleTimeHours = 30.5m,
             P85CycleTimeHours = 96m,

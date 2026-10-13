@@ -6,11 +6,14 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
+using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Events;
 using Netptune.Core.Meta;
 using Netptune.Core.Models.Reporting;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Projects;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Sprints;
@@ -438,6 +441,107 @@ public sealed class ReportingEndpointTests(NetptuneFixture fixture)
 
         before.CurrentOpenTaskCount.Should().Be(1);
         after.CurrentOpenTaskCount.Should().Be(0);
+    }
+
+    [Fact]
+    public async Task Flow_ShouldCoverTheLastNinetyDaysAndNameTheHistoryStart_WhenNoRangeIsGiven()
+    {
+        var project = await CreateProject();
+
+        await CreateTask(project.Id, sprintId: null);
+
+        var response = await Client.GetAsync($"api/reports/flow?projectId={project.Id}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<FlowReport>>();
+        var report = result!.Payload!;
+
+        (report.To - report.From).Should().Be(TimeSpan.FromDays(90));
+        report.HistoryStart.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(5));
+    }
+
+    [Fact]
+    public async Task Flow_ShouldStartAtTheHistoryStart_WhenAskedToAndNoStartIsGiven()
+    {
+        var project = await CreateProject();
+
+        await CreateTask(project.Id, sprintId: null);
+
+        var report = await GetFlowFromHistory(project, DateTime.UtcNow.AddDays(1));
+
+        report.HistoryStart.Should().NotBeNull();
+        report.From.Should().Be(report.HistoryStart!.Value);
+    }
+
+    [Fact]
+    public async Task Flow_ShouldStopAtTheRangeLimit_WhenHistoryStartsMoreThanAYearBack()
+    {
+        var project = await CreateProject();
+        var historyStart = DateTime.UtcNow.AddYears(-3);
+
+        await SeedProjectEvent(project, historyStart);
+
+        var to = DateTime.UtcNow;
+        var report = await GetFlowFromHistory(project, to);
+
+        report.From.Should().Be(to.AddDays(-366));
+        report.HistoryStart.Should().BeCloseTo(historyStart, TimeSpan.FromSeconds(1));
+    }
+
+    [Fact]
+    public async Task Flow_ShouldCoverAnEmptyWindow_WhenHistoryStartsAfterTheWindowEnds()
+    {
+        var project = await CreateProject();
+
+        await CreateTask(project.Id, sprintId: null);
+
+        var to = DateTime.UtcNow.AddDays(-1);
+        var report = await GetFlowFromHistory(project, to);
+
+        report.From.Should().Be(to);
+        report.To.Should().Be(to);
+    }
+
+    private async Task<FlowReport> GetFlowFromHistory(ProjectViewModel project, DateTime to)
+    {
+        using var scope = fixture.CreateScope();
+        var unitOfWork = scope.ServiceProvider.GetRequiredService<INetptuneUnitOfWork>();
+        var reportingScope = new ReportingScope(project.WorkspaceId, new HashSet<int> { project.Id });
+        var filter = new ReportingFilter
+        {
+            ProjectId = project.Id,
+            To = to,
+            StartsAtHistory = true,
+        };
+
+        return await unitOfWork.Reports.GetFlow(reportingScope, filter, TestContext.Current.CancellationToken);
+    }
+
+    private async Task SeedProjectEvent(ProjectViewModel project, DateTime occurredAt)
+    {
+        using var scope = fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var reference = new EventReference
+        {
+            Role = EventReferenceRoles.Scope,
+            EntityType = "project",
+            EntityId = project.Id.ToString(),
+        };
+
+        context.EventRecords.Add(new EventRecord
+        {
+            WorkspaceId = project.WorkspaceId,
+            EventKey = EventKeys.EntityCreated,
+            SubjectType = "project",
+            SubjectId = project.Id.ToString(),
+            OccurredAt = occurredAt,
+            RecordedAt = occurredAt,
+            RetentionClass = EventRetentionClasses.Permanent,
+            References = [reference],
+        });
+
+        await context.SaveChangesAsync(TestContext.Current.CancellationToken);
     }
 
     private async Task<FlowReport> GetFlow(int projectId)

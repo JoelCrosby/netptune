@@ -106,6 +106,8 @@ public static class FlowMetricCalculator
 
         return new FlowReport
         {
+            From = input.From,
+            To = input.To,
             Buckets = buckets,
             Throughput = completionsInRange.Count,
             MedianCycleTimeHours = Percentile(samples, .5m),

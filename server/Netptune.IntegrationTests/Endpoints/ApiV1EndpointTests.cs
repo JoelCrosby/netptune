@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Reporting;
 using Netptune.Core.Requests;
 using Netptune.Core.Requests.ServiceAccounts;
 using Netptune.Core.Responses.Common;
@@ -1016,6 +1017,23 @@ public sealed class ApiV1EndpointTests
         var response = await client.GetAsync(route, TestContext.Current.CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+    }
+
+    [Fact]
+    public async Task GetFlowReport_ShouldNameTheWindowItCovered()
+    {
+        var client = await CreateClient();
+
+        var response = await client.GetAsync(
+            "api/v1/reports/flow?from=2026-01-01&to=2026-03-01",
+            TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var report = await response.Content.ReadFromJsonAsync<FlowReport>(TestContext.Current.CancellationToken);
+
+        report!.From.Should().Be(new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+        report.To.Should().Be(new DateTime(2026, 3, 1, 0, 0, 0, DateTimeKind.Utc));
     }
 
     [Fact]
