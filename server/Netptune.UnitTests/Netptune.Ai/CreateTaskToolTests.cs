@@ -10,8 +10,10 @@ using Netptune.Core.Authorization;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Ai;
+using Netptune.Core.ViewModels.Boards;
 using Netptune.Core.ViewModels.Projects;
 using Netptune.Core.ViewModels.Tags;
+using Netptune.Handlers.BoardGroups.Queries;
 using Netptune.Handlers.Boards.Queries;
 using Netptune.Handlers.Projects.Queries;
 
@@ -165,6 +167,42 @@ public class CreateTaskToolTests
 
         result.IsError.Should().BeTrue();
         result.Content.Should().Contain("ref:nope");
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Execute_ShouldFail_WhenTheStartDateFallsAfterTheDueDate()
+    {
+        var result = await Execute(
+            $$"""{"name":"Fix the login page","projectId":{{ProjectId}},"startDate":"2026-09-02","dueDate":"2026-09-01"}""");
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("on or before it is due");
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Execute_ShouldFail_WhenTheBoardGroupIsOnAnotherProjectsBoard()
+    {
+        var group = new BoardGroupOptionViewModel
+        {
+            Id = 9,
+            Name = "Todo",
+            BoardId = 4,
+            BoardName = "Marketing",
+            BoardIdentifier = "marketing",
+            ProjectId = 7,
+            ProjectName = "Marketing",
+        };
+
+        Mediator
+            .Send(Arg.Any<GetBoardGroupOptionsQuery>(), Arg.Any<CancellationToken>())
+            .Returns([group]);
+
+        var result = await Execute($$"""{"name":"Fix the login page","projectId":{{ProjectId}},"boardGroupId":9}""");
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("its own project");
         ChangeSet.Changes.Should().BeEmpty();
     }
 

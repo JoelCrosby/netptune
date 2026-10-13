@@ -3,6 +3,7 @@ using System.Text.Json;
 using Mediator;
 
 using Netptune.Core.Authorization;
+using Netptune.Core.Encoding;
 using Netptune.Core.Enums;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.RelationTypes.Queries;
@@ -52,12 +53,21 @@ public sealed class CreateRelationTypeAction : IAiToolAction
             return AiToolExecution.Failed("Relation types could not be read.");
         }
 
-        var isExisting = AiRelationTypeLookup.Exists(relationTypes, name!);
+        var key = name!.ToUrlSlug();
+        var hasKey = !string.IsNullOrWhiteSpace(key);
 
-        if (isExisting)
+        if (!hasKey)
+        {
+            return AiToolExecution.Failed("A relation type name needs at least one letter or digit.");
+        }
+
+        var clash = relationTypes.FirstOrDefault(relationType => relationType.Key == key);
+        var isNamedLikeExisting = AiRelationTypeLookup.Exists(relationTypes, name!);
+
+        if (clash is not null || isNamedLikeExisting)
         {
             return AiToolExecution.Failed(
-                $"A relation type named “{name}” already exists — link with it directly. "
+                $"A relation type named “{clash?.Name ?? name}” already exists — link with it directly. "
                 + AiRelationTypeLookup.Describe(relationTypes));
         }
 

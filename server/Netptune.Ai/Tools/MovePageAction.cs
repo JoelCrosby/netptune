@@ -57,6 +57,15 @@ public sealed class MovePageAction : IAiToolAction
             return AiToolExecution.Failed("A page cannot be moved inside itself.");
         }
 
+        var targetParent = tree.FirstOrDefault(node => node.Id == parent.ParentId);
+        var changesSpace = targetParent is not null && targetParent.ProjectId != page.ProjectId;
+
+        if (changesSpace)
+        {
+            return AiToolExecution.Failed(
+                $"“{page.Title}” and “{targetParent!.Title}” are in different spaces, and pages cannot move between spaces.");
+        }
+
         var staysPut = parent.ParentRef is null && parent.ParentId == page.ParentId;
 
         if (staysPut)

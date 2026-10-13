@@ -45,6 +45,8 @@ public sealed class AiSystemPromptBuilder : IAiSystemPromptBuilder
         prompt.AppendLine("Once a propose_ tool has returned, say what you proposed and that it awaits their approval, never that it is done.");
         prompt.AppendLine("With none called, simply answer — never disclaim a proposal you did not make or describe the state of the change set.");
         prompt.AppendLine("Look up real ids with the read tools before proposing a change against them.");
+        prompt.AppendLine("A propose_ tool may refuse a change Netptune's rules forbid and name the rule; pass that on rather than working around it.");
+        prompt.AppendLine("State how Netptune behaves only when a tool result or description says so; otherwise say you cannot confirm it.");
         prompt.AppendLine("A proposal that creates something answers with a handle such as ref:1.");
         prompt.AppendLine("Pass that handle as projectRef, boardRef, boardGroupRef, taskRef, sprintRef or relationTypeRef to build on an entity the same change set is still creating.");
         prompt.AppendLine("So propose a whole tree in one turn: a project, then its sprints, boards, board groups and tasks, each pointing at the handle above it.");

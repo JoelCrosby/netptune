@@ -80,6 +80,18 @@ public class RelationTypeChangeToolTests
         ChangeSet.Changes.Should().BeEmpty();
     }
 
+    [Theory]
+    [InlineData("Relates-To!", "already exists")]
+    [InlineData("🚀", "letter or digit")]
+    public async Task Update_ShouldFail_WhenTheServerWouldRejectTheName(string name, string message)
+    {
+        var result = await Execute($$"""{"action":"update","relationTypeId":{{BlocksId}},"name":"{{name}}"}""");
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain(message);
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
     [Fact]
     public async Task Delete_ShouldFail_WhenTheTypeIsInUse()
     {

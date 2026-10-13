@@ -18,6 +18,19 @@ public sealed class GetReportTool : IAiTool
 
     private const int DefaultVelocityTake = 12;
 
+    private const string BurndownMembership =
+        "Replayed from the sprint's history. Only taking a task out of an active sprint counts as removed. "
+        + "Deleted or archived tasks, and tasks moved to another project, stay counted with their last status. "
+        + "A completed sprint's numbers are frozen at completion, its unfinished tasks counted as remaining.";
+
+    private const string FlowCycleTime =
+        "From a task's first Active-category status to its first Done-category status. Tasks that never went "
+        + "Active, or were created done, have no cycle time. A task completes the first time it reaches Done.";
+
+    private const string EstimatedUnitNote =
+        "Only tasks estimated in this unit carry a value; tasks with another estimate type or none count as 0 "
+        + "and as missing estimates.";
+
     private static readonly string[] KnownReports = [Flow, Burndown, Velocity, Workload];
 
     private readonly IMediator Mediator;
@@ -151,6 +164,8 @@ public sealed class GetReportTool : IAiTool
             historyStart = report.HistoryStart,
             hasEarlierHistory,
             throughput = report.Throughput,
+            unitNote = DescribeUnit(filter.Unit),
+            cycleTime = FlowCycleTime,
             medianCycleTimeHours = report.MedianCycleTimeHours,
             p85CycleTimeHours = report.P85CycleTimeHours,
             cycleTimeSampleSize = report.CycleTimeSampleSize,
@@ -204,6 +219,7 @@ public sealed class GetReportTool : IAiTool
             sprintId = report.SprintId,
             sprintName = report.SprintName,
             unit = report.Unit.ToString(),
+            unitNote = DescribeUnit(report.Unit),
             committedCount = report.CommittedCount,
             addedCount = report.AddedCount,
             removedCount = report.RemovedCount,
@@ -212,6 +228,7 @@ public sealed class GetReportTool : IAiTool
             missingEstimateCount = report.MissingEstimateCount,
             coverageStart = report.Coverage.CoverageStart,
             isPartial = report.Coverage.IsPartial,
+            membership = BurndownMembership,
             points = report.Points.Select(point => new
             {
                 date = point.Date,
@@ -252,6 +269,7 @@ public sealed class GetReportTool : IAiTool
         var summary = new
         {
             unit = report.Unit.ToString(),
+            unitNote = DescribeUnit(report.Unit),
             excludedSprintCount = report.ExcludedSprintCount,
             coverageStart = report.Coverage.CoverageStart,
             isPartial = report.Coverage.IsPartial,
@@ -269,6 +287,11 @@ public sealed class GetReportTool : IAiTool
         };
 
         return AiToolExecution.Success(JsonSerializer.Serialize(summary));
+    }
+
+    private static string? DescribeUnit(ReportingUnit unit)
+    {
+        return unit == ReportingUnit.Tasks ? null : EstimatedUnitNote;
     }
 
     private async Task<AiToolExecution> ReadWorkload(JsonElement arguments, CancellationToken cancellationToken)
@@ -290,6 +313,7 @@ public sealed class GetReportTool : IAiTool
         var summary = new
         {
             unit = report.Unit.ToString(),
+            unitNote = DescribeUnit(report.Unit),
             uniqueTaskCount = report.UniqueTaskCount,
             unassignedTaskCount = report.UnassignedTaskCount,
             multiAssignedTaskCount = report.MultiAssignedTaskCount,

@@ -3,6 +3,7 @@ using System.Text.Json;
 using Mediator;
 
 using Netptune.Core.Authorization;
+using Netptune.Core.Encoding;
 using Netptune.Core.Enums;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -45,9 +46,16 @@ public sealed class CreateStatusAction : IAiToolAction
                 "A category of New, Backlog, Todo, Active, Done or Inactive is required.");
         }
 
+        var key = name!.ToUrlSlug();
+        var hasKey = !string.IsNullOrWhiteSpace(key);
+
+        if (!hasKey)
+        {
+            return AiToolExecution.Failed("A status name needs at least one letter or digit.");
+        }
+
         var statuses = await Mediator.Send(new GetStatusesQuery(new StatusFilter()), cancellationToken);
-        var existing = statuses?.FirstOrDefault(status =>
-            string.Equals(status.Name, name, StringComparison.OrdinalIgnoreCase));
+        var existing = statuses?.FirstOrDefault(status => status.Key == key);
 
         if (existing is not null)
         {

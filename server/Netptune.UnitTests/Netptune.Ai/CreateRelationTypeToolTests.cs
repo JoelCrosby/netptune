@@ -86,6 +86,25 @@ public class CreateRelationTypeToolTests
         ChangeSet.Changes.Should().ContainSingle();
     }
 
+    [Fact]
+    public async Task Execute_ShouldNameTheExistingType_WhenTheNameOnlyDiffersByPunctuation()
+    {
+        var result = await Execute("""{"name":"Blocks!","category":"Dependency"}""");
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("A relation type named “Blocks” already exists");
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Execute_ShouldFail_WhenTheNameHasNoLetterOrDigit()
+    {
+        var result = await Execute("""{"name":"🚀","category":"Dependency"}""");
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("letter or digit");
+    }
+
     private async Task<AiToolExecution> Execute(string json)
     {
         var tool = new CreateRelationTypeAction(Mediator, ChangeSet);

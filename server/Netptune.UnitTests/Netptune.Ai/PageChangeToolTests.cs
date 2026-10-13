@@ -250,6 +250,26 @@ public class PageChangeToolTests
     }
 
     [Fact]
+    public async Task Move_ShouldRefuse_WhenTheParentIsInAnotherSpace()
+    {
+        List<PageTreeNodeViewModel> tree =
+        [
+            new() { Id = RfcId, ParentId = null, Kind = PageKind.Document, Title = "RFC", Slug = "rfc", SortOrder = 1 },
+            new() { Id = 14, ParentId = null, ProjectId = 3, Kind = PageKind.Folder, Title = "Roadmap", Slug = "roadmap", SortOrder = 2 },
+        ];
+
+        Mediator
+            .Send(Arg.Any<GetPageTreeQuery>(), Arg.Any<CancellationToken>())
+            .Returns(ClientResponse<List<PageTreeNodeViewModel>>.Success(tree));
+
+        var result = await Execute(new MovePageAction(Mediator, ChangeSet), $$"""{"pageId":{{RfcId}},"parentId":14}""");
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("different spaces");
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
     public async Task Move_ShouldRefuse_WhenThePageIsAlreadyThere()
     {
         var result = await Execute(new MovePageAction(Mediator, ChangeSet), $$"""{"pageId":{{RfcId}},"parentId":{{FolderId}}}""");

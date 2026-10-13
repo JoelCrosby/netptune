@@ -28,6 +28,19 @@ internal static class AiBoardLookup
         return options.FirstOrDefault(option => option.Id == boardGroupId);
     }
 
+    public static string? FindProjectMismatch(BoardGroupOptionViewModel group, int? projectId)
+    {
+        var isSameProject = group.ProjectId == projectId;
+
+        if (isSameProject)
+        {
+            return null;
+        }
+
+        return $"Board group “{group.Name}” is on {group.BoardName} in project {group.ProjectName}; "
+            + "a task can only sit on boards in its own project.";
+    }
+
     public static async Task<List<BoardGroupOptionViewModel>> FindGroupsInBoard(
         IMediator mediator,
         int boardId,

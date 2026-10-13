@@ -68,23 +68,11 @@ public sealed class CreateTaskRelationCommandHandler : IRequestHandler<CreateTas
 
         var response = await UnitOfWork.Transaction(async () =>
         {
-            if (await UnitOfWork.ProjectTaskRelations.Exists(relationType.Id, source, target, cancellationToken))
-            {
-                return ClientResponse<TaskRelationViewModel>.Failed("These tasks are already linked by this relation.");
-            }
+            var violation = await TaskRelationRules.FindViolation(UnitOfWork, relationType, source, target, cancellationToken);
 
-            if (RelationTypeRules.HasSingleSource(relationType.Category) &&
-                await UnitOfWork.ProjectTaskRelations.HasExistingSource(relationType.Id, target, cancellationToken))
+            if (violation is not null)
             {
-                return ClientResponse<TaskRelationViewModel>.Failed(
-                    $"That task already has a \"{relationType.Name}\" link. A task can only have one.");
-            }
-
-            if (RelationTypeRules.IsAcyclic(relationType.Category) &&
-                await UnitOfWork.ProjectTaskRelations.WouldCreateCycle(relationType.Id, source, target, cancellationToken))
-            {
-                return ClientResponse<TaskRelationViewModel>.Failed(
-                    $"This would create a circular \"{relationType.Name}\" chain.");
+                return ClientResponse<TaskRelationViewModel>.Failed(violation);
             }
 
             var relation = new ProjectTaskRelation

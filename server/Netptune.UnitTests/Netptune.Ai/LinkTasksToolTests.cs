@@ -10,6 +10,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.RelationTypes;
+using Netptune.Handlers.Relations.Queries;
 using Netptune.Handlers.RelationTypes.Queries;
 using Netptune.Handlers.Tasks.Queries;
 
@@ -138,6 +139,24 @@ public class LinkTasksToolTests
         var result = await Execute("""{"taskId":557,"relatedTaskId":557,"relationType":"blocks"}""");
 
         result.IsError.Should().BeTrue();
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Execute_ShouldFail_WithTheRuleTheLinkWouldBreak()
+    {
+        const string rule = "This would create a circular \"Blocks\" chain.";
+
+        Mediator
+            .Send(Arg.Is<FindTaskRelationViolationQuery>(query =>
+                query.RelationTypeId == BlocksId && query.TaskId == 557 && query.OtherTaskId == 558),
+                Arg.Any<CancellationToken>())
+            .Returns(rule);
+
+        var result = await Execute("""{"taskId":557,"relatedTaskId":558,"relationType":"blocks"}""");
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Be(rule);
         ChangeSet.Changes.Should().BeEmpty();
     }
 

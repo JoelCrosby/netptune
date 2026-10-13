@@ -5,6 +5,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.ProjectTasks;
@@ -605,7 +606,39 @@ public sealed class UpdateTaskTool : IAiTool
             return startMessage;
         }
 
-        return AddDateField(fields, "dueDate", task.DueDate, arguments, cleared);
+        var dueMessage = AddDateField(fields, "dueDate", task.DueDate, arguments, cleared);
+
+        if (dueMessage is not null)
+        {
+            return dueMessage;
+        }
+
+        var startDate = ResolveDate("startDate", task.StartDate, arguments, cleared);
+        var dueDate = ResolveDate("dueDate", task.DueDate, arguments, cleared);
+        var isScheduleValid = ProjectTaskSchedule.IsValid(startDate, dueDate);
+
+        if (!isScheduleValid)
+        {
+            return $"This would leave the task starting {startDate:yyyy-MM-dd} but due {dueDate:yyyy-MM-dd}; "
+                + "a task must start on or before it is due.";
+        }
+
+        return null;
+    }
+
+    private static DateOnly? ResolveDate(string name, DateOnly? before, JsonElement arguments, List<string> cleared)
+    {
+        var isCleared = cleared.Contains(name);
+
+        if (isCleared)
+        {
+            return null;
+        }
+
+        var raw = AiToolSchema.GetString(arguments, name);
+        var hasValue = !string.IsNullOrWhiteSpace(raw);
+
+        return hasValue ? DateOnly.Parse(raw!) : before;
     }
 
     private static string? AddDateField(

@@ -59,6 +59,30 @@ public class StatusToolTests
         payload.TryGetProperty("description", out _).Should().BeFalse();
     }
 
+    [Theory]
+    [InlineData("In-Progress", "already exists")]
+    [InlineData("🚀", "letter or digit")]
+    public async Task CreateStatus_ShouldRefuse_ANameTheServerWouldReject(string name, string message)
+    {
+        var tool = new CreateStatusAction(Mediator, ChangeSet);
+        var result = await Execute(tool, $$"""{"name":"{{name}}","category":"Active"}""");
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain(message);
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task UpdateStatus_ShouldFail_WhenTheNewNameHasNoLetterOrDigit()
+    {
+        var tool = new UpdateStatusAction(Mediator, ChangeSet);
+        var result = await Execute(tool, $$"""{"statusId":{{InProgressId}},"name":"🚀"}""");
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("letter or digit");
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
     [Fact]
     public async Task UpdateStatus_ShouldProposeTheCategory()
     {

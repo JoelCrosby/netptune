@@ -8,7 +8,6 @@ using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Users;
-using Netptune.Handlers.BoardGroups.Queries;
 using Netptune.Handlers.Users.Queries;
 
 namespace Netptune.Ai.Tools;
@@ -165,12 +164,18 @@ internal static class AiTaskChangeDrafts
             return AiTaskDraftResult.Unchanged;
         }
 
-        var options = await mediator.Send(new GetBoardGroupOptionsQuery(), cancellationToken);
-        var group = options.FirstOrDefault(option => option.Id == boardGroupId);
+        var group = await AiBoardLookup.FindGroup(mediator, boardGroupId, cancellationToken);
 
         if (group is null)
         {
             return AiTaskDraftResult.Failed($"Board group {boardGroupId} is not in this workspace.");
+        }
+
+        var mismatch = AiBoardLookup.FindProjectMismatch(group, task.ProjectId);
+
+        if (mismatch is not null)
+        {
+            return AiTaskDraftResult.Failed(mismatch);
         }
 
         var payload = new

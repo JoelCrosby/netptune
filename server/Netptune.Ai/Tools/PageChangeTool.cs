@@ -33,7 +33,7 @@ public sealed class PageChangeTool : IAiTool
         + "update_body: replaces the whole body with the markdown you give, so read the page with get_page first "
         + "and send every part you keep; pass the revision get_page returned. It is refused if the page changed since, "
         + "and applies only if nobody edits it before the user applies. "
-        + "move: puts the page last under its new parent. "
+        + "move: puts the page last under its new parent in the same space. "
         + "update_details: sets status (draft or published) and/or tags, the complete set of tag names to keep. "
         + "archive: archives the page and every page inside it; they can be restored. "
         + "restore: brings back a page from list_archived_pages. "

@@ -6,6 +6,7 @@ using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.ProjectTasks;
+using Netptune.Handlers.Sprints.Queries;
 using Netptune.Handlers.Tasks.Queries;
 
 namespace Netptune.Ai.Tools;
@@ -31,7 +32,8 @@ public sealed class SetTaskSprintTool : IAiTool
 
     public string Description =>
         "Propose putting tasks into a sprint, or set backlog to take them out of the sprint they are in. "
-        + "Tasks must belong to the sprint's project. Find sprint ids with list_records, "
+        + "Tasks must belong to the sprint's project, and a completed sprint's tasks can only move to another sprint. "
+        + "Find sprint ids with list_records, "
         + "or pass handles of a sprint or tasks proposed earlier in this change set.";
 
     public AiToolKind Kind => AiToolKind.Write;
@@ -111,7 +113,7 @@ public sealed class SetTaskSprintTool : IAiTool
             return AiToolExecution.Failed("Tasks proposed in this change set are not in a sprint to be taken out of.");
         }
 
-        var drafts = new List<AiChangeDraft>();
+        var tasks = new List<TaskViewModel>();
 
         foreach (var taskId in taskIds)
         {
@@ -127,10 +129,43 @@ public sealed class SetTaskSprintTool : IAiTool
                 return AiToolExecution.Failed($"Task {task.SystemId} is not in a sprint.");
             }
 
-            drafts.Add(CreateRemoval(task));
+            tasks.Add(task);
         }
 
+        var completedSprintError = await FindCompletedSprintError(tasks, cancellationToken);
+
+        if (completedSprintError is not null)
+        {
+            return AiToolExecution.Failed(completedSprintError);
+        }
+
+        var drafts = tasks.ConvertAll(CreateRemoval);
+
         return Propose(drafts, $"taking {drafts.Count} task(s) out of their sprint");
+    }
+
+    private async Task<string?> FindCompletedSprintError(List<TaskViewModel> tasks, CancellationToken cancellationToken)
+    {
+        var sprintIds = tasks.Select(task => task.SprintId!.Value).Distinct().ToList();
+        var sprints = await Mediator.Send(new GetSprintsByIdQuery(sprintIds), cancellationToken);
+        var completedSprintsById = sprints
+            .Where(sprint => sprint.Status == SprintStatus.Completed)
+            .ToDictionary(sprint => sprint.Id);
+        var tasksInCompletedSprints = tasks
+            .Where(task => completedSprintsById.ContainsKey(task.SprintId!.Value))
+            .GroupBy(task => task.SprintId!.Value)
+            .FirstOrDefault();
+
+        if (tasksInCompletedSprints is null)
+        {
+            return null;
+        }
+
+        var sprint = completedSprintsById[tasksInCompletedSprints.Key];
+        var systemIds = string.Join(", ", tasksInCompletedSprints.Select(task => task.SystemId));
+
+        return $"Sprint “{sprint.Name}” is completed and can no longer be changed, so {systemIds} "
+            + "cannot be taken out of it. Moving them into a planning or active sprint is allowed.";
     }
 
     private async Task<AiToolExecution> ProposeMove(

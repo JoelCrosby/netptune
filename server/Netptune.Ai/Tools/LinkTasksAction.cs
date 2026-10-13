@@ -5,6 +5,7 @@ using Mediator;
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Services.Ai;
+using Netptune.Handlers.Relations.Queries;
 using Netptune.Handlers.RelationTypes.Queries;
 using Netptune.Handlers.Tasks.Queries;
 
@@ -57,6 +58,12 @@ public sealed class LinkTasksAction : IAiToolAction
         }
 
         var (source, target) = relation.IsInverse ? (related, stated) : (stated, related);
+        var violation = await FindViolation(relation, source, target, cancellationToken);
+
+        if (violation is not null)
+        {
+            return AiToolExecution.Failed(violation);
+        }
 
         var payload = new
         {
@@ -88,6 +95,24 @@ public sealed class LinkTasksAction : IAiToolAction
 
         return AiToolExecution.Success(
             $"Proposed linking {source.Label} to {target.Label}. Nothing has been applied yet — the user must review and apply the change.");
+    }
+
+    private async Task<string?> FindViolation(
+        LinkRelation relation,
+        LinkEnd source,
+        LinkEnd target,
+        CancellationToken cancellationToken)
+    {
+        var isEveryEndExisting = relation.RelationTypeId.HasValue && source.TaskId.HasValue && target.TaskId.HasValue;
+
+        if (!isEveryEndExisting)
+        {
+            return null;
+        }
+
+        var query = new FindTaskRelationViolationQuery(relation.RelationTypeId!.Value, source.TaskId!.Value, target.TaskId!.Value);
+
+        return await Mediator.Send(query, cancellationToken);
     }
 
     private sealed record LinkRelation

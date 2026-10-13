@@ -27,7 +27,8 @@ public sealed class ProjectChangeTool : IAiTool
     public string Description =>
         "Propose creating, updating or deleting a project. "
         + "On update, fields that are not passed keep their current value. "
-        + "Deleting a project cannot be undone from the assistant.";
+        + "Deleting a project hides its boards but leaves its tasks, sprints and pages in place, "
+        + "and cannot be undone from the assistant.";
 
     public AiToolKind Kind => AiToolKind.Write;
 

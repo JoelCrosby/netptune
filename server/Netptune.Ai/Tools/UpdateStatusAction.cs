@@ -52,6 +52,13 @@ public sealed class UpdateStatusAction : IAiToolAction
         if (isRenamed)
         {
             var key = name!.ToUrlSlug();
+            var hasKey = !string.IsNullOrWhiteSpace(key);
+
+            if (!hasKey)
+            {
+                return AiToolExecution.Failed("A status name needs at least one letter or digit.");
+            }
+
             var clash = statuses.FirstOrDefault(item => item.Id != status.Id && item.Key == key);
 
             if (clash is not null)

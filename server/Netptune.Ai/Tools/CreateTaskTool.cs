@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Statuses.Queries;
@@ -16,8 +17,6 @@ public sealed class CreateTaskTool : IAiTool
     public const string ChangeName = "propose_create_task";
 
     private const int MemberLookupTake = 200;
-
-    private static readonly string[] DateFields = ["startDate", "dueDate"];
 
     private readonly IMediator Mediator;
     private readonly IAiChangeSetBuilder ChangeSet;
@@ -355,6 +354,13 @@ public sealed class CreateTaskTool : IAiTool
             return $"Board group {boardGroupId} is not in this workspace.";
         }
 
+        var projectMismatch = AiBoardLookup.FindProjectMismatch(existing, project.Id);
+
+        if (projectMismatch is not null)
+        {
+            return projectMismatch;
+        }
+
         fields.Add(AiChangeFields.BoardGroup(existing.Id, $"{existing.BoardName} · {existing.Name}"));
 
         return null;
@@ -400,25 +406,52 @@ public sealed class CreateTaskTool : IAiTool
 
     private static string? AddDateFields(List<AiChangeField> fields, JsonElement arguments)
     {
-        foreach (var name in DateFields)
+        var startMessage = AddDateField(fields, arguments, "startDate", out var startDate);
+
+        if (startMessage is not null)
         {
-            var raw = AiToolSchema.GetString(arguments, name);
-            var hasValue = !string.IsNullOrWhiteSpace(raw);
-
-            if (!hasValue)
-            {
-                continue;
-            }
-
-            var isParsed = DateOnly.TryParse(raw, out var parsed);
-
-            if (!isParsed)
-            {
-                return $"“{name}” must be a date in YYYY-MM-DD form.";
-            }
-
-            fields.Add(AiChangeFields.Date(name, null, parsed));
+            return startMessage;
         }
+
+        var dueMessage = AddDateField(fields, arguments, "dueDate", out var dueDate);
+
+        if (dueMessage is not null)
+        {
+            return dueMessage;
+        }
+
+        var isScheduleValid = ProjectTaskSchedule.IsValid(startDate, dueDate);
+
+        if (!isScheduleValid)
+        {
+            return $"The start date {startDate:yyyy-MM-dd} falls after the due date {dueDate:yyyy-MM-dd}; "
+                + "a task must start on or before it is due.";
+        }
+
+        return null;
+    }
+
+    private static string? AddDateField(List<AiChangeField> fields, JsonElement arguments, string name, out DateOnly? date)
+    {
+        date = null;
+
+        var raw = AiToolSchema.GetString(arguments, name);
+        var hasValue = !string.IsNullOrWhiteSpace(raw);
+
+        if (!hasValue)
+        {
+            return null;
+        }
+
+        var isParsed = DateOnly.TryParse(raw, out var parsed);
+
+        if (!isParsed)
+        {
+            return $"“{name}” must be a date in YYYY-MM-DD form.";
+        }
+
+        date = parsed;
+        fields.Add(AiChangeFields.Date(name, null, parsed));
 
         return null;
     }

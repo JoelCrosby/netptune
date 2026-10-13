@@ -491,6 +491,7 @@ public class SprintToolTests
     [Fact]
     public async Task SetTaskSprint_ShouldProposeTakingTasksOutOfTheirSprint_WhenBacklogIsSet()
     {
+        GivenSprintsById([CreateActiveSprint() with { Id = SprintId }]);
         GivenTask(CreateTask(1, ProjectId, SprintId));
         GivenTask(CreateTask(2, ProjectId, SprintId));
 
@@ -500,6 +501,21 @@ public class SprintToolTests
         result.IsError.Should().BeFalse();
         ChangeSet.Changes.Should().HaveCount(2);
         ChangeSet.Changes.Should().OnlyContain(change => change.ToolName == SetTaskSprintTool.RemoveChange);
+    }
+
+    [Fact]
+    public async Task SetTaskSprint_ShouldFail_WhenATaskToTakeOutIsInACompletedSprint()
+    {
+        GivenSprintsById([CreateCompletedSprint()]);
+        GivenTask(CreateTask(1, ProjectId, SprintId));
+        GivenTask(CreateTask(2, ProjectId, SprintId));
+
+        var tool = new SetTaskSprintTool(Mediator, ChangeSet);
+        var result = await tool.Execute(Arguments("""{"taskIds":[1,2],"backlog":true}"""), TestContext.Current.CancellationToken);
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("completed").And.Contain("NPT-1, NPT-2");
+        ChangeSet.Changes.Should().BeEmpty();
     }
 
     [Fact]
@@ -590,6 +606,13 @@ public class SprintToolTests
             .Returns(sprints);
     }
 
+    private void GivenSprintsById(List<SprintViewModel> sprints)
+    {
+        Mediator
+            .Send(Arg.Any<GetSprintsByIdQuery>(), Arg.Any<CancellationToken>())
+            .Returns(sprints);
+    }
+
     private void GivenProposedClosure(int sprintId, string toolName)
     {
         ChangeSet.Add(new AiChangeDraft
@@ -641,6 +664,11 @@ public class SprintToolTests
             ProjectKey = "NPT",
             WorkspaceId = 1,
         };
+    }
+
+    private static SprintViewModel CreateCompletedSprint()
+    {
+        return CreateActiveSprint() with { Id = SprintId, Name = "Sprint 4", Status = SprintStatus.Completed };
     }
 
     private static TaskViewModel CreateTask(int id, int projectId, int? sprintId = null)

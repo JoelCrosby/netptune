@@ -54,6 +54,13 @@ public sealed class UpdateRelationTypeAction : IAiToolAction
         if (isRenamed)
         {
             var key = name!.ToUrlSlug();
+            var hasKey = !string.IsNullOrWhiteSpace(key);
+
+            if (!hasKey)
+            {
+                return AiToolExecution.Failed("A relation type name needs at least one letter or digit.");
+            }
+
             var clash = relationTypes.FirstOrDefault(item => item.Id != relationType.Id && item.Key == key);
 
             if (clash is not null)

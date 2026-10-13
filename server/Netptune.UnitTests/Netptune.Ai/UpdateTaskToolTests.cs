@@ -9,8 +9,10 @@ using Netptune.Ai.Tools;
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Services.Ai;
+using Netptune.Core.ViewModels.Boards;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Tags;
+using Netptune.Handlers.BoardGroups.Queries;
 using Netptune.Handlers.Tasks.Queries;
 
 using NSubstitute;
@@ -95,6 +97,50 @@ public class UpdateTaskToolTests
         var result = await Execute($$"""{"taskId":{{TaskId}},"dueDate":"2026-09-01","clear":["dueDate"]}""");
 
         result.IsError.Should().BeTrue();
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Execute_ShouldFail_WhenTheStartDateWouldFallAfterTheStoredDueDate()
+    {
+        GivenTask(CreateTask());
+
+        var result = await Execute($$"""{"taskId":{{TaskId}},"startDate":"2026-09-01"}""");
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("2026-08-14");
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Execute_ShouldAllowALaterStartDate_WhenTheDueDateIsClearedAlongsideIt()
+    {
+        GivenTask(CreateTask());
+
+        var result = await Execute($$"""{"taskId":{{TaskId}},"startDate":"2026-09-01","clear":["dueDate"]}""");
+
+        result.IsError.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Execute_ShouldFail_WhenTheBoardGroupIsOnAnotherProjectsBoard()
+    {
+        GivenTask(CreateTask());
+        GivenBoardGroup(new BoardGroupOptionViewModel
+        {
+            Id = 9,
+            Name = "Todo",
+            BoardId = 4,
+            BoardName = "Marketing",
+            BoardIdentifier = "marketing",
+            ProjectId = 7,
+            ProjectName = "Marketing",
+        });
+
+        var result = await Execute($$"""{"taskId":{{TaskId}},"boardGroupId":9}""");
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("its own project");
         ChangeSet.Changes.Should().BeEmpty();
     }
 
@@ -429,6 +475,13 @@ public class UpdateTaskToolTests
         Mediator
             .Send(Arg.Is<GetTaskQuery>(query => query.Id == task.Id), Arg.Any<CancellationToken>())
             .Returns(task);
+    }
+
+    private void GivenBoardGroup(BoardGroupOptionViewModel group)
+    {
+        Mediator
+            .Send(Arg.Any<GetBoardGroupOptionsQuery>(), Arg.Any<CancellationToken>())
+            .Returns([group]);
     }
 
     private void GivenTasks(params TaskViewModel[] tasks)
