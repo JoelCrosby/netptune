@@ -52,6 +52,11 @@ import {
 } from './editor-inline-prompt';
 
 const saveDebounceMs = 2400;
+const headingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+
+export const editorHeadingSelector = headingTags
+  .map((tag) => `app-editor ${tag}`)
+  .join(', ');
 
 export type EditorAppearance = 'boxed' | 'flat' | 'document';
 
@@ -419,7 +424,7 @@ export class EditorComponent
 
   scrollToHeading(index: number) {
     const headings = this.el().nativeElement.querySelectorAll(
-      'h1, h2, h3, h4, h5, h6'
+      headingTags.join(', ')
     );
 
     headings

@@ -25,10 +25,14 @@ import { DialogService } from '@core/services/dialog.service';
 import { PageCommandsService } from '@core/services/page-commands.service';
 import { BreadcrumbItem } from '@static/components/breadcrumb/breadcrumb.component';
 import { injectBreadcrumbs } from '@core/services/breadcrumb.service';
-import { EditorMode } from '@static/components/editor/editor.component';
+import {
+  EditorMode,
+  editorHeadingSelector,
+} from '@static/components/editor/editor.component';
 import { SidePanelComponent } from '@static/components/side-panel/side-panel.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
+import { ScrollSpyDirective } from '@static/directives/scroll-spy.directive';
 import {
   PageVersionDialogComponent,
   PageVersionDialogData,
@@ -61,6 +65,7 @@ import { PageTreeStore } from '../../services/page-tree.store';
     PageToolbarComponent,
     PageEditorComponent,
     PageRailComponent,
+    ScrollSpyDirective,
     EmptyStateComponent,
   ],
   providers: [PageDraftFactory, PagePresenceService],
@@ -90,7 +95,10 @@ import { PageTreeStore } from '../../services/page-tree.store';
               (statusChanged)="onStatusChanged(draft, $event)"
               (historyRequested)="onHistoryRequested()" />
 
-            <div class="min-h-0 flex-1 overflow-y-auto">
+            <div
+              class="min-h-0 flex-1 overflow-y-auto"
+              [appScrollSpy]="headingSelector"
+              (activeIndexChange)="activeHeading.set($event)">
               <app-page-editor
                 [draft]="draft"
                 [links]="links.value()"
@@ -115,6 +123,7 @@ import { PageTreeStore } from '../../services/page-tree.store';
                 (pageOpened)="onPageOpened($event)"
                 [revision]="draft.latest().revision"
                 [body]="draft.body()"
+                [activeHeading]="activeHeading()"
                 (headingSelected)="onHeadingSelected($event)"
                 (versionSelected)="onVersionSelected(draft, $event)" />
             </app-side-panel>
@@ -143,6 +152,7 @@ export class PageDetailViewComponent {
   private readonly snackbar = inject(SnackbarService);
   private readonly dialogs = inject(DialogService);
   private readonly editor = viewChild(PageEditorComponent);
+  private readonly scrollSpy = viewChild(ScrollSpyDirective);
   private readonly currentPage = inject(CurrentPageService);
   protected readonly contentWidth = inject(PageContentWidthService);
   protected readonly rail = inject(PageRailService);
@@ -177,6 +187,8 @@ export class PageDetailViewComponent {
   private readonly updates = pageUpdatesResource(this.slug);
   protected readonly mode = signal<EditorMode>('rich');
   protected readonly railTab = signal<string | number | null>('outline');
+  protected readonly activeHeading = signal<number | null>(null);
+  protected readonly headingSelector = editorHeadingSelector;
   protected readonly documentKind = PageKind.document;
 
   protected readonly canCreate = hasPermission(PERMISSIONS.pages.create);
@@ -377,6 +389,7 @@ export class PageDetailViewComponent {
   }
 
   protected onHeadingSelected(index: number) {
+    this.scrollSpy()?.hold(index);
     this.editor()?.scrollToHeading(index);
   }
 

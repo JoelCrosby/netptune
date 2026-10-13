@@ -116,6 +116,7 @@ import { outlineFromMarkdown } from '../util/page-outline';
             i18n-ariaLabel="Accessible label for the list of a page's headings"
             ariaLabel="Outline"
             [items]="outline()"
+            [activeId]="activeHeading()"
             (selected)="headingSelected.emit($event)" />
         } @else {
           <app-empty-state
@@ -135,6 +136,7 @@ export class PageRailComponent {
   readonly body = input.required<string>();
 
   readonly links = input<PageLinks | undefined>(undefined);
+  readonly activeHeading = input<number | null>(null);
 
   readonly headingSelected = output<number>();
   readonly taskOpened = output<string>();
