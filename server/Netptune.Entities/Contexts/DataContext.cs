@@ -83,6 +83,11 @@ public class DataContext : IdentityDbContext<AppUser>, IDataProtectionKeyContext
     public DbSet<AiWebDocument> AiWebDocuments { get; set; } = null!;
     public DbSet<WorkspaceSearchCredential> WorkspaceSearchCredentials { get; set; } = null!;
 
+    // Source control
+    public DbSet<SourceControlConnection> SourceControlConnections { get; set; } = null!;
+    public DbSet<SourceControlRepo> SourceControlRepos { get; set; } = null!;
+    public DbSet<SourceControlRepoProject> SourceControlRepoProjects { get; set; } = null!;
+
     public DbSet<Notification> Notifications { get; set; } = null!;
     public DbSet<NotificationSubscription> NotificationSubscriptions { get; set; } = null!;
     public DbSet<UserPreferenceValue> UserPreferenceValues { get; set; } = null!;

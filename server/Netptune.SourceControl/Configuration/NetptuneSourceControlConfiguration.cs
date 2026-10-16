@@ -4,15 +4,17 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 using Netptune.Core.SourceControl;
 using Netptune.SourceControl.Connect;
+using Netptune.SourceControl.Credentials;
 using Netptune.SourceControl.Providers.GitHub;
 using Netptune.SourceControl.Registry;
+using Netptune.SourceControl.Repos;
 
 namespace Netptune.SourceControl.Configuration;
 
 public static class NetptuneSourceControlConfiguration
 {
-    // The host must register Data Protection with the shared key ring: connect state, and later
-    // stored provider credentials, are unreadable to a host with a different ring.
+    // The host must register Data Protection with the shared key ring, and the Netptune repositories:
+    // connect state and stored provider credentials are unreadable to a host with a different ring.
     public static IServiceCollection AddNetptuneSourceControl(
         this IServiceCollection services,
         IConfiguration configuration)
@@ -21,7 +23,9 @@ public static class NetptuneSourceControlConfiguration
         services.TryAddSingleton(TimeProvider.System);
 
         services.AddSingleton<ScmConnectStateProtector>();
+        services.AddSingleton<IScmCredentialProtector, ScmCredentialProtector>();
         services.AddSingleton<ISourceControlProviderRegistry, SourceControlProviderRegistry>();
+        services.AddScoped<ISourceControlRepoSync, SourceControlRepoSync>();
 
         services.AddGitHubSourceControl(configuration);
 
