@@ -17,6 +17,7 @@ using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Ai;
+using Netptune.Core.SourceControl;
 using Netptune.Identity.Authorization.Requirements;
 using Netptune.IntegrationTests;
 using Netptune.IntegrationTests.TestServices;
@@ -104,6 +105,8 @@ public sealed class NetptuneFixture : IAsyncLifetime
                     services.AddSingleton<TestAiChatProvider>();
                     services.Replace<IAiChatProviderFactory, TestAiChatProviderFactory>();
                     services.RemoveAll<IAiModelEffortSource>();
+
+                    services.AddSingleton<ISourceControlProvider, TestSourceControlProvider>();
 
                     services.AddAuthorization(options =>
                     {

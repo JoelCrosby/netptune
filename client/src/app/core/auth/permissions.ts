@@ -121,6 +121,11 @@ export const PERMISSIONS = {
     deleteAnyConversations: 'assistant.delete_any_conversations',
     useWeb: 'assistant.use_web',
   },
+  sourceControl: {
+    read: 'source_control.read',
+    manage: 'source_control.manage',
+    createBranch: 'source_control.create_branch',
+  },
   flags: {
     read: 'flags.read',
     resolve: 'flags.resolve',

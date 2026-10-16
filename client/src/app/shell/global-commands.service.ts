@@ -78,6 +78,7 @@ export class GlobalCommandsService implements OnDestroy {
   private canReadAssistantConversations = hasPermission(
     PERMISSIONS.assistant.readAllConversations
   );
+  private canReadSourceControl = hasPermission(PERMISSIONS.sourceControl.read);
 
   private registeredIds: string[] = [];
 
@@ -344,6 +345,21 @@ export class GlobalCommandsService implements OnDestroy {
       keywords: ['service accounts', 'api', 'tokens', 'bots', 'workspace'],
       available: () => this.canReadServiceAccounts(),
       execute: () => this.navigate('settings/workspace/service-accounts'),
+    },
+    {
+      id: 'nav.settings.sourceControl',
+      label: $localize`:Command palette action that navigates to workspace source control settings:Go to Source Control Settings`,
+      group: 'settings',
+      icon: 'git-branch',
+      keywords: [
+        'source control',
+        'github',
+        'repositories',
+        'git',
+        'integrations',
+      ],
+      available: () => this.canReadSourceControl(),
+      execute: () => this.navigate('settings/workspace/source-control'),
     },
     {
       id: 'nav.settings.workspaceAssistant',

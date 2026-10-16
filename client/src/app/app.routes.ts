@@ -23,6 +23,12 @@ export const routes: Routes = [
     data: { title: $localize`:Page title for the workspace picker:Workspaces`, transparentSidebar: true, },
   },
   {
+    path: 'source-control/:provider/callback',
+    loadComponent: () => import('./features/source-control/views/source-control-callback-view/source-control-callback-view.component').then((m) => m.SourceControlCallbackViewComponent),
+    canActivate: [authGuard],
+    data: { title: $localize`:Page title while a source control connection completes:Connecting`, transparentSidebar: true, },
+  },
+  {
     path: ':workspace',
     loadChildren: () => import('./workspace.routes').then((m) => m.routes),
   },

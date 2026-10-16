@@ -6,7 +6,11 @@ import { Router } from '@angular/router';
 export class WorkspaceService {
   private readonly location = inject(Location);
   private readonly router = inject(Router);
-  private readonly nonWorkspaceRoutes = new Set(['auth', 'workspaces']);
+  private readonly nonWorkspaceRoutes = new Set([
+    'auth',
+    'workspaces',
+    'source-control',
+  ]);
   private readonly renamedSlugs = new Map<string, string>();
 
   currentWorkspace = signal<string | null>(null);

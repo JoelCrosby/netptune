@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.HttpOverrides;
 
 using Netptune.Ai.Configuration;
+using Netptune.SourceControl.Configuration;
 using Netptune.App.Configuration;
 using Netptune.App.Endpoints;
 using Netptune.App.Middleware;
@@ -121,6 +122,7 @@ builder.Services.AddS3StorageService();
 builder.Services.AddNetptuneMessageQueue(natsConnectionString);
 
 builder.Services.AddNetptuneAi(builder.Configuration);
+builder.Services.AddNetptuneSourceControl(builder.Configuration);
 builder.Services.AddNetptuneAutomationActions();
 builder.Services.AddNetptuneAutomationTriggers();
 builder.Services.AddNetptuneHandlers();
@@ -183,6 +185,7 @@ apiGroup.MapUserPreferencesEndpoints();
 apiGroup.MapCommandPaletteEndpoints();
 apiGroup.MapServiceAccountsEndpoints();
 apiGroup.MapAiEndpoints();
+apiGroup.MapSourceControlEndpoints();
 
 apiGroup.MapTaskViewEndpoints();
 apiGroup.MapPagesEndpoints();

@@ -174,6 +174,13 @@ export const routes: Routes = [
         loadComponent: () => import('./views/workspace-assistant-view/workspace-assistant-view.component').then((m) => m.WorkspaceAssistantViewComponent),
       },
       {
+        path: 'source-control',
+        canActivate: [workspaceSettingsGuard],
+        data: { permission: PERMISSIONS.sourceControl.read, breadcrumb: $localize`:Breadcrumb for the workspace source control settings:Source Control` },
+        title: $localize`:Page title for the workspace source control settings:Source Control`,
+        loadComponent: () => import('./views/workspace-source-control-view/workspace-source-control-view.component').then((m) => m.WorkspaceSourceControlViewComponent),
+      },
+      {
         path: '**',
         redirectTo: '',
       },

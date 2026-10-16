@@ -32,6 +32,7 @@
     <ProjectReference Include="..\Netptune.Repositories\Netptune.Repositories.csproj" />
     <ProjectReference Include="..\Netptune.Search\Netptune.Search.csproj" />
     <ProjectReference Include="..\Netptune.Services\Netptune.Services.csproj" />
+    <ProjectReference Include="..\Netptune.SourceControl\Netptune.SourceControl.csproj" />
     <ProjectReference Include="..\Netptune.Export\Netptune.Export.csproj" />
     <ProjectReference Include="..\Netptune.Import\Netptune.Import.csproj" />
     <ProjectReference Include="..\Netptune.Storage\Netptune.Storage.csproj" />

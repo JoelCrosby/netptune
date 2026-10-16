@@ -33,6 +33,7 @@ import {
   LucideSparkles,
   LucideBot,
   LucideDatabase,
+  LucideGitBranch,
   LucideSquareCheckBig,
   LucideTable2,
   LucideTag,
@@ -138,6 +139,7 @@ export class ShellSidebarComponent {
   canReadAssistantConversations = hasPermission(
     PERMISSIONS.assistant.readAllConversations
   );
+  canReadSourceControl = hasPermission(PERMISSIONS.sourceControl.read);
 
   links = computed(() => {
     const links: ShellMenuLink[] = [];
@@ -374,6 +376,14 @@ export class ShellSidebarComponent {
         label: $localize`:Sidebar link to the workspace assistant settings:Assistant`,
         value: ['./settings/workspace/assistant'],
         icon: LucideSparkles,
+      });
+    }
+
+    if (this.canReadSourceControl()) {
+      links.push({
+        label: $localize`:Sidebar link to the workspace source control settings:Source Control`,
+        value: ['./settings/workspace/source-control'],
+        icon: LucideGitBranch,
       });
     }
 
