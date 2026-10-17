@@ -58,7 +58,9 @@ const checkColors: Record<ScmCheckState, BadgeColor> = {
         i18n-showMoreLabel="
           Button that reveals the rest of a long list of linked code
         "
-        showMoreLabel="Show all" />
+        showMoreLabel="Show all"
+        i18n-newTabLabel="Screen reader hint on a link that opens in a new tab"
+        newTabLabel="(opens in a new tab)" />
     }
   `,
 })
@@ -67,13 +69,17 @@ export class TaskDetailCodeComponent {
 
   protected readonly links = taskCodeLinksResource(this.taskDetail.systemId);
 
-  readonly count = computed(() => this.links.value().length);
+  private readonly loadedLinks = computed(() => {
+    return this.links.hasValue() ? this.links.value() : [];
+  });
+
+  readonly count = computed(() => this.loadedLinks().length);
 
   private readonly labels = {
     pullRequests: $localize`:Group of pull requests linked to a task:Pull requests`,
     branches: $localize`:Group of branches linked to a task:Branches`,
     commits: $localize`:Group of commits linked to a task:Commits`,
-    open: $localize`:State of an open pull request:Open`,
+    open: $localize`:pull request state|State of an open pull request:Open`,
     draft: $localize`:State of a draft pull request:Draft`,
     merged: $localize`:State of a merged pull request:Merged`,
     closed: $localize`:State of a closed pull request:Closed`,
@@ -85,7 +91,7 @@ export class TaskDetailCodeComponent {
   };
 
   protected readonly groups = computed<ExternalLinkGroup[]>(() => {
-    const links = this.links.value();
+    const links = this.loadedLinks();
 
     const groups: ExternalLinkGroup[] = [
       {

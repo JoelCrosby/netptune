@@ -39,6 +39,19 @@ public class TaskCodeLinkRepository(DataContext context, IDbConnectionFactory co
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<HashSet<int>> GetRepoIdsWithLinks(
+        IReadOnlyCollection<int> repoIds,
+        CancellationToken cancellationToken = default)
+    {
+        var linkedRepoIds = await Entities
+            .Where(link => repoIds.Contains(link.RepoId))
+            .Select(link => link.RepoId)
+            .Distinct()
+            .ToListAsync(cancellationToken);
+
+        return linkedRepoIds.ToHashSet();
+    }
+
     public Task<bool> ReferencesCommit(int repoId, string commitSha, CancellationToken cancellationToken = default)
     {
         return Entities

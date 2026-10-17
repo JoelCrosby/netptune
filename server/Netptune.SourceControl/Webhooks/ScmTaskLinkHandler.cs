@@ -10,6 +10,8 @@ namespace Netptune.SourceControl.Webhooks;
 internal sealed class ScmTaskLinkHandler : IScmEventHandler
 {
     private const int MaxTitleLength = 512;
+    private const int MaxExternalRefLength = 256;
+    private const int MaxWebUrlLength = 1024;
 
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly TimeProvider Clock;
@@ -47,7 +49,7 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
 
         if (scmEvent is ScmBranchDeleted deleted)
         {
-            var removed = await MarkBranchRemoved(repo!, deleted.Branch, cancellationToken);
+            var removed = await MarkBranchRemoved(repo!, deleted, cancellationToken);
 
             return removed;
         }
@@ -73,16 +75,11 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
 
         var systemIds = referencesByCandidate.Values.SelectMany(references => references).Distinct().ToList();
 
-        var taskIds = systemIds.Count == 0
-            ? []
-            : await UnitOfWork.Tasks.GetTaskIdsBySystemIds(
-                systemIds,
-                connection.Workspace!.Slug,
-                includeArchived: false,
-                cancellationToken);
+        var taskIds = await ResolveTaskIds(systemIds, connection, cancellationToken);
 
         var now = Clock.GetUtcNow().UtcDateTime;
         var changed = false;
+        var newLinks = new List<TaskCodeLink>();
 
         foreach (var group in candidates.GroupBy(candidate => candidate.Kind))
         {
@@ -99,7 +96,10 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
 
                 // Updates reach every task already linked, even when this payload no longer mentions
                 // the task: a pull request whose title was edited is still the same pull request.
-                foreach (var link in existingForRef)
+                // A delivery older than what's stored is a retry or arrived out of order, and is skipped.
+                var staleLinks = existingForRef.Where(link => IsOlderThan(candidate, link)).ToList();
+
+                foreach (var link in existingForRef.Except(staleLinks))
                 {
                     Apply(link, candidate, now);
                     changed = true;
@@ -114,45 +114,67 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
                     .Distinct()
                     .ToList();
 
-                foreach (var taskId in newTaskIds)
-                {
-                    var link = Create(candidate, repo, taskId, now);
-
-                    await UnitOfWork.TaskCodeLinks.AddAsync(link, cancellationToken);
-                    changed = true;
-                }
+                newLinks.AddRange(newTaskIds.Select(taskId => Create(candidate, repo, taskId, now)));
             }
         }
 
-        if (changed)
+        if (newLinks.Count > 0)
         {
+            await UnitOfWork.TaskCodeLinks.AddRangeAsync(newLinks, cancellationToken);
+            changed = true;
+        }
+
+        if (changed)        {
             await UnitOfWork.CompleteAsync(cancellationToken);
         }
 
         return changed;
     }
 
+    private async Task<Dictionary<string, int>> ResolveTaskIds(
+        List<string> systemIds,
+        SourceControlConnection connection,
+        CancellationToken cancellationToken)
+    {
+        if (systemIds.Count == 0)
+        {
+            return [];
+        }
+
+        var taskIds = await UnitOfWork.Tasks.GetTaskIdsBySystemIds(
+            systemIds,
+            connection.Workspace!.Slug,
+            includeArchived: false,
+            cancellationToken);
+
+        return taskIds;
+    }
+
     private async Task<bool> MarkBranchRemoved(
         SourceControlRepo repo,
-        string branch,
+        ScmBranchDeleted deleted,
         CancellationToken cancellationToken)
     {
         var links = await UnitOfWork.TaskCodeLinks.GetForRefs(
             repo.Id,
             TaskCodeLinkKind.Branch,
-            [branch],
+            [deleted.Branch],
             cancellationToken);
 
-        if (links.Count == 0)
+        var deletedAt = deleted.OccurredAt.UtcDateTime;
+        var linksToRemove = links.Where(link => link.OccurredAt <= deletedAt).ToList();
+
+        if (linksToRemove.Count == 0)
         {
             return false;
         }
 
         var now = Clock.GetUtcNow().UtcDateTime;
 
-        foreach (var link in links)
+        foreach (var link in linksToRemove)
         {
             link.IsRemoved = true;
+            link.OccurredAt = deletedAt;
             link.UpdatedAt = now;
         }
 
@@ -163,13 +185,32 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
 
     private static List<LinkCandidate> BuildCandidates(ScmEvent scmEvent, SourceControlRepo repo)
     {
-        return scmEvent switch
+        List<LinkCandidate> candidates = scmEvent switch
         {
             ScmBranchCreated created => [FromBranch(created)],
             ScmCommitsPushed pushed => pushed.Commits.Select(commit => FromCommit(commit, pushed, repo)).ToList(),
             ScmPullRequestChanged changed => [FromPullRequest(changed.PullRequest)],
             _ => [],
         };
+
+        var storable = candidates.Where(FitsStorage).ToList();
+
+        return storable;
+    }
+
+    // Git allows branch names longer than the column; those are left unlinked rather than truncated,
+    // because two truncated names could collide on the same row.
+    private static bool FitsStorage(LinkCandidate candidate)
+    {
+        var refFits = candidate.ExternalRef.Length <= MaxExternalRefLength;
+        var urlFits = candidate.WebUrl.Length <= MaxWebUrlLength;
+
+        return refFits && urlFits;
+    }
+
+    private static bool IsOlderThan(LinkCandidate candidate, TaskCodeLink link)
+    {
+        return candidate.OccurredAt.UtcDateTime < link.OccurredAt;
     }
 
     private static LinkCandidate FromBranch(ScmBranchCreated created)

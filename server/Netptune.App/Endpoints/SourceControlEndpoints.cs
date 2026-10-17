@@ -1,8 +1,10 @@
 using Mediator;
 
+using Netptune.App.Configuration;
 using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests.SourceControl;
+using Netptune.Core.Services.Realtime;
 using Netptune.Handlers.SourceControl.Commands;
 using Netptune.Handlers.SourceControl.Queries;
 
@@ -26,19 +28,23 @@ public static class SourceControlEndpoints
             .RequireAuthorization(NetptunePermissions.SourceControl.Manage);
 
         group.MapPost("/connections/complete", HandleCompleteConnect)
-            .RequireAuthorization(NetptunePermissions.SourceControl.Manage);
+            .RequireAuthorization(NetptunePermissions.SourceControl.Manage)
+            .Broadcasts(WorkspaceEventScopes.SourceControl);
 
         group.MapDelete("/connections/{connectionId:int}", HandleDisconnect)
-            .RequireAuthorization(NetptunePermissions.SourceControl.Manage);
+            .RequireAuthorization(NetptunePermissions.SourceControl.Manage)
+            .Broadcasts(WorkspaceEventScopes.SourceControl, WorkspaceEventScopes.CodeLinks);
 
         group.MapGet("/connections/{connectionId:int}/repos", HandleGetRepos)
             .RequireAuthorization(NetptunePermissions.SourceControl.Read);
 
         group.MapPost("/connections/{connectionId:int}/sync", HandleSyncRepos)
-            .RequireAuthorization(NetptunePermissions.SourceControl.Manage);
+            .RequireAuthorization(NetptunePermissions.SourceControl.Manage)
+            .Broadcasts(WorkspaceEventScopes.SourceControl, WorkspaceEventScopes.CodeLinks);
 
         group.MapPut("/repos/{repoId:int}/linked", HandleSetRepoLinked)
-            .RequireAuthorization(NetptunePermissions.SourceControl.Manage);
+            .RequireAuthorization(NetptunePermissions.SourceControl.Manage)
+            .Broadcasts(WorkspaceEventScopes.SourceControl, WorkspaceEventScopes.CodeLinks);
 
         group.MapGet("/tasks/{systemId}/links", HandleGetTaskLinks)
             .RequireAuthorization(NetptunePermissions.SourceControl.Read, NetptunePermissions.Tasks.Read);

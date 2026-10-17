@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+
 namespace Netptune.SourceControl.Providers.GitHub;
 
 internal sealed class GitHubAppOptions
@@ -21,6 +23,29 @@ internal sealed class GitHubAppOptions
     public string ApiBaseUrl { get; set; } = "https://api.github.com";
 
     public string WebBaseUrl { get; set; } = "https://github.com";
+
+    // Environment variables often carry the PEM with escaped newlines.
+    public string PrivateKeyPem => PrivateKey.Replace("\\n", "\n");
+
+    public bool HasReadablePrivateKey()
+    {
+        using var rsa = RSA.Create();
+
+        try
+        {
+            rsa.ImportFromPem(PrivateKeyPem);
+
+            return true;
+        }
+        catch (ArgumentException)
+        {
+            return false;
+        }
+        catch (CryptographicException)
+        {
+            return false;
+        }
+    }
 
     public bool IsComplete()
     {

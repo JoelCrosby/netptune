@@ -9,7 +9,7 @@ using Netptune.UnitTests.Netptune.SourceControl.Support;
 
 using Xunit;
 
-namespace Netptune.UnitTests.Netptune.SourceControl;
+namespace Netptune.UnitTests.Netptune.SourceControl.Providers.GitHub;
 
 public sealed class GitHubAppTokenMinterTests : IDisposable
 {
@@ -18,8 +18,8 @@ public sealed class GitHubAppTokenMinterTests : IDisposable
     [Fact]
     public async Task CreateAppJwt_ShouldBeSignedByTheAppPrivateKey()
     {
-        using var publicKey = RSA.Create();
-        publicKey.ImportFromPem(GitHubTestHarness.PrivateKeyPem);
+        using var rsa = RSA.Create();
+        rsa.ImportFromPem(GitHubTestHarness.PrivateKeyPem);
 
         var jwt = Harness.TokenMinter.CreateAppJwt();
 
@@ -28,7 +28,7 @@ public sealed class GitHubAppTokenMinterTests : IDisposable
             ValidIssuer = GitHubTestHarness.AppId,
             ValidateAudience = false,
             ValidateLifetime = false,
-            IssuerSigningKey = new RsaSecurityKey(publicKey.ExportParameters(includePrivateParameters: false)),
+            IssuerSigningKey = new RsaSecurityKey(rsa.ExportParameters(includePrivateParameters: false)),
         };
 
         var result = await new JwtSecurityTokenHandler().ValidateTokenAsync(jwt, validation);

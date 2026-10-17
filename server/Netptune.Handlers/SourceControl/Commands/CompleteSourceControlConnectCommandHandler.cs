@@ -75,20 +75,26 @@ public sealed class CompleteSourceControlConnectCommandHandler
             return ClientResponse<SourceControlConnectionViewModel>.Failed(connected.Message);
         }
 
-        var connection = await SaveConnection(
-            request.Provider,
-            workspaceId,
-            userId,
-            connected.Payload!,
-            cancellationToken);
+        var connection = await UnitOfWork.Transaction(async () =>
+        {
+            var saved = await SaveConnection(
+                request.Provider,
+                workspaceId,
+                userId,
+                connected.Payload!,
+                cancellationToken);
 
-        // Saved first so a new connection has the id the audit event refers to.
-        await UnitOfWork.CompleteAsync(cancellationToken);
+            // Saved first so a new connection has the id the audit event refers to.
+            await UnitOfWork.CompleteAsync(cancellationToken);
 
-        var connectedEvent = SourceControlConnectionEvents.Create(connection, EventKeys.SourceControlConnected);
+            var connectedEvent = SourceControlConnectionEvents.Create(saved, EventKeys.SourceControlConnected);
 
-        await EventRecords.Append(connectedEvent, cancellationToken);
-        await UnitOfWork.CompleteAsync(cancellationToken);
+            await EventRecords.Append(connectedEvent, cancellationToken);
+            await UnitOfWork.CompleteAsync(cancellationToken);
+
+            return saved;
+        });
+
         await SyncRepos(connection, cancellationToken);
 
         var linkedRepos = await UnitOfWork.SourceControlRepos.GetLinkedForWorkspace(workspaceId, cancellationToken);
@@ -137,7 +143,7 @@ public sealed class CompleteSourceControlConnectCommandHandler
 
         var existing = await UnitOfWork.SourceControlConnections.GetByAccount(key, cancellationToken);
 
-        var connection = existing ?? await UnitOfWork.SourceControlConnections.AddAsync(new SourceControlConnection
+        var connection = existing ?? new SourceControlConnection
         {
             WorkspaceId = workspaceId,
             Provider = provider,
@@ -145,7 +151,12 @@ public sealed class CompleteSourceControlConnectCommandHandler
             AccountLogin = result.Account.Login,
             OwnerId = userId,
             CreatedByUserId = userId,
-        }, cancellationToken);
+        };
+
+        if (existing is null)
+        {
+            await UnitOfWork.SourceControlConnections.AddAsync(connection, cancellationToken);
+        }
 
         connection.AccountLogin = result.Account.Login;
         connection.AccountType = result.Account.AccountType;

@@ -9,6 +9,7 @@ internal static class SourceControlRepoSyncPlanner
         SourceControlConnection connection,
         IReadOnlyList<SourceControlRepo> existing,
         IReadOnlyList<ScmRepository> remote,
+        HashSet<int> reposWithTaskLinks,
         DateTime syncedAt)
     {
         var remoteById = remote
@@ -29,10 +30,10 @@ internal static class SourceControlRepoSyncPlanner
                 Refresh(repo, repository!, syncedAt);
                 refreshed++;
             }
-            else if (repo.IsLinked)
+            else if (repo.IsLinked || reposWithTaskLinks.Contains(repo.Id))
             {
-                // Linked repos keep their row so task links and project associations survive a
-                // repository being temporarily removed from the installation.
+                // Deleting the row would cascade to its task links and project associations, so a
+                // repository that has any is kept, in case it's only temporarily out of the installation.
                 repo.IsAccessible = false;
                 repo.SyncedAt = syncedAt;
                 markedInaccessible++;

@@ -104,6 +104,18 @@ public sealed class ReceiveSourceControlWebhookCommandHandler
 
         if (deliveryRecordId is null)
         {
+            // GitHub's "Redeliver" reuses the delivery id, so a delivery that never processed gets
+            // another full set of attempts rather than being dropped as a duplicate.
+            var revivedId = await UnitOfWork.ScmWebhookDeliveries.ReviveUnprocessed(
+                command.Provider,
+                envelope.DeliveryId,
+                cancellationToken);
+
+            if (revivedId is not null)
+            {
+                await Publish(revivedId.Value);
+            }
+
             return SourceControlWebhookOutcome.Duplicate;
         }
 

@@ -25,9 +25,7 @@ import { SnackbarService } from '@static/components/snackbar/snackbar.service';
           "
           title="The connection could not be completed"
           [description]="message"
-          i18n-retryLabel="Button that returns to the source control settings"
-          retryLabel="Back to Settings"
-          [retryable]="!!workspace"
+          [retryLabel]="returnLabel"
           (retry)="returnToSettings()" />
       } @else {
         <app-page-loading
@@ -51,12 +49,17 @@ export class SourceControlCallbackViewComponent implements OnInit {
   protected readonly workspace = this.pending?.workspace ?? null;
   protected readonly error = signal<string | null>(null);
 
+  protected readonly returnLabel = this.workspace
+    ? $localize`:Button that returns to the source control settings:Back to Settings`
+    : $localize`:Button that goes to the list of the user's workspaces:Go to Workspaces`;
+
   ngOnInit() {
     const slug = this.route.snapshot.paramMap.get('provider') ?? '';
     const provider = sourceControlProviderFromSlug(slug);
     const pending = this.pending;
 
     if (!pending || provider === null || pending.provider !== provider) {
+      clearPendingSourceControlConnect();
       this.error.set(
         $localize`:Shown when the source control callback has no matching connection request:This connection wasn't started from this browser tab. Start it again from your workspace settings.`
       );
@@ -77,8 +80,12 @@ export class SourceControlCallbackViewComponent implements OnInit {
       .subscribe({
         next: (response) => {
           clearPendingSourceControlConnect();
+          const account = response.payload?.accountLogin;
+
           this.snackbar.success(
-            $localize`:Shown after a source control account is connected:${response.payload?.accountLogin}:account: connected.`
+            account
+              ? $localize`:Shown after a source control account is connected:${account}:account: connected.`
+              : $localize`:Shown after a source control account is connected without its name:Account connected.`
           );
           this.returnToSettings();
         },
@@ -96,10 +103,12 @@ export class SourceControlCallbackViewComponent implements OnInit {
 
   protected returnToSettings() {
     if (!this.workspace) {
+      void this.router.navigate(['/workspaces']);
+
       return;
     }
 
-    this.router.navigate([
+    void this.router.navigate([
       '/',
       this.workspace,
       'settings',

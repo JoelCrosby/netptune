@@ -6,7 +6,7 @@ using Netptune.Core.SourceControl.Models;
 
 using Xunit;
 
-namespace Netptune.UnitTests.Netptune.SourceControl;
+namespace Netptune.UnitTests.Netptune.Core.SourceControl;
 
 public class ScmCheckSummaryTests
 {
@@ -31,7 +31,7 @@ public class ScmCheckSummaryTests
         summary!.State.Should().Be(ScmCheckState.Failure);
         summary.Failed.Should().Be(1);
         summary.Pending.Should().Be(1);
-        summary.WebUrl.Should().Be("https://scm.test/runs/test");
+        summary.AttentionUrl.Should().Be("https://scm.test/runs/test");
     }
 
     [Fact]
@@ -61,6 +61,17 @@ public class ScmCheckSummaryTests
     }
 
     [Fact]
+    public void Summarise_ShouldPreferTheLaterCompletedRunEvenWhenItWasStoredFirst()
+    {
+        var rerun = Run("build", ScmCheckRunConclusion.Success, completedAt: new DateTime(2026, 10, 17, 11, 0, 0));
+        var original = Run("build", ScmCheckRunConclusion.Failure, completedAt: new DateTime(2026, 10, 17, 10, 0, 0));
+
+        var summary = ScmCheckSummary.Summarise([rerun, original]);
+
+        summary!.State.Should().Be(ScmCheckState.Success);
+    }
+
+    [Fact]
     public void Summarise_ShouldBeNeutralWhenNothingPassedOrFailed()
     {
         var summary = ScmCheckSummary.Summarise(
@@ -70,13 +81,14 @@ public class ScmCheckSummaryTests
         ]);
 
         summary!.State.Should().Be(ScmCheckState.Neutral);
-        summary.WebUrl.Should().BeNull();
+        summary.AttentionUrl.Should().BeNull();
     }
 
     private SourceControlCheckRun Run(
         string name,
         ScmCheckRunConclusion? conclusion = null,
-        ScmCheckRunStatus status = ScmCheckRunStatus.Completed)
+        ScmCheckRunStatus status = ScmCheckRunStatus.Completed,
+        DateTime? completedAt = null)
     {
         return new SourceControlCheckRun
         {
@@ -87,6 +99,7 @@ public class ScmCheckSummaryTests
             Status = status,
             Conclusion = conclusion,
             WebUrl = $"https://scm.test/runs/{name}",
+            CompletedAt = completedAt,
         };
     }
 }

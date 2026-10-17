@@ -42,6 +42,10 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
     public const string UninstallEvent = "uninstall";
     public const string PullRequestEvent = "pull_request";
     public const string CheckRunEvent = "check_run";
+    public const string PushEvent = "push";
+    public const string BranchCreatedEvent = "create";
+    public const string BranchDeletedEvent = "delete";
+    public const string FailingEvent = "failing";
 
     // Signed means the signature header says "valid"; the body names the account. An uninstall event
     // normalises to the connection being revoked, which is enough to drive the whole pipeline.
@@ -97,6 +101,21 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
                 return [ReadCheckRun(envelope, connection)];
             }
 
+            if (envelope.EventName == PushEvent)
+            {
+                return [ReadPush(envelope, connection)];
+            }
+
+            if (envelope.EventName is BranchCreatedEvent or BranchDeletedEvent)
+            {
+                return [ReadBranchChange(envelope, connection)];
+            }
+
+            if (envelope.EventName == FailingEvent)
+            {
+                throw new InvalidOperationException("The test provider could not read this delivery.");
+            }
+
             if (envelope.EventName != UninstallEvent)
             {
                 return [];
@@ -119,7 +138,7 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
     }
 
     // The body names the repository by its external id, plus the pull request's number, title, state
-    // and optionally its head commit.
+    // and optionally its head commit and when it was last updated.
     private static ScmPullRequestChanged ReadPullRequest(ScmWebhookEnvelope envelope, ScmConnection connection)
     {
         using var document = JsonDocument.Parse(envelope.Body);
@@ -128,6 +147,9 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
         var number = root.GetProperty("number").GetString()!;
         var state = Enum.Parse<ScmPullRequestState>(root.GetProperty("state").GetString()!);
         var author = new ScmIdentity { Provider = SourceControlProvider.GitLab, Username = "tester" };
+        var updatedAt = root.TryGetProperty("updatedAt", out var updated)
+            ? updated.GetDateTimeOffset()
+            : envelope.ReceivedAt;
 
         return new ScmPullRequestChanged
         {
@@ -150,8 +172,77 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
                 Author = author,
                 WebUrl = $"https://scm.test/{repoId}/pulls/{number}",
                 CreatedAt = envelope.ReceivedAt,
-                UpdatedAt = envelope.ReceivedAt,
+                UpdatedAt = updatedAt,
             },
+        };
+    }
+
+    // The body names the repository, the branch, and each commit's sha and message.
+    private static ScmCommitsPushed ReadPush(ScmWebhookEnvelope envelope, ScmConnection connection)
+    {
+        using var document = JsonDocument.Parse(envelope.Body);
+        var root = document.RootElement;
+        var repoId = root.GetProperty("repo").GetString()!;
+        var author = new ScmIdentity { Provider = SourceControlProvider.GitLab, Username = "tester" };
+
+        var commits = root.GetProperty("commits")
+            .EnumerateArray()
+            .Select(commit => new ScmCommit
+            {
+                Sha = commit.GetProperty("sha").GetString()!,
+                Message = commit.GetProperty("message").GetString()!,
+                Author = author,
+                AuthoredAt = envelope.ReceivedAt,
+                WebUrl = $"https://scm.test/{repoId}/commit/{commit.GetProperty("sha").GetString()}",
+            })
+            .ToList();
+
+        return new ScmCommitsPushed
+        {
+            EventId = Guid.NewGuid(),
+            Provider = SourceControlProvider.GitLab,
+            ConnectionId = connection.Id,
+            WorkspaceId = connection.WorkspaceId,
+            OccurredAt = envelope.ReceivedAt,
+            Repository = new ScmRepositoryRef(repoId, connection.ExternalAccountId, repoId),
+            Branch = root.GetProperty("branch").GetString()!,
+            Commits = commits,
+        };
+    }
+
+    // The body names the repository and the branch; the event name says whether it was created or deleted.
+    private static ScmEvent ReadBranchChange(ScmWebhookEnvelope envelope, ScmConnection connection)
+    {
+        using var document = JsonDocument.Parse(envelope.Body);
+        var root = document.RootElement;
+        var repoId = root.GetProperty("repo").GetString()!;
+        var branch = root.GetProperty("branch").GetString()!;
+        var repository = new ScmRepositoryRef(repoId, connection.ExternalAccountId, repoId);
+
+        if (envelope.EventName == BranchDeletedEvent)
+        {
+            return new ScmBranchDeleted
+            {
+                EventId = Guid.NewGuid(),
+                Provider = SourceControlProvider.GitLab,
+                ConnectionId = connection.Id,
+                WorkspaceId = connection.WorkspaceId,
+                OccurredAt = envelope.ReceivedAt,
+                Repository = repository,
+                Branch = branch,
+            };
+        }
+
+        return new ScmBranchCreated
+        {
+            EventId = Guid.NewGuid(),
+            Provider = SourceControlProvider.GitLab,
+            ConnectionId = connection.Id,
+            WorkspaceId = connection.WorkspaceId,
+            OccurredAt = envelope.ReceivedAt,
+            Repository = repository,
+            Branch = branch,
+            WebUrl = $"https://scm.test/{repoId}/tree/{branch}",
         };
     }
 
@@ -228,7 +319,9 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
             ScmConnection connection,
             CancellationToken cancellationToken)
         {
-            return ValueTask.FromResult(SourceControlCapabilities.ListRepositories | SourceControlCapabilities.Webhooks);
+            var granted = SourceControlCapabilities.ListRepositories | SourceControlCapabilities.Webhooks;
+
+            return ValueTask.FromResult(granted);
         }
     }
 

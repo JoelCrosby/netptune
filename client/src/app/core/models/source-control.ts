@@ -95,7 +95,7 @@ export interface ScmCheckSummary {
   passed: number;
   failed: number;
   pending: number;
-  webUrl: string | null;
+  attentionUrl: string | null;
 }
 
 export interface TaskCodeLink {

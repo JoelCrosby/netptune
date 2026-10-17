@@ -4,8 +4,10 @@ import {
   LucideExternalLink,
   type LucideIconInput,
 } from '@lucide/angular';
+import { TooltipDirective } from '../../directives/tooltip.directive';
 import { BadgeComponent, type BadgeColor } from '../badge/badge.component';
 import { cn } from '../button/button.variants';
+import { InlineButtonComponent } from '../button/inline-button.component';
 import { ProviderMarkComponent } from '../provider-mark.component';
 
 export interface ExternalLinkBadge {
@@ -31,15 +33,15 @@ export interface ExternalLinkGroup {
   items: readonly ExternalLinkListItem[];
 }
 
-// Grouped rows that each open an outside page in a new tab. Long groups show
-// the first few rows until expanded.
 @Component({
   selector: 'app-external-link-list',
   imports: [
     BadgeComponent,
+    InlineButtonComponent,
     LucideDynamicIcon,
     LucideExternalLink,
     ProviderMarkComponent,
+    TooltipDirective,
   ],
   host: { '[class]': 'hostClass()' },
   template: `
@@ -86,10 +88,11 @@ export interface ExternalLinkGroup {
 
                 <span class="flex shrink-0 items-center gap-1.5 self-center">
                   @for (badge of item.badges; track badge.label) {
-                    <app-badge [color]="badge.color" [attr.title]="badge.title">
+                    <app-badge [color]="badge.color" [appTooltip]="badge.title">
                       {{ badge.label }}
                     </app-badge>
                   }
+                  <span class="sr-only">{{ newTabLabel() }}</span>
                   <svg
                     lucideExternalLink
                     aria-hidden="true"
@@ -102,8 +105,9 @@ export interface ExternalLinkGroup {
 
         @if (hiddenCount(group); as hidden) {
           <button
-            type="button"
-            class="text-muted hover:text-foreground self-start rounded px-2.5 py-1 text-xs font-medium"
+            app-inline-button
+            color="muted"
+            class="self-start px-2.5 py-1 text-xs"
             (click)="expand(group.id)">
             {{ showMoreLabel() }} ({{ hidden }})
           </button>
@@ -116,6 +120,7 @@ export class ExternalLinkListComponent {
   readonly groups = input.required<readonly ExternalLinkGroup[]>();
   readonly limit = input(5);
   readonly showMoreLabel = input.required<string>();
+  readonly newTabLabel = input.required<string>();
   readonly class = input('');
 
   private readonly expanded = signal<ReadonlySet<string>>(new Set());

@@ -48,6 +48,7 @@ internal sealed class ScmConnectionChangedHandler : IScmEventHandler
                 return true;
 
             case ScmConnectionAction.PermissionsChanged:
+            {
                 var provider = Registry.Resolve(connection.Provider);
                 var scmConnection = connection.ToScmConnection();
                 var granted = await provider.Connector.GetGrantedCapabilities(scmConnection, cancellationToken);
@@ -55,12 +56,15 @@ internal sealed class ScmConnectionChangedHandler : IScmEventHandler
                 connection.GrantedCapabilities = granted;
 
                 return true;
+            }
 
             case ScmConnectionAction.RepositoriesAdded:
             case ScmConnectionAction.RepositoriesRemoved:
+            {
                 var synced = await RepoSync.Sync(connection.Id, connection.WorkspaceId, cancellationToken);
 
                 return synced.IsSuccess;
+            }
 
             default:
                 return false;

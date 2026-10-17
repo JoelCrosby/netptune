@@ -249,8 +249,8 @@
     </unit>
     <unit id="3817498941817715969">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:214</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:215</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:234</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:233</note>
         <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:82</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:109,111</note>
         <note category="location">src/app/features/pages/editor/page-reference.controller.ts:224</note>
@@ -566,7 +566,7 @@
     </unit>
     <unit id="8195124744855652290">
       <notes>
-        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:90</note>
+        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:97</note>
         <note category="description">Fallback when completing a source control connection fails</note>
       </notes>
       <segment state="initial">
@@ -699,7 +699,7 @@
     </unit>
     <unit id="5322873861888163184">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:111,113</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:118,120</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:52,55</note>
         <note category="description">Button that puts this task on another board</note>
       </notes>
@@ -1027,7 +1027,7 @@
     </unit>
     <unit id="439171666441982967">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:84</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:90</note>
         <note category="description">CI checks that neither passed nor failed</note>
       </notes>
       <segment state="translated">
@@ -1047,7 +1047,7 @@
     </unit>
     <unit id="4393935842883042759">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:110</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:121</note>
         <note category="description">Shown when starting a source control connection fails</note>
       </notes>
       <segment state="initial">
@@ -2065,7 +2065,7 @@
     </unit>
     <unit id="7730041991995170578">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:189</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:220</note>
         <note category="description">Shown after a source control account is disconnected</note>
       </notes>
       <segment state="initial">
@@ -2226,7 +2226,7 @@
         <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:142</note>
         <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:214</note>
         <note category="location">src/app/features/settings/shared/entity-detail.ts:32</note>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:173</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:204</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:87,90</note>
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:70,73</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:61,64</note>
@@ -2829,7 +2829,7 @@
     <unit id="5497627646066282315">
       <notes>
         <note category="location">src/app/app.routes.ts:29</note>
-        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:37,42</note>
+        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:35,40</note>
         <note category="description">Page title while a source control connection completes</note>
       </notes>
       <segment state="initial">
@@ -3043,7 +3043,7 @@
     </unit>
     <unit id="8841695786041482472">
       <notes>
-        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:61</note>
+        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:64</note>
         <note category="description">Shown when the source control callback has no matching connection request</note>
       </notes>
       <segment state="initial">
@@ -3236,7 +3236,7 @@
     </unit>
     <unit id="6259071179416803182">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:106,112</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:107,113</note>
         <note category="description">Shown when no repositories match the picker filter</note>
       </notes>
       <segment state="initial">
@@ -4092,8 +4092,8 @@
     </unit>
     <unit id="6746571899700014633">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:80,82</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:89,91</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:86,88</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:95,97</note>
         <note category="description">Opens the full list of a task&apos;s fields</note>
       </notes>
       <segment state="initial">
@@ -4447,7 +4447,7 @@
     </unit>
     <unit id="5851424994801012357">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:71,76</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:69,74</note>
         <note category="description">Badge on a source control connection the provider has suspended</note>
       </notes>
       <segment state="initial">
@@ -4996,7 +4996,7 @@
     </unit>
     <unit id="3767233705625660520">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:142</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:143</note>
         <note category="description">Shown when refreshing the repository list fails</note>
       </notes>
       <segment state="initial">
@@ -5768,7 +5768,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:432</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:66,67</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:197</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:217</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:104,107</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:153,156</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:48,50</note>
@@ -6488,9 +6488,20 @@
         <target>Direction</target>
       </segment>
     </unit>
+    <unit id="4328866122499184090">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:82</note>
+        <note category="description">State of an open pull request</note>
+        <note category="meaning">pull request state</note>
+      </notes>
+      <segment state="translated">
+        <source>Open</source>
+        <target>Ouverte</target>
+      </segment>
+    </unit>
     <unit id="5858110625401609648">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:38,40</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:36,38</note>
         <note category="description">Explains what a source control connection is</note>
       </notes>
       <segment state="initial">
@@ -6763,7 +6774,7 @@
     </unit>
     <unit id="1645769586576976075">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:189</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:188</note>
         <note category="description">Shown when linking or unlinking a repository fails</note>
       </notes>
       <segment state="initial">
@@ -6963,8 +6974,8 @@
     </unit>
     <unit id="3807699453257291879">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:216</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:210</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:236</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:228</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:89</note>
         <note category="description">Section heading for a task&apos;s comments</note>
       </notes>
@@ -7076,8 +7087,8 @@
     <unit id="4116911651502837995">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:434</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:213</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:211</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:233</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:229</note>
         <note category="description">Section heading for files attached to a task</note>
       </notes>
       <segment state="translated">
@@ -7751,6 +7762,17 @@
       <segment state="translated">
         <source>From</source>
         <target>Du</target>
+      </segment>
+    </unit>
+    <unit id="5204826649434227680">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:88,91</note>
+        <note category="description">Badge on an archived repository</note>
+        <note category="meaning">repository state</note>
+      </notes>
+      <segment state="translated">
+        <source>Archived</source>
+        <target>Archivé</target>
       </segment>
     </unit>
     <unit id="1635323592018171706">
@@ -11258,7 +11280,7 @@
     </unit>
     <unit id="5981012101929159464">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:62,63</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:66,67</note>
         <note category="description">Button that connects a source control provider</note>
       </notes>
       <segment state="initial">
@@ -11805,7 +11827,7 @@
     </unit>
     <unit id="2021256332025917696">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:81</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:87</note>
         <note category="description">CI checks still running on linked code</note>
       </notes>
       <segment state="translated">
@@ -12494,7 +12516,7 @@
     </unit>
     <unit id="2642466038653346310">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:170</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:201</note>
         <note category="description">Title of the disconnect source control confirmation</note>
       </notes>
       <segment state="initial">
@@ -12504,7 +12526,7 @@
     </unit>
     <unit id="2643772160333421542">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:58,62</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:56,60</note>
         <note category="description">Number of repositories linked through a source control connection</note>
       </notes>
       <segment state="initial">
@@ -12788,7 +12810,7 @@
     </unit>
     <unit id="4974769258684890058">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:110,112</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:107,109</note>
         <note category="description">Shown when a workspace has no source control connections</note>
       </notes>
       <segment state="initial">
@@ -14034,7 +14056,7 @@
     </unit>
     <unit id="8805582001022257690">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:105,107</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:111,113</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:135,137</note>
         <note category="description">Button that asks the assistant about this task</note>
       </notes>
@@ -14654,11 +14676,11 @@
     </unit>
     <unit id="615701940674255230">
       <notes>
-        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:81</note>
+        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:87</note>
         <note category="description">Shown after a source control account is connected</note>
       </notes>
       <segment state="initial">
-        <source><ph id="0" equiv="account" disp="response.payload?.accountLogin"/> connected.</source>
+        <source><ph id="0" equiv="account" disp="account"/> connected.</source>
         <target><ph id="0" equiv="account" disp="response.payload?.accountLogin"/> connecté.</target>
       </segment>
     </unit>
@@ -14680,6 +14702,16 @@
       <segment state="translated">
         <source>None of</source>
         <target>Aucune</target>
+      </segment>
+    </unit>
+    <unit id="6158676915815199876">
+      <notes>
+        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:88</note>
+        <note category="description">Shown after a source control account is connected without its name</note>
+      </notes>
+      <segment state="translated">
+        <source>Account connected.</source>
+        <target>Compte connecté.</target>
       </segment>
     </unit>
     <unit id="5621842545023812080">
@@ -14858,8 +14890,8 @@
     <unit id="7565716024468232322">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:433</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:212</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:212</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:232</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:230</note>
         <note category="location">src/app/features/pages/components/page-rail.component.ts:155</note>
         <note category="description">Tab listing the tasks this one links to</note>
       </notes>
@@ -15097,7 +15129,7 @@
     </unit>
     <unit id="7614983501706369438">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:83,85</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:94,96</note>
         <note category="description">Explains who can enable source control providers</note>
       </notes>
       <segment state="initial">
@@ -16320,7 +16352,7 @@
     </unit>
     <unit id="3523968380696217863">
       <notes>
-        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:29,31</note>
+        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:53</note>
         <note category="description">Button that returns to the source control settings</note>
       </notes>
       <segment state="initial">
@@ -17192,7 +17224,7 @@
     </unit>
     <unit id="9005457553529671208">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:75</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:81</note>
         <note category="description">Group of commits linked to a task</note>
       </notes>
       <segment state="translated">
@@ -17202,7 +17234,7 @@
     </unit>
     <unit id="9007078948220384866">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:195</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:227</note>
         <note category="description">Shown when disconnecting a source control account fails</note>
       </notes>
       <segment state="initial">
@@ -17283,7 +17315,7 @@
     </unit>
     <unit id="6628324895041859721">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:186</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:196</note>
         <note category="description">Tooltip counting a linked commit&apos;s CI checks</note>
       </notes>
       <segment state="translated">
@@ -17745,7 +17777,7 @@
       <notes>
         <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:348,353</note>
         <note category="location">src/app/features/queries/components/query-details-drawer.component.ts:63,67</note>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:124,128</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:125,129</note>
         <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:91,93</note>
         <note category="description">Closes a dialog once the user has finished</note>
       </notes>
@@ -18044,8 +18076,8 @@
     </unit>
     <unit id="7107218117130409950">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:211</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:213</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:231</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:231</note>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:64</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:71,72</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:86</note>
@@ -18100,7 +18132,7 @@
     </unit>
     <unit id="7860418101283165917">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:79</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:85</note>
         <note category="description">State of a closed pull request</note>
       </notes>
       <segment state="translated">
@@ -19374,12 +19406,11 @@
     </unit>
     <unit id="7593555694782789615">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:76</note>
         <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:190</note>
         <note category="location">src/app/features/sprints/components/sprint-overview.component.ts:151</note>
         <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:68</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-applied-changes.component.ts:58,59</note>
-        <note category="description">State of an open pull request</note>
+        <note category="description">Label shown in the interface</note>
       </notes>
       <segment state="translated">
         <source>Open</source>
@@ -19448,7 +19479,7 @@
     </unit>
     <unit id="1554838717931748985">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:78</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:84</note>
         <note category="description">State of a merged pull request</note>
       </notes>
       <segment state="translated">
@@ -19480,7 +19511,6 @@
     <unit id="1562584780596394495">
       <notes>
         <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:115</note>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:87,89</note>
         <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:32</note>
         <note category="description">Header of the archived pages column saying when the page was archived</note>
       </notes>
@@ -21432,7 +21462,7 @@
     </unit>
     <unit id="4808589666930368915">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:77</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:83</note>
         <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:250</note>
         <note category="location">src/app/features/pages/components/page-meta-chips.component.ts:30,34</note>
         <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:254</note>
@@ -23784,7 +23814,7 @@
     </unit>
     <unit id="6844266706936447326">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:83</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:89</note>
         <note category="description">CI checks that failed on linked code</note>
       </notes>
       <segment state="translated">
@@ -24786,9 +24816,19 @@
         <target>Supprimer le compte de service</target>
       </segment>
     </unit>
+    <unit id="5602212197098670157">
+      <notes>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:81,83</note>
+        <note category="description">Shown when the source control settings cannot be loaded</note>
+      </notes>
+      <segment state="translated">
+        <source>Source control settings could not be loaded</source>
+        <target>Les paramètres de gestion du code source n’ont pas pu être chargés</target>
+      </segment>
+    </unit>
     <unit id="5603033194044285473">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:97,100</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:94,97</note>
         <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:47,51</note>
         <note category="description">Button that opens the repository picker for a connection</note>
       </notes>
@@ -24922,7 +24962,7 @@
     </unit>
     <unit id="1019897759924590321">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:73</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:79</note>
         <note category="description">Group of pull requests linked to a task</note>
       </notes>
       <segment state="translated">
@@ -25103,7 +25143,7 @@
     </unit>
     <unit id="2946624699882754313">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:61,66</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:61,62</note>
         <note category="description">Button that reveals the rest of a long list of linked code</note>
       </notes>
       <segment state="translated">
@@ -25558,7 +25598,7 @@
     </unit>
     <unit id="3865115635607753363">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:74</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:80</note>
         <note category="description">Group of branches linked to a task</note>
       </notes>
       <segment state="translated">
@@ -25860,7 +25900,7 @@
       <notes>
         <note category="location">src/app/features/settings/settings.routes.ts:179</note>
         <note category="location">src/app/features/settings/settings.routes.ts:180</note>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:51,53</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:55,57</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:384</note>
         <note category="description">Breadcrumb for the workspace source control settings</note>
       </notes>
@@ -26245,8 +26285,8 @@
     </unit>
     <unit id="8186013988289067040">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:215</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:216</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:235</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:234</note>
         <note category="description">Tab listing the branches, commits and pull requests linked to a task</note>
       </notes>
       <segment state="translated">
@@ -26690,7 +26730,7 @@
     </unit>
     <unit id="7036957557306562994">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:82</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:88</note>
         <note category="description">CI checks that all passed on linked code</note>
       </notes>
       <segment state="translated">
@@ -26721,8 +26761,8 @@
     </unit>
     <unit id="186236568870281953">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:217</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:214</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:237</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:232</note>
         <note category="location">src/app/features/pages/components/page-rail.component.ts:159</note>
         <note category="description">Tab showing what has happened to a task</note>
       </notes>
@@ -26988,7 +27028,7 @@
     <unit id="2467702290618186989">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:279,281</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:121,123</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:128,130</note>
         <note category="description">Button that links this task to another</note>
       </notes>
       <segment state="initial">
@@ -27038,7 +27078,7 @@
     </unit>
     <unit id="4008496035123032607">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:120,123</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:121,124</note>
         <note category="description">Button that reloads the repository list from the provider</note>
       </notes>
       <segment state="initial">
@@ -27319,7 +27359,7 @@
     </unit>
     <unit id="5740900064270211020">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:114,120</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:111,117</note>
         <note category="description">Explains how to add the first source control connection</note>
       </notes>
       <segment state="initial">
@@ -27633,7 +27673,7 @@
     </unit>
     <unit id="6381490568322624964">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:80</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:86</note>
         <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:128</note>
         <note category="description">Shown on a linked branch that was deleted</note>
       </notes>
@@ -28198,7 +28238,7 @@
     </unit>
     <unit id="7543358363832842069">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:79,81</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:90,92</note>
         <note category="description">Shown when no source control provider is configured on the server</note>
       </notes>
       <segment state="initial">
@@ -28398,6 +28438,16 @@
         <target> Cet e-mail et ce mot de passe ne correspondent à aucun compte. </target>
       </segment>
     </unit>
+    <unit id="8788669123164389474">
+      <notes>
+        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:54</note>
+        <note category="description">Button that goes to the list of the user&apos;s workspaces</note>
+      </notes>
+      <segment state="translated">
+        <source>Go to Workspaces</source>
+        <target>Aller aux espaces de travail</target>
+      </segment>
+    </unit>
     <unit id="7634806463979024086">
       <notes>
         <note category="location">src/app/features/storage/components/storage-header.component.ts:153</note>
@@ -28462,7 +28512,7 @@
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:82,85</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:136</note>
-        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:36,37</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:34,35</note>
         <note category="description">Heading of the assistant connections card</note>
       </notes>
       <segment state="translated">
@@ -28512,7 +28562,7 @@
     </unit>
     <unit id="5087255234379846922">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:171</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:202</note>
         <note category="description">Explains what disconnecting a source control account does</note>
       </notes>
       <segment state="initial">
@@ -28633,7 +28683,7 @@
     </unit>
     <unit id="5376287016044032856">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:96,99</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:97,100</note>
         <note category="description">Badge on a repository the connection can no longer see</note>
       </notes>
       <segment state="initial">
@@ -29511,6 +29561,16 @@
         <target>Me notifier à propos de <ph id="0" equiv="NAME" disp="name"/></target>
       </segment>
     </unit>
+    <unit id="7910686896025980900">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:63,68</note>
+        <note category="description">Screen reader hint on a link that opens in a new tab</note>
+      </notes>
+      <segment state="translated">
+        <source>(opens in a new tab)</source>
+        <target>(s’ouvre dans un nouvel onglet)</target>
+      </segment>
+    </unit>
     <unit id="7915786442718084882">
       <notes>
         <note category="location">src/app/features/queries/queries.routes.ts:19</note>
@@ -30119,8 +30179,8 @@
     </unit>
     <unit id="2907016025519254862">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:85,88</note>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:172</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:82,85</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:203</note>
         <note category="description">Button that removes a source control connection</note>
       </notes>
       <segment state="initial">

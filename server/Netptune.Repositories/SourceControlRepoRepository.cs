@@ -31,18 +31,6 @@ public class SourceControlRepoRepository(DataContext context, IDbConnectionFacto
             .ToListAsync(cancellationToken);
     }
 
-    public Task<List<SourceControlRepo>> GetLinkedForProject(
-        int projectId,
-        CancellationToken cancellationToken = default)
-    {
-        return Entities
-            .AsNoTracking()
-            .Where(repo => repo.IsLinked && !repo.Connection.IsDeleted)
-            .Where(repo => repo.Projects.Any(link => link.ProjectId == projectId))
-            .OrderBy(repo => repo.FullName)
-            .ToListAsync(cancellationToken);
-    }
-
     public Task<SourceControlRepo?> GetByExternalId(
         int connectionId,
         string externalId,
@@ -59,7 +47,6 @@ public class SourceControlRepoRepository(DataContext context, IDbConnectionFacto
         CancellationToken cancellationToken = default)
     {
         return Entities
-            .Include(repo => repo.Projects)
             .Where(repo => repo.Id == repoId && repo.WorkspaceId == workspaceId && !repo.Connection.IsDeleted)
             .FirstOrDefaultAsync(cancellationToken);
     }

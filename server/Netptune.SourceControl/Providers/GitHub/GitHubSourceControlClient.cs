@@ -190,7 +190,13 @@ internal sealed class GitHubSourceControlClient : ISourceControlClient
             return ClientResponse<ScmBranch>.Success(created);
         }
 
-        var resolved = await ResolveRejectedCreate(context, repository, request, baseBranch, response, cancellationToken);
+        var resolved = await ResolveRejectedCreate(
+            context,
+            repository,
+            request,
+            baseBranch,
+            response,
+            cancellationToken);
 
         return resolved;
     }

@@ -4,8 +4,10 @@ using System.Net.Http.Json;
 using FluentAssertions;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.DependencyInjection;
 
+using Netptune.Core.Entities;
 using Netptune.Core.Events;
 using Netptune.Core.Requests.SourceControl;
 using Netptune.Core.Responses.Common;
@@ -131,6 +133,77 @@ public sealed class SourceControlEndpointTests
     }
 
     [Fact]
+    public async Task UnlinkingARepo_ShouldStopCountingItTowardsTheConnection()
+    {
+        var connection = await Connect(UniqueAccount());
+        var repos = await GetRepos(connection.Id);
+
+        await SetLinked(Client, repos[0].Id, isLinked: true);
+        var response = await SetLinked(Client, repos[0].Id, isLinked: false);
+
+        var listed = (await GetConnections()).Single(listedConnection => listedConnection.Id == connection.Id);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        listed.LinkedRepoCount.Should().Be(0);
+    }
+
+    [Fact]
+    public async Task LinkingARepo_ShouldFailWhenTheConnectionCanNoLongerSeeIt()
+    {
+        var connection = await Connect(UniqueAccount());
+        var repos = await GetRepos(connection.Id);
+
+        await UpdateRepo(repos[0].Id, repo => repo.SetProperty(stored => stored.IsAccessible, false));
+
+        var response = await SetLinked(Client, repos[0].Id, isLinked: true);
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task Connect_ShouldReactivateARevokedConnection()
+    {
+        var account = UniqueAccount();
+        var connection = await Connect(account);
+
+        using (var scope = Fixture.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+            await context.SourceControlConnections
+                .Where(stored => stored.Id == connection.Id)
+                .ExecuteUpdateAsync(
+                    setters => setters.SetProperty(stored => stored.Status, ScmConnectionStatus.Revoked),
+                    TestContext.Current.CancellationToken);
+        }
+
+        var reconnected = await Connect(account);
+
+        reconnected.Id.Should().Be(connection.Id);
+        reconnected.Status.Should().Be(ScmConnectionStatus.Active);
+    }
+
+    [Fact]
+    public async Task ConnectionRoutes_ShouldReturnNotFoundForAnotherWorkspacesConnection()
+    {
+        var foreignClient = await CreateOwnerClient("linux");
+        var foreignConnection = await Connect(UniqueAccount(), foreignClient);
+        var foreignRepoId = (await GetRepos(foreignConnection.Id, foreignClient))[0].Id;
+        var token = TestContext.Current.CancellationToken;
+
+        var repos = await Client.GetAsync($"api/source-control/connections/{foreignConnection.Id}/repos", token);
+        var sync = await Client.PostAsync($"api/source-control/connections/{foreignConnection.Id}/sync", null, token);
+        var link = await SetLinked(Client, foreignRepoId, isLinked: true);
+        var disconnect = await Client.DeleteAsync($"api/source-control/connections/{foreignConnection.Id}", token);
+
+        repos.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        sync.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        link.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        disconnect.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        (await GetRepos(foreignConnection.Id, foreignClient)).Should().NotBeEmpty("the owning workspace still has it");
+    }
+
+    [Fact]
     public async Task Disconnect_ShouldRemoveTheConnectionAndUnlinkItsRepos()
     {
         var connection = await Connect(UniqueAccount());
@@ -210,7 +283,43 @@ public sealed class SourceControlEndpointTests
         return $"group-{Guid.NewGuid():N}"[..20];
     }
 
-    private async Task<HttpResponseMessage> PostComplete(string account, string code = "ok")
+    private static async Task<HttpResponseMessage> SetLinked(HttpClient client, int repoId, bool isLinked)
+    {
+        var response = await client.PutAsJsonAsync(
+            $"api/source-control/repos/{repoId}/linked",
+            new SetSourceControlRepoLinkedRequest { IsLinked = isLinked },
+            TestContext.Current.CancellationToken);
+
+        return response;
+    }
+
+    private async Task UpdateRepo(
+        int repoId,
+        Func<UpdateSettersBuilder<SourceControlRepo>, UpdateSettersBuilder<SourceControlRepo>> update)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        await context.SourceControlRepos
+            .Where(repo => repo.Id == repoId)
+            .ExecuteUpdateAsync(setters => update(setters), TestContext.Current.CancellationToken);
+    }
+
+    private async Task<HttpClient> CreateOwnerClient(string slug)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        var ownerEmail = await context.Workspaces
+            .AsNoTracking()
+            .Where(workspace => workspace.Slug == slug)
+            .Select(workspace => workspace.Owner!.Email)
+            .SingleAsync(TestContext.Current.CancellationToken);
+
+        return Fixture.CreateNetptuneClientAs(ownerEmail!, slug);
+    }
+
+    private async Task<HttpResponseMessage> PostComplete(string account, string code = "ok", HttpClient? client = null)
     {
         var request = new CompleteSourceControlConnectRequest
         {
@@ -222,7 +331,7 @@ public sealed class SourceControlEndpointTests
             },
         };
 
-        var response = await Client.PostAsJsonAsync(
+        var response = await (client ?? Client).PostAsJsonAsync(
             "api/source-control/connections/complete",
             request,
             TestContext.Current.CancellationToken);
@@ -230,9 +339,9 @@ public sealed class SourceControlEndpointTests
         return response;
     }
 
-    private async Task<SourceControlConnectionViewModel> Connect(string account)
+    private async Task<SourceControlConnectionViewModel> Connect(string account, HttpClient? client = null)
     {
-        var response = await PostComplete(account);
+        var response = await PostComplete(account, client: client);
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<SourceControlConnectionViewModel>>(
             TestContext.Current.CancellationToken);
 
@@ -250,9 +359,9 @@ public sealed class SourceControlEndpointTests
         return connections!;
     }
 
-    private async Task<List<SourceControlRepoViewModel>> GetRepos(int connectionId)
+    private async Task<List<SourceControlRepoViewModel>> GetRepos(int connectionId, HttpClient? client = null)
     {
-        var result = await Client.GetFromJsonAsync<ClientResponse<List<SourceControlRepoViewModel>>>(
+        var result = await (client ?? Client).GetFromJsonAsync<ClientResponse<List<SourceControlRepoViewModel>>>(
             $"api/source-control/connections/{connectionId}/repos",
             TestContext.Current.CancellationToken);
 

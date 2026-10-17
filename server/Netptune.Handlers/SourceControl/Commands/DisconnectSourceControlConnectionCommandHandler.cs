@@ -59,8 +59,11 @@ public sealed class DisconnectSourceControlConnectionCommandHandler
 
         var disconnectedEvent = SourceControlConnectionEvents.Create(connection, EventKeys.SourceControlDisconnected);
 
-        await EventRecords.Append(disconnectedEvent, cancellationToken);
-        await UnitOfWork.CompleteAsync(cancellationToken);
+        await UnitOfWork.Transaction(async () =>
+        {
+            await EventRecords.Append(disconnectedEvent, cancellationToken);
+            await UnitOfWork.CompleteAsync(cancellationToken);
+        });
 
         return ClientResponse.Success;
     }

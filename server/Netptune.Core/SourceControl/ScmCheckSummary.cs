@@ -7,11 +7,12 @@ namespace Netptune.Core.SourceControl;
 public static class ScmCheckSummary
 {
     // A re-run arrives as a new run with the same name, so only the latest run of each name counts.
+    // Latest is by completion, with unfinished runs newest, because deliveries can be stored out of order.
     public static ScmCheckSummaryViewModel? Summarise(IEnumerable<SourceControlCheckRun> checkRuns)
     {
         var latest = checkRuns
             .GroupBy(checkRun => checkRun.Name, StringComparer.Ordinal)
-            .Select(group => group.MaxBy(checkRun => checkRun.Id)!)
+            .Select(group => group.MaxBy(RecencyOf)!)
             .OrderBy(checkRun => checkRun.Name, StringComparer.Ordinal)
             .ToList();
 
@@ -35,7 +36,7 @@ public static class ScmCheckSummary
             Passed = passed,
             Failed = failed.Count,
             Pending = pending,
-            WebUrl = attentionRun?.WebUrl,
+            AttentionUrl = attentionRun?.WebUrl,
         };
     }
 
@@ -52,6 +53,11 @@ public static class ScmCheckSummary
         }
 
         return passed > 0 ? ScmCheckState.Success : ScmCheckState.Neutral;
+    }
+
+    private static (DateTime CompletedAt, long Id) RecencyOf(SourceControlCheckRun checkRun)
+    {
+        return (checkRun.CompletedAt ?? DateTime.MaxValue, checkRun.Id);
     }
 
     private static bool IsFailure(SourceControlCheckRun checkRun)

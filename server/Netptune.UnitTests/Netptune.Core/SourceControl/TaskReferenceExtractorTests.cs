@@ -4,7 +4,7 @@ using Netptune.Core.SourceControl;
 
 using Xunit;
 
-namespace Netptune.UnitTests.Netptune.SourceControl;
+namespace Netptune.UnitTests.Netptune.Core.SourceControl;
 
 public class TaskReferenceExtractorTests
 {

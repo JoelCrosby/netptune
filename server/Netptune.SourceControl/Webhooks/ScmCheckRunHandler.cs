@@ -9,6 +9,9 @@ namespace Netptune.SourceControl.Webhooks;
 internal sealed class ScmCheckRunHandler : IScmEventHandler
 {
     private const int MaxNameLength = 256;
+    private const int MaxExternalIdLength = 128;
+    private const int MaxCommitShaLength = 64;
+    private const int MaxWebUrlLength = 1024;
 
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly TimeProvider Clock;
@@ -38,13 +41,13 @@ internal sealed class ScmCheckRunHandler : IScmEventHandler
             cancellationToken);
 
         var isTracked = repo is { IsLinked: true, IsAccessible: true };
+        var checkRun = changed.CheckRun;
+        var isStorable = FitsStorage(checkRun);
 
-        if (!isTracked)
+        if (!isTracked || !isStorable)
         {
             return false;
         }
-
-        var checkRun = changed.CheckRun;
         var now = Clock.GetUtcNow().UtcDateTime;
         var stored = await UnitOfWork.SourceControlCheckRuns.GetByExternalId(
             repo!.Id,
@@ -99,6 +102,15 @@ internal sealed class ScmCheckRunHandler : IScmEventHandler
         stored.WebUrl = checkRun.WebUrl;
         stored.CompletedAt = checkRun.CompletedAt?.UtcDateTime;
         stored.UpdatedAt = now;
+    }
+
+    private static bool FitsStorage(ScmCheckRun checkRun)
+    {
+        var idFits = checkRun.ExternalId.Length <= MaxExternalIdLength;
+        var shaFits = checkRun.CommitSha.Length <= MaxCommitShaLength;
+        var urlFits = checkRun.WebUrl.Length <= MaxWebUrlLength;
+
+        return idFits && shaFits && urlFits;
     }
 
     private static string Truncate(string value)

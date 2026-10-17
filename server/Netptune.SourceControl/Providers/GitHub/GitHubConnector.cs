@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Net;
 
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
@@ -13,15 +14,13 @@ namespace Netptune.SourceControl.Providers.GitHub;
 
 internal sealed class GitHubConnector : ISourceControlConnector
 {
-    private const int MaxInstallationPages = 10;
-
     private const string AwaitingApproval = "The installation is waiting for an organisation owner to approve it on GitHub.";
 
     private const string MissingInstallation = "GitHub did not return an installation to connect. Start again.";
 
     private const string NotAuthorised = "GitHub did not authorise the connection. Start again.";
 
-    private const string NoInstallationAccess = "Your GitHub account doesn't have access to that installation.";
+    private const string NotInstallationAdmin = "Only an owner of the GitHub organisation or account that installed the app can connect it.";
 
     private const string InstallationNotFound = "GitHub could not find that installation.";
 
@@ -110,20 +109,20 @@ internal sealed class GitHubConnector : ISourceControlConnector
             return ClientResponse<ScmConnectResult>.Failed(NotAuthorised);
         }
 
-        // GitHub's setup URL accepts any installation_id in the query string, so the user has to
-        // prove they can see the installation before it's attached to their workspace.
-        var canAccessInstallation = await UserCanAccessInstallation(userToken, installationId, cancellationToken);
-
-        if (!canAccessInstallation)
-        {
-            return ClientResponse<ScmConnectResult>.Failed(NoInstallationAccess);
-        }
-
         var installation = await GetInstallation(installationId, cancellationToken);
 
         if (installation is null)
         {
             return ClientResponse<ScmConnectResult>.Failed(InstallationNotFound);
+        }
+
+        // GitHub's setup URL accepts any installation_id in the query string, and any member who can
+        // read one of its repositories can see an installation, so only its account's owners may attach it.
+        var administersAccount = await UserAdministersAccount(userToken, installation.Account, cancellationToken);
+
+        if (!administersAccount)
+        {
+            return ClientResponse<ScmConnectResult>.Failed(NotInstallationAdmin);
         }
 
         var isSuspended = installation.SuspendedAt is not null;
@@ -201,7 +200,12 @@ internal sealed class GitHubConnector : ISourceControlConnector
 
         var installation = await GetInstallation(installationId, cancellationToken);
 
-        return GitHubPermissions.ToCapabilities(installation?.Permissions);
+        if (installation is null)
+        {
+            return SourceControlCapabilities.None;
+        }
+
+        return GitHubPermissions.ToCapabilities(installation.Permissions);
     }
 
     private ClientResponse ValidateState(ScmConnectCallback callback)
@@ -256,35 +260,62 @@ internal sealed class GitHubConnector : ISourceControlConnector
         return string.IsNullOrWhiteSpace(accessToken) ? null : accessToken;
     }
 
-    private async Task<bool> UserCanAccessInstallation(
+    private async Task<bool> UserAdministersAccount(
         string userToken,
-        long installationId,
+        GitHubAccountDto account,
         CancellationToken cancellationToken)
     {
-        string? url = "/user/installations?per_page=100";
+        var isOrganisation = string.Equals(account.Type, "Organization", StringComparison.OrdinalIgnoreCase);
 
-        for (var page = 0; page < MaxInstallationPages && url is not null; page++)
+        if (isOrganisation)
         {
-            var request = new GitHubRequest
-            {
-                Method = HttpMethod.Get,
-                Url = url,
-                BearerToken = userToken,
-            };
+            var isOrganisationAdmin = await UserIsOrganisationAdmin(userToken, account.Login, cancellationToken);
 
-            var response = await Api.Send<GitHubUserInstallationsDto>(request, cancellationToken);
-            var installations = response.Payload?.Installations ?? [];
-            var isListed = installations.Any(installation => installation.Id == installationId);
-
-            if (isListed)
-            {
-                return true;
-            }
-
-            url = response.NextPageUrl;
+            return isOrganisationAdmin;
         }
 
-        return false;
+        var user = await SendAsUser<GitHubAccountDto>(userToken, "/user", cancellationToken);
+        var isAccountOwner = user is not null && user.Id == account.Id;
+
+        return isAccountOwner;
+    }
+
+    private async Task<bool> UserIsOrganisationAdmin(
+        string userToken,
+        string organisation,
+        CancellationToken cancellationToken)
+    {
+        var url = $"/user/memberships/orgs/{Uri.EscapeDataString(organisation)}";
+        var membership = await SendAsUser<GitHubOrganisationMembershipDto>(userToken, url, cancellationToken);
+
+        var isActive = membership?.State == "active";
+        var isAdmin = membership?.Role == "admin";
+
+        return isActive && isAdmin;
+    }
+
+    // A 403 here means the user (or the app's Members permission) can't read the membership, which
+    // is a refusal to connect rather than a provider failure.
+    private async Task<T?> SendAsUser<T>(string userToken, string url, CancellationToken cancellationToken)
+        where T : class
+    {
+        var request = new GitHubRequest
+        {
+            Method = HttpMethod.Get,
+            Url = url,
+            BearerToken = userToken,
+        };
+
+        try
+        {
+            var response = await Api.Send<T>(request, cancellationToken);
+
+            return response.Payload;
+        }
+        catch (ScmProviderException exception) when (exception.StatusCode == (int)HttpStatusCode.Forbidden)
+        {
+            return null;
+        }
     }
 
     private async Task<GitHubInstallationDto?> GetInstallation(long installationId, CancellationToken cancellationToken)

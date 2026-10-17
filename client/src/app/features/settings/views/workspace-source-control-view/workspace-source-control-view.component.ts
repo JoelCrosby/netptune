@@ -8,14 +8,11 @@ import {
   sourceControlProviderNames,
   sourceControlProviderSlug,
 } from '@core/models/source-control';
-import {
-  sourceControlConnectionsResource,
-  sourceControlProvidersResource,
-} from '@core/resources/source-control.resource';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SourceControlService } from '@core/services/source-control.service';
+import { getErrorMessage } from '@core/util/error-message';
 import { mutation } from '@core/util/mutation';
 import { requireSuccess } from '@core/util/rxjs-operators';
 import { SourceControlConnectionsComponent } from '@settings/components/source-control/source-control-connections.component';
@@ -23,8 +20,14 @@ import {
   SourceControlReposDialogComponent,
   SourceControlReposDialogData,
 } from '@settings/components/source-control/source-control-repos-dialog.component';
+import {
+  sourceControlConnectionsResource,
+  sourceControlProvidersResource,
+} from '@settings/resources/source-control.resource';
+import { SourceControlCommandsService } from '@settings/services/source-control-commands.service';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
+import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
@@ -36,6 +39,7 @@ import { first, switchMap } from 'rxjs';
   selector: 'app-workspace-source-control-view',
   imports: [
     EmptyStateComponent,
+    ErrorStateComponent,
     FlatButtonComponent,
     PageBodyComponent,
     PageContainerComponent,
@@ -51,7 +55,7 @@ import { first, switchMap } from 'rxjs';
         title="Source Control">
         @if (canManage()) {
           <div pageHeaderActions class="flex gap-2">
-            @for (provider of providers.value(); track provider.provider) {
+            @for (provider of providerList(); track provider.provider) {
               <button
                 app-flat-button
                 type="button"
@@ -69,7 +73,14 @@ import { first, switchMap } from 'rxjs';
 
       <app-page-body scroll>
         <div class="flex flex-col gap-7 pb-10">
-          @if (isUnavailable()) {
+          @if (loadFailed()) {
+            <app-error-state
+              i18n-title="
+                Shown when the source control settings cannot be loaded
+              "
+              title="Source control settings could not be loaded"
+              (retry)="reload()" />
+          } @else if (isUnavailable()) {
             <app-empty-state
               outlined
               i18n-title="
@@ -83,7 +94,7 @@ import { first, switchMap } from 'rxjs';
               description="A server administrator has to register a provider app, such as a GitHub App, before workspaces can connect." />
           } @else {
             <app-source-control-connections
-              [connections]="connections.value()"
+              [connections]="connectionList()"
               [canManage]="canManage()"
               (chooseRepos)="openRepos($event)"
               (disconnect)="disconnect($event)" />
@@ -95,6 +106,7 @@ import { first, switchMap } from 'rxjs';
 })
 export class WorkspaceSourceControlViewComponent {
   private readonly service = inject(SourceControlService);
+  private readonly commands = inject(SourceControlCommandsService);
   private readonly dialog = inject(DialogService);
   private readonly confirmation = inject(ConfirmationService);
   private readonly snackbar = inject(SnackbarService);
@@ -106,16 +118,36 @@ export class WorkspaceSourceControlViewComponent {
   protected readonly providers = sourceControlProvidersResource();
   protected readonly connections = sourceControlConnectionsResource();
 
+  private readonly connectFailedMessage = $localize`:Shown when starting a source control connection fails:The connection could not be started.`;
+
   protected readonly connect = mutation({
-    fallbackError: $localize`:Shown when starting a source control connection fails:The connection could not be started.`,
+    fallbackError: this.connectFailedMessage,
+  });
+
+  protected readonly providerList = computed(() => {
+    return this.providers.hasValue() ? this.providers.value() : [];
+  });
+
+  protected readonly connectionList = computed(() => {
+    return this.connections.hasValue() ? this.connections.value() : [];
+  });
+
+  protected readonly loadFailed = computed(() => {
+    return !!this.providers.error() || !!this.connections.error();
   });
 
   protected readonly isUnavailable = computed(() => {
     const hasLoaded = this.providers.hasValue() && !this.providers.isLoading();
-    const hasConnections = this.connections.value().length > 0;
+    const hasProviders = this.providerList().length > 0;
+    const hasConnections = this.connectionList().length > 0;
 
-    return hasLoaded && this.providers.value().length === 0 && !hasConnections;
+    return hasLoaded && !hasProviders && !hasConnections;
   });
+
+  protected reload() {
+    this.providers.reload();
+    this.connections.reload();
+  }
 
   protected providerName(provider: SourceControlProviderInfo): string {
     return sourceControlProviderNames[provider.provider];
@@ -138,7 +170,11 @@ export class WorkspaceSourceControlViewComponent {
         onSuccess: (response) => {
           const redirectUrl = response.payload?.redirectUrl;
 
-          if (!redirectUrl) return;
+          if (!redirectUrl) {
+            this.snackbar.error(this.connectFailedMessage);
+
+            return;
+          }
 
           writePendingSourceControlConnect({
             workspace,
@@ -152,16 +188,11 @@ export class WorkspaceSourceControlViewComponent {
     );
   }
 
-  protected async openRepos(connection: SourceControlConnection) {
-    const changed = await this.dialog.openForResult<
-      boolean,
-      SourceControlReposDialogData
-    >(SourceControlReposDialogComponent, {
-      width: '640px',
-      data: { connection },
-    });
-
-    if (changed) this.connections.reload();
+  protected openRepos(connection: SourceControlConnection) {
+    this.dialog.open<unknown, SourceControlReposDialogData>(
+      SourceControlReposDialogComponent,
+      { width: '640px', data: { connection } }
+    );
   }
 
   protected disconnect(connection: SourceControlConnection) {
@@ -180,7 +211,7 @@ export class WorkspaceSourceControlViewComponent {
             return [];
           }
 
-          return this.service.disconnect(connection.id).pipe(requireSuccess());
+          return this.commands.disconnect(connection.id);
         })
       )
       .subscribe({
@@ -188,11 +219,13 @@ export class WorkspaceSourceControlViewComponent {
           this.snackbar.success(
             $localize`:Shown after a source control account is disconnected:${connection.accountLogin}:account: disconnected.`
           );
-          this.connections.reload();
         },
-        error: () => {
+        error: (error: unknown) => {
           this.snackbar.error(
-            $localize`:Shown when disconnecting a source control account fails:The account could not be disconnected.`
+            getErrorMessage(
+              error,
+              $localize`:Shown when disconnecting a source control account fails:The account could not be disconnected.`
+            )
           );
         },
       });

@@ -42,36 +42,39 @@ internal sealed class ScmWebhookProcessor : IScmWebhookProcessor
         var delivery = await UnitOfWork.ScmWebhookDeliveries.GetAsync(
             deliveryRecordId,
             cancellationToken: cancellationToken);
-        var isPending = delivery is not null && delivery.ProcessedAt is null;
 
-        if (!isPending)
+        if (delivery is not { ProcessedAt: null })
         {
             return;
         }
 
+        HashSet<(string Workspace, string Scope)> changes;
+
         try
         {
-            var changedWorkspaces = await Apply(delivery!, cancellationToken);
+            changes = await Apply(delivery, cancellationToken);
 
-            delivery!.ProcessedAt = Clock.GetUtcNow().UtcDateTime;
+            delivery.ProcessedAt = Clock.GetUtcNow().UtcDateTime;
             delivery.LastError = null;
 
             await UnitOfWork.CompleteAsync(cancellationToken);
-            await NotifyWorkspaces(changedWorkspaces);
         }
         catch (Exception exception) when (exception is not OperationCanceledException)
         {
             Logger.LogWarning(exception, "Processing webhook delivery {DeliveryRecordId} failed", deliveryRecordId);
 
-            delivery!.Attempts++;
-            delivery.LastError = exception.Message.Length > MaxErrorLength
+            // Written directly: the failed writes are still tracked, so saving through the context
+            // would retry them and fail the same way, and the attempt would never be counted.
+            var error = exception.Message.Length > MaxErrorLength
                 ? exception.Message[..MaxErrorLength]
                 : exception.Message;
 
-            await UnitOfWork.CompleteAsync(CancellationToken.None);
+            await UnitOfWork.ScmWebhookDeliveries.RecordFailure(delivery.Id, error, CancellationToken.None);
 
             throw;
         }
+
+        await NotifyWorkspaces(changes);
     }
 
     private async Task<HashSet<(string Workspace, string Scope)>> Apply(
@@ -79,18 +82,20 @@ internal sealed class ScmWebhookProcessor : IScmWebhookProcessor
         CancellationToken cancellationToken)
     {
         var changedWorkspaces = new HashSet<(string Workspace, string Scope)>();
-        var isEnabled = Registry.IsEnabled(delivery.Provider);
 
-        if (!isEnabled || delivery.ExternalAccountId is null)
+        if (delivery.ExternalAccountId is null)
         {
             return changedWorkspaces;
         }
 
-        var reader = Registry.Resolve(delivery.Provider).WebhookReader;
+        // Thrown rather than skipped: the App only stores deliveries for enabled providers, so this
+        // host is misconfigured, and marking the delivery processed would silently discard it.
+        var isEnabled = Registry.IsEnabled(delivery.Provider);
+        var reader = isEnabled ? Registry.Resolve(delivery.Provider).WebhookReader : null;
 
         if (reader is null)
         {
-            return changedWorkspaces;
+            throw new InvalidOperationException($"{delivery.Provider} webhooks are not enabled on this host.");
         }
 
         var envelope = new ScmWebhookEnvelope
@@ -134,13 +139,22 @@ internal sealed class ScmWebhookProcessor : IScmWebhookProcessor
         return changedWorkspaces;
     }
 
+    // The delivery is already committed, so a failed refresh only leaves open views stale until their
+    // next reload; failing here would make the broker redeliver a message that has nothing left to do.
     private async Task NotifyWorkspaces(IEnumerable<(string Workspace, string Scope)> changes)
     {
         foreach (var workspace in changes.GroupBy(change => change.Workspace))
         {
             var scopes = workspace.Select(change => change.Scope).ToArray();
 
-            await WorkspaceEvents.PublishAsync(workspace.Key, string.Empty, scopes);
+            try
+            {
+                await WorkspaceEvents.PublishAsync(workspace.Key, string.Empty, scopes);
+            }
+            catch (Exception exception)
+            {
+                Logger.LogWarning(exception, "Publishing source control changes to {Workspace} failed", workspace.Key);
+            }
         }
     }
 }

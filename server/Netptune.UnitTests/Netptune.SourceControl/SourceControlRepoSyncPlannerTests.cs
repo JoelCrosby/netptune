@@ -25,7 +25,7 @@ public class SourceControlRepoSyncPlannerTests
     [Fact]
     public void Plan_ShouldAddRepositoriesSeenForTheFirstTime()
     {
-        var plan = SourceControlRepoSyncPlanner.Plan(Connection, [], [Remote("1", "netptune")], SyncedAt);
+        var plan = SourceControlRepoSyncPlanner.Plan(Connection, [], [Remote("1", "netptune")], [], SyncedAt);
 
         var added = plan.Added.Should().ContainSingle().Subject;
 
@@ -43,7 +43,7 @@ public class SourceControlRepoSyncPlannerTests
     {
         var existing = Existing("1", "old-name", isLinked: true);
 
-        var plan = SourceControlRepoSyncPlanner.Plan(Connection, [existing], [Remote("1", "new-name")], SyncedAt);
+        var plan = SourceControlRepoSyncPlanner.Plan(Connection, [existing], [Remote("1", "new-name")], [], SyncedAt);
 
         plan.Added.Should().BeEmpty();
         plan.Refreshed.Should().Be(1);
@@ -58,9 +58,20 @@ public class SourceControlRepoSyncPlannerTests
     {
         var existing = Existing("1", "netptune", isLinked: false);
 
-        var plan = SourceControlRepoSyncPlanner.Plan(Connection, [existing], [], SyncedAt);
+        var plan = SourceControlRepoSyncPlanner.Plan(Connection, [existing], [], [], SyncedAt);
 
         plan.Removed.Should().ContainSingle().Which.Should().BeSameAs(existing);
+    }
+
+    [Fact]
+    public void Plan_ShouldKeepAnUnlinkedRepositoryWithTaskLinksSoItsHistorySurvives()
+    {
+        var existing = Existing("1", "netptune", isLinked: false);
+
+        var plan = SourceControlRepoSyncPlanner.Plan(Connection, [existing], [], [existing.Id], SyncedAt);
+
+        plan.Removed.Should().BeEmpty();
+        existing.IsAccessible.Should().BeFalse();
     }
 
     [Fact]
@@ -68,7 +79,7 @@ public class SourceControlRepoSyncPlannerTests
     {
         var existing = Existing("1", "netptune", isLinked: true);
 
-        var plan = SourceControlRepoSyncPlanner.Plan(Connection, [existing], [], SyncedAt);
+        var plan = SourceControlRepoSyncPlanner.Plan(Connection, [existing], [], [], SyncedAt);
 
         plan.Removed.Should().BeEmpty();
         plan.MarkedInaccessible.Should().Be(1);
@@ -81,7 +92,7 @@ public class SourceControlRepoSyncPlannerTests
     {
         var existing = Existing("1", "netptune", isLinked: true) with { IsAccessible = false };
 
-        SourceControlRepoSyncPlanner.Plan(Connection, [existing], [Remote("1", "netptune")], SyncedAt);
+        SourceControlRepoSyncPlanner.Plan(Connection, [existing], [Remote("1", "netptune")], [], SyncedAt);
 
         existing.IsAccessible.Should().BeTrue();
     }
@@ -89,7 +100,12 @@ public class SourceControlRepoSyncPlannerTests
     [Fact]
     public void Plan_ShouldAddARepositoryListedTwiceOnlyOnce()
     {
-        var plan = SourceControlRepoSyncPlanner.Plan(Connection, [], [Remote("1", "netptune"), Remote("1", "netptune")], SyncedAt);
+        var plan = SourceControlRepoSyncPlanner.Plan(
+            Connection,
+            [],
+            [Remote("1", "netptune"), Remote("1", "netptune")],
+            [],
+            SyncedAt);
 
         plan.Added.Should().ContainSingle();
     }

@@ -66,7 +66,9 @@ public sealed class FakeSourceControlProvider : ISourceControlProvider
             ScmConnection connection,
             CancellationToken cancellationToken)
         {
-            return ValueTask.FromResult(SourceControlCapabilities.ListRepositories | SourceControlCapabilities.Webhooks);
+            var granted = SourceControlCapabilities.ListRepositories | SourceControlCapabilities.Webhooks;
+
+            return ValueTask.FromResult(granted);
         }
     }
 

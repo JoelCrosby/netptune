@@ -14,6 +14,5 @@ public sealed record ScmCheckSummaryViewModel
 
     public int Pending { get; init; }
 
-    // The first failing run, or the only run, so a single click lands on what needs attention.
-    public string? WebUrl { get; init; }
+    public string? AttentionUrl { get; init; }
 }

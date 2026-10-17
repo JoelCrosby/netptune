@@ -9,19 +9,21 @@ using Netptune.UnitTests.Netptune.SourceControl.Support;
 
 using Xunit;
 
-namespace Netptune.UnitTests.Netptune.SourceControl;
+namespace Netptune.UnitTests.Netptune.SourceControl.Providers.GitHub;
 
 public sealed class GitHubConnectorTests : IDisposable
 {
     private const int WorkspaceId = 3;
     private const string UserId = "user-1";
 
-    private const string UserInstallations = """
-        { "total_count": 1, "installations": [ { "id": 987654, "account": { "id": 11, "login": "acme", "type": "Organization" } } ] }
-        """;
+    private const string AcmeMembershipUrl = "/user/memberships/orgs/acme";
 
-    private const string OtherUserInstallations = """
-        { "total_count": 1, "installations": [ { "id": 1111, "account": { "id": 12, "login": "elsewhere", "type": "User" } } ] }
+    private const string AdminMembership = """{ "state": "active", "role": "admin" }""";
+
+    private const string MemberMembership = """{ "state": "active", "role": "member" }""";
+
+    private const string UserAccountInstallation = """
+        { "id": 987654, "account": { "id": 42, "login": "jo", "type": "User" }, "permissions": { "metadata": "read" } }
         """;
 
     private const string Installation = """
@@ -72,15 +74,39 @@ public sealed class GitHubConnectorTests : IDisposable
 
         var connection = GitHubTestHarness.CreateConnection();
 
-        var getToken = async () => await Harness.Connector.GetAccessToken(connection, TestContext.Current.CancellationToken);
+        var getToken = async () => await Harness.Connector.GetAccessToken(
+            connection,
+            TestContext.Current.CancellationToken);
 
         await getToken.Should().ThrowAsync<ScmProviderException>();
     }
 
     [Fact]
+    public async Task GetAccessToken_ShouldReportANetworkFailureAsAProviderError()
+    {
+        Harness.Http.On(
+            HttpMethod.Post,
+            $"/app/installations/{GitHubTestHarness.InstallationId}/access_tokens",
+            HttpStatusCode.OK,
+            configure: _ => throw new HttpRequestException("Connection refused"));
+
+        var connection = GitHubTestHarness.CreateConnection();
+
+        var getToken = async () => await Harness.Connector.GetAccessToken(
+            connection,
+            TestContext.Current.CancellationToken);
+
+        var thrown = await getToken.Should().ThrowAsync<ScmProviderException>();
+
+        thrown.Which.StatusCode.Should().Be((int)HttpStatusCode.ServiceUnavailable);
+    }
+
+    [Fact]
     public async Task GetGrantedCapabilities_ShouldReadTheInstallationPermissions()
     {
-        Harness.Http.On(HttpMethod.Get, $"/app/installations/{GitHubTestHarness.InstallationId}", HttpStatusCode.OK, Installation);
+        Harness.Http.On(
+            HttpMethod.Get,
+            $"/app/installations/{GitHubTestHarness.InstallationId}", HttpStatusCode.OK, Installation);
 
         var granted = await Harness.Connector.GetGrantedCapabilities(
             GitHubTestHarness.CreateConnection(),
@@ -100,15 +126,17 @@ public sealed class GitHubConnectorTests : IDisposable
         var state = Uri.UnescapeDataString(redirect.Query["?state=".Length..]);
 
         redirect.GetLeftPart(UriPartial.Path).Should().Be("https://github.com/apps/netptune-test/installations/new");
-        Harness.StateProtector.Unprotect(state).Should().Be(new ScmConnectState(SourceControlProvider.GitHub, WorkspaceId, UserId));
+        var expectedState = new ScmConnectState(SourceControlProvider.GitHub, WorkspaceId, UserId);
+
+        Harness.StateProtector.Unprotect(state).Should().Be(expectedState);
     }
 
     [Fact]
-    public async Task CompleteConnect_ShouldConnectAnInstallationTheUserCanAccess()
+    public async Task CompleteConnect_ShouldConnectAnInstallationForAnOrganisationTheUserAdministers()
     {
         StubOAuthExchange();
-        Harness.Http.On(HttpMethod.Get, "/user/installations?per_page=100", HttpStatusCode.OK, UserInstallations);
-        Harness.Http.On(HttpMethod.Get, $"/app/installations/{GitHubTestHarness.InstallationId}", HttpStatusCode.OK, Installation);
+        StubInstallation(Installation);
+        Harness.Http.On(HttpMethod.Get, AcmeMembershipUrl, HttpStatusCode.OK, AdminMembership);
 
         var result = await Harness.Connector.CompleteConnect(CreateCallback(), TestContext.Current.CancellationToken);
 
@@ -119,26 +147,68 @@ public sealed class GitHubConnectorTests : IDisposable
         result.Payload.CredentialKind.Should().Be(ScmCredentialKind.AppInstallation);
         result.Payload.ProtectedCredential.Should().BeNull();
         result.Payload.GrantedCapabilities.HasFlag(SourceControlCapabilities.ReadPullRequests).Should().BeTrue();
-        result.Payload.GrantedCapabilities.HasFlag(SourceControlCapabilities.CreateBranch).Should().BeFalse("contents is read-only");
+        var canCreateBranch = result.Payload.GrantedCapabilities.HasFlag(SourceControlCapabilities.CreateBranch);
+
+        canCreateBranch.Should().BeFalse("contents is read-only");
 
         var exchange = Harness.Http.Requests[0];
         exchange.Uri.AbsoluteUri.Should().Be("https://github.com/login/oauth/access_token");
         exchange.Accept.Should().Be("application/json");
         exchange.Body.Should().Contain("\"code\":\"oauth-code\"");
-        Harness.Http.Requests[1].Authorization.Should().Be("Bearer ghu_user");
+        var membershipRequest = Harness.Http.Requests.Single(request => request.Uri.AbsolutePath == AcmeMembershipUrl);
+        membershipRequest.Authorization.Should().Be("Bearer ghu_user");
     }
 
     [Fact]
-    public async Task CompleteConnect_ShouldRejectAnInstallationTheUserCannotSee()
+    public async Task CompleteConnect_ShouldRejectAMemberWhoIsNotAnOrganisationAdmin()
     {
         StubOAuthExchange();
-        Harness.Http.On(HttpMethod.Get, "/user/installations?per_page=100", HttpStatusCode.OK, OtherUserInstallations);
+        StubInstallation(Installation);
+        Harness.Http.On(HttpMethod.Get, AcmeMembershipUrl, HttpStatusCode.OK, MemberMembership);
 
         var result = await Harness.Connector.CompleteConnect(CreateCallback(), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
-        result.Message.Should().Contain("doesn't have access");
-        Harness.Http.Requests.Should().NotContain(request => request.Uri.AbsolutePath.StartsWith("/app/installations"));
+        result.Message.Should().Contain("Only an owner");
+    }
+
+    [Fact]
+    public async Task CompleteConnect_ShouldRejectWhenGitHubRefusesToShowTheMembership()
+    {
+        StubOAuthExchange();
+        StubInstallation(Installation);
+        Harness.Http.On(HttpMethod.Get, AcmeMembershipUrl, HttpStatusCode.Forbidden, """{ "message": "Resource not accessible by integration" }""");
+
+        var result = await Harness.Connector.CompleteConnect(CreateCallback(), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Contain("Only an owner");
+    }
+
+    [Fact]
+    public async Task CompleteConnect_ShouldConnectAUserAccountInstallationForItsOwner()
+    {
+        StubOAuthExchange();
+        StubInstallation(UserAccountInstallation);
+        Harness.Http.On(HttpMethod.Get, "/user", HttpStatusCode.OK, """{ "id": 42, "login": "jo" }""");
+
+        var result = await Harness.Connector.CompleteConnect(CreateCallback(), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeTrue(result.Message);
+        result.Payload!.Account.Login.Should().Be("jo");
+    }
+
+    [Fact]
+    public async Task CompleteConnect_ShouldRejectAUserAccountInstallationForSomeoneElse()
+    {
+        StubOAuthExchange();
+        StubInstallation(UserAccountInstallation);
+        Harness.Http.On(HttpMethod.Get, "/user", HttpStatusCode.OK, """{ "id": 7, "login": "mallory" }""");
+
+        var result = await Harness.Connector.CompleteConnect(CreateCallback(), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Contain("Only an owner");
     }
 
     [Fact]
@@ -200,6 +270,13 @@ public sealed class GitHubConnectorTests : IDisposable
     public void Dispose()
     {
         Harness.Dispose();
+    }
+
+    private void StubInstallation(string installation)
+    {
+        Harness.Http.On(
+            HttpMethod.Get,
+            $"/app/installations/{GitHubTestHarness.InstallationId}", HttpStatusCode.OK, installation);
     }
 
     private void StubOAuthExchange()

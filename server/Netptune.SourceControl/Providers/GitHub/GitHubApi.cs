@@ -9,6 +9,8 @@ using Microsoft.Extensions.Options;
 using Netptune.Core.SourceControl;
 using Netptune.SourceControl.Providers.GitHub.Dtos;
 
+using Polly.Timeout;
+
 namespace Netptune.SourceControl.Providers.GitHub;
 
 internal sealed record GitHubRequest
@@ -67,7 +69,7 @@ internal sealed class GitHubApi
 
         var client = ClientFactory.CreateClient(ClientName);
 
-        using var response = await client.SendAsync(message, cancellationToken);
+        using var response = await SendOrThrowProviderException(client, message, cancellationToken);
 
         ThrowIfRateLimited(response);
 
@@ -98,6 +100,34 @@ internal sealed class GitHubApi
             StatusCode = response.StatusCode,
             ErrorMessage = errorMessage,
         };
+    }
+
+    private static async Task<HttpResponseMessage> SendOrThrowProviderException(
+        HttpClient client,
+        HttpRequestMessage message,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var response = await client.SendAsync(message, cancellationToken);
+
+            return response;
+        }
+        catch (Exception exception) when (IsTransportFailure(exception, cancellationToken))
+        {
+            throw new ScmProviderException(
+                SourceControlProvider.GitHub,
+                (int)HttpStatusCode.ServiceUnavailable,
+                exception.Message);
+        }
+    }
+
+    private static bool IsTransportFailure(Exception exception, CancellationToken cancellationToken)
+    {
+        var isTimeout = exception is TimeoutRejectedException
+            || (exception is TaskCanceledException && !cancellationToken.IsCancellationRequested);
+
+        return isTimeout || exception is HttpRequestException;
     }
 
     private HttpRequestMessage CreateMessage(GitHubRequest request)
@@ -148,17 +178,29 @@ internal sealed class GitHubApi
 
         var remaining = ReadHeader(response, "x-ratelimit-remaining");
         var isPrimaryLimitExhausted = remaining == "0";
-        var retryAfter = response.Headers.RetryAfter?.Delta;
-        var isSecondaryLimit = retryAfter is not null;
+        var retryAfterAt = ReadRetryAfter(response);
+        var isSecondaryLimit = retryAfterAt is not null;
 
         if (!isPrimaryLimitExhausted && !isSecondaryLimit)
         {
             return;
         }
 
-        var retryAt = isSecondaryLimit ? Clock.GetUtcNow() + retryAfter!.Value : ReadRateLimitReset(response);
+        var retryAt = retryAfterAt ?? ReadRateLimitReset(response);
 
         throw new ScmRateLimitedException(SourceControlProvider.GitHub, retryAt);
+    }
+
+    private DateTimeOffset? ReadRetryAfter(HttpResponseMessage response)
+    {
+        var retryAfter = response.Headers.RetryAfter;
+
+        if (retryAfter?.Delta is { } delay)
+        {
+            return Clock.GetUtcNow() + delay;
+        }
+
+        return retryAfter?.Date;
     }
 
     private DateTimeOffset ReadRateLimitReset(HttpResponseMessage response)

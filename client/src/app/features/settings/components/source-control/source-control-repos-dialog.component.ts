@@ -5,10 +5,10 @@ import {
   SourceControlRepo,
   sourceControlProviderNames,
 } from '@core/models/source-control';
-import { sourceControlReposResource } from '@core/resources/source-control.resource';
-import { SourceControlService } from '@core/services/source-control.service';
+import { getErrorMessage } from '@core/util/error-message';
 import { mutation } from '@core/util/mutation';
-import { requireSuccess } from '@core/util/rxjs-operators';
+import { sourceControlReposResource } from '@settings/resources/source-control.resource';
+import { SourceControlCommandsService } from '@settings/services/source-control-commands.service';
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
@@ -71,7 +71,7 @@ export interface SourceControlReposDialogData {
           @for (repo of visibleRepos(); track repo.id) {
             <app-selectable-row
               [checked]="isLinked(repo)"
-              [disabled]="!repo.isAccessible || pendingRepoId() === repo.id"
+              [disabled]="isLocked(repo)"
               (toggled)="setLinked(repo, $event)">
               <div
                 class="flex min-w-0 flex-1 items-center justify-between gap-3">
@@ -83,7 +83,8 @@ export interface SourceControlReposDialogData {
                     >
                   }
                   @if (repo.isArchived) {
-                    <app-badge i18n="Badge on an archived repository"
+                    <app-badge
+                      i18n="repository state|Badge on an archived repository"
                       >Archived</app-badge
                     >
                   }
@@ -129,9 +130,9 @@ export interface SourceControlReposDialogData {
 export class SourceControlReposDialogComponent {
   private readonly data = inject<SourceControlReposDialogData>(DIALOG_DATA);
   private readonly dialogRef =
-    inject<DialogRef<boolean, SourceControlReposDialogComponent>>(DialogRef);
+    inject<DialogRef<unknown, SourceControlReposDialogComponent>>(DialogRef);
 
-  private readonly service = inject(SourceControlService);
+  private readonly commands = inject(SourceControlCommandsService);
   private readonly snackbar = inject(SnackbarService);
 
   protected readonly repos = sourceControlReposResource(
@@ -144,19 +145,13 @@ export class SourceControlReposDialogComponent {
 
   protected readonly subtitle = `${sourceControlProviderNames[this.data.connection.provider]} · ${this.data.connection.accountLogin}`;
   protected readonly term = signal('');
-  protected readonly pendingRepoId = signal<number | null>(null);
-
+  private readonly pendingRepoIds = signal<ReadonlySet<number>>(new Set());
   private readonly linkedOverrides = signal(new Map<number, boolean>());
-  private changed = false;
 
-  protected readonly loadFailed = computed(() => {
-    const response = this.repos.value();
-
-    return !!this.repos.error() || response?.isSuccess === false;
-  });
+  protected readonly loadFailed = computed(() => !!this.repos.error());
 
   protected readonly visibleRepos = computed(() => {
-    const repos = this.repos.value()?.payload ?? [];
+    const repos = this.repos.hasValue() ? this.repos.value() : [];
     const term = this.term().trim().toLowerCase();
 
     if (!term) {
@@ -170,43 +165,56 @@ export class SourceControlReposDialogComponent {
     return this.linkedOverrides().get(repo.id) ?? repo.isLinked;
   }
 
+  // A repository that lost access can still be unlinked, just not linked again.
+  protected isLocked(repo: SourceControlRepo): boolean {
+    const cannotLink = !repo.isAccessible && !this.isLinked(repo);
+    const isPending = this.pendingRepoIds().has(repo.id);
+
+    return cannotLink || isPending;
+  }
+
   protected setLinked(repo: SourceControlRepo, isLinked: boolean) {
-    this.pendingRepoId.set(repo.id);
+    this.setPending(repo.id, true);
     this.setOverride(repo.id, isLinked);
 
-    this.service
-      .setLinked(repo.id, isLinked)
-      .pipe(requireSuccess())
-      .subscribe({
-        next: () => {
-          this.changed = true;
-          this.pendingRepoId.set(null);
-        },
-        error: () => {
-          this.setOverride(repo.id, !isLinked);
-          this.pendingRepoId.set(null);
-          this.snackbar.error(
+    this.commands.setLinked(repo, isLinked).subscribe({
+      next: () => this.setPending(repo.id, false),
+      error: (error: unknown) => {
+        this.setOverride(repo.id, !isLinked);
+        this.setPending(repo.id, false);
+        this.snackbar.error(
+          getErrorMessage(
+            error,
             $localize`:Shown when linking or unlinking a repository fails:${repo.fullName}:repository: could not be updated.`
-          );
-        },
-      });
+          )
+        );
+      },
+    });
   }
 
   protected sync() {
-    this.refresh.run(
-      this.service.sync(this.data.connection.id).pipe(requireSuccess()),
-      {
-        onSuccess: () => {
-          this.linkedOverrides.set(new Map());
-          this.repos.reload();
-        },
-        onError: (message) => this.snackbar.error(message),
-      }
-    );
+    this.refresh.run(this.commands.sync(this.data.connection.id), {
+      onSuccess: () => this.linkedOverrides.set(new Map()),
+      onError: (message) => this.snackbar.error(message),
+    });
   }
 
   protected close() {
-    this.dialogRef.close(this.changed);
+    this.dialogRef.close();
+  }
+
+  private setPending(repoId: number, isPending: boolean) {
+    this.pendingRepoIds.update((pending) => {
+      const next = new Set(pending);
+
+      if (isPending) {
+        next.add(repoId);
+      } else {
+        next.delete(repoId);
+      }
+
+      return next;
+    });
   }
 
   private setOverride(repoId: number, isLinked: boolean) {

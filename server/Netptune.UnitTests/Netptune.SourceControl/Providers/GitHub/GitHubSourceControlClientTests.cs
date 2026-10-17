@@ -10,7 +10,7 @@ using Netptune.UnitTests.Netptune.SourceControl.Support;
 
 using Xunit;
 
-namespace Netptune.UnitTests.Netptune.SourceControl;
+namespace Netptune.UnitTests.Netptune.SourceControl.Providers.GitHub;
 
 public sealed class GitHubSourceControlClientTests : IDisposable
 {
@@ -34,11 +34,19 @@ public sealed class GitHubSourceControlClientTests : IDisposable
     [Fact]
     public async Task ListRepositories_ShouldFollowTheNextPageLink()
     {
-        Harness.Http.On(HttpMethod.Get, "/installation/repositories?per_page=100", HttpStatusCode.OK, RepositoriesPage(1, "netptune"), response =>
+        var firstPage = RepositoriesPage(1, "netptune");
+
+        Harness.Http.On(HttpMethod.Get, "/installation/repositories?per_page=100", HttpStatusCode.OK, firstPage, response =>
         {
-            response.Headers.Add("Link", "<https://api.github.com/installation/repositories?per_page=100&page=2>; rel=\"next\"");
+            response.Headers.Add(
+                "Link",
+                "<https://api.github.com/installation/repositories?per_page=100&page=2>; rel=\"next\"");
         });
-        Harness.Http.On(HttpMethod.Get, "/installation/repositories?per_page=100&page=2", HttpStatusCode.OK, RepositoriesPage(2, "website"));
+        Harness.Http.On(
+            HttpMethod.Get,
+            "/installation/repositories?per_page=100&page=2",
+            HttpStatusCode.OK,
+            RepositoriesPage(2, "website"));
 
         var repositories = await ListRepositories();
 
@@ -50,7 +58,9 @@ public sealed class GitHubSourceControlClientTests : IDisposable
     [Fact]
     public async Task ListRepositories_ShouldNotFollowANextPageLinkToAnotherHost()
     {
-        Harness.Http.On(HttpMethod.Get, "/installation/repositories?per_page=100", HttpStatusCode.OK, RepositoriesPage(1, "netptune"), response =>
+        var firstPage = RepositoriesPage(1, "netptune");
+
+        Harness.Http.On(HttpMethod.Get, "/installation/repositories?per_page=100", HttpStatusCode.OK, firstPage, response =>
         {
             response.Headers.Add("Link", "<https://evil.example/steal?page=2>; rel=\"next\"");
         });
@@ -64,7 +74,11 @@ public sealed class GitHubSourceControlClientTests : IDisposable
     [Fact]
     public async Task Requests_ShouldAuthenticateWithTheInstallationToken()
     {
-        Harness.Http.On(HttpMethod.Get, "/installation/repositories?per_page=100", HttpStatusCode.OK, RepositoriesPage(1, "netptune"));
+        Harness.Http.On(
+            HttpMethod.Get,
+            "/installation/repositories?per_page=100",
+            HttpStatusCode.OK,
+            RepositoriesPage(1, "netptune"));
 
         await ListRepositories();
 
@@ -76,7 +90,11 @@ public sealed class GitHubSourceControlClientTests : IDisposable
     {
         Harness.Http.On(HttpMethod.Get, $"{BranchesPath}/feature/missing", HttpStatusCode.NotFound, """{ "message": "Branch not found" }""");
 
-        var branch = await Harness.Client.GetBranch(Context, Repository, "feature/missing", TestContext.Current.CancellationToken);
+        var branch = await Harness.Client.GetBranch(
+            Context,
+            Repository,
+            "feature/missing",
+            TestContext.Current.CancellationToken);
 
         branch.Should().BeNull();
     }
@@ -86,9 +104,18 @@ public sealed class GitHubSourceControlClientTests : IDisposable
     {
         StubBranch("feature/netp-564-search", BaseSha);
 
-        var branch = await Harness.Client.GetBranch(Context, Repository, "feature/netp-564-search", TestContext.Current.CancellationToken);
+        var branch = await Harness.Client.GetBranch(
+            Context,
+            Repository,
+            "feature/netp-564-search",
+            TestContext.Current.CancellationToken);
 
-        branch.Should().Be(new ScmBranch("feature/netp-564-search", BaseSha, "https://github.com/acme/netptune/tree/feature/netp-564-search"));
+        var expected = new ScmBranch(
+            "feature/netp-564-search",
+            BaseSha,
+            "https://github.com/acme/netptune/tree/feature/netp-564-search");
+
+        branch.Should().Be(expected);
     }
 
     [Fact]
@@ -113,7 +140,7 @@ public sealed class GitHubSourceControlClientTests : IDisposable
 
         result.IsSuccess.Should().BeFalse();
         result.Message.Should().Contain("base branch main");
-        Harness.Http.Requests.Should().NotContain(request => request.Method == HttpMethod.Post && request.Uri.AbsolutePath.EndsWith("/git/refs"));
+        Harness.Http.Requests.Should().NotContain(request => IsCreateRef(request));
     }
 
     [Fact]
@@ -189,7 +216,11 @@ public sealed class GitHubSourceControlClientTests : IDisposable
     {
         var request = new ScmCreateBranch(name, "main");
 
-        var result = await Harness.Client.CreateBranch(Context, Repository, request, TestContext.Current.CancellationToken);
+        var result = await Harness.Client.CreateBranch(
+            Context,
+            Repository,
+            request,
+            TestContext.Current.CancellationToken);
 
         return result;
     }
@@ -223,5 +254,13 @@ public sealed class GitHubSourceControlClientTests : IDisposable
               ]
             }
             """;
+    }
+
+    private static bool IsCreateRef(RecordedRequest request)
+    {
+        var isPost = request.Method == HttpMethod.Post;
+        var isRefsPath = request.Uri.AbsolutePath.EndsWith("/git/refs");
+
+        return isPost && isRefsPath;
     }
 }

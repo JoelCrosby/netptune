@@ -61,8 +61,14 @@ public sealed class SourceControlWebhookEndpointTests
     [Fact]
     public async Task Webhook_ShouldReturnNotFoundForAnUnknownOrDisabledProvider()
     {
-        var unknown = await Anonymous.PostAsync("api/webhooks/source-control/svn", null, TestContext.Current.CancellationToken);
-        var disabled = await Anonymous.PostAsync("api/webhooks/source-control/github", null, TestContext.Current.CancellationToken);
+        var unknown = await Anonymous.PostAsync(
+            "api/webhooks/source-control/svn",
+            null,
+            TestContext.Current.CancellationToken);
+        var disabled = await Anonymous.PostAsync(
+            "api/webhooks/source-control/github",
+            null,
+            TestContext.Current.CancellationToken);
 
         unknown.StatusCode.Should().Be(HttpStatusCode.NotFound);
         disabled.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -91,6 +97,59 @@ public sealed class SourceControlWebhookEndpointTests
         first.StatusCode.Should().Be(HttpStatusCode.Accepted);
         redelivered.StatusCode.Should().Be(HttpStatusCode.Accepted);
         (await StoredDeliveries(account)).Should().ContainSingle();
+    }
+
+    [Fact]
+    public async Task Webhook_ShouldReprocessARedeliveryOfADeliveryThatNeverSucceeded()
+    {
+        var account = await ConnectAccount();
+        var deliveryId = Guid.NewGuid().ToString();
+
+        await PostWebhook(account, deliveryId);
+
+        var stored = (await StoredDeliveries(account)).Single();
+
+        using (var scope = Fixture.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+            await context.ScmWebhookDeliveries
+                .Where(delivery => delivery.Id == stored.Id)
+                .ExecuteUpdateAsync(
+                    setters => setters
+                        .SetProperty(delivery => delivery.Attempts, 5)
+                        .SetProperty(delivery => delivery.LastError, "gave up"),
+                    TestContext.Current.CancellationToken);
+        }
+
+        var redelivered = await PostWebhook(account, deliveryId);
+        var revived = (await StoredDeliveries(account)).Single();
+
+        redelivered.StatusCode.Should().Be(HttpStatusCode.Accepted);
+        revived.Attempts.Should().Be(0);
+        revived.LastError.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Webhook_ShouldRejectABodyOverTheSizeLimit()
+    {
+        var account = await ConnectAccount();
+        var padding = new string('x', 6 * 1024 * 1024);
+
+        using var request = new HttpRequestMessage(HttpMethod.Post, WebhookUrl);
+
+        request.Content = new StringContent(
+            $$"""{ "account": "{{account}}", "padding": "{{padding}}" }""",
+            Encoding.UTF8,
+            "application/json");
+        request.Headers.Add(TestSourceControlProvider.DeliveryHeader, Guid.NewGuid().ToString());
+        request.Headers.Add(TestSourceControlProvider.EventHeader, "push");
+        request.Headers.Add(TestSourceControlProvider.SignatureHeader, TestSourceControlProvider.ValidSignature);
+
+        var response = await Anonymous.SendAsync(request, TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.RequestEntityTooLarge);
+        (await StoredDeliveries(account)).Should().BeEmpty();
     }
 
     [Fact]

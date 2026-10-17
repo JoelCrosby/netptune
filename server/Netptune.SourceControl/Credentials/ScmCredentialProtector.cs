@@ -10,6 +10,7 @@ internal sealed class ScmCredentialProtector : IScmCredentialProtector
 {
     private const string PurposeName = "netptune.scm-credentials";
     private const int HintLength = 4;
+    private const int MinimumHintedSecretLength = HintLength * 3;
 
     private readonly IDataProtector Protector;
 
@@ -35,12 +36,8 @@ internal sealed class ScmCredentialProtector : IScmCredentialProtector
     public string CreateHint(string secret)
     {
         var trimmed = secret.Trim();
+        var isTooShortToHint = trimmed.Length < MinimumHintedSecretLength;
 
-        if (trimmed.Length <= HintLength)
-        {
-            return trimmed;
-        }
-
-        return trimmed[^HintLength..];
+        return isTooShortToHint ? string.Empty : trimmed[^HintLength..];
     }
 }

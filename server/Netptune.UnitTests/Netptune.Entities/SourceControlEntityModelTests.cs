@@ -9,7 +9,7 @@ using Netptune.Entities.Contexts;
 
 using Xunit;
 
-namespace Netptune.UnitTests.Netptune.SourceControl;
+namespace Netptune.UnitTests.Netptune.Entities;
 
 public class SourceControlEntityModelTests
 {

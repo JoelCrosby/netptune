@@ -11,7 +11,7 @@ using Netptune.UnitTests.Netptune.SourceControl.Support;
 
 using Xunit;
 
-namespace Netptune.UnitTests.Netptune.SourceControl;
+namespace Netptune.UnitTests.Netptune.SourceControl.Providers.GitHub;
 
 public sealed class GitHubWebhookReaderTests : IDisposable
 {
@@ -30,7 +30,10 @@ public sealed class GitHubWebhookReaderTests : IDisposable
     [Fact]
     public void Verify_ShouldRejectABodySignedWithAnotherSecret()
     {
-        var request = GitHubTestHarness.CreateWebhookRequest("push", GitHubWebhookPayloads.Push, secret: "someone-else");
+        var request = GitHubTestHarness.CreateWebhookRequest(
+            "push",
+            GitHubWebhookPayloads.Push,
+            secret: "someone-else");
 
         var verification = Harness.WebhookReader.Verify(request, null);
 
@@ -88,7 +91,9 @@ public sealed class GitHubWebhookReaderTests : IDisposable
     [Fact]
     public void ReadEnvelope_ShouldExtractTheRoutingFacts()
     {
-        var request = GitHubTestHarness.CreateWebhookRequest("pull_request", GitHubWebhookPayloads.PullRequest("closed", merged: true));
+        var request = GitHubTestHarness.CreateWebhookRequest(
+            "pull_request",
+            GitHubWebhookPayloads.PullRequest("closed", merged: true));
 
         var envelope = Harness.WebhookReader.ReadEnvelope(request);
 
@@ -210,7 +215,9 @@ public sealed class GitHubWebhookReaderTests : IDisposable
     [Fact]
     public void Normalise_ShouldIgnorePullRequestActionsNetptuneDoesNotUse()
     {
-        Normalise("pull_request", GitHubWebhookPayloads.PullRequest("labeled", merged: false, state: "open")).Should().BeEmpty();
+        var labeled = GitHubWebhookPayloads.PullRequest("labeled", merged: false, state: "open");
+
+        Normalise("pull_request", labeled).Should().BeEmpty();
     }
 
     [Fact]
@@ -228,7 +235,9 @@ public sealed class GitHubWebhookReaderTests : IDisposable
     [Fact]
     public void Normalise_ShouldTurnACreatedCheckRunIntoAQueuedCheckRun()
     {
-        var events = Normalise("check_run", GitHubWebhookPayloads.CheckRun("created", status: "queued", conclusion: "null"));
+        var events = Normalise(
+            "check_run",
+            GitHubWebhookPayloads.CheckRun("created", status: "queued", conclusion: "null"));
 
         var created = events.Should().ContainSingle().Which.Should().BeOfType<ScmCheckRunChanged>().Subject;
 

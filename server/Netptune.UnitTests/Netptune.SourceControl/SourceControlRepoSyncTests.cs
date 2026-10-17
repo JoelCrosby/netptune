@@ -20,8 +20,10 @@ public class SourceControlRepoSyncTests
     private const int WorkspaceId = 3;
 
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
-    private readonly ISourceControlConnectionRepository Connections = Substitute.For<ISourceControlConnectionRepository>();
+    private readonly ISourceControlConnectionRepository Connections =
+        Substitute.For<ISourceControlConnectionRepository>();
     private readonly ISourceControlRepoRepository Repos = Substitute.For<ISourceControlRepoRepository>();
+    private readonly ITaskCodeLinkRepository TaskCodeLinks = Substitute.For<ITaskCodeLinkRepository>();
     private readonly FakeSourceControlProvider Provider = new();
     private readonly AdjustableTimeProvider Clock = new(new DateTimeOffset(2026, 10, 16, 12, 0, 0, TimeSpan.Zero));
     private readonly SourceControlRepoSync Sync;
@@ -30,7 +32,11 @@ public class SourceControlRepoSyncTests
     {
         UnitOfWork.SourceControlConnections.Returns(Connections);
         UnitOfWork.SourceControlRepos.Returns(Repos);
+        UnitOfWork.TaskCodeLinks.Returns(TaskCodeLinks);
         Repos.GetForConnection(ConnectionId, Arg.Any<CancellationToken>()).Returns([]);
+        TaskCodeLinks
+            .GetRepoIdsWithLinks(Arg.Any<IReadOnlyCollection<int>>(), Arg.Any<CancellationToken>())
+            .Returns([]);
 
         var registry = new SourceControlProviderRegistry([Provider]);
 

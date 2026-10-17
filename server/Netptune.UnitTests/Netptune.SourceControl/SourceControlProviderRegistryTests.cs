@@ -22,9 +22,12 @@ public sealed class SourceControlProviderRegistryTests : IDisposable
         var context = registry.CreateContext(connection);
         var provider = registry.Resolve(SourceControlProvider.GitLab);
         var cancellationToken = TestContext.Current.CancellationToken;
-        var repositories = await provider.Client.ListRepositories(context, cancellationToken).ToListAsync(cancellationToken);
+        var listing = provider.Client.ListRepositories(context, cancellationToken);
+        var repositories = await listing.ToListAsync(cancellationToken);
 
-        registry.All.Select(registered => registered.Provider).Should().Equal(SourceControlProvider.GitHub, SourceControlProvider.GitLab);
+        registry.All.Select(registered => registered.Provider).Should().Equal(
+            SourceControlProvider.GitHub,
+            SourceControlProvider.GitLab);
         registry.Resolve(SourceControlProvider.GitHub).Should().BeSameAs(GitHub.Provider);
         repositories.Should().ContainSingle().Which.FullName.Should().Be("fake-group/fake-repo");
         fake.FakeConnector.TokenRequests.Should().Be(1);
@@ -33,7 +36,8 @@ public sealed class SourceControlProviderRegistryTests : IDisposable
     [Fact]
     public void Constructor_ShouldRejectTwoProvidersOfTheSameKind()
     {
-        var create = () => new SourceControlProviderRegistry([new FakeSourceControlProvider(), new FakeSourceControlProvider()]);
+        FakeSourceControlProvider[] duplicates = [new(), new()];
+        var create = () => new SourceControlProviderRegistry(duplicates);
 
         create.Should().Throw<InvalidOperationException>().WithMessage("*GitLab*");
     }

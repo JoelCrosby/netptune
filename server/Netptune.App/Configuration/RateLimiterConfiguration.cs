@@ -111,11 +111,11 @@ public static class RateLimiterConfiguration
                         QueueLimit = 2,
                     }));
 
-            // Partitioned by provider rather than caller: GitHub delivers from a pool of addresses, and the
-            // limit is there to cap abuse of an unauthenticated route, not to throttle real bursts.
+            // Partitioned by caller as well as provider, so junk posted to the unauthenticated route can't
+            // spend the budget real deliveries need; GitHub spreads its deliveries over a pool of addresses.
             options.AddPolicy(WebhooksPolicyName, context =>
                 RateLimitPartition.GetSlidingWindowLimiter(
-                    $"webhooks:{context.Request.RouteValues["provider"]}",
+                    WebhookPartitionKey(context),
                     _ => new SlidingWindowRateLimiterOptions
                     {
                         PermitLimit = WebhooksPermitLimit,
@@ -139,5 +139,13 @@ public static class RateLimiterConfiguration
         });
 
         return services;
+    }
+
+    private static string WebhookPartitionKey(HttpContext context)
+    {
+        var provider = context.Request.RouteValues["provider"]?.ToString()?.ToLowerInvariant();
+        var caller = context.GetRemoteIpAddress() ?? "unknown";
+
+        return $"webhooks:{provider}:{caller}";
     }
 }

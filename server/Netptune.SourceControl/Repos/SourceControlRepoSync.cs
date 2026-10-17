@@ -25,7 +25,10 @@ internal sealed class SourceControlRepoSync : ISourceControlRepoSync
         int workspaceId,
         CancellationToken cancellationToken)
     {
-        var connection = await UnitOfWork.SourceControlConnections.GetOwned(connectionId, workspaceId, cancellationToken);
+        var connection = await UnitOfWork.SourceControlConnections.GetOwned(
+            connectionId,
+            workspaceId,
+            cancellationToken);
 
         if (connection is null)
         {
@@ -44,8 +47,10 @@ internal sealed class SourceControlRepoSync : ISourceControlRepoSync
         var context = Registry.CreateContext(scmConnection);
         var remote = await provider.Client.ListRepositories(context, cancellationToken).ToListAsync(cancellationToken);
         var existing = await UnitOfWork.SourceControlRepos.GetForConnection(connection.Id, cancellationToken);
+        var existingIds = existing.Select(repo => repo.Id).ToList();
+        var reposWithTaskLinks = await UnitOfWork.TaskCodeLinks.GetRepoIdsWithLinks(existingIds, cancellationToken);
         var syncedAt = Clock.GetUtcNow().UtcDateTime;
-        var plan = SourceControlRepoSyncPlanner.Plan(connection, existing, remote, syncedAt);
+        var plan = SourceControlRepoSyncPlanner.Plan(connection, existing, remote, reposWithTaskLinks, syncedAt);
 
         await UnitOfWork.SourceControlRepos.AddRangeAsync(plan.Added, cancellationToken);
         await UnitOfWork.SourceControlRepos.DeletePermanent(plan.Removed, cancellationToken);

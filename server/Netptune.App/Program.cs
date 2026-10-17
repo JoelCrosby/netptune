@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.HttpOverrides;
 
 using Netptune.Ai.Configuration;
-using Netptune.SourceControl.Configuration;
 using Netptune.App.Configuration;
 using Netptune.App.Endpoints;
 using Netptune.App.Middleware;
@@ -27,6 +26,7 @@ using Netptune.ServiceDefaults;
 using Netptune.ServiceDefaults.Middleware;
 using Netptune.ServiceDefaults.Networking;
 using Netptune.Services.Configuration;
+using Netptune.SourceControl.Configuration;
 using Netptune.Storage;
 using Netptune.Transfer;
 

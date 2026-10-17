@@ -34,6 +34,12 @@ public class ScmCredentialProtectorTests
     }
 
     [Fact]
+    public void CreateHint_ShouldRevealNothingOfASecretTooShortToHint()
+    {
+        Protector.CreateHint("abcd1234").Should().BeEmpty();
+    }
+
+    [Fact]
     public void ToScmConnection_ShouldCarryTheStoredSecretsStillEncrypted()
     {
         var protectedCredential = Protector.Protect(Secret);

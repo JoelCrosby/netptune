@@ -6,7 +6,6 @@ import {
 } from '@core/models/source-control';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { BadgeComponent } from '@static/components/badge/badge.component';
-import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { MediaRowComponent } from '@static/components/media-row.component';
@@ -20,7 +19,6 @@ import { PanelComponent } from '@static/components/panel.component';
     AvatarComponent,
     BadgeComponent,
     EmptyStateComponent,
-    FlatButtonComponent,
     MediaRowComponent,
     PanelBodyComponent,
     PanelComponent,
@@ -76,10 +74,9 @@ import { PanelComponent } from '@static/components/panel.component';
             @if (canManage()) {
               <div mediaRowActions class="flex items-center gap-2">
                 <button
-                  app-flat-button
-                  color="ghost"
+                  app-stroked-button
+                  color="warn"
                   type="button"
-                  class="text-warn"
                   (click)="disconnect.emit(connection)">
                   <span i18n="Button that removes a source control connection"
                     >Disconnect</span

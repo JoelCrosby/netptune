@@ -24,10 +24,7 @@ internal sealed class GitHubAppTokenMinter : IDisposable
         Clock = clock;
         Rsa = RSA.Create();
 
-        // Environment variables often carry the PEM with escaped newlines.
-        var pem = Options.PrivateKey.Replace("\\n", "\n");
-
-        Rsa.ImportFromPem(pem);
+        Rsa.ImportFromPem(Options.PrivateKeyPem);
 
         // IdentityModel caches signature providers by public key across key instances, which would
         // hand a later minter a provider wrapping this RSA after it has been disposed.
