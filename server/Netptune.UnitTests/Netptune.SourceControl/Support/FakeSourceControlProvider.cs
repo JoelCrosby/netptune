@@ -61,6 +61,13 @@ public sealed class FakeSourceControlProvider : ISourceControlProvider
 
             return ValueTask.FromResult(token);
         }
+
+        public ValueTask<SourceControlCapabilities> GetGrantedCapabilities(
+            ScmConnection connection,
+            CancellationToken cancellationToken)
+        {
+            return ValueTask.FromResult(SourceControlCapabilities.ListRepositories | SourceControlCapabilities.Webhooks);
+        }
     }
 
     private sealed class FakeClient : ISourceControlClient

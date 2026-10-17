@@ -1,10 +1,12 @@
 import { httpResource } from '@angular/common/http';
+import { PERMISSIONS } from '../auth/permissions';
 import { ClientResponse } from '../models/client-response';
 import {
   SourceControlConnection,
   SourceControlProviderInfo,
   SourceControlRepo,
 } from '../models/source-control';
+import { permissionResource } from './permission.resource';
 
 export const sourceControlProvidersResource = () => {
   return httpResource<SourceControlProviderInfo[]>(
@@ -14,10 +16,15 @@ export const sourceControlProvidersResource = () => {
 };
 
 export const sourceControlConnectionsResource = () => {
-  return httpResource<SourceControlConnection[]>(
-    () => ({ url: 'api/source-control/connections' }),
-    { defaultValue: [] }
-  );
+  return permissionResource<
+    SourceControlConnection[],
+    SourceControlConnection[]
+  >({
+    permission: PERMISSIONS.sourceControl.read,
+    request: () => ({ url: 'api/source-control/connections' }),
+    defaultValue: [],
+    refreshOn: ['sourceControl'],
+  });
 };
 
 export const sourceControlReposResource = (connectionId: () => number) => {

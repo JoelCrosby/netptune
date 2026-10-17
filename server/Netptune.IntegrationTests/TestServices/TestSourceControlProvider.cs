@@ -1,9 +1,12 @@
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 
 using Netptune.Core.Responses.Common;
 using Netptune.Core.SourceControl;
 using Netptune.Core.SourceControl.Connect;
+using Netptune.Core.SourceControl.Events;
 using Netptune.Core.SourceControl.Models;
+using Netptune.Core.SourceControl.Webhooks;
 
 namespace Netptune.IntegrationTests.TestServices;
 
@@ -30,7 +33,78 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
 
     public ISourceControlClient Client { get; } = new TestClient();
 
-    public ISourceControlWebhookReader? WebhookReader => null;
+    public ISourceControlWebhookReader? WebhookReader { get; } = new TestWebhookReader();
+
+    public const string SignatureHeader = "X-Test-Signature";
+    public const string DeliveryHeader = "X-Test-Delivery";
+    public const string EventHeader = "X-Test-Event";
+    public const string ValidSignature = "valid";
+    public const string UninstallEvent = "uninstall";
+
+    // Signed means the signature header says "valid"; the body names the account. An uninstall event
+    // normalises to the connection being revoked, which is enough to drive the whole pipeline.
+    private sealed class TestWebhookReader : ISourceControlWebhookReader
+    {
+        public ScmWebhookVerification Verify(ScmWebhookRequest request, ScmConnection? routedConnection)
+        {
+            var signature = request.GetHeader(SignatureHeader);
+
+            if (signature is null)
+            {
+                return ScmWebhookVerification.MissingSignature;
+            }
+
+            var isValid = signature == ValidSignature;
+
+            return isValid ? ScmWebhookVerification.Verified : ScmWebhookVerification.InvalidSignature;
+        }
+
+        public ScmWebhookEnvelope? ReadEnvelope(ScmWebhookRequest request)
+        {
+            var deliveryId = request.GetHeader(DeliveryHeader);
+            var eventName = request.GetHeader(EventHeader);
+
+            if (deliveryId is null || eventName is null)
+            {
+                return null;
+            }
+
+            using var document = JsonDocument.Parse(request.Body);
+            var account = document.RootElement.GetProperty("account").GetString();
+
+            return new ScmWebhookEnvelope
+            {
+                Provider = SourceControlProvider.GitLab,
+                DeliveryId = deliveryId,
+                EventName = eventName,
+                ExternalAccountId = account,
+                ReceivedAt = DateTimeOffset.UtcNow,
+                Body = request.Body,
+            };
+        }
+
+        public IReadOnlyList<ScmEvent> Normalise(ScmWebhookEnvelope envelope, ScmConnection connection)
+        {
+            if (envelope.EventName != UninstallEvent)
+            {
+                return [];
+            }
+
+            return
+            [
+                new ScmConnectionChanged
+                {
+                    EventId = Guid.NewGuid(),
+                    Provider = SourceControlProvider.GitLab,
+                    ConnectionId = connection.Id,
+                    WorkspaceId = connection.WorkspaceId,
+                    OccurredAt = envelope.ReceivedAt,
+                    Action = ScmConnectionAction.Revoked,
+                    Repositories = [],
+                },
+            ];
+        }
+    }
 
     private sealed class TestConnector : ISourceControlConnector
     {
@@ -67,6 +141,13 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
         public ValueTask<ScmAccessToken> GetAccessToken(ScmConnection connection, CancellationToken cancellationToken)
         {
             return ValueTask.FromResult(new ScmAccessToken("test-token", DateTimeOffset.MaxValue));
+        }
+
+        public ValueTask<SourceControlCapabilities> GetGrantedCapabilities(
+            ScmConnection connection,
+            CancellationToken cancellationToken)
+        {
+            return ValueTask.FromResult(SourceControlCapabilities.ListRepositories | SourceControlCapabilities.Webhooks);
         }
     }
 

@@ -78,6 +78,20 @@ public sealed class GitHubConnectorTests : IDisposable
     }
 
     [Fact]
+    public async Task GetGrantedCapabilities_ShouldReadTheInstallationPermissions()
+    {
+        Harness.Http.On(HttpMethod.Get, $"/app/installations/{GitHubTestHarness.InstallationId}", HttpStatusCode.OK, Installation);
+
+        var granted = await Harness.Connector.GetGrantedCapabilities(
+            GitHubTestHarness.CreateConnection(),
+            TestContext.Current.CancellationToken);
+
+        granted.HasFlag(SourceControlCapabilities.ReadPullRequests).Should().BeTrue();
+        granted.HasFlag(SourceControlCapabilities.CreateBranch).Should().BeFalse("contents is read-only");
+        Harness.Http.Requests.Single().Authorization.Should().StartWith("Bearer ey");
+    }
+
+    [Fact]
     public void BeginConnect_ShouldSendTheBrowserToTheAppInstallPageWithSignedState()
     {
         var start = Harness.Connector.BeginConnect(new ScmConnectRequest(WorkspaceId, UserId));

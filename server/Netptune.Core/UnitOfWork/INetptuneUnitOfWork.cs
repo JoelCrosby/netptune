@@ -77,6 +77,8 @@ public interface INetptuneUnitOfWork : IUnitOfWork
 
     ISourceControlRepoRepository SourceControlRepos { get; }
 
+    IScmWebhookDeliveryRepository ScmWebhookDeliveries { get; }
+
     IAiConversationRepository AiConversations { get; }
 
     IAiUsageRecordRepository AiUsageRecords { get; }

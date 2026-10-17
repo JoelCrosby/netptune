@@ -12,6 +12,7 @@ const scopesByEntityType: Record<string, readonly RefreshScope[]> = {
   relationType: ['relationTypes', 'tasks'],
   comment: ['comments', 'tasks'],
   page: ['pages'],
+  sourceControl: ['sourceControl'],
 };
 
 /**

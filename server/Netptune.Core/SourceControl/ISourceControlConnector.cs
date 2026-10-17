@@ -10,4 +10,6 @@ public interface ISourceControlConnector
     ValueTask<ClientResponse<ScmConnectResult>> CompleteConnect(ScmConnectCallback callback, CancellationToken cancellationToken);
 
     ValueTask<ScmAccessToken> GetAccessToken(ScmConnection connection, CancellationToken cancellationToken);
+
+    ValueTask<SourceControlCapabilities> GetGrantedCapabilities(ScmConnection connection, CancellationToken cancellationToken);
 }

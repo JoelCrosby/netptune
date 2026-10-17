@@ -18,6 +18,8 @@ public static class MessageKeys
 
         public const string Transfer = "netptune.transfer";
 
+        public const string SourceControl = "netptune.source-control";
+
         public const string Canonical = "netptune.events.v1.>";
 
         public static IReadOnlyCollection<string> Legacy =>
@@ -27,6 +29,7 @@ public static class MessageKeys
             Email,
             Automation,
             Transfer,
+            SourceControl,
         ];
     }
 

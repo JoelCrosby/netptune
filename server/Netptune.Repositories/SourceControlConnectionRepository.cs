@@ -53,8 +53,20 @@ public class SourceControlConnectionRepository(DataContext context, IDbConnectio
         CancellationToken cancellationToken = default)
     {
         return Entities
+            .Include(connection => connection.Workspace)
             .Where(connection => connection.Provider == provider)
             .Where(connection => connection.ExternalAccountId == externalAccountId && !connection.IsDeleted)
             .ToListAsync(cancellationToken);
+    }
+
+    public Task<bool> HasExternalAccount(
+        SourceControlProvider provider,
+        string externalAccountId,
+        CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .Where(connection => connection.Provider == provider)
+            .Where(connection => connection.ExternalAccountId == externalAccountId && !connection.IsDeleted)
+            .AnyAsync(cancellationToken);
     }
 }

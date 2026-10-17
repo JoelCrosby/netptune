@@ -44,6 +44,7 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
     public IWorkspaceAiCredentialRepository WorkspaceAiCredentials { get; }
     public ISourceControlConnectionRepository SourceControlConnections { get; }
     public ISourceControlRepoRepository SourceControlRepos { get; }
+    public IScmWebhookDeliveryRepository ScmWebhookDeliveries { get; }
     public IAiConversationRepository AiConversations { get; }
 
     public IAiUsageRecordRepository AiUsageRecords { get; }
@@ -96,6 +97,7 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
         WorkspaceAiCredentials = new WorkspaceAiCredentialRepository(context, connectionFactory);
         SourceControlConnections = new SourceControlConnectionRepository(context, connectionFactory);
         SourceControlRepos = new SourceControlRepoRepository(context, connectionFactory);
+        ScmWebhookDeliveries = new ScmWebhookDeliveryRepository(context, connectionFactory);
         AiConversations = new AiConversationRepository(context, connectionFactory);
         AiUsageRecords = new AiUsageRecordRepository(context, connectionFactory);
         AiWebDocuments = new AiWebDocumentRepository(context, connectionFactory);

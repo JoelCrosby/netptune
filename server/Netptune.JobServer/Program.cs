@@ -12,6 +12,7 @@ using Netptune.Repositories.Configuration;
 using Netptune.Search;
 using Netptune.ServiceDefaults;
 using Netptune.ServiceDefaults.Middleware;
+using Netptune.SourceControl.Configuration;
 using Netptune.Services.Configuration;
 using Netptune.Storage;
 using Netptune.Transfer;
@@ -45,6 +46,9 @@ builder.Services.AddNetptuneExport();
 builder.Services.AddNetptuneImport();
 
 builder.Services.AddNetptuneAutomation(builder.Configuration);
+builder.Services.AddNetptuneDataProtection();
+builder.Services.AddNetptuneSourceControl(builder.Configuration);
+builder.Services.AddNetptuneSourceControlWebhookMaintenance();
 builder.Services.AddHostedService<SearchSeedService>();
 builder.Services.AddHostedService<EventOutboxPublisher>();
 builder.Services.AddHostedService<ExportRetentionService>();

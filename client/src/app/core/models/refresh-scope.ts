@@ -14,6 +14,7 @@ export const allRefreshScopes = [
   'profile',
   'pins',
   'pages',
+  'sourceControl',
 ] as const;
 
 export type RefreshScope = (typeof allRefreshScopes)[number];

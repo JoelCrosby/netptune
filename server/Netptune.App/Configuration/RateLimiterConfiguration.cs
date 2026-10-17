@@ -21,6 +21,10 @@ public static class RateLimiterConfiguration
 
     public const string TransferPolicyName = "import-export";
 
+    public const string WebhooksPolicyName = "webhooks";
+
+    private const int WebhooksPermitLimit = 600;
+
     private const int DefaultApiPermitLimit = 300;
 
     private const int DefaultAiPermitLimit = 20;
@@ -105,6 +109,20 @@ public static class RateLimiterConfiguration
                         SegmentsPerWindow = 2,
                         QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
                         QueueLimit = 2,
+                    }));
+
+            // Partitioned by provider rather than caller: GitHub delivers from a pool of addresses, and the
+            // limit is there to cap abuse of an unauthenticated route, not to throttle real bursts.
+            options.AddPolicy(WebhooksPolicyName, context =>
+                RateLimitPartition.GetSlidingWindowLimiter(
+                    $"webhooks:{context.Request.RouteValues["provider"]}",
+                    _ => new SlidingWindowRateLimiterOptions
+                    {
+                        PermitLimit = WebhooksPermitLimit,
+                        Window = TimeSpan.FromMinutes(1),
+                        SegmentsPerWindow = 6,
+                        QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                        QueueLimit = 50,
                     }));
 
             options.AddPolicy(AiPolicyName, context =>

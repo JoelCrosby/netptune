@@ -185,6 +185,25 @@ internal sealed class GitHubConnector : ISourceControlConnector
         return token;
     }
 
+    public async ValueTask<SourceControlCapabilities> GetGrantedCapabilities(
+        ScmConnection connection,
+        CancellationToken cancellationToken)
+    {
+        var hasInstallationId = long.TryParse(
+            connection.ExternalAccountId,
+            CultureInfo.InvariantCulture,
+            out var installationId);
+
+        if (!hasInstallationId)
+        {
+            return SourceControlCapabilities.None;
+        }
+
+        var installation = await GetInstallation(installationId, cancellationToken);
+
+        return GitHubPermissions.ToCapabilities(installation?.Permissions);
+    }
+
     private ClientResponse ValidateState(ScmConnectCallback callback)
     {
         var protectedState = callback.Parameters.GetValueOrDefault("state");

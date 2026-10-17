@@ -48,7 +48,7 @@ var connectionString = configuration.GetNetptuneConnectionString("netptune");
 var redisConnectionString = configuration.GetNetptuneRedisConnectionString();
 var natsConnectionString = configuration.GetNetptuneNatsConnectionString();
 
-builder.AddNetptuneDataProtection();
+builder.Services.AddNetptuneDataProtection();
 
 builder.Services.AddCors(options =>
 {
@@ -186,6 +186,7 @@ apiGroup.MapCommandPaletteEndpoints();
 apiGroup.MapServiceAccountsEndpoints();
 apiGroup.MapAiEndpoints();
 apiGroup.MapSourceControlEndpoints();
+apiGroup.MapSourceControlWebhookEndpoints();
 
 apiGroup.MapTaskViewEndpoints();
 apiGroup.MapPagesEndpoints();
