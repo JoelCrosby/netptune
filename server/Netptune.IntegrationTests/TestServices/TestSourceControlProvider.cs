@@ -41,6 +41,7 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
     public const string ValidSignature = "valid";
     public const string UninstallEvent = "uninstall";
     public const string PullRequestEvent = "pull_request";
+    public const string CheckRunEvent = "check_run";
 
     // Signed means the signature header says "valid"; the body names the account. An uninstall event
     // normalises to the connection being revoked, which is enough to drive the whole pipeline.
@@ -91,6 +92,11 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
                 return [ReadPullRequest(envelope, connection)];
             }
 
+            if (envelope.EventName == CheckRunEvent)
+            {
+                return [ReadCheckRun(envelope, connection)];
+            }
+
             if (envelope.EventName != UninstallEvent)
             {
                 return [];
@@ -112,7 +118,8 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
         }
     }
 
-    // The body names the repository by its external id, plus the pull request's number, title and state.
+    // The body names the repository by its external id, plus the pull request's number, title, state
+    // and optionally its head commit.
     private static ScmPullRequestChanged ReadPullRequest(ScmWebhookEnvelope envelope, ScmConnection connection)
     {
         using var document = JsonDocument.Parse(envelope.Body);
@@ -138,12 +145,45 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
                 Title = root.GetProperty("title").GetString()!,
                 State = state,
                 SourceBranch = "feature/test",
+                HeadSha = root.TryGetProperty("sha", out var sha) ? sha.GetString() : null,
                 TargetBranch = "main",
                 Author = author,
                 WebUrl = $"https://scm.test/{repoId}/pulls/{number}",
                 CreatedAt = envelope.ReceivedAt,
                 UpdatedAt = envelope.ReceivedAt,
             },
+        };
+    }
+
+    // The body names the repository, the run's id, name and commit, its status and optional conclusion.
+    private static ScmCheckRunChanged ReadCheckRun(ScmWebhookEnvelope envelope, ScmConnection connection)
+    {
+        using var document = JsonDocument.Parse(envelope.Body);
+        var root = document.RootElement;
+        var repoId = root.GetProperty("repo").GetString()!;
+        var runId = root.GetProperty("id").GetString()!;
+        var conclusion = root.TryGetProperty("conclusion", out var value)
+            ? Enum.Parse<ScmCheckRunConclusion>(value.GetString()!)
+            : (ScmCheckRunConclusion?)null;
+
+        return new ScmCheckRunChanged
+        {
+            EventId = Guid.NewGuid(),
+            Provider = SourceControlProvider.GitLab,
+            ConnectionId = connection.Id,
+            WorkspaceId = connection.WorkspaceId,
+            OccurredAt = envelope.ReceivedAt,
+            Repository = new ScmRepositoryRef(repoId, connection.ExternalAccountId, repoId),
+            CheckRun = new ScmCheckRun
+            {
+                ExternalId = runId,
+                Name = root.GetProperty("name").GetString()!,
+                Status = Enum.Parse<ScmCheckRunStatus>(root.GetProperty("status").GetString()!),
+                Conclusion = conclusion,
+                CommitSha = root.GetProperty("sha").GetString()!,
+                WebUrl = $"https://scm.test/{repoId}/runs/{runId}",
+            },
+            PullRequestNumbers = [],
         };
     }
 

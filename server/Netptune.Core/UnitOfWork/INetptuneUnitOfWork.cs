@@ -81,6 +81,8 @@ public interface INetptuneUnitOfWork : IUnitOfWork
 
     ITaskCodeLinkRepository TaskCodeLinks { get; }
 
+    ISourceControlCheckRunRepository SourceControlCheckRuns { get; }
+
     IAiConversationRepository AiConversations { get; }
 
     IAiUsageRecordRepository AiUsageRecords { get; }

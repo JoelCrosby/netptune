@@ -1,4 +1,5 @@
 using Netptune.Core.Entities;
+using Netptune.Core.Services.Realtime;
 using Netptune.Core.SourceControl;
 using Netptune.Core.SourceControl.Events;
 
@@ -14,6 +15,8 @@ internal sealed class ScmConnectionChangedHandler : IScmEventHandler
         Registry = registry;
         RepoSync = repoSync;
     }
+
+    public string RefreshScope => WorkspaceEventScopes.SourceControl;
 
     public bool CanHandle(ScmEvent scmEvent)
     {

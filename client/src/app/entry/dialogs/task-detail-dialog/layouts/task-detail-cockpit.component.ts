@@ -1,10 +1,18 @@
-import { Component, inject, signal, viewChild } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  linkedSignal,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { TaskDetailBoardsComponent } from '../task-detail-boards.component';
 import { TaskDetailCommentsComponent } from '../task-detail-comments.component';
 import { TaskDetailDescriptionComponent } from '../task-detail-description.component';
 import { TaskDetailPagesComponent } from '../task-detail-pages.component';
+import { TaskDetailCodeComponent } from '../task-detail-code.component';
 import { TaskDetailFilesComponent } from '../task-detail-files.component';
 import { TaskDetailFlagsComponent } from '../task-detail-flags.component';
 import { TaskDetailHeaderComponent } from '../task-detail-header.component';
@@ -30,6 +38,7 @@ import { DialogSectionComponent } from '@static/components/dialog/dialog-section
   selector: 'app-task-detail-cockpit',
   imports: [
     TaskDetailPagesComponent,
+    TaskDetailCodeComponent,
     DialogColumnsComponent,
     DialogRailComponent,
     DialogSectionComponent,
@@ -92,7 +101,8 @@ import { DialogSectionComponent } from '@static/components/dialog/dialog-section
                   task.placements.length,
                   relations.count(),
                   filesSection()?.count() ?? null,
-                  pagesSection()?.count() ?? null
+                  pagesSection()?.count() ?? null,
+                  codeCount()
                 )
               "
               [(value)]="activeTab" />
@@ -139,6 +149,11 @@ import { DialogSectionComponent } from '@static/components/dialog/dialog-section
                 <app-task-detail-pages />
               </div>
             }
+            @if (readSourceControl()) {
+              <div [class.hidden]="activeTab() !== 'code'">
+                <app-task-detail-code />
+              </div>
+            }
           </div>
         </app-dialog-section>
 
@@ -180,9 +195,22 @@ export class TaskDetailCockpitComponent {
 
   protected readonly filesSection = viewChild(TaskDetailFilesComponent);
   protected readonly pagesSection = viewChild(TaskDetailPagesComponent);
+  protected readonly codeSection = viewChild(TaskDetailCodeComponent);
 
   readonly task = this.taskDetail.task;
-  readonly activeTab = signal('boards');
+  protected readonly codeCount = computed(
+    () => this.codeSection()?.count() ?? 0
+  );
+
+  readonly activeTab = linkedSignal<number, string>({
+    source: this.codeCount,
+    computation: (count, previous) => {
+      const tab = previous?.value ?? 'boards';
+      const isHiddenCodeTab = tab === 'code' && !count;
+
+      return isHiddenCodeTab ? 'boards' : tab;
+    },
+  });
   readonly railTab = signal('comments');
 
   readonly descriptionLabel = $localize`:Eyebrow above the task description:Description`;
@@ -196,12 +224,14 @@ export class TaskDetailCockpitComponent {
   readonly readComments = hasPermission(PERMISSIONS.comments.read);
   readonly readActivity = hasPermission(PERMISSIONS.activity.read);
   readonly readPages = hasPermission(PERMISSIONS.pages.read);
+  readonly readSourceControl = hasPermission(PERMISSIONS.sourceControl.read);
 
   private readonly labels = {
     boards: $localize`:Section heading for the boards a task appears on:Boards`,
     links: $localize`:Tab listing the tasks this one links to:Links`,
     files: $localize`:Section heading for files attached to a task:Files`,
     pages: $localize`:Tab listing the pages that mention a task:Pages`,
+    code: $localize`:Tab listing the branches, commits and pull requests linked to a task:Code`,
     comments: $localize`:Section heading for a task's comments:Comments`,
     history: $localize`:Tab showing what has happened to a task:History`,
   };
@@ -210,7 +240,8 @@ export class TaskDetailCockpitComponent {
     boards: number,
     links: number,
     files: number | null,
-    pages: number | null
+    pages: number | null,
+    code: number
   ): TabItem[] {
     const tabs: TabItem[] = [
       { value: 'boards', label: this.labels.boards, count: boards },
@@ -223,6 +254,10 @@ export class TaskDetailCockpitComponent {
 
     if (pages !== null) {
       tabs.push({ value: 'pages', label: this.labels.pages, count: pages });
+    }
+
+    if (code) {
+      tabs.push({ value: 'code', label: this.labels.code, count: code });
     }
 
     return tabs;

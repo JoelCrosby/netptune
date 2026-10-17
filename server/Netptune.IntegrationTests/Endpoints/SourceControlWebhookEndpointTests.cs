@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Netptune.Core.Entities;
 using Netptune.Core.Requests.SourceControl;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services.Realtime;
 using Netptune.Core.SourceControl;
 using Netptune.Core.SourceControl.Webhooks;
 using Netptune.Core.ViewModels.SourceControl;
@@ -120,6 +121,30 @@ public sealed class SourceControlWebhookEndpointTests
         connection.Status.Should().Be(ScmConnectionStatus.Revoked);
         processed.ProcessedAt.Should().NotBeNull();
         processed.Attempts.Should().Be(0);
+    }
+
+    [Fact]
+    public async Task Processing_ShouldPublishSourceControlWhenTheConnectionChanges()
+    {
+        var account = await ConnectAccount();
+
+        await PostWebhook(account, Guid.NewGuid().ToString(), eventName: TestSourceControlProvider.UninstallEvent);
+
+        var delivery = (await StoredDeliveries(account)).Single();
+
+        var published = await WorkspaceEventProbe.Published(
+            Fixture.Services,
+            string.Empty,
+            WorkspaceEventScopes.SourceControl,
+            async () =>
+            {
+                using var scope = Fixture.CreateScope();
+                var processor = scope.ServiceProvider.GetRequiredService<IScmWebhookProcessor>();
+
+                await processor.Process(delivery.Id, TestContext.Current.CancellationToken);
+            });
+
+        published.Should().BeTrue();
     }
 
     [Fact]

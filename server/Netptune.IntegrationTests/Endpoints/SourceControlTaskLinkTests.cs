@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Netptune.Core.Entities;
 using Netptune.Core.Requests.SourceControl;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services.Realtime;
 using Netptune.Core.SourceControl;
 using Netptune.Core.SourceControl.Models;
 using Netptune.Core.SourceControl.Webhooks;
@@ -98,6 +99,128 @@ public sealed class SourceControlTaskLinkTests
         links.Should().BeEmpty();
     }
 
+    [Fact]
+    public async Task TaskLinks_ShouldReturnThePullRequestWithItsLatestChecks()
+    {
+        var (account, repo) = await ConnectWithLinkedRepo();
+        var task = await AnyTask();
+        var sha = Guid.NewGuid().ToString("N");
+
+        await ProcessPullRequest(account, repo.ExternalId, "11", $"Fix {task.SystemId}", "Open", sha);
+        await ProcessCheckRun(account, repo.ExternalId, "1", "build", sha, "Completed", "Failure");
+        await ProcessCheckRun(account, repo.ExternalId, "2", "build", sha, "Completed", "Success");
+        await ProcessCheckRun(account, repo.ExternalId, "3", "lint", sha, "InProgress", null);
+
+        var links = await GetTaskLinks(task.SystemId);
+
+        var link = links.Should().ContainSingle(candidate => candidate.ExternalRef == "11"
+            && candidate.Kind == TaskCodeLinkKind.PullRequest).Subject;
+
+        link.Provider.Should().Be(SourceControlProvider.GitLab);
+        link.Checks.Should().NotBeNull();
+        link.Checks!.State.Should().Be(ScmCheckState.Pending);
+        link.Checks.Total.Should().Be(2);
+        link.Checks.Passed.Should().Be(1);
+        link.Checks.Pending.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task TaskLinks_ShouldFollowThePullRequestToItsNewHead()
+    {
+        var (account, repo) = await ConnectWithLinkedRepo();
+        var task = await AnyTask();
+        var firstSha = Guid.NewGuid().ToString("N");
+        var secondSha = Guid.NewGuid().ToString("N");
+
+        await ProcessPullRequest(account, repo.ExternalId, "12", $"Fix {task.SystemId}", "Open", firstSha);
+        await ProcessCheckRun(account, repo.ExternalId, "31", "build", firstSha, "Completed", "Failure");
+        await ProcessPullRequest(account, repo.ExternalId, "12", $"Fix {task.SystemId}", "Open", secondSha);
+        await ProcessCheckRun(account, repo.ExternalId, "32", "build", secondSha, "Completed", "Success");
+
+        var links = await GetTaskLinks(task.SystemId);
+        var link = links.Should().ContainSingle(candidate => candidate.ExternalRef == "12").Subject;
+
+        link.Checks!.State.Should().Be(ScmCheckState.Success);
+        link.Checks.Total.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task CheckRun_ShouldNotBeStoredForARepoThatIsNotLinked()
+    {
+        var (account, linkedRepo) = await ConnectWithLinkedRepo();
+        var unlinkedRepo = (await GetRepos(linkedRepo.ConnectionId)).Single(repo => !repo.IsLinked);
+
+        await ProcessCheckRun(account, unlinkedRepo.ExternalId, "41", "build", "abc", "Completed", "Success");
+
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var stored = await context.SourceControlCheckRuns
+            .AsNoTracking()
+            .Where(checkRun => checkRun.RepoId == unlinkedRepo.Id)
+            .ToListAsync(TestContext.Current.CancellationToken);
+
+        stored.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Processing_ShouldPublishCodeLinksWhenAPullRequestLinksATask()
+    {
+        var (account, repo) = await ConnectWithLinkedRepo();
+        var task = await AnyTask();
+
+        var published = await WorkspaceEventProbe.Published(
+            Fixture.Services,
+            string.Empty,
+            WorkspaceEventScopes.CodeLinks,
+            () => ProcessPullRequest(account, repo.ExternalId, "13", $"Fix {task.SystemId}", "Open"));
+
+        published.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task TaskLinks_ShouldReturnNotFoundForAnUnknownTask()
+    {
+        var response = await Client.GetAsync(
+            "api/source-control/tasks/nope-999999/links",
+            TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task CheckRun_ShouldNotGoBackToRunningOnceItHasFinished()
+    {
+        var (account, repo) = await ConnectWithLinkedRepo();
+        var sha = Guid.NewGuid().ToString("N");
+
+        await ProcessCheckRun(account, repo.ExternalId, "21", "build", sha, "Completed", "Success");
+        await ProcessCheckRun(account, repo.ExternalId, "21", "build", sha, "Queued", null);
+
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var stored = await context.SourceControlCheckRuns
+            .AsNoTracking()
+            .SingleAsync(
+                checkRun => checkRun.RepoId == repo.Id && checkRun.ExternalId == "21",
+                TestContext.Current.CancellationToken);
+
+        stored.Status.Should().Be(ScmCheckRunStatus.Completed);
+        stored.Conclusion.Should().Be(ScmCheckRunConclusion.Success);
+    }
+
+    private async Task<List<TaskCodeLinkViewModel>> GetTaskLinks(string systemId)
+    {
+        var response = await Client.GetAsync(
+            $"api/source-control/tasks/{systemId}/links",
+            TestContext.Current.CancellationToken);
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<List<TaskCodeLinkViewModel>>>(
+            TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        return result.Payload!;
+    }
+
     private async Task<(string Account, RepoRef Repo)> ConnectWithLinkedRepo()
     {
         var account = $"link-{Guid.NewGuid():N}"[..20];
@@ -157,15 +280,42 @@ public sealed class SourceControlTaskLinkTests
         return (task.Id, $"{task.Key}-{task.ProjectScopeId}");
     }
 
-    private async Task ProcessPullRequest(string account, string repoExternalId, string number, string title, string state)
+    private async Task ProcessPullRequest(
+        string account,
+        string repoExternalId,
+        string number,
+        string title,
+        string state,
+        string? headSha = null)
+    {
+        var sha = headSha is null ? string.Empty : $$""", "sha": "{{headSha}}" """;
+        var body = $$"""{ "account": "{{account}}", "repo": "{{repoExternalId}}", "number": "{{number}}", "title": "{{title}}", "state": "{{state}}"{{sha}} }""";
+
+        await Process(account, TestSourceControlProvider.PullRequestEvent, body);
+    }
+
+    private async Task ProcessCheckRun(
+        string account,
+        string repoExternalId,
+        string runId,
+        string name,
+        string sha,
+        string status,
+        string? conclusion)
+    {
+        var conclusionField = conclusion is null ? string.Empty : $$""", "conclusion": "{{conclusion}}" """;
+        var body = $$"""{ "account": "{{account}}", "repo": "{{repoExternalId}}", "id": "{{runId}}", "name": "{{name}}", "sha": "{{sha}}", "status": "{{status}}"{{conclusionField}} }""";
+
+        await Process(account, TestSourceControlProvider.CheckRunEvent, body);
+    }
+
+    private async Task Process(string account, string eventName, string body)
     {
         using var request = new HttpRequestMessage(HttpMethod.Post, WebhookUrl);
 
-        var body = $$"""{ "account": "{{account}}", "repo": "{{repoExternalId}}", "number": "{{number}}", "title": "{{title}}", "state": "{{state}}" }""";
-
         request.Content = new StringContent(body, Encoding.UTF8, "application/json");
         request.Headers.Add(TestSourceControlProvider.DeliveryHeader, Guid.NewGuid().ToString());
-        request.Headers.Add(TestSourceControlProvider.EventHeader, TestSourceControlProvider.PullRequestEvent);
+        request.Headers.Add(TestSourceControlProvider.EventHeader, eventName);
         request.Headers.Add(TestSourceControlProvider.SignatureHeader, TestSourceControlProvider.ValidSignature);
 
         var response = await Anonymous.SendAsync(request, TestContext.Current.CancellationToken);

@@ -14,6 +14,8 @@ public sealed record ScmPullRequest
 
     public required string SourceBranch { get; init; }
 
+    public string? HeadSha { get; init; }
+
     public required string TargetBranch { get; init; }
 
     public required ScmIdentity Author { get; init; }

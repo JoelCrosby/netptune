@@ -5,6 +5,8 @@ namespace Netptune.SourceControl.Webhooks;
 
 internal interface IScmEventHandler
 {
+    string RefreshScope { get; }
+
     bool CanHandle(ScmEvent scmEvent);
 
     // Returns whether anything the workspace can see changed, so open views are told to refresh.

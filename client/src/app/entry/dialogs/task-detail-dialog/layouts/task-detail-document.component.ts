@@ -1,4 +1,10 @@
-import { Component, inject, signal, viewChild } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  linkedSignal,
+  viewChild,
+} from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { LucideChevronDown, LucideSparkles } from '@lucide/angular';
@@ -7,6 +13,7 @@ import { TaskDetailBoardsComponent } from '../task-detail-boards.component';
 import { TaskDetailCommentsComponent } from '../task-detail-comments.component';
 import { TaskDetailDescriptionComponent } from '../task-detail-description.component';
 import { TaskDetailPagesComponent } from '../task-detail-pages.component';
+import { TaskDetailCodeComponent } from '../task-detail-code.component';
 import { TaskDetailFilesComponent } from '../task-detail-files.component';
 import { TaskDetailFlagsComponent } from '../task-detail-flags.component';
 import { TaskDetailHeaderComponent } from '../task-detail-header.component';
@@ -29,6 +36,7 @@ import {
   selector: 'app-task-detail-document',
   imports: [
     TaskDetailPagesComponent,
+    TaskDetailCodeComponent,
     TabGroupComponent,
     DropdownMenuComponent,
     LucideChevronDown,
@@ -128,7 +136,8 @@ import {
                 filesSection()?.count() ?? null,
                 relations.count(),
                 task.placements.length,
-                pagesSection()?.count() ?? null
+                pagesSection()?.count() ?? null,
+                codeCount()
               )
             "
             [(value)]="activeTab" />
@@ -152,6 +161,11 @@ import {
           @if (readPages()) {
             <div [class.hidden]="activeTab() !== 'pages'">
               <app-task-detail-pages />
+            </div>
+          }
+          @if (readSourceControl()) {
+            <div [class.hidden]="activeTab() !== 'code'">
+              <app-task-detail-code />
             </div>
           }
           @if (readActivity()) {
@@ -180,9 +194,22 @@ export class TaskDetailDocumentComponent {
 
   protected readonly filesSection = viewChild(TaskDetailFilesComponent);
   protected readonly pagesSection = viewChild(TaskDetailPagesComponent);
+  protected readonly codeSection = viewChild(TaskDetailCodeComponent);
 
   readonly task = this.taskDetail.task;
-  readonly activeTab = signal('comments');
+  protected readonly codeCount = computed(
+    () => this.codeSection()?.count() ?? 0
+  );
+
+  readonly activeTab = linkedSignal<number, string>({
+    source: this.codeCount,
+    computation: (count, previous) => {
+      const tab = previous?.value ?? 'comments';
+      const isHiddenCodeTab = tab === 'code' && !count;
+
+      return isHiddenCodeTab ? 'comments' : tab;
+    },
+  });
 
   readonly popoverEyebrowClass = `${EYEBROW} px-3.5 pt-1.5 pb-2`;
   readonly allFieldsClass = `${META_CHIP} border-primary/45 text-primary border font-semibold`;
@@ -193,6 +220,7 @@ export class TaskDetailDocumentComponent {
   readonly readComments = hasPermission(PERMISSIONS.comments.read);
   readonly readActivity = hasPermission(PERMISSIONS.activity.read);
   readonly readPages = hasPermission(PERMISSIONS.pages.read);
+  readonly readSourceControl = hasPermission(PERMISSIONS.sourceControl.read);
 
   readonly canAskAssistant = this.taskDetail.canAskAssistant;
 
@@ -203,6 +231,7 @@ export class TaskDetailDocumentComponent {
     boards: $localize`:Section heading for the boards a task appears on:Boards`,
     history: $localize`:Tab showing what has happened to a task:History`,
     pages: $localize`:Tab listing the pages that mention a task:Pages`,
+    code: $localize`:Tab listing the branches, commits and pull requests linked to a task:Code`,
   };
 
   tabItems(
@@ -210,7 +239,8 @@ export class TaskDetailDocumentComponent {
     files: number | null,
     links: number,
     boards: number,
-    pages: number | null
+    pages: number | null,
+    code: number
   ): TabItem[] {
     const tabs: TabItem[] = [];
 
@@ -231,6 +261,10 @@ export class TaskDetailDocumentComponent {
 
     if (pages !== null) {
       tabs.push({ value: 'pages', label: this.labels.pages, count: pages });
+    }
+
+    if (code) {
+      tabs.push({ value: 'code', label: this.labels.code, count: code });
     }
 
     if (this.readActivity()) {

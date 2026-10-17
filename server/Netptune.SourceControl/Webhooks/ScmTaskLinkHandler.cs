@@ -1,4 +1,5 @@
 using Netptune.Core.Entities;
+using Netptune.Core.Services.Realtime;
 using Netptune.Core.SourceControl;
 using Netptune.Core.SourceControl.Events;
 using Netptune.Core.SourceControl.Models;
@@ -18,6 +19,8 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
         UnitOfWork = unitOfWork;
         Clock = clock;
     }
+
+    public string RefreshScope => WorkspaceEventScopes.CodeLinks;
 
     public bool CanHandle(ScmEvent scmEvent)
     {
@@ -214,6 +217,7 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
             AuthorLogin = pullRequest.Author.Username,
             OccurredAt = pullRequest.UpdatedAt,
             PullRequestState = pullRequest.State,
+            HeadSha = pullRequest.HeadSha,
             Texts = [pullRequest.Title, pullRequest.Body, pullRequest.SourceBranch],
         };
     }
@@ -231,6 +235,7 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
             WebUrl = candidate.WebUrl,
             AuthorLogin = candidate.AuthorLogin,
             PullRequestState = candidate.PullRequestState,
+            HeadSha = candidate.HeadSha,
             OccurredAt = candidate.OccurredAt.UtcDateTime,
             CreatedAt = now,
             UpdatedAt = now,
@@ -243,6 +248,7 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
         link.WebUrl = candidate.WebUrl;
         link.AuthorLogin = candidate.AuthorLogin ?? link.AuthorLogin;
         link.PullRequestState = candidate.PullRequestState ?? link.PullRequestState;
+        link.HeadSha = candidate.HeadSha ?? link.HeadSha;
         link.OccurredAt = candidate.OccurredAt.UtcDateTime;
         link.IsRemoved = false;
         link.UpdatedAt = now;
@@ -280,6 +286,8 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
         public DateTimeOffset OccurredAt { get; init; }
 
         public ScmPullRequestState? PullRequestState { get; init; }
+
+        public string? HeadSha { get; init; }
 
         public required string?[] Texts { get; init; }
     }

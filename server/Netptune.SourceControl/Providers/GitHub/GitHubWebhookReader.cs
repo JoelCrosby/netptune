@@ -233,9 +233,10 @@ internal sealed class GitHubWebhookReader : ISourceControlWebhookReader
     private static ScmEvent? NormaliseCheckRun(NormaliseScope scope)
     {
         var payload = Deserialize<GitHubCheckRunPayload>(scope.Envelope.Body);
-        var isCompleted = payload?.Action == "completed";
+        // A rerequested run is replaced by a new one, which arrives as its own "created".
+        var isTracked = payload?.Action is "created" or "completed";
 
-        if (!isCompleted)
+        if (!isTracked)
         {
             return null;
         }
@@ -247,7 +248,7 @@ internal sealed class GitHubWebhookReader : ISourceControlWebhookReader
             .Select(pullRequest => pullRequest.Number.ToString(CultureInfo.InvariantCulture))
             .ToList();
 
-        return new ScmCheckRunCompleted
+        return new ScmCheckRunChanged
         {
             EventId = scope.EventId,
             Provider = SourceControlProvider.GitHub,

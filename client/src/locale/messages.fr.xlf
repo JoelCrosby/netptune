@@ -249,8 +249,8 @@
     </unit>
     <unit id="3817498941817715969">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:204</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:205</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:214</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:215</note>
         <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:82</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:109,111</note>
         <note category="location">src/app/features/pages/editor/page-reference.controller.ts:224</note>
@@ -699,7 +699,7 @@
     </unit>
     <unit id="5322873861888163184">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:108,110</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:111,113</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:52,55</note>
         <note category="description">Button that puts this task on another board</note>
       </notes>
@@ -1023,6 +1023,16 @@
       <segment state="translated">
         <source>Apply</source>
         <target>Appliquer</target>
+      </segment>
+    </unit>
+    <unit id="439171666441982967">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:84</note>
+        <note category="description">CI checks that neither passed nor failed</note>
+      </notes>
+      <segment state="translated">
+        <source>Checks skipped</source>
+        <target>Vérifications ignorées</target>
       </segment>
     </unit>
     <unit id="4393155387750539833">
@@ -4082,8 +4092,8 @@
     </unit>
     <unit id="6746571899700014633">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:78,80</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:87,89</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:80,82</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:89,91</note>
         <note category="description">Opens the full list of a task&apos;s fields</note>
       </notes>
       <segment state="initial">
@@ -5758,7 +5768,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:432</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:66,67</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:188</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:197</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:104,107</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:153,156</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:48,50</note>
@@ -6953,8 +6963,8 @@
     </unit>
     <unit id="3807699453257291879">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:205</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:200</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:216</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:210</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:89</note>
         <note category="description">Section heading for a task&apos;s comments</note>
       </notes>
@@ -7066,8 +7076,8 @@
     <unit id="4116911651502837995">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:434</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:203</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:201</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:213</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:211</note>
         <note category="description">Section heading for files attached to a task</note>
       </notes>
       <segment state="translated">
@@ -11793,6 +11803,16 @@
         <target>Choisissez une tâche</target>
       </segment>
     </unit>
+    <unit id="2021256332025917696">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:81</note>
+        <note category="description">CI checks still running on linked code</note>
+      </notes>
+      <segment state="translated">
+        <source>Checks running</source>
+        <target>Vérifications en cours</target>
+      </segment>
+    </unit>
     <unit id="6914161425970763792">
       <notes>
         <note category="location">src/app/features/automations/components/automation-relation-editor.component.ts:168</note>
@@ -14014,7 +14034,7 @@
     </unit>
     <unit id="8805582001022257690">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:103,105</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:105,107</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:135,137</note>
         <note category="description">Button that asks the assistant about this task</note>
       </notes>
@@ -14838,8 +14858,8 @@
     <unit id="7565716024468232322">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:433</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:202</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:202</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:212</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:212</note>
         <note category="location">src/app/features/pages/components/page-rail.component.ts:155</note>
         <note category="description">Tab listing the tasks this one links to</note>
       </notes>
@@ -17170,6 +17190,16 @@
         <target>Croissant</target>
       </segment>
     </unit>
+    <unit id="9005457553529671208">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:75</note>
+        <note category="description">Group of commits linked to a task</note>
+      </notes>
+      <segment state="translated">
+        <source>Commits</source>
+        <target>Commits</target>
+      </segment>
+    </unit>
     <unit id="9007078948220384866">
       <notes>
         <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:195</note>
@@ -17249,6 +17279,16 @@
       <segment state="translated">
         <source>Recorded events per day</source>
         <target>Événements enregistrés par jour</target>
+      </segment>
+    </unit>
+    <unit id="6628324895041859721">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:186</note>
+        <note category="description">Tooltip counting a linked commit&apos;s CI checks</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="passed" disp="checks.passed"/> of <ph id="1" equiv="total" disp="checks.total"/> passed, <ph id="2" equiv="failed" disp="checks.failed"/> failed, <ph id="3" equiv="pending" disp="checks.pending"/> running</source>
+        <target><ph id="0" equiv="passed" disp="checks.passed"/> sur <ph id="1" equiv="total" disp="checks.total"/> réussies, <ph id="2" equiv="failed" disp="checks.failed"/> échouées, <ph id="3" equiv="pending" disp="checks.pending"/> en cours</target>
       </segment>
     </unit>
     <unit id="662925928705970482">
@@ -18004,8 +18044,8 @@
     </unit>
     <unit id="7107218117130409950">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:201</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:203</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:211</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:213</note>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:64</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:71,72</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:86</note>
@@ -18056,6 +18096,16 @@
       <segment state="initial">
         <source> No sprint </source>
         <target>Aucun sprint</target>
+      </segment>
+    </unit>
+    <unit id="7860418101283165917">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:79</note>
+        <note category="description">State of a closed pull request</note>
+      </notes>
+      <segment state="translated">
+        <source>Closed</source>
+        <target>Fermée</target>
       </segment>
     </unit>
     <unit id="7864156617362454936">
@@ -19324,11 +19374,12 @@
     </unit>
     <unit id="7593555694782789615">
       <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:76</note>
         <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:190</note>
         <note category="location">src/app/features/sprints/components/sprint-overview.component.ts:151</note>
         <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:68</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-applied-changes.component.ts:58,59</note>
-        <note category="description">Label shown in the interface</note>
+        <note category="description">State of an open pull request</note>
       </notes>
       <segment state="translated">
         <source>Open</source>
@@ -19393,6 +19444,16 @@
       <segment state="translated">
         <source>Passwords do not match.</source>
         <target>Les mots de passe ne correspondent pas.</target>
+      </segment>
+    </unit>
+    <unit id="1554838717931748985">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:78</note>
+        <note category="description">State of a merged pull request</note>
+      </notes>
+      <segment state="translated">
+        <source>Merged</source>
+        <target>Fusionnée</target>
       </segment>
     </unit>
     <unit id="1557442310664697272">
@@ -21371,10 +21432,11 @@
     </unit>
     <unit id="4808589666930368915">
       <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:77</note>
         <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:250</note>
         <note category="location">src/app/features/pages/components/page-meta-chips.component.ts:30,34</note>
         <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:254</note>
-        <note category="description">Status chip on a draft page</note>
+        <note category="description">State of a draft pull request</note>
       </notes>
       <segment state="translated">
         <source>Draft</source>
@@ -23720,6 +23782,16 @@
         <target>Aller aux paramètres de l&apos;assistant de l&apos;espace de travail</target>
       </segment>
     </unit>
+    <unit id="6844266706936447326">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:83</note>
+        <note category="description">CI checks that failed on linked code</note>
+      </notes>
+      <segment state="translated">
+        <source>Checks failed</source>
+        <target>Vérifications échouées</target>
+      </segment>
+    </unit>
     <unit id="6844391301599182097">
       <notes>
         <note category="location">src/app/features/settings/components/workspace-public-access/workspace-public-access.component.ts:30,36</note>
@@ -24848,6 +24920,16 @@
         <target>· Jamais utilisé</target>
       </segment>
     </unit>
+    <unit id="1019897759924590321">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:73</note>
+        <note category="description">Group of pull requests linked to a task</note>
+      </notes>
+      <segment state="translated">
+        <source>Pull requests</source>
+        <target>Pull requests</target>
+      </segment>
+    </unit>
     <unit id="4100161296614821905">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/api-credential-row.component.ts:148,150</note>
@@ -25017,6 +25099,16 @@
       <segment state="translated">
         <source>Pages moved</source>
         <target>Pages déplacées</target>
+      </segment>
+    </unit>
+    <unit id="2946624699882754313">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:61,66</note>
+        <note category="description">Button that reveals the rest of a long list of linked code</note>
+      </notes>
+      <segment state="translated">
+        <source>Show all</source>
+        <target>Tout afficher</target>
       </segment>
     </unit>
     <unit id="2946988289493771337">
@@ -25462,6 +25554,16 @@
       <segment state="translated">
         <source>Delete <ph id="0" equiv="NAME" disp="name"/></source>
         <target>Supprimer <ph id="0" equiv="NAME" disp="name"/></target>
+      </segment>
+    </unit>
+    <unit id="3865115635607753363">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:74</note>
+        <note category="description">Group of branches linked to a task</note>
+      </notes>
+      <segment state="translated">
+        <source>Branches</source>
+        <target>Branches</target>
       </segment>
     </unit>
     <unit id="3866373356324045807">
@@ -26141,6 +26243,17 @@
         <target>Aucune tâche disponible à ajouter.</target>
       </segment>
     </unit>
+    <unit id="8186013988289067040">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:215</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:216</note>
+        <note category="description">Tab listing the branches, commits and pull requests linked to a task</note>
+      </notes>
+      <segment state="translated">
+        <source>Code</source>
+        <target>Code</target>
+      </segment>
+    </unit>
     <unit id="8188398788637486228">
       <notes>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:53,56</note>
@@ -26575,6 +26688,16 @@
         <target>jours</target>
       </segment>
     </unit>
+    <unit id="7036957557306562994">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:82</note>
+        <note category="description">CI checks that all passed on linked code</note>
+      </notes>
+      <segment state="translated">
+        <source>Checks passed</source>
+        <target>Vérifications réussies</target>
+      </segment>
+    </unit>
     <unit id="1860421182220689611">
       <notes>
         <note category="location">src/app/features/sprints/components/sprint-detail-actions.component.ts:138,143</note>
@@ -26598,8 +26721,8 @@
     </unit>
     <unit id="186236568870281953">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:206</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:204</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:217</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:214</note>
         <note category="location">src/app/features/pages/components/page-rail.component.ts:159</note>
         <note category="description">Tab showing what has happened to a task</note>
       </notes>
@@ -26865,7 +26988,7 @@
     <unit id="2467702290618186989">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:279,281</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:118,120</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:121,123</note>
         <note category="description">Button that links this task to another</note>
       </notes>
       <segment state="initial">
@@ -27510,8 +27633,9 @@
     </unit>
     <unit id="6381490568322624964">
       <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:80</note>
         <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:128</note>
-        <note category="description">Column heading for when a task was deleted</note>
+        <note category="description">Shown on a linked branch that was deleted</note>
       </notes>
       <segment state="translated">
         <source>Deleted</source>

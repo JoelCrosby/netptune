@@ -13,6 +13,7 @@ const scopesByEntityType: Record<string, readonly RefreshScope[]> = {
   comment: ['comments', 'tasks'],
   page: ['pages'],
   sourceControl: ['sourceControl'],
+  codeLinks: ['codeLinks'],
 };
 
 /**

@@ -40,6 +40,9 @@ public static class SourceControlEndpoints
         group.MapPut("/repos/{repoId:int}/linked", HandleSetRepoLinked)
             .RequireAuthorization(NetptunePermissions.SourceControl.Manage);
 
+        group.MapGet("/tasks/{systemId}/links", HandleGetTaskLinks)
+            .RequireAuthorization(NetptunePermissions.SourceControl.Read, NetptunePermissions.Tasks.Read);
+
         return builder;
     }
 
@@ -114,6 +117,16 @@ public static class SourceControlEndpoints
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new SetSourceControlRepoLinkedCommand(repoId, request), cancellationToken);
+
+        return result.ToResult();
+    }
+
+    private static async Task<IResult> HandleGetTaskLinks(
+        string systemId,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetTaskCodeLinksQuery(systemId), cancellationToken);
 
         return result.ToResult();
     }

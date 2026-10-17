@@ -2,7 +2,7 @@ using Netptune.Core.SourceControl.Models;
 
 namespace Netptune.Core.SourceControl.Events;
 
-public sealed record ScmCheckRunCompleted : ScmEvent
+public sealed record ScmCheckRunChanged : ScmEvent
 {
     public required ScmRepositoryRef Repository { get; init; }
 

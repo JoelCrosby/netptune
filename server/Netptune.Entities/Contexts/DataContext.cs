@@ -89,6 +89,7 @@ public class DataContext : IdentityDbContext<AppUser>, IDataProtectionKeyContext
     public DbSet<SourceControlRepoProject> SourceControlRepoProjects { get; set; } = null!;
     public DbSet<ScmWebhookDelivery> ScmWebhookDeliveries { get; set; } = null!;
     public DbSet<TaskCodeLink> TaskCodeLinks { get; set; } = null!;
+    public DbSet<SourceControlCheckRun> SourceControlCheckRuns { get; set; } = null!;
 
     public DbSet<Notification> Notifications { get; set; } = null!;
     public DbSet<NotificationSubscription> NotificationSubscriptions { get; set; } = null!;

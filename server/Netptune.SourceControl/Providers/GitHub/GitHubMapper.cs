@@ -112,6 +112,7 @@ internal static class GitHubMapper
             Body = pullRequest.Body,
             State = ToPullRequestState(pullRequest),
             SourceBranch = pullRequest.Head.Ref,
+            HeadSha = pullRequest.Head.Sha,
             TargetBranch = pullRequest.Base.Ref,
             Author = author,
             WebUrl = pullRequest.HtmlUrl,

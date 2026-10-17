@@ -27,6 +27,8 @@ public sealed record TaskCodeLink : KeyedEntity<long>
 
     public ScmPullRequestState? PullRequestState { get; set; }
 
+    public string? HeadSha { get; set; }
+
     public bool IsRemoved { get; set; }
 
     public DateTime OccurredAt { get; set; }

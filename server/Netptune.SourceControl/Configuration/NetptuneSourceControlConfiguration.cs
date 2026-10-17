@@ -30,6 +30,7 @@ public static class NetptuneSourceControlConfiguration
         services.AddScoped<ISourceControlRepoSync, SourceControlRepoSync>();
         services.AddScoped<IScmEventHandler, ScmConnectionChangedHandler>();
         services.AddScoped<IScmEventHandler, ScmTaskLinkHandler>();
+        services.AddScoped<IScmEventHandler, ScmCheckRunHandler>();
         services.AddScoped<IScmWebhookProcessor, ScmWebhookProcessor>();
 
         services.AddGitHubSourceControl(configuration);

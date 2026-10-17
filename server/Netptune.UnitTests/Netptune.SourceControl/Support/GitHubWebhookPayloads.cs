@@ -139,7 +139,7 @@ internal static class GitHubWebhookPayloads
             """;
     }
 
-    public static string CheckRun(string action)
+    public static string CheckRun(string action, string status = "completed", string conclusion = "\"failure\"")
     {
         return $$"""
             {
@@ -147,8 +147,8 @@ internal static class GitHubWebhookPayloads
               "check_run": {
                 "id": 777,
                 "name": "build",
-                "status": "completed",
-                "conclusion": "failure",
+                "status": "{{status}}",
+                "conclusion": {{conclusion}},
                 "head_sha": "3333333333333333333333333333333333333333",
                 "html_url": "https://github.com/acme/netptune/runs/777",
                 "completed_at": "2026-10-16T09:45:00Z",

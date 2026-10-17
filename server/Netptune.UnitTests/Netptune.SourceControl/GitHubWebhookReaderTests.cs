@@ -191,6 +191,7 @@ public sealed class GitHubWebhookReaderTests : IDisposable
         changed.PullRequest.State.Should().Be(ScmPullRequestState.Merged);
         changed.PullRequest.Number.Should().Be("42");
         changed.PullRequest.SourceBranch.Should().Be("feature/netp-564-search");
+        changed.PullRequest.HeadSha.Should().Be("3333333333333333333333333333333333333333");
         changed.PullRequest.TargetBranch.Should().Be("main");
         changed.PullRequest.MergedAt.Should().Be(new DateTimeOffset(2026, 10, 16, 9, 30, 0, TimeSpan.Zero));
     }
@@ -213,11 +214,11 @@ public sealed class GitHubWebhookReaderTests : IDisposable
     }
 
     [Fact]
-    public void Normalise_ShouldTurnACompletedCheckRunIntoCheckRunCompleted()
+    public void Normalise_ShouldTurnACompletedCheckRunIntoCheckRunChanged()
     {
         var events = Normalise("check_run", GitHubWebhookPayloads.CheckRun("completed"));
 
-        var completed = events.Should().ContainSingle().Which.Should().BeOfType<ScmCheckRunCompleted>().Subject;
+        var completed = events.Should().ContainSingle().Which.Should().BeOfType<ScmCheckRunChanged>().Subject;
 
         completed.CheckRun.Conclusion.Should().Be(ScmCheckRunConclusion.Failure);
         completed.CheckRun.Status.Should().Be(ScmCheckRunStatus.Completed);
@@ -225,9 +226,20 @@ public sealed class GitHubWebhookReaderTests : IDisposable
     }
 
     [Fact]
-    public void Normalise_ShouldIgnoreCheckRunsThatHaveNotCompleted()
+    public void Normalise_ShouldTurnACreatedCheckRunIntoAQueuedCheckRun()
     {
-        Normalise("check_run", GitHubWebhookPayloads.CheckRun("created")).Should().BeEmpty();
+        var events = Normalise("check_run", GitHubWebhookPayloads.CheckRun("created", status: "queued", conclusion: "null"));
+
+        var created = events.Should().ContainSingle().Which.Should().BeOfType<ScmCheckRunChanged>().Subject;
+
+        created.CheckRun.Status.Should().Be(ScmCheckRunStatus.Queued);
+        created.CheckRun.Conclusion.Should().BeNull();
+    }
+
+    [Fact]
+    public void Normalise_ShouldIgnoreARerequestedCheckRun()
+    {
+        Normalise("check_run", GitHubWebhookPayloads.CheckRun("rerequested")).Should().BeEmpty();
     }
 
     [Fact]

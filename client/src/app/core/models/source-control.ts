@@ -69,6 +69,51 @@ export interface SourceControlRepo {
   syncedAt: string;
 }
 
+export enum TaskCodeLinkKind {
+  branch = 0,
+  commit = 1,
+  pullRequest = 2,
+}
+
+export enum ScmPullRequestState {
+  open = 0,
+  draft = 1,
+  merged = 2,
+  closed = 3,
+}
+
+export enum ScmCheckState {
+  pending = 0,
+  success = 1,
+  failure = 2,
+  neutral = 3,
+}
+
+export interface ScmCheckSummary {
+  state: ScmCheckState;
+  total: number;
+  passed: number;
+  failed: number;
+  pending: number;
+  webUrl: string | null;
+}
+
+export interface TaskCodeLink {
+  id: number;
+  kind: TaskCodeLinkKind;
+  externalRef: string;
+  title: string;
+  webUrl: string;
+  authorLogin: string | null;
+  pullRequestState: ScmPullRequestState | null;
+  isRemoved: boolean;
+  occurredAt: string;
+  provider: SourceControlProvider;
+  repoFullName: string;
+  repoWebUrl: string;
+  checks: ScmCheckSummary | null;
+}
+
 export interface SourceControlConnectStart {
   redirectUrl: string;
 }

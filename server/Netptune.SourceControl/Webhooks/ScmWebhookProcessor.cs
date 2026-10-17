@@ -74,9 +74,11 @@ internal sealed class ScmWebhookProcessor : IScmWebhookProcessor
         }
     }
 
-    private async Task<HashSet<string>> Apply(ScmWebhookDelivery delivery, CancellationToken cancellationToken)
+    private async Task<HashSet<(string Workspace, string Scope)>> Apply(
+        ScmWebhookDelivery delivery,
+        CancellationToken cancellationToken)
     {
-        var changedWorkspaces = new HashSet<string>();
+        var changedWorkspaces = new HashSet<(string Workspace, string Scope)>();
         var isEnabled = Registry.IsEnabled(delivery.Provider);
 
         if (!isEnabled || delivery.ExternalAccountId is null)
@@ -124,7 +126,7 @@ internal sealed class ScmWebhookProcessor : IScmWebhookProcessor
 
                 if (changed)
                 {
-                    changedWorkspaces.Add(connection.Workspace!.Slug);
+                    changedWorkspaces.Add((connection.Workspace!.Slug, handler.RefreshScope));
                 }
             }
         }
@@ -132,11 +134,13 @@ internal sealed class ScmWebhookProcessor : IScmWebhookProcessor
         return changedWorkspaces;
     }
 
-    private async Task NotifyWorkspaces(IEnumerable<string> workspaces)
+    private async Task NotifyWorkspaces(IEnumerable<(string Workspace, string Scope)> changes)
     {
-        foreach (var workspace in workspaces)
+        foreach (var workspace in changes.GroupBy(change => change.Workspace))
         {
-            await WorkspaceEvents.PublishAsync(workspace, string.Empty, [WorkspaceEventScopes.SourceControl]);
+            var scopes = workspace.Select(change => change.Scope).ToArray();
+
+            await WorkspaceEvents.PublishAsync(workspace.Key, string.Empty, scopes);
         }
     }
 }

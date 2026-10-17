@@ -9,7 +9,8 @@ using Netptune.Core.UnitOfWork;
 namespace Netptune.SourceControl.Webhooks;
 
 // The App stores a delivery and then publishes it, so a crash between the two leaves a row nothing
-// will ever process. This re-publishes those, and prunes processed rows once they're no use for replay.
+// will ever process. This re-publishes those, and prunes processed rows once they're no use for replay,
+// along with check runs too old to be any commit's latest status.
 internal sealed class ScmWebhookMaintenanceService : BackgroundService
 {
     private const int MaxAttempts = 5;
@@ -18,6 +19,7 @@ internal sealed class ScmWebhookMaintenanceService : BackgroundService
     private static readonly TimeSpan Interval = TimeSpan.FromMinutes(5);
     private static readonly TimeSpan StallThreshold = TimeSpan.FromMinutes(10);
     private static readonly TimeSpan Retention = TimeSpan.FromDays(14);
+    private static readonly TimeSpan CheckRunRetention = TimeSpan.FromDays(90);
 
     private readonly IServiceScopeFactory ScopeFactory;
     private readonly TimeProvider Clock;
@@ -71,13 +73,17 @@ internal sealed class ScmWebhookMaintenanceService : BackgroundService
         }
 
         var pruned = await unitOfWork.ScmWebhookDeliveries.DeleteProcessedBefore(now - Retention, cancellationToken);
+        var prunedCheckRuns = await unitOfWork.SourceControlCheckRuns.DeleteUpdatedBefore(
+            now - CheckRunRetention,
+            cancellationToken);
 
-        if (stalled.Count > 0 || pruned > 0)
+        if (stalled.Count > 0 || pruned > 0 || prunedCheckRuns > 0)
         {
             Logger.LogInformation(
-                "Re-published {Stalled} stalled webhook deliveries and pruned {Pruned} processed ones",
+                "Re-published {Stalled} stalled webhook deliveries, pruned {Pruned} processed ones and {PrunedCheckRuns} old check runs",
                 stalled.Count,
-                pruned);
+                pruned,
+                prunedCheckRuns);
         }
     }
 }
