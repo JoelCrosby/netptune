@@ -18,6 +18,8 @@ public interface IIdentityService
 
     string GetProviderKey();
 
+    string? GetProviderUsername();
+
     string GetWorkspaceKey();
 
     string? TryGetWorkspaceKey();

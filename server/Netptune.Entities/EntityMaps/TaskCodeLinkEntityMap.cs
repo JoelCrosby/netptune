@@ -37,6 +37,14 @@ public sealed class TaskCodeLinkEntityMap : KeyedEntityMap<TaskCodeLink, long>
             .HasMaxLength(256);
 
         builder
+            .Property(link => link.AuthorExternalId)
+            .HasMaxLength(128);
+
+        builder
+            .Property(link => link.AuthorEmail)
+            .HasMaxLength(256);
+
+        builder
             .Property(link => link.PullRequestState)
             .HasConversion<int?>();
 

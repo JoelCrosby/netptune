@@ -14,9 +14,11 @@ using Netptune.Core.Services.Realtime;
 using Netptune.Core.SourceControl;
 using Netptune.Core.SourceControl.Models;
 using Netptune.Core.SourceControl.Webhooks;
+using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.SourceControl;
 using Netptune.Entities.Contexts;
 using Netptune.IntegrationTests.TestServices;
+using Netptune.TestData;
 
 using Xunit;
 
@@ -335,6 +337,223 @@ public sealed class SourceControlTaskLinkTests
         (await LinksForRepo(linuxRepo.Id)).Select(link => link.TaskId).Should().Equal(linuxTask.Id);
     }
 
+    [Fact]
+    public async Task TaskLinks_ShouldAttributeTheAuthorToTheMemberWhoMappedTheirUsername()
+    {
+        var (account, repo) = await ConnectWithLinkedRepo();
+        var task = await AnyTask();
+        var username = $"dev-{Guid.NewGuid():N}"[..20];
+        var identity = await AddIdentity(username);
+
+        var shoutedUsername = username.ToUpperInvariant();
+
+        var title = $"Fix {task.SystemId}";
+
+        await ProcessPullRequest(account, repo.ExternalId, "21", title, "Open", author: shoutedUsername);
+
+        var link = (await GetTaskLinks(task.SystemId)).Single(candidate => candidate.ExternalRef == "21");
+
+        link.Author.Should().NotBeNull();
+        link.Author!.Id.Should().Be(identity.UserId);
+    }
+
+    [Fact]
+    public async Task TaskLinks_ShouldLeaveAnUnmappedAuthorAsTheirUsername()
+    {
+        var (account, repo) = await ConnectWithLinkedRepo();
+        var task = await AnyTask();
+        var username = $"nobody-{Guid.NewGuid():N}"[..20];
+
+        await ProcessPullRequest(account, repo.ExternalId, "22", $"Fix {task.SystemId}", "Open", author: username);
+
+        var link = (await GetTaskLinks(task.SystemId)).Single(candidate => candidate.ExternalRef == "22");
+
+        link.Author.Should().BeNull();
+        link.AuthorLogin.Should().Be(username);
+    }
+
+    [Fact]
+    public async Task TaskLinks_ShouldFollowARenamedAccountByItsId()
+    {
+        var (account, repo) = await ConnectWithLinkedRepo();
+        var task = await AnyTask();
+        var externalId = Guid.NewGuid().ToString("N");
+        var renamed = $"new-{Guid.NewGuid():N}"[..20];
+        var userId = await CurrentUserId();
+
+        await RecordVerified(userId, externalId, $"old-{Guid.NewGuid():N}"[..20]);
+        await ProcessPullRequest(
+            account,
+            repo.ExternalId,
+            "23",
+            $"Fix {task.SystemId}",
+            "Open",
+            author: renamed,
+            authorId: externalId);
+
+        var link = (await GetTaskLinks(task.SystemId)).Single(candidate => candidate.ExternalRef == "23");
+        var identity = await StoredIdentity(externalId);
+
+        link.Author!.Id.Should().Be(userId);
+        identity.Username.Should().Be(renamed);
+    }
+
+    [Fact]
+    public async Task Processing_ShouldMoveAUsernameToTheAccountThatNowHoldsIt()
+    {
+        var (account, repo) = await ConnectWithLinkedRepo();
+        var task = await AnyTask();
+        var username = $"moved-{Guid.NewGuid():N}"[..20];
+        var formerId = Guid.NewGuid().ToString("N");
+        var currentId = Guid.NewGuid().ToString("N");
+        var userId = await CurrentUserId();
+        var otherUserId = await UserIdOf(SeedData.Users.ElementAt(2).Email);
+
+        await RecordVerified(otherUserId, formerId, username);
+        await RecordVerified(userId, currentId, $"before-{Guid.NewGuid():N}"[..20]);
+        await ProcessPullRequest(
+            account,
+            repo.ExternalId,
+            "24",
+            $"Fix {task.SystemId}",
+            "Open",
+            author: username,
+            authorId: currentId);
+
+        var former = await StoredIdentity(formerId);
+        var current = await StoredIdentity(currentId);
+
+        former.Username.Should().BeNull();
+        current.Username.Should().Be(username);
+    }
+
+    [Fact]
+    public async Task TaskLinks_ShouldAttributeACommitByTheAuthorsEmail()
+    {
+        var (account, repo) = await ConnectWithLinkedRepo();
+        var task = await AnyTask();
+        var sha = Guid.NewGuid().ToString("N");
+        var userId = await CurrentUserId();
+        var email = await EmailOf(userId);
+
+        var branch = $"feature/{task.SystemId}-email";
+
+        await ProcessPush(account, repo.ExternalId, branch, sha, "Tidy", email.ToUpperInvariant());
+
+        var link = (await GetTaskLinks(task.SystemId)).Single(candidate => candidate.ExternalRef == sha);
+
+        link.Author!.Id.Should().Be(userId);
+    }
+
+    [Fact]
+    public async Task RecordVerified_ShouldReplaceAnotherMembersManualClaimOnTheUsername()
+    {
+        var username = $"claim-{Guid.NewGuid():N}"[..20];
+        var memberClient = Fixture.CreateNetptuneClientAs(SeedData.Users.ElementAt(2).Email);
+        var userId = await CurrentUserId();
+        var externalId = Guid.NewGuid().ToString("N");
+
+        var claim = await memberClient.PostAsJsonAsync(
+            "api/source-control/identities",
+            new AddSourceControlIdentityRequest { Provider = SourceControlProvider.GitLab, Username = username },
+            TestContext.Current.CancellationToken);
+
+        await RecordVerified(userId, externalId, username);
+
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var holders = await context.UserSourceControlIdentities
+            .AsNoTracking()
+            .Where(identity => identity.NormalizedUsername == username)
+            .ToListAsync(TestContext.Current.CancellationToken);
+
+        claim.StatusCode.Should().Be(HttpStatusCode.OK);
+        holders.Should().ContainSingle().Which.UserId.Should().Be(userId);
+    }
+
+    private async Task<UserSourceControlIdentity> AddIdentity(string username)
+    {
+        var response = await Client.PostAsJsonAsync(
+            "api/source-control/identities",
+            new AddSourceControlIdentityRequest { Provider = SourceControlProvider.GitLab, Username = username },
+            TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var normalized = UserSourceControlIdentity.Normalize(username);
+
+        var identity = await context.UserSourceControlIdentities
+            .AsNoTracking()
+            .SingleAsync(stored => stored.NormalizedUsername == normalized, TestContext.Current.CancellationToken);
+
+        return identity;
+    }
+
+    private async Task<string> CurrentUserId()
+    {
+        var identity = await AddIdentity($"whoami-{Guid.NewGuid():N}"[..20]);
+
+        return identity.UserId;
+    }
+
+    private async Task<string> UserIdOf(string email)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        var userId = await context.Users
+            .AsNoTracking()
+            .Where(user => user.Email == email)
+            .Select(user => user.Id)
+            .SingleAsync(TestContext.Current.CancellationToken);
+
+        return userId;
+    }
+
+    private async Task<string> EmailOf(string userId)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        var email = await context.Users
+            .AsNoTracking()
+            .Where(user => user.Id == userId)
+            .Select(user => user.Email!)
+            .SingleAsync(TestContext.Current.CancellationToken);
+
+        return email;
+    }
+
+    private async Task RecordVerified(string userId, string externalId, string username)
+    {
+        using var scope = Fixture.CreateScope();
+        var unitOfWork = scope.ServiceProvider.GetRequiredService<INetptuneUnitOfWork>();
+
+        await unitOfWork.UserSourceControlIdentities.RecordVerified(
+            userId,
+            SourceControlProvider.GitLab,
+            externalId,
+            username,
+            DateTime.UtcNow,
+            TestContext.Current.CancellationToken);
+
+        await unitOfWork.CompleteAsync(TestContext.Current.CancellationToken);
+    }
+
+    private async Task<UserSourceControlIdentity> StoredIdentity(string externalId)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        var identity = await context.UserSourceControlIdentities
+            .AsNoTracking()
+            .SingleAsync(stored => stored.ExternalId == externalId, TestContext.Current.CancellationToken);
+
+        return identity;
+    }
+
     private async Task SetDefaultBranch(int repoId, string branch)
     {
         using var scope = Fixture.CreateScope();
@@ -361,9 +580,16 @@ public sealed class SourceControlTaskLinkTests
         return Fixture.CreateNetptuneClientAs(ownerEmail!, slug);
     }
 
-    private async Task ProcessPush(string account, string repoExternalId, string branch, string sha, string message)
+    private async Task ProcessPush(
+        string account,
+        string repoExternalId,
+        string branch,
+        string sha,
+        string message,
+        string? email = null)
     {
-        var body = $$"""{ "account": "{{account}}", "repo": "{{repoExternalId}}", "branch": "{{branch}}", "commits": [ { "sha": "{{sha}}", "message": "{{message}}" } ] }""";
+        var emailField = email is null ? string.Empty : $$""", "email": "{{email}}" """;
+        var body = $$"""{ "account": "{{account}}", "repo": "{{repoExternalId}}", "branch": "{{branch}}", "commits": [ { "sha": "{{sha}}", "message": "{{message}}"{{emailField}} } ] }""";
 
         await Process(account, TestSourceControlProvider.PushEvent, body);
     }
@@ -488,11 +714,15 @@ public sealed class SourceControlTaskLinkTests
         string title,
         string state,
         string? headSha = null,
-        DateTimeOffset? updatedAt = null)
+        DateTimeOffset? updatedAt = null,
+        string? author = null,
+        string? authorId = null)
     {
         var sha = headSha is null ? string.Empty : $$""", "sha": "{{headSha}}" """;
         var updated = updatedAt is null ? string.Empty : $$""", "updatedAt": "{{updatedAt:O}}" """;
-        var body = $$"""{ "account": "{{account}}", "repo": "{{repoExternalId}}", "number": "{{number}}", "title": "{{title}}", "state": "{{state}}"{{sha}}{{updated}} }""";
+        var authorName = author is null ? string.Empty : $$""", "author": "{{author}}" """;
+        var authorAccount = authorId is null ? string.Empty : $$""", "authorId": "{{authorId}}" """;
+        var body = $$"""{ "account": "{{account}}", "repo": "{{repoExternalId}}", "number": "{{number}}", "title": "{{title}}", "state": "{{state}}"{{sha}}{{updated}}{{authorName}}{{authorAccount}} }""";
 
         await Process(account, TestSourceControlProvider.PullRequestEvent, body);
     }

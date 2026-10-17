@@ -27,6 +27,8 @@ public sealed class BackgroundIdentityService : IIdentityService
 
     public string GetProviderKey() => RequireActor().UserId;
 
+    public string? GetProviderUsername() => null;
+
     public bool IsRestrictedByCredential(string permission) => false;
 
     public async Task<AppUser> GetCurrentUser()

@@ -153,7 +153,7 @@ export class TaskDetailCodeComponent {
     return [
       link.repoFullName,
       this.referenceOf(link),
-      link.authorLogin,
+      link.author?.displayName ?? link.authorLogin,
       fromNow(link.occurredAt),
     ]
       .filter((part) => !!part)

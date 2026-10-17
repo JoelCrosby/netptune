@@ -21,8 +21,10 @@ using Netptune.Core.Events;
 using Netptune.Core.Messaging;
 using Netptune.Core.Models;
 using Netptune.Core.Models.Messaging;
+using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
+using Netptune.Core.SourceControl;
 using Netptune.Core.UnitOfWork;
 using Netptune.Identity.Authentication;
 
@@ -378,6 +380,57 @@ public class AuthenticationServiceTests
     // LogInViaProvider
 
     [Fact]
+    public async Task LogInViaProvider_ShouldRecordTheGitHubAccountAsAVerifiedIdentity()
+    {
+        const string providerKey = "github-123";
+        var user = AutoFixtures.AppUser;
+        var identities = Substitute.For<IUserSourceControlIdentityRepository>();
+
+        Identity.GetCurrentUserEmail().Returns(user.Email!);
+        Identity.GetProviderKey().Returns(providerKey);
+        Identity.GetProviderUsername().Returns("octocat");
+        UserManager.FindByLoginAsync("GitHub", providerKey).Returns(user);
+        UserManager.UpdateAsync(user).Returns(IdentityResult.Success);
+        UnitOfWork.UserSourceControlIdentities.Returns(identities);
+        UnitOfWork.WorkspaceUsers.GetWorkspaceIdsForUser(user.Id, Arg.Any<CancellationToken>()).Returns([42]);
+
+        await Service.LogInViaProvider("GitHub");
+
+        await identities.Received(1).RecordVerified(
+            user.Id,
+            SourceControlProvider.GitHub,
+            providerKey,
+            "octocat",
+            Arg.Any<DateTime>(),
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task LogInViaProvider_ShouldNotRecordAnIdentityForOtherProviders()
+    {
+        const string providerKey = "google-123";
+        var user = AutoFixtures.AppUser;
+        var identities = Substitute.For<IUserSourceControlIdentityRepository>();
+
+        Identity.GetCurrentUserEmail().Returns(user.Email!);
+        Identity.GetProviderKey().Returns(providerKey);
+        UserManager.FindByLoginAsync("Google", providerKey).Returns(user);
+        UserManager.UpdateAsync(user).Returns(IdentityResult.Success);
+        UnitOfWork.UserSourceControlIdentities.Returns(identities);
+        UnitOfWork.WorkspaceUsers.GetWorkspaceIdsForUser(user.Id, Arg.Any<CancellationToken>()).Returns([42]);
+
+        await Service.LogInViaProvider("Google");
+
+        await identities.DidNotReceiveWithAnyArgs().RecordVerified(
+            default!,
+            default,
+            default!,
+            default,
+            default,
+            default);
+    }
+
+    [Fact]
     public async Task LogInViaProvider_ShouldReturnSuccess_WhenUserExists()
     {
         const string providerScheme = "GitHub";
@@ -446,6 +499,7 @@ public class AuthenticationServiceTests
 
         UserManager.FindByLoginAsync(providerScheme, providerKey).ReturnsNull();
         UserManager.FindByEmailAsync(user.Email!).Returns(user);
+        Identity.GetProviderUsername().Returns("octocat");
         Cache.SetAsync(
                 Arg.Any<string>(),
                 Arg.Any<PendingExternalLogin>(),
@@ -466,6 +520,7 @@ public class AuthenticationServiceTests
                 pending.ExistingUserId == user.Id &&
                 pending.Provider == providerScheme &&
                 pending.ProviderKey == providerKey &&
+                pending.ProviderUsername == "octocat" &&
                 pending.Email == user.Email),
             Arg.Is<DistributedCacheEntryOptions>(options =>
                 options.AbsoluteExpirationRelativeToNow == TimeSpan.FromMinutes(10)));
@@ -546,6 +601,40 @@ public class AuthenticationServiceTests
             login.ProviderKey == providerKey &&
             login.ProviderDisplayName == providerScheme));
         await Cache.Received(1).RemoveAsync(GetExternalLinkCacheKey(token));
+    }
+
+    [Fact]
+    public async Task LinkProvider_ShouldRecordTheLinkedGitHubAccountAsAVerifiedIdentity()
+    {
+        const string token = "pending-link-token";
+        var user = AutoFixtures.AppUser;
+        var identities = Substitute.For<IUserSourceControlIdentityRepository>();
+        var pending = new PendingExternalLogin
+        {
+            ExistingUserId = user.Id,
+            Provider = "GitHub",
+            ProviderKey = "github-123",
+            ProviderUsername = "octocat",
+            Email = user.Email!,
+            Created = DateTime.UtcNow,
+        };
+
+        Identity.GetCurrentUserId().Returns(user.Id);
+        Cache.GetValueAsync<PendingExternalLogin>(GetExternalLinkCacheKey(token)).Returns(pending);
+        UserManager.FindByIdAsync(user.Id).Returns(user);
+        UserManager.AddLoginAsync(user, Arg.Any<UserLoginInfo>()).Returns(IdentityResult.Success);
+        UserManager.UpdateAsync(user).Returns(IdentityResult.Success);
+        UnitOfWork.UserSourceControlIdentities.Returns(identities);
+
+        await Service.LinkProvider(new LinkProviderRequest { Token = token });
+
+        await identities.Received(1).RecordVerified(
+            user.Id,
+            SourceControlProvider.GitHub,
+            "github-123",
+            "octocat",
+            Arg.Any<DateTime>(),
+            Arg.Any<CancellationToken>());
     }
 
     [Fact]

@@ -138,7 +138,7 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
     }
 
     // The body names the repository by its external id, plus the pull request's number, title, state
-    // and optionally its head commit and when it was last updated.
+    // and optionally its head commit, when it was last updated, and its author's username and id.
     private static ScmPullRequestChanged ReadPullRequest(ScmWebhookEnvelope envelope, ScmConnection connection)
     {
         using var document = JsonDocument.Parse(envelope.Body);
@@ -146,7 +146,12 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
         var repoId = root.GetProperty("repo").GetString()!;
         var number = root.GetProperty("number").GetString()!;
         var state = Enum.Parse<ScmPullRequestState>(root.GetProperty("state").GetString()!);
-        var author = new ScmIdentity { Provider = SourceControlProvider.GitLab, Username = "tester" };
+        var author = new ScmIdentity
+        {
+            Provider = SourceControlProvider.GitLab,
+            ExternalId = root.TryGetProperty("authorId", out var authorId) ? authorId.GetString() : null,
+            Username = root.TryGetProperty("author", out var authorName) ? authorName.GetString()! : "tester",
+        };
         var updatedAt = root.TryGetProperty("updatedAt", out var updated)
             ? updated.GetDateTimeOffset()
             : envelope.ReceivedAt;
@@ -177,21 +182,24 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
         };
     }
 
-    // The body names the repository, the branch, and each commit's sha and message.
+    // The body names the repository, the branch, and each commit's sha, message and optional author email.
     private static ScmCommitsPushed ReadPush(ScmWebhookEnvelope envelope, ScmConnection connection)
     {
         using var document = JsonDocument.Parse(envelope.Body);
         var root = document.RootElement;
         var repoId = root.GetProperty("repo").GetString()!;
-        var author = new ScmIdentity { Provider = SourceControlProvider.GitLab, Username = "tester" };
-
         var commits = root.GetProperty("commits")
             .EnumerateArray()
             .Select(commit => new ScmCommit
             {
                 Sha = commit.GetProperty("sha").GetString()!,
                 Message = commit.GetProperty("message").GetString()!,
-                Author = author,
+                Author = new ScmIdentity
+                {
+                    Provider = SourceControlProvider.GitLab,
+                    Username = "tester",
+                    Email = commit.TryGetProperty("email", out var email) ? email.GetString() : null,
+                },
                 AuthoredAt = envelope.ReceivedAt,
                 WebUrl = $"https://scm.test/{repoId}/commit/{commit.GetProperty("sha").GetString()}",
             })

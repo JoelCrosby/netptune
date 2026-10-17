@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Netptune.Core.Entities;
 using Netptune.Core.Services.Realtime;
 using Netptune.Core.SourceControl;
+using Netptune.Core.SourceControl.Models;
 using Netptune.Core.SourceControl.Webhooks;
 using Netptune.Core.UnitOfWork;
 
@@ -114,9 +115,13 @@ internal sealed class ScmWebhookProcessor : IScmWebhookProcessor
             delivery.ExternalAccountId,
             cancellationToken);
 
+        var observedAccounts = new List<ScmIdentity>();
+
         foreach (var connection in connections)
         {
             var scmEvents = reader.Normalise(envelope, connection.ToScmConnection());
+
+            observedAccounts.AddRange(scmEvents.SelectMany(ScmObservedAccounts.Of));
 
             foreach (var scmEvent in scmEvents)
             {
@@ -135,6 +140,12 @@ internal sealed class ScmWebhookProcessor : IScmWebhookProcessor
                 }
             }
         }
+
+        await UnitOfWork.UserSourceControlIdentities.RecordObserved(
+            delivery.Provider,
+            observedAccounts,
+            Clock.GetUtcNow().UtcDateTime,
+            cancellationToken);
 
         return changedWorkspaces;
     }

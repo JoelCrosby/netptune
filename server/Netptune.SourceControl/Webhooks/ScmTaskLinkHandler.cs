@@ -12,6 +12,7 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
     private const int MaxTitleLength = 512;
     private const int MaxExternalRefLength = 256;
     private const int MaxWebUrlLength = 1024;
+    private const int MaxAuthorLength = 256;
 
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly TimeProvider Clock;
@@ -221,7 +222,8 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
             ExternalRef = created.Branch,
             Title = created.Branch,
             WebUrl = created.WebUrl,
-            AuthorLogin = created.Actor?.Username,
+            AuthorLogin = Bounded(created.Actor?.Username),
+            AuthorExternalId = created.Actor?.ExternalId,
             OccurredAt = created.OccurredAt,
             Texts = [created.Branch],
         };
@@ -241,7 +243,9 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
             ExternalRef = commit.Sha,
             Title = subject,
             WebUrl = commit.WebUrl,
-            AuthorLogin = commit.Author.Username,
+            AuthorLogin = Bounded(commit.Author.Username),
+            AuthorExternalId = commit.Author.ExternalId,
+            AuthorEmail = Bounded(commit.Author.Email),
             OccurredAt = commit.AuthoredAt,
             Texts = [commit.Message, branchText],
         };
@@ -255,7 +259,8 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
             ExternalRef = pullRequest.Number,
             Title = pullRequest.Title,
             WebUrl = pullRequest.WebUrl,
-            AuthorLogin = pullRequest.Author.Username,
+            AuthorLogin = Bounded(pullRequest.Author.Username),
+            AuthorExternalId = pullRequest.Author.ExternalId,
             OccurredAt = pullRequest.UpdatedAt,
             PullRequestState = pullRequest.State,
             HeadSha = pullRequest.HeadSha,
@@ -275,6 +280,8 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
             Title = Truncate(candidate.Title),
             WebUrl = candidate.WebUrl,
             AuthorLogin = candidate.AuthorLogin,
+            AuthorExternalId = candidate.AuthorExternalId,
+            AuthorEmail = candidate.AuthorEmail,
             PullRequestState = candidate.PullRequestState,
             HeadSha = candidate.HeadSha,
             OccurredAt = candidate.OccurredAt.UtcDateTime,
@@ -288,11 +295,21 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
         link.Title = Truncate(candidate.Title);
         link.WebUrl = candidate.WebUrl;
         link.AuthorLogin = candidate.AuthorLogin ?? link.AuthorLogin;
+        link.AuthorExternalId = candidate.AuthorExternalId ?? link.AuthorExternalId;
+        link.AuthorEmail = candidate.AuthorEmail ?? link.AuthorEmail;
         link.PullRequestState = candidate.PullRequestState ?? link.PullRequestState;
         link.HeadSha = candidate.HeadSha ?? link.HeadSha;
         link.OccurredAt = candidate.OccurredAt.UtcDateTime;
         link.IsRemoved = false;
         link.UpdatedAt = now;
+    }
+
+    // Git puts no limit on author names or emails, and an author is optional on a link.
+    private static string? Bounded(string? value)
+    {
+        var fits = value is not null && value.Length <= MaxAuthorLength;
+
+        return fits ? value : null;
     }
 
     private static string Truncate(string value)
@@ -323,6 +340,10 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
         public required string WebUrl { get; init; }
 
         public string? AuthorLogin { get; init; }
+
+        public string? AuthorExternalId { get; init; }
+
+        public string? AuthorEmail { get; init; }
 
         public DateTimeOffset OccurredAt { get; init; }
 

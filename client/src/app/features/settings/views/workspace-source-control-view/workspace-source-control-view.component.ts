@@ -20,10 +20,8 @@ import {
   SourceControlReposDialogComponent,
   SourceControlReposDialogData,
 } from '@settings/components/source-control/source-control-repos-dialog.component';
-import {
-  sourceControlConnectionsResource,
-  sourceControlProvidersResource,
-} from '@settings/resources/source-control.resource';
+import { sourceControlProvidersResource } from '@core/resources/source-control.resource';
+import { sourceControlConnectionsResource } from '@settings/resources/source-control.resource';
 import { SourceControlCommandsService } from '@settings/services/source-control-commands.service';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';

@@ -46,6 +46,14 @@ public static class SourceControlEndpoints
             .RequireAuthorization(NetptunePermissions.SourceControl.Manage)
             .Broadcasts(WorkspaceEventScopes.SourceControl, WorkspaceEventScopes.CodeLinks);
 
+        group.MapGet("/identities", HandleGetIdentities);
+
+        group.MapPost("/identities", HandleAddIdentity)
+            .Broadcasts(WorkspaceEventScopes.CodeLinks);
+
+        group.MapDelete("/identities/{identityId:int}", HandleRemoveIdentity)
+            .Broadcasts(WorkspaceEventScopes.CodeLinks);
+
         group.MapGet("/tasks/{systemId}/links", HandleGetTaskLinks)
             .RequireAuthorization(NetptunePermissions.SourceControl.Read, NetptunePermissions.Tasks.Read);
 
@@ -123,6 +131,33 @@ public static class SourceControlEndpoints
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new SetSourceControlRepoLinkedCommand(repoId, request), cancellationToken);
+
+        return result.ToResult();
+    }
+
+    private static async Task<IResult> HandleGetIdentities(IMediator mediator, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetSourceControlIdentitiesQuery(), cancellationToken);
+
+        return Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleAddIdentity(
+        AddSourceControlIdentityRequest request,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new AddSourceControlIdentityCommand(request), cancellationToken);
+
+        return result.ToResult();
+    }
+
+    private static async Task<IResult> HandleRemoveIdentity(
+        int identityId,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new RemoveSourceControlIdentityCommand(identityId), cancellationToken);
 
         return result.ToResult();
     }

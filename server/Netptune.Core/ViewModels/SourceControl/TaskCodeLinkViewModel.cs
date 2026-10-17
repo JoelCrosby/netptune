@@ -1,5 +1,6 @@
 using Netptune.Core.SourceControl;
 using Netptune.Core.SourceControl.Models;
+using Netptune.Core.ViewModels.Users;
 
 namespace Netptune.Core.ViewModels.SourceControl;
 
@@ -16,6 +17,8 @@ public sealed record TaskCodeLinkViewModel
     public required string WebUrl { get; init; }
 
     public string? AuthorLogin { get; init; }
+
+    public AssigneeViewModel? Author { get; init; }
 
     public ScmPullRequestState? PullRequestState { get; init; }
 

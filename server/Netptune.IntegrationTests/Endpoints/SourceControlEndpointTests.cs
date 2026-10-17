@@ -204,6 +204,65 @@ public sealed class SourceControlEndpointTests
     }
 
     [Fact]
+    public async Task Identities_ShouldAddListAndRemoveAManualMapping()
+    {
+        var username = UniqueAccount();
+
+        var added = await AddIdentity(Client, username);
+        var identity = (await added.Content.ReadFromJsonAsync<ClientResponse<SourceControlIdentityViewModel>>(
+            TestContext.Current.CancellationToken))!.Payload!;
+
+        var listed = await GetIdentities(Client);
+        var removed = await Client.DeleteAsync(
+            $"api/source-control/identities/{identity.Id}",
+            TestContext.Current.CancellationToken);
+        var afterRemove = await GetIdentities(Client);
+
+        added.StatusCode.Should().Be(HttpStatusCode.OK);
+        identity.Username.Should().Be(username);
+        identity.IsVerified.Should().BeFalse();
+        listed.Should().Contain(candidate => candidate.Id == identity.Id);
+        removed.StatusCode.Should().Be(HttpStatusCode.OK);
+        afterRemove.Should().NotContain(candidate => candidate.Id == identity.Id);
+    }
+
+    [Fact]
+    public async Task Identities_ShouldRefuseAUsernameAnotherMemberHasMapped()
+    {
+        var username = UniqueAccount();
+        var memberClient = Fixture.CreateNetptuneClientAs(SeedData.Users.ElementAt(2).Email);
+
+        var first = await AddIdentity(memberClient, username);
+        var second = await AddIdentity(Client, username.ToUpperInvariant());
+
+        first.StatusCode.Should().Be(HttpStatusCode.OK);
+        second.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task Identities_ShouldNotRemoveAnotherMembersMapping()
+    {
+        var memberClient = Fixture.CreateNetptuneClientAs(SeedData.Users.ElementAt(2).Email);
+        var added = await AddIdentity(memberClient, UniqueAccount());
+        var identity = (await added.Content.ReadFromJsonAsync<ClientResponse<SourceControlIdentityViewModel>>(
+            TestContext.Current.CancellationToken))!.Payload!;
+
+        var removed = await Client.DeleteAsync(
+            $"api/source-control/identities/{identity.Id}",
+            TestContext.Current.CancellationToken);
+
+        removed.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task Identities_ShouldRejectAProviderThatIsNotEnabled()
+    {
+        var response = await AddIdentity(Client, UniqueAccount(), SourceControlProvider.GitHub);
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
     public async Task Disconnect_ShouldRemoveTheConnectionAndUnlinkItsRepos()
     {
         var connection = await Connect(UniqueAccount());
@@ -281,6 +340,28 @@ public sealed class SourceControlEndpointTests
     private static string UniqueAccount()
     {
         return $"group-{Guid.NewGuid():N}"[..20];
+    }
+
+    private static async Task<HttpResponseMessage> AddIdentity(
+        HttpClient client,
+        string username,
+        SourceControlProvider provider = SourceControlProvider.GitLab)
+    {
+        var response = await client.PostAsJsonAsync(
+            "api/source-control/identities",
+            new AddSourceControlIdentityRequest { Provider = provider, Username = username },
+            TestContext.Current.CancellationToken);
+
+        return response;
+    }
+
+    private static async Task<List<SourceControlIdentityViewModel>> GetIdentities(HttpClient client)
+    {
+        var identities = await client.GetFromJsonAsync<List<SourceControlIdentityViewModel>>(
+            "api/source-control/identities",
+            TestContext.Current.CancellationToken);
+
+        return identities!;
     }
 
     private static async Task<HttpResponseMessage> SetLinked(HttpClient client, int repoId, bool isLinked)

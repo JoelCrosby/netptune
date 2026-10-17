@@ -5,6 +5,7 @@ import {
   ScmRepoSyncResult,
   SourceControlConnectStart,
   SourceControlConnection,
+  SourceControlIdentity,
   SourceControlProvider,
   SourceControlRepo,
 } from '@core/models/source-control';
@@ -40,6 +41,19 @@ export class SourceControlService {
     return this.http.post<ClientResponse<ScmRepoSyncResult>>(
       `api/source-control/connections/${connectionId}/sync`,
       null
+    );
+  }
+
+  addIdentity(provider: SourceControlProvider, username: string) {
+    return this.http.post<ClientResponse<SourceControlIdentity>>(
+      'api/source-control/identities',
+      { provider, username }
+    );
+  }
+
+  removeIdentity(identityId: number) {
+    return this.http.delete<ClientResponse<void>>(
+      `api/source-control/identities/${identityId}`
     );
   }
 

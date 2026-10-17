@@ -1,18 +1,9 @@
-import { httpResource } from '@angular/common/http';
 import { PERMISSIONS } from '@core/auth/permissions';
 import {
   SourceControlConnection,
-  SourceControlProviderInfo,
   SourceControlRepo,
 } from '@core/models/source-control';
 import { permissionResource } from '@core/resources/permission.resource';
-
-export const sourceControlProvidersResource = () => {
-  return httpResource<SourceControlProviderInfo[]>(
-    () => ({ url: 'api/source-control/providers' }),
-    { defaultValue: [] }
-  );
-};
 
 export const sourceControlConnectionsResource = () => {
   return permissionResource<

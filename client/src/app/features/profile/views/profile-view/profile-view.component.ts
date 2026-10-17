@@ -4,6 +4,7 @@ import { profileResource } from '@core/resources/profile.resource';
 import { ProfileCommandsService } from '@core/services/profile-commands.service';
 import { AccountPasswordComponent } from '@profile/components/account-password/account-password.component';
 import { UpdateProfileComponent } from '@profile/components/update-profile/update-profile.component';
+import { SourceControlAccountsComponent } from '@profile/components/source-control-accounts/source-control-accounts.component';
 import { LinkedProvidersComponent } from '@profile/components/linked-providers/linked-providers.component';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
@@ -19,6 +20,7 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
     UpdateProfileComponent,
     AccountPasswordComponent,
     LinkedProvidersComponent,
+    SourceControlAccountsComponent,
   ],
   template: `
     <app-page-container
@@ -43,6 +45,7 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
           <app-update-profile />
           <app-account-password />
           <app-linked-providers />
+          <app-source-control-accounts />
         </div>
       }
     </app-page-container>

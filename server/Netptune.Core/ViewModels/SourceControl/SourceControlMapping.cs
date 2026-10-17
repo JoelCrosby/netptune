@@ -23,4 +23,15 @@ public static class SourceControlMapping
             SyncedAt = repo.SyncedAt,
         };
     }
+
+    public static SourceControlIdentityViewModel ToViewModel(UserSourceControlIdentity identity)
+    {
+        return new SourceControlIdentityViewModel
+        {
+            Id = identity.Id,
+            Provider = identity.Provider,
+            Username = identity.Username,
+            IsVerified = identity.IsVerified,
+        };
+    }
 }

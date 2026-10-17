@@ -1,3 +1,5 @@
+import { AssigneeViewModel } from './view-models/board-view';
+
 export enum SourceControlProvider {
   gitHub = 0,
   azureDevOps = 1,
@@ -104,6 +106,7 @@ export interface TaskCodeLink {
   title: string;
   webUrl: string;
   authorLogin: string | null;
+  author: AssigneeViewModel | null;
   pullRequestState: ScmPullRequestState | null;
   isRemoved: boolean;
   occurredAt: string;
@@ -111,6 +114,13 @@ export interface TaskCodeLink {
   repoFullName: string;
   repoWebUrl: string;
   checks: ScmCheckSummary | null;
+}
+
+export interface SourceControlIdentity {
+  id: number;
+  provider: SourceControlProvider;
+  username: string | null;
+  isVerified: boolean;
 }
 
 export interface SourceControlConnectStart {

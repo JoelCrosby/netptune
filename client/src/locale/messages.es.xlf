@@ -176,7 +176,7 @@
     </unit>
     <unit id="8108308365027351358">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-api-credential-scopes-dialog.component.ts:110,115</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-api-credential-scopes-dialog.component.ts:111,116</note>
         <note category="description">Button that saves a credential&apos;s scopes</note>
       </notes>
       <segment state="initial">
@@ -447,7 +447,7 @@
     </unit>
     <unit id="3365632461151309436">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-api-credential-scopes-dialog.component.ts:67,70</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-api-credential-scopes-dialog.component.ts:68,71</note>
       </notes>
       <segment state="initial">
         <source>{VAR_PLURAL, plural, =1 {This credential lacks 1 permission the account has:} other {This credential lacks <ph id="0" equiv="INTERPOLATION"/> permissions the account has: }}</source>
@@ -1047,7 +1047,7 @@
     </unit>
     <unit id="4393935842883042759">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:121</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:119</note>
         <note category="description">Shown when starting a source control connection fails</note>
       </notes>
       <segment state="initial">
@@ -2065,7 +2065,7 @@
     </unit>
     <unit id="7730041991995170578">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:220</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:218</note>
         <note category="description">Shown after a source control account is disconnected</note>
       </notes>
       <segment state="initial">
@@ -2219,14 +2219,14 @@
         <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:342</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-spend-cap-dialog.component.ts:80,83</note>
         <note category="location">src/app/features/settings/components/delete-workspace-dialog/delete-workspace-dialog.component.ts:59,62</note>
-        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:97,100</note>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-api-credential-scopes-dialog.component.ts:103,106</note>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:164,167</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:100,103</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-api-credential-scopes-dialog.component.ts:104,107</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:165,168</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:269</note>
         <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:142</note>
         <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:214</note>
         <note category="location">src/app/features/settings/shared/entity-detail.ts:32</note>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:204</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:202</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:87,90</note>
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:70,73</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:61,64</note>
@@ -2956,6 +2956,16 @@
       <segment state="translated">
         <source>Only someone who can pin at this scope may remove it</source>
         <target>Solo quien pueda fijar en este ámbito puede quitarlo</target>
+      </segment>
+    </unit>
+    <unit id="311157768509575825">
+      <notes>
+        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:166</note>
+        <note category="description">Shown when removing a source control account fails</note>
+      </notes>
+      <segment state="translated">
+        <source>The account could not be removed.</source>
+        <target>No se pudo eliminar la cuenta.</target>
       </segment>
     </unit>
     <unit id="3118592863000722717">
@@ -5304,7 +5314,7 @@
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:120,125</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:83,94</note>
         <note category="location">src/app/features/settings/components/service-accounts/api-credential-row.component.ts:96,100</note>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-api-credential-scopes-dialog.component.ts:67,75</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-api-credential-scopes-dialog.component.ts:68,76</note>
         <note category="location">src/app/features/settings/components/service-accounts/service-account-permission-summary.component.ts:145,151</note>
         <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:25,33</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:70,76</note>
@@ -5465,8 +5475,8 @@
         <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:159</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:95,96</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:401</note>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:58,60</note>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:209</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:59,61</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:210</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:74,76</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:144</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:149</note>
@@ -5776,7 +5786,7 @@
         <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:78,81</note>
         <note category="location">src/app/features/queries/components/query-details-drawer.component.ts:31,33</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:106,108</note>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:63,65</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:64,66</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:91,94</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:172,175</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:144,147</note>
@@ -7576,7 +7586,7 @@
     <unit id="6273997865051397082">
       <notes>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:119,122</note>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:173,178</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:174,179</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:116,119</note>
         <note category="description">Button that saves edits to the workspace</note>
       </notes>
@@ -7654,6 +7664,16 @@
       <segment state="translated">
         <source> Next </source>
         <target>Siguiente</target>
+      </segment>
+    </unit>
+    <unit id="3971902929824297761">
+      <notes>
+        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:120</note>
+        <note category="description">Shown for a source control account whose username isn&apos;t known yet</note>
+      </notes>
+      <segment state="translated">
+        <source>Username not known yet</source>
+        <target>Nombre de usuario aún desconocido</target>
       </segment>
     </unit>
     <unit id="3971949003366430322">
@@ -11280,7 +11300,7 @@
     </unit>
     <unit id="5981012101929159464">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:66,67</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:64,65</note>
         <note category="description">Button that connects a source control provider</note>
       </notes>
       <segment state="initial">
@@ -12516,7 +12536,7 @@
     </unit>
     <unit id="2642466038653346310">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:201</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:199</note>
         <note category="description">Title of the disconnect source control confirmation</note>
       </notes>
       <segment state="initial">
@@ -12889,6 +12909,16 @@
       <segment state="translated">
         <source> Move to backlog </source>
         <target>Mover al backlog</target>
+      </segment>
+    </unit>
+    <unit id="8945480026995354798">
+      <notes>
+        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:89,92</note>
+        <note category="description">Button that maps a source control username to the profile</note>
+      </notes>
+      <segment state="translated">
+        <source> Link Account </source>
+        <target> Vincular cuenta </target>
       </segment>
     </unit>
     <unit id="8949873009695123445">
@@ -15129,7 +15159,7 @@
     </unit>
     <unit id="7614983501706369438">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:94,96</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:92,94</note>
         <note category="description">Explains who can enable source control providers</note>
       </notes>
       <segment state="initial">
@@ -16462,7 +16492,7 @@
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:187,189</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:81,83</note>
-        <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:39,42</note>
+        <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:41,44</note>
         <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:62,64</note>
         <note category="location">src/app/features/queries/views/queries-view/queries-view.component.ts:64,66</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:105,107</note>
@@ -17224,7 +17254,7 @@
     </unit>
     <unit id="9007078948220384866">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:227</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:225</note>
         <note category="description">Shown when disconnecting a source control account fails</note>
       </notes>
       <segment state="initial">
@@ -17444,6 +17474,16 @@
       <segment state="translated">
         <source>Tasks</source>
         <target>Tareas</target>
+      </segment>
+    </unit>
+    <unit id="6907053851510331441">
+      <notes>
+        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:56,59</note>
+        <note category="description">Explains what mapping source control accounts on a profile does</note>
+      </notes>
+      <segment state="translated">
+        <source>Commits and pull requests by these accounts are shown as yours. Signing in with GitHub adds your GitHub account automatically.</source>
+        <target>Los commits y pull requests de estas cuentas se muestran como tuyos. Iniciar sesión con GitHub añade tu cuenta de GitHub automáticamente.</target>
       </segment>
     </unit>
     <unit id="6909153285279943756">
@@ -19692,7 +19732,7 @@
     </unit>
     <unit id="4915431133669985304">
       <notes>
-        <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:30,33</note>
+        <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:32,35</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:107</note>
         <note category="location">src/app/workspace.routes.ts:153</note>
         <note category="description">Page title for the user profile</note>
@@ -19714,7 +19754,7 @@
     </unit>
     <unit id="5708580315739377560">
       <notes>
-        <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:37,38</note>
+        <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:39,40</note>
         <note category="description">Shown when the profile fails to load</note>
       </notes>
       <segment state="translated">
@@ -19795,7 +19835,7 @@
     </unit>
     <unit id="1258539912357116302">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:79,85</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:80,86</note>
         <note category="description">Warns that removing an account permission also affects its credentials, while adding one does not</note>
       </notes>
       <segment state="initial">
@@ -20072,7 +20112,7 @@
     </unit>
     <unit id="2631658929830152455">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-api-credential-scopes-dialog.component.ts:84,87</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-api-credential-scopes-dialog.component.ts:85,88</note>
         <note category="description">Button that adds every account permission to a credential</note>
       </notes>
       <segment state="initial">
@@ -20675,6 +20715,16 @@
       <segment state="translated">
         <source>Samples</source>
         <target>Muestras</target>
+      </segment>
+    </unit>
+    <unit id="607063947643086502">
+      <notes>
+        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:108</note>
+        <note category="description">Shown when mapping a source control username fails</note>
+      </notes>
+      <segment state="translated">
+        <source>The account could not be linked.</source>
+        <target>No se pudo vincular la cuenta.</target>
       </segment>
     </unit>
     <unit id="6073259723754877941">
@@ -22164,6 +22214,17 @@
         <target><ph id="0" equiv="SHOWN" disp="shown"/> de <ph id="1" equiv="TOTAL" disp="total"/> mostrados</target>
       </segment>
     </unit>
+    <unit id="5248717555542428023">
+      <notes>
+        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:83,84</note>
+        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:136</note>
+        <note category="description">Label of the source control username field</note>
+      </notes>
+      <segment state="translated">
+        <source>Username</source>
+        <target>Nombre de usuario</target>
+      </segment>
+    </unit>
     <unit id="5249135576117895248">
       <notes>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:245,248</note>
@@ -22703,9 +22764,19 @@
         <target>Ya lo he guardado</target>
       </segment>
     </unit>
+    <unit id="3057076851869743805">
+      <notes>
+        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:52,54</note>
+        <note category="description">Heading above the source control accounts on a profile</note>
+      </notes>
+      <segment state="translated">
+        <source>Source Control Accounts</source>
+        <target>Cuentas de control de código fuente</target>
+      </segment>
+    </unit>
     <unit id="5885532337718779371">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:39,42</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:42,45</note>
         <note category="description">Title of the create-API-credential dialog</note>
       </notes>
       <segment state="translated">
@@ -22715,7 +22786,7 @@
     </unit>
     <unit id="939457493165168798">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:49,52</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:52,55</note>
         <note category="description">Explains credential creation. NAME is the service account name and the 90 day expiry is fixed by the server</note>
       </notes>
       <segment state="translated">
@@ -22735,8 +22806,8 @@
     </unit>
     <unit id="9048091755272109818">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:58,59</note>
-        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:130</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:61,62</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:137</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:190,192</note>
         <note category="description">Label of the credential name field</note>
       </notes>
@@ -22747,7 +22818,7 @@
     </unit>
     <unit id="672862139704252110">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:60,62</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:63,65</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:194,195</note>
         <note category="description">Example credential name shown as placeholder text</note>
       </notes>
@@ -22758,7 +22829,7 @@
     </unit>
     <unit id="1730059192631856512">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:62,65</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:65,68</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:196,199</note>
         <note category="description">Hint under the credential name field</note>
       </notes>
@@ -22779,7 +22850,7 @@
     </unit>
     <unit id="7617073660084768167">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:68,71</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:71,74</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:203,205</note>
         <note category="description">Heading above the permission scopes for a credential</note>
       </notes>
@@ -22832,8 +22903,8 @@
     </unit>
     <unit id="6722861709318164496">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:123</note>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-api-credential-scopes-dialog.component.ts:149</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:130</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-api-credential-scopes-dialog.component.ts:154</note>
         <note category="description">Shown when a service account has no permissions to scope</note>
       </notes>
       <segment state="translated">
@@ -22876,7 +22947,7 @@
     </unit>
     <unit id="196598341098112332">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:105,108</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:108,111</note>
         <note category="description">Button that creates the API credential</note>
       </notes>
       <segment state="translated">
@@ -23069,7 +23140,7 @@
     <unit id="8204051222798572777">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:125,128</note>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:70,73</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:71,74</note>
         <note category="description">Heading above the API permissions for a service account</note>
       </notes>
       <segment state="translated">
@@ -23109,7 +23180,7 @@
     </unit>
     <unit id="4777350418733054176">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:92,99</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:93,100</note>
         <note category="location">src/app/features/settings/components/service-accounts/permission-grid.component.ts:24,31</note>
         <note category="description">How many permissions are selected. SELECTED is the chosen count and TOTAL the number available</note>
       </notes>
@@ -23120,7 +23191,7 @@
     </unit>
     <unit id="1916930465370171483">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:109,111</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:110,112</note>
         <note category="location">src/app/features/settings/components/service-accounts/permission-grid.component.ts:40,43</note>
         <note category="description">Button that selects every permission</note>
       </notes>
@@ -23149,10 +23220,20 @@
         <target> Expandir todo </target>
       </segment>
     </unit>
+    <unit id="1919585649802644988">
+      <notes>
+        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:64,66</note>
+        <note category="description">Accessible label for the list of source control accounts</note>
+      </notes>
+      <segment state="translated">
+        <source>Source control accounts</source>
+        <target>Cuentas de control de código fuente</target>
+      </segment>
+    </unit>
     <unit id="1420721946741654809">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:151,154</note>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:155,159</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:156,160</note>
         <note category="description">Validation message when no permission is selected</note>
       </notes>
       <segment state="translated">
@@ -23454,7 +23535,7 @@
     </unit>
     <unit id="3108295184226330469">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:183</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:184</note>
         <note category="location">src/app/features/settings/components/service-accounts/permission-grid.component.ts:140</note>
         <note category="description">Button that deselects every permission in a group</note>
       </notes>
@@ -23502,9 +23583,19 @@
         <target>{VAR_PLURAL, plural, =0 {Todas las áreas del espacio de trabajo.} =1 {Sin acceso a 1 área más.} other {Sin acceso a <ph id="0" equiv="INTERPOLATION"/> áreas más.}}</target>
       </segment>
     </unit>
+    <unit id="3234827259954773448">
+      <notes>
+        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:119</note>
+        <note category="description">Badge on a source control account the user added by hand</note>
+      </notes>
+      <segment state="translated">
+        <source>Added by you</source>
+        <target>Añadida por ti</target>
+      </segment>
+    </unit>
     <unit id="3235487491166357848">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:184</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:185</note>
         <note category="location">src/app/features/settings/components/service-accounts/permission-grid.component.ts:141</note>
         <note category="description">Button that selects every permission in a group</note>
       </notes>
@@ -23576,7 +23667,7 @@
     </unit>
     <unit id="8161736557394529216">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:50,53</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:51,54</note>
         <note category="description">Title of the edit-service-account dialog</note>
       </notes>
       <segment state="translated">
@@ -23599,7 +23690,7 @@
       <notes>
         <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:111,112</note>
         <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:67,71</note>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:117,120</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:118,121</note>
         <note category="location">src/app/features/settings/components/service-accounts/permission-grid.component.ts:47,52</note>
         <note category="location">src/app/static/components/filter-facet/filter-facet.component.ts:71,74</note>
         <note category="description">Button that clears the task selection</note>
@@ -24808,7 +24899,7 @@
     </unit>
     <unit id="5602212197098670157">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:81,83</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:79,81</note>
         <note category="description">Shown when the source control settings cannot be loaded</note>
       </notes>
       <segment state="translated">
@@ -24848,6 +24939,16 @@
       <segment state="translated">
         <source>Default</source>
         <target>Predeterminado</target>
+      </segment>
+    </unit>
+    <unit id="5608170361165981161">
+      <notes>
+        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:118</note>
+        <note category="description">Badge on a source control account proven by signing in</note>
+      </notes>
+      <segment state="translated">
+        <source>From sign-in</source>
+        <target>Del inicio de sesión</target>
       </segment>
     </unit>
     <unit id="3281640360025639314">
@@ -25103,7 +25204,7 @@
     </unit>
     <unit id="2942359578078973905">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-api-credential-scopes-dialog.component.ts:53,56</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-api-credential-scopes-dialog.component.ts:54,57</note>
         <note category="description">Explains that credential scopes are fixed. NAME is the credential name</note>
       </notes>
       <segment state="initial">
@@ -25890,7 +25991,7 @@
       <notes>
         <note category="location">src/app/features/settings/settings.routes.ts:179</note>
         <note category="location">src/app/features/settings/settings.routes.ts:180</note>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:55,57</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:53,55</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:384</note>
         <note category="description">Breadcrumb for the workspace source control settings</note>
       </notes>
@@ -26564,7 +26665,7 @@
     </unit>
     <unit id="7523114787603051321">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:77,85</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:80,88</note>
         <note category="description">Explains that credential scopes narrow the account permissions and are fixed when the credential is created</note>
       </notes>
       <segment state="initial">
@@ -28104,6 +28205,16 @@
         <target>Ctrl K</target>
       </segment>
     </unit>
+    <unit id="4176159076663605915">
+      <notes>
+        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:72,76</note>
+        <note category="description">Shown when a profile has no source control accounts</note>
+      </notes>
+      <segment state="translated">
+        <source>No source control accounts yet.</source>
+        <target>Aún no hay cuentas de control de código fuente.</target>
+      </segment>
+    </unit>
     <unit id="8104638323313491168">
       <notes>
         <note category="location">src/app/shell/command-palette/command-palette.component.ts:34</note>
@@ -28228,7 +28339,7 @@
     </unit>
     <unit id="7543358363832842069">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:90,92</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:88,90</note>
         <note category="description">Shown when no source control provider is configured on the server</note>
       </notes>
       <segment state="initial">
@@ -28552,7 +28663,7 @@
     </unit>
     <unit id="5087255234379846922">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:202</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:200</note>
         <note category="description">Explains what disconnecting a source control account does</note>
       </notes>
       <segment state="initial">
@@ -30017,6 +30128,7 @@
     <unit id="4814285799071780083">
       <notes>
         <note category="location">src/app/core/services/task-commands.service.ts:226</note>
+        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:69,70</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:347</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:341</note>
         <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:82,85</note>
@@ -30170,7 +30282,7 @@
     <unit id="2907016025519254862">
       <notes>
         <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:82,85</note>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:203</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:201</note>
         <note category="description">Button that removes a source control connection</note>
       </notes>
       <segment state="initial">
@@ -30382,7 +30494,7 @@
     </unit>
     <unit id="444463860595403557">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/edit-api-credential-scopes-dialog.component.ts:43,46</note>
+        <note category="location">src/app/features/settings/components/service-accounts/edit-api-credential-scopes-dialog.component.ts:44,47</note>
         <note category="description">Title of the edit-credential-scopes dialog</note>
       </notes>
       <segment state="initial">

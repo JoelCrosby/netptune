@@ -8,6 +8,8 @@ public sealed class PendingExternalLogin
 
     public required string ProviderKey { get; init; }
 
+    public string? ProviderUsername { get; init; }
+
     public required string Email { get; init; }
 
     public string? DisplayName { get; init; }

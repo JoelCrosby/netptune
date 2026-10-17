@@ -83,6 +83,8 @@ public interface INetptuneUnitOfWork : IUnitOfWork
 
     ISourceControlCheckRunRepository SourceControlCheckRuns { get; }
 
+    IUserSourceControlIdentityRepository UserSourceControlIdentities { get; }
+
     IAiConversationRepository AiConversations { get; }
 
     IAiUsageRecordRepository AiUsageRecords { get; }

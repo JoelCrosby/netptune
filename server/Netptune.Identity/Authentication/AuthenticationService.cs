@@ -4,6 +4,8 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
+using AspNet.Security.OAuth.GitHub;
+
 using Flurl;
 
 using Microsoft.AspNetCore.Http;
@@ -28,6 +30,7 @@ using Netptune.Core.Models.Messaging;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.SourceControl;
 using Netptune.Core.UnitOfWork;
 
 using WorkspaceAppUser = Netptune.Core.Relationships.WorkspaceAppUser;
@@ -197,12 +200,36 @@ public class NetptuneAuthService : INetptuneAuthService
         user.LastLoginTime = DateTime.UtcNow;
 
         await UserManager.UpdateAsync(user);
+        await RecordSourceControlIdentity(user.Id, providerScheme, providerKey, Identity.GetProviderUsername());
 
         var ticket = await GenerateTicket(user);
 
         await LogAuthenticationEvent(user, email, providerScheme, succeeded: true);
 
         return LoginResult.Success(ticket);
+    }
+
+    private async Task RecordSourceControlIdentity(
+        string userId,
+        string providerScheme,
+        string providerKey,
+        string? providerUsername)
+    {
+        var isGitHub = providerScheme == GitHubAuthenticationDefaults.AuthenticationScheme;
+
+        if (!isGitHub)
+        {
+            return;
+        }
+
+        await UnitOfWork.UserSourceControlIdentities.RecordVerified(
+            userId,
+            SourceControlProvider.GitHub,
+            providerKey,
+            providerUsername,
+            DateTime.UtcNow);
+
+        await UnitOfWork.CompleteAsync();
     }
 
     private async Task LogAuthenticationEvent(AppUser? user, string email, string method, bool succeeded)
@@ -306,6 +333,8 @@ public class NetptuneAuthService : INetptuneAuthService
             return LoginResult.Failed(string.Join(", ", linkResult.Errors.Select(error => error.Description)));
         }
 
+        await RecordSourceControlIdentity(user.Id, pending.Provider, pending.ProviderKey, pending.ProviderUsername);
+
         await Cache.RemoveAsync(cacheKey);
 
         user.LastLoginTime = DateTime.UtcNow;
@@ -331,6 +360,7 @@ public class NetptuneAuthService : INetptuneAuthService
             ExistingUserId = existingUser.Id,
             Provider = providerScheme,
             ProviderKey = providerKey,
+            ProviderUsername = Identity.GetProviderUsername(),
             Email = email,
             DisplayName = Identity.GetUserName(),
             PictureUrl = Identity.GetPictureUrl(),

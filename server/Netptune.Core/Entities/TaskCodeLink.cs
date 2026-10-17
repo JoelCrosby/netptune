@@ -25,6 +25,10 @@ public sealed record TaskCodeLink : KeyedEntity<long>
 
     public string? AuthorLogin { get; set; }
 
+    public string? AuthorExternalId { get; set; }
+
+    public string? AuthorEmail { get; set; }
+
     public ScmPullRequestState? PullRequestState { get; set; }
 
     public string? HeadSha { get; set; }

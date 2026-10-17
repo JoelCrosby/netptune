@@ -1,11 +1,13 @@
 using Mediator;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.SourceControl;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.SourceControl;
+using Netptune.Core.ViewModels.Users;
 
 namespace Netptune.Handlers.SourceControl.Queries;
 
@@ -43,9 +45,10 @@ public sealed class GetTaskCodeLinksQueryHandler
         var taskId = taskIds.Values.First();
         var links = await UnitOfWork.TaskCodeLinks.GetForTask(taskId, workspaceId, cancellationToken);
         var checkRuns = await GetCheckRuns(links, cancellationToken);
+        var authors = await GetAuthorMatcher(links, workspaceId, cancellationToken);
 
         var viewModels = links
-            .Select(link => ToViewModel(link, checkRuns))
+            .Select(link => ToViewModel(link, checkRuns, authors))
             .ToList();
 
         return ClientResponse<List<TaskCodeLinkViewModel>>.Success(viewModels);
@@ -72,6 +75,52 @@ public sealed class GetTaskCodeLinksQueryHandler
         return checkRuns.ToLookup(checkRun => (checkRun.RepoId, checkRun.CommitSha));
     }
 
+    private async Task<ScmAuthorMatcher> GetAuthorMatcher(
+        List<TaskCodeLink> links,
+        int workspaceId,
+        CancellationToken cancellationToken)
+    {
+        var identities = new List<UserSourceControlIdentity>();
+
+        // One lookup per provider present on the task, so at most one per supported provider.
+        foreach (var providerLinks in links.GroupBy(link => link.Repo.Connection.Provider))
+        {
+            var externalIds = providerLinks
+                .Select(link => link.AuthorExternalId)
+                .OfType<string>()
+                .Distinct()
+                .ToList();
+            var usernames = providerLinks
+                .Select(link => link.AuthorLogin)
+                .OfType<string>()
+                .Select(UserSourceControlIdentity.Normalize)
+                .Distinct()
+                .ToList();
+
+            var providerIdentities = await UnitOfWork.UserSourceControlIdentities.GetMemberIdentities(
+                workspaceId,
+                providerLinks.Key,
+                externalIds,
+                usernames,
+                cancellationToken);
+
+            identities.AddRange(providerIdentities);
+        }
+
+        var emails = links
+            .Select(link => link.AuthorEmail)
+            .OfType<string>()
+            .Select(ScmAuthorMatcher.NormalizeEmail)
+            .Distinct()
+            .ToList();
+
+        var membersByEmail = emails.Count == 0
+            ? []
+            : await UnitOfWork.UserSourceControlIdentities.GetMembersByEmail(workspaceId, emails, cancellationToken);
+
+        return new ScmAuthorMatcher(identities, membersByEmail);
+    }
+
     private static string? CommitShaOf(TaskCodeLink link)
     {
         return link.Kind switch
@@ -84,10 +133,13 @@ public sealed class GetTaskCodeLinksQueryHandler
 
     private static TaskCodeLinkViewModel ToViewModel(
         TaskCodeLink link,
-        ILookup<(int RepoId, string Sha), SourceControlCheckRun> checkRuns)
+        ILookup<(int RepoId, string Sha), SourceControlCheckRun> checkRuns,
+        ScmAuthorMatcher authors)
     {
         var commitSha = CommitShaOf(link);
         var checks = commitSha is null ? null : ScmCheckSummary.Summarise(checkRuns[(link.RepoId, commitSha)]);
+        var provider = link.Repo.Connection.Provider;
+        var author = authors.Match(provider, link.AuthorExternalId, link.AuthorLogin, link.AuthorEmail);
 
         return new TaskCodeLinkViewModel
         {
@@ -97,13 +149,25 @@ public sealed class GetTaskCodeLinksQueryHandler
             Title = link.Title,
             WebUrl = link.WebUrl,
             AuthorLogin = link.AuthorLogin,
+            Author = author is null ? null : ToAuthor(author),
             PullRequestState = link.PullRequestState,
             IsRemoved = link.IsRemoved,
             OccurredAt = link.OccurredAt,
-            Provider = link.Repo.Connection.Provider,
+            Provider = provider,
             RepoFullName = link.Repo.FullName,
             RepoWebUrl = link.Repo.WebUrl,
             Checks = checks,
+        };
+    }
+
+    private static AssigneeViewModel ToAuthor(AppUser user)
+    {
+        return new AssigneeViewModel
+        {
+            Id = user.Id,
+            DisplayName = user.DisplayName,
+            PictureUrl = user.PictureUrl,
+            IsServiceAccount = user.UserType == AppUserType.ServiceAccount,
         };
     }
 }

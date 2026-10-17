@@ -47,6 +47,7 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
     public IScmWebhookDeliveryRepository ScmWebhookDeliveries { get; }
     public ITaskCodeLinkRepository TaskCodeLinks { get; }
     public ISourceControlCheckRunRepository SourceControlCheckRuns { get; }
+    public IUserSourceControlIdentityRepository UserSourceControlIdentities { get; }
     public IAiConversationRepository AiConversations { get; }
 
     public IAiUsageRecordRepository AiUsageRecords { get; }
@@ -102,6 +103,7 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
         ScmWebhookDeliveries = new ScmWebhookDeliveryRepository(context, connectionFactory);
         TaskCodeLinks = new TaskCodeLinkRepository(context, connectionFactory);
         SourceControlCheckRuns = new SourceControlCheckRunRepository(context, connectionFactory);
+        UserSourceControlIdentities = new UserSourceControlIdentityRepository(context, connectionFactory);
         AiConversations = new AiConversationRepository(context, connectionFactory);
         AiUsageRecords = new AiUsageRecordRepository(context, connectionFactory);
         AiWebDocuments = new AiWebDocumentRepository(context, connectionFactory);

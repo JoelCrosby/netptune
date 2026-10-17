@@ -55,6 +55,8 @@ public class IdentityService : IIdentityService
 
     public string GetProviderKey() => GetClaimValue(ClaimTypes.NameIdentifier);
 
+    public string? GetProviderUsername() => TryGetClaimValue(ClaimTypes.Name, out var username) ? username : null;
+
     public Task<AppUser> GetCurrentUser()
     {
         return UserCache.Get(GetCurrentUserId())!;
