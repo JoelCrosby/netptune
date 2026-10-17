@@ -14,7 +14,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
+    <!-- A generator must not reference a newer Roslyn than the compiler that loads it, so this stays
+         below the central version, which EF's design-time tooling needs at 5.0. -->
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" VersionOverride="4.14.0" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>
