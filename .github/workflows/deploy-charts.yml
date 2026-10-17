@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       force_build:
-        description: "Rebuild and redeploy every image regardless of what changed"
+        description: "Rebuild every image. Leave off to redeploy the current images, e.g. after changing prod secrets"
         type: boolean
         default: false
   push:
@@ -71,6 +71,16 @@ jobs:
               charts/netptune/*) charts=true ;;
             esac
           done < <(git diff --name-only "$before" "$after")
+
+          # A manual run has no previous commit to diff against, so without force_build it
+          # redeploys the current images. That is how prod secret changes, which live in the
+          # private netptune-secrets repo and trigger nothing here, are applied.
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            server=false
+            client=false
+            website=false
+            charts=true
+          fi
 
           # A manual run with force_build rebuilds and redeploys everything, which is how
           # images get rebuilt when only the workflow or charts changed.
@@ -538,6 +548,40 @@ jobs:
         run: |
           echo "${{ secrets.KUBECONFIG_PROD }}" > kubeconfig.yaml
 
+      - name: Install sops
+        env:
+          SOPS_VERSION: "3.13.3"
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/sops" \
+            "https://github.com/getsops/sops/releases/download/v${SOPS_VERSION}/sops-v${SOPS_VERSION}.linux.amd64"
+          chmod +x "$RUNNER_TEMP/sops"
+          echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
+
+      - name: Check out prod secrets
+        uses: actions/checkout@v6
+        with:
+          repository: JoelCrosby/netptune-secrets
+          ssh-key: ${{ secrets.SECRETS_REPO_DEPLOY_KEY }}
+          path: prod-secrets
+          persist-credentials: false
+
+      - name: Decrypt prod values
+        env:
+          SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
+        run: sops --decrypt prod-secrets/secrets.prod.enc.yaml > "$RUNNER_TEMP/secrets.prod.yaml"
+
+      # A value left empty in the file would otherwise surface as a pod failing options validation
+      # halfway through the rollout.
+      - name: Check prod values
+        run: |
+          empty="$(yq '.. | select(tag == "!!str" and . == "") | path | join(".")' "$RUNNER_TEMP/secrets.prod.yaml")"
+
+          if [[ -n "$empty" ]]; then
+            echo "::error::Empty values in netptune-secrets/secrets.prod.enc.yaml:"
+            echo "$empty"
+            exit 1
+          fi
+
       - name: Deploy
         run: |
           helm upgrade --install netptune-app charts/netptune/ \
@@ -546,6 +590,7 @@ jobs:
             --timeout 10m \
             --kubeconfig kubeconfig.yaml \
             --namespace default \
+            --values "$RUNNER_TEMP/secrets.prod.yaml" \
             --set "parameters.app.app_image=${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/netptune:${{ needs.changes.outputs.server_sha }}" \
             --set "parameters.api.api_image=${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/netptune-api:${{ needs.changes.outputs.server_sha }}" \
             --set "parameters.jobs.jobs_image=${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/netptune-jobs:${{ needs.changes.outputs.server_sha }}" \
@@ -556,60 +601,5 @@ jobs:
             --set "ingress.host=netptune.co.uk" \
             --set "ingress.apiHost=api.netptune.co.uk" \
             --set ingress.tls.enabled=true \
-            --set "ingress.tls.email=${{ secrets.TLS_EMAIL }}" \
-            --set "parameters.client.api_url=http://app-service:7400" \
-            --set "secrets.postgres.postgres_password=${{ secrets.POSTGRES_PASSWORD }}" \
-            --set "secrets.meilisearch.master_key=${{ secrets.NETPTUNE_MEILISEARCH_MASTER_KEY }}" \
-            --set "secrets.cache.cache_password=${{ secrets.CACHE_PASSWORD }}" \
-            --set "secrets.app.cache_password=${{ secrets.CACHE_PASSWORD }}" \
-            --set "secrets.app.postgres_password=${{ secrets.POSTGRES_PASSWORD }}" \
-            --set "secrets.app.signing_key=${{ secrets.SIGNING_KEY }}" \
-            --set "secrets.app.github_client_id=${{ secrets.NETPTUNE_GITHUB_CLIENT_ID }}" \
-            --set "secrets.app.github_secret=${{ secrets.NETPTUNE_GITHUB_SECRET }}" \
-            --set "secrets.app.github_callback=${{ secrets.NETPTUNE_GITHUB_CALLBACK }}" \
-            --set "secrets.app.google_client_id=${{ secrets.NETPTUNE_GOOGLE_CLIENT_ID }}" \
-            --set "secrets.app.google_secret=${{ secrets.NETPTUNE_GOOGLE_SECRET }}" \
-            --set "secrets.app.google_callback=${{ secrets.NETPTUNE_GOOGLE_CALLBACK }}" \
-            --set "secrets.app.microsoft_client_id=${{ secrets.NETPTUNE_MICROSOFT_CLIENT_ID }}" \
-            --set "secrets.app.microsoft_secret=${{ secrets.NETPTUNE_MICROSOFT_SECRET }}" \
-            --set "secrets.app.microsoft_callback=${{ secrets.NETPTUNE_MICROSOFT_CALLBACK }}" \
-            --set "secrets.app.sendgrid_api_key=${{ secrets.SENDGRID_API_KEY }}" \
-            --set "secrets.app.s3_bucket_name=${{ secrets.S3_BUCKET_NAME }}" \
-            --set "secrets.app.s3_region=${{ secrets.S3_REGION }}" \
-            --set "secrets.app.s3_access_key_id=${{ secrets.S3_ACCESS_KEY_ID }}" \
-            --set "secrets.app.s3_secret_access_key=${{ secrets.S3_SECRET_ACCESS_KEY }}" \
-            --set "secrets.app.turnstile_secret_key=${{ secrets.NETPTUNE_TURNSTILE_SECRET_KEY }}" \
-            --set "secrets.app.cloudflare_email_token=${{ secrets.NETPTUNE_CLOUDFLARE_EMAIL_TOKEN }}" \
-            --set "secrets.app.cloudflare_account_id=${{ secrets.NETPTUNE_CLOUDFLARE_ACCOUNT_ID }}" \
-            --set "secrets.app.edge_authorization_secret=${{ secrets.NETPTUNE_EDGE_AUTHORIZATION_SECRET }}" \
-            --set "secrets.api.cache_password=${{ secrets.CACHE_PASSWORD }}" \
-            --set "secrets.api.postgres_password=${{ secrets.POSTGRES_PASSWORD }}" \
-            --set "secrets.api.edge_authorization_secret=${{ secrets.NETPTUNE_EDGE_AUTHORIZATION_SECRET }}" \
-            --set "secrets.jobs.cache_password=${{ secrets.CACHE_PASSWORD }}" \
-            --set "secrets.jobs.postgres_password=${{ secrets.POSTGRES_PASSWORD }}" \
-            --set "secrets.jobs.signing_key=${{ secrets.SIGNING_KEY }}" \
-            --set "secrets.jobs.sendgrid_api_key=${{ secrets.SENDGRID_API_KEY }}" \
-            --set "secrets.jobs.s3_bucket_name=${{ secrets.S3_BUCKET_NAME }}" \
-            --set "secrets.jobs.s3_region=${{ secrets.S3_REGION }}" \
-            --set "secrets.jobs.s3_access_key_id=${{ secrets.S3_ACCESS_KEY_ID }}" \
-            --set "secrets.jobs.s3_secret_access_key=${{ secrets.S3_SECRET_ACCESS_KEY }}" \
-            --set "secrets.jobs.cloudflare_email_token=${{ secrets.NETPTUNE_CLOUDFLARE_EMAIL_TOKEN }}" \
-            --set "secrets.jobs.cloudflare_account_id=${{ secrets.NETPTUNE_CLOUDFLARE_ACCOUNT_ID }}" \
-            --set "secrets.activity.cache_password=${{ secrets.CACHE_PASSWORD }}" \
-            --set "secrets.activity.postgres_password=${{ secrets.POSTGRES_PASSWORD }}" \
-            --set "secrets.activity.signing_key=${{ secrets.SIGNING_KEY }}" \
-            --set "secrets.activity.s3_bucket_name=${{ secrets.S3_BUCKET_NAME }}" \
-            --set "secrets.activity.s3_region=${{ secrets.S3_REGION }}" \
-            --set "secrets.activity.s3_access_key_id=${{ secrets.S3_ACCESS_KEY_ID }}" \
-            --set "secrets.activity.s3_secret_access_key=${{ secrets.S3_SECRET_ACCESS_KEY }}" \
-            --set "secrets.headlamp.github_client_id=${{ secrets.HEADLAMP_GITHUB_CLIENT_ID }}" \
-            --set "secrets.headlamp.github_client_secret=${{ secrets.HEADLAMP_GITHUB_CLIENT_SECRET }}" \
-            --set "secrets.headlamp.cookie_secret=${{ secrets.HEADLAMP_COOKIE_SECRET }}" \
-            --set "secrets.dbgate.github_client_id=${{ secrets.DBGATE_GITHUB_CLIENT_ID }}" \
-            --set "secrets.dbgate.github_client_secret=${{ secrets.DBGATE_GITHUB_CLIENT_SECRET }}" \
-            --set "secrets.dbgate.cookie_secret=${{ secrets.DBGATE_COOKIE_SECRET }}" \
-            --set "secrets.aspire.github_client_id=${{ secrets.ASPIRE_GITHUB_CLIENT_ID }}" \
-            --set "secrets.aspire.github_client_secret=${{ secrets.ASPIRE_GITHUB_CLIENT_SECRET }}" \
-            --set "secrets.aspire.cookie_secret=${{ secrets.ASPIRE_COOKIE_SECRET }}" \
-            --set "secrets.aspire.otlp_api_key=${{ secrets.ASPIRE_OTLP_API_KEY }}"
+            --set "parameters.client.api_url=http://app-service:7400"
 

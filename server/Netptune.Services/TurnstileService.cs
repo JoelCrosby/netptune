@@ -1,9 +1,9 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
-using Netptune.Core.Extensions;
+using Netptune.Core.Models.Options;
 using Netptune.Core.Services;
 
 namespace Netptune.Services;
@@ -20,10 +20,10 @@ public class TurnstileService : ITurnstileService
         PropertyNameCaseInsensitive = true,
     };
 
-    public TurnstileService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+    public TurnstileService(IHttpClientFactory httpClientFactory, IOptions<TurnstileOptions> options)
     {
         HttpClientFactory = httpClientFactory;
-        SecretKey = configuration.GetEnvironmentVariable("NETPTUNE_TURNSTILE_SECRET_KEY");
+        SecretKey = options.Value.SecretKey;
     }
 
     public async Task<bool> ValidateAsync(string? token, string? remoteIp = null)

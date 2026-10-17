@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 using Netptune.Core.Authentication;
@@ -60,7 +61,8 @@ public class NetptuneAuthService : INetptuneAuthService
         INetptuneUnitOfWork unitOfWork,
         IWorkspacePermissionCache workspacePermissionCache,
         ICacheProvider cache,
-        IEventRecordWriter eventRecords)
+        IEventRecordWriter eventRecords,
+        IOptions<NetptuneAuthenticationOptions> authenticationOptions)
     {
         SignInManager = signInManager;
         UserManager = userManager;
@@ -76,7 +78,7 @@ public class NetptuneAuthService : INetptuneAuthService
         ExpireDays = configuration.GetRequiredValue("Tokens:ExpireDays");
         Origin = configuration.GetRequiredValue("Origin");
 
-        SecurityKey = Environment.GetEnvironmentVariable("NETPTUNE_SIGNING_KEY")!;
+        SecurityKey = authenticationOptions.Value.SigningKey;
     }
 
     public async Task<LoginResult> LogIn(TokenRequest model)

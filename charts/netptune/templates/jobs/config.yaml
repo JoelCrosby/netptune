@@ -10,14 +10,6 @@ metadata:
 data:
   ASPNETCORE_FORWARDEDHEADERS_ENABLED: "{{ .Values.config.jobs.ASPNETCORE_FORWARDEDHEADERS_ENABLED }}"
   HTTP_PORTS: "{{ .Values.parameters.jobs.port_http }}"
-  CACHE_HOST: "{{ .Values.config.jobs.CACHE_HOST }}"
-  CACHE_PORT: "{{ .Values.config.jobs.CACHE_PORT }}"
-  POSTGRESDB_HOST: "{{ .Values.config.jobs.POSTGRESDB_HOST }}"
-  POSTGRESDB_PORT: "{{ .Values.config.jobs.POSTGRESDB_PORT }}"
-  POSTGRESDB_USERNAME: "{{ .Values.config.jobs.POSTGRESDB_USERNAME }}"
-  POSTGRESDB_JDBCCONNECTIONSTRING: "{{ .Values.config.jobs.POSTGRESDB_JDBCCONNECTIONSTRING }}"
-  POSTGRESDB_DATABASENAME: "{{ .Values.config.jobs.POSTGRESDB_DATABASENAME }}"
-  ConnectionStrings__nats: "{{ .Values.config.jobs.ConnectionStrings__nats }}"
 {{- if .Values.aspire.enabled }}
   OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard-service:18889"
   OTEL_EXPORTER_OTLP_PROTOCOL: "grpc"

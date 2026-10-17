@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 using Netptune.Core.Authentication.Models;
 using Netptune.Core.Authorization;
@@ -54,10 +55,6 @@ public class AuthenticationServiceTests
 
     public AuthenticationServiceTests()
     {
-        Environment.SetEnvironmentVariable(
-            "NETPTUNE_SIGNING_KEY",
-            SigningKey);
-
         Configuration["Tokens:Issuer"].Returns("test-issuer");
         Configuration["Tokens:ExpireDays"].Returns("7");
         Configuration["Origin"].Returns("https://test.example.com");
@@ -100,8 +97,8 @@ public class AuthenticationServiceTests
             UnitOfWork,
             WorkspacePermissionCache,
             Cache,
-            EventRecords
-        );
+            EventRecords,
+            Options.Create(new NetptuneAuthenticationOptions { SigningKey = SigningKey }));
     }
 
     private static string HashToken(string token)

@@ -6,12 +6,10 @@ namespace Netptune.Storage;
 
 public static class ServiceCollectionExtensions
 {
-    public static void AddS3StorageService(this IServiceCollection services, Action<S3StorageOptions> action)
+    public static void AddS3StorageService(this IServiceCollection services)
     {
-        if (action == null) throw new ArgumentNullException(nameof(action));
-
         services.AddOptions<S3StorageOptions>()
-            .Configure(action)
+            .BindConfiguration(S3StorageOptions.SectionName)
             .ValidateDataAnnotations()
             .ValidateOnStart();
 

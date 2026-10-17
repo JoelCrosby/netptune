@@ -14,12 +14,12 @@ Netptune sends transactional email through Cloudflare's Email Sending API. Both 
 3. Create an API token authorized to send email.
 4. Copy the Cloudflare account ID.
 
-| Setting                           | Value                   |
-| --------------------------------- | ----------------------- |
-| `NETPTUNE_CLOUDFLARE_EMAIL_TOKEN` | Cloudflare API token    |
-| `NETPTUNE_CLOUDFLARE_ACCOUNT_ID`  | Cloudflare account ID   |
-| `Email__DefaultFromAddress`       | Verified sender address |
-| `Email__DefaultFromDisplayName`   | Sender display name     |
+| Setting                         | Value                   |
+| ------------------------------- | ----------------------- |
+| `Email__Cloudflare__ApiToken`   | Cloudflare API token    |
+| `Email__Cloudflare__AccountId`  | Cloudflare account ID   |
+| `Email__DefaultFromAddress`     | Verified sender address |
+| `Email__DefaultFromDisplayName` | Sender display name     |
 
 The jobs service calls `POST /client/v4/accounts/{account_id}/email/sending/send`. See the [Cloudflare Email Sending API](https://developers.cloudflare.com/api/resources/email_sending/methods/send/).
 
@@ -29,7 +29,7 @@ Turnstile is enforced on email/password login and registration.
 
 1. In Cloudflare, create a Turnstile widget for the Angular application's hostname.
 2. Copy its site key and secret key.
-3. Set `NETPTUNE_TURNSTILE_SECRET_KEY` on the API.
+3. Set `Turnstile__SecretKey` on the API.
 4. Rebuild the Angular client with the site key in `client/src/environments/environment.prod.ts`.
 
 :::warning
@@ -46,11 +46,11 @@ Netptune uses a local ASP.NET Core callback path for each provider. The provider
 
 For an application at `https://app.example.com`, a typical configuration is:
 
-| Provider  | Server callback setting                         | Provider redirect URI                      |
-| --------- | ----------------------------------------------- | ------------------------------------------ |
-| GitHub    | `NETPTUNE_GITHUB_CALLBACK=/signin-github`       | `https://app.example.com/signin-github`    |
-| Google    | `NETPTUNE_GOOGLE_CALLBACK=/signin-google`       | `https://app.example.com/signin-google`    |
-| Microsoft | `NETPTUNE_MICROSOFT_CALLBACK=/signin-microsoft` | `https://app.example.com/signin-microsoft` |
+| Provider  | Server callback setting                                     | Provider redirect URI                      |
+| --------- | ----------------------------------------------------------- | ------------------------------------------ |
+| GitHub    | `Authentication__GitHub__CallbackPath=/signin-github`       | `https://app.example.com/signin-github`    |
+| Google    | `Authentication__Google__CallbackPath=/signin-google`       | `https://app.example.com/signin-google`    |
+| Microsoft | `Authentication__Microsoft__CallbackPath=/signin-microsoft` | `https://app.example.com/signin-microsoft` |
 
 Callback settings must be paths beginning with `/`, while the provider consoles require complete HTTPS URLs.
 
@@ -67,9 +67,9 @@ Create an OAuth App from GitHub's **Settings → Developer settings → OAuth Ap
 After registering it, generate a client secret and configure:
 
 ```env
-NETPTUNE_GITHUB_CLIENT_ID=your-client-id
-NETPTUNE_GITHUB_SECRET=your-client-secret
-NETPTUNE_GITHUB_CALLBACK=/signin-github
+Authentication__GitHub__ClientId=your-client-id
+Authentication__GitHub__ClientSecret=your-client-secret
+Authentication__GitHub__CallbackPath=/signin-github
 ```
 
 See GitHub's [OAuth App creation guide](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app).
@@ -84,9 +84,9 @@ In Google Cloud:
 4. Copy the client ID and client secret.
 
 ```env
-NETPTUNE_GOOGLE_CLIENT_ID=your-client-id
-NETPTUNE_GOOGLE_SECRET=your-client-secret
-NETPTUNE_GOOGLE_CALLBACK=/signin-google
+Authentication__Google__ClientId=your-client-id
+Authentication__Google__ClientSecret=your-client-secret
+Authentication__Google__CallbackPath=/signin-google
 ```
 
 Google requires the redirect URI to match exactly. See its [web-server OAuth guide](https://developers.google.com/identity/protocols/oauth2/web-server).
@@ -101,14 +101,14 @@ In the Microsoft Entra admin center:
 4. Copy the application (client) ID and secret value.
 
 ```env
-NETPTUNE_MICROSOFT_CLIENT_ID=your-client-id
-NETPTUNE_MICROSOFT_SECRET=your-client-secret
-NETPTUNE_MICROSOFT_CALLBACK=/signin-microsoft
+Authentication__Microsoft__ClientId=your-client-id
+Authentication__Microsoft__ClientSecret=your-client-secret
+Authentication__Microsoft__CallbackPath=/signin-microsoft
 ```
 
 :::note
 
-The current API reads all three provider configurations with a required-value helper during startup. Supply non-empty values for GitHub, Google, and Microsoft even if you only intend to advertise one provider.
+The current API validates all three provider configurations at startup and stops with an error naming any missing key. Supply non-empty values for GitHub, Google, and Microsoft even if you only intend to advertise one provider.
 
 :::
 
@@ -119,10 +119,10 @@ Netptune uses S3 for uploaded profile pictures and rich-text media. The activity
 Create a private bucket and an access key with permission to list the bucket and read, write, and delete its objects. Configure the same values on the API, jobs, and activity services:
 
 ```env
-NETPTUNE_S3_BUCKET_NAME=netptune
-NETPTUNE_S3_REGION=us-east-1
-NETPTUNE_S3_ACCESS_KEY_ID=your-access-key
-NETPTUNE_S3_SECRET_ACCESS_KEY=your-secret-key
+Storage__S3__BucketName=netptune
+Storage__S3__Region=us-east-1
+Storage__S3__AccessKeyId=your-access-key
+Storage__S3__SecretAccessKey=your-secret-key
 ```
 
 A minimal AWS IAM policy scoped to one bucket is:
@@ -147,7 +147,7 @@ A minimal AWS IAM policy scoped to one bucket is:
 
 :::warning
 
-The current service wiring does not read a custom S3 endpoint or service URL. Although the storage library uses the S3 API, a self-hosted MinIO endpoint cannot currently be selected through an environment variable.
+The current service wiring does not read a custom S3 endpoint or service URL. Although the storage library uses the S3 API, a self-hosted MinIO endpoint cannot currently be selected through configuration.
 
 :::
 

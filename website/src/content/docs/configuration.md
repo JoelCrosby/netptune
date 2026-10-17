@@ -3,40 +3,40 @@ title: 'Configuration Reference'
 description: 'Configuration currently read by the API, jobs, activity, client, and Helm chart.'
 ---
 
-.NET configuration keys can be supplied as environment variables by replacing `:` with `__`. For example, `Tokens:Issuer` becomes `Tokens__Issuer`.
+.NET configuration keys can be supplied as environment variables by replacing `:` with `__`. For example, `Tokens:Issuer` becomes `Tokens__Issuer`. The servers read configuration only this way; there are no separately named environment variables.
+
+Required values are validated at startup. A missing one stops the process with an error naming the key.
 
 ## Shared service connections
 
 | Setting                          | Services            | Description                                                                                       |
 | -------------------------------- | ------------------- | ------------------------------------------------------------------------------------------------- |
-| `DATABASE_URL`                   | API, jobs, activity | Preferred PostgreSQL connection string.                                                           |
-| `ConnectionStrings__netptune`    | API, jobs, activity | PostgreSQL fallback used when `DATABASE_URL` is absent.                                           |
-| `REDIS_URL`                      | API, jobs, activity | Preferred Valkey/Redis connection string.                                                         |
-| `ConnectionStrings__redis`       | API, jobs, activity | Valkey/Redis fallback used when `REDIS_URL` is absent.                                            |
+| `ConnectionStrings__netptune`    | API, jobs, activity | PostgreSQL connection string.                                                                     |
+| `ConnectionStrings__redis`       | API, jobs, activity | Valkey/Redis connection string.                                                                   |
 | `ConnectionStrings__nats`        | API, jobs, activity | NATS connection URL. The server must have JetStream enabled.                                      |
 | `ConnectionStrings__meilisearch` | API, jobs           | Aspire-style connection string, for example `Endpoint=http://meilisearch:7700/;MasterKey=secret`. |
 
-The current Helm chart generates `REDIS_URL`, `ConnectionStrings__netptune`, `ConnectionStrings__nats`, and `ConnectionStrings__meilisearch` for the relevant workloads.
+The current Helm chart generates all four connection strings into the shared `server-secrets` Secret and `server-config` ConfigMap.
 
 ## API
 
 ### Authentication
 
-| Variable                        | Required at startup | Description                                                                |
-| ------------------------------- | ------------------- | -------------------------------------------------------------------------- |
-| `NETPTUNE_SIGNING_KEY`          | Yes                 | Symmetric key used to sign authentication tokens. Use a long random value. |
-| `NETPTUNE_GITHUB_CLIENT_ID`     | Yes                 | GitHub OAuth App client ID.                                                |
-| `NETPTUNE_GITHUB_SECRET`        | Yes                 | GitHub OAuth App client secret.                                            |
-| `NETPTUNE_GITHUB_CALLBACK`      | Yes                 | Local callback path handled by ASP.NET Core, such as `/signin-github`.     |
-| `NETPTUNE_GOOGLE_CLIENT_ID`     | Yes                 | Google web OAuth client ID.                                                |
-| `NETPTUNE_GOOGLE_SECRET`        | Yes                 | Google OAuth client secret.                                                |
-| `NETPTUNE_GOOGLE_CALLBACK`      | Yes                 | Local callback path, such as `/signin-google`.                             |
-| `NETPTUNE_MICROSOFT_CLIENT_ID`  | Yes                 | Microsoft identity application client ID.                                  |
-| `NETPTUNE_MICROSOFT_SECRET`     | Yes                 | Microsoft application client secret.                                       |
-| `NETPTUNE_MICROSOFT_CALLBACK`   | Yes                 | Local callback path, such as `/signin-microsoft`.                          |
-| `NETPTUNE_TURNSTILE_SECRET_KEY` | Yes                 | Cloudflare Turnstile server-side secret used for login and registration.   |
+| Key                                       | Required at startup | Description                                                                |
+| ----------------------------------------- | ------------------- | -------------------------------------------------------------------------- |
+| `Authentication__SigningKey`              | Yes                 | Symmetric key used to sign authentication tokens. Use a long random value. |
+| `Authentication__GitHub__ClientId`        | Yes                 | GitHub OAuth App client ID.                                                |
+| `Authentication__GitHub__ClientSecret`    | Yes                 | GitHub OAuth App client secret.                                            |
+| `Authentication__GitHub__CallbackPath`    | Yes                 | Local callback path handled by ASP.NET Core, such as `/signin-github`.     |
+| `Authentication__Google__ClientId`        | Yes                 | Google web OAuth client ID.                                                |
+| `Authentication__Google__ClientSecret`    | Yes                 | Google OAuth client secret.                                                |
+| `Authentication__Google__CallbackPath`    | Yes                 | Local callback path, such as `/signin-google`.                             |
+| `Authentication__Microsoft__ClientId`     | Yes                 | Microsoft identity application client ID.                                  |
+| `Authentication__Microsoft__ClientSecret` | Yes                 | Microsoft application client secret.                                       |
+| `Authentication__Microsoft__CallbackPath` | Yes                 | Local callback path, such as `/signin-microsoft`.                          |
+| `Turnstile__SecretKey`                    | Yes                 | Cloudflare Turnstile server-side secret used for login and registration.   |
 
-The current API calls its required-environment-variable helper for all three OAuth providers. Blank values cause startup to fail; OAuth providers cannot currently be omitted through configuration alone.
+The API validates all three OAuth provider configurations at startup. Blank values cause startup to fail; OAuth providers cannot currently be omitted through configuration alone.
 
 ### Origins, tokens, and email defaults
 
@@ -54,23 +54,23 @@ Override the origin and CORS values when deploying on another domain. `CorsOrigi
 
 ### Cloudflare email
 
-| Variable                          | Required | Description                                                      |
-| --------------------------------- | -------- | ---------------------------------------------------------------- |
-| `NETPTUNE_CLOUDFLARE_EMAIL_TOKEN` | Yes      | Cloudflare API token authorized to send email.                   |
-| `NETPTUNE_CLOUDFLARE_ACCOUNT_ID`  | Yes      | Cloudflare account identifier used in the Email Sending API URL. |
+| Key                            | Required | Description                                                      |
+| ------------------------------ | -------- | ---------------------------------------------------------------- |
+| `Email__Cloudflare__ApiToken`  | Yes      | Cloudflare API token authorized to send email.                   |
+| `Email__Cloudflare__AccountId` | Yes      | Cloudflare account identifier used in the Email Sending API URL. |
 
 The API publishes email work to NATS. The jobs service consumes that work and sends the rendered message through Cloudflare.
 
 ### S3 storage
 
-| Variable                        | Required | Description                                        |
-| ------------------------------- | -------- | -------------------------------------------------- |
-| `NETPTUNE_S3_BUCKET_NAME`       | Yes      | Bucket used for uploaded media and audit archives. |
-| `NETPTUNE_S3_REGION`            | Yes      | AWS region passed to the S3 client.                |
-| `NETPTUNE_S3_ACCESS_KEY_ID`     | Yes      | S3 access key ID.                                  |
-| `NETPTUNE_S3_SECRET_ACCESS_KEY` | Yes      | S3 secret access key.                              |
+| Key                            | Required | Description                                        |
+| ------------------------------ | -------- | -------------------------------------------------- |
+| `Storage__S3__BucketName`      | Yes      | Bucket used for uploaded media and audit archives. |
+| `Storage__S3__Region`          | Yes      | AWS region passed to the S3 client.                |
+| `Storage__S3__AccessKeyId`     | Yes      | S3 access key ID.                                  |
+| `Storage__S3__SecretAccessKey` | Yes      | S3 secret access key.                              |
 
-The current storage options do not expose a custom S3 endpoint variable. AWS S3-style credentials and region are supported directly; arbitrary MinIO endpoints are not configurable by the current `Program.cs` files.
+The current storage options do not expose a custom S3 endpoint key. AWS S3-style credentials and region are supported directly; arbitrary MinIO endpoints are not configurable by the current `Program.cs` files.
 
 ### AI assistant
 
@@ -140,7 +140,7 @@ The assistant's tables are created with the rest of the schema when the API firs
 
 The API processes `X-Forwarded-For`, `X-Forwarded-Proto`, and `X-Forwarded-Host` and clears the default known-proxy restrictions.
 
-The API uses the same PostgreSQL, Valkey, NATS, forwarded-header, and OTLP settings under `config.api` and `secrets.api`. Its chart port is `7600`; it does not require JWT signing or third-party OAuth secrets because it accepts API credentials only.
+The API uses the same PostgreSQL, Valkey, NATS, forwarded-header, and OTLP settings, from the shared `server-config` and `server-secrets` plus its own `config.api`. Its chart port is `7600`; it does not require JWT signing or third-party OAuth secrets because it accepts API credentials only.
 
 ## Jobs service
 
@@ -180,16 +180,26 @@ The chart maps `parameters.client.api_url` to `API_URL`. The Turnstile site key 
 
 ## Helm value mapping
 
-| Helm value                           | Generated setting                                                             |
-| ------------------------------------ | ----------------------------------------------------------------------------- |
-| `secrets.postgres.postgres_password` | PostgreSQL server password                                                    |
-| `secrets.cache.cache_password`       | Valkey server password                                                        |
-| `secrets.meilisearch.master_key`     | `MEILI_MASTER_KEY` and application Meilisearch connection strings             |
-| `secrets.api.*`                      | API database, cache, auth, email, Turnstile, and S3 settings                  |
-| `secrets.jobs.*`                     | Jobs database, cache, email, and S3 settings                                  |
-| `secrets.activity.*`                 | Activity database, cache, and S3 settings                                     |
-| `config.api.*`                       | API ports, resource discovery values, NATS, and telemetry retry settings      |
-| `config.jobs.*`                      | Jobs ports, resource discovery values, NATS, and telemetry retry settings     |
-| `config.activity.*`                  | Activity ports, resource discovery values, NATS, and telemetry retry settings |
+| Helm value                           | Generated setting                                                                                                                                                       |
+| ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `secrets.postgres.postgres_password` | PostgreSQL server password and `ConnectionStrings__netptune` in `server-secrets`                                                                                        |
+| `secrets.cache.cache_password`       | Valkey server password and `ConnectionStrings__redis` in `server-secrets`                                                                                               |
+| `secrets.meilisearch.master_key`     | `MEILI_MASTER_KEY` and `ConnectionStrings__meilisearch` in `server-secrets`                                                                                             |
+| `secrets.aspire.otlp_api_key`        | `OTEL_EXPORTER_OTLP_HEADERS` in `server-secrets` when `aspire.enabled`                                                                                                  |
+| `serverSecrets.*`                    | Rendered verbatim into the shared `server-secrets` Secret: auth, email, Turnstile, and S3 secrets                                                                       |
+| `serverConfig.*`                     | Rendered verbatim into the shared `server-config` ConfigMap: OAuth client IDs and callback paths                                                                        |
+| `trustedProxies.*`                   | `TrustedProxies__*` settings; `TrustedProxies__EdgeAuthorizationHeader` is added to `server-config` when `serverSecrets.TrustedProxies__EdgeAuthorizationSecret` is set |
+| `config.app.*`, `config.api.*`       | Per-component ports, resource discovery values, and telemetry retry settings                                                                                            |
+| `config.jobs.*`                      | Jobs ports, resource discovery values, and telemetry retry settings                                                                                                     |
+| `config.activity.*`                  | Activity ports, resource discovery values, and telemetry retry settings                                                                                                 |
 
-`sendgrid_api_key` and several `signing_key` fields remain in the chart schema but are not read by the current jobs or activity programs. Cloudflare Email Sending is the active email implementation.
+`server-secrets` and `server-config` are mounted into the app, API, jobs, and activity pods and the activity retention CronJob. Their keys are the env-form configuration keys on this page, so supplying a new value needs no template change:
+
+```yaml
+serverSecrets:
+  Storage__S3__SecretAccessKey: change-me
+serverConfig:
+  Authentication__GitHub__CallbackPath: /signin-github
+```
+
+`charts/netptune/values.secret.yaml.example` shows the full shape. Cloudflare Email Sending is the active email implementation.

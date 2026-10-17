@@ -34,21 +34,9 @@ builder.Services.AddNetptuneEventRecording();
 builder.Services.AddNetptuneNotifications();
 builder.Services.AddNetptuneBackgroundIdentity();
 
-builder.Services.AddCloudflareEmailService(options =>
-{
-    options.ApiToken = builder.Configuration.GetEnvironmentVariable("NETPTUNE_CLOUDFLARE_EMAIL_TOKEN");
-    options.AccountId = builder.Configuration.GetEnvironmentVariable("NETPTUNE_CLOUDFLARE_ACCOUNT_ID");
-    options.DefaultFromAddress = builder.Configuration.GetRequiredValue("Email:DefaultFromAddress");
-    options.DefaultFromDisplayName = builder.Configuration.GetRequiredValue("Email:DefaultFromDisplayName");
-});
+builder.Services.AddCloudflareEmailService();
 
-builder.Services.AddS3StorageService(options =>
-{
-    options.BucketName = builder.Configuration.GetEnvironmentVariable("NETPTUNE_S3_BUCKET_NAME");
-    options.Region = builder.Configuration.GetEnvironmentVariable("NETPTUNE_S3_REGION");
-    options.AccessKeyID = builder.Configuration.GetEnvironmentVariable("NETPTUNE_S3_ACCESS_KEY_ID");
-    options.SecretAccessKey = builder.Configuration.GetEnvironmentVariable("NETPTUNE_S3_SECRET_ACCESS_KEY");
-});
+builder.Services.AddS3StorageService();
 
 builder.AddNetptuneSearch();
 

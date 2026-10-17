@@ -8,34 +8,93 @@
 - A Redis / Valkey instance
 - A NATS server with JetStream enabled
 - An S3-compatible bucket
-- A SendGrid API key (for email)
-- A GitHub OAuth app (for social login)
+- A Cloudflare account with Email Sending (for email)
+- GitHub, Google and Microsoft OAuth apps (for social login)
 
 ## Deploy with Helm
+
+Every secret and per-environment setting goes in one values file, passed with `-f`. Its full shape,
+with every key, is [charts/netptune/values.secret.yaml.example](charts/netptune/values.secret.yaml.example):
+
+- **`secrets.*`** holds the infrastructure passwords and the oauth2-proxy apps (postgres, cache,
+  meilisearch, Aspire, Headlamp, dbgate). The chart derives the application connection strings from
+  them.
+- **`serverSecrets`** and **`serverConfig`** are rendered as-is into the `server-secrets` Secret
+  and the `server-config` ConfigMap, which every .NET server pod (app, api, jobs, activity) loads.
+  Keys are .NET configuration keys in env form, for example `Storage__S3__SecretAccessKey` for
+  `Storage:S3:SecretAccessKey`.
 
 ```bash
 helm upgrade --install netptune-app charts/netptune/ \
   --namespace default \
+  --values values.secret.yaml \
   --set ingress.enabled=true \
   --set "ingress.host=your-domain.com" \
   --set "ingress.apiHost=api.your-domain.com" \
-  --set ingress.tls.enabled=true \
-  --set "ingress.tls.email=your@email.com" \
-  --set "secrets.postgres.postgres_password=<password>" \
-  --set "secrets.cache.cache_password=<password>" \
-  --set "secrets.api.cache_password=<password>" \
-  --set "secrets.api.postgres_password=<password>" \
-  --set "secrets.app.signing_key=<jwt-signing-key>" \
-  --set "secrets.app.github_client_id=<github-client-id>" \
-  --set "secrets.app.github_secret=<github-secret>" \
-  --set "secrets.app.sendgrid_api_key=<sendgrid-key>" \
-  --set "secrets.app.s3_bucket_name=<bucket>" \
-  --set "secrets.app.s3_region=<region>" \
-  --set "secrets.app.s3_access_key_id=<key-id>" \
-  --set "secrets.app.s3_secret_access_key=<secret>"
+  --set ingress.tls.enabled=true
 ```
 
-See [charts/netptune/values.yaml](charts/netptune/values.yaml) for the full set of configurable values.
+The server validates its options at startup, so a missing required value stops the pod with an
+error naming the key. See [charts/netptune/values.yaml](charts/netptune/values.yaml) for everything
+else that can be configured.
+
+## Production secrets (SOPS)
+
+Production values live in the private repo **`JoelCrosby/netptune-secrets`**, as
+`secrets.prod.enc.yaml` with its values encrypted by [SOPS](https://github.com/getsops/sops) using
+an [age](https://github.com/FiloSottile/age) key. Nothing secret, encrypted or not, is committed to
+this public repo; `.gitignore` refuses `charts/**/secrets.*.yaml` as a safety net.
+
+The deploy workflow:
+
+1. checks that repo out with a read-only deploy key (`SECRETS_REPO_DEPLOY_KEY`);
+2. decrypts the file with `SOPS_AGE_KEY`;
+3. fails on any empty value;
+4. passes it to `helm upgrade -f`.
+
+Those two and `KUBECONFIG_PROD` are the only Actions secrets the deploy reads.
+
+**Adding or changing a value:**
+
+1. In the netptune-secrets repo, run `sops secrets.prod.enc.yaml`. It opens decrypted in `$EDITOR`
+   and re-encrypts on save. Add the key under `serverSecrets` (secret) or `serverConfig` (plain).
+2. If no options class reads it yet, add the property in code here.
+3. Commit and push the secrets repo. That alone triggers nothing here.
+4. Run the **Deploy** workflow manually (Actions → Deploy → Run workflow, "force build" off). It
+   redeploys the current images with the new values, and the checksum annotations restart the
+   server pods.
+
+If the change ships with code that reads the new key, push the secrets repo first. The normal push
+deploy then picks up both.
+
+**One-time setup:** `./setup.sh` in the netptune-secrets repo does all of this interactively. It can
+also pre-fill the values from the live cluster's Secrets. The steps it performs:
+
+1. Install `sops` and `age`.
+2. Create the key with `age-keygen -o key.txt`. **Back up `key.txt` in a password manager**: losing it
+   means the prod file can't be decrypted.
+3. Create the private repo `JoelCrosby/netptune-secrets`, with a `.sops.yaml` holding the public key
+   (`age-keygen -y key.txt`):
+
+   ```yaml
+   creation_rules:
+     - path_regex: secrets\..*\.enc\.yaml$
+       age: "age1…"
+   ```
+
+4. In that repo, build `secrets.prod.yaml` from this repo's `charts/netptune/values.secret.yaml.example`
+   and fill in the values. Encrypt it with
+   `sops --encrypt --filename-override secrets.prod.enc.yaml secrets.prod.yaml > secrets.prod.enc.yaml`.
+   The override makes `.sops.yaml`'s `*.enc.yaml` rule apply. Delete the plain file, then commit and
+   push the encrypted one. That repo's `.gitignore` already refuses plaintext.
+5. Create the deploy key:
+   - generate it with `ssh-keygen -t ed25519 -N "" -f netptune-secrets-deploy`;
+   - add the `.pub` file as a **read-only** deploy key on netptune-secrets;
+   - add the private file as the `SECRETS_REPO_DEPLOY_KEY` Actions secret on this repo;
+   - delete both local files.
+6. Add the full contents of `key.txt` as the `SOPS_AGE_KEY` Actions secret on this repo.
+7. Keep the key at `~/.config/sops/age/keys.txt`, where `sops` looks by default, or set
+   `SOPS_AGE_KEY_FILE`.
 
 ## Traefik ingress
 
@@ -74,10 +133,9 @@ Two things have to agree:
 1. A **Cloudflare Transform Rule** — Rules → Transform Rules → Modify Request Header → *Set static*,
    applied to all requests, setting the header named by `trustedProxies.edgeAuthorizationHeader`
    (default `X-Netptune-Edge`) to a generated secret.
-2. The **`NETPTUNE_EDGE_AUTHORIZATION_SECRET`** GitHub Actions secret, set to that same value. The
-   deploy workflow passes it to both `secrets.app.edge_authorization_secret` and
-   `secrets.api.edge_authorization_secret`. For a manual `helm upgrade`, set those two values
-   directly in `values.secret.yaml` instead.
+2. **`serverSecrets.TrustedProxies__EdgeAuthorizationSecret`** in the values file, set to that same
+   value. When it is set, the chart adds the matching `TrustedProxies__EdgeAuthorizationHeader` to
+   `server-config`, so every server pod gets the pair together.
 
 Leave the secret empty and the check is skipped, which is what local development does. Set only one
 half and the application refuses to start rather than quietly falling back — a half-configured check
@@ -88,7 +146,7 @@ secret nothing is stamping means the address header stops being believed and eve
 into the ingress's own address for rate limiting.
 
 Nothing here expires or needs refreshing. Rotating the secret means updating the Transform Rule and
-the GitHub secret; there is no scheduled maintenance. To rotate without a gap, add the new value to
+the `serverSecrets` value; there is no scheduled maintenance. To rotate without a gap, add the new value to
 the Transform Rule first, deploy, then remove the old one.
 
 Swapping CDN means changing `trustedProxies.clientAddressHeader` to whatever that CDN uses

@@ -243,6 +243,8 @@ pgdata/
 
 # Helm values
 charts/**/values.secret.yaml
+# Prod secrets live in the private netptune-secrets repo; keep both forms out of this public one.
+charts/**/secrets.*.yaml
 
 # Vendored Helm subcharts (pinned by Chart.lock, restored with `helm dependency update`)
 charts/*/charts/

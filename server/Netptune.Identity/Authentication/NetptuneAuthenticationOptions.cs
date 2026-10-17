@@ -2,41 +2,58 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Netptune.Identity.Authentication;
 
-public class NetptuneAuthenticationOptions
+public sealed class NetptuneAuthenticationOptions : IValidatableObject
 {
-    [Required]
-    public string Issuer { get; set; } = null!;
+    public const string SectionName = "Authentication";
 
     [Required]
-    public string Audience { get; set; } = null!;
+    public string SigningKey { get; set; } = null!;
 
-    [Required]
-    public string SecurityKey { get; set; } = null!;
+    public ExternalLoginOptions GitHub { get; set; } = new();
 
-    [Required]
-    public string GitHubClientId { get; set; } = null!;
+    public ExternalLoginOptions Google { get; set; } = new();
 
-    [Required]
-    public string GitHubSecret { get; set; } = null!;
+    public ExternalLoginOptions Microsoft { get; set; } = new();
 
-    [Required]
-    public string GitHubCallback { get; set; } = null!;
+    // DataAnnotations doesn't descend into nested objects, so the provider sections are checked here.
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        var providers = new[]
+        {
+            (Name: nameof(GitHub), Options: GitHub),
+            (Name: nameof(Google), Options: Google),
+            (Name: nameof(Microsoft), Options: Microsoft),
+        };
 
-    [Required]
-    public string GoogleClientId { get; set; } = null!;
+        foreach (var (name, options) in providers)
+        {
+            foreach (var missing in options.MissingKeys())
+            {
+                yield return new ValidationResult($"{SectionName}:{name}:{missing} is required.");
+            }
+        }
+    }
+}
 
-    [Required]
-    public string GoogleSecret { get; set; } = null!;
+public sealed class ExternalLoginOptions
+{
+    public string ClientId { get; set; } = null!;
 
-    [Required]
-    public string GoogleCallback { get; set; } = null!;
+    public string ClientSecret { get; set; } = null!;
 
-    [Required]
-    public string MicrosoftClientId { get; set; } = null!;
+    public string CallbackPath { get; set; } = null!;
 
-    [Required]
-    public string MicrosoftSecret { get; set; } = null!;
+    public IEnumerable<string> MissingKeys()
+    {
+        var values = new[]
+        {
+            (Key: nameof(ClientId), Value: ClientId),
+            (Key: nameof(ClientSecret), Value: ClientSecret),
+            (Key: nameof(CallbackPath), Value: CallbackPath),
+        };
 
-    [Required]
-    public string MicrosoftCallback { get; set; } = null!;
+        return values
+            .Where(value => string.IsNullOrWhiteSpace(value.Value))
+            .Select(value => value.Key);
+    }
 }

@@ -25,13 +25,7 @@ builder.AddNetptuneCache(options =>
 builder.Services.AddNetptuneRepository(options => options.ConnectionString = connectionString);
 builder.Services.AddNetptuneEntities(options => options.ConnectionString = connectionString);
 
-builder.Services.AddS3StorageService(options =>
-{
-    options.BucketName = builder.Configuration.GetEnvironmentVariable("NETPTUNE_S3_BUCKET_NAME");
-    options.Region = builder.Configuration.GetEnvironmentVariable("NETPTUNE_S3_REGION");
-    options.AccessKeyID = builder.Configuration.GetEnvironmentVariable("NETPTUNE_S3_ACCESS_KEY_ID");
-    options.SecretAccessKey = builder.Configuration.GetEnvironmentVariable("NETPTUNE_S3_SECRET_ACCESS_KEY");
-});
+builder.Services.AddS3StorageService();
 
 builder.Services.AddNetptuneActivity(builder.Configuration);
 

@@ -43,8 +43,10 @@ spec:
               envFrom:
                 - configMapRef:
                     name: "activity-config"
+                - configMapRef:
+                    name: "server-config"
                 - secretRef:
-                    name: "activity-secrets"
+                    name: "server-secrets"
               imagePullPolicy: "Always"
               resources:
 {{- toYaml .Values.parameters.activity.retention.resources | nindent 16 }}

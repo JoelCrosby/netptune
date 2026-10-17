@@ -7,12 +7,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
 using Netptune.Core.Authentication;
 using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
+using Netptune.Core.Extensions;
 using Netptune.Core.Services;
 
 namespace Netptune.Identity.Authentication;
@@ -25,9 +27,21 @@ public static class AuthenticationServiceCollectionExtensions
             .AddDefaultTokenProviders();
     }
 
-    public static IServiceCollection AddNetptuneAuthentication(this IServiceCollection services, Action<NetptuneAuthenticationOptions> action)
+    public static IServiceCollection AddNetptuneAuthentication(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
-        var authenticationOptions = ConfigureServices(services, action);
+        var section = configuration.GetSection(NetptuneAuthenticationOptions.SectionName);
+
+        services.AddOptions<NetptuneAuthenticationOptions>()
+            .Bind(section)
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
+        // The scheme callbacks below run lazily, after startup validation has rejected missing values.
+        var authenticationOptions = section.Get<NetptuneAuthenticationOptions>() ?? new NetptuneAuthenticationOptions();
+        var issuer = configuration.GetRequiredValue("Tokens:Issuer");
+        var audience = configuration.GetRequiredValue("Tokens:Audience");
 
         services.AddHttpContextAccessor();
         services.AddHttpClient();
@@ -66,9 +80,9 @@ public static class AuthenticationServiceCollectionExtensions
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidIssuer = authenticationOptions.Issuer,
-                ValidAudience = authenticationOptions.Audience,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationOptions.SecurityKey)),
+                ValidIssuer = issuer,
+                ValidAudience = audience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationOptions.SigningKey)),
             };
             options.Events = new JwtBearerEvents
             {
@@ -112,9 +126,9 @@ public static class AuthenticationServiceCollectionExtensions
 
         .AddGitHub(options =>
         {
-            options.ClientId = authenticationOptions.GitHubClientId;
-            options.ClientSecret = authenticationOptions.GitHubSecret;
-            options.CallbackPath = authenticationOptions.GitHubCallback;
+            options.ClientId = authenticationOptions.GitHub.ClientId;
+            options.ClientSecret = authenticationOptions.GitHub.ClientSecret;
+            options.CallbackPath = authenticationOptions.GitHub.CallbackPath;
             options.SignInScheme = IdentityConstants.ExternalScheme;
             options.Scope.Add("read:user");
             options.Scope.Add("urn:github:name");
@@ -150,9 +164,9 @@ public static class AuthenticationServiceCollectionExtensions
         services.AddAuthentication()
             .AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
             {
-                options.ClientId = authenticationOptions.GoogleClientId;
-                options.ClientSecret = authenticationOptions.GoogleSecret;
-                options.CallbackPath = authenticationOptions.GoogleCallback;
+                options.ClientId = authenticationOptions.Google.ClientId;
+                options.ClientSecret = authenticationOptions.Google.ClientSecret;
+                options.CallbackPath = authenticationOptions.Google.CallbackPath;
                 options.SignInScheme = IdentityConstants.ExternalScheme;
                 options.SaveTokens = true;
                 options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
@@ -170,9 +184,9 @@ public static class AuthenticationServiceCollectionExtensions
             })
             .AddMicrosoftAccount(MicrosoftAccountDefaults.AuthenticationScheme, options =>
             {
-                options.ClientId = authenticationOptions.MicrosoftClientId;
-                options.ClientSecret = authenticationOptions.MicrosoftSecret;
-                options.CallbackPath = authenticationOptions.MicrosoftCallback;
+                options.ClientId = authenticationOptions.Microsoft.ClientId;
+                options.ClientSecret = authenticationOptions.Microsoft.ClientSecret;
+                options.CallbackPath = authenticationOptions.Microsoft.CallbackPath;
                 options.SignInScheme = IdentityConstants.ExternalScheme;
                 options.SaveTokens = true;
                 options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
@@ -200,19 +214,5 @@ public static class AuthenticationServiceCollectionExtensions
         services.AddScoped<IIdentityService, IdentityService>();
 
         return services;
-    }
-
-    private static NetptuneAuthenticationOptions ConfigureServices(
-        IServiceCollection services, Action<NetptuneAuthenticationOptions> action)
-    {
-        if (action is null) throw new ArgumentNullException(nameof(action));
-
-        var options = new NetptuneAuthenticationOptions();
-
-        action(options);
-
-        services.Configure(action);
-
-        return options;
     }
 }

@@ -72,8 +72,8 @@ public sealed class NetptuneFixture : IAsyncLifetime
 
         LoadEnvironmentVariables();
 
-        Environment.SetEnvironmentVariable("DATABASE_URL", DbContainer.GetConnectionString());
-        Environment.SetEnvironmentVariable("REDIS_URL", CacheContainer.GetConnectionString());
+        Environment.SetEnvironmentVariable("ConnectionStrings__netptune", DbContainer.GetConnectionString());
+        Environment.SetEnvironmentVariable("ConnectionStrings__redis", CacheContainer.GetConnectionString());
         Environment.SetEnvironmentVariable("ConnectionStrings__nats", NatsContainer.GetConnectionString());
         Environment.SetEnvironmentVariable("ConnectionStrings__meilisearch", GetSearchConnectionString());
 
@@ -164,24 +164,25 @@ public sealed class NetptuneFixture : IAsyncLifetime
 
     private static void LoadEnvironmentVariables()
     {
-        Environment.SetEnvironmentVariable("NETPTUNE_SIGNING_KEY", "test-signing-key-that-is-long-enough-for-hmac-sha256");
-        Environment.SetEnvironmentVariable("NETPTUNE_GITHUB_CLIENT_ID", "test");
-        Environment.SetEnvironmentVariable("NETPTUNE_GITHUB_SECRET", "test");
-        Environment.SetEnvironmentVariable("NETPTUNE_GITHUB_CALLBACK", "/test-github-callback");
-        Environment.SetEnvironmentVariable("NETPTUNE_GOOGLE_CLIENT_ID", "test");
-        Environment.SetEnvironmentVariable("NETPTUNE_GOOGLE_SECRET", "test");
-        Environment.SetEnvironmentVariable("NETPTUNE_GOOGLE_CALLBACK", "/test-google-callback");
-        Environment.SetEnvironmentVariable("NETPTUNE_MICROSOFT_CLIENT_ID", "test");
-        Environment.SetEnvironmentVariable("NETPTUNE_MICROSOFT_SECRET", "test");
-        Environment.SetEnvironmentVariable("NETPTUNE_MICROSOFT_CALLBACK", "/test-microsoft-callback");
-        Environment.SetEnvironmentVariable("SEND_GRID_API_KEY", "test");
-        Environment.SetEnvironmentVariable("NETPTUNE_S3_BUCKET_NAME", "test");
-        Environment.SetEnvironmentVariable("NETPTUNE_S3_REGION", "test");
-        Environment.SetEnvironmentVariable("NETPTUNE_S3_ACCESS_KEY_ID", "test");
-        Environment.SetEnvironmentVariable("NETPTUNE_S3_SECRET_ACCESS_KEY", "test");
-        Environment.SetEnvironmentVariable("NETPTUNE_TURNSTILE_SECRET_KEY", "test");
-        Environment.SetEnvironmentVariable("NETPTUNE_CLOUDFLARE_EMAIL_TOKEN", "test");
-        Environment.SetEnvironmentVariable("NETPTUNE_CLOUDFLARE_ACCOUNT_ID", "test");
+        Environment.SetEnvironmentVariable(
+            "Authentication__SigningKey",
+            "test-signing-key-that-is-long-enough-for-hmac-sha256");
+        Environment.SetEnvironmentVariable("Authentication__GitHub__ClientId", "test");
+        Environment.SetEnvironmentVariable("Authentication__GitHub__ClientSecret", "test");
+        Environment.SetEnvironmentVariable("Authentication__GitHub__CallbackPath", "/test-github-callback");
+        Environment.SetEnvironmentVariable("Authentication__Google__ClientId", "test");
+        Environment.SetEnvironmentVariable("Authentication__Google__ClientSecret", "test");
+        Environment.SetEnvironmentVariable("Authentication__Google__CallbackPath", "/test-google-callback");
+        Environment.SetEnvironmentVariable("Authentication__Microsoft__ClientId", "test");
+        Environment.SetEnvironmentVariable("Authentication__Microsoft__ClientSecret", "test");
+        Environment.SetEnvironmentVariable("Authentication__Microsoft__CallbackPath", "/test-microsoft-callback");
+        Environment.SetEnvironmentVariable("Storage__S3__BucketName", "test");
+        Environment.SetEnvironmentVariable("Storage__S3__Region", "test");
+        Environment.SetEnvironmentVariable("Storage__S3__AccessKeyId", "test");
+        Environment.SetEnvironmentVariable("Storage__S3__SecretAccessKey", "test");
+        Environment.SetEnvironmentVariable("Turnstile__SecretKey", "test");
+        Environment.SetEnvironmentVariable("Email__Cloudflare__ApiToken", "test");
+        Environment.SetEnvironmentVariable("Email__Cloudflare__AccountId", "test");
     }
 
     public async ValueTask DisposeAsync()

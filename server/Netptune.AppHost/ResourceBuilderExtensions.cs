@@ -9,7 +9,7 @@ public static class ResourceBuilderExtensions
             return builder
                 .WaitFor(cache)
                 .WithReference(cache)
-                .WithEnvironment("REDIS_URL", cache.Resource.ConnectionStringExpression);
+                .WithEnvironment("ConnectionStrings__redis", cache.Resource.ConnectionStringExpression);
         }
 
         public IResourceBuilder<T> WithPostgres(IResourceBuilder<PostgresDatabaseResource> database)

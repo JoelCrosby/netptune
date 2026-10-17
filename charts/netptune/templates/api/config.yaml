@@ -11,18 +11,7 @@ data:
   ASPNETCORE_FORWARDEDHEADERS_ENABLED: "{{ .Values.config.api.ASPNETCORE_FORWARDEDHEADERS_ENABLED }}"
   HTTP_PORTS: "{{ .Values.parameters.api.port_http }}"
   ASPNETCORE_URLS: "{{ .Values.config.api.ASPNETCORE_URLS }}"
-  CACHE_HOST: "{{ .Values.config.api.CACHE_HOST }}"
-  CACHE_PORT: "{{ .Values.config.api.CACHE_PORT }}"
-  POSTGRESDB_HOST: "{{ .Values.config.api.POSTGRESDB_HOST }}"
-  POSTGRESDB_PORT: "{{ .Values.config.api.POSTGRESDB_PORT }}"
-  POSTGRESDB_USERNAME: "{{ .Values.config.api.POSTGRESDB_USERNAME }}"
-  POSTGRESDB_JDBCCONNECTIONSTRING: "{{ .Values.config.api.POSTGRESDB_JDBCCONNECTIONSTRING }}"
-  POSTGRESDB_DATABASENAME: "{{ .Values.config.api.POSTGRESDB_DATABASENAME }}"
-  ConnectionStrings__nats: "{{ .Values.config.api.ConnectionStrings__nats }}"
   TrustedProxies__ClientAddressHeader: "{{ .Values.trustedProxies.clientAddressHeader }}"
-{{- if .Values.secrets.api.edge_authorization_secret }}
-  TrustedProxies__EdgeAuthorizationHeader: "{{ .Values.trustedProxies.edgeAuthorizationHeader }}"
-{{- end }}
 {{- range $index, $network := .Values.trustedProxies.networks }}
   TrustedProxies__Networks__{{ $index }}: "{{ $network }}"
 {{- end }}

@@ -67,13 +67,13 @@ The current route for `ingress.host` sends `/api/` to the app and `/` to the web
 
 :::warning
 
-The API image currently defaults `Origin` and `CorsOrigins` to the project's own domains, and the chart does not expose overrides for those settings. Changing `ingress.appHost` alone is not sufficient for a custom-domain deployment; add `Origin` and `CorsOrigins__0` to the API ConfigMap or extend the chart before installation.
+The API image currently defaults `Origin` and `CorsOrigins` to the project's own domains. Changing `ingress.appHost` alone is not sufficient for a custom-domain deployment; add `Origin` and `CorsOrigins__0` under `serverConfig` in the override file.
 
 :::
 
 ## 3. Add secrets
 
-Add the required secret values to the same private override file. The API currently reads all three OAuth provider configurations during startup, so every listed OAuth value must be non-empty.
+Add the required values to the same private override file. Infrastructure passwords live under `secrets`; the chart derives the server connection strings from them. Server settings go under `serverSecrets` and `serverConfig`, keyed by their env-form configuration keys (see [Configuration](/docs/configuration)), and are shared by the app, API, jobs, and activity pods. The API validates all three OAuth provider configurations at startup, so every listed OAuth value must be non-empty.
 
 ```yaml
 secrets:
@@ -86,45 +86,29 @@ secrets:
   meilisearch:
     master_key: change-me-at-least-16-bytes
 
-  api:
-    cache_password: change-me
-    postgres_password: change-me
-    signing_key: change-me-long-random-value
-    github_client_id: change-me
-    github_secret: change-me
-    github_callback: /signin-github
-    google_client_id: change-me
-    google_secret: change-me
-    google_callback: /signin-google
-    microsoft_client_id: change-me
-    microsoft_secret: change-me
-    microsoft_callback: /signin-microsoft
-    s3_bucket_name: netptune
-    s3_region: us-east-1
-    s3_access_key_id: change-me
-    s3_secret_access_key: change-me
-    turnstile_secret_key: change-me
-    cloudflare_email_token: change-me
-    cloudflare_account_id: change-me
+serverSecrets:
+  Authentication__SigningKey: change-me-long-random-value
+  Authentication__GitHub__ClientSecret: change-me
+  Authentication__Google__ClientSecret: change-me
+  Authentication__Microsoft__ClientSecret: change-me
+  Storage__S3__BucketName: netptune
+  Storage__S3__Region: us-east-1
+  Storage__S3__AccessKeyId: change-me
+  Storage__S3__SecretAccessKey: change-me
+  Email__Cloudflare__ApiToken: change-me
+  Turnstile__SecretKey: change-me
 
-  jobs:
-    cache_password: change-me
-    postgres_password: change-me
-    s3_bucket_name: netptune
-    s3_region: us-east-1
-    s3_access_key_id: change-me
-    s3_secret_access_key: change-me
-    cloudflare_email_token: change-me
-    cloudflare_account_id: change-me
-
-  activity:
-    cache_password: change-me
-    postgres_password: change-me
-    s3_bucket_name: netptune
-    s3_region: us-east-1
-    s3_access_key_id: change-me
-    s3_secret_access_key: change-me
+serverConfig:
+  Authentication__GitHub__ClientId: change-me
+  Authentication__GitHub__CallbackPath: /signin-github
+  Authentication__Google__ClientId: change-me
+  Authentication__Google__CallbackPath: /signin-google
+  Authentication__Microsoft__ClientId: change-me
+  Authentication__Microsoft__CallbackPath: /signin-microsoft
+  Email__Cloudflare__AccountId: change-me
 ```
+
+Anything else on the [Configuration](/docs/configuration) page can be added to `serverConfig` or `serverSecrets` the same way without changing the chart.
 
 Generate random values with tools such as:
 
@@ -135,11 +119,11 @@ openssl rand -hex 32
 
 :::warning
 
-Do not commit the override file. The checked-in `values.secret.yaml.example` does not currently include the activity service block, so copying it without adding `secrets.activity` produces empty activity credentials.
+Do not commit the override file. `charts/netptune/values.secret.yaml.example` contains the full shape and is a reasonable starting point; the project's own production deploy keeps the same file encrypted with SOPS and decrypts it in CI, but any private values file passed with `--values` works.
 
 :::
 
-If Aspire, Headlamp, or DbGate remain enabled, also populate their OAuth and cookie secrets from `charts/netptune/values.yaml`.
+If Aspire, Headlamp, or DbGate remain enabled, also populate their OAuth and cookie secrets under `secrets.aspire`, `secrets.headlamp`, and `secrets.dbgate`. To enable the Cloudflare edge check described in `charts/netptune/values.yaml`, add `TrustedProxies__EdgeAuthorizationSecret` to `serverSecrets`.
 
 ## 4. Review images and optional components
 
@@ -162,7 +146,7 @@ website:
   image: ghcr.io/joelcrosby/netptune-website:sha-<full-commit-sha>
 ```
 
-The `/api/v1` route is served by the independently scalable API deployment. Its API-key-only host shares PostgreSQL, Valkey, and NATS with the main application but has its own image, configuration, secrets, service, and health probes.
+The `/api/v1` route is served by the independently scalable API deployment. Its API-key-only host shares PostgreSQL, Valkey, and NATS with the main application but has its own image, ConfigMap, service, and health probes, and shares the `server-secrets` and `server-config` values with the other server pods.
 
 The production client image currently contains the Netptune-hosted Cloudflare Turnstile site key at build time. A self-hosted deployment needs a client image rebuilt with its own site key in `client/src/environments/environment.prod.ts`; the Helm chart only configures the server-side secret.
 

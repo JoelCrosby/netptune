@@ -1,5 +1,6 @@
 using FluentAssertions;
 
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Messaging;
@@ -62,13 +63,18 @@ public class EmailRenderServiceTests
     {
         var services = new ServiceCollection();
 
-        services.AddCloudflareEmailService(options =>
-        {
-            options.ApiToken = "token";
-            options.AccountId = "account";
-            options.DefaultFromAddress = "no-reply@netptune.co.uk";
-            options.DefaultFromDisplayName = "Netptune";
-        });
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["Email:DefaultFromAddress"] = "no-reply@netptune.co.uk",
+                ["Email:DefaultFromDisplayName"] = "Netptune",
+                ["Email:Cloudflare:ApiToken"] = "token",
+                ["Email:Cloudflare:AccountId"] = "account",
+            })
+            .Build();
+
+        services.AddSingleton<IConfiguration>(configuration);
+        services.AddCloudflareEmailService();
 
         return services.BuildServiceProvider().GetRequiredService<IEmailRenderService>();
     }

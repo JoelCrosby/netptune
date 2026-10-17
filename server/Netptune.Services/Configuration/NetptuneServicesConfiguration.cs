@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Http;
 using Netptune.Core.Models.Hosting;
+using Netptune.Core.Models.Options;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.Services.Ai;
@@ -47,6 +48,11 @@ public static class NetptuneServicesConfiguration
         services.AddScoped<ITaskRelationLinker, TaskRelationLinker>();
         services.AddScoped<ITaskReferenceResolver, TaskReferenceResolver>();
         services.AddScoped<ITaskStatusResolver, TaskStatusResolver>();
+        services.AddOptions<TurnstileOptions>()
+            .BindConfiguration(TurnstileOptions.SectionName)
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
         services.AddTransient<ITurnstileService, TurnstileService>();
 
         services.AddSingleton<IAiCredentialProtector, AiCredentialProtector>();

@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Messaging;
+using Netptune.Core.Models.Messaging;
 
 using RazorLight;
 
@@ -8,12 +9,11 @@ namespace Netptune.Messaging;
 
 public static class ServiceCollectionExtensions
 {
-    public static void AddCloudflareEmailService(this IServiceCollection services, Action<CloudflareEmailOptions> action)
+    public static void AddCloudflareEmailService(this IServiceCollection services)
     {
-        if (action == null) throw new ArgumentNullException(nameof(action));
-
         services.AddOptions<CloudflareEmailOptions>()
-            .Configure(action)
+            .BindConfiguration(EmailOptions.SectionName)
+            .BindConfiguration(CloudflareEmailOptions.CloudflareSectionName)
             .ValidateDataAnnotations()
             .ValidateOnStart();
 

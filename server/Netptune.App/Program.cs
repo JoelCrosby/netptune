@@ -89,21 +89,7 @@ builder.Services.AddSingleton<SseConnectionLimiter>();
 
 builder.Services.AddNetptuneIdentity().AddNetptuneIdentityEntities();
 builder.Services.AddNetptuneAuthorization();
-builder.Services.AddNetptuneAuthentication(options =>
-{
-    options.Issuer = configuration.GetRequiredValue("Tokens:Issuer");
-    options.Audience = configuration.GetRequiredValue("Tokens:Audience");
-    options.SecurityKey = configuration.GetEnvironmentVariable("NETPTUNE_SIGNING_KEY");
-    options.GitHubClientId = configuration.GetEnvironmentVariable("NETPTUNE_GITHUB_CLIENT_ID");
-    options.GitHubSecret = configuration.GetEnvironmentVariable("NETPTUNE_GITHUB_SECRET");
-    options.GitHubCallback = configuration.GetEnvironmentVariable("NETPTUNE_GITHUB_CALLBACK");
-    options.GoogleClientId = configuration.GetEnvironmentVariable("NETPTUNE_GOOGLE_CLIENT_ID");
-    options.GoogleSecret = configuration.GetEnvironmentVariable("NETPTUNE_GOOGLE_SECRET");
-    options.GoogleCallback = configuration.GetEnvironmentVariable("NETPTUNE_GOOGLE_CALLBACK");
-    options.MicrosoftClientId = configuration.GetEnvironmentVariable("NETPTUNE_MICROSOFT_CLIENT_ID");
-    options.MicrosoftSecret = configuration.GetEnvironmentVariable("NETPTUNE_MICROSOFT_SECRET");
-    options.MicrosoftCallback = configuration.GetEnvironmentVariable("NETPTUNE_MICROSOFT_CALLBACK");
-});
+builder.Services.AddNetptuneAuthentication(configuration);
 
 builder.AddNetptuneCache(options =>
 {
@@ -128,21 +114,9 @@ builder.Services.AddNetptuneImport();
 
 builder.AddNetptuneSearch();
 
-builder.Services.AddCloudflareEmailService(options =>
-{
-    options.ApiToken = configuration.GetEnvironmentVariable("NETPTUNE_CLOUDFLARE_EMAIL_TOKEN");
-    options.AccountId = configuration.GetEnvironmentVariable("NETPTUNE_CLOUDFLARE_ACCOUNT_ID");
-    options.DefaultFromAddress = configuration.GetRequiredValue("Email:DefaultFromAddress");
-    options.DefaultFromDisplayName = configuration.GetRequiredValue("Email:DefaultFromDisplayName");
-});
+builder.Services.AddCloudflareEmailService();
 
-builder.Services.AddS3StorageService(options =>
-{
-    options.BucketName = configuration.GetEnvironmentVariable("NETPTUNE_S3_BUCKET_NAME");
-    options.Region = configuration.GetEnvironmentVariable("NETPTUNE_S3_REGION");
-    options.AccessKeyID = configuration.GetEnvironmentVariable("NETPTUNE_S3_ACCESS_KEY_ID");
-    options.SecretAccessKey = configuration.GetEnvironmentVariable("NETPTUNE_S3_SECRET_ACCESS_KEY");
-});
+builder.Services.AddS3StorageService();
 
 builder.Services.AddNetptuneMessageQueue(natsConnectionString);
 

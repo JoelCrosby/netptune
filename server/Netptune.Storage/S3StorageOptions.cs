@@ -4,6 +4,8 @@ namespace Netptune.Storage;
 
 public class S3StorageOptions
 {
+    public const string SectionName = "Storage:S3";
+
     [Required]
     public string BucketName { get; set; } = null!;
 
@@ -11,7 +13,7 @@ public class S3StorageOptions
     public string Region { get; set; } = null!;
 
     [Required]
-    public string AccessKeyID { get; set; } = null!;
+    public string AccessKeyId { get; set; } = null!;
 
     [Required]
     public string SecretAccessKey { get; set; } = null!;

@@ -1,0 +1,19 @@
+---
+apiVersion: "v1"
+kind: "ConfigMap"
+metadata:
+  name: "server-config"
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "server"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+data:
+  ConnectionStrings__nats: "nats://nats-service:4222"
+{{- if index .Values.serverSecrets "TrustedProxies__EdgeAuthorizationSecret" }}
+  # Every server pod validates trusted proxy options, and the validator wants the header and the
+  # secret together, so the header follows the secret into the shared config.
+  TrustedProxies__EdgeAuthorizationHeader: {{ .Values.trustedProxies.edgeAuthorizationHeader | quote }}
+{{- end }}
+{{- range $key, $value := .Values.serverConfig }}
+  {{ $key }}: {{ $value | toString | quote }}
+{{- end }}

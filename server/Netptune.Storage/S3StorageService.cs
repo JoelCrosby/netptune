@@ -30,7 +30,7 @@ public class S3StorageService : IStorageService
         Region = RegionEndpoint.GetBySystemName(Options.Region);
 
         S3Client = new AmazonS3Client(
-            Options.AccessKeyID,
+            Options.AccessKeyId,
             Options.SecretAccessKey,
             Region
         );

@@ -6,6 +6,8 @@ namespace Netptune.Messaging;
 
 public class CloudflareEmailOptions : EmailOptions
 {
+    public const string CloudflareSectionName = "Email:Cloudflare";
+
     [Required]
     public string ApiToken { get; set; } = null!;
 
