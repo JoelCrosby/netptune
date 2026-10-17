@@ -33,6 +33,8 @@ public sealed record TaskCodeLink : KeyedEntity<long>
 
     public string? HeadSha { get; set; }
 
+    public ScmCheckState? LastCheckState { get; set; }
+
     public bool IsRemoved { get; set; }
 
     public DateTime OccurredAt { get; set; }

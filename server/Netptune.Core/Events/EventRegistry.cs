@@ -42,6 +42,23 @@ public static class EventKeys
     public const string AssistantConversationDeleted = "assistant.conversation-deleted";
     public const string SourceControlConnected = "source-control.connected";
     public const string SourceControlDisconnected = "source-control.disconnected";
+    public const string SourceControlPullRequestOpened = "source-control.pull-request-opened";
+    public const string SourceControlPullRequestMerged = "source-control.pull-request-merged";
+    public const string SourceControlPullRequestClosed = "source-control.pull-request-closed";
+    public const string SourceControlCommitsPushed = "source-control.commits-pushed";
+    public const string SourceControlChecksPassed = "source-control.checks-passed";
+    public const string SourceControlChecksFailed = "source-control.checks-failed";
+
+    // Code activity often comes from someone with no Netptune account, so it is recorded without an actor.
+    public static bool AllowsMissingActor(string eventKey)
+    {
+        return eventKey is SourceControlPullRequestOpened
+            or SourceControlPullRequestMerged
+            or SourceControlPullRequestClosed
+            or SourceControlCommitsPushed
+            or SourceControlChecksPassed
+            or SourceControlChecksFailed;
+    }
 
     public static string From(ActivityType type) => type switch
     {
@@ -70,6 +87,12 @@ public static class EventKeys
         ActivityType.AddComment => CommentCreated,
         ActivityType.ModifyComment => CommentUpdated,
         ActivityType.RemoveComment => CommentDeleted,
+        ActivityType.PullRequestOpened => SourceControlPullRequestOpened,
+        ActivityType.PullRequestMerged => SourceControlPullRequestMerged,
+        ActivityType.PullRequestClosed => SourceControlPullRequestClosed,
+        ActivityType.CommitsPushed => SourceControlCommitsPushed,
+        ActivityType.ChecksPassed => SourceControlChecksPassed,
+        ActivityType.ChecksFailed => SourceControlChecksFailed,
         _ => EntityActivityRecorded,
     };
 
@@ -88,6 +111,12 @@ public static class EventKeys
             or CommentUpdated
             or CommentDeleted
             or FlagResolutionRecorded
+            or SourceControlPullRequestOpened
+            or SourceControlPullRequestMerged
+            or SourceControlPullRequestClosed
+            or SourceControlCommitsPushed
+            or SourceControlChecksPassed
+            or SourceControlChecksFailed
             => EventRetentionClasses.Permanent,
         _ => EventRetentionClasses.Audit,
     };
@@ -112,6 +141,12 @@ public static class EventKeys
             AssistantConversationDeleted => ActivityType.Delete,
             SourceControlConnected => ActivityType.Create,
             SourceControlDisconnected => ActivityType.Delete,
+            SourceControlPullRequestOpened => ActivityType.PullRequestOpened,
+            SourceControlPullRequestMerged => ActivityType.PullRequestMerged,
+            SourceControlPullRequestClosed => ActivityType.PullRequestClosed,
+            SourceControlCommitsPushed => ActivityType.CommitsPushed,
+            SourceControlChecksPassed => ActivityType.ChecksPassed,
+            SourceControlChecksFailed => ActivityType.ChecksFailed,
             _ => (ActivityType?)null,
         };
 
@@ -219,6 +254,12 @@ public static class EventDefinitionRegistry
             [(EventKeys.AssistantConversationDeleted, 1)] = typeof(AssistantConversationDeletedPayload),
             [(EventKeys.SourceControlConnected, 1)] = typeof(SourceControlConnectionEventPayload),
             [(EventKeys.SourceControlDisconnected, 1)] = typeof(SourceControlConnectionEventPayload),
+            [(EventKeys.SourceControlPullRequestOpened, 1)] = typeof(SourceControlActivityPayload),
+            [(EventKeys.SourceControlPullRequestMerged, 1)] = typeof(SourceControlActivityPayload),
+            [(EventKeys.SourceControlPullRequestClosed, 1)] = typeof(SourceControlActivityPayload),
+            [(EventKeys.SourceControlCommitsPushed, 1)] = typeof(SourceControlActivityPayload),
+            [(EventKeys.SourceControlChecksPassed, 1)] = typeof(SourceControlActivityPayload),
+            [(EventKeys.SourceControlChecksFailed, 1)] = typeof(SourceControlActivityPayload),
         };
 
     public static void Validate(IEventWriteRequest request)

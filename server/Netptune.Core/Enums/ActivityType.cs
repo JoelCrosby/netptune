@@ -46,4 +46,10 @@ public enum ActivityType
     ExportCompleted = 38,
     ExportFailed = 39,
     AutomationNotification = 40,
+    PullRequestOpened = 41,
+    PullRequestMerged = 42,
+    PullRequestClosed = 43,
+    CommitsPushed = 44,
+    ChecksPassed = 45,
+    ChecksFailed = 46,
 }

@@ -10,6 +10,11 @@ public static class SourceControlProviderSlugs
         ["gitlab"] = SourceControlProvider.GitLab,
     };
 
+    public static string From(SourceControlProvider provider)
+    {
+        return ProvidersBySlug.First(pair => pair.Value == provider).Key;
+    }
+
     public static bool TryParse(string slug, out SourceControlProvider provider)
     {
         return ProvidersBySlug.TryGetValue(slug, out provider);

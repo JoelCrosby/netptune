@@ -1,4 +1,5 @@
 using Netptune.Core.Entities;
+using Netptune.Core.Events;
 using Netptune.Core.Services.Realtime;
 using Netptune.Core.SourceControl;
 using Netptune.Core.SourceControl.Events;
@@ -15,11 +16,13 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
     private const int MaxAuthorLength = 256;
 
     private readonly INetptuneUnitOfWork UnitOfWork;
+    private readonly ScmTaskActivityRecorder Activity;
     private readonly TimeProvider Clock;
 
-    public ScmTaskLinkHandler(INetptuneUnitOfWork unitOfWork, TimeProvider clock)
+    public ScmTaskLinkHandler(INetptuneUnitOfWork unitOfWork, ScmTaskActivityRecorder activity, TimeProvider clock)
     {
         UnitOfWork = unitOfWork;
+        Activity = activity;
         Clock = clock;
     }
 
@@ -56,12 +59,123 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
         }
 
         var candidates = BuildCandidates(scmEvent, repo!);
-        var linked = await Link(candidates, repo!, connection, cancellationToken);
+        var outcome = await Link(candidates, repo!, connection, cancellationToken);
 
-        return linked;
+        await RecordActivity(scmEvent, repo!, connection, outcome, cancellationToken);
+
+        return outcome.Changed;
     }
 
-    private async Task<bool> Link(
+    private async Task RecordActivity(
+        ScmEvent scmEvent,
+        SourceControlRepo repo,
+        SourceControlConnection connection,
+        LinkOutcome outcome,
+        CancellationToken cancellationToken)
+    {
+        switch (scmEvent)
+        {
+            case ScmPullRequestChanged changed:
+            {
+                await RecordPullRequest(changed, repo, connection, outcome, cancellationToken);
+
+                return;
+            }
+
+            case ScmCommitsPushed pushed:
+            {
+                await RecordPush(pushed, repo, connection, outcome, cancellationToken);
+
+                return;
+            }
+        }
+    }
+
+    private async Task RecordPullRequest(
+        ScmPullRequestChanged changed,
+        SourceControlRepo repo,
+        SourceControlConnection connection,
+        LinkOutcome outcome,
+        CancellationToken cancellationToken)
+    {
+        var eventKey = changed.Action switch
+        {
+            ScmPullRequestAction.Opened or ScmPullRequestAction.Reopened => EventKeys.SourceControlPullRequestOpened,
+            ScmPullRequestAction.Merged => EventKeys.SourceControlPullRequestMerged,
+            ScmPullRequestAction.Closed => EventKeys.SourceControlPullRequestClosed,
+            _ => null,
+        };
+
+        var pullRequest = changed.PullRequest;
+        var taskIds = outcome.TaskIdsFor(pullRequest.Number);
+
+        if (eventKey is null || taskIds.Count == 0)
+        {
+            return;
+        }
+
+        var isOpening = eventKey == EventKeys.SourceControlPullRequestOpened;
+        var actor = isOpening ? pullRequest.Author : changed.Actor ?? pullRequest.Author;
+
+        await Activity.Record(new ScmTaskActivity
+        {
+            EventKey = eventKey,
+            TaskIds = taskIds,
+            Repo = repo,
+            Provider = connection.Provider,
+            Reference = pullRequest.Number,
+            Title = Truncate(pullRequest.Title),
+            WebUrl = pullRequest.WebUrl,
+            Actor = actor,
+            OccurredAt = changed.OccurredAt,
+        }, cancellationToken);
+    }
+
+    // Only commits linked for the first time count, so pushing the same commits again (a merge to the
+    // default branch, say) doesn't repeat the entry.
+    private async Task RecordPush(
+        ScmCommitsPushed pushed,
+        SourceControlRepo repo,
+        SourceControlConnection connection,
+        LinkOutcome outcome,
+        CancellationToken cancellationToken)
+    {
+        var newCommitLinks = outcome.NewLinks
+            .Where(link => link.Kind == TaskCodeLinkKind.Commit)
+            .ToList();
+
+        var pushesByTask = newCommitLinks
+            .GroupBy(link => link.TaskId)
+            .Select(group => new
+            {
+                TaskId = group.Key,
+                CommitCount = group.Count(),
+                Latest = group.MaxBy(link => link.OccurredAt)!,
+            })
+            .GroupBy(push => (push.CommitCount, push.Latest.ExternalRef))
+            .ToList();
+
+        foreach (var push in pushesByTask)
+        {
+            var latest = push.First().Latest;
+
+            await Activity.Record(new ScmTaskActivity
+            {
+                EventKey = EventKeys.SourceControlCommitsPushed,
+                TaskIds = push.Select(task => task.TaskId).ToList(),
+                Repo = repo,
+                Provider = connection.Provider,
+                Reference = pushed.Branch,
+                Title = latest.Title,
+                WebUrl = latest.WebUrl,
+                Actor = pushed.Actor ?? pushed.Commits.FirstOrDefault()?.Author,
+                OccurredAt = pushed.OccurredAt,
+                CommitCount = push.Key.CommitCount,
+            }, cancellationToken);
+        }
+    }
+
+    private async Task<LinkOutcome> Link(
         IReadOnlyList<LinkCandidate> candidates,
         SourceControlRepo repo,
         SourceControlConnection connection,
@@ -81,6 +195,7 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
         var now = Clock.GetUtcNow().UtcDateTime;
         var changed = false;
         var newLinks = new List<TaskCodeLink>();
+        var linkedTaskIdsByRef = new Dictionary<string, HashSet<int>>(StringComparer.Ordinal);
 
         foreach (var group in candidates.GroupBy(candidate => candidate.Kind))
         {
@@ -116,6 +231,12 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
                     .ToList();
 
                 newLinks.AddRange(newTaskIds.Select(taskId => Create(candidate, repo, taskId, now)));
+
+                var refTaskIds = linkedTaskIdsByRef.GetValueOrDefault(candidate.ExternalRef) ?? [];
+
+                refTaskIds.UnionWith(linkedTaskIds);
+                refTaskIds.UnionWith(newTaskIds);
+                linkedTaskIdsByRef[candidate.ExternalRef] = refTaskIds;
             }
         }
 
@@ -125,11 +246,7 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
             changed = true;
         }
 
-        if (changed)        {
-            await UnitOfWork.CompleteAsync(cancellationToken);
-        }
-
-        return changed;
+        return new LinkOutcome(changed, newLinks, linkedTaskIdsByRef);
     }
 
     private async Task<Dictionary<string, int>> ResolveTaskIds(
@@ -178,8 +295,6 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
             link.OccurredAt = deletedAt;
             link.UpdatedAt = now;
         }
-
-        await UnitOfWork.CompleteAsync(cancellationToken);
 
         return true;
     }
@@ -298,7 +413,10 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
         link.AuthorExternalId = candidate.AuthorExternalId ?? link.AuthorExternalId;
         link.AuthorEmail = candidate.AuthorEmail ?? link.AuthorEmail;
         link.PullRequestState = candidate.PullRequestState ?? link.PullRequestState;
+        var headMoved = candidate.HeadSha is not null && candidate.HeadSha != link.HeadSha;
+
         link.HeadSha = candidate.HeadSha ?? link.HeadSha;
+        link.LastCheckState = headMoved ? null : link.LastCheckState;
         link.OccurredAt = candidate.OccurredAt.UtcDateTime;
         link.IsRemoved = false;
         link.UpdatedAt = now;
@@ -352,5 +470,18 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
         public string? HeadSha { get; init; }
 
         public required string?[] Texts { get; init; }
+    }
+
+    private sealed record LinkOutcome(
+        bool Changed,
+        List<TaskCodeLink> NewLinks,
+        Dictionary<string, HashSet<int>> TaskIdsByRef)
+    {
+        public List<int> TaskIdsFor(string externalRef)
+        {
+            var taskIds = TaskIdsByRef.GetValueOrDefault(externalRef);
+
+            return taskIds is null ? [] : taskIds.ToList();
+        }
     }
 }

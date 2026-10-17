@@ -2960,7 +2960,7 @@
     </unit>
     <unit id="311157768509575825">
       <notes>
-        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:166</note>
+        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:167</note>
         <note category="description">Shown when removing a source control account fails</note>
       </notes>
       <segment state="translated">
@@ -4371,8 +4371,8 @@
     </unit>
     <unit id="2417852967799354784">
       <notes>
-        <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:49,52</note>
-        <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:56,60</note>
+        <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:51,54</note>
+        <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:58,62</note>
         <note category="description">Tooltip on the button that opens the activity feed</note>
       </notes>
       <segment state="translated">
@@ -4382,8 +4382,8 @@
     </unit>
     <unit id="2080668244235875808">
       <notes>
-        <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:99,100</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-activity-feed.component.ts:69,70</note>
+        <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:109,110</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-activity-feed.component.ts:72,73</note>
         <note category="description">Heading of the empty activity feed</note>
       </notes>
       <segment state="translated">
@@ -4413,8 +4413,8 @@
     </unit>
     <unit id="2335067641977437350">
       <notes>
-        <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:101,102</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-activity-feed.component.ts:71,72</note>
+        <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:111,112</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-activity-feed.component.ts:74,75</note>
         <note category="description">Explains why the activity feed is empty</note>
       </notes>
       <segment state="translated">
@@ -4434,8 +4434,8 @@
     </unit>
     <unit id="5688462374174490321">
       <notes>
-        <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:110,112</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-activity-feed.component.ts:80,83</note>
+        <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:120,122</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-activity-feed.component.ts:83,86</note>
         <note category="location">src/app/features/automations/components/automation-run-history.component.ts:259,262</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:58,64</note>
         <note category="description">Button that loads the next page of activity</note>
@@ -7668,7 +7668,7 @@
     </unit>
     <unit id="3971902929824297761">
       <notes>
-        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:120</note>
+        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:121</note>
         <note category="description">Shown for a source control account whose username isn&apos;t known yet</note>
       </notes>
       <segment state="translated">
@@ -12913,7 +12913,7 @@
     </unit>
     <unit id="8945480026995354798">
       <notes>
-        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:89,92</note>
+        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:90,93</note>
         <note category="description">Button that maps a source control username to the profile</note>
       </notes>
       <segment state="translated">
@@ -17478,7 +17478,7 @@
     </unit>
     <unit id="6907053851510331441">
       <notes>
-        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:56,59</note>
+        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:57,60</note>
         <note category="description">Explains what mapping source control accounts on a profile does</note>
       </notes>
       <segment state="translated">
@@ -20719,7 +20719,7 @@
     </unit>
     <unit id="607063947643086502">
       <notes>
-        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:108</note>
+        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:109</note>
         <note category="description">Shown when mapping a source control username fails</note>
       </notes>
       <segment state="translated">
@@ -22216,8 +22216,8 @@
     </unit>
     <unit id="5248717555542428023">
       <notes>
-        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:83,84</note>
-        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:136</note>
+        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:84,85</note>
+        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:137</note>
         <note category="description">Label of the source control username field</note>
       </notes>
       <segment state="translated">
@@ -22766,7 +22766,7 @@
     </unit>
     <unit id="3057076851869743805">
       <notes>
-        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:52,54</note>
+        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:53,55</note>
         <note category="description">Heading above the source control accounts on a profile</note>
       </notes>
       <segment state="translated">
@@ -23222,7 +23222,7 @@
     </unit>
     <unit id="1919585649802644988">
       <notes>
-        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:64,66</note>
+        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:65,67</note>
         <note category="description">Accessible label for the list of source control accounts</note>
       </notes>
       <segment state="translated">
@@ -23585,7 +23585,7 @@
     </unit>
     <unit id="3234827259954773448">
       <notes>
-        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:119</note>
+        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:120</note>
         <note category="description">Badge on a source control account the user added by hand</note>
       </notes>
       <segment state="translated">
@@ -24943,7 +24943,7 @@
     </unit>
     <unit id="5608170361165981161">
       <notes>
-        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:118</note>
+        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:119</note>
         <note category="description">Badge on a source control account proven by signing in</note>
       </notes>
       <segment state="translated">
@@ -25324,8 +25324,8 @@
     </unit>
     <unit id="4274276168705525822">
       <notes>
-        <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:82,83</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-activity-feed.component.ts:55,56</note>
+        <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:85,86</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-activity-feed.component.ts:58,59</note>
         <note category="description">Precedes the assistant that made a change on the user&apos;s behalf</note>
       </notes>
       <segment state="translated">
@@ -28207,7 +28207,7 @@
     </unit>
     <unit id="4176159076663605915">
       <notes>
-        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:72,76</note>
+        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:73,77</note>
         <note category="description">Shown when a profile has no source control accounts</note>
       </notes>
       <segment state="translated">
@@ -30128,7 +30128,7 @@
     <unit id="4814285799071780083">
       <notes>
         <note category="location">src/app/core/services/task-commands.service.ts:226</note>
-        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:69,70</note>
+        <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:70,71</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:347</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:341</note>
         <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:82,85</note>

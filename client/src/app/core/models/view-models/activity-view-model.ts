@@ -4,13 +4,15 @@ import { UserAvatar } from '../user-avatar';
 export interface ActivityViewModel {
   id: number;
   entityType: EntityType;
-  userId: string;
-  userUsername: string;
-  userPictureUrl: string;
+  userId: string | null;
+  userUsername: string | null;
+  userPictureUrl: string | null;
   userIsServiceAccount?: boolean;
   agent?: string | null;
   type: ActivityType;
   entityId: number;
+  taskSystemId?: string | null;
+  taskName?: string | null;
   time: Date;
   firstTime: Date;
   changedFields: string[];
@@ -58,4 +60,10 @@ export enum ActivityType {
   exportCompleted = 38,
   exportFailed = 39,
   automationNotification = 40,
+  pullRequestOpened = 41,
+  pullRequestMerged = 42,
+  pullRequestClosed = 43,
+  commitsPushed = 44,
+  checksPassed = 45,
+  checksFailed = 46,
 }

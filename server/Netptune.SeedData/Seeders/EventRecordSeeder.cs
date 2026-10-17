@@ -11,7 +11,10 @@ public sealed class EventRecordSeeder : ISeeder
 {
     public int Phase => 2;
 
-    private static readonly ActivityType[] Types = Enum.GetValues<ActivityType>();
+    // Source control activity only makes sense with the details a real webhook brings, so it isn't seeded.
+    private static readonly ActivityType[] Types = Enum.GetValues<ActivityType>()
+        .Where(type => !EventKeys.AllowsMissingActor(EventKeys.From(type)))
+        .ToArray();
     private static readonly DateTime BaseDate = new(
         2025,
         1,

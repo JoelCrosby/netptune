@@ -12,5 +12,5 @@ public interface ITaskCodeLinkRepository : IRepository<TaskCodeLink, long>
 
     Task<HashSet<int>> GetRepoIdsWithLinks(IReadOnlyCollection<int> repoIds, CancellationToken cancellationToken = default);
 
-    Task<bool> ReferencesCommit(int repoId, string commitSha, CancellationToken cancellationToken = default);
+    Task<List<TaskCodeLink>> GetReferencingCommit(int repoId, string commitSha, CancellationToken cancellationToken = default);
 }

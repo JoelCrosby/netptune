@@ -53,6 +53,10 @@ public sealed class TaskCodeLinkEntityMap : KeyedEntityMap<TaskCodeLink, long>
             .HasMaxLength(64);
 
         builder
+            .Property(link => link.LastCheckState)
+            .HasConversion<int?>();
+
+        builder
             .HasOne(link => link.Repo)
             .WithMany()
             .HasForeignKey(link => link.RepoId)

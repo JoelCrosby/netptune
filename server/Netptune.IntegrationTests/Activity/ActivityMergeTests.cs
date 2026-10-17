@@ -798,6 +798,40 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
     }
 
     [Fact]
+    public async Task HandleCanonicalEvent_ShouldRecordSourceControlActivityWithoutAnActor()
+    {
+        const int entityId = 1410;
+        var payload = new SourceControlActivityPayload
+        {
+            Provider = "github",
+            RepoFullName = "acme/api",
+            Reference = "16",
+            Title = "Fix search",
+            WebUrl = "https://github.com/acme/api/pull/16",
+            ActorLogin = "octocat",
+        };
+
+        await HandleCanonical(entityId, EventKeys.SourceControlPullRequestMerged, payload, actorUserId: null);
+
+        var entry = (await Entries(entityId)).Should().ContainSingle().Subject;
+
+        entry.UserId.Should().BeNull();
+        entry.ActivityType.Should().Be(ActivityType.PullRequestMerged);
+        entry.Meta!.RootElement.GetProperty("actorLogin").GetString().Should().Be("octocat");
+    }
+
+    [Fact]
+    public async Task HandleCanonicalEvent_ShouldStillSkipOtherEventsWithoutAnActor()
+    {
+        const int entityId = 1411;
+        var transition = new FieldTransitionedPayload { Field = "description", OldValue = "a", NewValue = "b" };
+
+        await HandleCanonical(entityId, EventKeys.EntityFieldTransitioned, transition, actorUserId: null);
+
+        (await Entries(entityId)).Should().BeEmpty();
+    }
+
+    [Fact]
     public async Task HandleCanonicalEvent_ShouldNotifyTheAssigneeImmediately_WhenATaskIsAssigned()
     {
         const int entityId = 1402;
@@ -882,11 +916,16 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
         };
     }
 
-    private async Task HandleCanonical(int entityId, FieldTransitionedPayload transition)
+    private Task HandleCanonical(int entityId, FieldTransitionedPayload transition)
+    {
+        return HandleCanonical(entityId, EventKeys.EntityFieldTransitioned, transition, fixture.ActorUserId);
+    }
+
+    private async Task HandleCanonical(int entityId, string eventKey, object transition, string? actorUserId)
     {
         var eventId = Guid.NewGuid();
         var occurredAt = DateTime.UtcNow;
-        var payload = JsonSerializer.SerializeToDocument(transition, JsonOptions.Default);
+        var payload = JsonSerializer.SerializeToDocument(transition, transition.GetType(), JsonOptions.Default);
 
         long eventRecordId;
 
@@ -897,10 +936,10 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
             {
                 EventId = eventId,
                 WorkspaceId = fixture.WorkspaceId,
-                EventKey = EventKeys.EntityFieldTransitioned,
+                EventKey = eventKey,
                 SubjectType = EventEntityTypes.From(EntityType.Task),
                 SubjectId = entityId.ToString(),
-                ActorUserId = fixture.ActorUserId,
+                ActorUserId = actorUserId,
                 OccurredAt = occurredAt,
                 RecordedAt = occurredAt,
                 RetentionClass = EventRetentionClasses.Permanent,
@@ -917,12 +956,12 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
         {
             EventId = eventId,
             EventRecordId = eventRecordId,
-            EventKey = EventKeys.EntityFieldTransitioned,
+            EventKey = eventKey,
             SchemaVersion = 1,
             WorkspaceId = fixture.WorkspaceId,
             SubjectType = EventEntityTypes.From(EntityType.Task),
             SubjectId = entityId.ToString(),
-            ActorUserId = fixture.ActorUserId,
+            ActorUserId = actorUserId,
             OccurredAt = occurredAt,
             RecordedAt = occurredAt,
             RetentionClass = EventRetentionClasses.Permanent,

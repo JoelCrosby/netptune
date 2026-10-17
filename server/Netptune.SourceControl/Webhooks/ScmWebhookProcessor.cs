@@ -1,3 +1,4 @@
+using System.Runtime.ExceptionServices;
 using System.Text;
 
 using Microsoft.Extensions.Logging;
@@ -58,19 +59,25 @@ internal sealed class ScmWebhookProcessor : IScmWebhookProcessor
             delivery.ProcessedAt = Clock.GetUtcNow().UtcDateTime;
             delivery.LastError = null;
 
+            // Handlers don't save, so this one save commits the links, the activity events they produce
+            // and the processed mark together: a redelivery after a failure can't record activity twice.
             await UnitOfWork.CompleteAsync(cancellationToken);
         }
-        catch (Exception exception) when (exception is not OperationCanceledException)
+        catch (Exception exception) when (exception.GetBaseException() is not OperationCanceledException)
         {
-            Logger.LogWarning(exception, "Processing webhook delivery {DeliveryRecordId} failed", deliveryRecordId);
+            var failure = exception.GetBaseException();
+
+            Logger.LogWarning(failure, "Processing webhook delivery {DeliveryRecordId} failed", deliveryRecordId);
 
             // Written directly: the failed writes are still tracked, so saving through the context
             // would retry them and fail the same way, and the attempt would never be counted.
-            var error = exception.Message.Length > MaxErrorLength
-                ? exception.Message[..MaxErrorLength]
-                : exception.Message;
+            var error = failure.Message.Length > MaxErrorLength
+                ? failure.Message[..MaxErrorLength]
+                : failure.Message;
 
             await UnitOfWork.ScmWebhookDeliveries.RecordFailure(delivery.Id, error, CancellationToken.None);
+
+            ExceptionDispatchInfo.Capture(failure).Throw();
 
             throw;
         }

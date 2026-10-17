@@ -162,7 +162,7 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
         Expression<Func<ActivityEntry, bool>> predicate = entityType switch
         {
             EntityType.Task => x => x.EntityId == entityId || x.TaskId == entityId,
-            EntityType.Board => x => x.EntityId == entityId || x.BoardId == entityId,
+            EntityType.Board => x => (x.EntityType == EntityType.Board && x.EntityId == entityId) || x.BoardId == entityId,
             EntityType.Project => x => x.EntityId == entityId || x.ProjectId == entityId,
             EntityType.Workspace => x => x.EntityId == entityId || x.WorkspaceId == entityId,
             EntityType.BoardGroup => x => x.EntityId == entityId || x.BoardGroupId == entityId,
@@ -175,8 +175,12 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
         var cursorRequest = new CursorRequest { Cursor = cursor };
         var hasCursor = cursorRequest.TryGetCursor(out var cursorOccurredAt, out var cursorId);
 
+        // A board's feed also carries what happened to everything on it, such as its tasks.
+        var isBoardFeed = entityType == EntityType.Board;
+
         var query = Context.Set<ActivityEntry>()
-            .Where(x => !x.IsDeleted && x.EntityType == entityType && x.WorkspaceId == workspaceId)
+            .Where(x => !x.IsDeleted && x.WorkspaceId == workspaceId)
+            .Where(x => x.EntityType == entityType || (isBoardFeed && x.BoardId == entityId))
             .Where(predicate);
 
         if (hasCursor)
@@ -193,11 +197,11 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
                 Id = y.Id,
                 Type = y.ActivityType,
                 EntityId = y.EntityId,
-                EntityType = entityType,
+                EntityType = y.EntityType,
                 UserId = y.UserId,
-                UserUsername = y.User.DisplayName,
-                UserPictureUrl = y.User.PictureUrl,
-                UserIsServiceAccount = y.User.UserType == AppUserType.ServiceAccount,
+                UserUsername = y.User!.DisplayName,
+                UserPictureUrl = y.User!.PictureUrl,
+                UserIsServiceAccount = y.User != null && y.User.UserType == AppUserType.ServiceAccount,
                 Agent = y.Agent,
                 Time = y.LastOccurredAt,
                 FirstTime = y.FirstOccurredAt,
@@ -208,7 +212,41 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 
+        if (isBoardFeed)
+        {
+            await AddTaskNames(activities, cancellationToken);
+        }
+
         return activities;
+    }
+
+    private async Task AddTaskNames(List<ActivityViewModel> activities, CancellationToken cancellationToken)
+    {
+        var taskIds = activities
+            .Where(activity => activity.EntityType == EntityType.Task && activity.EntityId.HasValue)
+            .Select(activity => activity.EntityId!.Value)
+            .Distinct()
+            .ToList();
+
+        if (taskIds.Count == 0)
+        {
+            return;
+        }
+
+        var tasks = await Context.ProjectTasks
+            .AsNoTracking()
+            .Where(task => taskIds.Contains(task.Id))
+            .Select(task => new { task.Id, task.Name, SystemId = task.Project!.Key + "-" + task.ProjectScopeId })
+            .ToDictionaryAsync(task => task.Id, cancellationToken);
+
+        foreach (var activity in activities)
+        {
+            var isTask = activity.EntityType == EntityType.Task;
+            var task = isTask ? tasks.GetValueOrDefault(activity.EntityId!.Value) : null;
+
+            activity.TaskName = task?.Name;
+            activity.TaskSystemId = task?.SystemId;
+        }
     }
 
     public async Task<HashSet<Guid>> GetExistingEventIds(IEnumerable<Guid> eventIds, CancellationToken cancellationToken = default)
@@ -400,6 +438,12 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
             ActivityType.AddComment => ApplyCanonicalActivityFilter(query, EventKeys.CommentCreated, legacyActivityType),
             ActivityType.ModifyComment => ApplyCanonicalActivityFilter(query, EventKeys.CommentUpdated, legacyActivityType),
             ActivityType.RemoveComment => ApplyCanonicalActivityFilter(query, EventKeys.CommentDeleted, legacyActivityType),
+            ActivityType.PullRequestOpened => ApplyCanonicalActivityFilter(query, EventKeys.SourceControlPullRequestOpened, legacyActivityType),
+            ActivityType.PullRequestMerged => ApplyCanonicalActivityFilter(query, EventKeys.SourceControlPullRequestMerged, legacyActivityType),
+            ActivityType.PullRequestClosed => ApplyCanonicalActivityFilter(query, EventKeys.SourceControlPullRequestClosed, legacyActivityType),
+            ActivityType.CommitsPushed => ApplyCanonicalActivityFilter(query, EventKeys.SourceControlCommitsPushed, legacyActivityType),
+            ActivityType.ChecksPassed => ApplyCanonicalActivityFilter(query, EventKeys.SourceControlChecksPassed, legacyActivityType),
+            ActivityType.ChecksFailed => ApplyCanonicalActivityFilter(query, EventKeys.SourceControlChecksFailed, legacyActivityType),
             _ => ApplyLegacyActivityFilter(query, legacyActivityType),
         };
     }
@@ -603,10 +647,26 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
             EventKeys.AssistantConversationDeleted => FormatAssistantConversationDeletion(payload),
             EventKeys.SourceControlConnected => FormatSourceControlConnection(payload, "Connected"),
             EventKeys.SourceControlDisconnected => FormatSourceControlConnection(payload, "Disconnected"),
+            EventKeys.SourceControlPullRequestOpened => FormatSourceControlActivity(payload, "Opened pull request #"),
+            EventKeys.SourceControlPullRequestMerged => FormatSourceControlActivity(payload, "Merged pull request #"),
+            EventKeys.SourceControlPullRequestClosed => FormatSourceControlActivity(payload, "Closed pull request #"),
+            EventKeys.SourceControlCommitsPushed => FormatSourceControlActivity(payload, "Pushed commits to"),
+            EventKeys.SourceControlChecksPassed => FormatSourceControlActivity(payload, "Checks passed on"),
+            EventKeys.SourceControlChecksFailed => FormatSourceControlActivity(payload, "Checks failed on"),
             _ => FormatLegacySummary(payload, activityType, statusNames),
         };
 
         return Truncate(summary, 140);
+    }
+
+    private static string FormatSourceControlActivity(JsonElement payload, string action)
+    {
+        var repo = GetPayloadValue(payload, "repoFullName");
+        var reference = GetPayloadValue(payload, "reference");
+
+        var separator = action.EndsWith('#') ? string.Empty : " ";
+
+        return $"{action}{separator}{reference} in {repo}";
     }
 
     private static string FormatCreatedSummary(JsonElement payload)

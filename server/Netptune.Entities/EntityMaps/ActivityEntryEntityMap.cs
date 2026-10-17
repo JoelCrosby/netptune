@@ -48,6 +48,11 @@ public class ActivityEntryEntityMap : WorkspaceEntityMap<ActivityEntry, int>
             .HasDatabaseName("ix_activity_entries_entity_last_occurred_id");
 
         builder
+            .HasIndex(entry => new { entry.BoardId, entry.LastOccurredAt, entry.Id })
+            .HasFilter("board_id IS NOT NULL")
+            .HasDatabaseName("ix_activity_entries_board_last_occurred_id");
+
+        builder
             .Property(entry => entry.EntityType)
             .IsRequired();
 
@@ -88,6 +93,6 @@ public class ActivityEntryEntityMap : WorkspaceEntityMap<ActivityEntry, int>
             .WithMany()
             .HasForeignKey(entry => entry.UserId)
             .OnDelete(DeleteBehavior.Restrict)
-            .IsRequired();
+            .IsRequired(false);
     }
 }

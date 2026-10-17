@@ -1,3 +1,4 @@
+import { ActivityActorPipe } from '@static/pipes/activity-actor.pipe';
 import { Component, computed, inject, input } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
@@ -25,6 +26,7 @@ import { TaskDetailService } from '../task-detail.service';
     SpinnerComponent,
     TooltipDirective,
     ActivityPipe,
+    ActivityActorPipe,
     ActivityTimeRangePipe,
     LucideActivity,
   ],
@@ -36,16 +38,17 @@ import { TaskDetailService } from '../task-detail.service';
       </div>
     } @else {
       @for (activity of activities(); track activity.id) {
+        @let actor = activity | activityActor;
         <div class="flex items-start gap-2.5">
           <app-avatar
             class="shrink-0"
             size="sm"
             [tooltip]="false"
-            [imageUrl]="activity.userPictureUrl"
-            [name]="activity.userUsername"
-            [isServiceAccount]="activity.userIsServiceAccount ?? false" />
+            [imageUrl]="actor.pictureUrl"
+            [name]="actor.name"
+            [isServiceAccount]="actor.isServiceAccount" />
           <div class="min-w-0 text-[13px]/[20px]">
-            <span class="font-semibold">{{ activity.userUsername }}</span>
+            <span class="font-semibold">{{ actor.name }}</span>
             @if (activity.agent) {
               <span
                 class="text-muted ml-1 text-xs"

@@ -14,7 +14,7 @@ public record ActivityEntry : WorkspaceEntity<int>
 
     public int EntityId { get; init; }
 
-    public string UserId { get; init; } = null!;
+    public string? UserId { get; init; }
 
     public string Agent { get; init; } = string.Empty;
 
@@ -57,7 +57,7 @@ public record ActivityEntry : WorkspaceEntity<int>
     #region NavigationProperties
 
     [JsonIgnore]
-    public AppUser User { get; set; } = null!;
+    public AppUser? User { get; set; }
 
     #endregion
 }

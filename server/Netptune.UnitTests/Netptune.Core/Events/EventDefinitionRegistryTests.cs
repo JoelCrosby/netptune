@@ -2,6 +2,7 @@ using System.Text.Json;
 
 using FluentAssertions;
 
+using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
 
@@ -57,6 +58,12 @@ public sealed class EventDefinitionRegistryTests
     [InlineData(EventKeys.AssistantConversationDeleted, ActivityType.Delete)]
     [InlineData(EventKeys.SourceControlConnected, ActivityType.Create)]
     [InlineData(EventKeys.SourceControlDisconnected, ActivityType.Delete)]
+    [InlineData(EventKeys.SourceControlPullRequestOpened, ActivityType.PullRequestOpened)]
+    [InlineData(EventKeys.SourceControlPullRequestMerged, ActivityType.PullRequestMerged)]
+    [InlineData(EventKeys.SourceControlPullRequestClosed, ActivityType.PullRequestClosed)]
+    [InlineData(EventKeys.SourceControlCommitsPushed, ActivityType.CommitsPushed)]
+    [InlineData(EventKeys.SourceControlChecksPassed, ActivityType.ChecksPassed)]
+    [InlineData(EventKeys.SourceControlChecksFailed, ActivityType.ChecksFailed)]
     public void ActivityTypeFor_ShouldMapAuditEventKeys(string eventKey, ActivityType expected)
     {
         using var payload = JsonDocument.Parse("{}");
@@ -118,5 +125,20 @@ public sealed class EventDefinitionRegistryTests
         var action = () => EventDefinitionRegistry.Validate(request);
 
         action.Should().NotThrow();
+    }
+
+    [Theory]
+    [InlineData(EventKeys.SourceControlPullRequestOpened, true)]
+    [InlineData(EventKeys.SourceControlChecksFailed, true)]
+    [InlineData(EventKeys.EntityCreated, false)]
+    public void AllowsMissingActor_ShouldOnlyAllowSourceControlActivity(string eventKey, bool expected)
+    {
+        EventKeys.AllowsMissingActor(eventKey).Should().Be(expected);
+    }
+
+    [Fact]
+    public void RetentionFor_ShouldKeepSourceControlActivityWithTheTaskHistory()
+    {
+        EventKeys.RetentionFor(EventKeys.SourceControlCommitsPushed).Should().Be(EventRetentionClasses.Permanent);
     }
 }

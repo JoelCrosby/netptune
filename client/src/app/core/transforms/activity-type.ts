@@ -156,6 +156,18 @@ export const activityTypeToString = (value: ActivityType): string => {
       return 'Export failed';
     case ActivityType.automationNotification:
       return 'Automation notification';
+    case ActivityType.pullRequestOpened:
+      return 'Opened pull request';
+    case ActivityType.pullRequestMerged:
+      return 'Merged pull request';
+    case ActivityType.pullRequestClosed:
+      return 'Closed pull request';
+    case ActivityType.commitsPushed:
+      return 'Pushed';
+    case ActivityType.checksPassed:
+      return 'Checks passed on';
+    case ActivityType.checksFailed:
+      return 'Checks failed on';
     default:
       return '[UNKNOWN ACTIVITY TYPE]';
   }

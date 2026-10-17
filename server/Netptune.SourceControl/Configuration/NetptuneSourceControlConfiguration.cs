@@ -28,6 +28,7 @@ public static class NetptuneSourceControlConfiguration
         services.AddSingleton<IScmCredentialProtector, ScmCredentialProtector>();
         services.AddSingleton<ISourceControlProviderRegistry, SourceControlProviderRegistry>();
         services.AddScoped<ISourceControlRepoSync, SourceControlRepoSync>();
+        services.AddScoped<ScmTaskActivityRecorder>();
         services.AddScoped<IScmEventHandler, ScmConnectionChangedHandler>();
         services.AddScoped<IScmEventHandler, ScmTaskLinkHandler>();
         services.AddScoped<IScmEventHandler, ScmCheckRunHandler>();

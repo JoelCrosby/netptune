@@ -37,6 +37,14 @@ const getAction = (value: ActivityViewModel) => {
   return `${activityType} ${meta}`;
 };
 
+interface SourceControlActivityMeta {
+  reference?: string;
+  title?: string;
+  commitCount?: number;
+  checksTotal?: number;
+  checksFailed?: number;
+}
+
 const getMeta = (value: ActivityViewModel) => {
   switch (value.type) {
     case ActivityType.move: {
@@ -87,6 +95,26 @@ const getMeta = (value: ActivityViewModel) => {
     case ActivityType.removeFile: {
       const meta = value.meta as { fileName: string };
       return meta?.fileName ?? '';
+    }
+    case ActivityType.pullRequestOpened:
+    case ActivityType.pullRequestMerged:
+    case ActivityType.pullRequestClosed: {
+      const meta = value.meta as SourceControlActivityMeta | null;
+      return `#${meta?.reference ?? ''} ${meta?.title ?? ''}`.trim();
+    }
+    case ActivityType.commitsPushed: {
+      const meta = value.meta as SourceControlActivityMeta | null;
+      const count = meta?.commitCount ?? 1;
+      const commits = count === 1 ? '1 commit' : `${count} commits`;
+      return `${commits} to ${meta?.reference ?? ''}`.trim();
+    }
+    case ActivityType.checksPassed:
+      return (value.meta as SourceControlActivityMeta | null)?.reference ?? '';
+    case ActivityType.checksFailed: {
+      const meta = value.meta as SourceControlActivityMeta | null;
+      const failed = meta?.checksFailed ?? 0;
+      const total = meta?.checksTotal ?? 0;
+      return `${meta?.reference ?? ''} (${failed} of ${total} failed)`;
     }
     default:
       return '';

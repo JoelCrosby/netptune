@@ -1,24 +1,30 @@
 using Netptune.Core.Entities;
+using Netptune.Core.Events;
 using Netptune.Core.Services.Realtime;
+using Netptune.Core.SourceControl;
 using Netptune.Core.SourceControl.Events;
 using Netptune.Core.SourceControl.Models;
 using Netptune.Core.UnitOfWork;
+using Netptune.Core.ViewModels.SourceControl;
 
 namespace Netptune.SourceControl.Webhooks;
 
 internal sealed class ScmCheckRunHandler : IScmEventHandler
 {
     private const int MaxNameLength = 256;
+    private const int ShortShaLength = 7;
     private const int MaxExternalIdLength = 128;
     private const int MaxCommitShaLength = 64;
     private const int MaxWebUrlLength = 1024;
 
     private readonly INetptuneUnitOfWork UnitOfWork;
+    private readonly ScmTaskActivityRecorder Activity;
     private readonly TimeProvider Clock;
 
-    public ScmCheckRunHandler(INetptuneUnitOfWork unitOfWork, TimeProvider clock)
+    public ScmCheckRunHandler(INetptuneUnitOfWork unitOfWork, ScmTaskActivityRecorder activity, TimeProvider clock)
     {
         UnitOfWork = unitOfWork;
+        Activity = activity;
         Clock = clock;
     }
 
@@ -48,11 +54,18 @@ internal sealed class ScmCheckRunHandler : IScmEventHandler
         {
             return false;
         }
+
         var now = Clock.GetUtcNow().UtcDateTime;
         var stored = await UnitOfWork.SourceControlCheckRuns.GetByExternalId(
             repo!.Id,
             checkRun.ExternalId,
             cancellationToken);
+        var commitRuns = await UnitOfWork.SourceControlCheckRuns.GetForCommits(
+            [repo.Id],
+            [checkRun.CommitSha],
+            cancellationToken);
+
+        SourceControlCheckRun current;
 
         if (stored is null)
         {
@@ -69,6 +82,8 @@ internal sealed class ScmCheckRunHandler : IScmEventHandler
             Apply(created, checkRun, now);
 
             await UnitOfWork.SourceControlCheckRuns.AddAsync(created, cancellationToken);
+
+            current = created;
         }
         else
         {
@@ -82,16 +97,82 @@ internal sealed class ScmCheckRunHandler : IScmEventHandler
             }
 
             Apply(stored, checkRun, now);
+
+            current = stored;
         }
 
-        await UnitOfWork.CompleteAsync(cancellationToken);
+        var runsAfter = commitRuns
+            .Where(run => run.ExternalId != current.ExternalId)
+            .Append(current)
+            .ToList();
+        var summaryAfter = ScmCheckSummary.Summarise(runsAfter)!;
+        var links = await UnitOfWork.TaskCodeLinks.GetReferencingCommit(repo.Id, checkRun.CommitSha, cancellationToken);
 
-        var isReferenced = await UnitOfWork.TaskCodeLinks.ReferencesCommit(
-            repo.Id,
-            checkRun.CommitSha,
-            cancellationToken);
+        await RecordOutcome(summaryAfter, links, repo, connection, changed, cancellationToken);
 
-        return isReferenced;
+        return links.Count > 0;
+    }
+
+    // Each link remembers the last result recorded for its commit, so ten checks produce one entry, and a
+    // job created after the others passed (a workflow with dependent jobs) doesn't record "passed" again.
+    private async Task RecordOutcome(
+        ScmCheckSummaryViewModel summaryAfter,
+        List<TaskCodeLink> links,
+        SourceControlRepo repo,
+        SourceControlConnection connection,
+        ScmCheckRunChanged changed,
+        CancellationToken cancellationToken)
+    {
+        var eventKey = summaryAfter.State switch
+        {
+            ScmCheckState.Success => EventKeys.SourceControlChecksPassed,
+            ScmCheckState.Failure => EventKeys.SourceControlChecksFailed,
+            _ => null,
+        };
+
+        if (eventKey is null)
+        {
+            return;
+        }
+
+        var unrecordedLinks = links.Where(link => link.LastCheckState != summaryAfter.State).ToList();
+
+        foreach (var link in unrecordedLinks)
+        {
+            link.LastCheckState = summaryAfter.State;
+        }
+
+        var subjectsByTask = unrecordedLinks
+            .GroupBy(link => link.TaskId)
+            .Select(group => group.FirstOrDefault(link => link.Kind == TaskCodeLinkKind.PullRequest) ?? group.First())
+            .GroupBy(link => (link.Kind, link.ExternalRef))
+            .ToList();
+
+        foreach (var subject in subjectsByTask)
+        {
+            var link = subject.First();
+
+            await Activity.Record(new ScmTaskActivity
+            {
+                EventKey = eventKey!,
+                TaskIds = subject.Select(task => task.TaskId).ToList(),
+                Repo = repo,
+                Provider = connection.Provider,
+                Reference = ReferenceOf(link),
+                Title = link.Title,
+                WebUrl = summaryAfter.AttentionUrl ?? link.WebUrl,
+                OccurredAt = changed.OccurredAt,
+                Checks = new ScmCheckSummaryCounts(summaryAfter.Total, summaryAfter.Failed),
+            }, cancellationToken);
+        }
+    }
+
+    private static string ReferenceOf(TaskCodeLink link)
+    {
+        var isCommit = link.Kind == TaskCodeLinkKind.Commit;
+        var shortSha = link.ExternalRef[..Math.Min(ShortShaLength, link.ExternalRef.Length)];
+
+        return isCommit ? shortSha : $"#{link.ExternalRef}";
     }
 
     private static void Apply(SourceControlCheckRun stored, ScmCheckRun checkRun, DateTime now)

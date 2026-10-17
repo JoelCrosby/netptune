@@ -208,6 +208,8 @@ export class AuditTableComponent {
       case ActivityType.loginSuccess:
       case ActivityType.importCompleted:
       case ActivityType.exportCompleted:
+      case ActivityType.pullRequestMerged:
+      case ActivityType.checksPassed:
         return 'bg-green-500/10 text-green-600 dark:text-green-400';
       case ActivityType.delete:
       case ActivityType.remove:
@@ -217,6 +219,7 @@ export class AuditTableComponent {
       case ActivityType.loginFailed:
       case ActivityType.importFailed:
       case ActivityType.exportFailed:
+      case ActivityType.checksFailed:
         return 'bg-red-500/10 text-red-600 dark:text-red-400';
       case ActivityType.assign:
       case ActivityType.unassign:

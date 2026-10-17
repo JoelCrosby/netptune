@@ -11,6 +11,9 @@ import { TagFilterContainerComponent } from '@shared/components/tag-filter/tag-f
 import { NotificationSubscribeComponent } from '@shared/components/notification-subscribe/notification-subscribe.component';
 import { NotificationScope } from '@core/models/notification-subscription';
 import { BoardGroupHeaderSeperatorComponent } from './board-group-header-seperator.component';
+import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-menu.component';
+import { EntityType } from '@core/models/entity-type';
+import { toolbarButtonVariants } from '@static/components/button/button.variants';
 import { PERMISSIONS } from '@app/core/auth/permissions';
 import { BoardViewService } from '@core/services/board-view.service';
 import { BOARDS_HIDDEN_GROUP_IDS } from '@core/models/user-preferences';
@@ -28,6 +31,7 @@ import { UserPreferencesService } from '@core/services/user-preferences.service'
     BoardGroupHeaderSeperatorComponent,
     BoardGroupHiddenNoticeComponent,
     NotificationSubscribeComponent,
+    ActivityMenuComponent,
   ],
   template: `
     <div class="flex flex-row items-center gap-2">
@@ -54,6 +58,13 @@ import { UserPreferencesService } from '@core/services/user-preferences.service'
           [scope]="notificationScope.board"
           [scopeEntityId]="board.id"
           [scopeName]="board.name" />
+
+        @if (readActivity()) {
+          <app-activity-menu
+            [entityType]="boardEntityType"
+            [entityId]="board.id"
+            [buttonClass]="activityButtonClass" />
+        }
       }
 
       <app-board-group-hidden-notice
@@ -69,6 +80,11 @@ export class BoardGroupHeaderComponent {
   protected readonly board = inject(BoardViewService).board;
 
   protected readonly notificationScope = NotificationScope;
+  protected readonly boardEntityType = EntityType.board;
+  protected readonly activityButtonClass = toolbarButtonVariants({
+    color: 'neutral',
+  });
+  protected readonly readActivity = hasPermission(PERMISSIONS.activity.read);
 
   hiddenCount = computed(() => {
     const boardId = this.board()?.id;

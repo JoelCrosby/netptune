@@ -283,3 +283,27 @@ public sealed record SourceControlConnectionEventPayload
 
     public required string ExternalAccountId { get; init; }
 }
+
+public sealed record SourceControlActivityPayload
+{
+    public required string Provider { get; init; }
+
+    public required string RepoFullName { get; init; }
+
+    // The pull request number, the branch for pushed commits, or "#number" / a short SHA for checks.
+    public required string Reference { get; init; }
+
+    public required string Title { get; init; }
+
+    public required string WebUrl { get; init; }
+
+    public int? CommitCount { get; init; }
+
+    public int? ChecksTotal { get; init; }
+
+    public int? ChecksFailed { get; init; }
+
+    public string? ActorLogin { get; init; }
+
+    public string? ActorAvatarUrl { get; init; }
+}

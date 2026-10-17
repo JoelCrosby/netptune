@@ -13,7 +13,7 @@ public sealed record NotificationRecipientRequest
 
     public required IReadOnlyCollection<string> WorkspaceUserIds { get; init; }
 
-    public required string ActorUserId { get; init; }
+    public required string? ActorUserId { get; init; }
 
     public int WorkspaceId { get; init; }
 

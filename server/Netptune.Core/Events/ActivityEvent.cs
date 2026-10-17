@@ -30,7 +30,7 @@ public class ActivityEvent
 
     public EntityType EntityType { get; init; }
 
-    public string UserId { get; init; } = null!;
+    public string? UserId { get; init; }
 
     public string? Agent { get; init; }
 

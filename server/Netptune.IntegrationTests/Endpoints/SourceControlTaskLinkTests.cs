@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
 
 using FluentAssertions;
 
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Events;
 using Netptune.Core.Requests.SourceControl;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Realtime;
@@ -428,6 +430,123 @@ public sealed class SourceControlTaskLinkTests
     }
 
     [Fact]
+    public async Task Processing_ShouldRecordPullRequestActivityOnTheLinkedTask()
+    {
+        var (account, repo) = await ConnectWithLinkedRepo();
+        var task = await AnyTask();
+        var author = $"nobody-{Guid.NewGuid():N}"[..20];
+
+        await ProcessPullRequest(account, repo.ExternalId, "31", $"Fix {task.SystemId}", "Merged", author: author);
+
+        var record = (await ActivityRecords(task.Id, EventKeys.SourceControlPullRequestMerged))
+            .Should().ContainSingle(candidate => ReadPayload(candidate, "reference") == "31").Subject;
+
+        record.ActorUserId.Should().BeNull();
+        ReadPayload(record, "actorLogin").Should().Be(author);
+        ReadPayload(record, "repoFullName").Should().StartWith(account);
+    }
+
+    [Fact]
+    public async Task Processing_ShouldAttributePullRequestActivityToTheMappedMember()
+    {
+        var (account, repo) = await ConnectWithLinkedRepo();
+        var task = await AnyTask();
+        var username = $"opener-{Guid.NewGuid():N}"[..20];
+        var identity = await AddIdentity(username);
+
+        await ProcessPullRequest(account, repo.ExternalId, "32", $"Fix {task.SystemId}", "Open", author: username);
+
+        var record = (await ActivityRecords(task.Id, EventKeys.SourceControlPullRequestOpened))
+            .Should().ContainSingle(candidate => ReadPayload(candidate, "reference") == "32").Subject;
+
+        record.ActorUserId.Should().Be(identity.UserId);
+    }
+
+    [Fact]
+    public async Task Processing_ShouldRecordAPushOnceForCommitsLinkedForTheFirstTime()
+    {
+        var (account, repo) = await ConnectWithLinkedRepo();
+        var task = await AnyTask();
+        var branch = $"feature/{task.SystemId}-{Guid.NewGuid():N}"[..40];
+        var sha = Guid.NewGuid().ToString("N");
+
+        await ProcessPush(account, repo.ExternalId, branch, sha, "Tidy");
+        await ProcessPush(account, repo.ExternalId, branch, sha, "Tidy");
+
+        var records = (await ActivityRecords(task.Id, EventKeys.SourceControlCommitsPushed))
+            .Where(candidate => ReadPayload(candidate, "reference") == branch)
+            .ToList();
+
+        records.Should().ContainSingle();
+        ReadPayload(records[0], "commitCount").Should().Be("1");
+    }
+
+    [Fact]
+    public async Task Processing_ShouldRecordChecksOnlyWhenTheOverallResultChanges()
+    {
+        var (account, repo) = await ConnectWithLinkedRepo();
+        var task = await AnyTask();
+        var sha = Guid.NewGuid().ToString("N");
+
+        await ProcessPullRequest(account, repo.ExternalId, "33", $"Fix {task.SystemId}", "Open", sha);
+        await ProcessCheckRun(account, repo.ExternalId, "51", "build", sha, "InProgress", null);
+        await ProcessCheckRun(account, repo.ExternalId, "52", "lint", sha, "Completed", "Success");
+        await ProcessCheckRun(account, repo.ExternalId, "51", "build", sha, "Completed", "Success");
+        await ProcessCheckRun(account, repo.ExternalId, "53", "deploy", sha, "Completed", "Success");
+        await ProcessCheckRun(account, repo.ExternalId, "54", "e2e", sha, "Completed", "Failure");
+
+        var passed = (await ActivityRecords(task.Id, EventKeys.SourceControlChecksPassed))
+            .Where(candidate => ReadPayload(candidate, "reference") == "#33")
+            .ToList();
+        var failed = (await ActivityRecords(task.Id, EventKeys.SourceControlChecksFailed))
+            .Where(candidate => ReadPayload(candidate, "reference") == "#33")
+            .ToList();
+
+        passed.Should().ContainSingle();
+        failed.Should().ContainSingle();
+        ReadPayload(failed[0], "checksFailed").Should().Be("1");
+    }
+
+    [Fact]
+    public async Task Processing_ShouldNotRecordPassedAgainWhenADependentJobStartsAndPasses()
+    {
+        var (account, repo) = await ConnectWithLinkedRepo();
+        var task = await AnyTask();
+        var sha = Guid.NewGuid().ToString("N");
+
+        await ProcessPullRequest(account, repo.ExternalId, "34", $"Fix {task.SystemId}", "Open", sha);
+        await ProcessCheckRun(account, repo.ExternalId, "61", "build", sha, "Completed", "Success");
+        await ProcessCheckRun(account, repo.ExternalId, "62", "deploy", sha, "Queued", null);
+        await ProcessCheckRun(account, repo.ExternalId, "62", "deploy", sha, "Completed", "Success");
+
+        var passed = (await ActivityRecords(task.Id, EventKeys.SourceControlChecksPassed))
+            .Where(candidate => ReadPayload(candidate, "reference") == "#34")
+            .ToList();
+
+        passed.Should().ContainSingle();
+    }
+
+    [Fact]
+    public async Task Processing_ShouldRecordChecksAgainForANewPullRequestHead()
+    {
+        var (account, repo) = await ConnectWithLinkedRepo();
+        var task = await AnyTask();
+        var firstSha = Guid.NewGuid().ToString("N");
+        var secondSha = Guid.NewGuid().ToString("N");
+
+        await ProcessPullRequest(account, repo.ExternalId, "35", $"Fix {task.SystemId}", "Open", firstSha);
+        await ProcessCheckRun(account, repo.ExternalId, "71", "build", firstSha, "Completed", "Success");
+        await ProcessPullRequest(account, repo.ExternalId, "35", $"Fix {task.SystemId}", "Open", secondSha);
+        await ProcessCheckRun(account, repo.ExternalId, "72", "build", secondSha, "Completed", "Success");
+
+        var passed = (await ActivityRecords(task.Id, EventKeys.SourceControlChecksPassed))
+            .Where(candidate => ReadPayload(candidate, "reference") == "#35")
+            .ToList();
+
+        passed.Should().HaveCount(2);
+    }
+
+    [Fact]
     public async Task TaskLinks_ShouldAttributeACommitByTheAuthorsEmail()
     {
         var (account, repo) = await ConnectWithLinkedRepo();
@@ -496,6 +615,27 @@ public sealed class SourceControlTaskLinkTests
         var identity = await AddIdentity($"whoami-{Guid.NewGuid():N}"[..20]);
 
         return identity.UserId;
+    }
+
+    private async Task<List<EventRecord>> ActivityRecords(int taskId, string eventKey)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var subjectId = taskId.ToString();
+
+        var records = await context.EventRecords
+            .AsNoTracking()
+            .Where(record => record.EventKey == eventKey && record.SubjectType == "task" && record.SubjectId == subjectId)
+            .ToListAsync(TestContext.Current.CancellationToken);
+
+        return records;
+    }
+
+    private static string? ReadPayload(EventRecord record, string property)
+    {
+        var hasProperty = record.Payload.RootElement.TryGetProperty(property, out var value);
+
+        return hasProperty && value.ValueKind != JsonValueKind.Null ? value.ToString() : null;
     }
 
     private async Task<string> UserIdOf(string email)

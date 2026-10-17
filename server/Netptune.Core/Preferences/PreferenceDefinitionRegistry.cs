@@ -1,6 +1,7 @@
 using System.Text.Json;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Activity;
 
 namespace Netptune.Core.Preferences;
 
@@ -286,9 +287,7 @@ public sealed class PreferenceDefinitionRegistry : IPreferenceDefinitionRegistry
     private static IEnumerable<PreferenceDefinition> NotificationDefinitions()
     {
         var notifiableActivityTypes = Enum.GetValues<ActivityType>()
-            .Where(activityType => activityType is not ActivityType.ExportRequested
-                and not ActivityType.LoginSuccess
-                and not ActivityType.LoginFailed)
+            .Where(ActivityNotificationPolicy.IsNotifiable)
             .ToList();
 
         var sectionedActivityTypes = NotificationSections

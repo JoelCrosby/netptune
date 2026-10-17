@@ -8,7 +8,10 @@ namespace Netptune.TestData.Seeders;
 
 internal static class EventRecordSeeder
 {
-    private static readonly ActivityType[] Types = Enum.GetValues<ActivityType>();
+    // Source control activity only makes sense with the details a real webhook brings, so it isn't seeded.
+    private static readonly ActivityType[] Types = Enum.GetValues<ActivityType>()
+        .Where(type => !EventKeys.AllowsMissingActor(EventKeys.From(type)))
+        .ToArray();
     private static readonly DateTime BaseDate = new(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
     internal static List<EventRecord> Generate(List<ProjectTask> tasks, List<AppUser> users, List<Workspace> workspaces) =>

@@ -52,12 +52,15 @@ public class TaskCodeLinkRepository(DataContext context, IDbConnectionFactory co
         return linkedRepoIds.ToHashSet();
     }
 
-    public Task<bool> ReferencesCommit(int repoId, string commitSha, CancellationToken cancellationToken = default)
+    public Task<List<TaskCodeLink>> GetReferencingCommit(
+        int repoId,
+        string commitSha,
+        CancellationToken cancellationToken = default)
     {
         return Entities
             .Where(link => link.RepoId == repoId && !link.IsRemoved)
             .Where(link => (link.Kind == TaskCodeLinkKind.Commit && link.ExternalRef == commitSha)
                 || (link.Kind == TaskCodeLinkKind.PullRequest && link.HeadSha == commitSha))
-            .AnyAsync(cancellationToken);
+            .ToListAsync(cancellationToken);
     }
 }

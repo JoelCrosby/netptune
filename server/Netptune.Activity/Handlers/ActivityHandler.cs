@@ -23,13 +23,6 @@ public sealed class ActivityHandler :
     IRequestHandler<CanonicalEventEnvelope>
 {
     private const string CanonicalConsumerKey = "activity-projection-v1";
-    private static readonly HashSet<ActivityType> AuditOnlyTypes =
-    [
-        ActivityType.ExportRequested,
-        ActivityType.LoginSuccess,
-        ActivityType.LoginFailed,
-    ];
-
     private const int MaxUpsertAttempts = 3;
 
     private readonly INetptuneUnitOfWork UnitOfWork;
@@ -57,7 +50,7 @@ public sealed class ActivityHandler :
 
         public int EntityId => Event.EntityId!.Value;
 
-        public string UserId => Event.UserId;
+        public string? UserId => Event.UserId;
 
         public string Agent => Event.Agent ?? string.Empty;
     }
@@ -203,7 +196,7 @@ public sealed class ActivityHandler :
     {
         activity = null!;
         var hasWorkspaceContext = envelope.WorkspaceId.HasValue;
-        var hasActor = envelope.ActorUserId is not null;
+        var hasActor = envelope.ActorUserId is not null || EventKeys.AllowsMissingActor(envelope.EventKey);
 
         var hasSupportedEntityType = EventEntityTypes.TryParse(envelope.SubjectType, out var entityType);
 
@@ -226,7 +219,7 @@ public sealed class ActivityHandler :
         {
             EventId = envelope.EventId,
             EntityType = entityType,
-            UserId = envelope.ActorUserId!,
+            UserId = envelope.ActorUserId,
             Type = activityType,
             EntityId = entityId,
             WorkspaceId = envelope.WorkspaceId.GetValueOrDefault(),
@@ -300,13 +293,16 @@ public sealed class ActivityHandler :
         {
             var (workspaceId, entityType, entityId, userId, _) = group.Key;
 
-            await UnitOfWork.ActivityEntries.ExpireEntriesForOtherUsers(
-                workspaceId,
-                entityType,
-                entityId,
-                userId,
-                now,
-                cancellationToken);
+            if (userId is not null)
+            {
+                await UnitOfWork.ActivityEntries.ExpireEntriesForOtherUsers(
+                    workspaceId,
+                    entityType,
+                    entityId,
+                    userId,
+                    now,
+                    cancellationToken);
+            }
 
             var mergeable = group.Where(record => !IsDiscrete(record)).ToList();
 
@@ -370,7 +366,7 @@ public sealed class ActivityHandler :
             WorkspaceId = last.WorkspaceId,
             EntityType = last.EntityType,
             EntityId = last.EntityId,
-            UserId = last.UserId,
+            UserId = last.UserId!,
             Agent = last.Agent,
 
             ActivityType = types.Count == 1 ? types[0] : ActivityType.Modify,
@@ -441,7 +437,7 @@ public sealed class ActivityHandler :
 
         var usersByWorkspace = await UnitOfWork.WorkspaceUsers.GetWorkspaceUserIdsByWorkspaceIds(workspaceIds, cancellationToken);
 
-        var notifiable = records.Where(record => !AuditOnlyTypes.Contains(record.Event.Type)).ToList();
+        var notifiable = records.Where(record => ActivityNotificationPolicy.IsNotifiable(record.Event.Type)).ToList();
         var matchRequests = notifiable.Select(ToMatchRequest).ToList();
         var fanOut = await NotificationSubscriptionFanOut.Build(UnitOfWork, matchRequests, cancellationToken);
 

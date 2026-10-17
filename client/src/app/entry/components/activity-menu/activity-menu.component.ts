@@ -1,3 +1,7 @@
+import { RouterLink } from '@angular/router';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
+import { TextLinkComponent } from '@static/components/text-link.component';
+import { ActivityActorPipe } from '@static/pipes/activity-actor.pipe';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
@@ -39,6 +43,9 @@ import { ActivityPipe } from '@static/pipes/activity.pipe';
     AvatarComponent,
     SpinnerComponent,
     ActivityPipe,
+    ActivityActorPipe,
+    RouterLink,
+    TextLinkComponent,
     ActivityTimeRangePipe,
   ],
   template: `
@@ -61,16 +68,17 @@ import { ActivityPipe } from '@static/pipes/activity.pipe';
         <div class="py-2">
           @if (loaded()) {
             @for (activity of activities(); track $index; let last = $last) {
+              @let actor = activity | activityActor;
               <div
                 class="flex min-w-80 flex-row items-center gap-1 px-4 py-1 text-sm">
                 <app-avatar
                   class="shrink-0 grow-0 basis-8"
-                  [imageUrl]="activity.userPictureUrl"
-                  [name]="activity.userUsername"
-                  [isServiceAccount]="activity.userIsServiceAccount ?? false"
+                  [imageUrl]="actor.pictureUrl"
+                  [name]="actor.name"
+                  [isServiceAccount]="actor.isServiceAccount"
                   size="sm"></app-avatar>
                 <span class="font-medium tracking-[0.225px] whitespace-nowrap">
-                  {{ activity.userUsername }}
+                  {{ actor.name }}
                 </span>
                 @if (activity.agent) {
                   <span
@@ -87,6 +95,18 @@ import { ActivityPipe } from '@static/pipes/activity.pipe';
                   [appTooltip]="activity | activityTimeRange">
                   {{ activity | activity }}
                 </span>
+                @if (activity.taskSystemId; as taskSystemId) {
+                  <a
+                    app-text-link
+                    color="muted"
+                    size="small"
+                    class="ml-1 truncate"
+                    [routerLink]="['/', workspaceSlug(), 'tasks', taskSystemId]"
+                    [appTooltip]="activity.taskName"
+                    (click)="closeMenu()">
+                    {{ taskSystemId }}
+                  </a>
+                }
               </div>
 
               @if (!last) {
@@ -126,6 +146,8 @@ export class ActivityMenuComponent implements OnDestroy {
   private overlay = inject(Overlay);
   private vcr = inject(ViewContainerRef);
   private el = inject(ElementRef<HTMLElement>);
+
+  protected readonly workspaceSlug = inject(CurrentWorkspaceService).slug;
 
   readonly entityType = input.required<EntityType>();
   // The host owns the trigger's look so it can sit flush with its neighbours.
@@ -197,7 +219,7 @@ export class ActivityMenuComponent implements OnDestroy {
   }
 
   /* Closing idles the resource, which empties the list and forgets the cursor. */
-  private closeMenu() {
+  protected closeMenu() {
     this.overlayRef?.detach();
 
     this.isOpen.set(false);

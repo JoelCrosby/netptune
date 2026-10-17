@@ -11,9 +11,9 @@ public class ActivityViewModel
 
     public EntityType EntityType { get; set; }
 
-    public string UserId { get; set; } = null!;
+    public string? UserId { get; set; }
 
-    public string UserUsername { get; set; } = null!;
+    public string? UserUsername { get; set; }
 
     public string? UserPictureUrl { get; set; }
 
@@ -24,6 +24,10 @@ public class ActivityViewModel
     public ActivityType Type { get; set; }
 
     public int? EntityId { get; set; }
+
+    public string? TaskSystemId { get; set; }
+
+    public string? TaskName { get; set; }
 
     public DateTime Time { get; set; }
 
