@@ -26,6 +26,8 @@ public sealed class ApiContainerTests
         "Netptune.Core.Services.Ai.IAiUndoCatalog",
         "Netptune.Core.Services.Automations.IAutomationTriggerEvaluator",
         "Netptune.Core.Services.IStorageService",
+        "Netptune.Core.SourceControl.ISourceControlProviderRegistry",
+        "Netptune.Core.SourceControl.ISourceControlRepoSync",
         "Netptune.Transfer.Services.IArchiveImporter",
         "Netptune.Transfer.Services.IExportRunner",
         "Netptune.Transfer.Services.IImportMappingAdvisor",
