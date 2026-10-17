@@ -132,7 +132,8 @@ import { DialogSectionComponent } from '@static/components/dialog/dialog-section
             </div>
           </div>
 
-          <div class="max-h-56 overflow-y-auto px-5 pt-4 pb-4">
+          <div
+            class="custom-scroll border-foreground/8 max-h-56 overflow-y-auto border-t px-5 pt-4 pb-4">
             <div [class.hidden]="activeTab() !== 'boards'">
               <app-task-detail-boards #boards />
             </div>
