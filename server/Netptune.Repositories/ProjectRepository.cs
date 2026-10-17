@@ -194,6 +194,15 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
         return !exists;
     }
 
+    public Task<List<string>> GetProjectKeys(int workspaceId, CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .AsNoTracking()
+            .Where(project => project.WorkspaceId == workspaceId && !project.IsDeleted)
+            .Select(project => project.Key)
+            .ToListAsync(cancellationToken);
+    }
+
     private static Expression<Func<Project, ProjectViewModel>> ProjectToViewModel()
     {
         return x => new ProjectViewModel

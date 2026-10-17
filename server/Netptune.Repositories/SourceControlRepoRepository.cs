@@ -43,6 +43,16 @@ public class SourceControlRepoRepository(DataContext context, IDbConnectionFacto
             .ToListAsync(cancellationToken);
     }
 
+    public Task<SourceControlRepo?> GetByExternalId(
+        int connectionId,
+        string externalId,
+        CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .Where(repo => repo.ConnectionId == connectionId && repo.ExternalId == externalId)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
     public Task<SourceControlRepo?> GetOwned(
         int repoId,
         int workspaceId,

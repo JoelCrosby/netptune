@@ -70,6 +70,7 @@ public static class TransferRedaction
         Redacted<SourceControlRepo>(TransferRedactionKeys.SourceControlConnections),
         Redacted<SourceControlRepoProject>(TransferRedactionKeys.SourceControlConnections),
         Redacted<ScmWebhookDelivery>(TransferRedactionKeys.SourceControlConnections),
+        Redacted<TaskCodeLink>(TransferRedactionKeys.SourceControlConnections),
         Redacted<AutomationRun>(TransferRedactionKeys.AutomationHistory),
         Redacted<AutomationActionResult>(TransferRedactionKeys.AutomationHistory),
         Redacted<ScheduledAutomationAction>(TransferRedactionKeys.AutomationHistory),

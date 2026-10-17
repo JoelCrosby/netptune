@@ -40,6 +40,7 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
     public const string EventHeader = "X-Test-Event";
     public const string ValidSignature = "valid";
     public const string UninstallEvent = "uninstall";
+    public const string PullRequestEvent = "pull_request";
 
     // Signed means the signature header says "valid"; the body names the account. An uninstall event
     // normalises to the connection being revoked, which is enough to drive the whole pipeline.
@@ -85,6 +86,11 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
 
         public IReadOnlyList<ScmEvent> Normalise(ScmWebhookEnvelope envelope, ScmConnection connection)
         {
+            if (envelope.EventName == PullRequestEvent)
+            {
+                return [ReadPullRequest(envelope, connection)];
+            }
+
             if (envelope.EventName != UninstallEvent)
             {
                 return [];
@@ -104,6 +110,41 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
                 },
             ];
         }
+    }
+
+    // The body names the repository by its external id, plus the pull request's number, title and state.
+    private static ScmPullRequestChanged ReadPullRequest(ScmWebhookEnvelope envelope, ScmConnection connection)
+    {
+        using var document = JsonDocument.Parse(envelope.Body);
+        var root = document.RootElement;
+        var repoId = root.GetProperty("repo").GetString()!;
+        var number = root.GetProperty("number").GetString()!;
+        var state = Enum.Parse<ScmPullRequestState>(root.GetProperty("state").GetString()!);
+        var author = new ScmIdentity { Provider = SourceControlProvider.GitLab, Username = "tester" };
+
+        return new ScmPullRequestChanged
+        {
+            EventId = Guid.NewGuid(),
+            Provider = SourceControlProvider.GitLab,
+            ConnectionId = connection.Id,
+            WorkspaceId = connection.WorkspaceId,
+            OccurredAt = envelope.ReceivedAt,
+            Repository = new ScmRepositoryRef(repoId, connection.ExternalAccountId, repoId),
+            Action = state == ScmPullRequestState.Merged ? ScmPullRequestAction.Merged : ScmPullRequestAction.Opened,
+            PullRequest = new ScmPullRequest
+            {
+                ExternalId = number,
+                Number = number,
+                Title = root.GetProperty("title").GetString()!,
+                State = state,
+                SourceBranch = "feature/test",
+                TargetBranch = "main",
+                Author = author,
+                WebUrl = $"https://scm.test/{repoId}/pulls/{number}",
+                CreatedAt = envelope.ReceivedAt,
+                UpdatedAt = envelope.ReceivedAt,
+            },
+        };
     }
 
     private sealed class TestConnector : ISourceControlConnector

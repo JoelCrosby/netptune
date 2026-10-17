@@ -12,4 +12,6 @@ public interface ISourceControlRepoRepository : IRepository<SourceControlRepo, i
     Task<List<SourceControlRepo>> GetLinkedForProject(int projectId, CancellationToken cancellationToken = default);
 
     Task<SourceControlRepo?> GetOwned(int repoId, int workspaceId, CancellationToken cancellationToken = default);
+
+    Task<SourceControlRepo?> GetByExternalId(int connectionId, string externalId, CancellationToken cancellationToken = default);
 }
