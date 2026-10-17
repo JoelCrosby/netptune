@@ -11,14 +11,18 @@ import {
 } from '@angular/core';
 import { ThemeService } from '@core/services/theme.service';
 import { environment } from '@env/environment';
+import { ClipFrameComponent } from '@static/components/clip-frame.component';
 import { TurnstileLoaderService } from './turnstile-loader.service';
 
 @Component({
   selector: 'app-turnstile',
+  imports: [ClipFrameComponent],
   host: { '[class.pb-4]': 'visible()' },
   template: `
     <div class="flex flex-col gap-2">
-      <div #turnstileContainer></div>
+      <app-clip-frame>
+        <div #turnstileContainer></div>
+      </app-clip-frame>
 
       @if (loadError()) {
         <p
