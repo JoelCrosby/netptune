@@ -601,6 +601,8 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
             EventKeys.CommentUpdated => "Comment edited",
             EventKeys.CommentDeleted => "Comment deleted",
             EventKeys.AssistantConversationDeleted => FormatAssistantConversationDeletion(payload),
+            EventKeys.SourceControlConnected => FormatSourceControlConnection(payload, "Connected"),
+            EventKeys.SourceControlDisconnected => FormatSourceControlConnection(payload, "Disconnected"),
             _ => FormatLegacySummary(payload, activityType, statusNames),
         };
 
@@ -670,6 +672,14 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
         return owner is null
             ? $"Deleted assistant conversation \"{title}\""
             : $"Deleted {owner}'s assistant conversation \"{title}\"";
+    }
+
+    private static string FormatSourceControlConnection(JsonElement payload, string verb)
+    {
+        var provider = GetPayloadValue(payload, "provider") ?? "source control";
+        var account = FormatValue(GetPayloadValue(payload, "accountLogin"));
+
+        return $"{verb} {provider} account {account}";
     }
 
     private static string FormatWorkspaceSettingsChange(JsonElement payload)

@@ -6,6 +6,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
+using Netptune.Core.Events;
 using Netptune.Core.Requests.SourceControl;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.SourceControl;
@@ -160,6 +161,14 @@ public sealed class SourceControlEndpointTests
             .ToListAsync(TestContext.Current.CancellationToken);
 
         stored.Should().OnlyContain(repo => !repo.IsLinked);
+
+        var auditedKeys = await context.EventRecords
+            .Where(record => record.SubjectType == "source-control-connection")
+            .Where(record => record.SubjectId == connection.Id.ToString())
+            .Select(record => record.EventKey)
+            .ToListAsync(TestContext.Current.CancellationToken);
+
+        auditedKeys.Should().BeEquivalentTo([EventKeys.SourceControlConnected, EventKeys.SourceControlDisconnected]);
     }
 
     [Fact]

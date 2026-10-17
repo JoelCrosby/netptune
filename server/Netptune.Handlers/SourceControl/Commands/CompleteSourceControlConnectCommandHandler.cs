@@ -3,6 +3,7 @@ using Mediator;
 using Microsoft.Extensions.Logging;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Events;
 using Netptune.Core.Repositories;
 using Netptune.Core.Requests.SourceControl;
 using Netptune.Core.Responses.Common;
@@ -24,6 +25,7 @@ public sealed class CompleteSourceControlConnectCommandHandler
     private readonly IIdentityService Identity;
     private readonly ISourceControlProviderRegistry Registry;
     private readonly ISourceControlRepoSync RepoSync;
+    private readonly IEventRecordWriter EventRecords;
     private readonly ILogger<CompleteSourceControlConnectCommandHandler> Logger;
 
     public CompleteSourceControlConnectCommandHandler(
@@ -31,12 +33,14 @@ public sealed class CompleteSourceControlConnectCommandHandler
         IIdentityService identity,
         ISourceControlProviderRegistry registry,
         ISourceControlRepoSync repoSync,
+        IEventRecordWriter eventRecords,
         ILogger<CompleteSourceControlConnectCommandHandler> logger)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Registry = registry;
         RepoSync = repoSync;
+        EventRecords = eventRecords;
         Logger = logger;
     }
 
@@ -78,6 +82,12 @@ public sealed class CompleteSourceControlConnectCommandHandler
             connected.Payload!,
             cancellationToken);
 
+        // Saved first so a new connection has the id the audit event refers to.
+        await UnitOfWork.CompleteAsync(cancellationToken);
+
+        var connectedEvent = SourceControlConnectionEvents.Create(connection, EventKeys.SourceControlConnected);
+
+        await EventRecords.Append(connectedEvent, cancellationToken);
         await UnitOfWork.CompleteAsync(cancellationToken);
         await SyncRepos(connection, cancellationToken);
 

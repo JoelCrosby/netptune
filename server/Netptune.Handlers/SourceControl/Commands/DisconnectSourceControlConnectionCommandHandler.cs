@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Events;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
@@ -13,11 +14,16 @@ public sealed class DisconnectSourceControlConnectionCommandHandler
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
+    private readonly IEventRecordWriter EventRecords;
 
-    public DisconnectSourceControlConnectionCommandHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity)
+    public DisconnectSourceControlConnectionCommandHandler(
+        INetptuneUnitOfWork unitOfWork,
+        IIdentityService identity,
+        IEventRecordWriter eventRecords)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
+        EventRecords = eventRecords;
     }
 
     public async ValueTask<ClientResponse> Handle(
@@ -51,6 +57,9 @@ public sealed class DisconnectSourceControlConnectionCommandHandler
         connection.WebhookSecret = null;
         connection.Delete(userId);
 
+        var disconnectedEvent = SourceControlConnectionEvents.Create(connection, EventKeys.SourceControlDisconnected);
+
+        await EventRecords.Append(disconnectedEvent, cancellationToken);
         await UnitOfWork.CompleteAsync(cancellationToken);
 
         return ClientResponse.Success;
