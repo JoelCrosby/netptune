@@ -90,6 +90,15 @@ export const allPermissions: Permission[] = permissionGroups.flatMap((group) =>
   group.permissions.map((permission) => permission.key)
 );
 
+const knownPermissionKeys = new Set<string>(allPermissions);
+
+// Stored lists can still hold a permission the app has since removed, which the server rejects.
+export function knownPermissions(permissions: readonly string[]): Permission[] {
+  return permissions.filter((permission): permission is Permission => {
+    return knownPermissionKeys.has(permission);
+  });
+}
+
 export function missingCredentialScopes(
   account: ServiceAccount,
   credential: ApiCredential

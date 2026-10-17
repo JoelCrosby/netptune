@@ -205,7 +205,6 @@ public static class NetptunePermissions
     {
         public const string Read = "source_control.read";
         public const string Manage = "source_control.manage";
-        public const string CreateBranch = "source_control.create_branch";
     }
 
     public static class Flags

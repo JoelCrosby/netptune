@@ -20,7 +20,6 @@ internal sealed class GitHubSourceControlProvider : ISourceControlProvider
         | SourceControlCapabilities.ReadCommits
         | SourceControlCapabilities.ReadPullRequests
         | SourceControlCapabilities.ReadCheckRuns
-        | SourceControlCapabilities.CreateBranch
         | SourceControlCapabilities.Webhooks;
 
     public ScmTerminology Terminology => GitHubTerminology;

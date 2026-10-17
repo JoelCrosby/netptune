@@ -171,7 +171,7 @@ public sealed class GitHubWebhookReaderTests : IDisposable
     [Fact]
     public void Normalise_ShouldTurnABranchCreateIntoBranchCreated()
     {
-        var events = Normalise("create", GitHubWebhookPayloads.CreateBranch);
+        var events = Normalise("create", GitHubWebhookPayloads.BranchCreated);
 
         var created = events.Should().ContainSingle().Which.Should().BeOfType<ScmBranchCreated>().Subject;
 

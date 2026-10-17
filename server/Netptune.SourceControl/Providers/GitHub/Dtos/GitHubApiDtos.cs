@@ -195,13 +195,6 @@ internal sealed record GitHubCheckRunsDto
     public List<GitHubCheckRunDto> CheckRuns { get; init; } = [];
 }
 
-internal sealed record GitHubCreateRefDto
-{
-    public required string Ref { get; init; }
-
-    public required string Sha { get; init; }
-}
-
 internal sealed record GitHubErrorDto
 {
     public string? Message { get; init; }

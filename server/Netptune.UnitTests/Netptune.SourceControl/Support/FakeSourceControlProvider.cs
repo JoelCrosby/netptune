@@ -141,14 +141,5 @@ public sealed class FakeSourceControlProvider : ISourceControlProvider
         {
             throw new NotSupportedException();
         }
-
-        public ValueTask<ClientResponse<ScmBranch>> CreateBranch(
-            ScmConnectionContext context,
-            ScmRepositoryRef repository,
-            ScmCreateBranch request,
-            CancellationToken cancellationToken)
-        {
-            throw new NotSupportedException();
-        }
     }
 }

@@ -18,7 +18,10 @@ import { FormInputComponent } from '@static/components/form-input/form-input.com
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
 import { PermissionGridComponent } from './permission-grid.component';
-import { filterPermissionGroups } from './service-account-permissions';
+import {
+  filterPermissionGroups,
+  knownPermissions,
+} from './service-account-permissions';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 import { toggleInSet } from '@core/util/signals';
 
@@ -116,8 +119,12 @@ export class CreateApiCredentialDialogComponent {
 
   readonly account = inject<ServiceAccount>(DIALOG_DATA);
   readonly scopeGroups = filterPermissionGroups(this.account.permissions);
+  private readonly accountPermissions = knownPermissions(
+    this.account.permissions
+  );
+
   readonly selectedScopes = signal<ReadonlySet<Permission>>(
-    new Set(this.account.permissions)
+    new Set(this.accountPermissions)
   );
 
   readonly noPermissionsMessage = $localize`:Shown when a service account has no permissions to scope:This service account has no API permissions.`;
@@ -139,7 +146,7 @@ export class CreateApiCredentialDialogComponent {
   }
 
   selectAllScopes() {
-    this.selectedScopes.set(new Set(this.account.permissions));
+    this.selectedScopes.set(new Set(this.accountPermissions));
   }
 
   clearScopes() {

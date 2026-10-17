@@ -24,6 +24,7 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import {
   allPermissions,
+  knownPermissions,
   permissionGroups,
   PermissionGroupOption,
 } from './service-account-permissions';
@@ -194,7 +195,7 @@ export class EditServiceAccountDialogComponent {
   readonly totalPermissionCount = allPermissions.length;
 
   readonly selectedPermissions = signal<ReadonlySet<Permission>>(
-    new Set(this.dialogData.account.permissions)
+    new Set(knownPermissions(this.dialogData.account.permissions))
   );
 
   readonly accountFormModel = signal({

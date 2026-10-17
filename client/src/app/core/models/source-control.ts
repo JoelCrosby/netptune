@@ -23,7 +23,6 @@ export type SourceControlCapability =
   | 'readCommits'
   | 'readPullRequests'
   | 'readCheckRuns'
-  | 'createBranch'
   | 'webhooks'
   | 'issueSync';
 

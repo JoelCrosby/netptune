@@ -13,7 +13,7 @@
     </unit>
     <unit id="6097221033230214756">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:64</note>
+        <note category="location">src/app/core/auth/permission-items.ts:63</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -49,7 +49,7 @@
     </unit>
     <unit id="8049735056636703804">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:69</note>
+        <note category="location">src/app/core/auth/permission-items.ts:68</note>
         <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:147</note>
         <note category="location">src/app/shell/workspace-select/workspace-select.component.ts:392</note>
         <note category="description">Name of a workspace permission</note>
@@ -60,7 +60,7 @@
     </unit>
     <unit id="8228130641173001405">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:74</note>
+        <note category="location">src/app/core/auth/permission-items.ts:73</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -114,7 +114,7 @@
     </unit>
     <unit id="8576643134711566154">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:79</note>
+        <note category="location">src/app/core/auth/permission-items.ts:78</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -132,7 +132,7 @@
     </unit>
     <unit id="3561573022652726148">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:84</note>
+        <note category="location">src/app/core/auth/permission-items.ts:83</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -150,7 +150,7 @@
     </unit>
     <unit id="1761054140906700185">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:91</note>
+        <note category="location">src/app/core/auth/permission-items.ts:90</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -198,7 +198,7 @@
     </unit>
     <unit id="185504950006603388">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:96</note>
+        <note category="location">src/app/core/auth/permission-items.ts:95</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -242,7 +242,7 @@
     </unit>
     <unit id="3817505261985538845">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:101</note>
+        <note category="location">src/app/core/auth/permission-items.ts:100</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -287,7 +287,7 @@
     </unit>
     <unit id="5277744923448150585">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:106</note>
+        <note category="location">src/app/core/auth/permission-items.ts:105</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -305,7 +305,7 @@
     </unit>
     <unit id="2799785023614626500">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:111</note>
+        <note category="location">src/app/core/auth/permission-items.ts:110</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -314,7 +314,7 @@
     </unit>
     <unit id="3798028332869343379">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:116</note>
+        <note category="location">src/app/core/auth/permission-items.ts:115</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -332,7 +332,7 @@
     </unit>
     <unit id="6075892571566060535">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:123</note>
+        <note category="location">src/app/core/auth/permission-items.ts:122</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -386,7 +386,7 @@
     </unit>
     <unit id="1726548551961127827">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:128</note>
+        <note category="location">src/app/core/auth/permission-items.ts:127</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -421,7 +421,7 @@
     </unit>
     <unit id="3373039778816479588">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:133</note>
+        <note category="location">src/app/core/auth/permission-items.ts:132</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -448,7 +448,7 @@
     </unit>
     <unit id="1204089050920081335">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:138</note>
+        <note category="location">src/app/core/auth/permission-items.ts:137</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -484,7 +484,7 @@
     </unit>
     <unit id="1575435135569882153">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:145</note>
+        <note category="location">src/app/core/auth/permission-items.ts:144</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -538,7 +538,7 @@
     </unit>
     <unit id="8199152735148472244">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:150</note>
+        <note category="location">src/app/core/auth/permission-items.ts:149</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -547,7 +547,7 @@
     </unit>
     <unit id="8888203649499721040">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:155</note>
+        <note category="location">src/app/core/auth/permission-items.ts:154</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -556,7 +556,7 @@
     </unit>
     <unit id="551552314018962417">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:160</note>
+        <note category="location">src/app/core/auth/permission-items.ts:159</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -592,7 +592,7 @@
     </unit>
     <unit id="2819959485156980302">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:167</note>
+        <note category="location">src/app/core/auth/permission-items.ts:166</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -622,7 +622,7 @@
     </unit>
     <unit id="5322626006494247041">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:172</note>
+        <note category="location">src/app/core/auth/permission-items.ts:171</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -650,7 +650,7 @@
     </unit>
     <unit id="6390571285331619884">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:177</note>
+        <note category="location">src/app/core/auth/permission-items.ts:176</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -659,7 +659,7 @@
     </unit>
     <unit id="4529090892145486687">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:182</note>
+        <note category="location">src/app/core/auth/permission-items.ts:181</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -695,7 +695,7 @@
     </unit>
     <unit id="6329198644372548025">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:189</note>
+        <note category="location">src/app/core/auth/permission-items.ts:188</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -704,7 +704,7 @@
     </unit>
     <unit id="2736232235410300078">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:194</note>
+        <note category="location">src/app/core/auth/permission-items.ts:193</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -769,7 +769,7 @@
     </unit>
     <unit id="6985320992724229617">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:199</note>
+        <note category="location">src/app/core/auth/permission-items.ts:198</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -778,7 +778,7 @@
     </unit>
     <unit id="7985187851588850736">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:204</note>
+        <note category="location">src/app/core/auth/permission-items.ts:203</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -787,7 +787,7 @@
     </unit>
     <unit id="8433465645307144784">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:209</note>
+        <note category="location">src/app/core/auth/permission-items.ts:208</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -807,7 +807,7 @@
     </unit>
     <unit id="22852633810459681">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:214</note>
+        <note category="location">src/app/core/auth/permission-items.ts:213</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -843,7 +843,7 @@
     </unit>
     <unit id="7528868572765139441">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:219</note>
+        <note category="location">src/app/core/auth/permission-items.ts:218</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -861,7 +861,7 @@
     </unit>
     <unit id="8992597512682859829">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:224</note>
+        <note category="location">src/app/core/auth/permission-items.ts:223</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -870,7 +870,7 @@
     </unit>
     <unit id="2145525847134662630">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:229</note>
+        <note category="location">src/app/core/auth/permission-items.ts:228</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:85</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
@@ -880,7 +880,7 @@
     </unit>
     <unit id="7884294193521928458">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:234</note>
+        <note category="location">src/app/core/auth/permission-items.ts:233</note>
         <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:384</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
@@ -890,7 +890,7 @@
     </unit>
     <unit id="886870364473177759">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:327</note>
+        <note category="location">src/app/core/auth/permission-items.ts:326</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -899,7 +899,7 @@
     </unit>
     <unit id="4382007774315374200">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:332</note>
+        <note category="location">src/app/core/auth/permission-items.ts:331</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -990,7 +990,7 @@
     </unit>
     <unit id="5179126202645575816">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:337</note>
+        <note category="location">src/app/core/auth/permission-items.ts:336</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1027,7 +1027,7 @@
     </unit>
     <unit id="31482867150839515">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:342</note>
+        <note category="location">src/app/core/auth/permission-items.ts:341</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1065,7 +1065,7 @@
     </unit>
     <unit id="3002689292416921946">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:347</note>
+        <note category="location">src/app/core/auth/permission-items.ts:346</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1127,7 +1127,7 @@
     </unit>
     <unit id="3398156745191610421">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:354</note>
+        <note category="location">src/app/core/auth/permission-items.ts:353</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1136,7 +1136,7 @@
     </unit>
     <unit id="5157376787376464663">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:359</note>
+        <note category="location">src/app/core/auth/permission-items.ts:358</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1173,7 +1173,7 @@
     </unit>
     <unit id="8823075031689391120">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:364</note>
+        <note category="location">src/app/core/auth/permission-items.ts:363</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1209,7 +1209,7 @@
     </unit>
     <unit id="8933548881178191171">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:369</note>
+        <note category="location">src/app/core/auth/permission-items.ts:368</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1218,7 +1218,7 @@
     </unit>
     <unit id="5659725016755840642">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:376</note>
+        <note category="location">src/app/core/auth/permission-items.ts:375</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1227,7 +1227,7 @@
     </unit>
     <unit id="5800916510887895585">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:381</note>
+        <note category="location">src/app/core/auth/permission-items.ts:380</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1273,7 +1273,7 @@
     </unit>
     <unit id="8144780536536072093">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:386</note>
+        <note category="location">src/app/core/auth/permission-items.ts:385</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1282,7 +1282,7 @@
     </unit>
     <unit id="7216658744747223519">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:391</note>
+        <note category="location">src/app/core/auth/permission-items.ts:390</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1291,7 +1291,7 @@
     </unit>
     <unit id="3949141401593763883">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:396</note>
+        <note category="location">src/app/core/auth/permission-items.ts:395</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1300,7 +1300,7 @@
     </unit>
     <unit id="4217244185667688873">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:403</note>
+        <note category="location">src/app/core/auth/permission-items.ts:402</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1327,7 +1327,7 @@
     </unit>
     <unit id="2967407594735372079">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:408</note>
+        <note category="location">src/app/core/auth/permission-items.ts:407</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1336,7 +1336,7 @@
     </unit>
     <unit id="6120183880516360710">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:415</note>
+        <note category="location">src/app/core/auth/permission-items.ts:414</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1355,7 +1355,7 @@
     </unit>
     <unit id="5258368564796629743">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:420</note>
+        <note category="location">src/app/core/auth/permission-items.ts:419</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1409,7 +1409,7 @@
     </unit>
     <unit id="3781527988196646385">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:427</note>
+        <note category="location">src/app/core/auth/permission-items.ts:426</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1427,7 +1427,7 @@
     </unit>
     <unit id="7041821873420776665">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:434</note>
+        <note category="location">src/app/core/auth/permission-items.ts:433</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1445,7 +1445,7 @@
     </unit>
     <unit id="4885466789264460695">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:439</note>
+        <note category="location">src/app/core/auth/permission-items.ts:438</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1472,7 +1472,7 @@
     </unit>
     <unit id="3223868158732972286">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:446</note>
+        <note category="location">src/app/core/auth/permission-items.ts:445</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1481,7 +1481,7 @@
     </unit>
     <unit id="4288759217931050376">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:451</note>
+        <note category="location">src/app/core/auth/permission-items.ts:450</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1490,7 +1490,7 @@
     </unit>
     <unit id="3510542800119420038">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:472</note>
+        <note category="location">src/app/core/auth/permission-items.ts:471</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1517,7 +1517,7 @@
     </unit>
     <unit id="5307305327820813211">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:477</note>
+        <note category="location">src/app/core/auth/permission-items.ts:476</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1526,7 +1526,7 @@
     </unit>
     <unit id="7544555877603826527">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:523</note>
+        <note category="location">src/app/core/auth/permission-items.ts:517</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1554,7 +1554,7 @@
     </unit>
     <unit id="9018075259180774811">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:528</note>
+        <note category="location">src/app/core/auth/permission-items.ts:522</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1563,7 +1563,7 @@
     </unit>
     <unit id="2122122363042197554">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:535</note>
+        <note category="location">src/app/core/auth/permission-items.ts:529</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1599,7 +1599,7 @@
     </unit>
     <unit id="5867014445190639814">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:540</note>
+        <note category="location">src/app/core/auth/permission-items.ts:534</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1617,7 +1617,7 @@
     </unit>
     <unit id="3664214651312931514">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:545</note>
+        <note category="location">src/app/core/auth/permission-items.ts:539</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1636,7 +1636,7 @@
     </unit>
     <unit id="2839504544577956852">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:550</note>
+        <note category="location">src/app/core/auth/permission-items.ts:544</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1645,7 +1645,7 @@
     </unit>
     <unit id="1618471987006077444">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:555</note>
+        <note category="location">src/app/core/auth/permission-items.ts:549</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1690,7 +1690,7 @@
     </unit>
     <unit id="6572526459338060111">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:562</note>
+        <note category="location">src/app/core/auth/permission-items.ts:556</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1699,7 +1699,7 @@
     </unit>
     <unit id="2248388072026596689">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:567</note>
+        <note category="location">src/app/core/auth/permission-items.ts:561</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1726,7 +1726,7 @@
     </unit>
     <unit id="5162962829978601498">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:572</note>
+        <note category="location">src/app/core/auth/permission-items.ts:566</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1744,7 +1744,7 @@
     </unit>
     <unit id="6247029488700953689">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:577</note>
+        <note category="location">src/app/core/auth/permission-items.ts:571</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1753,7 +1753,7 @@
     </unit>
     <unit id="8604673556809626581">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:300</note>
+        <note category="location">src/app/core/auth/permission-items.ts:299</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1762,7 +1762,7 @@
     </unit>
     <unit id="8604924961258321909">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:584</note>
+        <note category="location">src/app/core/auth/permission-items.ts:578</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1781,7 +1781,7 @@
     </unit>
     <unit id="3975259698791708574">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:589</note>
+        <note category="location">src/app/core/auth/permission-items.ts:583</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1808,7 +1808,7 @@
     </unit>
     <unit id="1848580203082626434">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:594</note>
+        <note category="location">src/app/core/auth/permission-items.ts:588</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1835,7 +1835,7 @@
     </unit>
     <unit id="734924568623984342">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:599</note>
+        <note category="location">src/app/core/auth/permission-items.ts:593</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -3617,7 +3617,7 @@
     </unit>
     <unit id="2957627656155649168">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:239</note>
+        <note category="location">src/app/core/auth/permission-items.ts:238</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -4541,7 +4541,7 @@
     </unit>
     <unit id="3769715950462623259">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:458</note>
+        <note category="location">src/app/core/auth/permission-items.ts:457</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -5997,7 +5997,7 @@
     </unit>
     <unit id="2688547031134197193">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:293</note>
+        <note category="location">src/app/core/auth/permission-items.ts:292</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -6088,7 +6088,7 @@
     </unit>
     <unit id="2575054327998237831">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:499</note>
+        <note category="location">src/app/core/auth/permission-items.ts:498</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -6185,7 +6185,7 @@
     </unit>
     <unit id="5631710543421517153">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:484</note>
+        <note category="location">src/app/core/auth/permission-items.ts:483</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -6410,7 +6410,7 @@
     </unit>
     <unit id="4112448628063511508">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:266</note>
+        <note category="location">src/app/core/auth/permission-items.ts:265</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -8055,7 +8055,7 @@
     </unit>
     <unit id="1479707136034431936">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:283</note>
+        <note category="location">src/app/core/auth/permission-items.ts:282</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -8426,7 +8426,7 @@
     </unit>
     <unit id="3577508648825979912">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:465</note>
+        <note category="location">src/app/core/auth/permission-items.ts:464</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -9421,7 +9421,7 @@
     </unit>
     <unit id="8748180536879356854">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:251</note>
+        <note category="location">src/app/core/auth/permission-items.ts:250</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -11022,7 +11022,7 @@
     </unit>
     <unit id="8493682611789857374">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:246</note>
+        <note category="location">src/app/core/auth/permission-items.ts:245</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -12758,7 +12758,7 @@
     </unit>
     <unit id="8375416460166159043">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:320</note>
+        <note category="location">src/app/core/auth/permission-items.ts:319</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -14427,15 +14427,6 @@
       </notes>
       <segment>
         <source>Drop to upload</source>
-      </segment>
-    </unit>
-    <unit id="8800386549221798466">
-      <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:516</note>
-        <note category="description">Name of a workspace permission</note>
-      </notes>
-      <segment>
-        <source>Create Branches</source>
       </segment>
     </unit>
     <unit id="880144039825111570">
@@ -19106,7 +19097,7 @@
     </unit>
     <unit id="380334853194915857">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:310</note>
+        <note category="location">src/app/core/auth/permission-items.ts:309</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -20844,7 +20835,7 @@
     </unit>
     <unit id="7264838797878508480">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:305</note>
+        <note category="location">src/app/core/auth/permission-items.ts:304</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -21091,7 +21082,7 @@
     </unit>
     <unit id="4587531734717759061">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:261</note>
+        <note category="location">src/app/core/auth/permission-items.ts:260</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -22224,7 +22215,7 @@
     </unit>
     <unit id="5944289423622043161">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:278</note>
+        <note category="location">src/app/core/auth/permission-items.ts:277</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -23068,7 +23059,7 @@
     </unit>
     <unit id="820849383493183708">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:494</note>
+        <note category="location">src/app/core/auth/permission-items.ts:493</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -25071,7 +25062,7 @@
     </unit>
     <unit id="9070133908576398128">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:288</note>
+        <note category="location">src/app/core/auth/permission-items.ts:287</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -25232,7 +25223,7 @@
     </unit>
     <unit id="3341156395496259696">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:315</note>
+        <note category="location">src/app/core/auth/permission-items.ts:314</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -25508,7 +25499,7 @@
     </unit>
     <unit id="7542210616185617551">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:273</note>
+        <note category="location">src/app/core/auth/permission-items.ts:272</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -25818,7 +25809,7 @@
     </unit>
     <unit id="2623514669811430218">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:506</note>
+        <note category="location">src/app/core/auth/permission-items.ts:505</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -25948,7 +25939,7 @@
     </unit>
     <unit id="5383274518270102702">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:489</note>
+        <note category="location">src/app/core/auth/permission-items.ts:488</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -27416,7 +27407,7 @@
     </unit>
     <unit id="4440938864523766003">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:256</note>
+        <note category="location">src/app/core/auth/permission-items.ts:255</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -27479,7 +27470,7 @@
     </unit>
     <unit id="4447345194722487528">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:511</note>
+        <note category="location">src/app/core/auth/permission-items.ts:510</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>

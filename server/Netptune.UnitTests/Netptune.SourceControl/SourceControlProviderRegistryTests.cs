@@ -82,11 +82,11 @@ public sealed class SourceControlProviderRegistryTests : IDisposable
         var registry = new SourceControlProviderRegistry([GitHub.Provider]);
         var readOnly = GitHubTestHarness.CreateConnection(SourceControlCapabilities.ReadBranches);
 
-        var createBranch = registry.Require(readOnly, SourceControlCapabilities.CreateBranch);
+        var readPullRequests = registry.Require(readOnly, SourceControlCapabilities.ReadPullRequests);
         var readBranches = registry.Require(readOnly, SourceControlCapabilities.ReadBranches);
 
-        createBranch.IsSuccess.Should().BeFalse();
-        createBranch.Message.Should().Contain("CreateBranch");
+        readPullRequests.IsSuccess.Should().BeFalse();
+        readPullRequests.Message.Should().Contain("ReadPullRequests");
         readBranches.IsSuccess.Should().BeTrue();
     }
 

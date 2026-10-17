@@ -18,6 +18,7 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
 import { PermissionGridComponent } from './permission-grid.component';
 import {
   filterPermissionGroups,
+  knownPermissions,
   permissionLabel,
 } from './service-account-permissions';
 
@@ -130,14 +131,18 @@ export class EditApiCredentialScopesDialogComponent {
   readonly credential = this.data.credential;
   readonly scopeGroups = filterPermissionGroups(this.account.permissions);
 
+  private readonly accountPermissions = knownPermissions(
+    this.account.permissions
+  );
+
   readonly selectedScopes = signal<ReadonlySet<Permission>>(
-    new Set(this.credential.scopes)
+    new Set(knownPermissions(this.credential.scopes))
   );
 
   readonly missingScopes = computed(() => {
     const selected = this.selectedScopes();
 
-    return this.account.permissions.filter(
+    return this.accountPermissions.filter(
       (permission) => !selected.has(permission)
     );
   });
@@ -153,7 +158,7 @@ export class EditApiCredentialScopesDialogComponent {
   }
 
   selectAll() {
-    this.selectedScopes.set(new Set(this.account.permissions));
+    this.selectedScopes.set(new Set(this.accountPermissions));
   }
 
   clear() {

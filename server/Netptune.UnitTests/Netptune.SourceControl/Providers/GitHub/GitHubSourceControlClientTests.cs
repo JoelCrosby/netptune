@@ -2,7 +2,6 @@ using System.Net;
 
 using FluentAssertions;
 
-using Netptune.Core.Responses.Common;
 using Netptune.Core.SourceControl;
 using Netptune.Core.SourceControl.Models;
 using Netptune.SourceControl.Registry;
@@ -15,7 +14,6 @@ namespace Netptune.UnitTests.Netptune.SourceControl.Providers.GitHub;
 public sealed class GitHubSourceControlClientTests : IDisposable
 {
     private const string BaseSha = "1111111111111111111111111111111111111111";
-    private const string OtherSha = "9999999999999999999999999999999999999999";
     private const string BranchesPath = "/repos/acme/netptune/branches";
 
     private static readonly ScmRepositoryRef Repository = new("4242", "acme", "netptune");
@@ -119,57 +117,6 @@ public sealed class GitHubSourceControlClientTests : IDisposable
     }
 
     [Fact]
-    public async Task CreateBranch_ShouldCreateTheRefFromTheBaseBranchHead()
-    {
-        StubBranch("main", BaseSha);
-        Harness.Http.On(HttpMethod.Post, "/repos/acme/netptune/git/refs", HttpStatusCode.Created, $$"""{ "ref": "refs/heads/feature/netp-1", "object": { "sha": "{{BaseSha}}" } }""");
-
-        var result = await CreateBranch("feature/netp-1");
-
-        result.IsSuccess.Should().BeTrue(result.Message);
-        result.Payload!.HeadSha.Should().Be(BaseSha);
-        Harness.Http.Requests[^1].Body.Should().Be($$"""{"ref":"refs/heads/feature/netp-1","sha":"{{BaseSha}}"}""");
-    }
-
-    [Fact]
-    public async Task CreateBranch_ShouldFailWhenTheBaseBranchDoesNotExist()
-    {
-        Harness.Http.On(HttpMethod.Get, $"{BranchesPath}/main", HttpStatusCode.NotFound, """{ "message": "Branch not found" }""");
-
-        var result = await CreateBranch("feature/netp-1");
-
-        result.IsSuccess.Should().BeFalse();
-        result.Message.Should().Contain("base branch main");
-        Harness.Http.Requests.Should().NotContain(request => IsCreateRef(request));
-    }
-
-    [Fact]
-    public async Task CreateBranch_ShouldFailWhenADifferentBranchAlreadyHasThatName()
-    {
-        StubBranch("main", BaseSha);
-        StubRejectedCreate();
-        StubBranch("feature/netp-1", OtherSha);
-
-        var result = await CreateBranch("feature/netp-1");
-
-        result.IsSuccess.Should().BeFalse();
-        result.Message.Should().Contain("already exists");
-    }
-
-    [Fact]
-    public async Task CreateBranch_ShouldSucceedWhenARetriedCreateFindsTheBranchAtTheBaseCommit()
-    {
-        StubBranch("main", BaseSha);
-        StubRejectedCreate();
-        StubBranch("feature/netp-1", BaseSha);
-
-        var result = await CreateBranch("feature/netp-1");
-
-        result.IsSuccess.Should().BeTrue();
-        result.Payload!.Name.Should().Be("feature/netp-1");
-    }
-
-    [Fact]
     public async Task Requests_ShouldSurfaceAnExhaustedRateLimitWithItsResetTime()
     {
         var reset = Harness.Clock.GetUtcNow().AddMinutes(20);
@@ -212,27 +159,9 @@ public sealed class GitHubSourceControlClientTests : IDisposable
         return listed;
     }
 
-    private async Task<ClientResponse<ScmBranch>> CreateBranch(string name)
-    {
-        var request = new ScmCreateBranch(name, "main");
-
-        var result = await Harness.Client.CreateBranch(
-            Context,
-            Repository,
-            request,
-            TestContext.Current.CancellationToken);
-
-        return result;
-    }
-
     private void StubBranch(string name, string sha)
     {
         Harness.Http.On(HttpMethod.Get, $"{BranchesPath}/{name}", HttpStatusCode.OK, $$"""{ "name": "{{name}}", "commit": { "sha": "{{sha}}" } }""");
-    }
-
-    private void StubRejectedCreate()
-    {
-        Harness.Http.On(HttpMethod.Post, "/repos/acme/netptune/git/refs", HttpStatusCode.UnprocessableEntity, """{ "message": "Reference already exists" }""");
     }
 
     private static string RepositoriesPage(long id, string name)
@@ -254,13 +183,5 @@ public sealed class GitHubSourceControlClientTests : IDisposable
               ]
             }
             """;
-    }
-
-    private static bool IsCreateRef(RecordedRequest request)
-    {
-        var isPost = request.Method == HttpMethod.Post;
-        var isRefsPath = request.Uri.AbsolutePath.EndsWith("/git/refs");
-
-        return isPost && isRefsPath;
     }
 }

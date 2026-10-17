@@ -41,7 +41,7 @@ public static class TasksEndpoints
 
         group.MapGet("/tasks/{systemId}", GetTask)
             .WithSummary("Get a task")
-            .WithDescription("Returns a task by its system id, such as NPT-42.")
+            .WithDescription("Returns a task by its system id, such as NPT-42. Archived tasks return 404; list them with GET /tasks/archived.")
             .RequireAuthorization(NetptunePermissions.Tasks.Read);
 
         group.MapPost("/tasks", CreateTask)
@@ -308,7 +308,7 @@ public static class TasksEndpoints
         string systemId,
         CancellationToken cancellationToken)
     {
-        var id = await PublicTaskReferences.ResolveIncludingArchived(mediator, systemId, cancellationToken);
+        var id = await PublicTaskReferences.Resolve(mediator, systemId, cancellationToken);
 
         if (id is null)
         {

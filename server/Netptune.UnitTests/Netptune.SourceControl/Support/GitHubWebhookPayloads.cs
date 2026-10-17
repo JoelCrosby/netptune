@@ -85,7 +85,7 @@ internal static class GitHubWebhookPayloads
         }
         """;
 
-    public const string CreateBranch = $$"""
+    public const string BranchCreated = $$"""
         {
           "ref": "feature/netp-564-search",
           "ref_type": "branch",

@@ -1,4 +1,3 @@
-using Netptune.Core.Responses.Common;
 using Netptune.Core.SourceControl.Models;
 
 namespace Netptune.Core.SourceControl;
@@ -18,6 +17,4 @@ public interface ISourceControlClient
     ValueTask<IReadOnlyList<ScmPullRequest>> ListPullRequests(ScmConnectionContext context, ScmRepositoryRef repository, ScmPullRequestQuery query, CancellationToken cancellationToken);
 
     ValueTask<IReadOnlyList<ScmCheckRun>> ListCheckRuns(ScmConnectionContext context, ScmRepositoryRef repository, string commitSha, CancellationToken cancellationToken);
-
-    ValueTask<ClientResponse<ScmBranch>> CreateBranch(ScmConnectionContext context, ScmRepositoryRef repository, ScmCreateBranch request, CancellationToken cancellationToken);
 }

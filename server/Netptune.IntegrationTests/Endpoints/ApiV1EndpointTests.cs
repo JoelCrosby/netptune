@@ -1116,7 +1116,7 @@ public sealed class ApiV1EndpointTests
     }
 
     [Fact]
-    public async Task ArchivedTasks_ShouldOnlyBeFoundByRoutesThatReadOrRestoreThem()
+    public async Task ArchivedTasks_ShouldOnlyBeFoundByRoutesThatListOrRestoreThem()
     {
         var client = await CreateClient();
         var task = await CreateTask(client);
@@ -1132,7 +1132,7 @@ public sealed class ApiV1EndpointTests
         }, cancellationToken);
         var updateBody = await update.Content.ReadAsStringAsync(cancellationToken);
 
-        read.StatusCode.Should().Be(HttpStatusCode.OK);
+        read.StatusCode.Should().Be(HttpStatusCode.NotFound);
         update.StatusCode.Should().Be(HttpStatusCode.NotFound);
         updateBody.Should().Contain(task.SystemId);
     }

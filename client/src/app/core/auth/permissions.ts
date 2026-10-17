@@ -124,7 +124,6 @@ export const PERMISSIONS = {
   sourceControl: {
     read: 'source_control.read',
     manage: 'source_control.manage',
-    createBranch: 'source_control.create_branch',
   },
   flags: {
     read: 'flags.read',

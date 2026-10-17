@@ -16,7 +16,6 @@ import {
   LucideFileText,
   LucideFlag,
   LucideGitBranch,
-  LucideGitBranchPlus,
   LucideGlobe,
   LucideSparkles,
   LucideIconInput,
@@ -510,11 +509,6 @@ export const netptunePermissionLabels: PermissionLabels = {
       key: 'source_control.manage',
       label: $localize`:Name of a workspace permission:Manage Source Control Connections`,
       icon: LucideShield,
-    },
-    createBranch: {
-      key: 'source_control.create_branch',
-      label: $localize`:Name of a workspace permission:Create Branches`,
-      icon: LucideGitBranchPlus,
     },
   },
   flags: {

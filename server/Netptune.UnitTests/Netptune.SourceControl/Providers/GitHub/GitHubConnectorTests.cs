@@ -113,7 +113,6 @@ public sealed class GitHubConnectorTests : IDisposable
             TestContext.Current.CancellationToken);
 
         granted.HasFlag(SourceControlCapabilities.ReadPullRequests).Should().BeTrue();
-        granted.HasFlag(SourceControlCapabilities.CreateBranch).Should().BeFalse("contents is read-only");
         Harness.Http.Requests.Single().Authorization.Should().StartWith("Bearer ey");
     }
 
@@ -147,9 +146,6 @@ public sealed class GitHubConnectorTests : IDisposable
         result.Payload.CredentialKind.Should().Be(ScmCredentialKind.AppInstallation);
         result.Payload.ProtectedCredential.Should().BeNull();
         result.Payload.GrantedCapabilities.HasFlag(SourceControlCapabilities.ReadPullRequests).Should().BeTrue();
-        var canCreateBranch = result.Payload.GrantedCapabilities.HasFlag(SourceControlCapabilities.CreateBranch);
-
-        canCreateBranch.Should().BeFalse("contents is read-only");
 
         var exchange = Harness.Http.Requests[0];
         exchange.Uri.AbsoluteUri.Should().Be("https://github.com/login/oauth/access_token");

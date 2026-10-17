@@ -399,14 +399,5 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
         {
             throw new NotSupportedException();
         }
-
-        public ValueTask<ClientResponse<ScmBranch>> CreateBranch(
-            ScmConnectionContext context,
-            ScmRepositoryRef repository,
-            ScmCreateBranch request,
-            CancellationToken cancellationToken)
-        {
-            throw new NotSupportedException();
-        }
     }
 }

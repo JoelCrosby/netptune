@@ -9,7 +9,8 @@ public enum SourceControlCapabilities
     ReadCommits = 1 << 2,
     ReadPullRequests = 1 << 3,
     ReadCheckRuns = 1 << 4,
-    CreateBranch = 1 << 5,
+
+    // 1 << 5 was CreateBranch. Granted capabilities are stored as these bits, so it stays unused.
     Webhooks = 1 << 6,
     IssueSync = 1 << 7,
 }

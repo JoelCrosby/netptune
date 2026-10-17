@@ -14,16 +14,6 @@ public static class PublicTaskReferences
         return FirstId(resolution);
     }
 
-    public static async Task<int?> ResolveIncludingArchived(
-        IMediator mediator,
-        string systemId,
-        CancellationToken cancellationToken)
-    {
-        var resolution = await ResolveIncludingArchived(mediator, [systemId], cancellationToken);
-
-        return FirstId(resolution);
-    }
-
     public static Task<PublicTaskIdResolution> Resolve(
         IMediator mediator,
         IReadOnlyCollection<string> systemIds,

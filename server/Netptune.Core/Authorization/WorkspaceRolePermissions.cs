@@ -65,7 +65,6 @@ public static class WorkspaceRolePermissions
         NetptunePermissions.Files.DeleteOwn,
         NetptunePermissions.Assistant.Use,
         NetptunePermissions.Assistant.UseWeb,
-        NetptunePermissions.SourceControl.CreateBranch,
     };
 
     private static readonly IReadOnlySet<string> AdminPermissions = new HashSet<string>(MemberPermissions)

@@ -2,7 +2,6 @@ using System.Globalization;
 using System.Net;
 using System.Runtime.CompilerServices;
 
-using Netptune.Core.Responses.Common;
 using Netptune.Core.SourceControl;
 using Netptune.Core.SourceControl.Models;
 using Netptune.SourceControl.Providers.GitHub.Dtos;
@@ -151,83 +150,6 @@ internal sealed class GitHubSourceControlClient : ISourceControlClient
         var checkRuns = response.Payload?.CheckRuns ?? [];
 
         return checkRuns.Select(GitHubMapper.ToCheckRun).ToList();
-    }
-
-    public async ValueTask<ClientResponse<ScmBranch>> CreateBranch(
-        ScmConnectionContext context,
-        ScmRepositoryRef repository,
-        ScmCreateBranch request,
-        CancellationToken cancellationToken)
-    {
-        var baseBranch = await GetBranch(context, repository, request.BaseBranch, cancellationToken);
-
-        if (baseBranch is null)
-        {
-            return ClientResponse<ScmBranch>.Failed($"The base branch {request.BaseBranch} does not exist.");
-        }
-
-        var token = await context.GetAccessToken(cancellationToken);
-
-        var createRequest = new GitHubRequest
-        {
-            Method = HttpMethod.Post,
-            Url = $"{GitHubUrls.Repository(repository)}/git/refs",
-            BearerToken = token.Token,
-            Body = new GitHubCreateRefDto
-            {
-                Ref = $"refs/heads/{request.Name}",
-                Sha = baseBranch.HeadSha,
-            },
-        };
-
-        var response = await Api.Send<GitHubCommitShaDto>(createRequest, cancellationToken);
-
-        if (response.IsSuccess)
-        {
-            var webUrl = GitHubUrls.Branch(Api.WebBaseUrl, repository, request.Name);
-            var created = new ScmBranch(request.Name, baseBranch.HeadSha, webUrl);
-
-            return ClientResponse<ScmBranch>.Success(created);
-        }
-
-        var resolved = await ResolveRejectedCreate(
-            context,
-            repository,
-            request,
-            baseBranch,
-            response,
-            cancellationToken);
-
-        return resolved;
-    }
-
-    // The HTTP pipeline retries transient failures, so a create that succeeded on GitHub can come
-    // back as "already exists". A branch already at the base commit is the branch that was asked for.
-    private async Task<ClientResponse<ScmBranch>> ResolveRejectedCreate(
-        ScmConnectionContext context,
-        ScmRepositoryRef repository,
-        ScmCreateBranch request,
-        ScmBranch baseBranch,
-        GitHubResponse<GitHubCommitShaDto> response,
-        CancellationToken cancellationToken)
-    {
-        var existing = await GetBranch(context, repository, request.Name, cancellationToken);
-
-        if (existing is null)
-        {
-            var reason = response.ErrorMessage ?? "GitHub rejected the branch name.";
-
-            return ClientResponse<ScmBranch>.Failed(reason);
-        }
-
-        var isAtBaseCommit = existing.HeadSha == baseBranch.HeadSha;
-
-        if (isAtBaseCommit)
-        {
-            return ClientResponse<ScmBranch>.Success(existing);
-        }
-
-        return ClientResponse<ScmBranch>.Failed($"A branch named {request.Name} already exists.");
     }
 
     private async Task<GitHubResponse<T>> Get<T>(
