@@ -78,7 +78,7 @@ public class AiModelCatalogServiceTests
             TestContext.Current.CancellationToken);
 
         efforts.Should().Equal(AiModels.EffortsFor(AiModels.OpenAiDefault));
-        await Source.DidNotReceiveWithAnyArgs().GetEfforts(default!, default);
+        await Source.DidNotReceiveWithAnyArgs().GetEfforts(default!, TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -161,7 +161,7 @@ public class AiModelCatalogServiceTests
         var models = await Catalog.List([], TestContext.Current.CancellationToken);
 
         models.Should().BeEquivalentTo(AiModels.Catalog);
-        await Source.DidNotReceiveWithAnyArgs().GetEfforts(default!, default);
+        await Source.DidNotReceiveWithAnyArgs().GetEfforts(default!, TestContext.Current.CancellationToken);
     }
 
     private void GivenLiveEfforts(Dictionary<string, IReadOnlyList<AiEffort>> efforts)

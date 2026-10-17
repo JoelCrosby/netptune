@@ -43,6 +43,6 @@ public class GetWorkspaceMembersByIdQueryHandlerTests
         var result = await Handler.Handle(new GetWorkspaceMembersByIdQuery([]), TestContext.Current.CancellationToken);
 
         result.Should().BeEmpty();
-        await UnitOfWork.Users.DidNotReceiveWithAnyArgs().GetUserAvatars(default!, default, default);
+        await UnitOfWork.Users.DidNotReceiveWithAnyArgs().GetUserAvatars(default!, default, TestContext.Current.CancellationToken);
     }
 }
