@@ -66,6 +66,7 @@ const groupLabels: Record<string, string> = {
   reports: 'Reports',
   automations: 'Automations',
   assistant: 'Assistant',
+  sourceControl: 'Source control',
   flags: 'Flags',
   serviceAccounts: 'Service accounts',
   storage: 'Storage',

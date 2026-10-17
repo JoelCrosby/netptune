@@ -85,6 +85,9 @@ public class TransferRedactionTests
             "AutomationRun",
             "AutomationActionResult",
             "ScheduledAutomationAction",
+            "SourceControlConnection",
+            "SourceControlRepo",
+            "SourceControlRepoProject",
         };
 
         foreach (var name in withheld)

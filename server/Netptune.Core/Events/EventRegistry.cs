@@ -40,6 +40,8 @@ public static class EventKeys
     public const string FlagResolutionRecorded = "flag.resolution-recorded";
     public const string EntityActivityRecorded = "entity.activity-recorded";
     public const string AssistantConversationDeleted = "assistant.conversation-deleted";
+    public const string SourceControlConnected = "source-control.connected";
+    public const string SourceControlDisconnected = "source-control.disconnected";
 
     public static string From(ActivityType type) => type switch
     {
@@ -108,6 +110,8 @@ public static class EventKeys
             CommentDeleted => ActivityType.RemoveComment,
             FlagResolutionRecorded => ActivityType.Modify,
             AssistantConversationDeleted => ActivityType.Delete,
+            SourceControlConnected => ActivityType.Create,
+            SourceControlDisconnected => ActivityType.Delete,
             _ => (ActivityType?)null,
         };
 
@@ -213,6 +217,8 @@ public static class EventDefinitionRegistry
             [(EventKeys.CommentDeleted, 1)] = typeof(CommentEventPayload),
             [(EventKeys.FlagResolutionRecorded, 1)] = typeof(FlagResolutionPayload),
             [(EventKeys.AssistantConversationDeleted, 1)] = typeof(AssistantConversationDeletedPayload),
+            [(EventKeys.SourceControlConnected, 1)] = typeof(SourceControlConnectionEventPayload),
+            [(EventKeys.SourceControlDisconnected, 1)] = typeof(SourceControlConnectionEventPayload),
         };
 
     public static void Validate(IEventWriteRequest request)

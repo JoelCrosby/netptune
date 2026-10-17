@@ -19,6 +19,7 @@ public static class TransferRedactionKeys
     public const string TransferHistory = "transfer-history";
     public const string SavedViews = "saved-views";
     public const string EncryptionKeys = "encryption-keys";
+    public const string SourceControlConnections = "source-control-connections";
 
     public static IReadOnlySet<string> All { get; } = typeof(TransferRedactionKeys)
         .GetFields(BindingFlags.Public | BindingFlags.Static)

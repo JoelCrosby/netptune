@@ -73,6 +73,10 @@ public interface INetptuneUnitOfWork : IUnitOfWork
 
     IWorkspaceAiCredentialRepository WorkspaceAiCredentials { get; }
 
+    ISourceControlConnectionRepository SourceControlConnections { get; }
+
+    ISourceControlRepoRepository SourceControlRepos { get; }
+
     IAiConversationRepository AiConversations { get; }
 
     IAiUsageRecordRepository AiUsageRecords { get; }

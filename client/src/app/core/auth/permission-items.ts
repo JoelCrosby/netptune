@@ -15,6 +15,8 @@ import {
   LucideFilePen,
   LucideFileText,
   LucideFlag,
+  LucideGitBranch,
+  LucideGitBranchPlus,
   LucideGlobe,
   LucideSparkles,
   LucideIconInput,
@@ -496,6 +498,23 @@ export const netptunePermissionLabels: PermissionLabels = {
       key: 'assistant.use_web',
       label: $localize`:Name of a workspace permission:Assistant Web Access`,
       icon: LucideGlobe,
+    },
+  },
+  sourceControl: {
+    read: {
+      key: 'source_control.read',
+      label: $localize`:Name of a workspace permission:View Source Control`,
+      icon: LucideGitBranch,
+    },
+    manage: {
+      key: 'source_control.manage',
+      label: $localize`:Name of a workspace permission:Manage Source Control Connections`,
+      icon: LucideShield,
+    },
+    createBranch: {
+      key: 'source_control.create_branch',
+      label: $localize`:Name of a workspace permission:Create Branches`,
+      icon: LucideGitBranchPlus,
     },
   },
   flags: {

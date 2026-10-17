@@ -272,3 +272,14 @@ public sealed record AssistantConversationDeletedPayload
 
     public string? OwnerDisplayName { get; init; }
 }
+
+public sealed record SourceControlConnectionEventPayload
+{
+    public int ConnectionId { get; init; }
+
+    public required string Provider { get; init; }
+
+    public required string AccountLogin { get; init; }
+
+    public required string ExternalAccountId { get; init; }
+}
