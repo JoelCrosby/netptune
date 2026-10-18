@@ -61,8 +61,20 @@ public static class AutomationMapping
             AutomationTriggerType.SprintCompleted or
             AutomationTriggerType.TaskBlocked or
             AutomationTriggerType.TaskUnblocked or
-            AutomationTriggerType.SubtasksCompleted => JsonSerializer.SerializeToDocument(new
+            AutomationTriggerType.SubtasksCompleted or
+            AutomationTriggerType.ChecksFailed => JsonSerializer.SerializeToDocument(new
             {
+                conditionGroup = trigger.ConditionGroup,
+            }, JsonOptions.Default),
+            AutomationTriggerType.PullRequestOpened => JsonSerializer.SerializeToDocument(new
+            {
+                targetBranches = TrimBranches(trigger.TargetBranches),
+                includeDrafts = trigger.IncludeDrafts ?? false,
+                conditionGroup = trigger.ConditionGroup,
+            }, JsonOptions.Default),
+            AutomationTriggerType.PullRequestMerged => JsonSerializer.SerializeToDocument(new
+            {
+                targetBranches = TrimBranches(trigger.TargetBranches),
                 conditionGroup = trigger.ConditionGroup,
             }, JsonOptions.Default),
             _ => null,
@@ -108,6 +120,22 @@ public static class AutomationMapping
             };
         }
 
+        var isPullRequestTrigger = AutomationSourceControlTrigger.IsPullRequest(type);
+
+        if (isPullRequestTrigger)
+        {
+            var isOpenedTrigger = type == AutomationTriggerType.PullRequestOpened;
+            var storedIncludeDrafts = JsonUtils.ReadObject<bool?>(config, "includeDrafts") ?? false;
+
+            return new AutomationTriggerViewModel
+            {
+                Type = type,
+                TargetBranches = JsonUtils.ReadList<string>(config, "targetBranches"),
+                IncludeDrafts = isOpenedTrigger ? storedIncludeDrafts : null,
+                ConditionGroup = JsonUtils.ReadObject<AutomationConditionGroup>(config, "conditionGroup"),
+            };
+        }
+
         var scheduledConditionGroup = JsonUtils.ReadObject<AutomationConditionGroup>(config, "conditionGroup");
 
         return new AutomationTriggerViewModel
@@ -132,5 +160,10 @@ public static class AutomationMapping
             Type = action.Type,
             SortOrder = action.SortOrder,
         };
+    }
+
+    private static List<string> TrimBranches(List<string>? branches)
+    {
+        return branches?.Select(branch => branch.Trim()).ToList() ?? [];
     }
 }

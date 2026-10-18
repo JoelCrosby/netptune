@@ -2,6 +2,7 @@ import { Component, computed, model } from '@angular/core';
 import { cn } from '@static/components/button/button.variants';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormSelectSearchComponent } from '@static/components/form-select-search/form-select-search.component';
+import { SwitchFieldComponent } from '@static/components/switch/switch-field.component';
 import {
   automationTriggerTypes,
   taskChangeFieldLabels,
@@ -9,6 +10,7 @@ import {
 } from '../models/automation-copy';
 import {
   AutomationTriggerType,
+  isPullRequestTrigger,
   TaskChangeField,
 } from '../models/automation.models';
 
@@ -19,7 +21,11 @@ interface DurationCopy {
 
 @Component({
   selector: 'app-automation-trigger-editor',
-  imports: [FormInputComponent, FormSelectSearchComponent],
+  imports: [
+    FormInputComponent,
+    FormSelectSearchComponent,
+    SwitchFieldComponent,
+  ],
   host: { class: 'flex flex-col gap-5' },
   template: `
     <app-form-select-search
@@ -68,6 +74,27 @@ interface DurationCopy {
           }
         </div>
       </div>
+    } @else if (isPullRequest()) {
+      <app-form-input
+        name="targetBranches"
+        i18n-label="Label of the branches a pull request must target"
+        label="Target branches"
+        [placeholder]="branchPlaceholder"
+        i18n-hint="Hint below the target branches field"
+        hint="Separate branches with commas. End one with * to match every branch that starts with it. Leave empty for any branch."
+        [noMargin]="true"
+        [(value)]="targetBranches" />
+
+      @if (triggerType() === automationTriggerType.pullRequestOpened) {
+        <app-switch-field
+          i18n-label="
+            Label of the switch that lets draft pull requests run the rule
+          "
+          label="Include draft pull requests"
+          i18n-hint="Hint below the draft pull requests switch"
+          hint="When off, a draft runs the rule once it is ready for review."
+          [(checked)]="includeDrafts" />
+      }
     } @else if (durationCopy(); as duration) {
       <div>
         <label
@@ -108,6 +135,7 @@ interface DurationCopy {
 export class AutomationTriggerEditorComponent {
   readonly automationTriggerType = AutomationTriggerType;
   readonly triggerTypes = automationTriggerTypes;
+  readonly branchPlaceholder = 'main, release/*';
 
   readonly taskFieldOptions = [
     TaskChangeField.name,
@@ -126,6 +154,12 @@ export class AutomationTriggerEditorComponent {
   );
   readonly taskFields = model<TaskChangeField[]>([TaskChangeField.status]);
   readonly durationDays = model('3');
+  readonly targetBranches = model('');
+  readonly includeDrafts = model(false);
+
+  protected readonly isPullRequest = computed(() => {
+    return isPullRequestTrigger(this.triggerType());
+  });
 
   protected readonly durationCopy = computed<DurationCopy | null>(() => {
     switch (this.triggerType()) {

@@ -214,6 +214,20 @@ internal static class AutomationTestData
         }, actionType);
     }
 
+    public static async Task<AutomationRule> CreateSourceControlRule(
+        DataContext db,
+        AutomationScenario scenario,
+        AutomationTriggerType triggerType,
+        string[]? targetBranches = null,
+        bool includeDrafts = false)
+    {
+        return await CreateRule(db, scenario, triggerType, new
+        {
+            targetBranches = targetBranches ?? [],
+            includeDrafts,
+        }, AutomationActionType.FlagTask);
+    }
+
     public static async Task AddProjectMember(DataContext db, AutomationScenario scenario, string userId)
     {
         db.ProjectUsers.Add(new ProjectUser

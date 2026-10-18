@@ -16,6 +16,8 @@ import {
   AutomationRuleRequest,
   AutomationTrigger,
   AutomationTriggerType,
+  isValidBranchPattern,
+  maxTargetBranches,
 } from '../models/automation.models';
 import { messageVariables } from '../models/automation-copy';
 
@@ -340,6 +342,20 @@ function validateTrigger(trigger: AutomationTrigger): string | null {
 
   if (hasInvalidSprintLeadTime) {
     return 'Sprint lead time must be 0 to 365 days.';
+  }
+
+  const targetBranches = trigger.targetBranches ?? [];
+
+  if (targetBranches.length > maxTargetBranches) {
+    return `Choose at most ${maxTargetBranches} target branches.`;
+  }
+
+  const invalidBranch = targetBranches.find(
+    (pattern) => !isValidBranchPattern(pattern)
+  );
+
+  if (invalidBranch) {
+    return `${invalidBranch} is not a valid branch. Only a trailing * is allowed.`;
   }
 
   return null;

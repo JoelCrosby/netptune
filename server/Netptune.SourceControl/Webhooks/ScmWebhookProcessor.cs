@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.Extensions.Logging;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Services.Activity;
 using Netptune.Core.Services.Realtime;
 using Netptune.Core.SourceControl;
 using Netptune.Core.SourceControl.Models;
@@ -20,6 +21,8 @@ internal sealed class ScmWebhookProcessor : IScmWebhookProcessor
     private readonly ISourceControlProviderRegistry Registry;
     private readonly IEnumerable<IScmEventHandler> Handlers;
     private readonly IWorkspaceEventPublisher WorkspaceEvents;
+    private readonly IEventPublisher EventPublisher;
+    private readonly ScmAutomationEvents AutomationEvents;
     private readonly TimeProvider Clock;
     private readonly ILogger<ScmWebhookProcessor> Logger;
 
@@ -28,6 +31,8 @@ internal sealed class ScmWebhookProcessor : IScmWebhookProcessor
         ISourceControlProviderRegistry registry,
         IEnumerable<IScmEventHandler> handlers,
         IWorkspaceEventPublisher workspaceEvents,
+        IEventPublisher eventPublisher,
+        ScmAutomationEvents automationEvents,
         TimeProvider clock,
         ILogger<ScmWebhookProcessor> logger)
     {
@@ -35,6 +40,8 @@ internal sealed class ScmWebhookProcessor : IScmWebhookProcessor
         Registry = registry;
         Handlers = handlers;
         WorkspaceEvents = workspaceEvents;
+        EventPublisher = eventPublisher;
+        AutomationEvents = automationEvents;
         Clock = clock;
         Logger = logger;
     }
@@ -52,9 +59,18 @@ internal sealed class ScmWebhookProcessor : IScmWebhookProcessor
 
         HashSet<(string Workspace, string Scope)> changes;
 
+        AutomationEvents.Clear();
+
         try
         {
             changes = await Apply(delivery, cancellationToken);
+
+            // Dispatched before the processed mark is saved, so a crash in between redelivers the webhook
+            // rather than losing the triggers; each run's idempotency key absorbs the repeat.
+            foreach (var message in AutomationEvents.TakeAll())
+            {
+                await EventPublisher.Dispatch(message);
+            }
 
             delivery.ProcessedAt = Clock.GetUtcNow().UtcDateTime;
             delivery.LastError = null;

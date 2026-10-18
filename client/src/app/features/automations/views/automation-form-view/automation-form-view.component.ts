@@ -78,6 +78,8 @@ import {
   AutomationTrigger,
   AutomationTriggerType,
   TaskChangeField,
+  isPullRequestTrigger,
+  parseBranchPatterns,
 } from '../../models/automation.models';
 import { AutomationsService } from '../../services/automations.service';
 
@@ -349,7 +351,9 @@ type AutomationFlowStepKey = 'settings' | 'trigger' | 'conditions' | number;
                       <app-automation-trigger-editor
                         [(triggerType)]="triggerType"
                         [(taskFields)]="taskFields"
-                        [(durationDays)]="durationDays" />
+                        [(durationDays)]="durationDays"
+                        [(targetBranches)]="targetBranches"
+                        [(includeDrafts)]="includeDrafts" />
                     }
                     @case ('conditions') {
                       <app-automation-conditions-editor
@@ -500,6 +504,8 @@ export class AutomationFormViewComponent {
   readonly taskFields = signal<TaskChangeField[]>([TaskChangeField.status]);
   readonly conditionGroup = signal<AutomationConditionGroup | null>(null);
   readonly durationDays = signal('3');
+  readonly targetBranches = signal('');
+  readonly includeDrafts = signal(false);
   readonly projectId = signal<number | null>(null);
   readonly boardId = signal<number | null>(null);
   readonly sprintId = signal<number | null>(null);
@@ -793,10 +799,17 @@ export class AutomationFormViewComponent {
       this.triggerType() === AutomationTriggerType.taskInactiveFor ||
       this.triggerType() === AutomationTriggerType.sprintEndingSoon;
 
+    const isPullRequest = isPullRequestTrigger(this.triggerType());
+    const isOpened =
+      this.triggerType() === AutomationTriggerType.pullRequestOpened;
+    const targetBranches = parseBranchPatterns(this.targetBranches());
+
     return {
       type: this.triggerType(),
       fields: null,
       durationDays: usesDuration ? Number(this.durationDays()) : null,
+      targetBranches: isPullRequest ? targetBranches : null,
+      includeDrafts: isOpened ? this.includeDrafts() : null,
       conditionGroup: this.conditionGroup(),
     };
   });
@@ -833,6 +846,8 @@ export class AutomationFormViewComponent {
     const taskFields = rule.trigger.fields ?? [];
     const conditionGroup = rule.trigger.conditionGroup ?? null;
     const durationDays = String(rule.trigger.durationDays ?? 3);
+    const targetBranches = (rule.trigger.targetBranches ?? []).join(', ');
+    const includeDrafts = rule.trigger.includeDrafts ?? false;
     const actions = rule.actions.length
       ? rule.actions.map((action) => ({
           ...action,
@@ -847,6 +862,8 @@ export class AutomationFormViewComponent {
     this.taskFields.set(taskFields);
     this.conditionGroup.set(conditionGroup);
     this.durationDays.set(durationDays);
+    this.targetBranches.set(targetBranches);
+    this.includeDrafts.set(includeDrafts);
     this.actions.set(actions);
     this.projectId.set(rule.projectId ?? null);
     this.boardId.set(rule.boardId ?? null);

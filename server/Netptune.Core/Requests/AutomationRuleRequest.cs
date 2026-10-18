@@ -32,6 +32,10 @@ public record AutomationTriggerRequest
 
     public int? DurationDays { get; init; }
 
+    public List<string>? TargetBranches { get; init; }
+
+    public bool? IncludeDrafts { get; init; }
+
     public string? Validate()
     {
         var hasWatchedFields = Fields is { Count: > 0 };
@@ -66,7 +70,47 @@ public record AutomationTriggerRequest
             return triggerError;
         }
 
+        var sourceControlError = ValidateSourceControl();
+
+        if (sourceControlError is not null)
+        {
+            return sourceControlError;
+        }
+
         return ValidateConditions();
+    }
+
+    private string? ValidateSourceControl()
+    {
+        var targetBranches = TargetBranches ?? [];
+        var hasBranches = targetBranches.Count > 0;
+        var isPullRequestTrigger = AutomationSourceControlTrigger.IsPullRequest(Type);
+
+        if (hasBranches && !isPullRequestTrigger)
+        {
+            return "Only pull request automations can filter by target branch.";
+        }
+
+        if (targetBranches.Count > AutomationSourceControlTrigger.MaxTargetBranches)
+        {
+            return $"A pull request automation can name at most {AutomationSourceControlTrigger.MaxTargetBranches} target branches.";
+        }
+
+        var hasInvalidBranch = targetBranches.Any(branch => !AutomationSourceControlTrigger.IsValidBranchPattern(branch));
+
+        if (hasInvalidBranch)
+        {
+            return "Target branches must be branch names, optionally ending in * to match a prefix.";
+        }
+
+        var hasDraftsSetting = IncludeDrafts.HasValue;
+
+        if (hasDraftsSetting && Type != AutomationTriggerType.PullRequestOpened)
+        {
+            return "Only pull request opened automations can include drafts.";
+        }
+
+        return null;
     }
 
     private string? ValidateConditions()

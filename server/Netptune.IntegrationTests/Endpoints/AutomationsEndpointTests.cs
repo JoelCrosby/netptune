@@ -339,6 +339,44 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
     }
 
     [Fact]
+    public async Task Create_ShouldPersistPullRequestTriggerSettings()
+    {
+        var setup = await GetSetup();
+        var token = TestContext.Current.CancellationToken;
+        var response = await Client.PostAsJsonAsync("api/automations", new AutomationRuleRequest
+        {
+            Name = $"Pull request rule {Guid.NewGuid():N}",
+            IsEnabled = true,
+            ExecutionUserId = setup.ExecutionUserId,
+            Trigger = new AutomationTriggerRequest
+            {
+                Type = AutomationTriggerType.PullRequestOpened,
+                TargetBranches = [" main ", "release/*"],
+                IncludeDrafts = true,
+            },
+            Actions =
+            [
+                new AutomationActionRequest
+                {
+                    Type = AutomationActionType.NotifyTaskAssignees,
+                    Recipients = [AutomationNotificationRecipient.Assignees],
+                },
+            ],
+        }, token);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync(token));
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<AutomationRuleViewModel>>(token);
+        var reloaded = await Client.GetFromJsonAsync<ClientResponse<AutomationRuleViewModel>>(
+            $"api/automations/{result!.Payload!.Id}",
+            token);
+        var trigger = reloaded!.Payload!.Trigger;
+
+        trigger.TargetBranches.Should().Equal("main", "release/*");
+        trigger.IncludeDrafts.Should().BeTrue();
+    }
+
+    [Fact]
     public async Task Create_ShouldFail_WithMoreThanOneScope()
     {
         var setup = await GetSetup();

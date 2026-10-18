@@ -57,6 +57,9 @@ internal sealed class ScheduledActionEligibilityEvaluator
             AutomationTriggerType.TaskOverdue => MatchesOverdueRule(scheduledAction, now),
             AutomationTriggerType.TaskHasNoDueDate => MatchesNoDueDateRule(scheduledAction),
             AutomationTriggerType.TaskInactiveFor => MatchesInactiveRule(scheduledAction, now),
+            AutomationTriggerType.PullRequestOpened or
+            AutomationTriggerType.PullRequestMerged or
+            AutomationTriggerType.ChecksFailed => MatchesConditions(scheduledAction),
             _ => false,
         };
 

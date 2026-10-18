@@ -17,6 +17,9 @@ export enum AutomationTriggerType {
   taskBlocked = 11,
   taskUnblocked = 12,
   subtasksCompleted = 13,
+  pullRequestOpened = 14,
+  pullRequestMerged = 15,
+  checksFailed = 16,
 }
 
 export enum TaskChangeField {
@@ -130,6 +133,37 @@ export interface AutomationTrigger {
   fields?: TaskChangeField[] | null;
   conditionGroup?: AutomationConditionGroup | null;
   durationDays?: number | null;
+  targetBranches?: string[] | null;
+  includeDrafts?: boolean | null;
+}
+
+export const maxTargetBranches = 20;
+export const maxBranchLength = 255;
+
+export function isPullRequestTrigger(type: AutomationTriggerType): boolean {
+  return (
+    type === AutomationTriggerType.pullRequestOpened ||
+    type === AutomationTriggerType.pullRequestMerged
+  );
+}
+
+export function parseBranchPatterns(text: string): string[] {
+  const patterns = text.split(',').map((pattern) => pattern.trim());
+
+  return [...new Set(patterns.filter(Boolean))];
+}
+
+export function isValidBranchPattern(pattern: string): boolean {
+  const wildcard = pattern.indexOf('*');
+  const hasOnlyTrailingWildcard =
+    wildcard === -1 || wildcard === pattern.length - 1;
+
+  return (
+    pattern !== '*' &&
+    pattern.length <= maxBranchLength &&
+    !/\s/.test(pattern) &&
+    hasOnlyTrailingWildcard
+  );
 }
 
 export interface AutomationAction {

@@ -54,8 +54,17 @@ internal sealed class ScmTaskActivityRecorder
             return;
         }
 
-        var actorUserId = await ResolveActor(activity, cancellationToken);
+        var actorUserId = await ResolveActor(
+            activity.Repo.WorkspaceId,
+            activity.Provider,
+            activity.Actor,
+            cancellationToken);
 
+        await RecordAs(activity, actorUserId, cancellationToken);
+    }
+
+    public async Task RecordAs(ScmTaskActivity activity, string? actorUserId, CancellationToken cancellationToken)
+    {
         var payload = new SourceControlActivityPayload
         {
             Provider = SourceControlProviderSlugs.From(activity.Provider),
@@ -88,10 +97,12 @@ internal sealed class ScmTaskActivityRecorder
         await EventRecords.AppendRange(requests, cancellationToken);
     }
 
-    private async Task<string?> ResolveActor(ScmTaskActivity activity, CancellationToken cancellationToken)
+    public async Task<string?> ResolveActor(
+        int workspaceId,
+        SourceControlProvider provider,
+        ScmIdentity? actor,
+        CancellationToken cancellationToken)
     {
-        var actor = activity.Actor;
-
         if (actor is null)
         {
             return null;
@@ -104,16 +115,16 @@ internal sealed class ScmTaskActivityRecorder
         List<string> emails = actor.Email is null ? [] : [ScmAuthorMatcher.NormalizeEmail(actor.Email)];
 
         var identities = await UnitOfWork.UserSourceControlIdentities.GetMemberIdentities(
-            activity.Repo.WorkspaceId,
-            activity.Provider,
+            workspaceId,
+            provider,
             externalIds,
             usernames,
             cancellationToken);
 
-        var membersByEmail = await GetMembersByEmail(activity.Repo.WorkspaceId, emails, cancellationToken);
+        var membersByEmail = await GetMembersByEmail(workspaceId, emails, cancellationToken);
 
         var matcher = new ScmAuthorMatcher(identities, membersByEmail);
-        var member = matcher.Match(activity.Provider, actor.ExternalId, actor.Username, actor.Email);
+        var member = matcher.Match(provider, actor.ExternalId, actor.Username, actor.Email);
 
         return member?.Id;
     }

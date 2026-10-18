@@ -1,5 +1,7 @@
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Events.SourceControl;
 using Netptune.Core.Services.Realtime;
 using Netptune.Core.SourceControl;
 using Netptune.Core.SourceControl.Events;
@@ -17,12 +19,18 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
 
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly ScmTaskActivityRecorder Activity;
+    private readonly ScmAutomationEvents Automation;
     private readonly TimeProvider Clock;
 
-    public ScmTaskLinkHandler(INetptuneUnitOfWork unitOfWork, ScmTaskActivityRecorder activity, TimeProvider clock)
+    public ScmTaskLinkHandler(
+        INetptuneUnitOfWork unitOfWork,
+        ScmTaskActivityRecorder activity,
+        ScmAutomationEvents automation,
+        TimeProvider clock)
     {
         UnitOfWork = unitOfWork;
         Activity = activity;
+        Automation = automation;
         Clock = clock;
     }
 
@@ -109,15 +117,37 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
         var pullRequest = changed.PullRequest;
         var taskIds = outcome.TaskIdsFor(pullRequest.Number);
 
-        if (eventKey is null || taskIds.Count == 0)
+        AutomationTriggerType? triggerType = changed.Action switch
+        {
+            ScmPullRequestAction.Opened
+                or ScmPullRequestAction.Reopened
+                or ScmPullRequestAction.ReadyForReview => AutomationTriggerType.PullRequestOpened,
+            ScmPullRequestAction.Merged => AutomationTriggerType.PullRequestMerged,
+            _ => null,
+        };
+
+        var hasNothingToRecord = eventKey is null && triggerType is null;
+
+        if (taskIds.Count == 0 || hasNothingToRecord)
         {
             return;
         }
 
-        var isOpening = eventKey == EventKeys.SourceControlPullRequestOpened;
+        var isOpening = triggerType == AutomationTriggerType.PullRequestOpened;
         var actor = isOpening ? pullRequest.Author : changed.Actor ?? pullRequest.Author;
+        var actorUserId = await Activity.ResolveActor(repo.WorkspaceId, connection.Provider, actor, cancellationToken);
 
-        await Activity.Record(new ScmTaskActivity
+        if (triggerType is not null)
+        {
+            QueueAutomation(changed, repo, triggerType.Value, taskIds, actorUserId);
+        }
+
+        if (eventKey is null)
+        {
+            return;
+        }
+
+        await Activity.RecordAs(new ScmTaskActivity
         {
             EventKey = eventKey,
             TaskIds = taskIds,
@@ -128,7 +158,28 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
             WebUrl = pullRequest.WebUrl,
             Actor = actor,
             OccurredAt = changed.OccurredAt,
-        }, cancellationToken);
+        }, actorUserId, cancellationToken);
+    }
+
+    private void QueueAutomation(
+        ScmPullRequestChanged changed,
+        SourceControlRepo repo,
+        AutomationTriggerType triggerType,
+        List<int> taskIds,
+        string? actorUserId)
+    {
+        Automation.Add(new SourceControlTaskEventMessage
+        {
+            EventId = changed.EventId,
+            WorkspaceId = repo.WorkspaceId,
+            TriggerType = triggerType,
+            TaskIds = taskIds,
+            TargetBranch = changed.PullRequest.TargetBranch,
+            IsDraft = changed.PullRequest.State == ScmPullRequestState.Draft,
+            IsReadyForReview = changed.Action == ScmPullRequestAction.ReadyForReview,
+            ActorUserId = actorUserId,
+            OccurredAt = changed.OccurredAt.UtcDateTime,
+        });
     }
 
     // Only commits linked for the first time count, so pushing the same commits again (a merge to the

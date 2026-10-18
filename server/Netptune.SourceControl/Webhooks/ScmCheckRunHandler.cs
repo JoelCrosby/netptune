@@ -1,5 +1,7 @@
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Events.SourceControl;
 using Netptune.Core.Services.Realtime;
 using Netptune.Core.SourceControl;
 using Netptune.Core.SourceControl.Events;
@@ -19,12 +21,18 @@ internal sealed class ScmCheckRunHandler : IScmEventHandler
 
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly ScmTaskActivityRecorder Activity;
+    private readonly ScmAutomationEvents Automation;
     private readonly TimeProvider Clock;
 
-    public ScmCheckRunHandler(INetptuneUnitOfWork unitOfWork, ScmTaskActivityRecorder activity, TimeProvider clock)
+    public ScmCheckRunHandler(
+        INetptuneUnitOfWork unitOfWork,
+        ScmTaskActivityRecorder activity,
+        ScmAutomationEvents automation,
+        TimeProvider clock)
     {
         UnitOfWork = unitOfWork;
         Activity = activity;
+        Automation = automation;
         Clock = clock;
     }
 
@@ -140,6 +148,21 @@ internal sealed class ScmCheckRunHandler : IScmEventHandler
         foreach (var link in unrecordedLinks)
         {
             link.LastCheckState = summaryAfter.State;
+        }
+
+        var isFailure = summaryAfter.State == ScmCheckState.Failure;
+        var failedTaskIds = unrecordedLinks.Select(link => link.TaskId).Distinct().ToList();
+
+        if (isFailure && failedTaskIds.Count > 0)
+        {
+            Automation.Add(new SourceControlTaskEventMessage
+            {
+                EventId = changed.EventId,
+                WorkspaceId = repo.WorkspaceId,
+                TriggerType = AutomationTriggerType.ChecksFailed,
+                TaskIds = failedTaskIds,
+                OccurredAt = changed.OccurredAt.UtcDateTime,
+            });
         }
 
         var subjectsByTask = unrecordedLinks

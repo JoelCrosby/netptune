@@ -36,6 +36,9 @@ export const triggerTypeLabels: Record<AutomationTriggerType, string> = {
   [AutomationTriggerType.taskBlocked]: $localize`:Name of an automation trigger event:Task becomes blocked`,
   [AutomationTriggerType.taskUnblocked]: $localize`:Name of an automation trigger event:Task becomes unblocked`,
   [AutomationTriggerType.subtasksCompleted]: $localize`:Name of an automation trigger event:All subtasks complete`,
+  [AutomationTriggerType.pullRequestOpened]: $localize`:Name of an automation trigger event:Pull request opened`,
+  [AutomationTriggerType.pullRequestMerged]: $localize`:Name of an automation trigger event:Pull request merged`,
+  [AutomationTriggerType.checksFailed]: $localize`:Name of an automation trigger event:Checks fail`,
 };
 
 export const automationTriggerTypes: readonly AutomationTriggerType[] = [
@@ -52,6 +55,9 @@ export const automationTriggerTypes: readonly AutomationTriggerType[] = [
   AutomationTriggerType.sprintStarted,
   AutomationTriggerType.sprintCompleted,
   AutomationTriggerType.sprintEndingSoon,
+  AutomationTriggerType.pullRequestOpened,
+  AutomationTriggerType.pullRequestMerged,
+  AutomationTriggerType.checksFailed,
 ];
 
 export const taskChangeFieldLabels: Record<TaskChangeField, string> = {
@@ -415,7 +421,29 @@ export function describeAutomationTrigger(
       return $localize`:Automation trigger description:When a task is no longer blocked`;
     case AutomationTriggerType.subtasksCompleted:
       return $localize`:Automation trigger description:When every subtask of a task is complete`;
+    case AutomationTriggerType.pullRequestOpened:
+      return describePullRequestOpenedTrigger(trigger.targetBranches ?? []);
+    case AutomationTriggerType.pullRequestMerged:
+      return describePullRequestMergedTrigger(trigger.targetBranches ?? []);
+    case AutomationTriggerType.checksFailed:
+      return $localize`:Automation trigger description:When checks fail on a task's linked code`;
   }
+}
+
+function describePullRequestOpenedTrigger(targetBranches: string[]): string {
+  const branches = targetBranches.join(', ');
+
+  return branches
+    ? $localize`:Automation trigger description. BRANCHES is a comma-separated list of branch names:When a pull request into ${branches}:BRANCHES: is opened for a task`
+    : $localize`:Automation trigger description:When a pull request is opened for a task`;
+}
+
+function describePullRequestMergedTrigger(targetBranches: string[]): string {
+  const branches = targetBranches.join(', ');
+
+  return branches
+    ? $localize`:Automation trigger description. BRANCHES is a comma-separated list of branch names:When a task's pull request is merged into ${branches}:BRANCHES:`
+    : $localize`:Automation trigger description:When a task's pull request is merged`;
 }
 
 // Each whole sentence is one message. $localize cannot evaluate ICU, so the

@@ -15,4 +15,7 @@ public enum AutomationTriggerType
     TaskBlocked = 11,
     TaskUnblocked = 12,
     SubtasksCompleted = 13,
+    PullRequestOpened = 14,
+    PullRequestMerged = 15,
+    ChecksFailed = 16,
 }

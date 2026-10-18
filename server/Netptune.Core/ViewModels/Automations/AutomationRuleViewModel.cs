@@ -45,6 +45,10 @@ public record AutomationTriggerViewModel
     public AutomationConditionGroup? ConditionGroup { get; init; }
 
     public int? DurationDays { get; init; }
+
+    public List<string>? TargetBranches { get; init; }
+
+    public bool? IncludeDrafts { get; init; }
 }
 
 public record AutomationActionViewModel : AutomationActionFields

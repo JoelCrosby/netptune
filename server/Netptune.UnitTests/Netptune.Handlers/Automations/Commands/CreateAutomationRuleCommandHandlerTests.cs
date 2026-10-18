@@ -370,6 +370,55 @@ public class CreateAutomationRuleCommandHandlerTests
         await Automations.DidNotReceive().AddAsync(Arg.Any<AutomationRule>(), Arg.Any<CancellationToken>());
     }
 
+    [Theory]
+    [InlineData("release/*/x")]
+    [InlineData("*")]
+    [InlineData("feature branch")]
+    public async Task Handle_ShouldFail_WhenTargetBranchIsInvalid(string branch)
+    {
+        var request = SourceControlRequest(new AutomationTriggerRequest
+        {
+            Type = AutomationTriggerType.PullRequestMerged,
+            TargetBranches = [branch],
+        });
+
+        var result = await Handler.Handle(new CreateAutomationRuleCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().ContainEquivalentOf("target branch");
+        await Automations.DidNotReceive().AddAsync(Arg.Any<AutomationRule>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Handle_ShouldFail_WhenChecksFailedHasTargetBranches()
+    {
+        var request = SourceControlRequest(new AutomationTriggerRequest
+        {
+            Type = AutomationTriggerType.ChecksFailed,
+            TargetBranches = ["main"],
+        });
+
+        var result = await Handler.Handle(new CreateAutomationRuleCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().ContainEquivalentOf("target branch");
+    }
+
+    [Fact]
+    public async Task Handle_ShouldFail_WhenMergedTriggerIncludesDrafts()
+    {
+        var request = SourceControlRequest(new AutomationTriggerRequest
+        {
+            Type = AutomationTriggerType.PullRequestMerged,
+            IncludeDrafts = true,
+        });
+
+        var result = await Handler.Handle(new CreateAutomationRuleCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Contain("include drafts");
+    }
+
     [Fact]
     public async Task Handle_ShouldFail_WhenDueDateTriggerHasInvalidDuration()
     {
@@ -558,4 +607,21 @@ public class CreateAutomationRuleCommandHandlerTests
         await Automations.DidNotReceive()
             .AddAsync(Arg.Any<AutomationRule>(), Arg.Any<CancellationToken>());
     }
+
+    private static AutomationRuleRequest SourceControlRequest(AutomationTriggerRequest trigger)
+    {
+        return new AutomationRuleRequest
+        {
+            Name = "Source control rule",
+            Trigger = trigger,
+            Actions =
+            [
+                new AutomationActionRequest
+                {
+                    Type = AutomationActionType.NotifyTaskAssignees,
+                },
+            ],
+        };
+    }
+
 }

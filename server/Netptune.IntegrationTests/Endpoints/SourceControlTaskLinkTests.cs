@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Requests.SourceControl;
 using Netptune.Core.Responses.Common;
@@ -181,6 +182,41 @@ public sealed class SourceControlTaskLinkTests
             string.Empty,
             WorkspaceEventScopes.CodeLinks,
             () => ProcessPullRequest(account, repo.ExternalId, "13", $"Fix {task.SystemId}", "Open"));
+
+        published.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task Processing_ShouldPublishAnAutomationTriggerWhenAPullRequestMerges()
+    {
+        var (account, repo) = await ConnectWithLinkedRepo();
+        var task = await AnyTask();
+
+        await ProcessPullRequest(account, repo.ExternalId, "14", $"Fix {task.SystemId}", "Open");
+
+        var published = await AutomationTriggerProbe.Published(
+            Fixture.Services,
+            trigger => trigger.TriggerType == AutomationTriggerType.PullRequestMerged
+                && trigger.TargetBranch == "main"
+                && trigger.TaskIds.Contains(task.Id),
+            () => ProcessPullRequest(account, repo.ExternalId, "14", $"Fix {task.SystemId}", "Merged"));
+
+        published.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task Processing_ShouldPublishAnAutomationTriggerWhenChecksFail()
+    {
+        var (account, repo) = await ConnectWithLinkedRepo();
+        var task = await AnyTask();
+        var sha = Guid.NewGuid().ToString("N");
+
+        await ProcessPullRequest(account, repo.ExternalId, "15", $"Fix {task.SystemId}", "Open", sha);
+
+        var published = await AutomationTriggerProbe.Published(
+            Fixture.Services,
+            trigger => trigger.TriggerType == AutomationTriggerType.ChecksFailed && trigger.TaskIds.Contains(task.Id),
+            () => ProcessCheckRun(account, repo.ExternalId, "61", "build", sha, "Completed", "Failure"));
 
         published.Should().BeTrue();
     }

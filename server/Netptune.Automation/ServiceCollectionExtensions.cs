@@ -90,6 +90,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IAutomationRuleMatcher, TaskBlockedRuleMatcher>();
         services.AddScoped<IAutomationRuleMatcher, TaskUnblockedRuleMatcher>();
         services.AddScoped<IAutomationRuleMatcher, SubtasksCompletedRuleMatcher>();
+        services.AddScoped<IAutomationRuleMatcher, PullRequestOpenedRuleMatcher>();
+        services.AddScoped<IAutomationRuleMatcher, PullRequestMergedRuleMatcher>();
+        services.AddScoped<IAutomationRuleMatcher, ChecksFailedRuleMatcher>();
         services.AddScoped<AutomationTriggerRegistry>();
 
         services.AddNetptuneAutomationTriggers();
