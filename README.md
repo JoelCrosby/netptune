@@ -32,7 +32,7 @@ An Open Source self-hostable project management application built for teams. Org
 - **Kanban boards** — drag-and-drop task management with customisable columns and groups
 - **Tasks** — create, assign, tag, comment on, and track status, priority, and estimates on individual work items
 - **Sprints** — time-boxed sprints with task counts and status tracking
-- **Automations** — trigger-based rules that notify assignees, flag tasks, or update fields automatically
+- **Automations** — rules triggered by task, sprint and source control events or on a schedule, that notify people, flag, update, comment on, create or delete tasks
 - **Source control** — connect GitHub to link branches, commits and pull requests to tasks, show CI checks, and trigger automations when pull requests open or merge
 - **Real-time updates** — live board state via Server-Sent Events so all members see changes instantly
 - **Search** — workspace-wide task search powered by Meilisearch, available from the command palette
