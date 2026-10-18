@@ -33,6 +33,7 @@ An Open Source self-hostable project management application built for teams. Org
 - **Tasks** — create, assign, tag, comment on, and track status, priority, and estimates on individual work items
 - **Sprints** — time-boxed sprints with task counts and status tracking
 - **Automations** — trigger-based rules that notify assignees, flag tasks, or update fields automatically
+- **Source control** — connect GitHub to link branches, commits and pull requests to tasks, show CI checks, and trigger automations when pull requests open or merge
 - **Real-time updates** — live board state via Server-Sent Events so all members see changes instantly
 - **Search** — workspace-wide task search powered by Meilisearch, available from the command palette
 - **Activity feed** — per-board audit log of all changes
