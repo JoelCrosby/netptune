@@ -18,8 +18,17 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
 
     public SourceControlProvider Provider => SourceControlProvider.GitLab;
 
-    public SourceControlCapabilities Capabilities =>
-        SourceControlCapabilities.ListRepositories | SourceControlCapabilities.Webhooks;
+    public const string HeadSha = "1111111111111111111111111111111111111111";
+    public const string ReadmeText = "# Test repository\nHello from the test provider.\n";
+
+    public static SourceControlCapabilities Granted =>
+        SourceControlCapabilities.ListRepositories
+        | SourceControlCapabilities.ReadBranches
+        | SourceControlCapabilities.ReadCommits
+        | SourceControlCapabilities.ReadPullRequests
+        | SourceControlCapabilities.Webhooks;
+
+    public SourceControlCapabilities Capabilities => Granted;
 
     public ScmTerminology Terminology { get; } = new()
     {
@@ -312,7 +321,7 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
                 ExternalAccountId = account,
                 Account = new ScmAccount { ExternalId = account, Login = account, AccountType = ScmAccountType.Group },
                 CredentialKind = ScmCredentialKind.PersonalAccessToken,
-                GrantedCapabilities = SourceControlCapabilities.ListRepositories | SourceControlCapabilities.Webhooks,
+                GrantedCapabilities = Granted,
             };
 
             return ValueTask.FromResult(ClientResponse<ScmConnectResult>.Success(result));
@@ -327,9 +336,7 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
             ScmConnection connection,
             CancellationToken cancellationToken)
         {
-            var granted = SourceControlCapabilities.ListRepositories | SourceControlCapabilities.Webhooks;
-
-            return ValueTask.FromResult(granted);
+            return ValueTask.FromResult(Granted);
         }
     }
 
@@ -369,7 +376,9 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
             string name,
             CancellationToken cancellationToken)
         {
-            throw new NotSupportedException();
+            var branch = name == "main" ? new ScmBranch("main", HeadSha, "https://scm.test/tree/main") : null;
+
+            return ValueTask.FromResult(branch);
         }
 
         public ValueTask<IReadOnlyList<ScmCommit>> ListCommits(
@@ -378,7 +387,18 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
             ScmCommitQuery query,
             CancellationToken cancellationToken)
         {
-            throw new NotSupportedException();
+            IReadOnlyList<ScmCommit> commits =
+            [
+                new ScmCommit
+                {
+                    Sha = HeadSha,
+                    Message = "Add the readme\n\nWith a body.",
+                    Author = new ScmIdentity { Provider = SourceControlProvider.GitLab, Username = "tester" },
+                    WebUrl = $"https://scm.test/commit/{HeadSha}",
+                },
+            ];
+
+            return ValueTask.FromResult(commits);
         }
 
         public ValueTask<ScmPullRequest?> GetPullRequest(
@@ -387,7 +407,21 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
             string number,
             CancellationToken cancellationToken)
         {
-            throw new NotSupportedException();
+            var pullRequest = number == "7"
+                ? new ScmPullRequest
+                {
+                    ExternalId = "7",
+                    Number = "7",
+                    Title = "Add the readme",
+                    State = ScmPullRequestState.Open,
+                    SourceBranch = "feature/readme",
+                    TargetBranch = "main",
+                    Author = new ScmIdentity { Provider = SourceControlProvider.GitLab, Username = "tester" },
+                    WebUrl = "https://scm.test/pulls/7",
+                }
+                : null;
+
+            return ValueTask.FromResult(pullRequest);
         }
 
         public ValueTask<IReadOnlyList<ScmPullRequest>> ListPullRequests(
@@ -397,6 +431,78 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
             CancellationToken cancellationToken)
         {
             throw new NotSupportedException();
+        }
+
+        public ValueTask<ScmTree> GetTree(
+            ScmConnectionContext context,
+            ScmRepositoryRef repository,
+            string commitSha,
+            CancellationToken cancellationToken)
+        {
+            var tree = new ScmTree
+            {
+                CommitSha = commitSha,
+                Entries =
+                [
+                    new ScmTreeEntry("README.md", false, ReadmeText.Length),
+                    new ScmTreeEntry("src", true, null),
+                    new ScmTreeEntry("src/app.ts", false, 20),
+                ],
+            };
+
+            return ValueTask.FromResult(tree);
+        }
+
+        public ValueTask<ScmFileContent?> GetFile(
+            ScmConnectionContext context,
+            ScmRepositoryRef repository,
+            string path,
+            string commitSha,
+            CancellationToken cancellationToken)
+        {
+            var file = path == "README.md"
+                ? new ScmFileContent
+                {
+                    Path = path,
+                    Size = ReadmeText.Length,
+                    Text = ReadmeText,
+                    WebUrl = "https://scm.test/README.md",
+                }
+                : null;
+
+            return ValueTask.FromResult(file);
+        }
+
+        public ValueTask<IReadOnlyList<ScmCodeMatch>> SearchCode(
+            ScmConnectionContext context,
+            ScmRepositoryRef repository,
+            string query,
+            CancellationToken cancellationToken)
+        {
+            var match = new ScmCodeMatch("README.md", ["Hello from the test provider."], "https://scm.test/README.md");
+            IReadOnlyList<ScmCodeMatch> matches = [match];
+
+            return ValueTask.FromResult(matches);
+        }
+
+        public ValueTask<IReadOnlyList<ScmPullRequestFile>> ListPullRequestFiles(
+            ScmConnectionContext context,
+            ScmRepositoryRef repository,
+            string number,
+            CancellationToken cancellationToken)
+        {
+            IReadOnlyList<ScmPullRequestFile> files =
+            [
+                new ScmPullRequestFile
+                {
+                    Path = "README.md",
+                    Status = "added",
+                    Additions = 2,
+                    Patch = "+# Test repository",
+                },
+            ];
+
+            return ValueTask.FromResult(files);
         }
 
         public ValueTask<IReadOnlyList<ScmCheckRun>> ListCheckRuns(

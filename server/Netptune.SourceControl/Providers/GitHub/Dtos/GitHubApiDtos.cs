@@ -199,3 +199,68 @@ internal sealed record GitHubErrorDto
 {
     public string? Message { get; init; }
 }
+
+internal sealed record GitHubTreeDto
+{
+    public string Sha { get; init; } = string.Empty;
+
+    public List<GitHubTreeEntryDto> Tree { get; init; } = [];
+
+    public bool Truncated { get; init; }
+}
+
+internal sealed record GitHubTreeEntryDto
+{
+    public string Path { get; init; } = string.Empty;
+
+    public string Type { get; init; } = string.Empty;
+
+    public long? Size { get; init; }
+}
+
+internal sealed record GitHubContentDto
+{
+    public string Type { get; init; } = string.Empty;
+
+    public string Path { get; init; } = string.Empty;
+
+    public long Size { get; init; }
+
+    public string? Content { get; init; }
+
+    public string? Encoding { get; init; }
+
+    public string HtmlUrl { get; init; } = string.Empty;
+}
+
+internal sealed record GitHubCodeSearchDto
+{
+    public List<GitHubCodeSearchItemDto> Items { get; init; } = [];
+}
+
+internal sealed record GitHubCodeSearchItemDto
+{
+    public string Path { get; init; } = string.Empty;
+
+    public string HtmlUrl { get; init; } = string.Empty;
+
+    public List<GitHubTextMatchDto>? TextMatches { get; init; }
+}
+
+internal sealed record GitHubTextMatchDto
+{
+    public string? Fragment { get; init; }
+}
+
+internal sealed record GitHubPullRequestFileDto
+{
+    public string Filename { get; init; } = string.Empty;
+
+    public string Status { get; init; } = string.Empty;
+
+    public int Additions { get; init; }
+
+    public int Deletions { get; init; }
+
+    public string? Patch { get; init; }
+}

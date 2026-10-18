@@ -16,5 +16,13 @@ public interface ISourceControlClient
 
     ValueTask<IReadOnlyList<ScmPullRequest>> ListPullRequests(ScmConnectionContext context, ScmRepositoryRef repository, ScmPullRequestQuery query, CancellationToken cancellationToken);
 
+    ValueTask<ScmTree> GetTree(ScmConnectionContext context, ScmRepositoryRef repository, string commitSha, CancellationToken cancellationToken);
+
+    ValueTask<ScmFileContent?> GetFile(ScmConnectionContext context, ScmRepositoryRef repository, string path, string commitSha, CancellationToken cancellationToken);
+
+    ValueTask<IReadOnlyList<ScmCodeMatch>> SearchCode(ScmConnectionContext context, ScmRepositoryRef repository, string query, CancellationToken cancellationToken);
+
+    ValueTask<IReadOnlyList<ScmPullRequestFile>> ListPullRequestFiles(ScmConnectionContext context, ScmRepositoryRef repository, string number, CancellationToken cancellationToken);
+
     ValueTask<IReadOnlyList<ScmCheckRun>> ListCheckRuns(ScmConnectionContext context, ScmRepositoryRef repository, string commitSha, CancellationToken cancellationToken);
 }

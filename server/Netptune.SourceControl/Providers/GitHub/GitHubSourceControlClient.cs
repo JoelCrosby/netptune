@@ -1,6 +1,8 @@
 using System.Globalization;
 using System.Net;
 using System.Runtime.CompilerServices;
+using System.Text;
+using System.Text.Json;
 
 using Netptune.Core.SourceControl;
 using Netptune.Core.SourceControl.Models;
@@ -13,6 +15,10 @@ internal sealed class GitHubSourceControlClient : ISourceControlClient
     private const int PageSize = 100;
     private const int MaxBranches = 1000;
     private const int MaxCheckRuns = 100;
+    private const int MaxSearchResults = 20;
+    private const int MaxPullRequestFiles = 300;
+    private const int BinarySniffLength = 8000;
+    private const string TextMatchMediaType = "application/vnd.github.text-match+json";
 
     private readonly GitHubApi Api;
 
@@ -138,6 +144,75 @@ internal sealed class GitHubSourceControlClient : ISourceControlClient
         return pullRequests.Select(GitHubMapper.ToPullRequest).ToList();
     }
 
+    public async ValueTask<ScmTree> GetTree(
+        ScmConnectionContext context,
+        ScmRepositoryRef repository,
+        string commitSha,
+        CancellationToken cancellationToken)
+    {
+        var url = $"{GitHubUrls.Repository(repository)}/git/trees/{Uri.EscapeDataString(commitSha)}?recursive=1";
+        var response = await Get<GitHubTreeDto>(context, url, cancellationToken);
+        var tree = response.Payload ?? new GitHubTreeDto { Sha = commitSha };
+
+        var entries = tree.Tree
+            .Where(entry => entry.Type is "blob" or "tree")
+            .Select(entry => new ScmTreeEntry(entry.Path, entry.Type == "tree", entry.Size))
+            .ToList();
+
+        return new ScmTree
+        {
+            CommitSha = commitSha,
+            Entries = entries,
+            IsTruncated = tree.Truncated,
+        };
+    }
+
+    public async ValueTask<ScmFileContent?> GetFile(
+        ScmConnectionContext context,
+        ScmRepositoryRef repository,
+        string path,
+        string commitSha,
+        CancellationToken cancellationToken)
+    {
+        var contentsPath = $"{GitHubUrls.Repository(repository)}/contents/{GitHubUrls.EscapePath(path)}";
+        var url = $"{contentsPath}?ref={Uri.EscapeDataString(commitSha)}";
+        var content = await GetContent(context, url, cancellationToken);
+        var isFile = content is { Type: "file" };
+
+        if (!isFile)
+        {
+            return null;
+        }
+
+        return ToFileContent(content!);
+    }
+
+    public async ValueTask<IReadOnlyList<ScmCodeMatch>> SearchCode(
+        ScmConnectionContext context,
+        ScmRepositoryRef repository,
+        string query,
+        CancellationToken cancellationToken)
+    {
+        var scopedQuery = $"{query} repo:{repository.Owner}/{repository.Name}";
+        var url = $"/search/code?q={Uri.EscapeDataString(scopedQuery)}&per_page={MaxSearchResults}";
+        var response = await Get<GitHubCodeSearchDto>(context, url, cancellationToken, TextMatchMediaType);
+        var items = response.Payload?.Items ?? [];
+
+        return items.Select(ToCodeMatch).ToList();
+    }
+
+    public async ValueTask<IReadOnlyList<ScmPullRequestFile>> ListPullRequestFiles(
+        ScmConnectionContext context,
+        ScmRepositoryRef repository,
+        string number,
+        CancellationToken cancellationToken)
+    {
+        var url = $"{GitHubUrls.Repository(repository)}/pulls/{Uri.EscapeDataString(number)}/files?per_page={PageSize}";
+        var files = await CollectPages<GitHubPullRequestFileDto>(context, url, MaxPullRequestFiles, cancellationToken);
+
+        return files.Select(ToPullRequestFile).ToList();
+    }
+
     public async ValueTask<IReadOnlyList<ScmCheckRun>> ListCheckRuns(
         ScmConnectionContext context,
         ScmRepositoryRef repository,
@@ -152,10 +227,80 @@ internal sealed class GitHubSourceControlClient : ISourceControlClient
         return checkRuns.Select(GitHubMapper.ToCheckRun).ToList();
     }
 
-    private async Task<GitHubResponse<T>> Get<T>(
+    // A directory's contents come back as an array rather than one entry, which is not a file either.
+    private async Task<GitHubContentDto?> GetContent(
         ScmConnectionContext context,
         string url,
         CancellationToken cancellationToken)
+    {
+        try
+        {
+            var response = await Get<GitHubContentDto>(context, url, cancellationToken);
+
+            return response.Payload;
+        }
+        catch (JsonException)
+        {
+            return null;
+        }
+    }
+
+    private static ScmFileContent ToFileContent(GitHubContentDto content)
+    {
+        var hasInlineContent = content.Encoding == "base64" && content.Content is not null;
+
+        if (!hasInlineContent)
+        {
+            return new ScmFileContent
+            {
+                Path = content.Path,
+                Size = content.Size,
+                IsTooLarge = true,
+                WebUrl = content.HtmlUrl,
+            };
+        }
+
+        var bytes = Convert.FromBase64String(content.Content!);
+        var sniffLength = Math.Min(bytes.Length, BinarySniffLength);
+        var isBinary = Array.IndexOf(bytes, (byte)0, 0, sniffLength) >= 0;
+
+        return new ScmFileContent
+        {
+            Path = content.Path,
+            Size = content.Size,
+            Text = isBinary ? null : Encoding.UTF8.GetString(bytes),
+            IsBinary = isBinary,
+            WebUrl = content.HtmlUrl,
+        };
+    }
+
+    private static ScmCodeMatch ToCodeMatch(GitHubCodeSearchItemDto item)
+    {
+        var fragments = (item.TextMatches ?? [])
+            .Select(match => match.Fragment)
+            .OfType<string>()
+            .ToList();
+
+        return new ScmCodeMatch(item.Path, fragments, item.HtmlUrl);
+    }
+
+    private static ScmPullRequestFile ToPullRequestFile(GitHubPullRequestFileDto file)
+    {
+        return new ScmPullRequestFile
+        {
+            Path = file.Filename,
+            Status = file.Status,
+            Additions = file.Additions,
+            Deletions = file.Deletions,
+            Patch = file.Patch,
+        };
+    }
+
+    private async Task<GitHubResponse<T>> Get<T>(
+        ScmConnectionContext context,
+        string url,
+        CancellationToken cancellationToken,
+        string? accept = null)
     {
         var token = await context.GetAccessToken(cancellationToken);
 
@@ -164,6 +309,7 @@ internal sealed class GitHubSourceControlClient : ISourceControlClient
             Method = HttpMethod.Get,
             Url = url,
             BearerToken = token.Token,
+            Accept = accept ?? GitHubRequest.DefaultAccept,
         };
 
         var response = await Api.Send<T>(request, cancellationToken);

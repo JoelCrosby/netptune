@@ -427,7 +427,7 @@ public class AuthenticationServiceTests
             default!,
             default,
             default,
-            default);
+            TestContext.Current.CancellationToken);
     }
 
     [Fact]

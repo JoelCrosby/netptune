@@ -23,7 +23,15 @@ internal static class GitHubUrls
 
     public static string EscapePath(string path)
     {
-        var segments = path.Split('/').Select(Uri.EscapeDataString);
+        var rawSegments = path.Split('/');
+        var hasDotSegment = rawSegments.Any(segment => segment is "." or "..");
+
+        if (hasDotSegment)
+        {
+            throw new ArgumentException("A path must not contain \".\" or \"..\" segments.", nameof(path));
+        }
+
+        var segments = rawSegments.Select(Uri.EscapeDataString);
 
         return string.Join('/', segments);
     }

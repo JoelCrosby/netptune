@@ -23,7 +23,9 @@ internal sealed record GitHubRequest
 
     public object? Body { get; init; }
 
-    public string Accept { get; init; } = "application/vnd.github+json";
+    public const string DefaultAccept = "application/vnd.github+json";
+
+    public string Accept { get; init; } = DefaultAccept;
 }
 
 internal sealed record GitHubResponse<T>

@@ -73,6 +73,12 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiTool, ListAutomationsTool>();
         services.AddScoped<IAiTool, ListAutomationRunsTool>();
         services.AddScoped<IAiTool, ListWorkspaceFilesTool>();
+        services.AddScoped<IAiTool, ListRepositoriesTool>();
+        services.AddScoped<IAiTool, ListRepositoryFilesTool>();
+        services.AddScoped<IAiTool, ReadRepositoryFileTool>();
+        services.AddScoped<IAiTool, SearchRepositoryCodeTool>();
+        services.AddScoped<IAiTool, ListRepositoryCommitsTool>();
+        services.AddScoped<IAiTool, GetPullRequestTool>();
         services.AddScoped<IAiTool, AskQuestionTool>();
 
         services.AddScoped<IAiChangeHandler, CreateTaskChangeHandler>();

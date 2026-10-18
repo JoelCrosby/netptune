@@ -5,6 +5,7 @@ using Dapper;
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Models.Repository;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Repositories;
@@ -200,6 +201,18 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
             .AsNoTracking()
             .Where(project => project.WorkspaceId == workspaceId && !project.IsDeleted)
             .Select(project => project.Key)
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<List<ProjectRepositoryUrl>> GetRepositoryUrls(
+        int workspaceId,
+        CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .AsNoTracking()
+            .Where(project => project.WorkspaceId == workspaceId && !project.IsDeleted)
+            .Where(project => project.RepositoryUrl != null && project.RepositoryUrl != "")
+            .Select(project => new ProjectRepositoryUrl(project.Key, project.RepositoryUrl!))
             .ToListAsync(cancellationToken);
     }
 

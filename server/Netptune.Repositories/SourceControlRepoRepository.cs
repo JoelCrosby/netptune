@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Netptune.Core.Entities;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.SourceControl;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
 
@@ -39,6 +40,19 @@ public class SourceControlRepoRepository(DataContext context, IDbConnectionFacto
         return Entities
             .Where(repo => repo.ConnectionId == connectionId && repo.ExternalId == externalId)
             .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public Task<List<SourceControlRepo>> GetReadableForWorkspace(
+        int workspaceId,
+        CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .AsNoTracking()
+            .Include(repo => repo.Connection)
+            .Where(repo => repo.WorkspaceId == workspaceId && repo.IsLinked && repo.IsAccessible)
+            .Where(repo => !repo.Connection.IsDeleted && repo.Connection.Status == ScmConnectionStatus.Active)
+            .OrderBy(repo => repo.FullName)
+            .ToListAsync(cancellationToken);
     }
 
     public Task<SourceControlRepo?> GetOwned(

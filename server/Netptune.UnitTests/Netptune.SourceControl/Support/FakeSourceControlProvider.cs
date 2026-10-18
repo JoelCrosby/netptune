@@ -74,6 +74,43 @@ public sealed class FakeSourceControlProvider : ISourceControlProvider
 
     private sealed class FakeClient : ISourceControlClient
     {
+        public ValueTask<ScmTree> GetTree(
+            ScmConnectionContext context,
+            ScmRepositoryRef repository,
+            string commitSha,
+            CancellationToken cancellationToken)
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<ScmFileContent?> GetFile(
+            ScmConnectionContext context,
+            ScmRepositoryRef repository,
+            string path,
+            string commitSha,
+            CancellationToken cancellationToken)
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<IReadOnlyList<ScmCodeMatch>> SearchCode(
+            ScmConnectionContext context,
+            ScmRepositoryRef repository,
+            string query,
+            CancellationToken cancellationToken)
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<IReadOnlyList<ScmPullRequestFile>> ListPullRequestFiles(
+            ScmConnectionContext context,
+            ScmRepositoryRef repository,
+            string number,
+            CancellationToken cancellationToken)
+        {
+            throw new NotSupportedException();
+        }
+
         public async IAsyncEnumerable<ScmRepository> ListRepositories(
             ScmConnectionContext context,
             [EnumeratorCancellation] CancellationToken cancellationToken)

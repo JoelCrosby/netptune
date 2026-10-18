@@ -9,6 +9,7 @@ using Netptune.Ai.Configuration;
 using Netptune.Core.Authorization;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Ai;
+using Netptune.Core.SourceControl.Reading;
 using Netptune.Core.UnitOfWork;
 
 using NSubstitute;
@@ -117,6 +118,7 @@ public class AiToolRegistrationTests
         services.AddSingleton(Substitute.For<IIdentityService>());
         services.AddSingleton(Substitute.For<IAiCredentialProtector>());
         services.AddSingleton(Substitute.For<IAiExecutionContext>());
+        services.AddSingleton(Substitute.For<ISourceControlReader>());
         services.AddNetptuneAi(configuration);
 
         return services.BuildServiceProvider();
