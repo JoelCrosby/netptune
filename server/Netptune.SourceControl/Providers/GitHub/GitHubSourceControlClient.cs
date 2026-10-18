@@ -13,6 +13,7 @@ namespace Netptune.SourceControl.Providers.GitHub;
 internal sealed class GitHubSourceControlClient : ISourceControlClient
 {
     private const int PageSize = 100;
+    private const int MaxComparePages = 3;
     private const int MaxBranches = 1000;
     private const int MaxCheckRuns = 100;
     private const int MaxSearchResults = 20;
@@ -104,6 +105,30 @@ internal sealed class GitHubSourceControlClient : ISourceControlClient
         return commits.Select(GitHubMapper.ToCommit).ToList();
     }
 
+    // Only the commits on the head branch that its base doesn't have, oldest first, as a push would report them.
+    // Pages run oldest first too, so every page is read to reach the newest; GitHub stops at 250 commits.
+    public async ValueTask<IReadOnlyList<ScmCommit>> CompareCommits(
+        ScmConnectionContext context,
+        ScmRepositoryRef repository,
+        string baseBranch,
+        string headBranch,
+        CancellationToken cancellationToken)
+    {
+        var range = $"{GitHubUrls.EscapePath(baseBranch)}...{GitHubUrls.EscapePath(headBranch)}";
+        var commits = new List<GitHubCommitDto>();
+        string? url = $"{GitHubUrls.Repository(repository)}/compare/{range}?per_page={PageSize}";
+
+        for (var page = 0; url is not null && page < MaxComparePages; page++)
+        {
+            var response = await Get<GitHubCompareDto>(context, url, cancellationToken);
+
+            commits.AddRange(response.Payload?.Commits ?? []);
+            url = response.NextPageUrl;
+        }
+
+        return commits.Select(GitHubMapper.ToCommit).ToList();
+    }
+
     public async ValueTask<ScmPullRequest?> GetPullRequest(
         ScmConnectionContext context,
         ScmRepositoryRef repository,
@@ -131,6 +156,12 @@ internal sealed class GitHubSourceControlClient : ISourceControlClient
         var state = query.IncludeClosed ? "all" : "open";
         var parameters = new List<string> { $"state={state}", $"per_page={pageSize}" };
 
+        if (query.UpdatedSince is not null)
+        {
+            parameters.Add("sort=updated");
+            parameters.Add("direction=desc");
+        }
+
         if (query.SourceBranch is not null)
         {
             var head = $"{repository.Owner}:{query.SourceBranch}";
@@ -140,8 +171,11 @@ internal sealed class GitHubSourceControlClient : ISourceControlClient
 
         var url = $"{GitHubUrls.Repository(repository)}/pulls?{string.Join('&', parameters)}";
         var pullRequests = await CollectPages<GitHubPullRequestDto>(context, url, query.Take, cancellationToken);
+        var mapped = pullRequests.Select(GitHubMapper.ToPullRequest);
 
-        return pullRequests.Select(GitHubMapper.ToPullRequest).ToList();
+        return query.UpdatedSince is null
+            ? mapped.ToList()
+            : mapped.Where(pullRequest => pullRequest.UpdatedAt >= query.UpdatedSince).ToList();
     }
 
     public async ValueTask<ScmTree> GetTree(

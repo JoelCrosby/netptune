@@ -44,6 +44,7 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
     public async Task<bool> Handle(
         ScmEvent scmEvent,
         SourceControlConnection connection,
+        ScmEventSource source,
         CancellationToken cancellationToken)
     {
         var repository = RepositoryOf(scmEvent);
@@ -68,8 +69,12 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
 
         var candidates = BuildCandidates(scmEvent, repo!);
         var outcome = await Link(candidates, repo!, connection, cancellationToken);
+        var isLiveEvent = source == ScmEventSource.Webhook;
 
-        await RecordActivity(scmEvent, repo!, connection, outcome, cancellationToken);
+        if (isLiveEvent)
+        {
+            await RecordActivity(scmEvent, repo!, connection, outcome, cancellationToken);
+        }
 
         return outcome.Changed;
     }

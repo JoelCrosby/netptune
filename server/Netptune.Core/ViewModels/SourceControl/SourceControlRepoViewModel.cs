@@ -1,3 +1,5 @@
+using Netptune.Core.SourceControl;
+
 namespace Netptune.Core.ViewModels.SourceControl;
 
 public sealed record SourceControlRepoViewModel
@@ -27,4 +29,8 @@ public sealed record SourceControlRepoViewModel
     public DateTime? LinkedAt { get; init; }
 
     public DateTime SyncedAt { get; init; }
+
+    public SourceControlHistorySyncStatus HistorySyncStatus { get; init; }
+
+    public DateTime? HistorySyncedAt { get; init; }
 }

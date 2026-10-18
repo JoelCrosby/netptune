@@ -126,6 +126,11 @@ internal sealed record GitHubCommitDto
     public GitHubAccountDto? Author { get; init; }
 }
 
+internal sealed record GitHubCompareDto
+{
+    public List<GitHubCommitDto> Commits { get; init; } = [];
+}
+
 internal sealed record GitHubBranchRefDto
 {
     public string Ref { get; init; } = string.Empty;

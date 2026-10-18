@@ -63,4 +63,11 @@ export class SourceControlService {
       { isLinked }
     );
   }
+
+  syncHistory(repoId: number) {
+    return this.http.post<ClientResponse<SourceControlRepo>>(
+      `api/source-control/repos/${repoId}/history-sync`,
+      {}
+    );
+  }
 }

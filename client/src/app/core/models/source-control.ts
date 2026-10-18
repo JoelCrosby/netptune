@@ -68,6 +68,15 @@ export interface SourceControlRepo {
   isLinked: boolean;
   linkedAt: string | null;
   syncedAt: string;
+  historySyncStatus: SourceControlHistorySyncStatus;
+  historySyncedAt: string | null;
+}
+
+export enum SourceControlHistorySyncStatus {
+  notSynced = 0,
+  syncing = 1,
+  synced = 2,
+  failed = 3,
 }
 
 export enum TaskCodeLinkKind {

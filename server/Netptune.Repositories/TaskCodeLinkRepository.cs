@@ -4,6 +4,8 @@ using Netptune.Core.Entities;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.SourceControl;
+using Netptune.Core.SourceControl.History;
+using Netptune.Core.SourceControl.Models;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
 
@@ -62,5 +64,22 @@ public class TaskCodeLinkRepository(DataContext context, IDbConnectionFactory co
             .Where(link => (link.Kind == TaskCodeLinkKind.Commit && link.ExternalRef == commitSha)
                 || (link.Kind == TaskCodeLinkKind.PullRequest && link.HeadSha == commitSha))
             .ToListAsync(cancellationToken);
+    }
+
+    public async Task<List<OpenPullRequestHead>> GetOpenPullRequestHeads(
+        int repoId,
+        CancellationToken cancellationToken = default)
+    {
+        var heads = await Entities
+            .AsNoTracking()
+            .Where(link => link.RepoId == repoId && !link.IsRemoved && link.Kind == TaskCodeLinkKind.PullRequest)
+            .Where(link => link.PullRequestState == ScmPullRequestState.Open
+                || link.PullRequestState == ScmPullRequestState.Draft)
+            .Where(link => link.HeadSha != null)
+            .Select(link => new { link.ExternalRef, link.HeadSha })
+            .Distinct()
+            .ToListAsync(cancellationToken);
+
+        return heads.Select(head => new OpenPullRequestHead(head.ExternalRef, head.HeadSha!)).ToList();
     }
 }

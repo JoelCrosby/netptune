@@ -37,6 +37,14 @@ public sealed record SourceControlRepo : KeyedEntity<int>
 
     public DateTime SyncedAt { get; set; }
 
+    public DateTime? HistorySyncRequestedAt { get; set; }
+
+    public DateTime? HistorySyncStartedAt { get; set; }
+
+    public DateTime? HistorySyncedAt { get; set; }
+
+    public string? HistorySyncError { get; set; }
+
     #region NavigationProperties
 
     [JsonIgnore]
@@ -49,6 +57,12 @@ public sealed record SourceControlRepo : KeyedEntity<int>
     public ICollection<SourceControlRepoProject> Projects { get; set; } = new HashSet<SourceControlRepoProject>();
 
     #endregion
+
+    public void RequestHistorySync(DateTime now)
+    {
+        HistorySyncRequestedAt = now;
+        HistorySyncError = null;
+    }
 
     public ScmRepositoryRef ToRepositoryRef()
     {

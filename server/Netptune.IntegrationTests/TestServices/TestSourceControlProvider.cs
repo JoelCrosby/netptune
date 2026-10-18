@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 
@@ -26,6 +27,7 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
         | SourceControlCapabilities.ReadBranches
         | SourceControlCapabilities.ReadCommits
         | SourceControlCapabilities.ReadPullRequests
+        | SourceControlCapabilities.ReadCheckRuns
         | SourceControlCapabilities.Webhooks;
 
     public SourceControlCapabilities Capabilities => Granted;
@@ -41,6 +43,9 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
     public ISourceControlConnector Connector { get; } = new TestConnector();
 
     public ISourceControlClient Client { get; } = new TestClient();
+
+    // What a history sync reads back, keyed by repository external id, so each test seeds its own repo.
+    public static ConcurrentDictionary<string, TestRepoHistory> Histories { get; } = new();
 
     public ISourceControlWebhookReader? WebhookReader { get; } = new TestWebhookReader();
 
@@ -367,7 +372,21 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
             ScmRepositoryRef repository,
             CancellationToken cancellationToken)
         {
-            throw new NotSupportedException();
+            IReadOnlyList<ScmBranch> branches = HistoryOf(repository).Branches;
+
+            return ValueTask.FromResult(branches);
+        }
+
+        public ValueTask<IReadOnlyList<ScmCommit>> CompareCommits(
+            ScmConnectionContext context,
+            ScmRepositoryRef repository,
+            string baseBranch,
+            string headBranch,
+            CancellationToken cancellationToken)
+        {
+            IReadOnlyList<ScmCommit> commits = HistoryOf(repository).BranchCommits.GetValueOrDefault(headBranch) ?? [];
+
+            return ValueTask.FromResult(commits);
         }
 
         public ValueTask<ScmBranch?> GetBranch(
@@ -430,7 +449,20 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
             ScmPullRequestQuery query,
             CancellationToken cancellationToken)
         {
-            throw new NotSupportedException();
+            var history = HistoryOf(repository);
+
+            if (history.FailsWithStatus is { } status)
+            {
+                throw new ScmProviderException(SourceControlProvider.GitLab, status, "history unavailable");
+            }
+
+            IReadOnlyList<ScmPullRequest> pullRequests = history.PullRequests
+                .Where(pullRequest => query.IncludeClosed || IsOpen(pullRequest))
+                .Where(pullRequest => query.UpdatedSince is null || pullRequest.UpdatedAt >= query.UpdatedSince)
+                .Take(query.Take)
+                .ToList();
+
+            return ValueTask.FromResult(pullRequests);
         }
 
         public ValueTask<ScmTree> GetTree(
@@ -511,7 +543,32 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
             string commitSha,
             CancellationToken cancellationToken)
         {
-            throw new NotSupportedException();
+            IReadOnlyList<ScmCheckRun> checkRuns = HistoryOf(repository).CheckRuns.GetValueOrDefault(commitSha) ?? [];
+
+            return ValueTask.FromResult(checkRuns);
+        }
+
+        private static bool IsOpen(ScmPullRequest pullRequest)
+        {
+            return pullRequest.State is ScmPullRequestState.Open or ScmPullRequestState.Draft;
+        }
+
+        private static TestRepoHistory HistoryOf(ScmRepositoryRef repository)
+        {
+            return Histories.GetValueOrDefault(repository.ExternalId) ?? new TestRepoHistory();
         }
     }
+}
+
+public sealed class TestRepoHistory
+{
+    public List<ScmPullRequest> PullRequests { get; } = [];
+
+    public List<ScmBranch> Branches { get; } = [];
+
+    public Dictionary<string, List<ScmCommit>> BranchCommits { get; } = [];
+
+    public Dictionary<string, List<ScmCheckRun>> CheckRuns { get; } = [];
+
+    public int? FailsWithStatus { get; init; }
 }

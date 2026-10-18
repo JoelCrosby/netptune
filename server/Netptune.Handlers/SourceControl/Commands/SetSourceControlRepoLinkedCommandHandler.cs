@@ -3,6 +3,8 @@ using Mediator;
 using Netptune.Core.Requests.SourceControl;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
+using Netptune.Core.SourceControl.History;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.SourceControl;
 
@@ -16,11 +18,16 @@ public sealed class SetSourceControlRepoLinkedCommandHandler
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
+    private readonly IEventPublisher EventPublisher;
 
-    public SetSourceControlRepoLinkedCommandHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity)
+    public SetSourceControlRepoLinkedCommandHandler(
+        INetptuneUnitOfWork unitOfWork,
+        IIdentityService identity,
+        IEventPublisher eventPublisher)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
+        EventPublisher = eventPublisher;
     }
 
     public async ValueTask<ClientResponse<SourceControlRepoViewModel>> Handle(
@@ -49,11 +56,25 @@ public sealed class SetSourceControlRepoLinkedCommandHandler
 
         if (!isUnchanged)
         {
+            var now = DateTime.UtcNow;
+
             repo.IsLinked = isLinking;
-            repo.LinkedAt = isLinking ? DateTime.UtcNow : null;
+            repo.LinkedAt = isLinking ? now : null;
             repo.LinkedByUserId = isLinking ? Identity.GetCurrentUserId() : null;
 
+            if (isLinking)
+            {
+                repo.RequestHistorySync(now);
+            }
+
             await UnitOfWork.CompleteAsync(cancellationToken);
+        }
+
+        var isNewlyLinked = isLinking && !isUnchanged;
+
+        if (isNewlyLinked)
+        {
+            await EventPublisher.Dispatch(new ScmHistorySyncMessage { RepoId = repo.Id });
         }
 
         var viewModel = SourceControlMapping.ToViewModel(repo);

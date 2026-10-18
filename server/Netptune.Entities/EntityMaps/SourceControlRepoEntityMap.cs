@@ -47,6 +47,10 @@ public sealed class SourceControlRepoEntityMap : KeyedEntityMap<SourceControlRep
             .HasDefaultValue(true);
 
         builder
+            .Property(repo => repo.HistorySyncError)
+            .HasMaxLength(512);
+
+        builder
             .HasOne(repo => repo.Connection)
             .WithMany(connection => connection.Repos)
             .HasForeignKey(repo => repo.ConnectionId)

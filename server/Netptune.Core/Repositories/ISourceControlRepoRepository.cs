@@ -13,5 +13,13 @@ public interface ISourceControlRepoRepository : IRepository<SourceControlRepo, i
 
     Task<SourceControlRepo?> GetOwned(int repoId, int workspaceId, CancellationToken cancellationToken = default);
 
+    Task<SourceControlRepo?> GetForHistorySync(int repoId, CancellationToken cancellationToken = default);
+
+    Task<bool> TryClaimHistorySync(int repoId, DateTime now, CancellationToken cancellationToken = default);
+
+    Task ReleaseHistorySync(int repoId, CancellationToken cancellationToken = default);
+
+    Task<bool> IsLinked(int repoId, CancellationToken cancellationToken = default);
+
     Task<SourceControlRepo?> GetByExternalId(int connectionId, string externalId, CancellationToken cancellationToken = default);
 }

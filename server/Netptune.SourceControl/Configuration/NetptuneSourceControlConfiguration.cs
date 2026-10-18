@@ -3,10 +3,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 using Netptune.Core.SourceControl;
+using Netptune.Core.SourceControl.History;
 using Netptune.Core.SourceControl.Reading;
 using Netptune.Core.SourceControl.Webhooks;
 using Netptune.SourceControl.Connect;
 using Netptune.SourceControl.Credentials;
+using Netptune.SourceControl.History;
 using Netptune.SourceControl.Providers.GitHub;
 using Netptune.SourceControl.Reading;
 using Netptune.SourceControl.Registry;
@@ -32,6 +34,7 @@ public static class NetptuneSourceControlConfiguration
         services.AddScoped<ISourceControlRepoSync, SourceControlRepoSync>();
         services.AddScoped<ScmTaskActivityRecorder>();
         services.AddScoped<ScmAutomationEvents>();
+        services.AddScoped<IScmHistorySync, ScmHistorySync>();
         services.AddScoped<ISourceControlReader, SourceControlReader>();
         services.AddScoped<IScmEventHandler, ScmConnectionChangedHandler>();
         services.AddScoped<IScmEventHandler, ScmTaskLinkHandler>();

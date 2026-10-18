@@ -46,6 +46,10 @@ public static class SourceControlEndpoints
             .RequireAuthorization(NetptunePermissions.SourceControl.Manage)
             .Broadcasts(WorkspaceEventScopes.SourceControl, WorkspaceEventScopes.CodeLinks);
 
+        group.MapPost("/repos/{repoId:int}/history-sync", HandleSyncRepoHistory)
+            .RequireAuthorization(NetptunePermissions.SourceControl.Manage)
+            .Broadcasts(WorkspaceEventScopes.SourceControl);
+
         group.MapGet("/identities", HandleGetIdentities);
 
         group.MapPost("/identities", HandleAddIdentity)
@@ -131,6 +135,16 @@ public static class SourceControlEndpoints
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new SetSourceControlRepoLinkedCommand(repoId, request), cancellationToken);
+
+        return result.ToResult();
+    }
+
+    private static async Task<IResult> HandleSyncRepoHistory(
+        int repoId,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new SyncSourceControlRepoHistoryCommand(repoId), cancellationToken);
 
         return result.ToResult();
     }

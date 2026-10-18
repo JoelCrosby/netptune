@@ -7,6 +7,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.Services.Realtime;
 using Netptune.Core.SourceControl;
+using Netptune.Core.SourceControl.Events;
 using Netptune.Core.SourceControl.Models;
 using Netptune.Core.SourceControl.Webhooks;
 using Netptune.Core.UnitOfWork;
@@ -155,7 +156,7 @@ internal sealed class ScmWebhookProcessor : IScmWebhookProcessor
                     continue;
                 }
 
-                var changed = await handler.Handle(scmEvent, connection, cancellationToken);
+                var changed = await handler.Handle(scmEvent, connection, ScmEventSource.Webhook, cancellationToken);
 
                 if (changed)
                 {

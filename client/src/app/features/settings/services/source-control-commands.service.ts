@@ -33,6 +33,13 @@ export class SourceControlCommandsService {
     );
   }
 
+  syncHistory(repo: SourceControlRepo) {
+    return this.api.syncHistory(repo.id).pipe(
+      requireSuccess(),
+      tap(() => this.workspaceRefresh.refresh(['sourceControl']))
+    );
+  }
+
   private refresh() {
     this.workspaceRefresh.refresh(['sourceControl', 'codeLinks']);
   }

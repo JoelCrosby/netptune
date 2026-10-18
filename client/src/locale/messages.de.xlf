@@ -3266,12 +3266,22 @@
     </unit>
     <unit id="6259071179416803182">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:107,113</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:156,162</note>
         <note category="description">Shown when no repositories match the picker filter</note>
       </notes>
       <segment state="initial">
         <source>No repositories found</source>
         <target>Keine Repositorys gefunden</target>
+      </segment>
+    </unit>
+    <unit id="6259685679738852177">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:118,121</note>
+        <note category="description">Badge while a repository&apos;s recent history is being imported</note>
+      </notes>
+      <segment state="translated">
+        <source>Syncing history</source>
+        <target>Verlauf wird synchronisiert</target>
       </segment>
     </unit>
     <unit id="6269606295190909224">
@@ -3404,7 +3414,7 @@
     </unit>
     <unit id="7183893264147245056">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:53,58</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:60,65</note>
         <note category="description">Explains what linking a repository does</note>
       </notes>
       <segment state="initial">
@@ -4932,6 +4942,16 @@
         <target>Gruppenname</target>
       </segment>
     </unit>
+    <unit id="5610449079065825545">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:144,146</note>
+        <note category="description">Button that imports a repository&apos;s recent pull requests and branches again</note>
+      </notes>
+      <segment state="translated">
+        <source>Sync history</source>
+        <target>Verlauf synchronisieren</target>
+      </segment>
+    </unit>
     <unit id="5611592591303869712">
       <notes>
         <note category="location">src/app/core/tasks/task-columns.ts:107</note>
@@ -5036,7 +5056,7 @@
     </unit>
     <unit id="3767233705625660520">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:143</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:192</note>
         <note category="description">Shown when refreshing the repository list fails</note>
       </notes>
       <segment state="initial">
@@ -6824,7 +6844,7 @@
     </unit>
     <unit id="1645769586576976075">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:188</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:241</note>
         <note category="description">Shown when linking or unlinking a repository fails</note>
       </notes>
       <segment state="initial">
@@ -7826,7 +7846,7 @@
     </unit>
     <unit id="5204826649434227680">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:88,91</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:97,100</note>
         <note category="description">Badge on an archived repository</note>
         <note category="meaning">repository state</note>
       </notes>
@@ -17877,7 +17897,7 @@
       <notes>
         <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:348,353</note>
         <note category="location">src/app/features/queries/components/query-details-drawer.component.ts:63,67</note>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:125,129</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:174,178</note>
         <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:91,93</note>
         <note category="description">Closes a dialog once the user has finished</note>
       </notes>
@@ -22024,6 +22044,16 @@
         <target>Einbezogen</target>
       </segment>
     </unit>
+    <unit id="1286135493079382754">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:196</note>
+        <note category="description">Tooltip on the button that imports a repository&apos;s history</note>
+      </notes>
+      <segment state="translated">
+        <source>Link pull requests and branches from the last 90 days</source>
+        <target>Pull Requests und Branches der letzten 90 Tage verknüpfen</target>
+      </segment>
+    </unit>
     <unit id="1286983255645370171">
       <notes>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:227</note>
@@ -25010,7 +25040,7 @@
     <unit id="5603033194044285473">
       <notes>
         <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:94,97</note>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:47,51</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:54,58</note>
         <note category="description">Button that opens the repository picker for a connection</note>
       </notes>
       <segment state="initial">
@@ -27269,7 +27299,7 @@
     </unit>
     <unit id="4008496035123032607">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:121,124</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:170,173</note>
         <note category="description">Button that reloads the repository list from the provider</note>
       </notes>
       <segment state="initial">
@@ -27512,6 +27542,16 @@
       <segment state="translated">
         <source>Ideal</source>
         <target>Ideal</target>
+      </segment>
+    </unit>
+    <unit id="4573642022855940312">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:128,132</note>
+        <note category="description">Badge when importing a repository&apos;s recent history failed</note>
+      </notes>
+      <segment state="translated">
+        <source>History sync failed</source>
+        <target>Verlaufssynchronisierung fehlgeschlagen</target>
       </segment>
     </unit>
     <unit id="45739481977493163">
@@ -28834,7 +28874,7 @@
     </unit>
     <unit id="2116113218403836033">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:67,70</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:74,77</note>
         <note category="description">Shown when the repository list cannot be loaded</note>
       </notes>
       <segment state="initial">
@@ -28894,7 +28934,7 @@
     </unit>
     <unit id="5376287016044032856">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:97,100</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:106,109</note>
         <note category="description">Badge on a repository the connection can no longer see</note>
       </notes>
       <segment state="initial">
@@ -29943,9 +29983,19 @@
         <target>ist</target>
       </segment>
     </unit>
+    <unit id="3679464218270439179">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:266</note>
+        <note category="description">Shown when starting a repository history sync fails</note>
+      </notes>
+      <segment state="translated">
+        <source>The history of <ph id="0" equiv="repository" disp="repo.fullName"/> could not be synced.</source>
+        <target>Der Verlauf von <ph id="0" equiv="repository" disp="repo.fullName"/> konnte nicht synchronisiert werden.</target>
+      </segment>
+    </unit>
     <unit id="3686284950598311784">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:82,84</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:91,93</note>
         <note category="description">Badge on a private repository</note>
       </notes>
       <segment state="initial">

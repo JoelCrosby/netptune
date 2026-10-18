@@ -15,6 +15,7 @@ using Netptune.Core.Requests.SourceControl;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Realtime;
 using Netptune.Core.SourceControl;
+using Netptune.Core.SourceControl.History;
 using Netptune.Core.SourceControl.Models;
 using Netptune.Core.SourceControl.Webhooks;
 using Netptune.Core.UnitOfWork;
@@ -219,6 +220,217 @@ public sealed class SourceControlTaskLinkTests
             () => ProcessCheckRun(account, repo.ExternalId, "61", "build", sha, "Completed", "Failure"));
 
         published.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task HistorySync_ShouldLinkRecentPullRequestsAndBranchCommits_WithoutRecordingActivity()
+    {
+        var (_, repo) = await ConnectWithLinkedRepo();
+        var task = await AnyTask();
+        var now = DateTimeOffset.UtcNow;
+        var branch = $"{task.SystemId}-history";
+        var history = new TestRepoHistory();
+
+        var recentPullRequest = HistoryPullRequest(
+            "140",
+            $"Fix {task.SystemId}",
+            ScmPullRequestState.Merged,
+            now.AddDays(-10));
+        var oldPullRequest = HistoryPullRequest(
+            "141",
+            $"Old {task.SystemId}",
+            ScmPullRequestState.Closed,
+            now.AddDays(-200));
+
+        history.PullRequests.Add(recentPullRequest);
+        history.PullRequests.Add(oldPullRequest);
+        history.Branches.Add(new ScmBranch(branch, "b1", $"https://scm.test/tree/{branch}"));
+        history.Branches.Add(new ScmBranch("main", "m1", "https://scm.test/tree/main"));
+        history.BranchCommits[branch] =
+        [
+            HistoryCommit($"old-{Guid.NewGuid():N}", now.AddDays(-120)),
+            HistoryCommit($"new-{Guid.NewGuid():N}", now.AddDays(-2)),
+        ];
+        TestSourceControlProvider.Histories[repo.ExternalId] = history;
+
+        await SyncHistory(repo.Id);
+
+        var links = await LinksFor(task.Id, repo.Id);
+        var syncedRepo = await RepoById(repo.Id);
+        var openedRecords = await ActivityRecords(task.Id, EventKeys.SourceControlPullRequestOpened);
+        var pushedRecords = await ActivityRecords(task.Id, EventKeys.SourceControlCommitsPushed);
+
+        links.Where(link => link.Kind == TaskCodeLinkKind.PullRequest).Select(link => link.ExternalRef)
+            .Should().Equal("140");
+        links.Should().ContainSingle(link => link.Kind == TaskCodeLinkKind.Branch && link.ExternalRef == branch);
+        links.Where(link => link.Kind == TaskCodeLinkKind.Commit).Select(link => link.ExternalRef)
+            .Should().ContainSingle(sha => sha.StartsWith("new-"));
+        openedRecords.Should().NotContain(record => ReadPayload(record, "reference") == "#140");
+        pushedRecords.Should().NotContain(record => ReadPayload(record, "reference") == branch);
+        syncedRepo.HistorySyncedAt.Should().NotBeNull();
+        syncedRepo.HistorySyncError.Should().BeNull();
+        syncedRepo.HistorySyncStartedAt.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task HistorySync_ShouldRecordTheProvidersError_AndReleaseItsClaim()
+    {
+        var (_, repo) = await ConnectWithLinkedRepo();
+
+        TestSourceControlProvider.Histories[repo.ExternalId] = new TestRepoHistory { FailsWithStatus = 502 };
+
+        await SyncHistory(repo.Id);
+
+        var syncedRepo = await RepoById(repo.Id);
+
+        syncedRepo.HistorySyncError.Should().Contain("502");
+        syncedRepo.HistorySyncedAt.Should().BeNull();
+        syncedRepo.HistorySyncStartedAt.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task HistorySync_ShouldSkipARepoAnotherWorkerIsAlreadySyncing()
+    {
+        var (_, repo) = await ConnectWithLinkedRepo();
+        var task = await AnyTask();
+        var startedAt = DateTime.UtcNow.AddMinutes(-1);
+        var history = new TestRepoHistory();
+        var pullRequest = HistoryPullRequest(
+            "143",
+            $"Fix {task.SystemId}",
+            ScmPullRequestState.Open,
+            DateTimeOffset.UtcNow);
+
+        history.PullRequests.Add(pullRequest);
+        TestSourceControlProvider.Histories[repo.ExternalId] = history;
+
+        await SetHistorySyncStartedAt(repo.Id, startedAt);
+        await SyncHistory(repo.Id);
+
+        var links = await LinksFor(task.Id, repo.Id);
+        var syncedRepo = await RepoById(repo.Id);
+
+        links.Should().NotContain(link => link.ExternalRef == "143");
+        syncedRepo.HistorySyncStartedAt.Should().BeCloseTo(startedAt, TimeSpan.FromSeconds(1));
+    }
+
+    [Fact]
+    public async Task HistorySync_ShouldTakeOverAClaimWhoseWorkerDied()
+    {
+        var (_, repo) = await ConnectWithLinkedRepo();
+        var task = await AnyTask();
+        var history = new TestRepoHistory();
+        var pullRequest = HistoryPullRequest(
+            "144",
+            $"Fix {task.SystemId}",
+            ScmPullRequestState.Open,
+            DateTimeOffset.UtcNow);
+
+        history.PullRequests.Add(pullRequest);
+        TestSourceControlProvider.Histories[repo.ExternalId] = history;
+
+        await SetHistorySyncStartedAt(repo.Id, DateTime.UtcNow - ScmHistorySyncState.Lease - TimeSpan.FromMinutes(1));
+        await SyncHistory(repo.Id);
+
+        var links = await LinksFor(task.Id, repo.Id);
+
+        links.Should().Contain(link => link.ExternalRef == "144");
+    }
+
+    [Fact]
+    public async Task HistorySync_ShouldRememberAnOpenPullRequestsChecks_SoTheNextWebhookIsNotNews()
+    {
+        var (account, repo) = await ConnectWithLinkedRepo();
+        var task = await AnyTask();
+        var sha = Guid.NewGuid().ToString("N");
+        var history = new TestRepoHistory();
+
+        var pullRequest = HistoryPullRequest(
+            "142",
+            $"Fix {task.SystemId}",
+            ScmPullRequestState.Open,
+            DateTimeOffset.UtcNow,
+            sha);
+
+        history.PullRequests.Add(pullRequest);
+        history.CheckRuns[sha] =
+        [
+            new ScmCheckRun
+            {
+                ExternalId = $"history-{sha}",
+                Name = "build",
+                Status = ScmCheckRunStatus.Completed,
+                Conclusion = ScmCheckRunConclusion.Failure,
+                CommitSha = sha,
+                WebUrl = "https://scm.test/checks/1",
+            },
+        ];
+        TestSourceControlProvider.Histories[repo.ExternalId] = history;
+
+        await SyncHistory(repo.Id);
+        await ProcessCheckRun(account, repo.ExternalId, "71", "lint", sha, "Completed", "Failure");
+
+        var link = (await LinksFor(task.Id, repo.Id)).Single(candidate => candidate.ExternalRef == "142");
+        var failedRecords = (await ActivityRecords(task.Id, EventKeys.SourceControlChecksFailed))
+            .Where(record => ReadPayload(record, "reference") == "#142")
+            .ToList();
+
+        link.LastCheckState.Should().Be(ScmCheckState.Failure);
+        failedRecords.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task LinkingARepo_ShouldQueueItsHistorySync()
+    {
+        var (_, repo) = await ConnectWithLinkedRepo();
+
+        var syncedRepo = await RepoById(repo.Id);
+
+        syncedRepo.HistorySyncRequestedAt.Should().NotBeNull();
+        syncedRepo.HistorySyncedAt.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task HistorySyncRoute_ShouldRefuseARepoThatIsNotLinked()
+    {
+        var (_, repo) = await ConnectWithLinkedRepo();
+        var token = TestContext.Current.CancellationToken;
+
+        await Client.PutAsJsonAsync(
+            $"api/source-control/repos/{repo.Id}/linked",
+            new SetSourceControlRepoLinkedRequest { IsLinked = false },
+            token);
+
+        var response = await Client.PostAsync($"api/source-control/repos/{repo.Id}/history-sync", null, token);
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task HistorySyncRoute_ShouldNotQueueAnotherSync_WhileOneIsQueued()
+    {
+        var (_, repo) = await ConnectWithLinkedRepo();
+        var token = TestContext.Current.CancellationToken;
+        var requestedAt = (await RepoById(repo.Id)).HistorySyncRequestedAt;
+
+        var response = await Client.PostAsync($"api/source-control/repos/{repo.Id}/history-sync", null, token);
+        var syncedRepo = await RepoById(repo.Id);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        syncedRepo.HistorySyncRequestedAt.Should().Be(requestedAt);
+    }
+
+    [Fact]
+    public async Task HistorySyncRoute_ShouldReportTheRepoAsSyncing()
+    {
+        var (_, repo) = await ConnectWithLinkedRepo();
+        var token = TestContext.Current.CancellationToken;
+
+        var response = await Client.PostAsync($"api/source-control/repos/{repo.Id}/history-sync", null, token);
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<SourceControlRepoViewModel>>(token);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        result!.Payload!.HistorySyncStatus.Should().Be(SourceControlHistorySyncStatus.Syncing);
     }
 
     [Fact]
@@ -944,6 +1156,72 @@ public sealed class SourceControlTaskLinkTests
         var response = await Anonymous.SendAsync(request, TestContext.Current.CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.Accepted);
+    }
+
+    private async Task SyncHistory(int repoId)
+    {
+        using var scope = Fixture.CreateScope();
+        var historySync = scope.ServiceProvider.GetRequiredService<IScmHistorySync>();
+
+        await historySync.Sync(repoId, TestContext.Current.CancellationToken);
+    }
+
+    private async Task SetHistorySyncStartedAt(int repoId, DateTime startedAt)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        await context.SourceControlRepos
+            .Where(candidate => candidate.Id == repoId)
+            .ExecuteUpdateAsync(
+                setters => setters.SetProperty(candidate => candidate.HistorySyncStartedAt, startedAt),
+                TestContext.Current.CancellationToken);
+    }
+
+    private async Task<SourceControlRepo> RepoById(int repoId)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        var repo = await context.SourceControlRepos
+            .AsNoTracking()
+            .SingleAsync(candidate => candidate.Id == repoId, TestContext.Current.CancellationToken);
+
+        return repo;
+    }
+
+    private static ScmPullRequest HistoryPullRequest(
+        string number,
+        string title,
+        ScmPullRequestState state,
+        DateTimeOffset updatedAt,
+        string? headSha = null)
+    {
+        return new ScmPullRequest
+        {
+            ExternalId = number,
+            Number = number,
+            Title = title,
+            State = state,
+            SourceBranch = $"feature/{number}",
+            TargetBranch = "main",
+            Author = new ScmIdentity { Provider = SourceControlProvider.GitLab, Username = "tester" },
+            WebUrl = $"https://scm.test/pulls/{number}",
+            UpdatedAt = updatedAt,
+            HeadSha = headSha,
+        };
+    }
+
+    private static ScmCommit HistoryCommit(string sha, DateTimeOffset authoredAt)
+    {
+        return new ScmCommit
+        {
+            Sha = sha,
+            Message = "Work on the task",
+            Author = new ScmIdentity { Provider = SourceControlProvider.GitLab, Username = "tester" },
+            WebUrl = $"https://scm.test/commit/{sha}",
+            AuthoredAt = authoredAt,
+        };
     }
 
     private async Task<List<TaskCodeLink>> LinksFor(int taskId, int repoId)

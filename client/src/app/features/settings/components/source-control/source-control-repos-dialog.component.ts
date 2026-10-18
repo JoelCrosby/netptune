@@ -1,7 +1,9 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, computed, inject, signal } from '@angular/core';
+import { LucideRefreshCw } from '@lucide/angular';
 import {
   SourceControlConnection,
+  SourceControlHistorySyncStatus,
   SourceControlRepo,
   sourceControlProviderNames,
 } from '@core/models/source-control';
@@ -11,6 +13,7 @@ import { sourceControlReposResource } from '@settings/resources/source-control.r
 import { SourceControlCommandsService } from '@settings/services/source-control-commands.service';
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
+import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
@@ -21,6 +24,7 @@ import { SkeletonComponent } from '@static/components/skeleton/skeleton.componen
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { SupportingTextComponent } from '@static/components/supporting-text.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
+import { TooltipDirective } from '@static/directives/tooltip.directive';
 
 export interface SourceControlReposDialogData {
   connection: SourceControlConnection;
@@ -35,11 +39,14 @@ export interface SourceControlReposDialogData {
     EmptyStateComponent,
     ErrorStateComponent,
     FlatButtonComponent,
+    IconButtonComponent,
+    LucideRefreshCw,
     SearchInputComponent,
     SelectableRowComponent,
     SkeletonComponent,
     StrokedButtonComponent,
     SupportingTextComponent,
+    TooltipDirective,
   ],
   template: `
     <app-dialog-title showCloseButton [subtitle]="subtitle">
@@ -69,37 +76,79 @@ export interface SourceControlReposDialogData {
       } @else {
         <div class="flex max-h-96 flex-col overflow-y-auto">
           @for (repo of visibleRepos(); track repo.id) {
-            <app-selectable-row
-              [checked]="isLinked(repo)"
-              [disabled]="isLocked(repo)"
-              (toggled)="setLinked(repo, $event)">
-              <div
-                class="flex min-w-0 flex-1 items-center justify-between gap-3">
-                <span class="truncate">{{ repo.fullName }}</span>
-                <div class="flex shrink-0 gap-1.5">
-                  @if (repo.isPrivate) {
-                    <app-badge i18n="Badge on a private repository"
-                      >Private</app-badge
-                    >
-                  }
-                  @if (repo.isArchived) {
-                    <app-badge
-                      i18n="repository state|Badge on an archived repository"
-                      >Archived</app-badge
-                    >
-                  }
-                  @if (!repo.isAccessible) {
-                    <app-badge
-                      color="warn"
-                      i18n="
-                        Badge on a repository the connection can no longer see
-                      "
-                      >No access</app-badge
-                    >
-                  }
+            <div class="flex items-center gap-1">
+              <app-selectable-row
+                class="min-w-0 flex-1"
+                [checked]="isLinked(repo)"
+                [disabled]="isLocked(repo)"
+                (toggled)="setLinked(repo, $event)">
+                <div
+                  class="flex min-w-0 flex-1 items-center justify-between gap-3">
+                  <span class="truncate">{{ repo.fullName }}</span>
+                  <div class="flex shrink-0 gap-1.5">
+                    @if (repo.isPrivate) {
+                      <app-badge i18n="Badge on a private repository"
+                        >Private</app-badge
+                      >
+                    }
+                    @if (repo.isArchived) {
+                      <app-badge
+                        i18n="repository state|Badge on an archived repository"
+                        >Archived</app-badge
+                      >
+                    }
+                    @if (!repo.isAccessible) {
+                      <app-badge
+                        color="warn"
+                        i18n="
+                          Badge on a repository the connection can no longer see
+                        "
+                        >No access</app-badge
+                      >
+                    }
+                    @if (repo.isLinked) {
+                      @switch (repo.historySyncStatus) {
+                        @case (historySyncStatus.syncing) {
+                          <app-badge
+                            color="pending"
+                            i18n="
+                              Badge while a repository's recent history is being
+                              imported
+                            "
+                            >Syncing history</app-badge
+                          >
+                        }
+                        @case (historySyncStatus.failed) {
+                          <app-badge
+                            color="warn"
+                            i18n="
+                              Badge when importing a repository's recent history
+                              failed
+                            "
+                            >History sync failed</app-badge
+                          >
+                        }
+                      }
+                    }
+                  </div>
                 </div>
-              </div>
-            </app-selectable-row>
+              </app-selectable-row>
+              @if (repo.isLinked) {
+                <button
+                  app-icon-button
+                  type="button"
+                  i18n-ariaLabel="
+                    Button that imports a repository's recent pull requests and
+                    branches again
+                  "
+                  ariaLabel="Sync history"
+                  [appTooltip]="syncHistoryTooltip"
+                  [disabled]="isSyncingHistory(repo)"
+                  (click)="syncHistory(repo)">
+                  <svg lucideRefreshCw class="h-4 w-4"></svg>
+                </button>
+              }
+            </div>
           } @empty {
             <app-empty-state
               compact
@@ -142,6 +191,10 @@ export class SourceControlReposDialogComponent {
   protected readonly refresh = mutation({
     fallbackError: $localize`:Shown when refreshing the repository list fails:The repository list could not be refreshed.`,
   });
+
+  protected readonly historySyncStatus = SourceControlHistorySyncStatus;
+  protected readonly syncHistoryTooltip = $localize`:Tooltip on the button that imports a repository's history:Link pull requests and branches from the last 90 days`;
+  private readonly historySyncRepoIds = signal<ReadonlySet<number>>(new Set());
 
   protected readonly subtitle = `${sourceControlProviderNames[this.data.connection.provider]} · ${this.data.connection.accountLogin}`;
   protected readonly term = signal('');
@@ -192,6 +245,31 @@ export class SourceControlReposDialogComponent {
     });
   }
 
+  protected isSyncingHistory(repo: SourceControlRepo): boolean {
+    const isRequesting = this.historySyncRepoIds().has(repo.id);
+    const isRunning =
+      repo.historySyncStatus === SourceControlHistorySyncStatus.syncing;
+
+    return isRequesting || isRunning;
+  }
+
+  protected syncHistory(repo: SourceControlRepo) {
+    this.historySyncRepoIds.update((ids) => new Set(ids).add(repo.id));
+
+    this.commands.syncHistory(repo).subscribe({
+      next: () => this.clearHistorySync(repo.id),
+      error: (error: unknown) => {
+        this.clearHistorySync(repo.id);
+        this.snackbar.error(
+          getErrorMessage(
+            error,
+            $localize`:Shown when starting a repository history sync fails:The history of ${repo.fullName}:repository: could not be synced.`
+          )
+        );
+      },
+    });
+  }
+
   protected sync() {
     this.refresh.run(this.commands.sync(this.data.connection.id), {
       onSuccess: () => this.linkedOverrides.set(new Map()),
@@ -201,6 +279,16 @@ export class SourceControlReposDialogComponent {
 
   protected close() {
     this.dialogRef.close();
+  }
+
+  private clearHistorySync(repoId: number) {
+    this.historySyncRepoIds.update((ids) => {
+      const next = new Set(ids);
+
+      next.delete(repoId);
+
+      return next;
+    });
   }
 
   private setPending(repoId: number, isPending: boolean) {

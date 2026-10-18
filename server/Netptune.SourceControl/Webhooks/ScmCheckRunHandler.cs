@@ -46,6 +46,7 @@ internal sealed class ScmCheckRunHandler : IScmEventHandler
     public async Task<bool> Handle(
         ScmEvent scmEvent,
         SourceControlConnection connection,
+        ScmEventSource source,
         CancellationToken cancellationToken)
     {
         var changed = (ScmCheckRunChanged)scmEvent;
@@ -116,7 +117,22 @@ internal sealed class ScmCheckRunHandler : IScmEventHandler
         var summaryAfter = ScmCheckSummary.Summarise(runsAfter)!;
         var links = await UnitOfWork.TaskCodeLinks.GetReferencingCommit(repo.Id, checkRun.CommitSha, cancellationToken);
 
-        await RecordOutcome(summaryAfter, links, repo, connection, changed, cancellationToken);
+        var hasResult = summaryAfter.State is ScmCheckState.Success or ScmCheckState.Failure;
+        var unrecordedLinks = hasResult
+            ? links.Where(link => link.LastCheckState != summaryAfter.State).ToList()
+            : [];
+        var isLiveEvent = source == ScmEventSource.Webhook;
+
+        if (isLiveEvent)
+        {
+            await RecordOutcome(summaryAfter, unrecordedLinks, repo, connection, changed, cancellationToken);
+        }
+
+        // Synced history still remembers the result, so the next webhook for the same commit isn't recorded as news.
+        foreach (var link in unrecordedLinks)
+        {
+            link.LastCheckState = summaryAfter.State;
+        }
 
         return links.Count > 0;
     }
@@ -125,7 +141,7 @@ internal sealed class ScmCheckRunHandler : IScmEventHandler
     // job created after the others passed (a workflow with dependent jobs) doesn't record "passed" again.
     private async Task RecordOutcome(
         ScmCheckSummaryViewModel summaryAfter,
-        List<TaskCodeLink> links,
+        List<TaskCodeLink> unrecordedLinks,
         SourceControlRepo repo,
         SourceControlConnection connection,
         ScmCheckRunChanged changed,
@@ -138,16 +154,9 @@ internal sealed class ScmCheckRunHandler : IScmEventHandler
             _ => null,
         };
 
-        if (eventKey is null)
+        if (eventKey is null || unrecordedLinks.Count == 0)
         {
             return;
-        }
-
-        var unrecordedLinks = links.Where(link => link.LastCheckState != summaryAfter.State).ToList();
-
-        foreach (var link in unrecordedLinks)
-        {
-            link.LastCheckState = summaryAfter.State;
         }
 
         var isFailure = summaryAfter.State == ScmCheckState.Failure;

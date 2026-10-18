@@ -12,6 +12,8 @@ public interface ISourceControlClient
 
     ValueTask<IReadOnlyList<ScmCommit>> ListCommits(ScmConnectionContext context, ScmRepositoryRef repository, ScmCommitQuery query, CancellationToken cancellationToken);
 
+    ValueTask<IReadOnlyList<ScmCommit>> CompareCommits(ScmConnectionContext context, ScmRepositoryRef repository, string baseBranch, string headBranch, CancellationToken cancellationToken);
+
     ValueTask<ScmPullRequest?> GetPullRequest(ScmConnectionContext context, ScmRepositoryRef repository, string number, CancellationToken cancellationToken);
 
     ValueTask<IReadOnlyList<ScmPullRequest>> ListPullRequests(ScmConnectionContext context, ScmRepositoryRef repository, ScmPullRequestQuery query, CancellationToken cancellationToken);

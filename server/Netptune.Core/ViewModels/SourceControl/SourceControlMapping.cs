@@ -1,4 +1,5 @@
 using Netptune.Core.Entities;
+using Netptune.Core.SourceControl.History;
 
 namespace Netptune.Core.ViewModels.SourceControl;
 
@@ -21,6 +22,8 @@ public static class SourceControlMapping
             IsLinked = repo.IsLinked,
             LinkedAt = repo.LinkedAt,
             SyncedAt = repo.SyncedAt,
+            HistorySyncStatus = ScmHistorySyncState.Of(repo, DateTime.UtcNow),
+            HistorySyncedAt = repo.HistorySyncedAt,
         };
     }
 

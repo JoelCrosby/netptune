@@ -161,6 +161,16 @@ public sealed class FakeSourceControlProvider : ISourceControlProvider
             throw new NotSupportedException();
         }
 
+        public ValueTask<IReadOnlyList<ScmCommit>> CompareCommits(
+            ScmConnectionContext context,
+            ScmRepositoryRef repository,
+            string baseBranch,
+            string headBranch,
+            CancellationToken cancellationToken)
+        {
+            throw new NotSupportedException();
+        }
+
         public ValueTask<IReadOnlyList<ScmPullRequest>> ListPullRequests(
             ScmConnectionContext context,
             ScmRepositoryRef repository,

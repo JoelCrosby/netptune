@@ -26,6 +26,7 @@ internal sealed class ScmConnectionChangedHandler : IScmEventHandler
     public async Task<bool> Handle(
         ScmEvent scmEvent,
         SourceControlConnection connection,
+        ScmEventSource source,
         CancellationToken cancellationToken)
     {
         var changed = (ScmConnectionChanged)scmEvent;

@@ -4,6 +4,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.SourceControl;
+using Netptune.Core.SourceControl.History;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
 
@@ -30,6 +31,45 @@ public class SourceControlRepoRepository(DataContext context, IDbConnectionFacto
             .Where(repo => repo.WorkspaceId == workspaceId && repo.IsLinked && !repo.Connection.IsDeleted)
             .OrderBy(repo => repo.FullName)
             .ToListAsync(cancellationToken);
+    }
+
+    public Task<SourceControlRepo?> GetForHistorySync(int repoId, CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .Include(repo => repo.Connection)
+            .Include(repo => repo.Workspace)
+            .Where(repo => repo.Id == repoId && !repo.Connection.IsDeleted)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<bool> TryClaimHistorySync(int repoId, DateTime now, CancellationToken cancellationToken = default)
+    {
+        var expiredBefore = now - ScmHistorySyncState.Lease;
+
+        var claimed = await Entities
+            .Where(repo => repo.Id == repoId)
+            .Where(repo => repo.HistorySyncStartedAt == null || repo.HistorySyncStartedAt < expiredBefore)
+            .ExecuteUpdateAsync(
+                setters => setters.SetProperty(repo => repo.HistorySyncStartedAt, now),
+                cancellationToken);
+
+        return claimed == 1;
+    }
+
+    public Task ReleaseHistorySync(int repoId, CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .Where(repo => repo.Id == repoId)
+            .ExecuteUpdateAsync(
+                setters => setters.SetProperty(repo => repo.HistorySyncStartedAt, (DateTime?)null),
+                cancellationToken);
+    }
+
+    public Task<bool> IsLinked(int repoId, CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .AsNoTracking()
+            .AnyAsync(repo => repo.Id == repoId && repo.IsLinked && repo.IsAccessible, cancellationToken);
     }
 
     public Task<SourceControlRepo?> GetByExternalId(
