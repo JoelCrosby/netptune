@@ -5,20 +5,27 @@ using Netptune.Automation.Models;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Events;
 using Netptune.Core.Models.Automations;
 using Netptune.Core.Relations;
 using Netptune.Core.Relationships;
+using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Automation.Persistence.Actions;
 
 internal sealed class ManageTaskRelationHandler : IActionExecutionHandler
 {
-    private readonly INetptuneUnitOfWork UnitOfWork;
+    private const string RelationAdded = "added";
+    private const string RelationRemoved = "removed";
 
-    public ManageTaskRelationHandler(INetptuneUnitOfWork unitOfWork)
+    private readonly INetptuneUnitOfWork UnitOfWork;
+    private readonly IEventRecordWriter EventRecords;
+
+    public ManageTaskRelationHandler(INetptuneUnitOfWork unitOfWork, IEventRecordWriter eventRecords)
     {
         UnitOfWork = unitOfWork;
+        EventRecords = eventRecords;
     }
 
     public AutomationActionType Type => AutomationActionType.ManageTaskRelation;
@@ -120,7 +127,10 @@ internal sealed class ManageTaskRelationHandler : IActionExecutionHandler
             TargetTaskId = targetTaskId,
         };
 
+        var relationEvent = BuildRelationEvent(action, relation, RelationAdded);
+
         await UnitOfWork.ProjectTaskRelations.AddAsync(relation, cancellationToken);
+        await EventRecords.Append(relationEvent, cancellationToken);
         await UnitOfWork.CompleteAsync(cancellationToken);
 
         action.Result.Output = JsonSerializer.SerializeToDocument(new
@@ -152,8 +162,12 @@ internal sealed class ManageTaskRelationHandler : IActionExecutionHandler
         }
 
         var relationIds = relations.Select(relation => relation.Id).ToList();
+        var relationEvents = relations
+            .Select(relation => (IEventWriteRequest)BuildRelationEvent(action, relation, RelationRemoved))
+            .ToList();
 
         await UnitOfWork.ProjectTaskRelations.DeletePermanent(relationIds, cancellationToken);
+        await EventRecords.AppendRange(relationEvents, cancellationToken);
         await UnitOfWork.CompleteAsync(cancellationToken);
 
         action.Result.Output = JsonSerializer.SerializeToDocument(new
@@ -162,6 +176,44 @@ internal sealed class ManageTaskRelationHandler : IActionExecutionHandler
         }, JsonOptions.Default);
 
         return ActionOutcomes.Succeeded();
+    }
+
+    private static EventWriteRequest<TaskRelationChangedPayload> BuildRelationEvent(
+        PlannedAutomationAction action,
+        ProjectTaskRelation relation,
+        string change)
+    {
+        var execution = action.Execution;
+        var task = execution.Task;
+        var relatedTaskId = relation.SourceTaskId == task.Id ? relation.TargetTaskId : relation.SourceTaskId;
+
+        return new EventWriteRequest<TaskRelationChangedPayload>
+        {
+            WorkspaceId = task.WorkspaceId,
+            EventKey = EventKeys.TaskRelationChanged,
+            SubjectType = EventEntityTypes.From(EntityType.Task),
+            SubjectId = task.Id.ToString(),
+            ActorUserId = execution.ExecutionUserId!,
+            OriginType = EventOriginType.Automation,
+            CorrelationId = execution.CorrelationId,
+            CausationEventId = execution.CausationEventId,
+            Payload = new TaskRelationChangedPayload
+            {
+                Change = change,
+                RelationTypeId = relation.RelationTypeId,
+                SourceTaskId = relation.SourceTaskId,
+                TargetTaskId = relation.TargetTaskId,
+            },
+            References =
+            [
+                new EventReferenceInput
+                {
+                    Role = EventReferenceRoles.Member,
+                    EntityType = EventEntityTypes.From(EntityType.Task),
+                    EntityId = relatedTaskId.ToString(),
+                },
+            ],
+        };
     }
 
     private async Task<string?> FindLinkConflict(

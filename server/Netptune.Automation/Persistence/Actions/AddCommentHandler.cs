@@ -79,6 +79,7 @@ internal sealed class AddCommentHandler : IActionExecutionHandler
             SubjectType = EventEntityTypes.From(EntityType.Task),
             SubjectId = comment.EntityId.ToString(),
             ActorUserId = action.Execution.ExecutionUserId!,
+            OriginType = EventOriginType.Automation,
             Payload = new CommentEventPayload
             {
                 CommentId = comment.Id,

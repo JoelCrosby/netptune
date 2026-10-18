@@ -163,6 +163,7 @@ public sealed class TaskMutationPipeline : ITaskMutationPipeline
                 ActorUserId = request.ActorUserId,
                 CorrelationId = correlationId,
                 CausationEventId = request.CausationEventId,
+                OriginType = request.OriginType,
                 Payload = transition,
                 References = references,
             }, cancellationToken);
@@ -196,6 +197,7 @@ public sealed class TaskMutationPipeline : ITaskMutationPipeline
             ActorUserId = request.ActorUserId,
             CorrelationId = correlationId,
             CausationEventId = request.CausationEventId,
+            OriginType = request.OriginType,
             Payload = new ScopeMemberAttributeChangedPayload
             {
                 MemberType = EventEntityTypes.From(EntityType.Task),

@@ -3,7 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 
+using Netptune.Activity.Realtime;
 using Netptune.Activity.Services;
+using Netptune.Core.Services.Realtime;
 
 using ActivityMergeOptions = Netptune.Core.Models.Activity.ActivityMergeOptions;
 
@@ -18,6 +20,10 @@ public static class ServiceCollectionExtensions
         services.AddTransient<AuditRetentionJob>();
 
         services.AddHostedService<ActivityMergeWindowJob>();
+
+        services.AddSingleton<WorkspaceRefreshQueue>();
+        services.AddSingleton<IWorkspaceRefreshQueue>(provider => provider.GetRequiredService<WorkspaceRefreshQueue>());
+        services.AddHostedService(provider => provider.GetRequiredService<WorkspaceRefreshQueue>());
 
         return services;
     }

@@ -11,10 +11,13 @@ using Netptune.Core.Entities;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Relationships;
 using Netptune.Core.Services.Notifications;
+using Netptune.Core.Services.Realtime;
 using Netptune.Core.UnitOfWork;
 using Netptune.Entities.Configuration;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Configuration;
+
+using NSubstitute;
 
 using Testcontainers.PostgreSql;
 
@@ -31,6 +34,8 @@ public sealed class ActivityMergeFixture : IAsyncLifetime
     private ServiceProvider Provider = null!;
 
     public RecordingNotificationEventPublisher NotificationEvents { get; } = new();
+
+    public IWorkspaceRefreshQueue RefreshQueue { get; } = Substitute.For<IWorkspaceRefreshQueue>();
 
     public IServiceScopeFactory ScopeFactory => Provider.GetRequiredService<IServiceScopeFactory>();
 
@@ -114,6 +119,7 @@ public sealed class ActivityMergeFixture : IAsyncLifetime
         var handler = new ActivityHandler(
             scope.ServiceProvider.GetRequiredService<INetptuneUnitOfWork>(),
             scope.ServiceProvider.GetRequiredService<INotificationEventPublisher>(),
+            RefreshQueue,
             Options.Create(merge ?? new ActivityMergeOptions()),
             scope.ServiceProvider.GetRequiredService<DataContext>());
 

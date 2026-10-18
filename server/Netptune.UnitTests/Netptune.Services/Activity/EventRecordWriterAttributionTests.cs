@@ -71,6 +71,17 @@ public class EventRecordWriterAttributionTests
         record.Agent.Should().BeNull();
     }
 
+    [Fact]
+    public async Task Append_ShouldUseTheRequestedOrigin_WhenNoAssistantScopeIsActive()
+    {
+        var writer = CreateWriter();
+        var request = CreateRequest() with { OriginType = EventOriginType.Automation };
+
+        var record = await writer.Append(request, TestContext.Current.CancellationToken);
+
+        record.OriginType.Should().Be(EventOriginType.Automation);
+    }
+
     private EventRecordWriter CreateWriter()
     {
         return new EventRecordWriter(UnitOfWork, aiExecution: AiExecution);

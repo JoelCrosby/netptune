@@ -1,7 +1,5 @@
 using System.Text.Json;
 
-using Mediator;
-
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -13,16 +11,17 @@ using Netptune.Core.Events;
 
 namespace Netptune.Events;
 
-public sealed class CanonicalEventConsumerService : BackgroundService
+public sealed class CanonicalEventConsumerService<TConsumer> : BackgroundService
+    where TConsumer : ICanonicalEventConsumer
 {
-    private const string DurableName = "netptune-activity-canonical-v1";
+    private static readonly string DurableName = TConsumer.DurableName;
 
     private readonly INatsJSContext JetStream;
     private readonly EventStream Stream;
     private readonly EventMessageProcessor Processor;
     private readonly EventRetryPolicy RetryPolicy;
     private readonly IServiceScopeFactory ServiceScopeFactory;
-    private readonly ILogger<CanonicalEventConsumerService> Logger;
+    private readonly ILogger<CanonicalEventConsumerService<TConsumer>> Logger;
 
     public CanonicalEventConsumerService(
         INatsJSContext jetStream,
@@ -30,7 +29,7 @@ public sealed class CanonicalEventConsumerService : BackgroundService
         EventMessageProcessor processor,
         EventRetryPolicy retryPolicy,
         IServiceScopeFactory serviceScopeFactory,
-        ILogger<CanonicalEventConsumerService> logger)
+        ILogger<CanonicalEventConsumerService<TConsumer>> logger)
     {
         JetStream = jetStream;
         Stream = stream;
@@ -51,6 +50,7 @@ public sealed class CanonicalEventConsumerService : BackgroundService
                 Name = DurableName,
                 DurableName = DurableName,
                 AckPolicy = ConsumerConfigAckPolicy.Explicit,
+                DeliverPolicy = TConsumer.ReplaysHistory ? ConsumerConfigDeliverPolicy.All : ConsumerConfigDeliverPolicy.New,
                 AckWait = RetryPolicy.AckWait,
                 MaxDeliver = RetryPolicy.MaxDeliver,
                 Backoff = RetryPolicy.Backoff,
@@ -78,8 +78,8 @@ public sealed class CanonicalEventConsumerService : BackgroundService
 
         using var scope = ServiceScopeFactory.CreateScope();
 
-        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        var consumer = scope.ServiceProvider.GetRequiredService<TConsumer>();
 
-        await mediator.Send(envelope, cancellationToken);
+        await consumer.Handle(envelope, cancellationToken);
     }
 }

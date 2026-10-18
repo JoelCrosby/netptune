@@ -150,6 +150,7 @@ public sealed class EventOutboxPublisher : BackgroundService
         OccurredAt = record.OccurredAt,
         RecordedAt = record.RecordedAt,
         ActorUserId = record.ActorUserId,
+        OriginType = record.OriginType,
         CorrelationId = record.CorrelationId,
         CausationEventId = record.CausationEventId,
         RetentionClass = record.RetentionClass,

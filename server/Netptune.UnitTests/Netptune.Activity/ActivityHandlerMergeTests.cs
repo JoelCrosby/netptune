@@ -8,6 +8,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Services.Notifications;
+using Netptune.Core.Services.Realtime;
 using Netptune.Core.UnitOfWork;
 
 using NSubstitute;
@@ -20,6 +21,7 @@ public class ActivityHandlerMergeTests
 {
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly INotificationEventPublisher NotificationEvents = Substitute.For<INotificationEventPublisher>();
+    private readonly IWorkspaceRefreshQueue RefreshQueue = Substitute.For<IWorkspaceRefreshQueue>();
 
     private const int WorkspaceId = 1;
     private const int EntityId = 99;
@@ -81,7 +83,7 @@ public class ActivityHandlerMergeTests
     }
 
     private ActivityHandler Handler(ActivityMergeOptions? merge = null) =>
-        new(UnitOfWork, NotificationEvents, Options.Create(merge ?? new ActivityMergeOptions()));
+        new(UnitOfWork, NotificationEvents, RefreshQueue, Options.Create(merge ?? new ActivityMergeOptions()));
 
     [Fact]
     public async Task Handle_ShouldNotNotify_ForMergeableTypes()

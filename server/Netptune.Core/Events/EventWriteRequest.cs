@@ -31,6 +31,8 @@ public interface IEventWriteRequest
 
     Guid? CausationEventId { get; }
 
+    EventOriginType? OriginType { get; }
+
     bool Publish { get; }
 }
 
@@ -59,6 +61,8 @@ public sealed record EventWriteRequest<TPayload> : IEventWriteRequest where TPay
     public Guid? CorrelationId { get; init; }
 
     public Guid? CausationEventId { get; init; }
+
+    public EventOriginType? OriginType { get; init; }
 
     public bool Publish { get; init; } = true;
 
@@ -249,6 +253,29 @@ public sealed record CommentEventPayload
     public int CommentId { get; init; }
 
     public IReadOnlyCollection<string> RecipientUserIds { get; init; } = [];
+}
+
+public sealed record EntityDeletedPayload
+{
+    public required string Name { get; init; }
+}
+
+public sealed record FlagRaisedPayload
+{
+    public required string FlagName { get; init; }
+
+    public int? AutomationRuleId { get; init; }
+}
+
+public sealed record TaskRelationChangedPayload
+{
+    public required string Change { get; init; }
+
+    public int RelationTypeId { get; init; }
+
+    public int SourceTaskId { get; init; }
+
+    public int TargetTaskId { get; init; }
 }
 
 public sealed record FlagResolutionPayload

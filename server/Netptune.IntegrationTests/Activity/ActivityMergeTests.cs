@@ -12,8 +12,11 @@ using Netptune.Core.Events;
 using Netptune.Core.Events.Tasks;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Services.Notifications;
+using Netptune.Core.Services.Realtime;
 using Netptune.Core.UnitOfWork;
 using Netptune.Entities.Contexts;
+
+using NSubstitute;
 
 using Xunit;
 
@@ -821,6 +824,59 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
     }
 
     [Fact]
+    public async Task HandleCanonicalEvent_ShouldQueueAnActivityRefresh_ForBackgroundChanges()
+    {
+        const int entityId = 1412;
+        var payload = new SourceControlActivityPayload
+        {
+            Provider = "github",
+            RepoFullName = "acme/api",
+            Reference = "17",
+            Title = "Fix search",
+            WebUrl = "https://github.com/acme/api/pull/17",
+        };
+
+        fixture.RefreshQueue.ClearReceivedCalls();
+
+        await HandleCanonical(entityId, EventKeys.SourceControlChecksFailed, payload, null, EventOriginType.System);
+
+        fixture.RefreshQueue.Received(1).Enqueue(
+            fixture.WorkspaceId,
+            Arg.Is<IReadOnlyCollection<string>>(scopes => scopes.Single() == WorkspaceEventScopes.Activity));
+    }
+
+    [Fact]
+    public async Task HandleCanonicalEvent_ShouldRecordAnAutomationDeletion()
+    {
+        const int entityId = 1413;
+        var payload = new EntityDeletedPayload { Name = "Stale task" };
+
+        await HandleCanonical(entityId, EventKeys.EntityDeleted, payload, fixture.ActorUserId, EventOriginType.Automation);
+
+        var entry = (await Entries(entityId)).Should().ContainSingle().Subject;
+
+        entry.ActivityType.Should().Be(ActivityType.Delete);
+    }
+
+    [Fact]
+    public async Task HandleCanonicalEvent_ShouldKeepFlagsAndRelationsOutOfTaskHistory()
+    {
+        const int entityId = 1414;
+        var flag = new FlagRaisedPayload { FlagName = "Needs attention" };
+        var relation = new TaskRelationChangedPayload { Change = "added", SourceTaskId = entityId, TargetTaskId = 1 };
+
+        await HandleCanonical(entityId, EventKeys.FlagRaised, flag, fixture.ActorUserId, EventOriginType.Automation);
+        await HandleCanonical(
+            entityId,
+            EventKeys.TaskRelationChanged,
+            relation,
+            fixture.ActorUserId,
+            EventOriginType.Automation);
+
+        (await Entries(entityId)).Should().BeEmpty();
+    }
+
+    [Fact]
     public async Task HandleCanonicalEvent_ShouldStillSkipOtherEventsWithoutAnActor()
     {
         const int entityId = 1411;
@@ -921,7 +977,12 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
         return HandleCanonical(entityId, EventKeys.EntityFieldTransitioned, transition, fixture.ActorUserId);
     }
 
-    private async Task HandleCanonical(int entityId, string eventKey, object transition, string? actorUserId)
+    private async Task HandleCanonical(
+        int entityId,
+        string eventKey,
+        object transition,
+        string? actorUserId,
+        EventOriginType originType = EventOriginType.User)
     {
         var eventId = Guid.NewGuid();
         var occurredAt = DateTime.UtcNow;
@@ -940,6 +1001,7 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
                 SubjectType = EventEntityTypes.From(EntityType.Task),
                 SubjectId = entityId.ToString(),
                 ActorUserId = actorUserId,
+                OriginType = originType,
                 OccurredAt = occurredAt,
                 RecordedAt = occurredAt,
                 RetentionClass = EventRetentionClasses.Permanent,
@@ -957,6 +1019,7 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
             EventId = eventId,
             EventRecordId = eventRecordId,
             EventKey = eventKey,
+            OriginType = originType,
             SchemaVersion = 1,
             WorkspaceId = fixture.WorkspaceId,
             SubjectType = EventEntityTypes.From(EntityType.Task),

@@ -23,4 +23,6 @@ public static class WorkspaceEventScopes
     public const string SourceControl = "sourceControl";
 
     public const string CodeLinks = "codeLinks";
+
+    public const string Activity = "activity";
 }

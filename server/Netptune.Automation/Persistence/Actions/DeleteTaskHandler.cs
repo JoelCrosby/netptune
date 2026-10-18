@@ -6,6 +6,7 @@ using Netptune.Automation.Models;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Automation.Persistence.Actions;
@@ -13,10 +14,12 @@ namespace Netptune.Automation.Persistence.Actions;
 internal sealed class DeleteTaskHandler : IActionExecutionHandler
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
+    private readonly IEventRecordWriter EventRecords;
 
-    public DeleteTaskHandler(INetptuneUnitOfWork unitOfWork)
+    public DeleteTaskHandler(INetptuneUnitOfWork unitOfWork, IEventRecordWriter eventRecords)
     {
         UnitOfWork = unitOfWork;
+        EventRecords = eventRecords;
     }
 
     public AutomationActionType Type => AutomationActionType.DeleteTask;
@@ -61,6 +64,14 @@ internal sealed class DeleteTaskHandler : IActionExecutionHandler
                 AutomationActionResultStatus.Skipped,
                 "The task was already deleted.");
         }
+
+        var deletionEvent = TaskDeletionEvents.Create(
+            execution.Task,
+            execution.ExecutionUserId!,
+            execution.CorrelationId,
+            execution.CausationEventId);
+
+        await EventRecords.Append(deletionEvent, cancellationToken);
 
         state.AppliedTaskDeletions.Add(action);
         state.DeletedTaskIds.Add(execution.Task.Id);

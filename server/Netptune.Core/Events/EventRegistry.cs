@@ -38,6 +38,8 @@ public static class EventKeys
     public const string CommentUpdated = "comment.updated";
     public const string CommentDeleted = "comment.deleted";
     public const string FlagResolutionRecorded = "flag.resolution-recorded";
+    public const string FlagRaised = "flag.raised";
+    public const string TaskRelationChanged = "relation.changed";
     public const string EntityActivityRecorded = "entity.activity-recorded";
     public const string AssistantConversationDeleted = "assistant.conversation-deleted";
     public const string SourceControlConnected = "source-control.connected";
@@ -52,12 +54,24 @@ public static class EventKeys
     // Code activity often comes from someone with no Netptune account, so it is recorded without an actor.
     public static bool AllowsMissingActor(string eventKey)
     {
+        return IsSourceControlActivity(eventKey);
+    }
+
+    public static bool IsSourceControlActivity(string eventKey)
+    {
         return eventKey is SourceControlPullRequestOpened
             or SourceControlPullRequestMerged
             or SourceControlPullRequestClosed
             or SourceControlCommitsPushed
             or SourceControlChecksPassed
             or SourceControlChecksFailed;
+    }
+
+    // Task history shows relations with their related task's details, which these payloads don't carry,
+    // and flags have never appeared there; both are on the ledger only so background changes reach boards.
+    public static bool IsProjectedToActivity(string eventKey)
+    {
+        return eventKey is not (FlagRaised or TaskRelationChanged);
     }
 
     public static string From(ActivityType type) => type switch
@@ -134,6 +148,7 @@ public static class EventKeys
             ImportFailed => ActivityType.ImportFailed,
             WorkspaceRoleChanged => ActivityType.RoleChanged,
             WorkspaceSettingsChanged => ActivityType.WorkspaceSettingsChanged,
+            EntityDeleted => ActivityType.Delete,
             CommentCreated => ActivityType.AddComment,
             CommentUpdated => ActivityType.ModifyComment,
             CommentDeleted => ActivityType.RemoveComment,
@@ -250,6 +265,9 @@ public static class EventDefinitionRegistry
             [(EventKeys.CommentCreated, 1)] = typeof(CommentEventPayload),
             [(EventKeys.CommentUpdated, 1)] = typeof(CommentEventPayload),
             [(EventKeys.CommentDeleted, 1)] = typeof(CommentEventPayload),
+            [(EventKeys.EntityDeleted, 1)] = typeof(EntityDeletedPayload),
+            [(EventKeys.FlagRaised, 1)] = typeof(FlagRaisedPayload),
+            [(EventKeys.TaskRelationChanged, 1)] = typeof(TaskRelationChangedPayload),
             [(EventKeys.FlagResolutionRecorded, 1)] = typeof(FlagResolutionPayload),
             [(EventKeys.AssistantConversationDeleted, 1)] = typeof(AssistantConversationDeletedPayload),
             [(EventKeys.SourceControlConnected, 1)] = typeof(SourceControlConnectionEventPayload),

@@ -10,10 +10,13 @@ using Netptune.Core.Meta;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Relationships;
 using Netptune.Core.Services.Notifications;
+using Netptune.Core.Services.Realtime;
 using Netptune.Core.UnitOfWork;
 using Netptune.Entities.Configuration;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Configuration;
+
+using NSubstitute;
 
 using Testcontainers.PostgreSql;
 
@@ -83,6 +86,7 @@ public sealed class NotificationSubscriptionFixture : IAsyncLifetime
         var handler = new ActivityHandler(
             scope.ServiceProvider.GetRequiredService<INetptuneUnitOfWork>(),
             scope.ServiceProvider.GetRequiredService<INotificationEventPublisher>(),
+            Substitute.For<IWorkspaceRefreshQueue>(),
             Options.Create(new ActivityMergeOptions()),
             scope.ServiceProvider.GetRequiredService<DataContext>());
 

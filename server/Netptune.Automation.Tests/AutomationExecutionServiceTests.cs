@@ -69,6 +69,11 @@ public sealed class AutomationExecutionServiceTests
         flag.EntityType.Should().Be(EntityType.Task);
         flag.EntityId.Should().Be(scenario.Task.Id);
         flag.Name.Should().Be("Needs attention");
+
+        var flagEvent = scope.EventRecords.Events.Single(record => record.EventKey == EventKeys.FlagRaised);
+
+        flagEvent.SubjectId.Should().Be(scenario.Task.Id.ToString());
+        flagEvent.OriginType.Should().Be(EventOriginType.Automation);
     }
 
     [Fact]
@@ -305,6 +310,7 @@ public sealed class AutomationExecutionServiceTests
             recordedEvent.ActorUserId == scenario.ExecutionUser.Id);
         fieldEvents.Should().OnlyContain(recordedEvent => recordedEvent.CorrelationId == correlationId);
         fieldEvents.Should().OnlyContain(recordedEvent => recordedEvent.CausationEventId == sourceEventId);
+        fieldEvents.Should().OnlyContain(recordedEvent => recordedEvent.OriginType == EventOriginType.Automation);
         var transitionPayloads = fieldEvents
             .Select(recordedEvent => (FieldTransitionedPayload)recordedEvent.Payload)
             .ToList();
@@ -699,6 +705,7 @@ public sealed class AutomationExecutionServiceTests
         commentEvent.SubjectType.Should().Be(EventEntityTypes.From(EntityType.Task));
         commentEvent.SubjectId.Should().Be(scenario.Task.Id.ToString());
         commentEvent.ActorUserId.Should().Be(scenario.ExecutionUser.Id);
+        commentEvent.OriginType.Should().Be(EventOriginType.Automation);
         payload.CommentId.Should().Be(comment.Id);
         payload.RecipientUserIds.Should().BeEmpty();
     }
@@ -742,6 +749,11 @@ public sealed class AutomationExecutionServiceTests
         task.IsDeleted.Should().BeTrue();
         task.DeletedByUserId.Should().Be(scenario.ExecutionUser.Id);
         run.Status.Should().Be(AutomationRunStatus.Succeeded);
+
+        var deletion = scope.EventRecords.Events.Single(record => record.EventKey == EventKeys.EntityDeleted);
+
+        deletion.SubjectId.Should().Be(scenario.Task.Id.ToString());
+        deletion.OriginType.Should().Be(EventOriginType.Automation);
     }
 
     [Theory]
@@ -967,6 +979,12 @@ public sealed class AutomationExecutionServiceTests
         deletedTask.DeletedByUserId.Should().Be(scenario.ExecutionUser.Id);
         completedAction.Status.Should().Be(ScheduledAutomationActionStatus.Completed);
         completedAction.ProcessedAt.Should().NotBeNull();
+
+        var deletion = scope.EventRecords.Events.Single(record => record.EventKey == EventKeys.EntityDeleted);
+
+        deletion.SubjectId.Should().Be(scenario.Task.Id.ToString());
+        deletion.ActorUserId.Should().Be(scenario.ExecutionUser.Id);
+        deletion.OriginType.Should().Be(EventOriginType.Automation);
     }
 
     [Fact]
@@ -1510,6 +1528,13 @@ public sealed class AutomationExecutionServiceTests
         relation.SourceTaskId.Should().Be(scenario.Task.Id);
         relation.TargetTaskId.Should().Be(relatedTask.Id);
         run.Status.Should().Be(AutomationRunStatus.Succeeded);
+
+        var relationEvent = scope.EventRecords.Events.Single(record => record.EventKey == EventKeys.TaskRelationChanged);
+        var payload = relationEvent.Payload.Should().BeOfType<TaskRelationChangedPayload>().Subject;
+
+        payload.Change.Should().Be("added");
+        relationEvent.References.Should().ContainSingle(reference => reference.EntityId == relatedTask.Id.ToString());
+        relationEvent.OriginType.Should().Be(EventOriginType.Automation);
     }
 
     [Fact]
@@ -1534,6 +1559,10 @@ public sealed class AutomationExecutionServiceTests
 
         hasRelations.Should().BeFalse();
         run.Status.Should().Be(AutomationRunStatus.Succeeded);
+
+        var relationEvent = scope.EventRecords.Events.Single(record => record.EventKey == EventKeys.TaskRelationChanged);
+
+        relationEvent.Payload.Should().BeOfType<TaskRelationChangedPayload>().Which.Change.Should().Be("removed");
     }
 
     [Fact]

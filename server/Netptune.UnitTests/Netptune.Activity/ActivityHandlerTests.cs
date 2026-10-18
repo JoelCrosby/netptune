@@ -8,6 +8,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Services.Notifications;
+using Netptune.Core.Services.Realtime;
 using Netptune.Core.UnitOfWork;
 
 using NSubstitute;
@@ -24,6 +25,7 @@ public class ActivityHandlerTests
 
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly INotificationEventPublisher NotificationEvents = Substitute.For<INotificationEventPublisher>();
+    private readonly IWorkspaceRefreshQueue RefreshQueue = Substitute.For<IWorkspaceRefreshQueue>();
 
     private readonly HashSet<Guid> PersistedEventIds = [];
 
@@ -114,7 +116,7 @@ public class ActivityHandlerTests
 
         UnitOfWork.InvokeTransaction();
 
-        Handler = new(UnitOfWork, NotificationEvents, Options.Create(new ActivityMergeOptions()));
+        Handler = new(UnitOfWork, NotificationEvents, RefreshQueue, Options.Create(new ActivityMergeOptions()));
     }
 
     private ActivityEvent BuildEvent(string? userId = null, int? workspaceId = null) =>
@@ -138,6 +140,16 @@ public class ActivityHandlerTests
 
         await UnitOfWork.Received(3).CompleteAsync(TestContext.Current.CancellationToken);
         await UnitOfWork.Received(1).Transaction(Arg.Any<Func<Task>>(), Arg.Any<bool>());
+    }
+
+    [Fact]
+    public async Task Handle_ShouldNotQueueAnActivityRefresh_ForChangesMadeByAUser()
+    {
+        var message = new ActivityMessage([BuildEvent(), BuildEvent()]);
+
+        await Handler.Handle(message, TestContext.Current.CancellationToken);
+
+        RefreshQueue.DidNotReceiveWithAnyArgs().Enqueue(WorkspaceId, []);
     }
 
     [Fact]

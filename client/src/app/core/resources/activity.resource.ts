@@ -20,6 +20,6 @@ export const activityResource = (
     permission: PERMISSIONS.activity.read,
     trackBy: (activity) => activity.id,
     parse: (response) => response.payload ?? [],
-    refreshOn: ['codeLinks'],
+    refreshOn: ['activity'],
   });
 };

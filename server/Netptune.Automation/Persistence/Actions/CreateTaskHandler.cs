@@ -352,6 +352,7 @@ internal sealed class CreateTaskHandler : IActionExecutionHandler
             SubjectType = EventEntityTypes.From(EntityType.Task),
             SubjectId = task.Id.ToString(),
             ActorUserId = action.Execution.ExecutionUserId!,
+            OriginType = EventOriginType.Automation,
             Payload = new EntityCreatedPayload
             {
                 Name = task.Name,

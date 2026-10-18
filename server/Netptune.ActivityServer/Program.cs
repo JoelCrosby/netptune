@@ -1,4 +1,5 @@
 using Netptune.Activity;
+using Netptune.Activity.Realtime;
 using Netptune.Activity.Services;
 using Netptune.Cache;
 using Netptune.Core.Events;
@@ -34,6 +35,7 @@ builder.Services.AddNetptuneMessageQueue(
     builder.Configuration,
     MessageKeys.Consumers.Activity);
 builder.Services.AddCanonicalEventConsumer();
+builder.Services.AddCanonicalEventConsumer<RealtimeCanonicalEventConsumer>();
 
 builder.Services.AddMediator(options =>
 {

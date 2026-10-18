@@ -1,5 +1,7 @@
 using System.Text.Json;
 
+using Netptune.Core.Enums;
+
 namespace Netptune.Core.Events;
 
 public sealed record CanonicalEventEnvelope : IEventMessage
@@ -27,6 +29,8 @@ public sealed record CanonicalEventEnvelope : IEventMessage
     public required DateTime RecordedAt { get; init; }
 
     public string? ActorUserId { get; init; }
+
+    public EventOriginType OriginType { get; init; }
 
     public Guid? CorrelationId { get; init; }
 

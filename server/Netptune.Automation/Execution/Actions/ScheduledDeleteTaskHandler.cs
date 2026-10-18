@@ -1,6 +1,7 @@
 using Netptune.Automation.Common;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Automation.Execution.Actions;
@@ -8,10 +9,12 @@ namespace Netptune.Automation.Execution.Actions;
 internal sealed class ScheduledDeleteTaskHandler : IScheduledActionHandler
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
+    private readonly IEventRecordWriter EventRecords;
 
-    public ScheduledDeleteTaskHandler(INetptuneUnitOfWork unitOfWork)
+    public ScheduledDeleteTaskHandler(INetptuneUnitOfWork unitOfWork, IEventRecordWriter eventRecords)
     {
         UnitOfWork = unitOfWork;
+        EventRecords = eventRecords;
     }
 
     public AutomationActionType Type => AutomationActionType.DeleteTask;
@@ -29,6 +32,11 @@ internal sealed class ScheduledDeleteTaskHandler : IScheduledActionHandler
         {
             return new ScheduledActionOutcome(ScheduledAutomationActionStatus.Cancelled);
         }
+
+        var deletionEvent = TaskDeletionEvents.Create(action.Task, action.OwnerId);
+
+        await EventRecords.Append(deletionEvent, cancellationToken);
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
         return new ScheduledActionOutcome(ScheduledAutomationActionStatus.Completed, RemoveTaskFromSearch: true);
     }

@@ -1,4 +1,5 @@
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Services;
 using Netptune.Core.SourceControl;
@@ -90,6 +91,7 @@ internal sealed class ScmTaskActivityRecorder
                 Payload = payload,
                 ActorUserId = actorUserId,
                 ResolveActorFromIdentity = false,
+                OriginType = EventOriginType.System,
                 OccurredAt = activity.OccurredAt.UtcDateTime,
             })
             .ToList();

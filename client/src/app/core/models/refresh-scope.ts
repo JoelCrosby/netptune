@@ -16,6 +16,7 @@ export const allRefreshScopes = [
   'pages',
   'sourceControl',
   'codeLinks',
+  'activity',
 ] as const;
 
 export type RefreshScope = (typeof allRefreshScopes)[number];

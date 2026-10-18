@@ -85,7 +85,8 @@ public sealed class EventRecordWriter : IEventRecordWriter
 
         var eventKey = request.EventKey;
         var isAssistantExecution = AiExecution?.IsActive == true;
-        var originType = isAssistantExecution ? AiExecution!.OriginType : EventOriginType.User;
+        var requestedOriginType = request.OriginType ?? EventOriginType.User;
+        var originType = isAssistantExecution ? AiExecution!.OriginType : requestedOriginType;
         var agent = isAssistantExecution ? AiExecution!.Agent : null;
         var assistantCorrelationId = isAssistantExecution ? AiExecution!.CorrelationId : null;
 

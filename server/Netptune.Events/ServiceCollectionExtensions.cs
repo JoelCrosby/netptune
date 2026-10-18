@@ -76,7 +76,14 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddCanonicalEventConsumer(this IServiceCollection services)
     {
-        services.AddHostedService<CanonicalEventConsumerService>();
+        return services.AddCanonicalEventConsumer<ActivityCanonicalEventConsumer>();
+    }
+
+    public static IServiceCollection AddCanonicalEventConsumer<TConsumer>(this IServiceCollection services)
+        where TConsumer : class, ICanonicalEventConsumer
+    {
+        services.AddScoped<TConsumer>();
+        services.AddHostedService<CanonicalEventConsumerService<TConsumer>>();
 
         return services;
     }

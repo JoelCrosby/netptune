@@ -12,6 +12,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Services.Notifications;
+using Netptune.Core.Services.Realtime;
 using Netptune.Core.UnitOfWork;
 using Netptune.Entities.Contexts;
 using Netptune.Services.Notifications;
@@ -27,17 +28,20 @@ public sealed class ActivityHandler :
 
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly INotificationEventPublisher NotificationEvents;
+    private readonly IWorkspaceRefreshQueue RefreshQueue;
     private readonly ActivityMergeOptions Merge;
     private readonly DataContext? Context;
 
     public ActivityHandler(
         INetptuneUnitOfWork unitOfWork,
         INotificationEventPublisher notificationEvents,
+        IWorkspaceRefreshQueue refreshQueue,
         IOptions<ActivityMergeOptions> merge,
         DataContext? context = null)
     {
         UnitOfWork = unitOfWork;
         NotificationEvents = notificationEvents;
+        RefreshQueue = refreshQueue;
         Merge = merge.Value;
         Context = context;
     }
@@ -125,6 +129,8 @@ public sealed class ActivityHandler :
         // the transaction lands is told about a notification that does not exist yet.
         await PublishNotificationEventsAsync(notifications, cancellationToken);
 
+        QueueActivityRefresh(records);
+
         return default;
     }
 
@@ -187,7 +193,25 @@ public sealed class ActivityHandler :
 
         await PublishNotificationEventsAsync(notifications, cancellationToken);
 
+        QueueActivityRefresh([record]);
+
         return default;
+    }
+
+    // User and assistant changes are broadcast by the request that made them, so only background work needs a
+    // push once its entries exist. A push for every edit would also refresh everything in clients too old to
+    // know this scope.
+    private void QueueActivityRefresh(IEnumerable<ActivityRecord> records)
+    {
+        var workspaceIds = records
+            .Where(record => record.Log.OriginType is EventOriginType.Automation or EventOriginType.System)
+            .Select(record => record.WorkspaceId)
+            .Distinct();
+
+        foreach (var workspaceId in workspaceIds)
+        {
+            RefreshQueue.Enqueue(workspaceId, [WorkspaceEventScopes.Activity]);
+        }
     }
 
     private static bool TryBuildActivityEvent(
@@ -201,10 +225,12 @@ public sealed class ActivityHandler :
         var hasSupportedEntityType = EventEntityTypes.TryParse(envelope.SubjectType, out var entityType);
 
         var hasNumericEntityId = int.TryParse(envelope.SubjectId, out var entityId);
+        var isProjectedEvent = EventKeys.IsProjectedToActivity(envelope.EventKey);
         var canProjectActivity = hasWorkspaceContext &&
             hasActor &&
             hasSupportedEntityType &&
-            hasNumericEntityId;
+            hasNumericEntityId &&
+            isProjectedEvent;
 
         if (!canProjectActivity)
         {
