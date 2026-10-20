@@ -84,6 +84,8 @@ public sealed class NetptuneFixture : IAsyncLifetime
         Environment.SetEnvironmentVariable("RateLimiting__AuthPermitLimit", "100000");
         Environment.SetEnvironmentVariable("RateLimiting__RegisterPermitLimit", "100000");
         Environment.SetEnvironmentVariable("RateLimiting__RefreshPermitLimit", "100000");
+        Environment.SetEnvironmentVariable("RateLimiting__TransferPermitLimit", "100000");
+        Environment.SetEnvironmentVariable("RateLimiting__AiPermitLimit", "100000");
 
         ApiApplicationFactory = new WebApplicationFactory<PreAuthenticationRateLimiter>();
 

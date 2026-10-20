@@ -118,36 +118,7 @@ jobs:
     name: Test Server
     needs: changes
     if: ${{ needs.changes.outputs.server == 'true' }}
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: server
-
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: "10.x"
-
-      - name: Restore unit tests
-        run: dotnet restore Netptune.UnitTests/Netptune.UnitTests.csproj
-
-      - name: Build unit tests
-        run: dotnet build Netptune.UnitTests/Netptune.UnitTests.csproj --no-restore --configuration Release
-
-      - name: Run unit tests
-        run: dotnet test --project Netptune.UnitTests/Netptune.UnitTests.csproj --no-build --configuration Release
-
-      - name: Restore integration tests
-        run: dotnet restore Netptune.IntegrationTests/Netptune.IntegrationTests.csproj
-
-      - name: Build integration tests
-        run: dotnet build Netptune.IntegrationTests/Netptune.IntegrationTests.csproj --no-restore --configuration Release
-
-      - name: Run integration tests
-        run: dotnet test --project Netptune.IntegrationTests/Netptune.IntegrationTests.csproj --no-build --configuration Release
+    uses: ./.github/workflows/test.yml
 
   build-app:
     name: Build App Image

@@ -35,6 +35,8 @@ public static class RateLimiterConfiguration
 
     private const int DefaultRefreshPermitLimit = 60;
 
+    private const int DefaultTransferPermitLimit = 10;
+
     public static IServiceCollection AddNetptuneRateLimiter(
         this IServiceCollection services,
         IConfiguration configuration)
@@ -44,6 +46,7 @@ public static class RateLimiterConfiguration
         var authPermitLimit = configuration.GetValue("RateLimiting:AuthPermitLimit", DefaultAuthPermitLimit);
         var registerPermitLimit = configuration.GetValue("RateLimiting:RegisterPermitLimit", DefaultRegisterPermitLimit);
         var refreshPermitLimit = configuration.GetValue("RateLimiting:RefreshPermitLimit", DefaultRefreshPermitLimit);
+        var transferPermitLimit = configuration.GetValue("RateLimiting:TransferPermitLimit", DefaultTransferPermitLimit);
 
         services.AddRateLimiter(options =>
         {
@@ -104,7 +107,7 @@ public static class RateLimiterConfiguration
                     context.GetRateLimitPartitionKey(),
                     _ => new SlidingWindowRateLimiterOptions
                     {
-                        PermitLimit = 10,
+                        PermitLimit = transferPermitLimit,
                         Window = TimeSpan.FromMinutes(1),
                         SegmentsPerWindow = 2,
                         QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
