@@ -129,6 +129,7 @@ export type EditorUploader = (file: File) => Promise<EditorUpload | null>;
   host: {
     class: 'relative flex overflow-visible',
     '[class]': 'appearanceClass()',
+    '(focusin)': 'onFocusIn()',
     '(focusout)': 'onFocusOut($event)',
   },
 })
@@ -206,6 +207,11 @@ export class EditorComponent
   readonly injector = inject(Injector);
 
   readonly editor = signal<Editor | null>(null);
+
+  private readonly focused = signal(false);
+  private readonly hasPendingEdit = signal(false);
+
+  readonly isEditing = computed(() => this.focused() || this.hasPendingEdit());
 
   // bumped on every transaction so the menus can recompute which marks and nodes
   // are active at the cursor
@@ -339,8 +345,13 @@ export class EditorComponent
 
     this.savedContent = serialised;
     this.editorValue = serialised;
+    this.hasPendingEdit.set(false);
 
     return serialised;
+  }
+
+  onFocusIn() {
+    this.focused.set(true);
   }
 
   onFocusOut(event: FocusEvent) {
@@ -349,6 +360,7 @@ export class EditorComponent
 
     if (next && holder.contains(next)) return;
 
+    this.focused.set(false);
     this.persistCurrentMode(this.emitSaved);
   }
 
@@ -434,6 +446,7 @@ export class EditorComponent
 
   protected onMarkdownInput(source: string) {
     this.value.set(source);
+    this.hasPendingEdit.set(source !== this.markdownSaved);
     this.markdownChanged.next();
   }
 
@@ -461,6 +474,22 @@ export class EditorComponent
     this.persistCurrentMode(this.emitSaved);
   }
 
+  // replaces the content without handing over the edit it held, for when the
+  // user has chosen a value from elsewhere over their own
+  discard(value: string) {
+    if (this.mode() === 'markdown') {
+      this.markdownSaved = value;
+      this.hasPendingEdit.set(false);
+      this.value.set(value);
+
+      return;
+    }
+
+    this.prompt.cancel();
+    this.replaceContent(value);
+    this.value.set(value);
+  }
+
   private persistCurrentMode(deliver: (value: string) => void) {
     if (this.mode() === 'markdown') {
       this.persistMarkdown(deliver);
@@ -477,6 +506,7 @@ export class EditorComponent
     if (source === this.markdownSaved) return;
 
     this.markdownSaved = source;
+    this.hasPendingEdit.set(false);
     deliver(source);
   }
 
@@ -497,6 +527,14 @@ export class EditorComponent
       this.saved.emit(pending);
     }
 
+    this.replaceContent(value);
+  }
+
+  private replaceContent(value?: string) {
+    const editor = this.editor();
+
+    if (!editor) return;
+
     this.editorValue = value ?? null;
 
     editor.commands.setContent(this.toDocument(value), {
@@ -504,6 +542,7 @@ export class EditorComponent
     });
 
     this.savedContent = this.toMarkdown(editor.getJSON());
+    this.hasPendingEdit.set(false);
   }
 
   private createEditor() {
@@ -607,6 +646,7 @@ export class EditorComponent
     const serialised = this.toMarkdown(editor.getJSON());
 
     this.editorValue = serialised;
+    this.hasPendingEdit.set(serialised !== this.savedContent);
     this.value.set(serialised);
     this.changed.next();
   }

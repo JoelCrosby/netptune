@@ -1,8 +1,9 @@
-import { Component, computed, inject, input, model } from '@angular/core';
+import { Component, computed, inject, input, viewChild } from '@angular/core';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { hasPermission } from '@core/auth/has-permission';
-import { TaskViewModel } from '@app/core/models/view-models/project-task-dto';
 import { assistantInlinePrompt } from '@core/util/assistant-inline-prompt';
+import { syncedDraft } from '@core/util/synced-draft';
+import { ChangeConflictComponent } from '@static/components/change-conflict/change-conflict.component';
 import { basicEditorCommands } from '@static/components/editor/editor-commands';
 import {
   EditorAppearance,
@@ -19,6 +20,18 @@ import { TaskDetailService } from './task-detail.service';
       <div [class]="eyebrowClass" [id]="labelId">{{ label }}</div>
     }
 
+    @if (description.hasIncoming()) {
+      <app-change-conflict
+        class="mb-3 block"
+        i18n-title="
+          Title of the notice shown when a task description changed elsewhere
+          while it was being edited
+        "
+        title="This description was changed elsewhere"
+        (loadIncoming)="description.loadIncoming()"
+        (keepMine)="description.keepMine()" />
+    }
+
     <app-editor
       [attr.aria-labelledby]="label() ? labelId : null"
       i18n-placeholder="Placeholder in the empty task description editor"
@@ -28,12 +41,12 @@ import { TaskDetailService } from './task-detail.service';
       [uploader]="uploadMedia"
       [commands]="commands"
       [inlinePrompt]="inlinePrompt()"
-      (saved)="updateTask($event)"
-      [finalSave]="finalSave()"
-      [(value)]="description"
+      (saved)="description.save($event)"
+      [finalSave]="finalSave"
+      [(value)]="description.value"
       [isReadOnly]="isReadOnly()"></app-editor>
   `,
-  imports: [EditorComponent],
+  imports: [ChangeConflictComponent, EditorComponent],
 })
 export class TaskDetailDescriptionComponent {
   readonly appearance = input<EditorAppearance>('flat');
@@ -41,6 +54,7 @@ export class TaskDetailDescriptionComponent {
   readonly label = input<string | null>(null);
 
   private readonly taskDetail = inject(TaskDetailService);
+  private readonly editor = viewChild(EditorComponent);
 
   readonly task = this.taskDetail.task;
   private readonly canUpdate = hasPermission(PERMISSIONS.tasks.update);
@@ -65,35 +79,14 @@ export class TaskDetailDescriptionComponent {
 
     return canWrite ? this.assistantPrompt : null;
   });
-  description = model(this.task()?.description ?? '');
 
-  finalSave = computed(() => {
-    const task = this.task();
-
-    if (!task) return null;
-
-    return (value: string) => this.saveDescription(task, value);
+  readonly description = syncedDraft({
+    key: () => this.task()?.id,
+    saved: () => this.task()?.description ?? '',
+    isEditing: () => this.editor()?.isEditing() ?? false,
+    replace: (value) => this.editor()?.discard(value),
+    save: (value) => this.taskDetail.updateDescription(value),
   });
 
-  updateTask(value?: string) {
-    if (typeof value === 'undefined' || value === null) {
-      return;
-    }
-
-    const task = this.task();
-
-    if (!task) {
-      return;
-    }
-
-    this.saveDescription(task, value);
-  }
-
-  private saveDescription(task: TaskViewModel, description: string) {
-    if (task.description === description) {
-      return;
-    }
-
-    this.taskDetail.updateDescription(description);
-  }
+  readonly finalSave = (value: string) => this.description.save(value);
 }
