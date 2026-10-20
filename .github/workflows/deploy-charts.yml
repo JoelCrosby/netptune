@@ -122,8 +122,8 @@ jobs:
 
   build-app:
     name: Build App Image
-    needs: [changes, test-server]
-    if: ${{ always() && needs.changes.outputs.server == 'true' && needs.test-server.result == 'success' }}
+    needs: changes
+    if: ${{ needs.changes.outputs.server == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -154,8 +154,6 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/netptune
           tags: |
             type=raw,value=${{ needs.changes.outputs.server_sha }}
-            type=ref,event=branch
-            type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push
         uses: docker/build-push-action@v7
@@ -175,8 +173,8 @@ jobs:
 
   build-jobs:
     name: Build Jobs Image
-    needs: [changes, test-server]
-    if: ${{ always() && needs.changes.outputs.server == 'true' && needs.test-server.result == 'success' }}
+    needs: changes
+    if: ${{ needs.changes.outputs.server == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -207,8 +205,6 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/netptune-jobs
           tags: |
             type=raw,value=${{ needs.changes.outputs.server_sha }}
-            type=ref,event=branch
-            type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push
         uses: docker/build-push-action@v7
@@ -228,8 +224,8 @@ jobs:
 
   build-api:
     name: Build API Image
-    needs: [changes, test-server]
-    if: ${{ always() && needs.changes.outputs.server == 'true' && needs.test-server.result == 'success' }}
+    needs: changes
+    if: ${{ needs.changes.outputs.server == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -260,8 +256,6 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/netptune-api
           tags: |
             type=raw,value=${{ needs.changes.outputs.server_sha }}
-            type=ref,event=branch
-            type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push
         uses: docker/build-push-action@v7
@@ -281,8 +275,8 @@ jobs:
 
   build-activity:
     name: Build Activity Image
-    needs: [changes, test-server]
-    if: ${{ always() && needs.changes.outputs.server == 'true' && needs.test-server.result == 'success' }}
+    needs: changes
+    if: ${{ needs.changes.outputs.server == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -313,8 +307,6 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/netptune-activity
           tags: |
             type=raw,value=${{ needs.changes.outputs.server_sha }}
-            type=ref,event=branch
-            type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push
         uses: docker/build-push-action@v7
@@ -452,6 +444,9 @@ jobs:
         (needs.build-website.result == 'success' || needs.build-website.result == 'skipped')
       }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - name: Checkout
@@ -484,6 +479,27 @@ jobs:
               exit 1
             fi
             echo "ok ghcr.io/$owner/$repo:$tag"
+          done
+
+      - name: Log in to GitHub Container Registry
+        if: ${{ needs.changes.outputs.server == 'true' }}
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # The server images build while the tests run, so they are pushed with only their commit tag
+      # and only get the branch and latest tags once the tests have passed.
+      - name: Tag server images
+        if: ${{ needs.changes.outputs.server == 'true' }}
+        run: |
+          for repo in netptune netptune-api netptune-jobs netptune-activity; do
+            image="${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/$repo"
+            docker buildx imagetools create \
+              --tag "$image:${{ github.ref_name }}" \
+              --tag "$image:latest" \
+              "$image:${{ needs.changes.outputs.server_sha }}"
           done
 
       - name: Verify CSP inline script hash
