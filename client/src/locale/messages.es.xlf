@@ -904,7 +904,7 @@
     </unit>
     <unit id="2285896285181808525">
       <notes>
-        <note category="location">src/app/static/components/editor/editor.component.ts:184</note>
+        <note category="location">src/app/static/components/editor/editor.component.ts:185</note>
         <note category="description">Shown in the slash command menu when nothing matches what was typed</note>
       </notes>
       <segment state="translated">
@@ -5871,7 +5871,7 @@
     <unit id="533409430255690539">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:253,255</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-description.component.ts:25,27</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-description.component.ts:38,40</note>
         <note category="description">Placeholder in the empty task description editor</note>
       </notes>
       <segment state="translated">
@@ -10256,6 +10256,16 @@
         <target> Coincidir con </target>
       </segment>
     </unit>
+    <unit id="1500333947681743593">
+      <notes>
+        <note category="location">src/app/static/components/change-conflict/change-conflict.component.ts:29,34</note>
+        <note category="description">Button that discards local edits and loads the version that changed elsewhere</note>
+      </notes>
+      <segment state="translated">
+        <source>Load new version</source>
+        <target>Cargar la nueva versión</target>
+      </segment>
+    </unit>
     <unit id="1509364563909331398">
       <notes>
         <note category="location">src/app/features/automations/components/automation-conditions-editor.component.ts:38,41</note>
@@ -11407,6 +11417,16 @@
       <segment state="translated">
         <source>Critical</source>
         <target>Crítica</target>
+      </segment>
+    </unit>
+    <unit id="4690286048875308022">
+      <notes>
+        <note category="location">src/app/static/components/change-conflict/change-conflict.component.ts:42,48</note>
+        <note category="description">Button that saves local edits over the version that changed elsewhere</note>
+      </notes>
+      <segment state="translated">
+        <source>Keep mine</source>
+        <target>Conservar la mía</target>
       </segment>
     </unit>
     <unit id="4691887509600985309">
@@ -14548,6 +14568,16 @@
         <target>Código fuente</target>
       </segment>
     </unit>
+    <unit id="2496855741943654515">
+      <notes>
+        <note category="location">src/app/static/components/change-conflict/change-conflict.component.ts:19,23</note>
+        <note category="description">Body of the notice shown when something changed elsewhere while it was being edited</note>
+      </notes>
+      <segment state="translated">
+        <source> Your edits aren&apos;t saved. Load the new version, or keep yours and save it over the change. </source>
+        <target> Tus cambios no se han guardado. Carga la nueva versión, o conserva la tuya y guárdala encima. </target>
+      </segment>
+    </unit>
     <unit id="2498784210328272403">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:85</note>
@@ -17486,7 +17516,7 @@
     </unit>
     <unit id="1074599325149334297">
       <notes>
-        <note category="location">src/app/static/components/editor/editor.component.ts:200</note>
+        <note category="location">src/app/static/components/editor/editor.component.ts:201</note>
         <note category="description">Accessible label for the raw markdown source of a document</note>
       </notes>
       <segment state="translated">
@@ -20025,6 +20055,16 @@
         <target>Subir imagen</target>
       </segment>
     </unit>
+    <unit id="2507001995479491974">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-description.component.ts:30,35</note>
+        <note category="description">Title of the notice shown when a task description changed elsewhere while it was being edited</note>
+      </notes>
+      <segment state="translated">
+        <source>This description was changed elsewhere</source>
+        <target>Esta descripción se ha cambiado en otro lugar</target>
+      </segment>
+    </unit>
     <unit id="2508083421321389619">
       <notes>
         <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:129</note>
@@ -20255,6 +20295,16 @@
       <segment state="translated">
         <source>Task Detail</source>
         <target>Detalle de la tarea</target>
+      </segment>
+    </unit>
+    <unit id="5058134351315070081">
+      <notes>
+        <note category="location">src/app/static/components/change-conflict/change-conflict.component.ts:52</note>
+        <note category="description">Title of the notice shown when something changed elsewhere while it was being edited</note>
+      </notes>
+      <segment state="translated">
+        <source>This was changed elsewhere</source>
+        <target>Esto se ha cambiado en otro lugar</target>
       </segment>
     </unit>
     <unit id="5058483321290632814">
@@ -30482,7 +30532,7 @@
     </unit>
     <unit id="2389097364194442984">
       <notes>
-        <note category="location">src/app/static/components/editor/editor.component.ts:183</note>
+        <note category="location">src/app/static/components/editor/editor.component.ts:184</note>
         <note category="description">Accessible label for the menu of blocks that typing / offers</note>
       </notes>
       <segment state="translated">
