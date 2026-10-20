@@ -168,8 +168,6 @@ jobs:
             GITHUB_REF=${{ github.ref }}
             BUILD_NUMBER=${{ steps.build_number.outputs.value }}
             RUN_ID=${{ github.run_id }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
   build-jobs:
     name: Build Jobs Image
@@ -219,8 +217,6 @@ jobs:
             GITHUB_REF=${{ github.ref }}
             BUILD_NUMBER=${{ steps.build_number.outputs.value }}
             RUN_ID=${{ github.run_id }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
   build-api:
     name: Build API Image
@@ -270,8 +266,6 @@ jobs:
             GITHUB_REF=${{ github.ref }}
             BUILD_NUMBER=${{ steps.build_number.outputs.value }}
             RUN_ID=${{ github.run_id }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
   build-activity:
     name: Build Activity Image
@@ -321,8 +315,6 @@ jobs:
             GITHUB_REF=${{ github.ref }}
             BUILD_NUMBER=${{ steps.build_number.outputs.value }}
             RUN_ID=${{ github.run_id }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
   build-client:
     name: Build Client Image
@@ -374,8 +366,8 @@ jobs:
             GITHUB_REF=${{ github.ref }}
             BUILD_NUMBER=${{ steps.build_number.outputs.value }}
             RUN_ID=${{ github.run_id }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=client
+          cache-to: type=gha,scope=client,mode=max
 
   build-website:
     name: Build Website Image
@@ -425,8 +417,8 @@ jobs:
           build-args: |
             COMMIT=${{ github.sha }}
             BUILD_NUMBER=${{ steps.build_number.outputs.value }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=website
+          cache-to: type=gha,scope=website,mode=max
 
   deploy:
     name: Deploy
