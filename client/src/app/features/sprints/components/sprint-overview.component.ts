@@ -288,11 +288,11 @@ function scopeStats(
     },
     {
       label: $localize`:Scope added after the sprint started:Added`,
-      value: `+${added}`,
+      value: added ? `+${added}` : added,
     },
     {
       label: $localize`:Scope removed after the sprint started:Removed`,
-      value: `−${removed}`,
+      value: removed ? `−${removed}` : removed,
     },
     {
       label: $localize`:Heading of the sprint scope card:Scope change`,
