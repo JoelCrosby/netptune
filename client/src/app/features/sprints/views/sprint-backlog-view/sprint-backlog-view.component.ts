@@ -13,6 +13,7 @@ import { TaskListFiltersComponent } from '@project-tasks/components/task-list/ta
 import { LucideCalendarPlus, LucideListChecks } from '@lucide/angular';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { IconTileComponent } from '@static/components/icon-tile.component';
+import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SprintBacklogGroupComponent } from '../../components/sprint-backlog-group.component';
@@ -29,6 +30,7 @@ interface BacklogGroupConfig {
     EmptyStateComponent,
     IconTileComponent,
     LucideListChecks,
+    PageBodyComponent,
     PageContainerComponent,
     PageHeaderComponent,
     PanelComponent,
@@ -36,52 +38,56 @@ interface BacklogGroupConfig {
     TaskListFiltersComponent,
   ],
   template: `
-    <app-page-container
-      followsWidthPreference
-      [centerPage]="true"
-      [marginBottom]="true">
+    <app-page-container layout="list">
       <app-page-header
+        toolbar
         i18n-title="Page title for the sprint backlog"
         title="Backlog"
-        [count]="totalCount()" />
+        i18n-filtersLabel="Accessible name of the sprint backlog filter row"
+        filtersLabel="Filter backlog tasks"
+        [count]="totalCount()">
+        <app-task-list-filters
+          pageHeaderFilters
+          [assigneeOptions]="assigneeOptions()" />
+      </app-page-header>
 
-      <div class="flex flex-col gap-6">
-        <app-task-list-filters [assigneeOptions]="assigneeOptions()" />
+      <app-page-body scroll>
+        <div class="flex flex-col gap-6 pb-16">
+          @if (canManageTasks() && assignableSprints().length === 0) {
+            <app-panel
+              surface="card"
+              class="flex items-start gap-3 border-dashed px-6 py-5">
+              <app-icon-tile [icon]="noticeIcon" />
+              <p class="text-muted text-sm">
+                <span
+                  i18n="
+                    Shown when there is no sprint available to assign backlog
+                    tasks to
+                  ">
+                  No planning or active sprints found. Create a sprint first to
+                  assign tasks to it.
+                </span>
+              </p>
+            </app-panel>
+          }
 
-        @if (canManageTasks() && assignableSprints().length === 0) {
-          <app-panel
-            surface="card"
-            class="flex items-start gap-3 border-dashed px-6 py-5">
-            <app-icon-tile [icon]="noticeIcon" />
-            <p class="text-muted text-sm">
-              <span
-                i18n="
-                  Shown when there is no sprint available to assign backlog
-                  tasks to
-                ">
-                No planning or active sprints found. Create a sprint first to
-                assign tasks to it.
-              </span>
-            </p>
-          </app-panel>
-        }
+          @for (group of groups; track group.label) {
+            <app-sprint-backlog-group
+              [label]="group.label"
+              [categories]="group.categories"
+              [filterParams]="filterParams()"
+              [sprints]="assignableSprints()" />
+          }
 
-        @for (group of groups; track group.label) {
-          <app-sprint-backlog-group
-            [label]="group.label"
-            [categories]="group.categories"
-            [filterParams]="filterParams()"
-            [sprints]="assignableSprints()" />
-        }
-
-        @if (allEmpty()) {
-          <app-panel surface="card" class="px-6 py-5">
-            <app-empty-state compact [title]="emptyMessage()">
-              <svg emptyStateIcon lucideListChecks class="h-8 w-8"></svg>
-            </app-empty-state>
-          </app-panel>
-        }
-      </div>
+          @if (allEmpty()) {
+            <app-panel surface="card" class="px-6 py-5">
+              <app-empty-state compact [title]="emptyMessage()">
+                <svg emptyStateIcon lucideListChecks class="h-8 w-8"></svg>
+              </app-empty-state>
+            </app-panel>
+          }
+        </div>
+      </app-page-body>
     </app-page-container>
   `,
 })

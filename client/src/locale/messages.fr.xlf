@@ -456,7 +456,7 @@
     </unit>
     <unit id="3372842294576593903">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:94</note>
+        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:100</note>
         <note category="description">Shown when every unfinished task already belongs to an open sprint</note>
       </notes>
       <segment state="translated">
@@ -2251,7 +2251,7 @@
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:70,73</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:61,64</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:164,167</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:265</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:266</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:282</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:62,64</note>
         <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:97,99</note>
@@ -2542,7 +2542,7 @@
         <note category="location">src/app/features/settings/shared/entity-detail.ts:31</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:219</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:192</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:264</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:265</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:225</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:281</note>
         <note category="location">src/app/shared/components/task-selection-actions/task-selection-actions.component.ts:32,34</note>
@@ -3826,7 +3826,7 @@
     </unit>
     <unit id="950764916725173684">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:93</note>
+        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:99</note>
         <note category="description">Shown when no backlog task matches the active filters</note>
       </notes>
       <segment state="translated">
@@ -5210,7 +5210,7 @@
         <note category="location">src/app/features/reporting/components/sprint-velocity-table.component.ts:53</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:140</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:377</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:59,62</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:60,61</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:27</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:47</note>
         <note category="description">Column heading for the task sprint</note>
@@ -14948,7 +14948,7 @@
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:148</note>
         <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:48</note>
-        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:121</note>
+        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:127</note>
         <note category="description">Example value shown in the notification preview</note>
       </notes>
       <segment state="translated">
@@ -26056,7 +26056,7 @@
         <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:99</note>
         <note category="location">src/app/features/sprints/components/sprint-overview.component.ts:189</note>
         <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:44</note>
-        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:117</note>
+        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:123</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:238</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:676</note>
         <note category="description">Heading above the newly created tasks leaving a sprint</note>
@@ -26129,7 +26129,7 @@
     </unit>
     <unit id="17636938633185042">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:172</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:173</note>
         <note category="description">Position in an active sprint. DAY and TOTAL are day counts</note>
       </notes>
       <segment state="initial">
@@ -27138,7 +27138,7 @@
       <notes>
         <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:101</note>
         <note category="location">src/app/features/sprints/sprints.routes.ts:22</note>
-        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:46,48</note>
+        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:46</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:192</note>
         <note category="description">Heading above the backlog tasks leaving a sprint</note>
       </notes>
@@ -27159,7 +27159,7 @@
     </unit>
     <unit id="8279562457696531698">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:62,67</note>
+        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:67,71</note>
         <note category="description">Shown when there is no sprint available to assign backlog tasks to</note>
       </notes>
       <segment state="translated">
@@ -27170,7 +27170,7 @@
     <unit id="8693603235657020323">
       <notes>
         <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:37</note>
-        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:125</note>
+        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:131</note>
         <note category="location">src/app/features/storage/components/storage-filters.component.ts:136</note>
         <note category="description">Notification settings group for events without a group</note>
       </notes>
@@ -27409,7 +27409,7 @@
     </unit>
     <unit id="1152778269115350205">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:262</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:263</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:279</note>
         <note category="description">Title of the confirmation dialog for deleting a sprint</note>
       </notes>
@@ -28535,6 +28535,16 @@
       <segment state="initial">
         <source>Source control isn&apos;t set up on this Netptune instance</source>
         <target>Le contrôle de code source n&apos;est pas configuré sur cette instance de Netptune</target>
+      </segment>
+    </unit>
+    <unit id="7543741134103967509">
+      <notes>
+        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:47,49</note>
+        <note category="description">Accessible name of the sprint backlog filter row</note>
+      </notes>
+      <segment state="translated">
+        <source>Filter backlog tasks</source>
+        <target>Filtrer les tâches du backlog</target>
       </segment>
     </unit>
     <unit id="6036308268629413664">

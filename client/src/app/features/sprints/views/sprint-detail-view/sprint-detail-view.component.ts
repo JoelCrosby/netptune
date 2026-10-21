@@ -18,6 +18,7 @@ import { CurrentSprintService } from '@core/services/current-sprint.service';
 import { DialogService } from '@core/services/dialog.service';
 import { sprintDetailResource } from '@core/resources/sprint.resource';
 import { SprintCommandsService } from '@core/services/sprint-commands.service';
+import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
@@ -41,6 +42,7 @@ import { injectBreadcrumbs } from '@core/services/breadcrumb.service';
   selector: 'app-sprint-detail-view',
   imports: [
     ErrorStateComponent,
+    PageBodyComponent,
     PageContainerComponent,
     PageHeaderComponent,
     PageLoadingComponent,
@@ -50,60 +52,59 @@ import { injectBreadcrumbs } from '@core/services/breadcrumb.service';
     SprintTaskListComponent,
   ],
   template: `
-    <app-page-container
-      followsWidthPreference
-      [centerPage]="true"
-      [marginBottom]="true">
+    <app-page-container layout="list">
       <app-page-header
+        toolbar
         i18n-title="Page title for a single sprint"
-        title="Sprint" />
+        title="Sprint">
+        @if (loadedSprint(); as sprint) {
+          <app-sprint-detail-actions
+            pageHeaderActions
+            [sprint]="sprint"
+            (createTask)="onCreateTask(sprint)"
+            (assignTasks)="onAddTasks(sprint)"
+            (startSprint)="onStart(sprint.id)"
+            (completeSprint)="onComplete(sprint)"
+            (editSprint)="onEdit(sprint)"
+            (deleteSprint)="onDelete(sprint)" />
+        }
+      </app-page-header>
 
-      @if (loading()) {
-        <app-page-loading />
-      } @else if (loadError(); as error) {
-        <app-error-state
-          [title]="
-            error.status === 404
-              ? 'This sprint could not be found'
-              : 'This sprint could not be loaded'
-          "
-          [description]="
-            error.status === 404
-              ? 'It may have been deleted, or you may not have access to it.'
-              : 'Check your connection and try again.'
-          "
-          [retryable]="error.status !== 404"
-          (retry)="reload()" />
-      } @else if (sprint(); as sprint) {
-        <section class="flex flex-col gap-6">
-          <header
-            class="flex flex-wrap items-start justify-between gap-x-6 gap-y-4">
+      <app-page-body scroll>
+        @if (loading()) {
+          <app-page-loading />
+        } @else if (loadError(); as error) {
+          <app-error-state
+            [title]="
+              error.status === 404
+                ? 'This sprint could not be found'
+                : 'This sprint could not be loaded'
+            "
+            [description]="
+              error.status === 404
+                ? 'It may have been deleted, or you may not have access to it.'
+                : 'Check your connection and try again.'
+            "
+            [retryable]="error.status !== 404"
+            (retry)="reload()" />
+        } @else if (sprint(); as sprint) {
+          <section class="flex flex-col gap-6 pb-16">
             <app-sprint-identity
-              class="min-w-0 flex-1"
               size="large"
               showGoal
-              [headingLevel]="1"
+              [headingLevel]="2"
               [sprint]="sprint"
               [detail]="dayLabel()" />
 
-            <app-sprint-detail-actions
+            <app-sprint-overview [sprint]="sprint" [burndown]="burndown()" />
+
+            <app-sprint-task-list
               [sprint]="sprint"
-              (createTask)="onCreateTask(sprint)"
-              (assignTasks)="onAddTasks(sprint)"
-              (startSprint)="onStart(sprint.id)"
-              (completeSprint)="onComplete(sprint)"
-              (editSprint)="onEdit(sprint)"
-              (deleteSprint)="onDelete(sprint)" />
-          </header>
-
-          <app-sprint-overview [sprint]="sprint" [burndown]="burndown()" />
-
-          <app-sprint-task-list
-            [sprint]="sprint"
-            [addedTaskIds]="addedTaskIds()"
-            [canManage]="canManageTasks()" />
-        </section>
-      }
+              [addedTaskIds]="addedTaskIds()"
+              [canManage]="canManageTasks()" />
+          </section>
+        }
+      </app-page-body>
     </app-page-container>
   `,
 })
@@ -133,7 +134,7 @@ export class SprintDetailViewComponent {
 
   readonly canManageTasks = hasPermission(PERMISSIONS.sprints.manageTasks);
 
-  private readonly loadedSprint = computed(() => {
+  readonly loadedSprint = computed(() => {
     const resource = this.sprintResourceRef;
 
     return resource.hasValue() ? resource.value() : undefined;
