@@ -17948,7 +17948,7 @@
     <unit id="5478121364779850827">
       <notes>
         <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:128,132</note>
-        <note category="location">src/app/static/components/grouped-toggle-list/grouped-toggle-list.component.ts:170,172</note>
+        <note category="location">src/app/static/components/grouped-toggle-list/grouped-toggle-list.component.ts:172,174</note>
         <note category="description">Button that discards unsaved edits to the board</note>
       </notes>
       <segment state="translated">
@@ -19360,7 +19360,7 @@
     </unit>
     <unit id="1168206319879732017">
       <notes>
-        <note category="location">src/app/static/components/grouped-toggle-list/grouped-toggle-list.component.ts:199,205</note>
+        <note category="location">src/app/static/components/grouped-toggle-list/grouped-toggle-list.component.ts:204,208</note>
         <note category="description">Button that clears the search and state filter of a list</note>
       </notes>
       <segment state="translated">
@@ -29653,7 +29653,7 @@
     </unit>
     <unit id="6437922782751429973">
       <notes>
-        <note category="location">src/app/static/components/grouped-toggle-list/grouped-toggle-list.component.ts:221</note>
+        <note category="location">src/app/static/components/grouped-toggle-list/grouped-toggle-list.component.ts:227</note>
         <note category="description">Suggests how to find items after a search found nothing</note>
       </notes>
       <segment state="translated">
