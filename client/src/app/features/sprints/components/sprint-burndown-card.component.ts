@@ -61,7 +61,7 @@ const scopeLabel = $localize`:Burndown series for total scope:Scope`;
         [dataLabels]="dataLabels" />
 
       @if (stats().length) {
-        <div class="-mx-6 mt-5 -mb-5">
+        <div class="-mx-6 mt-auto -mb-5 pt-5">
           <app-stat-strip [items]="stats()" />
         </div>
       }

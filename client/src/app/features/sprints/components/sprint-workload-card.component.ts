@@ -30,7 +30,7 @@ import {
       description="Open tasks per assignee">
       @if (entries().length) {
         <app-meter-list [entries]="entries()" />
-        <div class="-mx-6 mt-5 -mb-5">
+        <div class="-mx-6 mt-auto -mb-5 pt-5">
           <app-stat-strip [items]="stats()" />
         </div>
       } @else {
