@@ -2272,7 +2272,7 @@
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:70,73</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:61,64</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:164,167</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:266</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:238</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:282</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:62,64</note>
         <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:97,99</note>
@@ -2563,7 +2563,7 @@
         <note category="location">src/app/features/settings/shared/entity-detail.ts:31</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:219</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:192</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:265</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:237</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:225</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:281</note>
         <note category="location">src/app/shared/components/task-selection-actions/task-selection-actions.component.ts:32,34</note>
@@ -3266,7 +3266,7 @@
     <unit id="5256927257860771053">
       <notes>
         <note category="location">src/app/core/services/sprint-commands.service.ts:160</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail.service.ts:225</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail.service.ts:198</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -3329,7 +3329,7 @@
     <unit id="9054551961119650411">
       <notes>
         <note category="location">src/app/core/services/sprint-commands.service.ts:175</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail.service.ts:245</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail.service.ts:218</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -5243,7 +5243,7 @@
         <note category="location">src/app/features/reporting/components/sprint-velocity-table.component.ts:53</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:140</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:377</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:60</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:53</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:27</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:47</note>
         <note category="description">Column heading for the task sprint</note>
@@ -14514,7 +14514,7 @@
     </unit>
     <unit id="5234544449365538384">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:437</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:433</note>
         <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:326</note>
         <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:362</note>
         <note category="description">Shown when a page link could not be copied</note>
@@ -18417,7 +18417,7 @@
     <unit id="7869199587095613616">
       <notes>
         <note category="location">src/app/features/pages/components/page-editor.component.ts:296,297</note>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:435</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:431</note>
         <note category="location">src/app/static/components/branding-preview/branding-preview.component.ts:156</note>
         <note category="description">Placeholder in an empty page title</note>
       </notes>
@@ -24111,7 +24111,7 @@
     </unit>
     <unit id="892073694820881630">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:436</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:432</note>
         <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:321</note>
         <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:357</note>
         <note category="description">Confirmation that a page link was copied</note>
@@ -24232,14 +24232,14 @@
         <target>Comprobaciones fallidas</target>
       </segment>
     </unit>
-    <unit id="6844391301599182097">
+    <unit id="8512756231833494466">
       <notes>
         <note category="location">src/app/features/settings/components/workspace-public-access/workspace-public-access.component.ts:30,36</note>
         <note category="description">Explains which parts of a workspace public visitors can see</note>
       </notes>
       <segment state="translated">
-        <source> Choose what visitors without an account can see. Everything else — members, comments, activity, files and workspace settings — stays private to members regardless. </source>
-        <target>Elige qué pueden ver los visitantes sin cuenta. Todo lo demás — miembros, comentarios, actividad, archivos y configuración — sigue siendo privado para los miembros.</target>
+        <source> Choose what visitors without an account can see. Everything else — members, activity, files and workspace settings — stays private to members regardless. </source>
+        <target>Elige qué pueden ver los visitantes sin cuenta. Todo lo demás — miembros, actividad, archivos y configuración — sigue siendo privado para los miembros.</target>
       </segment>
     </unit>
     <unit id="6848079532028484128">
@@ -26290,7 +26290,7 @@
     </unit>
     <unit id="17636938633185042">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:173</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:165</note>
         <note category="description">Position in an active sprint. DAY and TOTAL are day counts</note>
       </notes>
       <segment state="initial">
@@ -27571,7 +27571,7 @@
     </unit>
     <unit id="1152778269115350205">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:263</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:235</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:279</note>
         <note category="description">Title of the confirmation dialog for deleting a sprint</note>
       </notes>

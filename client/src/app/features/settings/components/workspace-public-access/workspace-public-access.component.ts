@@ -28,7 +28,7 @@ import { CheckboxComponent } from '@static/components/checkbox/checkbox.componen
         <span
           i18n="Explains which parts of a workspace public visitors can see">
           Choose what visitors without an account can see. Everything else —
-          members, comments, activity, files and workspace settings — stays
+          members, activity, files and workspace settings — stays
           private to members regardless.
         </span>
       </p>

@@ -14,6 +14,7 @@ using Netptune.Core.Requests;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Branding;
+using Netptune.Core.ViewModels.Comments;
 using Netptune.Core.ViewModels.Files;
 using Netptune.Core.ViewModels.Pins;
 using Netptune.Core.ViewModels.ProjectTasks;
@@ -63,7 +64,6 @@ public sealed class PublicWorkspaceEndpointTests
 
         NetptunePermissions.PublicReadable.Should().NotContain([
             NetptunePermissions.Members.Read,
-            NetptunePermissions.Comments.Read,
             NetptunePermissions.Activity.Read,
             NetptunePermissions.Audit.Read,
             NetptunePermissions.Notifications.Read,
@@ -256,6 +256,91 @@ public sealed class PublicWorkspaceEndpointTests
         });
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
+    public async Task AnonymousRequest_ShouldReturnComments_WhenTheWorkspaceSharesComments()
+    {
+        var slug = $"public-{Guid.NewGuid():N}"[..20];
+
+        await CreateWorkspace(slug);
+        await SetVisibility(slug, isPublic: true);
+        await SetPublicPermissions(slug, [NetptunePermissions.Tasks.Read, NetptunePermissions.Comments.Read]);
+
+        var owner = CreateOwnerClient(slug);
+        var seed = await SeedWorkspace(slug);
+        var task = await CreateTask(owner, seed);
+        var comment = await CreateComment(owner, task.SystemId);
+
+        var anonymous = Fixture.CreateAnonymousNetptuneClient(slug);
+
+        var response = await anonymous.GetAsync($"api/comments/task/{task.SystemId}?page=1&pageSize=50");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var comments = await response.Content.ReadFromJsonAsync<List<CommentViewModel>>();
+
+        comments!.Should().ContainSingle(item => item.Id == comment.Id);
+    }
+
+    [Fact]
+    public async Task AnonymousRequest_ShouldBeDenied_ForCommentsWhenNotShared()
+    {
+        var slug = $"public-{Guid.NewGuid():N}"[..20];
+
+        await CreateWorkspace(slug);
+        await SetVisibility(slug, isPublic: true);
+        await SetPublicPermissions(slug, [NetptunePermissions.Tasks.Read]);
+
+        var owner = CreateOwnerClient(slug);
+        var seed = await SeedWorkspace(slug);
+        var task = await CreateTask(owner, seed);
+
+        await CreateComment(owner, task.SystemId);
+
+        var anonymous = Fixture.CreateAnonymousNetptuneClient(slug);
+
+        var response = await anonymous.GetAsync($"api/comments/task/{task.SystemId}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
+    public async Task AnonymousRequest_ShouldBeDenied_ForCommentWritesOnPublicWorkspace()
+    {
+        var slug = $"public-{Guid.NewGuid():N}"[..20];
+
+        await CreateWorkspace(slug);
+        await SetVisibility(slug, isPublic: true);
+
+        var owner = CreateOwnerClient(slug);
+        var seed = await SeedWorkspace(slug);
+        var task = await CreateTask(owner, seed);
+        var comment = await CreateComment(owner, task.SystemId);
+
+        var anonymous = Fixture.CreateAnonymousNetptuneClient(slug);
+
+        var create = await anonymous.PostAsJsonAsync("api/comments/task", new AddCommentRequest
+        {
+            Comment = "anonymous comment",
+            SystemId = task.SystemId,
+        });
+        var update = await anonymous.PutAsJsonAsync($"api/comments/{comment.Id}", new UpdateCommentRequest
+        {
+            Comment = "anonymous edit",
+        });
+        var delete = await anonymous.DeleteAsync($"api/comments/{comment.Id}");
+        var react = await anonymous.PostAsJsonAsync($"api/comments/{comment.Id}/reactions", new CommentReactionRequest
+        {
+            Value = "👍",
+        });
+        var unreact = await anonymous.DeleteAsync($"api/comments/{comment.Id}/reactions?value=👍");
+
+        create.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        update.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        delete.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        react.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        unreact.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
     [Fact]
@@ -623,6 +708,21 @@ public sealed class PublicWorkspaceEndpointTests
         response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+
+        return result.Payload!;
+    }
+
+    private static async Task<CommentViewModel> CreateComment(HttpClient owner, string systemId)
+    {
+        var response = await owner.PostAsJsonAsync("api/comments/task", new AddCommentRequest
+        {
+            Comment = "Shared with public visitors",
+            SystemId = systemId,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<CommentViewModel>>();
 
         return result.Payload!;
     }

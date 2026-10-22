@@ -1,5 +1,7 @@
 import { httpResource } from '@angular/common/http';
 import { computed, inject, Injectable } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { DEFAULT_PAGE_SIZE } from '@core/models/pagination';
 import { CommentViewModel } from '@core/models/comment';
 import {
@@ -27,12 +29,13 @@ export class TaskDetailCommentsService {
   private readonly confirmation = inject(ConfirmationService);
   private readonly snackbar = inject(SnackbarService);
   private readonly taskDetail = inject(TaskDetailService);
+  private readonly canRead = hasPermission(PERMISSIONS.comments.read);
 
   readonly resource = httpResource<CommentViewModel[]>(
     () => {
       const systemId = this.taskDetail.systemId();
 
-      if (!systemId) return undefined;
+      if (!systemId || !this.canRead()) return undefined;
 
       return {
         url: `api/comments/task/${systemId}`,
