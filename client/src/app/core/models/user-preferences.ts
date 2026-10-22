@@ -6,6 +6,8 @@ export const APPEARANCE_THEME = 'appearance.theme';
 export const APPEARANCE_TASK_DETAIL_LAYOUT = 'appearance.taskDetailLayout';
 export const APPEARANCE_PAGE_WIDTH = 'appearance.pageWidth';
 export const APPEARANCE_PAGE_CONTENT_WIDTH = 'appearance.pageContentWidth';
+export const APPEARANCE_TASK_DETAIL_RAIL_COLLAPSED =
+  'appearance.taskDetailRailCollapsed';
 export const BOARDS_HIDDEN_GROUP_IDS = 'boards.hiddenGroupIds';
 export const BOARDS_TASK_SORT = 'boards.taskSort';
 export const QUERIES_PINNED_IDS = 'views.pinnedIds';

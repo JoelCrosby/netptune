@@ -226,7 +226,7 @@
     <unit id="3817498941817715969">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:609</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:234</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:239</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:233</note>
         <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:82</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:110,112</note>
@@ -632,7 +632,7 @@
     </unit>
     <unit id="5322873861888163184">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:118,120</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:122,124</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:52,55</note>
         <note category="description">Button that puts this task on another board</note>
       </notes>
@@ -2024,7 +2024,7 @@
         <note category="location">src/app/core/util/assistant-inline-prompt.ts:11</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:337,340</note>
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:201,204</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:142</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:161</note>
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:80,82</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:504</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:268</note>
@@ -2302,7 +2302,7 @@
         <note category="location">src/app/core/services/notification-commands.service.ts:74</note>
         <note category="location">src/app/core/services/task-commands.service.ts:235</note>
         <note category="location">src/app/core/services/task-commands.service.ts:243</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:141</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:160</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:503</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:267</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:798</note>
@@ -4025,7 +4025,6 @@
     <unit id="2080668244235875808">
       <notes>
         <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:119,120</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-activity-feed.component.ts:72,73</note>
         <note category="description">Heading of the empty activity feed</note>
       </notes>
       <segment>
@@ -4053,7 +4052,6 @@
     <unit id="2335067641977437350">
       <notes>
         <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:121,122</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-activity-feed.component.ts:74,75</note>
         <note category="description">Explains why the activity feed is empty</note>
       </notes>
       <segment>
@@ -4559,7 +4557,7 @@
         <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:68,70</note>
         <note category="location">src/app/entry/dialogs/status-dialog/status-dialog.component.ts:86,88</note>
         <note category="location">src/app/entry/dialogs/tag-dialog/tag-dialog.component.ts:49,51</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:163,164</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:184,185</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:115,117</note>
         <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:254,259</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:88,90</note>
@@ -5319,7 +5317,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:432</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:66,67</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:217</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:222</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:104,107</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:153,156</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:48,50</note>
@@ -6412,7 +6410,7 @@
     <unit id="3807699453257291879">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:612</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:236</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:241</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:228</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:89</note>
         <note category="description">Name of the comments permission group</note>
@@ -6423,7 +6421,7 @@
     </unit>
     <unit id="4313782791271467411">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:104</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:123</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -6441,7 +6439,7 @@
     </unit>
     <unit id="7248378588975188090">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:86</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:105</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -6459,7 +6457,7 @@
     </unit>
     <unit id="4813239392166088334">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:143</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:162</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment>
@@ -6477,7 +6475,7 @@
     </unit>
     <unit id="9136333277025964285">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:144</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:163</note>
         <note category="description">Title of a dialog or section</note>
       </notes>
       <segment>
@@ -6515,7 +6513,7 @@
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:627</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:434</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:233</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:238</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:229</note>
         <note category="description">Name of the files permission group</note>
       </notes>
@@ -9195,6 +9193,15 @@
       </notes>
       <segment>
         <source>Days</source>
+      </segment>
+    </unit>
+    <unit id="8411885200883366638">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-activity-feed.component.ts:74,75</note>
+        <note category="description">Explains why the task&apos;s history is empty</note>
+      </notes>
+      <segment>
+        <source>Changes to the task will appear here</source>
       </segment>
     </unit>
     <unit id="8412126247479081035">
@@ -12911,7 +12918,7 @@
     <unit id="8805582001022257690">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:111,113</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:135,137</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:156,158</note>
         <note category="description">Button that asks the assistant about this task</note>
       </notes>
       <segment>
@@ -13097,6 +13104,15 @@
         <source>Notify task assignees</source>
       </segment>
     </unit>
+    <unit id="2795454335379147011">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-activity-feed.component.ts:72,73</note>
+        <note category="description">Heading shown when a task has no history</note>
+      </notes>
+      <segment>
+        <source>There is no history for this task</source>
+      </segment>
+    </unit>
     <unit id="5559509996919657173">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:80</note>
@@ -13173,7 +13189,7 @@
     </unit>
     <unit id="4510676848705799339">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:145,147</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:166,168</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:83</note>
         <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:182,185</note>
         <note category="description">Menu item that deletes a task</note>
@@ -13289,6 +13305,15 @@
       </notes>
       <segment>
         <source>Turn back on</source>
+      </segment>
+    </unit>
+    <unit id="3696187452155042483">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:21,22</note>
+        <note category="description">Heading shown when a task has no comments</note>
+      </notes>
+      <segment>
+        <source>There are no comments for this task</source>
       </segment>
     </unit>
     <unit id="3696853758218662823">
@@ -13672,7 +13697,7 @@
     <unit id="7565716024468232322">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:433</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:232</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:237</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:230</note>
         <note category="location">src/app/features/pages/components/page-rail.component.ts:277</note>
         <note category="description">Tab listing the tasks this one links to</note>
@@ -16565,7 +16590,7 @@
     <unit id="7107218117130409950">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:605</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:231</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:236</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:231</note>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:64</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:71,72</note>
@@ -17549,6 +17574,15 @@
         <source>Tasks by status</source>
       </segment>
     </unit>
+    <unit id="3875186816345392442">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:214</note>
+        <note category="description">Accessible label for the toggle that shows or hides the comments and history beside a task</note>
+      </notes>
+      <segment>
+        <source>Comments and history</source>
+      </segment>
+    </unit>
     <unit id="3878950936097270792">
       <notes>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-summary.ts:69</note>
@@ -17999,7 +18033,7 @@
     </unit>
     <unit id="117068237894470695">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:122,124</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:143,145</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:149,151</note>
         <note category="description">Accessible label for the button that opens the task&apos;s other actions</note>
       </notes>
@@ -19700,7 +19734,7 @@
     </unit>
     <unit id="4810719754522561546">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:190</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:213</note>
         <note category="description">Accessible label for the control that opens the pin scope menu</note>
       </notes>
       <segment>
@@ -22372,8 +22406,8 @@
     </unit>
     <unit id="6827887873610296004">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:103,105</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:107,108</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:124,126</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:128,129</note>
         <note category="location">src/app/shared/components/pinned-task-row/pinned-task-row.component.ts:86,88</note>
         <note category="location">src/app/shared/components/pinned-task-row/pinned-task-row.component.ts:90,91</note>
         <note category="description">Tooltip on the link that opens the task&apos;s own page</note>
@@ -23815,6 +23849,15 @@
         <source>imports</source>
       </segment>
     </unit>
+    <unit id="896339964962031169">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:23,25</note>
+        <note category="description">Explains why the task&apos;s comments list is empty</note>
+      </notes>
+      <segment>
+        <source>Comments on the task will appear here</source>
+      </segment>
+    </unit>
     <unit id="8966831176355460987">
       <notes>
         <note category="location">src/app/static/components/file-dropzone/file-dropzone.component.ts:42,46</note>
@@ -24146,7 +24189,7 @@
     </unit>
     <unit id="8186013988289067040">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:235</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:240</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:234</note>
         <note category="description">Tab listing the branches, commits and pull requests linked to a task</note>
       </notes>
@@ -24576,7 +24619,7 @@
     </unit>
     <unit id="186236568870281953">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:237</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:242</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:232</note>
         <note category="location">src/app/features/pages/components/page-rail.component.ts:282</note>
         <note category="description">Tab showing what has happened to a task</note>
@@ -24615,7 +24658,7 @@
     </unit>
     <unit id="4475093671158329161">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:227</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:251</note>
         <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:95,99</note>
         <note category="description">Label on the control that pins a task</note>
       </notes>
@@ -24818,7 +24861,7 @@
     <unit id="2467702290618186989">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:279,281</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:128,130</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:132,134</note>
         <note category="description">Button that links this task to another</note>
       </notes>
       <segment>
@@ -25146,7 +25189,7 @@
     </unit>
     <unit id="5743757503664322992">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:224</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:248</note>
         <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:31,32</note>
         <note category="location">src/app/features/pins/views/pinned-view/pinned-view.component.ts:65,67</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:253</note>

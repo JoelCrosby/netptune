@@ -122,6 +122,18 @@ public sealed class PreferenceDefinitionRegistry : IPreferenceDefinitionRegistry
         },
         new()
         {
+            Key = PreferenceKeys.AppearanceTaskDetailRailCollapsed,
+            GroupKey = "appearance",
+            Label = "Task detail sidebar collapsed",
+            ControlType = "hidden",
+            ValueType = "boolean",
+            DefaultValue = JsonSerializer.SerializeToElement(false),
+            AllowedScopes = [PreferenceScopes.Global],
+            Internal = true,
+            Order = 50,
+        },
+        new()
+        {
             Key = PreferenceKeys.CommandPaletteRecentItemsScope,
             GroupKey = "commandPalette",
             Label = "Recent items scope",

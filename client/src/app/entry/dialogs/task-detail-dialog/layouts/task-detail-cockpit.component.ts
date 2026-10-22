@@ -24,6 +24,7 @@ import { TaskDetailComposerComponent } from '../shared/task-detail-composer.comp
 import { TaskDetailPropertyChipsComponent } from '../shared/task-detail-property-chips.component';
 import { TaskDetailTagRowComponent } from '../shared/task-detail-tag-row.component';
 import { TaskDetailTimestampsComponent } from '../shared/task-detail-timestamps.component';
+import { TaskDetailRailService } from '../task-detail-rail';
 import { TaskDetailService } from '../task-detail.service';
 import {
   TabGroupComponent,
@@ -64,7 +65,10 @@ import { DialogSectionComponent } from '@static/components/dialog/dialog-section
     @if (task(); as task) {
       <app-task-detail-chrome
         class="border-foreground/8 h-[52px] border-b"
-        [showActivity]="false" />
+        [showActivity]="false"
+        [showRailToggle]="true"
+        [railCollapsed]="rail.collapsed()"
+        (railCollapsedChange)="rail.setCollapsed($event)" />
 
       <div
         class="border-foreground/8 flex shrink-0 flex-col gap-3.5 border-b px-7 pt-5.5 pb-4">
@@ -158,7 +162,7 @@ import { DialogSectionComponent } from '@static/components/dialog/dialog-section
           </div>
         </app-dialog-section>
 
-        <app-dialog-rail class="w-[372px]">
+        <app-dialog-rail class="w-[372px]" [collapsed]="rail.collapsed()">
           <div
             class="border-foreground/8 flex h-[52px] shrink-0 items-center gap-2 border-b px-4">
             <app-tab-group
@@ -193,6 +197,7 @@ import { DialogSectionComponent } from '@static/components/dialog/dialog-section
 export class TaskDetailCockpitComponent {
   readonly taskDetail = inject(TaskDetailService);
   readonly comments = inject(TaskDetailCommentsService);
+  readonly rail = inject(TaskDetailRailService);
 
   protected readonly filesSection = viewChild(TaskDetailFilesComponent);
   protected readonly pagesSection = viewChild(TaskDetailPagesComponent);

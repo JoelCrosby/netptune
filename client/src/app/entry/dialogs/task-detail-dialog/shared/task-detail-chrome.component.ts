@@ -6,6 +6,7 @@ import {
   effect,
   inject,
   input,
+  model,
   untracked,
   viewChild,
 } from '@angular/core';
@@ -25,6 +26,8 @@ import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-
 import {
   LucideEllipsis,
   LucideExternalLink,
+  LucidePanelRightClose,
+  LucidePanelRightOpen,
   LucidePin,
   LucideSparkles,
   LucideTrash2,
@@ -53,6 +56,8 @@ import { DividerComponent } from '@static/components/divider/divider.component';
     TooltipDirective,
     LucideEllipsis,
     LucideExternalLink,
+    LucidePanelRightClose,
+    LucidePanelRightOpen,
     LucideSparkles,
     LucideTrash2,
     LucideX,
@@ -68,7 +73,7 @@ import { DividerComponent } from '@static/components/divider/divider.component';
         </span>
       }
 
-      <div class="ml-auto flex shrink-0 items-center gap-0.5">
+      <div class="ml-auto flex shrink-0 items-center gap-1">
         @if (canPin()) {
           <app-split-button
             #pinButton
@@ -92,6 +97,22 @@ import { DividerComponent } from '@static/components/divider/divider.component';
             [entityType]="entityType"
             [entityId]="task.id"
             [buttonClass]="iconButtonClass" />
+        }
+
+        @if (showRailToggle()) {
+          <button
+            type="button"
+            [class]="iconButtonClass"
+            [attr.aria-pressed]="!railCollapsed()"
+            [attr.aria-label]="railLabel"
+            [appTooltip]="railLabel"
+            (click)="railCollapsed.set(!railCollapsed())">
+            @if (railCollapsed()) {
+              <svg lucidePanelRightOpen class="h-4 w-4"></svg>
+            } @else {
+              <svg lucidePanelRightClose class="h-4 w-4"></svg>
+            }
+          </button>
         }
 
         @if (dialogRef) {
@@ -172,6 +193,8 @@ export class TaskDetailChromeComponent {
   readonly showBreadcrumb = input(true);
   readonly showActivity = input(true);
   readonly showOverflow = input(true);
+  readonly showRailToggle = input(false);
+  readonly railCollapsed = model(false);
 
   readonly dialogRef = inject(DialogRef, { optional: true });
 
@@ -188,6 +211,7 @@ export class TaskDetailChromeComponent {
   readonly pinIcon = LucidePin;
   readonly personalScope = TaskPinScope.user;
   readonly pinMenuLabel = $localize`:Accessible label for the control that opens the pin scope menu:Choose where to pin`;
+  readonly railLabel = $localize`:Accessible label for the toggle that shows or hides the comments and history beside a task:Comments and history`;
 
   // Pinning always writes, even at the personal scope, so a signed-out reader of a public
   // workspace has nowhere to put a pin.

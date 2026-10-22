@@ -1,5 +1,10 @@
 import { httpResource } from '@angular/common/http';
-import { computed, inject, Injectable } from '@angular/core';
+import {
+  computed,
+  inject,
+  Injectable,
+  type ResourceStatus,
+} from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { DEFAULT_PAGE_SIZE } from '@core/models/pagination';
@@ -22,6 +27,12 @@ import { EMPTY } from 'rxjs';
 import { catchError, filter, switchMap, tap } from 'rxjs/operators';
 import { ConfirmDialogOptions } from '../../confirm-dialog/confirm-dialog.component';
 import { TaskDetailService } from '../task-detail.service';
+
+const loadedStatuses = new Set<ResourceStatus>([
+  'resolved',
+  'reloading',
+  'local',
+]);
 
 @Injectable()
 export class TaskDetailCommentsService {
@@ -47,6 +58,11 @@ export class TaskDetailCommentsService {
 
   readonly comments = this.resource.value;
   readonly count = computed(() => this.comments().length);
+  readonly isEmpty = computed(() => {
+    const hasLoaded = loadedStatuses.has(this.resource.status());
+
+    return hasLoaded && this.count() === 0;
+  });
   readonly latest = computed(() => this.comments().at(0) ?? null);
 
   constructor() {

@@ -3,6 +3,8 @@ import { PERMISSIONS } from '@core/auth/permissions';
 import { hasPermission } from '@core/auth/has-permission';
 import { SessionService } from '@core/services/session.service';
 import { workspaceUsersResource } from '@core/resources/user.resource';
+import { LucideMessageSquare } from '@lucide/angular';
+import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import {
   CommentsListComponent,
   CommentsListDensity,
@@ -12,21 +14,32 @@ import { TaskDetailCommentsService } from './shared/task-detail-comments.service
 @Component({
   selector: 'app-task-detail-comments',
   template: `
-    <app-comments-list
-      [user]="user()"
-      [comments]="comments.comments()"
-      [workspaceUsers]="workspaceUsers()"
-      [density]="density()"
-      [showComposer]="false"
-      (updateComment)="comments.update($event)"
-      (deleteComment)="comments.confirmDelete($event)"
-      (toggleCommentReaction)="comments.toggleReaction($event)"
-      [canDelete]="canDeleteComment()"
-      [canEdit]="canCreateComment()"
-      [canCreate]="canCreateComment()"
-      [canReact]="canCreateComment()"></app-comments-list>
+    @if (comments.isEmpty()) {
+      <app-empty-state
+        compact
+        i18n-title="Heading shown when a task has no comments"
+        title="There are no comments for this task"
+        i18n-description="Explains why the task's comments list is empty"
+        description="Comments on the task will appear here">
+        <svg emptyStateIcon lucideMessageSquare></svg>
+      </app-empty-state>
+    } @else {
+      <app-comments-list
+        [user]="user()"
+        [comments]="comments.comments()"
+        [workspaceUsers]="workspaceUsers()"
+        [density]="density()"
+        [showComposer]="false"
+        (updateComment)="comments.update($event)"
+        (deleteComment)="comments.confirmDelete($event)"
+        (toggleCommentReaction)="comments.toggleReaction($event)"
+        [canDelete]="canDeleteComment()"
+        [canEdit]="canCreateComment()"
+        [canCreate]="canCreateComment()"
+        [canReact]="canCreateComment()"></app-comments-list>
+    }
   `,
-  imports: [CommentsListComponent],
+  imports: [CommentsListComponent, EmptyStateComponent, LucideMessageSquare],
 })
 export class TaskDetailCommentsComponent {
   readonly density = input<CommentsListDensity>('compact');

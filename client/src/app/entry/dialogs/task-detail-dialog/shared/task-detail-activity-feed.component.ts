@@ -68,10 +68,10 @@ import { TaskDetailService } from '../task-detail.service';
       } @empty {
         <app-empty-state
           compact
-          i18n-title="Heading of the empty activity feed"
-          title="There is no activity"
-          i18n-description="Explains why the activity feed is empty"
-          description="Activity on the item will appear here">
+          i18n-title="Heading shown when a task has no history"
+          title="There is no history for this task"
+          i18n-description="Explains why the task's history is empty"
+          description="Changes to the task will appear here">
           <svg emptyStateIcon lucideActivity></svg>
         </app-empty-state>
       }

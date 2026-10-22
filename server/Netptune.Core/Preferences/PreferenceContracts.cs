@@ -10,6 +10,7 @@ public static class PreferenceKeys
     public const string AppearanceTaskDetailLayout = "appearance.taskDetailLayout";
     public const string AppearancePageWidth = "appearance.pageWidth";
     public const string AppearancePageContentWidth = "appearance.pageContentWidth";
+    public const string AppearanceTaskDetailRailCollapsed = "appearance.taskDetailRailCollapsed";
     public const string CommandPaletteRecentItemsScope = "commandPalette.recentItems.scope";
     public const string BoardHiddenGroupIds = "boards.hiddenGroupIds";
     public const string BoardTaskSort = "boards.taskSort";
