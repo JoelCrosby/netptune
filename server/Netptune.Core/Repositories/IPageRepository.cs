@@ -14,11 +14,13 @@ public interface IPageRepository : IWorkspaceEntityRepository<Page, int>
 
     Task<Page?> GetArchivedInWorkspace(int id, int workspaceId, CancellationToken cancellationToken = default);
 
-    Task<List<PageTreeNodeViewModel>> GetTree(int workspaceId, string userId, CancellationToken cancellationToken = default);
+    Task<List<PageTreeNodeViewModel>> GetTree(int workspaceId, string? userId, CancellationToken cancellationToken = default);
 
-    Task<PageViewModel?> GetViewModel(int id, int workspaceId, string userId, CancellationToken cancellationToken = default);
+    Task<List<PageVisibilityNode>> GetVisibilityNodes(int workspaceId, CancellationToken cancellationToken = default);
 
-    Task<PageViewModel?> GetViewModelBySlug(string slug, int workspaceId, string userId, CancellationToken cancellationToken = default);
+    Task<PageViewModel?> GetViewModel(int id, int workspaceId, string? userId, CancellationToken cancellationToken = default);
+
+    Task<PageViewModel?> GetViewModelBySlug(string slug, int workspaceId, string? userId, CancellationToken cancellationToken = default);
 
     Task<List<PageBodyViewModel>> GetBodies(int workspaceId, IReadOnlyCollection<int> ids, CancellationToken cancellationToken = default);
 

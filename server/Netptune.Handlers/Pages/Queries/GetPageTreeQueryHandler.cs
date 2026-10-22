@@ -2,6 +2,7 @@ using Mediator;
 
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Pages;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Pages;
 
@@ -13,19 +14,23 @@ public sealed class GetPageTreeQueryHandler : IRequestHandler<GetPageTreeQuery, 
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
+    private readonly IPageVisibilityService PageVisibility;
 
-    public GetPageTreeQueryHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity)
+    public GetPageTreeQueryHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity, IPageVisibilityService pageVisibility)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
+        PageVisibility = pageVisibility;
     }
 
     public async ValueTask<ClientResponse<List<PageTreeNodeViewModel>>> Handle(GetPageTreeQuery request, CancellationToken cancellationToken)
     {
         var workspaceId = await Identity.GetWorkspaceId();
-        var userId = Identity.GetCurrentUserId();
+        var userId = Identity.TryGetCurrentUserId();
         var nodes = await UnitOfWork.Pages.GetTree(workspaceId, userId, cancellationToken);
+        var scope = await PageVisibility.GetScope(workspaceId, cancellationToken);
+        var visibleNodes = nodes.Where(node => scope.Allows(node.Id)).ToList();
 
-        return ClientResponse<List<PageTreeNodeViewModel>>.Success(nodes);
+        return ClientResponse<List<PageTreeNodeViewModel>>.Success(visibleNodes);
     }
 }

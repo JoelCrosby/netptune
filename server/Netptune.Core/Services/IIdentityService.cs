@@ -10,6 +10,8 @@ public interface IIdentityService
 
     string? TryGetCurrentUserId();
 
+    bool IsSignedIn();
+
     string GetCurrentUserEmail();
 
     string GetUserName();

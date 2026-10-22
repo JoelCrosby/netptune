@@ -40,7 +40,11 @@ import { outlineFromMarkdown } from '../util/page-outline';
         padding="none"
         divider="bottom"
         class="flex h-12 shrink-0 items-center px-3">
-        <app-tab-group variant="subtle" stretch [tabs]="tabs" [(value)]="tab" />
+        <app-tab-group
+          variant="subtle"
+          stretch
+          [tabs]="tabs()"
+          [(value)]="tab" />
       </div>
 
       <div class="min-h-0 flex-1 overflow-y-auto p-3">
@@ -137,6 +141,7 @@ export class PageRailComponent {
 
   readonly links = input<PageLinks | undefined>(undefined);
   readonly activeHeading = input<number | null>(null);
+  readonly canViewHistory = input(false);
 
   readonly headingSelected = output<number>();
   readonly taskOpened = output<string>();
@@ -145,20 +150,11 @@ export class PageRailComponent {
 
   readonly tab = model<string | number | null>('outline');
 
-  protected readonly tabs: TabItem[] = [
-    {
-      value: 'outline',
-      label: $localize`:Tab in the page side rail listing the page's headings:Outline`,
-    },
-    {
-      value: 'links',
-      label: $localize`:Tab in the page side rail listing linked tasks, pages and backlinks:Links`,
-    },
-    {
-      value: 'history',
-      label: $localize`:Tab in the page side rail listing saved versions:History`,
-    },
-  ];
+  protected readonly tabs = computed<TabItem[]>(() => {
+    const tabs = [outlineTab, linksTab];
+
+    return this.canViewHistory() ? [...tabs, historyTab] : tabs;
+  });
 
   private readonly versionsKey = computed(() => {
     const showingHistory = this.tab() === 'history';
@@ -270,3 +266,18 @@ function versionMeta(version: PageVersionSummary): string {
 
   return $localize`:Who saved a page version and when:${author}:AUTHOR: · ${when}:WHEN:`;
 }
+
+const outlineTab: TabItem = {
+  value: 'outline',
+  label: $localize`:Tab in the page side rail listing the page's headings:Outline`,
+};
+
+const linksTab: TabItem = {
+  value: 'links',
+  label: $localize`:Tab in the page side rail listing linked tasks, pages and backlinks:Links`,
+};
+
+const historyTab: TabItem = {
+  value: 'history',
+  label: $localize`:Tab in the page side rail listing saved versions:History`,
+};

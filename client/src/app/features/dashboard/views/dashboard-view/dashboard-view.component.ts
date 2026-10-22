@@ -1,6 +1,7 @@
-import { Component, computed } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
+import { SessionService } from '@core/services/session.service';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { DashboardAssignedTasksComponent } from '../../components/dashboard-assigned-tasks.component';
@@ -42,7 +43,9 @@ import { DashboardFlowService } from '../../services/dashboard-flow.service';
       <div class="flex flex-col gap-8">
         <app-dashboard-pinned-card />
 
-        <app-dashboard-current-sprint-card />
+        @if (canReadSprints()) {
+          <app-dashboard-current-sprint-card />
+        }
 
         @if (canReadReports()) {
           <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -52,8 +55,11 @@ import { DashboardFlowService } from '../../services/dashboard-flow.service';
         }
 
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <app-dashboard-status-breakdown-card />
-          <app-dashboard-notifications-card class="lg:relative" />
+          <app-dashboard-status-breakdown-card
+            [class.lg:col-span-2]="isPublicViewer()" />
+          @if (!isPublicViewer()) {
+            <app-dashboard-notifications-card class="lg:relative" />
+          }
         </div>
 
         @if (canSeeVelocity() || canSeeWorkload()) {
@@ -67,17 +73,21 @@ import { DashboardFlowService } from '../../services/dashboard-flow.service';
           </div>
         }
 
-        <app-dashboard-assigned-tasks />
+        @if (!isPublicViewer()) {
+          <app-dashboard-assigned-tasks />
+        }
       </div>
     </app-page-container>
   `,
 })
 export class DashboardViewComponent {
+  protected readonly isPublicViewer = inject(SessionService).isPublicViewer;
+
   protected readonly canReadReports = hasPermission(PERMISSIONS.reports.read);
 
   private readonly canReadMembers = hasPermission(PERMISSIONS.members.read);
 
-  private readonly canReadSprints = hasPermission(PERMISSIONS.sprints.read);
+  protected readonly canReadSprints = hasPermission(PERMISSIONS.sprints.read);
 
   protected readonly canSeeWorkload = computed(
     () => this.canReadReports() && this.canReadMembers()

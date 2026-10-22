@@ -24,8 +24,14 @@ public sealed class GetRecentPagesQueryHandler : IRequestHandler<GetRecentPagesQ
 
     public async ValueTask<ClientResponse<List<RecentPageViewModel>>> Handle(GetRecentPagesQuery request, CancellationToken cancellationToken)
     {
+        var userId = Identity.TryGetCurrentUserId();
+
+        if (userId is null)
+        {
+            return ClientResponse<List<RecentPageViewModel>>.Success([]);
+        }
+
         var workspaceId = await Identity.GetWorkspaceId();
-        var userId = Identity.GetCurrentUserId();
         var pages = await UnitOfWork.Pages.GetRecentlyVisited(workspaceId, userId, Take, cancellationToken);
 
         return ClientResponse<List<RecentPageViewModel>>.Success(pages);

@@ -167,4 +167,5 @@ export const publicReadablePermissions: Permission[] = [
   PERMISSIONS.calendar.read,
   PERMISSIONS.reports.read,
   PERMISSIONS.automations.read,
+  PERMISSIONS.pages.read,
 ];

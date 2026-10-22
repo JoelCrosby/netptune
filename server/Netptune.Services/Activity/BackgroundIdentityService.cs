@@ -19,6 +19,8 @@ public sealed class BackgroundIdentityService : IIdentityService
 
     public string? TryGetCurrentUserId() => Actor.Current?.UserId;
 
+    public bool IsSignedIn() => TryGetCurrentUserId() is not null;
+
     public string GetWorkspaceKey() => RequireActor().WorkspaceKey;
 
     public string? TryGetWorkspaceKey() => Actor.Current?.WorkspaceKey;

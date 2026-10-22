@@ -1,5 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { SessionService } from '@core/services/session.service';
 import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { PageKind, PageTreeNode } from '@core/models/pages';
@@ -174,22 +175,25 @@ function spaceRowId(projectId: number): number {
       }
     </nav>
 
-    <div
-      app-panel-body
-      padding="none"
-      divider="top"
-      class="flex h-14 shrink-0 flex-col p-2">
-      <app-tree
-        i18n-ariaLabel="Accessible label for the page tree footer links"
-        ariaLabel="More pages"
-        size="large"
-        [nodes]="footerNodes()"
-        [selectedId]="store.footerSelectedId()" />
-    </div>
+    @if (!isPublicViewer()) {
+      <div
+        app-panel-body
+        padding="none"
+        divider="top"
+        class="flex h-14 shrink-0 flex-col p-2">
+        <app-tree
+          i18n-ariaLabel="Accessible label for the page tree footer links"
+          ariaLabel="More pages"
+          size="large"
+          [nodes]="footerNodes()"
+          [selectedId]="store.footerSelectedId()" />
+      </div>
+    }
   `,
 })
 export class PageTreeComponent {
   protected readonly store = inject(PageTreeStore);
+  protected readonly isPublicViewer = inject(SessionService).isPublicViewer;
   private readonly commands = inject(PageCommandsService);
   private readonly router = inject(Router);
 

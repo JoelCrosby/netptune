@@ -229,7 +229,7 @@
     </unit>
     <unit id="185582359745220936">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:241</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:259</note>
         <note category="description">Suggested question on pages home about a page the user opened recently</note>
       </notes>
       <segment state="translated">
@@ -252,11 +252,11 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:234</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:233</note>
         <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:82</note>
-        <note category="location">src/app/features/pages/components/page-tree.component.ts:109,111</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:110,112</note>
         <note category="location">src/app/features/pages/editor/page-reference.controller.ts:224</note>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:71</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:74</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:92</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:209</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:212</note>
         <note category="location">src/app/workspace.routes.ts:99</note>
         <note category="description">Tab listing the pages that mention a task</note>
       </notes>
@@ -546,7 +546,7 @@
     </unit>
     <unit id="1576787664013138461">
       <notes>
-        <note category="location">src/app/features/pages/components/page-tree.component.ts:120,124</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:121,125</note>
         <note category="description">Shown when no page title matches the tree filter</note>
       </notes>
       <segment state="translated">
@@ -586,7 +586,7 @@
     </unit>
     <unit id="8198968372594669406">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:193,196</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:197,200</note>
         <note category="description">Menu item that moves a published page back to draft</note>
       </notes>
       <segment state="translated">
@@ -666,8 +666,8 @@
     </unit>
     <unit id="5320007980265950916">
       <notes>
-        <note category="location">src/app/features/pages/components/page-rail.component.ts:118,119</note>
-        <note category="location">src/app/features/pages/components/page-rail.component.ts:151</note>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:122,123</note>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:272</note>
         <note category="description">Accessible label for the list of a page&apos;s headings</note>
       </notes>
       <segment state="translated">
@@ -760,7 +760,7 @@
     </unit>
     <unit id="6329053745200289910">
       <notes>
-        <note category="location">src/app/features/pages/components/page-tree.component.ts:160,163</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:161,164</note>
         <note category="description">Hint under the empty page tree</note>
       </notes>
       <segment state="translated">
@@ -924,7 +924,7 @@
     </unit>
     <unit id="2292068350947207931">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:382</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:400</note>
         <note category="description">Suggested page for the assistant to draft on pages home</note>
       </notes>
       <segment state="translated">
@@ -1004,6 +1004,16 @@
         <target>Sprints anzeigen</target>
       </segment>
     </unit>
+    <unit id="886974259328140572">
+      <notes>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:144,146</note>
+        <note category="description">Pages home heading for someone reading a public workspace</note>
+      </notes>
+      <segment state="translated">
+        <source>Pick a page to read</source>
+        <target>Wählen Sie eine Seite zum Lesen</target>
+      </segment>
+    </unit>
     <unit id="4382007774315374200">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:331</note>
@@ -1067,7 +1077,7 @@
     </unit>
     <unit id="4394924118608662801">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:256</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:262</note>
         <note category="description">Accessible label for the toggle that lets a page&apos;s writing run the full width of the editor</note>
       </notes>
       <segment state="translated">
@@ -1219,7 +1229,7 @@
     </unit>
     <unit id="3389185365103310416">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:259</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:277</note>
         <note category="description">Heading of the pages home box that asks the assistant a question</note>
       </notes>
       <segment state="translated">
@@ -1552,7 +1562,7 @@
     </unit>
     <unit id="5265840946296600125">
       <notes>
-        <note category="location">src/app/features/pages/components/page-tree.component.ts:170,172</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:171,173</note>
         <note category="description">Accessible label for the list of page spaces</note>
       </notes>
       <segment state="translated">
@@ -3255,8 +3265,8 @@
     </unit>
     <unit id="625751865795648832">
       <notes>
-        <note category="location">src/app/features/pages/components/page-tree.component.ts:64,65</note>
-        <note category="location">src/app/features/pages/components/page-tree.component.ts:66,70</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:65,66</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:67,71</note>
         <note category="description">Placeholder in the box that filters the page tree</note>
       </notes>
       <segment state="translated">
@@ -3308,7 +3318,7 @@
     </unit>
     <unit id="9054755428836810112">
       <notes>
-        <note category="location">src/app/features/pages/components/page-rail.component.ts:271</note>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:267</note>
         <note category="description">Who saved a page version and when</note>
       </notes>
       <segment state="translated">
@@ -3725,7 +3735,7 @@
     </unit>
     <unit id="2275328567992347600">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:140,142</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:144,146</note>
         <note category="description">Shown when the requested page does not exist or was archived</note>
       </notes>
       <segment state="translated">
@@ -3930,8 +3940,8 @@
     </unit>
     <unit id="5833343911271171142">
       <notes>
-        <note category="location">src/app/features/pages/components/page-rail.component.ts:75,77</note>
-        <note category="location">src/app/features/pages/components/page-rail.component.ts:81,83</note>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:79,81</note>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:85,87</note>
         <note category="description">Heading over the pages that mention this page</note>
       </notes>
       <segment state="translated">
@@ -4513,7 +4523,7 @@
         <note category="location">src/app/features/notifications/views/notifications-view/notifications-view.component.ts:29,30</note>
         <note category="location">src/app/features/settings/settings.routes.ts:27</note>
         <note category="location">src/app/features/settings/views/personal-notification-settings-view/personal-notification-settings-view.component.ts:22,24</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:427</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:430</note>
         <note category="location">src/app/workspace.routes.ts:123</note>
         <note category="description">Accessible label for the notifications button</note>
       </notes>
@@ -4671,12 +4681,12 @@
         <note category="location">src/app/core/util/pin-scope.ts:69</note>
         <note category="location">src/app/entry/components/setup-creation-summary/setup-creation-summary.component.ts:58</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:220</note>
-        <note category="location">src/app/features/pages/components/page-tree.component.ts:35</note>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:375</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:36</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:393</note>
         <note category="location">src/app/features/pins/components/pin-scope-menu.component.ts:160</note>
         <note category="location">src/app/features/settings/components/preference-scope.ts:36</note>
         <note category="location">src/app/features/settings/settings.routes.ts:46</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:457</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:460</note>
         <note category="description">Badge on a task pinned for the whole workspace</note>
       </notes>
       <segment state="translated">
@@ -4864,7 +4874,7 @@
     </unit>
     <unit id="4033785320232635352">
       <notes>
-        <note category="location">src/app/features/pages/components/page-tree.component.ts:146,148</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:147,149</note>
         <note category="description">Accessible label for the workspace page tree</note>
       </notes>
       <segment state="translated">
@@ -5210,7 +5220,7 @@
         <note category="location">src/app/features/reporting/components/sprint-velocity-table.component.ts:53</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:140</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:377</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:60,61</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:60</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:27</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:47</note>
         <note category="description">Column heading for the task sprint</note>
@@ -5398,7 +5408,7 @@
     </unit>
     <unit id="7386303229223377554">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:118,119</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:121,122</note>
         <note category="description">Heading over the templates on pages home</note>
       </notes>
       <segment state="translated">
@@ -5625,7 +5635,7 @@
     </unit>
     <unit id="8970106517317640002">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:106,111</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:109,114</note>
         <note category="description">Accessible label for the switch between asking the assistant and drafting a page on pages home</note>
       </notes>
       <segment state="translated">
@@ -5767,7 +5777,7 @@
     </unit>
     <unit id="3198215594515009353">
       <notes>
-        <note category="location">src/app/features/pages/components/page-rail.component.ts:94,96</note>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:98,100</note>
         <note category="description">Hint in the empty links tab of a page</note>
       </notes>
       <segment state="translated">
@@ -7424,7 +7434,7 @@
         <note category="location">src/app/features/settings/settings.routes.ts:103</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:72,73</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:260</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:360</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:363</note>
         <note category="description">Section heading for links between tasks</note>
       </notes>
       <segment state="translated">
@@ -7505,7 +7515,7 @@
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:46</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:46</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:90</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:344</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:347</note>
         <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:53,54</note>
         <note category="description">Label of the tags field</note>
       </notes>
@@ -7566,8 +7576,8 @@
     </unit>
     <unit id="4158925728608139729">
       <notes>
-        <note category="location">src/app/features/pages/components/page-tree.component.ts:133,135</note>
-        <note category="location">src/app/features/pages/components/page-tree.component.ts:136,138</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:134,136</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:137,139</note>
         <note category="description">Heading over the user&apos;s favourite pages</note>
       </notes>
       <segment state="translated">
@@ -7933,7 +7943,7 @@
     </unit>
     <unit id="7808802259664641341">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:250</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:268</note>
         <note category="description">Placeholder of the pages home box when drafting a page</note>
       </notes>
       <segment state="translated">
@@ -8013,7 +8023,7 @@
     </unit>
     <unit id="2378730518632679921">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:228</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:246</note>
         <note category="description">Hint beside the templates on pages home naming the space new pages go in</note>
       </notes>
       <segment state="translated">
@@ -8300,7 +8310,7 @@
     </unit>
     <unit id="7550887575678493407">
       <notes>
-        <note category="location">src/app/features/pages/components/page-tree.component.ts:184,187</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:186,189</note>
         <note category="description">Accessible label for the page tree footer links</note>
       </notes>
       <segment state="translated">
@@ -8381,8 +8391,8 @@
     </unit>
     <unit id="7622219570715945608">
       <notes>
-        <note category="location">src/app/features/pages/components/page-rail.component.ts:64,66</note>
-        <note category="location">src/app/features/pages/components/page-rail.component.ts:67,69</note>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:68,70</note>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:71,73</note>
         <note category="description">Heading over the pages a page mentions</note>
       </notes>
       <segment state="translated">
@@ -8485,7 +8495,7 @@
     </unit>
     <unit id="8658377241875728158">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:139,141</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:155,157</note>
         <note category="description">Heading over the pages the user opened recently</note>
       </notes>
       <segment state="translated">
@@ -8535,7 +8545,7 @@
     </unit>
     <unit id="3071620290019453863">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:371</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:389</note>
         <note category="description">Button that marks a page as still accurate so it leaves needs review</note>
       </notes>
       <segment state="translated">
@@ -8692,7 +8702,7 @@
     </unit>
     <unit id="1663903229329909090">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:268</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:274</note>
         <note category="description">Accessible label for the toggle that shows or hides the panel beside a page</note>
       </notes>
       <segment state="translated">
@@ -8773,7 +8783,7 @@
     <unit id="1678559204833619774">
       <notes>
         <note category="location">src/app/features/audit/views/audit-view/audit-view.component.ts:27,28</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:408</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:411</note>
         <note category="location">src/app/workspace.routes.ts:135</note>
         <note category="description">Page title for the workspace audit log</note>
       </notes>
@@ -8865,7 +8875,7 @@
     </unit>
     <unit id="6311995465990730419">
       <notes>
-        <note category="location">src/app/features/pages/components/page-rail.component.ts:257</note>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:253</note>
         <note category="description">History entry for a version that restored an earlier one</note>
       </notes>
       <segment state="translated">
@@ -8925,7 +8935,7 @@
     </unit>
     <unit id="9153313578755352192">
       <notes>
-        <note category="location">src/app/features/pages/components/page-tree.component.ts:158,159</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:159,160</note>
         <note category="description">Shown in the page tree before any page exists</note>
       </notes>
       <segment state="translated">
@@ -9427,7 +9437,7 @@
     </unit>
     <unit id="4354588089802697390">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:384</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:402</note>
         <note category="description">Suggested page for the assistant to draft on pages home</note>
       </notes>
       <segment state="translated">
@@ -10137,7 +10147,7 @@
     </unit>
     <unit id="9200330298718156939">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:260</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:278</note>
         <note category="description">Description under the pages home heading when asking the assistant</note>
       </notes>
       <segment state="translated">
@@ -10602,7 +10612,7 @@
     </unit>
     <unit id="3740112420485576878">
       <notes>
-        <note category="location">src/app/features/pages/components/page-rail.component.ts:112,115</note>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:116,119</note>
         <note category="description">Shown in the history tab before a page has saved versions</note>
       </notes>
       <segment state="translated">
@@ -10796,7 +10806,7 @@
     </unit>
     <unit id="2408149066831973826">
       <notes>
-        <note category="location">src/app/features/pages/components/page-rail.component.ts:125,126</note>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:129,130</note>
         <note category="description">Shown in the outline before a page has headings</note>
       </notes>
       <segment state="translated">
@@ -11054,7 +11064,7 @@
     </unit>
     <unit id="1746908154865482674">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:153,155</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:169,171</note>
         <note category="description">Shown on pages home before the user has opened any page</note>
       </notes>
       <segment state="translated">
@@ -11483,7 +11493,7 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-notify-editor.component.ts:45</note>
         <note category="location">src/app/features/users/views/users-view/users-view.component.html:6</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:260</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:263</note>
         <note category="location">src/app/workspace.routes.ts:129</note>
         <note category="description">Label of the users field</note>
       </notes>
@@ -11977,7 +11987,7 @@
     </unit>
     <unit id="6917262024577443751">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:169,170</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:185,186</note>
         <note category="description">Accessible label for the list of pages that need review</note>
       </notes>
       <segment state="translated">
@@ -12051,7 +12061,7 @@
     </unit>
     <unit id="555138163471839862">
       <notes>
-        <note category="location">src/app/features/pages/components/page-tree.component.ts:167,169</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:168,170</note>
         <note category="description">Heading over the project spaces in the page tree</note>
       </notes>
       <segment state="translated">
@@ -12132,7 +12142,7 @@
     </unit>
     <unit id="8666730504824237140">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:289</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:295</note>
         <note category="description">Option that shows a page as formatted text</note>
       </notes>
       <segment state="translated">
@@ -12182,7 +12192,7 @@
     </unit>
     <unit id="1343094894232587177">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:249</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:267</note>
         <note category="description">Description under the pages home heading when drafting a page with the assistant</note>
       </notes>
       <segment state="translated">
@@ -12595,7 +12605,7 @@
     </unit>
     <unit id="3898388632413645870">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:149,151</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:165,167</note>
         <note category="description">Accessible label for the list of recently viewed pages</note>
       </notes>
       <segment state="translated">
@@ -12983,7 +12993,7 @@
     </unit>
     <unit id="3008573030448240863">
       <notes>
-        <note category="location">src/app/features/pages/components/page-rail.component.ts:264</note>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:260</note>
         <note category="description">History entry for an ordinary edit of a page</note>
       </notes>
       <segment state="translated">
@@ -13356,7 +13366,7 @@
     </unit>
     <unit id="8505589254065619352">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:379</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:397</note>
         <note category="description">Option on pages home that has the assistant draft a new page</note>
       </notes>
       <segment state="translated">
@@ -13467,7 +13477,7 @@
     </unit>
     <unit id="8304423617415800133">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:164,167</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:167,170</note>
         <note category="description">Menu item that removes a page from favourites</note>
       </notes>
       <segment state="translated">
@@ -14166,7 +14176,7 @@
     </unit>
     <unit id="3787321817465559173">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:168,173</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:171,174</note>
         <note category="description">Menu item that adds a page to favourites</note>
       </notes>
       <segment state="translated">
@@ -14425,7 +14435,7 @@
     </unit>
     <unit id="5234544449365538384">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:419</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:429</note>
         <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:326</note>
         <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:362</note>
         <note category="description">Shown when a page link could not be copied</note>
@@ -14651,7 +14661,7 @@
     </unit>
     <unit id="7153255681393081191">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:293</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:299</note>
         <note category="description">Option that shows a page as raw markdown</note>
       </notes>
       <segment state="translated">
@@ -14988,7 +14998,7 @@
     </unit>
     <unit id="4710835816744718690">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:262</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:280</note>
         <note category="description">Hint in the pages home box saying how many pages the assistant searches</note>
       </notes>
       <segment state="translated">
@@ -15032,7 +15042,7 @@
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:433</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:232</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:230</note>
-        <note category="location">src/app/features/pages/components/page-rail.component.ts:155</note>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:277</note>
         <note category="description">Tab listing the tasks this one links to</note>
       </notes>
       <segment state="initial">
@@ -15092,7 +15102,7 @@
     </unit>
     <unit id="8729582342971384106">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:161,162</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:177,178</note>
         <note category="description">Heading over published pages that may be out of date</note>
       </notes>
       <segment state="translated">
@@ -15898,7 +15908,7 @@
     </unit>
     <unit id="3212500310580654477">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:49</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:51</note>
         <note category="description">Why a page is listed under needs review</note>
       </notes>
       <segment state="translated">
@@ -16537,8 +16547,8 @@
     </unit>
     <unit id="3640373857486272611">
       <notes>
-        <note category="location">src/app/features/pages/components/page-rail.component.ts:103,105</note>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:124,126</note>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:107,109</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:125,127</note>
         <note category="description">Accessible label for the list of saved versions of a page</note>
       </notes>
       <segment state="translated">
@@ -16759,7 +16769,7 @@
     </unit>
     <unit id="5048551055618217661">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:171,173</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:187,189</note>
         <note category="description">Shown when no published page needs review</note>
       </notes>
       <segment state="translated">
@@ -16930,7 +16940,7 @@
     <unit id="4930506384627295710">
       <notes>
         <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:596</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:471</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:474</note>
         <note category="location">src/app/workspace.routes.ts:147</note>
         <note category="description">Heading of the automation settings step</note>
       </notes>
@@ -16984,7 +16994,7 @@
       <notes>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:60,61</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:69,73</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:268</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:271</note>
         <note category="location">src/app/workspace.routes.ts:75</note>
         <note category="description">Page title for the automation list</note>
       </notes>
@@ -17558,7 +17568,7 @@
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:107,110</note>
         <note category="location">src/app/features/settings/settings.routes.ts:130</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:392</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:395</note>
         <note category="description">Page title for the workspace import and export page</note>
       </notes>
       <segment>
@@ -17587,7 +17597,7 @@
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:226</note>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:140</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:83</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:157</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:160</note>
         <note category="location">src/app/workspace.routes.ts:57</note>
         <note category="description">Column heading for the number of tasks on a board</note>
       </notes>
@@ -17754,9 +17764,9 @@
     <unit id="8257661007652110878">
       <notes>
         <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:117,120</note>
-        <note category="location">src/app/features/pages/components/page-tree.component.ts:79,81</note>
-        <note category="location">src/app/features/pages/components/page-tree.component.ts:90,92</note>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:192</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:80,82</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:91,93</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:210</note>
         <note category="location">src/app/shell/global-commands.service.ts:470</note>
         <note category="description">Menu item that creates a page</note>
       </notes>
@@ -17802,7 +17812,7 @@
       <notes>
         <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:44,47</note>
         <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:103,105</note>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:373</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:391</note>
         <note category="location">src/app/features/settings/settings.routes.ts:149</note>
         <note category="location">src/app/features/settings/settings.routes.ts:150</note>
         <note category="description">Page title for the guided import builder</note>
@@ -17885,7 +17895,7 @@
     </unit>
     <unit id="3226430334036368740">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:47</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:49</note>
         <note category="description">Why a page is listed under needs review</note>
       </notes>
       <segment state="translated">
@@ -18102,7 +18112,7 @@
         <note category="location">src/app/features/boards/util/board-task-sort.ts:32</note>
         <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:98</note>
         <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:349</note>
-        <note category="location">src/app/features/pages/components/page-rail.component.ts:261</note>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:257</note>
         <note category="description">Sort option ordering by creation date</note>
       </notes>
       <segment state="translated">
@@ -18231,7 +18241,7 @@
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:64</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:71,72</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:86</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:171</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:174</note>
         <note category="location">src/app/workspace.routes.ts:81</note>
         <note category="description">Section heading for the boards a task appears on</note>
       </notes>
@@ -18272,7 +18282,7 @@
     </unit>
     <unit id="7857104024284312513">
       <notes>
-        <note category="location">src/app/features/pages/components/page-rail.component.ts:127,131</note>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:131,135</note>
         <note category="description">Hint in the empty page outline</note>
       </notes>
       <segment state="translated">
@@ -18323,7 +18333,7 @@
     <unit id="7869199587095613616">
       <notes>
         <note category="location">src/app/features/pages/components/page-editor.component.ts:296,297</note>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:417</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:427</note>
         <note category="location">src/app/static/components/branding-preview/branding-preview.component.ts:156</note>
         <note category="description">Placeholder in an empty page title</note>
       </notes>
@@ -18581,8 +18591,8 @@
     </unit>
     <unit id="5116679637427656902">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:180,185</note>
-        <note category="location">src/app/features/pages/components/page-tree.component.ts:201</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:184,189</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:205</note>
         <note category="description">Menu item that creates a page inside the open page</note>
       </notes>
       <segment state="translated">
@@ -18803,7 +18813,7 @@
     </unit>
     <unit id="1022106416065199935">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:149,151</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:151,153</note>
         <note category="description">Accessible label for the button that opens the page action menu</note>
       </notes>
       <segment state="translated">
@@ -18967,7 +18977,7 @@
     <unit id="3825802286872185103">
       <notes>
         <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:61,64</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:223</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:226</note>
         <note category="location">src/app/workspace.routes.ts:111</note>
         <note category="description">Page title for the calendar</note>
       </notes>
@@ -19360,8 +19370,8 @@
     </unit>
     <unit id="6570363013146073520">
       <notes>
-        <note category="location">src/app/features/dashboard/views/dashboard-view/dashboard-view.component.ts:40,42</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:149</note>
+        <note category="location">src/app/features/dashboard/views/dashboard-view/dashboard-view.component.ts:41,43</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:152</note>
         <note category="location">src/app/workspace.routes.ts:46</note>
         <note category="description">Page title for the dashboard</note>
       </notes>
@@ -20263,13 +20273,13 @@
     <unit id="1055686627716339120">
       <notes>
         <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:66</note>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:211,214</note>
-        <note category="location">src/app/features/pages/components/page-tree.component.ts:280</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:215,218</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:284</note>
         <note category="location">src/app/features/pages/pages.routes.ts:13</note>
         <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:44</note>
         <note category="location">src/app/features/project-tasks/project-tasks.routes.ts:13</note>
         <note category="location">src/app/features/project-tasks/views/archive-view/archive-view.component.ts:21,23</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:163</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:166</note>
         <note category="description">Heading of the archive file panel</note>
       </notes>
       <segment state="translated">
@@ -20515,7 +20525,7 @@
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:58,59</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:67,71</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:84</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:202</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:205</note>
         <note category="location">src/app/workspace.routes.ts:51</note>
         <note category="description">Filter heading for projects</note>
       </notes>
@@ -21655,7 +21665,7 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:83</note>
         <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:250</note>
         <note category="location">src/app/features/pages/components/page-meta-chips.component.ts:30,34</note>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:254</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:272</note>
         <note category="description">State of a draft pull request</note>
       </notes>
       <segment state="translated">
@@ -21757,7 +21767,7 @@
     <unit id="1868606282505332204">
       <notes>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:66,68</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:231</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:234</note>
         <note category="location">src/app/workspace.routes.ts:93</note>
         <note category="description">Page title for the reporting views</note>
       </notes>
@@ -22126,7 +22136,7 @@
     </unit>
     <unit id="5140329174632274131">
       <notes>
-        <note category="location">src/app/features/pages/components/page-tree.component.ts:112,114</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:113,115</note>
         <note category="description">Accessible label for the filtered page list</note>
       </notes>
       <segment state="translated">
@@ -22304,7 +22314,7 @@
     <unit id="6215048040341403789">
       <notes>
         <note category="location">src/app/features/roadmap/views/roadmap-view.component.ts:61,64</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:216</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:219</note>
         <note category="location">src/app/workspace.routes.ts:105</note>
         <note category="description">Page title for the roadmap</note>
       </notes>
@@ -22562,7 +22572,7 @@
     </unit>
     <unit id="5990720761138943356">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:248</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:266</note>
         <note category="description">Heading of the pages home box when drafting a page with the assistant</note>
       </notes>
       <segment state="translated">
@@ -22764,8 +22774,8 @@
         <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:42,45</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:156,159</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:162,164</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:376</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:440</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:379</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:443</note>
         <note category="location">src/app/workspace.routes.ts:117</note>
         <note category="description">Heading over the assistant actions in the slash command menu</note>
       </notes>
@@ -22806,7 +22816,7 @@
     </unit>
     <unit id="4368320598560128070">
       <notes>
-        <note category="location">src/app/features/pages/components/page-rail.component.ts:92,94</note>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:96,98</note>
         <note category="description">Shown in the links tab before a page mentions or is mentioned by anything</note>
       </notes>
       <segment state="translated">
@@ -23362,7 +23372,7 @@
     </unit>
     <unit id="1917188133536938125">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:383</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:401</note>
         <note category="description">Suggested page for the assistant to draft on pages home</note>
       </notes>
       <segment state="translated">
@@ -23613,7 +23623,7 @@
     </unit>
     <unit id="7430416142942514215">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:197,200</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:201,204</note>
         <note category="description">Menu item that publishes a draft page</note>
       </notes>
       <segment state="translated">
@@ -23962,7 +23972,7 @@
     </unit>
     <unit id="892073694820881630">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:418</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:428</note>
         <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:321</note>
         <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:357</note>
         <note category="description">Confirmation that a page link was copied</note>
@@ -24561,7 +24571,7 @@
     </unit>
     <unit id="2202405455693944225">
       <notes>
-        <note category="location">src/app/features/pages/components/page-tree.component.ts:125,127</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:126,128</note>
         <note category="description">Accessible label for the link to the pages home</note>
       </notes>
       <segment state="translated">
@@ -24809,7 +24819,7 @@
     </unit>
     <unit id="8676025783488152933">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:261</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:279</note>
         <note category="description">Placeholder of the box on pages home that asks the assistant about the workspace&apos;s pages</note>
       </notes>
       <segment state="translated">
@@ -25096,6 +25106,16 @@
       <segment state="initial">
         <source>Choose Repositories</source>
         <target>Repositorys auswählen</target>
+      </segment>
+    </unit>
+    <unit id="5604637583769459715">
+      <notes>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:148,150</note>
+        <note category="description">Pages home hint for someone reading a public workspace</note>
+      </notes>
+      <segment state="translated">
+        <source>Published pages are listed in the sidebar.</source>
+        <target>Veröffentlichte Seiten sind in der Seitenleiste aufgeführt.</target>
       </segment>
     </unit>
     <unit id="5606751605449364227">
@@ -25565,7 +25585,7 @@
     </unit>
     <unit id="2821179408673282599">
       <notes>
-        <note category="location">src/app/features/pages/components/page-tree.component.ts:268</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:272</note>
         <note category="description">Link to the pages home</note>
       </notes>
       <segment state="translated">
@@ -25656,7 +25676,7 @@
     </unit>
     <unit id="2812208926273686149">
       <notes>
-        <note category="location">src/app/features/pages/components/page-tree.component.ts:98,101</note>
+        <note category="location">src/app/features/pages/components/page-tree.component.ts:99,102</note>
         <note category="description">Menu item that creates a folder of pages</note>
       </notes>
       <segment state="translated">
@@ -25930,7 +25950,7 @@
     <unit id="6922994998696471598">
       <notes>
         <note category="location">src/app/features/queries/views/queries-view/queries-view.component.ts:48,49</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:239</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:242</note>
         <note category="location">src/app/workspace.routes.ts:63</note>
         <note category="description">Page title for the saved query list</note>
       </notes>
@@ -26172,7 +26192,7 @@
         <note category="location">src/app/features/settings/settings.routes.ts:179</note>
         <note category="location">src/app/features/settings/settings.routes.ts:180</note>
         <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:53,55</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:384</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:387</note>
         <note category="description">Breadcrumb for the workspace source control settings</note>
       </notes>
       <segment state="initial">
@@ -26577,7 +26597,7 @@
     </unit>
     <unit id="818882206456622635">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:264</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:282</note>
         <note category="description">Accessible label of the box on pages home that asks the assistant a question</note>
       </notes>
       <segment state="translated">
@@ -26825,7 +26845,7 @@
     </unit>
     <unit id="7419704019640008953">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:136,141</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:138,143</note>
         <note category="description">Button that copies a link to share the open page</note>
       </notes>
       <segment state="translated">
@@ -26905,7 +26925,7 @@
     </unit>
     <unit id="745963961861200833">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:143,146</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:159,162</note>
         <note category="description">Description of the pages home recently viewed card</note>
       </notes>
       <segment state="translated">
@@ -27034,7 +27054,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:237</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:232</note>
-        <note category="location">src/app/features/pages/components/page-rail.component.ts:159</note>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:282</note>
         <note category="description">Tab showing what has happened to a task</note>
       </notes>
       <segment state="initial">
@@ -27139,7 +27159,7 @@
         <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:101</note>
         <note category="location">src/app/features/sprints/sprints.routes.ts:22</note>
         <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:46</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:192</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:195</note>
         <note category="description">Heading above the backlog tasks leaving a sprint</note>
       </notes>
       <segment state="translated">
@@ -27309,7 +27329,7 @@
     </unit>
     <unit id="2468424720649338406">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:48</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:50</note>
         <note category="description">Why a page is listed under needs review</note>
       </notes>
       <segment state="translated">
@@ -27442,7 +27462,7 @@
       <notes>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:61,62</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:85</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:187</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:190</note>
         <note category="location">src/app/workspace.routes.ts:87</note>
         <note category="description">Page title for the sprint list</note>
       </notes>
@@ -27453,7 +27473,7 @@
     </unit>
     <unit id="4348734030451828895">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:253</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:271</note>
         <note category="description">Accessible label of the pages home box when drafting a page</note>
       </notes>
       <segment state="translated">
@@ -27619,7 +27639,7 @@
     <unit id="57403663622654391">
       <notes>
         <note category="location">src/app/features/storage/views/storage-view.component.ts:22,25</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:400</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:403</note>
         <note category="location">src/app/workspace.routes.ts:141</note>
         <note category="description">Page title for workspace file storage</note>
       </notes>
@@ -27663,7 +27683,7 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:224</note>
         <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:31,32</note>
         <note category="location">src/app/features/pins/views/pinned-view/pinned-view.component.ts:65,67</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:250</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:253</note>
         <note category="location">src/app/workspace.routes.ts:69</note>
         <note category="description">Label on the pin control when the task is already pinned</note>
       </notes>
@@ -28468,8 +28488,8 @@
     </unit>
     <unit id="4911319983039735103">
       <notes>
-        <note category="location">src/app/features/pages/components/page-rail.component.ts:53,55</note>
-        <note category="location">src/app/features/pages/components/page-rail.component.ts:56,58</note>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:57,59</note>
+        <note category="location">src/app/features/pages/components/page-rail.component.ts:60,62</note>
         <note category="description">Heading over the tasks a page mentions</note>
       </notes>
       <segment state="translated">
@@ -29292,7 +29312,7 @@
     </unit>
     <unit id="4036781966313831213">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:251</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:269</note>
         <note category="description">Hint in the pages home box saying where an assistant draft is created</note>
       </notes>
       <segment state="translated">
@@ -29332,7 +29352,7 @@
     </unit>
     <unit id="2610280847967679840">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:163,166</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:179,182</note>
         <note category="description">Description of the pages home needs review card</note>
       </notes>
       <segment state="translated">
@@ -29513,8 +29533,8 @@
         <note category="location">src/app/features/settings/settings.routes.ts:57</note>
         <note category="location">src/app/features/settings/views/personal-general-settings-view/personal-general-settings-view.component.ts:32,35</note>
         <note category="location">src/app/features/settings/views/workspace-general-settings-view/workspace-general-settings-view.component.ts:21,24</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:336</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:422</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:339</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:425</note>
         <note category="description">Breadcrumb for general personal settings</note>
       </notes>
       <segment state="translated">
@@ -29528,7 +29548,7 @@
         <note category="location">src/app/features/settings/settings.routes.ts:83</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:66,67</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:88</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:352</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:355</note>
         <note category="location">src/app/static/components/status-filter/status-filter.component.ts:42,43</note>
         <note category="description">Filter heading for statuses</note>
       </notes>
@@ -29550,7 +29570,7 @@
     <unit id="788903633413068121">
       <notes>
         <note category="location">src/app/features/settings/settings.routes.ts:124</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:368</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:371</note>
         <note category="description">Breadcrumb for workspace service account settings</note>
       </notes>
       <segment state="translated">
@@ -29794,7 +29814,7 @@
     </unit>
     <unit id="3487164997301514763">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:142,146</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:146,150</note>
         <note category="description">Hint shown when a page cannot be found</note>
       </notes>
       <segment state="translated">
@@ -30643,8 +30663,8 @@
     </unit>
     <unit id="6441348058745652320">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:265</note>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:377</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:283</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:395</note>
         <note category="description">Accessible label of the button that sends a question to the assistant</note>
       </notes>
       <segment state="translated">
@@ -30784,7 +30804,7 @@
     </unit>
     <unit id="2395695896327760676">
       <notes>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:432</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:435</note>
         <note category="description">Sidebar link to personal notification preference settings</note>
       </notes>
       <segment state="translated">

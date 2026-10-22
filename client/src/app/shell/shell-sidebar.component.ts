@@ -135,6 +135,7 @@ export class ShellSidebarComponent {
   canReadReports = hasPermission(PERMISSIONS.reports.read);
   canReadQueries = hasPermission(PERMISSIONS.queries.read);
   canReadPages = hasPermission(PERMISSIONS.pages.read);
+  canReadTasks = hasPermission(PERMISSIONS.tasks.read);
   canRestoreTasks = hasPermission(PERMISSIONS.tasks.restore);
   canReadAssistantConversations = hasPermission(
     PERMISSIONS.assistant.readAllConversations
@@ -144,7 +145,9 @@ export class ShellSidebarComponent {
   links = computed(() => {
     const links: ShellMenuLink[] = [];
 
-    if (this.authenticated()) {
+    const canSeeDashboard = this.authenticated() || this.canReadTasks();
+
+    if (canSeeDashboard) {
       links.push({
         label: $localize`:Sidebar link to the workspace dashboard:Dashboard`,
         value: ['./dashboard'],

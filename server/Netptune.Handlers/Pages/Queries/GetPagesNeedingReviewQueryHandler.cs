@@ -28,6 +28,13 @@ public sealed class GetPagesNeedingReviewQueryHandler
         GetPagesNeedingReviewQuery request,
         CancellationToken cancellationToken)
     {
+        var isSignedIn = Identity.IsSignedIn();
+
+        if (!isSignedIn)
+        {
+            return ClientResponse<List<PageNeedingReviewViewModel>>.Success([]);
+        }
+
         var workspaceId = await Identity.GetWorkspaceId();
         var window = PageReviewWindow.At(workspaceId, DateTime.UtcNow, Take);
         var pages = await UnitOfWork.Pages.GetNeedingReview(window, cancellationToken);

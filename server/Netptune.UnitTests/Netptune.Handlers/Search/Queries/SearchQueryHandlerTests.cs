@@ -28,6 +28,7 @@ public sealed class SearchQueryHandlerTests
     {
         Handler = new SearchQueryHandler(Search, Identity, UnitOfWork);
         Identity.GetWorkspaceKey().Returns(WorkspaceSlug);
+        Identity.IsSignedIn().Returns(true);
     }
 
     [Fact]
@@ -65,6 +66,21 @@ public sealed class SearchQueryHandlerTests
 
         await Search.Received(1).SearchAsync(
             Arg.Is<GlobalSearchQuery>(query => query.IncludePages == includePages),
+            cancellationToken);
+    }
+
+    [Fact]
+    public async Task Search_ShouldLeaveOutPages_WhenNobodyIsSignedIn()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
+        Identity.IsSignedIn().Returns(false);
+        Search.SearchAsync(Arg.Any<GlobalSearchQuery>(), cancellationToken).Returns(SearchResponse());
+
+        await Handler.Handle(new SearchQuery("roadmap", IncludePages: true), cancellationToken);
+
+        await Search.Received(1).SearchAsync(
+            Arg.Is<GlobalSearchQuery>(query => !query.IncludePages),
             cancellationToken);
     }
 

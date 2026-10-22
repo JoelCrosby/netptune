@@ -47,7 +47,7 @@ public sealed class PageRepository : WorkspaceEntityRepository<DataContext, Page
             .SingleOrDefaultAsync(cancellationToken);
     }
 
-    public Task<List<PageTreeNodeViewModel>> GetTree(int workspaceId, string userId, CancellationToken cancellationToken = default)
+    public Task<List<PageTreeNodeViewModel>> GetTree(int workspaceId, string? userId, CancellationToken cancellationToken = default)
     {
         var favourites = Context.Set<PageFavourite>();
 
@@ -73,7 +73,22 @@ public sealed class PageRepository : WorkspaceEntityRepository<DataContext, Page
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<PageViewModel?> GetViewModel(int id, int workspaceId, string userId, CancellationToken cancellationToken = default)
+    public Task<List<PageVisibilityNode>> GetVisibilityNodes(int workspaceId, CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .AsNoTracking()
+            .Where(page => page.WorkspaceId == workspaceId && !page.IsDeleted && !page.IsTemplate)
+            .Select(page => new PageVisibilityNode
+            {
+                Id = page.Id,
+                ParentId = page.ParentId,
+                Kind = page.Kind,
+                Status = page.Status,
+            })
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<PageViewModel?> GetViewModel(int id, int workspaceId, string? userId, CancellationToken cancellationToken = default)
     {
         var page = await Entities
             .AsNoTracking()
@@ -84,7 +99,7 @@ public sealed class PageRepository : WorkspaceEntityRepository<DataContext, Page
         return await WithContributors(page, cancellationToken);
     }
 
-    public async Task<PageViewModel?> GetViewModelBySlug(string slug, int workspaceId, string userId, CancellationToken cancellationToken = default)
+    public async Task<PageViewModel?> GetViewModelBySlug(string slug, int workspaceId, string? userId, CancellationToken cancellationToken = default)
     {
         var exact = await Entities
             .AsNoTracking()
@@ -480,7 +495,7 @@ public sealed class PageRepository : WorkspaceEntityRepository<DataContext, Page
         UpdatedAt = page.UpdatedAt ?? page.CreatedAt,
     };
 
-    private Expression<Func<Page, PageViewModel>> ToViewModel(string userId)
+    private Expression<Func<Page, PageViewModel>> ToViewModel(string? userId)
     {
         var favourites = Context.Set<PageFavourite>();
 

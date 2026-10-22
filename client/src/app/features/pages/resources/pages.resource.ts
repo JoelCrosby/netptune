@@ -1,3 +1,4 @@
+import { HttpResourceRequest } from '@angular/common/http';
 import { inject, linkedSignal, Signal, untracked } from '@angular/core';
 import { PERMISSIONS } from '@core/auth/permissions';
 import {
@@ -16,6 +17,7 @@ import {
   requestFrom,
 } from '@core/resources/permission.resource';
 import { stableResource } from '@core/resources/stable.resource';
+import { SessionService } from '@core/services/session.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 
 export const pageTreeResource = () => {
@@ -110,7 +112,7 @@ export const pageLinksResource = (key: Signal<PageVersionsKey | undefined>) => {
 export const archivedPagesResource = () => {
   return permissionResource<ArchivedPage[]>({
     permission: PERMISSIONS.pages.read,
-    request: () => ({ url: 'api/pages/archived' }),
+    request: memberRequest({ url: 'api/pages/archived' }),
     parse: (response) => response.payload ?? [],
     defaultValue: [],
     refreshOn: ['pages'],
@@ -120,7 +122,7 @@ export const archivedPagesResource = () => {
 export const recentPagesResource = () => {
   return permissionResource<RecentPage[]>({
     permission: PERMISSIONS.pages.read,
-    request: () => ({ url: 'api/pages/recent' }),
+    request: memberRequest({ url: 'api/pages/recent' }),
     parse: (response) => response.payload ?? [],
     defaultValue: [],
     refreshOn: ['pages'],
@@ -130,7 +132,7 @@ export const recentPagesResource = () => {
 export const pagesNeedingReviewResource = () => {
   return permissionResource<PageNeedingReview[]>({
     permission: PERMISSIONS.pages.read,
-    request: () => ({ url: 'api/pages/needs-review' }),
+    request: memberRequest({ url: 'api/pages/needs-review' }),
     parse: (response) => response.payload ?? [],
     defaultValue: [],
     refreshOn: ['pages'],
@@ -145,3 +147,9 @@ export const pageChildrenResource = (pageId: Signal<number | undefined>) => {
     refreshOn: ['pages'],
   });
 };
+
+function memberRequest(request: HttpResourceRequest) {
+  const isPublicViewer = inject(SessionService).isPublicViewer;
+
+  return () => (isPublicViewer() ? undefined : request);
+}

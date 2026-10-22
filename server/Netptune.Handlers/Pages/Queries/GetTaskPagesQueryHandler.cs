@@ -3,6 +3,7 @@ using Mediator;
 using Netptune.Core.Enums;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Pages;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Pages;
 
@@ -14,11 +15,13 @@ public sealed class GetTaskPagesQueryHandler : IRequestHandler<GetTaskPagesQuery
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
+    private readonly IPageVisibilityService PageVisibility;
 
-    public GetTaskPagesQueryHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity)
+    public GetTaskPagesQueryHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity, IPageVisibilityService pageVisibility)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
+        PageVisibility = pageVisibility;
     }
 
     public async ValueTask<ClientResponse<List<PageBacklinkViewModel>>> Handle(GetTaskPagesQuery request, CancellationToken cancellationToken)
@@ -35,7 +38,9 @@ public sealed class GetTaskPagesQueryHandler : IRequestHandler<GetTaskPagesQuery
 
         var taskKey = task.Id.ToString();
         var pages = await UnitOfWork.PageLinks.GetBacklinks(PageLinkTargetType.Task, taskKey, workspaceId, cancellationToken);
+        var scope = await PageVisibility.GetScope(workspaceId, cancellationToken);
+        var visiblePages = pages.Where(page => scope.Allows(page.PageId)).ToList();
 
-        return ClientResponse<List<PageBacklinkViewModel>>.Success(pages);
+        return ClientResponse<List<PageBacklinkViewModel>>.Success(visiblePages);
     }
 }

@@ -22,6 +22,13 @@ public sealed class GetPageVersionQueryHandler : IRequestHandler<GetPageVersionQ
 
     public async ValueTask<ClientResponse<PageVersionViewModel>> Handle(GetPageVersionQuery request, CancellationToken cancellationToken)
     {
+        var isSignedIn = Identity.IsSignedIn();
+
+        if (!isSignedIn)
+        {
+            return ClientResponse<PageVersionViewModel>.NotFound;
+        }
+
         var workspaceId = await Identity.GetWorkspaceId();
         var version = await UnitOfWork.PageVersions.GetViewModel(request.VersionId, request.PageId, workspaceId, cancellationToken);
 

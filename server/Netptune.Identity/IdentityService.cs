@@ -33,6 +33,8 @@ public class IdentityService : IIdentityService
         return hasUserId ? userId : null;
     }
 
+    public bool IsSignedIn() => TryGetCurrentUserId() is not null;
+
     public string GetCurrentUserEmail() => GetClaimValue(ClaimTypes.Email);
 
     public string GetUserName()

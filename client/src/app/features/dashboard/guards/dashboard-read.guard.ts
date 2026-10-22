@@ -6,10 +6,11 @@ import { SessionService } from '@core/services/session.service';
 
 export const dashboardReadGuard: CanActivateFn = (route) => {
   const router = inject(Router);
-  const isAuthenticated = inject(SessionService).isAuthenticated();
+  const session = inject(SessionService);
+  const canView = session.isAuthenticated() || session.isPublicViewer();
   const canRead = hasPermission(PERMISSIONS.tasks.read)();
 
-  if (isAuthenticated && canRead) return true;
+  if (canView && canRead) return true;
 
   const workspace = route.pathFromRoot
     .map((snapshot) => snapshot.params['workspace'])

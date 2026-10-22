@@ -22,6 +22,13 @@ public sealed class GetArchivedPagesQueryHandler : IRequestHandler<GetArchivedPa
 
     public async ValueTask<ClientResponse<List<ArchivedPageViewModel>>> Handle(GetArchivedPagesQuery request, CancellationToken cancellationToken)
     {
+        var isSignedIn = Identity.IsSignedIn();
+
+        if (!isSignedIn)
+        {
+            return ClientResponse<List<ArchivedPageViewModel>>.Success([]);
+        }
+
         var workspaceId = await Identity.GetWorkspaceId();
         var pages = await UnitOfWork.Pages.GetArchived(workspaceId, cancellationToken);
 

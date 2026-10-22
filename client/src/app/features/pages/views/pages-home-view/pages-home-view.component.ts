@@ -17,10 +17,12 @@ import {
 import { AiAssistantService } from '@core/services/ai-assistant.service';
 import { DialogService } from '@core/services/dialog.service';
 import { PageCommandsService } from '@core/services/page-commands.service';
+import { SessionService } from '@core/services/session.service';
 import { fromNow } from '@core/util/dates';
 import { LucideFileClock, LucideHistory, LucideUpload } from '@lucide/angular';
 import { HeaderAction } from '@core/types/header-action';
 import { ChartCardComponent } from '@static/components/chart-card/chart-card.component';
+import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { PromptHeroComponent } from '@static/components/prompt-hero/prompt-hero.component';
@@ -59,6 +61,7 @@ const REVIEW_REASONS: Record<PageReviewReason, string> = {
     SectionHeaderComponent,
     TemplateCardComponent,
     ChartCardComponent,
+    EmptyStateComponent,
     PageBodyComponent,
     RowListComponent,
   ],
@@ -131,48 +134,62 @@ const REVIEW_REASONS: Record<PageReviewReason, string> = {
           </section>
         }
 
-        <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <app-chart-card
-            [flush]="true"
-            [icon]="recentIcon"
-            i18n-title="Heading over the pages the user opened recently"
-            title="Recently viewed"
-            i18n-description="
-              Description of the pages home recently viewed card
+        @if (isPublicViewer()) {
+          <app-empty-state
+            class="max-md:hidden"
+            outlined
+            i18n-title="
+              Pages home heading for someone reading a public workspace
             "
-            description="Pages you opened lately">
-            <app-row-list
-              flush
-              i18n-ariaLabel="
-                Accessible label for the list of recently viewed pages
+            title="Pick a page to read"
+            i18n-description="
+              Pages home hint for someone reading a public workspace
+            "
+            description="Published pages are listed in the sidebar." />
+        } @else {
+          <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <app-chart-card
+              [flush]="true"
+              [icon]="recentIcon"
+              i18n-title="Heading over the pages the user opened recently"
+              title="Recently viewed"
+              i18n-description="
+                Description of the pages home recently viewed card
               "
-              ariaLabel="Recently viewed pages"
-              i18n-emptyLabel="
-                Shown on pages home before the user has opened any page
-              "
-              emptyLabel="Pages you open appear here."
-              [items]="recentItems()" />
-          </app-chart-card>
+              description="Pages you opened lately">
+              <app-row-list
+                flush
+                i18n-ariaLabel="
+                  Accessible label for the list of recently viewed pages
+                "
+                ariaLabel="Recently viewed pages"
+                i18n-emptyLabel="
+                  Shown on pages home before the user has opened any page
+                "
+                emptyLabel="Pages you open appear here."
+                [items]="recentItems()" />
+            </app-chart-card>
 
-          <app-chart-card
-            [flush]="true"
-            [icon]="reviewIcon"
-            i18n-title="Heading over published pages that may be out of date"
-            title="Needs review"
-            i18n-description="Description of the pages home needs review card"
-            description="Published pages that may be out of date">
-            <app-row-list
-              flush
-              i18n-ariaLabel="
-                Accessible label for the list of pages that need review
-              "
-              ariaLabel="Pages that need review"
-              i18n-emptyLabel="Shown when no published page needs review"
-              emptyLabel="Every published page is up to date."
-              [items]="reviewItems()"
-              (actioned)="onReviewed($event)" />
-          </app-chart-card>
-        </div>
+            <app-chart-card
+              [flush]="true"
+              [icon]="reviewIcon"
+              i18n-title="Heading over published pages that may be out of date"
+              title="Needs review"
+              i18n-description="Description of the pages home needs review card"
+              description="Published pages that may be out of date">
+              <app-row-list
+                flush
+                i18n-ariaLabel="
+                  Accessible label for the list of pages that need review
+                "
+                ariaLabel="Pages that need review"
+                i18n-emptyLabel="Shown when no published page needs review"
+                emptyLabel="Every published page is up to date."
+                [items]="reviewItems()"
+                (actioned)="onReviewed($event)" />
+            </app-chart-card>
+          </div>
+        }
       </div>
     </app-page-body>
   `,
@@ -186,6 +203,7 @@ export class PagesHomeViewComponent {
   private readonly canUseAssistant = hasPermission(PERMISSIONS.assistant.use);
   private readonly canUpdate = hasPermission(PERMISSIONS.pages.update);
   private readonly recent = recentPagesResource();
+  protected readonly isPublicViewer = inject(SessionService).isPublicViewer;
   private readonly needingReview = pagesNeedingReviewResource();
 
   protected readonly canCreate = hasPermission(PERMISSIONS.pages.create);

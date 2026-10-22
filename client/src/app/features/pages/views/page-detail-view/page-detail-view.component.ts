@@ -23,6 +23,7 @@ import { prettyShortDate } from '@core/util/dates';
 import { CurrentPageService } from '@core/services/current-page.service';
 import { DialogService } from '@core/services/dialog.service';
 import { PageCommandsService } from '@core/services/page-commands.service';
+import { SessionService } from '@core/services/session.service';
 import { BreadcrumbItem } from '@static/components/breadcrumb/breadcrumb.component';
 import { injectBreadcrumbs } from '@core/services/breadcrumb.service';
 import {
@@ -81,6 +82,8 @@ import { PageTreeStore } from '../../services/page-tree.store';
               [canCreate]="canCreate()"
               [canArchive]="canArchive()"
               [canEdit]="canUpdate()"
+              [canFavourite]="!isPublicViewer()"
+              [canViewHistory]="!isPublicViewer()"
               [status]="draft.latest().status"
               [(mode)]="mode"
               [contentWidth]="contentWidth.width()"
@@ -124,6 +127,7 @@ import { PageTreeStore } from '../../services/page-tree.store';
                 [revision]="draft.latest().revision"
                 [body]="draft.body()"
                 [activeHeading]="activeHeading()"
+                [canViewHistory]="!isPublicViewer()"
                 (headingSelected)="onHeadingSelected($event)"
                 (versionSelected)="onVersionSelected(draft, $event)" />
             </app-side-panel>
@@ -157,6 +161,7 @@ export class PageDetailViewComponent {
   protected readonly contentWidth = inject(PageContentWidthService);
   protected readonly rail = inject(PageRailService);
   private readonly presence = inject(PagePresenceService);
+  protected readonly isPublicViewer = inject(SessionService).isPublicViewer;
 
   private readonly routeParams = toSignal(this.route.params, {
     initialValue: this.route.snapshot.params,
@@ -264,9 +269,14 @@ export class PageDetailViewComponent {
     effect(() => {
       const id = this.draft()?.id;
 
-      if (id !== undefined) {
+      if (id === undefined) return;
+
+      this.presence.join(id);
+
+      const isPublicViewer = this.isPublicViewer();
+
+      if (!isPublicViewer) {
         this.commands.recordVisit(id);
-        this.presence.join(id);
       }
     });
 

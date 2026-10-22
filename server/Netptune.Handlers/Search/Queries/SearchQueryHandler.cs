@@ -30,7 +30,11 @@ public sealed class SearchQueryHandler : IRequestHandler<SearchQuery, SearchResp
     {
         var workspaceSlug = Identity.GetWorkspaceKey();
         var limit = Math.Clamp(request.Limit, 1, MaximumLimit);
-        var query = new GlobalSearchQuery(request.Q, workspaceSlug, request.Types, limit, request.IncludePages);
+        var isSignedIn = Identity.IsSignedIn();
+
+        // The search index does not know which pages are published, so signed-out viewers get no page hits.
+        var includePages = request.IncludePages && isSignedIn;
+        var query = new GlobalSearchQuery(request.Q, workspaceSlug, request.Types, limit, includePages);
         var response = await Search.SearchAsync(query, cancellationToken);
         var results = await HydrateTaskResults(response.Results, workspaceSlug, cancellationToken);
         var exactTasks = await ResolveExactTasks(request, workspaceSlug, cancellationToken);

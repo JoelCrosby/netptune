@@ -25,6 +25,7 @@ public static class NetptunePermissions
         Calendar.Read,
         Reports.Read,
         Automations.Read,
+        Pages.Read,
     }.ToFrozenSet();
 
     public static IReadOnlySet<string> ResolvePublicPermissions(IEnumerable<string>? configured)
