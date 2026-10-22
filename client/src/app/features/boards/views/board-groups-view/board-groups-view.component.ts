@@ -60,12 +60,12 @@ import { HeaderAction } from '@core/types/header-action';
 import { brandingImageUrl } from '@core/util/branding';
 import { getNewSortOrder } from '@core/util/sort-order-helper';
 import {
-  LucideDelete,
   LucideEllipsisVertical,
   LucideEyeOff,
   LucideFileDown,
   LucideFileUp,
   LucideSettings2,
+  LucideTrash2,
   LucideX,
 } from '@lucide/angular';
 import { Router } from '@angular/router';
@@ -398,7 +398,8 @@ export class BoardGroupsViewComponent implements OnDestroy {
     actions.push({
       label: $localize`:Overflow action that deletes the board:Delete Board`,
       click: () => this.onDeleteBoardClicked(),
-      icon: LucideDelete,
+      icon: LucideTrash2,
+      color: 'warn',
     });
 
     return actions;

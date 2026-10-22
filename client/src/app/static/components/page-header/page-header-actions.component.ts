@@ -39,6 +39,7 @@ import { StrokedButtonComponent } from '../button/stroked-button.component';
           @for (action of overflowActions(); track action) {
             <button
               app-menu-item
+              [color]="action.color ?? 'default'"
               (click)="action.click && action.click(); menu.close()">
               @if (action.icon) {
                 <svg
