@@ -1,11 +1,4 @@
-import {
-  computed,
-  DestroyRef,
-  effect,
-  inject,
-  Injectable,
-  signal,
-} from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UpdateProjectTaskRequest } from '@app/core/models/requests/update-project-task-request';
 import { TaskEstimate } from '@core/enums/estimate-type';
@@ -19,7 +12,7 @@ import { AiAssistantService } from '@core/services/ai-assistant.service';
 import { AiWriterService } from '@core/services/ai-writer.service';
 import { SprintsService } from '@core/services/sprints.service';
 import { StorageService } from '@core/services/storage.service';
-import { CurrentTaskService } from '@core/services/current-task.service';
+import { CurrentContextService } from '@core/services/current-context.service';
 import { TaskCommandsService } from '@core/services/task-commands.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import { unwrapClientResponse } from '@core/util/rxjs-operators';
@@ -33,7 +26,7 @@ export class TaskDetailService {
   private readonly sprintsService = inject(SprintsService);
   private readonly snackbar = inject(SnackbarService);
   private readonly taskCommands = inject(TaskCommandsService);
-  private readonly currentTask = inject(CurrentTaskService);
+  private readonly currentContext = inject(CurrentContextService);
   private readonly workspaceRefresh = inject(WorkspaceRefreshService);
   private readonly assistant = inject(AiAssistantService);
   private readonly writer = inject(AiWriterService);
@@ -64,28 +57,8 @@ export class TaskDetailService {
     return this.assistant.isAvailable() && this.task() !== null;
   });
 
-  // The resource is torn down before this service's destroy hook runs, so the task
-  // it held is gone by then; remember what was published to clear it on close.
-  private publishedSystemId: string | undefined;
-
   constructor() {
-    effect(() => this.publishCurrentTask());
-    inject(DestroyRef).onDestroy(() => this.clearCurrentTask());
-  }
-
-  private publishCurrentTask() {
-    const task = this.task();
-
-    this.publishedSystemId = task?.systemId;
-    this.currentTask.set(task);
-  }
-
-  private clearCurrentTask() {
-    const systemId = this.publishedSystemId;
-
-    if (!systemId) return;
-
-    this.currentTask.clearIfCurrent(systemId);
+    this.currentContext.publish('task', this.task);
   }
 
   show(systemId: string) {

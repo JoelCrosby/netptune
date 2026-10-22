@@ -13,7 +13,7 @@ import { Selected } from '@core/models/selected';
 import { Status } from '@core/models/status';
 import { boardViewResource } from '@core/resources/board-view.resource';
 import { buildTaskFilterRouteParams } from '@core/router/task-filter-route-params';
-import { CurrentBoardService } from '@core/services/current-board.service';
+import { CurrentContextService } from '@core/services/current-context.service';
 import { TaskFilterService } from '@core/services/task-filter.service';
 import { ProjectTasksHubService } from '@core/services/tasks-hub.service';
 import { moveTaskInGroups, sortBySortOrder } from '@core/util/board-groups';
@@ -23,7 +23,7 @@ export class BoardViewService {
   private readonly router = inject(Router);
   private readonly filters = inject(TaskFilterService);
   private readonly hub = inject(ProjectTasksHubService);
-  private readonly currentBoard = inject(CurrentBoardService);
+  private readonly currentContext = inject(CurrentContextService);
 
   private readonly openIdentifier = signal<string | undefined>(undefined);
 
@@ -78,17 +78,17 @@ export class BoardViewService {
     });
   });
 
+  // Reading the value of a failed resource throws, which happens when switching
+  // workspace reloads this board under the new one, so check before reading.
+  private readonly openBoard = computed(() => {
+    const loadFailed = !!this.resource.error();
+
+    return loadFailed ? undefined : this.board();
+  });
+
   constructor() {
     this.leaveOnLoadFailure();
-
-    /* The assistant asks what the user is looking at, from outside this view. */
-    // Reading the value of a failed resource throws, which happens when switching
-    // workspace reloads this board under the new one, so check before reading.
-    effect(() => {
-      const loadFailed = !!this.resource.error();
-
-      this.currentBoard.set(loadFailed ? undefined : this.board());
-    });
+    this.currentContext.publish('board', this.openBoard);
   }
 
   open(identifier: string) {

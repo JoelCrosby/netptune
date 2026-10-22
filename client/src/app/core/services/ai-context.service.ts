@@ -5,11 +5,8 @@ import {
   contextChipKey,
 } from '@core/models/ai-context';
 import { CurrentRouteService } from '@core/router/current-route.service';
-import { CurrentBoardService } from '@core/services/current-board.service';
-import { CurrentPageService } from '@core/services/current-page.service';
+import { CurrentContextService } from '@core/services/current-context.service';
 import { CurrentProjectService } from '@core/services/current-project.service';
-import { CurrentSprintService } from '@core/services/current-sprint.service';
-import { CurrentTaskService } from '@core/services/current-task.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import {
   boardChip,
@@ -32,11 +29,12 @@ import { onChange } from '@core/util/signals';
 export class AiContextService {
   private readonly url = inject(CurrentRouteService).url;
   private readonly workspace = inject(CurrentWorkspaceService).slug;
+  private readonly currentContext = inject(CurrentContextService);
   private readonly project = inject(CurrentProjectService).open;
-  private readonly board = inject(CurrentBoardService).board;
-  private readonly sprint = inject(CurrentSprintService).sprint;
-  private readonly task = inject(CurrentTaskService).task;
-  private readonly page = inject(CurrentPageService).page;
+  private readonly board = this.currentContext.board;
+  private readonly sprint = this.currentContext.sprint;
+  private readonly task = this.currentContext.task;
+  private readonly page = this.currentContext.page;
 
   private readonly removed = signal<ReadonlySet<string>>(new Set());
 

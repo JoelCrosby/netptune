@@ -20,7 +20,7 @@ import {
   PageVersionSummary,
 } from '@core/models/pages';
 import { prettyShortDate } from '@core/util/dates';
-import { CurrentPageService } from '@core/services/current-page.service';
+import { CurrentContextService } from '@core/services/current-context.service';
 import { DialogService } from '@core/services/dialog.service';
 import { PageCommandsService } from '@core/services/page-commands.service';
 import { SessionService } from '@core/services/session.service';
@@ -158,7 +158,7 @@ export class PageDetailViewComponent {
   private readonly dialogs = inject(DialogService);
   private readonly editor = viewChild(PageEditorComponent);
   private readonly scrollSpy = viewChild(ScrollSpyDirective);
-  private readonly currentPage = inject(CurrentPageService);
+  private readonly currentContext = inject(CurrentContextService);
   protected readonly contentWidth = inject(PageContentWidthService);
   protected readonly rail = inject(PageRailService);
   private readonly presence = inject(PagePresenceService);
@@ -253,6 +253,18 @@ export class PageDetailViewComponent {
     return [...ancestors, { id: draft.id, label: titleOf(draft) }];
   });
 
+  private readonly currentPage = computed(() => {
+    const isLoaded = this.detail.hasValue();
+
+    if (!isLoaded) return undefined;
+
+    const draft = this.draft();
+
+    if (!draft) return undefined;
+
+    return { id: draft.id, slug: draft.latest().slug, title: titleOf(draft) };
+  });
+
   constructor() {
     injectBreadcrumbs(
       () => this.breadcrumbs(),
@@ -295,25 +307,9 @@ export class PageDetailViewComponent {
       }
     });
 
-    effect(() => {
-      const draft = this.draft();
+    this.currentContext.publish('page', this.currentPage);
 
-      if (!draft) return;
-
-      const slug = draft.latest().slug;
-
-      this.currentPage.set({ id: draft.id, slug, title: titleOf(draft) });
-    });
-
-    inject(DestroyRef).onDestroy(() => {
-      const id = untracked(this.draft)?.id;
-
-      this.presence.leave();
-
-      if (id !== undefined) {
-        this.currentPage.clearIfCurrent(id);
-      }
-    });
+    inject(DestroyRef).onDestroy(() => this.presence.leave());
   }
 
   private applyRemote(page: PageDetail) {

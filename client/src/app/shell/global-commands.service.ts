@@ -29,7 +29,7 @@ import {
   DEFAULT_TASK_DETAIL_LAYOUT,
   TaskDetailLayout,
 } from '@entry/dialogs/task-detail-dialog/task-detail-layout';
-import { CurrentTaskService } from '@core/services/current-task.service';
+import { CurrentContextService } from '@core/services/current-context.service';
 import { PageKind } from '@core/models/pages';
 import { PageCommandsService } from '@core/services/page-commands.service';
 import { PinCommandsService } from '@core/services/pin-commands.service';
@@ -51,7 +51,7 @@ export class GlobalCommandsService implements OnDestroy {
   private preferences = inject(UserPreferencesService);
   private authenticated = inject(SessionService).isAuthenticated;
   private keyboard = inject(KeyboardService);
-  private currentTask = inject(CurrentTaskService);
+  private currentTask = inject(CurrentContextService).task;
   private pinCommands = inject(PinCommandsService);
   private pageCommands = inject(PageCommandsService);
 
@@ -556,7 +556,7 @@ export class GlobalCommandsService implements OnDestroy {
       if (typing) return;
 
       untracked(() => {
-        const task = this.currentTask.task();
+        const task = this.currentTask();
 
         if (!task) return;
 

@@ -7,7 +7,7 @@ import { BoardViewModel } from '@core/models/view-models/board-view-model';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
-import { CurrentPage } from '@core/services/current-page.service';
+import { CurrentPage } from '@core/services/current-context.service';
 import { referenceRoute } from '@core/util/ai-references';
 
 const SECTIONS: Record<string, string> = {

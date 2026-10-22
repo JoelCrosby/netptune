@@ -1,12 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import {
-  Component,
-  DestroyRef,
-  computed,
-  effect,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,7 +7,7 @@ import { CreateTaskDialogComponent } from '@app/entry/dialogs/create-task-dialog
 import { PERMISSIONS } from '@core/auth/permissions';
 import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-view-model';
 import { ConfirmationService } from '@core/services/confirmation.service';
-import { CurrentSprintService } from '@core/services/current-sprint.service';
+import { CurrentContextService } from '@core/services/current-context.service';
 import { DialogService } from '@core/services/dialog.service';
 import { sprintDetailResource } from '@core/resources/sprint.resource';
 import { SprintCommandsService } from '@core/services/sprint-commands.service';
@@ -116,8 +109,7 @@ export class SprintDetailViewComponent {
 
   readonly identifier = signal<string | null>(null);
   private readonly sprintCommands = inject(SprintCommandsService);
-  private readonly currentSprint = inject(CurrentSprintService);
-  private publishedSprintId: number | undefined;
+  private readonly currentContext = inject(CurrentContextService);
   private readonly sprintResourceRef = sprintDetailResource(
     computed(() => this.identifier() ?? undefined)
   );
@@ -191,27 +183,7 @@ export class SprintDetailViewComponent {
         }
       });
 
-    effect(() => this.publishCurrentSprint());
-
-    inject(DestroyRef).onDestroy(() => this.clearCurrentSprint());
-  }
-
-  // Reading the value of a failed resource throws, which happens when switching
-  // workspace reloads this sprint under the new one, so check before reading.
-  private publishCurrentSprint() {
-    const resource = this.sprintResourceRef;
-    const sprint = resource.hasValue() ? resource.value() : undefined;
-
-    this.publishedSprintId = sprint?.id;
-    this.currentSprint.set(sprint);
-  }
-
-  private clearCurrentSprint() {
-    const sprintId = this.publishedSprintId;
-
-    if (sprintId === undefined) return;
-
-    this.currentSprint.clearIfCurrent(sprintId);
+    this.currentContext.publish('sprint', this.loadedSprint);
   }
 
   reload() {
