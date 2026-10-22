@@ -96,7 +96,8 @@ import { PageTreeStore } from '../../services/page-tree.store';
               (linkCopied)="onCopyLink()"
               (archived)="onArchive(page)"
               (statusChanged)="onStatusChanged(draft, $event)"
-              (historyRequested)="onHistoryRequested()" />
+              (historyRequested)="onHistoryRequested()"
+              (exportRequested)="onExport(draft)" />
 
             <div
               class="min-h-0 flex-1 overflow-y-auto"
@@ -352,6 +353,13 @@ export class PageDetailViewComponent {
     this.commands.archive(page).subscribe(() => {
       void this.router.navigate(this.store.homeLink());
     });
+  }
+
+  protected onExport(draft: PageDraft) {
+    this.editor()?.flush();
+    const title = draft.title().trim() || draft.latest().title;
+
+    this.commands.export(title, draft.body());
   }
 
   protected onStatusChanged(draft: PageDraft, status: PageStatus) {

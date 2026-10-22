@@ -10,7 +10,9 @@ import {
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { PagesService } from '@core/services/pages.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
+import { downloadFile } from '@core/util/download-helper';
 import { getErrorMessage } from '@core/util/error-message';
+import { toUrlSlug } from '@core/util/strings';
 import {
   requireSuccess,
   unwrapClientResponse,
@@ -145,6 +147,17 @@ export class PageCommandsService {
     });
   }
 
+  // The title goes in as a leading heading, which the markdown import reads back as the page title.
+  export(title: string, body: string) {
+    const markdown = body ? `# ${title}\n\n${body}\n` : `# ${title}\n`;
+    const file = new Blob([markdown], { type: 'text/markdown;charset=utf-8' });
+    const filename = `${toUrlSlug(title) || 'page'}.md`;
+
+    downloadFile(file, filename).catch((error: unknown) => {
+      this.report(error, exportFailed);
+    });
+  }
+
   markReviewed(id: number) {
     this.pages
       .markReviewed(id)
@@ -190,6 +203,7 @@ const createFailed = $localize`:Error shown when creating a page fails:The page 
 const moveFailed = $localize`:Error shown when moving a page in the tree fails:The page couldn't be moved.`;
 const archiveFailed = $localize`:Error shown when archiving a page fails:The page couldn't be archived.`;
 const restoreFailed = $localize`:Error shown when restoring an archived page fails:The page couldn't be restored.`;
+const exportFailed = $localize`:Error shown when downloading a page as a markdown file fails:The page couldn't be exported.`;
 const importFailed = $localize`:Error shown when importing markdown files as pages fails:The files couldn't be imported.`;
 
 function importedMessage(result: ImportPagesResult): string {

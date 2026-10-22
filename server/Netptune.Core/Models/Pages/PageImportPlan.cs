@@ -131,6 +131,6 @@ public static partial class PageImportPlan
         }
     }
 
-    [GeneratedRegex(@"\A\s*#[ \t]+(?<title>[^\n]+?)[ \t#]*(\n|\z)")]
+    [GeneratedRegex(@"\A\s*#[ \t]+(?<title>[^\n]+?)(?:[ \t]+#+)?[ \t]*(\n|\z)")]
     private static partial Regex LeadingHeadingPattern();
 }

@@ -437,7 +437,7 @@
     </unit>
     <unit id="3357404710327931870">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:215</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:229</note>
         <note category="description">Confirmation shown after an archived page is deleted for good</note>
       </notes>
       <segment state="translated">
@@ -516,7 +516,7 @@
     </unit>
     <unit id="1205822916208418969">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:221</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:235</note>
         <note category="description">Body of the dialog confirming a page is archived</note>
       </notes>
       <segment state="translated">
@@ -586,7 +586,7 @@
     </unit>
     <unit id="8198968372594669406">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:197,200</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:200,203</note>
         <note category="description">Menu item that moves a published page back to draft</note>
       </notes>
       <segment state="translated">
@@ -1024,6 +1024,16 @@
         <target>Sprints erstellen</target>
       </segment>
     </unit>
+    <unit id="4383507700364787846">
+      <notes>
+        <note category="location">src/app/core/services/page-commands.service.ts:206</note>
+        <note category="description">Error shown when downloading a page as a markdown file fails</note>
+      </notes>
+      <segment state="initial">
+        <source>The page couldn&apos;t be exported.</source>
+        <target>Die Seite konnte nicht exportiert werden.</target>
+      </segment>
+    </unit>
     <unit id="4390635106652893166">
       <notes>
         <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:296</note>
@@ -1077,7 +1087,7 @@
     </unit>
     <unit id="4394924118608662801">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:262</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:282</note>
         <note category="description">Accessible label for the toggle that lets a page&apos;s writing run the full width of the editor</note>
       </notes>
       <segment state="translated">
@@ -1350,7 +1360,7 @@
     </unit>
     <unit id="8826681798176849723">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:213</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:227</note>
         <note category="description">Confirmation shown after an earlier version of a page is restored</note>
       </notes>
       <segment state="translated">
@@ -1471,7 +1481,7 @@
     </unit>
     <unit id="4218369478454644471">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:245</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:259</note>
         <note category="description">Body of the dialog confirming a folder is archived</note>
       </notes>
       <segment state="translated">
@@ -2215,10 +2225,10 @@
         <note category="location">src/app/core/services/board-group-commands.service.ts:324</note>
         <note category="location">src/app/core/services/confirmation.service.ts:12</note>
         <note category="location">src/app/core/services/notification-commands.service.ts:75</note>
-        <note category="location">src/app/core/services/page-commands.service.ts:223</note>
-        <note category="location">src/app/core/services/page-commands.service.ts:231</note>
-        <note category="location">src/app/core/services/page-commands.service.ts:239</note>
-        <note category="location">src/app/core/services/page-commands.service.ts:247</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:237</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:245</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:253</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:261</note>
         <note category="location">src/app/core/services/project-commands.service.ts:69</note>
         <note category="location">src/app/core/services/tag-commands.service.ts:78</note>
         <note category="location">src/app/core/services/task-archive.service.ts:40</note>
@@ -2427,7 +2437,7 @@
     </unit>
     <unit id="3795755932820482964">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:202</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:216</note>
         <note category="description">Shown after markdown files were imported as pages</note>
       </notes>
       <segment state="translated">
@@ -2828,7 +2838,7 @@
     </unit>
     <unit id="548997937116395361">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:201</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:215</note>
         <note category="description">Shown after a single markdown file was imported as a page</note>
       </notes>
       <segment state="translated">
@@ -3584,7 +3594,7 @@
     </unit>
     <unit id="4135402603013824809">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:212</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:226</note>
         <note category="description">Error shown when restoring an earlier version of a page fails</note>
       </notes>
       <segment state="translated">
@@ -3735,7 +3745,7 @@
     </unit>
     <unit id="2275328567992347600">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:144,146</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:145,147</note>
         <note category="description">Shown when the requested page does not exist or was archived</note>
       </notes>
       <segment state="translated">
@@ -4328,8 +4338,8 @@
     </unit>
     <unit id="2075279880931649711">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:236</note>
-        <note category="location">src/app/core/services/page-commands.service.ts:238</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:250</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:252</note>
         <note category="description">Title of the dialog confirming an archived folder is deleted for good</note>
       </notes>
       <segment state="translated">
@@ -4773,7 +4783,7 @@
     </unit>
     <unit id="7440923050870641719">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:95,99</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:97,101</note>
         <note category="description">Accessible label for the switch between the rich and markdown editor</note>
       </notes>
       <segment state="translated">
@@ -7208,7 +7218,7 @@
     </unit>
     <unit id="5170889864683436620">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:214</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:228</note>
         <note category="description">Confirmation shown after a page is archived</note>
       </notes>
       <segment state="translated">
@@ -8702,7 +8712,7 @@
     </unit>
     <unit id="1663903229329909090">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:274</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:294</note>
         <note category="description">Accessible label for the toggle that shows or hides the panel beside a page</note>
       </notes>
       <segment state="translated">
@@ -8986,7 +8996,7 @@
     </unit>
     <unit id="1479642863135924755">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:211</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:225</note>
         <note category="description">Error shown when adding or removing a page favourite fails</note>
       </notes>
       <segment state="translated">
@@ -9117,6 +9127,16 @@
       <segment state="translated">
         <source>No tasks match your search.</source>
         <target>Keine Aufgaben entsprechen Ihrer Suche.</target>
+      </segment>
+    </unit>
+    <unit id="5939896076435837911">
+      <notes>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:219,224</note>
+        <note category="description">Menu item that downloads the open page as a markdown file</note>
+      </notes>
+      <segment state="initial">
+        <source>Export as Markdown</source>
+        <target>Als Markdown exportieren</target>
       </segment>
     </unit>
     <unit id="1446670643492611810">
@@ -10137,7 +10157,7 @@
     </unit>
     <unit id="5479973736305481005">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:206</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:220</note>
         <note category="description">Shown after an import of a single page that left some files out</note>
       </notes>
       <segment state="translated">
@@ -10157,7 +10177,7 @@
     </unit>
     <unit id="9203983883403011576">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:191</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:204</note>
         <note category="description">Error shown when archiving a page fails</note>
       </notes>
       <segment state="translated">
@@ -10983,7 +11003,7 @@
     </unit>
     <unit id="319428593796731470">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:193</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:207</note>
         <note category="description">Error shown when importing markdown files as pages fails</note>
       </notes>
       <segment state="translated">
@@ -11997,7 +12017,7 @@
     </unit>
     <unit id="6178346760391748598">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:229</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:243</note>
         <note category="description">Body of the dialog confirming an archived page is deleted for good</note>
       </notes>
       <segment state="translated">
@@ -12142,7 +12162,7 @@
     </unit>
     <unit id="8666730504824237140">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:295</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:325</note>
         <note category="description">Option that shows a page as formatted text</note>
       </notes>
       <segment state="translated">
@@ -13477,7 +13497,7 @@
     </unit>
     <unit id="8304423617415800133">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:167,170</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:170,173</note>
         <note category="description">Menu item that removes a page from favourites</note>
       </notes>
       <segment state="translated">
@@ -14176,7 +14196,7 @@
     </unit>
     <unit id="3787321817465559173">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:171,174</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:174,177</note>
         <note category="description">Menu item that adds a page to favourites</note>
       </notes>
       <segment state="translated">
@@ -14435,7 +14455,7 @@
     </unit>
     <unit id="5234544449365538384">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:429</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:435</note>
         <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:326</note>
         <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:362</note>
         <note category="description">Shown when a page link could not be copied</note>
@@ -14549,7 +14569,7 @@
     </unit>
     <unit id="2490468446168750289">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:189</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:202</note>
         <note category="description">Error shown when creating a page fails</note>
       </notes>
       <segment state="translated">
@@ -14661,7 +14681,7 @@
     </unit>
     <unit id="7153255681393081191">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:299</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:329</note>
         <note category="description">Option that shows a page as raw markdown</note>
       </notes>
       <segment state="translated">
@@ -16432,7 +16452,7 @@
     </unit>
     <unit id="6997967012661620403">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:217</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:231</note>
         <note category="description">Confirmation shown after an archived page is restored</note>
       </notes>
       <segment state="translated">
@@ -16548,7 +16568,7 @@
     <unit id="3640373857486272611">
       <notes>
         <note category="location">src/app/features/pages/components/page-rail.component.ts:107,109</note>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:125,127</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:127,129</note>
         <note category="description">Accessible label for the list of saved versions of a page</note>
       </notes>
       <segment state="translated">
@@ -17262,7 +17282,7 @@
     </unit>
     <unit id="2707695310412416681">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:216</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:230</note>
         <note category="description">Error shown when deleting an archived page for good fails</note>
       </notes>
       <segment state="translated">
@@ -18333,7 +18353,7 @@
     <unit id="7869199587095613616">
       <notes>
         <note category="location">src/app/features/pages/components/page-editor.component.ts:296,297</note>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:427</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:433</note>
         <note category="location">src/app/static/components/branding-preview/branding-preview.component.ts:156</note>
         <note category="description">Placeholder in an empty page title</note>
       </notes>
@@ -18591,7 +18611,7 @@
     </unit>
     <unit id="5116679637427656902">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:184,189</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:187,192</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:205</note>
         <note category="description">Menu item that creates a page inside the open page</note>
       </notes>
@@ -18813,7 +18833,7 @@
     </unit>
     <unit id="1022106416065199935">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:151,153</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:154,156</note>
         <note category="description">Accessible label for the button that opens the page action menu</note>
       </notes>
       <segment state="translated">
@@ -20273,7 +20293,7 @@
     <unit id="1055686627716339120">
       <notes>
         <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:66</note>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:215,218</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:233,236</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:284</note>
         <note category="location">src/app/features/pages/pages.routes.ts:13</note>
         <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:44</note>
@@ -21970,7 +21990,7 @@
     </unit>
     <unit id="7050417113599636550">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:210</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:224</note>
         <note category="description">Error shown when marking a page as reviewed fails</note>
       </notes>
       <segment state="translated">
@@ -23623,7 +23643,7 @@
     </unit>
     <unit id="7430416142942514215">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:201,204</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:205,208</note>
         <note category="description">Menu item that publishes a draft page</note>
       </notes>
       <segment state="translated">
@@ -23807,7 +23827,7 @@
     </unit>
     <unit id="4525703526182627629">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:207</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:221</note>
         <note category="description">Shown after an import that left some files out</note>
       </notes>
       <segment state="translated">
@@ -23972,7 +23992,7 @@
     </unit>
     <unit id="892073694820881630">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:428</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:434</note>
         <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:321</note>
         <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:357</note>
         <note category="description">Confirmation that a page link was copied</note>
@@ -25454,7 +25474,7 @@
     </unit>
     <unit id="2949537818776440189">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:192</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:205</note>
         <note category="description">Error shown when restoring an archived page fails</note>
       </notes>
       <segment state="translated">
@@ -26845,7 +26865,7 @@
     </unit>
     <unit id="7419704019640008953">
       <notes>
-        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:138,143</note>
+        <note category="location">src/app/features/pages/components/page-toolbar.component.ts:140,144</note>
         <note category="description">Button that copies a link to share the open page</note>
       </notes>
       <segment state="translated">
@@ -27084,8 +27104,8 @@
     </unit>
     <unit id="4469230288436513410">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:228</note>
-        <note category="location">src/app/core/services/page-commands.service.ts:230</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:242</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:244</note>
         <note category="description">Title of the dialog confirming an archived page is deleted for good</note>
       </notes>
       <segment state="translated">
@@ -27483,7 +27503,7 @@
     </unit>
     <unit id="6667211785603976230">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:237</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:251</note>
         <note category="description">Body of the dialog confirming an archived folder is deleted for good</note>
       </notes>
       <segment state="translated">
@@ -28093,8 +28113,8 @@
     </unit>
     <unit id="8329380997135897984">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:220</note>
-        <note category="location">src/app/core/services/page-commands.service.ts:222</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:234</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:236</note>
         <note category="description">Title of the dialog confirming a page is archived</note>
       </notes>
       <segment state="translated">
@@ -29432,8 +29452,8 @@
     </unit>
     <unit id="6662135835508534133">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:244</note>
-        <note category="location">src/app/core/services/page-commands.service.ts:246</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:258</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:260</note>
         <note category="description">Title of the dialog confirming a folder is archived</note>
       </notes>
       <segment state="translated">
@@ -29814,7 +29834,7 @@
     </unit>
     <unit id="3487164997301514763">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:146,150</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:147,151</note>
         <note category="description">Hint shown when a page cannot be found</note>
       </notes>
       <segment state="translated">
@@ -30185,7 +30205,7 @@
     </unit>
     <unit id="2142361343554969922">
       <notes>
-        <note category="location">src/app/core/services/page-commands.service.ts:190</note>
+        <note category="location">src/app/core/services/page-commands.service.ts:203</note>
         <note category="description">Error shown when moving a page in the tree fails</note>
       </notes>
       <segment state="translated">

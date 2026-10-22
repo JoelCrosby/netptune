@@ -12,6 +12,7 @@ import {
   LucideArchive,
   LucideEllipsis,
   LucideFileCheck,
+  LucideFileDown,
   LucideFilePen,
   LucideFilePlus,
   LucideFoldHorizontal,
@@ -56,6 +57,7 @@ import {
     LucideStar,
     LucideEllipsis,
     LucideFileCheck,
+    LucideFileDown,
     LucideFilePen,
     LucideFilePlus,
     LucideHistory,
@@ -206,6 +208,19 @@ import {
             </button>
           }
 
+          @if (isDocument()) {
+            <button
+              app-menu-item
+              type="button"
+              (click)="moreMenu.close(); exportRequested.emit()">
+              <svg lucideFileDown class="h-4 w-4 shrink-0"></svg>
+              <span
+                i18n="Menu item that downloads the open page as a markdown file"
+                >Export as Markdown</span
+              >
+            </button>
+          }
+
           @if (canArchive()) {
             <app-menu-separator />
 
@@ -262,6 +277,7 @@ export class PageToolbarComponent {
   readonly archived = output();
   readonly statusChanged = output<PageStatus>();
   readonly historyRequested = output();
+  readonly exportRequested = output();
 
   protected readonly contentWidthLabel = $localize`:Accessible label for the toggle that lets a page's writing run the full width of the editor:Full width`;
 
@@ -291,6 +307,7 @@ export class PageToolbarComponent {
 
   protected readonly hasMenuActions = computed(() => {
     return (
+      this.isDocument() ||
       this.canFavourite() ||
       this.canCreate() ||
       this.canEdit() ||

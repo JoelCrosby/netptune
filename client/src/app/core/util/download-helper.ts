@@ -6,22 +6,31 @@ export const downloadFile = async (
   a.setAttribute('style', 'display: none');
   document.body.appendChild(a);
 
-  return new Promise((resovle) => {
+  return new Promise((resolve, reject) => {
     setTimeout(() => {
-      const url = URL.createObjectURL(file);
-      a.href = url;
-      a.rel = 'noopener noreferrer';
-      a.download = filename;
-      a.dispatchEvent(
-        new MouseEvent('click', {
-          bubbles: true,
-          cancelable: true,
-          view: window,
-        })
-      );
-      document.body.removeChild(a);
+      try {
+        const url = URL.createObjectURL(file);
+        a.href = url;
+        a.rel = 'noopener noreferrer';
+        a.download = filename;
+        a.dispatchEvent(
+          new MouseEvent('click', {
+            bubbles: true,
+            cancelable: true,
+            view: window,
+          })
+        );
+        setTimeout(() => URL.revokeObjectURL(url), revokeDelayMs);
 
-      resovle();
+        resolve();
+      } catch (error: unknown) {
+        reject(error);
+      } finally {
+        document.body.removeChild(a);
+      }
     }, 0);
   });
 };
+
+// Safari cancels a download whose object URL is revoked in the same task as the click.
+const revokeDelayMs = 1000;

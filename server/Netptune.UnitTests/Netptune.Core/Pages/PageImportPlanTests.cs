@@ -35,6 +35,18 @@ public class PageImportPlanTests
         node.Body.Should().Be("## Steps\n\n- One");
     }
 
+    [Theory]
+    [InlineData("# Learning C#\n\nBody", "Learning C#")]
+    [InlineData("# Release notes ##\n\nBody", "Release notes")]
+    [InlineData("# Release notes #   \n\nBody", "Release notes")]
+    public void Build_ShouldOnlyStripAClosingSequenceFromTheHeading(string content, string title)
+    {
+        var node = PageImportPlan.Build([new PageImportFile("notes.md", content)]).Single();
+
+        node.Title.Should().Be(title);
+        node.Body.Should().Be("Body");
+    }
+
     [Fact]
     public void Build_ShouldFallBackToTheFileName_WhenThePageDoesNotOpenWithAHeading()
     {
