@@ -50,6 +50,16 @@ pnpm start
 
 The development client runs on `http://localhost:6400`. The app launch profile uses `http://localhost:7400` and `https://localhost:7401`; the API profile uses `http://localhost:7500` and `https://localhost:7501`.
 
+### Cluster-parity mode
+
+To reproduce problems that only appear in the cluster, start the AppHost with its `cluster-parity` launch profile:
+
+```bash
+dotnet run --project server/Netptune.AppHost/Netptune.AppHost.csproj --launch-profile cluster-parity
+```
+
+This builds the client and website from their Dockerfiles and serves everything through a Traefik edge on port 8000. The edge reproduces the chart's Gateway routes on `netptune.localhost`, `app.netptune.localhost`, `api.netptune.localhost` and `www.netptune.localhost`. The app and API run as `Production` on ports 7400 and 7600, with the chart's forwarded-header, trusted-proxy and memory settings. Seed data is not loaded. `DEPLOYMENT.md` lists what the mode covers and what it leaves out.
+
 ## Production deployment
 
 Use the [Kubernetes / Helm guide](/docs/kubernetes) for the deployment path represented by the current repository.

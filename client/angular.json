@@ -107,6 +107,14 @@
               "localize": true,
               "i18nMissingTranslation": "warning"
             },
+            "localhost": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.localhost.ts"
+                }
+              ]
+            },
             "development-fr": {
               "optimization": false,
               "extractLicenses": false,

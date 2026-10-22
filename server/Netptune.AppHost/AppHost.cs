@@ -30,14 +30,11 @@ var meilisearch = builder
     .WithDataVolume()
     .WithLifetime(ContainerLifetime.Persistent);
 
-var seedData = builder
-    .AddProject<Projects.Netptune_SeedData>("seed-data")
-    .WithPostgres(postgresdb)
-    .WithParentRelationship(postgresdb);
+var seedData = builder.AddSeedData(postgresdb);
 
 var jobs = builder
-    .AddProject<Projects.Netptune_JobServer>("jobs")
-    .WaitForCompletion(seedData)
+    .AddNetptuneProject<Projects.Netptune_JobServer>("jobs")
+    .WaitForSeedData(seedData)
     .WithCache(cache)
     .WithPostgres(postgresdb)
     .WithNats(nats)
@@ -45,15 +42,15 @@ var jobs = builder
     .WithReference(meilisearch);
 
 var activity = builder
-    .AddProject<Projects.Netptune_ActivityServer>("activity")
-    .WaitForCompletion(seedData)
+    .AddNetptuneProject<Projects.Netptune_ActivityServer>("activity")
+    .WaitForSeedData(seedData)
     .WithCache(cache)
     .WithPostgres(postgresdb)
     .WithNats(nats);
 
 var app = builder
-    .AddProject<Projects.Netptune_App>("app")
-    .WaitForCompletion(seedData)
+    .AddNetptuneProject<Projects.Netptune_App>("app", ClusterParity.AppPort)
+    .WaitForSeedData(seedData)
     .WithJobServer(jobs)
     .WithCache(cache)
     .WithPostgres(postgresdb)
@@ -63,13 +60,26 @@ var app = builder
     .WithExternalHttpEndpoints();
 
 var api = builder
-    .AddProject<Projects.Netptune_Api>("api")
-    .WaitForCompletion(seedData)
+    .AddNetptuneProject<Projects.Netptune_Api>("api", ClusterParity.ApiPort)
+    .WaitForSeedData(seedData)
     .WithCache(cache)
     .WithPostgres(postgresdb)
     .WithNats(nats)
     .WaitFor(meilisearch)
     .WithReference(meilisearch)
     .WithExternalHttpEndpoints();
+
+builder.AddClusterParity(new NetptuneResources
+{
+    Cache = cache,
+    Postgres = postgres,
+    PostgresDatabase = postgresdb,
+    Nats = nats,
+    Meilisearch = meilisearch,
+    Jobs = jobs,
+    Activity = activity,
+    App = app,
+    Api = api,
+});
 
 builder.Build().Run();

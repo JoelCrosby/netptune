@@ -176,6 +176,62 @@ npm install
 npm start
 ```
 
+### Cluster-parity mode
+
+The `cluster-parity` launch profile brings up a stack that routes and runs like the cluster, for
+reproducing problems that only show up there. The default profile is unchanged.
+
+```bash
+cd server
+dotnet run --project Netptune.AppHost --launch-profile cluster-parity
+```
+
+It runs the client and website from their Dockerfiles behind a Traefik edge (the cluster's
+`traefik:v3.6.13`) on port 8000. Its routes and middlewares in `server/Netptune.AppHost/Edge/`
+mirror the chart's HTTPRoutes and `middleware.yaml`:
+
+| Host                                 | Routes like       |
+| ------------------------------------ | ----------------- |
+| `http://netptune.localhost:8000`     | `ingress.host`    |
+| `http://app.netptune.localhost:8000` | `ingress.appHost` |
+| `http://api.netptune.localhost:8000` | `ingress.apiHost` |
+| `http://www.netptune.localhost:8000` | `website.host`    |
+
+Browsers resolve `*.localhost` to loopback and treat it as a secure context, so the `Secure` auth
+cookies work over plain http.
+
+Compared with the default profile:
+
+- **Services.** app and api listen on 7400 and 7600, the pods' ports, bound to loopback. The profile
+  turns on Aspire's container tunnel so the edge and the client's nginx can still reach them. All four
+  servers run as `Production`, without the launch profiles or `appsettings.Development.json`. They
+  get the chart's config keys as `Section__Key` env vars: forwarded headers, trusted proxies, Origin
+  and CORS, the `Ai__*` limits and the OTLP retry. Turnstile uses Cloudflare's test keys.
+  `DOTNET_GCHeapHardLimit` reproduces the heap cap a 512Mi pod limit imposes.
+- **Edge.** Traefik stamps `X-Netptune-Edge` with a generated secret on every request, standing in
+  for the Cloudflare Transform Rule. A `CF-Connecting-IP` sent through port 8000 is believed, so rate
+  limits partition per address. Sent straight to 7400 it is ignored, as at an unprotected origin.
+- **Backing services.** These are the same containers as the default profile, so data is shared.
+  They get the chart's memory limits. Valkey gets `maxmemory 320mb` with `volatile-lru` and
+  appendonly persistence, and Meilisearch gets `MEILI_ENV=production`. Switching profile recreates
+  the containers but keeps their volumes. Valkey has no volume in the default profile, so its
+  contents, including the DataProtection key ring, go with each switch and you have to sign in again.
+- **No seeding.** seed-data is skipped. Each service creates the schema on startup, as in the
+  cluster, so a fresh volume starts empty and you register a user.
+- **Scheduled work.** `activity-retention` runs `--job retention` and `postgres-backup` runs the
+  backup's `pg_dump` and verify step into the `netptune-postgres-backup` volume. Both are explicit
+  start, so start them from the dashboard. Retention archives to whichever bucket the shell's
+  `Storage__S3__*` settings name before deleting rows; the backup never uploads.
+
+The cluster-parity mode builds container images. Aspire builds them with `docker build`, which
+needs the buildx plugin. On a rootless Podman machine without it, set
+`ASPIRE_CONTAINER_RUNTIME=podman` before running.
+
+Not reproduced: TLS and the http→https redirect, HPAs and the KEDA `ScaledObject` (one instance of
+each service), CPU requests, route `timeouts`, the dashboard's oauth2-proxy and telemetry caps, the
+chart's exact image tags for the backing services (the persistent volumes are on Aspire's defaults),
+and running the servers from their published images rather than as projects.
+
 ## Running Tests
 
 The integration test suite uses [Testcontainers](https://dotnet.testcontainers.org/) and requires Docker.
