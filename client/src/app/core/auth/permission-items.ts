@@ -595,3 +595,34 @@ export const netptunePermissionLabels: PermissionLabels = {
     },
   },
 };
+
+export type PermissionGroupKey = keyof typeof PERMISSIONS;
+
+export const permissionGroupLabels: Record<PermissionGroupKey, string> = {
+  workspace: $localize`:Name of the workspace permission group:Workspace`,
+  members: $localize`:Name of the members permission group:Members`,
+  projects: $localize`:Name of the projects permission group:Projects`,
+  boards: $localize`:Name of the boards permission group:Boards`,
+  boardGroups: $localize`:Name of the board groups permission group:Board groups`,
+  tasks: $localize`:Name of the tasks permission group:Tasks`,
+  queries: $localize`:Name of the queries permission group:Queries`,
+  pages: $localize`:Name of the pages permission group:Pages`,
+  data: $localize`:Name of the data permission group:Data`,
+  sprints: $localize`:Name of the sprints permission group:Sprints`,
+  comments: $localize`:Name of the comments permission group:Comments`,
+  tags: $localize`:Name of the tags permission group:Tags`,
+  statuses: $localize`:Name of the statuses permission group:Statuses`,
+  relationTypes: $localize`:Name of the relation types permission group:Relation types`,
+  activity: $localize`:Name of the activity permission group:Activity`,
+  audit: $localize`:Name of the audit permission group:Audit`,
+  notifications: $localize`:Name of the notifications permission group:Notifications`,
+  calendar: $localize`:Name of the calendar permission group:Calendar`,
+  reports: $localize`:Name of the reports permission group:Reports`,
+  automations: $localize`:Name of the automations permission group:Automations`,
+  assistant: $localize`:Name of the assistant permission group:Assistant`,
+  sourceControl: $localize`:Name of the source control permission group:Source control`,
+  flags: $localize`:Name of the flags permission group:Flags`,
+  serviceAccounts: $localize`:Name of the service accounts permission group:Service accounts`,
+  storage: $localize`:Name of the storage permission group:Storage`,
+  files: $localize`:Name of the files permission group:Files`,
+};

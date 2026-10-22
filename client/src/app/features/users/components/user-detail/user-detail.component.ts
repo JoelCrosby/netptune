@@ -1,7 +1,7 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { SessionService } from '@core/services/session.service';
 import { hasPermission } from '@core/auth/has-permission';
-import { PermissionListComponent } from '@app/static/components/permission-list/permission-list.component';
+import { UserPermissionsComponent } from '../user-permissions/user-permissions.component';
 import { LucideShieldCheck, LucideUserRoundX } from '@lucide/angular';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import {
@@ -31,7 +31,7 @@ import { PanelBodyComponent } from '@static/components/panel-body.component';
     PanelBodyComponent,
     PanelComponent,
     PanelHeaderComponent,
-    PermissionListComponent,
+    UserPermissionsComponent,
   ],
   template: `
     @if (user(); as user) {
@@ -89,7 +89,8 @@ import { PanelBodyComponent } from '@static/components/panel-body.component';
           </app-panel-body>
         </section>
 
-        <section app-panel surface="card">
+        <!-- overflow-clip rather than the panel's overflow-hidden, so the toolbar can stick -->
+        <section app-panel surface="card" class="overflow-clip">
           <app-panel-header
             density="comfortable"
             [icon]="permissionsIcon"
@@ -98,7 +99,7 @@ import { PanelBodyComponent } from '@static/components/panel-body.component';
             i18n-description="Explains what a member's permissions grant"
             description="What this member can do in the workspace, on top of their role." />
 
-          <app-permission-list [user]="user" />
+          <app-user-permissions [user]="user" />
         </section>
       </div>
     } @else {

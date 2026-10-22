@@ -20,7 +20,10 @@ import { injectBreadcrumbs } from '@core/services/breadcrumb.service';
     UserDetailComponent,
   ],
   template: `
-    <app-page-container [verticalPadding]="false" [centerPage]="true">
+    <app-page-container
+      [verticalPadding]="false"
+      [centerPage]="true"
+      [marginBottom]="true">
       <app-page-header [title]="user()?.displayName" />
 
       @if (loading()) {

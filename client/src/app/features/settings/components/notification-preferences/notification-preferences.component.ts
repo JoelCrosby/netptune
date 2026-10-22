@@ -5,25 +5,21 @@ import {
   ResolvedPreferenceValue,
 } from '@core/models/user-preferences';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
-import { toggleInSet } from '@core/util/signals';
-import {
-  LucideBell,
-  LucideChevronRight,
-  LucideChevronsUpDown,
-  LucideSearch,
-} from '@lucide/angular';
+import { LucideBell } from '@lucide/angular';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
-import { FilterInputComponent } from '@static/components/filter-input/filter-input.component';
+import {
+  GroupedToggleListComponent,
+  ToggleListChange,
+  ToggleListGroup,
+  ToggleListRow,
+} from '@static/components/grouped-toggle-list/grouped-toggle-list.component';
 import {
   SegmentedControlComponent,
   SegmentedOption,
 } from '@static/components/segmented-control/segmented-control.component';
 import { SkeletonComponent } from '@static/components/skeleton/skeleton.component';
-import { SwitchComponent } from '@static/components/switch/switch.component';
 import { PanelComponent } from '@static/components/panel.component';
 import { PanelHeaderComponent } from '@static/components/panel-header.component';
-import { InlineButtonComponent } from '@static/components/button/inline-button.component';
-import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { forkJoin } from 'rxjs';
 
 type StateFilter = 'all' | 'on' | 'off' | 'changed';
@@ -36,27 +32,6 @@ const UNSECTIONED: PreferenceSection = {
   key: '',
   label: $localize`:Notification settings group for events without a group:Other`,
 };
-
-interface NotificationRow {
-  key: string;
-  label: string;
-  hint: string;
-  switchLabel: string;
-  enabled: boolean;
-  isOverridden: boolean;
-  preference: ResolvedPreferenceValue;
-}
-
-interface NotificationGroup {
-  key: string;
-  label: string;
-  summary: string;
-  isOpen: boolean;
-  isAllOn: boolean;
-  flipLabel: string;
-  rows: NotificationRow[];
-  preferences: ResolvedPreferenceValue[];
-}
 
 const SCOPE_OPTIONS: SegmentedOption<PreferenceScope>[] = [
   {
@@ -92,18 +67,12 @@ const FILTER_OPTIONS: SegmentedOption<StateFilter>[] = [
   selector: 'app-notification-preferences',
   imports: [
     EmptyStateComponent,
-    FilterInputComponent,
-    InlineButtonComponent,
+    GroupedToggleListComponent,
     LucideBell,
-    LucideChevronRight,
-    LucideChevronsUpDown,
-    LucideSearch,
     PanelComponent,
     PanelHeaderComponent,
     SegmentedControlComponent,
     SkeletonComponent,
-    StrokedButtonComponent,
-    SwitchComponent,
   ],
   host: { class: 'block' },
   template: `
@@ -155,145 +124,29 @@ const FILTER_OPTIONS: SegmentedOption<StateFilter>[] = [
           <svg emptyStateIcon lucideBell class="h-8 w-8"></svg>
         </app-empty-state>
       } @else {
-        <div
-          class="border-border bg-card sticky top-0 z-10 flex flex-wrap items-center gap-2.5 border-b px-6 py-3">
-          <app-filter-input
-            class="min-w-48 flex-1"
-            [(value)]="query"
-            i18n-placeholder="Placeholder in the notification event search box"
-            placeholder="Search events" />
-
-          <app-segmented-control
-            class="shrink-0"
-            [options]="filterOptions"
-            [(value)]="filter"
-            i18n-ariaLabel="
-              Accessible label for the control that filters notification events
-              by state
-            "
-            ariaLabel="Show events" />
-
-          <button
-            app-stroked-button
-            type="button"
-            color="neutral"
-            size="small"
-            class="shrink-0"
-            [disabled]="isFiltering()"
-            (click)="toggleAllGroups()">
-            <svg
-              lucideChevronsUpDown
-              class="h-3.5 w-3.5"
-              aria-hidden="true"></svg>
-            @if (isAnyGroupOpen()) {
-              <span i18n="Button that collapses every notification group">
-                Collapse all
-              </span>
-            } @else {
-              <span i18n="Button that expands every notification group">
-                Expand all
-              </span>
-            }
-          </button>
-        </div>
-
-        @for (group of groups(); track group.key) {
-          <div class="border-border border-b last:border-b-0">
-            <div class="flex items-center gap-3 pr-6 pl-4">
-              <button
-                type="button"
-                class="text-foreground focus-visible:ring-primary flex min-w-0 flex-1 cursor-pointer items-center gap-3 rounded-md px-2 py-3 text-left outline-none focus-visible:ring-2"
-                [attr.aria-expanded]="group.isOpen"
-                [disabled]="isFiltering()"
-                (click)="toggleGroup(group.key)">
-                <svg
-                  lucideChevronRight
-                  aria-hidden="true"
-                  class="text-muted h-3.5 w-3.5 shrink-0 transition-transform duration-150"
-                  [class.rotate-90]="group.isOpen"></svg>
-                <span class="text-sm font-semibold">{{ group.label }}</span>
-                <span class="text-muted text-xs">{{ group.summary }}</span>
-              </button>
-
-              <button
-                type="button"
-                app-inline-button
-                color="muted"
-                appearance="soft"
-                class="border-border shrink-0 rounded-full border font-semibold"
-                (click)="flipGroup(group)">
-                {{ group.flipLabel }}
-              </button>
-            </div>
-
-            @if (group.isOpen) {
-              <div class="flex flex-col px-6 pb-2.5">
-                @for (row of group.rows; track row.key) {
-                  <div
-                    class="hover:bg-hover flex items-center gap-4 rounded-lg py-2 pr-2 pl-8.5">
-                    <div class="min-w-0 flex-1">
-                      <p class="truncate text-sm font-medium">
-                        {{ row.label }}
-                      </p>
-                      <p
-                        class="text-xs"
-                        [class.text-primary]="row.isOverridden"
-                        [class.text-muted]="!row.isOverridden">
-                        {{ row.hint }}
-                      </p>
-                    </div>
-
-                    @if (row.isOverridden) {
-                      <button
-                        type="button"
-                        app-inline-button
-                        color="muted"
-                        appearance="soft"
-                        class="shrink-0"
-                        (click)="clearValue(row.preference)">
-                        <span i18n="Button that removes a preference override">
-                          Reset
-                        </span>
-                      </button>
-                    }
-
-                    <app-switch
-                      class="shrink-0"
-                      [checked]="row.enabled"
-                      [ariaLabel]="row.switchLabel"
-                      (changed)="updateValue(row.preference, $event)" />
-                  </div>
-                }
-              </div>
-            }
-          </div>
-        } @empty {
-          <app-empty-state
-            compact
-            i18n-title="
-              Empty state when no notification events match the search
-            "
-            title="No events match"
-            i18n-description="
-              Suggests how to find notification events after a search found
-              nothing
-            "
-            description="Try a shorter word, or clear the filter.">
-            <svg emptyStateIcon lucideSearch class="h-8 w-8"></svg>
-            <button
-              emptyStateAction
-              app-stroked-button
-              type="button"
-              color="neutral"
-              size="small"
-              (click)="resetFilters()"
-              i18n="
-                Button that clears the notification search and state filter
-              ">
-              Clear search and filter
-            </button>
-          </app-empty-state>
-        }
+        <app-grouped-toggle-list
+          [groups]="groups()"
+          [filterOptions]="filterOptions"
+          [filtering]="isFiltering()"
+          [(query)]="query"
+          [(filter)]="filter"
+          i18n-searchPlaceholder="
+            Placeholder in the notification event search box
+          "
+          searchPlaceholder="Search events"
+          i18n-filterAriaLabel="
+            Accessible label for the control that filters notification events by
+            state
+          "
+          filterAriaLabel="Show events"
+          i18n-emptyTitle="
+            Empty state when no notification events match the search
+          "
+          emptyTitle="No events match"
+          (rowChanged)="updateValue($event)"
+          (rowReset)="clearValue($event)"
+          (groupAction)="flipGroup($event)"
+          (cleared)="resetFilters()" />
       }
     </section>
   `,
@@ -311,8 +164,6 @@ export class NotificationPreferencesComponent {
   protected readonly scope = signal<PreferenceScope>('global');
   protected readonly query = signal('');
   protected readonly filter = signal<StateFilter>('all');
-  // Groups start collapsed; this holds the ones the user has opened.
-  private readonly expanded = signal<ReadonlySet<string>>(new Set());
 
   protected readonly isInitialLoad = computed(() => {
     return !this.userPreferences.loaded() && this.values().length === 0;
@@ -320,16 +171,6 @@ export class NotificationPreferencesComponent {
 
   protected readonly isFiltering = computed(() => {
     return this.query().trim().length > 0 || this.filter() !== 'all';
-  });
-
-  private readonly allGroupKeys = computed(() => {
-    return this.groupedPreferences().map((group) => group.key);
-  });
-
-  protected readonly isAnyGroupOpen = computed(() => {
-    const expanded = this.expanded();
-
-    return this.allGroupKeys().some((key) => expanded.has(key));
   });
 
   // Read by the page header, which shows the totals beside the page title.
@@ -363,17 +204,22 @@ export class NotificationPreferencesComponent {
       groups.set(section.key, group);
     }
 
-    return [...groups.values()];
+    return groups;
   });
 
-  protected readonly groups = computed<NotificationGroup[]>(() => {
+  private readonly preferencesByKey = computed(() => {
+    return new Map(
+      this.values().map((preference) => [preference.definition.key, preference])
+    );
+  });
+
+  protected readonly groups = computed<ToggleListGroup[]>(() => {
     const scope = this.scope();
     const query = this.query().trim().toLowerCase();
     const filter = this.filter();
     const isFiltering = this.isFiltering();
-    const expanded = this.expanded();
 
-    return this.groupedPreferences()
+    return [...this.groupedPreferences().values()]
       .map((group) => {
         const groupMatches = group.label.toLowerCase().includes(query);
         const rows = group.preferences
@@ -385,50 +231,38 @@ export class NotificationPreferencesComponent {
             return matchesQuery && matchesFilter(row, filter);
           });
 
-        const enabledCount = group.preferences.filter((preference) => {
-          return this.valueFor(preference, scope) === true;
-        }).length;
-
+        const enabledCount = this.enabledCount(group, scope);
         const total = group.preferences.length;
         const shown = rows.length;
         const isAllOn = enabledCount === total;
 
         return {
           key: group.key,
-          label: group.label,
+          heading: group.label,
           summary: isFiltering
             ? $localize`:How many events in a notification group match the filter:${shown}:SHOWN: of ${total}:TOTAL: shown`
             : $localize`:How many events in a notification group are turned on:${enabledCount}:ENABLED: of ${total}:TOTAL: on`,
-          isOpen: isFiltering || expanded.has(group.key),
-          isAllOn,
-          flipLabel: isAllOn
+          actionLabel: isAllOn
             ? $localize`:Button that turns off every event in a notification group:Mute all`
             : $localize`:Button that turns on every event in a notification group:Turn all on`,
           rows,
-          preferences: group.preferences,
         };
       })
       .filter((group) => group.rows.length > 0);
   });
-
-  protected toggleGroup(key: string) {
-    toggleInSet(this.expanded, key);
-  }
-
-  protected toggleAllGroups() {
-    const next = this.isAnyGroupOpen() ? [] : this.allGroupKeys();
-
-    this.expanded.set(new Set(next));
-  }
 
   protected resetFilters() {
     this.query.set('');
     this.filter.set('all');
   }
 
-  protected flipGroup(group: NotificationGroup) {
+  protected flipGroup(key: string) {
+    const group = this.groupedPreferences().get(key);
+
+    if (!group) return;
+
     const scope = this.scope();
-    const value = !group.isAllOn;
+    const value = this.enabledCount(group, scope) !== group.preferences.length;
     const updates = group.preferences
       .filter((preference) => this.valueFor(preference, scope) !== value)
       .map((preference) => {
@@ -444,33 +278,50 @@ export class NotificationPreferencesComponent {
     forkJoin(updates).subscribe();
   }
 
-  protected updateValue(preference: ResolvedPreferenceValue, value: boolean) {
+  protected updateValue(change: ToggleListChange) {
+    const preference = this.preferencesByKey().get(change.key);
+
+    if (!preference) return;
+
     this.userPreferences
-      .updateValue(preference.definition.key, this.scopeFor(preference), value)
+      .updateValue(change.key, this.scopeFor(preference), change.checked)
       .subscribe();
   }
 
-  protected clearValue(preference: ResolvedPreferenceValue) {
+  protected clearValue(key: string) {
+    const preference = this.preferencesByKey().get(key);
+
+    if (!preference) return;
+
     this.userPreferences
-      .deleteValue(preference.definition.key, this.scopeFor(preference))
+      .deleteValue(key, this.scopeFor(preference))
       .subscribe();
+  }
+
+  private enabledCount(
+    group: PreferenceSectionGroup,
+    scope: PreferenceScope
+  ): number {
+    return group.preferences.filter((preference) => {
+      return this.valueFor(preference, scope) === true;
+    }).length;
   }
 
   private toRow(
     preference: ResolvedPreferenceValue,
     scope: PreferenceScope
-  ): NotificationRow {
-    const value = this.valueFor(preference, scope);
+  ): ToggleListRow {
     const label = preference.definition.label;
+    const isOverridden = this.storedValue(preference, scope) !== null;
 
     return {
       key: preference.definition.key,
       label,
+      checked: this.valueFor(preference, scope) === true,
+      ariaLabel: $localize`:Accessible label for a notification toggle. EVENT is the already-localised event name:Receive ${label}:EVENT: notifications`,
       hint: this.hint(preference, scope),
-      switchLabel: $localize`:Accessible label for a notification toggle. EVENT is the already-localised event name:Receive ${label}:EVENT: notifications`,
-      enabled: value === true,
-      isOverridden: this.storedValue(preference, scope) !== null,
-      preference,
+      isHintHighlighted: isOverridden,
+      isResettable: isOverridden,
     };
   }
 
@@ -523,15 +374,15 @@ export class NotificationPreferencesComponent {
   }
 }
 
-function matchesFilter(row: NotificationRow, filter: StateFilter): boolean {
+function matchesFilter(row: ToggleListRow, filter: StateFilter): boolean {
   switch (filter) {
     case 'all':
       return true;
     case 'on':
-      return row.enabled;
+      return row.checked;
     case 'off':
-      return !row.enabled;
+      return !row.checked;
     case 'changed':
-      return row.isOverridden;
+      return row.isResettable === true;
   }
 }

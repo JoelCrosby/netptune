@@ -249,6 +249,7 @@
     </unit>
     <unit id="3817498941817715969">
       <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:609</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:234</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:233</note>
         <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:82</note>
@@ -258,7 +259,7 @@
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:92</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:212</note>
         <note category="location">src/app/workspace.routes.ts:99</note>
-        <note category="description">Tab listing the pages that mention a task</note>
+        <note category="description">Name of the pages permission group</note>
       </notes>
       <segment state="translated">
         <source>Pages</source>
@@ -377,7 +378,7 @@
     </unit>
     <unit id="6077676238123249584">
       <notes>
-        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:138</note>
+        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:139</note>
         <note category="description">Explains why a member cannot edit their own role</note>
       </notes>
       <segment state="translated">
@@ -1259,8 +1260,8 @@
     </unit>
     <unit id="3392062750241531265">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:190,192</note>
-        <note category="description">Button that collapses every notification group</note>
+        <note category="location">src/app/static/components/grouped-toggle-list/grouped-toggle-list.component.ts:93,96</note>
+        <note category="description">Button that collapses every group in a toggle list</note>
       </notes>
       <segment state="translated">
         <source> Collapse all </source>
@@ -2714,6 +2715,16 @@
       <segment state="translated">
         <source>Tasks Deleted</source>
         <target>Aufgaben gelöscht</target>
+      </segment>
+    </unit>
+    <unit id="488569004095823810">
+      <notes>
+        <note category="location">src/app/features/users/components/user-permissions/user-permissions.component.ts:49,51</note>
+        <note category="description">Placeholder in the member permission search box</note>
+      </notes>
+      <segment state="translated">
+        <source>Search permissions</source>
+        <target>Berechtigungen suchen</target>
       </segment>
     </unit>
     <unit id="4076698465756278873">
@@ -4527,6 +4538,7 @@
     </unit>
     <unit id="5851560788527570644">
       <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:618</note>
         <note category="location">src/app/entry/components/notification-bell/notification-bell.component.ts:48,49</note>
         <note category="location">src/app/entry/components/notification-bell/notification-bell.component.ts:50,52</note>
         <note category="location">src/app/features/notifications/notifications.routes.ts:12</note>
@@ -4535,7 +4547,7 @@
         <note category="location">src/app/features/settings/views/personal-notification-settings-view/personal-notification-settings-view.component.ts:22,24</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:430</note>
         <note category="location">src/app/workspace.routes.ts:123</note>
-        <note category="description">Accessible label for the notifications button</note>
+        <note category="description">Name of the notifications permission group</note>
       </notes>
       <segment state="translated">
         <source>Notifications</source>
@@ -4566,7 +4578,7 @@
     </unit>
     <unit id="6642900695427911796">
       <notes>
-        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:99,102</note>
+        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:100,103</note>
         <note category="description">Explains what a member&apos;s permissions grant</note>
       </notes>
       <segment state="translated">
@@ -4687,6 +4699,7 @@
     </unit>
     <unit id="2244471832629453998">
       <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:602</note>
         <note category="location">src/app/core/util/pin-scope.ts:25</note>
         <note category="location">src/app/core/util/pin-scope.ts:69</note>
         <note category="location">src/app/entry/components/setup-creation-summary/setup-creation-summary.component.ts:58</note>
@@ -4697,7 +4710,7 @@
         <note category="location">src/app/features/settings/components/preference-scope.ts:36</note>
         <note category="location">src/app/features/settings/settings.routes.ts:46</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:460</note>
-        <note category="description">Badge on a task pinned for the whole workspace</note>
+        <note category="description">Name of the workspace permission group</note>
       </notes>
       <segment state="translated">
         <source>Workspace</source>
@@ -5242,7 +5255,7 @@
     </unit>
     <unit id="5503213672777720666">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:349</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:190</note>
         <note category="description">Summary of notification events. ENABLED and TOTAL are counts, CHANGED is how many differ from the default</note>
       </notes>
       <segment state="translated">
@@ -5921,7 +5934,7 @@
     </unit>
     <unit id="6340642993291274556">
       <notes>
-        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:109,110</note>
+        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:110,111</note>
         <note category="description">Advice shown when a member cannot be found</note>
       </notes>
       <segment state="translated">
@@ -7064,10 +7077,11 @@
     </unit>
     <unit id="3807699453257291879">
       <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:612</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:236</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:228</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:89</note>
-        <note category="description">Section heading for a task&apos;s comments</note>
+        <note category="description">Name of the comments permission group</note>
       </notes>
       <segment state="translated">
         <source>Comments</source>
@@ -7176,10 +7190,11 @@
     </unit>
     <unit id="4116911651502837995">
       <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:627</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:434</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:233</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:229</note>
-        <note category="description">Section heading for files attached to a task</note>
+        <note category="description">Name of the files permission group</note>
       </notes>
       <segment state="translated">
         <source>Files</source>
@@ -7515,6 +7530,7 @@
     </unit>
     <unit id="7886570921510760899">
       <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:613</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:59</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:125</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:72</note>
@@ -7527,7 +7543,7 @@
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:90</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:347</note>
         <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:53,54</note>
-        <note category="description">Label of the tags field</note>
+        <note category="description">Name of the tags permission group</note>
       </notes>
       <segment state="translated">
         <source>Tags</source>
@@ -7536,7 +7552,7 @@
     </unit>
     <unit id="2362646105488486702">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:522</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:373</note>
         <note category="description">Shown when a notification has never been changed</note>
       </notes>
       <segment state="translated">
@@ -7842,7 +7858,7 @@
     </unit>
     <unit id="895474011655201510">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:174,179</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:141,144</note>
         <note category="description">Accessible label for the control that filters notification events by state</note>
       </notes>
       <segment state="translated">
@@ -7873,6 +7889,16 @@
       <segment state="translated">
         <source>Archived</source>
         <target>Archiviert</target>
+      </segment>
+    </unit>
+    <unit id="1635166248543232876">
+      <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:623</note>
+        <note category="description">Name of the source control permission group</note>
+      </notes>
+      <segment state="translated">
+        <source>Source control</source>
+        <target>Versionskontrolle</target>
       </segment>
     </unit>
     <unit id="1635323592018171706">
@@ -8155,6 +8181,16 @@
         <target>In Arbeit</target>
       </segment>
     </unit>
+    <unit id="3309973566259313398">
+      <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:617</note>
+        <note category="description">Name of the audit permission group</note>
+      </notes>
+      <segment state="translated">
+        <source>Audit</source>
+        <target>Audit</target>
+      </segment>
+    </unit>
     <unit id="9126383792072202008">
       <notes>
         <note category="location">src/app/features/pages/services/page-draft.ts:272</note>
@@ -8331,7 +8367,7 @@
     <unit id="7556340900290410206">
       <notes>
         <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:36,37</note>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:164,167</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:136,138</note>
         <note category="description">Placeholder in the box that searches trigger events</note>
       </notes>
       <segment state="translated">
@@ -8824,7 +8860,7 @@
     </unit>
     <unit id="4202788523463485576">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:87</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:62</note>
         <note category="description">Notification filter showing events changed from the default</note>
       </notes>
       <segment state="translated">
@@ -9610,7 +9646,7 @@
     </unit>
     <unit id="3582459763200691347">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:406</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:247</note>
         <note category="description">Button that turns on every event in a notification group</note>
       </notes>
       <segment state="translated">
@@ -10372,10 +10408,11 @@
         <note category="location">src/app/core/util/pinned-task-filter.ts:40</note>
         <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:252</note>
         <note category="location">src/app/features/automations/components/automation-run-history.component.ts:298</note>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:75</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:50</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:71</note>
         <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:64</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:170</note>
+        <note category="location">src/app/features/users/components/user-permissions/user-permissions.component.ts:25</note>
         <note category="location">src/app/features/users/views/users-view/users-view.component.ts:51</note>
         <note category="location">src/app/shared/components/query-builder/query-builder.models.ts:72</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:671</note>
@@ -11461,8 +11498,9 @@
     </unit>
     <unit id="4691887509600985309">
       <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:603</note>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:146</note>
-        <note category="description">Accessible name of the list of people a task can be assigned to</note>
+        <note category="description">Name of the members permission group</note>
       </notes>
       <segment state="initial">
         <source>Members</source>
@@ -11481,7 +11519,7 @@
     </unit>
     <unit id="4697947893832068670">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:512</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:363</note>
         <note category="description">Shown when a notification is set for this workspace only</note>
       </notes>
       <segment state="translated">
@@ -11532,6 +11570,16 @@
         <target>Abfrage konnte nicht gelöscht werden</target>
       </segment>
     </unit>
+    <unit id="8232924927311578387">
+      <notes>
+        <note category="location">src/app/features/users/components/user-permissions/user-permissions.component.ts:140</note>
+        <note category="description">Accessible label for a member permission toggle. PERMISSION is the already-localised permission name</note>
+      </notes>
+      <segment state="translated">
+        <source>Grant <ph id="0" equiv="PERMISSION" disp="meta.label"/></source>
+        <target><ph id="0" equiv="PERMISSION" disp="meta.label"/> erteilen</target>
+      </segment>
+    </unit>
     <unit id="8233185078584262941">
       <notes>
         <note category="location">src/app/features/automations/models/automation-flow-copy.ts:82</note>
@@ -11575,7 +11623,7 @@
     </unit>
     <unit id="4944057561753398636">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:64</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:39</note>
         <note category="description">Preference scope applying to every workspace</note>
       </notes>
       <segment state="translated">
@@ -12529,8 +12577,9 @@
     </unit>
     <unit id="1793354110968330702">
       <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:615</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:91</note>
-        <note category="description">Plural of the entity a proposed change targets</note>
+        <note category="description">Name of the relation types permission group</note>
       </notes>
       <segment state="translated">
         <source>Relation types</source>
@@ -13310,7 +13359,7 @@
     </unit>
     <unit id="1838131741653693713">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:135,137</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:104,106</note>
         <note category="description">Accessible label while notification preferences load</note>
       </notes>
       <segment state="translated">
@@ -14030,6 +14079,16 @@
         <target> In der Warteschlange. Die Ausführung erscheint im Verlauf dieser Regel, sobald sie abgeschlossen ist. </target>
       </segment>
     </unit>
+    <unit id="5700894637334761575">
+      <notes>
+        <note category="location">src/app/features/users/components/user-permissions/user-permissions.component.ts:56,58</note>
+        <note category="description">Empty state when no member permissions match the search</note>
+      </notes>
+      <segment state="translated">
+        <source>No permissions match</source>
+        <target>Keine passenden Berechtigungen</target>
+      </segment>
+    </unit>
     <unit id="5701618810648052610">
       <notes>
         <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:43</note>
@@ -14455,7 +14514,7 @@
     </unit>
     <unit id="5234544449365538384">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:435</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:437</note>
         <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:326</note>
         <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:362</note>
         <note category="description">Shown when a page link could not be copied</note>
@@ -15152,9 +15211,10 @@
     </unit>
     <unit id="5306473977542913614">
       <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:616</note>
         <note category="location">src/app/features/settings/views/personal-assistant-settings-view/personal-assistant-settings-view.component.ts:57,59</note>
         <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:109,112</note>
-        <note category="description">Heading of the assistant activity group</note>
+        <note category="description">Name of the activity permission group</note>
       </notes>
       <segment state="translated">
         <source>Activity</source>
@@ -17012,11 +17072,12 @@
     </unit>
     <unit id="6112696339048270378">
       <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:621</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:60,61</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:69,73</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:271</note>
         <note category="location">src/app/workspace.routes.ts:75</note>
-        <note category="description">Page title for the automation list</note>
+        <note category="description">Name of the automations permission group</note>
       </notes>
       <segment state="translated">
         <source>Automations</source>
@@ -17343,7 +17404,7 @@
     </unit>
     <unit id="3136143367735182406">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:154,156</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:123,125</note>
         <note category="description">Explains why the notification preference list is empty</note>
       </notes>
       <segment state="translated">
@@ -17586,10 +17647,11 @@
     </unit>
     <unit id="146442697456175258">
       <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:610</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:107,110</note>
         <note category="location">src/app/features/settings/settings.routes.ts:130</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:395</note>
-        <note category="description">Page title for the workspace import and export page</note>
+        <note category="description">Name of the data permission group</note>
       </notes>
       <segment>
         <source>Data</source>
@@ -17608,6 +17670,7 @@
     </unit>
     <unit id="6904866445262015585">
       <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:607</note>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:133,134</note>
         <note category="location">src/app/features/pages/editor/page-reference.controller.ts:223</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:39</note>
@@ -17619,7 +17682,7 @@
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:83</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:160</note>
         <note category="location">src/app/workspace.routes.ts:57</note>
-        <note category="description">Column heading for the number of tasks on a board</note>
+        <note category="description">Name of the tasks permission group</note>
       </notes>
       <segment state="translated">
         <source>Tasks</source>
@@ -17885,7 +17948,7 @@
     <unit id="5478121364779850827">
       <notes>
         <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:128,132</note>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:255,256</note>
+        <note category="location">src/app/static/components/grouped-toggle-list/grouped-toggle-list.component.ts:170,172</note>
         <note category="description">Button that discards unsaved edits to the board</note>
       </notes>
       <segment state="translated">
@@ -18256,6 +18319,7 @@
     </unit>
     <unit id="7107218117130409950">
       <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:605</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:231</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:231</note>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:64</note>
@@ -18263,7 +18327,7 @@
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:86</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:174</note>
         <note category="location">src/app/workspace.routes.ts:81</note>
-        <note category="description">Section heading for the boards a task appears on</note>
+        <note category="description">Name of the boards permission group</note>
       </notes>
       <segment state="translated">
         <source>Boards</source>
@@ -18353,7 +18417,7 @@
     <unit id="7869199587095613616">
       <notes>
         <note category="location">src/app/features/pages/components/page-editor.component.ts:296,297</note>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:433</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:435</note>
         <note category="location">src/app/static/components/branding-preview/branding-preview.component.ts:156</note>
         <note category="description">Placeholder in an empty page title</note>
       </notes>
@@ -18996,10 +19060,11 @@
     </unit>
     <unit id="3825802286872185103">
       <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:619</note>
         <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:61,64</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:226</note>
         <note category="location">src/app/workspace.routes.ts:111</note>
-        <note category="description">Page title for the calendar</note>
+        <note category="description">Name of the calendar permission group</note>
       </notes>
       <segment state="translated">
         <source>Calendar</source>
@@ -19255,7 +19320,7 @@
     </unit>
     <unit id="1164332617862004960">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:470</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:321</note>
         <note category="description">Accessible label for a notification toggle. EVENT is the already-localised event name</note>
       </notes>
       <segment state="translated">
@@ -19295,8 +19360,8 @@
     </unit>
     <unit id="1168206319879732017">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:293,296</note>
-        <note category="description">Button that clears the notification search and state filter</note>
+        <note category="location">src/app/static/components/grouped-toggle-list/grouped-toggle-list.component.ts:199,205</note>
+        <note category="description">Button that clears the search and state filter of a list</note>
       </notes>
       <segment state="translated">
         <source> Clear search and filter </source>
@@ -19441,6 +19506,16 @@
       <segment state="translated">
         <source> Delete </source>
         <target>Löschen</target>
+      </segment>
+    </unit>
+    <unit id="4187114561595975197">
+      <notes>
+        <note category="location">src/app/features/users/components/user-permissions/user-permissions.component.ts:33</note>
+        <note category="description">Permission filter showing permissions the member does not have</note>
+      </notes>
+      <segment state="translated">
+        <source>Not granted</source>
+        <target>Nicht erteilt</target>
       </segment>
     </unit>
     <unit id="4188373865140182407">
@@ -19767,6 +19842,16 @@
       <segment state="translated">
         <source>Not enough finished work yet.</source>
         <target>Noch nicht genug abgeschlossene Arbeit.</target>
+      </segment>
+    </unit>
+    <unit id="5917235910239060692">
+      <notes>
+        <note category="location">src/app/features/users/components/user-permissions/user-permissions.component.ts:110</note>
+        <note category="description">How many permissions in a group the member has</note>
+      </notes>
+      <segment state="initial">
+        <source><ph id="0" equiv="GRANTED" disp="grantedCount"/> of <ph id="1" equiv="TOTAL" disp="total"/> granted</source>
+        <target><ph id="0" equiv="GRANTED" disp="granted"/> von <ph id="1" equiv="TOTAL" disp="total"/> erteilt</target>
       </segment>
     </unit>
     <unit id="1295579971866134458">
@@ -20541,13 +20626,14 @@
     </unit>
     <unit id="7091571651222742304">
       <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:604</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:60,62</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:58,59</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:67,71</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:84</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:205</note>
         <note category="location">src/app/workspace.routes.ts:51</note>
-        <note category="description">Filter heading for projects</note>
+        <note category="description">Name of the projects permission group</note>
       </notes>
       <segment state="translated">
         <source>Projects</source>
@@ -21178,6 +21264,16 @@
         <target>Für diesen Sprint ist keine verlässliche Baseline verfügbar. Sprints vor Beginn der Erfassung werden nicht angenähert.</target>
       </segment>
     </unit>
+    <unit id="2870788902465061969">
+      <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:624</note>
+        <note category="description">Name of the flags permission group</note>
+      </notes>
+      <segment state="translated">
+        <source>Flags</source>
+        <target>Flags</target>
+      </segment>
+    </unit>
     <unit id="2873196070623992437">
       <notes>
         <note category="location">src/app/features/dashboard/components/charts/velocity-chart.component.ts:40</note>
@@ -21705,7 +21801,7 @@
     </unit>
     <unit id="4811445635785211905">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:519</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:370</note>
         <note category="description">Shown when a notification is set for every workspace</note>
       </notes>
       <segment state="translated">
@@ -21786,10 +21882,11 @@
     </unit>
     <unit id="1868606282505332204">
       <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:620</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:66,68</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:234</note>
         <note category="location">src/app/workspace.routes.ts:93</note>
-        <note category="description">Page title for the reporting views</note>
+        <note category="description">Name of the reports permission group</note>
       </notes>
       <segment state="translated">
         <source>Reports</source>
@@ -22164,6 +22261,16 @@
         <target>Passende Seiten</target>
       </segment>
     </unit>
+    <unit id="5140873416679049863">
+      <notes>
+        <note category="location">src/app/features/users/components/user-permissions/user-permissions.component.ts:29</note>
+        <note category="description">Permission filter showing permissions the member has</note>
+      </notes>
+      <segment state="translated">
+        <source>Granted</source>
+        <target>Erteilt</target>
+      </segment>
+    </unit>
     <unit id="5141352019990967744">
       <notes>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:228</note>
@@ -22396,7 +22503,8 @@
     </unit>
     <unit id="5244478317141032759">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:400</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:243</note>
+        <note category="location">src/app/features/users/components/user-permissions/user-permissions.component.ts:109</note>
         <note category="description">How many events in a notification group match the filter</note>
       </notes>
       <segment state="translated">
@@ -22456,6 +22564,16 @@
       <segment state="initial">
         <source>Runs on the <ph id="0" equiv="BOARD" disp="name"/> board</source>
         <target>Läuft auf dem Board <ph id="0" equiv="BOARD" disp="board?.name ?? &apos;…&apos;"/></target>
+      </segment>
+    </unit>
+    <unit id="8239244328573703502">
+      <notes>
+        <note category="location">src/app/features/users/components/user-permissions/user-permissions.component.ts:54,56</note>
+        <note category="description">Accessible label for the control that filters member permissions by state</note>
+      </notes>
+      <segment state="translated">
+        <source>Show permissions</source>
+        <target>Berechtigungen anzeigen</target>
       </segment>
     </unit>
     <unit id="8241813984684687145">
@@ -22783,6 +22901,7 @@
     </unit>
     <unit id="4361487192183535591">
       <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:622</note>
         <note category="location">src/app/core/util/assistant-inline-prompt.ts:20</note>
         <note category="location">src/app/features/assistant/assistant.routes.ts:12</note>
         <note category="location">src/app/features/pages/editor/page-editor-commands.ts:20</note>
@@ -22797,7 +22916,7 @@
         <note category="location">src/app/shell/shell-sidebar.component.ts:379</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:443</note>
         <note category="location">src/app/workspace.routes.ts:117</note>
-        <note category="description">Heading over the assistant actions in the slash command menu</note>
+        <note category="description">Name of the assistant permission group</note>
       </notes>
       <segment state="translated">
         <source>Assistant</source>
@@ -23299,7 +23418,7 @@
     <unit id="7314814725704332646">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:118,119</note>
-        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:97,98</note>
+        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:98,99</note>
         <note category="description">Title of the permissions wizard step</note>
       </notes>
       <segment state="translated">
@@ -23402,8 +23521,8 @@
     </unit>
     <unit id="1918603297826248431">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:194,197</note>
-        <note category="description">Button that expands every notification group</note>
+        <note category="location">src/app/static/components/grouped-toggle-list/grouped-toggle-list.component.ts:97,101</note>
+        <note category="description">Button that expands every group in a toggle list</note>
       </notes>
       <segment state="translated">
         <source> Expand all </source>
@@ -23453,7 +23572,7 @@
     </unit>
     <unit id="188527826541298850">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:515</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:366</note>
         <note category="description">Shown when a workspace notification follows the global choice</note>
       </notes>
       <segment state="translated">
@@ -23992,7 +24111,7 @@
     </unit>
     <unit id="892073694820881630">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:434</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:436</note>
         <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:321</note>
         <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:357</note>
         <note category="description">Confirmation that a page link was copied</note>
@@ -24450,7 +24569,7 @@
     </unit>
     <unit id="1532753058248581257">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:401</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:244</note>
         <note category="description">How many events in a notification group are turned on</note>
       </notes>
       <segment state="translated">
@@ -24756,9 +24875,10 @@
     </unit>
     <unit id="517565553858035199">
       <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:625</note>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:36,37</note>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:44,49</note>
-        <note category="description">Page title for workspace service accounts</note>
+        <note category="description">Name of the service accounts permission group</note>
       </notes>
       <segment state="translated">
         <source>Service accounts</source>
@@ -24979,7 +25099,7 @@
     </unit>
     <unit id="2456694907046019567">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:116,117</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:85,86</note>
         <note category="description">Heading above the notification toggles</note>
       </notes>
       <segment state="translated">
@@ -25656,7 +25776,7 @@
     <unit id="8990769651805334695">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:90</note>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:79</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:54</note>
         <note category="description">Shown when the assistant is on</note>
       </notes>
       <segment state="translated">
@@ -25756,7 +25876,7 @@
     </unit>
     <unit id="7099805567995662271">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:352</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:193</note>
         <note category="description">Summary of notification events. ENABLED and TOTAL are counts</note>
       </notes>
       <segment state="translated">
@@ -25969,10 +26089,11 @@
     </unit>
     <unit id="6922994998696471598">
       <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:608</note>
         <note category="location">src/app/features/queries/views/queries-view/queries-view.component.ts:48,49</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:242</note>
         <note category="location">src/app/workspace.routes.ts:63</note>
-        <note category="description">Page title for the saved query list</note>
+        <note category="description">Name of the queries permission group</note>
       </notes>
       <segment state="translated">
         <source>Queries</source>
@@ -26484,7 +26605,7 @@
     <unit id="2247746632525326951">
       <notes>
         <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:294</note>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:68</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:43</note>
         <note category="description">Archive destination that fills the current workspace</note>
       </notes>
       <segment state="translated">
@@ -26646,8 +26767,9 @@
     </unit>
     <unit id="720498085522302459">
       <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:606</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:87</note>
-        <note category="description">Plural of the entity a proposed change targets</note>
+        <note category="description">Name of the board groups permission group</note>
       </notes>
       <segment state="translated">
         <source>Board groups</source>
@@ -26726,7 +26848,7 @@
     </unit>
     <unit id="7648635992567747657">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:276,278</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:145,147</note>
         <note category="description">Empty state when no notification events match the search</note>
       </notes>
       <segment state="translated">
@@ -26935,7 +27057,7 @@
     </unit>
     <unit id="7455114085219104367">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:405</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:246</note>
         <note category="description">Button that turns off every event in a notification group</note>
       </notes>
       <segment state="translated">
@@ -27209,7 +27331,7 @@
     </unit>
     <unit id="8693603235657020323">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:37</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:33</note>
         <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:131</note>
         <note category="location">src/app/features/storage/components/storage-filters.component.ts:136</note>
         <note category="description">Notification settings group for events without a group</note>
@@ -27480,11 +27602,12 @@
     </unit>
     <unit id="4347094825344030699">
       <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:611</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:61,62</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:85</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:190</note>
         <note category="location">src/app/workspace.routes.ts:87</note>
-        <note category="description">Page title for the sprint list</note>
+        <note category="description">Name of the sprints permission group</note>
       </notes>
       <segment state="translated">
         <source>Sprints</source>
@@ -27658,10 +27781,11 @@
     </unit>
     <unit id="57403663622654391">
       <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:626</note>
         <note category="location">src/app/features/storage/views/storage-view.component.ts:22,25</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:403</note>
         <note category="location">src/app/workspace.routes.ts:141</note>
-        <note category="description">Page title for workspace file storage</note>
+        <note category="description">Name of the storage permission group</note>
       </notes>
       <segment state="translated">
         <source>Storage</source>
@@ -27864,7 +27988,7 @@
     </unit>
     <unit id="5250569740790418380">
       <notes>
-        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:107,108</note>
+        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:108,109</note>
         <note category="description">Shown when a member cannot be found</note>
       </notes>
       <segment state="translated">
@@ -28093,7 +28217,7 @@
     </unit>
     <unit id="8839963009744223515">
       <notes>
-        <note category="location">src/app/features/users/views/user-detail-view/user-detail-view.component.ts:31,32</note>
+        <note category="location">src/app/features/users/views/user-detail-view/user-detail-view.component.ts:34,35</note>
         <note category="description">Shown when a member fails to load</note>
       </notes>
       <segment state="translated">
@@ -28103,7 +28227,7 @@
     </unit>
     <unit id="8327886049061327137">
       <notes>
-        <note category="location">src/app/features/users/views/user-detail-view/user-detail-view.component.ts:33,36</note>
+        <note category="location">src/app/features/users/views/user-detail-view/user-detail-view.component.ts:36,39</note>
         <note category="description">Explains why a member may fail to load</note>
       </notes>
       <segment state="translated">
@@ -28134,7 +28258,7 @@
     </unit>
     <unit id="8987098024875595306">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:150,152</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:119,121</note>
         <note category="description">Empty state for the notification preference list</note>
       </notes>
       <segment state="translated">
@@ -28275,7 +28399,7 @@
     </unit>
     <unit id="4422463525624222082">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:127,132</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:96,101</note>
         <note category="description">Accessible label for the control that picks the preference scope</note>
       </notes>
       <segment state="translated">
@@ -28710,7 +28834,7 @@
     </unit>
     <unit id="2188854212912601730">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:118,121</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:87,90</note>
         <note category="description">Explains which scope the toggles below are editing</note>
       </notes>
       <segment state="translated">
@@ -29403,7 +29527,7 @@
     <unit id="3500458863157551898">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:91</note>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:83</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:58</note>
         <note category="description">Shown when the assistant is off</note>
       </notes>
       <segment state="translated">
@@ -29529,8 +29653,8 @@
     </unit>
     <unit id="6437922782751429973">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:281,284</note>
-        <note category="description">Suggests how to find notification events after a search found nothing</note>
+        <note category="location">src/app/static/components/grouped-toggle-list/grouped-toggle-list.component.ts:221</note>
+        <note category="description">Suggests how to find items after a search found nothing</note>
       </notes>
       <segment state="translated">
         <source>Try a shorter word, or clear the filter.</source>
@@ -29564,13 +29688,14 @@
     </unit>
     <unit id="5168008278809915722">
       <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:614</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:80,82</note>
         <note category="location">src/app/features/settings/settings.routes.ts:83</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:66,67</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:88</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:355</note>
         <note category="location">src/app/static/components/status-filter/status-filter.component.ts:42,43</note>
-        <note category="description">Filter heading for statuses</note>
+        <note category="description">Name of the statuses permission group</note>
       </notes>
       <segment state="translated">
         <source>Statuses</source>

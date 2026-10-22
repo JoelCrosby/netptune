@@ -1,5 +1,7 @@
 import {
   netptunePermissionLabels,
+  PermissionGroupKey,
+  permissionGroupLabels,
   PermissionMeta,
 } from '@core/auth/permission-items';
 import { Permission } from '@core/auth/permissions';
@@ -44,40 +46,11 @@ export interface PermissionOption {
   label: string;
 }
 
-const groupLabels: Record<string, string> = {
-  workspace: 'Workspace',
-  members: 'Members',
-  projects: 'Projects',
-  boards: 'Boards',
-  boardGroups: 'Board groups',
-  tasks: 'Tasks',
-  queries: 'Queries',
-  pages: 'Pages',
-  data: 'Data',
-  sprints: 'Sprints',
-  comments: 'Comments',
-  tags: 'Tags',
-  statuses: 'Statuses',
-  relationTypes: 'Relation types',
-  activity: 'Activity',
-  audit: 'Audit',
-  notifications: 'Notifications',
-  calendar: 'Calendar',
-  reports: 'Reports',
-  automations: 'Automations',
-  assistant: 'Assistant',
-  sourceControl: 'Source control',
-  flags: 'Flags',
-  serviceAccounts: 'Service accounts',
-  storage: 'Storage',
-  files: 'Files',
-};
-
 export const permissionGroups: PermissionGroupOption[] = Object.entries(
   netptunePermissionLabels
 ).map(([group, permissions]) => ({
   key: group,
-  label: groupLabels[group] ?? group,
+  label: permissionGroupLabels[group as PermissionGroupKey],
   permissions: (Object.values(permissions) as PermissionMeta[]).map(
     (permission) => ({
       key: permission.key as Permission,
