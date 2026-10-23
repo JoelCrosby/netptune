@@ -3,7 +3,6 @@ import {
   computed,
   inject,
   linkedSignal,
-  signal,
   viewChild,
 } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
@@ -66,7 +65,7 @@ import { DialogSectionComponent } from '@static/components/dialog/dialog-section
       <app-task-detail-chrome
         class="border-foreground/8 h-[52px] border-b"
         [showActivity]="false"
-        [showRailToggle]="true"
+        [showRailToggle]="showRail()"
         [railCollapsed]="rail.collapsed()"
         (railCollapsedChange)="rail.setCollapsed($event)" />
 
@@ -162,30 +161,33 @@ import { DialogSectionComponent } from '@static/components/dialog/dialog-section
           </div>
         </app-dialog-section>
 
-        <app-dialog-rail class="w-[372px]" [collapsed]="rail.collapsed()">
-          <div
-            class="border-foreground/8 flex h-[52px] shrink-0 items-center gap-2 border-b px-4">
-            <app-tab-group
-              variant="island"
-              [tabs]="railTabItems(comments.count())"
-              [(value)]="railTab" />
-          </div>
+        @if (showRail()) {
+          <app-dialog-rail class="w-[372px]" [collapsed]="rail.collapsed()">
+            <div
+              class="border-foreground/8 flex h-[52px] shrink-0 items-center gap-2 border-b px-4">
+              <app-tab-group
+                variant="island"
+                [tabs]="railTabItems(comments.count())"
+                [(value)]="railTab" />
+            </div>
 
-          <div class="custom-scroll min-h-0 flex-1 overflow-y-auto px-4 py-3.5">
-            @if (railTab() === 'comments') {
-              <app-task-detail-comments />
-            } @else {
-              <app-task-detail-activity-feed
-                [enabled]="railTab() === 'history'" />
+            <div
+              class="custom-scroll min-h-0 flex-1 overflow-y-auto px-4 py-3.5">
+              @if (readComments() && railTab() === 'comments') {
+                <app-task-detail-comments />
+              } @else {
+                <app-task-detail-activity-feed
+                  [enabled]="railTab() === 'history'" />
+              }
+            </div>
+
+            @if (canCreateComment() && railTab() === 'comments') {
+              <app-task-detail-composer
+                class="border-foreground/8 shrink-0 border-t px-4 py-3"
+                [showAvatar]="false" />
             }
-          </div>
-
-          @if (readComments() && railTab() === 'comments') {
-            <app-task-detail-composer
-              class="border-foreground/8 shrink-0 border-t px-4 py-3"
-              [showAvatar]="false" />
-          }
-        </app-dialog-rail>
+          </app-dialog-rail>
+        }
       </app-dialog-columns>
 
       <app-task-detail-timestamps
@@ -217,7 +219,9 @@ export class TaskDetailCockpitComponent {
       return isHiddenCodeTab ? 'boards' : tab;
     },
   });
-  readonly railTab = signal('comments');
+  readonly railTab = linkedSignal(() => {
+    return this.readComments() ? 'comments' : 'history';
+  });
 
   readonly descriptionLabel = $localize`:Eyebrow above the task description:Description`;
   readonly tabActionClass =
@@ -228,9 +232,13 @@ export class TaskDetailCockpitComponent {
   readonly readFiles = hasPermission(PERMISSIONS.files.read);
   readonly readFlags = hasPermission(PERMISSIONS.flags.read);
   readonly readComments = hasPermission(PERMISSIONS.comments.read);
+  readonly canCreateComment = hasPermission(PERMISSIONS.comments.create);
   readonly readActivity = hasPermission(PERMISSIONS.activity.read);
   readonly readPages = hasPermission(PERMISSIONS.pages.read);
   readonly readSourceControl = hasPermission(PERMISSIONS.sourceControl.read);
+  readonly showRail = computed(
+    () => this.readComments() || this.readActivity()
+  );
 
   private readonly labels = {
     boards: $localize`:Section heading for the boards a task appears on:Boards`,

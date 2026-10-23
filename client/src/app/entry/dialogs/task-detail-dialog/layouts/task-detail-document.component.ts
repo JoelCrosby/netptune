@@ -177,7 +177,7 @@ import {
         </div>
       </div>
 
-      @if (readComments()) {
+      @if (canCreateComment()) {
         <div
           class="border-foreground/8 flex shrink-0 justify-center border-t py-3">
           <app-task-detail-composer
@@ -201,13 +201,18 @@ export class TaskDetailDocumentComponent {
     () => this.codeSection()?.count() ?? 0
   );
 
-  readonly activeTab = linkedSignal<number, string>({
-    source: this.codeCount,
-    computation: (count, previous) => {
-      const tab = previous?.value ?? 'comments';
-      const isHiddenCodeTab = tab === 'code' && !count;
+  readonly activeTab = linkedSignal<
+    { code: number; comments: boolean },
+    string
+  >({
+    source: () => ({ code: this.codeCount(), comments: this.readComments() }),
+    computation: (source, previous) => {
+      const fallback = source.comments ? 'comments' : 'links';
+      const tab = previous?.value ?? fallback;
+      const isHiddenCodeTab = tab === 'code' && !source.code;
+      const isHiddenCommentsTab = tab === 'comments' && !source.comments;
 
-      return isHiddenCodeTab ? 'comments' : tab;
+      return isHiddenCodeTab || isHiddenCommentsTab ? fallback : tab;
     },
   });
 
@@ -218,6 +223,7 @@ export class TaskDetailDocumentComponent {
   readonly readFiles = hasPermission(PERMISSIONS.files.read);
   readonly readFlags = hasPermission(PERMISSIONS.flags.read);
   readonly readComments = hasPermission(PERMISSIONS.comments.read);
+  readonly canCreateComment = hasPermission(PERMISSIONS.comments.create);
   readonly readActivity = hasPermission(PERMISSIONS.activity.read);
   readonly readPages = hasPermission(PERMISSIONS.pages.read);
   readonly readSourceControl = hasPermission(PERMISSIONS.sourceControl.read);
