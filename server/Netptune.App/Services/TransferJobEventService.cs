@@ -18,12 +18,7 @@ public sealed class TransferJobEventService(
 {
     public async Task SubscribeAsync(string workspaceSlug, HttpResponse response, CancellationToken cancellationToken)
     {
-        response.ContentType = "text/event-stream";
-        response.Headers.Append("Cache-Control", "no-cache");
-        response.Headers.Append("X-Accel-Buffering", "no");
-        response.Headers.Append("Connection", "keep-alive");
-
-        await response.Body.FlushAsync(cancellationToken);
+        await using var stream = await EventStreamResponse.OpenAsync(response, cancellationToken);
 
         var queue = await connection.GetSubscriber().SubscribeAsync(TransferJobChannels.ForWorkspace(workspaceSlug));
 
@@ -31,7 +26,7 @@ public sealed class TransferJobEventService(
         {
             await foreach (var message in queue.WithCancellation(cancellationToken))
             {
-                await WriteFrame(message, response, cancellationToken);
+                await WriteFrame(message, stream, cancellationToken);
             }
         }
         catch (OperationCanceledException exception)
@@ -46,7 +41,10 @@ public sealed class TransferJobEventService(
 
     // The publisher already wrote the payload's JSON, so it is forwarded as-is. Deserialising it only to
     // serialise the identical object back would cost a round trip per event and change nothing.
-    private async Task WriteFrame(ChannelMessage message, HttpResponse response, CancellationToken cancellationToken)
+    private async Task WriteFrame(
+        ChannelMessage message,
+        EventStreamResponse stream,
+        CancellationToken cancellationToken)
     {
         try
         {
@@ -68,8 +66,7 @@ public sealed class TransferJobEventService(
                 return;
             }
 
-            await response.WriteAsync($"event: {eventName}\ndata: {data.GetRawText()}\n\n", cancellationToken);
-            await response.Body.FlushAsync(cancellationToken);
+            await stream.WriteAsync($"event: {eventName}\ndata: {data.GetRawText()}\n\n", cancellationToken);
         }
         catch (Exception exception) when (exception is not OperationCanceledException)
         {

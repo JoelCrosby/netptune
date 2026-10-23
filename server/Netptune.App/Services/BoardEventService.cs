@@ -103,12 +103,7 @@ public sealed class BoardEventService : IBoardEventService, IHostedService
         HttpResponse response,
         CancellationToken cancellationToken)
     {
-        response.Headers.Append("Content-Type", "text/event-stream");
-        response.Headers.Append("Cache-Control", "no-cache");
-        response.Headers.Append("X-Accel-Buffering", "no");
-        response.Headers.Append("Connection", "keep-alive");
-
-        await response.Body.FlushAsync(cancellationToken);
+        await using var stream = await EventStreamResponse.OpenAsync(response, cancellationToken);
 
         var outbound = Channel.CreateBounded<string>(new BoundedChannelOptions(ConnectionQueueCapacity)
         {
@@ -132,8 +127,7 @@ public sealed class BoardEventService : IBoardEventService, IHostedService
         {
             await foreach (var frame in outbound.Reader.ReadAllAsync(cancellationToken))
             {
-                await response.WriteAsync(frame, cancellationToken);
-                await response.Body.FlushAsync(cancellationToken);
+                await stream.WriteAsync(frame, cancellationToken);
             }
         }
         catch (OperationCanceledException)

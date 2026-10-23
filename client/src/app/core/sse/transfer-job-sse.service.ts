@@ -5,6 +5,7 @@ import { ExportJobProgressEvent } from '@core/models/view-models/export-job-view
 import { ImportSessionProgressEvent } from '@core/models/view-models/import-session';
 import { Logger } from '@core/util/logger';
 import { environment } from '@env/environment';
+import { ReconnectingEventSource } from './reconnecting-event-source';
 
 export interface TransferJobHandlers {
   onExport?: (progress: ExportJobProgressEvent) => void;
@@ -13,7 +14,7 @@ export interface TransferJobHandlers {
 
 @Service()
 export class TransferJobSseService {
-  private eventSource: EventSource | null = null;
+  private eventSource: ReconnectingEventSource | null = null;
 
   private readonly isAuthenticated = inject(SessionService).isAuthenticated;
   private readonly workspaceId = inject(CurrentWorkspaceService).slug;
@@ -32,18 +33,24 @@ export class TransferJobSseService {
     const params = new URLSearchParams({ workspace: workspaceId });
     const url = `${environment.apiEndpoint}api/hubs/transfer-jobs?${params.toString()}`;
 
-    this.eventSource = new EventSource(url, { withCredentials: true });
+    this.eventSource = new ReconnectingEventSource(
+      'Transfers',
+      url,
+      (source) => {
+        this.listen(source, 'export-job-progress', handlers.onExport);
+        this.listen(source, 'import-session-progress', handlers.onImport);
 
-    this.listen('export-job-progress', handlers.onExport);
-    this.listen('import-session-progress', handlers.onImport);
+        source.onerror = () => {
+          Logger.warn('[SSE][Transfers] Connection error or closed.');
+        };
 
-    this.eventSource.onerror = () => {
-      Logger.warn('[SSE][Transfers] Connection error or closed.');
-    };
+        source.onopen = () => {
+          Logger.log('%c[SSE][Transfers][Connected]', 'color: lime');
+        };
+      }
+    );
 
-    this.eventSource.onopen = () => {
-      Logger.log('%c[SSE][Transfers][Connected]', 'color: lime');
-    };
+    this.eventSource.open();
   }
 
   disconnect(): void {
@@ -55,10 +62,14 @@ export class TransferJobSseService {
     Logger.log('%c[SSE][Transfers][Disconnected]', 'color: orange');
   }
 
-  private listen<T>(name: string, handler?: (progress: T) => void): void {
-    if (!this.eventSource || !handler) return;
+  private listen<T>(
+    source: EventSource,
+    name: string,
+    handler?: (progress: T) => void
+  ): void {
+    if (!handler) return;
 
-    this.eventSource.addEventListener(name, (event: MessageEvent<string>) => {
+    source.addEventListener(name, (event: MessageEvent<string>) => {
       try {
         handler(JSON.parse(event.data) as T);
       } catch {

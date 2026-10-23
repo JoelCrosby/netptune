@@ -27,12 +27,7 @@ public class NotificationEventService(
 
     public async Task SubscribeAsync(string userId, HttpResponse response, CancellationToken cancellationToken)
     {
-        response.Headers.Append("Content-Type", "text/event-stream");
-        response.Headers.Append("Cache-Control", "no-cache");
-        response.Headers.Append("X-Accel-Buffering", "no");
-        response.Headers.Append("Connection", "keep-alive");
-
-        await response.Body.FlushAsync(cancellationToken);
+        await using var stream = await EventStreamResponse.OpenAsync(response, cancellationToken);
 
         var queue = await connection.GetSubscriber().SubscribeAsync(ChannelForUser(userId));
 
@@ -52,8 +47,7 @@ public class NotificationEventService(
                         notificationEvent,
                         NotificationEventSerializerContext.Default.NotificationEvent);
 
-                    await response.WriteAsync($"data: {json}\n\n", cancellationToken);
-                    await response.Body.FlushAsync(cancellationToken);
+                    await stream.WriteAsync($"data: {json}\n\n", cancellationToken);
                 }
                 catch (Exception e) when (e is not OperationCanceledException)
                 {

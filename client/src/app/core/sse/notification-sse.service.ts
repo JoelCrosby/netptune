@@ -10,6 +10,7 @@ import { CurrentWorkspaceService } from '@core/services/current-workspace.servic
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import { Logger } from '@core/util/logger';
 import { environment } from '@env/environment';
+import { ReconnectingEventSource } from './reconnecting-event-source';
 
 /** No view owns the stream, so nothing else would construct the service that opens it. */
 export function provideNotificationEvents(): EnvironmentProviders {
@@ -21,7 +22,7 @@ export function provideNotificationEvents(): EnvironmentProviders {
 @Service()
 export class NotificationSseService {
   private readonly workspaceRefresh = inject(WorkspaceRefreshService);
-  private eventSource: EventSource | null = null;
+  private eventSource: ReconnectingEventSource | null = null;
 
   private readonly isAuthenticated = inject(SessionService).isAuthenticated;
 
@@ -48,20 +49,29 @@ export class NotificationSseService {
     const params = new URLSearchParams({ workspace });
     const url = `${environment.apiEndpoint}api/hubs/notifications?${params.toString()}`;
 
-    const eventSource = new EventSource(url, { withCredentials: true });
+    const eventSource = new ReconnectingEventSource(
+      'Notifications',
+      url,
+      (source) => {
+        source.addEventListener('message', () => {
+          Logger.log(
+            '%c[SSE][Notifications] notification received',
+            'color: lime'
+          );
+          this.workspaceRefresh.refresh(['notifications']);
+        });
 
-    eventSource.addEventListener('message', () => {
-      Logger.log('%c[SSE][Notifications] notification received', 'color: lime');
-      this.workspaceRefresh.refresh(['notifications']);
-    });
+        source.onerror = () => {
+          Logger.warn('[SSE][Notifications] Connection error or closed.');
+        };
 
-    eventSource.onerror = () => {
-      Logger.warn('[SSE][Notifications] Connection error or closed.');
-    };
+        source.onopen = () => {
+          Logger.log('%c[SSE][Notifications][Connected]', 'color: lime');
+        };
+      }
+    );
 
-    eventSource.onopen = () => {
-      Logger.log('%c[SSE][Notifications][Connected]', 'color: lime');
-    };
+    eventSource.open();
 
     this.eventSource = eventSource;
   }

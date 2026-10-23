@@ -15,6 +15,7 @@ import { refreshScopesForEntityTypes } from '@core/util/entity-refresh-scopes';
 import { Logger } from '@core/util/logger';
 import { environment } from '@env/environment';
 import { RealtimeClientIdService } from './realtime-client-id.service';
+import { ReconnectingEventSource } from './reconnecting-event-source';
 
 /** Bursts of remote edits arrive as one event each, and each one costs a round of reloads. */
 const REFRESH_DELAY = 250;
@@ -62,7 +63,7 @@ export class WorkspaceEventsService {
 
   readonly onlineUserIds = this.online.asReadonly();
 
-  private eventSource: EventSource | null = null;
+  private eventSource: ReconnectingEventSource | null = null;
   private isConnected = false;
   private pendingScopes = new Set<RefreshScope>();
   private refreshTimer: ReturnType<typeof setTimeout> | null = null;
@@ -112,26 +113,33 @@ export class WorkspaceEventsService {
     });
 
     const url = `${environment.apiEndpoint}api/hubs/board-events?${params.toString()}`;
-    const eventSource = new EventSource(url, { withCredentials: true });
 
-    eventSource.addEventListener('message', (event: MessageEvent<string>) => {
-      Logger.log('%c[SSE][EVENT] workspace update received', 'color: lime');
-      this.requestRefresh(readChangedScopes(event.data));
-    });
+    const eventSource = new ReconnectingEventSource(
+      'Workspace',
+      url,
+      (source) => {
+        source.addEventListener('message', (event: MessageEvent<string>) => {
+          Logger.log('%c[SSE][EVENT] workspace update received', 'color: lime');
+          this.requestRefresh(readChangedScopes(event.data));
+        });
 
-    eventSource.addEventListener('presence', (event) => {
-      Logger.log('%c[SSE][EVENT] presence received', 'color: cyan');
-      this.setOnlineUsers(event.data);
-    });
+        source.addEventListener('presence', (event) => {
+          Logger.log('%c[SSE][EVENT] presence received', 'color: cyan');
+          this.setOnlineUsers(event.data);
+        });
 
-    eventSource.onerror = () => {
-      Logger.warn('[SSE] Connection error or closed.');
-    };
+        source.onerror = () => {
+          Logger.warn('[SSE] Connection error or closed.');
+        };
 
-    eventSource.onopen = () => {
-      Logger.log('%c[SSE][Connected]', 'color: lime');
-      this.handleOpen();
-    };
+        source.onopen = () => {
+          Logger.log('%c[SSE][Connected]', 'color: lime');
+          this.handleOpen();
+        };
+      }
+    );
+
+    eventSource.open();
 
     this.eventSource = eventSource;
   }
