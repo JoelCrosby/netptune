@@ -10,7 +10,7 @@ public interface INetptuneAuthService
 {
     Task<LoginResult> LogIn(TokenRequest model);
 
-    Task<LoginResult> Refresh(RefreshTokenRequest request);
+    Task<LoginResult> Refresh(RefreshTokenRequest request, CancellationToken cancellationToken = default);
 
     Task<LoginResult> LogInViaProvider(string providerScheme);
 

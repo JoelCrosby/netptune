@@ -209,6 +209,29 @@ public sealed class AuthEndpointTests
     }
 
     [Fact]
+    public async Task Refresh_ShouldAcceptTheTokenOnce_WhenRefreshesRace()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var client = CreateClient();
+        var email = await Register(client);
+        var login = await client.PostAsJsonAsync("api/auth/login", new TokenRequest
+        {
+            Email = email,
+            Password = Password,
+            Turnstile = TestTurnstileService.ValidToken,
+        }, cancellationToken);
+
+        var refreshToken = GetCookieValue(login, "refresh_token");
+        var attempts = Enumerable.Range(0, 4).Select(_ => SendRefresh(client, refreshToken, cancellationToken));
+        var responses = await Task.WhenAll(attempts);
+        var statuses = responses.Select(response => response.StatusCode).ToList();
+        var acceptedCount = statuses.Count(status => status == HttpStatusCode.OK);
+
+        acceptedCount.Should().Be(1);
+        statuses.Should().AllSatisfy(status => status.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.Unauthorized));
+    }
+
+    [Fact]
     public async Task Refresh_ShouldReturnUnauthorized_WhenTheRefreshCookieIsMissing()
     {
         var client = CreateClient();
@@ -457,6 +480,18 @@ public sealed class AuthEndpointTests
         response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
 
         return email;
+    }
+
+    private static Task<HttpResponseMessage> SendRefresh(
+        HttpClient client,
+        string refreshToken,
+        CancellationToken cancellationToken)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Post, "api/auth/refresh");
+
+        request.Headers.Add("Cookie", $"refresh_token={refreshToken}");
+
+        return client.SendAsync(request, cancellationToken);
     }
 
     private async Task<AppUser> GetUser(string email)

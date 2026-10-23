@@ -20,6 +20,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Messaging;
 using Netptune.Core.Models;
+using Netptune.Core.Models.Authentication;
 using Netptune.Core.Models.Messaging;
 using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
@@ -60,6 +61,7 @@ public class AuthenticationServiceTests
         Configuration["Tokens:Issuer"].Returns("test-issuer");
         Configuration["Tokens:ExpireDays"].Returns("7");
         Configuration["Origin"].Returns("https://test.example.com");
+        UnitOfWork.InvokeTransaction<LoginResult>();
         UnitOfWork.WorkspaceUsers
             .GetWorkspaceIdsForUser(Arg.Any<string>(), Arg.Any<CancellationToken>())
             .Returns([]);
@@ -297,16 +299,19 @@ public class AuthenticationServiceTests
         };
 
         UnitOfWork.RefreshTokens.GetByTokenAsync(hashedToken, Arg.Any<CancellationToken>()).Returns(existingToken);
+        UnitOfWork.RefreshTokens.TryRevokeAsync(hashedToken, Arg.Any<CancellationToken>()).Returns(true);
         UserManager.FindByIdAsync(user.Id).Returns(user);
 
-        var result = await Service.Refresh(new RefreshTokenRequest { RefreshToken = rawRefreshToken });
+        var request = new RefreshTokenRequest { RefreshToken = rawRefreshToken };
+        var result = await Service.Refresh(request, TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
         result.Ticket.Should().NotBeNull();
         result.Ticket!.UserId.Should().Be(user.Id);
         result.Ticket.RefreshToken.Should().NotBe(rawRefreshToken);
 
-        await UnitOfWork.RefreshTokens.Received(1).RevokeAsync(hashedToken, Arg.Any<CancellationToken>());
+        await UnitOfWork.Received(1).Transaction(Arg.Any<Func<Task<LoginResult>>>());
+        await UnitOfWork.RefreshTokens.Received(1).TryRevokeAsync(hashedToken, Arg.Any<CancellationToken>());
         await UnitOfWork.RefreshTokens.Received(1).RemoveExpiredAsync(user.Id, Arg.Any<CancellationToken>());
         await UnitOfWork.RefreshTokens.Received(1).AddAsync(Arg.Is<RefreshToken>(token =>
             token.UserId == user.Id &&
@@ -322,11 +327,12 @@ public class AuthenticationServiceTests
 
         UnitOfWork.RefreshTokens.GetByTokenAsync(hashedToken, Arg.Any<CancellationToken>()).ReturnsNull();
 
-        var result = await Service.Refresh(new RefreshTokenRequest { RefreshToken = rawRefreshToken });
+        var request = new RefreshTokenRequest { RefreshToken = rawRefreshToken };
+        var result = await Service.Refresh(request, TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
         result.Message.Should().Be("Invalid or expired refresh token");
-        await UnitOfWork.RefreshTokens.DidNotReceive().RevokeAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await UnitOfWork.RefreshTokens.DidNotReceive().TryRevokeAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
         await UnitOfWork.RefreshTokens.DidNotReceive().RemoveExpiredAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
     }
 
@@ -345,12 +351,13 @@ public class AuthenticationServiceTests
 
         UnitOfWork.RefreshTokens.GetByTokenAsync(hashedToken, Arg.Any<CancellationToken>()).Returns(existingToken);
 
-        var result = await Service.Refresh(new RefreshTokenRequest { RefreshToken = rawRefreshToken });
+        var request = new RefreshTokenRequest { RefreshToken = rawRefreshToken };
+        var result = await Service.Refresh(request, TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
         result.Message.Should().Be("Invalid or expired refresh token");
         await UserManager.DidNotReceive().FindByIdAsync(Arg.Any<string>());
-        await UnitOfWork.RefreshTokens.DidNotReceive().RevokeAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await UnitOfWork.RefreshTokens.DidNotReceive().TryRevokeAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -369,12 +376,40 @@ public class AuthenticationServiceTests
         UnitOfWork.RefreshTokens.GetByTokenAsync(hashedToken, Arg.Any<CancellationToken>()).Returns(existingToken);
         UserManager.FindByIdAsync(existingToken.UserId).ReturnsNull();
 
-        var result = await Service.Refresh(new RefreshTokenRequest { RefreshToken = rawRefreshToken });
+        var request = new RefreshTokenRequest { RefreshToken = rawRefreshToken };
+        var result = await Service.Refresh(request, TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
         result.Message.Should().Be("Invalid or expired refresh token");
-        await UnitOfWork.RefreshTokens.DidNotReceive().RevokeAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await UnitOfWork.RefreshTokens.DidNotReceive().TryRevokeAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
         await UnitOfWork.RefreshTokens.DidNotReceive().RemoveExpiredAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Refresh_ShouldReturnFailure_WhenAnotherRequestRevokedTheTokenFirst()
+    {
+        const string rawRefreshToken = "raced-token";
+        var hashedToken = HashToken(rawRefreshToken);
+        var user = AutoFixtures.AppUser;
+        var existingToken = new RefreshToken
+        {
+            Token = hashedToken,
+            UserId = user.Id,
+            Created = DateTime.UtcNow.AddDays(-1),
+            Expires = DateTime.UtcNow.AddDays(1),
+        };
+
+        UnitOfWork.RefreshTokens.GetByTokenAsync(hashedToken, Arg.Any<CancellationToken>()).Returns(existingToken);
+        UnitOfWork.RefreshTokens.TryRevokeAsync(hashedToken, Arg.Any<CancellationToken>()).Returns(false);
+        UserManager.FindByIdAsync(user.Id).Returns(user);
+
+        var request = new RefreshTokenRequest { RefreshToken = rawRefreshToken };
+        var result = await Service.Refresh(request, TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Be("Invalid or expired refresh token");
+        await UnitOfWork.RefreshTokens.DidNotReceive().RemoveExpiredAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await UnitOfWork.RefreshTokens.DidNotReceive().AddAsync(Arg.Any<RefreshToken>(), Arg.Any<CancellationToken>());
     }
 
     // LogInViaProvider

@@ -152,7 +152,8 @@ public static class AuthEndpoints
 
     public static async Task<IResult> HandleRefresh(
         INetptuneAuthService authenticationService,
-        HttpContext context)
+        HttpContext context,
+        CancellationToken cancellationToken)
     {
         var refreshToken = context.Request.Cookies["refresh_token"];
 
@@ -161,10 +162,12 @@ public static class AuthEndpoints
             return Results.Unauthorized();
         }
 
-        var result = await authenticationService.Refresh(new RefreshTokenRequest
+        var request = new RefreshTokenRequest
         {
             RefreshToken = refreshToken,
-        });
+        };
+
+        var result = await authenticationService.Refresh(request, cancellationToken);
 
         if (!result.IsSuccess)
         {

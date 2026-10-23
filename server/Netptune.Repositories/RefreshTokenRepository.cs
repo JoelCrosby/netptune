@@ -21,22 +21,24 @@ public class RefreshTokenRepository : Repository<DataContext, RefreshToken, int>
             .FirstOrDefaultAsync(t => t.Token == token, cancellationToken);
     }
 
-    public async Task RevokeAsync(string token, CancellationToken cancellationToken = default)
+    // A single conditional UPDATE, so of two requests racing with the same token only one revokes it.
+    public async Task<bool> TryRevokeAsync(string token, CancellationToken cancellationToken = default)
     {
-        var refreshToken = await Context.RefreshTokens
-            .FirstOrDefaultAsync(t => t.Token == token, cancellationToken);
+        var now = DateTime.UtcNow;
 
-        if (refreshToken is null) return;
+        var revokedCount = await Context.RefreshTokens
+            .Where(t => t.Token == token && t.Revoked == null && t.Expires > now)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(t => t.Revoked, now), cancellationToken);
 
-        refreshToken.Revoked = DateTime.UtcNow;
+        return revokedCount == 1;
     }
 
-    public async Task RemoveExpiredAsync(string userId, CancellationToken cancellationToken = default)
+    public Task<int> RemoveExpiredAsync(string userId, CancellationToken cancellationToken = default)
     {
-        var expired = await Context.RefreshTokens
-            .Where(t => t.UserId == userId && (t.Revoked != null || t.Expires <= DateTime.UtcNow))
-            .ToListAsync(cancellationToken);
+        var now = DateTime.UtcNow;
 
-        Context.RefreshTokens.RemoveRange(expired);
+        return Context.RefreshTokens
+            .Where(t => t.UserId == userId && (t.Revoked != null || t.Expires <= now))
+            .ExecuteDeleteAsync(cancellationToken);
     }
 }

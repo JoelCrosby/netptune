@@ -115,10 +115,10 @@ public class NetptuneAuthService : INetptuneAuthService
         return LoginResult.Success(ticket);
     }
 
-    public async Task<LoginResult> Refresh(RefreshTokenRequest request)
+    public async Task<LoginResult> Refresh(RefreshTokenRequest request, CancellationToken cancellationToken = default)
     {
         var hasedToken = HashToken(request.RefreshToken);
-        var existing = await UnitOfWork.RefreshTokens.GetByTokenAsync(hasedToken);
+        var existing = await UnitOfWork.RefreshTokens.GetByTokenAsync(hasedToken, cancellationToken);
 
         if (existing is null || !existing.IsActive)
         {
@@ -132,14 +132,25 @@ public class NetptuneAuthService : INetptuneAuthService
             return LoginResult.Failed("Invalid or expired refresh token");
         }
 
-        await UnitOfWork.RefreshTokens.RevokeAsync(hasedToken);
-        await UnitOfWork.RefreshTokens.RemoveExpiredAsync(appUser.Id);
+        var result = await UnitOfWork.Transaction(async () =>
+        {
+            var revoked = await UnitOfWork.RefreshTokens.TryRevokeAsync(hasedToken, cancellationToken);
 
-        var ticket = await GenerateTicket(appUser);
+            if (!revoked)
+            {
+                return LoginResult.Failed("Invalid or expired refresh token");
+            }
 
-        await UnitOfWork.CompleteAsync();
+            await UnitOfWork.RefreshTokens.RemoveExpiredAsync(appUser.Id, cancellationToken);
 
-        return LoginResult.Success(ticket);
+            var ticket = await GenerateTicket(appUser);
+
+            await UnitOfWork.CompleteAsync(cancellationToken);
+
+            return LoginResult.Success(ticket);
+        });
+
+        return result;
     }
 
     public async Task<LoginResult> LogInViaProvider(string providerScheme)
