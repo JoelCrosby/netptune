@@ -3,6 +3,7 @@ import { PinnedTask, TaskPin } from '@core/models/task-pin';
 import { pinnedTasksResource } from '@core/resources/task-pin.resource';
 import { DialogService } from '@core/services/dialog.service';
 import { PinCommandsService } from '@core/services/pin-commands.service';
+import { SessionService } from '@core/services/session.service';
 import { pinnedTaskFilter } from '@core/util/pinned-task-filter';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
 import { LucidePin } from '@lucide/angular';
@@ -48,6 +49,7 @@ import { TabGroupComponent } from '@static/components/tab-group/tab-group.compon
             [class.border-t]="!first"
             [class.border-border]="!first"
             [pinned]="pinned"
+            [showAction]="!isPublicViewer()"
             (opened)="onTaskClicked(pinned)"
             (unpinned)="onUnpinClicked($event)" />
         }
@@ -59,6 +61,8 @@ export class DashboardPinnedCardComponent {
   private readonly pinsRef = pinnedTasksResource();
   private readonly pinCommands = inject(PinCommandsService);
   private readonly dialog = inject(DialogService);
+
+  protected readonly isPublicViewer = inject(SessionService).isPublicViewer;
 
   protected readonly pinIcon = LucidePin;
 

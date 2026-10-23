@@ -18,6 +18,7 @@ import { PERMISSIONS } from '@app/core/auth/permissions';
 import { BoardViewService } from '@core/services/board-view.service';
 import { BOARDS_HIDDEN_GROUP_IDS } from '@core/models/user-preferences';
 import { DialogService } from '@core/services/dialog.service';
+import { SessionService } from '@core/services/session.service';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
 
 @Component({
@@ -53,11 +54,13 @@ import { UserPreferencesService } from '@core/services/user-preferences.service'
       <app-board-group-sort />
 
       @if (board(); as board) {
-        <app-notification-subscribe
-          appearance="toolbar"
-          [scope]="notificationScope.board"
-          [scopeEntityId]="board.id"
-          [scopeName]="board.name" />
+        @if (!isPublicViewer()) {
+          <app-notification-subscribe
+            appearance="toolbar"
+            [scope]="notificationScope.board"
+            [scopeEntityId]="board.id"
+            [scopeName]="board.name" />
+        }
 
         @if (readActivity()) {
           <app-activity-menu
@@ -78,6 +81,7 @@ export class BoardGroupHeaderComponent {
   private dialog = inject(DialogService);
 
   protected readonly board = inject(BoardViewService).board;
+  protected readonly isPublicViewer = inject(SessionService).isPublicViewer;
 
   protected readonly notificationScope = NotificationScope;
   protected readonly boardEntityType = EntityType.board;

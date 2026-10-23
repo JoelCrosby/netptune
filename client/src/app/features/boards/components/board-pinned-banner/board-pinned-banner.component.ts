@@ -5,6 +5,7 @@ import { BoardSelectionService } from '@core/services/board-selection.service';
 import { BoardViewService } from '@core/services/board-view.service';
 import { DialogService } from '@core/services/dialog.service';
 import { PinCommandsService } from '@core/services/pin-commands.service';
+import { SessionService } from '@core/services/session.service';
 import { pinnedTaskFilter } from '@core/util/pinned-task-filter';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
 import { LucideChevronUp, LucidePin } from '@lucide/angular';
@@ -94,6 +95,7 @@ import { TabGroupComponent } from '@static/components/tab-group/tab-group.compon
                   class="border-border border-t"
                   layout="compact"
                   [showPageLink]="true"
+                  [showAction]="!isPublicViewer()"
                   [pinned]="pinned"
                   (opened)="onTaskOpened(pinned)"
                   (unpinned)="onUnpinClicked($event)" />
@@ -133,6 +135,8 @@ export class BoardPinnedBannerComponent {
   private readonly selection = inject(BoardSelectionService);
   private readonly pinCommands = inject(PinCommandsService);
   private readonly dialog = inject(DialogService);
+
+  protected readonly isPublicViewer = inject(SessionService).isPublicViewer;
 
   private readonly boardId = computed(() => this.boardView.board()?.id);
   private readonly pinsRef = boardPinsResource(this.boardId);

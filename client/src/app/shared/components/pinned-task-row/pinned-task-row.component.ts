@@ -16,9 +16,6 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
 
 export type PinnedTaskRowLayout = 'full' | 'compact';
 
-// One pinned task: the task itself, a badge per pin naming who it is pinned for, and
-// the control to unpin it. `full` carries the task's status, estimate and assignees;
-// `compact` keeps to the key, name and priority so a narrow list still reads the name.
 @Component({
   selector: 'app-pinned-task-row',
   imports: [
@@ -92,22 +89,24 @@ export type PinnedTaskRowLayout = 'full' | 'compact';
       </a>
     }
 
-    @if (removablePin(); as pin) {
-      <button
-        type="button"
-        app-icon-button
-        class="text-foreground/35 hover:text-foreground h-7 w-7 flex-none"
-        [title]="unpinLabel"
-        [attr.aria-label]="unpinLabel"
-        (click)="unpinned.emit(pin)">
-        <svg lucidePinOff class="h-3.75 w-3.75"></svg>
-      </button>
-    } @else {
-      <span
-        class="text-foreground/20 flex h-7 w-7 flex-none items-center justify-center"
-        [title]="lockedLabel">
-        <svg lucideLock class="h-3.5 w-3.5"></svg>
-      </span>
+    @if (showAction()) {
+      @if (removablePin(); as pin) {
+        <button
+          type="button"
+          app-icon-button
+          class="text-foreground/35 hover:text-foreground h-7 w-7 flex-none"
+          [title]="unpinLabel"
+          [attr.aria-label]="unpinLabel"
+          (click)="unpinned.emit(pin)">
+          <svg lucidePinOff class="h-3.75 w-3.75"></svg>
+        </button>
+      } @else {
+        <span
+          class="text-foreground/20 flex h-7 w-7 flex-none items-center justify-center"
+          [title]="lockedLabel">
+          <svg lucideLock class="h-3.5 w-3.5"></svg>
+        </span>
+      }
     }
   `,
 })
@@ -115,6 +114,7 @@ export class PinnedTaskRowComponent {
   readonly pinned = input.required<PinnedTask>();
   readonly layout = input<PinnedTaskRowLayout>('full');
   readonly showPageLink = input(false);
+  readonly showAction = input(true);
 
   readonly opened = output();
   readonly unpinned = output<TaskPin>();

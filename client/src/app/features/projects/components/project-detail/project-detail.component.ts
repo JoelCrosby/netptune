@@ -21,6 +21,7 @@ import { FormSelectComponent } from '@static/components/form-select/form-select.
 import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
 import { NotificationSubscribeComponent } from '@shared/components/notification-subscribe/notification-subscribe.component';
 import { NotificationScope } from '@core/models/notification-subscription';
+import { SessionService } from '@core/services/session.service';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 import { PanelComponent } from '@static/components/panel.component';
 import { PanelBodyComponent } from '@static/components/panel-body.component';
@@ -55,11 +56,13 @@ import { PanelHeaderComponent } from '@static/components/panel-header.component'
         description="How this project is named, identified and where its new tasks start.">
         <div panelHeaderActions>
           @if (project(); as project) {
-            <app-notification-subscribe
-              class="shrink-0"
-              [scope]="notificationScope.project"
-              [scopeEntityId]="project.id"
-              [scopeName]="project.name" />
+            @if (!isPublicViewer()) {
+              <app-notification-subscribe
+                class="shrink-0"
+                [scope]="notificationScope.project"
+                [scopeEntityId]="project.id"
+                [scopeName]="project.name" />
+            }
           }
         </div>
       </app-panel-header>
@@ -127,6 +130,8 @@ import { PanelHeaderComponent } from '@static/components/panel-header.component'
 })
 export class ProjectDetailComponent {
   private projectCommands = inject(ProjectCommandsService);
+
+  protected readonly isPublicViewer = inject(SessionService).isPublicViewer;
 
   protected readonly detailsIcon = LucideFolderOpen;
   protected readonly notificationScope = NotificationScope;

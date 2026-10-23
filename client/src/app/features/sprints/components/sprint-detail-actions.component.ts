@@ -13,6 +13,7 @@ import { SprintStatus } from '@core/enums/sprint-status';
 import { NotificationScope } from '@core/models/notification-subscription';
 import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-view-model';
 import { AiAssistantService } from '@core/services/ai-assistant.service';
+import { SessionService } from '@core/services/session.service';
 import { SprintCommandsService } from '@core/services/sprint-commands.service';
 import {
   LucideBell,
@@ -139,75 +140,81 @@ import { MenuSeparatorComponent } from '@static/components/dropdown-menu/menu-se
       </button>
     }
 
-    <button
-      #moreTrigger
-      app-stroked-button
-      color="neutral"
-      type="button"
-      class="w-10 min-w-0 px-0"
-      aria-haspopup="menu"
-      i18n-aria-label="
-        Accessible label for the button that opens the sprint action menu
-      "
-      aria-label="More sprint actions"
-      (click)="moreMenu.toggle($any($event.currentTarget))">
-      <svg lucideEllipsis class="h-4 w-4 shrink-0"></svg>
-    </button>
-
-    <app-dropdown-menu #moreMenu xPosition="before" panelClass="w-60 p-1">
+    @if (hasMoreActions()) {
       <button
-        app-menu-item
+        #moreTrigger
+        app-stroked-button
+        color="neutral"
         type="button"
-        (click)="moreMenu.close(); notify.open(notifyOrigin().nativeElement)">
-        <svg lucideBell class="h-4 w-4 shrink-0"></svg>
-        <span i18n="Menu item that opens the sprint notification settings">
-          Notify me about this sprint
-        </span>
+        class="w-10 min-w-0 px-0"
+        aria-haspopup="menu"
+        i18n-aria-label="
+          Accessible label for the button that opens the sprint action menu
+        "
+        aria-label="More sprint actions"
+        (click)="moreMenu.toggle($any($event.currentTarget))">
+        <svg lucideEllipsis class="h-4 w-4 shrink-0"></svg>
       </button>
 
-      @if (assistant.isAvailable()) {
-        <button
-          app-menu-item
-          type="button"
-          (click)="assistant.askAboutSprint(sprint()); moreMenu.close()">
-          <svg lucideSparkles class="h-4 w-4 shrink-0"></svg>
-          <span i18n="Menu item that asks the assistant about this sprint">
-            Summarise with Assistant
-          </span>
-        </button>
-      }
+      <app-dropdown-menu #moreMenu xPosition="before" panelClass="w-60 p-1">
+        @if (!isPublicViewer()) {
+          <button
+            app-menu-item
+            type="button"
+            (click)="
+              moreMenu.close(); notify.open(notifyOrigin().nativeElement)
+            ">
+            <svg lucideBell class="h-4 w-4 shrink-0"></svg>
+            <span i18n="Menu item that opens the sprint notification settings">
+              Notify me about this sprint
+            </span>
+          </button>
+        }
 
-      @if (canEditSprint()) {
-        <button
-          app-menu-item
-          type="button"
-          (click)="editSprint.emit(); moreMenu.close()">
-          <svg lucideSettings2 class="h-4 w-4 shrink-0"></svg>
-          <span i18n="Menu item that edits the sprint">Sprint settings</span>
-        </button>
-      }
+        @if (assistant.isAvailable()) {
+          <button
+            app-menu-item
+            type="button"
+            (click)="assistant.askAboutSprint(sprint()); moreMenu.close()">
+            <svg lucideSparkles class="h-4 w-4 shrink-0"></svg>
+            <span i18n="Menu item that asks the assistant about this sprint">
+              Summarise with Assistant
+            </span>
+          </button>
+        }
 
-      @if (canUpdate()) {
-        <app-menu-separator />
+        @if (canEditSprint()) {
+          <button
+            app-menu-item
+            type="button"
+            (click)="editSprint.emit(); moreMenu.close()">
+            <svg lucideSettings2 class="h-4 w-4 shrink-0"></svg>
+            <span i18n="Menu item that edits the sprint">Sprint settings</span>
+          </button>
+        }
 
-        <button
-          app-menu-item
-          type="button"
-          color="warn"
-          (click)="deleteSprint.emit(); moreMenu.close()">
-          <svg lucideTrash2 class="h-4 w-4 shrink-0"></svg>
-          <span i18n="Menu item that deletes the sprint">Delete sprint</span>
-        </button>
-      }
-    </app-dropdown-menu>
+        @if (canUpdate()) {
+          <app-menu-separator />
 
-    <app-notification-subscribe
-      #notify
-      appearance="hidden"
-      xPosition="before"
-      [scope]="notificationScope.sprint"
-      [scopeEntityId]="sprint().id"
-      [scopeName]="sprint().name" />
+          <button
+            app-menu-item
+            type="button"
+            color="warn"
+            (click)="deleteSprint.emit(); moreMenu.close()">
+            <svg lucideTrash2 class="h-4 w-4 shrink-0"></svg>
+            <span i18n="Menu item that deletes the sprint">Delete sprint</span>
+          </button>
+        }
+      </app-dropdown-menu>
+
+      <app-notification-subscribe
+        #notify
+        appearance="hidden"
+        xPosition="before"
+        [scope]="notificationScope.sprint"
+        [scopeEntityId]="sprint().id"
+        [scopeName]="sprint().name" />
+    }
   `,
 })
 export class SprintDetailActionsComponent {
@@ -221,6 +228,7 @@ export class SprintDetailActionsComponent {
   readonly deleteSprint = output();
 
   protected readonly assistant = inject(AiAssistantService);
+  protected readonly isPublicViewer = inject(SessionService).isPublicViewer;
 
   // The notify panel hangs off the overflow trigger the row was reached through, so it opens where
   // the menu it replaces just was.
@@ -241,6 +249,15 @@ export class SprintDetailActionsComponent {
   // Saving or completing a sprint can move its unfinished tasks, so the server asks for both.
   protected readonly canEditSprint = computed(() => {
     return this.canUpdate() && this.canManageTasks();
+  });
+
+  protected readonly hasMoreActions = computed(() => {
+    return (
+      !this.isPublicViewer() ||
+      this.assistant.isAvailable() ||
+      this.canEditSprint() ||
+      this.canUpdate()
+    );
   });
 
   protected readonly canAddWork = computed(() => {
