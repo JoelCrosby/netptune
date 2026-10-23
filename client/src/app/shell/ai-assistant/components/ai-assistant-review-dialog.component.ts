@@ -19,6 +19,7 @@ import {
 } from '@core/models/ai-conversation';
 import { AiAssistantService } from '@core/services/ai-assistant.service';
 import { AiPanelService } from '@core/services/ai-panel.service';
+import { BrowserSettingsService } from '@core/settings/browser-settings.service';
 import { LucideSparkles, LucideX } from '@lucide/angular';
 import { ButtonComponent } from '@static/components/button/button.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
@@ -69,9 +70,6 @@ export interface AiReviewData {
   workspace?: string | null;
   filter?: AiReviewFilter;
 }
-
-const MODE_KEY = 'netptune.ai.review.mode';
-const LIST_WIDTH_KEY = 'netptune.ai.review.list-width';
 
 const MIN_LIST_WIDTH = 260;
 const MAX_LIST_WIDTH = 720;
@@ -465,6 +463,7 @@ export class AiAssistantReviewDialogComponent {
   protected readonly assistant = inject(AiAssistantService);
 
   private readonly panel = inject(AiPanelService);
+  private readonly settings = inject(BrowserSettingsService);
   private readonly dialogRef = inject<DialogRef<void>>(DialogRef);
   private readonly router = inject(Router);
   private readonly data = inject<AiReviewData | null>(DIALOG_DATA, {
@@ -800,12 +799,7 @@ export class AiAssistantReviewDialogComponent {
 
   protected setMode(mode: AiDiffMode) {
     this.mode.set(mode);
-
-    try {
-      localStorage.setItem(MODE_KEY, mode);
-    } catch {
-      // Ignore storage failures (private mode, quota, etc.).
-    }
+    this.settings.set('ai.review.mode', mode);
   }
 
   protected setListWidth(width: number) {
@@ -818,11 +812,7 @@ export class AiAssistantReviewDialogComponent {
       return;
     }
 
-    try {
-      localStorage.setItem(LIST_WIDTH_KEY, String(this.listWidth()));
-    } catch {
-      // Ignore storage failures (private mode, quota, etc.).
-    }
+    this.settings.set('ai.review.listWidth', this.listWidth());
   }
 
   protected toggleGroup(key: string) {
@@ -1042,7 +1032,7 @@ export class AiAssistantReviewDialogComponent {
   }
 
   private storedMode(): AiDiffMode {
-    const stored = this.readMode();
+    const stored = this.settings.get('ai.review.mode');
     const isKnown =
       stored === 'split' || stored === 'unified' || stored === 'inline';
 
@@ -1050,20 +1040,8 @@ export class AiAssistantReviewDialogComponent {
   }
 
   private storedListWidth(): number {
-    try {
-      const stored = localStorage.getItem(LIST_WIDTH_KEY);
+    const stored = this.settings.get('ai.review.listWidth');
 
-      return stored === null ? DEFAULT_LIST_WIDTH : clampListWidth(+stored);
-    } catch {
-      return DEFAULT_LIST_WIDTH;
-    }
-  }
-
-  private readMode(): string | null {
-    try {
-      return localStorage.getItem(MODE_KEY);
-    } catch {
-      return null;
-    }
+    return stored === undefined ? DEFAULT_LIST_WIDTH : clampListWidth(stored);
   }
 }

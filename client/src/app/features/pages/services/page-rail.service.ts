@@ -1,29 +1,16 @@
-import { Service, signal } from '@angular/core';
-
-const storageKey = 'netptune.pages.railCollapsed';
+import { Service, inject, signal } from '@angular/core';
+import { BrowserSettingsService } from '@core/settings/browser-settings.service';
 
 @Service()
 export class PageRailService {
-  readonly collapsed = signal(readCollapsed());
+  private readonly settings = inject(BrowserSettingsService);
+
+  readonly collapsed = signal(
+    this.settings.get('pages.railCollapsed') === true
+  );
 
   setCollapsed(collapsed: boolean) {
     this.collapsed.set(collapsed);
-    writeCollapsed(collapsed);
-  }
-}
-
-function readCollapsed(): boolean {
-  try {
-    return localStorage.getItem(storageKey) === 'true';
-  } catch {
-    return false;
-  }
-}
-
-function writeCollapsed(collapsed: boolean) {
-  try {
-    localStorage.setItem(storageKey, String(collapsed));
-  } catch {
-    return;
+    this.settings.set('pages.railCollapsed', collapsed);
   }
 }

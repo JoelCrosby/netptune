@@ -1,6 +1,6 @@
 import { Service, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { LocalStorageService } from '@core/local-storage/local-storage.service';
+import { BrowserSettingsService } from '@core/settings/browser-settings.service';
 import { AiDisplayMode } from '@core/models/ai-display-mode';
 import {
   DEFAULT_AI_PANEL_WIDTH,
@@ -12,14 +12,12 @@ import { LayoutService } from '@core/services/layout.service';
 import { SessionService } from '@core/services/session.service';
 import { WorkspaceService } from '@core/services/workspace.service';
 
-const MODE_STORAGE_KEY = 'ai-assistant.mode';
-const PANEL_WIDTH_STORAGE_KEY = 'ai-assistant.panel-width';
 const ASSISTANT_PAGE_PATTERN = /^\/[^/]+\/assistant$/;
 
 @Service()
 export class AiPanelService {
   private readonly router = inject(Router);
-  private readonly storage = inject(LocalStorageService);
+  private readonly settings = inject(BrowserSettingsService);
   private readonly workspace = inject(WorkspaceService);
   private readonly workspaceId = inject(CurrentWorkspaceService).slug;
   private readonly catalog = inject(AiModelCatalogService);
@@ -29,7 +27,7 @@ export class AiPanelService {
   readonly isOpen = signal(false);
 
   readonly mode = signal<AiDisplayMode>(
-    this.storage.getItem<AiDisplayMode>(MODE_STORAGE_KEY) ?? 'overlay'
+    this.settings.get('ai.mode') ?? 'overlay'
   );
 
   readonly width = signal(this.readWidth());
@@ -102,7 +100,7 @@ export class AiPanelService {
 
   setMode(mode: AiDisplayMode) {
     this.mode.set(mode);
-    this.storage.setItem(MODE_STORAGE_KEY, mode);
+    this.settings.set('ai.mode', mode);
 
     if (mode === 'dedicated') {
       this.isOpen.set(false);
@@ -218,11 +216,11 @@ export class AiPanelService {
   }
 
   private persistWidth() {
-    this.storage.setItem(PANEL_WIDTH_STORAGE_KEY, this.width());
+    this.settings.set('ai.panelWidth', this.width());
   }
 
   private readWidth(): number {
-    const stored = this.storage.getItem<number>(PANEL_WIDTH_STORAGE_KEY);
+    const stored = this.settings.get('ai.panelWidth');
 
     if (typeof stored !== 'number') {
       return DEFAULT_AI_PANEL_WIDTH;

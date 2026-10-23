@@ -6,6 +6,7 @@ import {
   linkedSignal,
 } from '@angular/core';
 import { PageTreeNode } from '@core/models/pages';
+import { BrowserSettingsService } from '@core/settings/browser-settings.service';
 import { CurrentRouteService } from '@core/router/current-route.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
@@ -14,8 +15,6 @@ import { PageCommandsService } from '@core/services/page-commands.service';
 import { TreeMove } from '@static/components/tree/tree.types';
 import { pageTreeResource } from '../resources/pages.resource';
 import { placementFor } from '../util/page-placement';
-
-const expandedStoragePrefix = 'pages.tree.expanded.';
 
 export const archiveNodeId = -1;
 export const homeNodeId = -2;
@@ -40,6 +39,7 @@ export class PageTreeStore {
   private readonly currentWorkspace = inject(CurrentWorkspaceService);
   private readonly currentRoute = inject(CurrentRouteService);
   private readonly commands = inject(PageCommandsService);
+  private readonly settings = inject(BrowserSettingsService);
   private readonly tree = pageTreeResource();
   private readonly projects = projectResource();
 
@@ -130,22 +130,20 @@ export class PageTreeStore {
     return new Map(this.nodes().map((node) => [node.id, node]));
   });
 
-  private readonly storageKey = computed(() => {
-    return `${expandedStoragePrefix}${this.workspaceSlug()}`;
-  });
-
   readonly expanded = linkedSignal<ExpansionSource, readonly number[]>({
-    source: () => ({ key: this.storageKey(), openId: this.selectedId() }),
+    source: () => ({ key: this.workspaceSlug(), openId: this.selectedId() }),
     computation: (source, previous) => {
       const sameWorkspace = previous?.source.key === source.key;
-      const current = sameWorkspace ? previous.value : readExpanded(source.key);
+      const current = sameWorkspace
+        ? previous.value
+        : this.readExpanded(source.key);
 
       return this.withAncestorsOf(source.openId, current);
     },
   });
 
   constructor() {
-    effect(() => writeExpanded(this.storageKey(), this.expanded()));
+    effect(() => this.writeExpanded(this.workspaceSlug(), this.expanded()));
   }
 
   link(slug: string): string[] {
@@ -240,23 +238,16 @@ export class PageTreeStore {
       });
     });
   }
-}
 
-function readExpanded(key: string): number[] {
-  try {
-    const stored = localStorage.getItem(key);
-    const parsed: unknown = stored ? JSON.parse(stored) : [];
+  private readExpanded(workspace: string): number[] {
+    const stored = this.settings.get('pages.treeExpanded')?.[workspace];
 
-    return Array.isArray(parsed) ? parsed.filter(Number.isInteger) : [];
-  } catch {
-    return [];
+    return Array.isArray(stored) ? stored.filter(Number.isInteger) : [];
   }
-}
 
-function writeExpanded(key: string, expanded: readonly number[]) {
-  try {
-    localStorage.setItem(key, JSON.stringify(expanded));
-  } catch {
-    // Storage can be unavailable (private mode, quota); expansion just won't persist.
+  private writeExpanded(workspace: string, expanded: readonly number[]) {
+    this.settings.update('pages.treeExpanded', (byWorkspace) => {
+      return { ...byWorkspace, [workspace]: [...expanded] };
+    });
   }
 }

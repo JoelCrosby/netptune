@@ -8,7 +8,8 @@ import {
 } from '@angular/router';
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
-import { provideAuthRefresh } from './app/core/auth/auth.service';
+import { provideAuthRefresh } from './app/core/auth/session-refresh.service';
+import { provideSessionSync } from './app/core/auth/session-sync.service';
 import { authInterceptor } from './app/core/http-interceptors/auth.interceptor';
 import { provideAppLoader } from './app/core/services/app-loader.service';
 import { provideNavigationService } from './app/core/services/navigation.service';
@@ -26,6 +27,7 @@ bootstrapApplication(AppComponent, {
     ),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideAuthRefresh(),
+    provideSessionSync(),
     provideNavigationService(),
     provideAppLoader(),
     provideVersionCheck(),

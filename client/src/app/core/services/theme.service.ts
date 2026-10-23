@@ -1,8 +1,8 @@
-import { effect, Service, signal } from '@angular/core';
+import { effect, inject, Service, signal } from '@angular/core';
+import { BrowserSettingsService } from '@core/settings/browser-settings.service';
 
 export type Theme = 'light' | 'dark';
 
-const THEME_STORAGE_KEY = 'Netptune-settings.theme';
 const themes = new Set<string>(['light', 'dark']);
 
 function isTheme(value: string): value is Theme {
@@ -11,7 +11,8 @@ function isTheme(value: string): value is Theme {
 
 @Service()
 export class ThemeService {
-  private readonly current = signal(initialTheme());
+  private readonly settings = inject(BrowserSettingsService);
+  private readonly current = signal(this.initialTheme());
 
   readonly theme = this.current.asReadonly();
 
@@ -27,11 +28,11 @@ export class ThemeService {
     }
 
     this.current.set(chosen);
-    this.remember(chosen);
+    this.settings.set('theme', chosen);
   }
 
   clear() {
-    this.forget();
+    this.settings.remove('theme');
     this.current.set(browserTheme());
   }
 
@@ -46,36 +47,11 @@ export class ThemeService {
     classList.add(theme);
   }
 
-  private remember(theme: Theme) {
-    try {
-      localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(theme));
-    } catch {
-      // Storage can be unavailable (private mode, quota). The theme is
-      // already applied; only the pre-paint cache is lost.
-    }
-  }
+  private initialTheme(): Theme {
+    const stored = this.settings.get('theme');
+    const isKnown = typeof stored === 'string' && isTheme(stored);
 
-  private forget() {
-    try {
-      localStorage.removeItem(THEME_STORAGE_KEY);
-    } catch {
-      // Nothing to undo — the cache simply stays as it was.
-    }
-  }
-}
-
-function initialTheme(): Theme {
-  return storedTheme() ?? browserTheme();
-}
-
-function storedTheme(): Theme | null {
-  try {
-    const stored = localStorage.getItem(THEME_STORAGE_KEY);
-    const theme = stored ? (JSON.parse(stored) as string) : null;
-
-    return theme && isTheme(theme) ? theme : null;
-  } catch {
-    return null;
+    return isKnown ? stored : browserTheme();
   }
 }
 

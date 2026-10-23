@@ -24,6 +24,7 @@ import { ClientResponse } from '@app/core/models/client-response';
 import { Page } from '@app/core/models/pagination';
 import { DialogService } from '@app/core/services/dialog.service';
 import { LayoutService } from '@core/services/layout.service';
+import { BrowserSettingsService } from '@core/settings/browser-settings.service';
 import { reloadOnWorkspaceChange } from '@core/util/reload-on-refresh';
 import {
   LucideArrowDown,
@@ -331,6 +332,7 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   injector = inject(Injector);
   dialog = inject(DialogService);
   private readonly isMobile = inject(LayoutService).isMobileView;
+  private readonly settings = inject(BrowserSettingsService);
   data = input.required<DatatableDataSource<T>>();
   selection = input(false, { transform: booleanAttribute });
   customizableColumns = input(false, { transform: booleanAttribute });
@@ -620,7 +622,7 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
     effect(() => {
       if (!this.customizableColumns()) return;
 
-      const loaded = loadColumnPreferences(this.data().key);
+      const loaded = loadColumnPreferences(this.settings, this.data().key);
       untracked(() => this.columnPreferences.set(loaded));
     });
 
@@ -810,7 +812,7 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
       if (!result) return;
 
       this.columnPreferences.set(result);
-      saveColumnPreferences(this.data().key, result);
+      saveColumnPreferences(this.settings, this.data().key, result);
     });
   }
 

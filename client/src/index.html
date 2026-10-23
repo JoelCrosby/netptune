@@ -15,8 +15,8 @@
 
         try {
           var cached = JSON.parse(
-            localStorage.getItem('Netptune-settings.theme')
-          );
+            localStorage.getItem('Netptune-settings') || '{}'
+          ).theme;
           if (cached === 'light' || cached === 'dark') {
             theme = cached;
           }

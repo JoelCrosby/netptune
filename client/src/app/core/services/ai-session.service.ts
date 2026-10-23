@@ -1,5 +1,5 @@
 import { Service, inject } from '@angular/core';
-import { LocalStorageService } from '@core/local-storage/local-storage.service';
+import { BrowserSettingsService } from '@core/settings/browser-settings.service';
 
 export interface AiWorkspaceSession {
   conversationId: string | null;
@@ -8,30 +8,17 @@ export interface AiWorkspaceSession {
 }
 
 /** A chat belongs to the workspace it was started in, so sessions are kept per workspace. */
-type AiStoredSessions = Record<string, AiWorkspaceSession>;
-
-const SESSION_STORAGE_KEY = 'ai-assistant.sessions';
-const LEGACY_SESSION_STORAGE_KEY = 'ai-assistant.session';
-
 @Service()
 export class AiSessionService {
-  private readonly storage = inject(LocalStorageService);
-
-  private sessions: AiStoredSessions = this.read();
+  private readonly settings = inject(BrowserSettingsService);
 
   find(workspace: string): AiWorkspaceSession | null {
-    return this.sessions[workspace] ?? null;
+    return this.settings.get('ai.sessions')?.[workspace] ?? null;
   }
 
   remember(workspace: string, session: AiWorkspaceSession) {
-    this.sessions = { ...this.sessions, [workspace]: session };
-
-    this.storage.setItem(SESSION_STORAGE_KEY, this.sessions);
-  }
-
-  private read(): AiStoredSessions {
-    this.storage.removeItem(LEGACY_SESSION_STORAGE_KEY);
-
-    return this.storage.getItem<AiStoredSessions>(SESSION_STORAGE_KEY) ?? {};
+    this.settings.update('ai.sessions', (sessions) => {
+      return { ...sessions, [workspace]: session };
+    });
   }
 }

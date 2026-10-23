@@ -1,16 +1,14 @@
 import { Service, computed, inject, signal } from '@angular/core';
-import { LocalStorageService } from '@core/local-storage/local-storage.service';
+import { BrowserSettingsService } from '@core/settings/browser-settings.service';
 import { AiProvider } from '@core/models/ai-credential';
 import { AiEffort } from '@core/models/ai-effort';
 import { AiModelOption } from '@core/models/ai-model';
 import { AiApiService } from '@core/services/ai-api.service';
 
-const MODEL_STORAGE_KEY = 'ai-assistant.model';
-
 @Service()
 export class AiModelCatalogService {
   private readonly api = inject(AiApiService);
-  private readonly storage = inject(LocalStorageService);
+  private readonly settings = inject(BrowserSettingsService);
 
   readonly models = signal<AiModelOption[]>([]);
   readonly hasCredentials = signal<boolean | null>(null);
@@ -79,7 +77,7 @@ export class AiModelCatalogService {
 
   select(modelId: string | null) {
     this.selectedModel.set(modelId);
-    this.storage.setItem(MODEL_STORAGE_KEY, modelId);
+    this.settings.set('ai.model', modelId);
   }
 
   use(modelId: string | null) {
@@ -104,6 +102,6 @@ export class AiModelCatalogService {
   }
 
   private readPreference(): string | null {
-    return this.storage.getItem<string | null>(MODEL_STORAGE_KEY) ?? null;
+    return this.settings.get('ai.model') ?? null;
   }
 }

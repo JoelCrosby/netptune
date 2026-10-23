@@ -1,5 +1,5 @@
 import { Service, inject, signal } from '@angular/core';
-import { LocalStorageService } from '@core/local-storage/local-storage.service';
+import { BrowserSettingsService } from '@core/settings/browser-settings.service';
 import {
   AiChangeSet,
   AiChangeSetStatus,
@@ -18,12 +18,10 @@ import {
   refreshScopesForChanges,
 } from '@core/util/ai-refresh-scopes';
 
-const EXPANDED_STORAGE_KEY = 'ai-assistant.applied-changes-expanded';
-
 @Service()
 export class AiChangeSetService {
   private readonly api = inject(AiApiService);
-  private readonly storage = inject(LocalStorageService);
+  private readonly settings = inject(BrowserSettingsService);
   private readonly workspaceRefresh = inject(WorkspaceRefreshService);
   private readonly stream = inject(AiStreamService);
   private readonly progress = inject(AiApplyProgressService);
@@ -39,7 +37,7 @@ export class AiChangeSetService {
    * conversation stay open, and the last choice becomes the default for the sets after it.
    */
   private readonly expandedByDefault = signal(
-    this.storage.getItem<boolean>(EXPANDED_STORAGE_KEY) ?? false
+    this.settings.get('ai.appliedChangesExpanded') ?? false
   );
   private readonly expandedById = signal<ReadonlyMap<string, boolean>>(
     new Map()
@@ -57,7 +55,7 @@ export class AiChangeSetService {
     });
 
     this.expandedByDefault.set(isExpanded);
-    this.storage.setItem(EXPANDED_STORAGE_KEY, isExpanded);
+    this.settings.set('ai.appliedChangesExpanded', isExpanded);
   }
 
   set(changeSet: AiChangeSet | null) {
@@ -107,7 +105,11 @@ export class AiChangeSetService {
     this.isEditing.set(true);
 
     try {
-      const result = await this.api.updateChange(changeSet.id, changeId, fields);
+      const result = await this.api.updateChange(
+        changeSet.id,
+        changeId,
+        fields
+      );
 
       if (result.changeSet) {
         this.changeSet.set(result.changeSet);

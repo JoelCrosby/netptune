@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { AuthCommandsService } from '@core/services/auth-commands.service';
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
 import { WorkspaceInvite } from '@core/models/session';
 import { of } from 'rxjs';
@@ -11,8 +10,6 @@ export const registerInvite: ResolveFn<WorkspaceInvite> = (
 ) => {
   {
     const http = inject(HttpClient);
-
-    inject(AuthCommandsService).endSession();
 
     const code = route.queryParamMap.get('code');
 

@@ -1,9 +1,7 @@
 import { Service, computed, inject, signal } from '@angular/core';
-import { LocalStorageService } from '@core/local-storage/local-storage.service';
+import { BrowserSettingsService } from '@core/settings/browser-settings.service';
 import { AiEffort, AiEffortOption } from '@core/models/ai-effort';
 import { AiModelCatalogService } from '@core/services/ai-model-catalog.service';
-
-const EFFORT_STORAGE_KEY = 'ai-assistant.effort';
 
 const EFFORT_OPTIONS: AiEffortOption[] = [
   {
@@ -30,7 +28,7 @@ const EFFORT_OPTIONS: AiEffortOption[] = [
 
 @Service()
 export class AiEffortService {
-  private readonly storage = inject(LocalStorageService);
+  private readonly settings = inject(BrowserSettingsService);
   private readonly catalog = inject(AiModelCatalogService);
 
   readonly efforts = computed(() => {
@@ -66,7 +64,7 @@ export class AiEffortService {
 
   select(effort: AiEffort | null) {
     this.selectedEffort.set(effort);
-    this.storage.setItem(EFFORT_STORAGE_KEY, effort);
+    this.settings.set('ai.effort', effort);
   }
 
   use(effort: AiEffort | null) {
@@ -78,7 +76,7 @@ export class AiEffortService {
   }
 
   private readPreference(): AiEffort | null {
-    return this.storage.getItem<AiEffort | null>(EFFORT_STORAGE_KEY) ?? null;
+    return this.settings.get('ai.effort') ?? null;
   }
 }
 

@@ -1,15 +1,14 @@
 import { Service, computed, effect, inject, signal } from '@angular/core';
-import { LocalStorageService } from '@core/local-storage/local-storage.service';
 import { AiConversationService } from '@core/services/ai-conversation.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
+import { BrowserSettingsService } from '@core/settings/browser-settings.service';
 
-const DRAFT_STORAGE_KEY = 'ai-assistant.drafts';
 const DRAFT_PERSIST_DELAY = 400;
 const NEW_CONVERSATION_KEY = 'new';
 
 @Service()
 export class AiDraftService {
-  private readonly storage = inject(LocalStorageService);
+  private readonly settings = inject(BrowserSettingsService);
   private readonly workspaceId = inject(CurrentWorkspaceService).slug;
   private readonly conversation = inject(AiConversationService);
 
@@ -22,16 +21,14 @@ export class AiDraftService {
     return this.keyFor(conversationId);
   });
 
-  private drafts: Record<string, string> =
-    this.storage.getItem<Record<string, string>>(DRAFT_STORAGE_KEY) ?? {};
-
+  private unsaved = new Map<string, string>();
   private timer: ReturnType<typeof setTimeout> | null = null;
 
   constructor() {
     effect(() => {
       const key = this.key();
 
-      this.text.set(this.drafts[key] ?? '');
+      this.text.set(this.draftFor(key));
     });
   }
 
@@ -61,8 +58,12 @@ export class AiDraftService {
     return `${this.workspaceId() ?? ''}:${conversationId}`;
   }
 
+  private draftFor(key: string): string {
+    return this.unsaved.get(key) ?? this.settings.get('ai.drafts')?.[key] ?? '';
+  }
+
   private remember(key: string, text: string) {
-    this.drafts = this.withDraft(key, text);
+    this.unsaved.set(key, text);
 
     if (this.timer !== null) {
       clearTimeout(this.timer);
@@ -70,21 +71,33 @@ export class AiDraftService {
 
     this.timer = setTimeout(() => {
       this.timer = null;
-      this.storage.setItem(DRAFT_STORAGE_KEY, this.drafts);
+      this.flush();
     }, DRAFT_PERSIST_DELAY);
   }
 
-  private withDraft(key: string, text: string): Record<string, string> {
-    const hasText = text.trim().length > 0;
+  private flush() {
+    const unsaved = [...this.unsaved];
 
-    if (hasText) {
-      return { ...this.drafts, [key]: text };
-    }
-
-    const remaining = Object.entries(this.drafts).filter(([stored]) => {
-      return stored !== key;
+    this.unsaved = new Map();
+    this.settings.update('ai.drafts', (drafts) => {
+      return unsaved.reduce(withDraft, drafts ?? {});
     });
-
-    return Object.fromEntries(remaining);
   }
+}
+
+function withDraft(
+  drafts: Record<string, string>,
+  [key, text]: [string, string]
+): Record<string, string> {
+  const hasText = text.trim().length > 0;
+
+  if (hasText) {
+    return { ...drafts, [key]: text };
+  }
+
+  const remaining = Object.entries(drafts).filter(([stored]) => {
+    return stored !== key;
+  });
+
+  return Object.fromEntries(remaining);
 }

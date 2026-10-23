@@ -1,14 +1,16 @@
-import { Service, signal } from '@angular/core';
+import { Service, inject, signal } from '@angular/core';
+import { BrowserSettingsService } from '@core/settings/browser-settings.service';
 
 export const MIN_PAGE_SIDEBAR_WIDTH = 200;
 export const MAX_PAGE_SIDEBAR_WIDTH = 520;
 
 const DEFAULT_PAGE_SIDEBAR_WIDTH = 272;
-const storageKey = 'netptune.pages.sidebarWidth';
 
 @Service()
 export class PageSidebarService {
-  readonly width = signal(readWidth());
+  private readonly settings = inject(BrowserSettingsService);
+
+  readonly width = signal(this.readWidth());
 
   private resizing = false;
 
@@ -17,7 +19,7 @@ export class PageSidebarService {
 
     if (this.resizing) return;
 
-    writeWidth(this.width());
+    this.writeWidth();
   }
 
   setResizing(resizing: boolean) {
@@ -25,7 +27,19 @@ export class PageSidebarService {
 
     if (resizing) return;
 
-    writeWidth(this.width());
+    this.writeWidth();
+  }
+
+  private readWidth(): number {
+    const stored = this.settings.get('pages.sidebarWidth');
+
+    return stored === undefined
+      ? DEFAULT_PAGE_SIDEBAR_WIDTH
+      : clampWidth(stored);
+  }
+
+  private writeWidth() {
+    this.settings.set('pages.sidebarWidth', this.width());
   }
 }
 
@@ -38,24 +52,4 @@ function clampWidth(width: number): number {
   );
 
   return Math.round(bounded);
-}
-
-function readWidth(): number {
-  try {
-    const stored = localStorage.getItem(storageKey);
-
-    return stored === null
-      ? DEFAULT_PAGE_SIDEBAR_WIDTH
-      : clampWidth(Number(stored));
-  } catch {
-    return DEFAULT_PAGE_SIDEBAR_WIDTH;
-  }
-}
-
-function writeWidth(width: number) {
-  try {
-    localStorage.setItem(storageKey, String(width));
-  } catch {
-    return;
-  }
 }

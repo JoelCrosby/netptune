@@ -5,25 +5,23 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { reloadToLogin } from '@core/auth/reload-to-login';
+import {
+  SessionRefreshService,
+  isSessionRejection,
+} from '@core/auth/session-refresh.service';
 import { AuthCommandsService } from '@core/services/auth-commands.service';
 import { SessionService } from '@core/services/session.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { WorkspaceListService } from '@core/services/workspace-list.service';
-import { Router } from '@angular/router';
-import { AuthService } from '@core/auth/auth.service';
+import { LoginResponse } from '@core/models/session';
 import { environment } from '@env/environment';
-import { Observable, throwError } from 'rxjs';
-import {
-  catchError,
-  finalize,
-  shareReplay,
-  switchMap,
-  tap,
-} from 'rxjs/operators';
+import { from, Observable, throwError } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
 import { WorkspaceService } from '../services/workspace.service';
 import { RealtimeClientIdService } from '../sse/realtime-client-id.service';
 
-let sessionRefreshRequest$: ReturnType<AuthService['refresh']> | null = null;
+let sessionRefresh: Promise<LoginResponse> | null = null;
 
 export const resolveWorkspaceHeader = (
   workspaceRoute: string | null,
@@ -38,9 +36,8 @@ export const authInterceptor = (
   const currentWorkspace = inject(CurrentWorkspaceService);
   const session = inject(SessionService);
   const workspaceList = inject(WorkspaceListService);
-  const router = inject(Router);
   const workspaceService = inject(WorkspaceService);
-  const authService = inject(AuthService);
+  const refresher = inject(SessionRefreshService);
   const realtimeClientId = inject(RealtimeClientIdService);
 
   const isAuthManagementRequest = (req: HttpRequest<unknown>): boolean => {
@@ -54,29 +51,32 @@ export const authInterceptor = (
     return req.url.startsWith('api/');
   };
 
-  const handle401 = (req: HttpRequest<unknown>) => {
-    if (!sessionRefreshRequest$) {
-      sessionRefreshRequest$ = authService.refresh().pipe(
-        tap((user) => {
-          session.establish(user);
-          workspaceList.reload();
-        }),
-        finalize(() => {
-          sessionRefreshRequest$ = null;
-        }),
-        shareReplay({ bufferSize: 1, refCount: false })
-      );
-    }
+  const refreshSession = (): Promise<LoginResponse> => {
+    return refresher
+      .refresh()
+      .then((user) => {
+        session.establish(user);
+        workspaceList.reload();
 
-    const sessionRefreshWithLogoutOnFailure$ = sessionRefreshRequest$.pipe(
-      catchError((err: unknown) => {
-        authCommands.endSession();
-        void router.navigate(['/auth/login']);
-        return throwError(() => err);
+        return user;
       })
-    );
+      .catch((err: unknown) => {
+        if (isSessionRejection(err)) {
+          authCommands.endSession();
+          reloadToLogin();
+        }
 
-    return sessionRefreshWithLogoutOnFailure$.pipe(switchMap(() => next(req)));
+        throw err;
+      })
+      .finally(() => {
+        sessionRefresh = null;
+      });
+  };
+
+  const handle401 = (req: HttpRequest<unknown>) => {
+    sessionRefresh ??= refreshSession();
+
+    return from(sessionRefresh).pipe(switchMap(() => next(req)));
   };
 
   if (!isApiRequest(req)) {

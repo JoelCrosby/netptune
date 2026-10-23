@@ -3,7 +3,12 @@ import { SessionService } from '@core/services/session.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { Router } from '@angular/router';
 import { AuthService } from '@core/auth/auth.service';
-import { hasPendingProviderLink } from '@core/auth/pending-provider-link';
+import {
+  clearPendingProviderLink,
+  hasPendingProviderLink,
+} from '@core/auth/pending-provider-link';
+import { clearPendingSourceControlConnect } from '@core/auth/pending-source-control-connect';
+import { reloadToLogin } from '@core/auth/reload-to-login';
 import { LoginRequest } from '@core/models/login-request';
 import { RegisterRequest } from '@core/models/register-request';
 import { ConfirmationService } from '@core/services/confirmation.service';
@@ -12,7 +17,7 @@ import { unwrapClientResponse } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { WorkspaceListService } from '@core/services/workspace-list.service';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
-import { catchError, EMPTY, filter, finalize, switchMap, tap } from 'rxjs';
+import { catchError, EMPTY, filter, finalize, switchMap } from 'rxjs';
 
 @Service()
 export class AuthCommandsService {
@@ -100,7 +105,6 @@ export class AuthCommandsService {
             $localize`:Confirmation shown after an action succeeds:Email confirmation code is invalid or expired`
           );
           void this.router.navigate(['/auth/login']);
-          this.endSession();
 
           return EMPTY;
         }),
@@ -143,7 +147,6 @@ export class AuthCommandsService {
             $localize`:Confirmation shown after an action succeeds:Reset password request is invalid or expired`
           );
           void this.router.navigate(['/auth/login']);
-          this.endSession();
 
           return EMPTY;
         }),
@@ -164,10 +167,16 @@ export class AuthCommandsService {
       .pipe(
         filter(Boolean),
         switchMap(() => this.authService.logout()),
-        tap(() => void this.router.navigate(['/auth/login'])),
         catchError(() => EMPTY)
       )
-      .subscribe(() => this.endSession());
+      .subscribe(() => this.signOut());
+  }
+
+  signOut() {
+    clearPendingProviderLink();
+    clearPendingSourceControlConnect();
+    this.endSession();
+    reloadToLogin();
   }
 
   /** Drops everything the signed-in user could see, not just the session itself. */

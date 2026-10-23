@@ -1,14 +1,14 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { LocalStorageService } from '@core/local-storage/local-storage.service';
+import { BrowserSettingsService } from '@core/settings/browser-settings.service';
 import { LayoutService } from '@core/services/layout.service';
 
 @Injectable()
 export class ShellService {
-  private storage = inject(LocalStorageService);
+  private settings = inject(BrowserSettingsService);
   private layout = inject(LayoutService);
 
   private readonly expandedPreference = signal<boolean>(
-    this.storage.getItem('side-nav-expanded') ?? true
+    this.settings.get('shell.sideNavExpanded') ?? true
   );
 
   readonly isDrawer = this.layout.isMobileView;
@@ -30,6 +30,6 @@ export class ShellService {
     const expanded = !this.expandedPreference();
 
     this.expandedPreference.set(expanded);
-    this.storage.setItem('side-nav-expanded', expanded);
+    this.settings.set('shell.sideNavExpanded', expanded);
   }
 }

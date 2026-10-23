@@ -8,9 +8,22 @@ export function hasSessionHint(): boolean {
   }
 }
 
-export function rememberSessionHint() {
+// The hint carries the latest token expiry so a tab can tell that another tab has
+// already refreshed the shared cookies.
+export function sessionHintExpiry(): string | null {
   try {
-    localStorage.setItem(SESSION_HINT_KEY, 'true');
+    const stored = localStorage.getItem(SESSION_HINT_KEY);
+    const isDate = stored !== null && !Number.isNaN(Date.parse(stored));
+
+    return isDate ? stored : null;
+  } catch {
+    return null;
+  }
+}
+
+export function rememberSessionHint(expires: string) {
+  try {
+    localStorage.setItem(SESSION_HINT_KEY, expires);
   } catch {
     // Nothing is lost beyond the next cold start attempting a refresh.
   }

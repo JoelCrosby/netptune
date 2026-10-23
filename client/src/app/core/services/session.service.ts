@@ -8,10 +8,12 @@ import { WorkspaceRole } from '@core/enums/workspace-role';
 import { LoginResponse, UserResponse } from '@core/models/session';
 import { UserPermissions } from '@core/models/user-permissions';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
+import { BrowserSettingsService } from '@core/settings/browser-settings.service';
 
 @Service()
 export class SessionService {
   private readonly currentWorkspace = inject(CurrentWorkspaceService);
+  private readonly settings = inject(BrowserSettingsService);
 
   private readonly user = signal<UserResponse | undefined>(undefined);
   private readonly signedIn = signal(false);
@@ -83,7 +85,8 @@ export class SessionService {
     this.user.set(user);
     this.signedIn.set(true);
     this.expires.set(user.expires);
-    rememberSessionHint();
+    this.settings.claim(user.userId);
+    rememberSessionHint(user.expires);
   }
 
   /** A re-read of the signed-in user, which carries their permissions but no new token. */
@@ -96,6 +99,7 @@ export class SessionService {
     this.user.set(undefined);
     this.signedIn.set(false);
     this.expires.set(undefined);
+    this.settings.release();
     forgetSessionHint();
   }
 
