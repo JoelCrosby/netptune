@@ -29,7 +29,7 @@ public sealed class TransferJobEventService(
 
         try
         {
-            await foreach (var message in queue)
+            await foreach (var message in queue.WithCancellation(cancellationToken))
             {
                 await WriteFrame(message, response, cancellationToken);
             }

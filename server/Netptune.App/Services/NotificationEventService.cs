@@ -38,7 +38,7 @@ public class NotificationEventService(
 
         try
         {
-            await foreach (var message in queue)
+            await foreach (var message in queue.WithCancellation(cancellationToken))
             {
                 try
                 {
@@ -55,7 +55,7 @@ public class NotificationEventService(
                     await response.WriteAsync($"data: {json}\n\n", cancellationToken);
                     await response.Body.FlushAsync(cancellationToken);
                 }
-                catch (Exception e)
+                catch (Exception e) when (e is not OperationCanceledException)
                 {
                     logger.LogError(e, "Notification event deserialization failed");
                 }
