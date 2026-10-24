@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Ai.Tools;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Statuses.Commands;
@@ -27,14 +28,14 @@ public sealed class DeleteStatusChangeHandler : IAiChangeHandler
 
         if (!statusId.HasValue)
         {
-            return AiChangePayload.Failure(change, "The status this change refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorStatusChangeRefersCouldNotResolved);
         }
 
         var response = await Mediator.Send(new DeleteStatusCommand(statusId.Value), cancellationToken);
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The status could not be deleted.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorStatusCouldNotDeleted);
         }
 
         return AiChangePayload.Applied(change, statusId.Value);

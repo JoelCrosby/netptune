@@ -4,6 +4,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Events.Sprints;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -49,14 +50,14 @@ public sealed class StartSprintCommandHandler : IRequestHandler<StartSprintComma
 
         if (sprint.Status != SprintStatus.Planning)
         {
-            return ClientResponse<SprintViewModel>.Failed("Only planning sprints can be started");
+            return ClientResponse<SprintViewModel>.Failed(AppText.ErrorOnlyPlanningSprintsCanStarted);
         }
 
         var hasActiveSprint = await UnitOfWork.Sprints.HasActiveSprintAsync(sprint.ProjectId, sprint.Id, cancellationToken);
 
         if (hasActiveSprint)
         {
-            return ClientResponse<SprintViewModel>.Failed("This project already has an active sprint");
+            return ClientResponse<SprintViewModel>.Failed(AppText.ErrorProjectAlreadyActiveSprint);
         }
 
         var user = await Identity.GetCurrentUser();

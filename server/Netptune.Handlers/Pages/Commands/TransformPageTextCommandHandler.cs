@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using Mediator;
 
 using Netptune.Core.Entities;
-using Netptune.Core.Models.Ai;
+using Netptune.Core.Localization;
 using Netptune.Core.Requests.Pages;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -63,19 +63,19 @@ public sealed partial class TransformPageTextCommandHandler
 
         if (!isKnownAction)
         {
-            return ClientResponse<TransformPageTextResult>.Failed("Unknown action.");
+            return ClientResponse<TransformPageTextResult>.Failed(AppText.ErrorUnknownAction);
         }
 
         var text = input.Text?.Trim() ?? string.Empty;
 
         if (text.Length == 0)
         {
-            return ClientResponse<TransformPageTextResult>.Failed("There is no text to work on.");
+            return ClientResponse<TransformPageTextResult>.Failed(AppText.ErrorNoTextWork);
         }
 
         if (text.Length > MaxTextLength)
         {
-            return ClientResponse<TransformPageTextResult>.Failed("Select a shorter passage; the assistant works on up to 20,000 characters.");
+            return ClientResponse<TransformPageTextResult>.Failed(AppText.ErrorPassageTooLongForAssistant);
         }
 
         var language = input.Language?.Trim();
@@ -85,7 +85,7 @@ public sealed partial class TransformPageTextCommandHandler
 
         if (lacksLanguage)
         {
-            return ClientResponse<TransformPageTextResult>.Failed("Choose a language to translate into.");
+            return ClientResponse<TransformPageTextResult>.Failed(AppText.ErrorChooseLanguageTranslate);
         }
 
         var workspaceId = await Identity.GetWorkspaceId();
@@ -102,14 +102,14 @@ public sealed partial class TransformPageTextCommandHandler
 
         if (!assistantEnabled)
         {
-            return ClientResponse<TransformPageTextResult>.Failed("The assistant is turned off for this workspace.");
+            return ClientResponse<TransformPageTextResult>.Failed(AppText.ErrorAssistantTurnedOffWorkspace);
         }
 
         var spend = await Spend.GetStatus(workspace!, cancellationToken);
 
         if (spend.IsOverCap)
         {
-            return ClientResponse<TransformPageTextResult>.Failed(AiSpendMessages.CapReached);
+            return ClientResponse<TransformPageTextResult>.Failed(AppText.AiSpendCapReached);
         }
 
         var userId = Identity.GetCurrentUserId();
@@ -117,7 +117,7 @@ public sealed partial class TransformPageTextCommandHandler
 
         if (credential is null)
         {
-            return ClientResponse<TransformPageTextResult>.Failed("No assistant key is set up for this workspace.");
+            return ClientResponse<TransformPageTextResult>.Failed(AppText.ErrorNoAssistantKeySetUpWorkspace);
         }
 
         var transformRequest = new AiPageTransformRequest
@@ -139,7 +139,7 @@ public sealed partial class TransformPageTextCommandHandler
 
         if (string.IsNullOrWhiteSpace(result.Text))
         {
-            return ClientResponse<TransformPageTextResult>.Failed("The assistant returned nothing. Try again.");
+            return ClientResponse<TransformPageTextResult>.Failed(AppText.ErrorAssistantReturnedNothingTryAgain);
         }
 
         return ClientResponse<TransformPageTextResult>.Success(new TransformPageTextResult { Text = result.Text });

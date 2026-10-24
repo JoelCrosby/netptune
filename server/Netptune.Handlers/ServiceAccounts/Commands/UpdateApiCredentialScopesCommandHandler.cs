@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Core.Authorization;
+using Netptune.Core.Localization;
 using Netptune.Core.Requests.ServiceAccounts;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -51,12 +52,13 @@ public sealed class UpdateApiCredentialScopesCommandHandler
 
         if (credential.ServiceAccount.DisabledAt.HasValue)
         {
-            return ClientResponse<ApiCredentialViewModel>.Failed("Deleted service accounts cannot change credentials.");
+            return ClientResponse<ApiCredentialViewModel>.Failed(
+                AppText.ErrorDeletedServiceAccountsCannotChangeCredentials);
         }
 
         if (credential.RevokedAt.HasValue)
         {
-            return ClientResponse<ApiCredentialViewModel>.Failed("Revoked credentials cannot change scopes.");
+            return ClientResponse<ApiCredentialViewModel>.Failed(AppText.ErrorRevokedCredentialsCannotChangeScopes);
         }
 
         var workspaceKey = Identity.GetWorkspaceKey();
@@ -67,7 +69,7 @@ public sealed class UpdateApiCredentialScopesCommandHandler
 
         if (membership is null)
         {
-            return ClientResponse<ApiCredentialViewModel>.Failed("Service account does not have a workspace membership.");
+            return ClientResponse<ApiCredentialViewModel>.Failed(AppText.ErrorServiceAccountDoesNotWorkspaceMembership);
         }
 
         var scopes = command.Request.Scopes
@@ -79,7 +81,7 @@ public sealed class UpdateApiCredentialScopesCommandHandler
 
         if (scopes.Count == 0)
         {
-            return ClientResponse<ApiCredentialViewModel>.Failed("A credential needs at least one scope.");
+            return ClientResponse<ApiCredentialViewModel>.Failed(AppText.ErrorCredentialNeedsAtLeastOneScope);
         }
 
         var exceedsAccount = scopes.Any(scope => !NetptunePermissions.All.Contains(scope)
@@ -87,7 +89,8 @@ public sealed class UpdateApiCredentialScopesCommandHandler
 
         if (exceedsAccount)
         {
-            return ClientResponse<ApiCredentialViewModel>.Failed("Credential scopes must be a subset of the service account permissions.");
+            return ClientResponse<ApiCredentialViewModel>.Failed(
+                AppText.ErrorCredentialScopesMustSubsetServiceAccountPermissions);
         }
 
         credential.Scopes.Clear();

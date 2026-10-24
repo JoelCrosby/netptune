@@ -5,6 +5,7 @@ using Mediator;
 using Netptune.Core.Authorization;
 using Netptune.Core.Encoding;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Boards.Queries;
 
@@ -76,14 +77,14 @@ public sealed class UpdateBoardAction : IAiToolAction
             return AiToolExecution.Failed("No changes were supplied for this board.");
         }
 
-        var changedNames = string.Join(", ", fields.Select(field => field.Name));
+        var changedNames = AiFieldNames.Describe(fields);
 
         ChangeSet.Add(new AiChangeDraft
         {
             ToolName = ChangeName,
             EntityType = "board",
             EntityId = board.Id,
-            Summary = $"Update {changedNames} on “{board.Name}”",
+            Summary = Localized.Format(AppText.AiSummaryUpdateNamed, changedNames, board.Name),
             Fields = fields,
             Payload = JsonSerializer.SerializeToDocument(payload),
             ValidationStatus = AiChangeValidationStatus.Valid,

@@ -1,3 +1,4 @@
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests.Ai;
 
@@ -27,17 +28,17 @@ public static class SaveAiCredentialValidation
 
         if (!isKnownProvider)
         {
-            return (null, "Unknown AI provider.");
+            return (null, AppText.ErrorUnknownAIProvider);
         }
 
         if (secret.Length < MinimumSecretLength)
         {
-            return (null, "API key is not valid.");
+            return (null, AppText.ErrorAPIKeyNotValid);
         }
 
         if (label.Length is 0 or > MaximumLabelLength)
         {
-            return (null, $"Label must be between 1 and {MaximumLabelLength} characters.");
+            return (null, Localized.Format(AppText.ErrorLabelMustBetweenCharacters, MaximumLabelLength));
         }
 
         var model = request.Model?.Trim();
@@ -46,7 +47,7 @@ public static class SaveAiCredentialValidation
 
         if (isUnsupportedModel)
         {
-            return (null, "Model is not supported for this provider.");
+            return (null, AppText.ErrorModelNotSupportedProvider);
         }
 
         var credential = new ValidatedAiCredential

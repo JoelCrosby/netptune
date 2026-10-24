@@ -16,6 +16,10 @@ public record AutomationRule : WorkspaceEntity<int>
 
     public string? AutoDisabledReason { get; set; }
 
+    public string? AutoDisabledReasonCode { get; set; }
+
+    public List<string> AutoDisabledReasonArguments { get; set; } = [];
+
     public string? ExecutionUserId { get; set; }
 
     public AutomationTriggerType TriggerType { get; set; }

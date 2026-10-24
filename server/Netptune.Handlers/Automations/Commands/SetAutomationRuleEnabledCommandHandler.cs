@@ -49,6 +49,8 @@ public sealed class SetAutomationRuleEnabledCommandHandler : IRequestHandler<Set
         {
             rule.AutoDisabledAt = null;
             rule.AutoDisabledReason = null;
+            rule.AutoDisabledReasonCode = null;
+            rule.AutoDisabledReasonArguments = [];
         }
 
         rule.ModifiedByUserId = userId;

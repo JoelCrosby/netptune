@@ -3,6 +3,7 @@ using Mediator;
 using Netptune.Core.Authentication;
 using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
+using Netptune.Core.Localization;
 using Netptune.Core.Requests.ServiceAccounts;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -50,7 +51,8 @@ public sealed class CreateApiCredentialCommandHandler
 
         if (serviceAccount.DisabledAt.HasValue)
         {
-            return ClientResponse<ApiCredentialCreatedViewModel>.Failed("Deleted service accounts cannot create credentials.");
+            return ClientResponse<ApiCredentialCreatedViewModel>.Failed(
+                AppText.ErrorDeletedServiceAccountsCannotCreateCredentials);
         }
 
         var membership = await UnitOfWork.WorkspaceUsers.GetUserPermissions(
@@ -60,7 +62,8 @@ public sealed class CreateApiCredentialCommandHandler
 
         if (membership is null)
         {
-            return ClientResponse<ApiCredentialCreatedViewModel>.Failed("Service account does not have a workspace membership.");
+            return ClientResponse<ApiCredentialCreatedViewModel>.Failed(
+                AppText.ErrorServiceAccountDoesNotWorkspaceMembership);
         }
 
         var scopes = command.Request.Scopes.Count == 0
@@ -73,14 +76,16 @@ public sealed class CreateApiCredentialCommandHandler
 
         if (scopes.Any(scope => !NetptunePermissions.All.Contains(scope) || !membership.Permissions.Contains(scope)))
         {
-            return ClientResponse<ApiCredentialCreatedViewModel>.Failed("Credential scopes must be a subset of the service account permissions.");
+            return ClientResponse<ApiCredentialCreatedViewModel>.Failed(
+                AppText.ErrorCredentialScopesMustSubsetServiceAccountPermissions);
         }
 
         var name = command.Request.Name.Trim();
 
         if (name.Length is < 2 or > 128)
         {
-            return ClientResponse<ApiCredentialCreatedViewModel>.Failed("Credential name must be between 2 and 128 characters.");
+            return ClientResponse<ApiCredentialCreatedViewModel>.Failed(
+                AppText.ErrorCredentialNameMustBetweenCharacters);
         }
 
         var now = DateTime.UtcNow;
@@ -88,7 +93,8 @@ public sealed class CreateApiCredentialCommandHandler
 
         if (expiresAt <= now || expiresAt > now.AddDays(366))
         {
-            return ClientResponse<ApiCredentialCreatedViewModel>.Failed("Credential expiry must be within the next 366 days.");
+            return ClientResponse<ApiCredentialCreatedViewModel>.Failed(
+                AppText.ErrorCredentialExpiryMustWithinNextDays);
         }
 
         var credentialId = Guid.NewGuid();

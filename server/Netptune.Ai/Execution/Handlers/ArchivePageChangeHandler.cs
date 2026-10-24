@@ -3,6 +3,7 @@ using System.Text.Json;
 using Mediator;
 
 using Netptune.Core.Authorization;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Pages.Commands;
@@ -11,8 +12,7 @@ namespace Netptune.Ai.Execution.Handlers;
 
 public sealed class ArchivePageChangeHandler : IAiChangeHandler, IAiChangeUndoHandler
 {
-    public const string NotYourPageMessage =
-        "Only the person who created this page, or someone allowed to manage every page, can archive, restore or delete it.";
+    public static string NotYourPageMessage => AppText.AiChangeErrorOnlyPersonWhoCreatedPageSomeoneAllowed;
 
     private readonly IMediator Mediator;
 
@@ -35,14 +35,16 @@ public sealed class ArchivePageChangeHandler : IAiChangeHandler, IAiChangeUndoHa
 
         if (!pageId.HasValue)
         {
-            return AiChangePayload.Failure(change, "The page this change refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorPageChangeRefersCouldNotResolved);
         }
 
         var response = await Mediator.Send(new ArchivePageCommand(pageId.Value), cancellationToken);
 
         if (!response.IsSuccess)
         {
-            var message = response.IsForbidden ? NotYourPageMessage : response.Message ?? "The page could not be archived.";
+            var message = response.IsForbidden
+                ? NotYourPageMessage
+                : response.Message ?? AppText.AiChangeErrorPageCouldNotArchived;
 
             return AiChangePayload.Failure(change, message);
         }
@@ -62,14 +64,16 @@ public sealed class ArchivePageChangeHandler : IAiChangeHandler, IAiChangeUndoHa
 
         if (!pageId.HasValue)
         {
-            return AiChangeUndoResult.Failure(change, "The archived page could not be resolved.");
+            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorArchivedPageCouldNotResolved);
         }
 
         var response = await Mediator.Send(new RestorePageCommand(pageId.Value), cancellationToken);
 
         if (!response.IsSuccess)
         {
-            var message = response.IsForbidden ? NotYourPageMessage : response.Message ?? "The page could not be restored.";
+            var message = response.IsForbidden
+                ? NotYourPageMessage
+                : response.Message ?? AppText.AiChangeErrorPageCouldNotRestored;
 
             return AiChangeUndoResult.Failure(change, message);
         }

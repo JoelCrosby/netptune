@@ -3,6 +3,7 @@ using Mediator;
 using Netptune.Core.Cache;
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Users;
+using Netptune.Core.Localization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -37,11 +38,11 @@ public sealed class ToggleUserPermissionCommandHandler : IRequestHandler<ToggleU
         var workspaceKey = Identity.GetWorkspaceKey();
         var workspace = await UnitOfWork.Workspaces.GetBySlug(workspaceKey, true, cancellationToken);
 
-        if (workspace is null) return ClientResponse<List<string>>.Failed("workspace not found");
+        if (workspace is null) return ClientResponse<List<string>>.Failed(AppText.ErrorWorkspaceNotFound);
 
         var workspaceUser = await UnitOfWork.WorkspaceUsers.GetUserPermissions(request.Request.UserId, workspaceKey, false, cancellationToken);
 
-        if (workspaceUser is null) return ClientResponse<List<string>>.Failed("user is not a member of this workspace");
+        if (workspaceUser is null) return ClientResponse<List<string>>.Failed(AppText.ErrorUserNotMemberWorkspace);
 
         var permissions = workspaceUser.Permissions;
         bool granted;

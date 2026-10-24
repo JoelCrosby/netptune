@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.RelationTypes.Queries;
 
@@ -57,7 +58,7 @@ public sealed class DeleteRelationTypeAction : IAiToolAction
             ToolName = Change,
             EntityType = AiRelationTypeLookup.EntityType,
             EntityId = usage.Id,
-            Summary = $"Delete relation type “{usage.Name}”",
+            Summary = Localized.Format(AppText.AiSummaryDeleteRelationType, usage.Name),
             Fields = fields,
             Payload = JsonSerializer.SerializeToDocument(new { relationTypeId = usage.Id }),
             ValidationStatus = AiChangeValidationStatus.Valid,

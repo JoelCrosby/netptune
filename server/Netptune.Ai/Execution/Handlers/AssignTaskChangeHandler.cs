@@ -3,6 +3,7 @@ using System.Text.Json;
 using Mediator;
 
 using Netptune.Core.Authorization;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -30,7 +31,7 @@ public sealed class AssignTaskChangeHandler : IAiChangeHandler, IAiChangeUndoHan
 
         if (!taskId.HasValue)
         {
-            return AiChangePayload.Failure(change, "The task this change refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorTaskChangeRefersCouldNotResolved);
         }
 
         var payload = change.Payload.RootElement;
@@ -44,7 +45,7 @@ public sealed class AssignTaskChangeHandler : IAiChangeHandler, IAiChangeUndoHan
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The task could not be reassigned.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorTaskCouldNotReassigned);
         }
 
         return AiChangePayload.Applied(change, taskId);

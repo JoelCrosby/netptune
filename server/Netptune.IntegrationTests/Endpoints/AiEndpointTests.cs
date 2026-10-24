@@ -1189,6 +1189,33 @@ public sealed class AiEndpointTests
     }
 
     [Fact]
+    public async Task SendMessage_ShouldDescribeTheProposalInTheUsersLanguage()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var taskId = await ReadTaskId();
+
+        await SaveCredential(client);
+        ScriptTaskProposal(taskId);
+
+        var conversationId = await SendTurn(client, new { text = "Monte la priorité.", locale = "fr" });
+
+        try
+        {
+            var changeSet = await WaitForPendingChangeSet(conversationId);
+
+            changeSet.Should().NotBeNull();
+            changeSet.Changes.Should().ContainSingle()
+                .Which.Summary.Should().StartWith("Mettre à jour priorité sur “");
+        }
+        finally
+        {
+            await RemoveSeed(conversationId);
+            await DeleteExistingCredentials(client);
+            ResetScript();
+        }
+    }
+
+    [Fact]
     public async Task SendMessage_ShouldStoreTheUsageOfEveryProviderCallInTheTurn()
     {
         var client = Fixture.CreateNetptuneClient();

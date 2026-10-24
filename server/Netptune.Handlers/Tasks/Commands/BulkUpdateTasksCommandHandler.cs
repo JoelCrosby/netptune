@@ -7,6 +7,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Events.Sprints;
 using Netptune.Core.Events.Tasks;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Relationships;
@@ -60,7 +61,7 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
 
         if (requestedTaskIds.Count == 0)
         {
-            return ClientResponse.Failed("At least one task is required");
+            return ClientResponse.Failed(AppText.ErrorAtLeastOneTaskRequired);
         }
 
         var overflow = RequestLimits.DescribeBulkIdOverflow(requestedTaskIds.Count);
@@ -80,9 +81,11 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
         {
             var namedIds = string.Join(", ", missingTaskIds.Take(MissingIdsNamedInError));
             var remainder = missingTaskIds.Count - MissingIdsNamedInError;
-            var suffix = remainder > 0 ? $" and {remainder} more" : string.Empty;
+            var error = remainder > 0
+                ? Localized.Format(AppText.ErrorTasksNotFoundWorkspaceAndMore, namedIds, remainder)
+                : Localized.Format(AppText.ErrorTasksNotFoundWorkspace, namedIds);
 
-            return ClientResponse.Failed($"Tasks were not found in the workspace: {namedIds}{suffix}");
+            return ClientResponse.Failed(error);
         }
 
         var tasks = await UnitOfWork.Tasks.GetTasksForUpdate(taskIds, cancellationToken);
@@ -92,17 +95,17 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
 
         if (req.StatusId.HasValue && status is null)
         {
-            return ClientResponse.Failed($"Status with id {req.StatusId.Value} was not found in the workspace");
+            return ClientResponse.Failed(Localized.Format(AppText.ErrorStatusIdNotFoundWorkspace, req.StatusId.Value));
         }
 
         if (req.ClearSprint && req.SprintId.HasValue)
         {
-            return ClientResponse.Failed("SprintId and ClearSprint cannot both be supplied");
+            return ClientResponse.Failed(AppText.ErrorSprintIdClearSprintCannotBothSupplied);
         }
 
         if (req.ClearDueDate && req.DueDate.HasValue)
         {
-            return ClientResponse.Failed("DueDate and ClearDueDate cannot both be supplied");
+            return ClientResponse.Failed(AppText.ErrorDueDateClearDueDateCannotBothSupplied);
         }
 
         var dueDateBreaksSchedule = req.DueDate.HasValue
@@ -122,14 +125,16 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
 
             if (sprint is null)
             {
-                return ClientResponse.Failed($"Sprint with id {req.SprintId.Value} was not found in the workspace");
+                var error = Localized.Format(AppText.ErrorSprintIdNotFoundWorkspace, req.SprintId.Value);
+
+                return ClientResponse.Failed(error);
             }
 
             var sprintAcceptsTasks = sprint.Status is SprintStatus.Planning or SprintStatus.Active;
 
             if (!sprintAcceptsTasks)
             {
-                return ClientResponse.Failed("Completed or cancelled sprints cannot be changed");
+                return ClientResponse.Failed(AppText.ErrorCompletedCancelledSprintsCannotChanged);
             }
 
             var targetProjectIds = tasks
@@ -141,7 +146,7 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
 
             if (!allTasksBelongToSprintProject)
             {
-                return ClientResponse.Failed("Every task must belong to the sprint's project");
+                return ClientResponse.Failed(AppText.ErrorEveryTaskMustBelongToSprintProject);
             }
         }
 
@@ -173,7 +178,7 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
 
         if (scopeReservationFailed)
         {
-            return ClientResponse.Failed($"Project with Id {targetProjectId} not found");
+            return ClientResponse.Failed(Localized.Format(AppText.ErrorProjectIdNotFound, targetProjectId));
         }
 
         var activeSprintIds = await GetActiveSprintIds(tasks, req.SprintId, cancellationToken);

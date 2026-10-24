@@ -5,7 +5,9 @@ using Mediator;
 using Netptune.Core.Encoding;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Localization;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Localization;
 using Netptune.Core.Services.Notifications;
 using Netptune.Core.Storage;
 using Netptune.Core.UnitOfWork;
@@ -28,6 +30,7 @@ public sealed class ExportJobHandler : IRequestHandler<ExportJobRequestedMessage
     private readonly IEventRecordWriter EventRecords;
     private readonly INotificationDispatcher Notifications;
     private readonly IActorContext Actor;
+    private readonly IUserLocaleReader Locales;
     private readonly ILogger<ExportJobHandler> Logger;
 
     public ExportJobHandler(
@@ -38,6 +41,7 @@ public sealed class ExportJobHandler : IRequestHandler<ExportJobRequestedMessage
         IEventRecordWriter eventRecords,
         INotificationDispatcher notifications,
         IActorContext actor,
+        IUserLocaleReader locales,
         ILogger<ExportJobHandler> logger,
         IExportJobRepository exportJobs)
     {
@@ -48,6 +52,7 @@ public sealed class ExportJobHandler : IRequestHandler<ExportJobRequestedMessage
         EventRecords = eventRecords;
         Notifications = notifications;
         Actor = actor;
+        Locales = locales;
         Logger = logger;
         ExportJobs = exportJobs;
     }
@@ -80,6 +85,10 @@ public sealed class ExportJobHandler : IRequestHandler<ExportJobRequestedMessage
         }
 
         using var actor = Actor.Begin(new ActorIdentity(request.UserId, job.WorkspaceId, workspaceSlug));
+
+        var locale = await Locales.GetLocale(request.UserId, cancellationToken);
+
+        using var culture = CultureScope.Use(locale);
 
         try
         {

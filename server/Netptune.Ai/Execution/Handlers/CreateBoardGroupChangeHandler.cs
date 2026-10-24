@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -31,7 +32,7 @@ public sealed class CreateBoardGroupChangeHandler : IAiChangeHandler
 
         if (!hasName || !boardId.HasValue)
         {
-            return AiChangePayload.Failure(change, "The board group details are missing from this change.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorBoardGroupDetailsMissingChange);
         }
 
         var request = new AddBoardGroupRequest
@@ -45,7 +46,7 @@ public sealed class CreateBoardGroupChangeHandler : IAiChangeHandler
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The board group could not be created.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorBoardGroupCouldNotCreated);
         }
 
         return AiChangePayload.Applied(change, response.Payload?.Id);

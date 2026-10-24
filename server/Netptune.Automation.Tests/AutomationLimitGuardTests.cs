@@ -50,6 +50,8 @@ public sealed class AutomationLimitGuardTests
         disabledRule.IsEnabled.Should().BeFalse();
         disabledRule.AutoDisabledAt.Should().NotBeNull();
         disabledRule.AutoDisabledReason.Should().Contain("failed runs");
+        disabledRule.AutoDisabledReasonCode.Should().Be("disabledAfterFailures");
+        disabledRule.AutoDisabledReasonArguments.Should().HaveCount(2);
         runCount.Should().Be(20);
     }
 
@@ -108,6 +110,7 @@ public sealed class AutomationLimitGuardTests
 
         disabledRule.IsEnabled.Should().BeFalse();
         disabledRule.AutoDisabledReason.Should().Contain("runs within");
+        disabledRule.AutoDisabledReasonCode.Should().Be("disabledAfterRuns");
     }
 
     [Fact]

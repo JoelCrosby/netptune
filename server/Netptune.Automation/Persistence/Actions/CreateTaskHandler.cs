@@ -58,7 +58,7 @@ internal sealed class CreateTaskHandler : IActionExecutionHandler
 
         if (!sourceTask.ProjectId.HasValue)
         {
-            return new ActionOutcome(AutomationActionResultStatus.Failed, "The triggering task is not in a project.");
+            return new ActionOutcome(AutomationActionResultStatus.Failed, AutomationMessage.TaskNotInProject);
         }
 
         var resolution = await ResolveCreationTargets(
@@ -77,7 +77,7 @@ internal sealed class CreateTaskHandler : IActionExecutionHandler
 
         if (!scopeId.HasValue)
         {
-            return new ActionOutcome(AutomationActionResultStatus.Failed, "Unable to reserve a task key for the project.");
+            return new ActionOutcome(AutomationActionResultStatus.Failed, AutomationMessage.TaskKeyUnavailable);
         }
 
         var task = BuildTask(action, contribution, resolution, scopeId.Value);
@@ -166,14 +166,14 @@ internal sealed class CreateTaskHandler : IActionExecutionHandler
 
         if (project is null)
         {
-            return TaskCreationResolution.Failed("The triggering task's project is no longer available.");
+            return TaskCreationResolution.Failed(AutomationMessage.ProjectUnavailable);
         }
 
         var boardGroup = await ResolveBoardGroup(contribution.BoardGroupId, projectId, cancellationToken);
 
         if (boardGroup is null)
         {
-            return TaskCreationResolution.Failed("The selected board group is not available for the project.");
+            return TaskCreationResolution.Failed(AutomationMessage.BoardGroupUnavailable);
         }
 
         var statusId = contribution.StatusId ?? boardGroup.StatusId ?? project.DefaultStatusId;
@@ -181,7 +181,7 @@ internal sealed class CreateTaskHandler : IActionExecutionHandler
 
         if (status is null)
         {
-            return TaskCreationResolution.Failed("A task status is not available in the workspace.");
+            return TaskCreationResolution.Failed(AutomationMessage.TaskStatusUnavailable);
         }
 
         var validUserIds = await ResolveValidUserIds(contribution.AssigneeIds, workspaceId, cancellationToken);
@@ -189,7 +189,7 @@ internal sealed class CreateTaskHandler : IActionExecutionHandler
 
         if (hasInvalidUser)
         {
-            return TaskCreationResolution.Failed("An assignee is no longer available in the workspace.");
+            return TaskCreationResolution.Failed(AutomationMessage.AssigneeUnavailable);
         }
 
         var tags = await ResolveTags(contribution.AddTags, workspaceId, cancellationToken);
@@ -198,7 +198,7 @@ internal sealed class CreateTaskHandler : IActionExecutionHandler
 
         if (hasInvalidTag)
         {
-            return TaskCreationResolution.Failed("A configured tag is no longer available in the workspace.");
+            return TaskCreationResolution.Failed(AutomationMessage.TagUnavailable);
         }
 
         var sprintError = await ValidateSprint(contribution.SprintId, projectId, workspaceId, cancellationToken);
@@ -218,7 +218,7 @@ internal sealed class CreateTaskHandler : IActionExecutionHandler
         };
     }
 
-    private async Task<string?> ValidateSprint(
+    private async Task<AutomationMessage?> ValidateSprint(
         int? sprintId,
         int projectId,
         int workspaceId,
@@ -237,7 +237,7 @@ internal sealed class CreateTaskHandler : IActionExecutionHandler
 
         if (!isAvailable)
         {
-            return "The selected sprint is not available for the project.";
+            return AutomationMessage.SprintUnavailable;
         }
 
         return null;
@@ -287,7 +287,7 @@ internal sealed class CreateTaskHandler : IActionExecutionHandler
             cancellationToken: cancellationToken);
     }
 
-    private async Task<string?> LinkToSourceTask(
+    private async Task<AutomationMessage?> LinkToSourceTask(
         PlannedAutomationAction action,
         AutomationTaskCreationContribution contribution,
         ProjectTask createdTask,
@@ -307,7 +307,7 @@ internal sealed class CreateTaskHandler : IActionExecutionHandler
 
         if (relationType is null)
         {
-            return "The selected relation type is no longer available in the workspace.";
+            return AutomationMessage.RelationTypeUnavailable;
         }
 
         var hasSingleSource = RelationTypeRules.HasSingleSource(relationType.Category);
@@ -321,7 +321,7 @@ internal sealed class CreateTaskHandler : IActionExecutionHandler
 
             if (hasExistingSource)
             {
-                return "The created task already has a relation of the selected type.";
+                return AutomationMessage.CreatedTaskAlreadyRelated;
             }
         }
 
@@ -403,9 +403,9 @@ internal sealed class CreateTaskHandler : IActionExecutionHandler
 
         public string? ProjectKey { get; init; }
 
-        public string? Error { get; init; }
+        public AutomationMessage? Error { get; init; }
 
-        public static TaskCreationResolution Failed(string error)
+        public static TaskCreationResolution Failed(AutomationMessage error)
         {
             return new TaskCreationResolution { Error = error };
         }

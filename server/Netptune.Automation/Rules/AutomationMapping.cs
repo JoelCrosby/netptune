@@ -22,6 +22,8 @@ public static class AutomationMapping
             IsEnabled = rule.IsEnabled,
             AutoDisabledAt = rule.AutoDisabledAt,
             AutoDisabledReason = rule.AutoDisabledReason,
+            AutoDisabledReasonCode = rule.AutoDisabledReasonCode,
+            AutoDisabledReasonArguments = rule.AutoDisabledReasonArguments,
             ExecutionUserId = rule.ExecutionUserId,
             ProjectId = rule.ProjectId,
             BoardId = rule.BoardId,

@@ -60,7 +60,7 @@ internal sealed class UpdateTaskHandler : IActionExecutionHandler
 
         if (!application.Changed)
         {
-            return new ActionOutcome(AutomationActionResultStatus.Skipped, "The task already has the configured values.");
+            return new ActionOutcome(AutomationActionResultStatus.Skipped, AutomationMessage.TaskAlreadyMatches);
         }
 
         return ActionOutcomes.Succeeded();
@@ -84,7 +84,7 @@ internal sealed class UpdateTaskHandler : IActionExecutionHandler
                 execution.Rule.Id,
                 taskId);
 
-            return TaskUpdateApplication.Failed("The task no longer exists.");
+            return TaskUpdateApplication.Failed(AutomationMessage.TaskMissing);
         }
 
         var boardGroup = await ResolveBoardGroup(contribution.BoardGroupId, cancellationToken);
@@ -95,7 +95,7 @@ internal sealed class UpdateTaskHandler : IActionExecutionHandler
 
         if (boardGroupMissing)
         {
-            return TaskUpdateApplication.Failed("The selected board group is not available for the task's project.");
+            return TaskUpdateApplication.Failed(AutomationMessage.BoardGroupUnavailableForTask);
         }
 
         var statusId = contribution.StatusId ?? boardGroup?.StatusId;
@@ -103,7 +103,7 @@ internal sealed class UpdateTaskHandler : IActionExecutionHandler
 
         if (statusId.HasValue && status is null)
         {
-            return TaskUpdateApplication.Failed("The selected status is not available in the workspace.");
+            return TaskUpdateApplication.Failed(AutomationMessage.StatusUnavailable);
         }
 
         var referencedUserIds = GetReferencedUserIds(contribution);
@@ -112,7 +112,7 @@ internal sealed class UpdateTaskHandler : IActionExecutionHandler
 
         if (hasInvalidUser)
         {
-            return TaskUpdateApplication.Failed("An owner or assignee is no longer available in the workspace.");
+            return TaskUpdateApplication.Failed(AutomationMessage.OwnerOrAssigneeUnavailable);
         }
 
         var requestedTagNames = contribution.AddTags
@@ -126,7 +126,7 @@ internal sealed class UpdateTaskHandler : IActionExecutionHandler
 
         if (hasInvalidTag)
         {
-            return TaskUpdateApplication.Failed("A configured tag is no longer available in the workspace.");
+            return TaskUpdateApplication.Failed(AutomationMessage.TagUnavailable);
         }
 
         var sprint = await ResolveSprint(contribution.SprintId, cancellationToken);
@@ -137,7 +137,7 @@ internal sealed class UpdateTaskHandler : IActionExecutionHandler
 
         if (sprintMissing)
         {
-            return TaskUpdateApplication.Failed("The selected sprint is not available for the task's project.");
+            return TaskUpdateApplication.Failed(AutomationMessage.SprintUnavailableForTask);
         }
 
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
@@ -147,7 +147,7 @@ internal sealed class UpdateTaskHandler : IActionExecutionHandler
 
         if (!hasValidSchedule)
         {
-            return TaskUpdateApplication.Failed(ProjectTaskSchedule.InvalidDateRangeMessage);
+            return TaskUpdateApplication.Failed(AutomationMessage.InvalidDateRange);
         }
 
         TaskMutationPipeline.Apply(task, new TaskMutationValues(status, contribution.Priority));
@@ -169,7 +169,7 @@ internal sealed class UpdateTaskHandler : IActionExecutionHandler
         {
             Logger.LogWarning("Automation rule {RuleId} could not record the update for task {TaskId}", execution.Rule.Id, taskId);
 
-            return TaskUpdateApplication.Failed("The updated task could not be reloaded.");
+            return TaskUpdateApplication.Failed(AutomationMessage.TaskReloadFailed);
         }
 
         var diff = ProjectTaskDiff.Create(previous, current);
@@ -434,7 +434,7 @@ internal sealed class UpdateTaskHandler : IActionExecutionHandler
     {
         public bool Changed { get; init; }
 
-        public string? Error { get; init; }
+        public AutomationMessage? Error { get; init; }
 
         public static TaskUpdateApplication Succeeded { get; } = new()
         {
@@ -443,7 +443,7 @@ internal sealed class UpdateTaskHandler : IActionExecutionHandler
 
         public static TaskUpdateApplication Unchanged { get; } = new();
 
-        public static TaskUpdateApplication Failed(string error)
+        public static TaskUpdateApplication Failed(AutomationMessage error)
         {
             return new TaskUpdateApplication
             {

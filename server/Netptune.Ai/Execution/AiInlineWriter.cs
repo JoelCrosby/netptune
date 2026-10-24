@@ -4,6 +4,7 @@ using System.Text;
 using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests.Ai;
 using Netptune.Core.Services;
@@ -78,7 +79,7 @@ public sealed class AiInlineWriter : IAiInlineWriter
     {
         Func<int, Task<InlineWriteSubject?>> subject = _ => LoadTask(systemId, cancellationToken);
 
-        var target = new InlineWriteTarget(TaskPermissions, "The task could not be found.");
+        var target = new InlineWriteTarget(TaskPermissions, AppText.AiErrorTaskNotFound);
 
         return Write(request, target, subject, cancellationToken);
     }
@@ -87,7 +88,7 @@ public sealed class AiInlineWriter : IAiInlineWriter
     {
         Func<int, Task<InlineWriteSubject?>> subject = workspaceId => LoadPage(pageId, workspaceId, cancellationToken);
 
-        var target = new InlineWriteTarget(PagePermissions, "The page could not be found.");
+        var target = new InlineWriteTarget(PagePermissions, AppText.AiErrorPageNotFound);
 
         return Write(request, target, subject, cancellationToken);
     }
@@ -154,14 +155,14 @@ public sealed class AiInlineWriter : IAiInlineWriter
 
         if (prompt.Length == 0)
         {
-            yield return AiStreamEvent.Failed("Tell the assistant what to write.");
+            yield return AiStreamEvent.Failed(AppText.AiErrorWriteInstructionRequired);
 
             yield break;
         }
 
         if (prompt.Length > MaxPromptLength)
         {
-            yield return AiStreamEvent.Failed("Shorten the request; the assistant takes up to 2,000 characters.");
+            yield return AiStreamEvent.Failed(AppText.AiErrorWriteInstructionTooLong);
 
             yield break;
         }
@@ -175,7 +176,7 @@ public sealed class AiInlineWriter : IAiInlineWriter
 
         if (membership is null)
         {
-            yield return AiStreamEvent.Failed("You are not a member of this workspace.");
+            yield return AiStreamEvent.Failed(AppText.AiErrorNotWorkspaceMember);
 
             yield break;
         }
@@ -186,7 +187,7 @@ public sealed class AiInlineWriter : IAiInlineWriter
 
         if (!isPermitted)
         {
-            yield return AiStreamEvent.Failed("You do not have permission to have the assistant write here.");
+            yield return AiStreamEvent.Failed(AppText.AiErrorNoPermissionToWriteHere);
 
             yield break;
         }
@@ -206,7 +207,7 @@ public sealed class AiInlineWriter : IAiInlineWriter
 
         if (!assistantEnabled)
         {
-            yield return AiStreamEvent.Failed("The assistant is turned off for this workspace.");
+            yield return AiStreamEvent.Failed(AppText.AiErrorAssistantTurnedOff);
 
             yield break;
         }
@@ -215,7 +216,7 @@ public sealed class AiInlineWriter : IAiInlineWriter
 
         if (spend.IsOverCap)
         {
-            yield return AiStreamEvent.Failed(AiSpendMessages.CapReached);
+            yield return AiStreamEvent.Failed(AppText.AiSpendCapReached);
 
             yield break;
         }
@@ -224,7 +225,7 @@ public sealed class AiInlineWriter : IAiInlineWriter
 
         if (credential is null)
         {
-            yield return AiStreamEvent.Failed("No assistant key is set up for this workspace.");
+            yield return AiStreamEvent.Failed(AppText.ErrorNoAssistantKeySetUpWorkspace);
 
             yield break;
         }
@@ -272,7 +273,7 @@ public sealed class AiInlineWriter : IAiInlineWriter
 
         if (string.IsNullOrWhiteSpace(turn.Text))
         {
-            yield return AiStreamEvent.Failed("The assistant returned nothing. Try again.");
+            yield return AiStreamEvent.Failed(AppText.ErrorAssistantReturnedNothingTryAgain);
 
             yield break;
         }

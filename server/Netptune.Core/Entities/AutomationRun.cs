@@ -22,6 +22,10 @@ public record AutomationRun : AuditableEntity<int>
 
     public string? Message { get; set; }
 
+    public string? MessageCode { get; set; }
+
+    public List<string> MessageArguments { get; set; } = [];
+
     public JsonDocument? Context { get; set; }
 
     [JsonIgnore]

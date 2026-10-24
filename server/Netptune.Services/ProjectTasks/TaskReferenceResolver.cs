@@ -1,3 +1,4 @@
+using Netptune.Core.Localization;
 using Netptune.Core.Services.ProjectTasks;
 using Netptune.Core.UnitOfWork;
 
@@ -30,7 +31,7 @@ public sealed class TaskReferenceResolver : ITaskReferenceResolver
 
         if (containsInvalidAssignee)
         {
-            return TaskAssigneeResolution.Failed("Assignee IDs cannot be empty or duplicated");
+            return TaskAssigneeResolution.Failed(AppText.ErrorAssigneeIDsCannotEmptyDuplicated);
         }
 
         var clearsEveryAssignee = assigneeIds.Count == 0;
@@ -46,7 +47,9 @@ public sealed class TaskReferenceResolver : ITaskReferenceResolver
 
         if (missingAssigneeIds.Count > 0)
         {
-            var error = $"Assignees were not found in the workspace: {string.Join(", ", missingAssigneeIds)}";
+            var error = Localized.Format(
+                AppText.ErrorAssigneesNotFoundWorkspace,
+                string.Join(", ", missingAssigneeIds));
 
             return TaskAssigneeResolution.Failed(error);
         }
@@ -73,7 +76,7 @@ public sealed class TaskReferenceResolver : ITaskReferenceResolver
 
         if (containsInvalidTag)
         {
-            return TaskTagResolution.Failed("Tags cannot be empty or duplicated");
+            return TaskTagResolution.Failed(AppText.ErrorTagsCannotEmptyDuplicated);
         }
 
         var clearsEveryTag = requestedNames.Count == 0;
@@ -89,7 +92,7 @@ public sealed class TaskReferenceResolver : ITaskReferenceResolver
 
         if (missingTags.Count > 0)
         {
-            var error = $"Tags were not found in the workspace: {string.Join(", ", missingTags)}";
+            var error = Localized.Format(AppText.ErrorTagsNotFoundWorkspace, string.Join(", ", missingTags));
 
             return TaskTagResolution.Failed(error);
         }

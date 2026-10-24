@@ -3,6 +3,7 @@ using Mediator;
 using Netptune.Core.Entities;
 using Netptune.Core.Events;
 using Netptune.Core.Events.Comments;
+using Netptune.Core.Localization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -50,7 +51,7 @@ public sealed class UpdateCommentCommandHandler : IRequestHandler<UpdateCommentC
 
         if (string.IsNullOrWhiteSpace(body))
         {
-            return ClientResponse<CommentViewModel>.Failed("Comment cannot be empty.");
+            return ClientResponse<CommentViewModel>.Failed(AppText.ErrorCommentCannotEmpty);
         }
 
         var requestedMentionIds = request.Request.Mentions
@@ -99,7 +100,7 @@ public sealed class UpdateCommentCommandHandler : IRequestHandler<UpdateCommentC
 
         if (result is null)
         {
-            return ClientResponse<CommentViewModel>.Failed("update comment failed");
+            return ClientResponse<CommentViewModel>.Failed(AppText.ErrorUpdateCommentFailed);
         }
 
         return result;

@@ -36,6 +36,10 @@ import {
   AutomationRunSummary,
   AutomationTrigger,
 } from '@core/automations/automation.models';
+import {
+  describeActionResultMessage,
+  describeRunMessage,
+} from '@core/automations/automation-messages';
 import { AutomationsService } from '../services/automations.service';
 import { AutomationRunStatusPillComponent } from './automation-run-status-pill.component';
 
@@ -397,21 +401,27 @@ export class AutomationRunHistoryComponent {
         (result) => result.status === AutomationActionResultStatus.failed
       );
 
+      const failedActionMessage = failedAction
+        ? describeActionResultMessage(failedAction)
+        : null;
+
       return (
-        failedAction?.message ??
-        run.message ??
+        failedActionMessage ??
+        describeRunMessage(run) ??
         $localize`:Result of an automation run that failed without a message:An action failed`
       );
     }
 
     if (run.status === AutomationRunStatus.skipped) {
       return (
-        run.message ??
+        describeRunMessage(run) ??
         $localize`:Result of an automation run whose conditions did not match:Conditions not met`
       );
     }
 
-    if (run.message) return run.message;
+    const runMessage = describeRunMessage(run);
+
+    if (runMessage) return runMessage;
 
     const outcomes = run.actionResults.map((result) => {
       return this.actionOutcome(result);
@@ -447,7 +457,7 @@ export class AutomationRunHistoryComponent {
       steps.push({
         keyword: $localize`:Heading of the step where an automation run failed:FAILED`,
         text:
-          run.message ??
+          describeRunMessage(run) ??
           $localize`:Result of an automation run that failed without a message:An action failed`,
         tone: 'warn',
       });
@@ -471,7 +481,7 @@ export class AutomationRunHistoryComponent {
       return {
         keyword,
         text:
-          run.message ??
+          describeRunMessage(run) ??
           $localize`:Run step when the conditions did not match:Conditions not matched, so the run stopped here`,
         tone: 'muted',
       };
@@ -494,7 +504,8 @@ export class AutomationRunHistoryComponent {
 
   private actionStep(result: AutomationActionResult, index: number): RunStep {
     const outcome = this.actionOutcome(result);
-    const text = result.message ? `${outcome}: ${result.message}` : outcome;
+    const message = describeActionResultMessage(result);
+    const text = message ? `${outcome}: ${message}` : outcome;
 
     return {
       keyword: automationActionKeyword(index),

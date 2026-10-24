@@ -2,6 +2,7 @@ using Mediator;
 
 using Netptune.Core.Encoding;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Relations;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
@@ -43,12 +44,12 @@ public sealed class UpdateRelationTypeCommandHandler : IRequestHandler<UpdateRel
 
         if (string.IsNullOrWhiteSpace(key))
         {
-            return ClientResponse<RelationTypeViewModel>.Failed("Relation type name must contain at least one valid character.");
+            return ClientResponse<RelationTypeViewModel>.Failed(AppText.ErrorRelationTypeNameMustContainAtLeast);
         }
 
         if (await UnitOfWork.RelationTypes.KeyExists(workspaceId.Value, key, relationType.Id, cancellationToken))
         {
-            return ClientResponse<RelationTypeViewModel>.Failed("Relation type name should be unique.");
+            return ClientResponse<RelationTypeViewModel>.Failed(AppText.ErrorRelationTypeNameShouldUnique);
         }
 
         relationType.Name = name;

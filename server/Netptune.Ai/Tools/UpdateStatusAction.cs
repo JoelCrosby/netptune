@@ -5,6 +5,7 @@ using Mediator;
 using Netptune.Core.Authorization;
 using Netptune.Core.Encoding;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Statuses.Queries;
@@ -84,7 +85,10 @@ public sealed class UpdateStatusAction : IAiToolAction
 
             if (category != status.Category)
             {
-                fields.Add(AiChangeFields.Text("category", status.Category.ToString(), category.ToString()));
+                var beforeCategory = LocalizedEnum.Label(status.Category);
+                var afterCategory = LocalizedEnum.Label(category);
+
+                fields.Add(AiChangeFields.Text("category", beforeCategory, afterCategory));
                 payload["category"] = category.ToString();
             }
         }
@@ -97,14 +101,14 @@ public sealed class UpdateStatusAction : IAiToolAction
             return AiToolExecution.Failed("No changes were supplied for this status.");
         }
 
-        var changedNames = string.Join(", ", fields.Select(field => field.Name));
+        var changedNames = AiFieldNames.Describe(fields);
 
         ChangeSet.Add(new AiChangeDraft
         {
             ToolName = ChangeName,
             EntityType = "status",
             EntityId = status.Id,
-            Summary = $"Update {changedNames} on status “{status.Name}”",
+            Summary = Localized.Format(AppText.AiSummaryUpdateStatus, changedNames, status.Name),
             Fields = fields,
             Payload = JsonSerializer.SerializeToDocument(payload),
             ValidationStatus = AiChangeValidationStatus.Valid,

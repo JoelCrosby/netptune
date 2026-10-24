@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Tasks.Queries;
 
@@ -68,7 +69,7 @@ public sealed class AddCommentAction : IAiToolAction
             ToolName = ChangeName,
             EntityType = "task",
             EntityId = task?.Id,
-            Summary = $"Comment on “{task?.Name ?? pending!.Summary}”",
+            Summary = Localized.Format(AppText.AiSummaryAddComment, task?.Name ?? pending!.Summary),
             Fields = [new AiChangeField { Name = "comment", After = comment }],
             Payload = JsonDocument.Parse(arguments.GetRawText()),
             ValidationStatus = AiChangeValidationStatus.Valid,

@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
@@ -41,7 +42,7 @@ public sealed class DiscardAiChangeSetCommandHandler : IRequestHandler<DiscardAi
 
         if (!isPending)
         {
-            return ClientResponse.Failed("Only a pending change set can be discarded.");
+            return ClientResponse.Failed(AppText.ErrorOnlyPendingChangeSetCanDiscarded);
         }
 
         changeSet.Status = AiChangeSetStatus.Discarded;

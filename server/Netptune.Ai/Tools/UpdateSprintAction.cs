@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 
 namespace Netptune.Ai.Tools;
@@ -82,14 +83,14 @@ public sealed class UpdateSprintAction : IAiToolAction
             return AiToolExecution.Failed("No changes were supplied for this sprint.");
         }
 
-        var changedNames = string.Join(", ", fields.Select(field => field.Name));
+        var changedNames = AiFieldNames.Describe(fields);
 
         ChangeSet.Add(new AiChangeDraft
         {
             ToolName = ChangeName,
             EntityType = "sprint",
             EntityId = sprint.Id,
-            Summary = $"Update {changedNames} on sprint “{sprint.Name}”",
+            Summary = Localized.Format(AppText.AiSummaryUpdateSprint, changedNames, sprint.Name),
             Fields = fields,
             Payload = JsonDocument.Parse(arguments.GetRawText()),
             ValidationStatus = AiChangeValidationStatus.Valid,

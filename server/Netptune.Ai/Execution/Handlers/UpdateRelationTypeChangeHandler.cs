@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Ai.Tools;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -30,7 +31,7 @@ public sealed class UpdateRelationTypeChangeHandler : IAiChangeHandler
 
         if (!relationTypeId.HasValue)
         {
-            return AiChangePayload.Failure(change, "The relation type this change refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorRelationTypeChangeRefersCouldNotResolved);
         }
 
         // The update command replaces every field, so fields the change leaves alone are read fresh at apply time.
@@ -39,7 +40,7 @@ public sealed class UpdateRelationTypeChangeHandler : IAiChangeHandler
 
         if (relationType is null)
         {
-            return AiChangePayload.Failure(change, "The relation type no longer exists in this workspace.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorRelationTypeNoLongerExistsWorkspace);
         }
 
         var request = new UpdateRelationTypeRequest
@@ -55,7 +56,9 @@ public sealed class UpdateRelationTypeChangeHandler : IAiChangeHandler
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The relation type could not be updated.");
+            return AiChangePayload.Failure(
+                change,
+                response.Message ?? AppText.AiChangeErrorRelationTypeCouldNotUpdated);
         }
 
         return AiChangePayload.Applied(change, relationType.Id);

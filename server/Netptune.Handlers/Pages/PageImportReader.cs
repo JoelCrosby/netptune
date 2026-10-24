@@ -1,6 +1,7 @@
 using System.IO.Compression;
 using System.Text;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Pages;
 
 namespace Netptune.Handlers.Pages;
@@ -22,7 +23,7 @@ public static class PageImportReader
     public const int MaxEntries = 2000;
     public const long MaxTotalBytes = 30L * 1024 * 1024;
     public const int MaxSkippedListed = 50;
-    public const string UnreadableZipMessage = "The zip file could not be read.";
+    public static string UnreadableZipMessage => AppText.ErrorZipFileCouldNotRead;
 
     private static readonly HashSet<string> MarkdownExtensions = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -66,7 +67,7 @@ public static class PageImportReader
 
             if (archive.Entries.Count > MaxEntries)
             {
-                return collector.Fail($"A zip file can hold at most {MaxEntries} entries.");
+                return collector.Fail(Localized.Format(AppText.ErrorZipFileCanHoldAtMostEntries, MaxEntries));
             }
 
             foreach (var entry in archive.Entries)
@@ -144,7 +145,7 @@ public static class PageImportReader
 
             if (Files.Count >= MaxFiles)
             {
-                return $"An import can hold at most {MaxFiles} files.";
+                return Localized.Format(AppText.ErrorImportCanHoldAtMostFiles, MaxFiles);
             }
 
             using var bytes = await ReadBounded(content, cancellationToken);
@@ -153,7 +154,7 @@ public static class PageImportReader
 
             if (TotalBytes > MaxTotalBytes)
             {
-                return "The files add up to more than 30 MB.";
+                return AppText.ErrorFilesAddUpMoreThanMB;
             }
 
             var isOverBodyLimit = bytes.Length > PageBody.MaxBytes;

@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Meta;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
@@ -30,7 +31,7 @@ public sealed class CreateProjectChangeHandler : IAiChangeHandler
 
         if (!hasName)
         {
-            return AiChangePayload.Failure(change, "The project name is missing from this change.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorProjectNameMissingChange);
         }
 
         var request = new AddProjectRequest
@@ -45,7 +46,7 @@ public sealed class CreateProjectChangeHandler : IAiChangeHandler
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The project could not be created.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorProjectCouldNotCreated);
         }
 
         return AiChangePayload.Applied(change, response.Payload?.Id);

@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -32,7 +33,7 @@ public sealed class CreateRelationTypeChangeHandler : IAiChangeHandler
 
         if (!hasName || !isKnownCategory)
         {
-            return AiChangePayload.Failure(change, "The relation type details are missing from this change.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorRelationTypeDetailsMissingChange);
         }
 
         var request = new CreateRelationTypeRequest
@@ -48,7 +49,9 @@ public sealed class CreateRelationTypeChangeHandler : IAiChangeHandler
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The relation type could not be created.");
+            return AiChangePayload.Failure(
+                change,
+                response.Message ?? AppText.AiChangeErrorRelationTypeCouldNotCreated);
         }
 
         return AiChangePayload.Applied(change, response.Payload?.Id);

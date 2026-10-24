@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Ai.Tools;
 using Netptune.Core.Authorization;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -15,8 +16,7 @@ namespace Netptune.Ai.Execution.Handlers;
 
 public sealed class UpdateTagChangeHandler : IAiChangeHandler, IAiChangeUndoHandler
 {
-    public const string ChangedSinceMessage =
-        "The tag has been renamed since this change was applied, so it was left as it is now.";
+    public static string ChangedSinceMessage => AppText.AiChangeErrorTagRenamedSinceChangeAppliedLeftNow;
 
     private readonly IMediator Mediator;
 
@@ -42,7 +42,7 @@ public sealed class UpdateTagChangeHandler : IAiChangeHandler, IAiChangeUndoHand
 
         if (!tagId.HasValue)
         {
-            return AiChangePayload.Failure(change, "The tag this change refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorTagChangeRefersCouldNotResolved);
         }
 
         var name = AiChangePayload.ReadString(payload, "name")?.Trim();
@@ -50,7 +50,7 @@ public sealed class UpdateTagChangeHandler : IAiChangeHandler, IAiChangeUndoHand
 
         if (!hasName)
         {
-            return AiChangePayload.Failure(change, "The new tag name is missing from this change.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorNewTagNameMissingChange);
         }
 
         var tags = await ReadTags(cancellationToken);
@@ -58,14 +58,16 @@ public sealed class UpdateTagChangeHandler : IAiChangeHandler, IAiChangeUndoHand
 
         if (tag is null)
         {
-            return AiChangePayload.Failure(change, "The tag no longer exists in this workspace.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorTagNoLongerExistsWorkspace);
         }
 
         var clash = FindClash(tags, tag.Id, name!);
 
         if (clash is not null)
         {
-            return AiChangePayload.Failure(change, $"A tag named “{clash.Name}” already exists.");
+            var clashError = Localized.Format(AppText.AiChangeErrorTagNamedAlreadyExists, clash.Name);
+
+            return AiChangePayload.Failure(change, clashError);
         }
 
         var error = await Rename(tag.Name, name!, cancellationToken);
@@ -106,7 +108,7 @@ public sealed class UpdateTagChangeHandler : IAiChangeHandler, IAiChangeUndoHand
 
         if (!snapshot.HasValue)
         {
-            return AiChangeUndoResult.Failure(change, "There is nothing recorded to restore.");
+            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
         }
 
         var tagId = AiChangePayload.ReadInt(snapshot.Value, "tagId");
@@ -115,7 +117,7 @@ public sealed class UpdateTagChangeHandler : IAiChangeHandler, IAiChangeUndoHand
 
         if (!tagId.HasValue || !hasPreviousName)
         {
-            return AiChangeUndoResult.Failure(change, "There is nothing recorded to restore.");
+            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
         }
 
         var tags = await ReadTags(cancellationToken);
@@ -123,7 +125,7 @@ public sealed class UpdateTagChangeHandler : IAiChangeHandler, IAiChangeUndoHand
 
         if (tag is null)
         {
-            return AiChangeUndoResult.Failure(change, "The tag is no longer in this workspace.");
+            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorTagNoLongerWorkspace);
         }
 
         var appliedName = AiChangePayload.ReadString(change.Payload.RootElement, "name")?.Trim();
@@ -138,7 +140,9 @@ public sealed class UpdateTagChangeHandler : IAiChangeHandler, IAiChangeUndoHand
 
         if (clash is not null)
         {
-            return AiChangeUndoResult.Failure(change, $"Another tag is now named “{clash.Name}”.");
+            var clashError = Localized.Format(AppText.AiChangeErrorAnotherTagNowNamed, clash.Name);
+
+            return AiChangeUndoResult.Failure(change, clashError);
         }
 
         var error = await Rename(tag.Name, previousName!, cancellationToken);
@@ -174,6 +178,6 @@ public sealed class UpdateTagChangeHandler : IAiChangeHandler, IAiChangeUndoHand
             return null;
         }
 
-        return response.Message ?? "The tag could not be renamed.";
+        return response.Message ?? AppText.AiChangeErrorTagCouldNotRenamed;
     }
 }

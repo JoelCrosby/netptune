@@ -5,6 +5,7 @@ using Mediator;
 using Netptune.Ai.Tools;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests.Pages;
 using Netptune.Core.ViewModels.Pages;
@@ -34,8 +35,7 @@ public sealed record AiPageSnapshot
 
 public static class AiPageUndo
 {
-    public const string EditedSinceApplyMessage =
-        "The page was edited after this change was applied. Restore an earlier version from its history instead.";
+    public static string EditedSinceApplyMessage => AppText.AiChangeErrorPageEditedAfterChangeAppliedRestoreEarlier;
 
     private static readonly JsonSerializerOptions SerializerOptions = new()
     {
@@ -103,14 +103,14 @@ public static class AiPageUndo
 
         if (snapshot is null)
         {
-            return AiChangeUndoResult.Failure(change, "There is nothing recorded to restore.");
+            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
         }
 
         var current = await AiPageLookup.Read(mediator, snapshot.PageId, cancellationToken);
 
         if (current is null)
         {
-            return AiChangeUndoResult.Failure(change, "The page is no longer in this workspace.");
+            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorPageNoLongerWorkspace);
         }
 
         var editedSinceApply = current.Revision != snapshot.Revision + 1;
@@ -125,7 +125,7 @@ public static class AiPageUndo
 
         if (!response.IsSuccess)
         {
-            return AiChangeUndoResult.Failure(change, response.Message ?? "The page could not be restored.");
+            return AiChangeUndoResult.Failure(change, response.Message ?? AppText.AiChangeErrorPageCouldNotRestored);
         }
 
         return AiChangeUndoResult.Undone(change, snapshot.PageId);

@@ -6,6 +6,7 @@ using Netptune.Automation.Models;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Automations;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 
@@ -49,7 +50,7 @@ internal sealed class DeleteTaskHandler : IActionExecutionHandler
 
             return new ActionOutcome(
                 AutomationActionResultStatus.Scheduled,
-                "The action was scheduled for later execution.");
+                AutomationMessage.DeleteScheduled);
         }
 
         var execution = action.Execution;
@@ -62,7 +63,7 @@ internal sealed class DeleteTaskHandler : IActionExecutionHandler
         {
             return new ActionOutcome(
                 AutomationActionResultStatus.Skipped,
-                "The task was already deleted.");
+                AutomationMessage.TaskAlreadyDeleted);
         }
 
         var deletionEvent = TaskDeletionEvents.Create(

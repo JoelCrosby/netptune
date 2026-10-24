@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Netptune.Ai.Execution.Handlers;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Ai;
@@ -69,14 +70,14 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
 
         if (!isAssistantEnabled)
         {
-            throw new InvalidOperationException("The assistant is turned off for this workspace.");
+            throw new InvalidOperationException(AppText.AiErrorAssistantTurnedOff);
         }
 
         var isPending = changeSet.Status == AiChangeSetStatus.Pending;
 
         if (!isPending)
         {
-            throw new InvalidOperationException("Only a pending change set can be applied.");
+            throw new InvalidOperationException(AppText.AiChangeErrorOnlyPendingChangeSetCanApplied);
         }
 
         var changes = await UnitOfWork.AiChangeSets.GetChanges(changeSet.Id, cancellationToken);
@@ -88,7 +89,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
 
         if (membership is null)
         {
-            throw new InvalidOperationException("You are not a member of this workspace.");
+            throw new InvalidOperationException(AppText.AiErrorNotWorkspaceMember);
         }
 
         var permissions = membership.Permissions.ToHashSet(StringComparer.Ordinal);
@@ -96,7 +97,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
 
         if (missingPermission)
         {
-            throw new UnauthorizedAccessException("You do not have permission to apply these changes.");
+            throw new UnauthorizedAccessException(AppText.AiChangeErrorYouDoNotPermissionApplyChanges);
         }
 
         var results = new List<AiAppliedChangeResult>();
@@ -201,7 +202,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
 
     private static void StopRemaining(List<AiProposedChange> ordered, List<AiAppliedChangeResult> results)
     {
-        const string error = "Stopped before this change was applied.";
+        var error = AppText.AiChangeErrorStoppedBeforeChangeApplied;
 
         var ran = results.Select(result => result.ChangeId).ToHashSet();
         var remaining = ordered.Where(change => !ran.Contains(change.Id)).ToList();
@@ -406,10 +407,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
             .FirstOrDefault(reference => !resolvedRefs.ContainsKey(reference));
     }
 
-    private const string SkippedForReferencePrefix = "Skipped because";
-
-    public const string StillReferencedMessage =
-        "Kept, because a change that depends on it could not be undone.";
+    public static string StillReferencedMessage => AppText.AiChangeErrorKeptBecauseChangeDependsCouldNotUndone;
 
     private static bool IsRetryable(AiProposedChange change)
     {
@@ -421,14 +419,14 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
     private static bool IsSkippedForReference(AiProposedChange change)
     {
         var isSkipped = change.ApplyStatus == AiChangeApplyStatus.Skipped;
-        var namesAReference = change.ApplyError?.StartsWith(SkippedForReferencePrefix, StringComparison.Ordinal) == true;
+        var hasSkipReason = change.ApplyError is not null;
 
-        return isSkipped && namesAReference;
+        return isSkipped && hasSkipReason;
     }
 
     private static AiAppliedChangeResult SkipChange(AiProposedChange change, string reference)
     {
-        var error = $"{SkippedForReferencePrefix} {reference} was not created.";
+        var error = Localized.Format(AppText.AiChangeErrorSkippedForReference, reference);
 
         change.ApplyStatus = AiChangeApplyStatus.Skipped;
         change.ApplyError = error;
@@ -515,7 +513,8 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
 
             if (handler is null)
             {
-                var unsupported = AiChangePayload.Failure(change, $"No handler is registered for {change.ToolName}.");
+                var error = Localized.Format(AppText.AiChangeErrorNoHandlerRegistered, change.ToolName);
+                var unsupported = AiChangePayload.Failure(change, error);
 
                 change.ApplyStatus = unsupported.Status;
                 change.ApplyError = unsupported.Error;
@@ -610,14 +609,14 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
 
         if (!isAssistantEnabled)
         {
-            throw new InvalidOperationException("The assistant is turned off for this workspace.");
+            throw new InvalidOperationException(AppText.AiErrorAssistantTurnedOff);
         }
 
         var wasApplied = changeSet.AppliedAt.HasValue;
 
         if (!wasApplied)
         {
-            throw new InvalidOperationException("Only an applied change set can be undone.");
+            throw new InvalidOperationException(AppText.AiChangeErrorOnlyAppliedChangeSetCanUndone);
         }
 
         var changes = await UnitOfWork.AiChangeSets.GetChanges(changeSet.Id, cancellationToken);
@@ -628,7 +627,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
 
         if (undoable.Count == 0)
         {
-            throw new InvalidOperationException("There is nothing left to undo in this change set.");
+            throw new InvalidOperationException(AppText.AiChangeErrorNothingLeftUndoChangeSet);
         }
 
         var membership = await UnitOfWork.WorkspaceUsers.GetUserPermissions(
@@ -638,7 +637,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
 
         if (membership is null)
         {
-            throw new InvalidOperationException("You are not a member of this workspace.");
+            throw new InvalidOperationException(AppText.AiErrorNotWorkspaceMember);
         }
 
         var permissions = membership.Permissions.ToHashSet(StringComparer.Ordinal);
@@ -646,7 +645,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
 
         if (missingPermission)
         {
-            throw new UnauthorizedAccessException("You do not have permission to undo these changes.");
+            throw new UnauthorizedAccessException(AppText.AiChangeErrorYouDoNotPermissionUndoChanges);
         }
 
         var agent = await ResolveAgentName(changeSet, cancellationToken);
@@ -712,7 +711,9 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
 
             if (handler is null)
             {
-                return AiChangeUndoResult.Failure(change, $"A {change.ToolName} change cannot be undone.");
+                var error = Localized.Format(AppText.AiChangeErrorChangeCannotUndone, change.ToolName);
+
+                return AiChangeUndoResult.Failure(change, error);
             }
 
             var outcome = await handler.Revert(new AiChangeUndoContext { Change = change }, cancellationToken);
@@ -775,21 +776,21 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
 
         if (!isAssistantEnabled)
         {
-            throw new InvalidOperationException("The assistant is turned off for this workspace.");
+            throw new InvalidOperationException(AppText.AiErrorAssistantTurnedOff);
         }
 
         var wasApplied = changeSet.AppliedAt.HasValue;
 
         if (!wasApplied)
         {
-            throw new InvalidOperationException("Only an applied change set has failed changes to retry.");
+            throw new InvalidOperationException(AppText.AiChangeErrorOnlyAppliedChangeSetFailedChangesRetry);
         }
 
         var isUndone = changeSet.UndoneAt.HasValue;
 
         if (isUndone)
         {
-            throw new InvalidOperationException("An undone change set cannot be applied again.");
+            throw new InvalidOperationException(AppText.AiChangeErrorUndoneChangeSetCannotAppliedAgain);
         }
 
         var changes = await UnitOfWork.AiChangeSets.GetChanges(changeSet.Id, cancellationToken);
@@ -797,7 +798,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
 
         if (retryable.Count == 0)
         {
-            throw new InvalidOperationException("There is nothing left to retry in this change set.");
+            throw new InvalidOperationException(AppText.AiChangeErrorNothingLeftRetryChangeSet);
         }
 
         var membership = await UnitOfWork.WorkspaceUsers.GetUserPermissions(
@@ -807,7 +808,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
 
         if (membership is null)
         {
-            throw new InvalidOperationException("You are not a member of this workspace.");
+            throw new InvalidOperationException(AppText.AiErrorNotWorkspaceMember);
         }
 
         var permissions = membership.Permissions.ToHashSet(StringComparer.Ordinal);
@@ -815,7 +816,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
 
         if (missingPermission)
         {
-            throw new UnauthorizedAccessException("You do not have permission to apply these changes.");
+            throw new UnauthorizedAccessException(AppText.AiChangeErrorYouDoNotPermissionApplyChanges);
         }
 
         var resolvedRefs = ReadResolvedRefs(changes);

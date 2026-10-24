@@ -2,6 +2,7 @@ using Mediator;
 
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Relations;
+using Netptune.Core.Localization;
 using Netptune.Core.Relations;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
@@ -58,7 +59,7 @@ public sealed class CreateTaskRelationCommandHandler : IRequestHandler<CreateTas
 
         if (requestingTask.Id == otherTask.Id)
         {
-            return ClientResponse<TaskRelationViewModel>.Failed("A task cannot be related to itself.");
+            return ClientResponse<TaskRelationViewModel>.Failed(AppText.ErrorTaskCannotRelatedItself);
         }
 
         var (source, target) = RelationTypeRules.Orient(relationType.Category, requestingTask.Id, otherTask.Id);
@@ -88,8 +89,16 @@ public sealed class CreateTaskRelationCommandHandler : IRequestHandler<CreateTas
 
             committedRelation = relation;
 
-            var requestingView = TaskRelationViewModel.BuildView(relation.Id, relationType, requestingIsSource, otherTask);
-            var otherView = TaskRelationViewModel.BuildView(relation.Id, relationType, !requestingIsSource, requestingTask);
+            var requestingView = TaskRelationViewModel.BuildView(
+                relation.Id,
+                relationType,
+                requestingIsSource,
+                otherTask);
+            var otherView = TaskRelationViewModel.BuildView(
+                relation.Id,
+                relationType,
+                !requestingIsSource,
+                requestingTask);
 
             LogRelation(requestingTask.Id, requestingView);
             LogRelation(otherTask.Id, otherView);

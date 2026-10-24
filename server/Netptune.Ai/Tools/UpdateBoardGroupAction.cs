@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.Statuses;
@@ -88,14 +89,14 @@ public sealed class UpdateBoardGroupAction : IAiToolAction
             return AiToolExecution.Failed("No changes were supplied for this board group.");
         }
 
-        var changedNames = string.Join(", ", fields.Select(field => field.Name));
+        var changedNames = AiFieldNames.Describe(fields);
 
         ChangeSet.Add(new AiChangeDraft
         {
             ToolName = ChangeName,
             EntityType = "boardGroup",
             EntityId = group.Id,
-            Summary = $"Update {changedNames} on “{group.Name}” in {option.BoardName}",
+            Summary = Localized.Format(AppText.AiSummaryUpdateBoardGroup, changedNames, group.Name, option.BoardName),
             Fields = fields,
             Payload = JsonSerializer.SerializeToDocument(payload),
             ValidationStatus = AiChangeValidationStatus.Valid,

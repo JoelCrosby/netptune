@@ -2,6 +2,7 @@ using Mediator;
 
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Tasks;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
@@ -49,7 +50,11 @@ public sealed class ReassignTasksCommandHandler : IRequestHandler<ReassignTasksC
 
             if (missingAssigneeIds.Count > 0)
             {
-                return ClientResponse.Failed($"Assignees were not found in the workspace: {string.Join(", ", missingAssigneeIds)}");
+                var error = Localized.Format(
+                    AppText.ErrorAssigneesNotFoundWorkspace,
+                    string.Join(", ", missingAssigneeIds));
+
+                return ClientResponse.Failed(error);
             }
         }
 

@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 
 using Netptune.Ai.Providers;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 
 namespace Netptune.Ai.Execution;
@@ -58,11 +59,11 @@ public static class AiTurnReader
 
     public static string DescribeTimeout(TimeSpan timeout)
     {
-        var limit = timeout.TotalSeconds < 120
-            ? $"{(int)timeout.TotalSeconds} seconds"
-            : $"{(int)timeout.TotalMinutes} minutes";
+        var isShort = timeout.TotalSeconds < 120;
 
-        return $"The assistant ran out of time after {limit}. Send another message to let it continue.";
+        return isShort
+            ? Localized.Format(AppText.AiErrorTimedOutSeconds, (int)timeout.TotalSeconds)
+            : Localized.Format(AppText.AiErrorTimedOutMinutes, (int)timeout.TotalMinutes);
     }
 
     private sealed record TurnStep(AiStreamEvent? Event, string? Failure);
@@ -83,7 +84,7 @@ public static class AiTurnReader
         {
             var described = AiProviderErrors.Describe(exception);
 
-            return new TurnStep(null, described ?? "The assistant could not reach the provider.");
+            return new TurnStep(null, described ?? AppText.AiErrorProviderUnreachable);
         }
     }
 

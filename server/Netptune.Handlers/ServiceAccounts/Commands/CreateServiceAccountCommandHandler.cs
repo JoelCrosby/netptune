@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Netptune.Core.Authorization;
 using Netptune.Core.Cache;
 using Netptune.Core.Entities;
+using Netptune.Core.Localization;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests.ServiceAccounts;
 using Netptune.Core.Responses.Common;
@@ -46,7 +47,7 @@ public sealed class CreateServiceAccountCommandHandler
 
         if (name.Length is < 2 or > 128)
         {
-            return ClientResponse<ServiceAccountViewModel>.Failed("Service account name must be between 2 and 128 characters.");
+            return ClientResponse<ServiceAccountViewModel>.Failed(AppText.ErrorServiceAccountNameMustBetweenCharacters);
         }
 
         var currentUser = await Identity.GetCurrentUser();
@@ -78,7 +79,8 @@ public sealed class CreateServiceAccountCommandHandler
         if (permissions.Any(permission => !NetptunePermissions.All.Contains(permission)
                                           || !allowedPermissions.Contains(permission)))
         {
-            return ClientResponse<ServiceAccountViewModel>.Failed("A service account cannot be granted permissions its owner does not have.");
+            return ClientResponse<ServiceAccountViewModel>.Failed(
+                AppText.ErrorServiceAccountCannotGrantedPermissionsOwnerDoes);
         }
 
         var ownerIds = request.OwnerUserIds
@@ -90,7 +92,7 @@ public sealed class CreateServiceAccountCommandHandler
 
         if (owners.Count != ownerIds.Count || owners.Any(owner => owner.UserType != AppUserType.User))
         {
-            return ClientResponse<ServiceAccountViewModel>.Failed("Every service account owner must be a human member of the workspace.");
+            return ClientResponse<ServiceAccountViewModel>.Failed(AppText.ErrorEveryServiceAccountOwnerMustHumanMember);
         }
 
         var accountUserId = Guid.NewGuid().ToString();

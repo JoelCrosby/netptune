@@ -22,8 +22,15 @@
       <StronglyTypedNamespace>Netptune.Core.Localization</StronglyTypedNamespace>
       <StronglyTypedClassName>AppText</StronglyTypedClassName>
       <PublicClass>true</PublicClass>
-      <StronglyTypedFileName>$(IntermediateOutputPath)AppText.Designer.cs</StronglyTypedFileName>
+      <StronglyTypedFileName>Localization\AppText.Designer.cs</StronglyTypedFileName>
     </EmbeddedResource>
   </ItemGroup>
+
+  <Target Name="DeduplicateAppTextDesigner" AfterTargets="CoreResGen">
+    <ItemGroup>
+      <Compile Remove="Localization\AppText.Designer.cs" />
+      <Compile Include="Localization\AppText.Designer.cs" />
+    </ItemGroup>
+  </Target>
 
 </Project>

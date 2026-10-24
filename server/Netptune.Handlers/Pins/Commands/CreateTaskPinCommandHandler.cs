@@ -3,6 +3,7 @@ using Mediator;
 using Netptune.Core.Cache;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Repositories;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -63,7 +64,7 @@ public sealed class CreateTaskPinCommandHandler : IRequestHandler<CreateTaskPinC
 
         if (scopeEntityId is null)
         {
-            return ClientResponse<TaskPinViewModel>.Failed("A board is required to pin to a board.");
+            return ClientResponse<TaskPinViewModel>.Failed(AppText.ErrorBoardRequiredPinBoard);
         }
 
         var targetExists = await ScopeTargetExists(input.Scope, scopeEntityId.Value, workspaceId, cancellationToken);

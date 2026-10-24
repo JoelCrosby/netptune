@@ -52,7 +52,7 @@ internal sealed class ManageTaskRelationHandler : IActionExecutionHandler
         {
             return new ActionOutcome(
                 AutomationActionResultStatus.Failed,
-                "The selected relation type is no longer available in the workspace.");
+                AutomationMessage.RelationTypeUnavailable);
         }
 
         if (contribution.Operation == AutomationRelationOperation.Remove)
@@ -75,14 +75,14 @@ internal sealed class ManageTaskRelationHandler : IActionExecutionHandler
 
         if (!contribution.RelatedTaskId.HasValue)
         {
-            return new ActionOutcome(AutomationActionResultStatus.Failed, "The action has no task to link to.");
+            return new ActionOutcome(AutomationActionResultStatus.Failed, AutomationMessage.RelationTargetMissing);
         }
 
         var relatedTaskId = contribution.RelatedTaskId.Value;
 
         if (relatedTaskId == taskId)
         {
-            return new ActionOutcome(AutomationActionResultStatus.Failed, "A task cannot be related to itself.");
+            return new ActionOutcome(AutomationActionResultStatus.Failed, AutomationMessage.RelationToSelf);
         }
 
         var validTaskIds = await UnitOfWork.Tasks.GetValidTaskIdsInWorkspace(
@@ -95,7 +95,7 @@ internal sealed class ManageTaskRelationHandler : IActionExecutionHandler
         {
             return new ActionOutcome(
                 AutomationActionResultStatus.Failed,
-                "The task to link to is no longer available in the workspace.");
+                AutomationMessage.RelationTargetUnavailable);
         }
 
         var (sourceTaskId, targetTaskId) = Orient(relationType.Category, contribution.Direction, taskId, relatedTaskId);
@@ -109,7 +109,7 @@ internal sealed class ManageTaskRelationHandler : IActionExecutionHandler
         {
             return new ActionOutcome(
                 AutomationActionResultStatus.Skipped,
-                "These tasks are already linked by this relation.");
+                AutomationMessage.RelationAlreadyLinked);
         }
 
         var conflictError = await FindLinkConflict(relationType, sourceTaskId, targetTaskId, cancellationToken);
@@ -158,7 +158,7 @@ internal sealed class ManageTaskRelationHandler : IActionExecutionHandler
         {
             return new ActionOutcome(
                 AutomationActionResultStatus.Skipped,
-                "The task has no relations of this type to remove.");
+                AutomationMessage.RelationNothingToRemove);
         }
 
         var relationIds = relations.Select(relation => relation.Id).ToList();
@@ -216,7 +216,7 @@ internal sealed class ManageTaskRelationHandler : IActionExecutionHandler
         };
     }
 
-    private async Task<string?> FindLinkConflict(
+    private async Task<AutomationMessage?> FindLinkConflict(
         RelationType relationType,
         int sourceTaskId,
         int targetTaskId,
@@ -233,7 +233,7 @@ internal sealed class ManageTaskRelationHandler : IActionExecutionHandler
 
             if (hasExistingSource)
             {
-                return $"That task already has a \"{relationType.Name}\" link. A task can only have one.";
+                return AutomationMessage.RelationSingleSource(relationType.Name);
             }
         }
 
@@ -249,7 +249,7 @@ internal sealed class ManageTaskRelationHandler : IActionExecutionHandler
 
             if (wouldCreateCycle)
             {
-                return $"This would create a circular \"{relationType.Name}\" chain.";
+                return AutomationMessage.RelationCycle(relationType.Name);
             }
         }
 

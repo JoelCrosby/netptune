@@ -47,7 +47,12 @@ import {
   resolveAutomationScope,
 } from '@core/automations/automation-flow-copy';
 import {
+  describeAutoDisabledReason,
+  describeRuleWarning,
+} from '@core/automations/automation-messages';
+import {
   AutomationRule,
+  AutomationRuleWarning,
   AutomationRunSummary,
 } from '@core/automations/automation.models';
 import { injectBreadcrumbs } from '@core/services/breadcrumb.service';
@@ -230,7 +235,7 @@ import { AutomationsService } from '../../services/automations.service';
                     This automation was disabled automatically
                   </span>
                 </h2>
-                <p class="text-sm">{{ rule.autoDisabledReason }}</p>
+                <p class="text-sm">{{ autoDisabledReason(rule) }}</p>
                 <p class="text-foreground/60 text-sm">
                   <span i18n="Advice on the auto-disabled warning">
                     Fix the underlying problem before enabling it again, or it
@@ -252,7 +257,7 @@ import { AutomationsService } from '../../services/automations.service';
                 </h2>
                 <ul class="ml-6 list-disc text-sm">
                   @for (warning of rule.warnings; track $index) {
-                    <li>{{ warning.message }}</li>
+                    <li>{{ warningText(warning) }}</li>
                   }
                 </ul>
                 <p class="text-foreground/60 text-sm">
@@ -437,6 +442,14 @@ export class AutomationDetailViewComponent {
         },
         error: () => this.error.set(true),
       });
+  }
+
+  autoDisabledReason(rule: AutomationRule): string | null {
+    return describeAutoDisabledReason(rule);
+  }
+
+  warningText(warning: AutomationRuleWarning): string {
+    return describeRuleWarning(warning);
   }
 
   refreshRuns() {

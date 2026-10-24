@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Flags.Queries;
 using Netptune.Handlers.Tasks.Queries;
@@ -93,10 +94,10 @@ public sealed class ResolveTaskFlagTool : IAiTool
             ToolName = Name,
             EntityType = "task",
             EntityId = task.Id,
-            Summary = $"Clear flag “{flag.Name}” on “{task.Name}” as {resolution.ToString().ToLowerInvariant()}",
+            Summary = Localized.Format(DescribeResolution(resolution), flag.Name, task.Name),
             Fields =
             [
-                new AiChangeField { Name = "flag", Before = flag.Name, After = resolution.ToString() },
+                new AiChangeField { Name = "flag", Before = flag.Name, After = LocalizedEnum.Label(resolution) },
             ],
             Payload = JsonSerializer.SerializeToDocument(payload),
             ValidationStatus = AiChangeValidationStatus.Valid,
@@ -104,5 +105,12 @@ public sealed class ResolveTaskFlagTool : IAiTool
 
         return AiToolExecution.Success(
             $"Proposed clearing flag “{flag.Name}” on {task.SystemId}. Nothing has been applied yet — the user must review and apply the change.");
+    }
+
+    private static string DescribeResolution(FlagResolutionType resolution)
+    {
+        return resolution == FlagResolutionType.Dismissed
+            ? AppText.AiSummaryDismissTaskFlag
+            : AppText.AiSummaryResolveTaskFlag;
     }
 }

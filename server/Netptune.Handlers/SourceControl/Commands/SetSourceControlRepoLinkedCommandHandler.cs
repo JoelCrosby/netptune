@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Requests.SourceControl;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -47,7 +48,7 @@ public sealed class SetSourceControlRepoLinkedCommandHandler
 
         if (isUnavailable)
         {
-            var message = $"{repo.FullName} is no longer visible to this connection.";
+            var message = Localized.Format(AppText.ErrorNoLongerVisibleConnection, repo.FullName);
 
             return ClientResponse<SourceControlRepoViewModel>.Failed(message);
         }

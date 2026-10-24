@@ -2,6 +2,7 @@ using FluentAssertions;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests.Pages;
 using Netptune.Core.Responses.Common;
@@ -134,7 +135,7 @@ public class TransformPageTextCommandHandlerTests
         var result = await Send(new TransformPageTextRequest { PageId = PageId, Action = "summarise", Text = "Hello" });
 
         result.IsSuccess.Should().BeFalse();
-        result.Message.Should().Be(AiSpendMessages.CapReached);
+        result.Message.Should().Be(AppText.AiSpendCapReached);
         await Transformer.DidNotReceive().Transform(Arg.Any<AiPageTransformRequest>(), Arg.Any<CancellationToken>());
     }
 

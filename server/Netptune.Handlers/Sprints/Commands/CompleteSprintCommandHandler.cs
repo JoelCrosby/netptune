@@ -4,6 +4,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Events.Sprints;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Models.Sprints;
 using Netptune.Core.Responses.Common;
@@ -50,7 +51,7 @@ public sealed class CompleteSprintCommandHandler : IRequestHandler<CompleteSprin
 
         if (sprint.Status != SprintStatus.Active)
         {
-            return ClientResponse<SprintViewModel>.Failed("Only active sprints can be completed");
+            return ClientResponse<SprintViewModel>.Failed(AppText.ErrorOnlyActiveSprintsCanCompleted);
         }
 
         var carryOverTarget = request.CarryOverSprintId.HasValue
@@ -194,17 +195,17 @@ public sealed class CompleteSprintCommandHandler : IRequestHandler<CompleteSprin
     {
         if (target is null || target.ProjectId != sprint.ProjectId)
         {
-            return "The sprint to carry unfinished tasks over to was not found in this project";
+            return AppText.ErrorSprintCarryUnfinishedTasksOverNotFound;
         }
 
         if (target.Id == sprint.Id)
         {
-            return "Unfinished tasks cannot carry over to the sprint being completed";
+            return AppText.ErrorUnfinishedTasksCannotCarryOverSprintBeing;
         }
 
         if (target.Status is not (SprintStatus.Planning or SprintStatus.Active))
         {
-            return "Unfinished tasks can only carry over to a planning or active sprint";
+            return AppText.ErrorUnfinishedTasksCanOnlyCarryOverPlanning;
         }
 
         return null;

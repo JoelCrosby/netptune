@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.BoardGroups.Queries;
@@ -72,7 +73,7 @@ public sealed class CreateBoardGroupAction : IAiToolAction
             ToolName = ChangeName,
             EntityType = AiPendingBoardGroupLookup.EntityType,
             RefKey = refKey,
-            Summary = $"Add group “{name}” to {board.Name}",
+            Summary = Localized.Format(AppText.AiSummaryCreateBoardGroup, name, board.Name),
             Fields = fields,
             Payload = JsonDocument.Parse(arguments.GetRawText()),
             ValidationStatus = AiChangeValidationStatus.Valid,

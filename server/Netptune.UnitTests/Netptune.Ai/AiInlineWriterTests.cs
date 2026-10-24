@@ -5,6 +5,7 @@ using FluentAssertions;
 using Netptune.Ai.Execution;
 using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
+using Netptune.Core.Localization;
 using Netptune.Core.Models;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
@@ -291,7 +292,7 @@ public class AiInlineWriterTests
 
         var events = await Collect(new InlineWriteRequest { Prompt = "Go" });
 
-        events.Should().ContainSingle().Which.Message.Should().Be(AiSpendMessages.CapReached);
+        events.Should().ContainSingle().Which.Message.Should().Be(AppText.AiSpendCapReached);
         Provider.Requests.Should().BeEmpty();
     }
 

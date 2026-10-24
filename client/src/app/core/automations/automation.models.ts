@@ -218,10 +218,18 @@ export enum AutomationWarningCode {
   missingTask = 9,
 }
 
+export enum AutomationWarningLocation {
+  rule = 0,
+  condition = 1,
+  action = 2,
+}
+
 export interface AutomationRuleWarning {
   code: AutomationWarningCode;
+  location: AutomationWarningLocation;
   message: string;
   actionId?: number | null;
+  value?: string | null;
 }
 
 export interface AutomationRule {
@@ -234,6 +242,8 @@ export interface AutomationRule {
   isEnabled: boolean;
   autoDisabledAt?: string | null;
   autoDisabledReason?: string | null;
+  autoDisabledReasonCode?: string | null;
+  autoDisabledReasonArguments?: string[];
   executionUserId: string | null;
   trigger: AutomationTrigger;
   actions: AutomationAction[];
@@ -253,6 +263,8 @@ export interface AutomationRun {
   status: AutomationRunStatus;
   idempotencyKey: string;
   message?: string | null;
+  messageCode?: string | null;
+  messageArguments?: string[];
   createdAt: Date;
   actionResults: AutomationActionResult[];
 }
@@ -280,6 +292,8 @@ export interface AutomationActionResult {
   startedAt?: Date | null;
   completedAt?: Date | null;
   message?: string | null;
+  messageCode?: string | null;
+  messageArguments?: string[];
   output?: Record<string, unknown> | null;
 }
 

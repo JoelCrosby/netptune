@@ -3,6 +3,7 @@ using System.Text.Json;
 using Mediator;
 
 using Netptune.Core.Encoding;
+using Netptune.Core.Localization;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
@@ -45,7 +46,7 @@ public sealed class SetImportMappingCommandHandler : IRequestHandler<SetImportMa
         if (!isMappable)
         {
             return ClientResponse<ImportSessionViewModel>.Failed(
-                $"An import that is {session.Stage} cannot be mapped.");
+                Localized.Format(AppText.ErrorImportCannotMapped, session.Stage));
         }
 
         var columnCount = ResolveColumnCount(session);

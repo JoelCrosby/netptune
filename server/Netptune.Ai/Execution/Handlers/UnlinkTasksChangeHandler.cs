@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Relations.Commands;
@@ -26,14 +27,14 @@ public sealed class UnlinkTasksChangeHandler : IAiChangeHandler
 
         if (!relationId.HasValue)
         {
-            return AiChangePayload.Failure(change, "The link this change refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorLinkChangeRefersCouldNotResolved);
         }
 
         var response = await Mediator.Send(new DeleteTaskRelationCommand(relationId.Value), cancellationToken);
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The link could not be removed.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorLinkCouldNotRemoved);
         }
 
         return AiChangePayload.Applied(change, change.EntityId);

@@ -174,6 +174,31 @@ public sealed class PagesEndpointTests
     }
 
     [Fact]
+    public async Task Move_ShouldExplainTheRejectionInTheReadersLanguage()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var folder = await Create(new CreatePageRequest { Kind = PageKind.Folder, Title = "Ingénierie" });
+        var child = await Create(new CreatePageRequest
+        {
+            Kind = PageKind.Document,
+            ParentId = folder.Id,
+            Title = "RFC",
+        });
+        using var request = new HttpRequestMessage(HttpMethod.Patch, $"api/pages/{folder.Id}/move")
+        {
+            Content = JsonContent.Create(new MovePageRequest { ParentId = child.Id, SortOrder = 1 }),
+        };
+
+        request.Headers.AcceptLanguage.ParseAdd("fr-FR");
+
+        var response = await Client.SendAsync(request, cancellationToken);
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PageViewModel>>(cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        result.Message.Should().Be("Une page ne peut pas être déplacée à l’intérieur d’elle-même.");
+    }
+
+    [Fact]
     public async Task Children_ShouldListTheLiveDirectChildrenInTreeOrder_WithTheirSummary()
     {
         var cancellationToken = TestContext.Current.CancellationToken;

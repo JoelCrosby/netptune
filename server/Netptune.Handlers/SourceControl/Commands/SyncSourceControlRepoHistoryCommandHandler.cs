@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
@@ -46,7 +47,7 @@ public sealed class SyncSourceControlRepoHistoryCommandHandler
 
         if (!isTracked)
         {
-            var message = $"Link {repo.FullName} before syncing its history.";
+            var message = Localized.Format(AppText.ErrorLinkBeforeSyncingHistory, repo.FullName);
 
             return ClientResponse<SourceControlRepoViewModel>.Failed(message);
         }

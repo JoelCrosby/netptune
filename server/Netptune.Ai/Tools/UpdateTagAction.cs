@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Tags.Queries;
 
@@ -83,7 +84,7 @@ public sealed class UpdateTagAction : IAiToolAction
             ToolName = Change,
             EntityType = "tag",
             EntityId = tag.Id,
-            Summary = $"Rename tag “{tag.Name}” to “{name}”",
+            Summary = Localized.Format(AppText.AiSummaryRenameTag, tag.Name, name),
             Fields = [AiChangeFields.Text("name", tag.Name, name)],
             Payload = JsonSerializer.SerializeToDocument(new { tagId = tag.Id, name }),
             ValidationStatus = AiChangeValidationStatus.Valid,

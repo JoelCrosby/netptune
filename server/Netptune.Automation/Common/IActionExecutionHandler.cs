@@ -1,11 +1,12 @@
 using Netptune.Automation.Models;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Automations;
 using Netptune.Core.Services.ProjectTasks;
 
 namespace Netptune.Automation.Common;
 
-internal sealed record ActionOutcome(AutomationActionResultStatus Status, string? Message = null);
+internal sealed record ActionOutcome(AutomationActionResultStatus Status, AutomationMessage? Message = null);
 
 internal sealed record AutomationPersistenceState
 {
@@ -38,6 +39,6 @@ internal static class ActionOutcomes
     {
         return new ActionOutcome(
             AutomationActionResultStatus.Skipped,
-            "The action did not produce an executable contribution.");
+            AutomationMessage.ActionNotExecutable);
     }
 }

@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using Mediator;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.Pages;
 using Netptune.Handlers.Pages.Queries;
@@ -17,7 +18,7 @@ public static partial class AiPageLookup
 {
     public const string EntityType = "page";
 
-    public const string TopLevel = "Top level";
+    public static string TopLevel => AppText.AiPageTopLevel;
 
     public static async Task<List<PageTreeNodeViewModel>> Tree(IMediator mediator, CancellationToken cancellationToken)
     {

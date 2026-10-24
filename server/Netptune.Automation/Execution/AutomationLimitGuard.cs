@@ -79,7 +79,7 @@ internal sealed class AutomationLimitGuard
                 "Automation rule {RuleId} was disabled by the circuit breaker while handling {TriggerType}: {Reason}",
                 trip.RuleId,
                 triggerType,
-                trip.Reason);
+                trip.Reason.Text);
         }
 
         var skippedCount = withinQuota.Count(execution => trippedRuleIds.Contains(execution.Rule.Id));
@@ -146,18 +146,18 @@ internal sealed class AutomationLimitGuard
 
         if (exceededFailures)
         {
-            return new CircuitBreakerTrip(
-                stats.RuleId,
-                $"Disabled automatically after {stats.FailureCount} failed runs within {DescribeWindow()}.");
+            var reason = AutomationMessage.DisabledAfterFailures(stats.FailureCount, Options.Window);
+
+            return new CircuitBreakerTrip(stats.RuleId, reason);
         }
 
         var exceededRuns = stats.RunCount >= Options.RunThreshold;
 
         if (exceededRuns)
         {
-            return new CircuitBreakerTrip(
-                stats.RuleId,
-                $"Disabled automatically after {stats.RunCount} runs within {DescribeWindow()}.");
+            var reason = AutomationMessage.DisabledAfterRuns(stats.RunCount, Options.Window);
+
+            return new CircuitBreakerTrip(stats.RuleId, reason);
         }
 
         return null;
@@ -180,7 +180,7 @@ internal sealed class AutomationLimitGuard
                 .Where(rule => rule.ExecutionUserId is not null)
                 .Select(rule =>
                 {
-                    var reason = reasonsByRuleId[rule.Id];
+                    var reason = reasonsByRuleId[rule.Id].Text;
                     var cancelledCount = cancelledCounts.GetValueOrDefault(rule.Id);
 
                     return BuildAutoDisabledEvent(rule, reason, cancelledCount);
@@ -214,25 +214,6 @@ internal sealed class AutomationLimitGuard
             },
         };
     }
-
-    private string DescribeWindow()
-    {
-        var window = Options.Window;
-
-        if (window.TotalHours < 1)
-        {
-            return $"{Math.Round(window.TotalMinutes)} minutes";
-        }
-
-        var tenthsOfAnHour = (int)Math.Round(window.TotalHours * 10);
-
-        if (tenthsOfAnHour == 10)
-        {
-            return "an hour";
-        }
-
-        return $"{tenthsOfAnHour / 10d} hours";
-    }
 }
 
-internal sealed record CircuitBreakerTrip(int RuleId, string Reason);
+internal sealed record CircuitBreakerTrip(int RuleId, AutomationMessage Reason);

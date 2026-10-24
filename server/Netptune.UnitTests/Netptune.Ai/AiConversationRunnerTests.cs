@@ -9,6 +9,7 @@ using Netptune.Ai.Execution;
 using Netptune.Ai.Tools;
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Services.Ai;
 
@@ -152,7 +153,7 @@ public class AiConversationRunnerTests
         var lastEvent = events[^1];
 
         lastEvent.Type.Should().Be(AiStreamEventType.Error);
-        lastEvent.Message.Should().Be(AiSpendMessages.CapReachedDuringTurn);
+        lastEvent.Message.Should().Be(AppText.AiSpendCapReachedDuringTurn);
         Provider.RequestCount.Should().Be(1);
     }
 

@@ -2,6 +2,7 @@ using Mediator;
 
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Localization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -34,7 +35,7 @@ public sealed class ResolveTaskFlagCommandHandler : IRequestHandler<ResolveTaskF
 
         if (!hasValidResolution)
         {
-            return ClientResponse.Failed("The flag resolution is not supported.");
+            return ClientResponse.Failed(AppText.ErrorFlagResolutionNotSupported);
         }
 
         var workspaceId = await Identity.GetWorkspaceId();

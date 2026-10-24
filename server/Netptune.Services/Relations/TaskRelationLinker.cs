@@ -1,6 +1,7 @@
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Relations;
+using Netptune.Core.Localization;
 using Netptune.Core.Relations;
 using Netptune.Core.Relationships;
 using Netptune.Core.Services.Activity;
@@ -45,14 +46,16 @@ public sealed class TaskRelationLinker : ITaskRelationLinker
 
             if (relatedSystemId.Length == 0)
             {
-                return TaskRelationPlan.Failed("Related task keys cannot be empty");
+                return TaskRelationPlan.Failed(AppText.ErrorRelatedTaskKeysCannotEmpty);
             }
 
             var isDuplicate = !seen.Add((link.RelationTypeId, relatedSystemId));
 
             if (isDuplicate)
             {
-                return TaskRelationPlan.Failed($"{relatedSystemId} is linked more than once by the same relation.");
+                var error = Localized.Format(AppText.ErrorLinkedMoreThanOnceSameRelation, relatedSystemId);
+
+                return TaskRelationPlan.Failed(error);
             }
 
             requests.Add(new RequestedRelation(link.RelationTypeId, relatedSystemId, link.TaskIsSource));
@@ -77,12 +80,16 @@ public sealed class TaskRelationLinker : ITaskRelationLinker
         {
             if (!relationTypesById.TryGetValue(requested.RelationTypeId, out var relationType))
             {
-                return TaskRelationPlan.Failed($"Relation type with Id {requested.RelationTypeId} not found");
+                var error = Localized.Format(AppText.ErrorRelationTypeIdNotFound, requested.RelationTypeId);
+
+                return TaskRelationPlan.Failed(error);
             }
 
             if (!relatedTasksBySystemId.TryGetValue(requested.RelatedSystemId, out var relatedTask))
             {
-                return TaskRelationPlan.Failed($"Task with key {requested.RelatedSystemId} not found");
+                var error = Localized.Format(AppText.ErrorTaskKeyNotFound, requested.RelatedSystemId);
+
+                return TaskRelationPlan.Failed(error);
             }
 
             planned.Add(new PlannedTaskRelation(relationType, relatedTask, requested.TaskIsSource));
@@ -202,7 +209,7 @@ public sealed class TaskRelationLinker : ITaskRelationLinker
 
         if (hasCompetingSources)
         {
-            return $"A task can only have one \"{relationType.Name}\" link.";
+            return Localized.Format(AppText.ErrorTaskCanOnlyOneLink, relationType.Name);
         }
 
         var targetIds = outbound.ConvertAll(relation => relation.Task.Id);
@@ -213,7 +220,7 @@ public sealed class TaskRelationLinker : ITaskRelationLinker
 
         if (claimedTargetIds.Count > 0)
         {
-            return $"That task already has a \"{relationType.Name}\" link. A task can only have one.";
+            return Localized.Format(AppText.ErrorTaskAlreadyLinkTaskCanOnlyOne, relationType.Name);
         }
 
         return null;
@@ -243,7 +250,7 @@ public sealed class TaskRelationLinker : ITaskRelationLinker
 
         if (closesTheLoop)
         {
-            return $"This would create a circular \"{relationType.Name}\" chain.";
+            return Localized.Format(AppText.ErrorWouldCreateCircularChain, relationType.Name);
         }
 
         return null;

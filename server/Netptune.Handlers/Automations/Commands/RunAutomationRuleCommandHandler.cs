@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Core.Events.Automations;
+using Netptune.Core.Localization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -40,13 +41,13 @@ public sealed class RunAutomationRuleCommandHandler
 
         if (taskIds.Count == 0)
         {
-            return ClientResponse<AutomationManualRunViewModel>.Failed("Choose at least one task to run.");
+            return ClientResponse<AutomationManualRunViewModel>.Failed(AppText.ErrorChooseAtLeastOneTaskRun);
         }
 
         if (taskIds.Count > MaximumTasksPerRun)
         {
             return ClientResponse<AutomationManualRunViewModel>.Failed(
-                $"A manual run can cover up to {MaximumTasksPerRun} tasks.");
+                Localized.Format(AppText.ErrorManualRunCanCoverUpTasks, MaximumTasksPerRun));
         }
 
         var workspaceId = await Identity.GetWorkspaceId();
@@ -66,7 +67,7 @@ public sealed class RunAutomationRuleCommandHandler
         if (validTaskIds.Count == 0)
         {
             return ClientResponse<AutomationManualRunViewModel>.Failed(
-                "The selected tasks are not available in this workspace.");
+                AppText.ErrorSelectedTasksNotAvailableWorkspace);
         }
 
         await EventPublisher.Dispatch(new AutomationManualRunMessage

@@ -42,7 +42,7 @@ public sealed class CsvExportWriter : IExportWriter
         {
             foreach (var field in request.Fields)
             {
-                csv.WriteField(field.Name);
+                csv.WriteField(TransferFieldLabels.Header(field));
             }
 
             await csv.NextRecordAsync();

@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.Sprints;
 using Netptune.Handlers.Sprints.Queries;
@@ -111,11 +112,11 @@ public sealed class SprintTransitionAction : IAiToolAction
         var statusField = new AiChangeField
         {
             Name = "status",
-            Before = SprintStatus.Planning.ToString(),
-            After = SprintStatus.Active.ToString(),
+            Before = LocalizedEnum.Label(SprintStatus.Planning),
+            After = LocalizedEnum.Label(SprintStatus.Active),
         };
 
-        return Propose(StartChange, sprint, $"Start sprint “{sprint.Name}”", [statusField]);
+        return Propose(StartChange, sprint, Localized.Format(AppText.AiSummaryStartSprint, sprint.Name), [statusField]);
     }
 
     private AiToolExecution ProposeComplete(SprintDetailViewModel sprint)
@@ -135,8 +136,8 @@ public sealed class SprintTransitionAction : IAiToolAction
             new()
             {
                 Name = "status",
-                Before = SprintStatus.Active.ToString(),
-                After = SprintStatus.Completed.ToString(),
+                Before = LocalizedEnum.Label(SprintStatus.Active),
+                After = LocalizedEnum.Label(SprintStatus.Completed),
             },
         };
 
@@ -147,7 +148,7 @@ public sealed class SprintTransitionAction : IAiToolAction
             fields.Add(new AiChangeField { Name = "unfinishedTasks", After = unfinishedCount.ToString() });
         }
 
-        return Propose(CompleteChange, sprint, $"Complete sprint “{sprint.Name}”", fields);
+        return Propose(CompleteChange, sprint, Localized.Format(AppText.AiSummaryCompleteSprint, sprint.Name), fields);
     }
 
     private AiToolExecution ProposeCancel(SprintDetailViewModel sprint)
@@ -162,11 +163,13 @@ public sealed class SprintTransitionAction : IAiToolAction
         var statusField = new AiChangeField
         {
             Name = "status",
-            Before = sprint.Status.ToString(),
-            After = SprintStatus.Cancelled.ToString(),
+            Before = LocalizedEnum.Label(sprint.Status),
+            After = LocalizedEnum.Label(SprintStatus.Cancelled),
         };
 
-        return Propose(CancelChange, sprint, $"Cancel sprint “{sprint.Name}”", [statusField]);
+        var error = Localized.Format(AppText.AiSummaryCancelSprint, sprint.Name);
+
+        return Propose(CancelChange, sprint, error, [statusField]);
     }
 
     private AiToolExecution ProposeDelete(SprintDetailViewModel sprint)
@@ -195,7 +198,7 @@ public sealed class SprintTransitionAction : IAiToolAction
             fields.Add(new AiChangeField { Name = "tasksReturnedToBacklog", After = sprint.TaskCount.ToString() });
         }
 
-        return Propose(DeleteChange, sprint, $"Delete sprint “{sprint.Name}”", fields);
+        return Propose(DeleteChange, sprint, Localized.Format(AppText.AiSummaryDeleteSprint, sprint.Name), fields);
     }
 
     private AiToolExecution Propose(

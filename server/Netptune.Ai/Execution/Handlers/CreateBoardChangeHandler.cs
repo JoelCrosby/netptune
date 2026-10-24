@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -34,7 +35,7 @@ public sealed class CreateBoardChangeHandler : IAiChangeHandler
 
         if (!hasName || !hasIdentifier || !projectId.HasValue)
         {
-            return AiChangePayload.Failure(change, "The board details are missing from this change.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorBoardDetailsMissingChange);
         }
 
         var request = new AddBoardRequest
@@ -50,7 +51,7 @@ public sealed class CreateBoardChangeHandler : IAiChangeHandler
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The board could not be created.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorBoardCouldNotCreated);
         }
 
         return AiChangePayload.Applied(change, response.Payload?.Id);

@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Ai.Tools;
 using Netptune.Core.Authorization;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Automations.Commands;
@@ -12,11 +13,9 @@ namespace Netptune.Ai.Execution.Handlers;
 
 public sealed class UpdateAutomationChangeHandler : IAiChangeHandler, IAiChangeUndoHandler
 {
-    public const string EditedBeforeApplyMessage =
-        "The rule was edited after this change was proposed, so it was left as it is now.";
+    public static string EditedBeforeApplyMessage => AppText.AiChangeErrorRuleEditedAfterChangeProposedLeftNow;
 
-    public const string EditedSinceMessage =
-        "The rule has been edited since this change was applied, so it was left as it is now.";
+    public static string EditedSinceMessage => AppText.AiChangeErrorRuleEditedSinceChangeAppliedLeftNow;
 
     private readonly IMediator Mediator;
 
@@ -42,14 +41,14 @@ public sealed class UpdateAutomationChangeHandler : IAiChangeHandler, IAiChangeU
 
         if (!ruleId.HasValue || rule is null || previous is null)
         {
-            return AiChangePayload.Failure(change, "The rule this change refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorRuleChangeRefersCouldNotResolved);
         }
 
         var current = await AiAutomationRuleReader.ReadCurrent(Mediator, ruleId.Value, cancellationToken);
 
         if (current is null)
         {
-            return AiChangePayload.Failure(change, "The rule is no longer in this workspace.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorRuleNoLongerWorkspace);
         }
 
         var isAsProposed = AiAutomationJson.AreSame(current, previous);
@@ -63,7 +62,7 @@ public sealed class UpdateAutomationChangeHandler : IAiChangeHandler, IAiChangeU
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The rule could not be updated.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorRuleCouldNotUpdated);
         }
 
         return AiChangePayload.Applied(change, ruleId.Value);
@@ -98,7 +97,7 @@ public sealed class UpdateAutomationChangeHandler : IAiChangeHandler, IAiChangeU
 
         if (!snapshot.HasValue)
         {
-            return AiChangeUndoResult.Failure(change, "There is nothing recorded to restore.");
+            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
         }
 
         var ruleId = AiChangePayload.ReadInt(snapshot.Value, "ruleId");
@@ -106,14 +105,14 @@ public sealed class UpdateAutomationChangeHandler : IAiChangeHandler, IAiChangeU
 
         if (!ruleId.HasValue || restored is null)
         {
-            return AiChangeUndoResult.Failure(change, "There is nothing recorded to restore.");
+            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
         }
 
         var current = await AiAutomationRuleReader.ReadCurrent(Mediator, ruleId.Value, cancellationToken);
 
         if (current is null)
         {
-            return AiChangeUndoResult.Failure(change, "The rule is no longer in this workspace.");
+            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorRuleNoLongerWorkspace);
         }
 
         var applied = AiAutomationRuleReader.ReadRule(change.Payload.RootElement, "rule");
@@ -128,7 +127,7 @@ public sealed class UpdateAutomationChangeHandler : IAiChangeHandler, IAiChangeU
 
         if (!response.IsSuccess)
         {
-            return AiChangeUndoResult.Failure(change, response.Message ?? "The rule could not be restored.");
+            return AiChangeUndoResult.Failure(change, response.Message ?? AppText.AiChangeErrorRuleCouldNotRestored);
         }
 
         return AiChangeUndoResult.Undone(change, ruleId.Value);

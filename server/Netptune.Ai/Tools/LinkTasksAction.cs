@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Relations.Queries;
 using Netptune.Handlers.RelationTypes.Queries;
@@ -75,12 +76,15 @@ public sealed class LinkTasksAction : IAiToolAction
             relationTypeRef = relation.RefKey,
         };
 
+        var relationLabel = relation.Label.ToLowerInvariant();
+        var summary = Localized.Format(AppText.AiSummaryLinkTasks, source.Label, relationLabel, target.Label);
+
         ChangeSet.Add(new AiChangeDraft
         {
             ToolName = ChangeName,
             EntityType = "task",
             EntityId = source.TaskId,
-            Summary = $"Link “{source.Label}” {relation.Label.ToLowerInvariant()} “{target.Label}”",
+            Summary = summary,
             Fields =
             [
                 AiChangeFields.Values(

@@ -39,6 +39,7 @@ import {
   describeAutomationTrigger,
   describeAutomationTriggerChip,
 } from '@core/automations/automation-copy';
+import { describeRuleWarning } from '@core/automations/automation-messages';
 import {
   AutomationRuleListItem,
   AutomationRun,
@@ -392,7 +393,7 @@ export class AutomationRulesTableComponent {
   }
 
   warningTooltip(rule: AutomationRuleListItem): string {
-    return rule.warnings.map((warning) => warning.message).join('\n');
+    return rule.warnings.map(describeRuleWarning).join('\n');
   }
 
   shortDate(value: Date): string {

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using Netptune.Ai.Configuration;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Ai;
@@ -85,7 +86,7 @@ public sealed class AiConversationService : IAiConversationService
 
         if (!hasText && !hasAnswer && !request.Retry)
         {
-            yield return AiStreamEvent.Failed("A message is required.");
+            yield return AiStreamEvent.Failed(AppText.AiErrorMessageRequired);
 
             yield break;
         }
@@ -98,7 +99,7 @@ public sealed class AiConversationService : IAiConversationService
 
         if (workspace is null || !isAssistantEnabled)
         {
-            yield return AiStreamEvent.Failed("The assistant is turned off for this workspace.");
+            yield return AiStreamEvent.Failed(AppText.AiErrorAssistantTurnedOff);
 
             yield break;
         }
@@ -107,7 +108,7 @@ public sealed class AiConversationService : IAiConversationService
 
         if (spend.IsOverCap)
         {
-            yield return AiStreamEvent.Failed(AiSpendMessages.CapReached);
+            yield return AiStreamEvent.Failed(AppText.AiSpendCapReached);
 
             yield break;
         }
@@ -116,7 +117,7 @@ public sealed class AiConversationService : IAiConversationService
 
         if (credentials.Count == 0)
         {
-            yield return AiStreamEvent.Failed("No API key is configured for the assistant.");
+            yield return AiStreamEvent.Failed(AppText.AiErrorNoApiKey);
 
             yield break;
         }
@@ -129,7 +130,7 @@ public sealed class AiConversationService : IAiConversationService
 
         if (conversationMissing)
         {
-            yield return AiStreamEvent.Failed("Conversation not found.");
+            yield return AiStreamEvent.Failed(AppText.AiErrorConversationNotFound);
 
             yield break;
         }
@@ -142,7 +143,9 @@ public sealed class AiConversationService : IAiConversationService
 
         if (credential is null)
         {
-            yield return AiStreamEvent.Failed($"No API key is configured for {provider}.");
+            var missingKey = Localized.Format(AppText.AiErrorNoApiKeyForProvider, provider);
+
+            yield return AiStreamEvent.Failed(missingKey);
 
             yield break;
         }
@@ -175,7 +178,7 @@ public sealed class AiConversationService : IAiConversationService
 
         if (membership is null)
         {
-            yield return AiStreamEvent.Failed("You are not a member of this workspace.");
+            yield return AiStreamEvent.Failed(AppText.AiErrorNotWorkspaceMember);
 
             yield break;
         }
@@ -186,7 +189,7 @@ public sealed class AiConversationService : IAiConversationService
 
             if (rewound is null)
             {
-                yield return AiStreamEvent.Failed("There is no message to try again.");
+                yield return AiStreamEvent.Failed(AppText.AiErrorNothingToRetry);
 
                 yield break;
             }
@@ -214,7 +217,7 @@ public sealed class AiConversationService : IAiConversationService
 
         if (!hasMessage)
         {
-            yield return AiStreamEvent.Failed("A message is required.");
+            yield return AiStreamEvent.Failed(AppText.AiErrorMessageRequired);
 
             yield break;
         }

@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Requests.Ai;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -54,7 +55,7 @@ public sealed class UpdateAiProposedChangeCommandHandler
 
         if (!isPending)
         {
-            return ClientResponse<AiChangeSetViewModel>.Failed("Only a pending change set can be edited.");
+            return ClientResponse<AiChangeSetViewModel>.Failed(AppText.ErrorOnlyPendingChangeSetCanEdited);
         }
 
         var changes = await UnitOfWork.AiChangeSets.GetChanges(changeSet.Id, cancellationToken);
@@ -69,7 +70,7 @@ public sealed class UpdateAiProposedChangeCommandHandler
 
         if (!isUnapplied)
         {
-            return ClientResponse<AiChangeSetViewModel>.Failed("This change has already run, so it cannot be edited.");
+            return ClientResponse<AiChangeSetViewModel>.Failed(AppText.ErrorChangeAlreadyRunCannotEdited);
         }
 
         var edit = await EditCatalog.Apply(change, changes, command.Request.Fields, cancellationToken);

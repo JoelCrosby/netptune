@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 
 namespace Netptune.Ai.Tools;
@@ -92,7 +93,7 @@ public sealed class MovePageAction : IAiToolAction
             ToolName = ChangeName,
             EntityType = AiPageLookup.EntityType,
             EntityId = page.Id,
-            Summary = $"Move “{page.Title}” to {parent.Display}",
+            Summary = Localized.Format(AppText.AiSummaryMovePage, page.Title, parent.Display),
             Fields = [AiChangeFields.Text("parent", currentDisplay, parent.Display)],
             Payload = JsonSerializer.SerializeToDocument(payload),
             ValidationStatus = AiChangeValidationStatus.Valid,

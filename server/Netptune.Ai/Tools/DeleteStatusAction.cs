@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Statuses.Queries;
 
@@ -57,7 +58,7 @@ public sealed class DeleteStatusAction : IAiToolAction
             ToolName = Change,
             EntityType = "status",
             EntityId = usage.Id,
-            Summary = $"Delete status “{usage.Name}”",
+            Summary = Localized.Format(AppText.AiSummaryDeleteStatus, usage.Name),
             Fields = fields,
             Payload = JsonSerializer.SerializeToDocument(new { statusId = usage.Id }),
             ValidationStatus = AiChangeValidationStatus.Valid,

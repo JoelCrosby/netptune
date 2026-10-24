@@ -1,4 +1,5 @@
 using Netptune.Core.Entities;
+using Netptune.Core.Localization;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Handlers.Pages;
@@ -9,8 +10,8 @@ public sealed record PagePlacementResult(Page? Parent, int? ProjectId, string? E
 
 public static class PagePlacement
 {
-    public const string ParentMissingMessage = "The parent page does not exist.";
-    public const string ProjectMissingMessage = "The project does not exist.";
+    public static string ParentMissingMessage => AppText.ErrorParentPageDoesNotExist;
+    public static string ProjectMissingMessage => AppText.ErrorProjectDoesNotExist;
 
     public static async Task<PagePlacementResult> Resolve(
         INetptuneUnitOfWork unitOfWork,

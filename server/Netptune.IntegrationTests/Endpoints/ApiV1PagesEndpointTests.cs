@@ -213,6 +213,25 @@ public sealed class ApiV1PagesEndpointTests
     }
 
     [Fact]
+    public async Task UpdatePage_ShouldAnswerInEnglish_WhateverTheCallersLanguage()
+    {
+        var client = await CreateClient();
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var page = await CreatePage(client, "French caller page");
+        using var request = new HttpRequestMessage(HttpMethod.Patch, $"api/v1/pages/{page.Id}")
+        {
+            Content = new StringContent("""{"tags":[null]}""", System.Text.Encoding.UTF8, "application/json"),
+        };
+
+        request.Headers.AcceptLanguage.ParseAdd("fr-FR");
+
+        var response = await client.SendAsync(request, cancellationToken);
+        var result = await Read<ClientResponse<PageViewModel>>(response);
+
+        result.Message.Should().Be("Tags cannot be empty.");
+    }
+
+    [Fact]
     public async Task UpdatePage_ShouldForbidTags_WhenTheCredentialCannotAssignTags()
     {
         var cancellationToken = TestContext.Current.CancellationToken;

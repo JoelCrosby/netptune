@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -31,7 +32,7 @@ public sealed class ReorderBoardGroupsChangeHandler : IAiChangeHandler
 
         if (!hasOrder)
         {
-            return AiChangePayload.Failure(change, "The group order is missing from this change.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorGroupOrderMissingChange);
         }
 
         // UpdateBoardGroupCommand takes the group by id without a workspace check of its own, so the
@@ -47,7 +48,7 @@ public sealed class ReorderBoardGroupsChangeHandler : IAiChangeHandler
         {
             return AiChangePayload.Failure(
                 change,
-                "The groups on this board have changed since the order was proposed.");
+                AppText.AiChangeErrorGroupsBoardChangedSinceOrderProposed);
         }
 
         var position = 0;
@@ -66,7 +67,9 @@ public sealed class ReorderBoardGroupsChangeHandler : IAiChangeHandler
 
             if (!response.IsSuccess)
             {
-                return AiChangePayload.Failure(change, response.Message ?? "The groups could not be reordered.");
+                return AiChangePayload.Failure(
+                    change,
+                    response.Message ?? AppText.AiChangeErrorGroupsCouldNotReordered);
             }
         }
 

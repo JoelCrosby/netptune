@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Core.Exceptions;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Roadmap;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Reporting;
@@ -45,7 +46,7 @@ public sealed class GetRoadmapQueryHandler : IRequestHandler<GetRoadmapQuery, Cl
         if (containsUnknownProject)
         {
             return ClientResponse<RoadmapViewModel>
-                .Failed("One or more projects are outside the current workspace scope");
+                .Failed(AppText.ErrorOneMoreProjectsOutsideCurrentWorkspaceScope);
         }
 
         try
@@ -64,13 +65,13 @@ public sealed class GetRoadmapQueryHandler : IRequestHandler<GetRoadmapQuery, Cl
     {
         if (filter.From > filter.To)
         {
-            return "Roadmap start date must be on or before its end date";
+            return AppText.ErrorRoadmapStartDateMustBeforeEndDate;
         }
 
         var inclusiveDayCount = filter.To.DayNumber - filter.From.DayNumber + 1;
 
         return inclusiveDayCount > 366
-            ? "Roadmap range cannot exceed 366 days"
+            ? AppText.ErrorRoadmapRangeCannotExceedDays
             : null;
     }
 }

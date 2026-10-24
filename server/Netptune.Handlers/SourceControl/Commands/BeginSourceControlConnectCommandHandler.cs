@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Requests.SourceControl;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -33,7 +34,7 @@ public sealed class BeginSourceControlConnectCommandHandler
 
         if (!isEnabled)
         {
-            var message = $"{providerKind} is not enabled on this Netptune instance.";
+            var message = Localized.Format(AppText.ErrorNotEnabledNetptuneInstance, providerKind);
 
             return ClientResponse<SourceControlConnectStartViewModel>.Failed(message);
         }

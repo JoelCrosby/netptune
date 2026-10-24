@@ -173,6 +173,7 @@ public sealed class AutomationExecutionServiceTests
 
         run.Status.Should().Be(AutomationRunStatus.Failed);
         run.Message.Should().Contain("required permissions");
+        run.MessageCode.Should().Be("principalLacksPermissions");
         run.ActionResults.Should().ContainSingle()
             .Which.Status.Should().Be(AutomationActionResultStatus.Skipped);
         (await scope.Db.Flags.AnyAsync(TestContext.Current.CancellationToken))
@@ -912,6 +913,7 @@ public sealed class AutomationExecutionServiceTests
             AutomationActionResultStatus.Skipped,
             AutomationActionResultStatus.Failed);
         actionResults[0].Message.Should().Contain("cancelled");
+        actionResults[0].MessageCode.Should().Be("cancelledAfterPlanningFailure");
         actionResults[1].Message.Should().NotBeNullOrWhiteSpace();
     }
 

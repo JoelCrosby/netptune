@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Localization;
 using Netptune.Core.Requests.SourceControl;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -16,9 +17,9 @@ public sealed record AddSourceControlIdentityCommand(AddSourceControlIdentityReq
 public sealed class AddSourceControlIdentityCommandHandler
     : IRequestHandler<AddSourceControlIdentityCommand, ClientResponse<SourceControlIdentityViewModel>>
 {
-    private const string ProviderNotEnabled = "That source control provider isn't enabled.";
-    private const string UsernameRequired = "Enter a username.";
-    private const string UsernameTaken = "That username is already mapped to another member.";
+    private static string ProviderNotEnabled => AppText.ErrorSourceControlProviderNotEnabled;
+    private static string UsernameRequired => AppText.ErrorEnterUsername;
+    private static string UsernameTaken => AppText.ErrorUsernameAlreadyMappedAnotherMember;
 
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;

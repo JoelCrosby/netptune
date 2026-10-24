@@ -3,6 +3,7 @@ using Mediator;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Extensions;
+using Netptune.Core.Localization;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Storage;
@@ -61,26 +62,30 @@ public sealed class UploadBrandingImageCommandHandler : IRequestHandler<UploadBr
 
         if (string.IsNullOrWhiteSpace(originalName))
         {
-            return ClientResponse<BrandingImageViewModel>.Failed("A valid filename is required.");
+            return ClientResponse<BrandingImageViewModel>.Failed(AppText.ErrorValidFilenameRequired);
         }
 
         if (upload.Length <= 0)
         {
-            return ClientResponse<BrandingImageViewModel>.Failed("The image is empty.");
+            return ClientResponse<BrandingImageViewModel>.Failed(AppText.ErrorImageEmpty);
         }
 
         if (upload.Length > UploadLimits.BrandingImageMaxBytes)
         {
             var limit = UploadLimits.Describe(UploadLimits.BrandingImageMaxBytes);
 
-            return ClientResponse<BrandingImageViewModel>.Failed($"The image exceeds the {limit} limit.");
+            var error = Localized.Format(AppText.ErrorImageExceedsLimit, limit);
+
+            return ClientResponse<BrandingImageViewModel>.Failed(error);
         }
 
         if (!ImageUploadTypes.IsAllowed(upload.ContentType))
         {
             var supported = ImageUploadTypes.Describe();
 
-            return ClientResponse<BrandingImageViewModel>.Failed($"The image must be a {supported} file.");
+            var error = Localized.Format(AppText.ErrorImageMustFile, supported);
+
+            return ClientResponse<BrandingImageViewModel>.Failed(error);
         }
 
         var workspaceKey = Identity.GetWorkspaceKey();
@@ -110,7 +115,13 @@ public sealed class UploadBrandingImageCommandHandler : IRequestHandler<UploadBr
             var used = usage?.UsedBytes ?? 0;
             var limit = usage?.LimitBytes ?? 0;
 
-            return ClientResponse<BrandingImageViewModel>.Failed($"Workspace storage limit exceeded ({used} of {limit} bytes used; {upload.Length} requested).");
+            var error = Localized.Format(
+                AppText.ErrorWorkspaceStorageLimitExceededBytesUsedRequested,
+                used,
+                limit,
+                upload.Length);
+
+            return ClientResponse<BrandingImageViewModel>.Failed(error);
         }
 
         try
@@ -139,7 +150,7 @@ public sealed class UploadBrandingImageCommandHandler : IRequestHandler<UploadBr
         {
             await BrandingFileRelease.Release(UnitOfWork, Storage, entity, userId, cancellationToken);
 
-            return ClientResponse<BrandingImageViewModel>.Failed("The image could not be uploaded.");
+            return ClientResponse<BrandingImageViewModel>.Failed(AppText.ErrorImageCouldNotUploaded);
         }
 
         await ReleaseReplacedImage(slot.CurrentFileId, workspaceId, userId, cancellationToken);

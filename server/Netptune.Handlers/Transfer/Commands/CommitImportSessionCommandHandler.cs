@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
@@ -44,7 +45,7 @@ public sealed class CommitImportSessionCommandHandler : IRequestHandler<CommitIm
 
         if (session.Mapping is null)
         {
-            return ClientResponse<ImportSessionViewModel>.Failed("Map the file before committing it.");
+            return ClientResponse<ImportSessionViewModel>.Failed(AppText.ErrorMapFileBeforeCommitting);
         }
 
         var isCommittable = ImportStages.CanCommit(session.Stage);
@@ -52,7 +53,7 @@ public sealed class CommitImportSessionCommandHandler : IRequestHandler<CommitIm
         if (!isCommittable)
         {
             return ClientResponse<ImportSessionViewModel>.Failed(
-                $"An import that is {session.Stage} cannot be committed.");
+                Localized.Format(AppText.ErrorImportCannotCommitted, session.Stage));
         }
 
         session.Stage = ImportStage.Committing;

@@ -2,6 +2,7 @@ using Mediator;
 
 using Microsoft.Extensions.Options;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Storage;
@@ -46,12 +47,12 @@ public sealed class GetExportJobDownloadQueryHandler : IRequestHandler<GetExport
 
         if (!hasArtefact)
         {
-            return ClientResponse<Uri>.Failed($"This export is {job.Status} and has nothing to download.");
+            return ClientResponse<Uri>.Failed(Localized.Format(AppText.ErrorExportNothingDownload, job.Status));
         }
 
         if (job.ExpiresAt <= DateTime.UtcNow)
         {
-            return ClientResponse<Uri>.Failed("This export has expired.");
+            return ClientResponse<Uri>.Failed(AppText.ErrorExportExpired);
         }
 
         var readOptions = new StorageReadOptions

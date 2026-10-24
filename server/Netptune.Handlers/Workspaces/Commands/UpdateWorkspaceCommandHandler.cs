@@ -6,6 +6,7 @@ using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Localization;
 using Netptune.Core.Meta;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses;
@@ -22,8 +23,8 @@ public sealed class UpdateWorkspaceCommandHandler : IRequestHandler<UpdateWorksp
 {
     public const int MinimumSlugLength = 4;
 
-    private const string IdentifierTakenMessage = "Identifier is already taken";
-    private const string IdentifierInvalidMessage = "Identifier must be at least 4 characters and contain letters or numbers";
+    private static string IdentifierTakenMessage => AppText.ErrorIdentifierAlreadyTaken;
+    private static string IdentifierInvalidMessage => AppText.ErrorIdentifierMustAtLeastCharactersContainLetters;
 
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;

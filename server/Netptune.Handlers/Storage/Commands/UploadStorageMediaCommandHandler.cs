@@ -3,6 +3,7 @@ using Mediator;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Extensions;
+using Netptune.Core.Localization;
 using Netptune.Core.Relationships;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
@@ -49,12 +50,12 @@ public sealed class UploadStorageMediaCommandHandler : IRequestHandler<UploadSto
 
         if (string.IsNullOrWhiteSpace(originalName))
         {
-            return ClientResponse<UploadResponse>.Failed("A valid filename is required.");
+            return ClientResponse<UploadResponse>.Failed(AppText.ErrorValidFilenameRequired);
         }
 
         if (request.Length <= 0)
         {
-            return ClientResponse<UploadResponse>.Failed("The file is empty.");
+            return ClientResponse<UploadResponse>.Failed(AppText.ErrorFileEmpty);
         }
 
         var workspaceId = await Identity.GetWorkspaceId();
@@ -76,7 +77,9 @@ public sealed class UploadStorageMediaCommandHandler : IRequestHandler<UploadSto
 
         if (request.Length > maxUploadBytes)
         {
-            return ClientResponse<UploadResponse>.Failed($"The file exceeds the {UploadLimits.Describe(maxUploadBytes)} limit.");
+            var error = Localized.Format(AppText.ErrorFileExceedsLimit, UploadLimits.Describe(maxUploadBytes));
+
+            return ClientResponse<UploadResponse>.Failed(error);
         }
 
         var userId = Identity.GetCurrentUserId();
@@ -128,7 +131,13 @@ public sealed class UploadStorageMediaCommandHandler : IRequestHandler<UploadSto
         {
             var usage = await UnitOfWork.Workspaces.GetStorageUsage(workspaceId, cancellationToken);
 
-            return ClientResponse<UploadResponse>.Failed($"Workspace storage limit exceeded ({usage?.UsedBytes ?? 0} of {usage?.LimitBytes ?? 0} bytes used; {request.Length} requested).");
+            var error = Localized.Format(
+                AppText.ErrorWorkspaceStorageLimitExceededBytesUsedRequested,
+                usage?.UsedBytes ?? 0,
+                usage?.LimitBytes ?? 0,
+                request.Length);
+
+            return ClientResponse<UploadResponse>.Failed(error);
         }
 
         try
@@ -156,7 +165,7 @@ public sealed class UploadStorageMediaCommandHandler : IRequestHandler<UploadSto
 
             if (file is null)
             {
-                return ClientResponse<UploadResponse>.Failed("The uploaded file could not be loaded.");
+                return ClientResponse<UploadResponse>.Failed(AppText.ErrorUploadedFileCouldNotLoaded);
             }
 
             return ClientResponse<UploadResponse>.Success(new UploadResponse
@@ -172,7 +181,7 @@ public sealed class UploadStorageMediaCommandHandler : IRequestHandler<UploadSto
         {
             await ReleaseFile(entity, userId, cancellationToken);
 
-            return ClientResponse<UploadResponse>.Failed("The upload could not be completed.");
+            return ClientResponse<UploadResponse>.Failed(AppText.ErrorUploadCouldNotCompleted);
         }
     }
 

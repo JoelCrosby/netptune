@@ -5,6 +5,7 @@ using Mediator;
 using Netptune.Core.Authorization;
 using Netptune.Core.Encoding;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.RelationTypes.Queries;
 
@@ -81,14 +82,14 @@ public sealed class UpdateRelationTypeAction : IAiToolAction
             return AiToolExecution.Failed("No changes were supplied for this relation type.");
         }
 
-        var changedNames = string.Join(", ", fields.Select(field => field.Name));
+        var changedNames = AiFieldNames.Describe(fields);
 
         ChangeSet.Add(new AiChangeDraft
         {
             ToolName = Change,
             EntityType = AiRelationTypeLookup.EntityType,
             EntityId = relationType.Id,
-            Summary = $"Update {changedNames} on relation type “{relationType.Name}”",
+            Summary = Localized.Format(AppText.AiSummaryUpdateRelationType, changedNames, relationType.Name),
             Fields = fields,
             Payload = JsonSerializer.SerializeToDocument(payload),
             ValidationStatus = AiChangeValidationStatus.Valid,

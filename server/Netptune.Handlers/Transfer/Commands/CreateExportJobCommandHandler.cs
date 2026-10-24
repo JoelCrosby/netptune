@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using Netptune.Core.Encoding;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Localization;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
@@ -74,7 +75,7 @@ public sealed class CreateExportJobCommandHandler : IRequestHandler<CreateExport
         if (unfinished >= Options.MaxConcurrentJobsPerWorkspace)
         {
             return ClientResponse<ExportJobViewModel>.Failed(
-                $"This workspace already has {unfinished} export jobs in flight. Wait for one to finish and try again.");
+                Localized.Format(AppText.ErrorWorkspaceAlreadyExportJobsFlightWaitOne, unfinished));
         }
 
         var quotaError = await CheckArchiveQuota(definition, workspaceId, cancellationToken);
@@ -113,7 +114,7 @@ public sealed class CreateExportJobCommandHandler : IRequestHandler<CreateExport
 
         if (viewModel is null)
         {
-            return ClientResponse<ExportJobViewModel>.Failed("The export job could not be read back.");
+            return ClientResponse<ExportJobViewModel>.Failed(AppText.ErrorExportJobCouldNotReadBack);
         }
 
         return ClientResponse<ExportJobViewModel>.Success(viewModel);
@@ -142,7 +143,7 @@ public sealed class CreateExportJobCommandHandler : IRequestHandler<CreateExport
             return null;
         }
 
-        return $"This archive would add about {fileBytes} bytes of files but only {usage.AvailableBytes} bytes of workspace storage remain. Export it without files, or free some space.";
+        return Localized.Format(AppText.ErrorArchiveWouldAddAboutBytesFilesBut, fileBytes, usage.AvailableBytes);
     }
 
     private async Task LogExportRequested(int workspaceId, ExportDefinitionModel definition, CancellationToken cancellationToken)

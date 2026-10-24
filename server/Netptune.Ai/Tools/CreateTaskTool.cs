@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -135,7 +136,7 @@ public sealed class CreateTaskTool : IAiTool
             ToolName = Name,
             EntityType = "task",
             RefKey = refKey,
-            Summary = $"Create task “{name}” in {project.Name}",
+            Summary = Localized.Format(AppText.AiSummaryCreateTask, name, project.Name),
             Fields = fields,
             Payload = JsonDocument.Parse(arguments.GetRawText()),
             ValidationStatus = AiChangeValidationStatus.Valid,

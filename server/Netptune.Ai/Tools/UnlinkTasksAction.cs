@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Relations.Queries;
 
@@ -64,7 +65,7 @@ public sealed class UnlinkTasksAction : IAiToolAction
             ToolName = ChangeName,
             EntityType = "task",
             EntityId = relation.RelatedTask.Id,
-            Summary = $"Unlink “{systemId}” from “{related}”",
+            Summary = Localized.Format(AppText.AiSummaryUnlinkTasks, systemId, related),
             Fields =
             [
                 AiChangeFields.Values(

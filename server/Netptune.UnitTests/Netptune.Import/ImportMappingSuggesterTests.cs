@@ -32,6 +32,9 @@ public class ImportMappingSuggesterTests
     [InlineData("Due date", TaskFieldKeys.DueDate)]
     [InlineData("Date created", TaskFieldKeys.CreatedAt)]
     [InlineData("Reporter", TaskFieldKeys.CreatedBy)]
+    [InlineData("Date d’échéance", TaskFieldKeys.DueDate)]
+    [InlineData("Fälligkeitsdatum", TaskFieldKeys.DueDate)]
+    [InlineData("Personas asignadas", TaskFieldKeys.Assignees)]
     public void Suggest_MapsAHeaderOntoTheFieldItMeans(string header, string expectedFieldKey)
     {
         var suggestion = Suggester.Suggest(TransferRecordTypes.Task, ProfileWith(header));

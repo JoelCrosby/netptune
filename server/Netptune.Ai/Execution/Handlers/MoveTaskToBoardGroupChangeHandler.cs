@@ -3,6 +3,7 @@ using System.Text.Json;
 using Mediator;
 
 using Netptune.Core.Authorization;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Tasks.Commands;
@@ -32,7 +33,7 @@ public sealed class MoveTaskToBoardGroupChangeHandler : IAiChangeHandler, IAiCha
 
         if (!taskId.HasValue || !boardGroupId.HasValue)
         {
-            return AiChangePayload.Failure(change, "The task or board group this change refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorTaskBoardGroupChangeRefersCouldNotResolved);
         }
 
         var command = new MoveTasksToBoardGroupCommand([taskId.Value], boardGroupId.Value);
@@ -40,7 +41,7 @@ public sealed class MoveTaskToBoardGroupChangeHandler : IAiChangeHandler, IAiCha
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The task could not be moved.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorTaskCouldNotMoved);
         }
 
         return AiChangePayload.Applied(change, taskId);

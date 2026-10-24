@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Tags.Queries;
 
@@ -58,7 +59,7 @@ public sealed class CreateTagAction : IAiToolAction
         {
             ToolName = Change,
             EntityType = "tag",
-            Summary = $"Create tag “{name}”",
+            Summary = Localized.Format(AppText.AiSummaryCreateTag, name),
             Fields = [AiChangeFields.Values("tag", AiChangeValueKind.Tag, [], [AiChangeFields.Tag(name!)])],
             Payload = JsonSerializer.SerializeToDocument(new { name }),
             ValidationStatus = AiChangeValidationStatus.Valid,

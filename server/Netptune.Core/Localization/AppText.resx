@@ -104,4 +104,2344 @@ Please confirm your email address with the following link.</value>
     <value>You received this email because someone invited this address to a Netptune workspace. If you weren't expecting it, you can safely ignore this email.</value>
     <comment>Footer explaining why the invitation e-mail was sent</comment>
   </data>
+  <data name="AiChangeErrorTaskCommentChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>The task or comment this change refers to could not be resolved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTaskNotFound" xml:space="preserve">
+    <value>Task {0} was not found.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change. {0} is the task id</comment>
+  </data>
+  <data name="AiChangeErrorCommentCouldNotPosted" xml:space="preserve">
+    <value>The comment could not be posted.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorPostedCommentCouldNotResolved" xml:space="preserve">
+    <value>The posted comment could not be resolved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorCommentCouldNotRemoved" xml:space="preserve">
+    <value>The comment could not be removed.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorSprintTasksChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>The sprint or tasks this change refers to could not be resolved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTasksCouldNotAddedSprint" xml:space="preserve">
+    <value>The tasks could not be added to the sprint.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorPageEditedAfterChangeAppliedRestoreEarlier" xml:space="preserve">
+    <value>The page was edited after this change was applied. Restore an earlier version from its history instead.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorNothingRecordedRestore" xml:space="preserve">
+    <value>There is nothing recorded to restore.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorPageNoLongerWorkspace" xml:space="preserve">
+    <value>The page is no longer in this workspace.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorPageCouldNotRestored" xml:space="preserve">
+    <value>The page could not be restored.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTaskCouldNotRestored" xml:space="preserve">
+    <value>The task could not be restored.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTaskCouldNotReadBackAfterRestoring" xml:space="preserve">
+    <value>The task could not be read back after restoring it.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTaskCouldNotPutBackSprint" xml:space="preserve">
+    <value>The task could not be put back in its sprint.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTaskCouldNotTakenBackOutSprint" xml:space="preserve">
+    <value>The task could not be taken back out of the sprint.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTaskCouldNotTakenBackOffBoard" xml:space="preserve">
+    <value>The task could not be taken back off a board.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTaskCouldNotPutBackBoardGroup" xml:space="preserve">
+    <value>The task could not be put back in its board group.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorOnlyPersonWhoCreatedPageSomeoneAllowed" xml:space="preserve">
+    <value>Only the person who created this page, or someone allowed to manage every page, can archive, restore or delete it.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorPageChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>The page this change refers to could not be resolved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorPageCouldNotArchived" xml:space="preserve">
+    <value>The page could not be archived.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorArchivedPageCouldNotResolved" xml:space="preserve">
+    <value>The archived page could not be resolved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTaskChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>The task this change refers to could not be resolved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTaskCouldNotReassigned" xml:space="preserve">
+    <value>The task could not be reassigned.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorSprintChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>The sprint this change refers to could not be resolved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorSprintCouldNotCancelled" xml:space="preserve">
+    <value>The sprint could not be cancelled.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorSprintCouldNotCompleted" xml:space="preserve">
+    <value>The sprint could not be completed.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorRuleEditedSinceCreatedLeftPlace" xml:space="preserve">
+    <value>The rule has been edited since it was created, so it was left in place.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorRuleMissingChange" xml:space="preserve">
+    <value>The rule is missing from this change.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorRuleCouldNotCreated" xml:space="preserve">
+    <value>The rule could not be created.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorCreatedRuleCouldNotResolved" xml:space="preserve">
+    <value>The created rule could not be resolved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorRuleNoLongerWorkspace" xml:space="preserve">
+    <value>The rule is no longer in this workspace.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorRuleCouldNotDeleted" xml:space="preserve">
+    <value>The rule could not be deleted.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorBoardDetailsMissingChange" xml:space="preserve">
+    <value>The board details are missing from this change.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorBoardCouldNotCreated" xml:space="preserve">
+    <value>The board could not be created.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorBoardGroupDetailsMissingChange" xml:space="preserve">
+    <value>The board group details are missing from this change.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorBoardGroupCouldNotCreated" xml:space="preserve">
+    <value>The board group could not be created.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorPagesAddedInsideSinceLeftPlaceArchive" xml:space="preserve">
+    <value>Pages have been added inside it since, so it was left in place. Archive it from the page tree if it should go.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorPageDetailsMissingChange" xml:space="preserve">
+    <value>The page details are missing from this change.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorPageCouldNotCreated" xml:space="preserve">
+    <value>The page could not be created.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorCreatedPageCouldNotResolved" xml:space="preserve">
+    <value>The created page could not be resolved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorCreatedPageCouldNotArchived" xml:space="preserve">
+    <value>The created page could not be archived.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorProjectNameMissingChange" xml:space="preserve">
+    <value>The project name is missing from this change.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorProjectCouldNotCreated" xml:space="preserve">
+    <value>The project could not be created.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorRelationTypeDetailsMissingChange" xml:space="preserve">
+    <value>The relation type details are missing from this change.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorRelationTypeCouldNotCreated" xml:space="preserve">
+    <value>The relation type could not be created.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorSprintDetailsMissingChange" xml:space="preserve">
+    <value>The sprint details are missing from this change.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorSprintCouldNotCreated" xml:space="preserve">
+    <value>The sprint could not be created.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorStatusDetailsMissingChange" xml:space="preserve">
+    <value>The status details are missing from this change.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorStatusCouldNotCreated" xml:space="preserve">
+    <value>The status could not be created.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTagNameMissingChange" xml:space="preserve">
+    <value>The tag name is missing from this change.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTagCouldNotCreated" xml:space="preserve">
+    <value>The tag could not be created.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTaskCouldNotCreated" xml:space="preserve">
+    <value>The task could not be created.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTaskCreatedButTagsCouldNotSet" xml:space="preserve">
+    <value>The task was created but its tags could not be set.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorCreatedTaskCouldNotResolved" xml:space="preserve">
+    <value>The created task could not be resolved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorCreatedTaskCouldNotDeleted" xml:space="preserve">
+    <value>The created task could not be deleted.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorBoardChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>The board this change refers to could not be resolved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorBoardCouldNotDeleted" xml:space="preserve">
+    <value>The board could not be deleted.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorBoardGroupChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>The board group this change refers to could not be resolved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorBoardGroupCouldNotDeleted" xml:space="preserve">
+    <value>The board group could not be deleted.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorCommentChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>The comment this change refers to could not be resolved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorCommentCouldNotDeleted" xml:space="preserve">
+    <value>The comment could not be deleted.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorPageCouldNotDeleted" xml:space="preserve">
+    <value>The page could not be deleted.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorProjectChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>The project this change refers to could not be resolved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorProjectCouldNotDeleted" xml:space="preserve">
+    <value>The project could not be deleted.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorRelationTypeChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>The relation type this change refers to could not be resolved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorRelationTypeCouldNotDeleted" xml:space="preserve">
+    <value>The relation type could not be deleted.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorSprintCouldNotDeleted" xml:space="preserve">
+    <value>The sprint could not be deleted.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorStatusChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>The status this change refers to could not be resolved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorStatusCouldNotDeleted" xml:space="preserve">
+    <value>The status could not be deleted.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTagChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>The tag this change refers to could not be resolved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTagNoLongerExistsWorkspace" xml:space="preserve">
+    <value>The tag no longer exists in this workspace.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTagCouldNotDeleted" xml:space="preserve">
+    <value>The tag could not be deleted.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTaskCouldNotDeleted" xml:space="preserve">
+    <value>The task could not be deleted.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorDeletedTaskCouldNotResolved" xml:space="preserve">
+    <value>The deleted task could not be resolved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTasksLinkRefersCouldNotResolved" xml:space="preserve">
+    <value>The tasks this link refers to could not be resolved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorRelationTypeLinkRefersCouldNotResolved" xml:space="preserve">
+    <value>The relation type this link refers to could not be resolved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTasksCouldNotLinked" xml:space="preserve">
+    <value>The tasks could not be linked.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorPageMovedAgainSinceChangeAppliedLeft" xml:space="preserve">
+    <value>The page has been moved again since this change was applied, so it was left where it is now.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorPageCouldNotMoved" xml:space="preserve">
+    <value>The page could not be moved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorPageCouldNotMovedBack" xml:space="preserve">
+    <value>The page could not be moved back.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTaskBoardGroupChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>The task or board group this change refers to could not be resolved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTaskCouldNotMoved" xml:space="preserve">
+    <value>The task could not be moved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTaskSprintChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>The task or sprint this change refers to could not be resolved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTaskCouldNotMovedSprint" xml:space="preserve">
+    <value>The task could not be moved into the sprint.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTaskCouldNotRemovedSprint" xml:space="preserve">
+    <value>The task could not be removed from the sprint.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorGroupOrderMissingChange" xml:space="preserve">
+    <value>The group order is missing from this change.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorGroupsBoardChangedSinceOrderProposed" xml:space="preserve">
+    <value>The groups on this board have changed since the order was proposed.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorGroupsCouldNotReordered" xml:space="preserve">
+    <value>The groups could not be reordered.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTaskFlagChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>The task or flag this change refers to could not be resolved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorFlagResolutionMissingChange" xml:space="preserve">
+    <value>The flag resolution is missing from this change.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorFlagCouldNotCleared" xml:space="preserve">
+    <value>The flag could not be cleared.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorRestoredPageCouldNotResolved" xml:space="preserve">
+    <value>The restored page could not be resolved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorPageCouldNotArchivedAgain" xml:space="preserve">
+    <value>The page could not be archived again.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorPageVersionChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>The page version this change refers to could not be resolved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorPageVersionCouldNotRestored" xml:space="preserve">
+    <value>The page version could not be restored.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorRuleTurnedOffSinceChangeAppliedLeft" xml:space="preserve">
+    <value>The rule has been turned on or off since this change was applied, so it was left as it is now.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorRuleChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>The rule this change refers to could not be resolved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorRuleCouldNotTurnedOff" xml:space="preserve">
+    <value>The rule could not be turned on or off.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorRuleCouldNotTurnedBack" xml:space="preserve">
+    <value>The rule could not be turned back.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTaskTagsCouldNotUpdated" xml:space="preserve">
+    <value>The task tags could not be updated.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorSprintCouldNotStarted" xml:space="preserve">
+    <value>The sprint could not be started.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorLinkChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>The link this change refers to could not be resolved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorLinkCouldNotRemoved" xml:space="preserve">
+    <value>The link could not be removed.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorRuleEditedAfterChangeProposedLeftNow" xml:space="preserve">
+    <value>The rule was edited after this change was proposed, so it was left as it is now.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorRuleEditedSinceChangeAppliedLeftNow" xml:space="preserve">
+    <value>The rule has been edited since this change was applied, so it was left as it is now.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorRuleCouldNotUpdated" xml:space="preserve">
+    <value>The rule could not be updated.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorRuleCouldNotRestored" xml:space="preserve">
+    <value>The rule could not be restored.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorBoardCouldNotUpdated" xml:space="preserve">
+    <value>The board could not be updated.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorBoardGroupNoLongerWorkspace" xml:space="preserve">
+    <value>The board group is no longer in this workspace.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorBoardGroupCouldNotUpdated" xml:space="preserve">
+    <value>The board group could not be updated.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorCommentEditedSinceChangeAppliedLeftNow" xml:space="preserve">
+    <value>The comment has been edited since this change was applied, so it was left as it is now.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorNewCommentTextMissingChange" xml:space="preserve">
+    <value>The new comment text is missing from this change.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorCommentChangeRefersNoLongerExists" xml:space="preserve">
+    <value>The comment this change refers to no longer exists.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorCommentNoLongerExists" xml:space="preserve">
+    <value>The comment no longer exists.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorCommentCouldNotSaved" xml:space="preserve">
+    <value>The comment could not be saved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorPageEditedAfterChangeProposedAskFresh" xml:space="preserve">
+    <value>The page was edited after this change was proposed. Ask for a fresh proposal.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTasksPageShouldLinkNotCreatedPage" xml:space="preserve">
+    <value>Some tasks this page should link to were not created, so the page was left as it is.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorPageCouldNotSaved" xml:space="preserve">
+    <value>The page could not be saved.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorPageDetailsChangedSinceApply" xml:space="preserve">
+    <value>The page's status or tags have changed since this change was applied, so they were left as they are now.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorUnknownTagsHint" xml:space="preserve">
+    <value>Was the change that creates them applied?</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorStatusChangeNotDraftPublished" xml:space="preserve">
+    <value>The status in this change is not draft or published.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorPageCouldNotUpdated" xml:space="preserve">
+    <value>The page could not be updated.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorPageDetailsCouldNotRestored" xml:space="preserve">
+    <value>The page details could not be restored.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorProjectCouldNotUpdated" xml:space="preserve">
+    <value>The project could not be updated.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorRelationTypeNoLongerExistsWorkspace" xml:space="preserve">
+    <value>The relation type no longer exists in this workspace.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorRelationTypeCouldNotUpdated" xml:space="preserve">
+    <value>The relation type could not be updated.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorSprintCouldNotUpdated" xml:space="preserve">
+    <value>The sprint could not be updated.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorStatusNoLongerExistsWorkspace" xml:space="preserve">
+    <value>The status no longer exists in this workspace.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorStatusCouldNotUpdated" xml:space="preserve">
+    <value>The status could not be updated.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTagRenamedSinceChangeAppliedLeftNow" xml:space="preserve">
+    <value>The tag has been renamed since this change was applied, so it was left as it is now.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorNewTagNameMissingChange" xml:space="preserve">
+    <value>The new tag name is missing from this change.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTagNamedAlreadyExists" xml:space="preserve">
+    <value>A tag named “{0}” already exists.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change. {0} is the name already in use</comment>
+  </data>
+  <data name="AiChangeErrorTagNoLongerWorkspace" xml:space="preserve">
+    <value>The tag is no longer in this workspace.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorAnotherTagNowNamed" xml:space="preserve">
+    <value>Another tag is now named “{0}”.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change. {0} is the name already in use</comment>
+  </data>
+  <data name="AiChangeErrorTagCouldNotRenamed" xml:space="preserve">
+    <value>The tag could not be renamed.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTaskCouldNotUpdated" xml:space="preserve">
+    <value>The task could not be updated.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiSummaryAddComment" xml:space="preserve">
+    <value>Comment on “{0}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the task name</comment>
+  </data>
+  <data name="AiSummarySetAssignees" xml:space="preserve">
+    <value>Set assignees on “{0}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the task name</comment>
+  </data>
+  <data name="AiSummarySetTags" xml:space="preserve">
+    <value>Set tags on “{0}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the target name</comment>
+  </data>
+  <data name="AiSummaryMoveTaskToBoardGroup" xml:space="preserve">
+    <value>Move “{0}” to {1} on {2}</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the task name, {1} is the group name, {2} is the board name</comment>
+  </data>
+  <data name="AiSummaryCreateAutomation" xml:space="preserve">
+    <value>Create automation “{0}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the rule name</comment>
+  </data>
+  <data name="AiSummaryCreateBoard" xml:space="preserve">
+    <value>Create board “{0}” in {1}</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the name, {1} is the project name</comment>
+  </data>
+  <data name="AiSummaryCreateBoardGroup" xml:space="preserve">
+    <value>Add group “{0}” to {1}</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the name, {1} is the board name</comment>
+  </data>
+  <data name="AiSummaryCreateProject" xml:space="preserve">
+    <value>Create project “{0}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the name</comment>
+  </data>
+  <data name="AiSummaryCreateRelationType" xml:space="preserve">
+    <value>Create relation type “{0}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the name</comment>
+  </data>
+  <data name="AiSummaryCreateSprint" xml:space="preserve">
+    <value>Create sprint “{0}” in {1}</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the name, {1} is the project name</comment>
+  </data>
+  <data name="AiSummaryCreateStatus" xml:space="preserve">
+    <value>Create status “{0}” in {1}</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the name, {1} is the category</comment>
+  </data>
+  <data name="AiSummaryCreateTag" xml:space="preserve">
+    <value>Create tag “{0}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the name</comment>
+  </data>
+  <data name="AiSummaryCreateTask" xml:space="preserve">
+    <value>Create task “{0}” in {1}</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the name, {1} is the project name</comment>
+  </data>
+  <data name="AiSummaryDeleteBoard" xml:space="preserve">
+    <value>Delete board “{0}” in {1}</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the board name, {1} is the project name</comment>
+  </data>
+  <data name="AiSummaryDeleteBoardGroup" xml:space="preserve">
+    <value>Delete group “{0}” from {1}</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the group name, {1} is the board name</comment>
+  </data>
+  <data name="AiSummaryDeleteComment" xml:space="preserve">
+    <value>Delete {0}'s comment on {1}</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the comment user display name, {1} is the system id</comment>
+  </data>
+  <data name="AiSummaryDeletePage" xml:space="preserve">
+    <value>Permanently delete “{0}” and everything archived inside it — this cannot be undone</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the page title</comment>
+  </data>
+  <data name="AiSummaryDeleteProject" xml:space="preserve">
+    <value>Delete project “{0}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the project name</comment>
+  </data>
+  <data name="AiSummaryDeleteRelationType" xml:space="preserve">
+    <value>Delete relation type “{0}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the name</comment>
+  </data>
+  <data name="AiSummaryDeleteStatus" xml:space="preserve">
+    <value>Delete status “{0}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the name</comment>
+  </data>
+  <data name="AiSummaryDeleteTag" xml:space="preserve">
+    <value>Delete tag “{0}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the tag name</comment>
+  </data>
+  <data name="AiSummaryDeleteTask" xml:space="preserve">
+    <value>Delete “{0}” ({1})</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the task name, {1} is the task system id</comment>
+  </data>
+  <data name="AiSummaryLinkTasks" xml:space="preserve">
+    <value>Link “{0}” {1} “{2}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the first task, {1} is how the relation reads, such as “blocks”, {2} is the other task</comment>
+  </data>
+  <data name="AiSummaryMovePage" xml:space="preserve">
+    <value>Move “{0}” to {1}</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the page title, {1} is where the page goes</comment>
+  </data>
+  <data name="AiSummaryReorderBoardGroups" xml:space="preserve">
+    <value>Reorder the groups on “{0}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the board name</comment>
+  </data>
+  <data name="AiSummaryRestorePage" xml:space="preserve">
+    <value>Restore “{0}” from the archive</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the page title</comment>
+  </data>
+  <data name="AiSummaryRestorePageVersion" xml:space="preserve">
+    <value>Restore “{0}” to revision {1}, saved {2}</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the page title, {1} is the revision number, {2} is the date it was saved</comment>
+  </data>
+  <data name="AiSummaryMoveTaskToSprint" xml:space="preserve">
+    <value>Move “{0}” into sprint “{1}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the task name, {1} is the sprint name</comment>
+  </data>
+  <data name="AiSummaryAddTasksToSprint" xml:space="preserve">
+    <value>Add {0} task(s) to sprint “{1}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the number of tasks, {1} is the sprint name</comment>
+  </data>
+  <data name="AiSummaryRemoveTaskFromSprint" xml:space="preserve">
+    <value>Take “{0}” out of {1}</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the task name, {1} is the sprint name</comment>
+  </data>
+  <data name="AiSummaryStartSprint" xml:space="preserve">
+    <value>Start sprint “{0}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the sprint name</comment>
+  </data>
+  <data name="AiSummaryCompleteSprint" xml:space="preserve">
+    <value>Complete sprint “{0}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the sprint name</comment>
+  </data>
+  <data name="AiSummaryCancelSprint" xml:space="preserve">
+    <value>Cancel sprint “{0}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the sprint name</comment>
+  </data>
+  <data name="AiSummaryDeleteSprint" xml:space="preserve">
+    <value>Delete sprint “{0}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the sprint name</comment>
+  </data>
+  <data name="AiSummaryUnlinkTasks" xml:space="preserve">
+    <value>Unlink “{0}” from “{1}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the system id, {1} is the other task</comment>
+  </data>
+  <data name="AiSummaryUpdateAutomation" xml:space="preserve">
+    <value>Update automation “{0}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the previous name</comment>
+  </data>
+  <data name="AiSummaryUpdateNamed" xml:space="preserve">
+    <value>Update {0} on “{1}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the list of changed field names, {1} is the board name</comment>
+  </data>
+  <data name="AiSummaryUpdateBoardGroup" xml:space="preserve">
+    <value>Update {0} on “{1}” in {2}</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the list of changed field names, {1} is the group name, {2} is the board name</comment>
+  </data>
+  <data name="AiSummaryUpdateComment" xml:space="preserve">
+    <value>Edit comment on {0}</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the system id</comment>
+  </data>
+  <data name="AiSummaryRewritePage" xml:space="preserve">
+    <value>Rewrite “{0}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the page title</comment>
+  </data>
+  <data name="AiSummarySetPageDetails" xml:space="preserve">
+    <value>Set {0} on “{1}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the list of changed field names, {1} is the target name</comment>
+  </data>
+  <data name="AiSummaryUpdateProject" xml:space="preserve">
+    <value>Update {0} on {1}</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the list of changed field names, {1} is the project name</comment>
+  </data>
+  <data name="AiSummaryUpdateRelationType" xml:space="preserve">
+    <value>Update {0} on relation type “{1}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the list of changed field names, {1} is the relation type name</comment>
+  </data>
+  <data name="AiSummaryUpdateSprint" xml:space="preserve">
+    <value>Update {0} on sprint “{1}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the list of changed field names, {1} is the sprint name</comment>
+  </data>
+  <data name="AiSummaryUpdateStatus" xml:space="preserve">
+    <value>Update {0} on status “{1}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the list of changed field names, {1} is the status name</comment>
+  </data>
+  <data name="AiSummaryRenameTag" xml:space="preserve">
+    <value>Rename tag “{0}” to “{1}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the tag name, {1} is the name</comment>
+  </data>
+  <data name="AiChangeErrorTaskChangeMovesNoLongerWorkspace" xml:space="preserve">
+    <value>The task this change moves is no longer in this workspace.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorNoFieldValuesSupplied" xml:space="preserve">
+    <value>No field values were supplied.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorNotPartChange" xml:space="preserve">
+    <value>“{0}” is not part of this change.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change. {0} is the field name</comment>
+  </data>
+  <data name="AiChangeErrorCannotEditedHere" xml:space="preserve">
+    <value>“{0}” cannot be edited here.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change. {0} is the field name</comment>
+  </data>
+  <data name="AiChangeErrorCannotLeftEmpty" xml:space="preserve">
+    <value>“{0}” cannot be left empty.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change. {0} is the field name</comment>
+  </data>
+  <data name="AiChangeErrorLongerThanCharacters" xml:space="preserve">
+    <value>“{0}” is longer than {1} characters.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change. {0} is the name, {1} is the maximum length</comment>
+  </data>
+  <data name="AiChangeErrorNotPriority" xml:space="preserve">
+    <value>“{0}” is not a priority.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change. {0} is the value entered</comment>
+  </data>
+  <data name="AiChangeErrorNotEstimateUnit" xml:space="preserve">
+    <value>“{0}” is not an estimate unit.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change. {0} is the value entered</comment>
+  </data>
+  <data name="AiChangeErrorEstimateNeedsValue" xml:space="preserve">
+    <value>An estimate needs a value.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTShirtEstimatesRunXSXL" xml:space="preserve">
+    <value>T-shirt estimates run from 1 (XS) to 5 (XL).</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorEstimateCannotNegative" xml:space="preserve">
+    <value>An estimate cannot be negative.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorMustDateYYYYMMDDForm" xml:space="preserve">
+    <value>“{0}” must be a date in YYYY-MM-DD form.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change. {0} is the name</comment>
+  </data>
+  <data name="AiChangeErrorStatusNotWorkspace" xml:space="preserve">
+    <value>That status is not in this workspace.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorPersonNotMemberWorkspace" xml:space="preserve">
+    <value>That person is not a member of this workspace.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorPeopleNotMembersWorkspace" xml:space="preserve">
+    <value>Some of those people are not members of this workspace.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorTagsDoNotExistWorkspace" xml:space="preserve">
+    <value>These tags do not exist in this workspace: {0}.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change. {0} is the list of names</comment>
+  </data>
+  <data name="AiChangeErrorSprintNotWorkspace" xml:space="preserve">
+    <value>That sprint is not in this workspace.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorSprintCompletedCanNoLongerChanged" xml:space="preserve">
+    <value>Sprint “{0}” is completed and can no longer be changed.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change. {0} is the sprint name</comment>
+  </data>
+  <data name="AiChangeErrorSprintBelongsDifferentProject" xml:space="preserve">
+    <value>Sprint “{0}” belongs to a different project.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change. {0} is the sprint name</comment>
+  </data>
+  <data name="AiChangeErrorBoardGroupNotWorkspace" xml:space="preserve">
+    <value>That board group is not in this workspace.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorBoardDifferentProject" xml:space="preserve">
+    <value>“{0}” is on a board in a different project.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change. {0} is the group name</comment>
+  </data>
+  <data name="AiErrorAssistantTurnedOff" xml:space="preserve">
+    <value>The assistant is turned off for this workspace.</value>
+    <comment>Shown when someone uses the assistant in a workspace that has it turned off</comment>
+  </data>
+  <data name="AiChangeErrorOnlyPendingChangeSetCanApplied" xml:space="preserve">
+    <value>Only a pending change set can be applied.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiErrorNotWorkspaceMember" xml:space="preserve">
+    <value>You are not a member of this workspace.</value>
+    <comment>Shown when someone uses the assistant in a workspace they are not a member of</comment>
+  </data>
+  <data name="AiChangeErrorYouDoNotPermissionApplyChanges" xml:space="preserve">
+    <value>You do not have permission to apply these changes.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorStoppedBeforeChangeApplied" xml:space="preserve">
+    <value>Stopped before this change was applied.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorKeptBecauseChangeDependsCouldNotUndone" xml:space="preserve">
+    <value>Kept, because a change that depends on it could not be undone.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorNoHandlerRegistered" xml:space="preserve">
+    <value>No handler is registered for {0}.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change. {0} is the kind of change</comment>
+  </data>
+  <data name="AiChangeErrorOnlyAppliedChangeSetCanUndone" xml:space="preserve">
+    <value>Only an applied change set can be undone.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorNothingLeftUndoChangeSet" xml:space="preserve">
+    <value>There is nothing left to undo in this change set.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorYouDoNotPermissionUndoChanges" xml:space="preserve">
+    <value>You do not have permission to undo these changes.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorChangeCannotUndone" xml:space="preserve">
+    <value>A {0} change cannot be undone.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change. {0} is the kind of change</comment>
+  </data>
+  <data name="AiChangeErrorOnlyAppliedChangeSetFailedChangesRetry" xml:space="preserve">
+    <value>Only an applied change set has failed changes to retry.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorUndoneChangeSetCannotAppliedAgain" xml:space="preserve">
+    <value>An undone change set cannot be applied again.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorNothingLeftRetryChangeSet" xml:space="preserve">
+    <value>There is nothing left to retry in this change set.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiSummaryEnableAutomation" xml:space="preserve">
+    <value>Enable automation “{0}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the rule name</comment>
+  </data>
+  <data name="AiSummaryDisableAutomation" xml:space="preserve">
+    <value>Disable automation “{0}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the rule name</comment>
+  </data>
+  <data name="AiSummaryCreateFolder" xml:space="preserve">
+    <value>Create folder “{0}” in {1}</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the folder title, {1} where it goes</comment>
+  </data>
+  <data name="AiSummaryCreateDocument" xml:space="preserve">
+    <value>Create document “{0}” in {1}</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the document title, {1} where it goes</comment>
+  </data>
+  <data name="AiSummaryResolveTaskFlag" xml:space="preserve">
+    <value>Clear flag “{0}” on “{1}” as resolved</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the flag, {1} the task name</comment>
+  </data>
+  <data name="AiSummaryDismissTaskFlag" xml:space="preserve">
+    <value>Clear flag “{0}” on “{1}” as dismissed</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the flag, {1} the task name</comment>
+  </data>
+  <data name="AiSummaryArchivePage" xml:space="preserve">
+    <value>Archive “{0}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the page title</comment>
+  </data>
+  <data name="AiSummaryArchivePageWithOneInside" xml:space="preserve">
+    <value>Archive “{0}” and the 1 page inside it</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the page title</comment>
+  </data>
+  <data name="AiSummaryArchivePageWithManyInside" xml:space="preserve">
+    <value>Archive “{0}” and the {1} pages inside it</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the page title, {1} the number of pages inside it</comment>
+  </data>
+  <data name="AiChangeErrorSkippedForReference" xml:space="preserve">
+    <value>Skipped because {0} was not created.</value>
+    <comment>Shown when the assistant skips a change because one it depends on failed. {0} names the missing item</comment>
+  </data>
+  <data name="AiPageTopLevel" xml:space="preserve">
+    <value>Top level</value>
+    <comment>Where a page sits when it is not inside a folder</comment>
+  </data>
+  <data name="ListPair" xml:space="preserve">
+    <value>{0} and {1}</value>
+    <comment>Two items in a sentence, such as “status and tags” or “3 tasks and 1 project”</comment>
+  </data>
+  <data name="AiAutomationEnabled" xml:space="preserve">
+    <value>Enabled</value>
+    <comment>Whether an automation rule runs</comment>
+  </data>
+  <data name="AiAutomationDisabled" xml:space="preserve">
+    <value>Disabled</value>
+    <comment>Whether an automation rule runs</comment>
+  </data>
+  <data name="AiAutomationScopeWorkspace" xml:space="preserve">
+    <value>Workspace</value>
+    <comment>Which tasks an automation rule applies to: the whole workspace</comment>
+  </data>
+  <data name="AiAutomationScopeProject" xml:space="preserve">
+    <value>Project · {0}</value>
+    <comment>Which tasks an automation rule applies to. {0} is the project name</comment>
+  </data>
+  <data name="AiAutomationScopeBoard" xml:space="preserve">
+    <value>Board · {0}</value>
+    <comment>Which tasks an automation rule applies to. {0} is the board name</comment>
+  </data>
+  <data name="AiAutomationScopeSprint" xml:space="preserve">
+    <value>Sprint · {0}</value>
+    <comment>Which tasks an automation rule applies to. {0} is the sprint name</comment>
+  </data>
+  <data name="AiAutomationCancelsOnePendingAction" xml:space="preserve">
+    <value>Applying this cancels 1 pending delayed action, and undo will not bring it back.</value>
+    <comment>Warning on a proposed automation rule change</comment>
+  </data>
+  <data name="AiAutomationCancelsPendingActions" xml:space="preserve">
+    <value>Applying this cancels {0} pending delayed actions, and undo will not bring them back.</value>
+    <comment>Warning on a proposed automation rule change. {0} is the number of actions</comment>
+  </data>
+  <data name="AiFieldNameName" xml:space="preserve">
+    <value>name</value>
+    <comment>Field name inside a change summary such as “Update name on …”</comment>
+  </data>
+  <data name="AiFieldNameDescription" xml:space="preserve">
+    <value>description</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="AiFieldNameStatus" xml:space="preserve">
+    <value>status</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="AiFieldNamePriority" xml:space="preserve">
+    <value>priority</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="AiFieldNameStartDate" xml:space="preserve">
+    <value>start date</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="AiFieldNameEndDate" xml:space="preserve">
+    <value>end date</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="AiFieldNameDueDate" xml:space="preserve">
+    <value>due date</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="AiFieldNameEstimate" xml:space="preserve">
+    <value>estimate</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="AiFieldNameAssignee" xml:space="preserve">
+    <value>assignee</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="AiFieldNameAssignees" xml:space="preserve">
+    <value>assignees</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="AiFieldNameTags" xml:space="preserve">
+    <value>tags</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="AiFieldNameTag" xml:space="preserve">
+    <value>tag</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="AiFieldNameSprint" xml:space="preserve">
+    <value>sprint</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="AiFieldNameProject" xml:space="preserve">
+    <value>project</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="AiFieldNameBoard" xml:space="preserve">
+    <value>board</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="AiFieldNameBoardGroup" xml:space="preserve">
+    <value>board group</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="AiFieldNameGoal" xml:space="preserve">
+    <value>goal</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="AiFieldNameComment" xml:space="preserve">
+    <value>comment</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="AiFieldNameFlag" xml:space="preserve">
+    <value>flag</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="AiFieldNameRepositoryUrl" xml:space="preserve">
+    <value>repository URL</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="AiFieldNameBody" xml:space="preserve">
+    <value>body</value>
+    <comment>Field name inside a change summary: the text of a page</comment>
+  </data>
+  <data name="AiFieldNameKind" xml:space="preserve">
+    <value>kind</value>
+    <comment>Field name inside a change summary: whether a page is a document or a folder</comment>
+  </data>
+  <data name="AiFieldNameParent" xml:space="preserve">
+    <value>location</value>
+    <comment>Field name inside a change summary: the folder a page sits in</comment>
+  </data>
+  <data name="AiFieldNameEnabled" xml:space="preserve">
+    <value>state</value>
+    <comment>Field name inside a change summary: whether an automation rule runs</comment>
+  </data>
+  <data name="AiFieldNameScope" xml:space="preserve">
+    <value>scope</value>
+    <comment>Field name inside a change summary: which tasks an automation rule applies to</comment>
+  </data>
+  <data name="AiFieldNameRunsAs" xml:space="preserve">
+    <value>runs as</value>
+    <comment>Field name inside a change summary: the account an automation rule runs as</comment>
+  </data>
+  <data name="AiFieldNameTrigger" xml:space="preserve">
+    <value>trigger</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="AiFieldNameActions" xml:space="preserve">
+    <value>actions</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="AiFieldNameRule" xml:space="preserve">
+    <value>rule</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="AiFieldNameIdentifier" xml:space="preserve">
+    <value>identifier</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="AiFieldNameCategory" xml:space="preserve">
+    <value>category</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="AiFieldNameColor" xml:space="preserve">
+    <value>colour</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="AiFieldNameInverseName" xml:space="preserve">
+    <value>inverse name</value>
+    <comment>Field name inside a change summary: how a relation reads from the other task</comment>
+  </data>
+  <data name="AiFieldNameReason" xml:space="preserve">
+    <value>reason</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="AiFieldNameAuthor" xml:space="preserve">
+    <value>author</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="AiFieldNameOrder" xml:space="preserve">
+    <value>order</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="AiFieldNameRelationType" xml:space="preserve">
+    <value>relation type</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="AiFieldNameTasks" xml:space="preserve">
+    <value>tasks</value>
+    <comment>Field name inside a change summary</comment>
+  </data>
+  <data name="StatusCategoryNew" xml:space="preserve">
+    <value>New</value>
+    <comment>Status category</comment>
+  </data>
+  <data name="StatusCategoryBacklog" xml:space="preserve">
+    <value>Backlog</value>
+    <comment>Status category</comment>
+  </data>
+  <data name="StatusCategoryTodo" xml:space="preserve">
+    <value>To do</value>
+    <comment>Status category</comment>
+  </data>
+  <data name="StatusCategoryActive" xml:space="preserve">
+    <value>Active</value>
+    <comment>Status category</comment>
+  </data>
+  <data name="StatusCategoryDone" xml:space="preserve">
+    <value>Done</value>
+    <comment>Status category</comment>
+  </data>
+  <data name="StatusCategoryInactive" xml:space="preserve">
+    <value>Inactive</value>
+    <comment>Status category</comment>
+  </data>
+  <data name="SprintStatusPlanning" xml:space="preserve">
+    <value>Planning</value>
+    <comment>Sprint status</comment>
+  </data>
+  <data name="SprintStatusActive" xml:space="preserve">
+    <value>Active</value>
+    <comment>Sprint status</comment>
+  </data>
+  <data name="SprintStatusCompleted" xml:space="preserve">
+    <value>Completed</value>
+    <comment>Sprint status</comment>
+  </data>
+  <data name="SprintStatusCancelled" xml:space="preserve">
+    <value>Cancelled</value>
+    <comment>Sprint status</comment>
+  </data>
+  <data name="RelationCategoryHierarchy" xml:space="preserve">
+    <value>Hierarchy</value>
+    <comment>Kind of task relation</comment>
+  </data>
+  <data name="RelationCategoryDependency" xml:space="preserve">
+    <value>Dependency</value>
+    <comment>Kind of task relation</comment>
+  </data>
+  <data name="RelationCategoryRelated" xml:space="preserve">
+    <value>Related</value>
+    <comment>Kind of task relation</comment>
+  </data>
+  <data name="RelationCategoryDuplicate" xml:space="preserve">
+    <value>Duplicate</value>
+    <comment>Kind of task relation</comment>
+  </data>
+  <data name="PageKindFolder" xml:space="preserve">
+    <value>Folder</value>
+    <comment>Kind of page</comment>
+  </data>
+  <data name="PageKindDocument" xml:space="preserve">
+    <value>Document</value>
+    <comment>Kind of page</comment>
+  </data>
+  <data name="FlagResolutionTypeResolved" xml:space="preserve">
+    <value>Resolved</value>
+    <comment>How a task flag was cleared</comment>
+  </data>
+  <data name="FlagResolutionTypeDismissed" xml:space="preserve">
+    <value>Dismissed</value>
+    <comment>How a task flag was cleared</comment>
+  </data>
+  <data name="AutomationTriggerTypeTaskUnassignedFor" xml:space="preserve">
+    <value>Task is unassigned</value>
+    <comment>Name of an automation trigger event</comment>
+  </data>
+  <data name="AutomationTriggerTypeTaskChanged" xml:space="preserve">
+    <value>Task changes</value>
+    <comment>Name of an automation trigger event</comment>
+  </data>
+  <data name="AutomationTriggerTypeTaskDueDateApproaching" xml:space="preserve">
+    <value>Task due date approaches</value>
+    <comment>Name of an automation trigger event</comment>
+  </data>
+  <data name="AutomationTriggerTypeTaskCreated" xml:space="preserve">
+    <value>Task is created</value>
+    <comment>Name of an automation trigger event</comment>
+  </data>
+  <data name="AutomationTriggerTypeTaskOverdue" xml:space="preserve">
+    <value>Task becomes overdue</value>
+    <comment>Name of an automation trigger event</comment>
+  </data>
+  <data name="AutomationTriggerTypeTaskHasNoDueDate" xml:space="preserve">
+    <value>Task has no due date</value>
+    <comment>Name of an automation trigger event</comment>
+  </data>
+  <data name="AutomationTriggerTypeTaskInactiveFor" xml:space="preserve">
+    <value>Task remains inactive</value>
+    <comment>Name of an automation trigger event</comment>
+  </data>
+  <data name="AutomationTriggerTypeSprintStarted" xml:space="preserve">
+    <value>Sprint starts</value>
+    <comment>Name of an automation trigger event</comment>
+  </data>
+  <data name="AutomationTriggerTypeSprintCompleted" xml:space="preserve">
+    <value>Sprint completes</value>
+    <comment>Name of an automation trigger event</comment>
+  </data>
+  <data name="AutomationTriggerTypeSprintEndingSoon" xml:space="preserve">
+    <value>Sprint end approaches</value>
+    <comment>Name of an automation trigger event</comment>
+  </data>
+  <data name="AutomationTriggerTypeTaskBlocked" xml:space="preserve">
+    <value>Task becomes blocked</value>
+    <comment>Name of an automation trigger event</comment>
+  </data>
+  <data name="AutomationTriggerTypeTaskUnblocked" xml:space="preserve">
+    <value>Task becomes unblocked</value>
+    <comment>Name of an automation trigger event</comment>
+  </data>
+  <data name="AutomationTriggerTypeSubtasksCompleted" xml:space="preserve">
+    <value>All subtasks complete</value>
+    <comment>Name of an automation trigger event</comment>
+  </data>
+  <data name="AutomationTriggerTypePullRequestOpened" xml:space="preserve">
+    <value>Pull request opened</value>
+    <comment>Name of an automation trigger event</comment>
+  </data>
+  <data name="AutomationTriggerTypePullRequestMerged" xml:space="preserve">
+    <value>Pull request merged</value>
+    <comment>Name of an automation trigger event</comment>
+  </data>
+  <data name="AutomationTriggerTypeChecksFailed" xml:space="preserve">
+    <value>Checks fail</value>
+    <comment>Name of an automation trigger event</comment>
+  </data>
+  <data name="AutomationActionTypeNotifyTaskAssignees" xml:space="preserve">
+    <value>Notify task assignees</value>
+    <comment>Name of an automation action</comment>
+  </data>
+  <data name="AutomationActionTypeFlagTask" xml:space="preserve">
+    <value>Flag task</value>
+    <comment>Name of an automation action</comment>
+  </data>
+  <data name="AutomationActionTypeUpdateTask" xml:space="preserve">
+    <value>Update task</value>
+    <comment>Name of an automation action</comment>
+  </data>
+  <data name="AutomationActionTypeAddComment" xml:space="preserve">
+    <value>Add comment</value>
+    <comment>Name of an automation action</comment>
+  </data>
+  <data name="AutomationActionTypeDeleteTask" xml:space="preserve">
+    <value>Delete task</value>
+    <comment>Name of an automation action</comment>
+  </data>
+  <data name="AutomationActionTypeCreateTask" xml:space="preserve">
+    <value>Create task</value>
+    <comment>Name of an automation action</comment>
+  </data>
+  <data name="AutomationActionTypeManageTaskRelation" xml:space="preserve">
+    <value>Manage task relation</value>
+    <comment>Name of an automation action</comment>
+  </data>
+  <data name="AiSummaryRenamePage" xml:space="preserve">
+    <value>Rename “{0}”</value>
+    <comment>Summary of a change the assistant proposes. Keep the “ ” quotes around names. {0} is the page title</comment>
+  </data>
+  <data name="ErrorAssigneeIDsCannotEmptyDuplicated" xml:space="preserve">
+    <value>Assignee IDs cannot be empty or duplicated</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorAssigneesNotFoundWorkspace" xml:space="preserve">
+    <value>Assignees were not found in the workspace: {0}</value>
+    <comment>Error shown when a request cannot be completed. {0} is the list of names</comment>
+  </data>
+  <data name="ErrorTagsCannotEmptyDuplicated" xml:space="preserve">
+    <value>Tags cannot be empty or duplicated</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorTagsNotFoundWorkspace" xml:space="preserve">
+    <value>Tags were not found in the workspace: {0}</value>
+    <comment>Error shown when a request cannot be completed. {0} is the list of names</comment>
+  </data>
+  <data name="ErrorSetupTemplateNotFound" xml:space="preserve">
+    <value>Setup template not found</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorDefaultTaskStatusNotFound" xml:space="preserve">
+    <value>Default task status not found</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorRelatedTaskKeysCannotEmpty" xml:space="preserve">
+    <value>Related task keys cannot be empty</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorLinkedMoreThanOnceSameRelation" xml:space="preserve">
+    <value>{0} is linked more than once by the same relation.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the related task id</comment>
+  </data>
+  <data name="ErrorRelationTypeIdNotFound" xml:space="preserve">
+    <value>Relation type with Id {0} not found</value>
+    <comment>Error shown when a request cannot be completed. {0} is theuested relation type id</comment>
+  </data>
+  <data name="ErrorTaskKeyNotFound" xml:space="preserve">
+    <value>Task with key {0} not found</value>
+    <comment>Error shown when a request cannot be completed. {0} is theuested related system id</comment>
+  </data>
+  <data name="ErrorTaskCanOnlyOneLink" xml:space="preserve">
+    <value>A task can only have one "{0}" link.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the relation type name</comment>
+  </data>
+  <data name="ErrorTaskAlreadyLinkTaskCanOnlyOne" xml:space="preserve">
+    <value>That task already has a "{0}" link. A task can only have one.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the relation type name</comment>
+  </data>
+  <data name="ErrorWouldCreateCircularChain" xml:space="preserve">
+    <value>This would create a circular "{0}" chain.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the relation type name</comment>
+  </data>
+  <data name="ErrorInvalidPreferenceKeyScopeValue" xml:space="preserve">
+    <value>Invalid preference key, scope, or value.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorInvalidPreferenceKeyScope" xml:space="preserve">
+    <value>Invalid preference key or scope.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorServiceAccountNameMustBetweenCharacters" xml:space="preserve">
+    <value>Service account name must be between 2 and 128 characters.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorDisabledServiceAccountCannotUpdated" xml:space="preserve">
+    <value>A disabled service account cannot be updated.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorServiceAccountNeedsAtLeastOnePermission" xml:space="preserve">
+    <value>A service account needs at least one permission.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorServiceAccountCannotGrantedPermissionsOwnerDoes" xml:space="preserve">
+    <value>A service account cannot be granted permissions its owner does not have.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorEveryServiceAccountOwnerMustHumanMember" xml:space="preserve">
+    <value>Every service account owner must be a human member of the workspace.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorDeletedServiceAccountsCannotCreateCredentials" xml:space="preserve">
+    <value>Deleted service accounts cannot create credentials.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorServiceAccountDoesNotWorkspaceMembership" xml:space="preserve">
+    <value>Service account does not have a workspace membership.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorCredentialScopesMustSubsetServiceAccountPermissions" xml:space="preserve">
+    <value>Credential scopes must be a subset of the service account permissions.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorCredentialNameMustBetweenCharacters" xml:space="preserve">
+    <value>Credential name must be between 2 and 128 characters.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorCredentialExpiryMustWithinNextDays" xml:space="preserve">
+    <value>Credential expiry must be within the next 366 days.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorDeletedServiceAccountsCannotChangeCredentials" xml:space="preserve">
+    <value>Deleted service accounts cannot change credentials.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorRevokedCredentialsCannotChangeScopes" xml:space="preserve">
+    <value>Revoked credentials cannot change scopes.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorCredentialNeedsAtLeastOneScope" xml:space="preserve">
+    <value>A credential needs at least one scope.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorUnknownAIProvider" xml:space="preserve">
+    <value>Unknown AI provider.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorAPIKeyNotValid" xml:space="preserve">
+    <value>API key is not valid.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorLabelMustBetweenCharacters" xml:space="preserve">
+    <value>Label must be between 1 and {0} characters.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the maximum label length</comment>
+  </data>
+  <data name="ErrorModelNotSupportedProvider" xml:space="preserve">
+    <value>Model is not supported for this provider.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorOnlyPendingChangeSetCanDiscarded" xml:space="preserve">
+    <value>Only a pending change set can be discarded.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorUnknownSearchProvider" xml:space="preserve">
+    <value>Unknown search provider.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorAPIKeyRequiredProvider" xml:space="preserve">
+    <value>An API key is required for this provider.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorGoogleSearchNeedsSearchEngineId" xml:space="preserve">
+    <value>Google search needs a search engine id.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorSearchEngineIdMustCharactersFewer" xml:space="preserve">
+    <value>Search engine id must be {0} characters or fewer.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the maximum engine id length</comment>
+  </data>
+  <data name="ErrorSearXNGNeedsBaseURLInstance" xml:space="preserve">
+    <value>SearXNG needs the base URL of an instance.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorEndpointMustCharactersFewer" xml:space="preserve">
+    <value>Endpoint must be {0} characters or fewer.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the maximum endpoint length</comment>
+  </data>
+  <data name="ErrorEndpointMustAbsoluteHttpHttpsURL" xml:space="preserve">
+    <value>Endpoint must be an absolute http or https URL.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorSpendCapMustMoreThanNoMore" xml:space="preserve">
+    <value>A spend cap must be more than 0 and no more than ${0:N0}.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the maximum cap</comment>
+  </data>
+  <data name="ErrorOnlyPendingChangeSetCanEdited" xml:space="preserve">
+    <value>Only a pending change set can be edited.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorChangeAlreadyRunCannotEdited" xml:space="preserve">
+    <value>This change has already run, so it cannot be edited.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorAtLeastOneTaskRequired" xml:space="preserve">
+    <value>At least one task is required</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorStatusIdNotFoundWorkspace" xml:space="preserve">
+    <value>Status with id {0} was not found in the workspace</value>
+    <comment>Error shown when a request cannot be completed. {0} is the status id</comment>
+  </data>
+  <data name="ErrorSprintIdClearSprintCannotBothSupplied" xml:space="preserve">
+    <value>SprintId and ClearSprint cannot both be supplied</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorDueDateClearDueDateCannotBothSupplied" xml:space="preserve">
+    <value>DueDate and ClearDueDate cannot both be supplied</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorSprintIdNotFoundWorkspace" xml:space="preserve">
+    <value>Sprint with id {0} was not found in the workspace</value>
+    <comment>Error shown when a request cannot be completed. {0} is the sprint id</comment>
+  </data>
+  <data name="ErrorCompletedCancelledSprintsCannotChanged" xml:space="preserve">
+    <value>Completed or cancelled sprints cannot be changed</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorEveryTaskMustBelongToSprintProject" xml:space="preserve">
+    <value>Every task must belong to the sprint's project</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorProjectIdNotFound" xml:space="preserve">
+    <value>Project with Id {0} not found</value>
+    <comment>Error shown when a request cannot be completed. {0} is the project id</comment>
+  </data>
+  <data name="ErrorTaskNotBoard" xml:space="preserve">
+    <value>The task is not on board '{0}'</value>
+    <comment>Error shown when a request cannot be completed. {0} is the board name</comment>
+  </data>
+  <data name="ErrorBoardGroupDoesNotBelongBoard" xml:space="preserve">
+    <value>The board group does not belong to a board.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorBoardGroupBelongsDifferentProject" xml:space="preserve">
+    <value>Board group “{0}” belongs to a different project.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the target name</comment>
+  </data>
+  <data name="ErrorBoardNotInTaskProject" xml:space="preserve">
+    <value>Board '{0}' does not belong to the task's project</value>
+    <comment>Error shown when a request cannot be completed. {0} is the board name</comment>
+  </data>
+  <data name="ErrorBoardNoGroupPlaceTask" xml:space="preserve">
+    <value>Board '{0}' has no group to place the task in</value>
+    <comment>Error shown when a request cannot be completed. {0} is the board name</comment>
+  </data>
+  <data name="ErrorTaskAlreadyBoard" xml:space="preserve">
+    <value>The task is already on board '{0}'</value>
+    <comment>Error shown when a request cannot be completed. {0} is the board name</comment>
+  </data>
+  <data name="ErrorWorkspaceKeyNotFound" xml:space="preserve">
+    <value>workspace with key {0} not found</value>
+    <comment>Error shown when a request cannot be completed. {0} is the workspace key</comment>
+  </data>
+  <data name="ErrorTaskStatusNotFound" xml:space="preserve">
+    <value>Task status not found</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorSprintIdNotFound" xml:space="preserve">
+    <value>Sprint with Id {0} not found</value>
+    <comment>Error shown when a request cannot be completed. {0} is the sprint id</comment>
+  </data>
+  <data name="ErrorUnableGetScopeIdProjectId" xml:space="preserve">
+    <value>Unable to get scope id for project with id {0}</value>
+    <comment>Error shown when a request cannot be completed. {0} is the project id</comment>
+  </data>
+  <data name="ErrorOnlyTasksAlreadyBoardCanMovedBetween" xml:space="preserve">
+    <value>Only tasks already on this board can be moved between its groups.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorWorkspaceNotFound" xml:space="preserve">
+    <value>workspace not found</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorNoEmailAddressesProvided" xml:space="preserve">
+    <value>no email addresses provided</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorCannotRemoveWorkspaceOwner" xml:space="preserve">
+    <value>cannot remove the owner of the workspace</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorNoPendingInviteFoundEmail" xml:space="preserve">
+    <value>no pending invite found for this email</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorOwnerAssignmentRequiresOwnershipTransfer" xml:space="preserve">
+    <value>owner assignment requires an ownership transfer</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorYouCannotChangeYourOwnWorkspaceRole" xml:space="preserve">
+    <value>you cannot change your own workspace role</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorUserNotMemberWorkspace" xml:space="preserve">
+    <value>user is not a member of this workspace</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorWorkspaceOwnerRoleCannotChangedHere" xml:space="preserve">
+    <value>the workspace owner role cannot be changed here</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorMapFileBeforeCommitting" xml:space="preserve">
+    <value>Map the file before committing it.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorImportCannotCommitted" xml:space="preserve">
+    <value>An import that is {0} cannot be committed.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the import state</comment>
+  </data>
+  <data name="ErrorImportCannotPreviewed" xml:space="preserve">
+    <value>An import that is {0} cannot be previewed.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the import state</comment>
+  </data>
+  <data name="ErrorMapFileBeforePreviewing" xml:space="preserve">
+    <value>Map the file before previewing it.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorImportCannotInspected" xml:space="preserve">
+    <value>An import that is {0} cannot be inspected.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the import state</comment>
+  </data>
+  <data name="ErrorImportCannotMapped" xml:space="preserve">
+    <value>An import that is {0} cannot be mapped.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the import state</comment>
+  </data>
+  <data name="ErrorImportRunningCannotDeleted" xml:space="preserve">
+    <value>An import that is running cannot be deleted.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorFileEmpty" xml:space="preserve">
+    <value>The file is empty.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorFileExceedsByteLimit" xml:space="preserve">
+    <value>The file exceeds the {0} byte limit.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the options upload size bytes</comment>
+  </data>
+  <data name="ErrorImportSessionCouldNotReadBack" xml:space="preserve">
+    <value>The import session could not be read back.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorNameRequired" xml:space="preserve">
+    <value>A name is required.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorExportDefinitionNamedAlreadyExists" xml:space="preserve">
+    <value>An export definition named '{0}' already exists.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the name</comment>
+  </data>
+  <data name="ErrorArchiveExportRunJob" xml:space="preserve">
+    <value>An archive export has to run as a job.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorExportProducesAboutRowsRunJobInstead" xml:space="preserve">
+    <value>This export produces about {0} rows. Run it as a job instead.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the preview estimated row count</comment>
+  </data>
+  <data name="ErrorWorkspaceAlreadyExportJobsFlightWaitOne" xml:space="preserve">
+    <value>This workspace already has {0} export jobs in flight. Wait for one to finish and try again.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the number of exports running</comment>
+  </data>
+  <data name="ErrorExportJobCouldNotReadBack" xml:space="preserve">
+    <value>The export job could not be read back.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorArchiveWouldAddAboutBytesFilesBut" xml:space="preserve">
+    <value>This archive would add about {0} bytes of files but only {1} bytes of workspace storage remain. Export it without files, or free some space.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the size of the files in bytes, {1} is the free space in bytes</comment>
+  </data>
+  <data name="ErrorExportCannotCancelled" xml:space="preserve">
+    <value>An export that is {0} cannot be cancelled.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the export state</comment>
+  </data>
+  <data name="ErrorExportCannotDeletedCancelFirst" xml:space="preserve">
+    <value>An export that is {0} cannot be deleted. Cancel it first.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the export state</comment>
+  </data>
+  <data name="ErrorImportCannotUndone" xml:space="preserve">
+    <value>An import that is {0} cannot be undone.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the import state</comment>
+  </data>
+  <data name="ErrorImportTooOldUndo" xml:space="preserve">
+    <value>This import is too old to undo.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorAssistantTurnedOffWorkspace" xml:space="preserve">
+    <value>The assistant is turned off for this workspace.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorInspectFileBeforeAskingAssistant" xml:space="preserve">
+    <value>Inspect the file before asking the assistant.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorNoAssistantKeySetUpWorkspace" xml:space="preserve">
+    <value>No assistant key is set up for this workspace.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorAssistantDidNotProposeUsableMappingSuggested" xml:space="preserve">
+    <value>The assistant did not propose a usable mapping. The suggested mapping is unchanged.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorExportNothingDownload" xml:space="preserve">
+    <value>This export is {0} and has nothing to download.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the export state</comment>
+  </data>
+  <data name="ErrorExportExpired" xml:space="preserve">
+    <value>This export has expired.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorInspectFileBeforeAskingMapping" xml:space="preserve">
+    <value>Inspect the file before asking for a mapping.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorOnlyPlanningSprintsCanStarted" xml:space="preserve">
+    <value>Only planning sprints can be started</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorProjectAlreadyActiveSprint" xml:space="preserve">
+    <value>This project already has an active sprint</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorOnlyActiveSprintsCanCompleted" xml:space="preserve">
+    <value>Only active sprints can be completed</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorSprintCarryUnfinishedTasksOverNotFound" xml:space="preserve">
+    <value>The sprint to carry unfinished tasks over to was not found in this project</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorUnfinishedTasksCannotCarryOverSprintBeing" xml:space="preserve">
+    <value>Unfinished tasks cannot carry over to the sprint being completed</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorUnfinishedTasksCanOnlyCarryOverPlanning" xml:space="preserve">
+    <value>Unfinished tasks can only carry over to a planning or active sprint</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorOnlyPlanningCancelledSprintsCanDeleted" xml:space="preserve">
+    <value>Only planning or cancelled sprints can be deleted</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorCompletedSprintsCannotChanged" xml:space="preserve">
+    <value>Completed sprints cannot be changed</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorSprintNameRequired" xml:space="preserve">
+    <value>Sprint name is required</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorSprintEndDateMustAfterStartDate" xml:space="preserve">
+    <value>Sprint end date must be after start date</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorProjectWithIdNotFound" xml:space="preserve">
+    <value>Project with id {0} not found</value>
+    <comment>Error shown when a request cannot be completed. {0} is the project id</comment>
+  </data>
+  <data name="ErrorSprintCreatedButCouldNotLoaded" xml:space="preserve">
+    <value>Sprint was created but could not be loaded</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorSomeTasksNotFoundWorkspace" xml:space="preserve">
+    <value>Some of these tasks were not found in the workspace</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorTasksNotInSprintProject" xml:space="preserve">
+    <value>These tasks are not in the sprint's project: {0}</value>
+    <comment>Error shown when a request cannot be completed. {0} is the list of task ids</comment>
+  </data>
+  <data name="ErrorCompletedSprintsCannotEdited" xml:space="preserve">
+    <value>Completed sprints cannot be edited</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorTasksAlreadyLinkedRelation" xml:space="preserve">
+    <value>These tasks are already linked by this relation.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorOneMoreProjectsOutsideCurrentWorkspaceScope" xml:space="preserve">
+    <value>One or more projects are outside the current workspace scope</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorRoadmapStartDateMustBeforeEndDate" xml:space="preserve">
+    <value>Roadmap start date must be on or before its end date</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorRoadmapRangeCannotExceedDays" xml:space="preserve">
+    <value>Roadmap range cannot exceed 366 days</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorRequestFileSizeExceedsMaximum" xml:space="preserve">
+    <value>Request file size exceeds maximum of {0}.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the limit</comment>
+  </data>
+  <data name="ErrorProfilePictureMustImage" xml:space="preserve">
+    <value>A profile picture must be a {0} image.</value>
+    <comment>Error shown when a request cannot be completed. {0} lists the supported formats</comment>
+  </data>
+  <data name="ErrorProfilePictureCouldNotUploaded" xml:space="preserve">
+    <value>The profile picture could not be uploaded.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorValidFilenameRequired" xml:space="preserve">
+    <value>A valid filename is required.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorFileExceedsLimit" xml:space="preserve">
+    <value>The file exceeds the {0} limit.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the size limit</comment>
+  </data>
+  <data name="ErrorWorkspaceStorageLimitExceededBytesUsedRequested" xml:space="preserve">
+    <value>Workspace storage limit exceeded ({0} of {1} bytes used; {2} requested).</value>
+    <comment>Error shown when a request cannot be completed. {0} lists what still uses it, {1} lists what still uses it, {2} is theuest length</comment>
+  </data>
+  <data name="ErrorUploadedFileCouldNotLoaded" xml:space="preserve">
+    <value>The uploaded file could not be loaded.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorUploadCouldNotCompleted" xml:space="preserve">
+    <value>The upload could not be completed.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorImageEmpty" xml:space="preserve">
+    <value>The image is empty.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorImageExceedsLimit" xml:space="preserve">
+    <value>The image exceeds the {0} limit.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the limit</comment>
+  </data>
+  <data name="ErrorImageMustFile" xml:space="preserve">
+    <value>The image must be a {0} file.</value>
+    <comment>Error shown when a request cannot be completed. {0} lists the supported formats</comment>
+  </data>
+  <data name="ErrorImageCouldNotUploaded" xml:space="preserve">
+    <value>The image could not be uploaded.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorProjectConflictingNameAlreadyExistsWorkspace" xml:space="preserve">
+    <value>A project with a conflicting name already exists in this workspace.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorUnknownSetupTemplate" xml:space="preserve">
+    <value>Unknown setup template '{0}'</value>
+    <comment>Error shown when a request cannot be completed. {0} is theuest request template key</comment>
+  </data>
+  <data name="ErrorProjectNotFound" xml:space="preserve">
+    <value>Project not found</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorAssignedStatusNotFoundNotTaskStatus" xml:space="preserve">
+    <value>Assigned status was not found or is not a task status.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorStatusNameMustContainAtLeastOne" xml:space="preserve">
+    <value>Status name must contain at least one valid character.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorStatusNameShouldUnique" xml:space="preserve">
+    <value>Status name should be unique.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorSystemStatusesCannotDeleted" xml:space="preserve">
+    <value>System statuses cannot be deleted.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorStatusUsedCannotDeleted" xml:space="preserve">
+    <value>Status is used by {0} and cannot be deleted.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the description</comment>
+  </data>
+  <data name="ErrorStatusUseCannotDeleted" xml:space="preserve">
+    <value>Status is in use and cannot be deleted.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorProjectOutsideCurrentWorkspaceScope" xml:space="preserve">
+    <value>The project is outside the current workspace scope</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorAddCommentFailed" xml:space="preserve">
+    <value>add comment failed</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorReactionNotSupported" xml:space="preserve">
+    <value>Reaction is not supported.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorAddReactionFailed" xml:space="preserve">
+    <value>add reaction failed</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorCommentCannotEmpty" xml:space="preserve">
+    <value>Comment cannot be empty.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorUpdateCommentFailed" xml:space="preserve">
+    <value>update comment failed</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorRemoveReactionFailed" xml:space="preserve">
+    <value>remove reaction failed</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorZipFileCouldNotRead" xml:space="preserve">
+    <value>The zip file could not be read.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorZipFileCanHoldAtMostEntries" xml:space="preserve">
+    <value>A zip file can hold at most {0} entries.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the max entries</comment>
+  </data>
+  <data name="ErrorImportCanHoldAtMostFiles" xml:space="preserve">
+    <value>An import can hold at most {0} files.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the max files</comment>
+  </data>
+  <data name="ErrorFilesAddUpMoreThanMB" xml:space="preserve">
+    <value>The files add up to more than 30 MB.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorParentPageDoesNotExist" xml:space="preserve">
+    <value>The parent page does not exist.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorProjectDoesNotExist" xml:space="preserve">
+    <value>The project does not exist.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorPagesInsideCreatedOtherPeopleOnlyThey" xml:space="preserve">
+    <value>Some pages inside were created by other people. Only they or an admin can archive, restore or delete them.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorViewNeedsAtLeastOneCondition" xml:space="preserve">
+    <value>A view needs at least one condition.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorViewNamedAlreadyExists" xml:space="preserve">
+    <value>A view named '{0}' already exists.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the name</comment>
+  </data>
+  <data name="ErrorViewDefinitionUnreadable" xml:space="preserve">
+    <value>This view's definition could not be read.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorNotScopeYouCanSubscribe" xml:space="preserve">
+    <value>That is not a scope you can subscribe to.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorChooseAtLeastOneEventNotifiedAbout" xml:space="preserve">
+    <value>Choose at least one event to be notified about.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorAutomationNamesCannotLongerThanCharacters" xml:space="preserve">
+    <value>Automation names cannot be longer than {0} characters.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the maximum name length</comment>
+  </data>
+  <data name="ErrorChooseAtLeastOneTaskRun" xml:space="preserve">
+    <value>Choose at least one task to run.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorManualRunCanCoverUpTasks" xml:space="preserve">
+    <value>A manual run can cover up to {0} tasks.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the maximum tasks per run</comment>
+  </data>
+  <data name="ErrorSelectedTasksNotAvailableWorkspace" xml:space="preserve">
+    <value>The selected tasks are not available in this workspace.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorIdentifierAlreadyTaken" xml:space="preserve">
+    <value>Identifier is already taken</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorIdentifierMustAtLeastCharactersContainLetters" xml:space="preserve">
+    <value>Identifier must be at least 4 characters and contain letters or numbers</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorOwnerCannotLeaveWorkspace" xml:space="preserve">
+    <value>the owner cannot leave the workspace</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorYouNotMemberWorkspace" xml:space="preserve">
+    <value>you are not a member of this workspace</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorTaskCannotRelatedItself" xml:space="preserve">
+    <value>A task cannot be related to itself.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorWorkspaceKeyDoesNotExist" xml:space="preserve">
+    <value>workspace with key {0} does not exist</value>
+    <comment>Error shown when a request cannot be completed. {0} is the workspace key</comment>
+  </data>
+  <data name="ErrorTagNameShouldUnique" xml:space="preserve">
+    <value>Tag Name should be unique</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorTagsCannotEmpty" xml:space="preserve">
+    <value>Tags cannot be empty.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorSendAtMostTagNames" xml:space="preserve">
+    <value>Send at most {0} tag names.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the maximum names</comment>
+  </data>
+  <data name="ErrorTagNamesNotFoundWorkspace" xml:space="preserve">
+    <value>Tags were not found in the workspace: {0}.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the names list</comment>
+  </data>
+  <data name="ErrorSourceControlProviderNotEnabled" xml:space="preserve">
+    <value>That source control provider isn't enabled.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorEnterUsername" xml:space="preserve">
+    <value>Enter a username.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorUsernameAlreadyMappedAnotherMember" xml:space="preserve">
+    <value>That username is already mapped to another member.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorRateLimitingNetptuneTryAgainAfter" xml:space="preserve">
+    <value>{0} is rate limiting Netptune. Try again after {1:t}.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the provider name, {1} is the time to retry after</comment>
+  </data>
+  <data name="ErrorCouldNotListRepositoriesTryAgainShortly" xml:space="preserve">
+    <value>{0} could not list repositories. Try again shortly.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the provider name</comment>
+  </data>
+  <data name="ErrorLinkBeforeSyncingHistory" xml:space="preserve">
+    <value>Link {0} before syncing its history.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the repository name</comment>
+  </data>
+  <data name="ErrorNoLongerVisibleConnection" xml:space="preserve">
+    <value>{0} is no longer visible to this connection.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the repository name</comment>
+  </data>
+  <data name="ErrorNotEnabledNetptuneInstance" xml:space="preserve">
+    <value>{0} is not enabled on this Netptune instance.</value>
+    <comment>Error shown when a request cannot be completed. {0} is theuest provider</comment>
+  </data>
+  <data name="ErrorCouldNotCompleteConnectionTryAgainShortly" xml:space="preserve">
+    <value>{0} could not complete the connection. Try again shortly.</value>
+    <comment>Error shown when a request cannot be completed. {0} is the provider kind</comment>
+  </data>
+  <data name="ErrorWorkspaceRequired" xml:space="preserve">
+    <value>A workspace is required.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorTypeTitleURLRequired" xml:space="preserve">
+    <value>Type, title, and URL are required.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorFlagResolutionNotSupported" xml:space="preserve">
+    <value>The flag resolution is not supported.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorRelationTypeNameMustContainAtLeast" xml:space="preserve">
+    <value>Relation type name must contain at least one valid character.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorRelationTypeNameShouldUnique" xml:space="preserve">
+    <value>Relation type name should be unique.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorSystemRelationTypesCannotDeleted" xml:space="preserve">
+    <value>System relation types cannot be deleted.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorBuiltRelationTypesCannotDeleted" xml:space="preserve">
+    <value>Built-in relation types cannot be deleted.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorRelationTypeUseCannotDeleted" xml:space="preserve">
+    <value>Relation type is in use and cannot be deleted.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorBoardRequiredPinBoard" xml:space="preserve">
+    <value>A board is required to pin to a board.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorUnknownPageKind" xml:space="preserve">
+    <value>Unknown page kind.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorFoldersNoBody" xml:space="preserve">
+    <value>Folders have no body.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorTemplatesMakeDocumentsNotFolders" xml:space="preserve">
+    <value>Templates make documents, not folders.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorChooseSprintWriteReleaseNotes" xml:space="preserve">
+    <value>Choose the sprint to write release notes for.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorYouNeedAccessSprintsTasksWriteRelease" xml:space="preserve">
+    <value>You need access to sprints and tasks to write release notes.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorSprintDoesNotExist" xml:space="preserve">
+    <value>The sprint does not exist.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorNoMarkdownFilesImport" xml:space="preserve">
+    <value>There were no markdown files to import.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorUnknownAction" xml:space="preserve">
+    <value>Unknown action.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorNoTextWork" xml:space="preserve">
+    <value>There is no text to work on.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorPassageTooLongForAssistant" xml:space="preserve">
+    <value>Select a shorter passage; the assistant works on up to 20,000 characters.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorChooseLanguageTranslate" xml:space="preserve">
+    <value>Choose a language to translate into.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorAssistantReturnedNothingTryAgain" xml:space="preserve">
+    <value>The assistant returned nothing. Try again.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorSortOrderMustNumber" xml:space="preserve">
+    <value>The sort order must be a number.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorPageCannotMovedInsideItself" xml:space="preserve">
+    <value>A page cannot be moved inside itself.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorPagesCannotMoveBetweenSpaces" xml:space="preserve">
+    <value>Pages can't be moved between spaces yet.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorPageChangedSomeoneElse" xml:space="preserve">
+    <value>This page was changed by someone else.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorUnknownPageStatus" xml:space="preserve">
+    <value>Unknown page status.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="TransferFieldTaskSystemId" xml:space="preserve">
+    <value>System id</value>
+    <comment>Column header in a task export</comment>
+  </data>
+  <data name="TransferFieldTaskName" xml:space="preserve">
+    <value>Name</value>
+    <comment>Column header in a task export</comment>
+  </data>
+  <data name="TransferFieldTaskDescription" xml:space="preserve">
+    <value>Description</value>
+    <comment>Column header in a task export</comment>
+  </data>
+  <data name="TransferFieldTaskStatus" xml:space="preserve">
+    <value>Status</value>
+    <comment>Column header in a task export</comment>
+  </data>
+  <data name="TransferFieldTaskPriority" xml:space="preserve">
+    <value>Priority</value>
+    <comment>Column header in a task export</comment>
+  </data>
+  <data name="TransferFieldTaskEstimateType" xml:space="preserve">
+    <value>Estimate type</value>
+    <comment>Column header in a task export</comment>
+  </data>
+  <data name="TransferFieldTaskEstimateValue" xml:space="preserve">
+    <value>Estimate</value>
+    <comment>Column header in a task export</comment>
+  </data>
+  <data name="TransferFieldTaskStartDate" xml:space="preserve">
+    <value>Start date</value>
+    <comment>Column header in a task export</comment>
+  </data>
+  <data name="TransferFieldTaskDueDate" xml:space="preserve">
+    <value>Due date</value>
+    <comment>Column header in a task export</comment>
+  </data>
+  <data name="TransferFieldTaskProject" xml:space="preserve">
+    <value>Project</value>
+    <comment>Column header in a task export</comment>
+  </data>
+  <data name="TransferFieldTaskSprint" xml:space="preserve">
+    <value>Sprint</value>
+    <comment>Column header in a task export</comment>
+  </data>
+  <data name="TransferFieldTaskBoardGroup" xml:space="preserve">
+    <value>Board group</value>
+    <comment>Column header in a task export</comment>
+  </data>
+  <data name="TransferFieldTaskAssignees" xml:space="preserve">
+    <value>Assignees</value>
+    <comment>Column header in a task export</comment>
+  </data>
+  <data name="TransferFieldTaskTags" xml:space="preserve">
+    <value>Tags</value>
+    <comment>Column header in a task export</comment>
+  </data>
+  <data name="TransferFieldTaskCreatedBy" xml:space="preserve">
+    <value>Created by</value>
+    <comment>Column header in a task export</comment>
+  </data>
+  <data name="TransferFieldTaskCreatedAt" xml:space="preserve">
+    <value>Created at</value>
+    <comment>Column header in a task export</comment>
+  </data>
+  <data name="TransferFieldTaskUpdatedAt" xml:space="preserve">
+    <value>Updated at</value>
+    <comment>Column header in a task export</comment>
+  </data>
+  <data name="AuditExportHeaderId" xml:space="preserve">
+    <value>Id</value>
+    <comment>Column header in the audit log export</comment>
+  </data>
+  <data name="AuditExportHeaderOccurredAt" xml:space="preserve">
+    <value>OccurredAt</value>
+    <comment>Column header in the audit log export: when the event happened</comment>
+  </data>
+  <data name="AuditExportHeaderUserId" xml:space="preserve">
+    <value>UserId</value>
+    <comment>Column header in the audit log export</comment>
+  </data>
+  <data name="AuditExportHeaderUserDisplayName" xml:space="preserve">
+    <value>UserDisplayName</value>
+    <comment>Column header in the audit log export: the person's name</comment>
+  </data>
+  <data name="AuditExportHeaderType" xml:space="preserve">
+    <value>Type</value>
+    <comment>Column header in the audit log export: what happened</comment>
+  </data>
+  <data name="AuditExportHeaderEntityType" xml:space="preserve">
+    <value>EntityType</value>
+    <comment>Column header in the audit log export: what kind of item changed</comment>
+  </data>
+  <data name="AuditExportHeaderEntityId" xml:space="preserve">
+    <value>EntityId</value>
+    <comment>Column header in the audit log export</comment>
+  </data>
+  <data name="AuditExportHeaderWorkspace" xml:space="preserve">
+    <value>WorkspaceSlug</value>
+    <comment>Column header in the audit log export</comment>
+  </data>
+  <data name="AuditExportHeaderProject" xml:space="preserve">
+    <value>ProjectSlug</value>
+    <comment>Column header in the audit log export</comment>
+  </data>
+  <data name="AuditExportHeaderBoard" xml:space="preserve">
+    <value>BoardSlug</value>
+    <comment>Column header in the audit log export</comment>
+  </data>
+  <data name="AuditExportHeaderMeta" xml:space="preserve">
+    <value>Meta</value>
+    <comment>Column header in the audit log export: extra details as JSON</comment>
+  </data>
+  <data name="ErrorTasksNotFoundWorkspace" xml:space="preserve">
+    <value>Tasks were not found in the workspace: {0}</value>
+    <comment>Error shown when a request cannot be completed. {0} is the list of missing task ids</comment>
+  </data>
+  <data name="ErrorTasksNotFoundWorkspaceAndMore" xml:space="preserve">
+    <value>Tasks were not found in the workspace: {0} and {1} more</value>
+    <comment>Error shown when a request cannot be completed. {0} is the list of missing task ids, {1} how many more are missing</comment>
+  </data>
+  <data name="ErrorRelationTypeUsedByOneRelation" xml:space="preserve">
+    <value>Relation type is used by 1 relation and cannot be deleted.</value>
+    <comment>Error shown when a relation type cannot be deleted</comment>
+  </data>
+  <data name="ErrorRelationTypeUsedByRelations" xml:space="preserve">
+    <value>Relation type is used by {0} relations and cannot be deleted.</value>
+    <comment>Error shown when a relation type cannot be deleted. {0} is the number of relations</comment>
+  </data>
+  <data name="StatusUsedByOneTask" xml:space="preserve">
+    <value>1 task</value>
+    <comment>Part of “Status is used by … and cannot be deleted”: one task</comment>
+  </data>
+  <data name="StatusUsedByTasks" xml:space="preserve">
+    <value>{0} tasks</value>
+    <comment>Part of “Status is used by … and cannot be deleted”. {0} is the number of tasks</comment>
+  </data>
+  <data name="StatusUsedByOneProject" xml:space="preserve">
+    <value>1 project</value>
+    <comment>Part of “Status is used by … and cannot be deleted”: one project</comment>
+  </data>
+  <data name="StatusUsedByProjects" xml:space="preserve">
+    <value>{0} projects</value>
+    <comment>Part of “Status is used by … and cannot be deleted”. {0} is the number of projects</comment>
+  </data>
+  <data name="AiErrorProviderNoResponse" xml:space="preserve">
+    <value>The provider returned no response.</value>
+    <comment>Shown in the assistant panel when a reply cannot be produced</comment>
+  </data>
+  <data name="AiErrorMessageRequired" xml:space="preserve">
+    <value>A message is required.</value>
+    <comment>Shown in the assistant panel when a reply cannot be produced</comment>
+  </data>
+  <data name="AiErrorNoApiKey" xml:space="preserve">
+    <value>No API key is configured for the assistant.</value>
+    <comment>Shown in the assistant panel when a reply cannot be produced</comment>
+  </data>
+  <data name="AiErrorConversationNotFound" xml:space="preserve">
+    <value>Conversation not found.</value>
+    <comment>Shown in the assistant panel when a reply cannot be produced</comment>
+  </data>
+  <data name="AiErrorNoApiKeyForProvider" xml:space="preserve">
+    <value>No API key is configured for {0}.</value>
+    <comment>Shown in the assistant panel when a reply cannot be produced. {0} is the provider name</comment>
+  </data>
+  <data name="AiErrorNothingToRetry" xml:space="preserve">
+    <value>There is no message to try again.</value>
+    <comment>Shown in the assistant panel when a reply cannot be produced</comment>
+  </data>
+  <data name="AiErrorWriteInstructionRequired" xml:space="preserve">
+    <value>Tell the assistant what to write.</value>
+    <comment>Shown in the assistant panel when a reply cannot be produced</comment>
+  </data>
+  <data name="AiErrorWriteInstructionTooLong" xml:space="preserve">
+    <value>Shorten the request; the assistant takes up to 2,000 characters.</value>
+    <comment>Shown in the assistant panel when a reply cannot be produced</comment>
+  </data>
+  <data name="AiErrorNoPermissionToWriteHere" xml:space="preserve">
+    <value>You do not have permission to have the assistant write here.</value>
+    <comment>Shown in the assistant panel when a reply cannot be produced</comment>
+  </data>
+  <data name="AiErrorTaskNotFound" xml:space="preserve">
+    <value>The task could not be found.</value>
+    <comment>Shown in the assistant panel when a reply cannot be produced</comment>
+  </data>
+  <data name="AiErrorPageNotFound" xml:space="preserve">
+    <value>The page could not be found.</value>
+    <comment>Shown in the assistant panel when a reply cannot be produced</comment>
+  </data>
+  <data name="AiErrorTurnBudgetReached" xml:space="preserve">
+    <value>The assistant stopped because the results it gathered for this reply reached their size limit. Send another message to let it continue.</value>
+    <comment>Shown in the assistant panel when a reply cannot be produced</comment>
+  </data>
+  <data name="AiErrorToolRoundsReached" xml:space="preserve">
+    <value>The assistant stopped after {0} rounds of tool calls. Send another message to let it continue.</value>
+    <comment>Shown in the assistant panel when a reply cannot be produced. {0} is the number of rounds</comment>
+  </data>
+  <data name="AiErrorTimedOutSeconds" xml:space="preserve">
+    <value>The assistant ran out of time after {0} seconds. Send another message to let it continue.</value>
+    <comment>Shown in the assistant panel when a reply cannot be produced. {0} is the number of seconds</comment>
+  </data>
+  <data name="AiErrorTimedOutMinutes" xml:space="preserve">
+    <value>The assistant ran out of time after {0} minutes. Send another message to let it continue.</value>
+    <comment>Shown in the assistant panel when a reply cannot be produced. {0} is the number of minutes</comment>
+  </data>
+  <data name="AiErrorProviderUnreachable" xml:space="preserve">
+    <value>The assistant could not reach the provider.</value>
+    <comment>Shown in the assistant panel when a reply cannot be produced</comment>
+  </data>
+  <data name="AiProviderInvalidKey" xml:space="preserve">
+    <value>The provider rejected the API key. Check the key in your assistant settings.</value>
+    <comment>Shown in the assistant panel when a reply cannot be produced</comment>
+  </data>
+  <data name="AiProviderForbidden" xml:space="preserve">
+    <value>The API key is not allowed to use this model. Pick another model or use a key with access to it.</value>
+    <comment>Shown in the assistant panel when a reply cannot be produced</comment>
+  </data>
+  <data name="AiProviderOutOfCredit" xml:space="preserve">
+    <value>The provider account is out of credit. Add credit to the account that owns this API key, then try again.</value>
+    <comment>Shown in the assistant panel when a reply cannot be produced</comment>
+  </data>
+  <data name="AiProviderRateLimited" xml:space="preserve">
+    <value>The provider is rate limiting this key. Try again shortly.</value>
+    <comment>Shown in the assistant panel when a reply cannot be produced</comment>
+  </data>
+  <data name="AiProviderModelMissing" xml:space="preserve">
+    <value>The provider does not know the selected model. Pick a different model in the assistant settings.</value>
+    <comment>Shown in the assistant panel when a reply cannot be produced</comment>
+  </data>
+  <data name="AiProviderTooLarge" xml:space="preserve">
+    <value>The conversation is too large for this model. Start a new chat and try again.</value>
+    <comment>Shown in the assistant panel when a reply cannot be produced</comment>
+  </data>
+  <data name="AiProviderRejected" xml:space="preserve">
+    <value>The provider rejected the request.</value>
+    <comment>Shown in the assistant panel when a reply cannot be produced</comment>
+  </data>
+  <data name="AiProviderUnavailable" xml:space="preserve">
+    <value>The provider is unavailable right now. Try again shortly.</value>
+    <comment>Shown in the assistant panel when a reply cannot be produced</comment>
+  </data>
+  <data name="AiSpendCapReached" xml:space="preserve">
+    <value>This workspace has reached its monthly assistant spend cap.</value>
+    <comment>Shown when the assistant cannot run because the workspace spent its monthly budget</comment>
+  </data>
+  <data name="AiSpendCapReachedDuringTurn" xml:space="preserve">
+    <value>The assistant stopped because this reply reached the workspace's monthly spend cap.</value>
+    <comment>Shown when the assistant stops mid-reply because the workspace spent its monthly budget</comment>
+  </data>
 </root>

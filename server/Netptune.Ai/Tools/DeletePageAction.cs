@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 
 namespace Netptune.Ai.Tools;
@@ -47,7 +48,7 @@ public sealed class DeletePageAction : IAiToolAction
             ToolName = ChangeName,
             EntityType = AiPageLookup.EntityType,
             EntityId = page.Id,
-            Summary = $"Permanently delete “{page.Title}” and everything archived inside it — this cannot be undone",
+            Summary = Localized.Format(AppText.AiSummaryDeletePage, page.Title),
             Fields = [AiChangeFields.Text("name", page.Title, null)],
             Payload = JsonSerializer.SerializeToDocument(new { pageId = page.Id }),
             ValidationStatus = AiChangeValidationStatus.Valid,

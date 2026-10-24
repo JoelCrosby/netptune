@@ -3,6 +3,7 @@ using System.Text.Json;
 using Mediator;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -110,7 +111,7 @@ public static class AiTaskUndo
 
         if (snapshot is null)
         {
-            return AiChangeUndoResult.Failure(change, "There is nothing recorded to restore.");
+            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
         }
 
         var request = new UpdateProjectTaskRequest
@@ -132,14 +133,14 @@ public static class AiTaskUndo
 
         if (!response.IsSuccess)
         {
-            return AiChangeUndoResult.Failure(change, response.Message ?? "The task could not be restored.");
+            return AiChangeUndoResult.Failure(change, response.Message ?? AppText.AiChangeErrorTaskCouldNotRestored);
         }
 
         var current = await mediator.Send(new GetTaskQuery(snapshot.TaskId), cancellationToken);
 
         if (current is null)
         {
-            return AiChangeUndoResult.Failure(change, "The task could not be read back after restoring it.");
+            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorTaskCouldNotReadBackAfterRestoring);
         }
 
         var sprintError = await RestoreSprint(mediator, snapshot, current.SprintId, cancellationToken);
@@ -179,14 +180,14 @@ public static class AiTaskUndo
                 new AddTasksToSprintCommand(snapshot.SprintId.Value, request),
                 cancellationToken);
 
-            return response.IsSuccess ? null : response.Message ?? "The task could not be put back in its sprint.";
+            return response.IsSuccess ? null : response.Message ?? AppText.AiChangeErrorTaskCouldNotPutBackSprint;
         }
 
         var removal = await mediator.Send(
             new RemoveTaskFromSprintCommand(currentSprintId!.Value, snapshot.TaskId),
             cancellationToken);
 
-        return removal.IsSuccess ? null : removal.Message ?? "The task could not be taken back out of the sprint.";
+        return removal.IsSuccess ? null : removal.Message ?? AppText.AiChangeErrorTaskCouldNotTakenBackOutSprint;
     }
 
     private static async Task<string?> RestorePlacements(
@@ -228,7 +229,7 @@ public static class AiTaskUndo
 
             if (!response.IsSuccess)
             {
-                return response.Message ?? "The task could not be taken back off a board.";
+                return response.Message ?? AppText.AiChangeErrorTaskCouldNotTakenBackOffBoard;
             }
         }
 
@@ -256,7 +257,7 @@ public static class AiTaskUndo
             new MoveTasksToBoardGroupCommand([taskId], placement.BoardGroupId),
             cancellationToken);
 
-        return response.IsSuccess ? null : response.Message ?? "The task could not be put back in its board group.";
+        return response.IsSuccess ? null : response.Message ?? AppText.AiChangeErrorTaskCouldNotPutBackBoardGroup;
     }
 
     private static async Task<string?> RestoreSingleBoardGroup(
@@ -276,7 +277,7 @@ public static class AiTaskUndo
             new MoveTasksToBoardGroupCommand([snapshot.TaskId], snapshot.BoardGroupId.Value),
             cancellationToken);
 
-        return response.IsSuccess ? null : response.Message ?? "The task could not be put back in its board group.";
+        return response.IsSuccess ? null : response.Message ?? AppText.AiChangeErrorTaskCouldNotPutBackBoardGroup;
     }
 
     private static AiTaskSnapshot? Read(JsonDocument? payload)

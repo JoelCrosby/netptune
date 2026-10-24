@@ -2,6 +2,7 @@ using Mediator;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Repositories;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -48,14 +49,15 @@ public sealed class UpsertNotificationSubscriptionCommandHandler
 
         if (!isKnownScope)
         {
-            return ClientResponse<NotificationSubscriptionViewModel>.Failed("That is not a scope you can subscribe to.");
+            return ClientResponse<NotificationSubscriptionViewModel>.Failed(AppText.ErrorNotScopeYouCanSubscribe);
         }
 
         var hasEvents = input.Events != NotificationSubscriptionEvents.None;
 
         if (!hasEvents)
         {
-            return ClientResponse<NotificationSubscriptionViewModel>.Failed("Choose at least one event to be notified about.");
+            return ClientResponse<NotificationSubscriptionViewModel>.Failed(
+                AppText.ErrorChooseAtLeastOneEventNotifiedAbout);
         }
 
         var workspaceId = await Identity.GetWorkspaceId();

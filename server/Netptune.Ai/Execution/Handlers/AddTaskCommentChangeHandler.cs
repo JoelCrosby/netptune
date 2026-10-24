@@ -3,6 +3,7 @@ using System.Text.Json;
 using Mediator;
 
 using Netptune.Core.Authorization;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -33,14 +34,14 @@ public sealed class AddTaskCommentChangeHandler : IAiChangeHandler, IAiChangeUnd
 
         if (!taskId.HasValue || !hasComment)
         {
-            return AiChangePayload.Failure(change, "The task or comment this change refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorTaskCommentChangeRefersCouldNotResolved);
         }
 
         var task = await Mediator.Send(new GetTaskQuery(taskId.Value), cancellationToken);
 
         if (task is null)
         {
-            return AiChangePayload.Failure(change, $"Task {taskId} was not found.");
+            return AiChangePayload.Failure(change, Localized.Format(AppText.AiChangeErrorTaskNotFound, taskId));
         }
 
         var request = new AddCommentRequest
@@ -53,7 +54,7 @@ public sealed class AddTaskCommentChangeHandler : IAiChangeHandler, IAiChangeUnd
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The comment could not be posted.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorCommentCouldNotPosted);
         }
 
         return AiChangePayload.Applied(change, response.Payload?.Id);
@@ -78,14 +79,14 @@ public sealed class AddTaskCommentChangeHandler : IAiChangeHandler, IAiChangeUnd
 
         if (!commentId.HasValue)
         {
-            return AiChangeUndoResult.Failure(change, "The posted comment could not be resolved.");
+            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorPostedCommentCouldNotResolved);
         }
 
         var response = await Mediator.Send(new DeleteCommentCommand(commentId.Value), cancellationToken);
 
         if (!response.IsSuccess)
         {
-            return AiChangeUndoResult.Failure(change, response.Message ?? "The comment could not be removed.");
+            return AiChangeUndoResult.Failure(change, response.Message ?? AppText.AiChangeErrorCommentCouldNotRemoved);
         }
 
         return AiChangeUndoResult.Undone(change, commentId);

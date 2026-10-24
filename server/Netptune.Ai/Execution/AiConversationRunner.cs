@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 
 using Netptune.Ai.Configuration;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.Ai;
@@ -76,7 +77,7 @@ public sealed class AiConversationRunner : IAiConversationRunner
 
             if (turn is null)
             {
-                yield return AiStreamEvent.Failed("The provider returned no response.");
+                yield return AiStreamEvent.Failed(AppText.AiErrorProviderNoResponse);
 
                 yield break;
             }
@@ -184,9 +185,7 @@ public sealed class AiConversationRunner : IAiConversationRunner
 
             if (isOverTurnBudget)
             {
-                yield return AiStreamEvent.Failed(
-                    "The assistant stopped because the results it gathered for this reply reached their size limit. "
-                    + "Send another message to let it continue.");
+                yield return AiStreamEvent.Failed(AppText.AiErrorTurnBudgetReached);
 
                 yield break;
             }
@@ -195,15 +194,15 @@ public sealed class AiConversationRunner : IAiConversationRunner
 
             if (isOverSpendCap)
             {
-                yield return AiStreamEvent.Failed(AiSpendMessages.CapReachedDuringTurn);
+                yield return AiStreamEvent.Failed(AppText.AiSpendCapReachedDuringTurn);
 
                 yield break;
             }
         }
 
-        yield return AiStreamEvent.Failed(
-            $"The assistant stopped after {Options.MaxToolIterations} rounds of tool calls. "
-            + "Send another message to let it continue.");
+        var roundsReached = Localized.Format(AppText.AiErrorToolRoundsReached, Options.MaxToolIterations);
+
+        yield return AiStreamEvent.Failed(roundsReached);
     }
 
     private async Task<AiToolExecution> ExecuteTool(

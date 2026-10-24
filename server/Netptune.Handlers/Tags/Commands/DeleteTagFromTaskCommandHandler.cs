@@ -2,6 +2,7 @@ using Mediator;
 
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Tags;
+using Netptune.Core.Localization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -36,7 +37,7 @@ public sealed class DeleteTagFromTaskCommandHandler : IRequestHandler<DeleteTagF
 
         if (!workspaceId.HasValue)
         {
-            return ClientResponse.Failed($"workspace with key {workspaceKey} does not exist");
+            return ClientResponse.Failed(Localized.Format(AppText.ErrorWorkspaceKeyDoesNotExist, workspaceKey));
         }
 
         var tag = await UnitOfWork.Tags.GetByValue(request.Request.Tag, workspaceId.Value, cancellationToken: cancellationToken);

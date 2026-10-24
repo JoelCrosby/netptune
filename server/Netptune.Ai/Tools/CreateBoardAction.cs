@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Boards.Queries;
 
@@ -68,7 +69,7 @@ public sealed class CreateBoardAction : IAiToolAction
             ToolName = ChangeName,
             EntityType = "board",
             RefKey = refKey,
-            Summary = $"Create board “{name}” in {project.Name}",
+            Summary = Localized.Format(AppText.AiSummaryCreateBoard, name, project.Name),
             Fields = fields,
             Payload = JsonDocument.Parse(arguments.GetRawText()),
             ValidationStatus = AiChangeValidationStatus.Valid,

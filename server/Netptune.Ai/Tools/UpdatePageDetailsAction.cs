@@ -5,6 +5,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.Pages;
 
@@ -137,14 +138,14 @@ public sealed class UpdatePageDetailsAction : IAiToolAction
             return AiToolExecution.Failed($"“{target.Name}” already has that status and those tags.");
         }
 
-        var changedNames = string.Join(" and ", fields.Select(field => field.Name));
+        var changedNames = AiFieldNames.DescribePair(fields);
 
         ChangeSet.Add(new AiChangeDraft
         {
             ToolName = ChangeName,
             EntityType = AiPageLookup.EntityType,
             EntityId = page?.Id,
-            Summary = $"Set {changedNames} on “{target.Name}”",
+            Summary = Localized.Format(AppText.AiSummarySetPageDetails, changedNames, target.Name),
             Fields = fields,
             Payload = JsonDocument.Parse(payload.ToJsonString()),
             ValidationStatus = AiChangeValidationStatus.Valid,

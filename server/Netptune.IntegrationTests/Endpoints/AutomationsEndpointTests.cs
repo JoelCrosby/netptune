@@ -521,6 +521,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
 
         fetched.Warnings.Should().ContainSingle(warning => warning.Code == AutomationWarningCode.MissingStatus);
         fetched.Warnings[0].ActionId.Should().Be(fetched.Actions[0].Id);
+        fetched.Warnings[0].Location.Should().Be(AutomationWarningLocation.Action);
     }
 
     [Fact]
@@ -549,6 +550,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
 
         fetched.Warnings.Should().ContainSingle(warning => warning.Code == AutomationWarningCode.MissingStatus);
         fetched.Warnings[0].ActionId.Should().BeNull();
+        fetched.Warnings[0].Location.Should().Be(AutomationWarningLocation.Condition);
     }
 
     [Fact]

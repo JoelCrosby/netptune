@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Preferences;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -41,12 +42,12 @@ public sealed class DeleteUserPreferenceValueCommandHandler
         var definition = Registry.Find(request.Key);
         if (definition is null || !definition.AllowedScopes.Contains(request.Scope))
         {
-            return ClientResponse<ResolvedPreferenceValue>.Failed("Invalid preference key or scope.");
+            return ClientResponse<ResolvedPreferenceValue>.Failed(AppText.ErrorInvalidPreferenceKeyScope);
         }
 
         if (request.Scope == PreferenceScopes.Workspace && workspaceId is null)
         {
-            return ClientResponse<ResolvedPreferenceValue>.Failed("Invalid preference key or scope.");
+            return ClientResponse<ResolvedPreferenceValue>.Failed(AppText.ErrorInvalidPreferenceKeyScope);
         }
 
         var scopedWorkspaceId = request.Scope == PreferenceScopes.Workspace ? workspaceId : null;

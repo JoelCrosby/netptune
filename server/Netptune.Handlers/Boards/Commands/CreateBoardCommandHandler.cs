@@ -3,6 +3,7 @@ using Mediator;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Meta;
 using Netptune.Core.Onboarding.Templates;
 using Netptune.Core.Requests;
@@ -49,7 +50,9 @@ public sealed class CreateBoardCommandHandler : IRequestHandler<CreateBoardComma
 
         if (template is null)
         {
-            return ClientResponse<BoardViewModel>.Failed($"Unknown setup template '{req.TemplateKey}'");
+            var error = Localized.Format(AppText.ErrorUnknownSetupTemplate, req.TemplateKey);
+
+            return ClientResponse<BoardViewModel>.Failed(error);
         }
 
         var board = new Board

@@ -2,9 +2,11 @@ using System.Globalization;
 using System.Text;
 
 using CsvHelper;
+using CsvHelper.Configuration;
 
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Audit;
 using Netptune.Core.Models.Files;
 using Netptune.Core.Services;
@@ -56,11 +58,27 @@ public sealed class ExportAuditLogQueryHandler : IRequestHandler<ExportAuditLogQ
         };
     }
 
+    private static IEnumerable<string> Headers =>
+    [
+        AppText.AuditExportHeaderId,
+        AppText.AuditExportHeaderOccurredAt,
+        AppText.AuditExportHeaderUserId,
+        AppText.AuditExportHeaderUserDisplayName,
+        AppText.AuditExportHeaderType,
+        AppText.AuditExportHeaderEntityType,
+        AppText.AuditExportHeaderEntityId,
+        AppText.AuditExportHeaderWorkspace,
+        AppText.AuditExportHeaderProject,
+        AppText.AuditExportHeaderBoard,
+        AppText.AuditExportHeaderMeta,
+    ];
+
     private static async Task<MemoryStream> ToAuditCsvStream(IEnumerable<AuditLogViewModel> rows)
     {
         var memoryStream = new MemoryStream();
         var writer = new StreamWriter(memoryStream, Encoding.UTF8);
-        var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+        var configuration = new CsvConfiguration(CultureInfo.InvariantCulture) { HasHeaderRecord = false };
+        var csv = new CsvWriter(writer, configuration);
 
         var flat = rows.Select(r => new
         {
@@ -77,6 +95,12 @@ public sealed class ExportAuditLogQueryHandler : IRequestHandler<ExportAuditLogQ
             Meta = r.Meta?.RootElement.ToString() ?? string.Empty,
         });
 
+        foreach (var header in Headers)
+        {
+            csv.WriteField(header);
+        }
+
+        await csv.NextRecordAsync();
         await csv.WriteRecordsAsync(flat);
         await writer.FlushAsync();
 

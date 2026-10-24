@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests.Pages;
@@ -40,7 +41,7 @@ public sealed class UpdatePageCommandHandler : IRequestHandler<UpdatePageCommand
 
         if (hasUnknownStatus)
         {
-            return ClientResponse<PageViewModel>.Failed("Unknown page status.");
+            return ClientResponse<PageViewModel>.Failed(AppText.ErrorUnknownPageStatus);
         }
 
         var workspaceKey = Identity.GetWorkspaceKey();

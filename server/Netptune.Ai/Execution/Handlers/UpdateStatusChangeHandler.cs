@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -29,7 +30,7 @@ public sealed class UpdateStatusChangeHandler : IAiChangeHandler
 
         if (!statusId.HasValue)
         {
-            return AiChangePayload.Failure(change, "The status this change refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorStatusChangeRefersCouldNotResolved);
         }
 
         // The update command replaces every field, so fields the change leaves alone are read fresh at apply time.
@@ -38,7 +39,7 @@ public sealed class UpdateStatusChangeHandler : IAiChangeHandler
 
         if (status is null)
         {
-            return AiChangePayload.Failure(change, "The status no longer exists in this workspace.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorStatusNoLongerExistsWorkspace);
         }
 
         var rawCategory = AiChangePayload.ReadString(payload, "category");
@@ -68,7 +69,7 @@ public sealed class UpdateStatusChangeHandler : IAiChangeHandler
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The status could not be updated.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorStatusCouldNotUpdated);
         }
 
         return AiChangePayload.Applied(change, status.Id);

@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Ai.Tools;
 using Netptune.Core.Authorization;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -14,8 +15,7 @@ namespace Netptune.Ai.Execution.Handlers;
 
 public sealed class UpdateCommentChangeHandler : IAiChangeHandler, IAiChangeUndoHandler
 {
-    public const string ChangedSinceMessage =
-        "The comment has been edited since this change was applied, so it was left as it is now.";
+    public static string ChangedSinceMessage => AppText.AiChangeErrorCommentEditedSinceChangeAppliedLeftNow;
 
     private readonly IMediator Mediator;
 
@@ -41,14 +41,14 @@ public sealed class UpdateCommentChangeHandler : IAiChangeHandler, IAiChangeUndo
 
         if (!hasBody)
         {
-            return AiChangePayload.Failure(change, "The new comment text is missing from this change.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorNewCommentTextMissingChange);
         }
 
         var target = await FindTarget(change.Payload.RootElement, cancellationToken);
 
         if (target is null)
         {
-            return AiChangePayload.Failure(change, "The comment this change refers to no longer exists.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorCommentChangeRefersNoLongerExists);
         }
 
         var error = await Save(target, body!, cancellationToken);
@@ -80,7 +80,7 @@ public sealed class UpdateCommentChangeHandler : IAiChangeHandler, IAiChangeUndo
 
         if (!snapshot.HasValue)
         {
-            return AiChangeUndoResult.Failure(change, "There is nothing recorded to restore.");
+            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
         }
 
         var previousBody = AiChangePayload.ReadString(snapshot.Value, "comment");
@@ -88,14 +88,14 @@ public sealed class UpdateCommentChangeHandler : IAiChangeHandler, IAiChangeUndo
 
         if (!hasPreviousBody)
         {
-            return AiChangeUndoResult.Failure(change, "There is nothing recorded to restore.");
+            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
         }
 
         var target = await FindTarget(change.Payload.RootElement, cancellationToken);
 
         if (target is null)
         {
-            return AiChangeUndoResult.Failure(change, "The comment no longer exists.");
+            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorCommentNoLongerExists);
         }
 
         var appliedBody = AiChangePayload.ReadString(change.Payload.RootElement, "comment");
@@ -145,6 +145,6 @@ public sealed class UpdateCommentChangeHandler : IAiChangeHandler, IAiChangeUndo
             return null;
         }
 
-        return response.Message ?? "The comment could not be saved.";
+        return response.Message ?? AppText.AiChangeErrorCommentCouldNotSaved;
     }
 }

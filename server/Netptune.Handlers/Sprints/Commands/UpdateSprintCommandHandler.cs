@@ -3,6 +3,7 @@ using Mediator;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Sprints;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
@@ -49,7 +50,7 @@ public sealed class UpdateSprintCommandHandler : IRequestHandler<UpdateSprintCom
         if (sprint is null) return ClientResponse<SprintViewModel>.NotFound;
         if (sprint.Status == SprintStatus.Completed && req.Status != SprintStatus.Cancelled)
         {
-            return ClientResponse<SprintViewModel>.Failed("Completed sprints cannot be edited");
+            return ClientResponse<SprintViewModel>.Failed(AppText.ErrorCompletedSprintsCannotEdited);
         }
 
         // Completion records the sprint's commitment for reporting and carries unfinished tasks off,
@@ -58,7 +59,7 @@ public sealed class UpdateSprintCommandHandler : IRequestHandler<UpdateSprintCom
 
         if (isCompleting && sprint.Status != SprintStatus.Active)
         {
-            return ClientResponse<SprintViewModel>.Failed("Only active sprints can be completed");
+            return ClientResponse<SprintViewModel>.Failed(AppText.ErrorOnlyActiveSprintsCanCompleted);
         }
 
         if (!string.IsNullOrWhiteSpace(req.Name))
@@ -72,7 +73,7 @@ public sealed class UpdateSprintCommandHandler : IRequestHandler<UpdateSprintCom
 
         if (sprint.EndDate < sprint.StartDate)
         {
-            return ClientResponse<SprintViewModel>.Failed("Sprint end date must be after start date");
+            return ClientResponse<SprintViewModel>.Failed(AppText.ErrorSprintEndDateMustAfterStartDate);
         }
 
         var wasActive = sprint.Status == SprintStatus.Active;

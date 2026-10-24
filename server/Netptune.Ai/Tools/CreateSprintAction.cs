@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 
 namespace Netptune.Ai.Tools;
@@ -75,7 +76,7 @@ public sealed class CreateSprintAction : IAiToolAction
             ToolName = ChangeName,
             EntityType = "sprint",
             RefKey = refKey,
-            Summary = $"Create sprint “{name}” in {project.Name}",
+            Summary = Localized.Format(AppText.AiSummaryCreateSprint, name, project.Name),
             Fields = fields,
             Payload = JsonDocument.Parse(arguments.GetRawText()),
             ValidationStatus = AiChangeValidationStatus.Valid,

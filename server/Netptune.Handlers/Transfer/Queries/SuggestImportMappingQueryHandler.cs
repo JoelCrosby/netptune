@@ -3,6 +3,7 @@ using System.Text.Json;
 using Mediator;
 
 using Netptune.Core.Encoding;
+using Netptune.Core.Localization;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
@@ -48,7 +49,7 @@ public sealed class SuggestImportMappingQueryHandler : IRequestHandler<SuggestIm
 
         if (profile is null)
         {
-            return ClientResponse<ImportMappingSuggestion>.Failed("Inspect the file before asking for a mapping.");
+            return ClientResponse<ImportMappingSuggestion>.Failed(AppText.ErrorInspectFileBeforeAskingMapping);
         }
 
         var vocabulary = await ImportVocabularyReader.Read(UnitOfWork, workspaceId, workspaceKey, cancellationToken);

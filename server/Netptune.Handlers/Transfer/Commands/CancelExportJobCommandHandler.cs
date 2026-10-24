@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
@@ -46,7 +47,9 @@ public sealed class CancelExportJobCommandHandler : IRequestHandler<CancelExport
 
         if (!isCancellable)
         {
-            return ClientResponse<ExportJobViewModel>.Failed($"An export that is {job.Status} cannot be cancelled.");
+            var error = Localized.Format(AppText.ErrorExportCannotCancelled, job.Status);
+
+            return ClientResponse<ExportJobViewModel>.Failed(error);
         }
 
         job.Status = ExportJobStatus.Cancelled;

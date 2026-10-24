@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
@@ -33,15 +34,18 @@ public sealed class DeleteRelationTypeCommandHandler : IRequestHandler<DeleteRel
         var relationType = await UnitOfWork.RelationTypes.GetInWorkspace(request.Id, workspaceId.Value, cancellationToken: cancellationToken);
 
         if (relationType is null) return ClientResponse.NotFound;
-        if (relationType.IsSystem) return ClientResponse.Failed("System relation types cannot be deleted.");
+
+        if (relationType.IsSystem) return ClientResponse.Failed(AppText.ErrorSystemRelationTypesCannotDeleted);
 
         var relationCount = await UnitOfWork.RelationTypes.GetRelationCount(relationType.Id, cancellationToken);
 
         if (relationCount > 0)
         {
-            var relationLabel = relationCount == 1 ? "relation" : "relations";
+            var error = relationCount == 1
+                ? AppText.ErrorRelationTypeUsedByOneRelation
+                : Localized.Format(AppText.ErrorRelationTypeUsedByRelations, relationCount);
 
-            return ClientResponse.Failed($"Relation type is used by {relationCount} {relationLabel} and cannot be deleted.");
+            return ClientResponse.Failed(error);
         }
 
         relationType.Delete(Identity.GetCurrentUserId());

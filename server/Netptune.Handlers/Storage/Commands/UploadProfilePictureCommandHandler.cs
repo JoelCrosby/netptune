@@ -2,6 +2,7 @@ using Mediator;
 
 using Microsoft.Extensions.Logging;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -45,21 +46,25 @@ public sealed class UploadProfilePictureCommandHandler : IRequestHandler<UploadP
     {
         if (request.Length <= 0)
         {
-            return ClientResponse<UploadResponse>.Failed("The file is empty.");
+            return ClientResponse<UploadResponse>.Failed(AppText.ErrorFileEmpty);
         }
 
         if (request.Length > UploadLimits.ProfilePictureMaxBytes)
         {
             var limit = UploadLimits.Describe(UploadLimits.ProfilePictureMaxBytes);
 
-            return ClientResponse<UploadResponse>.Failed($"Request file size exceeds maximum of {limit}.");
+            var error = Localized.Format(AppText.ErrorRequestFileSizeExceedsMaximum, limit);
+
+            return ClientResponse<UploadResponse>.Failed(error);
         }
 
         if (!ImageUploadTypes.IsAllowed(request.ContentType))
         {
             var supported = ImageUploadTypes.Describe();
 
-            return ClientResponse<UploadResponse>.Failed($"A profile picture must be a {supported} image.");
+            var error = Localized.Format(AppText.ErrorProfilePictureMustImage, supported);
+
+            return ClientResponse<UploadResponse>.Failed(error);
         }
 
         var userId = Identity.GetCurrentUserId();
@@ -72,7 +77,9 @@ public sealed class UploadProfilePictureCommandHandler : IRequestHandler<UploadP
 
         var contentType = ImageUploadTypes.Normalize(request.ContentType);
         var extension = ImageUploadTypes.ExtensionFor(contentType);
-        var key = Path.Join(PathConstants.ProfilePicturePath, $"{userId}-{UniqueIdBuilder.Generate(userId)}{extension}");
+        var key = Path.Join(
+            PathConstants.ProfilePicturePath,
+            $"{userId}-{UniqueIdBuilder.Generate(userId)}{extension}");
         var uploadOptions = new StorageUploadOptions
         {
             Name = key,
@@ -85,7 +92,7 @@ public sealed class UploadProfilePictureCommandHandler : IRequestHandler<UploadP
 
         if (!result.IsSuccess || result.Payload is null)
         {
-            return ClientResponse<UploadResponse>.Failed("The profile picture could not be uploaded.");
+            return ClientResponse<UploadResponse>.Failed(AppText.ErrorProfilePictureCouldNotUploaded);
         }
 
         var previousUrl = user.PictureUrl;

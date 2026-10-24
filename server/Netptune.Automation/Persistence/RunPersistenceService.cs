@@ -7,6 +7,7 @@ using Netptune.Automation.Models;
 using Netptune.Automation.Persistence.Actions;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Automations;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.Services.ProjectTasks;
@@ -87,7 +88,7 @@ internal sealed class RunPersistenceService
                 var outcome = await ApplyAction(action, state, cancellationToken);
 
                 action.Result.Status = outcome.Status;
-                action.Result.Message = outcome.Message;
+                AutomationMessageWriter.Write(action.Result, outcome.Message);
                 action.Result.CompletedAt = DateTime.UtcNow;
 
                 await UnitOfWork.CompleteAsync(cancellationToken);
@@ -123,7 +124,7 @@ internal sealed class RunPersistenceService
 
             return new ActionOutcome(
                 AutomationActionResultStatus.Skipped,
-                "The task was deleted by an earlier action.");
+                AutomationMessage.TaskDeletedByEarlierAction);
         }
 
         var handler = HandlerRegistry.Find(action.Action.Type);
@@ -136,7 +137,7 @@ internal sealed class RunPersistenceService
 
             return new ActionOutcome(
                 AutomationActionResultStatus.Skipped,
-                "No execution handler is registered for the action type.");
+                AutomationMessage.NoExecutionHandler);
         }
 
         return await handler.Execute(action, state, cancellationToken);

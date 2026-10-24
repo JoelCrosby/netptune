@@ -3,6 +3,7 @@ using System.Text.Json;
 using Mediator;
 
 using Netptune.Core.Encoding;
+using Netptune.Core.Localization;
 using Netptune.Core.Repositories;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -58,7 +59,7 @@ public sealed class GetTaskViewTasksQueryHandler : IRequestHandler<GetTaskViewTa
 
         if (definition is null)
         {
-            return ClientResponse<TaskViewResultViewModel>.Failed("This view's definition could not be read.");
+            return ClientResponse<TaskViewResultViewModel>.Failed(AppText.ErrorViewDefinitionUnreadable);
         }
 
         var input = request.Request;

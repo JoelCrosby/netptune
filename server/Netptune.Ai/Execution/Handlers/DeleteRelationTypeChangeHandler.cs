@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Ai.Tools;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.RelationTypes.Commands;
@@ -27,14 +28,16 @@ public sealed class DeleteRelationTypeChangeHandler : IAiChangeHandler
 
         if (!relationTypeId.HasValue)
         {
-            return AiChangePayload.Failure(change, "The relation type this change refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorRelationTypeChangeRefersCouldNotResolved);
         }
 
         var response = await Mediator.Send(new DeleteRelationTypeCommand(relationTypeId.Value), cancellationToken);
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The relation type could not be deleted.");
+            return AiChangePayload.Failure(
+                change,
+                response.Message ?? AppText.AiChangeErrorRelationTypeCouldNotDeleted);
         }
 
         return AiChangePayload.Applied(change, relationTypeId.Value);

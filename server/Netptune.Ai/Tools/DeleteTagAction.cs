@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Tags.Queries;
 
@@ -59,7 +60,7 @@ public sealed class DeleteTagAction : IAiToolAction
             ToolName = Change,
             EntityType = "tag",
             EntityId = tag.Id,
-            Summary = $"Delete tag “{tag.Name}”",
+            Summary = Localized.Format(AppText.AiSummaryDeleteTag, tag.Name),
             Fields = fields,
             Payload = JsonSerializer.SerializeToDocument(new { tagId = tag.Id }),
             ValidationStatus = AiChangeValidationStatus.Valid,

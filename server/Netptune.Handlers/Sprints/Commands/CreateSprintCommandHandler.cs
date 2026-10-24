@@ -3,6 +3,7 @@ using Mediator;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
@@ -37,14 +38,24 @@ public sealed class CreateSprintCommandHandler : IRequestHandler<CreateSprintCom
         var workspace = await UnitOfWork.Workspaces.GetBySlug(workspaceKey, cancellationToken: cancellationToken);
 
         if (workspace is null) return ClientResponse<SprintViewModel>.NotFound;
-        if (string.IsNullOrWhiteSpace(req.Name)) return ClientResponse<SprintViewModel>.Failed("Sprint name is required");
-        if (req.EndDate < req.StartDate) return ClientResponse<SprintViewModel>.Failed("Sprint end date must be after start date");
+
+        if (string.IsNullOrWhiteSpace(req.Name))
+        {
+            return ClientResponse<SprintViewModel>.Failed(AppText.ErrorSprintNameRequired);
+        }
+
+        if (req.EndDate < req.StartDate)
+        {
+            return ClientResponse<SprintViewModel>.Failed(AppText.ErrorSprintEndDateMustAfterStartDate);
+        }
 
         var project = await UnitOfWork.Projects.GetAsync(req.ProjectId, true, cancellationToken);
 
         if (project is null || project.WorkspaceId != workspace.Id || project.IsDeleted)
         {
-            return ClientResponse<SprintViewModel>.Failed($"Project with id {req.ProjectId} not found");
+            var error = Localized.Format(AppText.ErrorProjectWithIdNotFound, req.ProjectId);
+
+            return ClientResponse<SprintViewModel>.Failed(error);
         }
 
         var user = await Identity.GetCurrentUser();
@@ -77,7 +88,7 @@ public sealed class CreateSprintCommandHandler : IRequestHandler<CreateSprintCom
         await EventPublisher.IndexSprints([sprint.Id], workspaceKey);
 
         return result is null
-            ? ClientResponse<SprintViewModel>.Failed("Sprint was created but could not be loaded")
+            ? ClientResponse<SprintViewModel>.Failed(AppText.ErrorSprintCreatedButCouldNotLoaded)
             : ClientResponse<SprintViewModel>.Success(result);
     }
 }

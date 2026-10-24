@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Ai.Tools;
 using Netptune.Core.Authorization;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests.Pages;
 using Netptune.Core.Services.Ai;
@@ -14,10 +15,9 @@ namespace Netptune.Ai.Execution.Handlers;
 
 public sealed class UpdatePageDetailsChangeHandler : IAiChangeHandler, IAiChangeUndoHandler
 {
-    public const string ChangedSinceMessage =
-        "The page's status or tags have changed since this change was applied, so they were left as they are now.";
+    public static string ChangedSinceMessage => AppText.AiChangeErrorPageDetailsChangedSinceApply;
 
-    private const string UnknownTagsHint = "Was the change that creates them applied?";
+    private static string UnknownTagsHint => AppText.AiChangeErrorUnknownTagsHint;
 
     private readonly IMediator Mediator;
 
@@ -46,7 +46,7 @@ public sealed class UpdatePageDetailsChangeHandler : IAiChangeHandler, IAiChange
 
         if (!pageId.HasValue)
         {
-            return AiChangePayload.Failure(change, "The page this change refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorPageChangeRefersCouldNotResolved);
         }
 
         var rawStatus = AiChangePayload.ReadString(payload, "status");
@@ -55,7 +55,7 @@ public sealed class UpdatePageDetailsChangeHandler : IAiChangeHandler, IAiChange
 
         if (hasUnknownStatus)
         {
-            return AiChangePayload.Failure(change, "The status in this change is not draft or published.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorStatusChangeNotDraftPublished);
         }
 
         var setsTags = payload.TryGetProperty("tags", out _);
@@ -71,7 +71,7 @@ public sealed class UpdatePageDetailsChangeHandler : IAiChangeHandler, IAiChange
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The page could not be updated.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorPageCouldNotUpdated);
         }
 
         return AiChangePayload.Applied(change, pageId);
@@ -89,7 +89,7 @@ public sealed class UpdatePageDetailsChangeHandler : IAiChangeHandler, IAiChange
 
         if (snapshot is null)
         {
-            return AiChangeUndoResult.Failure(change, "There is nothing recorded to restore.");
+            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
         }
 
         var payload = change.Payload.RootElement;
@@ -100,7 +100,7 @@ public sealed class UpdatePageDetailsChangeHandler : IAiChangeHandler, IAiChange
 
         if (current is null)
         {
-            return AiChangeUndoResult.Failure(change, "The page is no longer in this workspace.");
+            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorPageNoLongerWorkspace);
         }
 
         var statusChangedSince = setStatus && current.Status != appliedStatus;
@@ -124,7 +124,9 @@ public sealed class UpdatePageDetailsChangeHandler : IAiChangeHandler, IAiChange
 
         if (!response.IsSuccess)
         {
-            return AiChangeUndoResult.Failure(change, response.Message ?? "The page details could not be restored.");
+            return AiChangeUndoResult.Failure(
+                change,
+                response.Message ?? AppText.AiChangeErrorPageDetailsCouldNotRestored);
         }
 
         return AiChangeUndoResult.Undone(change, snapshot.PageId);

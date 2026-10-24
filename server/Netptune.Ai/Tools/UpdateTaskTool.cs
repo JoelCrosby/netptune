@@ -5,6 +5,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -494,14 +495,14 @@ public sealed class UpdateTaskTool : IAiTool
             return AiTaskDraftResult.Unchanged;
         }
 
-        var changedNames = string.Join(", ", fields.Select(field => field.Name));
+        var changedNames = AiFieldNames.Describe(fields);
 
         return AiTaskDraftResult.Proposed(new AiChangeDraft
         {
             ToolName = UpdateChange,
             EntityType = "task",
             EntityId = task.Id,
-            Summary = $"Update {changedNames} on “{task.Name}”",
+            Summary = Localized.Format(AppText.AiSummaryUpdateNamed, changedNames, task.Name),
             Fields = fields,
             Payload = CreateFieldPayload(task, arguments),
             ValidationStatus = AiChangeValidationStatus.Valid,

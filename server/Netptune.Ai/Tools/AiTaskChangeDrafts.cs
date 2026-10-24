@@ -4,6 +4,7 @@ using System.Text.Json.Nodes;
 using Mediator;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.ProjectTasks;
@@ -93,7 +94,7 @@ internal static class AiTaskChangeDrafts
             ToolName = AssignChange,
             EntityType = "task",
             EntityId = task.Id,
-            Summary = $"Set assignees on “{task.Name}”",
+            Summary = Localized.Format(AppText.AiSummarySetAssignees, task.Name),
             Fields = [AiChangeFields.Values("assignees", AiChangeValueKind.User, before, after)],
             Payload = JsonDocument.Parse(payload.ToJsonString()),
             ValidationStatus = AiChangeValidationStatus.Valid,
@@ -144,7 +145,7 @@ internal static class AiTaskChangeDrafts
             ToolName = TagsChange,
             EntityType = "task",
             EntityId = target.Task?.Id,
-            Summary = $"Set tags on “{target.Name}”",
+            Summary = Localized.Format(AppText.AiSummarySetTags, target.Name),
             Fields = [AiChangeFields.Values("tags", AiChangeValueKind.Tag, before, after)],
             Payload = JsonDocument.Parse(payload.ToJsonString()),
             ValidationStatus = AiChangeValidationStatus.Valid,
@@ -191,7 +192,7 @@ internal static class AiTaskChangeDrafts
             ToolName = BoardGroupChange,
             EntityType = "task",
             EntityId = task.Id,
-            Summary = $"Move “{task.Name}” to {group.Name} on {group.BoardName}",
+            Summary = Localized.Format(AppText.AiSummaryMoveTaskToBoardGroup, task.Name, group.Name, group.BoardName),
             Fields = [AiChangeFields.BoardGroup(group.Id, $"{group.BoardName} · {group.Name}")],
             Payload = JsonSerializer.SerializeToDocument(payload),
             ValidationStatus = AiChangeValidationStatus.Valid,
@@ -221,7 +222,7 @@ internal static class AiTaskChangeDrafts
             ToolName = BoardGroupChange,
             EntityType = "task",
             EntityId = task.Id,
-            Summary = $"Move “{task.Name}” to {group.Name} on {group.BoardName}",
+            Summary = Localized.Format(AppText.AiSummaryMoveTaskToBoardGroup, task.Name, group.Name, group.BoardName),
             Fields = [AiChangeFields.BoardGroup(null, group.Label)],
             Payload = JsonSerializer.SerializeToDocument(payload),
             ValidationStatus = AiChangeValidationStatus.Valid,

@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Projects.Queries;
 
@@ -57,7 +58,7 @@ public sealed class CreateProjectAction : IAiToolAction
             ToolName = ChangeName,
             EntityType = "project",
             RefKey = refKey,
-            Summary = $"Create project “{name}”",
+            Summary = Localized.Format(AppText.AiSummaryCreateProject, name),
             Fields = fields,
             Payload = JsonDocument.Parse(arguments.GetRawText()),
             ValidationStatus = AiChangeValidationStatus.Valid,

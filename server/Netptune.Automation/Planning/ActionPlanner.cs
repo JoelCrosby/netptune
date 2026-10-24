@@ -2,6 +2,7 @@ using System.Text.Json;
 
 using Microsoft.Extensions.Logging;
 
+using Netptune.Automation.Common;
 using Netptune.Automation.Models;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
@@ -56,7 +57,7 @@ internal sealed class ActionPlanner
             catch (Exception ex)
             {
                 run.Status = AutomationRunStatus.Failed;
-                run.Message = ex.Message;
+                AutomationMessageWriter.Write(run, AutomationMessage.Uncoded(ex.Message));
 
                 Logger.LogError(ex, "Automation rule {RuleId} failed for task {TaskId}", execution.Rule.Id, execution.Task.Id);
             }
@@ -89,7 +90,11 @@ internal sealed class ActionPlanner
             if (automationAction is null)
             {
                 Logger.LogWarning("Automation rule {RuleId} has unsupported action type {ActionType}", execution.Rule.Id, action.Type);
-                CompleteActionResult(result, AutomationActionResultStatus.Skipped, "The action type is not supported.", markStarted: true);
+                CompleteActionResult(
+                    result,
+                    AutomationActionResultStatus.Skipped,
+                    AutomationMessage.ActionTypeUnsupported,
+                    markStarted: true);
 
                 continue;
             }
@@ -116,7 +121,9 @@ internal sealed class ActionPlanner
             }
             catch (Exception ex)
             {
-                CompleteActionResult(result, AutomationActionResultStatus.Failed, ex.Message, markStarted: true);
+                var failure = AutomationMessage.Uncoded(ex.Message);
+
+                CompleteActionResult(result, AutomationActionResultStatus.Failed, failure, markStarted: true);
                 SkipUnexecutedResults(execution, result, actions, index + 1);
 
                 throw;
@@ -156,7 +163,7 @@ internal sealed class ActionPlanner
                 CompleteActionResult(
                     result,
                     AutomationActionResultStatus.Skipped,
-                    "The run was cancelled because a later action could not be planned.");
+                    AutomationMessage.CancelledAfterPlanningFailure);
             }
         }
 
@@ -166,7 +173,7 @@ internal sealed class ActionPlanner
             CompleteActionResult(
                 result,
                 AutomationActionResultStatus.Skipped,
-                "The action was not planned because an earlier action failed.");
+                AutomationMessage.NotPlannedAfterEarlierFailure);
             execution.Run.ActionResults.Add(result);
         }
     }
@@ -174,7 +181,7 @@ internal sealed class ActionPlanner
     private static void CompleteActionResult(
         AutomationActionResult result,
         AutomationActionResultStatus status,
-        string message,
+        AutomationMessage message,
         bool markStarted = false)
     {
         var completedAt = DateTime.UtcNow;
@@ -185,7 +192,7 @@ internal sealed class ActionPlanner
         }
 
         result.Status = status;
-        result.Message = message;
+        AutomationMessageWriter.Write(result, message);
         result.CompletedAt = completedAt;
     }
 
@@ -193,7 +200,7 @@ internal sealed class ActionPlanner
     {
         var run = execution.Run!;
         run.Status = AutomationRunStatus.Failed;
-        run.Message = execution.AuthorizationError;
+        AutomationMessageWriter.Write(run, execution.AuthorizationError);
 
         foreach (var action in execution.Rule.Actions
                      .Where(action => !action.IsDeleted)
@@ -204,7 +211,7 @@ internal sealed class ActionPlanner
             CompleteActionResult(
                 result,
                 AutomationActionResultStatus.Skipped,
-                "The action was not run because the automation principal was not authorized.");
+                AutomationMessage.NotRunWhileUnauthorized);
             run.ActionResults.Add(result);
         }
     }

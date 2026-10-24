@@ -5,6 +5,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Pages.Queries;
 
@@ -97,7 +98,7 @@ public sealed class RestorePageVersionAction : IAiToolAction
             ToolName = ChangeName,
             EntityType = AiPageLookup.EntityType,
             EntityId = page.Id,
-            Summary = $"Restore “{page.Title}” to revision {version.Revision}, saved {savedOn}",
+            Summary = Localized.Format(AppText.AiSummaryRestorePageVersion, page.Title, version.Revision, savedOn),
             Fields = fields,
             Payload = JsonSerializer.SerializeToDocument(payload),
             ValidationStatus = AiChangeValidationStatus.Valid,

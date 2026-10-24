@@ -12,13 +12,13 @@ public static class EmailMessages
         {
             SendTo = sendTo,
             Name = firstName,
-            Greeting = Format(AppText.EmailGreeting, firstName),
+            Greeting = Localized.Format(AppText.EmailGreeting, firstName),
             Subject = AppText.PasswordResetEmailSubject,
             PreHeader = AppText.PasswordResetEmailPreHeader,
             Message = AppText.PasswordResetEmailMessage,
             Action = AppText.PasswordResetEmailAction,
             Link = link,
-            RawTextContent = Format(AppText.PasswordResetEmailText, link),
+            RawTextContent = Localized.Format(AppText.PasswordResetEmailText, link),
             Footer = AppText.PasswordResetEmailFooter,
             Tagline = AppText.EmailTagline,
             Language = CultureInfo.CurrentUICulture.Name,
@@ -31,13 +31,13 @@ public static class EmailMessages
         {
             SendTo = sendTo,
             Name = firstName,
-            Greeting = Format(AppText.EmailGreeting, firstName),
+            Greeting = Localized.Format(AppText.EmailGreeting, firstName),
             Subject = AppText.WelcomeEmailSubject,
             PreHeader = AppText.WelcomeEmailPreHeader,
             Message = AppText.WelcomeEmailMessage,
             Action = AppText.WelcomeEmailAction,
             Link = link,
-            RawTextContent = Format(AppText.WelcomeEmailText, link),
+            RawTextContent = Localized.Format(AppText.WelcomeEmailText, link),
             Footer = AppText.WelcomeEmailFooter,
             Tagline = AppText.EmailTagline,
             Language = CultureInfo.CurrentUICulture.Name,
@@ -52,19 +52,14 @@ public static class EmailMessages
             Name = address,
             Greeting = AppText.EmailGreetingWithoutName,
             Subject = AppText.InviteEmailSubject,
-            PreHeader = Format(AppText.InviteEmailPreHeader, workspaceName),
-            Message = Format(AppText.InviteEmailMessage, workspaceName),
+            PreHeader = Localized.Format(AppText.InviteEmailPreHeader, workspaceName),
+            Message = Localized.Format(AppText.InviteEmailMessage, workspaceName),
             Action = AppText.InviteEmailAction,
             Link = link,
-            RawTextContent = Format(AppText.InviteEmailText, workspaceName, link),
+            RawTextContent = Localized.Format(AppText.InviteEmailText, workspaceName, link),
             Footer = AppText.InviteEmailFooter,
             Tagline = AppText.EmailTagline,
             Language = CultureInfo.CurrentUICulture.Name,
         };
-    }
-
-    private static string Format(string template, params object[] values)
-    {
-        return string.Format(CultureInfo.CurrentUICulture, template, values);
     }
 }

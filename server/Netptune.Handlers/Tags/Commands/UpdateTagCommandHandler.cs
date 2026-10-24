@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
@@ -39,7 +40,9 @@ public sealed class UpdateTagCommandHandler : IRequestHandler<UpdateTagCommand, 
 
         if (!workspaceId.HasValue)
         {
-            return ClientResponse<TagViewModel>.Failed($"workspace with key {workspaceKey} does not exist");
+            var error = Localized.Format(AppText.ErrorWorkspaceKeyDoesNotExist, workspaceKey);
+
+            return ClientResponse<TagViewModel>.Failed(error);
         }
 
         var tag = await UnitOfWork.Tags.GetByValue(request.Request.CurrentValue, workspaceId.Value, cancellationToken: cancellationToken);

@@ -3,6 +3,7 @@ using System.Text.Json;
 using Mediator;
 
 using Netptune.Core.Encoding;
+using Netptune.Core.Localization;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
@@ -62,7 +63,7 @@ public sealed class InspectImportSessionCommandHandler : IRequestHandler<Inspect
         if (!isInspectable)
         {
             return ClientResponse<ImportSourceProfile>.Failed(
-                $"An import that is {session.Stage} cannot be inspected.");
+                Localized.Format(AppText.ErrorImportCannotInspected, session.Stage));
         }
 
         var reader = Readers.FirstOrDefault(candidate => candidate.CanRead(session.OriginalName));

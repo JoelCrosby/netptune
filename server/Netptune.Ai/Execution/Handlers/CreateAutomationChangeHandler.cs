@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Ai.Tools;
 using Netptune.Core.Authorization;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Automations.Commands;
@@ -12,8 +13,7 @@ namespace Netptune.Ai.Execution.Handlers;
 
 public sealed class CreateAutomationChangeHandler : IAiChangeHandler, IAiChangeUndoHandler
 {
-    public const string EditedSinceMessage =
-        "The rule has been edited since it was created, so it was left in place.";
+    public static string EditedSinceMessage => AppText.AiChangeErrorRuleEditedSinceCreatedLeftPlace;
 
     private readonly IMediator Mediator;
 
@@ -36,14 +36,14 @@ public sealed class CreateAutomationChangeHandler : IAiChangeHandler, IAiChangeU
 
         if (rule is null)
         {
-            return AiChangePayload.Failure(change, "The rule is missing from this change.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorRuleMissingChange);
         }
 
         var response = await Mediator.Send(new CreateAutomationRuleCommand(rule), cancellationToken);
 
         if (!response.IsSuccess || response.Payload is null)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The rule could not be created.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorRuleCouldNotCreated);
         }
 
         return AiChangePayload.Applied(change, response.Payload.Id);
@@ -61,14 +61,14 @@ public sealed class CreateAutomationChangeHandler : IAiChangeHandler, IAiChangeU
 
         if (!ruleId.HasValue)
         {
-            return AiChangeUndoResult.Failure(change, "The created rule could not be resolved.");
+            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorCreatedRuleCouldNotResolved);
         }
 
         var current = await AiAutomationRuleReader.ReadCurrent(Mediator, ruleId.Value, cancellationToken);
 
         if (current is null)
         {
-            return AiChangeUndoResult.Failure(change, "The rule is no longer in this workspace.");
+            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorRuleNoLongerWorkspace);
         }
 
         var created = AiAutomationRuleReader.ReadRule(change.Payload.RootElement, "rule");
@@ -83,7 +83,7 @@ public sealed class CreateAutomationChangeHandler : IAiChangeHandler, IAiChangeU
 
         if (!response.IsSuccess)
         {
-            return AiChangeUndoResult.Failure(change, response.Message ?? "The rule could not be deleted.");
+            return AiChangeUndoResult.Failure(change, response.Message ?? AppText.AiChangeErrorRuleCouldNotDeleted);
         }
 
         return AiChangeUndoResult.Undone(change, ruleId.Value);

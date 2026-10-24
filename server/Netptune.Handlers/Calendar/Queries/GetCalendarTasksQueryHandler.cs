@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Core.Exceptions;
+using Netptune.Core.Localization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Reporting;
@@ -41,7 +42,7 @@ public sealed class GetCalendarTasksQueryHandler
         if (containsUnknownProject)
         {
             return ClientResponse<PagedResponse<RoadmapTaskViewModel>>
-                .Failed("The project is outside the current workspace scope");
+                .Failed(AppText.ErrorProjectOutsideCurrentWorkspaceScope);
         }
 
         try

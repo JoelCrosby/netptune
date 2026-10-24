@@ -6,11 +6,10 @@ public static class MiddlewareExtensions
 {
     extension(IApplicationBuilder app)
     {
-        // Stamps every response with a correlation id and shapes unhandled failures as
-        // problem+json. Every host calls this so one API surface reports errors one way.
-        public IApplicationBuilder UseNetptuneRequestDefaults()
+        public IApplicationBuilder UseNetptuneRequestDefaults(
+            RequestLocaleSource localeSource = RequestLocaleSource.Reader)
         {
-            var localization = RequestLocalizationDefaults.Create();
+            var localization = RequestLocalizationDefaults.Create(localeSource);
 
             app.UseMiddleware<CorrelationIdMiddleware>();
             app.UseMiddleware<ServerErrorLoggingMiddleware>();

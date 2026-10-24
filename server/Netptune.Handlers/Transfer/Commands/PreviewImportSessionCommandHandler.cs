@@ -5,6 +5,7 @@ using Mediator;
 using Microsoft.Extensions.Options;
 
 using Netptune.Core.Encoding;
+using Netptune.Core.Localization;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
@@ -59,14 +60,14 @@ public sealed class PreviewImportSessionCommandHandler : IRequestHandler<Preview
         if (!isPreviewable)
         {
             return ClientResponse<ImportPreviewResult>.Failed(
-                $"An import that is {session.Stage} cannot be previewed.");
+                Localized.Format(AppText.ErrorImportCannotPreviewed, session.Stage));
         }
 
         var mapping = session.Mapping?.Deserialize<ImportMappingModel>(JsonOptions.Default);
 
         if (mapping is null)
         {
-            return ClientResponse<ImportPreviewResult>.Failed("Map the file before previewing it.");
+            return ClientResponse<ImportPreviewResult>.Failed(AppText.ErrorMapFileBeforePreviewing);
         }
 
         var profile = session.SourceProfile?.Deserialize<ImportSourceProfile>(JsonOptions.Default);

@@ -3,6 +3,7 @@ using System.Text.Json;
 using Mediator;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Localization;
 using Netptune.Core.Preferences;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -49,7 +50,7 @@ public sealed class SetUserPreferenceValueCommandHandler
         var definition = Registry.Find(request.Key);
         if (definition is null || !Validate(definition, request.Scope, request.Value, workspaceId))
         {
-            return ClientResponse<ResolvedPreferenceValue>.Failed("Invalid preference key, scope, or value.");
+            return ClientResponse<ResolvedPreferenceValue>.Failed(AppText.ErrorInvalidPreferenceKeyScopeValue);
         }
 
         var scopedWorkspaceId = request.Scope == PreferenceScopes.Workspace ? workspaceId : null;

@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using System.Text.Json;
 
 using Dapper;
 
@@ -333,6 +334,8 @@ public class AutomationRepository : WorkspaceEntityRepository<DataContext, Autom
                 Status = run.Status,
                 IdempotencyKey = run.IdempotencyKey,
                 Message = run.Message,
+                MessageCode = run.MessageCode,
+                MessageArguments = run.MessageArguments,
                 CreatedAt = run.CreatedAt,
             })
             .AsNoTracking()
@@ -504,6 +507,8 @@ public class AutomationRepository : WorkspaceEntityRepository<DataContext, Autom
             Status = run.Status,
             IdempotencyKey = run.IdempotencyKey,
             Message = run.Message,
+            MessageCode = run.MessageCode,
+            MessageArguments = run.MessageArguments,
             CreatedAt = run.CreatedAt,
             ActionResults = run.ActionResults
                 .OrderBy(result => result.SortOrder)
@@ -519,6 +524,8 @@ public class AutomationRepository : WorkspaceEntityRepository<DataContext, Autom
                     StartedAt = result.StartedAt,
                     CompletedAt = result.CompletedAt,
                     Message = result.Message,
+                    MessageCode = result.MessageCode,
+                    MessageArguments = result.MessageArguments,
                     Output = result.Output,
                 })
                 .ToList(),
@@ -547,7 +554,7 @@ public class AutomationRepository : WorkspaceEntityRepository<DataContext, Autom
     }
 
     public Task<int> AutoDisableRules(
-        IReadOnlyDictionary<int, string> reasonsByRuleId,
+        IReadOnlyDictionary<int, AutomationMessage> reasonsByRuleId,
         DateTime disabledAt,
         CancellationToken cancellationToken = default)
     {
@@ -557,11 +564,16 @@ public class AutomationRepository : WorkspaceEntityRepository<DataContext, Autom
         }
 
         var ruleIds = reasonsByRuleId.Keys.ToArray();
-        var reasons = ruleIds.Select(ruleId => reasonsByRuleId[ruleId]).ToArray();
+        var reasons = ruleIds.Select(ruleId => reasonsByRuleId[ruleId]).ToList();
+        var texts = reasons.Select(reason => reason.Text).ToArray();
+        var codes = reasons.Select(reason => reason.Code).ToArray();
+        var arguments = reasons.Select(reason => JsonSerializer.Serialize(reason.Arguments)).ToArray();
         NpgsqlParameter[] parameters =
         [
             new("ruleIds", NpgsqlDbType.Array | NpgsqlDbType.Integer) { Value = ruleIds },
-            new("reasons", NpgsqlDbType.Array | NpgsqlDbType.Text) { Value = reasons },
+            new("reasons", NpgsqlDbType.Array | NpgsqlDbType.Text) { Value = texts },
+            new("codes", NpgsqlDbType.Array | NpgsqlDbType.Text) { Value = codes },
+            new("arguments", NpgsqlDbType.Array | NpgsqlDbType.Text) { Value = arguments },
             new("disabledAt", NpgsqlDbType.TimestampTz) { Value = disabledAt },
         ];
 

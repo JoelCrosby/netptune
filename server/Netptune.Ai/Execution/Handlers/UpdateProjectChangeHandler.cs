@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -28,7 +29,7 @@ public sealed class UpdateProjectChangeHandler : IAiChangeHandler
 
         if (!projectId.HasValue)
         {
-            return AiChangePayload.Failure(change, "The project this change refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorProjectChangeRefersCouldNotResolved);
         }
 
         var request = new UpdateProjectRequest
@@ -43,7 +44,7 @@ public sealed class UpdateProjectChangeHandler : IAiChangeHandler
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The project could not be updated.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorProjectCouldNotUpdated);
         }
 
         return AiChangePayload.Applied(change, projectId);

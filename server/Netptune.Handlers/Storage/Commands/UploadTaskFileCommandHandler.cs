@@ -3,6 +3,7 @@ using Mediator;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Extensions;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Relationships;
 using Netptune.Core.Responses.Common;
@@ -69,12 +70,12 @@ public sealed class UploadTaskFileCommandHandler : IRequestHandler<UploadTaskFil
 
         if (string.IsNullOrWhiteSpace(originalName))
         {
-            return Failed(upload.FileName, "A valid filename is required.");
+            return Failed(upload.FileName, AppText.ErrorValidFilenameRequired);
         }
 
         if (upload.Length <= 0)
         {
-            return Failed(originalName, "The file is empty.");
+            return Failed(originalName, AppText.ErrorFileEmpty);
         }
 
         var workspaceId = await Identity.GetWorkspaceId();
@@ -82,7 +83,9 @@ public sealed class UploadTaskFileCommandHandler : IRequestHandler<UploadTaskFil
 
         if (upload.Length > maxUploadBytes)
         {
-            return Failed(originalName, $"The file exceeds the {UploadLimits.Describe(maxUploadBytes)} limit.");
+            var error = Localized.Format(AppText.ErrorFileExceedsLimit, UploadLimits.Describe(maxUploadBytes));
+
+            return Failed(originalName, error);
         }
 
         var userId = Identity.GetCurrentUserId();
@@ -129,7 +132,13 @@ public sealed class UploadTaskFileCommandHandler : IRequestHandler<UploadTaskFil
         {
             var usage = await UnitOfWork.Workspaces.GetStorageUsage(workspaceId, cancellationToken);
 
-            return Failed(originalName, $"Workspace storage limit exceeded ({usage?.UsedBytes ?? 0} of {usage?.LimitBytes ?? 0} bytes used; {upload.Length} requested).");
+            var error = Localized.Format(
+                AppText.ErrorWorkspaceStorageLimitExceededBytesUsedRequested,
+                usage?.UsedBytes ?? 0,
+                usage?.LimitBytes ?? 0,
+                upload.Length);
+
+            return Failed(originalName, error);
         }
 
         try
@@ -165,7 +174,7 @@ public sealed class UploadTaskFileCommandHandler : IRequestHandler<UploadTaskFil
         {
             await ReleaseFile(entity, userId, cancellationToken);
 
-            return Failed(originalName, "The upload could not be completed.");
+            return Failed(originalName, AppText.ErrorUploadCouldNotCompleted);
         }
     }
 

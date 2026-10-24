@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 
 namespace Netptune.Ai.Tools;
@@ -60,7 +61,7 @@ public sealed class DeleteBoardAction : IAiToolAction
             ToolName = ChangeName,
             EntityType = "board",
             EntityId = board.Id,
-            Summary = $"Delete board “{board.Name}” in {board.ProjectName}",
+            Summary = Localized.Format(AppText.AiSummaryDeleteBoard, board.Name, board.ProjectName),
             Fields = fields,
             Payload = JsonSerializer.SerializeToDocument(new { boardId = board.Id }),
             ValidationStatus = AiChangeValidationStatus.Valid,

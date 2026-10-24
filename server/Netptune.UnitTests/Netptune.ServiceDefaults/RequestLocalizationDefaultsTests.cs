@@ -65,10 +65,25 @@ public class RequestLocalizationDefaultsTests
         culture.Culture.Should().Be(CultureInfo.InvariantCulture.Name);
     }
 
-    private static async Task<ResolvedCulture> ResolveCulture(HttpContext context)
+    [Fact]
+    public async Task Request_ShouldIgnoreTheReader_WhenPinnedToTheDefault()
+    {
+        var context = new DefaultHttpContext();
+
+        context.Request.Headers.Cookie = "nt_locale=de";
+        context.Request.Headers.AcceptLanguage = "fr-FR,fr;q=0.9";
+
+        var culture = await ResolveCulture(context, RequestLocaleSource.Default);
+
+        culture.UiCulture.Should().Be("en-GB");
+    }
+
+    private static async Task<ResolvedCulture> ResolveCulture(
+        HttpContext context,
+        RequestLocaleSource source = RequestLocaleSource.Reader)
     {
         var resolved = new ResolvedCulture(string.Empty, string.Empty);
-        var options = Options.Create(RequestLocalizationDefaults.Create());
+        var options = Options.Create(RequestLocalizationDefaults.Create(source));
         var middleware = new RequestLocalizationMiddleware(
             _ =>
             {

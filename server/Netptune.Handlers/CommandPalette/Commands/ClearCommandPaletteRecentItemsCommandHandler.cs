@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Preferences;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -37,7 +38,7 @@ public sealed class ClearCommandPaletteRecentItemsCommandHandler
         var workspaceId = await GetRequiredWorkspaceId();
         if (workspaceId is null)
         {
-            return ClientResponse<CommandPaletteRecentItemsResponse>.Failed("A workspace is required.");
+            return ClientResponse<CommandPaletteRecentItemsResponse>.Failed(AppText.ErrorWorkspaceRequired);
         }
 
         var userId = Identity.GetCurrentUserId();
@@ -72,7 +73,8 @@ public sealed class ClearCommandPaletteRecentItemsCommandHandler
             cancellationToken);
 
         var globalValue = values.FirstOrDefault(value => value.WorkspaceId is null)?.Value.RootElement.Clone();
-        var workspaceValue = values.FirstOrDefault(value => value.WorkspaceId == workspaceId)?.Value.RootElement.Clone();
+        var workspaceValue = values.FirstOrDefault(
+            value => value.WorkspaceId == workspaceId)?.Value.RootElement.Clone();
         var effectiveValue = workspaceValue ?? globalValue ?? definition.DefaultValue;
 
         return effectiveValue.GetString() ?? "workspace";

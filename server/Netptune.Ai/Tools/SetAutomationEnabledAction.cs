@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Automations.Queries;
 
@@ -66,16 +67,16 @@ public sealed class SetAutomationEnabledAction : IAiToolAction
         var notice = isEnabled.Value
             ? null
             : await AiAutomationProposal.CancellationNotice(Mediator, rule.Id, cancellationToken);
-        var verb = isEnabled.Value ? "Enable" : "Disable";
-        var before = rule.IsEnabled ? "Enabled" : "Disabled";
-        var after = isEnabled.Value ? "Enabled" : "Disabled";
+        var summaryTemplate = isEnabled.Value ? AppText.AiSummaryEnableAutomation : AppText.AiSummaryDisableAutomation;
+        var before = AiAutomationProposal.DescribeEnabled(rule.IsEnabled);
+        var after = AiAutomationProposal.DescribeEnabled(isEnabled.Value);
 
         ChangeSet.Add(new AiChangeDraft
         {
             ToolName = Change,
             EntityType = AiAutomationProposal.EntityType,
             EntityId = rule.Id,
-            Summary = $"{verb} automation “{rule.Name}”",
+            Summary = Localized.Format(summaryTemplate, rule.Name),
             Fields = [AiChangeFields.Text("enabled", before, after)],
             Payload = JsonSerializer.SerializeToDocument(new { ruleId = rule.Id, isEnabled = isEnabled.Value }),
             ValidationStatus = AiChangeValidationStatus.Valid,

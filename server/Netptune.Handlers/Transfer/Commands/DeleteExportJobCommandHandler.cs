@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
@@ -43,7 +44,7 @@ public sealed class DeleteExportJobCommandHandler : IRequestHandler<DeleteExport
 
         if (!isDeletable)
         {
-            return ClientResponse.Failed($"An export that is {job.Status} cannot be deleted. Cancel it first.");
+            return ClientResponse.Failed(Localized.Format(AppText.ErrorExportCannotDeletedCancelFirst, job.Status));
         }
 
         var storageKey = job.StorageKey;

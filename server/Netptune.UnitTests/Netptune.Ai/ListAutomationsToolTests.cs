@@ -86,7 +86,9 @@ public class ListAutomationsToolTests
 
         root.GetProperty("reference").GetProperty("actions").TryGetProperty("CreateTask", out _).Should().BeTrue();
         root.EnumerateObject().Should().ContainSingle("a workspace with no rules still needs the reference");
-        await Mediator.DidNotReceiveWithAnyArgs().Send(default(GetAutomationRulesPagedQuery)!, default);
+        await Mediator.DidNotReceiveWithAnyArgs().Send(
+            default(GetAutomationRulesPagedQuery)!,
+            TestContext.Current.CancellationToken);
     }
 
     [Fact]

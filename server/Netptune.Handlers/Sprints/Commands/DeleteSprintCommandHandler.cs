@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -34,7 +35,7 @@ public sealed class DeleteSprintCommandHandler : IRequestHandler<DeleteSprintCom
         if (sprint is null) return ClientResponse.NotFound;
         if (sprint.Status is SprintStatus.Active or SprintStatus.Completed)
         {
-            return ClientResponse.Failed("Only planning or cancelled sprints can be deleted");
+            return ClientResponse.Failed(AppText.ErrorOnlyPlanningCancelledSprintsCanDeleted);
         }
 
         var user = await Identity.GetCurrentUser();

@@ -3,6 +3,7 @@ using Mediator;
 using Netptune.Core.Authorization;
 using Netptune.Core.Cache;
 using Netptune.Core.Entities;
+using Netptune.Core.Localization;
 using Netptune.Core.Requests.ServiceAccounts;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -40,7 +41,7 @@ public sealed class UpdateServiceAccountCommandHandler
 
         if (name.Length is < 2 or > 128)
         {
-            return ClientResponse<ServiceAccountViewModel>.Failed("Service account name must be between 2 and 128 characters.");
+            return ClientResponse<ServiceAccountViewModel>.Failed(AppText.ErrorServiceAccountNameMustBetweenCharacters);
         }
 
         var currentUser = await Identity.GetCurrentUser();
@@ -71,7 +72,7 @@ public sealed class UpdateServiceAccountCommandHandler
 
         if (serviceAccount.DisabledAt is not null)
         {
-            return ClientResponse<ServiceAccountViewModel>.Failed("A disabled service account cannot be updated.");
+            return ClientResponse<ServiceAccountViewModel>.Failed(AppText.ErrorDisabledServiceAccountCannotUpdated);
         }
 
         var permissions = request.Permissions
@@ -82,7 +83,7 @@ public sealed class UpdateServiceAccountCommandHandler
 
         if (permissions.Count == 0)
         {
-            return ClientResponse<ServiceAccountViewModel>.Failed("A service account needs at least one permission.");
+            return ClientResponse<ServiceAccountViewModel>.Failed(AppText.ErrorServiceAccountNeedsAtLeastOnePermission);
         }
 
         var allowedPermissions = currentPermissions.Role == WorkspaceRole.Owner
@@ -92,7 +93,8 @@ public sealed class UpdateServiceAccountCommandHandler
         if (permissions.Any(permission => !NetptunePermissions.All.Contains(permission)
                                           || !allowedPermissions.Contains(permission)))
         {
-            return ClientResponse<ServiceAccountViewModel>.Failed("A service account cannot be granted permissions its owner does not have.");
+            return ClientResponse<ServiceAccountViewModel>.Failed(
+                AppText.ErrorServiceAccountCannotGrantedPermissionsOwnerDoes);
         }
 
         var ownerIds = request.OwnerUserIds
@@ -104,7 +106,7 @@ public sealed class UpdateServiceAccountCommandHandler
 
         if (owners.Count != ownerIds.Count || owners.Any(owner => owner.UserType != AppUserType.User))
         {
-            return ClientResponse<ServiceAccountViewModel>.Failed("Every service account owner must be a human member of the workspace.");
+            return ClientResponse<ServiceAccountViewModel>.Failed(AppText.ErrorEveryServiceAccountOwnerMustHumanMember);
         }
 
         var updatedAt = DateTime.UtcNow;

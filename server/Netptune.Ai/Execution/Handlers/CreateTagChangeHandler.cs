@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -27,7 +28,7 @@ public sealed class CreateTagChangeHandler : IAiChangeHandler
 
         if (string.IsNullOrWhiteSpace(name))
         {
-            return AiChangePayload.Failure(change, "The tag name is missing from this change.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorTagNameMissingChange);
         }
 
         var request = new AddTagRequest { Tag = name };
@@ -35,7 +36,7 @@ public sealed class CreateTagChangeHandler : IAiChangeHandler
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The tag could not be created.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorTagCouldNotCreated);
         }
 
         return AiChangePayload.Applied(change, response.Payload?.Id);

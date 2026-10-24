@@ -5,6 +5,7 @@ using Mediator;
 using Netptune.Core.Authorization;
 using Netptune.Core.Encoding;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Statuses.Queries;
@@ -66,7 +67,7 @@ public sealed class CreateStatusAction : IAiToolAction
         var fields = new List<AiChangeField>
         {
             new() { Name = "name", After = name },
-            new() { Name = "category", After = category.ToString() },
+            new() { Name = "category", After = LocalizedEnum.Label(category) },
         };
 
         AiToolSchema.AddOptionalField(fields, "description", AiToolSchema.GetString(arguments, "description"));
@@ -77,7 +78,7 @@ public sealed class CreateStatusAction : IAiToolAction
             ToolName = ChangeName,
             EntityType = "status",
             RefKey = refKey,
-            Summary = $"Create status “{name}” in {category}",
+            Summary = Localized.Format(AppText.AiSummaryCreateStatus, name, LocalizedEnum.Label(category)),
             Fields = fields,
             Payload = JsonDocument.Parse(arguments.GetRawText()),
             ValidationStatus = AiChangeValidationStatus.Valid,

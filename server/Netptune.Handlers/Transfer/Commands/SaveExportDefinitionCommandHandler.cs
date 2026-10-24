@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Cache;
 using Netptune.Core.Encoding;
+using Netptune.Core.Localization;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
@@ -51,7 +52,7 @@ public sealed class SaveExportDefinitionCommandHandler : IRequestHandler<SaveExp
 
         if (string.IsNullOrWhiteSpace(input.Name))
         {
-            return ClientResponse<ExportDefinitionViewModel>.Failed("A name is required.");
+            return ClientResponse<ExportDefinitionViewModel>.Failed(AppText.ErrorNameRequired);
         }
 
         var validation = ExportDefinitionValidator.Validate(input.Definition);
@@ -67,7 +68,9 @@ public sealed class SaveExportDefinitionCommandHandler : IRequestHandler<SaveExp
 
         if (nameTaken)
         {
-            return ClientResponse<ExportDefinitionViewModel>.Failed($"An export definition named '{name}' already exists.");
+            var error = Localized.Format(AppText.ErrorExportDefinitionNamedAlreadyExists, name);
+
+            return ClientResponse<ExportDefinitionViewModel>.Failed(error);
         }
 
         var userId = Identity.GetCurrentUserId();

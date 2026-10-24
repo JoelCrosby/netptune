@@ -2,6 +2,7 @@ using Mediator;
 
 using Microsoft.Extensions.Options;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
@@ -65,19 +66,22 @@ public sealed class CreateImportSessionCommandHandler : IRequestHandler<CreateIm
 
         if (upload.Length <= 0)
         {
-            return ClientResponse<ImportSessionViewModel>.Failed("The file is empty.");
+            return ClientResponse<ImportSessionViewModel>.Failed(AppText.ErrorFileEmpty);
         }
 
         if (upload.Length > Options.UploadSizeBytes)
         {
-            return ClientResponse<ImportSessionViewModel>.Failed($"The file exceeds the {Options.UploadSizeBytes} byte limit.");
+            var error = Localized.Format(AppText.ErrorFileExceedsByteLimit, Options.UploadSizeBytes);
+
+            return ClientResponse<ImportSessionViewModel>.Failed(error);
         }
 
         var sourceKind = ResolveSourceKind(upload.FileName);
 
         if (sourceKind is null)
         {
-            return ClientResponse<ImportSessionViewModel>.Failed($"'{upload.FileName}' is not a supported import file.");
+            return ClientResponse<ImportSessionViewModel>.Failed(
+                $"'{upload.FileName}' is not a supported import file.");
         }
 
         var workspaceKey = Identity.GetWorkspaceKey();
@@ -109,7 +113,7 @@ public sealed class CreateImportSessionCommandHandler : IRequestHandler<CreateIm
 
         if (viewModel is null)
         {
-            return ClientResponse<ImportSessionViewModel>.Failed("The import session could not be read back.");
+            return ClientResponse<ImportSessionViewModel>.Failed(AppText.ErrorImportSessionCouldNotReadBack);
         }
 
         return ClientResponse<ImportSessionViewModel>.Success(viewModel);

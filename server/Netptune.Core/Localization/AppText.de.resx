@@ -28,58 +28,1813 @@
     <value>Passwort zurücksetzen</value>
   </data>
   <data name="PasswordResetEmailPreHeader" xml:space="preserve">
-    <value>Über den Link in dieser E-Mail können Sie ein neues Passwort festlegen.</value>
+    <value>Über den Link in dieser E-Mail kannst du ein neues Passwort festlegen.</value>
   </data>
   <data name="PasswordResetEmailAction" xml:space="preserve">
     <value>Mein Passwort zurücksetzen</value>
   </data>
   <data name="PasswordResetEmailMessage" xml:space="preserve">
-    <value>Klicken Sie auf den folgenden Link, um Ihr Passwort zurückzusetzen.</value>
+    <value>Klicke auf den folgenden Link, um dein Passwort zurückzusetzen.</value>
   </data>
   <data name="PasswordResetEmailText" xml:space="preserve">
-    <value>Hier ist der für Ihr Konto angeforderte Link zum Zurücksetzen des Passworts: {0}</value>
+    <value>Hier ist der für dein Konto angeforderte Link zum Zurücksetzen des Passworts: {0}</value>
   </data>
   <data name="PasswordResetEmailFooter" xml:space="preserve">
-    <value>Sie erhalten diese E-Mail, weil für Ihr Konto eine Zurücksetzung des Passworts angefordert wurde. Wenn Sie dies nicht angefordert haben, können Sie diese E-Mail bedenkenlos löschen.</value>
+    <value>Du erhältst diese E-Mail, weil für dein Konto eine Zurücksetzung des Passworts angefordert wurde. Wenn du das nicht warst, kannst du diese E-Mail bedenkenlos löschen.</value>
   </data>
   <data name="WelcomeEmailSubject" xml:space="preserve">
     <value>Willkommen bei Netptune</value>
   </data>
   <data name="WelcomeEmailPreHeader" xml:space="preserve">
-    <value>Danke für Ihre Registrierung</value>
+    <value>Danke für deine Registrierung</value>
   </data>
   <data name="WelcomeEmailAction" xml:space="preserve">
     <value>E-Mail-Adresse bestätigen</value>
   </data>
   <data name="WelcomeEmailMessage" xml:space="preserve">
-    <value>Vielen Dank für Ihre Registrierung bei Netptune.
+    <value>Vielen Dank für deine Registrierung bei Netptune.
 
-Bitte bestätigen Sie Ihre E-Mail-Adresse über den folgenden Link.</value>
+Bitte bestätige deine E-Mail-Adresse über den folgenden Link.</value>
   </data>
   <data name="WelcomeEmailText" xml:space="preserve">
-    <value>Vielen Dank für Ihre Registrierung bei Netptune. Bitte bestätigen Sie Ihre E-Mail-Adresse über den folgenden Link: {0}</value>
+    <value>Vielen Dank für deine Registrierung bei Netptune. Bitte bestätige deine E-Mail-Adresse über den folgenden Link: {0}</value>
   </data>
   <data name="WelcomeEmailFooter" xml:space="preserve">
-    <value>Sie erhalten diese E-Mail, weil mit dieser Adresse ein Netptune-Konto erstellt wurde. Wenn Sie das nicht waren, können Sie diese E-Mail bedenkenlos löschen.</value>
+    <value>Du erhältst diese E-Mail, weil mit dieser Adresse ein Netptune-Konto erstellt wurde. Wenn du das nicht warst, kannst du diese E-Mail bedenkenlos löschen.</value>
   </data>
   <data name="InviteEmailSubject" xml:space="preserve">
     <value>Einladung zu einem Netptune-Arbeitsbereich</value>
   </data>
   <data name="InviteEmailPreHeader" xml:space="preserve">
-    <value>Sie wurden eingeladen, {0} in Netptune beizutreten.</value>
+    <value>Du wurdest eingeladen, {0} in Netptune beizutreten.</value>
   </data>
   <data name="InviteEmailAction" xml:space="preserve">
     <value>Zum Arbeitsbereich</value>
   </data>
   <data name="InviteEmailMessage" xml:space="preserve">
-    <value>Sie wurden eingeladen, dem Arbeitsbereich {0} in Netptune beizutreten.</value>
+    <value>Du wurdest eingeladen, dem Arbeitsbereich {0} in Netptune beizutreten.</value>
   </data>
   <data name="InviteEmailText" xml:space="preserve">
-    <value>Sie wurden eingeladen, dem Arbeitsbereich {0} in Netptune beizutreten. Über den folgenden Link geht es los.
+    <value>Du wurdest eingeladen, dem Arbeitsbereich {0} in Netptune beizutreten. Über den folgenden Link geht es los.
 
 {1}</value>
   </data>
   <data name="InviteEmailFooter" xml:space="preserve">
-    <value>Sie erhalten diese E-Mail, weil jemand diese Adresse zu einem Netptune-Arbeitsbereich eingeladen hat. Wenn Sie damit nicht gerechnet haben, können Sie diese E-Mail ignorieren.</value>
+    <value>Du erhältst diese E-Mail, weil jemand diese Adresse zu einem Netptune-Arbeitsbereich eingeladen hat. Wenn du damit nicht gerechnet hast, kannst du diese E-Mail ignorieren.</value>
+  </data>
+  <data name="AiChangeErrorTaskCommentChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>Die Aufgabe oder der Kommentar dieser Änderung konnte nicht gefunden werden.</value>
+  </data>
+  <data name="AiChangeErrorTaskNotFound" xml:space="preserve">
+    <value>Die Aufgabe {0} wurde nicht gefunden.</value>
+  </data>
+  <data name="AiChangeErrorCommentCouldNotPosted" xml:space="preserve">
+    <value>Der Kommentar konnte nicht veröffentlicht werden.</value>
+  </data>
+  <data name="AiChangeErrorPostedCommentCouldNotResolved" xml:space="preserve">
+    <value>Der veröffentlichte Kommentar konnte nicht gefunden werden.</value>
+  </data>
+  <data name="AiChangeErrorCommentCouldNotRemoved" xml:space="preserve">
+    <value>Der Kommentar konnte nicht entfernt werden.</value>
+  </data>
+  <data name="AiChangeErrorSprintTasksChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>Der Sprint oder die Aufgaben dieser Änderung konnten nicht gefunden werden.</value>
+  </data>
+  <data name="AiChangeErrorTasksCouldNotAddedSprint" xml:space="preserve">
+    <value>Die Aufgaben konnten nicht zum Sprint hinzugefügt werden.</value>
+  </data>
+  <data name="AiChangeErrorPageEditedAfterChangeAppliedRestoreEarlier" xml:space="preserve">
+    <value>Die Seite wurde nach dem Anwenden dieser Änderung bearbeitet. Stelle stattdessen eine frühere Version aus ihrem Verlauf wieder her.</value>
+  </data>
+  <data name="AiChangeErrorNothingRecordedRestore" xml:space="preserve">
+    <value>Es ist nichts zum Wiederherstellen gespeichert.</value>
+  </data>
+  <data name="AiChangeErrorPageNoLongerWorkspace" xml:space="preserve">
+    <value>Die Seite ist nicht mehr in diesem Arbeitsbereich.</value>
+  </data>
+  <data name="AiChangeErrorPageCouldNotRestored" xml:space="preserve">
+    <value>Die Seite konnte nicht wiederhergestellt werden.</value>
+  </data>
+  <data name="AiChangeErrorTaskCouldNotRestored" xml:space="preserve">
+    <value>Die Aufgabe konnte nicht wiederhergestellt werden.</value>
+  </data>
+  <data name="AiChangeErrorTaskCouldNotReadBackAfterRestoring" xml:space="preserve">
+    <value>Die Aufgabe konnte nach dem Wiederherstellen nicht erneut gelesen werden.</value>
+  </data>
+  <data name="AiChangeErrorTaskCouldNotPutBackSprint" xml:space="preserve">
+    <value>Die Aufgabe konnte nicht in ihren Sprint zurückgelegt werden.</value>
+  </data>
+  <data name="AiChangeErrorTaskCouldNotTakenBackOutSprint" xml:space="preserve">
+    <value>Die Aufgabe konnte nicht wieder aus dem Sprint genommen werden.</value>
+  </data>
+  <data name="AiChangeErrorTaskCouldNotTakenBackOffBoard" xml:space="preserve">
+    <value>Die Aufgabe konnte nicht wieder von einem Board genommen werden.</value>
+  </data>
+  <data name="AiChangeErrorTaskCouldNotPutBackBoardGroup" xml:space="preserve">
+    <value>Die Aufgabe konnte nicht in ihre Board-Gruppe zurückgelegt werden.</value>
+  </data>
+  <data name="AiChangeErrorOnlyPersonWhoCreatedPageSomeoneAllowed" xml:space="preserve">
+    <value>Nur die Person, die diese Seite erstellt hat, oder jemand, der alle Seiten verwalten darf, kann sie archivieren, wiederherstellen oder löschen.</value>
+  </data>
+  <data name="AiChangeErrorPageChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>Die Seite dieser Änderung konnte nicht gefunden werden.</value>
+  </data>
+  <data name="AiChangeErrorPageCouldNotArchived" xml:space="preserve">
+    <value>Die Seite konnte nicht archiviert werden.</value>
+  </data>
+  <data name="AiChangeErrorArchivedPageCouldNotResolved" xml:space="preserve">
+    <value>Die archivierte Seite konnte nicht gefunden werden.</value>
+  </data>
+  <data name="AiChangeErrorTaskChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>Die Aufgabe dieser Änderung konnte nicht gefunden werden.</value>
+  </data>
+  <data name="AiChangeErrorTaskCouldNotReassigned" xml:space="preserve">
+    <value>Die Aufgabe konnte nicht neu zugewiesen werden.</value>
+  </data>
+  <data name="AiChangeErrorSprintChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>Der Sprint dieser Änderung konnte nicht gefunden werden.</value>
+  </data>
+  <data name="AiChangeErrorSprintCouldNotCancelled" xml:space="preserve">
+    <value>Der Sprint konnte nicht abgebrochen werden.</value>
+  </data>
+  <data name="AiChangeErrorSprintCouldNotCompleted" xml:space="preserve">
+    <value>Der Sprint konnte nicht abgeschlossen werden.</value>
+  </data>
+  <data name="AiChangeErrorRuleEditedSinceCreatedLeftPlace" xml:space="preserve">
+    <value>Die Regel wurde seit ihrer Erstellung bearbeitet und wurde daher beibehalten.</value>
+  </data>
+  <data name="AiChangeErrorRuleMissingChange" xml:space="preserve">
+    <value>In dieser Änderung fehlt die Regel.</value>
+  </data>
+  <data name="AiChangeErrorRuleCouldNotCreated" xml:space="preserve">
+    <value>Die Regel konnte nicht erstellt werden.</value>
+  </data>
+  <data name="AiChangeErrorCreatedRuleCouldNotResolved" xml:space="preserve">
+    <value>Die erstellte Regel konnte nicht gefunden werden.</value>
+  </data>
+  <data name="AiChangeErrorRuleNoLongerWorkspace" xml:space="preserve">
+    <value>Die Regel ist nicht mehr in diesem Arbeitsbereich.</value>
+  </data>
+  <data name="AiChangeErrorRuleCouldNotDeleted" xml:space="preserve">
+    <value>Die Regel konnte nicht gelöscht werden.</value>
+  </data>
+  <data name="AiChangeErrorBoardDetailsMissingChange" xml:space="preserve">
+    <value>In dieser Änderung fehlen die Angaben zum Board.</value>
+  </data>
+  <data name="AiChangeErrorBoardCouldNotCreated" xml:space="preserve">
+    <value>Das Board konnte nicht erstellt werden.</value>
+  </data>
+  <data name="AiChangeErrorBoardGroupDetailsMissingChange" xml:space="preserve">
+    <value>In dieser Änderung fehlen die Angaben zur Board-Gruppe.</value>
+  </data>
+  <data name="AiChangeErrorBoardGroupCouldNotCreated" xml:space="preserve">
+    <value>Die Board-Gruppe konnte nicht erstellt werden.</value>
+  </data>
+  <data name="AiChangeErrorPagesAddedInsideSinceLeftPlaceArchive" xml:space="preserve">
+    <value>Seitdem wurden Seiten darin angelegt, daher wurde sie beibehalten. Archiviere sie im Seitenbaum, wenn sie weg soll.</value>
+  </data>
+  <data name="AiChangeErrorPageDetailsMissingChange" xml:space="preserve">
+    <value>In dieser Änderung fehlen die Angaben zur Seite.</value>
+  </data>
+  <data name="AiChangeErrorPageCouldNotCreated" xml:space="preserve">
+    <value>Die Seite konnte nicht erstellt werden.</value>
+  </data>
+  <data name="AiChangeErrorCreatedPageCouldNotResolved" xml:space="preserve">
+    <value>Die erstellte Seite konnte nicht gefunden werden.</value>
+  </data>
+  <data name="AiChangeErrorCreatedPageCouldNotArchived" xml:space="preserve">
+    <value>Die erstellte Seite konnte nicht archiviert werden.</value>
+  </data>
+  <data name="AiChangeErrorProjectNameMissingChange" xml:space="preserve">
+    <value>In dieser Änderung fehlt der Projektname.</value>
+  </data>
+  <data name="AiChangeErrorProjectCouldNotCreated" xml:space="preserve">
+    <value>Das Projekt konnte nicht erstellt werden.</value>
+  </data>
+  <data name="AiChangeErrorRelationTypeDetailsMissingChange" xml:space="preserve">
+    <value>In dieser Änderung fehlen die Angaben zum Beziehungstyp.</value>
+  </data>
+  <data name="AiChangeErrorRelationTypeCouldNotCreated" xml:space="preserve">
+    <value>Der Beziehungstyp konnte nicht erstellt werden.</value>
+  </data>
+  <data name="AiChangeErrorSprintDetailsMissingChange" xml:space="preserve">
+    <value>In dieser Änderung fehlen die Angaben zum Sprint.</value>
+  </data>
+  <data name="AiChangeErrorSprintCouldNotCreated" xml:space="preserve">
+    <value>Der Sprint konnte nicht erstellt werden.</value>
+  </data>
+  <data name="AiChangeErrorStatusDetailsMissingChange" xml:space="preserve">
+    <value>In dieser Änderung fehlen die Angaben zum Status.</value>
+  </data>
+  <data name="AiChangeErrorStatusCouldNotCreated" xml:space="preserve">
+    <value>Der Status konnte nicht erstellt werden.</value>
+  </data>
+  <data name="AiChangeErrorTagNameMissingChange" xml:space="preserve">
+    <value>In dieser Änderung fehlt der Tag-Name.</value>
+  </data>
+  <data name="AiChangeErrorTagCouldNotCreated" xml:space="preserve">
+    <value>Der Tag konnte nicht erstellt werden.</value>
+  </data>
+  <data name="AiChangeErrorTaskCouldNotCreated" xml:space="preserve">
+    <value>Die Aufgabe konnte nicht erstellt werden.</value>
+  </data>
+  <data name="AiChangeErrorTaskCreatedButTagsCouldNotSet" xml:space="preserve">
+    <value>Die Aufgabe wurde erstellt, aber ihre Tags konnten nicht gesetzt werden.</value>
+  </data>
+  <data name="AiChangeErrorCreatedTaskCouldNotResolved" xml:space="preserve">
+    <value>Die erstellte Aufgabe konnte nicht gefunden werden.</value>
+  </data>
+  <data name="AiChangeErrorCreatedTaskCouldNotDeleted" xml:space="preserve">
+    <value>Die erstellte Aufgabe konnte nicht gelöscht werden.</value>
+  </data>
+  <data name="AiChangeErrorBoardChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>Das Board dieser Änderung konnte nicht gefunden werden.</value>
+  </data>
+  <data name="AiChangeErrorBoardCouldNotDeleted" xml:space="preserve">
+    <value>Das Board konnte nicht gelöscht werden.</value>
+  </data>
+  <data name="AiChangeErrorBoardGroupChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>Die Board-Gruppe dieser Änderung konnte nicht gefunden werden.</value>
+  </data>
+  <data name="AiChangeErrorBoardGroupCouldNotDeleted" xml:space="preserve">
+    <value>Die Board-Gruppe konnte nicht gelöscht werden.</value>
+  </data>
+  <data name="AiChangeErrorCommentChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>Der Kommentar dieser Änderung konnte nicht gefunden werden.</value>
+  </data>
+  <data name="AiChangeErrorCommentCouldNotDeleted" xml:space="preserve">
+    <value>Der Kommentar konnte nicht gelöscht werden.</value>
+  </data>
+  <data name="AiChangeErrorPageCouldNotDeleted" xml:space="preserve">
+    <value>Die Seite konnte nicht gelöscht werden.</value>
+  </data>
+  <data name="AiChangeErrorProjectChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>Das Projekt dieser Änderung konnte nicht gefunden werden.</value>
+  </data>
+  <data name="AiChangeErrorProjectCouldNotDeleted" xml:space="preserve">
+    <value>Das Projekt konnte nicht gelöscht werden.</value>
+  </data>
+  <data name="AiChangeErrorRelationTypeChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>Der Beziehungstyp dieser Änderung konnte nicht gefunden werden.</value>
+  </data>
+  <data name="AiChangeErrorRelationTypeCouldNotDeleted" xml:space="preserve">
+    <value>Der Beziehungstyp konnte nicht gelöscht werden.</value>
+  </data>
+  <data name="AiChangeErrorSprintCouldNotDeleted" xml:space="preserve">
+    <value>Der Sprint konnte nicht gelöscht werden.</value>
+  </data>
+  <data name="AiChangeErrorStatusChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>Der Status dieser Änderung konnte nicht gefunden werden.</value>
+  </data>
+  <data name="AiChangeErrorStatusCouldNotDeleted" xml:space="preserve">
+    <value>Der Status konnte nicht gelöscht werden.</value>
+  </data>
+  <data name="AiChangeErrorTagChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>Der Tag dieser Änderung konnte nicht gefunden werden.</value>
+  </data>
+  <data name="AiChangeErrorTagNoLongerExistsWorkspace" xml:space="preserve">
+    <value>Der Tag existiert in diesem Arbeitsbereich nicht mehr.</value>
+  </data>
+  <data name="AiChangeErrorTagCouldNotDeleted" xml:space="preserve">
+    <value>Der Tag konnte nicht gelöscht werden.</value>
+  </data>
+  <data name="AiChangeErrorTaskCouldNotDeleted" xml:space="preserve">
+    <value>Die Aufgabe konnte nicht gelöscht werden.</value>
+  </data>
+  <data name="AiChangeErrorDeletedTaskCouldNotResolved" xml:space="preserve">
+    <value>Die gelöschte Aufgabe konnte nicht gefunden werden.</value>
+  </data>
+  <data name="AiChangeErrorTasksLinkRefersCouldNotResolved" xml:space="preserve">
+    <value>Die Aufgaben dieser Verknüpfung konnten nicht gefunden werden.</value>
+  </data>
+  <data name="AiChangeErrorRelationTypeLinkRefersCouldNotResolved" xml:space="preserve">
+    <value>Der Beziehungstyp dieser Verknüpfung konnte nicht gefunden werden.</value>
+  </data>
+  <data name="AiChangeErrorTasksCouldNotLinked" xml:space="preserve">
+    <value>Die Aufgaben konnten nicht verknüpft werden.</value>
+  </data>
+  <data name="AiChangeErrorPageMovedAgainSinceChangeAppliedLeft" xml:space="preserve">
+    <value>Die Seite wurde seit dem Anwenden dieser Änderung erneut verschoben und bleibt daher, wo sie jetzt ist.</value>
+  </data>
+  <data name="AiChangeErrorPageCouldNotMoved" xml:space="preserve">
+    <value>Die Seite konnte nicht verschoben werden.</value>
+  </data>
+  <data name="AiChangeErrorPageCouldNotMovedBack" xml:space="preserve">
+    <value>Die Seite konnte nicht zurückverschoben werden.</value>
+  </data>
+  <data name="AiChangeErrorTaskBoardGroupChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>Die Aufgabe oder die Board-Gruppe dieser Änderung konnte nicht gefunden werden.</value>
+  </data>
+  <data name="AiChangeErrorTaskCouldNotMoved" xml:space="preserve">
+    <value>Die Aufgabe konnte nicht verschoben werden.</value>
+  </data>
+  <data name="AiChangeErrorTaskSprintChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>Die Aufgabe oder der Sprint dieser Änderung konnte nicht gefunden werden.</value>
+  </data>
+  <data name="AiChangeErrorTaskCouldNotMovedSprint" xml:space="preserve">
+    <value>Die Aufgabe konnte nicht in den Sprint verschoben werden.</value>
+  </data>
+  <data name="AiChangeErrorTaskCouldNotRemovedSprint" xml:space="preserve">
+    <value>Die Aufgabe konnte nicht aus dem Sprint entfernt werden.</value>
+  </data>
+  <data name="AiChangeErrorGroupOrderMissingChange" xml:space="preserve">
+    <value>In dieser Änderung fehlt die Reihenfolge der Gruppen.</value>
+  </data>
+  <data name="AiChangeErrorGroupsBoardChangedSinceOrderProposed" xml:space="preserve">
+    <value>Die Gruppen auf diesem Board haben sich geändert, seit die Reihenfolge vorgeschlagen wurde.</value>
+  </data>
+  <data name="AiChangeErrorGroupsCouldNotReordered" xml:space="preserve">
+    <value>Die Gruppen konnten nicht neu angeordnet werden.</value>
+  </data>
+  <data name="AiChangeErrorTaskFlagChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>Die Aufgabe oder die Markierung dieser Änderung konnte nicht gefunden werden.</value>
+  </data>
+  <data name="AiChangeErrorFlagResolutionMissingChange" xml:space="preserve">
+    <value>In dieser Änderung fehlt, wie die Markierung aufgelöst wird.</value>
+  </data>
+  <data name="AiChangeErrorFlagCouldNotCleared" xml:space="preserve">
+    <value>Die Markierung konnte nicht aufgehoben werden.</value>
+  </data>
+  <data name="AiChangeErrorRestoredPageCouldNotResolved" xml:space="preserve">
+    <value>Die wiederhergestellte Seite konnte nicht gefunden werden.</value>
+  </data>
+  <data name="AiChangeErrorPageCouldNotArchivedAgain" xml:space="preserve">
+    <value>Die Seite konnte nicht erneut archiviert werden.</value>
+  </data>
+  <data name="AiChangeErrorPageVersionChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>Die Seitenversion dieser Änderung konnte nicht gefunden werden.</value>
+  </data>
+  <data name="AiChangeErrorPageVersionCouldNotRestored" xml:space="preserve">
+    <value>Die Seitenversion konnte nicht wiederhergestellt werden.</value>
+  </data>
+  <data name="AiChangeErrorRuleTurnedOffSinceChangeAppliedLeft" xml:space="preserve">
+    <value>Die Regel wurde seit dem Anwenden dieser Änderung ein- oder ausgeschaltet und bleibt daher, wie sie jetzt ist.</value>
+  </data>
+  <data name="AiChangeErrorRuleChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>Die Regel dieser Änderung konnte nicht gefunden werden.</value>
+  </data>
+  <data name="AiChangeErrorRuleCouldNotTurnedOff" xml:space="preserve">
+    <value>Die Regel konnte nicht ein- oder ausgeschaltet werden.</value>
+  </data>
+  <data name="AiChangeErrorRuleCouldNotTurnedBack" xml:space="preserve">
+    <value>Die Regel konnte nicht in ihren vorherigen Zustand zurückgesetzt werden.</value>
+  </data>
+  <data name="AiChangeErrorTaskTagsCouldNotUpdated" xml:space="preserve">
+    <value>Die Tags der Aufgabe konnten nicht aktualisiert werden.</value>
+  </data>
+  <data name="AiChangeErrorSprintCouldNotStarted" xml:space="preserve">
+    <value>Der Sprint konnte nicht gestartet werden.</value>
+  </data>
+  <data name="AiChangeErrorLinkChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>Die Verknüpfung dieser Änderung konnte nicht gefunden werden.</value>
+  </data>
+  <data name="AiChangeErrorLinkCouldNotRemoved" xml:space="preserve">
+    <value>Die Verknüpfung konnte nicht entfernt werden.</value>
+  </data>
+  <data name="AiChangeErrorRuleEditedAfterChangeProposedLeftNow" xml:space="preserve">
+    <value>Die Regel wurde bearbeitet, nachdem diese Änderung vorgeschlagen wurde, und bleibt daher, wie sie jetzt ist.</value>
+  </data>
+  <data name="AiChangeErrorRuleEditedSinceChangeAppliedLeftNow" xml:space="preserve">
+    <value>Die Regel wurde seit dem Anwenden dieser Änderung bearbeitet und bleibt daher, wie sie jetzt ist.</value>
+  </data>
+  <data name="AiChangeErrorRuleCouldNotUpdated" xml:space="preserve">
+    <value>Die Regel konnte nicht aktualisiert werden.</value>
+  </data>
+  <data name="AiChangeErrorRuleCouldNotRestored" xml:space="preserve">
+    <value>Die Regel konnte nicht wiederhergestellt werden.</value>
+  </data>
+  <data name="AiChangeErrorBoardCouldNotUpdated" xml:space="preserve">
+    <value>Das Board konnte nicht aktualisiert werden.</value>
+  </data>
+  <data name="AiChangeErrorBoardGroupNoLongerWorkspace" xml:space="preserve">
+    <value>Die Board-Gruppe ist nicht mehr in diesem Arbeitsbereich.</value>
+  </data>
+  <data name="AiChangeErrorBoardGroupCouldNotUpdated" xml:space="preserve">
+    <value>Die Board-Gruppe konnte nicht aktualisiert werden.</value>
+  </data>
+  <data name="AiChangeErrorCommentEditedSinceChangeAppliedLeftNow" xml:space="preserve">
+    <value>Der Kommentar wurde seit dem Anwenden dieser Änderung bearbeitet und bleibt daher, wie er jetzt ist.</value>
+  </data>
+  <data name="AiChangeErrorNewCommentTextMissingChange" xml:space="preserve">
+    <value>In dieser Änderung fehlt der neue Kommentartext.</value>
+  </data>
+  <data name="AiChangeErrorCommentChangeRefersNoLongerExists" xml:space="preserve">
+    <value>Der Kommentar dieser Änderung existiert nicht mehr.</value>
+  </data>
+  <data name="AiChangeErrorCommentNoLongerExists" xml:space="preserve">
+    <value>Der Kommentar existiert nicht mehr.</value>
+  </data>
+  <data name="AiChangeErrorCommentCouldNotSaved" xml:space="preserve">
+    <value>Der Kommentar konnte nicht gespeichert werden.</value>
+  </data>
+  <data name="AiChangeErrorPageEditedAfterChangeProposedAskFresh" xml:space="preserve">
+    <value>Die Seite wurde bearbeitet, nachdem diese Änderung vorgeschlagen wurde. Bitte um einen neuen Vorschlag.</value>
+  </data>
+  <data name="AiChangeErrorTasksPageShouldLinkNotCreatedPage" xml:space="preserve">
+    <value>Einige Aufgaben, auf die diese Seite verlinken sollte, wurden nicht erstellt, daher bleibt die Seite unverändert.</value>
+  </data>
+  <data name="AiChangeErrorPageCouldNotSaved" xml:space="preserve">
+    <value>Die Seite konnte nicht gespeichert werden.</value>
+  </data>
+  <data name="AiChangeErrorPageDetailsChangedSinceApply" xml:space="preserve">
+    <value>Status oder Tags der Seite haben sich seit dem Anwenden dieser Änderung geändert und bleiben daher, wie sie jetzt sind.</value>
+  </data>
+  <data name="AiChangeErrorUnknownTagsHint" xml:space="preserve">
+    <value>Wurde die Änderung angewendet, die sie erstellt?</value>
+  </data>
+  <data name="AiChangeErrorStatusChangeNotDraftPublished" xml:space="preserve">
+    <value>Der Status in dieser Änderung ist weder Entwurf noch veröffentlicht.</value>
+  </data>
+  <data name="AiChangeErrorPageCouldNotUpdated" xml:space="preserve">
+    <value>Die Seite konnte nicht aktualisiert werden.</value>
+  </data>
+  <data name="AiChangeErrorPageDetailsCouldNotRestored" xml:space="preserve">
+    <value>Die Seitenangaben konnten nicht wiederhergestellt werden.</value>
+  </data>
+  <data name="AiChangeErrorProjectCouldNotUpdated" xml:space="preserve">
+    <value>Das Projekt konnte nicht aktualisiert werden.</value>
+  </data>
+  <data name="AiChangeErrorRelationTypeNoLongerExistsWorkspace" xml:space="preserve">
+    <value>Der Beziehungstyp existiert in diesem Arbeitsbereich nicht mehr.</value>
+  </data>
+  <data name="AiChangeErrorRelationTypeCouldNotUpdated" xml:space="preserve">
+    <value>Der Beziehungstyp konnte nicht aktualisiert werden.</value>
+  </data>
+  <data name="AiChangeErrorSprintCouldNotUpdated" xml:space="preserve">
+    <value>Der Sprint konnte nicht aktualisiert werden.</value>
+  </data>
+  <data name="AiChangeErrorStatusNoLongerExistsWorkspace" xml:space="preserve">
+    <value>Der Status existiert in diesem Arbeitsbereich nicht mehr.</value>
+  </data>
+  <data name="AiChangeErrorStatusCouldNotUpdated" xml:space="preserve">
+    <value>Der Status konnte nicht aktualisiert werden.</value>
+  </data>
+  <data name="AiChangeErrorTagRenamedSinceChangeAppliedLeftNow" xml:space="preserve">
+    <value>Der Tag wurde seit dem Anwenden dieser Änderung umbenannt und bleibt daher, wie er jetzt ist.</value>
+  </data>
+  <data name="AiChangeErrorNewTagNameMissingChange" xml:space="preserve">
+    <value>In dieser Änderung fehlt der neue Tag-Name.</value>
+  </data>
+  <data name="AiChangeErrorTagNamedAlreadyExists" xml:space="preserve">
+    <value>Ein Tag namens “{0}” existiert bereits.</value>
+  </data>
+  <data name="AiChangeErrorTagNoLongerWorkspace" xml:space="preserve">
+    <value>Der Tag ist nicht mehr in diesem Arbeitsbereich.</value>
+  </data>
+  <data name="AiChangeErrorAnotherTagNowNamed" xml:space="preserve">
+    <value>Ein anderer Tag heißt jetzt “{0}”.</value>
+  </data>
+  <data name="AiChangeErrorTagCouldNotRenamed" xml:space="preserve">
+    <value>Der Tag konnte nicht umbenannt werden.</value>
+  </data>
+  <data name="AiChangeErrorTaskCouldNotUpdated" xml:space="preserve">
+    <value>Die Aufgabe konnte nicht aktualisiert werden.</value>
+  </data>
+  <data name="AiSummaryAddComment" xml:space="preserve">
+    <value>“{0}” kommentieren</value>
+  </data>
+  <data name="AiSummarySetAssignees" xml:space="preserve">
+    <value>Zugewiesene Personen für “{0}” festlegen</value>
+  </data>
+  <data name="AiSummarySetTags" xml:space="preserve">
+    <value>Tags für “{0}” festlegen</value>
+  </data>
+  <data name="AiSummaryMoveTaskToBoardGroup" xml:space="preserve">
+    <value>“{0}” nach {1} auf {2} verschieben</value>
+  </data>
+  <data name="AiSummaryCreateAutomation" xml:space="preserve">
+    <value>Automatisierung “{0}” erstellen</value>
+  </data>
+  <data name="AiSummaryCreateBoard" xml:space="preserve">
+    <value>Board “{0}” in {1} erstellen</value>
+  </data>
+  <data name="AiSummaryCreateBoardGroup" xml:space="preserve">
+    <value>Gruppe “{0}” zu {1} hinzufügen</value>
+  </data>
+  <data name="AiSummaryCreateProject" xml:space="preserve">
+    <value>Projekt “{0}” erstellen</value>
+  </data>
+  <data name="AiSummaryCreateRelationType" xml:space="preserve">
+    <value>Beziehungstyp “{0}” erstellen</value>
+  </data>
+  <data name="AiSummaryCreateSprint" xml:space="preserve">
+    <value>Sprint “{0}” in {1} erstellen</value>
+  </data>
+  <data name="AiSummaryCreateStatus" xml:space="preserve">
+    <value>Status “{0}” in {1} erstellen</value>
+  </data>
+  <data name="AiSummaryCreateTag" xml:space="preserve">
+    <value>Tag “{0}” erstellen</value>
+  </data>
+  <data name="AiSummaryCreateTask" xml:space="preserve">
+    <value>Aufgabe “{0}” in {1} erstellen</value>
+  </data>
+  <data name="AiSummaryDeleteBoard" xml:space="preserve">
+    <value>Board “{0}” in {1} löschen</value>
+  </data>
+  <data name="AiSummaryDeleteBoardGroup" xml:space="preserve">
+    <value>Gruppe “{0}” aus {1} löschen</value>
+  </data>
+  <data name="AiSummaryDeleteComment" xml:space="preserve">
+    <value>Kommentar von {0} zu {1} löschen</value>
+  </data>
+  <data name="AiSummaryDeletePage" xml:space="preserve">
+    <value>“{0}” und alles darin Archivierte endgültig löschen — dies kann nicht rückgängig gemacht werden</value>
+  </data>
+  <data name="AiSummaryDeleteProject" xml:space="preserve">
+    <value>Projekt “{0}” löschen</value>
+  </data>
+  <data name="AiSummaryDeleteRelationType" xml:space="preserve">
+    <value>Beziehungstyp “{0}” löschen</value>
+  </data>
+  <data name="AiSummaryDeleteStatus" xml:space="preserve">
+    <value>Status “{0}” löschen</value>
+  </data>
+  <data name="AiSummaryDeleteTag" xml:space="preserve">
+    <value>Tag “{0}” löschen</value>
+  </data>
+  <data name="AiSummaryDeleteTask" xml:space="preserve">
+    <value>“{0}” ({1}) löschen</value>
+  </data>
+  <data name="AiSummaryLinkTasks" xml:space="preserve">
+    <value>“{0}” {1} “{2}” verknüpfen</value>
+  </data>
+  <data name="AiSummaryMovePage" xml:space="preserve">
+    <value>“{0}” nach {1} verschieben</value>
+  </data>
+  <data name="AiSummaryReorderBoardGroups" xml:space="preserve">
+    <value>Gruppen auf “{0}” neu anordnen</value>
+  </data>
+  <data name="AiSummaryRestorePage" xml:space="preserve">
+    <value>“{0}” aus dem Archiv wiederherstellen</value>
+  </data>
+  <data name="AiSummaryRestorePageVersion" xml:space="preserve">
+    <value>“{0}” auf Revision {1} vom {2} zurücksetzen</value>
+  </data>
+  <data name="AiSummaryMoveTaskToSprint" xml:space="preserve">
+    <value>“{0}” in den Sprint “{1}” verschieben</value>
+  </data>
+  <data name="AiSummaryAddTasksToSprint" xml:space="preserve">
+    <value>{0} Aufgabe(n) zum Sprint “{1}” hinzufügen</value>
+  </data>
+  <data name="AiSummaryRemoveTaskFromSprint" xml:space="preserve">
+    <value>“{0}” aus {1} nehmen</value>
+  </data>
+  <data name="AiSummaryStartSprint" xml:space="preserve">
+    <value>Sprint “{0}” starten</value>
+  </data>
+  <data name="AiSummaryCompleteSprint" xml:space="preserve">
+    <value>Sprint “{0}” abschließen</value>
+  </data>
+  <data name="AiSummaryCancelSprint" xml:space="preserve">
+    <value>Sprint “{0}” abbrechen</value>
+  </data>
+  <data name="AiSummaryDeleteSprint" xml:space="preserve">
+    <value>Sprint “{0}” löschen</value>
+  </data>
+  <data name="AiSummaryUnlinkTasks" xml:space="preserve">
+    <value>Verknüpfung von “{0}” mit “{1}” entfernen</value>
+  </data>
+  <data name="AiSummaryUpdateAutomation" xml:space="preserve">
+    <value>Automatisierung “{0}” aktualisieren</value>
+  </data>
+  <data name="AiSummaryUpdateNamed" xml:space="preserve">
+    <value>{0} von “{1}” aktualisieren</value>
+  </data>
+  <data name="AiSummaryUpdateBoardGroup" xml:space="preserve">
+    <value>{0} von “{1}” in {2} aktualisieren</value>
+  </data>
+  <data name="AiSummaryUpdateComment" xml:space="preserve">
+    <value>Kommentar zu {0} bearbeiten</value>
+  </data>
+  <data name="AiSummaryRewritePage" xml:space="preserve">
+    <value>“{0}” neu schreiben</value>
+  </data>
+  <data name="AiSummarySetPageDetails" xml:space="preserve">
+    <value>{0} von “{1}” festlegen</value>
+  </data>
+  <data name="AiSummaryUpdateProject" xml:space="preserve">
+    <value>{0} von {1} aktualisieren</value>
+  </data>
+  <data name="AiSummaryUpdateRelationType" xml:space="preserve">
+    <value>{0} von Beziehungstyp “{1}” aktualisieren</value>
+  </data>
+  <data name="AiSummaryUpdateSprint" xml:space="preserve">
+    <value>{0} von Sprint “{1}” aktualisieren</value>
+  </data>
+  <data name="AiSummaryUpdateStatus" xml:space="preserve">
+    <value>{0} von Status “{1}” aktualisieren</value>
+  </data>
+  <data name="AiSummaryRenameTag" xml:space="preserve">
+    <value>Tag “{0}” in “{1}” umbenennen</value>
+  </data>
+  <data name="AiChangeErrorTaskChangeMovesNoLongerWorkspace" xml:space="preserve">
+    <value>Die Aufgabe, die diese Änderung verschiebt, ist nicht mehr in diesem Arbeitsbereich.</value>
+  </data>
+  <data name="AiChangeErrorNoFieldValuesSupplied" xml:space="preserve">
+    <value>Es wurden keine Feldwerte angegeben.</value>
+  </data>
+  <data name="AiChangeErrorNotPartChange" xml:space="preserve">
+    <value>“{0}” ist nicht Teil dieser Änderung.</value>
+  </data>
+  <data name="AiChangeErrorCannotEditedHere" xml:space="preserve">
+    <value>“{0}” kann hier nicht bearbeitet werden.</value>
+  </data>
+  <data name="AiChangeErrorCannotLeftEmpty" xml:space="preserve">
+    <value>“{0}” darf nicht leer bleiben.</value>
+  </data>
+  <data name="AiChangeErrorLongerThanCharacters" xml:space="preserve">
+    <value>“{0}” ist länger als {1} Zeichen.</value>
+  </data>
+  <data name="AiChangeErrorNotPriority" xml:space="preserve">
+    <value>“{0}” ist keine Priorität.</value>
+  </data>
+  <data name="AiChangeErrorNotEstimateUnit" xml:space="preserve">
+    <value>“{0}” ist keine Schätzeinheit.</value>
+  </data>
+  <data name="AiChangeErrorEstimateNeedsValue" xml:space="preserve">
+    <value>Eine Schätzung braucht einen Wert.</value>
+  </data>
+  <data name="AiChangeErrorTShirtEstimatesRunXSXL" xml:space="preserve">
+    <value>T-Shirt-Schätzungen reichen von 1 (XS) bis 5 (XL).</value>
+  </data>
+  <data name="AiChangeErrorEstimateCannotNegative" xml:space="preserve">
+    <value>Eine Schätzung darf nicht negativ sein.</value>
+  </data>
+  <data name="AiChangeErrorMustDateYYYYMMDDForm" xml:space="preserve">
+    <value>“{0}” muss ein Datum im Format JJJJ-MM-TT sein.</value>
+  </data>
+  <data name="AiChangeErrorStatusNotWorkspace" xml:space="preserve">
+    <value>Dieser Status gehört nicht zu diesem Arbeitsbereich.</value>
+  </data>
+  <data name="AiChangeErrorPersonNotMemberWorkspace" xml:space="preserve">
+    <value>Diese Person ist kein Mitglied dieses Arbeitsbereichs.</value>
+  </data>
+  <data name="AiChangeErrorPeopleNotMembersWorkspace" xml:space="preserve">
+    <value>Einige dieser Personen sind keine Mitglieder dieses Arbeitsbereichs.</value>
+  </data>
+  <data name="AiChangeErrorTagsDoNotExistWorkspace" xml:space="preserve">
+    <value>Diese Tags gibt es in diesem Arbeitsbereich nicht: {0}.</value>
+  </data>
+  <data name="AiChangeErrorSprintNotWorkspace" xml:space="preserve">
+    <value>Dieser Sprint gehört nicht zu diesem Arbeitsbereich.</value>
+  </data>
+  <data name="AiChangeErrorSprintCompletedCanNoLongerChanged" xml:space="preserve">
+    <value>Der Sprint “{0}” ist abgeschlossen und kann nicht mehr geändert werden.</value>
+  </data>
+  <data name="AiChangeErrorSprintBelongsDifferentProject" xml:space="preserve">
+    <value>Der Sprint “{0}” gehört zu einem anderen Projekt.</value>
+  </data>
+  <data name="AiChangeErrorBoardGroupNotWorkspace" xml:space="preserve">
+    <value>Diese Board-Gruppe gehört nicht zu diesem Arbeitsbereich.</value>
+  </data>
+  <data name="AiChangeErrorBoardDifferentProject" xml:space="preserve">
+    <value>“{0}” liegt auf einem Board in einem anderen Projekt.</value>
+  </data>
+  <data name="AiErrorAssistantTurnedOff" xml:space="preserve">
+    <value>Der Assistent ist für diesen Arbeitsbereich ausgeschaltet.</value>
+  </data>
+  <data name="AiChangeErrorOnlyPendingChangeSetCanApplied" xml:space="preserve">
+    <value>Nur ein ausstehender Änderungssatz kann angewendet werden.</value>
+  </data>
+  <data name="AiErrorNotWorkspaceMember" xml:space="preserve">
+    <value>Du bist kein Mitglied dieses Arbeitsbereichs.</value>
+  </data>
+  <data name="AiChangeErrorYouDoNotPermissionApplyChanges" xml:space="preserve">
+    <value>Du hast keine Berechtigung, diese Änderungen anzuwenden.</value>
+  </data>
+  <data name="AiChangeErrorStoppedBeforeChangeApplied" xml:space="preserve">
+    <value>Vor dem Anwenden dieser Änderung angehalten.</value>
+  </data>
+  <data name="AiChangeErrorKeptBecauseChangeDependsCouldNotUndone" xml:space="preserve">
+    <value>Beibehalten, weil eine davon abhängige Änderung nicht rückgängig gemacht werden konnte.</value>
+  </data>
+  <data name="AiChangeErrorNoHandlerRegistered" xml:space="preserve">
+    <value>Für {0} ist kein Handler registriert.</value>
+  </data>
+  <data name="AiChangeErrorOnlyAppliedChangeSetCanUndone" xml:space="preserve">
+    <value>Nur ein angewendeter Änderungssatz kann rückgängig gemacht werden.</value>
+  </data>
+  <data name="AiChangeErrorNothingLeftUndoChangeSet" xml:space="preserve">
+    <value>In diesem Änderungssatz gibt es nichts mehr rückgängig zu machen.</value>
+  </data>
+  <data name="AiChangeErrorYouDoNotPermissionUndoChanges" xml:space="preserve">
+    <value>Du hast keine Berechtigung, diese Änderungen rückgängig zu machen.</value>
+  </data>
+  <data name="AiChangeErrorChangeCannotUndone" xml:space="preserve">
+    <value>Eine {0}-Änderung kann nicht rückgängig gemacht werden.</value>
+  </data>
+  <data name="AiChangeErrorOnlyAppliedChangeSetFailedChangesRetry" xml:space="preserve">
+    <value>Nur ein angewendeter Änderungssatz hat fehlgeschlagene Änderungen zum Wiederholen.</value>
+  </data>
+  <data name="AiChangeErrorUndoneChangeSetCannotAppliedAgain" xml:space="preserve">
+    <value>Ein rückgängig gemachter Änderungssatz kann nicht erneut angewendet werden.</value>
+  </data>
+  <data name="AiChangeErrorNothingLeftRetryChangeSet" xml:space="preserve">
+    <value>In diesem Änderungssatz gibt es nichts mehr zu wiederholen.</value>
+  </data>
+  <data name="AiSummaryEnableAutomation" xml:space="preserve">
+    <value>Automatisierung “{0}” aktivieren</value>
+  </data>
+  <data name="AiSummaryDisableAutomation" xml:space="preserve">
+    <value>Automatisierung “{0}” deaktivieren</value>
+  </data>
+  <data name="AiSummaryCreateFolder" xml:space="preserve">
+    <value>Ordner “{0}” in {1} erstellen</value>
+  </data>
+  <data name="AiSummaryCreateDocument" xml:space="preserve">
+    <value>Dokument “{0}” in {1} erstellen</value>
+  </data>
+  <data name="AiSummaryResolveTaskFlag" xml:space="preserve">
+    <value>Markierung “{0}” an “{1}” als gelöst aufheben</value>
+  </data>
+  <data name="AiSummaryDismissTaskFlag" xml:space="preserve">
+    <value>Markierung “{0}” an “{1}” als verworfen aufheben</value>
+  </data>
+  <data name="AiSummaryArchivePage" xml:space="preserve">
+    <value>“{0}” archivieren</value>
+  </data>
+  <data name="AiSummaryArchivePageWithOneInside" xml:space="preserve">
+    <value>“{0}” und die 1 Seite darin archivieren</value>
+  </data>
+  <data name="AiSummaryArchivePageWithManyInside" xml:space="preserve">
+    <value>“{0}” und die {1} Seiten darin archivieren</value>
+  </data>
+  <data name="AiChangeErrorSkippedForReference" xml:space="preserve">
+    <value>Übersprungen, weil {0} nicht erstellt wurde.</value>
+  </data>
+  <data name="AiPageTopLevel" xml:space="preserve">
+    <value>Oberste Ebene</value>
+  </data>
+  <data name="ListPair" xml:space="preserve">
+    <value>{0} und {1}</value>
+  </data>
+  <data name="AiAutomationEnabled" xml:space="preserve">
+    <value>Aktiviert</value>
+  </data>
+  <data name="AiAutomationDisabled" xml:space="preserve">
+    <value>Deaktiviert</value>
+  </data>
+  <data name="AiAutomationScopeWorkspace" xml:space="preserve">
+    <value>Arbeitsbereich</value>
+  </data>
+  <data name="AiAutomationScopeProject" xml:space="preserve">
+    <value>Projekt · {0}</value>
+  </data>
+  <data name="AiAutomationScopeBoard" xml:space="preserve">
+    <value>Board · {0}</value>
+  </data>
+  <data name="AiAutomationScopeSprint" xml:space="preserve">
+    <value>Sprint · {0}</value>
+  </data>
+  <data name="AiAutomationCancelsOnePendingAction" xml:space="preserve">
+    <value>Das Anwenden bricht 1 ausstehende verzögerte Aktion ab, und Rückgängigmachen stellt sie nicht wieder her.</value>
+  </data>
+  <data name="AiAutomationCancelsPendingActions" xml:space="preserve">
+    <value>Das Anwenden bricht {0} ausstehende verzögerte Aktionen ab, und Rückgängigmachen stellt sie nicht wieder her.</value>
+  </data>
+  <data name="AiFieldNameName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="AiFieldNameDescription" xml:space="preserve">
+    <value>Beschreibung</value>
+  </data>
+  <data name="AiFieldNameStatus" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="AiFieldNamePriority" xml:space="preserve">
+    <value>Priorität</value>
+  </data>
+  <data name="AiFieldNameStartDate" xml:space="preserve">
+    <value>Startdatum</value>
+  </data>
+  <data name="AiFieldNameEndDate" xml:space="preserve">
+    <value>Enddatum</value>
+  </data>
+  <data name="AiFieldNameDueDate" xml:space="preserve">
+    <value>Fälligkeitsdatum</value>
+  </data>
+  <data name="AiFieldNameEstimate" xml:space="preserve">
+    <value>Schätzung</value>
+  </data>
+  <data name="AiFieldNameAssignee" xml:space="preserve">
+    <value>Zuständige Person</value>
+  </data>
+  <data name="AiFieldNameAssignees" xml:space="preserve">
+    <value>zugewiesene Personen</value>
+  </data>
+  <data name="AiFieldNameTags" xml:space="preserve">
+    <value>Tags</value>
+  </data>
+  <data name="AiFieldNameTag" xml:space="preserve">
+    <value>Tag</value>
+  </data>
+  <data name="AiFieldNameSprint" xml:space="preserve">
+    <value>Sprint</value>
+  </data>
+  <data name="AiFieldNameProject" xml:space="preserve">
+    <value>Projekt</value>
+  </data>
+  <data name="AiFieldNameBoard" xml:space="preserve">
+    <value>Board</value>
+  </data>
+  <data name="AiFieldNameBoardGroup" xml:space="preserve">
+    <value>Board-Gruppe</value>
+  </data>
+  <data name="AiFieldNameGoal" xml:space="preserve">
+    <value>Ziel</value>
+  </data>
+  <data name="AiFieldNameComment" xml:space="preserve">
+    <value>Kommentar</value>
+  </data>
+  <data name="AiFieldNameFlag" xml:space="preserve">
+    <value>Markierung</value>
+  </data>
+  <data name="AiFieldNameRepositoryUrl" xml:space="preserve">
+    <value>Repository-URL</value>
+  </data>
+  <data name="AiFieldNameBody" xml:space="preserve">
+    <value>Inhalt</value>
+  </data>
+  <data name="AiFieldNameKind" xml:space="preserve">
+    <value>Art</value>
+  </data>
+  <data name="AiFieldNameParent" xml:space="preserve">
+    <value>Ort</value>
+  </data>
+  <data name="AiFieldNameEnabled" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="AiFieldNameScope" xml:space="preserve">
+    <value>Geltungsbereich</value>
+  </data>
+  <data name="AiFieldNameRunsAs" xml:space="preserve">
+    <value>ausführendes Konto</value>
+  </data>
+  <data name="AiFieldNameTrigger" xml:space="preserve">
+    <value>Auslöser</value>
+  </data>
+  <data name="AiFieldNameActions" xml:space="preserve">
+    <value>Aktionen</value>
+  </data>
+  <data name="AiFieldNameRule" xml:space="preserve">
+    <value>Regel</value>
+  </data>
+  <data name="AiFieldNameIdentifier" xml:space="preserve">
+    <value>Kennung</value>
+  </data>
+  <data name="AiFieldNameCategory" xml:space="preserve">
+    <value>Kategorie</value>
+  </data>
+  <data name="AiFieldNameColor" xml:space="preserve">
+    <value>Farbe</value>
+  </data>
+  <data name="AiFieldNameInverseName" xml:space="preserve">
+    <value>umgekehrter Name</value>
+  </data>
+  <data name="AiFieldNameReason" xml:space="preserve">
+    <value>Grund</value>
+  </data>
+  <data name="AiFieldNameAuthor" xml:space="preserve">
+    <value>Verfasser</value>
+  </data>
+  <data name="AiFieldNameOrder" xml:space="preserve">
+    <value>Reihenfolge</value>
+  </data>
+  <data name="AiFieldNameRelationType" xml:space="preserve">
+    <value>Beziehungstyp</value>
+  </data>
+  <data name="AiFieldNameTasks" xml:space="preserve">
+    <value>Aufgaben</value>
+  </data>
+  <data name="StatusCategoryNew" xml:space="preserve">
+    <value>Neu</value>
+  </data>
+  <data name="StatusCategoryBacklog" xml:space="preserve">
+    <value>Backlog</value>
+  </data>
+  <data name="StatusCategoryTodo" xml:space="preserve">
+    <value>Zu erledigen</value>
+  </data>
+  <data name="StatusCategoryActive" xml:space="preserve">
+    <value>Aktiv</value>
+  </data>
+  <data name="StatusCategoryDone" xml:space="preserve">
+    <value>Fertig</value>
+  </data>
+  <data name="StatusCategoryInactive" xml:space="preserve">
+    <value>Inaktiv</value>
+  </data>
+  <data name="SprintStatusPlanning" xml:space="preserve">
+    <value>In Planung</value>
+  </data>
+  <data name="SprintStatusActive" xml:space="preserve">
+    <value>Aktiv</value>
+  </data>
+  <data name="SprintStatusCompleted" xml:space="preserve">
+    <value>Abgeschlossen</value>
+  </data>
+  <data name="SprintStatusCancelled" xml:space="preserve">
+    <value>Abgebrochen</value>
+  </data>
+  <data name="RelationCategoryHierarchy" xml:space="preserve">
+    <value>Hierarchie</value>
+  </data>
+  <data name="RelationCategoryDependency" xml:space="preserve">
+    <value>Abhängigkeit</value>
+  </data>
+  <data name="RelationCategoryRelated" xml:space="preserve">
+    <value>Verwandt</value>
+  </data>
+  <data name="RelationCategoryDuplicate" xml:space="preserve">
+    <value>Duplikat</value>
+  </data>
+  <data name="PageKindFolder" xml:space="preserve">
+    <value>Ordner</value>
+  </data>
+  <data name="PageKindDocument" xml:space="preserve">
+    <value>Dokument</value>
+  </data>
+  <data name="FlagResolutionTypeResolved" xml:space="preserve">
+    <value>Gelöst</value>
+  </data>
+  <data name="FlagResolutionTypeDismissed" xml:space="preserve">
+    <value>Verworfen</value>
+  </data>
+  <data name="AutomationTriggerTypeTaskUnassignedFor" xml:space="preserve">
+    <value>Aufgabe ist nicht zugewiesen</value>
+  </data>
+  <data name="AutomationTriggerTypeTaskChanged" xml:space="preserve">
+    <value>Aufgabe ändert sich</value>
+  </data>
+  <data name="AutomationTriggerTypeTaskDueDateApproaching" xml:space="preserve">
+    <value>Fälligkeitsdatum der Aufgabe rückt näher</value>
+  </data>
+  <data name="AutomationTriggerTypeTaskCreated" xml:space="preserve">
+    <value>Aufgabe wird erstellt</value>
+  </data>
+  <data name="AutomationTriggerTypeTaskOverdue" xml:space="preserve">
+    <value>Aufgabe wird überfällig</value>
+  </data>
+  <data name="AutomationTriggerTypeTaskHasNoDueDate" xml:space="preserve">
+    <value>Aufgabe hat kein Fälligkeitsdatum</value>
+  </data>
+  <data name="AutomationTriggerTypeTaskInactiveFor" xml:space="preserve">
+    <value>Aufgabe bleibt inaktiv</value>
+  </data>
+  <data name="AutomationTriggerTypeSprintStarted" xml:space="preserve">
+    <value>Sprint beginnt</value>
+  </data>
+  <data name="AutomationTriggerTypeSprintCompleted" xml:space="preserve">
+    <value>Sprint wird abgeschlossen</value>
+  </data>
+  <data name="AutomationTriggerTypeSprintEndingSoon" xml:space="preserve">
+    <value>Sprint-Ende rückt näher</value>
+  </data>
+  <data name="AutomationTriggerTypeTaskBlocked" xml:space="preserve">
+    <value>Aufgabe wird blockiert</value>
+  </data>
+  <data name="AutomationTriggerTypeTaskUnblocked" xml:space="preserve">
+    <value>Aufgabe wird entsperrt</value>
+  </data>
+  <data name="AutomationTriggerTypeSubtasksCompleted" xml:space="preserve">
+    <value>Alle Teilaufgaben abgeschlossen</value>
+  </data>
+  <data name="AutomationTriggerTypePullRequestOpened" xml:space="preserve">
+    <value>Pull Request geöffnet</value>
+  </data>
+  <data name="AutomationTriggerTypePullRequestMerged" xml:space="preserve">
+    <value>Pull Request zusammengeführt</value>
+  </data>
+  <data name="AutomationTriggerTypeChecksFailed" xml:space="preserve">
+    <value>Prüfungen schlagen fehl</value>
+  </data>
+  <data name="AutomationActionTypeNotifyTaskAssignees" xml:space="preserve">
+    <value>Zuständige benachrichtigen</value>
+  </data>
+  <data name="AutomationActionTypeFlagTask" xml:space="preserve">
+    <value>Aufgabe markieren</value>
+  </data>
+  <data name="AutomationActionTypeUpdateTask" xml:space="preserve">
+    <value>Aufgabe aktualisieren</value>
+  </data>
+  <data name="AutomationActionTypeAddComment" xml:space="preserve">
+    <value>Kommentar hinzufügen</value>
+  </data>
+  <data name="AutomationActionTypeDeleteTask" xml:space="preserve">
+    <value>Aufgabe löschen</value>
+  </data>
+  <data name="AutomationActionTypeCreateTask" xml:space="preserve">
+    <value>Aufgabe erstellen</value>
+  </data>
+  <data name="AutomationActionTypeManageTaskRelation" xml:space="preserve">
+    <value>Aufgabenbeziehung verwalten</value>
+  </data>
+  <data name="AiSummaryRenamePage" xml:space="preserve">
+    <value>“{0}” umbenennen</value>
+  </data>
+  <data name="ErrorAssigneeIDsCannotEmptyDuplicated" xml:space="preserve">
+    <value>Die IDs der zugewiesenen Personen dürfen nicht leer oder doppelt sein</value>
+  </data>
+  <data name="ErrorAssigneesNotFoundWorkspace" xml:space="preserve">
+    <value>Zugewiesene Personen wurden im Arbeitsbereich nicht gefunden: {0}</value>
+  </data>
+  <data name="ErrorTagsCannotEmptyDuplicated" xml:space="preserve">
+    <value>Tags dürfen nicht leer oder doppelt sein</value>
+  </data>
+  <data name="ErrorTagsNotFoundWorkspace" xml:space="preserve">
+    <value>Tags wurden im Arbeitsbereich nicht gefunden: {0}</value>
+  </data>
+  <data name="ErrorSetupTemplateNotFound" xml:space="preserve">
+    <value>Einrichtungsvorlage nicht gefunden</value>
+  </data>
+  <data name="ErrorDefaultTaskStatusNotFound" xml:space="preserve">
+    <value>Standard-Aufgabenstatus nicht gefunden</value>
+  </data>
+  <data name="ErrorRelatedTaskKeysCannotEmpty" xml:space="preserve">
+    <value>Die Schlüssel verknüpfter Aufgaben dürfen nicht leer sein</value>
+  </data>
+  <data name="ErrorLinkedMoreThanOnceSameRelation" xml:space="preserve">
+    <value>{0} ist mehrfach über dieselbe Beziehung verknüpft.</value>
+  </data>
+  <data name="ErrorRelationTypeIdNotFound" xml:space="preserve">
+    <value>Beziehungstyp mit der ID {0} nicht gefunden</value>
+  </data>
+  <data name="ErrorTaskKeyNotFound" xml:space="preserve">
+    <value>Aufgabe mit dem Schlüssel {0} nicht gefunden</value>
+  </data>
+  <data name="ErrorTaskCanOnlyOneLink" xml:space="preserve">
+    <value>Eine Aufgabe kann nur eine „{0}“-Verknüpfung haben.</value>
+  </data>
+  <data name="ErrorTaskAlreadyLinkTaskCanOnlyOne" xml:space="preserve">
+    <value>Diese Aufgabe hat bereits eine „{0}“-Verknüpfung. Eine Aufgabe kann nur eine haben.</value>
+  </data>
+  <data name="ErrorWouldCreateCircularChain" xml:space="preserve">
+    <value>Dadurch entstünde eine zirkuläre „{0}“-Kette.</value>
+  </data>
+  <data name="ErrorInvalidPreferenceKeyScopeValue" xml:space="preserve">
+    <value>Ungültiger Einstellungsschlüssel, Geltungsbereich oder Wert.</value>
+  </data>
+  <data name="ErrorInvalidPreferenceKeyScope" xml:space="preserve">
+    <value>Ungültiger Einstellungsschlüssel oder Geltungsbereich.</value>
+  </data>
+  <data name="ErrorServiceAccountNameMustBetweenCharacters" xml:space="preserve">
+    <value>Der Name des Dienstkontos muss zwischen 2 und 128 Zeichen lang sein.</value>
+  </data>
+  <data name="ErrorDisabledServiceAccountCannotUpdated" xml:space="preserve">
+    <value>Ein deaktiviertes Dienstkonto kann nicht aktualisiert werden.</value>
+  </data>
+  <data name="ErrorServiceAccountNeedsAtLeastOnePermission" xml:space="preserve">
+    <value>Ein Dienstkonto braucht mindestens eine Berechtigung.</value>
+  </data>
+  <data name="ErrorServiceAccountCannotGrantedPermissionsOwnerDoes" xml:space="preserve">
+    <value>Einem Dienstkonto können keine Berechtigungen erteilt werden, die sein Besitzer nicht hat.</value>
+  </data>
+  <data name="ErrorEveryServiceAccountOwnerMustHumanMember" xml:space="preserve">
+    <value>Jeder Besitzer eines Dienstkontos muss ein menschliches Mitglied des Arbeitsbereichs sein.</value>
+  </data>
+  <data name="ErrorDeletedServiceAccountsCannotCreateCredentials" xml:space="preserve">
+    <value>Gelöschte Dienstkonten können keine Zugangsdaten erstellen.</value>
+  </data>
+  <data name="ErrorServiceAccountDoesNotWorkspaceMembership" xml:space="preserve">
+    <value>Das Dienstkonto hat keine Mitgliedschaft im Arbeitsbereich.</value>
+  </data>
+  <data name="ErrorCredentialScopesMustSubsetServiceAccountPermissions" xml:space="preserve">
+    <value>Die Geltungsbereiche der Zugangsdaten müssen eine Teilmenge der Berechtigungen des Dienstkontos sein.</value>
+  </data>
+  <data name="ErrorCredentialNameMustBetweenCharacters" xml:space="preserve">
+    <value>Der Name der Zugangsdaten muss zwischen 2 und 128 Zeichen lang sein.</value>
+  </data>
+  <data name="ErrorCredentialExpiryMustWithinNextDays" xml:space="preserve">
+    <value>Das Ablaufdatum der Zugangsdaten muss innerhalb der nächsten 366 Tage liegen.</value>
+  </data>
+  <data name="ErrorDeletedServiceAccountsCannotChangeCredentials" xml:space="preserve">
+    <value>Gelöschte Dienstkonten können keine Zugangsdaten ändern.</value>
+  </data>
+  <data name="ErrorRevokedCredentialsCannotChangeScopes" xml:space="preserve">
+    <value>Bei widerrufenen Zugangsdaten können die Geltungsbereiche nicht geändert werden.</value>
+  </data>
+  <data name="ErrorCredentialNeedsAtLeastOneScope" xml:space="preserve">
+    <value>Zugangsdaten brauchen mindestens einen Geltungsbereich.</value>
+  </data>
+  <data name="ErrorUnknownAIProvider" xml:space="preserve">
+    <value>Unbekannter KI-Anbieter.</value>
+  </data>
+  <data name="ErrorAPIKeyNotValid" xml:space="preserve">
+    <value>Der API-Schlüssel ist ungültig.</value>
+  </data>
+  <data name="ErrorLabelMustBetweenCharacters" xml:space="preserve">
+    <value>Die Bezeichnung muss zwischen 1 und {0} Zeichen lang sein.</value>
+  </data>
+  <data name="ErrorModelNotSupportedProvider" xml:space="preserve">
+    <value>Das Modell wird von diesem Anbieter nicht unterstützt.</value>
+  </data>
+  <data name="ErrorOnlyPendingChangeSetCanDiscarded" xml:space="preserve">
+    <value>Nur ein ausstehender Änderungssatz kann verworfen werden.</value>
+  </data>
+  <data name="ErrorUnknownSearchProvider" xml:space="preserve">
+    <value>Unbekannter Suchanbieter.</value>
+  </data>
+  <data name="ErrorAPIKeyRequiredProvider" xml:space="preserve">
+    <value>Für diesen Anbieter ist ein API-Schlüssel erforderlich.</value>
+  </data>
+  <data name="ErrorGoogleSearchNeedsSearchEngineId" xml:space="preserve">
+    <value>Die Google-Suche braucht eine Suchmaschinen-ID.</value>
+  </data>
+  <data name="ErrorSearchEngineIdMustCharactersFewer" xml:space="preserve">
+    <value>Die Suchmaschinen-ID darf höchstens {0} Zeichen lang sein.</value>
+  </data>
+  <data name="ErrorSearXNGNeedsBaseURLInstance" xml:space="preserve">
+    <value>SearXNG braucht die Basis-URL einer Instanz.</value>
+  </data>
+  <data name="ErrorEndpointMustCharactersFewer" xml:space="preserve">
+    <value>Der Endpunkt darf höchstens {0} Zeichen lang sein.</value>
+  </data>
+  <data name="ErrorEndpointMustAbsoluteHttpHttpsURL" xml:space="preserve">
+    <value>Der Endpunkt muss eine absolute http- oder https-URL sein.</value>
+  </data>
+  <data name="ErrorSpendCapMustMoreThanNoMore" xml:space="preserve">
+    <value>Ein Ausgabenlimit muss größer als 0 und höchstens {0:N0} $ sein.</value>
+  </data>
+  <data name="ErrorOnlyPendingChangeSetCanEdited" xml:space="preserve">
+    <value>Nur ein ausstehender Änderungssatz kann bearbeitet werden.</value>
+  </data>
+  <data name="ErrorChangeAlreadyRunCannotEdited" xml:space="preserve">
+    <value>Diese Änderung wurde bereits ausgeführt und kann daher nicht bearbeitet werden.</value>
+  </data>
+  <data name="ErrorAtLeastOneTaskRequired" xml:space="preserve">
+    <value>Mindestens eine Aufgabe ist erforderlich</value>
+  </data>
+  <data name="ErrorStatusIdNotFoundWorkspace" xml:space="preserve">
+    <value>Status mit der ID {0} wurde im Arbeitsbereich nicht gefunden</value>
+  </data>
+  <data name="ErrorSprintIdClearSprintCannotBothSupplied" xml:space="preserve">
+    <value>SprintId und ClearSprint können nicht gleichzeitig angegeben werden</value>
+  </data>
+  <data name="ErrorDueDateClearDueDateCannotBothSupplied" xml:space="preserve">
+    <value>DueDate und ClearDueDate können nicht gleichzeitig angegeben werden</value>
+  </data>
+  <data name="ErrorSprintIdNotFoundWorkspace" xml:space="preserve">
+    <value>Sprint mit der ID {0} wurde im Arbeitsbereich nicht gefunden</value>
+  </data>
+  <data name="ErrorCompletedCancelledSprintsCannotChanged" xml:space="preserve">
+    <value>Abgeschlossene oder abgebrochene Sprints können nicht geändert werden</value>
+  </data>
+  <data name="ErrorEveryTaskMustBelongToSprintProject" xml:space="preserve">
+    <value>Jede Aufgabe muss zum Projekt des Sprints gehören</value>
+  </data>
+  <data name="ErrorProjectIdNotFound" xml:space="preserve">
+    <value>Projekt mit der ID {0} nicht gefunden</value>
+  </data>
+  <data name="ErrorTaskNotBoard" xml:space="preserve">
+    <value>Die Aufgabe ist nicht auf dem Board „{0}“</value>
+  </data>
+  <data name="ErrorBoardGroupDoesNotBelongBoard" xml:space="preserve">
+    <value>Die Board-Gruppe gehört zu keinem Board.</value>
+  </data>
+  <data name="ErrorBoardGroupBelongsDifferentProject" xml:space="preserve">
+    <value>Die Board-Gruppe “{0}” gehört zu einem anderen Projekt.</value>
+  </data>
+  <data name="ErrorBoardNotInTaskProject" xml:space="preserve">
+    <value>Das Board „{0}“ gehört nicht zum Projekt der Aufgabe</value>
+  </data>
+  <data name="ErrorBoardNoGroupPlaceTask" xml:space="preserve">
+    <value>Das Board „{0}“ hat keine Gruppe für die Aufgabe</value>
+  </data>
+  <data name="ErrorTaskAlreadyBoard" xml:space="preserve">
+    <value>Die Aufgabe ist bereits auf dem Board „{0}“</value>
+  </data>
+  <data name="ErrorWorkspaceKeyNotFound" xml:space="preserve">
+    <value>Arbeitsbereich mit dem Schlüssel {0} nicht gefunden</value>
+  </data>
+  <data name="ErrorTaskStatusNotFound" xml:space="preserve">
+    <value>Aufgabenstatus nicht gefunden</value>
+  </data>
+  <data name="ErrorSprintIdNotFound" xml:space="preserve">
+    <value>Sprint mit der ID {0} nicht gefunden</value>
+  </data>
+  <data name="ErrorUnableGetScopeIdProjectId" xml:space="preserve">
+    <value>Die Bereichs-ID für das Projekt mit der ID {0} konnte nicht ermittelt werden</value>
+  </data>
+  <data name="ErrorOnlyTasksAlreadyBoardCanMovedBetween" xml:space="preserve">
+    <value>Nur Aufgaben, die bereits auf diesem Board sind, können zwischen seinen Gruppen verschoben werden.</value>
+  </data>
+  <data name="ErrorWorkspaceNotFound" xml:space="preserve">
+    <value>Arbeitsbereich nicht gefunden</value>
+  </data>
+  <data name="ErrorNoEmailAddressesProvided" xml:space="preserve">
+    <value>Keine E-Mail-Adressen angegeben</value>
+  </data>
+  <data name="ErrorCannotRemoveWorkspaceOwner" xml:space="preserve">
+    <value>Der Besitzer des Arbeitsbereichs kann nicht entfernt werden</value>
+  </data>
+  <data name="ErrorNoPendingInviteFoundEmail" xml:space="preserve">
+    <value>Für diese E-Mail-Adresse gibt es keine ausstehende Einladung</value>
+  </data>
+  <data name="ErrorOwnerAssignmentRequiresOwnershipTransfer" xml:space="preserve">
+    <value>Die Rolle als Besitzer kann nur durch eine Eigentumsübertragung vergeben werden</value>
+  </data>
+  <data name="ErrorYouCannotChangeYourOwnWorkspaceRole" xml:space="preserve">
+    <value>Du kannst deine eigene Rolle im Arbeitsbereich nicht ändern</value>
+  </data>
+  <data name="ErrorUserNotMemberWorkspace" xml:space="preserve">
+    <value>Die Person ist kein Mitglied dieses Arbeitsbereichs</value>
+  </data>
+  <data name="ErrorWorkspaceOwnerRoleCannotChangedHere" xml:space="preserve">
+    <value>Die Besitzerrolle des Arbeitsbereichs kann hier nicht geändert werden</value>
+  </data>
+  <data name="ErrorMapFileBeforeCommitting" xml:space="preserve">
+    <value>Ordne die Datei zu, bevor du sie übernimmst.</value>
+  </data>
+  <data name="ErrorImportCannotCommitted" xml:space="preserve">
+    <value>Ein Import im Zustand {0} kann nicht übernommen werden.</value>
+  </data>
+  <data name="ErrorImportCannotPreviewed" xml:space="preserve">
+    <value>Für einen Import im Zustand {0} ist keine Vorschau möglich.</value>
+  </data>
+  <data name="ErrorMapFileBeforePreviewing" xml:space="preserve">
+    <value>Ordne die Datei zu, bevor du eine Vorschau anzeigst.</value>
+  </data>
+  <data name="ErrorImportCannotInspected" xml:space="preserve">
+    <value>Ein Import im Zustand {0} kann nicht geprüft werden.</value>
+  </data>
+  <data name="ErrorImportCannotMapped" xml:space="preserve">
+    <value>Ein Import im Zustand {0} kann nicht zugeordnet werden.</value>
+  </data>
+  <data name="ErrorImportRunningCannotDeleted" xml:space="preserve">
+    <value>Ein laufender Import kann nicht gelöscht werden.</value>
+  </data>
+  <data name="ErrorFileEmpty" xml:space="preserve">
+    <value>Die Datei ist leer.</value>
+  </data>
+  <data name="ErrorFileExceedsByteLimit" xml:space="preserve">
+    <value>Die Datei überschreitet das Limit von {0} Byte.</value>
+  </data>
+  <data name="ErrorImportSessionCouldNotReadBack" xml:space="preserve">
+    <value>Die Importsitzung konnte nicht erneut gelesen werden.</value>
+  </data>
+  <data name="ErrorNameRequired" xml:space="preserve">
+    <value>Ein Name ist erforderlich.</value>
+  </data>
+  <data name="ErrorExportDefinitionNamedAlreadyExists" xml:space="preserve">
+    <value>Eine Exportdefinition namens „{0}“ existiert bereits.</value>
+  </data>
+  <data name="ErrorArchiveExportRunJob" xml:space="preserve">
+    <value>Ein Archivexport muss als Job laufen.</value>
+  </data>
+  <data name="ErrorExportProducesAboutRowsRunJobInstead" xml:space="preserve">
+    <value>Dieser Export erzeugt etwa {0} Zeilen. Führe ihn stattdessen als Job aus.</value>
+  </data>
+  <data name="ErrorWorkspaceAlreadyExportJobsFlightWaitOne" xml:space="preserve">
+    <value>Dieser Arbeitsbereich hat bereits {0} laufende Exportjobs. Warte, bis einer fertig ist, und versuche es erneut.</value>
+  </data>
+  <data name="ErrorExportJobCouldNotReadBack" xml:space="preserve">
+    <value>Der Exportjob konnte nicht erneut gelesen werden.</value>
+  </data>
+  <data name="ErrorArchiveWouldAddAboutBytesFilesBut" xml:space="preserve">
+    <value>Dieses Archiv würde etwa {0} Byte an Dateien hinzufügen, es sind aber nur noch {1} Byte Speicher im Arbeitsbereich frei. Exportiere es ohne Dateien oder schaffe Platz.</value>
+  </data>
+  <data name="ErrorExportCannotCancelled" xml:space="preserve">
+    <value>Ein Export im Zustand {0} kann nicht abgebrochen werden.</value>
+  </data>
+  <data name="ErrorExportCannotDeletedCancelFirst" xml:space="preserve">
+    <value>Ein Export im Zustand {0} kann nicht gelöscht werden. Brich ihn zuerst ab.</value>
+  </data>
+  <data name="ErrorImportCannotUndone" xml:space="preserve">
+    <value>Ein Import im Zustand {0} kann nicht rückgängig gemacht werden.</value>
+  </data>
+  <data name="ErrorImportTooOldUndo" xml:space="preserve">
+    <value>Dieser Import ist zu alt, um ihn rückgängig zu machen.</value>
+  </data>
+  <data name="ErrorAssistantTurnedOffWorkspace" xml:space="preserve">
+    <value>Der Assistent ist für diesen Arbeitsbereich ausgeschaltet.</value>
+  </data>
+  <data name="ErrorInspectFileBeforeAskingAssistant" xml:space="preserve">
+    <value>Prüfe die Datei, bevor du den Assistenten fragst.</value>
+  </data>
+  <data name="ErrorNoAssistantKeySetUpWorkspace" xml:space="preserve">
+    <value>Für diesen Arbeitsbereich ist kein Assistenten-Schlüssel eingerichtet.</value>
+  </data>
+  <data name="ErrorAssistantDidNotProposeUsableMappingSuggested" xml:space="preserve">
+    <value>Der Assistent hat keine brauchbare Zuordnung vorgeschlagen. Die vorgeschlagene Zuordnung bleibt unverändert.</value>
+  </data>
+  <data name="ErrorExportNothingDownload" xml:space="preserve">
+    <value>Dieser Export ist im Zustand {0} und hat nichts zum Herunterladen.</value>
+  </data>
+  <data name="ErrorExportExpired" xml:space="preserve">
+    <value>Dieser Export ist abgelaufen.</value>
+  </data>
+  <data name="ErrorInspectFileBeforeAskingMapping" xml:space="preserve">
+    <value>Prüfe die Datei, bevor du eine Zuordnung anforderst.</value>
+  </data>
+  <data name="ErrorOnlyPlanningSprintsCanStarted" xml:space="preserve">
+    <value>Nur Sprints in Planung können gestartet werden</value>
+  </data>
+  <data name="ErrorProjectAlreadyActiveSprint" xml:space="preserve">
+    <value>Dieses Projekt hat bereits einen aktiven Sprint</value>
+  </data>
+  <data name="ErrorOnlyActiveSprintsCanCompleted" xml:space="preserve">
+    <value>Nur aktive Sprints können abgeschlossen werden</value>
+  </data>
+  <data name="ErrorSprintCarryUnfinishedTasksOverNotFound" xml:space="preserve">
+    <value>Der Sprint, in den unerledigte Aufgaben übernommen werden sollen, wurde in diesem Projekt nicht gefunden</value>
+  </data>
+  <data name="ErrorUnfinishedTasksCannotCarryOverSprintBeing" xml:space="preserve">
+    <value>Unerledigte Aufgaben können nicht in den Sprint übernommen werden, der gerade abgeschlossen wird</value>
+  </data>
+  <data name="ErrorUnfinishedTasksCanOnlyCarryOverPlanning" xml:space="preserve">
+    <value>Unerledigte Aufgaben können nur in einen geplanten oder aktiven Sprint übernommen werden</value>
+  </data>
+  <data name="ErrorOnlyPlanningCancelledSprintsCanDeleted" xml:space="preserve">
+    <value>Nur Sprints in Planung oder abgebrochene Sprints können gelöscht werden</value>
+  </data>
+  <data name="ErrorCompletedSprintsCannotChanged" xml:space="preserve">
+    <value>Abgeschlossene Sprints können nicht geändert werden</value>
+  </data>
+  <data name="ErrorSprintNameRequired" xml:space="preserve">
+    <value>Der Sprintname ist erforderlich</value>
+  </data>
+  <data name="ErrorSprintEndDateMustAfterStartDate" xml:space="preserve">
+    <value>Das Enddatum des Sprints muss nach dem Startdatum liegen</value>
+  </data>
+  <data name="ErrorProjectWithIdNotFound" xml:space="preserve">
+    <value>Projekt mit der ID {0} nicht gefunden</value>
+  </data>
+  <data name="ErrorSprintCreatedButCouldNotLoaded" xml:space="preserve">
+    <value>Der Sprint wurde erstellt, konnte aber nicht geladen werden</value>
+  </data>
+  <data name="ErrorSomeTasksNotFoundWorkspace" xml:space="preserve">
+    <value>Einige dieser Aufgaben wurden im Arbeitsbereich nicht gefunden</value>
+  </data>
+  <data name="ErrorTasksNotInSprintProject" xml:space="preserve">
+    <value>Diese Aufgaben gehören nicht zum Projekt des Sprints: {0}</value>
+  </data>
+  <data name="ErrorCompletedSprintsCannotEdited" xml:space="preserve">
+    <value>Abgeschlossene Sprints können nicht bearbeitet werden</value>
+  </data>
+  <data name="ErrorTasksAlreadyLinkedRelation" xml:space="preserve">
+    <value>Diese Aufgaben sind bereits über diese Beziehung verknüpft.</value>
+  </data>
+  <data name="ErrorOneMoreProjectsOutsideCurrentWorkspaceScope" xml:space="preserve">
+    <value>Ein oder mehrere Projekte liegen außerhalb des aktuellen Arbeitsbereichs</value>
+  </data>
+  <data name="ErrorRoadmapStartDateMustBeforeEndDate" xml:space="preserve">
+    <value>Das Startdatum der Roadmap muss am oder vor dem Enddatum liegen</value>
+  </data>
+  <data name="ErrorRoadmapRangeCannotExceedDays" xml:space="preserve">
+    <value>Der Zeitraum der Roadmap darf 366 Tage nicht überschreiten</value>
+  </data>
+  <data name="ErrorRequestFileSizeExceedsMaximum" xml:space="preserve">
+    <value>Die Dateigröße überschreitet das Maximum von {0}.</value>
+  </data>
+  <data name="ErrorProfilePictureMustImage" xml:space="preserve">
+    <value>Ein Profilbild muss ein {0}-Bild sein.</value>
+  </data>
+  <data name="ErrorProfilePictureCouldNotUploaded" xml:space="preserve">
+    <value>Das Profilbild konnte nicht hochgeladen werden.</value>
+  </data>
+  <data name="ErrorValidFilenameRequired" xml:space="preserve">
+    <value>Ein gültiger Dateiname ist erforderlich.</value>
+  </data>
+  <data name="ErrorFileExceedsLimit" xml:space="preserve">
+    <value>Die Datei überschreitet das Limit von {0}.</value>
+  </data>
+  <data name="ErrorWorkspaceStorageLimitExceededBytesUsedRequested" xml:space="preserve">
+    <value>Speicherlimit des Arbeitsbereichs überschritten ({0} von {1} Byte belegt; {2} angefordert).</value>
+  </data>
+  <data name="ErrorUploadedFileCouldNotLoaded" xml:space="preserve">
+    <value>Die hochgeladene Datei konnte nicht geladen werden.</value>
+  </data>
+  <data name="ErrorUploadCouldNotCompleted" xml:space="preserve">
+    <value>Der Upload konnte nicht abgeschlossen werden.</value>
+  </data>
+  <data name="ErrorImageEmpty" xml:space="preserve">
+    <value>Das Bild ist leer.</value>
+  </data>
+  <data name="ErrorImageExceedsLimit" xml:space="preserve">
+    <value>Das Bild überschreitet das Limit von {0}.</value>
+  </data>
+  <data name="ErrorImageMustFile" xml:space="preserve">
+    <value>Das Bild muss eine {0}-Datei sein.</value>
+  </data>
+  <data name="ErrorImageCouldNotUploaded" xml:space="preserve">
+    <value>Das Bild konnte nicht hochgeladen werden.</value>
+  </data>
+  <data name="ErrorProjectConflictingNameAlreadyExistsWorkspace" xml:space="preserve">
+    <value>In diesem Arbeitsbereich gibt es bereits ein Projekt mit einem kollidierenden Namen.</value>
+  </data>
+  <data name="ErrorUnknownSetupTemplate" xml:space="preserve">
+    <value>Unbekannte Einrichtungsvorlage „{0}“</value>
+  </data>
+  <data name="ErrorProjectNotFound" xml:space="preserve">
+    <value>Projekt nicht gefunden</value>
+  </data>
+  <data name="ErrorAssignedStatusNotFoundNotTaskStatus" xml:space="preserve">
+    <value>Der zugewiesene Status wurde nicht gefunden oder ist kein Aufgabenstatus.</value>
+  </data>
+  <data name="ErrorStatusNameMustContainAtLeastOne" xml:space="preserve">
+    <value>Der Statusname muss mindestens ein gültiges Zeichen enthalten.</value>
+  </data>
+  <data name="ErrorStatusNameShouldUnique" xml:space="preserve">
+    <value>Der Statusname muss eindeutig sein.</value>
+  </data>
+  <data name="ErrorSystemStatusesCannotDeleted" xml:space="preserve">
+    <value>Systemstatus können nicht gelöscht werden.</value>
+  </data>
+  <data name="ErrorStatusUsedCannotDeleted" xml:space="preserve">
+    <value>Der Status wird von {0} verwendet und kann nicht gelöscht werden.</value>
+  </data>
+  <data name="ErrorStatusUseCannotDeleted" xml:space="preserve">
+    <value>Der Status wird verwendet und kann nicht gelöscht werden.</value>
+  </data>
+  <data name="ErrorProjectOutsideCurrentWorkspaceScope" xml:space="preserve">
+    <value>Das Projekt liegt außerhalb des aktuellen Arbeitsbereichs</value>
+  </data>
+  <data name="ErrorAddCommentFailed" xml:space="preserve">
+    <value>Kommentar konnte nicht hinzugefügt werden</value>
+  </data>
+  <data name="ErrorReactionNotSupported" xml:space="preserve">
+    <value>Diese Reaktion wird nicht unterstützt.</value>
+  </data>
+  <data name="ErrorAddReactionFailed" xml:space="preserve">
+    <value>Reaktion konnte nicht hinzugefügt werden</value>
+  </data>
+  <data name="ErrorCommentCannotEmpty" xml:space="preserve">
+    <value>Der Kommentar darf nicht leer sein.</value>
+  </data>
+  <data name="ErrorUpdateCommentFailed" xml:space="preserve">
+    <value>Kommentar konnte nicht aktualisiert werden</value>
+  </data>
+  <data name="ErrorRemoveReactionFailed" xml:space="preserve">
+    <value>Reaktion konnte nicht entfernt werden</value>
+  </data>
+  <data name="ErrorZipFileCouldNotRead" xml:space="preserve">
+    <value>Die ZIP-Datei konnte nicht gelesen werden.</value>
+  </data>
+  <data name="ErrorZipFileCanHoldAtMostEntries" xml:space="preserve">
+    <value>Eine ZIP-Datei kann höchstens {0} Einträge enthalten.</value>
+  </data>
+  <data name="ErrorImportCanHoldAtMostFiles" xml:space="preserve">
+    <value>Ein Import kann höchstens {0} Dateien enthalten.</value>
+  </data>
+  <data name="ErrorFilesAddUpMoreThanMB" xml:space="preserve">
+    <value>Die Dateien sind zusammen größer als 30 MB.</value>
+  </data>
+  <data name="ErrorParentPageDoesNotExist" xml:space="preserve">
+    <value>Die übergeordnete Seite existiert nicht.</value>
+  </data>
+  <data name="ErrorProjectDoesNotExist" xml:space="preserve">
+    <value>Das Projekt existiert nicht.</value>
+  </data>
+  <data name="ErrorPagesInsideCreatedOtherPeopleOnlyThey" xml:space="preserve">
+    <value>Einige Seiten darin wurden von anderen Personen erstellt. Nur diese oder ein Admin können sie archivieren, wiederherstellen oder löschen.</value>
+  </data>
+  <data name="ErrorViewNeedsAtLeastOneCondition" xml:space="preserve">
+    <value>Eine Ansicht braucht mindestens eine Bedingung.</value>
+  </data>
+  <data name="ErrorViewNamedAlreadyExists" xml:space="preserve">
+    <value>Eine Ansicht namens „{0}“ existiert bereits.</value>
+  </data>
+  <data name="ErrorViewDefinitionUnreadable" xml:space="preserve">
+    <value>Die Definition dieser Ansicht konnte nicht gelesen werden.</value>
+  </data>
+  <data name="ErrorNotScopeYouCanSubscribe" xml:space="preserve">
+    <value>Diesen Bereich kannst du nicht abonnieren.</value>
+  </data>
+  <data name="ErrorChooseAtLeastOneEventNotifiedAbout" xml:space="preserve">
+    <value>Wähle mindestens ein Ereignis, über das du benachrichtigt werden möchtest.</value>
+  </data>
+  <data name="ErrorAutomationNamesCannotLongerThanCharacters" xml:space="preserve">
+    <value>Namen von Automatisierungen dürfen höchstens {0} Zeichen lang sein.</value>
+  </data>
+  <data name="ErrorChooseAtLeastOneTaskRun" xml:space="preserve">
+    <value>Wähle mindestens eine Aufgabe für die Ausführung.</value>
+  </data>
+  <data name="ErrorManualRunCanCoverUpTasks" xml:space="preserve">
+    <value>Eine manuelle Ausführung kann bis zu {0} Aufgaben umfassen.</value>
+  </data>
+  <data name="ErrorSelectedTasksNotAvailableWorkspace" xml:space="preserve">
+    <value>Die ausgewählten Aufgaben sind in diesem Arbeitsbereich nicht verfügbar.</value>
+  </data>
+  <data name="ErrorIdentifierAlreadyTaken" xml:space="preserve">
+    <value>Diese Kennung ist bereits vergeben</value>
+  </data>
+  <data name="ErrorIdentifierMustAtLeastCharactersContainLetters" xml:space="preserve">
+    <value>Die Kennung muss mindestens 4 Zeichen lang sein und Buchstaben oder Ziffern enthalten</value>
+  </data>
+  <data name="ErrorOwnerCannotLeaveWorkspace" xml:space="preserve">
+    <value>Der Besitzer kann den Arbeitsbereich nicht verlassen</value>
+  </data>
+  <data name="ErrorYouNotMemberWorkspace" xml:space="preserve">
+    <value>Du bist kein Mitglied dieses Arbeitsbereichs</value>
+  </data>
+  <data name="ErrorTaskCannotRelatedItself" xml:space="preserve">
+    <value>Eine Aufgabe kann nicht mit sich selbst verknüpft werden.</value>
+  </data>
+  <data name="ErrorWorkspaceKeyDoesNotExist" xml:space="preserve">
+    <value>Der Arbeitsbereich mit dem Schlüssel {0} existiert nicht</value>
+  </data>
+  <data name="ErrorTagNameShouldUnique" xml:space="preserve">
+    <value>Der Tag-Name muss eindeutig sein</value>
+  </data>
+  <data name="ErrorTagsCannotEmpty" xml:space="preserve">
+    <value>Tags dürfen nicht leer sein.</value>
+  </data>
+  <data name="ErrorSendAtMostTagNames" xml:space="preserve">
+    <value>Sende höchstens {0} Tag-Namen.</value>
+  </data>
+  <data name="ErrorTagNamesNotFoundWorkspace" xml:space="preserve">
+    <value>Tags wurden im Arbeitsbereich nicht gefunden: {0}.</value>
+  </data>
+  <data name="ErrorSourceControlProviderNotEnabled" xml:space="preserve">
+    <value>Dieser Quellcodeverwaltungsanbieter ist nicht aktiviert.</value>
+  </data>
+  <data name="ErrorEnterUsername" xml:space="preserve">
+    <value>Gib einen Benutzernamen ein.</value>
+  </data>
+  <data name="ErrorUsernameAlreadyMappedAnotherMember" xml:space="preserve">
+    <value>Dieser Benutzername ist bereits einem anderen Mitglied zugeordnet.</value>
+  </data>
+  <data name="ErrorRateLimitingNetptuneTryAgainAfter" xml:space="preserve">
+    <value>{0} drosselt die Anfragen von Netptune. Versuche es nach {1:t} erneut.</value>
+  </data>
+  <data name="ErrorCouldNotListRepositoriesTryAgainShortly" xml:space="preserve">
+    <value>{0} konnte die Repositorys nicht auflisten. Versuche es gleich noch einmal.</value>
+  </data>
+  <data name="ErrorLinkBeforeSyncingHistory" xml:space="preserve">
+    <value>Verknüpfe {0}, bevor du den Verlauf synchronisierst.</value>
+  </data>
+  <data name="ErrorNoLongerVisibleConnection" xml:space="preserve">
+    <value>{0} ist für diese Verbindung nicht mehr sichtbar.</value>
+  </data>
+  <data name="ErrorNotEnabledNetptuneInstance" xml:space="preserve">
+    <value>{0} ist auf dieser Netptune-Instanz nicht aktiviert.</value>
+  </data>
+  <data name="ErrorCouldNotCompleteConnectionTryAgainShortly" xml:space="preserve">
+    <value>{0} konnte die Verbindung nicht herstellen. Versuche es gleich noch einmal.</value>
+  </data>
+  <data name="ErrorWorkspaceRequired" xml:space="preserve">
+    <value>Ein Arbeitsbereich ist erforderlich.</value>
+  </data>
+  <data name="ErrorTypeTitleURLRequired" xml:space="preserve">
+    <value>Typ, Titel und URL sind erforderlich.</value>
+  </data>
+  <data name="ErrorFlagResolutionNotSupported" xml:space="preserve">
+    <value>Diese Art, eine Markierung aufzulösen, wird nicht unterstützt.</value>
+  </data>
+  <data name="ErrorRelationTypeNameMustContainAtLeast" xml:space="preserve">
+    <value>Der Name des Beziehungstyps muss mindestens ein gültiges Zeichen enthalten.</value>
+  </data>
+  <data name="ErrorRelationTypeNameShouldUnique" xml:space="preserve">
+    <value>Der Name des Beziehungstyps muss eindeutig sein.</value>
+  </data>
+  <data name="ErrorSystemRelationTypesCannotDeleted" xml:space="preserve">
+    <value>System-Beziehungstypen können nicht gelöscht werden.</value>
+  </data>
+  <data name="ErrorBuiltRelationTypesCannotDeleted" xml:space="preserve">
+    <value>Integrierte Beziehungstypen können nicht gelöscht werden.</value>
+  </data>
+  <data name="ErrorRelationTypeUseCannotDeleted" xml:space="preserve">
+    <value>Der Beziehungstyp wird verwendet und kann nicht gelöscht werden.</value>
+  </data>
+  <data name="ErrorBoardRequiredPinBoard" xml:space="preserve">
+    <value>Zum Anheften an ein Board wird ein Board benötigt.</value>
+  </data>
+  <data name="ErrorUnknownPageKind" xml:space="preserve">
+    <value>Unbekannte Seitenart.</value>
+  </data>
+  <data name="ErrorFoldersNoBody" xml:space="preserve">
+    <value>Ordner haben keinen Inhalt.</value>
+  </data>
+  <data name="ErrorTemplatesMakeDocumentsNotFolders" xml:space="preserve">
+    <value>Vorlagen erstellen Dokumente, keine Ordner.</value>
+  </data>
+  <data name="ErrorChooseSprintWriteReleaseNotes" xml:space="preserve">
+    <value>Wähle den Sprint, für den die Versionshinweise geschrieben werden sollen.</value>
+  </data>
+  <data name="ErrorYouNeedAccessSprintsTasksWriteRelease" xml:space="preserve">
+    <value>Du brauchst Zugriff auf Sprints und Aufgaben, um Versionshinweise zu schreiben.</value>
+  </data>
+  <data name="ErrorSprintDoesNotExist" xml:space="preserve">
+    <value>Der Sprint existiert nicht.</value>
+  </data>
+  <data name="ErrorNoMarkdownFilesImport" xml:space="preserve">
+    <value>Es gab keine Markdown-Dateien zum Importieren.</value>
+  </data>
+  <data name="ErrorUnknownAction" xml:space="preserve">
+    <value>Unbekannte Aktion.</value>
+  </data>
+  <data name="ErrorNoTextWork" xml:space="preserve">
+    <value>Es gibt keinen Text zum Bearbeiten.</value>
+  </data>
+  <data name="ErrorPassageTooLongForAssistant" xml:space="preserve">
+    <value>Wähle eine kürzere Passage; der Assistent bearbeitet bis zu 20.000 Zeichen.</value>
+  </data>
+  <data name="ErrorChooseLanguageTranslate" xml:space="preserve">
+    <value>Wähle eine Sprache für die Übersetzung.</value>
+  </data>
+  <data name="ErrorAssistantReturnedNothingTryAgain" xml:space="preserve">
+    <value>Der Assistent hat nichts zurückgegeben. Versuche es erneut.</value>
+  </data>
+  <data name="ErrorSortOrderMustNumber" xml:space="preserve">
+    <value>Die Sortierreihenfolge muss eine Zahl sein.</value>
+  </data>
+  <data name="ErrorPageCannotMovedInsideItself" xml:space="preserve">
+    <value>Eine Seite kann nicht in sich selbst verschoben werden.</value>
+  </data>
+  <data name="ErrorPagesCannotMoveBetweenSpaces" xml:space="preserve">
+    <value>Seiten können noch nicht zwischen Bereichen verschoben werden.</value>
+  </data>
+  <data name="ErrorPageChangedSomeoneElse" xml:space="preserve">
+    <value>Diese Seite wurde von jemand anderem geändert.</value>
+  </data>
+  <data name="ErrorUnknownPageStatus" xml:space="preserve">
+    <value>Unbekannter Seitenstatus.</value>
+  </data>
+  <data name="TransferFieldTaskSystemId" xml:space="preserve">
+    <value>System-ID</value>
+  </data>
+  <data name="TransferFieldTaskName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="TransferFieldTaskDescription" xml:space="preserve">
+    <value>Beschreibung</value>
+  </data>
+  <data name="TransferFieldTaskStatus" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="TransferFieldTaskPriority" xml:space="preserve">
+    <value>Priorität</value>
+  </data>
+  <data name="TransferFieldTaskEstimateType" xml:space="preserve">
+    <value>Schätzungsart</value>
+  </data>
+  <data name="TransferFieldTaskEstimateValue" xml:space="preserve">
+    <value>Schätzung</value>
+  </data>
+  <data name="TransferFieldTaskStartDate" xml:space="preserve">
+    <value>Startdatum</value>
+  </data>
+  <data name="TransferFieldTaskDueDate" xml:space="preserve">
+    <value>Fälligkeitsdatum</value>
+  </data>
+  <data name="TransferFieldTaskProject" xml:space="preserve">
+    <value>Projekt</value>
+  </data>
+  <data name="TransferFieldTaskSprint" xml:space="preserve">
+    <value>Sprint</value>
+  </data>
+  <data name="TransferFieldTaskBoardGroup" xml:space="preserve">
+    <value>Board-Gruppe</value>
+  </data>
+  <data name="TransferFieldTaskAssignees" xml:space="preserve">
+    <value>Zugewiesene Personen</value>
+  </data>
+  <data name="TransferFieldTaskTags" xml:space="preserve">
+    <value>Tags</value>
+  </data>
+  <data name="TransferFieldTaskCreatedBy" xml:space="preserve">
+    <value>Erstellt von</value>
+  </data>
+  <data name="TransferFieldTaskCreatedAt" xml:space="preserve">
+    <value>Erstellt am</value>
+  </data>
+  <data name="TransferFieldTaskUpdatedAt" xml:space="preserve">
+    <value>Aktualisiert am</value>
+  </data>
+  <data name="AuditExportHeaderId" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="AuditExportHeaderOccurredAt" xml:space="preserve">
+    <value>Zeitpunkt</value>
+  </data>
+  <data name="AuditExportHeaderUserId" xml:space="preserve">
+    <value>Benutzer-ID</value>
+  </data>
+  <data name="AuditExportHeaderUserDisplayName" xml:space="preserve">
+    <value>Benutzer</value>
+  </data>
+  <data name="AuditExportHeaderType" xml:space="preserve">
+    <value>Typ</value>
+  </data>
+  <data name="AuditExportHeaderEntityType" xml:space="preserve">
+    <value>Elementtyp</value>
+  </data>
+  <data name="AuditExportHeaderEntityId" xml:space="preserve">
+    <value>Element-ID</value>
+  </data>
+  <data name="AuditExportHeaderWorkspace" xml:space="preserve">
+    <value>Arbeitsbereich</value>
+  </data>
+  <data name="AuditExportHeaderProject" xml:space="preserve">
+    <value>Projekt</value>
+  </data>
+  <data name="AuditExportHeaderBoard" xml:space="preserve">
+    <value>Board</value>
+  </data>
+  <data name="AuditExportHeaderMeta" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="ErrorTasksNotFoundWorkspace" xml:space="preserve">
+    <value>Aufgaben wurden im Arbeitsbereich nicht gefunden: {0}</value>
+  </data>
+  <data name="ErrorTasksNotFoundWorkspaceAndMore" xml:space="preserve">
+    <value>Aufgaben wurden im Arbeitsbereich nicht gefunden: {0} und {1} weitere</value>
+  </data>
+  <data name="ErrorRelationTypeUsedByOneRelation" xml:space="preserve">
+    <value>Der Beziehungstyp wird von 1 Beziehung verwendet und kann nicht gelöscht werden.</value>
+  </data>
+  <data name="ErrorRelationTypeUsedByRelations" xml:space="preserve">
+    <value>Der Beziehungstyp wird von {0} Beziehungen verwendet und kann nicht gelöscht werden.</value>
+  </data>
+  <data name="StatusUsedByOneTask" xml:space="preserve">
+    <value>1 Aufgabe</value>
+  </data>
+  <data name="StatusUsedByTasks" xml:space="preserve">
+    <value>{0} Aufgaben</value>
+  </data>
+  <data name="StatusUsedByOneProject" xml:space="preserve">
+    <value>1 Projekt</value>
+  </data>
+  <data name="StatusUsedByProjects" xml:space="preserve">
+    <value>{0} Projekten</value>
+  </data>
+  <data name="AiErrorProviderNoResponse" xml:space="preserve">
+    <value>Der Anbieter hat keine Antwort geliefert.</value>
+  </data>
+  <data name="AiErrorMessageRequired" xml:space="preserve">
+    <value>Eine Nachricht ist erforderlich.</value>
+  </data>
+  <data name="AiErrorNoApiKey" xml:space="preserve">
+    <value>Für den Assistenten ist kein API-Schlüssel eingerichtet.</value>
+  </data>
+  <data name="AiErrorConversationNotFound" xml:space="preserve">
+    <value>Unterhaltung nicht gefunden.</value>
+  </data>
+  <data name="AiErrorNoApiKeyForProvider" xml:space="preserve">
+    <value>Für {0} ist kein API-Schlüssel eingerichtet.</value>
+  </data>
+  <data name="AiErrorNothingToRetry" xml:space="preserve">
+    <value>Es gibt keine Nachricht, die erneut versucht werden kann.</value>
+  </data>
+  <data name="AiErrorWriteInstructionRequired" xml:space="preserve">
+    <value>Sag dem Assistenten, was er schreiben soll.</value>
+  </data>
+  <data name="AiErrorWriteInstructionTooLong" xml:space="preserve">
+    <value>Kürze die Anfrage; der Assistent nimmt bis zu 2.000 Zeichen an.</value>
+  </data>
+  <data name="AiErrorNoPermissionToWriteHere" xml:space="preserve">
+    <value>Du hast keine Berechtigung, den Assistenten hier schreiben zu lassen.</value>
+  </data>
+  <data name="AiErrorTaskNotFound" xml:space="preserve">
+    <value>Die Aufgabe wurde nicht gefunden.</value>
+  </data>
+  <data name="AiErrorPageNotFound" xml:space="preserve">
+    <value>Die Seite wurde nicht gefunden.</value>
+  </data>
+  <data name="AiErrorTurnBudgetReached" xml:space="preserve">
+    <value>Der Assistent hat angehalten, weil die für diese Antwort gesammelten Ergebnisse ihre Größengrenze erreicht haben. Sende eine weitere Nachricht, damit er weitermacht.</value>
+  </data>
+  <data name="AiErrorToolRoundsReached" xml:space="preserve">
+    <value>Der Assistent hat nach {0} Runden von Werkzeugaufrufen angehalten. Sende eine weitere Nachricht, damit er weitermacht.</value>
+  </data>
+  <data name="AiErrorTimedOutSeconds" xml:space="preserve">
+    <value>Dem Assistenten ist nach {0} Sekunden die Zeit ausgegangen. Sende eine weitere Nachricht, damit er weitermacht.</value>
+  </data>
+  <data name="AiErrorTimedOutMinutes" xml:space="preserve">
+    <value>Dem Assistenten ist nach {0} Minuten die Zeit ausgegangen. Sende eine weitere Nachricht, damit er weitermacht.</value>
+  </data>
+  <data name="AiErrorProviderUnreachable" xml:space="preserve">
+    <value>Der Assistent konnte den Anbieter nicht erreichen.</value>
+  </data>
+  <data name="AiProviderInvalidKey" xml:space="preserve">
+    <value>Der Anbieter hat den API-Schlüssel abgelehnt. Prüfe den Schlüssel in den Assistenten-Einstellungen.</value>
+  </data>
+  <data name="AiProviderForbidden" xml:space="preserve">
+    <value>Der API-Schlüssel darf dieses Modell nicht verwenden. Wähle ein anderes Modell oder einen Schlüssel mit Zugriff darauf.</value>
+  </data>
+  <data name="AiProviderOutOfCredit" xml:space="preserve">
+    <value>Das Anbieterkonto hat kein Guthaben mehr. Lade Guthaben auf das Konto, dem dieser API-Schlüssel gehört, und versuche es erneut.</value>
+  </data>
+  <data name="AiProviderRateLimited" xml:space="preserve">
+    <value>Der Anbieter drosselt diesen Schlüssel. Versuche es gleich noch einmal.</value>
+  </data>
+  <data name="AiProviderModelMissing" xml:space="preserve">
+    <value>Der Anbieter kennt das ausgewählte Modell nicht. Wähle in den Assistenten-Einstellungen ein anderes Modell.</value>
+  </data>
+  <data name="AiProviderTooLarge" xml:space="preserve">
+    <value>Die Unterhaltung ist für dieses Modell zu groß. Starte einen neuen Chat und versuche es erneut.</value>
+  </data>
+  <data name="AiProviderRejected" xml:space="preserve">
+    <value>Der Anbieter hat die Anfrage abgelehnt.</value>
+  </data>
+  <data name="AiProviderUnavailable" xml:space="preserve">
+    <value>Der Anbieter ist gerade nicht erreichbar. Versuche es gleich noch einmal.</value>
+  </data>
+  <data name="AiSpendCapReached" xml:space="preserve">
+    <value>Dieser Arbeitsbereich hat sein monatliches Ausgabenlimit für den Assistenten erreicht.</value>
+  </data>
+  <data name="AiSpendCapReachedDuringTurn" xml:space="preserve">
+    <value>Der Assistent hat angehalten, weil diese Antwort das monatliche Ausgabenlimit des Arbeitsbereichs erreicht hat.</value>
   </data>
 </root>

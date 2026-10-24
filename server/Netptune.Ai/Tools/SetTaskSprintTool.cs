@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Handlers.Sprints.Queries;
@@ -273,7 +274,7 @@ public sealed class SetTaskSprintTool : IAiTool
             ToolName = MoveChange,
             EntityType = "task",
             EntityId = task?.Id,
-            Summary = $"Move “{taskName}” into sprint “{sprint.Name}”",
+            Summary = Localized.Format(AppText.AiSummaryMoveTaskToSprint, taskName, sprint.Name),
             Fields =
             [
                 AiChangeFields.Values(
@@ -303,7 +304,7 @@ public sealed class SetTaskSprintTool : IAiTool
             ToolName = AddChange,
             EntityType = "sprint",
             EntityId = sprint.Id,
-            Summary = $"Add {tasks.Count} task(s) to sprint “{sprint.Name}”",
+            Summary = Localized.Format(AppText.AiSummaryAddTasksToSprint, tasks.Count, sprint.Name),
             Fields = [AiChangeFields.Values("tasks", AiChangeValueKind.Task, [], labels)],
             Payload = JsonSerializer.SerializeToDocument(payload),
             ValidationStatus = AiChangeValidationStatus.Valid,
@@ -323,7 +324,7 @@ public sealed class SetTaskSprintTool : IAiTool
             ToolName = RemoveChange,
             EntityType = "task",
             EntityId = task.Id,
-            Summary = $"Take “{task.Name}” out of {task.SprintName}",
+            Summary = Localized.Format(AppText.AiSummaryRemoveTaskFromSprint, task.Name, task.SprintName),
             Fields =
             [
                 AiChangeFields.Values(

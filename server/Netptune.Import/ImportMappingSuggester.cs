@@ -119,7 +119,13 @@ public sealed class ImportMappingSuggester
             return 0;
         }
 
-        if (name == Normalize(field.Name) || name == Normalize(LocalKey(field)))
+        var isExactName = TransferFieldLabels
+            .HeadersInEveryLocale(field)
+            .Append(field.Name)
+            .Append(LocalKey(field))
+            .Any(candidate => Normalize(candidate) == name);
+
+        if (isExactName)
         {
             return ExactNameScore;
         }

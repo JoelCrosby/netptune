@@ -44,12 +44,12 @@ public sealed class ResendWorkspaceInviteCommandHandler : IRequestHandler<Resend
         var workspaceKey = Identity.GetWorkspaceKey();
         var workspace = await UnitOfWork.Workspaces.GetBySlug(workspaceKey, false, cancellationToken);
 
-        if (workspace is null) return ClientResponse.Failed("workspace not found");
+        if (workspace is null) return ClientResponse.Failed(AppText.ErrorWorkspaceNotFound);
 
         var email = request.Email.Trim().IdentityNormalize();
         var invite = await UnitOfWork.WorkspaceInvites.GetPendingByEmail(email, workspace.Id, cancellationToken);
 
-        if (invite is null) return ClientResponse.Failed("no pending invite found for this email");
+        if (invite is null) return ClientResponse.Failed(AppText.ErrorNoPendingInviteFoundEmail);
 
         invite.Code = Guid.NewGuid().ToString().Replace("-", "").ToLowerInvariant();
         invite.ExpiresAt = DateTime.UtcNow.AddDays(7);

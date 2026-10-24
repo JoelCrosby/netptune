@@ -1,3 +1,5 @@
+using Netptune.Core.Localization;
+
 using System.ClientModel;
 using System.Text.Json;
 
@@ -9,29 +11,21 @@ public static class AiProviderErrors
 {
     private const int MaxReportedLength = 240;
 
-    private const string InvalidKey =
-        "The provider rejected the API key. Check the key in your assistant settings.";
+    private static string InvalidKey => AppText.AiProviderInvalidKey;
 
-    private const string Forbidden =
-        "The API key is not allowed to use this model. Pick another model or use a key with access to it.";
+    private static string Forbidden => AppText.AiProviderForbidden;
 
-    private const string OutOfCredit =
-        "The provider account is out of credit. Add credit to the account that owns this API key, then try again.";
+    private static string OutOfCredit => AppText.AiProviderOutOfCredit;
 
-    private const string RateLimited =
-        "The provider is rate limiting this key. Try again shortly.";
+    private static string RateLimited => AppText.AiProviderRateLimited;
 
-    private const string ModelMissing =
-        "The provider does not know the selected model. Pick a different model in the assistant settings.";
+    private static string ModelMissing => AppText.AiProviderModelMissing;
 
-    private const string TooLarge =
-        "The conversation is too large for this model. Start a new chat and try again.";
+    private static string TooLarge => AppText.AiProviderTooLarge;
 
-    private const string Rejected =
-        "The provider rejected the request.";
+    private static string Rejected => AppText.AiProviderRejected;
 
-    private const string Unavailable =
-        "The provider is unavailable right now. Try again shortly.";
+    private static string Unavailable => AppText.AiProviderUnavailable;
 
     private static readonly string[] CreditMarkers =
     [

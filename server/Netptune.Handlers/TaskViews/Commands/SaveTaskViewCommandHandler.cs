@@ -5,6 +5,7 @@ using Mediator;
 using Netptune.Core.Cache;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
+using Netptune.Core.Localization;
 using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
@@ -61,7 +62,7 @@ public sealed class SaveTaskViewCommandHandler : IRequestHandler<SaveTaskViewCom
 
         if (string.IsNullOrWhiteSpace(input.Name))
         {
-            return ClientResponse<TaskViewViewModel>.Failed("A name is required.");
+            return ClientResponse<TaskViewViewModel>.Failed(AppText.ErrorNameRequired);
         }
 
         var structural = QueryValidator.Validate(TaskFieldCatalog.Instance, input.Definition.Query);
@@ -75,7 +76,7 @@ public sealed class SaveTaskViewCommandHandler : IRequestHandler<SaveTaskViewCom
 
         if (conditionCount == 0)
         {
-            return ClientResponse<TaskViewViewModel>.Failed("A view needs at least one condition.");
+            return ClientResponse<TaskViewViewModel>.Failed(AppText.ErrorViewNeedsAtLeastOneCondition);
         }
 
         var workspaceId = await Identity.GetWorkspaceId();
@@ -93,7 +94,9 @@ public sealed class SaveTaskViewCommandHandler : IRequestHandler<SaveTaskViewCom
 
         if (nameTaken)
         {
-            return ClientResponse<TaskViewViewModel>.Failed($"A view named '{name}' already exists.");
+            var error = Localized.Format(AppText.ErrorViewNamedAlreadyExists, name);
+
+            return ClientResponse<TaskViewViewModel>.Failed(error);
         }
 
         var userId = Identity.GetCurrentUserId();

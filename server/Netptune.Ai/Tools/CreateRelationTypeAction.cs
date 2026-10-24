@@ -5,6 +5,7 @@ using Mediator;
 using Netptune.Core.Authorization;
 using Netptune.Core.Encoding;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.RelationTypes.Queries;
 
@@ -84,7 +85,7 @@ public sealed class CreateRelationTypeAction : IAiToolAction
         var fields = new List<AiChangeField>
         {
             new() { Name = "name", After = name },
-            new() { Name = "category", After = category.ToString() },
+            new() { Name = "category", After = LocalizedEnum.Label(category) },
         };
 
         AiToolSchema.AddOptionalField(fields, "inverseName", inverseName);
@@ -98,7 +99,7 @@ public sealed class CreateRelationTypeAction : IAiToolAction
             ToolName = Change,
             EntityType = AiRelationTypeLookup.EntityType,
             RefKey = refKey,
-            Summary = $"Create relation type “{name}”",
+            Summary = Localized.Format(AppText.AiSummaryCreateRelationType, name),
             Fields = fields,
             Payload = JsonDocument.Parse(arguments.GetRawText()),
             ValidationStatus = AiChangeValidationStatus.Valid,

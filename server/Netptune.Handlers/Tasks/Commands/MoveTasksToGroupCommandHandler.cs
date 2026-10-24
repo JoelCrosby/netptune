@@ -4,6 +4,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Events.Tasks;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Requests;
@@ -59,7 +60,7 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
 
         if (hasTaskOffBoard)
         {
-            return ClientResponse.Failed("Only tasks already on this board can be moved between its groups.");
+            return ClientResponse.Failed(AppText.ErrorOnlyTasksAlreadyBoardCanMovedBetween);
         }
 
         var oldTasks = boardGroup.StatusId.HasValue

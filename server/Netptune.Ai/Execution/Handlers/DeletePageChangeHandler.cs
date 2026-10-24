@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Pages.Commands;
@@ -24,7 +25,7 @@ public sealed class DeletePageChangeHandler : IAiChangeHandler
 
         if (!pageId.HasValue)
         {
-            return AiChangePayload.Failure(change, "The page this change refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorPageChangeRefersCouldNotResolved);
         }
 
         var response = await Mediator.Send(new DeleteArchivedPageCommand(pageId.Value), cancellationToken);
@@ -33,7 +34,7 @@ public sealed class DeletePageChangeHandler : IAiChangeHandler
         {
             var message = response.IsForbidden
                 ? ArchivePageChangeHandler.NotYourPageMessage
-                : response.Message ?? "The page could not be deleted.";
+                : response.Message ?? AppText.AiChangeErrorPageCouldNotDeleted;
 
             return AiChangePayload.Failure(change, message);
         }

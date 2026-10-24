@@ -55,7 +55,7 @@ public class AutomationLimitGuardTests
         Received.InOrder(() =>
         {
             Automations.AutoDisableRules(
-                Arg.Is<IReadOnlyDictionary<int, string>>(reasons => reasons.ContainsKey(RuleId)),
+                Arg.Is<IReadOnlyDictionary<int, AutomationMessage>>(reasons => reasons.ContainsKey(RuleId)),
                 Arg.Any<DateTime>(),
                 Arg.Any<CancellationToken>());
             Automations.CancelPendingRuleActions(

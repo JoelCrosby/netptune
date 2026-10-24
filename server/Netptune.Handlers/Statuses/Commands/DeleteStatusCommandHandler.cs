@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Usage;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -34,7 +35,8 @@ public sealed class DeleteStatusCommandHandler : IRequestHandler<DeleteStatusCom
         var status = await UnitOfWork.Statuses.GetInWorkspace(request.Id, workspaceId.Value, cancellationToken: cancellationToken);
 
         if (status is null) return ClientResponse.NotFound;
-        if (status.IsSystem) return ClientResponse.Failed("System statuses cannot be deleted.");
+
+        if (status.IsSystem) return ClientResponse.Failed(AppText.ErrorSystemStatusesCannotDeleted);
 
         var usage = await UnitOfWork.Statuses.GetUsage(status.Id, workspaceId.Value, cancellationToken);
         var isInUse = usage.TaskCount > 0 || usage.Projects.Count > 0;
@@ -63,20 +65,26 @@ public sealed class DeleteStatusCommandHandler : IRequestHandler<DeleteStatusCom
 
         if (usage.TaskCount > 0)
         {
-            var taskLabel = usage.TaskCount == 1 ? "task" : "tasks";
+            var tasks = usage.TaskCount == 1
+                ? AppText.StatusUsedByOneTask
+                : Localized.Format(AppText.StatusUsedByTasks, usage.TaskCount);
 
-            parts.Add($"{usage.TaskCount} {taskLabel}");
+            parts.Add(tasks);
         }
 
         if (usage.Projects.Count > 0)
         {
-            var projectLabel = usage.Projects.Count == 1 ? "project" : "projects";
+            var projects = usage.Projects.Count == 1
+                ? AppText.StatusUsedByOneProject
+                : Localized.Format(AppText.StatusUsedByProjects, usage.Projects.Count);
 
-            parts.Add($"{usage.Projects.Count} {projectLabel}");
+            parts.Add(projects);
         }
 
-        var description = string.Join(" and ", parts);
+        var description = parts.Count == 2
+            ? Localized.Format(AppText.ListPair, parts[0], parts[1])
+            : string.Concat(parts);
 
-        return $"Status is used by {description} and cannot be deleted.";
+        return Localized.Format(AppText.ErrorStatusUsedCannotDeleted, description);
     }
 }

@@ -5,6 +5,7 @@ using Netptune.Core.Cache;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Pages;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Requests.Pages;
@@ -47,7 +48,7 @@ public sealed class CreatePageCommandHandler : IRequestHandler<CreatePageCommand
 
         if (!isKnownKind)
         {
-            return ClientResponse<PageViewModel>.Failed("Unknown page kind.");
+            return ClientResponse<PageViewModel>.Failed(AppText.ErrorUnknownPageKind);
         }
 
         var start = await ResolveTemplate(input, cancellationToken);
@@ -71,7 +72,7 @@ public sealed class CreatePageCommandHandler : IRequestHandler<CreatePageCommand
 
         if (isFolder && hasBody)
         {
-            return ClientResponse<PageViewModel>.Failed("Folders have no body.");
+            return ClientResponse<PageViewModel>.Failed(AppText.ErrorFoldersNoBody);
         }
 
         var bodyTooLarge = PageBody.IsTooLarge(requestedBody);
@@ -175,7 +176,7 @@ public sealed class CreatePageCommandHandler : IRequestHandler<CreatePageCommand
 
         if (input.Kind != PageKind.Document)
         {
-            return new PageStart(null, null, "Templates make documents, not folders.");
+            return new PageStart(null, null, AppText.ErrorTemplatesMakeDocumentsNotFolders);
         }
 
         var isFromSprint = string.Equals(key, PageTemplates.FromSprint, StringComparison.Ordinal);
@@ -199,14 +200,14 @@ public sealed class CreatePageCommandHandler : IRequestHandler<CreatePageCommand
     {
         if (!sprintId.HasValue)
         {
-            return new PageStart(null, null, "Choose the sprint to write release notes for.");
+            return new PageStart(null, null, AppText.ErrorChooseSprintWriteReleaseNotes);
         }
 
         var canReadSprint = await CanReadSprintTasks();
 
         if (!canReadSprint)
         {
-            return new PageStart(null, null, "You need access to sprints and tasks to write release notes.");
+            return new PageStart(null, null, AppText.ErrorYouNeedAccessSprintsTasksWriteRelease);
         }
 
         var workspaceKey = Identity.GetWorkspaceKey();
@@ -214,7 +215,7 @@ public sealed class CreatePageCommandHandler : IRequestHandler<CreatePageCommand
 
         if (sprint is null)
         {
-            return new PageStart(null, null, "The sprint does not exist.");
+            return new PageStart(null, null, AppText.ErrorSprintDoesNotExist);
         }
 
         var completed = sprint.Tasks
@@ -233,7 +234,8 @@ public sealed class CreatePageCommandHandler : IRequestHandler<CreatePageCommand
         var workspaceKey = Identity.GetWorkspaceKey();
         var permissions = await PermissionCache.GetUserPermissions(userId, workspaceKey);
         var granted = permissions?.Permissions ?? [];
-        var memberCanRead = granted.Contains(NetptunePermissions.Sprints.Read) && granted.Contains(NetptunePermissions.Tasks.Read);
+        var memberCanRead = granted.Contains(
+            NetptunePermissions.Sprints.Read) && granted.Contains(NetptunePermissions.Tasks.Read);
         var credentialRestricts = Identity.IsRestrictedByCredential(NetptunePermissions.Sprints.Read)
             || Identity.IsRestrictedByCredential(NetptunePermissions.Tasks.Read);
 

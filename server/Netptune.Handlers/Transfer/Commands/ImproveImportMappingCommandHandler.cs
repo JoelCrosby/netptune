@@ -4,7 +4,7 @@ using Mediator;
 
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
-using Netptune.Core.Models.Ai;
+using Netptune.Core.Localization;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Ai;
@@ -77,21 +77,21 @@ public sealed class ImproveImportMappingCommandHandler
 
         if (workspace is null || !workspace.AssistantEnabled)
         {
-            return ClientResponse<ImproveImportMappingResult>.Failed("The assistant is turned off for this workspace.");
+            return ClientResponse<ImproveImportMappingResult>.Failed(AppText.ErrorAssistantTurnedOffWorkspace);
         }
 
         var spend = await Spend.GetStatus(workspace, cancellationToken);
 
         if (spend.IsOverCap)
         {
-            return ClientResponse<ImproveImportMappingResult>.Failed(AiSpendMessages.CapReached);
+            return ClientResponse<ImproveImportMappingResult>.Failed(AppText.AiSpendCapReached);
         }
 
         var profile = session.SourceProfile?.Deserialize<ImportSourceProfile>(JsonOptions.Default);
 
         if (profile is null)
         {
-            return ClientResponse<ImproveImportMappingResult>.Failed("Inspect the file before asking the assistant.");
+            return ClientResponse<ImproveImportMappingResult>.Failed(AppText.ErrorInspectFileBeforeAskingAssistant);
         }
 
         var userId = Identity.GetCurrentUserId();
@@ -99,7 +99,7 @@ public sealed class ImproveImportMappingCommandHandler
 
         if (credential is null)
         {
-            return ClientResponse<ImproveImportMappingResult>.Failed("No assistant key is set up for this workspace.");
+            return ClientResponse<ImproveImportMappingResult>.Failed(AppText.ErrorNoAssistantKeySetUpWorkspace);
         }
 
         var vocabulary = await ImportVocabularyReader.Read(UnitOfWork, workspaceId, workspaceKey, cancellationToken);
@@ -125,7 +125,7 @@ public sealed class ImproveImportMappingCommandHandler
         if (suggestion.Mapping.Bindings.Count == 0)
         {
             return ClientResponse<ImproveImportMappingResult>.Failed(
-                "The assistant did not propose a usable mapping. The suggested mapping is unchanged.");
+                AppText.ErrorAssistantDidNotProposeUsableMappingSuggested);
         }
 
         return ClientResponse<ImproveImportMappingResult>.Success(new ImproveImportMappingResult

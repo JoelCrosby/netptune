@@ -3,6 +3,7 @@ using Mediator;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -35,11 +36,15 @@ public sealed class CreateStatusCommandHandler : IRequestHandler<CreateStatusCom
         if (workspaceId is null) return ClientResponse<StatusViewModel>.NotFound;
 
         var key = request.Request.Name.Trim().ToUrlSlug();
-        if (string.IsNullOrWhiteSpace(key)) return ClientResponse<StatusViewModel>.Failed("Status name must contain at least one valid character.");
+
+        if (string.IsNullOrWhiteSpace(key))
+        {
+            return ClientResponse<StatusViewModel>.Failed(AppText.ErrorStatusNameMustContainAtLeastOne);
+        }
 
         if (await UnitOfWork.Statuses.KeyExists(workspaceId.Value, request.Request.EntityType, key, cancellationToken: cancellationToken))
         {
-            return ClientResponse<StatusViewModel>.Failed("Status name should be unique.");
+            return ClientResponse<StatusViewModel>.Failed(AppText.ErrorStatusNameShouldUnique);
         }
 
         var statuses = await UnitOfWork.Statuses.GetViewModelsForWorkspace(workspaceId.Value, request.Request.EntityType, cancellationToken);

@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 
 namespace Netptune.Ai.Tools;
@@ -46,7 +47,7 @@ public sealed class RestorePageAction : IAiToolAction
             ToolName = ChangeName,
             EntityType = AiPageLookup.EntityType,
             EntityId = page.Id,
-            Summary = $"Restore “{page.Title}” from the archive",
+            Summary = Localized.Format(AppText.AiSummaryRestorePage, page.Title),
             Fields = [AiChangeFields.Text("name", null, page.Title)],
             Payload = JsonSerializer.SerializeToDocument(new { pageId = page.Id }),
             ValidationStatus = AiChangeValidationStatus.Valid,

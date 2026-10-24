@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -52,7 +53,7 @@ public sealed class CreateTaskChangeHandler : IAiChangeHandler, IAiChangeUndoHan
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The task could not be created.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorTaskCouldNotCreated);
         }
 
         var taskId = response.Payload?.Id;
@@ -75,7 +76,7 @@ public sealed class CreateTaskChangeHandler : IAiChangeHandler, IAiChangeUndoHan
                 EntityType = change.EntityType,
                 Status = AiChangeApplyStatus.Failed,
                 AppliedEntityId = taskId,
-                Error = "The task was created but its tags could not be set.",
+                Error = AppText.AiChangeErrorTaskCreatedButTagsCouldNotSet,
             };
         }
 
@@ -111,14 +112,16 @@ public sealed class CreateTaskChangeHandler : IAiChangeHandler, IAiChangeUndoHan
 
         if (!taskId.HasValue)
         {
-            return AiChangeUndoResult.Failure(change, "The created task could not be resolved.");
+            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorCreatedTaskCouldNotResolved);
         }
 
         var response = await Mediator.Send(new DeleteTaskCommand(taskId.Value), cancellationToken);
 
         if (!response.IsSuccess)
         {
-            return AiChangeUndoResult.Failure(change, response.Message ?? "The created task could not be deleted.");
+            return AiChangeUndoResult.Failure(
+                change,
+                response.Message ?? AppText.AiChangeErrorCreatedTaskCouldNotDeleted);
         }
 
         return AiChangeUndoResult.Undone(change, taskId);

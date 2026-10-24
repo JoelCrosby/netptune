@@ -3,6 +3,7 @@ using System.Text.Json;
 using Mediator;
 
 using Netptune.Core.Authorization;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -32,7 +33,7 @@ public sealed class MoveTaskToSprintChangeHandler : IAiChangeHandler, IAiChangeU
 
         if (!taskId.HasValue || !sprintId.HasValue)
         {
-            return AiChangePayload.Failure(change, "The task or sprint this change refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorTaskSprintChangeRefersCouldNotResolved);
         }
 
         var request = new AddTasksToSprintRequest { TaskIds = [taskId.Value] };
@@ -42,7 +43,7 @@ public sealed class MoveTaskToSprintChangeHandler : IAiChangeHandler, IAiChangeU
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The task could not be moved into the sprint.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorTaskCouldNotMovedSprint);
         }
 
         return AiChangePayload.Applied(change, taskId);

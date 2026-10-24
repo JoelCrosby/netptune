@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.Services.Automations;
@@ -92,7 +93,7 @@ public sealed class CreateAutomationAction : IAiToolAction
         {
             ToolName = Change,
             EntityType = AiAutomationProposal.EntityType,
-            Summary = $"Create automation “{rule.Name}”",
+            Summary = Localized.Format(AppText.AiSummaryCreateAutomation, rule.Name),
             Fields = fields,
             Payload = payload,
             ValidationStatus = AiChangeValidationStatus.Valid,

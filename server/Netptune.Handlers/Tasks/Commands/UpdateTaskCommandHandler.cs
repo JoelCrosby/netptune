@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
@@ -75,7 +76,9 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
 
         if (req.StatusId.HasValue && status is null)
         {
-            return ClientResponse<TaskViewModel>.Failed($"Status with id {req.StatusId.Value} was not found in the workspace");
+            var error = Localized.Format(AppText.ErrorStatusIdNotFoundWorkspace, req.StatusId.Value);
+
+            return ClientResponse<TaskViewModel>.Failed(error);
         }
 
         var assigneeUpdate = await ReferenceResolver.ResolveAssignees(req.AssigneeIds, workspaceId, cancellationToken);

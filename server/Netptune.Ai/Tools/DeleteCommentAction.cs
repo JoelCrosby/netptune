@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Ai;
 
@@ -79,7 +80,7 @@ public sealed class DeleteCommentAction : IAiToolAction
             ToolName = Change,
             EntityType = AiCommentLookup.EntityType,
             EntityId = comment.Id,
-            Summary = $"Delete {comment.UserDisplayName}'s comment on {systemId}",
+            Summary = Localized.Format(AppText.AiSummaryDeleteComment, comment.UserDisplayName, systemId),
             Fields = fields,
             Payload = JsonSerializer.SerializeToDocument(new { systemId, commentId = comment.Id, isOwn = isOwnComment }),
             ValidationStatus = AiChangeValidationStatus.Valid,

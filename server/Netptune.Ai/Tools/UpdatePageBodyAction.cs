@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Pages;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Pages.Queries;
@@ -141,12 +142,14 @@ public sealed class UpdatePageBodyAction : IAiToolAction
             payload["taskRefs"] = taskHandles;
         }
 
+        var summaryTemplate = isRewritten ? AppText.AiSummaryRewritePage : AppText.AiSummaryRenamePage;
+
         ChangeSet.Add(new AiChangeDraft
         {
             ToolName = ChangeName,
             EntityType = AiPageLookup.EntityType,
             EntityId = page.Id,
-            Summary = isRewritten ? $"Rewrite “{page.Title}”" : $"Rename “{page.Title}”",
+            Summary = Localized.Format(summaryTemplate, page.Title),
             Fields = fields,
             Payload = JsonSerializer.SerializeToDocument(payload),
             ValidationStatus = AiChangeValidationStatus.Valid,

@@ -2,6 +2,7 @@ using Mediator;
 
 using Netptune.Core.Constants;
 using Netptune.Core.Entities;
+using Netptune.Core.Localization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -29,7 +30,7 @@ public sealed class AddCommentReactionCommandHandler : IRequestHandler<AddCommen
 
         if (value is null)
         {
-            return ClientResponse<CommentViewModel>.Failed("Reaction is not supported.");
+            return ClientResponse<CommentViewModel>.Failed(AppText.ErrorReactionNotSupported);
         }
 
         var workspaceId = await Identity.GetWorkspaceId();
@@ -61,7 +62,7 @@ public sealed class AddCommentReactionCommandHandler : IRequestHandler<AddCommen
 
         if (result is null)
         {
-            return ClientResponse<CommentViewModel>.Failed("add reaction failed");
+            return ClientResponse<CommentViewModel>.Failed(AppText.ErrorAddReactionFailed);
         }
 
         return result;

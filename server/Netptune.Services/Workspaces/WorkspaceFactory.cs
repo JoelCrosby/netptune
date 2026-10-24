@@ -1,6 +1,7 @@
 using Netptune.Core.Authorization;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Options;
 using Netptune.Core.Onboarding.Templates;
 using Netptune.Core.Relationships;
@@ -28,7 +29,7 @@ public static class WorkspaceFactory
 
             if (template is null)
             {
-                return ClientResponse<WorkspaceViewModel>.Failed("Setup template not found");
+                return ClientResponse<WorkspaceViewModel>.Failed(AppText.ErrorSetupTemplateNotFound);
             }
 
             var entity = new Workspace
@@ -59,7 +60,10 @@ public static class WorkspaceFactory
                                     cancellationToken)
                                 ?? await unitOfWork.Statuses.GetFirstTaskStatus(workspace.Id, cancellationToken);
 
-            if (defaultStatus is null) return ClientResponse<WorkspaceViewModel>.Failed("Default task status not found");
+            if (defaultStatus is null)
+            {
+                return ClientResponse<WorkspaceViewModel>.Failed(AppText.ErrorDefaultTaskStatusNotFound);
+            }
 
             var boardGroups = await WorkspaceSetupTemplateApplicator.ResolveBoardGroupsAsync(
                 template,

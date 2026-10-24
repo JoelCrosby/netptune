@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
@@ -26,7 +27,7 @@ public sealed class RemoveCommentReactionCommandHandler : IRequestHandler<Remove
 
         if (string.IsNullOrEmpty(value))
         {
-            return ClientResponse<CommentViewModel>.Failed("Reaction is not supported.");
+            return ClientResponse<CommentViewModel>.Failed(AppText.ErrorReactionNotSupported);
         }
 
         var workspaceId = await Identity.GetWorkspaceId();
@@ -45,7 +46,7 @@ public sealed class RemoveCommentReactionCommandHandler : IRequestHandler<Remove
 
         if (result is null)
         {
-            return ClientResponse<CommentViewModel>.Failed("remove reaction failed");
+            return ClientResponse<CommentViewModel>.Failed(AppText.ErrorRemoveReactionFailed);
         }
 
         return result;

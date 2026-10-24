@@ -3,6 +3,7 @@ using Mediator;
 using Netptune.Core.Cache;
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Users;
+using Netptune.Core.Localization;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
@@ -41,14 +42,14 @@ public sealed class LeaveWorkspaceCommandHandler : IRequestHandler<LeaveWorkspac
 
         if (userId == workspace.OwnerId)
         {
-            return ClientResponse.Failed("the owner cannot leave the workspace");
+            return ClientResponse.Failed(AppText.ErrorOwnerCannotLeaveWorkspace);
         }
 
         WorkspaceUserCache.Remove(new() { UserId = userId, WorkspaceKey = request.Key });
 
         var removed = await UnitOfWork.Users.RemoveUsersFromWorkspace([userId], workspace.Id, cancellationToken);
 
-        if (removed.Count == 0) return ClientResponse.Failed("you are not a member of this workspace");
+        if (removed.Count == 0) return ClientResponse.Failed(AppText.ErrorYouNotMemberWorkspace);
 
         await UnitOfWork.CompleteAsync(cancellationToken);
 

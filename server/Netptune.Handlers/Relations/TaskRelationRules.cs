@@ -1,4 +1,5 @@
 using Netptune.Core.Entities;
+using Netptune.Core.Localization;
 using Netptune.Core.Relations;
 using Netptune.Core.UnitOfWork;
 
@@ -17,7 +18,7 @@ internal static class TaskRelationRules
 
         if (isLinked)
         {
-            return "These tasks are already linked by this relation.";
+            return AppText.ErrorTasksAlreadyLinkedRelation;
         }
 
         var hasSingleSource = RelationTypeRules.HasSingleSource(relationType.Category);
@@ -28,7 +29,7 @@ internal static class TaskRelationRules
 
             if (hasSource)
             {
-                return $"That task already has a \"{relationType.Name}\" link. A task can only have one.";
+                return Localized.Format(AppText.ErrorTaskAlreadyLinkTaskCanOnlyOne, relationType.Name);
             }
         }
 
@@ -40,7 +41,7 @@ internal static class TaskRelationRules
 
             if (wouldCycle)
             {
-                return $"This would create a circular \"{relationType.Name}\" chain.";
+                return Localized.Format(AppText.ErrorWouldCreateCircularChain, relationType.Name);
             }
         }
 

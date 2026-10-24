@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Requests.Pages;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -38,7 +39,7 @@ public sealed class MovePageCommandHandler : IRequestHandler<MovePageCommand, Cl
 
         if (!sortOrderIsNumber)
         {
-            return ClientResponse<PageViewModel>.Failed("The sort order must be a number.");
+            return ClientResponse<PageViewModel>.Failed(AppText.ErrorSortOrderMustNumber);
         }
 
         var workspaceKey = Identity.GetWorkspaceKey();
@@ -57,7 +58,7 @@ public sealed class MovePageCommandHandler : IRequestHandler<MovePageCommand, Cl
 
             if (parent is null)
             {
-                return ClientResponse<PageViewModel>.Failed("The parent page does not exist.");
+                return ClientResponse<PageViewModel>.Failed(AppText.ErrorParentPageDoesNotExist);
             }
 
             var parentLineage = await UnitOfWork.Pages.GetAncestorIds(parentId, workspaceId, cancellationToken);
@@ -65,14 +66,14 @@ public sealed class MovePageCommandHandler : IRequestHandler<MovePageCommand, Cl
 
             if (wouldCreateCycle)
             {
-                return ClientResponse<PageViewModel>.Failed("A page cannot be moved inside itself.");
+                return ClientResponse<PageViewModel>.Failed(AppText.ErrorPageCannotMovedInsideItself);
             }
 
             var changesSpace = parent.ProjectId != page.ProjectId;
 
             if (changesSpace)
             {
-                return ClientResponse<PageViewModel>.Failed("Pages can't be moved between spaces yet.");
+                return ClientResponse<PageViewModel>.Failed(AppText.ErrorPagesCannotMoveBetweenSpaces);
             }
         }
 

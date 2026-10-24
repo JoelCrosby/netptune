@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -28,7 +29,7 @@ public sealed class CancelSprintChangeHandler : IAiChangeHandler
 
         if (!sprintId.HasValue)
         {
-            return AiChangePayload.Failure(change, "The sprint this change refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorSprintChangeRefersCouldNotResolved);
         }
 
         var request = new UpdateSprintRequest
@@ -41,7 +42,7 @@ public sealed class CancelSprintChangeHandler : IAiChangeHandler
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The sprint could not be cancelled.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorSprintCouldNotCancelled);
         }
 
         return AiChangePayload.Applied(change, sprintId);

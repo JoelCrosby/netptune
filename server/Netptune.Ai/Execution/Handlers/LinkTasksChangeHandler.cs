@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -31,12 +32,12 @@ public sealed class LinkTasksChangeHandler : IAiChangeHandler
 
         if (!hasTasks)
         {
-            return AiChangePayload.Failure(change, "The tasks this link refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorTasksLinkRefersCouldNotResolved);
         }
 
         if (!relationTypeId.HasValue)
         {
-            return AiChangePayload.Failure(change, "The relation type this link refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorRelationTypeLinkRefersCouldNotResolved);
         }
 
         var request = new CreateTaskRelationRequest
@@ -50,7 +51,7 @@ public sealed class LinkTasksChangeHandler : IAiChangeHandler
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The tasks could not be linked.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorTasksCouldNotLinked);
         }
 
         return AiChangePayload.Applied(change, change.EntityId);

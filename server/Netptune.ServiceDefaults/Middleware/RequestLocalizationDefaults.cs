@@ -14,7 +14,7 @@ public static class RequestLocalizationDefaults
 
     // Only the UI culture follows the user. Formatting stays invariant, as it was before localization,
     // so dates and numbers the server writes into payloads and files do not change with the reader.
-    public static RequestLocalizationOptions Create()
+    public static RequestLocalizationOptions Create(RequestLocaleSource source)
     {
         var uiCultures = AppLocales.Supported
             .Select(CultureInfo.GetCultureInfo)
@@ -27,12 +27,22 @@ public static class RequestLocalizationDefaults
             SupportedCultures = [CultureInfo.InvariantCulture],
             SupportedUICultures = uiCultures,
             FallBackToParentUICultures = true,
-            RequestCultureProviders =
-            [
-                new CustomRequestCultureProvider(ReadLocaleCookie),
-                new AcceptLanguageHeaderRequestCultureProvider(),
-            ],
+            RequestCultureProviders = CreateProviders(source),
         };
+    }
+
+    private static List<IRequestCultureProvider> CreateProviders(RequestLocaleSource source)
+    {
+        if (source == RequestLocaleSource.Default)
+        {
+            return [];
+        }
+
+        return
+        [
+            new CustomRequestCultureProvider(ReadLocaleCookie),
+            new AcceptLanguageHeaderRequestCultureProvider(),
+        ];
     }
 
     private static Task<ProviderCultureResult?> ReadLocaleCookie(HttpContext context)

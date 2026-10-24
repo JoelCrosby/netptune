@@ -3,6 +3,7 @@ using Mediator;
 using Netptune.Automation.Rules;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
@@ -49,7 +50,7 @@ public sealed class CloneAutomationRuleCommandHandler
         if (hasRequestedName && requestedName!.Length > MaximumNameLength)
         {
             return ClientResponse<AutomationRuleViewModel>.Failed(
-                $"Automation names cannot be longer than {MaximumNameLength} characters.");
+                Localized.Format(AppText.ErrorAutomationNamesCannotLongerThanCharacters, MaximumNameLength));
         }
 
         var workspaceId = await Identity.GetWorkspaceId();

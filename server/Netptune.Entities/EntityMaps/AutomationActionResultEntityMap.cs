@@ -33,6 +33,15 @@ public sealed class AutomationActionResultEntityMap : AuditableEntityMap<Automat
             .IsRequired(false);
 
         builder
+            .Property(result => result.MessageCode)
+            .HasMaxLength(64)
+            .IsRequired(false);
+
+        builder
+            .Property(result => result.MessageArguments)
+            .HasDefaultValueSql("'{}'");
+
+        builder
             .Property(result => result.Output)
             .HasColumnType("jsonb")
             .IsRequired(false);

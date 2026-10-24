@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
@@ -42,7 +43,7 @@ public sealed class RestoreTasksCommandHandler : IRequestHandler<RestoreTasksCom
 
         if (!workspaceId.HasValue)
         {
-            return ClientResponse.Failed($"workspace with key {workspaceSlug} not found");
+            return ClientResponse.Failed(Localized.Format(AppText.ErrorWorkspaceKeyNotFound, workspaceSlug));
         }
 
         var deletedIds = await UnitOfWork.Tasks.GetDeletedTaskIdsInWorkspace(ids, workspaceId.Value, cancellationToken);

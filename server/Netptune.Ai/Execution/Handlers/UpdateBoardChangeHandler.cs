@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -28,7 +29,7 @@ public sealed class UpdateBoardChangeHandler : IAiChangeHandler
 
         if (!boardId.HasValue)
         {
-            return AiChangePayload.Failure(change, "The board this change refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorBoardChangeRefersCouldNotResolved);
         }
 
         var request = new UpdateBoardRequest
@@ -42,7 +43,7 @@ public sealed class UpdateBoardChangeHandler : IAiChangeHandler
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The board could not be updated.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorBoardCouldNotUpdated);
         }
 
         return AiChangePayload.Applied(change, boardId);

@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -46,7 +47,7 @@ public sealed class UpdateBoardGroupCommandHandler : IRequestHandler<UpdateBoard
 
             if (status is not { EntityType: EntityType.Task })
             {
-                return ClientResponse<BoardGroupViewModel>.Failed("Assigned status was not found or is not a task status.");
+                return ClientResponse<BoardGroupViewModel>.Failed(AppText.ErrorAssignedStatusNotFoundNotTaskStatus);
             }
 
             result.StatusId = req.StatusId;

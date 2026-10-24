@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Ai.Tools;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -29,7 +30,7 @@ public sealed class DeleteTagChangeHandler : IAiChangeHandler
 
         if (!tagId.HasValue)
         {
-            return AiChangePayload.Failure(change, "The tag this change refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorTagChangeRefersCouldNotResolved);
         }
 
         var tags = await Mediator.Send(new GetTagsForWorkspaceQuery(), cancellationToken) ?? [];
@@ -37,7 +38,7 @@ public sealed class DeleteTagChangeHandler : IAiChangeHandler
 
         if (tag is null)
         {
-            return AiChangePayload.Failure(change, "The tag no longer exists in this workspace.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorTagNoLongerExistsWorkspace);
         }
 
         var request = new DeleteTagsRequest { Tags = [tag.Name] };
@@ -45,7 +46,7 @@ public sealed class DeleteTagChangeHandler : IAiChangeHandler
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The tag could not be deleted.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorTagCouldNotDeleted);
         }
 
         return AiChangePayload.Applied(change, tag.Id);

@@ -3,6 +3,7 @@ using Mediator;
 using Netptune.Core.Cache;
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Users;
+using Netptune.Core.Localization;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -38,15 +39,22 @@ public sealed class RemoveUsersFromWorkspaceCommandHandler : IRequestHandler<Rem
         var emailList = request.Emails.ToList();
         var workspace = await UnitOfWork.Workspaces.GetBySlug(workspaceKey, true, cancellationToken);
 
-        if (workspace is null) return ClientResponse<RemoveUsersWorkspaceResponse>.Failed("workspace not found");
-        if (emailList.Count == 0) return ClientResponse<RemoveUsersWorkspaceResponse>.Failed("no email addresses provided");
+        if (workspace is null)
+        {
+            return ClientResponse<RemoveUsersWorkspaceResponse>.Failed(AppText.ErrorWorkspaceNotFound);
+        }
+
+        if (emailList.Count == 0)
+        {
+            return ClientResponse<RemoveUsersWorkspaceResponse>.Failed(AppText.ErrorNoEmailAddressesProvided);
+        }
 
         var users = await UnitOfWork.Users.GetByEmailRange(emailList, true, cancellationToken);
         var userIds = users.ConvertAll(user => user.Id);
 
         if (userIds.Count == 1 && userIds.Contains(workspace.OwnerId!))
         {
-            return ClientResponse<RemoveUsersWorkspaceResponse>.Failed("cannot remove thew owner of the workspace");
+            return ClientResponse<RemoveUsersWorkspaceResponse>.Failed(AppText.ErrorCannotRemoveWorkspaceOwner);
         }
 
         foreach (var userId in userIds)

@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Ai.Tools;
 using Netptune.Core.Authorization;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests.Pages;
 using Netptune.Core.Services.Ai;
@@ -14,11 +15,9 @@ namespace Netptune.Ai.Execution.Handlers;
 
 public sealed class UpdatePageBodyChangeHandler : IAiChangeHandler, IAiChangeUndoHandler
 {
-    public const string EditedSinceMessage =
-        "The page was edited after this change was proposed. Ask for a fresh proposal.";
+    public static string EditedSinceMessage => AppText.AiChangeErrorPageEditedAfterChangeProposedAskFresh;
 
-    public const string UnresolvedTasksMessage =
-        "Some tasks this page should link to were not created, so the page was left as it is.";
+    public static string UnresolvedTasksMessage => AppText.AiChangeErrorTasksPageShouldLinkNotCreatedPage;
 
     private readonly IMediator Mediator;
 
@@ -43,7 +42,7 @@ public sealed class UpdatePageBodyChangeHandler : IAiChangeHandler, IAiChangeUnd
 
         if (!pageId.HasValue || !revision.HasValue)
         {
-            return AiChangePayload.Failure(change, "The page this change refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorPageChangeRefersCouldNotResolved);
         }
 
         var proposedBody = AiChangePayload.ReadString(payload, "body");
@@ -70,7 +69,7 @@ public sealed class UpdatePageBodyChangeHandler : IAiChangeHandler, IAiChangeUnd
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The page could not be saved.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorPageCouldNotSaved);
         }
 
         return AiChangePayload.Applied(change, pageId);

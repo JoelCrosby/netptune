@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 
 namespace Netptune.Ai.Tools;
@@ -55,7 +56,7 @@ public sealed class ArchivePageAction : IAiToolAction
             ToolName = ChangeName,
             EntityType = AiPageLookup.EntityType,
             EntityId = page.Id,
-            Summary = $"Archive “{page.Title}”{insideNote}",
+            Summary = DescribeArchive(page.Title, descendantCount),
             Fields = [AiChangeFields.Text("name", page.Title, null)],
             Payload = JsonSerializer.SerializeToDocument(new { pageId = page.Id }),
             ValidationStatus = AiChangeValidationStatus.Valid,
@@ -64,5 +65,15 @@ public sealed class ArchivePageAction : IAiToolAction
         return AiToolExecution.Success(
             $"Proposed archiving page {page.Id}{insideNote}. It can be restored afterwards. "
             + "Nothing has been applied yet — the user must review and apply the change.");
+    }
+
+    private static string DescribeArchive(string title, int descendantCount)
+    {
+        return descendantCount switch
+        {
+            0 => Localized.Format(AppText.AiSummaryArchivePage, title),
+            1 => Localized.Format(AppText.AiSummaryArchivePageWithOneInside, title),
+            _ => Localized.Format(AppText.AiSummaryArchivePageWithManyInside, title, descendantCount),
+        };
     }
 }

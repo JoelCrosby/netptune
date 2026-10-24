@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Ai.Tools;
 using Netptune.Core.Authorization;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Automations.Commands;
@@ -12,8 +13,7 @@ namespace Netptune.Ai.Execution.Handlers;
 
 public sealed class SetAutomationEnabledChangeHandler : IAiChangeHandler, IAiChangeUndoHandler
 {
-    public const string ChangedSinceMessage =
-        "The rule has been turned on or off since this change was applied, so it was left as it is now.";
+    public static string ChangedSinceMessage => AppText.AiChangeErrorRuleTurnedOffSinceChangeAppliedLeft;
 
     private readonly IMediator Mediator;
 
@@ -38,7 +38,7 @@ public sealed class SetAutomationEnabledChangeHandler : IAiChangeHandler, IAiCha
 
         if (!ruleId.HasValue || !isEnabled.HasValue)
         {
-            return AiChangePayload.Failure(change, "The rule this change refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorRuleChangeRefersCouldNotResolved);
         }
 
         var command = new SetAutomationRuleEnabledCommand(ruleId.Value, isEnabled.Value);
@@ -46,7 +46,7 @@ public sealed class SetAutomationEnabledChangeHandler : IAiChangeHandler, IAiCha
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The rule could not be turned on or off.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorRuleCouldNotTurnedOff);
         }
 
         return AiChangePayload.Applied(change, ruleId.Value);
@@ -79,7 +79,7 @@ public sealed class SetAutomationEnabledChangeHandler : IAiChangeHandler, IAiCha
 
         if (!snapshot.HasValue)
         {
-            return AiChangeUndoResult.Failure(change, "There is nothing recorded to restore.");
+            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
         }
 
         var ruleId = AiChangePayload.ReadInt(snapshot.Value, "ruleId");
@@ -88,14 +88,14 @@ public sealed class SetAutomationEnabledChangeHandler : IAiChangeHandler, IAiCha
 
         if (!ruleId.HasValue || !wasEnabled.HasValue)
         {
-            return AiChangeUndoResult.Failure(change, "There is nothing recorded to restore.");
+            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
         }
 
         var current = await AiAutomationRuleReader.ReadCurrent(Mediator, ruleId.Value, cancellationToken);
 
         if (current is null)
         {
-            return AiChangeUndoResult.Failure(change, "The rule is no longer in this workspace.");
+            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorRuleNoLongerWorkspace);
         }
 
         var isUnchangedSinceApply = current.IsEnabled == appliedEnabled;
@@ -110,7 +110,7 @@ public sealed class SetAutomationEnabledChangeHandler : IAiChangeHandler, IAiCha
 
         if (!response.IsSuccess)
         {
-            return AiChangeUndoResult.Failure(change, response.Message ?? "The rule could not be turned back.");
+            return AiChangeUndoResult.Failure(change, response.Message ?? AppText.AiChangeErrorRuleCouldNotTurnedBack);
         }
 
         return AiChangeUndoResult.Undone(change, ruleId.Value);

@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Tasks.Queries;
 
@@ -79,7 +80,7 @@ public sealed class DeleteTaskTool : IAiTool
             ToolName = Name,
             EntityType = "task",
             EntityId = task.Id,
-            Summary = $"Delete “{task.Name}” ({task.SystemId})",
+            Summary = Localized.Format(AppText.AiSummaryDeleteTask, task.Name, task.SystemId),
             Fields = fields,
             Payload = JsonSerializer.SerializeToDocument(new { taskId = task.Id }),
             ValidationStatus = AiChangeValidationStatus.Valid,

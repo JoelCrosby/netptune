@@ -5,6 +5,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Events.Sprints;
 using Netptune.Core.Events.Tasks;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Relationships;
@@ -75,7 +76,9 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
 
         if (!workspaceId.HasValue)
         {
-            return ClientResponse<TaskViewModel>.Failed($"workspace with key {workspaceKey} not found");
+            var error = Localized.Format(AppText.ErrorWorkspaceKeyNotFound, workspaceKey);
+
+            return ClientResponse<TaskViewModel>.Failed(error);
         }
 
         var user = await Identity.GetCurrentUser();
@@ -83,7 +86,9 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
 
         if (project is null)
         {
-            return ClientResponse<TaskViewModel>.Failed($"Project with Id {req.ProjectId} not found");
+            var error = Localized.Format(AppText.ErrorProjectIdNotFound, req.ProjectId);
+
+            return ClientResponse<TaskViewModel>.Failed(error);
         }
 
         var requestedAssignees = ReadRequestedAssignees(req);
@@ -128,7 +133,7 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
 
         if (status is null)
         {
-            return ClientResponse<TaskViewModel>.Failed("Task status not found");
+            return ClientResponse<TaskViewModel>.Failed(AppText.ErrorTaskStatusNotFound);
         }
 
         Sprint? targetSprint = null;
@@ -139,7 +144,9 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
 
             if (targetSprint is null || targetSprint.WorkspaceId != workspaceId.Value || targetSprint.ProjectId != project.Id || targetSprint.Status == SprintStatus.Completed)
             {
-                return ClientResponse<TaskViewModel>.Failed($"Sprint with Id {req.SprintId} not found");
+                var error = Localized.Format(AppText.ErrorSprintIdNotFound, req.SprintId);
+
+                return ClientResponse<TaskViewModel>.Failed(error);
             }
         }
 
@@ -179,7 +186,9 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
 
         if (!scopeId.HasValue)
         {
-            return ClientResponse<TaskViewModel>.Failed($"Unable to get scope id for project with id {project.Id}");
+            var error = Localized.Format(AppText.ErrorUnableGetScopeIdProjectId, project.Id);
+
+            return ClientResponse<TaskViewModel>.Failed(error);
         }
 
         task.ProjectScopeId = scopeId.Value;

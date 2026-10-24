@@ -4,6 +4,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Events.Comments;
+using Netptune.Core.Localization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -86,7 +87,7 @@ public sealed class AddCommentToTaskCommandHandler : IRequestHandler<AddCommentT
 
         if (result is null)
         {
-            return ClientResponse<CommentViewModel>.Failed("add comment failed");
+            return ClientResponse<CommentViewModel>.Failed(AppText.ErrorAddCommentFailed);
         }
 
         return result;

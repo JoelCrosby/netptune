@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Events;
+using Netptune.Core.Localization;
 using Netptune.Core.Repositories;
 using Netptune.Core.Requests.SourceControl;
 using Netptune.Core.Responses.Common;
@@ -53,7 +54,7 @@ public sealed class CompleteSourceControlConnectCommandHandler
 
         if (!isEnabled)
         {
-            var message = $"{request.Provider} is not enabled on this Netptune instance.";
+            var message = Localized.Format(AppText.ErrorNotEnabledNetptuneInstance, request.Provider);
 
             return ClientResponse<SourceControlConnectionViewModel>.Failed(message);
         }
@@ -121,7 +122,7 @@ public sealed class CompleteSourceControlConnectCommandHandler
         {
             Logger.LogWarning(exception, "{Provider} rejected a connection attempt", providerKind);
 
-            var message = $"{providerKind} could not complete the connection. Try again shortly.";
+            var message = Localized.Format(AppText.ErrorCouldNotCompleteConnectionTryAgainShortly, providerKind);
 
             return ClientResponse<ScmConnectResult>.Failed(message);
         }

@@ -3,6 +3,7 @@ using Mediator;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Relations;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
@@ -40,12 +41,12 @@ public sealed class CreateRelationTypeCommandHandler : IRequestHandler<CreateRel
 
         if (string.IsNullOrWhiteSpace(key))
         {
-            return ClientResponse<RelationTypeViewModel>.Failed("Relation type name must contain at least one valid character.");
+            return ClientResponse<RelationTypeViewModel>.Failed(AppText.ErrorRelationTypeNameMustContainAtLeast);
         }
 
         if (await UnitOfWork.RelationTypes.KeyExists(workspaceId.Value, key, cancellationToken: cancellationToken))
         {
-            return ClientResponse<RelationTypeViewModel>.Failed("Relation type name should be unique.");
+            return ClientResponse<RelationTypeViewModel>.Failed(AppText.ErrorRelationTypeNameShouldUnique);
         }
 
         var relationTypes = await UnitOfWork.RelationTypes.GetViewModelsForWorkspace(workspaceId.Value, cancellationToken);

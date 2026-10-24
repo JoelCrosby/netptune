@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Ai;
 
@@ -74,7 +75,7 @@ public sealed class UpdateCommentAction : IAiToolAction
             ToolName = Change,
             EntityType = AiCommentLookup.EntityType,
             EntityId = comment.Id,
-            Summary = $"Edit comment on {systemId}",
+            Summary = Localized.Format(AppText.AiSummaryUpdateComment, systemId),
             Fields = [AiChangeFields.Text("comment", comment.Body, body)],
             Payload = JsonSerializer.SerializeToDocument(new { systemId, commentId = comment.Id, comment = body }),
             ValidationStatus = AiChangeValidationStatus.Valid,

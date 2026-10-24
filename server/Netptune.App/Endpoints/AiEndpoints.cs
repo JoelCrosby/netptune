@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.Json;
 
 using Mediator;
@@ -9,6 +10,7 @@ using Netptune.App.Services;
 using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Requests.Ai;
@@ -563,6 +565,8 @@ public static class AiEndpoints
         IAiConversationService service)
     {
         StartEventStream(context);
+
+        using var culture = CultureScope.Use(request.Locale ?? CultureInfo.CurrentUICulture.Name);
 
         var clientConnected = true;
 

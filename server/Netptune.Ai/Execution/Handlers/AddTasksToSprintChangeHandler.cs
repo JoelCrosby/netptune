@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -31,7 +32,7 @@ public sealed class AddTasksToSprintChangeHandler : IAiChangeHandler
 
         if (!sprintId.HasValue || taskIds.Count == 0)
         {
-            return AiChangePayload.Failure(change, "The sprint or tasks this change refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorSprintTasksChangeRefersCouldNotResolved);
         }
 
         var request = new AddTasksToSprintRequest { TaskIds = taskIds };
@@ -39,7 +40,7 @@ public sealed class AddTasksToSprintChangeHandler : IAiChangeHandler
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The tasks could not be added to the sprint.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorTasksCouldNotAddedSprint);
         }
 
         return AiChangePayload.Applied(change, sprintId);

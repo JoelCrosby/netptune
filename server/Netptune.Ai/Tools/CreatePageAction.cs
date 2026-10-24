@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Pages;
 using Netptune.Core.Services.Ai;
 
@@ -88,7 +89,7 @@ public sealed class CreatePageAction : IAiToolAction
         var fields = new List<AiChangeField>
         {
             new() { Name = "name", After = normalisedTitle },
-            new() { Name = "kind", After = kindName },
+            new() { Name = "kind", After = LocalizedEnum.Label(kind.Value) },
             new() { Name = "parent", After = parent.Display },
         };
 
@@ -121,7 +122,7 @@ public sealed class CreatePageAction : IAiToolAction
             ToolName = ChangeName,
             EntityType = AiPageLookup.EntityType,
             RefKey = refKey,
-            Summary = $"Create {kindName} “{normalisedTitle}” in {parent.Display}",
+            Summary = Localized.Format(DescribeCreate(kind.Value), normalisedTitle, parent.Display),
             Fields = fields,
             Payload = JsonSerializer.SerializeToDocument(payload),
             ValidationStatus = AiChangeValidationStatus.Valid,
@@ -130,5 +131,10 @@ public sealed class CreatePageAction : IAiToolAction
         return AiToolExecution.Success(
             $"Proposed creating {kindName} \"{normalisedTitle}\" as {refKey}. "
             + "Nothing has been applied yet — the user must review and apply the change.");
+    }
+
+    private static string DescribeCreate(PageKind kind)
+    {
+        return kind == PageKind.Folder ? AppText.AiSummaryCreateFolder : AppText.AiSummaryCreateDocument;
     }
 }

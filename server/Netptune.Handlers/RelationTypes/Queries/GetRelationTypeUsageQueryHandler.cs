@@ -2,6 +2,7 @@ using Mediator;
 
 using Netptune.Automation.Rules;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Automations;
 using Netptune.Core.UnitOfWork;
@@ -68,12 +69,12 @@ public sealed class GetRelationTypeUsageQueryHandler : IRequestHandler<GetRelati
     {
         if (isSystem)
         {
-            return "Built-in relation types cannot be deleted.";
+            return AppText.ErrorBuiltRelationTypesCannotDeleted;
         }
 
         if (relationCount > 0)
         {
-            return "Relation type is in use and cannot be deleted.";
+            return AppText.ErrorRelationTypeUseCannotDeleted;
         }
 
         return null;

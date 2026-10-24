@@ -27,6 +27,14 @@ public class AutomationRuleEntityMap : WorkspaceEntityMap<AutomationRule, int>
             .HasMaxLength(512);
 
         builder
+            .Property(rule => rule.AutoDisabledReasonCode)
+            .HasMaxLength(64);
+
+        builder
+            .Property(rule => rule.AutoDisabledReasonArguments)
+            .HasDefaultValueSql("'{}'");
+
+        builder
             .HasOne<AppUser>()
             .WithMany()
             .HasForeignKey(rule => rule.ExecutionUserId)

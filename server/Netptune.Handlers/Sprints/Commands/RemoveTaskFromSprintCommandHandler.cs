@@ -2,6 +2,7 @@ using Mediator;
 
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Sprints;
+using Netptune.Core.Localization;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
@@ -43,7 +44,7 @@ public sealed class RemoveTaskFromSprintCommandHandler : IRequestHandler<RemoveT
 
         if (sprint.Status == SprintStatus.Completed)
         {
-            return ClientResponse<SprintDetailViewModel>.Failed("Completed sprints cannot be changed");
+            return ClientResponse<SprintDetailViewModel>.Failed(AppText.ErrorCompletedSprintsCannotChanged);
         }
 
         var task = await UnitOfWork.Tasks.GetTaskViewModel(request.TaskId, cancellationToken);

@@ -34,6 +34,7 @@ builder.Services.AddNetptuneEntities(options => options.ConnectionString = conne
 builder.Services.AddNetptuneEventRecording();
 builder.Services.AddNetptuneNotifications();
 builder.Services.AddNetptuneBackgroundIdentity();
+builder.Services.AddNetptuneUserLocales();
 
 builder.Services.AddCloudflareEmailService();
 

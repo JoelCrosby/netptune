@@ -5,6 +5,7 @@ using Mediator;
 using Netptune.Ai.Tools;
 using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests.Pages;
 using Netptune.Core.Services.Ai;
@@ -14,8 +15,7 @@ namespace Netptune.Ai.Execution.Handlers;
 
 public sealed class MovePageChangeHandler : IAiChangeHandler, IAiChangeUndoHandler
 {
-    public const string MovedSinceMessage =
-        "The page has been moved again since this change was applied, so it was left where it is now.";
+    public static string MovedSinceMessage => AppText.AiChangeErrorPageMovedAgainSinceChangeAppliedLeft;
 
     private readonly IMediator Mediator;
 
@@ -39,7 +39,7 @@ public sealed class MovePageChangeHandler : IAiChangeHandler, IAiChangeUndoHandl
 
         if (!pageId.HasValue)
         {
-            return AiChangePayload.Failure(change, "The page this change refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorPageChangeRefersCouldNotResolved);
         }
 
         var parentId = AiChangePayload.ReadInt(payload, "parentId")
@@ -55,7 +55,7 @@ public sealed class MovePageChangeHandler : IAiChangeHandler, IAiChangeUndoHandl
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The page could not be moved.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorPageCouldNotMoved);
         }
 
         return AiChangePayload.Applied(change, pageId);
@@ -75,7 +75,7 @@ public sealed class MovePageChangeHandler : IAiChangeHandler, IAiChangeUndoHandl
 
         if (snapshot is null)
         {
-            return AiChangeUndoResult.Failure(change, "There is nothing recorded to restore.");
+            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
         }
 
         var movedAgain = await WasMovedSinceApply(change, snapshot.PageId, cancellationToken);
@@ -90,7 +90,7 @@ public sealed class MovePageChangeHandler : IAiChangeHandler, IAiChangeUndoHandl
 
         if (!response.IsSuccess)
         {
-            return AiChangeUndoResult.Failure(change, response.Message ?? "The page could not be moved back.");
+            return AiChangeUndoResult.Failure(change, response.Message ?? AppText.AiChangeErrorPageCouldNotMovedBack);
         }
 
         return AiChangeUndoResult.Undone(change, snapshot.PageId);

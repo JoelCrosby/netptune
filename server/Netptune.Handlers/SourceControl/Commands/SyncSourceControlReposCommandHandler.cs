@@ -2,6 +2,7 @@ using Mediator;
 
 using Microsoft.Extensions.Logging;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.SourceControl;
@@ -43,7 +44,10 @@ public sealed class SyncSourceControlReposCommandHandler
         {
             Logger.LogWarning(exception, "Repository sync for {ConnectionId} was rate limited", command.ConnectionId);
 
-            var message = $"{exception.Provider} is rate limiting Netptune. Try again after {exception.RetryAt:t}.";
+            var message = Localized.Format(
+                AppText.ErrorRateLimitingNetptuneTryAgainAfter,
+                exception.Provider,
+                exception.RetryAt);
 
             return ClientResponse<ScmRepoSyncResult>.Failed(message);
         }
@@ -51,7 +55,7 @@ public sealed class SyncSourceControlReposCommandHandler
         {
             Logger.LogWarning(exception, "Repository sync for {ConnectionId} failed", command.ConnectionId);
 
-            var message = $"{exception.Provider} could not list repositories. Try again shortly.";
+            var message = Localized.Format(AppText.ErrorCouldNotListRepositoriesTryAgainShortly, exception.Provider);
 
             return ClientResponse<ScmRepoSyncResult>.Failed(message);
         }

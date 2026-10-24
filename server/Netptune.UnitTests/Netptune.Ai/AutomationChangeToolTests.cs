@@ -10,6 +10,7 @@ using Netptune.Ai.Tools;
 using Netptune.Automation.Actions;
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Ai;
@@ -238,7 +239,24 @@ public class AutomationChangeToolTests
 
         draft.ToolName.Should().Be(SetAutomationEnabledAction.Change);
         draft.ValidationMessage.Should().Be(
-            "Applying this cancels 1 pending delayed action, and undo will not bring them back.");
+            "Applying this cancels 1 pending delayed action, and undo will not bring it back.");
+    }
+
+    [Fact]
+    public async Task SetEnabled_ShouldDescribeTheChangeInTheCurrentUiCulture()
+    {
+        ReturnRule(BuildRule() with { IsEnabled = true });
+
+        using var culture = CultureScope.Use("fr");
+
+        await Execute("""{"action":"set_enabled","ruleId":21,"isEnabled":false}""");
+
+        var draft = Drafts.Single();
+        var field = draft.Fields.Single();
+
+        draft.Summary.Should().StartWith("Désactiver l’automatisation “");
+        field.Before.Should().Be("Activée");
+        field.After.Should().Be("Désactivée");
     }
 
     [Fact]

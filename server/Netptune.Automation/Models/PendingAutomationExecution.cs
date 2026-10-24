@@ -1,5 +1,6 @@
 using Netptune.Core.Entities;
 using Netptune.Core.Events.Tasks;
+using Netptune.Core.Models.Automations;
 
 namespace Netptune.Automation.Models;
 
@@ -13,7 +14,7 @@ internal sealed record PendingAutomationExecution
 
     public string? InitiatingUserId { get; init; }
 
-    public string? AuthorizationError { get; set; }
+    public AutomationMessage? AuthorizationError { get; set; }
 
     public required string IdempotencyKey { get; init; }
 

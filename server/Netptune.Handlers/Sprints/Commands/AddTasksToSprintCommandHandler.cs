@@ -2,6 +2,7 @@ using Mediator;
 
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Sprints;
+using Netptune.Core.Localization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -44,12 +45,12 @@ public sealed class AddTasksToSprintCommandHandler : IRequestHandler<AddTasksToS
 
         if (sprint.Status == SprintStatus.Completed)
         {
-            return ClientResponse<SprintDetailViewModel>.Failed("Completed sprints cannot be changed");
+            return ClientResponse<SprintDetailViewModel>.Failed(AppText.ErrorCompletedSprintsCannotChanged);
         }
 
         if (request.Request.TaskIds.Count == 0)
         {
-            return ClientResponse<SprintDetailViewModel>.Failed("At least one task is required");
+            return ClientResponse<SprintDetailViewModel>.Failed(AppText.ErrorAtLeastOneTaskRequired);
         }
 
         var taskIds = request.Request.TaskIds.Distinct().ToList();
@@ -59,7 +60,7 @@ public sealed class AddTasksToSprintCommandHandler : IRequestHandler<AddTasksToS
 
         if (hasTasksOutsideWorkspace)
         {
-            return ClientResponse<SprintDetailViewModel>.Failed("Some of these tasks were not found in the workspace");
+            return ClientResponse<SprintDetailViewModel>.Failed(AppText.ErrorSomeTasksNotFoundWorkspace);
         }
 
         var taskIdsInProject = await UnitOfWork.Tasks.GetValidTaskIdsInProject(
@@ -76,7 +77,7 @@ public sealed class AddTasksToSprintCommandHandler : IRequestHandler<AddTasksToS
                 workspaceKey,
                 cancellationToken);
             var systemIds = string.Join(", ", references.Select(reference => reference.SystemId).Order());
-            var message = $"These tasks are not in the sprint's project: {systemIds}";
+            var message = Localized.Format(AppText.ErrorTasksNotInSprintProject, systemIds);
 
             return ClientResponse<SprintDetailViewModel>.Failed(message);
         }

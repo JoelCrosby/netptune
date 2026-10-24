@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Requests.Ai;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -40,7 +41,7 @@ public sealed class SetAiSpendCapCommandHandler
         if (isOutOfRange)
         {
             return ClientResponse<AiSpendViewModel>.Failed(
-                $"A spend cap must be more than 0 and no more than {MaximumCap:C0}.");
+                Localized.Format(AppText.ErrorSpendCapMustMoreThanNoMore, MaximumCap));
         }
 
         var workspaceId = await Identity.GetWorkspaceId();

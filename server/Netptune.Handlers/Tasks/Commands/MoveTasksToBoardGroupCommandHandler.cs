@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
@@ -47,7 +48,7 @@ public sealed class MoveTasksToBoardGroupCommandHandler : IRequestHandler<MoveTa
 
         if (!hasBoard)
         {
-            return ClientResponse.Failed("The board group does not belong to a board.");
+            return ClientResponse.Failed(AppText.ErrorBoardGroupDoesNotBelongBoard);
         }
 
         var tasks = await UnitOfWork.Tasks.GetAllByIdAsync(request.TaskIds, true, cancellationToken);
@@ -62,7 +63,7 @@ public sealed class MoveTasksToBoardGroupCommandHandler : IRequestHandler<MoveTa
 
         if (isOutsideBoardProject)
         {
-            return ClientResponse.Failed($"Board group “{target.Name}” belongs to a different project.");
+            return ClientResponse.Failed(Localized.Format(AppText.ErrorBoardGroupBelongsDifferentProject, target.Name));
         }
 
         await EnsureOnBoard(request.TaskIds, target, cancellationToken);

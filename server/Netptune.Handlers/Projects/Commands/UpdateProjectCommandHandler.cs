@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
@@ -56,7 +57,7 @@ public sealed class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectC
 
             if (status is null || status.EntityType != EntityType.Task)
             {
-                return ClientResponse<ProjectViewModel>.Failed("Default task status not found");
+                return ClientResponse<ProjectViewModel>.Failed(AppText.ErrorDefaultTaskStatusNotFound);
             }
 
             project.DefaultStatusId = status.Id;

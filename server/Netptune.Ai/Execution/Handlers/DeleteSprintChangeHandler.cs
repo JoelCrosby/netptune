@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Sprints.Commands;
@@ -26,14 +27,14 @@ public sealed class DeleteSprintChangeHandler : IAiChangeHandler
 
         if (!sprintId.HasValue)
         {
-            return AiChangePayload.Failure(change, "The sprint this change refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorSprintChangeRefersCouldNotResolved);
         }
 
         var response = await Mediator.Send(new DeleteSprintCommand(sprintId.Value), cancellationToken);
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The sprint could not be deleted.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorSprintCouldNotDeleted);
         }
 
         return AiChangePayload.Applied(change, sprintId);

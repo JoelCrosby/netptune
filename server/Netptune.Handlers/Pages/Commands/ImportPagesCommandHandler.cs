@@ -2,6 +2,7 @@ using Mediator;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Pages;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Requests.Pages;
@@ -45,7 +46,7 @@ public sealed class ImportPagesCommandHandler : IRequestHandler<ImportPagesComma
 
         if (upload.Files.Count == 0)
         {
-            return ClientResponse<ImportPagesResultViewModel>.Failed("There were no markdown files to import.");
+            return ClientResponse<ImportPagesResultViewModel>.Failed(AppText.ErrorNoMarkdownFilesImport);
         }
 
         var workspaceKey = Identity.GetWorkspaceKey();

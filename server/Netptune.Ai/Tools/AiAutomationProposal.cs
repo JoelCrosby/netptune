@@ -1,8 +1,8 @@
 using System.Text.Json;
-using System.Text.RegularExpressions;
 
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.ServiceAccounts;
@@ -14,11 +14,9 @@ using Netptune.Handlers.Statuses.Queries;
 
 namespace Netptune.Ai.Tools;
 
-internal static partial class AiAutomationProposal
+internal static class AiAutomationProposal
 {
     public const string EntityType = "automationRule";
-
-    private const string Workspace = "Workspace";
 
     private static readonly JsonSerializerOptions SnapshotOptions = new(JsonSerializerDefaults.Web);
 
@@ -60,9 +58,9 @@ internal static partial class AiAutomationProposal
             return null;
         }
 
-        var actions = pendingCount == 1 ? "1 pending delayed action" : $"{pendingCount} pending delayed actions";
-
-        return $"Applying this cancels {actions}, and undo will not bring them back.";
+        return pendingCount == 1
+            ? AppText.AiAutomationCancelsOnePendingAction
+            : Localized.Format(AppText.AiAutomationCancelsPendingActions, pendingCount);
     }
 
     public static async Task<List<AiChangeField>> DescribeFields(
@@ -73,9 +71,11 @@ internal static partial class AiAutomationProposal
     {
         var fields = new List<AiChangeField>();
         var isCreate = before is null;
+        var beforeState = DescribeEnabledIfSet(before?.IsEnabled);
+        var afterState = DescribeEnabled(after.IsEnabled);
 
         AddTextWhenChanged(fields, "name", before?.Name, after.Name);
-        AddTextWhenChanged(fields, "enabled", DescribeEnabled(before?.IsEnabled), DescribeEnabled(after.IsEnabled));
+        AddTextWhenChanged(fields, "enabled", beforeState, afterState);
 
         var isRescoped = isCreate
             || before!.ProjectId != after.ProjectId
@@ -101,8 +101,8 @@ internal static partial class AiAutomationProposal
             fields.Add(AiChangeFields.Values("runsAs", AiChangeValueKind.User, beforeAccount, afterAccount));
         }
 
-        var beforeTrigger = Humanize(before?.Trigger.Type.ToString());
-        var afterTrigger = Humanize(after.Trigger.Type.ToString());
+        var beforeTrigger = before is null ? null : LocalizedEnum.Label(before.Trigger.Type);
+        var afterTrigger = LocalizedEnum.Label(after.Trigger.Type);
 
         AddTextWhenChanged(fields, "trigger", beforeTrigger, afterTrigger);
         AddTextWhenChanged(fields, "actions", DescribeActions(before), DescribeActions(after));
@@ -161,24 +161,24 @@ internal static partial class AiAutomationProposal
             var projects = await mediator.Send(new GetProjectsQuery(), cancellationToken);
             var project = projects.FirstOrDefault(item => item.Id == rule.ProjectId.Value);
 
-            return $"Project · {project?.Name ?? $"#{rule.ProjectId}"}";
+            return Localized.Format(AppText.AiAutomationScopeProject, project?.Name ?? $"#{rule.ProjectId}");
         }
 
         if (rule.BoardId.HasValue)
         {
             var board = await AiBoardLookup.FindBoard(mediator, rule.BoardId.Value, cancellationToken);
 
-            return $"Board · {board?.Name ?? $"#{rule.BoardId}"}";
+            return Localized.Format(AppText.AiAutomationScopeBoard, board?.Name ?? $"#{rule.BoardId}");
         }
 
         if (rule.SprintId.HasValue)
         {
             var sprint = await AiSprintLookup.Find(mediator, rule.SprintId.Value, cancellationToken);
 
-            return $"Sprint · {sprint?.Name ?? $"#{rule.SprintId}"}";
+            return Localized.Format(AppText.AiAutomationScopeSprint, sprint?.Name ?? $"#{rule.SprintId}");
         }
 
-        return Workspace;
+        return AppText.AiAutomationScopeWorkspace;
     }
 
     private static List<AiChangeValue> DescribeAccount(
@@ -195,14 +195,14 @@ internal static partial class AiAutomationProposal
         return [AiChangeFields.User(userId, account?.Name ?? userId)];
     }
 
-    private static string? DescribeEnabled(bool? isEnabled)
+    public static string DescribeEnabled(bool isEnabled)
     {
-        return isEnabled switch
-        {
-            true => "Enabled",
-            false => "Disabled",
-            null => null,
-        };
+        return isEnabled ? AppText.AiAutomationEnabled : AppText.AiAutomationDisabled;
+    }
+
+    private static string? DescribeEnabledIfSet(bool? isEnabled)
+    {
+        return isEnabled.HasValue ? DescribeEnabled(isEnabled.Value) : null;
     }
 
     private static string? DescribeActions(AutomationRuleRequest? rule)
@@ -212,7 +212,7 @@ internal static partial class AiAutomationProposal
             return null;
         }
 
-        var names = rule.Actions.Select(action => Humanize(action.Type.ToString()));
+        var names = rule.Actions.Select(action => LocalizedEnum.Label(action.Type));
 
         return string.Join(", ", names);
     }
@@ -226,21 +226,6 @@ internal static partial class AiAutomationProposal
             fields.Add(AiChangeFields.Text(name, before, after));
         }
     }
-
-    private static string? Humanize(string? name)
-    {
-        if (name is null)
-        {
-            return null;
-        }
-
-        var spaced = WordBoundary().Replace(name, " $1").ToLowerInvariant();
-
-        return char.ToUpperInvariant(spaced[0]) + spaced[1..];
-    }
-
-    [GeneratedRegex("(?<=[a-z])([A-Z])")]
-    private static partial Regex WordBoundary();
 }
 
 internal sealed record AiAutomationRead<T> where T : class

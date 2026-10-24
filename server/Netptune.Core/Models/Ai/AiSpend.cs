@@ -1,12 +1,5 @@
 namespace Netptune.Core.Models.Ai;
 
-public static class AiSpendMessages
-{
-    public const string CapReached = "This workspace has reached its monthly assistant spend cap.";
-
-    public const string CapReachedDuringTurn = "The assistant stopped because this reply reached the workspace's monthly spend cap.";
-}
-
 public sealed record AiSpendSlice
 {
     public required string UserId { get; init; }

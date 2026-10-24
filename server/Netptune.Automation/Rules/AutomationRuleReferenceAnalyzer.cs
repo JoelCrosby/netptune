@@ -92,28 +92,34 @@ public static class AutomationRuleReferenceAnalyzer
 
         if (projectIsMissing)
         {
-            warnings.Add(Warning(AutomationWarningCode.MissingProject, "This rule is scoped to a project that no longer exists."));
+            warnings.Add(RuleWarning(
+                AutomationWarningCode.MissingProject,
+                "This rule is scoped to a project that no longer exists."));
         }
 
         var boardIsMissing = rule.BoardId.HasValue && !existing.BoardIds.Contains(rule.BoardId.Value);
 
         if (boardIsMissing)
         {
-            warnings.Add(Warning(AutomationWarningCode.MissingBoard, "This rule is scoped to a board that no longer exists."));
+            warnings.Add(RuleWarning(
+                AutomationWarningCode.MissingBoard,
+                "This rule is scoped to a board that no longer exists."));
         }
 
         var sprintIsMissing = rule.SprintId.HasValue && !existing.SprintIds.Contains(rule.SprintId.Value);
 
         if (sprintIsMissing)
         {
-            warnings.Add(Warning(AutomationWarningCode.MissingSprint, "This rule is scoped to a sprint that no longer exists."));
+            warnings.Add(RuleWarning(
+                AutomationWarningCode.MissingSprint,
+                "This rule is scoped to a sprint that no longer exists."));
         }
 
         var executionUserIsMissing = rule.ExecutionUserId is not null && !existing.UserIds.Contains(rule.ExecutionUserId);
 
         if (executionUserIsMissing)
         {
-            warnings.Add(Warning(
+            warnings.Add(RuleWarning(
                 AutomationWarningCode.MissingExecutionUser,
                 "The account this rule runs as is no longer a member of this workspace."));
         }
@@ -157,7 +163,9 @@ public static class AutomationRuleReferenceAnalyzer
 
         if (referencesMissingStatus)
         {
-            warnings.Add(Warning(AutomationWarningCode.MissingStatus, "A condition checks a status that no longer exists."));
+            warnings.Add(ConditionWarning(
+                AutomationWarningCode.MissingStatus,
+                "A condition checks a status that no longer exists."));
         }
 
         var referencesMissingSprint = condition.Field == TaskChangeField.Sprint
@@ -166,14 +174,19 @@ public static class AutomationRuleReferenceAnalyzer
 
         if (referencesMissingSprint)
         {
-            warnings.Add(Warning(AutomationWarningCode.MissingSprint, "A condition checks a sprint that no longer exists."));
+            warnings.Add(ConditionWarning(
+                AutomationWarningCode.MissingSprint,
+                "A condition checks a sprint that no longer exists."));
         }
 
         var referencesMissingTag = condition.Field == TaskChangeField.Tags && !existing.TagNames.Contains(value);
 
         if (referencesMissingTag)
         {
-            warnings.Add(Warning(AutomationWarningCode.MissingTag, $"A condition checks the tag \"{value}\", which no longer exists."));
+            warnings.Add(ConditionWarning(
+                AutomationWarningCode.MissingTag,
+                $"A condition checks the tag \"{value}\", which no longer exists.",
+                value));
         }
 
         var checksUserField = condition.Field is TaskChangeField.Owner or TaskChangeField.Assignees;
@@ -181,7 +194,9 @@ public static class AutomationRuleReferenceAnalyzer
 
         if (referencesMissingUser)
         {
-            warnings.Add(Warning(AutomationWarningCode.MissingUser, "A condition checks a member who is no longer in this workspace."));
+            warnings.Add(ConditionWarning(
+                AutomationWarningCode.MissingUser,
+                "A condition checks a member who is no longer in this workspace."));
         }
     }
 
@@ -194,21 +209,30 @@ public static class AutomationRuleReferenceAnalyzer
 
         if (statusIsMissing)
         {
-            warnings.Add(Warning(AutomationWarningCode.MissingStatus, "This action sets a status that no longer exists.", action.Id));
+            warnings.Add(ActionWarning(
+                AutomationWarningCode.MissingStatus,
+                "This action sets a status that no longer exists.",
+                action.Id));
         }
 
         var sprintIsMissing = action.SprintId.HasValue && !existing.SprintIds.Contains(action.SprintId.Value);
 
         if (sprintIsMissing)
         {
-            warnings.Add(Warning(AutomationWarningCode.MissingSprint, "This action sets a sprint that no longer exists.", action.Id));
+            warnings.Add(ActionWarning(
+                AutomationWarningCode.MissingSprint,
+                "This action sets a sprint that no longer exists.",
+                action.Id));
         }
 
         var boardGroupIsMissing = action.BoardGroupId.HasValue && !existing.BoardGroupIds.Contains(action.BoardGroupId.Value);
 
         if (boardGroupIsMissing)
         {
-            warnings.Add(Warning(AutomationWarningCode.MissingBoardGroup, "This action moves tasks to a board group that no longer exists.", action.Id));
+            warnings.Add(ActionWarning(
+                AutomationWarningCode.MissingBoardGroup,
+                "This action moves tasks to a board group that no longer exists.",
+                action.Id));
         }
 
         AddRelationTypeWarnings(action, existing, warnings);
@@ -219,7 +243,10 @@ public static class AutomationRuleReferenceAnalyzer
 
         if (relatedTaskIsMissing)
         {
-            warnings.Add(Warning(AutomationWarningCode.MissingTask, "This action links to a task that no longer exists.", action.Id));
+            warnings.Add(ActionWarning(
+                AutomationWarningCode.MissingTask,
+                "This action links to a task that no longer exists.",
+                action.Id));
         }
     }
 
@@ -237,7 +264,10 @@ public static class AutomationRuleReferenceAnalyzer
 
         foreach (var _ in missingRelationTypes)
         {
-            warnings.Add(Warning(AutomationWarningCode.MissingRelationType, "This action uses a relation type that no longer exists.", action.Id));
+            warnings.Add(ActionWarning(
+                AutomationWarningCode.MissingRelationType,
+                "This action uses a relation type that no longer exists.",
+                action.Id));
         }
     }
 
@@ -263,7 +293,7 @@ public static class AutomationRuleReferenceAnalyzer
 
         foreach (var _ in missingUserIds)
         {
-            warnings.Add(Warning(
+            warnings.Add(ActionWarning(
                 AutomationWarningCode.MissingUser,
                 "This action references a member who is no longer in this workspace.",
                 action.Id));
@@ -283,10 +313,11 @@ public static class AutomationRuleReferenceAnalyzer
 
         foreach (var tag in missingTags)
         {
-            warnings.Add(Warning(
+            warnings.Add(ActionWarning(
                 AutomationWarningCode.MissingTag,
                 $"This action uses the tag \"{tag}\", which no longer exists.",
-                action.Id));
+                action.Id,
+                tag));
         }
     }
 
@@ -297,13 +328,43 @@ public static class AutomationRuleReferenceAnalyzer
         return group.Conditions.Concat(nestedConditions).ToList();
     }
 
-    private static AutomationRuleWarning Warning(AutomationWarningCode code, string message, int? actionId = null)
+    private static AutomationRuleWarning RuleWarning(AutomationWarningCode code, string message)
     {
         return new AutomationRuleWarning
         {
             Code = code,
+            Location = AutomationWarningLocation.Rule,
+            Message = message,
+        };
+    }
+
+    private static AutomationRuleWarning ConditionWarning(
+        AutomationWarningCode code,
+        string message,
+        string? value = null)
+    {
+        return new AutomationRuleWarning
+        {
+            Code = code,
+            Location = AutomationWarningLocation.Condition,
+            Message = message,
+            Value = value,
+        };
+    }
+
+    private static AutomationRuleWarning ActionWarning(
+        AutomationWarningCode code,
+        string message,
+        int actionId,
+        string? value = null)
+    {
+        return new AutomationRuleWarning
+        {
+            Code = code,
+            Location = AutomationWarningLocation.Action,
             Message = message,
             ActionId = actionId,
+            Value = value,
         };
     }
 }

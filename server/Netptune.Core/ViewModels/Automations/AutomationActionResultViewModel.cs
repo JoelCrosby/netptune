@@ -24,5 +24,9 @@ public sealed record AutomationActionResultViewModel
 
     public string? Message { get; init; }
 
+    public string? MessageCode { get; init; }
+
+    public List<string> MessageArguments { get; init; } = [];
+
     public JsonDocument? Output { get; init; }
 }

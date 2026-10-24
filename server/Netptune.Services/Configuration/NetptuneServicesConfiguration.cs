@@ -53,7 +53,7 @@ public static class NetptuneServicesConfiguration
         services.AddScoped<ITaskReferenceResolver, TaskReferenceResolver>();
         services.AddScoped<ITaskStatusResolver, TaskStatusResolver>();
         services.AddScoped<IPageVisibilityService, PageVisibilityService>();
-        services.AddScoped<IUserLocaleReader, UserLocaleReader>();
+        services.AddNetptuneUserLocales();
         services.AddOptions<TurnstileOptions>()
             .BindConfiguration(TurnstileOptions.SectionName)
             .ValidateDataAnnotations()
@@ -88,6 +88,13 @@ public static class NetptuneServicesConfiguration
         services.AddScoped<IActorContext, ActorContext>();
         services.AddScoped<IIdentityService, BackgroundIdentityService>();
         services.AddTransient<IActivityLogger, ActivityLogger>();
+
+        return services;
+    }
+
+    public static IServiceCollection AddNetptuneUserLocales(this IServiceCollection services)
+    {
+        services.AddScoped<IUserLocaleReader, UserLocaleReader>();
 
         return services;
     }

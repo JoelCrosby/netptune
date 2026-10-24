@@ -17,6 +17,10 @@ public record AutomationRuleViewModel
 
     public string? AutoDisabledReason { get; init; }
 
+    public string? AutoDisabledReasonCode { get; init; }
+
+    public List<string> AutoDisabledReasonArguments { get; init; } = [];
+
     public string? ExecutionUserId { get; init; }
 
     public int? ProjectId { get; init; }

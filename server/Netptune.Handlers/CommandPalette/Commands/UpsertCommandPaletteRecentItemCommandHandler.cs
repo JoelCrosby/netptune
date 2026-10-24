@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Localization;
 using Netptune.Core.Preferences;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -38,13 +39,13 @@ public sealed class UpsertCommandPaletteRecentItemCommandHandler
             string.IsNullOrWhiteSpace(request.RecentItem.Title) ||
             string.IsNullOrWhiteSpace(request.RecentItem.Url))
         {
-            return ClientResponse<CommandPaletteRecentItemsResponse>.Failed("Type, title, and URL are required.");
+            return ClientResponse<CommandPaletteRecentItemsResponse>.Failed(AppText.ErrorTypeTitleURLRequired);
         }
 
         var workspaceId = await GetRequiredWorkspaceId();
         if (workspaceId is null)
         {
-            return ClientResponse<CommandPaletteRecentItemsResponse>.Failed("A workspace is required.");
+            return ClientResponse<CommandPaletteRecentItemsResponse>.Failed(AppText.ErrorWorkspaceRequired);
         }
 
         var userId = Identity.GetCurrentUserId();

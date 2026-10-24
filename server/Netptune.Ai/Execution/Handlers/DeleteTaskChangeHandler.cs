@@ -3,6 +3,7 @@ using System.Text.Json;
 using Mediator;
 
 using Netptune.Core.Authorization;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Tasks.Commands;
@@ -29,14 +30,14 @@ public sealed class DeleteTaskChangeHandler : IAiChangeHandler, IAiChangeUndoHan
 
         if (!taskId.HasValue)
         {
-            return AiChangePayload.Failure(change, "The task this change refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorTaskChangeRefersCouldNotResolved);
         }
 
         var response = await Mediator.Send(new DeleteTaskCommand(taskId.Value), cancellationToken);
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The task could not be deleted.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorTaskCouldNotDeleted);
         }
 
         return AiChangePayload.Applied(change, taskId);
@@ -61,14 +62,14 @@ public sealed class DeleteTaskChangeHandler : IAiChangeHandler, IAiChangeUndoHan
 
         if (!taskId.HasValue)
         {
-            return AiChangeUndoResult.Failure(change, "The deleted task could not be resolved.");
+            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorDeletedTaskCouldNotResolved);
         }
 
         var response = await Mediator.Send(new RestoreTasksCommand([taskId.Value]), cancellationToken);
 
         if (!response.IsSuccess)
         {
-            return AiChangeUndoResult.Failure(change, response.Message ?? "The task could not be restored.");
+            return AiChangeUndoResult.Failure(change, response.Message ?? AppText.AiChangeErrorTaskCouldNotRestored);
         }
 
         return AiChangeUndoResult.Undone(change, taskId);

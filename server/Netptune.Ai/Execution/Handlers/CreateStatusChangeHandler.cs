@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -32,7 +33,7 @@ public sealed class CreateStatusChangeHandler : IAiChangeHandler
 
         if (!hasName || !isKnownCategory)
         {
-            return AiChangePayload.Failure(change, "The status details are missing from this change.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorStatusDetailsMissingChange);
         }
 
         var request = new CreateStatusRequest
@@ -47,7 +48,7 @@ public sealed class CreateStatusChangeHandler : IAiChangeHandler
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The status could not be created.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorStatusCouldNotCreated);
         }
 
         return AiChangePayload.Applied(change, response.Payload?.Id);

@@ -2,6 +2,7 @@ using Mediator;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Requests.Ai;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -44,7 +45,7 @@ public sealed class SaveWorkspaceSearchCredentialCommandHandler
 
         if (!isKnownProvider)
         {
-            return ClientResponse<WorkspaceSearchCredentialViewModel>.Failed("Unknown search provider.");
+            return ClientResponse<WorkspaceSearchCredentialViewModel>.Failed(AppText.ErrorUnknownSearchProvider);
         }
 
         var workspaceId = await Identity.GetWorkspaceId();
@@ -95,28 +96,28 @@ public sealed class SaveWorkspaceSearchCredentialCommandHandler
 
         if (isMissingKey)
         {
-            return "An API key is required for this provider.";
+            return AppText.ErrorAPIKeyRequiredProvider;
         }
 
         var isShortKey = hasSecret && secret!.Length < MinimumSecretLength;
 
         if (isShortKey)
         {
-            return "API key is not valid.";
+            return AppText.ErrorAPIKeyNotValid;
         }
 
         var isMissingEngineId = provider == WebSearchProvider.Google && string.IsNullOrWhiteSpace(engineId);
 
         if (isMissingEngineId)
         {
-            return "Google search needs a search engine id.";
+            return AppText.ErrorGoogleSearchNeedsSearchEngineId;
         }
 
         var isLongEngineId = engineId?.Length > MaximumEngineIdLength;
 
         if (isLongEngineId)
         {
-            return $"Search engine id must be {MaximumEngineIdLength} characters or fewer.";
+            return Localized.Format(AppText.ErrorSearchEngineIdMustCharactersFewer, MaximumEngineIdLength);
         }
 
         return ValidateEndpoint(provider, endpoint);
@@ -129,7 +130,7 @@ public sealed class SaveWorkspaceSearchCredentialCommandHandler
 
         if (isMissingEndpoint)
         {
-            return "SearXNG needs the base URL of an instance.";
+            return AppText.ErrorSearXNGNeedsBaseURLInstance;
         }
 
         if (!hasEndpoint)
@@ -141,13 +142,13 @@ public sealed class SaveWorkspaceSearchCredentialCommandHandler
 
         if (isLongEndpoint)
         {
-            return $"Endpoint must be {MaximumEndpointLength} characters or fewer.";
+            return Localized.Format(AppText.ErrorEndpointMustCharactersFewer, MaximumEndpointLength);
         }
 
         var isAbsolute = Uri.TryCreate(endpoint, UriKind.Absolute, out var uri);
         var isHttp = isAbsolute && (uri!.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
 
-        return isHttp ? null : "Endpoint must be an absolute http or https URL.";
+        return isHttp ? null : AppText.ErrorEndpointMustAbsoluteHttpHttpsURL;
     }
 
     private static WorkspaceSearchCredentialViewModel ToViewModel(WorkspaceSearchCredential credential)

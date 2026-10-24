@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Localization;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
@@ -55,7 +56,7 @@ public sealed class RunExportInlineCommandHandler : IRequestHandler<RunExportInl
 
         if (definition.Format == ExportFormat.Archive)
         {
-            return ClientResponse<ExportRunResult>.Failed("An archive export has to run as a job.");
+            return ClientResponse<ExportRunResult>.Failed(AppText.ErrorArchiveExportRunJob);
         }
 
         var workspaceKey = Identity.GetWorkspaceKey();
@@ -72,7 +73,7 @@ public sealed class RunExportInlineCommandHandler : IRequestHandler<RunExportInl
         if (!preview.CanRunInline)
         {
             return ClientResponse<ExportRunResult>.Failed(
-                $"This export produces about {preview.EstimatedRowCount} rows. Run it as a job instead.");
+                Localized.Format(AppText.ErrorExportProducesAboutRowsRunJobInstead, preview.EstimatedRowCount));
         }
 
         var result = await Runner.Run(runRequest, (_, _) => Task.CompletedTask, cancellationToken);

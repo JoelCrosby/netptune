@@ -2,6 +2,7 @@ using Mediator;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -38,7 +39,7 @@ public sealed class CreateBoardGroupCommandHandler : IRequestHandler<CreateBoard
 
         if (req.StatusId.HasValue && !await IsValidTaskStatus(req.StatusId.Value, board.WorkspaceId, cancellationToken))
         {
-            return ClientResponse<BoardGroupViewModel>.Failed("Assigned status was not found or is not a task status.");
+            return ClientResponse<BoardGroupViewModel>.Failed(AppText.ErrorAssignedStatusNotFoundNotTaskStatus);
         }
 
         var sortOrder = req.SortOrder ?? await UnitOfWork.BoardGroups.GetBoardGroupDefaultSortOrder(boardId, cancellationToken);

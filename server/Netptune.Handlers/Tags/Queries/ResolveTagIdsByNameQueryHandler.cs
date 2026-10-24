@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 
@@ -19,9 +20,9 @@ public sealed record TagNameResolution
 public sealed class ResolveTagIdsByNameQueryHandler : IRequestHandler<ResolveTagIdsByNameQuery, TagNameResolution>
 {
     public const int MaximumNames = 50;
-    public const string BlankNameMessage = "Tags cannot be empty.";
+    public static string BlankNameMessage => AppText.ErrorTagsCannotEmpty;
 
-    public static readonly string TooManyNamesMessage = $"Send at most {MaximumNames} tag names.";
+    public static string TooManyNamesMessage => Localized.Format(AppText.ErrorSendAtMostTagNames, MaximumNames);
 
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
@@ -36,7 +37,7 @@ public sealed class ResolveTagIdsByNameQueryHandler : IRequestHandler<ResolveTag
     {
         var namesList = string.Join(", ", unknownNames);
 
-        return $"Tags were not found in the workspace: {namesList}.";
+        return Localized.Format(AppText.ErrorTagNamesNotFoundWorkspace, namesList);
     }
 
     public async ValueTask<TagNameResolution> Handle(ResolveTagIdsByNameQuery request, CancellationToken cancellationToken)

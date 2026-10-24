@@ -2,6 +2,7 @@ using Mediator;
 
 using Netptune.Automation.Rules;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Usage;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Automations;
@@ -74,7 +75,7 @@ public sealed class GetStatusUsageQueryHandler : IRequestHandler<GetStatusUsageQ
     {
         if (isSystem)
         {
-            return "System statuses cannot be deleted.";
+            return AppText.ErrorSystemStatusesCannotDeleted;
         }
 
         var hasTasks = usage.TaskCount > 0;
@@ -83,7 +84,7 @@ public sealed class GetStatusUsageQueryHandler : IRequestHandler<GetStatusUsageQ
 
         if (isInUse)
         {
-            return "Status is in use and cannot be deleted.";
+            return AppText.ErrorStatusUseCannotDeleted;
         }
 
         return null;

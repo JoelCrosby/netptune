@@ -9,6 +9,7 @@ using Netptune.Ai.Execution.Handlers;
 using Netptune.Ai.Tools;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -30,7 +31,7 @@ public sealed partial class AiChangeEditCatalog : IAiChangeEditCatalog
     private const decimal LargestTShirtSize = 5;
     private const string DateFormat = "yyyy-MM-dd";
     private const string ClearKey = "clear";
-    private const string MissingTaskMessage = "The task this change moves is no longer in this workspace.";
+    private static string MissingTaskMessage => AppText.AiChangeErrorTaskChangeMovesNoLongerWorkspace;
 
     private readonly IMediator Mediator;
 
@@ -52,7 +53,7 @@ public sealed partial class AiChangeEditCatalog : IAiChangeEditCatalog
     {
         if (edits.Count == 0)
         {
-            return Failed("No field values were supplied.");
+            return Failed(AppText.AiChangeErrorNoFieldValuesSupplied);
         }
 
         var fields = AiChangeFieldSerializer.Deserialize(change.Fields);
@@ -66,14 +67,14 @@ public sealed partial class AiChangeEditCatalog : IAiChangeEditCatalog
 
             if (field is null)
             {
-                return Failed($"“{edit.Name}” is not part of this change.");
+                return Failed(Localized.Format(AppText.AiChangeErrorNotPartChange, AiFieldNames.Label(edit.Name)));
             }
 
             var editor = FindEditor(change, edit.Name);
 
             if (editor is null)
             {
-                return Failed($"“{edit.Name}” cannot be edited here.");
+                return Failed(Localized.Format(AppText.AiChangeErrorCannotEditedHere, AiFieldNames.Label(edit.Name)));
             }
 
             var request = new FieldEditRequest { Field = field, Editor = editor, Edit = edit };
@@ -99,7 +100,9 @@ public sealed partial class AiChangeEditCatalog : IAiChangeEditCatalog
 
         if (isClearing && !request.Editor.IsClearable)
         {
-            return FieldEditOutcome.Failed($"“{request.Field.Name}” cannot be left empty.");
+            var error = Localized.Format(AppText.AiChangeErrorCannotLeftEmpty, AiFieldNames.Label(request.Field.Name));
+
+            return FieldEditOutcome.Failed(error);
         }
 
         return request.Editor.Kind switch
@@ -114,7 +117,7 @@ public sealed partial class AiChangeEditCatalog : IAiChangeEditCatalog
             AiChangeEditorKind.Tags => await ResolveTags(request, lookups, cancellationToken),
             AiChangeEditorKind.Sprint => await ResolveSprint(request, lookups, cancellationToken),
             AiChangeEditorKind.BoardGroup => await ResolveBoardGroup(request, lookups, cancellationToken),
-            _ => FieldEditOutcome.Failed($"“{request.Field.Name}” cannot be edited here."),
+            _ => NotEditable(request.Field.Name),
         };
     }
 
@@ -125,12 +128,19 @@ public sealed partial class AiChangeEditCatalog : IAiChangeEditCatalog
 
         if (string.IsNullOrWhiteSpace(value))
         {
-            return FieldEditOutcome.Failed($"“{name}” cannot be left empty.");
+            var error = Localized.Format(AppText.AiChangeErrorCannotLeftEmpty, AiFieldNames.Label(name));
+
+            return FieldEditOutcome.Failed(error);
         }
 
         if (value.Length > MaximumTextLength)
         {
-            return FieldEditOutcome.Failed($"“{name}” is longer than {MaximumTextLength} characters.");
+            var error = Localized.Format(
+                AppText.AiChangeErrorLongerThanCharacters,
+                AiFieldNames.Label(name),
+                MaximumTextLength);
+
+            return FieldEditOutcome.Failed(error);
         }
 
         return FieldEditOutcome.Resolved(new AiResolvedFieldEdit
@@ -148,7 +158,7 @@ public sealed partial class AiChangeEditCatalog : IAiChangeEditCatalog
 
         if (!isKnown)
         {
-            return FieldEditOutcome.Failed($"“{request.Edit.Value}” is not a priority.");
+            return FieldEditOutcome.Failed(Localized.Format(AppText.AiChangeErrorNotPriority, request.Edit.Value));
         }
 
         var priorityName = priority.ToString();
@@ -179,14 +189,14 @@ public sealed partial class AiChangeEditCatalog : IAiChangeEditCatalog
 
         if (!isKnown)
         {
-            return FieldEditOutcome.Failed($"“{request.Edit.Value}” is not an estimate unit.");
+            return FieldEditOutcome.Failed(Localized.Format(AppText.AiChangeErrorNotEstimateUnit, request.Edit.Value));
         }
 
         var value = request.Edit.Number;
 
         if (!value.HasValue)
         {
-            return FieldEditOutcome.Failed("An estimate needs a value.");
+            return FieldEditOutcome.Failed(AppText.AiChangeErrorEstimateNeedsValue);
         }
 
         var isTShirt = type == EstimateType.TShirt;
@@ -194,12 +204,12 @@ public sealed partial class AiChangeEditCatalog : IAiChangeEditCatalog
 
         if (isTShirt && !isTShirtSize)
         {
-            return FieldEditOutcome.Failed("T-shirt estimates run from 1 (XS) to 5 (XL).");
+            return FieldEditOutcome.Failed(AppText.AiChangeErrorTShirtEstimatesRunXSXL);
         }
 
         if (value.Value < 0)
         {
-            return FieldEditOutcome.Failed("An estimate cannot be negative.");
+            return FieldEditOutcome.Failed(AppText.AiChangeErrorEstimateCannotNegative);
         }
 
         var formattedValue = value.Value.ToString("0.##", CultureInfo.InvariantCulture);
@@ -244,7 +254,9 @@ public sealed partial class AiChangeEditCatalog : IAiChangeEditCatalog
 
         if (!isParsed)
         {
-            return FieldEditOutcome.Failed($"“{name}” must be a date in YYYY-MM-DD form.");
+            var error = Localized.Format(AppText.AiChangeErrorMustDateYYYYMMDDForm, AiFieldNames.Label(name));
+
+            return FieldEditOutcome.Failed(error);
         }
 
         var dateField = AiChangeFields.Date(name, null, date);
@@ -296,7 +308,7 @@ public sealed partial class AiChangeEditCatalog : IAiChangeEditCatalog
 
         if (status is null)
         {
-            return FieldEditOutcome.Failed("That status is not in this workspace.");
+            return FieldEditOutcome.Failed(AppText.AiChangeErrorStatusNotWorkspace);
         }
 
         var statusValue = AiChangeFields.Status(status.Id, status.Name, status.Color);
@@ -329,7 +341,7 @@ public sealed partial class AiChangeEditCatalog : IAiChangeEditCatalog
 
         if (member is null)
         {
-            return FieldEditOutcome.Failed("That person is not a member of this workspace.");
+            return FieldEditOutcome.Failed(AppText.AiChangeErrorPersonNotMemberWorkspace);
         }
 
         return FieldEditOutcome.Resolved(new AiResolvedFieldEdit
@@ -350,7 +362,7 @@ public sealed partial class AiChangeEditCatalog : IAiChangeEditCatalog
 
         if (!isEveryUserAMember)
         {
-            return FieldEditOutcome.Failed("Some of those people are not members of this workspace.");
+            return FieldEditOutcome.Failed(AppText.AiChangeErrorPeopleNotMembersWorkspace);
         }
 
         var users = userIds.Select(id => ToUserValue(members[id])).ToList();
@@ -384,7 +396,9 @@ public sealed partial class AiChangeEditCatalog : IAiChangeEditCatalog
 
         if (unknown.Count > 0)
         {
-            return FieldEditOutcome.Failed($"These tags do not exist in this workspace: {string.Join(", ", unknown)}.");
+            var error = Localized.Format(AppText.AiChangeErrorTagsDoNotExistWorkspace, string.Join(", ", unknown));
+
+            return FieldEditOutcome.Failed(error);
         }
 
         var tags = requested.Select(AiChangeFields.Tag).ToList();
@@ -420,21 +434,23 @@ public sealed partial class AiChangeEditCatalog : IAiChangeEditCatalog
 
         if (!sprintId.HasValue)
         {
-            return FieldEditOutcome.Failed("That sprint is not in this workspace.");
+            return FieldEditOutcome.Failed(AppText.AiChangeErrorSprintNotWorkspace);
         }
 
         var sprint = await AiSprintLookup.Find(Mediator, sprintId.Value, cancellationToken);
 
         if (sprint is null)
         {
-            return FieldEditOutcome.Failed("That sprint is not in this workspace.");
+            return FieldEditOutcome.Failed(AppText.AiChangeErrorSprintNotWorkspace);
         }
 
         var isCompleted = sprint.Status == SprintStatus.Completed;
 
         if (isCompleted)
         {
-            return FieldEditOutcome.Failed($"Sprint “{sprint.Name}” is completed and can no longer be changed.");
+            var error = Localized.Format(AppText.AiChangeErrorSprintCompletedCanNoLongerChanged, sprint.Name);
+
+            return FieldEditOutcome.Failed(error);
         }
 
         var projectId = await lookups.ProjectId(request.Editor, Mediator, cancellationToken);
@@ -448,7 +464,9 @@ public sealed partial class AiChangeEditCatalog : IAiChangeEditCatalog
 
         if (!isSameProject)
         {
-            return FieldEditOutcome.Failed($"Sprint “{sprint.Name}” belongs to a different project.");
+            var error = Localized.Format(AppText.AiChangeErrorSprintBelongsDifferentProject, sprint.Name);
+
+            return FieldEditOutcome.Failed(error);
         }
 
         var sprintValue = AiChangeFields.Sprint(sprint.Id, sprint.Name);
@@ -486,7 +504,7 @@ public sealed partial class AiChangeEditCatalog : IAiChangeEditCatalog
 
         if (group is null)
         {
-            return FieldEditOutcome.Failed("That board group is not in this workspace.");
+            return FieldEditOutcome.Failed(AppText.AiChangeErrorBoardGroupNotWorkspace);
         }
 
         var projectId = await lookups.ProjectId(request.Editor, Mediator, cancellationToken);
@@ -500,7 +518,7 @@ public sealed partial class AiChangeEditCatalog : IAiChangeEditCatalog
 
         if (!isSameProject)
         {
-            return FieldEditOutcome.Failed($"“{group.Name}” is on a board in a different project.");
+            return FieldEditOutcome.Failed(Localized.Format(AppText.AiChangeErrorBoardDifferentProject, group.Name));
         }
 
         var isMove = lookups.IsChange(AiTaskChangeDrafts.BoardGroupChange);
@@ -534,7 +552,17 @@ public sealed partial class AiChangeEditCatalog : IAiChangeEditCatalog
             return summary;
         }
 
-        return $"Move {quoted.Value} to {group.Name} on {group.BoardName}";
+        var taskName = quoted.Groups[1].Value;
+
+        return Localized.Format(AppText.AiSummaryMoveTaskToBoardGroup, taskName, group.Name, group.BoardName);
+    }
+
+    private static FieldEditOutcome NotEditable(string fieldName)
+    {
+        var label = AiFieldNames.Label(fieldName);
+        var error = Localized.Format(AppText.AiChangeErrorCannotEditedHere, label);
+
+        return FieldEditOutcome.Failed(error);
     }
 
     private static int? ParseId(string? value)
@@ -571,7 +599,7 @@ public sealed partial class AiChangeEditCatalog : IAiChangeEditCatalog
         return new AiChangeEditResult { Error = error };
     }
 
-    [GeneratedRegex("“[^”]*”")]
+    [GeneratedRegex("“([^”]*)”")]
     private static partial Regex QuotedName();
 
     private sealed record FieldEditRequest

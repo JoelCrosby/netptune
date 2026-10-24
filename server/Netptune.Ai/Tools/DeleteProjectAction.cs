@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Projects.Queries;
 
@@ -53,7 +54,7 @@ public sealed class DeleteProjectAction : IAiToolAction
             ToolName = Change,
             EntityType = "project",
             EntityId = project.Id,
-            Summary = $"Delete project “{project.Name}”",
+            Summary = Localized.Format(AppText.AiSummaryDeleteProject, project.Name),
             Fields = fields,
             Payload = JsonSerializer.SerializeToDocument(new { projectId = project.Id }),
             ValidationStatus = AiChangeValidationStatus.Valid,

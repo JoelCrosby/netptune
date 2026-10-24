@@ -3,6 +3,7 @@ using System.Text.Json;
 using Mediator;
 
 using Netptune.Core.Authorization;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Pages.Commands;
@@ -35,7 +36,7 @@ public sealed class RestorePageVersionChangeHandler : IAiChangeHandler, IAiChang
 
         if (!pageId.HasValue || !versionId.HasValue || !proposedRevision.HasValue)
         {
-            return AiChangePayload.Failure(change, "The page version this change refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorPageVersionChangeRefersCouldNotResolved);
         }
 
         var command = new RestorePageVersionCommand(pageId.Value, versionId.Value, proposedRevision.Value);
@@ -48,7 +49,9 @@ public sealed class RestorePageVersionChangeHandler : IAiChangeHandler, IAiChang
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The page version could not be restored.");
+            return AiChangePayload.Failure(
+                change,
+                response.Message ?? AppText.AiChangeErrorPageVersionCouldNotRestored);
         }
 
         return AiChangePayload.Applied(change, pageId);

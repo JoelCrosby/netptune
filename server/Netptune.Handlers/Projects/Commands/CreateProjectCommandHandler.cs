@@ -3,6 +3,7 @@ using Mediator;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Exceptions;
+using Netptune.Core.Localization;
 using Netptune.Core.Onboarding.Templates;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
@@ -38,7 +39,7 @@ public sealed class CreateProjectCommandHandler : IRequestHandler<CreateProjectC
         catch (UniqueConstraintException)
         {
             return ClientResponse<ProjectViewModel>.Failed(
-                "A project with a conflicting name already exists in this workspace.");
+                AppText.ErrorProjectConflictingNameAlreadyExistsWorkspace);
         }
     }
 
@@ -59,14 +60,20 @@ public sealed class CreateProjectCommandHandler : IRequestHandler<CreateProjectC
 
             if (template is null)
             {
-                return ClientResponse<ProjectViewModel>.Failed($"Unknown setup template '{request.Request.TemplateKey}'");
+                var error = Localized.Format(AppText.ErrorUnknownSetupTemplate, request.Request.TemplateKey);
+
+                return ClientResponse<ProjectViewModel>.Failed(error);
             }
 
             await UnitOfWork.Statuses.EnsureNewTaskStatus(workspace.Id, user.Id, cancellationToken);
             await UnitOfWork.CompleteAsync(cancellationToken);
 
             var defaultStatus = await ResolveDefaultStatus(request.Request.DefaultStatusId, workspace.Id, cancellationToken);
-            if (defaultStatus is null) return ClientResponse<ProjectViewModel>.Failed("Default task status not found");
+
+            if (defaultStatus is null)
+            {
+                return ClientResponse<ProjectViewModel>.Failed(AppText.ErrorDefaultTaskStatusNotFound);
+            }
 
             var boardGroups = await WorkspaceSetupTemplateApplicator.ResolveBoardGroupsAsync(
                 template,
@@ -93,7 +100,7 @@ public sealed class CreateProjectCommandHandler : IRequestHandler<CreateProjectC
 
             var result = await UnitOfWork.Projects.GetProjectViewModel(project.Id, cancellationToken);
 
-            if (result is null) return ClientResponse<ProjectViewModel>.Failed("Project not found");
+            if (result is null) return ClientResponse<ProjectViewModel>.Failed(AppText.ErrorProjectNotFound);
 
             Activity.Log(options =>
             {

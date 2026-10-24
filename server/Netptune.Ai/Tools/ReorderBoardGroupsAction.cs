@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.Boards;
 
@@ -86,7 +87,7 @@ public sealed class ReorderBoardGroupsAction : IAiToolAction
             ToolName = ChangeName,
             EntityType = "board",
             EntityId = board.Id,
-            Summary = $"Reorder the groups on “{board.Name}”",
+            Summary = Localized.Format(AppText.AiSummaryReorderBoardGroups, board.Name),
             Fields = fields,
             Payload = JsonSerializer.SerializeToDocument(new { boardId = board.Id, groupIds }),
             ValidationStatus = AiChangeValidationStatus.Valid,

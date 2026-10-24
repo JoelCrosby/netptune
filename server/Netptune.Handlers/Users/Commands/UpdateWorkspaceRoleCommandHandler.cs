@@ -5,6 +5,7 @@ using Netptune.Core.Cache;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Localization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -44,12 +45,14 @@ public sealed class UpdateWorkspaceRoleCommandHandler
 
         if (!Enum.IsDefined(req.Role) || req.Role == WorkspaceRole.Owner)
         {
-            return ClientResponse<WorkspaceRoleUpdateViewModel>.Failed("owner assignment requires an ownership transfer");
+            return ClientResponse<WorkspaceRoleUpdateViewModel>.Failed(
+                AppText.ErrorOwnerAssignmentRequiresOwnershipTransfer);
         }
 
         if (req.UserId == Identity.GetCurrentUserId())
         {
-            return ClientResponse<WorkspaceRoleUpdateViewModel>.Failed("you cannot change your own workspace role");
+            return ClientResponse<WorkspaceRoleUpdateViewModel>.Failed(
+                AppText.ErrorYouCannotChangeYourOwnWorkspaceRole);
         }
 
         var workspaceKey = Identity.GetWorkspaceKey();
@@ -57,7 +60,7 @@ public sealed class UpdateWorkspaceRoleCommandHandler
 
         if (workspace is null)
         {
-            return ClientResponse<WorkspaceRoleUpdateViewModel>.Failed("workspace not found");
+            return ClientResponse<WorkspaceRoleUpdateViewModel>.Failed(AppText.ErrorWorkspaceNotFound);
         }
 
         var workspaceUser = await UnitOfWork.WorkspaceUsers
@@ -65,12 +68,13 @@ public sealed class UpdateWorkspaceRoleCommandHandler
 
         if (workspaceUser is null)
         {
-            return ClientResponse<WorkspaceRoleUpdateViewModel>.Failed("user is not a member of this workspace");
+            return ClientResponse<WorkspaceRoleUpdateViewModel>.Failed(AppText.ErrorUserNotMemberWorkspace);
         }
 
         if (workspaceUser.Role == WorkspaceRole.Owner)
         {
-            return ClientResponse<WorkspaceRoleUpdateViewModel>.Failed("the workspace owner role cannot be changed here");
+            return ClientResponse<WorkspaceRoleUpdateViewModel>.Failed(
+                AppText.ErrorWorkspaceOwnerRoleCannotChangedHere);
         }
 
         var oldRole = workspaceUser.Role;

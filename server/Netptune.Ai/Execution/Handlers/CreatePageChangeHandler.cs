@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Ai.Tools;
 using Netptune.Core.Authorization;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests.Pages;
 using Netptune.Core.Services.Ai;
@@ -13,8 +14,7 @@ namespace Netptune.Ai.Execution.Handlers;
 
 public sealed class CreatePageChangeHandler : IAiChangeHandler, IAiChangeUndoHandler
 {
-    public const string HoldsOtherPagesMessage =
-        "Pages have been added inside it since, so it was left in place. Archive it from the page tree if it should go.";
+    public static string HoldsOtherPagesMessage => AppText.AiChangeErrorPagesAddedInsideSinceLeftPlaceArchive;
 
     private readonly IMediator Mediator;
 
@@ -44,7 +44,7 @@ public sealed class CreatePageChangeHandler : IAiChangeHandler, IAiChangeUndoHan
 
         if (!isComplete)
         {
-            return AiChangePayload.Failure(change, "The page details are missing from this change.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorPageDetailsMissingChange);
         }
 
         var request = new CreatePageRequest { Kind = kind.GetValueOrDefault(), ParentId = parentId, Title = title, Body = body };
@@ -54,7 +54,7 @@ public sealed class CreatePageChangeHandler : IAiChangeHandler, IAiChangeUndoHan
 
         if (!isCreated)
         {
-            return AiChangePayload.Failure(change, created.Message ?? "The page could not be created.");
+            return AiChangePayload.Failure(change, created.Message ?? AppText.AiChangeErrorPageCouldNotCreated);
         }
 
         return AiChangePayload.Applied(change, page!.Id);
@@ -72,7 +72,7 @@ public sealed class CreatePageChangeHandler : IAiChangeHandler, IAiChangeUndoHan
 
         if (!pageId.HasValue)
         {
-            return AiChangeUndoResult.Failure(change, "The created page could not be resolved.");
+            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorCreatedPageCouldNotResolved);
         }
 
         // Pages this change set created inside are undone first, so anything still inside was added since,
@@ -89,7 +89,9 @@ public sealed class CreatePageChangeHandler : IAiChangeHandler, IAiChangeUndoHan
 
         if (!response.IsSuccess)
         {
-            return AiChangeUndoResult.Failure(change, response.Message ?? "The created page could not be archived.");
+            return AiChangeUndoResult.Failure(
+                change,
+                response.Message ?? AppText.AiChangeErrorCreatedPageCouldNotArchived);
         }
 
         return AiChangeUndoResult.Undone(change, pageId);

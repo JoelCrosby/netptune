@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -34,7 +35,7 @@ public sealed class CreateSprintChangeHandler : IAiChangeHandler
 
         if (!hasName || !projectId.HasValue || !hasDates)
         {
-            return AiChangePayload.Failure(change, "The sprint details are missing from this change.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorSprintDetailsMissingChange);
         }
 
         var request = new AddSprintRequest
@@ -50,7 +51,7 @@ public sealed class CreateSprintChangeHandler : IAiChangeHandler
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The sprint could not be created.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorSprintCouldNotCreated);
         }
 
         return AiChangePayload.Applied(change, response.Payload?.Id);

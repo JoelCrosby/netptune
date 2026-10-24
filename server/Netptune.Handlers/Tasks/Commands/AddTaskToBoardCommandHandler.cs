@@ -2,6 +2,7 @@ using Mediator;
 
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Tasks;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -54,14 +55,18 @@ public sealed class AddTaskToBoardCommandHandler : IRequestHandler<AddTaskToBoar
 
         if (!belongsToTaskProject)
         {
-            return ClientResponse<TaskViewModel>.Failed($"Board '{board.Name}' does not belong to the task's project");
+            var error = Localized.Format(AppText.ErrorBoardNotInTaskProject, board.Name);
+
+            return ClientResponse<TaskViewModel>.Failed(error);
         }
 
         var target = await ResolveTarget(request, board.Id, task.StatusId, cancellationToken);
 
         if (target is null)
         {
-            return ClientResponse<TaskViewModel>.Failed($"Board '{board.Name}' has no group to place the task in");
+            var error = Localized.Format(AppText.ErrorBoardNoGroupPlaceTask, board.Name);
+
+            return ClientResponse<TaskViewModel>.Failed(error);
         }
 
         var currentPlacement = await UnitOfWork.ProjectTasksInGroups.GetPlacementOnBoard(task.Id, board.Id, cancellationToken);
@@ -69,7 +74,7 @@ public sealed class AddTaskToBoardCommandHandler : IRequestHandler<AddTaskToBoar
 
         if (!placed)
         {
-            return ClientResponse<TaskViewModel>.Failed($"The task is already on board '{board.Name}'");
+            return ClientResponse<TaskViewModel>.Failed(Localized.Format(AppText.ErrorTaskAlreadyBoard, board.Name));
         }
 
         await UnitOfWork.CompleteAsync(cancellationToken);

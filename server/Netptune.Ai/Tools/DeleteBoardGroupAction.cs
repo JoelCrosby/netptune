@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 
 namespace Netptune.Ai.Tools;
@@ -63,7 +64,7 @@ public sealed class DeleteBoardGroupAction : IAiToolAction
             ToolName = ChangeName,
             EntityType = "boardGroup",
             EntityId = group.Id,
-            Summary = $"Delete group “{group.Name}” from {group.BoardName}",
+            Summary = Localized.Format(AppText.AiSummaryDeleteBoardGroup, group.Name, group.BoardName),
             Fields = fields,
             Payload = JsonSerializer.SerializeToDocument(new { boardGroupId = group.Id }),
             ValidationStatus = AiChangeValidationStatus.Valid,

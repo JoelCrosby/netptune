@@ -1,5 +1,6 @@
 using Netptune.Core.Authorization;
 using Netptune.Core.Cache;
+using Netptune.Core.Localization;
 using Netptune.Core.Services;
 
 namespace Netptune.Handlers.Pages;
@@ -8,7 +9,7 @@ public sealed record PageArchiveRights(bool Any, bool Own);
 
 public static class PagePermissions
 {
-    public const string OthersPagesInsideMessage = "Some pages inside were created by other people. Only they or an admin can archive, restore or delete them.";
+    public static string OthersPagesInsideMessage => AppText.ErrorPagesInsideCreatedOtherPeopleOnlyThey;
 
     public static async Task<PageArchiveRights> GetArchiveRights(
         IWorkspacePermissionCache permissionCache,

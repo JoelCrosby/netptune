@@ -24,6 +24,10 @@ public record AutomationRunViewModel
 
     public string? Message { get; init; }
 
+    public string? MessageCode { get; init; }
+
+    public List<string> MessageArguments { get; init; } = [];
+
     public DateTime CreatedAt { get; init; }
 
     public List<AutomationActionResultViewModel> ActionResults { get; init; } = [];

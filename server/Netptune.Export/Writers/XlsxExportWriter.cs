@@ -1,5 +1,6 @@
 using ClosedXML.Excel;
 
+using Netptune.Transfer;
 using Netptune.Transfer.Enums;
 using Netptune.Transfer.Records;
 using Netptune.Transfer.Services;
@@ -29,7 +30,9 @@ public sealed class XlsxExportWriter : IExportWriter
         {
             for (var column = 0; column < request.Fields.Count; column++)
             {
-                worksheet.Cell(row, column + 1).SetValue(request.Fields[column].Name);
+                var header = TransferFieldLabels.Header(request.Fields[column]);
+
+                worksheet.Cell(row, column + 1).SetValue(header);
             }
 
             worksheet.Row(row).Style.Font.Bold = true;

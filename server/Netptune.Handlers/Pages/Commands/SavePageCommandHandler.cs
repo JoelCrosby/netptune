@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Pages;
 using Netptune.Core.Requests.Pages;
 using Netptune.Core.Responses.Common;
@@ -15,7 +16,7 @@ public sealed record SavePageCommand(int Id, SavePageRequest Request) : IRequest
 
 public sealed class SavePageCommandHandler : IRequestHandler<SavePageCommand, ClientResponse<PageViewModel>>
 {
-    public const string ConflictMessage = "This page was changed by someone else.";
+    public static string ConflictMessage => AppText.ErrorPageChangedSomeoneElse;
 
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
@@ -52,7 +53,7 @@ public sealed class SavePageCommandHandler : IRequestHandler<SavePageCommand, Cl
 
         if (isFolder && hasBody)
         {
-            return ClientResponse<PageViewModel>.Failed("Folders have no body.");
+            return ClientResponse<PageViewModel>.Failed(AppText.ErrorFoldersNoBody);
         }
 
         var title = PageTitle.Normalise(input.Title);

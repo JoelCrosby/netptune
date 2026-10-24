@@ -47,7 +47,7 @@ public interface IAutomationRepository : IWorkspaceEntityRepository<AutomationRu
 
     Task<List<AutomationRunStats>> GetRunStats(IReadOnlyCollection<int> ruleIds, DateTime since, CancellationToken cancellationToken = default);
 
-    Task<int> AutoDisableRules(IReadOnlyDictionary<int, string> reasonsByRuleId, DateTime disabledAt, CancellationToken cancellationToken = default);
+    Task<int> AutoDisableRules(IReadOnlyDictionary<int, AutomationMessage> reasonsByRuleId, DateTime disabledAt, CancellationToken cancellationToken = default);
 
     Task<int> GetWorkspaceRunCount(int workspaceId, DateTime since, CancellationToken cancellationToken = default);
 }

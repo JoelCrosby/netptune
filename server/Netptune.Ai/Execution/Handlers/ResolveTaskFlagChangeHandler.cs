@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -30,7 +31,7 @@ public sealed class ResolveTaskFlagChangeHandler : IAiChangeHandler
 
         if (!taskId.HasValue || !flagId.HasValue)
         {
-            return AiChangePayload.Failure(change, "The task or flag this change refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorTaskFlagChangeRefersCouldNotResolved);
         }
 
         var raw = AiChangePayload.ReadString(payload, "resolution");
@@ -38,7 +39,7 @@ public sealed class ResolveTaskFlagChangeHandler : IAiChangeHandler
 
         if (!isParsed)
         {
-            return AiChangePayload.Failure(change, "The flag resolution is missing from this change.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorFlagResolutionMissingChange);
         }
 
         var request = new ResolveTaskFlagRequest { Resolution = resolution };
@@ -48,7 +49,7 @@ public sealed class ResolveTaskFlagChangeHandler : IAiChangeHandler
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The flag could not be cleared.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorFlagCouldNotCleared);
         }
 
         return AiChangePayload.Applied(change, taskId);

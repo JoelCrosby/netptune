@@ -38,6 +38,15 @@ public class AutomationRunEntityMap : AuditableEntityMap<AutomationRun, int>
             .IsRequired(false);
 
         builder
+            .Property(run => run.MessageCode)
+            .HasMaxLength(64)
+            .IsRequired(false);
+
+        builder
+            .Property(run => run.MessageArguments)
+            .HasDefaultValueSql("'{}'");
+
+        builder
             .Property(run => run.Context)
             .HasColumnType("jsonb")
             .IsRequired(false);

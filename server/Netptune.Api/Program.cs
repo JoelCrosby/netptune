@@ -79,7 +79,7 @@ builder.Services.AddApiOpenApi();
 
 var app = builder.Build();
 
-app.UseNetptuneRequestDefaults();
+app.UseNetptuneRequestDefaults(RequestLocaleSource.Default);
 app.UseNetptuneClientIpAddress();
 app.UseForwardedHeaders();
 app.UseMiddleware<ContentSecurityPolicyMiddleware>();

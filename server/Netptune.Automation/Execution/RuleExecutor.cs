@@ -133,7 +133,7 @@ internal sealed class RuleExecutor
         {
             if (execution.ExecutionUserId is null)
             {
-                execution.AuthorizationError = "The automation rule has no execution principal.";
+                execution.AuthorizationError = AutomationMessage.PrincipalMissing;
 
                 continue;
             }
@@ -152,14 +152,14 @@ internal sealed class RuleExecutor
 
             if (principal is null)
             {
-                execution.AuthorizationError = "The automation execution principal is no longer available.";
+                execution.AuthorizationError = AutomationMessage.PrincipalUnavailable;
 
                 continue;
             }
 
             if (!principal.IsEnabled)
             {
-                execution.AuthorizationError = "The automation execution principal is disabled.";
+                execution.AuthorizationError = AutomationMessage.PrincipalDisabled;
 
                 continue;
             }
@@ -169,7 +169,7 @@ internal sealed class RuleExecutor
 
             if (!AutomationPermissionPolicy.HasRequiredPermissions(principal.Permissions, requiredPermissions))
             {
-                execution.AuthorizationError = "The automation execution principal no longer has the required permissions.";
+                execution.AuthorizationError = AutomationMessage.PrincipalLacksPermissions;
             }
         }
     }

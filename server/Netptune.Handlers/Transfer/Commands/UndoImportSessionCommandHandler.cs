@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Transfer.Enums;
@@ -37,12 +38,14 @@ public sealed class UndoImportSessionCommandHandler : IRequestHandler<UndoImport
 
         if (!isUndoable)
         {
-            return ClientResponse<ImportUndoResult>.Failed($"An import that is {session.Stage} cannot be undone.");
+            var error = Localized.Format(AppText.ErrorImportCannotUndone, session.Stage);
+
+            return ClientResponse<ImportUndoResult>.Failed(error);
         }
 
         if (session.ExpiresAt <= DateTime.UtcNow)
         {
-            return ClientResponse<ImportUndoResult>.Failed("This import is too old to undo.");
+            return ClientResponse<ImportUndoResult>.Failed(AppText.ErrorImportTooOldUndo);
         }
 
         var result = await Undo.Undo(session, Identity.GetCurrentUserId(), cancellationToken);

@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -29,7 +30,7 @@ public sealed class UpdateBoardGroupChangeHandler : IAiChangeHandler
 
         if (!boardGroupId.HasValue)
         {
-            return AiChangePayload.Failure(change, "The board group this change refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorBoardGroupChangeRefersCouldNotResolved);
         }
 
         // UpdateBoardGroupCommand takes the group by id without a workspace check of its own, so the
@@ -38,7 +39,7 @@ public sealed class UpdateBoardGroupChangeHandler : IAiChangeHandler
 
         if (group is null)
         {
-            return AiChangePayload.Failure(change, "The board group is no longer in this workspace.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorBoardGroupNoLongerWorkspace);
         }
 
         var request = new UpdateBoardGroupRequest
@@ -53,7 +54,7 @@ public sealed class UpdateBoardGroupChangeHandler : IAiChangeHandler
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The board group could not be updated.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorBoardGroupCouldNotUpdated);
         }
 
         return AiChangePayload.Applied(change, group.Id);

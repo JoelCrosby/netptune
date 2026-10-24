@@ -4,6 +4,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Projects.Queries;
 
@@ -53,14 +54,14 @@ public sealed class UpdateProjectAction : IAiToolAction
             return AiToolExecution.Failed("No changes were supplied for this project.");
         }
 
-        var changedNames = string.Join(", ", fields.Select(field => field.Name));
+        var changedNames = AiFieldNames.Describe(fields);
 
         ChangeSet.Add(new AiChangeDraft
         {
             ToolName = ChangeName,
             EntityType = "project",
             EntityId = project.Id,
-            Summary = $"Update {changedNames} on {project.Name}",
+            Summary = Localized.Format(AppText.AiSummaryUpdateProject, changedNames, project.Name),
             Fields = fields,
             Payload = JsonDocument.Parse(arguments.GetRawText()),
             ValidationStatus = AiChangeValidationStatus.Valid,

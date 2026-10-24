@@ -139,7 +139,7 @@ public sealed class ExportRunner : IExportRunner
         return new ExportPreviewResult
         {
             FieldKeys = fields.Select(field => field.Key).ToList(),
-            Headers = fields.Select(field => field.Name).ToList(),
+            Headers = fields.Select(TransferFieldLabels.Header).ToList(),
             Rows = rows,
             EstimatedRowCount = estimate,
             CanRunInline = definition.Format != ExportFormat.Archive && estimate <= request.InlineRowLimit,

@@ -2,6 +2,7 @@ using Mediator;
 
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Tasks;
+using Netptune.Core.Localization;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
@@ -54,7 +55,7 @@ public sealed class RemoveTaskFromBoardCommandHandler : IRequestHandler<RemoveTa
 
         if (!removed)
         {
-            return ClientResponse<TaskViewModel>.Failed($"The task is not on board '{board.Name}'");
+            return ClientResponse<TaskViewModel>.Failed(Localized.Format(AppText.ErrorTaskNotBoard, board.Name));
         }
 
         await UnitOfWork.CompleteAsync(cancellationToken);

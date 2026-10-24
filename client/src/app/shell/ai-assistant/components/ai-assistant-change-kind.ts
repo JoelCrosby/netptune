@@ -139,7 +139,17 @@ export interface AiChangeSummary {
 }
 
 const QUOTED = /“([^”]+)”/g;
-const DANGLING = /\s+(on|in|into|from|to|of|for|with)$/i;
+const DANGLING_WORDS: Record<string, string> = {
+  en: 'on in into from to of for with',
+  fr: 'sur dans de du des à au aux vers en pour avec depuis',
+  de: 'auf in im von vom zu zum zur nach für mit aus an am',
+  es: 'en de del a al para con sobre desde hacia',
+};
+
+const DANGLING = new RegExp(
+  `\\s+(${Object.values(DANGLING_WORDS).join(' ').replaceAll(' ', '|')})$`,
+  'i'
+);
 
 const TARGET_QUOTES: Record<string, number> = {
   propose_resolve_task_flag: 1,

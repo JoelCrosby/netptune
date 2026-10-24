@@ -3,6 +3,7 @@ using Netptune.Automation.Models;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Models.Automations;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 
@@ -35,7 +36,7 @@ internal sealed class FlagTaskHandler : IActionExecutionHandler
         {
             return new ActionOutcome(
                 AutomationActionResultStatus.Skipped,
-                "The task already has a flag from this rule.");
+                AutomationMessage.TaskAlreadyFlagged);
         }
 
         await UnitOfWork.Flags.AddRangeAsync([flag], cancellationToken);

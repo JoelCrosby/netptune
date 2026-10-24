@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Boards.Commands;
@@ -26,14 +27,14 @@ public sealed class DeleteBoardChangeHandler : IAiChangeHandler
 
         if (!boardId.HasValue)
         {
-            return AiChangePayload.Failure(change, "The board this change refers to could not be resolved.");
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorBoardChangeRefersCouldNotResolved);
         }
 
         var response = await Mediator.Send(new DeleteBoardCommand(boardId.Value), cancellationToken);
 
         if (!response.IsSuccess)
         {
-            return AiChangePayload.Failure(change, response.Message ?? "The board could not be deleted.");
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorBoardCouldNotDeleted);
         }
 
         return AiChangePayload.Applied(change, boardId);
