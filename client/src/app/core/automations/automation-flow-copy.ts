@@ -9,7 +9,10 @@ import {
   describeAutomationTrigger,
   taskChangeFieldLabels,
 } from './automation-copy';
-import { AutomationTrigger, AutomationTriggerType } from './automation.models';
+import {
+  AutomationTrigger,
+  AutomationTriggerType,
+} from './automation.models';
 
 // Copy for the step cards the editor and the detail rail share, which name each part of a rule
 // in a title and summarise it underneath.

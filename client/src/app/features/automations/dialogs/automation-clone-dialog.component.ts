@@ -9,11 +9,11 @@ import { DialogTitleComponent } from '@static/components/dialog-title/dialog-tit
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
-import { AutomationRuleSummaryComponent } from '../components/automation-rule-summary.component';
 import {
   AutomationAction,
   AutomationTrigger,
-} from '../models/automation.models';
+} from '@core/automations/automation.models';
+import { AutomationRuleSummaryComponent } from '../components/automation-rule-summary.component';
 
 export interface AutomationCloneDialogData {
   ruleName: string;

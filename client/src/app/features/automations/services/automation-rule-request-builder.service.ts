@@ -18,8 +18,8 @@ import {
   AutomationTriggerType,
   isValidBranchPattern,
   maxTargetBranches,
-} from '../models/automation.models';
-import { messageVariables } from '../models/automation-copy';
+} from '@core/automations/automation.models';
+import { messageVariables } from '@core/automations/automation-copy';
 
 export interface AutomationRuleDraft {
   projectId: number | null;

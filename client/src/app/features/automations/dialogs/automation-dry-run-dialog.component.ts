@@ -17,10 +17,10 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { mutation } from '@core/util/mutation';
 import { debouncedSignal } from '@core/util/signals';
+import { triggerTypeLabels } from '@core/automations/automation-copy';
+import { AutomationDryRun } from '@core/automations/automation.models';
 import { AutomationConditionExplanationComponent } from '../components/automation-condition-explanation.component';
 import { AutomationDryRunEffectsComponent } from '../components/automation-dry-run-effects.component';
-import { triggerTypeLabels } from '../models/automation-copy';
-import { AutomationDryRun } from '../models/automation.models';
 import { AutomationsService } from '../services/automations.service';
 
 export interface AutomationDryRunDialogData {

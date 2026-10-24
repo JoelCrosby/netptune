@@ -33,30 +33,26 @@ import {
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { CalloutComponent } from '@static/components/callout/callout.component';
+import { FlowConnectorComponent } from '@static/components/flow-connector/flow-connector.component';
+import { FlowStepComponent } from '@static/components/flow-step/flow-step.component';
 import { FormControlShapeDirective } from '@static/components/form-control/form-control.directives';
 import { HeadingInputDirective } from '@static/components/form-input/heading-input.directive';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
+import {
+  SegmentTextComponent,
+  TextSegment,
+} from '@static/components/segment-text/segment-text.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { SwitchComponent } from '@static/components/switch/switch.component';
 import {
-  AutomationActionEditorComponent,
-  EditableAutomationAction,
-  automationActionLimit,
-} from '../../components/automation-action-editor.component';
-import { AutomationConditionsEditorComponent } from '../../components/automation-conditions-editor.component';
-import { AutomationDescriptionComponent } from '../../components/automation-description.component';
-import { AutomationFlowNodeComponent } from '../../components/automation-flow-node.component';
-import { AutomationSettingsEditorComponent } from '../../components/automation-settings-editor.component';
-import { AutomationTriggerEditorComponent } from '../../components/automation-trigger-editor.component';
-import {
-  AutomationCopySegment,
   actionTypeDescriptions,
   actionTypeLabels,
   countAutomationConditions,
   describeAutomationActionSegments,
+  toTextSegments,
   triggerTypeLabels,
-} from '../../models/automation-copy';
+} from '@core/automations/automation-copy';
 import {
   automationActionKeyword,
   describeAutomationScope,
@@ -65,7 +61,7 @@ import {
   describeServiceAccountName,
   describeTriggerStepSummary,
   resolveAutomationScope,
-} from '../../models/automation-flow-copy';
+} from '@core/automations/automation-flow-copy';
 import {
   AutomationActionType,
   AutomationDelayUnit,
@@ -80,7 +76,15 @@ import {
   TaskChangeField,
   isPullRequestTrigger,
   parseBranchPatterns,
-} from '../../models/automation.models';
+} from '@core/automations/automation.models';
+import {
+  AutomationActionEditorComponent,
+  EditableAutomationAction,
+  automationActionLimit,
+} from '../../components/automation-action-editor.component';
+import { AutomationConditionsEditorComponent } from '../../components/automation-conditions-editor.component';
+import { AutomationSettingsEditorComponent } from '../../components/automation-settings-editor.component';
+import { AutomationTriggerEditorComponent } from '../../components/automation-trigger-editor.component';
 import { AutomationsService } from '../../services/automations.service';
 
 type AutomationFlowStepKey = 'settings' | 'trigger' | 'conditions' | number;
@@ -90,8 +94,9 @@ type AutomationFlowStepKey = 'settings' | 'trigger' | 'conditions' | number;
   imports: [
     AutomationActionEditorComponent,
     AutomationConditionsEditorComponent,
-    AutomationDescriptionComponent,
-    AutomationFlowNodeComponent,
+    FlowConnectorComponent,
+    FlowStepComponent,
+    SegmentTextComponent,
     AutomationSettingsEditorComponent,
     AutomationTriggerEditorComponent,
     CalloutComponent,
@@ -202,72 +207,66 @@ type AutomationFlowStepKey = 'settings' | 'trigger' | 'conditions' | number;
               class="border-border bg-foreground/2 flex flex-col px-7 pt-6 pb-8 max-lg:border-b max-md:px-3 lg:overflow-y-auto lg:border-r lg:pr-6"
               i18n-aria-label="Accessible label of the automation steps list"
               aria-label="Automation steps">
-              <app-automation-flow-node
+              <app-flow-step
                 i18n-keyword="Heading of the setup part of the rule"
                 keyword="SETUP"
                 [icon]="setupIcon"
                 [title]="runAsName()"
                 [selected]="selected() === 'settings'"
-                (selectNode)="select('settings')">
+                (selectStep)="select('settings')">
                 {{ scopeSummary() }}
-              </app-automation-flow-node>
+              </app-flow-step>
 
               <div class="h-5" aria-hidden="true"></div>
 
-              <app-automation-flow-node
+              <app-flow-step
                 i18n-keyword="Heading of the trigger part of the rule"
                 keyword="WHEN"
                 [icon]="triggerIcon"
                 [title]="triggerTitle()"
                 [selected]="selected() === 'trigger'"
-                (selectNode)="select('trigger')">
-                <app-automation-description
-                  [segments]="triggerSummary()"
-                  [statuses]="taskStatuses()" />
-              </app-automation-flow-node>
+                (selectStep)="select('trigger')">
+                <app-segment-text [segments]="triggerSummary()" />
+              </app-flow-step>
 
-              <div class="bg-border ml-6 h-3 w-px" aria-hidden="true"></div>
+              <app-flow-connector />
 
-              <app-automation-flow-node
+              <app-flow-step
                 i18n-keyword="Heading of the conditions part of the rule"
                 keyword="IF"
                 [icon]="conditionsIcon"
                 [title]="conditionsTitle()"
                 [selected]="selected() === 'conditions'"
-                (selectNode)="select('conditions')">
+                (selectStep)="select('conditions')">
                 @if (!conditionCount()) {
                   <span
-                    flowNodeAside
+                    flowStepAside
                     class="text-foreground/45 text-xs"
                     i18n="Marks the conditions section as not required">
                     Optional
                   </span>
                 }
-                <app-automation-description
-                  [segments]="conditionsSummary()"
-                  [statuses]="taskStatuses()" />
-              </app-automation-flow-node>
+                <app-segment-text [segments]="conditionsSummary()" />
+              </app-flow-step>
 
               @for (
                 action of actions();
                 track action.clientId;
                 let index = $index
               ) {
-                <div class="bg-border ml-6 h-3 w-px" aria-hidden="true"></div>
+                <app-flow-connector />
 
-                <app-automation-flow-node
+                <app-flow-step
                   [keyword]="actionKeyword(index)"
                   [step]="index + 1"
                   [title]="actionTypeLabel(action)"
                   [selected]="selected() === action.clientId"
-                  (selectNode)="select(action.clientId)">
-                  <app-automation-description
-                    [segments]="actionSummary(action)"
-                    [statuses]="taskStatuses()" />
-                </app-automation-flow-node>
+                  (selectStep)="select(action.clientId)">
+                  <app-segment-text [segments]="actionSummary(action)" />
+                </app-flow-step>
               }
 
-              <div class="bg-border ml-6 h-3 w-px" aria-hidden="true"></div>
+              <app-flow-connector />
 
               <button
                 type="button"
@@ -568,7 +567,9 @@ export class AutomationFormViewComponent {
   });
 
   readonly triggerSummary = computed(() => {
-    return describeTriggerStepSummary(this.triggerPreview());
+    const segments = describeTriggerStepSummary(this.triggerPreview());
+
+    return toTextSegments(segments, this.taskStatuses());
   });
 
   readonly conditionCount = computed(() => {
@@ -580,10 +581,13 @@ export class AutomationFormViewComponent {
   });
 
   readonly conditionsSummary = computed(() => {
-    return describeConditionsStepSummary(
+    const statuses = this.taskStatuses();
+    const segments = describeConditionsStepSummary(
       this.triggerPreview(),
-      this.taskStatuses()
+      statuses
     );
+
+    return toTextSegments(segments, statuses);
   });
 
   readonly panelTitle = computed(() => {
@@ -680,8 +684,11 @@ export class AutomationFormViewComponent {
     return actionTypeLabels[action.type];
   }
 
-  actionSummary(action: EditableAutomationAction): AutomationCopySegment[] {
-    return describeAutomationActionSegments(action, this.taskStatuses());
+  actionSummary(action: EditableAutomationAction): TextSegment[] {
+    const statuses = this.taskStatuses();
+    const segments = describeAutomationActionSegments(action, statuses);
+
+    return toTextSegments(segments, statuses);
   }
 
   atActionLimit(): boolean {

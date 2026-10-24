@@ -7,11 +7,11 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
 import {
   messageVariables,
   notificationRecipientLabels,
-} from '../models/automation-copy';
+} from '@core/automations/automation-copy';
 import {
   AutomationAction,
   AutomationNotificationRecipient,
-} from '../models/automation.models';
+} from '@core/automations/automation.models';
 import { AutomationNotifyPreviewComponent } from './automation-notify-preview.component';
 
 @Component({

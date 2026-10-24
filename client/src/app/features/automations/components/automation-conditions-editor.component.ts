@@ -7,12 +7,12 @@ import {
 } from '@shared/components/query-builder/query-builder.models';
 import { QueryChipBarComponent } from '@shared/components/query-builder/query-chip-bar.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { AutomationConditionGroup } from '@core/automations/automation.models';
 import {
   automationConditionCatalog,
   fromBuilderGroup,
   toBuilderGroup,
 } from '../models/automation-query-builder';
-import { AutomationConditionGroup } from '../models/automation.models';
 
 @Component({
   selector: 'app-automation-conditions-editor',

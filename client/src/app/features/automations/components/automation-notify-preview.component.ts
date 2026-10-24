@@ -3,8 +3,8 @@ import { WorkspaceAppUser } from '@core/models/appuser';
 import {
   previewNotificationMessage,
   previewNotificationRecipients,
-} from '../models/automation-copy';
-import { AutomationAction } from '../models/automation.models';
+} from '@core/automations/automation-copy';
+import { AutomationAction } from '@core/automations/automation.models';
 
 @Component({
   selector: 'app-automation-notify-preview',

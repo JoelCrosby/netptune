@@ -10,7 +10,7 @@ import {
   AutomationAction,
   AutomationRelationDirection,
   AutomationRelationOperation,
-} from '../models/automation.models';
+} from '@core/automations/automation.models';
 
 interface TaskSearchResponse {
   payload?: {

@@ -26,8 +26,8 @@ import {
   automationActionResultStatusLabels,
   countAutomationConditions,
   triggerTypeLabels,
-} from '../models/automation-copy';
-import { automationActionKeyword } from '../models/automation-flow-copy';
+} from '@core/automations/automation-copy';
+import { automationActionKeyword } from '@core/automations/automation-flow-copy';
 import {
   AutomationActionResult,
   AutomationActionResultStatus,
@@ -35,7 +35,7 @@ import {
   AutomationRunStatus,
   AutomationRunSummary,
   AutomationTrigger,
-} from '../models/automation.models';
+} from '@core/automations/automation.models';
 import { AutomationsService } from '../services/automations.service';
 import { AutomationRunStatusPillComponent } from './automation-run-status-pill.component';
 

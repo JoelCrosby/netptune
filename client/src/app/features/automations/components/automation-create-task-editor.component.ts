@@ -13,12 +13,12 @@ import { FormSelectOptionComponent } from '@static/components/form-select/form-s
 import { FormSelectTagsOptionComponent } from '@static/components/form-select-tags/form-select-tags-option.component';
 import { FormSelectTagsComponent } from '@static/components/form-select-tags/form-select-tags.component';
 import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
-import { messageVariables } from '../models/automation-copy';
+import { messageVariables } from '@core/automations/automation-copy';
 import {
   AutomationAction,
   AutomationDateUpdate,
   AutomationDateUpdateMode,
-} from '../models/automation.models';
+} from '@core/automations/automation.models';
 
 @Component({
   selector: 'app-automation-create-task-editor',

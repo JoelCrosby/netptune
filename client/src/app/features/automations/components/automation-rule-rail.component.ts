@@ -6,27 +6,33 @@ import {
   actionTypeLabels,
   countAutomationConditions,
   describeAutomationActionSegments,
+  toTextSegments,
   triggerTypeLabels,
-} from '../models/automation-copy';
+} from '@core/automations/automation-copy';
 import {
   automationActionKeyword,
   describeConditionsStepSummary,
   describeConditionsStepTitle,
   describeTriggerStepSummary,
-} from '../models/automation-flow-copy';
+} from '@core/automations/automation-flow-copy';
 import {
   AutomationAction,
   AutomationTrigger,
-} from '../models/automation.models';
-import { AutomationDescriptionComponent } from './automation-description.component';
-import { AutomationFlowNodeComponent } from './automation-flow-node.component';
+} from '@core/automations/automation.models';
+import { FlowConnectorComponent } from '@static/components/flow-connector/flow-connector.component';
+import { FlowStepComponent } from '@static/components/flow-step/flow-step.component';
+import {
+  SegmentTextComponent,
+  TextSegment,
+} from '@static/components/segment-text/segment-text.component';
 
 @Component({
   selector: 'app-automation-rule-rail',
   imports: [
-    AutomationDescriptionComponent,
-    AutomationFlowNodeComponent,
+    FlowConnectorComponent,
+    FlowStepComponent,
     RouterLink,
+    SegmentTextComponent,
   ],
   host: {
     class: 'border-border bg-foreground/2 block rounded-xl border p-4',
@@ -49,21 +55,19 @@ import { AutomationFlowNodeComponent } from './automation-flow-node.component';
       }
     </div>
 
-    <app-automation-flow-node
+    <app-flow-step
       i18n-keyword="Heading of the trigger part of the rule"
       keyword="WHEN"
       size="compact"
       [interactive]="false"
       [icon]="triggerIcon"
       [title]="triggerTitle()">
-      <app-automation-description
-        [segments]="triggerSummary()"
-        [statuses]="statuses()" />
-    </app-automation-flow-node>
+      <app-segment-text [segments]="triggerSummary()" />
+    </app-flow-step>
 
-    <div class="bg-border ml-5.25 h-2.5 w-px" aria-hidden="true"></div>
+    <app-flow-connector size="compact" />
 
-    <app-automation-flow-node
+    <app-flow-step
       i18n-keyword="Heading of the conditions part of the rule"
       keyword="IF"
       size="compact"
@@ -72,30 +76,26 @@ import { AutomationFlowNodeComponent } from './automation-flow-node.component';
       [title]="conditionsTitle()">
       @if (!hasConditions()) {
         <span
-          flowNodeAside
+          flowStepAside
           class="text-foreground/45 text-xs"
           i18n="Marks the conditions section as not required">
           Optional
         </span>
       }
-      <app-automation-description
-        [segments]="conditionsSummary()"
-        [statuses]="statuses()" />
-    </app-automation-flow-node>
+      <app-segment-text [segments]="conditionsSummary()" />
+    </app-flow-step>
 
     @for (action of actions(); track $index; let index = $index) {
-      <div class="bg-border ml-5.25 h-2.5 w-px" aria-hidden="true"></div>
+      <app-flow-connector size="compact" />
 
-      <app-automation-flow-node
+      <app-flow-step
         size="compact"
         [interactive]="false"
         [keyword]="actionKeyword(index)"
         [step]="index + 1"
         [title]="actionTitle(action)">
-        <app-automation-description
-          [segments]="actionSummary(action)"
-          [statuses]="statuses()" />
-      </app-automation-flow-node>
+        <app-segment-text [segments]="actionSummary(action)" />
+      </app-flow-step>
     }
   `,
 })
@@ -113,7 +113,9 @@ export class AutomationRuleRailComponent {
   });
 
   protected readonly triggerSummary = computed(() => {
-    return describeTriggerStepSummary(this.trigger());
+    const segments = describeTriggerStepSummary(this.trigger());
+
+    return toTextSegments(segments, this.statuses());
   });
 
   protected readonly hasConditions = computed(() => {
@@ -125,7 +127,10 @@ export class AutomationRuleRailComponent {
   });
 
   protected readonly conditionsSummary = computed(() => {
-    return describeConditionsStepSummary(this.trigger(), this.statuses());
+    const statuses = this.statuses();
+    const segments = describeConditionsStepSummary(this.trigger(), statuses);
+
+    return toTextSegments(segments, statuses);
   });
 
   actionKeyword(index: number): string {
@@ -136,7 +141,10 @@ export class AutomationRuleRailComponent {
     return actionTypeLabels[action.type];
   }
 
-  actionSummary(action: AutomationAction) {
-    return describeAutomationActionSegments(action, this.statuses());
+  actionSummary(action: AutomationAction): TextSegment[] {
+    const statuses = this.statuses();
+    const segments = describeAutomationActionSegments(action, statuses);
+
+    return toTextSegments(segments, statuses);
   }
 }

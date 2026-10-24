@@ -21,14 +21,14 @@ import {
 import {
   conditionOperatorLabels,
   taskChangeFieldLabels,
-} from './automation-copy';
+} from '@core/automations/automation-copy';
 import {
   AutomationConditionGroup,
   AutomationConditionGroupOperator,
   AutomationConditionOperator,
   AutomationFieldCondition,
   TaskChangeField,
-} from './automation.models';
+} from '@core/automations/automation.models';
 
 const conditionFields: TaskChangeField[] = [
   TaskChangeField.name,

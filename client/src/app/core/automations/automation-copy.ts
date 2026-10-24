@@ -4,6 +4,7 @@ import { WorkspaceAppUser } from '@core/models/appuser';
 import { Status } from '@core/models/status';
 import { isNotNullOrUndefined } from '@core/util/nullish';
 import { joinNaturalList, toLowerText } from '@core/util/strings';
+import { TextSegment } from '@static/components/segment-text/segment-text.component';
 import {
   AutomationAction,
   AutomationActionType,
@@ -195,6 +196,24 @@ export const automationActionResultStatusLabels: Record<
 
 export type AutomationCopySegment =
   { type: 'text'; text: string } | { type: 'status'; statusId: number };
+
+export function toTextSegments(
+  segments: AutomationCopySegment[],
+  statuses: Status[] = []
+): TextSegment[] {
+  return segments.map((segment) => {
+    if (segment.type === 'text') return segment;
+
+    const status = statuses.find((item) => item.id === segment.statusId);
+
+    return {
+      type: 'status',
+      name: status?.name ?? statusLabel(segment.statusId, statuses),
+      color: status?.color,
+      category: status?.category ?? null,
+    };
+  });
+}
 
 export function describeAutomationTriggerSegments(
   trigger: AutomationTrigger,

@@ -10,12 +10,12 @@ import { FormInputComponent } from '@static/components/form-input/form-input.com
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
-import { actionTypeLabels } from '../models/automation-copy';
+import { actionTypeLabels } from '@core/automations/automation-copy';
 import {
   AutomationAction,
   AutomationActionType,
   AutomationDelayUnit,
-} from '../models/automation.models';
+} from '@core/automations/automation.models';
 import { AutomationCreateTaskEditorComponent } from './automation-create-task-editor.component';
 import { AutomationNotifyEditorComponent } from './automation-notify-editor.component';
 import { AutomationRelationEditorComponent } from './automation-relation-editor.component';

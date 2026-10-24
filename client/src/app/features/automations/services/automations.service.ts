@@ -14,7 +14,7 @@ import {
   AutomationRun,
   AutomationRunFilter,
   AutomationRunSummary,
-} from '../models/automation.models';
+} from '@core/automations/automation.models';
 
 @Service()
 export class AutomationsService {

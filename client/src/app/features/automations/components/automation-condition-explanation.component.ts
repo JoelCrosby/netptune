@@ -8,12 +8,12 @@ import {
   conditionOperatorLabels,
   statusLabel,
   taskChangeFieldLabels,
-} from '../models/automation-copy';
+} from '@core/automations/automation-copy';
 import {
   AutomationConditionExplanation,
   AutomationConditionGroupExplanation,
   TaskChangeField,
-} from '../models/automation.models';
+} from '@core/automations/automation.models';
 
 interface ConditionStatus {
   name: string;

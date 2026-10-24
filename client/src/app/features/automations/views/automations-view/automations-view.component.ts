@@ -19,21 +19,21 @@ import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 import { EMPTY, finalize, forkJoin, switchMap } from 'rxjs';
 import {
+  AutomationRuleListItem,
+  AutomationRuleSummary,
+} from '@core/automations/automation.models';
+import { reloadToken } from '@core/util/signals';
+import {
   AutomationRuleCounts,
   AutomationRuleToggle,
   AutomationRulesTableComponent,
 } from '../../components/automation-rules-table.component';
-import {
-  AutomationRuleListItem,
-  AutomationRuleSummary,
-} from '../../models/automation.models';
 import {
   AutomationCloneDialogComponent,
   AutomationCloneDialogData,
   AutomationCloneDialogResult,
 } from '../../dialogs/automation-clone-dialog.component';
 import { AutomationsService } from '../../services/automations.service';
-import { reloadToken } from '@core/util/signals';
 
 @Component({
   selector: 'app-automations-view',

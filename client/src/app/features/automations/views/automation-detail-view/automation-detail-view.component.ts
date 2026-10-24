@@ -23,7 +23,10 @@ import {
   LucideTriangleAlert,
 } from '@lucide/angular';
 import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-menu.component';
-import { cn, strokedButtonVariants } from '@static/components/button/button.variants';
+import {
+  cn,
+  strokedButtonVariants,
+} from '@static/components/button/button.variants';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
@@ -37,6 +40,16 @@ import { PageLoadingComponent } from '@static/components/page-loading/page-loadi
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
 import { finalize, firstValueFrom, forkJoin } from 'rxjs';
+import {
+  describeAutomationRunsAs,
+  describeServiceAccountName,
+  resolveAutomationScope,
+} from '@core/automations/automation-flow-copy';
+import {
+  AutomationRule,
+  AutomationRunSummary,
+} from '@core/automations/automation.models';
+import { injectBreadcrumbs } from '@core/services/breadcrumb.service';
 import { AutomationRuleRailComponent } from '../../components/automation-rule-rail.component';
 import { AutomationRunHistoryComponent } from '../../components/automation-run-history.component';
 import { AutomationStatePillComponent } from '../../components/automation-state-pill.component';
@@ -49,17 +62,7 @@ import {
   AutomationDryRunDialogComponent,
   AutomationDryRunDialogData,
 } from '../../dialogs/automation-dry-run-dialog.component';
-import {
-  describeAutomationRunsAs,
-  describeServiceAccountName,
-  resolveAutomationScope,
-} from '../../models/automation-flow-copy';
-import {
-  AutomationRule,
-  AutomationRunSummary,
-} from '../../models/automation.models';
 import { AutomationsService } from '../../services/automations.service';
-import { injectBreadcrumbs } from '@core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-automation-detail-view',

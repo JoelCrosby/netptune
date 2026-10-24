@@ -1,6 +1,6 @@
 import { Component, computed, input } from '@angular/core';
-import { automationRunStatusLabels } from '../models/automation-copy';
-import { AutomationRunStatus } from '../models/automation.models';
+import { automationRunStatusLabels } from '@core/automations/automation-copy';
+import { AutomationRunStatus } from '@core/automations/automation.models';
 import {
   AutomationStatePillComponent,
   AutomationStateTone,

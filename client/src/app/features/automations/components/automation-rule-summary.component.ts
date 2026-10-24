@@ -11,26 +11,29 @@ import { IconCircleComponent } from '@static/components/icon-circle.component';
 import { PanelComponent } from '@static/components/panel.component';
 import { PanelHeaderComponent } from '@static/components/panel-header.component';
 import {
-  AutomationCopySegment,
+  SegmentTextComponent,
+  TextSegment,
+} from '@static/components/segment-text/segment-text.component';
+import {
   describeAutomationActionSegments,
   describeAutomationConditionsSegments,
   describeAutomationTriggerSegments,
-} from '../models/automation-copy';
+  toTextSegments,
+} from '@core/automations/automation-copy';
 import {
   AutomationAction,
   AutomationTrigger,
   AutomationTriggerType,
-} from '../models/automation.models';
-import { AutomationDescriptionComponent } from './automation-description.component';
+} from '@core/automations/automation.models';
 
 @Component({
   selector: 'app-automation-rule-summary',
   imports: [
-    AutomationDescriptionComponent,
     BadgeComponent,
     IconCircleComponent,
     PanelComponent,
     PanelHeaderComponent,
+    SegmentTextComponent,
   ],
   template: `
     <app-panel
@@ -69,9 +72,7 @@ import { AutomationDescriptionComponent } from './automation-description.compone
               </h3>
             </header>
             <p class="p-3 text-sm leading-relaxed">
-              <app-automation-description
-                [segments]="triggerSummary()"
-                [statuses]="statuses()" />
+              <app-segment-text [segments]="triggerSummary()" />
             </p>
           </article>
         </div>
@@ -106,9 +107,7 @@ import { AutomationDescriptionComponent } from './automation-description.compone
             <p
               class="p-3 text-sm leading-relaxed"
               [class.text-foreground/55]="!hasConditions()">
-              <app-automation-description
-                [segments]="conditionsSummary()"
-                [statuses]="statuses()" />
+              <app-segment-text [segments]="conditionsSummary()" />
             </p>
           </article>
         </div>
@@ -138,9 +137,7 @@ import { AutomationDescriptionComponent } from './automation-description.compone
                     {{ actionIndex + 1 }}
                   </span>
                   <span class="min-w-0 leading-relaxed">
-                    <app-automation-description
-                      [segments]="actionSummary(action)"
-                      [statuses]="statuses()" />
+                    <app-segment-text [segments]="actionSummary(action)" />
                   </span>
                 </li>
               }
@@ -161,32 +158,40 @@ export class AutomationRuleSummaryComponent {
   actions = input.required<AutomationAction[]>();
   statuses = input<Status[]>([]);
 
-  triggerSummary(): AutomationCopySegment[] {
+  triggerSummary(): TextSegment[] {
     const trigger = this.trigger();
-
-    return describeAutomationTriggerSegments(
+    const statuses = this.statuses();
+    const segments = describeAutomationTriggerSegments(
       trigger.type === AutomationTriggerType.taskChanged
         ? {
             ...trigger,
             conditionGroup: null,
           }
         : trigger,
-      this.statuses()
+      statuses
     );
+
+    return toTextSegments(segments, statuses);
   }
 
   hasConditions(): boolean {
     return !!this.trigger().conditionGroup;
   }
 
-  conditionsSummary(): AutomationCopySegment[] {
-    return describeAutomationConditionsSegments(
+  conditionsSummary(): TextSegment[] {
+    const statuses = this.statuses();
+    const segments = describeAutomationConditionsSegments(
       this.trigger(),
-      this.statuses()
+      statuses
     );
+
+    return toTextSegments(segments, statuses);
   }
 
-  actionSummary(action: AutomationAction): AutomationCopySegment[] {
-    return describeAutomationActionSegments(action, this.statuses());
+  actionSummary(action: AutomationAction): TextSegment[] {
+    const statuses = this.statuses();
+    const segments = describeAutomationActionSegments(action, statuses);
+
+    return toTextSegments(segments, statuses);
   }
 }

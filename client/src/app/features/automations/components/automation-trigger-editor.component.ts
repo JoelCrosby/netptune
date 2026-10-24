@@ -7,12 +7,12 @@ import {
   automationTriggerTypes,
   taskChangeFieldLabels,
   triggerTypeLabels,
-} from '../models/automation-copy';
+} from '@core/automations/automation-copy';
 import {
   AutomationTriggerType,
   isPullRequestTrigger,
   TaskChangeField,
-} from '../models/automation.models';
+} from '@core/automations/automation.models';
 
 interface DurationCopy {
   label: string;

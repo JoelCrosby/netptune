@@ -3,21 +3,18 @@ import { Component, computed, input, output } from '@angular/core';
 import { LucideDynamicIcon, type LucideIconInput } from '@lucide/angular';
 import { cn } from '@static/components/button/button.variants';
 
-export type AutomationFlowNodeSize = 'default' | 'compact';
+export type FlowStepSize = 'default' | 'compact';
 
-// One step in a rule's flow. The node carries a keyword and either an icon or the action's
-// position, a title, and whatever summary the caller projects underneath. The editor makes it a
-// button that selects the step; the detail rail shows it as a static card.
 @Component({
-  selector: 'app-automation-flow-node',
+  selector: 'app-flow-step',
   imports: [LucideDynamicIcon, NgTemplateOutlet],
   template: `
     <ng-template #content>
       <span class="flex items-center justify-between gap-2">
         <span
           class="text-primary flex items-center gap-1.5 text-[0.6875rem] font-bold tracking-[0.12em]">
-          @if (icon(); as nodeIcon) {
-            <svg [lucideIcon]="nodeIcon" class="h-3.25 w-3.25"></svg>
+          @if (icon(); as stepIcon) {
+            <svg [lucideIcon]="stepIcon" class="h-3.25 w-3.25"></svg>
           } @else if (step(); as stepNumber) {
             <span
               class="bg-primary text-primary-foreground inline-flex h-4 w-4 items-center justify-center rounded-full text-[0.625rem] tracking-normal">
@@ -27,7 +24,7 @@ export type AutomationFlowNodeSize = 'default' | 'compact';
           <span>{{ keyword() }}</span>
         </span>
 
-        <ng-content select="[flowNodeAside]" />
+        <ng-content select="[flowStepAside]" />
       </span>
 
       <span [class]="titleClass()">{{ title() }}</span>
@@ -40,28 +37,28 @@ export type AutomationFlowNodeSize = 'default' | 'compact';
     @if (interactive()) {
       <button
         type="button"
-        [class]="nodeClass()"
+        [class]="stepClass()"
         [attr.aria-current]="selected() ? 'step' : null"
-        (click)="selectNode.emit()">
+        (click)="selectStep.emit()">
         <ng-container [ngTemplateOutlet]="content" />
       </button>
     } @else {
-      <div [class]="nodeClass()">
+      <div [class]="stepClass()">
         <ng-container [ngTemplateOutlet]="content" />
       </div>
     }
   `,
 })
-export class AutomationFlowNodeComponent {
+export class FlowStepComponent {
   readonly keyword = input.required<string>();
   readonly title = input.required<string>();
   readonly icon = input<LucideIconInput | null>(null);
   readonly step = input<number | null>(null);
   readonly selected = input(false);
   readonly interactive = input(true);
-  readonly size = input<AutomationFlowNodeSize>('default');
+  readonly size = input<FlowStepSize>('default');
 
-  readonly selectNode = output();
+  readonly selectStep = output();
 
   protected readonly titleClass = computed(() => {
     return cn(
@@ -70,7 +67,7 @@ export class AutomationFlowNodeComponent {
     );
   });
 
-  protected readonly nodeClass = computed(() => {
+  protected readonly stepClass = computed(() => {
     const compact = this.size() === 'compact';
     const interactive = this.interactive();
 

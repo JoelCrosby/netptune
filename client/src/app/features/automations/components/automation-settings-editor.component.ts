@@ -5,7 +5,7 @@ import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import {
   AutomationScopeKind,
   scopeKindLabels,
-} from '../models/automation-copy';
+} from '@core/automations/automation-copy';
 import { ServiceAccount } from '@core/models/service-account';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';

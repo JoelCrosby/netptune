@@ -2,12 +2,12 @@ import { Component, input } from '@angular/core';
 import { WorkspaceAppUser } from '@core/models/appuser';
 import { workspaceRoleLabels } from '@core/enums/workspace-role';
 import { joinNaturalList } from '@core/util/strings';
-import { actionTypeLabels } from '../models/automation-copy';
+import { actionTypeLabels } from '@core/automations/automation-copy';
 import {
   AutomationActionType,
   AutomationDryRunAction,
   AutomationRelationOperation,
-} from '../models/automation.models';
+} from '@core/automations/automation.models';
 
 @Component({
   selector: 'app-automation-dry-run-effects',

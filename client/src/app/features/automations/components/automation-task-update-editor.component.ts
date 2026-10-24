@@ -17,7 +17,7 @@ import {
   AutomationAction,
   AutomationDateUpdate,
   AutomationDateUpdateMode,
-} from '../models/automation.models';
+} from '@core/automations/automation.models';
 
 @Component({
   selector: 'app-automation-task-update-editor',

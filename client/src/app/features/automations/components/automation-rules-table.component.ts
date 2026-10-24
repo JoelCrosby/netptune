@@ -38,12 +38,12 @@ import {
   describeAutomationConditionChip,
   describeAutomationTrigger,
   describeAutomationTriggerChip,
-} from '../models/automation-copy';
+} from '@core/automations/automation-copy';
 import {
   AutomationRuleListItem,
   AutomationRun,
   AutomationRunStatus,
-} from '../models/automation.models';
+} from '@core/automations/automation.models';
 
 export interface AutomationRuleToggle {
   rule: AutomationRuleListItem;
