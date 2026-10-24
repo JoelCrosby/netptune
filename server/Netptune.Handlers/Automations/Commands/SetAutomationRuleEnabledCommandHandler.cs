@@ -1,7 +1,10 @@
 using Mediator;
 
+using Netptune.Core.Enums;
+using Netptune.Core.Models.Activity;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Handlers.Automations.Commands;
@@ -12,11 +15,16 @@ public sealed class SetAutomationRuleEnabledCommandHandler : IRequestHandler<Set
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
+    private readonly IActivityLogger Activity;
 
-    public SetAutomationRuleEnabledCommandHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity)
+    public SetAutomationRuleEnabledCommandHandler(
+        INetptuneUnitOfWork unitOfWork,
+        IIdentityService identity,
+        IActivityLogger activity)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
+        Activity = activity;
     }
 
     public async ValueTask<ClientResponse> Handle(SetAutomationRuleEnabledCommand request, CancellationToken cancellationToken)
@@ -26,6 +34,15 @@ public sealed class SetAutomationRuleEnabledCommandHandler : IRequestHandler<Set
 
         if (rule is null) return ClientResponse.NotFound;
 
+        var isUnchanged = rule.IsEnabled == request.IsEnabled;
+
+        if (isUnchanged)
+        {
+            return ClientResponse.Success;
+        }
+
+        var userId = Identity.GetCurrentUserId();
+
         rule.IsEnabled = request.IsEnabled;
 
         if (request.IsEnabled)
@@ -34,9 +51,30 @@ public sealed class SetAutomationRuleEnabledCommandHandler : IRequestHandler<Set
             rule.AutoDisabledReason = null;
         }
 
-        rule.ModifiedByUserId = Identity.GetCurrentUserId();
+        rule.ModifiedByUserId = userId;
 
-        await UnitOfWork.CompleteAsync(cancellationToken);
+        var cancelledCount = await UnitOfWork.Transaction(async () =>
+        {
+            var cancelled = request.IsEnabled
+                ? 0
+                : await UnitOfWork.Automations.CancelPendingRuleActions(rule.Id, userId, cancellationToken);
+
+            await UnitOfWork.CompleteAsync(cancellationToken);
+
+            return cancelled;
+        });
+
+        Activity.LogWith<AutomationRuleActivityMeta>(options =>
+        {
+            options.EntityId = rule.Id;
+            options.EntityType = EntityType.AutomationRule;
+            options.Type = request.IsEnabled ? ActivityType.Enable : ActivityType.Disable;
+            options.Meta = new AutomationRuleActivityMeta
+            {
+                Name = rule.Name,
+                CancelledScheduledActions = AutomationRuleActivityMeta.CancelledCount(cancelledCount),
+            };
+        });
 
         return ClientResponse.Success;
     }

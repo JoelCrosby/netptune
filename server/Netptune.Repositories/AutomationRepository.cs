@@ -15,6 +15,10 @@ using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
 using Netptune.Repositories.Sql;
 
+using Npgsql;
+
+using NpgsqlTypes;
+
 namespace Netptune.Repositories;
 
 public class AutomationRepository : WorkspaceEntityRepository<DataContext, AutomationRule, int>, IAutomationRepository
@@ -180,6 +184,59 @@ public class AutomationRepository : WorkspaceEntityRepository<DataContext, Autom
                 .SetProperty(action => action.LeaseExpiresAt, (DateTime?)null)
                 .SetProperty(action => action.LastError, retry.Error)
                 .SetProperty(action => action.UpdatedAt, DateTime.UtcNow), cancellationToken);
+    }
+
+    public Task<int> CancelPendingRuleActions(
+        int ruleId,
+        string actorUserId,
+        CancellationToken cancellationToken = default)
+    {
+        var now = DateTime.UtcNow;
+
+        return PendingRuleActions([ruleId])
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(action => action.Status, ScheduledAutomationActionStatus.Cancelled)
+                .SetProperty(action => action.ProcessedAt, now)
+                .SetProperty(action => action.ClaimId, (Guid?)null)
+                .SetProperty(action => action.LeaseExpiresAt, (DateTime?)null)
+                .SetProperty(action => action.ModifiedByUserId, actorUserId)
+                .SetProperty(action => action.UpdatedAt, now), cancellationToken);
+    }
+
+    public async Task<Dictionary<int, int>> CancelPendingRuleActions(
+        IReadOnlyCollection<int> ruleIds,
+        CancellationToken cancellationToken = default)
+    {
+        if (ruleIds.Count == 0)
+        {
+            return [];
+        }
+
+        NpgsqlParameter[] parameters =
+        [
+            new("ruleIds", NpgsqlDbType.Array | NpgsqlDbType.Integer) { Value = ruleIds.ToArray() },
+            new("cancelledStatus", NpgsqlDbType.Integer) { Value = (int)ScheduledAutomationActionStatus.Cancelled },
+            new("pendingStatus", NpgsqlDbType.Integer) { Value = (int)ScheduledAutomationActionStatus.Pending },
+            new("processingStatus", NpgsqlDbType.Integer) { Value = (int)ScheduledAutomationActionStatus.Processing },
+            new("cancelledAt", NpgsqlDbType.TimestampTz) { Value = DateTime.UtcNow },
+        ];
+
+        var cancelledRuleIds = await Context.Database
+            .SqlQueryRaw<int>(SqlScripts.CancelPendingRuleActions, parameters)
+            .ToListAsync(cancellationToken);
+
+        return cancelledRuleIds
+            .GroupBy(ruleId => ruleId)
+            .ToDictionary(group => group.Key, group => group.Count());
+    }
+
+    private IQueryable<ScheduledAutomationAction> PendingRuleActions(IReadOnlyCollection<int> ruleIds)
+    {
+        return Context.Set<ScheduledAutomationAction>()
+            .Where(action => ruleIds.Contains(action.AutomationRuleId))
+            .Where(action =>
+                action.Status == ScheduledAutomationActionStatus.Pending ||
+                action.Status == ScheduledAutomationActionStatus.Processing);
     }
 
     public Task<int> CancelPendingTaskActions(
@@ -485,24 +542,25 @@ public class AutomationRepository : WorkspaceEntityRepository<DataContext, Autom
     }
 
     public Task<int> AutoDisableRules(
-        IReadOnlyCollection<int> ruleIds,
-        string reason,
+        IReadOnlyDictionary<int, string> reasonsByRuleId,
         DateTime disabledAt,
         CancellationToken cancellationToken = default)
     {
-        if (ruleIds.Count == 0)
+        if (reasonsByRuleId.Count == 0)
         {
             return Task.FromResult(0);
         }
 
-        return Entities
-            .Where(rule => ruleIds.Contains(rule.Id))
-            .ExecuteUpdateAsync(
-                setters => setters
-                    .SetProperty(rule => rule.IsEnabled, false)
-                    .SetProperty(rule => rule.AutoDisabledAt, disabledAt)
-                    .SetProperty(rule => rule.AutoDisabledReason, reason),
-                cancellationToken);
+        var ruleIds = reasonsByRuleId.Keys.ToArray();
+        var reasons = ruleIds.Select(ruleId => reasonsByRuleId[ruleId]).ToArray();
+        NpgsqlParameter[] parameters =
+        [
+            new("ruleIds", NpgsqlDbType.Array | NpgsqlDbType.Integer) { Value = ruleIds },
+            new("reasons", NpgsqlDbType.Array | NpgsqlDbType.Text) { Value = reasons },
+            new("disabledAt", NpgsqlDbType.TimestampTz) { Value = disabledAt },
+        ];
+
+        return Context.Database.ExecuteSqlRawAsync(SqlScripts.AutoDisableRules, parameters, cancellationToken);
     }
 
     public Task<int> GetWorkspaceRunCount(

@@ -2,8 +2,11 @@ using FluentAssertions;
 
 using Microsoft.EntityFrameworkCore;
 
+using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Events;
 using Netptune.Core.Events.Tasks;
+using Netptune.Core.Models.Activity;
 
 using Xunit;
 
@@ -105,5 +108,63 @@ public sealed class AutomationLimitGuardTests
 
         disabledRule.IsEnabled.Should().BeFalse();
         disabledRule.AutoDisabledReason.Should().Contain("runs within");
+    }
+
+    [Fact]
+    public async Task Auto_disabling_a_rule_records_an_event_and_cancels_its_delayed_actions()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        var rule = await AutomationTestData.CreateTaskStateRule(
+            scope.Db,
+            scenario,
+            AutomationTriggerType.TaskCreated);
+        var actionId = await scope.Db.Set<AutomationAction>()
+            .Where(action => action.AutomationRuleId == rule.Id)
+            .Select(action => action.Id)
+            .FirstAsync(TestContext.Current.CancellationToken);
+        var scheduled = new ScheduledAutomationAction
+        {
+            AutomationRuleId = rule.Id,
+            AutomationActionId = actionId,
+            TaskId = scenario.Task.Id,
+            ActionType = AutomationActionType.NotifyTaskAssignees,
+            Status = ScheduledAutomationActionStatus.Pending,
+            ExpectedStatusId = scenario.Task.StatusId,
+            ExecuteAt = DateTime.UtcNow.AddDays(1),
+            IdempotencyKey = $"test:{Guid.NewGuid():N}",
+            OwnerId = rule.ExecutionUserId,
+        };
+
+        scope.Db.Add(scheduled);
+
+        await scope.Db.SaveChangesAsync(TestContext.Current.CancellationToken);
+        await AutomationTestData.CreateRuns(scope.Db, rule, 20, AutomationRunStatus.Failed);
+
+        await scope.AutomationExecution.ExecuteEventRules(new TaskCreatedMessage
+        {
+            TaskId = scenario.Task.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            ActorUserId = scenario.Owner.Id,
+        }, TestContext.Current.CancellationToken);
+
+        var subjectId = rule.Id.ToString();
+        var disabledEvent = scope.EventRecords.Events.Single(record =>
+            record.EventKey == EventKeys.AutomationRuleAutoDisabled &&
+            record.SubjectId == subjectId);
+        var disabledPayload = (AutomationRuleActivityMeta)disabledEvent.Payload;
+        var scheduledStatus = await scope.Db.Set<ScheduledAutomationAction>()
+            .AsNoTracking()
+            .Where(action => action.Id == scheduled.Id)
+            .Select(action => action.Status)
+            .SingleAsync(TestContext.Current.CancellationToken);
+
+        disabledEvent.SubjectType.Should().Be(EventEntityTypes.From(EntityType.AutomationRule));
+        disabledEvent.ActorUserId.Should().Be(rule.ExecutionUserId);
+        disabledEvent.OriginType.Should().Be(EventOriginType.System);
+        disabledPayload.Reason.Should().Contain("failed runs");
+        disabledPayload.CancelledScheduledActions.Should().Be(1);
+        scheduledStatus.Should().Be(ScheduledAutomationActionStatus.Cancelled);
     }
 }

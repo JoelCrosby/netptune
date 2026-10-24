@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
+import { EntityType } from '@core/models/entity-type';
 import { Status } from '@core/models/status';
 import { workspaceBoardsResource } from '@core/resources/board.resource';
 import { projectResource } from '@core/resources/project.resource';
@@ -21,6 +22,8 @@ import {
   LucideTrash2,
   LucideTriangleAlert,
 } from '@lucide/angular';
+import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-menu.component';
+import { cn, strokedButtonVariants } from '@static/components/button/button.variants';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
@@ -61,6 +64,7 @@ import { injectBreadcrumbs } from '@core/services/breadcrumb.service';
 @Component({
   selector: 'app-automation-detail-view',
   imports: [
+    ActivityMenuComponent,
     AutomationRuleRailComponent,
     AutomationRunHistoryComponent,
     AutomationStatePillComponent,
@@ -102,6 +106,13 @@ import { injectBreadcrumbs } from '@core/services/breadcrumb.service';
           }
 
           <div pageHeaderActions class="flex flex-wrap items-center gap-2">
+            @if (canReadActivity()) {
+              <app-activity-menu
+                [entityType]="automationRuleEntityType"
+                [entityId]="rule.id"
+                [buttonClass]="activityButtonClass" />
+            }
+
             <button
               app-stroked-button
               class="gap-2"
@@ -339,6 +350,12 @@ export class AutomationDetailViewComponent {
   readonly saving = mutation();
   readonly error = signal(false);
   readonly canManage = hasPermission(PERMISSIONS.automations.manage);
+  readonly canReadActivity = hasPermission(PERMISSIONS.activity.read);
+  readonly automationRuleEntityType = EntityType.automationRule;
+  readonly activityButtonClass = cn(
+    strokedButtonVariants({ color: 'neutral' }),
+    'w-9 min-w-0 px-0'
+  );
 
   readonly serviceAccountsResource = serviceAccountResource();
   readonly projectsResource = projectResource();

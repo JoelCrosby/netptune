@@ -12,4 +12,5 @@ export enum EntityType {
   relationType = 10,
   workspaceFile = 11,
   page = 12,
+  automationRule = 13,
 }

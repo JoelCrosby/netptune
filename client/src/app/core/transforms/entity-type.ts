@@ -26,6 +26,8 @@ export const entityTypeToString = (value: EntityType): string => {
       return $localize`:Name of the workspace file entity in activity and audit logs:File`;
     case EntityType.page:
       return $localize`:Name of the page entity in activity and audit logs:Page`;
+    case EntityType.automationRule:
+      return $localize`:Name of the automation rule entity in activity and audit logs:Automation`;
     default:
       return '[UNKNOWN ENTITY TYPE]';
   }

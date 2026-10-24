@@ -2,9 +2,12 @@ using Mediator;
 
 using Netptune.Automation.Rules;
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
+using Netptune.Core.Models.Activity;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
 using Netptune.Core.Services.Automations;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Automations;
@@ -22,15 +25,18 @@ public sealed class CloneAutomationRuleCommandHandler
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IAutomationActionRegistry ActionRegistry;
+    private readonly IActivityLogger Activity;
 
     public CloneAutomationRuleCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
-        IAutomationActionRegistry actionRegistry)
+        IAutomationActionRegistry actionRegistry,
+        IActivityLogger activity)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         ActionRegistry = actionRegistry;
+        Activity = activity;
     }
 
     public async ValueTask<ClientResponse<AutomationRuleViewModel>> Handle(
@@ -88,6 +94,18 @@ public sealed class CloneAutomationRuleCommandHandler
 
         await UnitOfWork.Automations.AddAsync(clone, cancellationToken);
         await UnitOfWork.CompleteAsync(cancellationToken);
+
+        Activity.LogWith<AutomationRuleActivityMeta>(options =>
+        {
+            options.EntityId = clone.Id;
+            options.EntityType = EntityType.AutomationRule;
+            options.Type = ActivityType.Create;
+            options.Meta = new AutomationRuleActivityMeta
+            {
+                Name = clone.Name,
+                ClonedFromRuleId = source.Id,
+            };
+        });
 
         var viewModel = clone.ToViewModel(ActionRegistry);
 

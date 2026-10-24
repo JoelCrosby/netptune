@@ -15,6 +15,8 @@ public static class ActivityNotificationPolicy
         ActivityType.CommitsPushed,
         ActivityType.ChecksPassed,
         ActivityType.ChecksFailed,
+        ActivityType.Enable,
+        ActivityType.Disable,
     ];
 
     public static bool IsNotifiable(ActivityType activityType)

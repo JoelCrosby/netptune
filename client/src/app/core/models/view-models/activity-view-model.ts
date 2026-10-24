@@ -66,4 +66,6 @@ export enum ActivityType {
   commitsPushed = 44,
   checksPassed = 45,
   checksFailed = 46,
+  enable = 47,
+  disable = 48,
 }

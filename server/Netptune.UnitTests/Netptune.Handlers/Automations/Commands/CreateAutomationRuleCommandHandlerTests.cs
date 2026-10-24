@@ -12,6 +12,7 @@ using Netptune.Core.Models.Automations;
 using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
 using Netptune.Core.Services.Automations;
 using Netptune.Core.UnitOfWork;
 using Netptune.Handlers.Automations.Commands;
@@ -29,6 +30,7 @@ public class CreateAutomationRuleCommandHandlerTests
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IServiceAccountRepository ServiceAccounts = Substitute.For<IServiceAccountRepository>();
     private readonly IWorkspacePermissionCache PermissionCache = Substitute.For<IWorkspacePermissionCache>();
+    private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
     private readonly CreateAutomationRuleCommandHandler Handler;
 
     public CreateAutomationRuleCommandHandlerTests()
@@ -59,7 +61,7 @@ public class CreateAutomationRuleCommandHandlerTests
             .BuildServiceProvider()
             .GetRequiredService<IAutomationActionRegistry>();
 
-        Handler = new CreateAutomationRuleCommandHandler(UnitOfWork, Identity, actionRegistry, PermissionCache);
+        Handler = new CreateAutomationRuleCommandHandler(UnitOfWork, Identity, actionRegistry, PermissionCache, Activity);
     }
 
     [Fact]

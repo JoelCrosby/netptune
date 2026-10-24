@@ -261,6 +261,46 @@ public class ActivityHandlerMergeTests
             Arg.Any<CancellationToken>());
     }
 
+    [Fact]
+    public async Task Handle_ShouldKeepAssistantAndUserEditsToAnAutomationRuleApart()
+    {
+        await Handler().Handle(new ActivityMessage([
+            RuleEdit(agent: null),
+            RuleEdit(agent: "claude-opus-5"),
+        ]), CancellationToken);
+
+        await UnitOfWork.ActivityEntries.Received(1).UpsertEntry(
+            Arg.Is<ActivityEntryUpsert>(upsert =>
+                upsert.EntityType == EntityType.AutomationRule && upsert.Agent == string.Empty),
+            Arg.Any<DateTime>(),
+            Arg.Any<TimeSpan>(),
+            Arg.Any<TimeSpan>(),
+            Arg.Any<CancellationToken>());
+
+        await UnitOfWork.ActivityEntries.Received(1).UpsertEntry(
+            Arg.Is<ActivityEntryUpsert>(upsert =>
+                upsert.EntityType == EntityType.AutomationRule && upsert.Agent == "claude-opus-5"),
+            Arg.Any<DateTime>(),
+            Arg.Any<TimeSpan>(),
+            Arg.Any<TimeSpan>(),
+            Arg.Any<CancellationToken>());
+    }
+
+    private static ActivityEvent RuleEdit(string? agent)
+    {
+        return new ActivityEvent
+        {
+            EventId = Guid.NewGuid(),
+            Type = ActivityType.Modify,
+            EntityType = EntityType.AutomationRule,
+            EntityId = EntityId,
+            WorkspaceId = WorkspaceId,
+            UserId = ActorUserId,
+            Agent = agent,
+            OccurredAt = DateTime.UtcNow,
+        };
+    }
+
     private static ActivityEvent Discrete(ActivityType type) =>
         new()
         {

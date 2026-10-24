@@ -816,6 +816,142 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
         return run.Id;
     }
 
+    [Fact]
+    public async Task Update_ShouldCancelPendingDelayedActions_WhenActionsChange()
+    {
+        var setup = await GetSetup();
+        var rule = await CreateNamedRule($"Cancel on update {Guid.NewGuid():N}");
+        var otherRule = await CreateNamedRule($"Untouched {Guid.NewGuid():N}");
+        var pendingId = await SeedPendingAction(rule.Id);
+        var otherPendingId = await SeedPendingAction(otherRule.Id);
+
+        var response = await Client.PutAsJsonAsync($"api/automations/{rule.Id}", new AutomationRuleRequest
+        {
+            Name = rule.Name,
+            IsEnabled = true,
+            ExecutionUserId = setup.ExecutionUserId,
+            Trigger = new AutomationTriggerRequest
+            {
+                Type = AutomationTriggerType.TaskChanged,
+                Fields = [TaskChangeField.Status],
+            },
+            Actions =
+            [
+                new AutomationActionRequest
+                {
+                    Type = AutomationActionType.NotifyTaskAssignees,
+                    Recipients = [AutomationNotificationRecipient.TaskOwner],
+                },
+            ],
+        }, TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+        (await GetScheduledStatus(pendingId)).Should().Be(ScheduledAutomationActionStatus.Cancelled);
+        (await GetScheduledStatus(otherPendingId)).Should().Be(ScheduledAutomationActionStatus.Pending);
+    }
+
+    [Fact]
+    public async Task Update_ShouldKeepPendingDelayedActions_WhenOnlyTheNameChanges()
+    {
+        var setup = await GetSetup();
+        var rule = await CreateNamedRule($"Rename only {Guid.NewGuid():N}");
+        var pendingId = await SeedPendingAction(rule.Id);
+
+        var response = await Client.PutAsJsonAsync($"api/automations/{rule.Id}", new AutomationRuleRequest
+        {
+            Name = $"Renamed {Guid.NewGuid():N}",
+            IsEnabled = true,
+            ExecutionUserId = setup.ExecutionUserId,
+            Trigger = new AutomationTriggerRequest
+            {
+                Type = AutomationTriggerType.TaskChanged,
+                Fields = [TaskChangeField.Status],
+            },
+            Actions =
+            [
+                new AutomationActionRequest
+                {
+                    Type = AutomationActionType.NotifyTaskAssignees,
+                    Recipients = [AutomationNotificationRecipient.Assignees],
+                },
+            ],
+        }, TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<AutomationRuleViewModel>>(
+            TestContext.Current.CancellationToken);
+
+        result!.Payload!.Actions.Should().ContainSingle();
+        (await GetScheduledStatus(pendingId)).Should().Be(ScheduledAutomationActionStatus.Pending);
+    }
+
+    [Fact]
+    public async Task Disable_ShouldCancelPendingDelayedActions()
+    {
+        var rule = await CreateNamedRule($"Cancel on disable {Guid.NewGuid():N}");
+        var pendingId = await SeedPendingAction(rule.Id);
+
+        var response = await Client.PostAsync($"api/automations/{rule.Id}/disable", null, TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+        (await GetScheduledStatus(pendingId)).Should().Be(ScheduledAutomationActionStatus.Cancelled);
+    }
+
+    [Fact]
+    public async Task Delete_ShouldCancelPendingDelayedActions()
+    {
+        var rule = await CreateNamedRule($"Cancel on delete {Guid.NewGuid():N}");
+        var pendingId = await SeedPendingAction(rule.Id);
+
+        var response = await Client.DeleteAsync($"api/automations/{rule.Id}", TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+        (await GetScheduledStatus(pendingId)).Should().Be(ScheduledAutomationActionStatus.Cancelled);
+    }
+
+    private async Task<int> SeedPendingAction(int ruleId)
+    {
+        var setup = await GetSetup();
+        var task = await CreateTask($"Delayed action target {Guid.NewGuid():N}");
+
+        using var scope = fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var actionId = await context.Set<AutomationAction>()
+            .Where(action => action.AutomationRuleId == ruleId && !action.IsDeleted)
+            .Select(action => action.Id)
+            .FirstAsync(TestContext.Current.CancellationToken);
+        var scheduled = new ScheduledAutomationAction
+        {
+            AutomationRuleId = ruleId,
+            AutomationActionId = actionId,
+            TaskId = task.Id,
+            ActionType = AutomationActionType.NotifyTaskAssignees,
+            Status = ScheduledAutomationActionStatus.Pending,
+            ExpectedStatusId = task.StatusId,
+            ExecuteAt = DateTime.UtcNow.AddDays(1),
+            IdempotencyKey = $"test:{Guid.NewGuid():N}",
+            OwnerId = setup.ExecutionUserId,
+        };
+
+        context.Add(scheduled);
+
+        await context.SaveChangesAsync(TestContext.Current.CancellationToken);
+
+        return scheduled.Id;
+    }
+
+    private async Task<ScheduledAutomationActionStatus> GetScheduledStatus(int scheduledActionId)
+    {
+        using var scope = fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        return await context.Set<ScheduledAutomationAction>()
+            .Where(action => action.Id == scheduledActionId)
+            .Select(action => action.Status)
+            .SingleAsync(TestContext.Current.CancellationToken);
+    }
+
     private async Task<AutomationRuleViewModel> GetRule(int ruleId)
     {
         var response = await Client.GetAsync($"api/automations/{ruleId}");

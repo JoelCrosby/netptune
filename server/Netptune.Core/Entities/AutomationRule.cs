@@ -37,8 +37,10 @@ public record AutomationRule : WorkspaceEntity<int>
     [JsonIgnore]
     public Sprint? Sprint { get; set; }
 
+    // AutomationAction is a record, and value equality breaks EF's fix-up: a tracked load added each action twice.
     [JsonIgnore]
-    public ICollection<AutomationAction> Actions { get; set; } = new HashSet<AutomationAction>();
+    public ICollection<AutomationAction> Actions { get; set; } =
+        new HashSet<AutomationAction>(ReferenceEqualityComparer.Instance);
 
     [JsonIgnore]
     public ICollection<AutomationRun> Runs { get; set; } = new HashSet<AutomationRun>();

@@ -27,6 +27,10 @@ public interface IAutomationRepository : IWorkspaceEntityRepository<AutomationRu
 
     Task<int> RetryClaimedScheduledAction(ScheduledActionRetry retry, CancellationToken cancellationToken = default);
 
+    Task<int> CancelPendingRuleActions(int ruleId, string actorUserId, CancellationToken cancellationToken = default);
+
+    Task<Dictionary<int, int>> CancelPendingRuleActions(IReadOnlyCollection<int> ruleIds, CancellationToken cancellationToken = default);
+
     Task<int> CancelPendingTaskActions(int taskId, Guid currentEventId, string actorUserId, CancellationToken cancellationToken = default);
 
     Task<PagedResponse<AutomationRule>> GetRulesPaged(int workspaceId, AutomationRuleFilter filter, CancellationToken cancellationToken = default);
@@ -41,7 +45,7 @@ public interface IAutomationRepository : IWorkspaceEntityRepository<AutomationRu
 
     Task<List<AutomationRunStats>> GetRunStats(IReadOnlyCollection<int> ruleIds, DateTime since, CancellationToken cancellationToken = default);
 
-    Task<int> AutoDisableRules(IReadOnlyCollection<int> ruleIds, string reason, DateTime disabledAt, CancellationToken cancellationToken = default);
+    Task<int> AutoDisableRules(IReadOnlyDictionary<int, string> reasonsByRuleId, DateTime disabledAt, CancellationToken cancellationToken = default);
 
     Task<int> GetWorkspaceRunCount(int workspaceId, DateTime since, CancellationToken cancellationToken = default);
 }

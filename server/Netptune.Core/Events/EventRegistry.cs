@@ -3,6 +3,7 @@ using System.Text.Json;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Tasks;
+using Netptune.Core.Models.Activity;
 
 namespace Netptune.Core.Events;
 
@@ -42,6 +43,7 @@ public static class EventKeys
     public const string TaskRelationChanged = "relation.changed";
     public const string EntityActivityRecorded = "entity.activity-recorded";
     public const string AssistantConversationDeleted = "assistant.conversation-deleted";
+    public const string AutomationRuleAutoDisabled = "automation.rule-auto-disabled";
     public const string SourceControlConnected = "source-control.connected";
     public const string SourceControlDisconnected = "source-control.disconnected";
     public const string SourceControlPullRequestOpened = "source-control.pull-request-opened";
@@ -154,6 +156,7 @@ public static class EventKeys
             CommentDeleted => ActivityType.RemoveComment,
             FlagResolutionRecorded => ActivityType.Modify,
             AssistantConversationDeleted => ActivityType.Delete,
+            AutomationRuleAutoDisabled => ActivityType.Disable,
             SourceControlConnected => ActivityType.Create,
             SourceControlDisconnected => ActivityType.Delete,
             SourceControlPullRequestOpened => ActivityType.PullRequestOpened,
@@ -270,6 +273,7 @@ public static class EventDefinitionRegistry
             [(EventKeys.TaskRelationChanged, 1)] = typeof(TaskRelationChangedPayload),
             [(EventKeys.FlagResolutionRecorded, 1)] = typeof(FlagResolutionPayload),
             [(EventKeys.AssistantConversationDeleted, 1)] = typeof(AssistantConversationDeletedPayload),
+            [(EventKeys.AutomationRuleAutoDisabled, 1)] = typeof(AutomationRuleActivityMeta),
             [(EventKeys.SourceControlConnected, 1)] = typeof(SourceControlConnectionEventPayload),
             [(EventKeys.SourceControlDisconnected, 1)] = typeof(SourceControlConnectionEventPayload),
             [(EventKeys.SourceControlPullRequestOpened, 1)] = typeof(SourceControlActivityPayload),

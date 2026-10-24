@@ -168,6 +168,10 @@ export const activityTypeToString = (value: ActivityType): string => {
       return 'Checks passed on';
     case ActivityType.checksFailed:
       return 'Checks failed on';
+    case ActivityType.enable:
+      return 'Enabled';
+    case ActivityType.disable:
+      return 'Disabled';
     default:
       return '[UNKNOWN ACTIVITY TYPE]';
   }

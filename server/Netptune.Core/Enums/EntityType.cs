@@ -15,4 +15,5 @@ public enum EntityType
     RelationType,
     WorkspaceFile,
     Page,
+    AutomationRule,
 }

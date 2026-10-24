@@ -169,6 +169,7 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
             EntityType.Sprint => x => x.EntityId == entityId,
             EntityType.Status => x => x.EntityId == entityId,
             EntityType.Page => x => x.EntityId == entityId,
+            EntityType.AutomationRule => x => x.EntityId == entityId,
             _ => _ => true,
         };
 
@@ -444,6 +445,7 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
             ActivityType.CommitsPushed => ApplyCanonicalActivityFilter(query, EventKeys.SourceControlCommitsPushed, legacyActivityType),
             ActivityType.ChecksPassed => ApplyCanonicalActivityFilter(query, EventKeys.SourceControlChecksPassed, legacyActivityType),
             ActivityType.ChecksFailed => ApplyCanonicalActivityFilter(query, EventKeys.SourceControlChecksFailed, legacyActivityType),
+            ActivityType.Disable => ApplyCanonicalActivityFilter(query, EventKeys.AutomationRuleAutoDisabled, legacyActivityType),
             _ => ApplyLegacyActivityFilter(query, legacyActivityType),
         };
     }

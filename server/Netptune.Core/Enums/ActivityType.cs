@@ -52,4 +52,6 @@ public enum ActivityType
     CommitsPushed = 44,
     ChecksPassed = 45,
     ChecksFailed = 46,
+    Enable = 47,
+    Disable = 48,
 }

@@ -3,9 +3,12 @@ using Mediator;
 using Netptune.Automation.Rules;
 using Netptune.Core.Cache;
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
+using Netptune.Core.Models.Activity;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
 using Netptune.Core.Services.Automations;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Automations;
@@ -21,17 +24,20 @@ public sealed class CreateAutomationRuleCommandHandler
     private readonly IIdentityService Identity;
     private readonly IAutomationActionRegistry ActionRegistry;
     private readonly IWorkspacePermissionCache PermissionCache;
+    private readonly IActivityLogger Activity;
 
     public CreateAutomationRuleCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
         IAutomationActionRegistry actionRegistry,
-        IWorkspacePermissionCache permissionCache)
+        IWorkspacePermissionCache permissionCache,
+        IActivityLogger activity)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         ActionRegistry = actionRegistry;
         PermissionCache = permissionCache;
+        Activity = activity;
     }
 
     public async ValueTask<ClientResponse<AutomationRuleViewModel>> Handle(
@@ -98,6 +104,14 @@ public sealed class CreateAutomationRuleCommandHandler
 
         await UnitOfWork.Automations.AddAsync(rule, cancellationToken);
         await UnitOfWork.CompleteAsync(cancellationToken);
+
+        Activity.LogWith<AutomationRuleActivityMeta>(options =>
+        {
+            options.EntityId = rule.Id;
+            options.EntityType = EntityType.AutomationRule;
+            options.Type = ActivityType.Create;
+            options.Meta = new AutomationRuleActivityMeta { Name = rule.Name };
+        });
 
         var viewModel = rule.ToViewModel(ActionRegistry);
 

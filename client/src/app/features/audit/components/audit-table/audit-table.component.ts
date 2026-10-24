@@ -210,6 +210,7 @@ export class AuditTableComponent {
       case ActivityType.exportCompleted:
       case ActivityType.pullRequestMerged:
       case ActivityType.checksPassed:
+      case ActivityType.enable:
         return 'bg-green-500/10 text-green-600 dark:text-green-400';
       case ActivityType.delete:
       case ActivityType.remove:
