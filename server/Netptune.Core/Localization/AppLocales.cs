@@ -6,6 +6,14 @@ public static class AppLocales
 
     public static IReadOnlyList<string> Supported { get; } = [Default, "fr", "de", "es"];
 
+    public static IReadOnlyDictionary<string, string> NativeNames { get; } = new Dictionary<string, string>
+    {
+        [Default] = "English (UK)",
+        ["fr"] = "Français",
+        ["de"] = "Deutsch",
+        ["es"] = "Español",
+    };
+
     public static string? Match(string? locale)
     {
         var requested = locale?.Trim();

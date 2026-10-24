@@ -30,6 +30,7 @@ import { CommandPaletteComponent } from './command-palette/command-palette.compo
 import { GlobalCommandsService } from './global-commands.service';
 import { BoardBackgroundService } from '@core/services/board-background.service';
 import { LastWorkspaceService } from '@core/services/last-workspace.service';
+import { LocalePreferenceService } from '@core/services/locale-preference.service';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
 import { CommandShortcutService } from './command-palette/command-shortcut.service';
 import { animatedPresence } from '@core/util/animated-presence';
@@ -223,6 +224,7 @@ export class ShellComponent {
   readonly commandShortcuts = inject(CommandShortcutService);
   readonly preferences = inject(UserPreferencesService);
   readonly lastWorkspace = inject(LastWorkspaceService);
+  readonly localePreference = inject(LocalePreferenceService);
   readonly boardBackground = inject(BoardBackgroundService);
 
   readonly boardBackgroundLoaded = linkedSignal<string | null, boolean>({

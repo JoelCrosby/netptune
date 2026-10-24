@@ -43,6 +43,22 @@ public class UserPreferenceRepository(DataContext context, IDbConnectionFactory 
             .ToListAsync(cancellationToken);
     }
 
+    public Task<List<UserPreferenceValue>> GetGlobalValues(
+        IReadOnlyCollection<string> userIds,
+        string key,
+        CancellationToken cancellationToken = default)
+    {
+        var ids = userIds.Distinct().ToList();
+
+        return Entities
+            .AsNoTracking()
+            .Where(preference =>
+                ids.Contains(preference.UserId) &&
+                preference.Key == key &&
+                preference.WorkspaceId == null)
+            .ToListAsync(cancellationToken);
+    }
+
     public Task<UserPreferenceValue?> GetScopedValue(
         string userId,
         string key,

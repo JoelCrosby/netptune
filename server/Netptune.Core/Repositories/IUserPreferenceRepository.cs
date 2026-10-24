@@ -9,5 +9,7 @@ public interface IUserPreferenceRepository : IRepository<UserPreferenceValue, in
 
     Task<List<UserPreferenceValue>> GetValues(string userId, string key, int? workspaceId, CancellationToken cancellationToken = default);
 
+    Task<List<UserPreferenceValue>> GetGlobalValues(IReadOnlyCollection<string> userIds, string key, CancellationToken cancellationToken = default);
+
     Task<UserPreferenceValue?> GetScopedValue(string userId, string key, int? workspaceId, CancellationToken cancellationToken = default);
 }

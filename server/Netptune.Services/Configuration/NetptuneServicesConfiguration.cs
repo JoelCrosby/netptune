@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Netptune.Core.Http;
 using Netptune.Core.Models.Hosting;
 using Netptune.Core.Models.Options;
+using Netptune.Core.Services.Localization;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.Services.Ai;
@@ -15,6 +16,7 @@ using Netptune.Core.Services.Reporting;
 using Netptune.Services.Activity;
 using Netptune.Services.Ai;
 using Netptune.Services.Integration;
+using Netptune.Services.Localization;
 using Netptune.Services.Notifications;
 using Netptune.Services.Pages;
 using Netptune.Services.ProjectTasks;
@@ -51,6 +53,7 @@ public static class NetptuneServicesConfiguration
         services.AddScoped<ITaskReferenceResolver, TaskReferenceResolver>();
         services.AddScoped<ITaskStatusResolver, TaskStatusResolver>();
         services.AddScoped<IPageVisibilityService, PageVisibilityService>();
+        services.AddScoped<IUserLocaleReader, UserLocaleReader>();
         services.AddOptions<TurnstileOptions>()
             .BindConfiguration(TurnstileOptions.SectionName)
             .ValidateDataAnnotations()

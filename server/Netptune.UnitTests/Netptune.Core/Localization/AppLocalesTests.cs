@@ -34,6 +34,12 @@ public class AppLocalesTests
     }
 
     [Fact]
+    public void NativeNames_ShouldNameEverySupportedLocale()
+    {
+        AppLocales.NativeNames.Keys.Should().BeEquivalentTo(AppLocales.Supported);
+    }
+
+    [Fact]
     public void CultureScope_ShouldTranslateInsideTheScope_AndRestoreTheCultureAfter()
     {
         var before = CultureInfo.CurrentUICulture;

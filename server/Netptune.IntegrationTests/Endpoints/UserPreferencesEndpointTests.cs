@@ -3,9 +3,14 @@ using System.Net.Http.Json;
 
 using FluentAssertions;
 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+
 using Netptune.Core.Enums;
 using Netptune.Core.Preferences;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services.Localization;
+using Netptune.Entities.Contexts;
 
 using Xunit;
 
@@ -14,10 +19,12 @@ namespace Netptune.IntegrationTests.Endpoints;
 [Collection(UserPreferencesCollection.Name)]
 public sealed class UserPreferencesEndpointTests
 {
+    private readonly NetptuneFixture Fixture;
     private readonly HttpClient Client;
 
     public UserPreferencesEndpointTests(NetptuneFixture fixture)
     {
+        Fixture = fixture;
         Client = fixture.CreateNetptuneClient();
     }
 
@@ -205,6 +212,49 @@ public sealed class UserPreferencesEndpointTests
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<ResolvedPreferenceValue>>();
 
         result.IsSuccess.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task PutValue_ShouldStoreTheLocale_ForMessagesSentOutsideARequest()
+    {
+        var response = await Client.PutAsJsonAsync(
+            $"api/user-preferences/values/{PreferenceKeys.AppearanceLocale}",
+            new { scope = "global", value = "fr" },
+            TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        try
+        {
+            using var scope = Fixture.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+            var userId = await context.UserPreferenceValues
+                .Where(value => value.Key == PreferenceKeys.AppearanceLocale && value.WorkspaceId == null)
+                .Select(value => value.UserId)
+                .SingleAsync(TestContext.Current.CancellationToken);
+            var reader = scope.ServiceProvider.GetRequiredService<IUserLocaleReader>();
+
+            var locale = await reader.GetLocale(userId, TestContext.Current.CancellationToken);
+
+            locale.Should().Be("fr");
+        }
+        finally
+        {
+            await Client.DeleteAsync(
+                $"api/user-preferences/values/{PreferenceKeys.AppearanceLocale}?scope=global",
+                TestContext.Current.CancellationToken);
+        }
+    }
+
+    [Fact]
+    public async Task PutValue_ShouldRejectALocaleTheAppDoesNotShip()
+    {
+        var response = await Client.PutAsJsonAsync(
+            $"api/user-preferences/values/{PreferenceKeys.AppearanceLocale}",
+            new { scope = "global", value = "ja" },
+            TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [Fact]

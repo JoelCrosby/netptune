@@ -1,6 +1,7 @@
 using System.Text.Json;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Activity;
 
 namespace Netptune.Core.Preferences;
@@ -131,6 +132,19 @@ public sealed class PreferenceDefinitionRegistry : IPreferenceDefinitionRegistry
             AllowedScopes = [PreferenceScopes.Global],
             Internal = true,
             Order = 50,
+        },
+        new()
+        {
+            Key = PreferenceKeys.AppearanceLocale,
+            GroupKey = "appearance",
+            Label = "Language",
+            ControlType = "hidden",
+            ValueType = "string",
+            DefaultValue = JsonSerializer.SerializeToElement(string.Empty),
+            AllowedScopes = [PreferenceScopes.Global],
+            Options = [.. AppLocales.Supported.Select(ToLocaleOption)],
+            Internal = true,
+            Order = 60,
         },
         new()
         {
@@ -324,6 +338,11 @@ public sealed class PreferenceDefinitionRegistry : IPreferenceDefinitionRegistry
             AllowedScopes = [PreferenceScopes.Global, PreferenceScopes.Workspace],
             Order = (index + 1) * 10,
         });
+    }
+
+    private static PreferenceOption ToLocaleOption(string locale)
+    {
+        return new PreferenceOption { Value = locale, Label = AppLocales.NativeNames[locale] };
     }
 
     private static string NotificationLabel(ActivityType activityType) => activityType switch
