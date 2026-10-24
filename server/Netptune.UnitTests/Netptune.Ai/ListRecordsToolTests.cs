@@ -10,12 +10,14 @@ using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Boards;
 using Netptune.Core.ViewModels.Projects;
+using Netptune.Core.ViewModels.ServiceAccounts;
 using Netptune.Core.ViewModels.Sprints;
 using Netptune.Core.ViewModels.Tags;
 using Netptune.Handlers.BoardGroups.Queries;
 using Netptune.Handlers.Boards.Queries;
 using Netptune.Handlers.Projects.Queries;
 using Netptune.Handlers.RelationTypes.Queries;
+using Netptune.Handlers.ServiceAccounts.Queries;
 using Netptune.Handlers.Sprints.Queries;
 using Netptune.Handlers.Statuses.Queries;
 using Netptune.Handlers.Tags.Queries;
@@ -54,6 +56,7 @@ public class ListRecordsToolTests
     [InlineData("sprints", NetptunePermissions.Sprints.Read)]
     [InlineData("members", NetptunePermissions.Members.Read)]
     [InlineData("member_roles", NetptunePermissions.Members.Read)]
+    [InlineData("automation_service_accounts", NetptunePermissions.ServiceAccounts.Read)]
     public void GetRequiredPermissions_ShouldAskOnlyForTheKindBeingListed(string kind, string expected)
     {
         var tool = new ListRecordsTool(Mediator);
@@ -251,6 +254,44 @@ public class ListRecordsToolTests
         Mediator
             .Send(Arg.Any<GetBoardsInWorkspaceQuery>(), Arg.Any<CancellationToken>())
             .Returns(ClientResponse<PagedResponse<BoardViewModel>>.Success(page));
+    }
+
+    [Fact]
+    public async Task Execute_ShouldPageServiceAccountsByName_AndSayWhetherEachCanRunRules()
+    {
+        Mediator
+            .Send(Arg.Any<GetServiceAccountsQuery>(), Arg.Any<CancellationToken>())
+            .Returns(
+            [
+                ServiceAccount("ops-2", "Ops bot", disabled: true),
+                ServiceAccount("release", "Release bot"),
+                ServiceAccount("ops-1", "Ops agent"),
+            ]);
+
+        var tool = new ListRecordsTool(Mediator);
+        var arguments = Arguments("""{"kind":"automation_service_accounts","search":"ops","pageSize":1}""");
+        var result = await tool.Execute(arguments, TestContext.Current.CancellationToken);
+
+        using var content = JsonDocument.Parse(result.Content);
+        var root = content.RootElement;
+        var record = root.GetProperty("records").EnumerateArray().Single();
+
+        root.GetProperty("totalCount").GetInt32().Should().Be(2);
+        root.GetProperty("hasMore").GetBoolean().Should().BeTrue();
+        record.GetProperty("userId").GetString().Should().Be("ops-1");
+        record.GetProperty("isEnabled").GetBoolean().Should().BeTrue();
+    }
+
+    private static ServiceAccountViewModel ServiceAccount(string userId, string name, bool disabled = false)
+    {
+        return new ServiceAccountViewModel
+        {
+            UserId = userId,
+            Name = name,
+            DisabledAt = disabled ? DateTime.UtcNow : null,
+            OwnerUserIds = [],
+            Permissions = [NetptunePermissions.Tasks.Update],
+        };
     }
 
     private static JsonElement Arguments(string json)

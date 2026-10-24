@@ -7,10 +7,12 @@ using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Ai;
+using Netptune.Core.ViewModels.ServiceAccounts;
 using Netptune.Handlers.BoardGroups.Queries;
 using Netptune.Handlers.Boards.Queries;
 using Netptune.Handlers.Projects.Queries;
 using Netptune.Handlers.RelationTypes.Queries;
+using Netptune.Handlers.ServiceAccounts.Queries;
 using Netptune.Handlers.Sprints.Queries;
 using Netptune.Handlers.Statuses.Queries;
 using Netptune.Handlers.Tags.Queries;
@@ -31,6 +33,7 @@ public sealed class ListRecordsTool : IAiTool
     public const string Sprints = "sprints";
     public const string Members = "members";
     public const string MemberRoles = "member_roles";
+    public const string AutomationServiceAccounts = "automation_service_accounts";
 
     private const int DefaultPageSize = 50;
     private const int MaximumPageSize = 100;
@@ -47,6 +50,7 @@ public sealed class ListRecordsTool : IAiTool
         [Sprints] = NetptunePermissions.Sprints.Read,
         [Members] = NetptunePermissions.Members.Read,
         [MemberRoles] = NetptunePermissions.Members.Read,
+        [AutomationServiceAccounts] = NetptunePermissions.ServiceAccounts.Read,
     };
 
     private readonly IMediator Mediator;
@@ -63,7 +67,8 @@ public sealed class ListRecordsTool : IAiTool
         + "(how tasks can be linked, such as blocks), board_groups (board columns, with their board and project; "
         + "boardId narrows them to one board), boards, sprints (the active sprint first, then the newest; projectId "
         + "narrows them to one project), members (the people work can be assigned to) and member_roles (each member's "
-        + "role and pending invites, for who owns or administers the workspace). "
+        + "role and pending invites, for who owns or administers the workspace) and automation_service_accounts (the "
+        + "accounts an automation rule can run as; a rule's executionUserId is one of their userIds). "
         + "Projects and boards come in name order. search narrows any kind by name. "
         + "Every kind returns totalCount, page, hasMore and records; ask for the "
         + "next page until hasMore is false to see them all. omittedForSize counts records on this page that did "
@@ -81,7 +86,7 @@ public sealed class ListRecordsTool : IAiTool
         {
           "kind": {
             "type": "string",
-            "enum": ["statuses", "tags", "projects", "relation_types", "board_groups", "boards", "sprints", "members", "member_roles"],
+            "enum": ["statuses", "tags", "projects", "relation_types", "board_groups", "boards", "sprints", "members", "member_roles", "automation_service_accounts"],
             "description": "Which records to list."
           },
           "search": { "type": "string", "description": "A name fragment to narrow the records by." },
@@ -138,6 +143,7 @@ public sealed class ListRecordsTool : IAiTool
             Sprints => await ListSprints(query, cancellationToken),
             Members => await ListMembers(query, cancellationToken),
             MemberRoles => await ListMemberRoles(query, cancellationToken),
+            AutomationServiceAccounts => await ListAutomationServiceAccounts(query, cancellationToken),
             _ => AiToolExecution.Failed($"kind must be one of: {string.Join(", ", PermissionsByKind.Keys)}."),
         };
     }
@@ -300,6 +306,39 @@ public sealed class ListRecordsTool : IAiTool
             role = member.Role.ToString(),
             isPending = member.IsPending,
         });
+    }
+
+    private async Task<AiToolExecution> ListAutomationServiceAccounts(
+        RecordQuery query,
+        CancellationToken cancellationToken)
+    {
+        var accounts = await Mediator.Send(new GetServiceAccountsQuery(), cancellationToken);
+        var matching = accounts
+            .Where(account => MatchesSearch(account.Name, query.Search))
+            .OrderBy(account => account.Name, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        var pageItems = matching
+            .Skip((query.Page - 1) * query.PageSize)
+            .Take(query.PageSize)
+            .ToList();
+        var page = new PagedResponse<ServiceAccountViewModel>(pageItems, query.Page, query.PageSize, matching.Count);
+        var result = ClientResponse<PagedResponse<ServiceAccountViewModel>>.Success(page);
+
+        return Render(result, "Service accounts could not be read.", account => new
+        {
+            userId = account.UserId,
+            name = account.Name,
+            description = account.Description,
+            isEnabled = account.DisabledAt is null,
+            permissions = account.Permissions,
+        });
+    }
+
+    private static bool MatchesSearch(string name, string? search)
+    {
+        var hasSearch = !string.IsNullOrWhiteSpace(search);
+
+        return !hasSearch || name.Contains(search!, StringComparison.OrdinalIgnoreCase);
     }
 
     private static AiToolExecution Render<T>(

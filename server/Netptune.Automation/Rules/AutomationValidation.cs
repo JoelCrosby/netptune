@@ -5,6 +5,8 @@ namespace Netptune.Automation.Rules;
 
 public static class AutomationValidation
 {
+    public const int MaximumActionCount = 10;
+
     public static string? Validate(AutomationRuleRequest request, IAutomationActionRegistry actionRegistry)
     {
         if (string.IsNullOrWhiteSpace(request.Name))
@@ -24,9 +26,9 @@ public static class AutomationValidation
             return "At least one automation action is required.";
         }
 
-        if (request.Actions.Count > 10)
+        if (request.Actions.Count > MaximumActionCount)
         {
-            return "Automations cannot have more than 10 actions.";
+            return $"Automations cannot have more than {MaximumActionCount} actions.";
         }
 
         foreach (var action in request.Actions)
