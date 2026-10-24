@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Http;
 
+using Netptune.Core.Authorization;
 using Netptune.Identity.Authentication;
 using Netptune.Identity.Authorization.Requirements;
 
@@ -89,6 +90,7 @@ public class TestPolicyEvaluator(PolicyEvaluator innerEvaluator) : IPolicyEvalua
         var providerKey = GetHeader(context, "x-test-auth-provider-key", $"{providerScheme.ToLowerInvariant()}-provider-key");
         var name = GetHeader(context, "x-test-auth-name", $"{providerScheme} User");
         var pictureUrl = GetHeader(context, "x-test-auth-picture", "https://example.com/avatar.png");
+        var emailVerified = GetHeader(context, "x-test-auth-email-verified", bool.TrueString);
         var nameParts = name.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
 
         var claims = new List<Claim>
@@ -101,6 +103,13 @@ public class TestPolicyEvaluator(PolicyEvaluator innerEvaluator) : IPolicyEvalua
             new(ClaimTypes.Surname, nameParts.ElementAtOrDefault(1) ?? string.Empty),
             new("Provider-Picture-Url", pictureUrl),
         };
+
+        var isEmailVerified = bool.TryParse(emailVerified, out var parsed) && parsed;
+
+        if (isEmailVerified)
+        {
+            claims.Add(new Claim(NetptuneClaims.ProviderEmailVerified, bool.TrueString));
+        }
 
         var identity = new ClaimsIdentity(claims, providerScheme);
         var principal = new ClaimsPrincipal(identity);

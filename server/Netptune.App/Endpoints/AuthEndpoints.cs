@@ -87,39 +87,48 @@ public static class AuthEndpoints
 
         group
             .MapGet("/github-login", HandleGithubLogin)
-            .AllowAnonymous();
+            .AllowAnonymous()
+            .RequireRateLimiting(RateLimiterConfiguration.AuthPolicyName);
 
         group
             .MapGet("/github-login-redirect", HandleGithubLoginCallback)
-            .RequireAuthorization(AuthenticationSchemes.Github);
+            .RequireAuthorization(AuthenticationSchemes.Github)
+            .RequireRateLimiting(RateLimiterConfiguration.AuthPolicyName);
 
         group
             .MapGet("/github-login-complete", HandleGithubLoginCallback)
-            .RequireAuthorization(AuthenticationSchemes.Github);
+            .RequireAuthorization(AuthenticationSchemes.Github)
+            .RequireRateLimiting(RateLimiterConfiguration.AuthPolicyName);
 
         group
             .MapGet("/google-login", HandleGoogleLogin)
-            .AllowAnonymous();
+            .AllowAnonymous()
+            .RequireRateLimiting(RateLimiterConfiguration.AuthPolicyName);
 
         group
             .MapGet("/google-login-redirect", HandleGoogleLoginCallback)
-            .RequireAuthorization(AuthenticationSchemes.Google);
+            .RequireAuthorization(AuthenticationSchemes.Google)
+            .RequireRateLimiting(RateLimiterConfiguration.AuthPolicyName);
 
         group
             .MapGet("/google-login-complete", HandleGoogleLoginCallback)
-            .RequireAuthorization(AuthenticationSchemes.Google);
+            .RequireAuthorization(AuthenticationSchemes.Google)
+            .RequireRateLimiting(RateLimiterConfiguration.AuthPolicyName);
 
         group
             .MapGet("/microsoft-login", HandleMicrosoftLogin)
-            .AllowAnonymous();
+            .AllowAnonymous()
+            .RequireRateLimiting(RateLimiterConfiguration.AuthPolicyName);
 
         group
             .MapGet("/microsoft-login-redirect", HandleMicrosoftLoginCallback)
-            .RequireAuthorization(AuthenticationSchemes.Microsoft);
+            .RequireAuthorization(AuthenticationSchemes.Microsoft)
+            .RequireRateLimiting(RateLimiterConfiguration.AuthPolicyName);
 
         group
             .MapGet("/microsoft-login-complete", HandleMicrosoftLoginCallback)
-            .RequireAuthorization(AuthenticationSchemes.Microsoft);
+            .RequireAuthorization(AuthenticationSchemes.Microsoft)
+            .RequireRateLimiting(RateLimiterConfiguration.AuthPolicyName);
 
         return builder;
     }

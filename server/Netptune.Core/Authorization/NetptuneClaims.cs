@@ -6,4 +6,5 @@ public static class NetptuneClaims
     public const string CredentialId = "netptune:credential_id";
     public const string CredentialScope = "netptune:credential_scope";
     public const string ActorType = "netptune:actor_type";
+    public const string ProviderEmailVerified = "netptune:provider_email_verified";
 }

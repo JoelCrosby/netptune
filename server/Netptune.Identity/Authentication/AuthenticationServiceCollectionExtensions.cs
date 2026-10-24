@@ -1,6 +1,7 @@
 using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -21,6 +22,8 @@ namespace Netptune.Identity.Authentication;
 
 public static class AuthenticationServiceCollectionExtensions
 {
+    private const string GithubEmailsUrl = "https://api.github.com/user/emails";
+
     public static IdentityBuilder AddNetptuneIdentity(this IServiceCollection services)
     {
         return services.AddIdentity<AppUser, IdentityRole>()
@@ -155,9 +158,16 @@ public static class AuthenticationServiceCollectionExtensions
 
                 var user = await client.GetFromJsonAsync<GithubUserResponse>("https://api.github.com/user");
 
-                if (user is null) return;
+                if (user is not null)
+                {
+                    context.Identity?.AddClaim(new Claim("Provider-Picture-Url", user.AvatarUrl.ToString()));
+                }
 
-                context.Identity?.AddClaim(new Claim("Provider-Picture-Url", user.AvatarUrl.ToString()));
+                var emails = await client.GetFromJsonAsync<List<GithubEmailResponse>>(GithubEmailsUrl);
+                var email = context.Identity?.FindFirst(ClaimTypes.Email)?.Value;
+                var isEmailVerified = emails?.Any(entry => entry.Verified && IsSameEmail(entry.Email, email)) ?? false;
+
+                MarkEmailVerified(context.Identity, isEmailVerified);
             };
         });
 
@@ -179,6 +189,11 @@ public static class AuthenticationServiceCollectionExtensions
                         context.Identity?.AddClaim(new Claim("Provider-Picture-Url", pictureUrl));
                     }
 
+                    var hasVerifiedFlag = context.User.TryGetProperty("email_verified", out var emailVerified);
+                    var isEmailVerified = hasVerifiedFlag && emailVerified.ValueKind == JsonValueKind.True;
+
+                    MarkEmailVerified(context.Identity, isEmailVerified);
+
                     return Task.CompletedTask;
                 };
             })
@@ -190,12 +205,41 @@ public static class AuthenticationServiceCollectionExtensions
                 options.SignInScheme = IdentityConstants.ExternalScheme;
                 options.SaveTokens = true;
                 options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Events.OnCreatingTicket = context =>
+                {
+                    // Graph's mail is free text a tenant admin can set to anyone's address. A tenant can only
+                    // give out sign-in names on domains it has verified, so only an email matching it is trusted.
+                    var email = context.Identity?.FindFirst(ClaimTypes.Email)?.Value;
+                    var hasSignInName = context.User.TryGetProperty("userPrincipalName", out var signInName);
+                    var userPrincipalName = hasSignInName ? signInName.GetString() : null;
+                    var isGuestName = userPrincipalName?.Contains("#EXT#", StringComparison.OrdinalIgnoreCase) ?? true;
+                    var isEmailVerified = !isGuestName && IsSameEmail(userPrincipalName, email);
+
+                    MarkEmailVerified(context.Identity, isEmailVerified);
+
+                    return Task.CompletedTask;
+                };
             });
 
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddTransient<INetptuneAuthService, NetptuneAuthService>();
 
         return services;
+    }
+
+    private static bool IsSameEmail(string? left, string? right)
+    {
+        return left is not null && string.Equals(left, right, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static void MarkEmailVerified(ClaimsIdentity? identity, bool isEmailVerified)
+    {
+        if (!isEmailVerified)
+        {
+            return;
+        }
+
+        identity?.AddClaim(new Claim(NetptuneClaims.ProviderEmailVerified, bool.TrueString));
     }
 
     public static IServiceCollection AddNetptuneApiKeyAuthentication(this IServiceCollection services)

@@ -3,8 +3,11 @@ using System.Net;
 using FluentAssertions;
 
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+
+using Netptune.App.Configuration;
 
 using Xunit;
 
@@ -36,6 +39,19 @@ public sealed class EndpointAuthorizationTests
         "/health/ready",
     ];
 
+    private static readonly string[] ProviderLoginRoutes =
+    [
+        "/api/auth/github-login",
+        "/api/auth/github-login-redirect",
+        "/api/auth/github-login-complete",
+        "/api/auth/google-login",
+        "/api/auth/google-login-redirect",
+        "/api/auth/google-login-complete",
+        "/api/auth/microsoft-login",
+        "/api/auth/microsoft-login-redirect",
+        "/api/auth/microsoft-login-complete",
+    ];
+
     private readonly NetptuneFixture Fixture;
 
     public EndpointAuthorizationTests(NetptuneFixture fixture)
@@ -54,6 +70,17 @@ public sealed class EndpointAuthorizationTests
             .ToList();
 
         anonymousRoutes.Should().BeEquivalentTo(ExpectedAnonymousRoutes);
+    }
+
+    [Fact]
+    public void ProviderLoginRoutes_ShouldUseTheSignInRateLimit()
+    {
+        var signInLimitedRoutes = RouteEndpoints()
+            .Where(endpoint => UsesRateLimitPolicy(endpoint, RateLimiterConfiguration.AuthPolicyName))
+            .Select(endpoint => endpoint.RoutePattern.RawText!)
+            .ToList();
+
+        signInLimitedRoutes.Should().Contain(ProviderLoginRoutes);
     }
 
     [Fact]
@@ -76,6 +103,13 @@ public sealed class EndpointAuthorizationTests
         var response = await client.GetAsync("api/users", TestContext.Current.CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    private static bool UsesRateLimitPolicy(RouteEndpoint endpoint, string policyName)
+    {
+        var rateLimiting = endpoint.Metadata.GetMetadata<EnableRateLimitingAttribute>();
+
+        return rateLimiting?.PolicyName == policyName;
     }
 
     private IEnumerable<RouteEndpoint> RouteEndpoints()

@@ -22,6 +22,8 @@ public interface IIdentityService
 
     string? GetProviderUsername();
 
+    bool IsProviderEmailVerified();
+
     string GetWorkspaceKey();
 
     string? TryGetWorkspaceKey();

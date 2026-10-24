@@ -31,6 +31,8 @@ public sealed class BackgroundIdentityService : IIdentityService
 
     public string? GetProviderUsername() => null;
 
+    public bool IsProviderEmailVerified() => false;
+
     public bool IsRestrictedByCredential(string permission) => false;
 
     public async Task<AppUser> GetCurrentUser()

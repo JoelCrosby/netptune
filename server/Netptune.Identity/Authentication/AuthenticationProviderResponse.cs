@@ -94,3 +94,15 @@ public class GithubUserResponse
     [JsonPropertyName("updated_at")]
     public DateTimeOffset UpdatedAt { get; set; }
 }
+
+public class GithubEmailResponse
+{
+    [JsonPropertyName("email")]
+    public string Email { get; set; } = null!;
+
+    [JsonPropertyName("primary")]
+    public bool Primary { get; set; }
+
+    [JsonPropertyName("verified")]
+    public bool Verified { get; set; }
+}

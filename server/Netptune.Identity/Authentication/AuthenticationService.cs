@@ -181,6 +181,15 @@ public class NetptuneAuthService : INetptuneAuthService
             }
             else
             {
+                var isEmailVerified = Identity.IsProviderEmailVerified();
+
+                if (!isEmailVerified)
+                {
+                    await LogAuthenticationEvent(null, email, providerScheme, succeeded: false);
+
+                    return LoginResult.Failed("External login failed.");
+                }
+
                 var name = Identity.GetUserName();
                 var nameParts = name.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
 

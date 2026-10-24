@@ -59,6 +59,14 @@ public class IdentityService : IIdentityService
 
     public string? GetProviderUsername() => TryGetClaimValue(ClaimTypes.Name, out var username) ? username : null;
 
+    public bool IsProviderEmailVerified()
+    {
+        var hasClaim = TryGetClaimValue(NetptuneClaims.ProviderEmailVerified, out var verified);
+        var isVerified = hasClaim && bool.TryParse(verified, out var parsed) && parsed;
+
+        return isVerified;
+    }
+
     public Task<AppUser> GetCurrentUser()
     {
         return UserCache.Get(GetCurrentUserId())!;

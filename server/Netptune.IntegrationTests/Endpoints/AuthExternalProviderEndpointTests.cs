@@ -5,10 +5,13 @@ using FluentAssertions;
 
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Models.Authentication;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Entities.Contexts;
 using Netptune.TestData;
 
 using Xunit;
@@ -17,11 +20,13 @@ namespace Netptune.IntegrationTests.Endpoints;
 
 public sealed class AuthExternalProviderEndpointTests
 {
+    private readonly NetptuneFixture Fixture;
     private readonly HttpClient Client;
     private readonly HttpClient AuthenticatedClient;
 
     public AuthExternalProviderEndpointTests(NetptuneFixture fixture)
     {
+        Fixture = fixture;
         Client = fixture.CreateNetptuneClient(new WebApplicationFactoryClientOptions
         {
             AllowAutoRedirect = false,
@@ -133,6 +138,31 @@ public sealed class AuthExternalProviderEndpointTests
         }
     }
 
+    [Theory]
+    [InlineData("api/auth/github-login-complete", "GitHub")]
+    [InlineData("api/auth/google-login-complete", "Google")]
+    [InlineData("api/auth/microsoft-login-complete", "Microsoft")]
+    public async Task ProviderLoginRedirect_ShouldNotCreateUser_WhenTheProviderEmailIsUnverified(
+        string route,
+        string providerName)
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var unique = Guid.NewGuid().ToString("N")[..8];
+        var email = $"unverified-{providerName.ToLowerInvariant()}-{unique}@example.com";
+        using var request = new HttpRequestMessage(HttpMethod.Get, route);
+        request.Headers.Add("x-test-auth-email", email);
+        request.Headers.Add("x-test-auth-provider-key", $"{providerName.ToLowerInvariant()}-{unique}");
+        request.Headers.Add("x-test-auth-email-verified", "false");
+
+        var response = await Client.SendAsync(request, cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+
+        var userExists = await UserExists(email, cancellationToken);
+
+        userExists.Should().BeFalse();
+    }
+
     [Fact]
     public async Task GetLoginMethods_ShouldReturnOkWithCorrectShape()
     {
@@ -232,5 +262,14 @@ public sealed class AuthExternalProviderEndpointTests
         });
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    private async Task<bool> UserExists(string email, CancellationToken cancellationToken)
+    {
+        using var scope = Fixture.CreateScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        return await context.Users.AnyAsync(user => user.Email == email, cancellationToken);
     }
 }

@@ -504,6 +504,7 @@ public class AuthenticationServiceTests
         Identity.GetProviderKey().Returns(providerKey);
         Identity.GetUserName().Returns($"{user.Firstname} {user.Lastname}");
         Identity.GetPictureUrl().Returns(user.PictureUrl);
+        Identity.IsProviderEmailVerified().Returns(true);
 
         UserManager.FindByLoginAsync(providerScheme, providerKey)
             .Returns(null, user);
@@ -518,6 +519,27 @@ public class AuthenticationServiceTests
         var result = await Service.LogInViaProvider(providerScheme);
 
         result.IsSuccess.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task LogInViaProvider_ShouldNotRegisterUser_WhenTheProviderEmailIsUnverified()
+    {
+        const string providerScheme = "Microsoft";
+        const string providerKey = "microsoft-123";
+        var user = AutoFixtures.AppUser;
+
+        Identity.GetCurrentUserEmail().Returns(user.Email!);
+        Identity.GetProviderKey().Returns(providerKey);
+        Identity.IsProviderEmailVerified().Returns(false);
+
+        UserManager.FindByLoginAsync(providerScheme, providerKey).ReturnsNull();
+        UserManager.FindByEmailAsync(user.Email!).ReturnsNull();
+
+        var result = await Service.LogInViaProvider(providerScheme);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Be("External login failed.");
+        await UserManager.DidNotReceive().CreateAsync(Arg.Any<AppUser>());
     }
 
     [Fact]
