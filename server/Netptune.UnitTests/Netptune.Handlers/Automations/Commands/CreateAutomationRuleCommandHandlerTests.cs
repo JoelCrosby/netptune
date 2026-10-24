@@ -1,5 +1,7 @@
 using FluentAssertions;
 
+using Mediator;
+
 using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Automation.Actions;
@@ -16,6 +18,7 @@ using Netptune.Core.Services.Activity;
 using Netptune.Core.Services.Automations;
 using Netptune.Core.UnitOfWork;
 using Netptune.Handlers.Automations.Commands;
+using Netptune.Handlers.Automations.Queries;
 
 using NSubstitute;
 
@@ -31,6 +34,7 @@ public class CreateAutomationRuleCommandHandlerTests
     private readonly IServiceAccountRepository ServiceAccounts = Substitute.For<IServiceAccountRepository>();
     private readonly IWorkspacePermissionCache PermissionCache = Substitute.For<IWorkspacePermissionCache>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+    private readonly IMediator Mediator = Substitute.For<IMediator>();
     private readonly CreateAutomationRuleCommandHandler Handler;
 
     public CreateAutomationRuleCommandHandlerTests()
@@ -61,7 +65,13 @@ public class CreateAutomationRuleCommandHandlerTests
             .BuildServiceProvider()
             .GetRequiredService<IAutomationActionRegistry>();
 
-        Handler = new CreateAutomationRuleCommandHandler(UnitOfWork, Identity, actionRegistry, PermissionCache, Activity);
+        var validator = new ValidateAutomationRuleQueryHandler(UnitOfWork, Identity, actionRegistry, PermissionCache);
+
+        Mediator
+            .Send(Arg.Any<ValidateAutomationRuleQuery>(), Arg.Any<CancellationToken>())
+            .Returns(call => validator.Handle(call.Arg<ValidateAutomationRuleQuery>(), call.Arg<CancellationToken>()));
+
+        Handler = new CreateAutomationRuleCommandHandler(UnitOfWork, Identity, actionRegistry, Activity, Mediator);
     }
 
     [Fact]

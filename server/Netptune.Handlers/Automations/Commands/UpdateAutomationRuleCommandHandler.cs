@@ -1,7 +1,6 @@
 using Mediator;
 
 using Netptune.Automation.Rules;
-using Netptune.Core.Cache;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Activity;
@@ -12,6 +11,7 @@ using Netptune.Core.Services.Activity;
 using Netptune.Core.Services.Automations;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Automations;
+using Netptune.Handlers.Automations.Queries;
 
 namespace Netptune.Handlers.Automations.Commands;
 
@@ -23,34 +23,27 @@ public sealed class UpdateAutomationRuleCommandHandler
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IAutomationActionRegistry ActionRegistry;
-    private readonly IWorkspacePermissionCache PermissionCache;
     private readonly IActivityLogger Activity;
+    private readonly IMediator Mediator;
 
     public UpdateAutomationRuleCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
         IAutomationActionRegistry actionRegistry,
-        IWorkspacePermissionCache permissionCache,
-        IActivityLogger activity)
+        IActivityLogger activity,
+        IMediator mediator)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         ActionRegistry = actionRegistry;
-        PermissionCache = permissionCache;
         Activity = activity;
+        Mediator = mediator;
     }
 
     public async ValueTask<ClientResponse<AutomationRuleViewModel>> Handle(
         UpdateAutomationRuleCommand request,
         CancellationToken cancellationToken)
     {
-        var validationError = AutomationValidation.Validate(request.Request, ActionRegistry);
-
-        if (validationError is not null)
-        {
-            return ClientResponse<AutomationRuleViewModel>.Failed(validationError);
-        }
-
         var workspaceId = await Identity.GetWorkspaceId();
         var userId = Identity.GetCurrentUserId();
         var rule = await UnitOfWork.Automations.GetRuleInWorkspace(request.Id, workspaceId, cancellationToken: cancellationToken);
@@ -60,30 +53,12 @@ public sealed class UpdateAutomationRuleCommandHandler
             return ClientResponse<AutomationRuleViewModel>.NotFound;
         }
 
-        var workspaceKey = Identity.GetWorkspaceKey();
         var ruleRequest = request.Request;
-        var validationContext = new AutomationValidationContext
-        {
-            Request = ruleRequest,
-            WorkspaceId = workspaceId,
-            UserId = userId,
-            WorkspaceKey = workspaceKey,
-            UnitOfWork = UnitOfWork,
-            PermissionCache = PermissionCache,
-            ActionRegistry = ActionRegistry,
-        };
-        var principalError = await AutomationPrincipalValidation.Validate(validationContext, cancellationToken);
+        var validation = await Mediator.Send(new ValidateAutomationRuleQuery(ruleRequest), cancellationToken);
 
-        if (principalError is not null)
+        if (!validation.IsSuccess)
         {
-            return ClientResponse<AutomationRuleViewModel>.Failed(principalError);
-        }
-
-        var referenceError = await AutomationReferenceValidation.Validate(validationContext, cancellationToken);
-
-        if (referenceError is not null)
-        {
-            return ClientResponse<AutomationRuleViewModel>.Failed(referenceError);
+            return ClientResponse<AutomationRuleViewModel>.Failed(validation.Message);
         }
 
         var changedSections = AutomationRuleChanges.Find(rule, ruleRequest, ActionRegistry);

@@ -1,5 +1,7 @@
 using FluentAssertions;
 
+using Mediator;
+
 using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Automation.Actions;
@@ -13,11 +15,13 @@ using Netptune.Core.Models.Activity;
 using Netptune.Core.Models.Automations;
 using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.Services.Automations;
 using Netptune.Core.UnitOfWork;
 using Netptune.Handlers.Automations.Commands;
+using Netptune.Handlers.Automations.Queries;
 
 using NSubstitute;
 
@@ -37,6 +41,7 @@ public class AutomationRuleChangeLoggingTests
     private readonly IServiceAccountRepository ServiceAccounts = Substitute.For<IServiceAccountRepository>();
     private readonly IWorkspacePermissionCache PermissionCache = Substitute.For<IWorkspacePermissionCache>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+    private readonly IMediator Mediator = Substitute.For<IMediator>();
     private readonly IAutomationActionRegistry ActionRegistry;
     private readonly List<ActivityOptions<AutomationRuleActivityMeta>> Logged = [];
 
@@ -78,12 +83,18 @@ public class AutomationRuleChangeLoggingTests
         var services = new ServiceCollection();
         services.AddNetptuneAutomationActions();
         ActionRegistry = services.BuildServiceProvider().GetRequiredService<IAutomationActionRegistry>();
+
+        var validator = new ValidateAutomationRuleQueryHandler(UnitOfWork, Identity, ActionRegistry, PermissionCache);
+
+        Mediator
+            .Send(Arg.Any<ValidateAutomationRuleQuery>(), Arg.Any<CancellationToken>())
+            .Returns(call => validator.Handle(call.Arg<ValidateAutomationRuleQuery>(), call.Arg<CancellationToken>()));
     }
 
     [Fact]
     public async Task Create_ShouldLogCreation_WithTheRuleName()
     {
-        var handler = new CreateAutomationRuleCommandHandler(UnitOfWork, Identity, ActionRegistry, PermissionCache, Activity);
+        var handler = new CreateAutomationRuleCommandHandler(UnitOfWork, Identity, ActionRegistry, Activity, Mediator);
 
         var result = await handler.Handle(new CreateAutomationRuleCommand(BuildRequest("New rule")), CancellationToken);
 
@@ -101,13 +112,17 @@ public class AutomationRuleChangeLoggingTests
         var originalActions = rule.Actions.ToList();
         var handler = CreateUpdateHandler();
 
-        var result = await handler.Handle(new UpdateAutomationRuleCommand(RuleId, BuildRequest("Renamed")), CancellationToken);
+        var command = new UpdateAutomationRuleCommand(RuleId, BuildRequest("Renamed"));
+        var result = await handler.Handle(command, CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
         rule.Name.Should().Be("Renamed");
         rule.Actions.Should().BeEquivalentTo(originalActions);
         rule.Actions.Should().OnlyContain(action => !action.IsDeleted);
-        await Automations.DidNotReceive().CancelPendingRuleActions(Arg.Any<int>(), Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await Automations.DidNotReceive().CancelPendingRuleActions(
+            Arg.Any<int>(),
+            Arg.Any<string>(),
+            Arg.Any<CancellationToken>());
         Logged.Should().ContainSingle();
         Logged[0].Type.Should().Be(ActivityType.Modify);
         Logged[0].Meta.ChangedSections.Should().Equal(AutomationRuleChanges.Name);
@@ -168,11 +183,44 @@ public class AutomationRuleChangeLoggingTests
         StoreRule(BuildRequest("Rule"));
         var handler = CreateUpdateHandler();
 
-        var result = await handler.Handle(new UpdateAutomationRuleCommand(RuleId, BuildRequest("Rule")), CancellationToken);
+        var command = new UpdateAutomationRuleCommand(RuleId, BuildRequest("Rule"));
+        var result = await handler.Handle(command, CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
         await UnitOfWork.DidNotReceive().CompleteAsync(Arg.Any<CancellationToken>());
         Logged.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Update_ShouldSaveNothing_WhenTheRuleFailsValidation()
+    {
+        var rule = StoreRule(BuildRequest("Rule"));
+        var handler = CreateUpdateHandler();
+
+        Mediator
+            .Send(Arg.Any<ValidateAutomationRuleQuery>(), Arg.Any<CancellationToken>())
+            .Returns(ClientResponse.Failed("The selected automation service account is disabled."));
+
+        var command = new UpdateAutomationRuleCommand(RuleId, BuildRequest("Renamed"));
+        var result = await handler.Handle(command, CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Be("The selected automation service account is disabled.");
+        rule.Name.Should().Be("Rule");
+        await UnitOfWork.DidNotReceive().CompleteAsync(Arg.Any<CancellationToken>());
+        Logged.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Update_ShouldReturnNotFound_BeforeValidating_WhenTheRuleIsMissing()
+    {
+        var handler = CreateUpdateHandler();
+        var invalidRequest = BuildRequest("Rule") with { Actions = [] };
+
+        var result = await handler.Handle(new UpdateAutomationRuleCommand(RuleId, invalidRequest), CancellationToken);
+
+        result.IsNotFound.Should().BeTrue();
+        await Mediator.DidNotReceive().Send(Arg.Any<ValidateAutomationRuleQuery>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -200,7 +248,10 @@ public class AutomationRuleChangeLoggingTests
         await handler.Handle(new SetAutomationRuleEnabledCommand(RuleId, true), CancellationToken);
 
         rule.IsEnabled.Should().BeTrue();
-        await Automations.DidNotReceive().CancelPendingRuleActions(Arg.Any<int>(), Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await Automations.DidNotReceive().CancelPendingRuleActions(
+            Arg.Any<int>(),
+            Arg.Any<string>(),
+            Arg.Any<CancellationToken>());
         Logged.Should().ContainSingle().Which.Type.Should().Be(ActivityType.Enable);
     }
 
@@ -238,7 +289,8 @@ public class AutomationRuleChangeLoggingTests
         StoreRule(BuildRequest("Source"));
         var handler = new CloneAutomationRuleCommandHandler(UnitOfWork, Identity, ActionRegistry, Activity);
 
-        var result = await handler.Handle(new CloneAutomationRuleCommand(RuleId, new AutomationCloneRequest()), CancellationToken);
+        var command = new CloneAutomationRuleCommand(RuleId, new AutomationCloneRequest());
+        var result = await handler.Handle(command, CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
         Logged.Should().ContainSingle();
@@ -249,7 +301,7 @@ public class AutomationRuleChangeLoggingTests
 
     private UpdateAutomationRuleCommandHandler CreateUpdateHandler()
     {
-        return new UpdateAutomationRuleCommandHandler(UnitOfWork, Identity, ActionRegistry, PermissionCache, Activity);
+        return new UpdateAutomationRuleCommandHandler(UnitOfWork, Identity, ActionRegistry, Activity, Mediator);
     }
 
     private static AutomationRuleRequest BuildRequest(string name)

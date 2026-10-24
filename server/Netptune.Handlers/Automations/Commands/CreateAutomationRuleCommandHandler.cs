@@ -1,7 +1,6 @@
 using Mediator;
 
 using Netptune.Automation.Rules;
-using Netptune.Core.Cache;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Activity;
@@ -12,6 +11,7 @@ using Netptune.Core.Services.Activity;
 using Netptune.Core.Services.Automations;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Automations;
+using Netptune.Handlers.Automations.Queries;
 
 namespace Netptune.Handlers.Automations.Commands;
 
@@ -23,62 +23,37 @@ public sealed class CreateAutomationRuleCommandHandler
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IAutomationActionRegistry ActionRegistry;
-    private readonly IWorkspacePermissionCache PermissionCache;
     private readonly IActivityLogger Activity;
+    private readonly IMediator Mediator;
 
     public CreateAutomationRuleCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
         IAutomationActionRegistry actionRegistry,
-        IWorkspacePermissionCache permissionCache,
-        IActivityLogger activity)
+        IActivityLogger activity,
+        IMediator mediator)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         ActionRegistry = actionRegistry;
-        PermissionCache = permissionCache;
         Activity = activity;
+        Mediator = mediator;
     }
 
     public async ValueTask<ClientResponse<AutomationRuleViewModel>> Handle(
         CreateAutomationRuleCommand request,
         CancellationToken cancellationToken)
     {
-        var validationError = AutomationValidation.Validate(request.Request, ActionRegistry);
+        var ruleRequest = request.Request;
+        var validation = await Mediator.Send(new ValidateAutomationRuleQuery(ruleRequest), cancellationToken);
 
-        if (validationError is not null)
+        if (!validation.IsSuccess)
         {
-            return ClientResponse<AutomationRuleViewModel>.Failed(validationError);
+            return ClientResponse<AutomationRuleViewModel>.Failed(validation.Message);
         }
 
         var workspaceId = await Identity.GetWorkspaceId();
         var userId = Identity.GetCurrentUserId();
-        var workspaceKey = Identity.GetWorkspaceKey();
-        var ruleRequest = request.Request;
-        var validationContext = new AutomationValidationContext
-        {
-            Request = ruleRequest,
-            WorkspaceId = workspaceId,
-            UserId = userId,
-            WorkspaceKey = workspaceKey,
-            UnitOfWork = UnitOfWork,
-            PermissionCache = PermissionCache,
-            ActionRegistry = ActionRegistry,
-        };
-        var principalError = await AutomationPrincipalValidation.Validate(validationContext, cancellationToken);
-
-        if (principalError is not null)
-        {
-            return ClientResponse<AutomationRuleViewModel>.Failed(principalError);
-        }
-
-        var referenceError = await AutomationReferenceValidation.Validate(validationContext, cancellationToken);
-
-        if (referenceError is not null)
-        {
-            return ClientResponse<AutomationRuleViewModel>.Failed(referenceError);
-        }
-
         var rule = new AutomationRule
         {
             WorkspaceId = workspaceId,
