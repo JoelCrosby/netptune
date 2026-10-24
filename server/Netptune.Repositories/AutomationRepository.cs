@@ -230,6 +230,11 @@ public class AutomationRepository : WorkspaceEntityRepository<DataContext, Autom
             .ToDictionary(group => group.Key, group => group.Count());
     }
 
+    public Task<int> CountPendingRuleActions(int ruleId, CancellationToken cancellationToken = default)
+    {
+        return PendingRuleActions([ruleId]).CountAsync(cancellationToken);
+    }
+
     private IQueryable<ScheduledAutomationAction> PendingRuleActions(IReadOnlyCollection<int> ruleIds)
     {
         return Context.Set<ScheduledAutomationAction>()

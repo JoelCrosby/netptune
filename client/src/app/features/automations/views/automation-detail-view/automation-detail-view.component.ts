@@ -13,6 +13,7 @@ import { ConfirmationService } from '@core/services/confirmation.service';
 import { DialogService } from '@core/services/dialog.service';
 import { StatusesService } from '@core/services/statuses.service';
 import { mutation } from '@core/util/mutation';
+import { onWorkspaceRefresh } from '@core/util/reload-on-refresh';
 import { reloadToken } from '@core/util/signals';
 import {
   LucideCopy,
@@ -404,6 +405,8 @@ export class AutomationDetailViewComponent {
     );
 
     this.load();
+
+    onWorkspaceRefresh(['automations'], () => this.load());
   }
 
   load() {

@@ -129,6 +129,7 @@ export enum AiChangeValueKind {
   tag = 4,
   task = 5,
   sprint = 6,
+  automation = 7,
 }
 
 export enum AiChangeEditorKind {

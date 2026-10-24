@@ -8,6 +8,7 @@ import {
   entityLabel,
   fieldLabel,
   isProseField,
+  isSnapshotField,
   isValid,
 } from './ai-assistant-change-group';
 import { changeSummary } from './ai-assistant-change-kind';
@@ -58,6 +59,7 @@ export interface AiInlineRow {
   isSelectable: boolean;
   isIncluded: boolean;
   fields: AiInlineField[];
+  caution: string | null;
 }
 
 export interface AiInlineGroup {
@@ -90,6 +92,7 @@ const ENTITY_PLURALS: Record<string, string> = {
   tag: $localize`:Plural of the entity a proposed change targets:Tags`,
   relationType: $localize`:Plural of the entity a proposed change targets:Relation types`,
   page: $localize`:Plural of the entity a proposed change targets:Pages`,
+  automationRule: $localize`:Plural of the entity a proposed change targets:Automations`,
 };
 
 /**
@@ -133,6 +136,7 @@ const ENTITY_COUNTS: Record<string, string> = {
   tag: $localize`:Plural of the entity a digest row counts, mid sentence:tags`,
   relationType: $localize`:Plural of the entity a digest row counts, mid sentence:relation types`,
   page: $localize`:Plural of the entity a digest row counts, mid sentence:pages`,
+  automationRule: $localize`:Plural of the entity a digest row counts, mid sentence:automations`,
 };
 
 /** The only fields that name a place every change in a row could share. */
@@ -522,11 +526,13 @@ const inlineFields = (
     return [identityField(change, letter)];
   }
 
-  if (change.fields.length === 0) {
+  const fields = change.fields.filter((field) => !isSnapshotField(field));
+
+  if (fields.length === 0) {
     return [identityField(change, letter)];
   }
 
-  return change.fields.map(toInlineField);
+  return fields.map(toInlineField);
 };
 
 export const inlineRow = (
@@ -542,6 +548,7 @@ export const inlineRow = (
     isSelectable,
     isIncluded: isSelectable && !excludedChangeIds.has(change.id),
     fields: inlineFields(change, letter),
+    caution: isSelectable ? (change.validationMessage ?? null) : null,
   };
 };
 

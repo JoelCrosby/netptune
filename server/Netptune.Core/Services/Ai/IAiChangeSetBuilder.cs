@@ -13,6 +13,7 @@ public enum AiChangeValueKind
     Tag = 4,
     Task = 5,
     Sprint = 6,
+    Automation = 7,
 }
 
 public sealed record AiChangeValue

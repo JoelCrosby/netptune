@@ -71,6 +71,7 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiTool, RelationTypeChangeTool>();
         services.AddScoped<IAiTool, GetReportTool>();
         services.AddScoped<IAiTool, ListAutomationsTool>();
+        services.AddScoped<IAiTool, AutomationChangeTool>();
         services.AddScoped<IAiTool, ListAutomationRunsTool>();
         services.AddScoped<IAiTool, ListWorkspaceFilesTool>();
         services.AddScoped<IAiTool, ListRepositoriesTool>();
@@ -129,6 +130,9 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiChangeHandler, DeleteProjectChangeHandler>();
         services.AddScoped<IAiChangeHandler, UpdateCommentChangeHandler>();
         services.AddScoped<IAiChangeHandler, DeleteCommentChangeHandler>();
+        services.AddScoped<IAiChangeHandler, CreateAutomationChangeHandler>();
+        services.AddScoped<IAiChangeHandler, UpdateAutomationChangeHandler>();
+        services.AddScoped<IAiChangeHandler, SetAutomationEnabledChangeHandler>();
         services.AddScoped<IAiChangeSetBuilder, AiChangeSetBuilder>();
         services.AddScoped<IAiQuestionSink, AiQuestionSink>();
         services.AddScoped<IAiToolRegistry, AiToolRegistry>();

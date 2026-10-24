@@ -7,6 +7,8 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
+using Netptune.Ai.Execution.Handlers;
+using Netptune.Ai.Tools;
 using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
@@ -14,13 +16,16 @@ using Netptune.Core.Events;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Requests.Pages;
+using Netptune.Core.Requests.ServiceAccounts;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.Services.Realtime;
 using Netptune.Core.ViewModels.Ai;
+using Netptune.Core.ViewModels.Automations;
 using Netptune.Core.ViewModels.Boards;
 using Netptune.Core.ViewModels.Pages;
 using Netptune.Core.ViewModels.ProjectTasks;
+using Netptune.Core.ViewModels.ServiceAccounts;
 using Netptune.Entities.Contexts;
 using Netptune.IntegrationTests.TestServices;
 
@@ -819,6 +824,134 @@ public sealed class AiEndpointTests
             .FirstAsync(TestContext.Current.CancellationToken);
 
         return new PlacedTask(task.Id, task.ProjectId!.Value, groupId);
+    }
+
+    [Fact]
+    public async Task ApplyChangeSet_ShouldCreateAnAutomationRule_AndUndoShouldDeleteIt()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var executionUserId = await CreateAutomationServiceAccount(client);
+        var name = $"Assistant rule {Guid.NewGuid():N}";
+        var rule = BuildAutomationRequest(name, executionUserId);
+        var proposal = new AiProposedChangeSeed
+        {
+            ToolName = CreateAutomationAction.Change,
+            EntityType = "automationRule",
+            Summary = $"Create automation “{name}”",
+            Payload = JsonSerializer.SerializeToDocument(new { rule }, AiAutomationJson.Options),
+        };
+
+        var seed = await SeedPendingChangeSet(proposal);
+
+        try
+        {
+            var applied = await ApplyChangeSet(client, seed.ChangeSetId, TestContext.Current.CancellationToken);
+            var result = applied.Results.Should().ContainSingle().Subject;
+
+            result.Status.Should().Be(AiChangeApplyStatus.Applied, result.Error);
+
+            var ruleId = result.AppliedEntityId!.Value;
+            var created = await client.GetAsync($"api/automations/{ruleId}", TestContext.Current.CancellationToken);
+
+            created.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var undo = await client.PostAsync(
+                $"api/ai/change-sets/{seed.ChangeSetId}/undo",
+                null,
+                TestContext.Current.CancellationToken);
+            var deleted = await client.GetAsync($"api/automations/{ruleId}", TestContext.Current.CancellationToken);
+
+            undo.StatusCode.Should().Be(HttpStatusCode.OK, await undo.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
+            deleted.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
+        finally
+        {
+            await RemoveSeed(seed.ConversationId);
+        }
+    }
+
+    [Fact]
+    public async Task ApplyChangeSet_ShouldRefuseAnAutomationUpdate_WhenTheRuleWasEditedAfterTheProposal()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var executionUserId = await CreateAutomationServiceAccount(client);
+        var original = BuildAutomationRequest($"Original {Guid.NewGuid():N}", executionUserId);
+        var createResponse = await client.PostAsJsonAsync("api/automations", original, TestContext.Current.CancellationToken);
+        var created = await createResponse.Content.ReadFromJsonAsync<ClientResponse<AutomationRuleViewModel>>(
+            TestContext.Current.CancellationToken);
+        var ruleId = created.Payload!.Id;
+        var previous = AiAutomationJson.ToRequest(created.Payload);
+        var proposed = previous with { Name = $"Proposed {Guid.NewGuid():N}" };
+        var proposal = new AiProposedChangeSeed
+        {
+            ToolName = UpdateAutomationAction.Change,
+            EntityType = "automationRule",
+            EntityId = ruleId,
+            Summary = "Update automation",
+            Payload = JsonSerializer.SerializeToDocument(
+                new { ruleId, rule = proposed, previous },
+                AiAutomationJson.Options),
+        };
+
+        var seed = await SeedPendingChangeSet(proposal);
+
+        try
+        {
+            var edit = previous with { Name = $"Edited by hand {Guid.NewGuid():N}" };
+            var editResponse = await client.PutAsJsonAsync($"api/automations/{ruleId}", edit, TestContext.Current.CancellationToken);
+
+            editResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var applied = await ApplyChangeSet(client, seed.ChangeSetId, TestContext.Current.CancellationToken);
+            var result = applied.Results.Should().ContainSingle().Subject;
+            var current = await client.GetFromJsonAsync<ClientResponse<AutomationRuleViewModel>>(
+                $"api/automations/{ruleId}",
+                TestContext.Current.CancellationToken);
+
+            result.Status.Should().Be(AiChangeApplyStatus.Failed);
+            result.Error.Should().Be(UpdateAutomationChangeHandler.EditedBeforeApplyMessage);
+            current!.Payload!.Name.Should().Be(edit.Name);
+        }
+        finally
+        {
+            await RemoveSeed(seed.ConversationId);
+        }
+    }
+
+    private static AutomationRuleRequest BuildAutomationRequest(string name, string executionUserId)
+    {
+        return new AutomationRuleRequest
+        {
+            Name = name,
+            IsEnabled = false,
+            ExecutionUserId = executionUserId,
+            Trigger = new AutomationTriggerRequest { Type = AutomationTriggerType.TaskCreated },
+            Actions =
+            [
+                new AutomationActionRequest
+                {
+                    Type = AutomationActionType.NotifyTaskAssignees,
+                    Recipients = [AutomationNotificationRecipient.Assignees],
+                },
+            ],
+        };
+    }
+
+    private static async Task<string> CreateAutomationServiceAccount(HttpClient client)
+    {
+        var response = await client.PostAsJsonAsync("api/service-accounts", new CreateServiceAccountRequest
+        {
+            Name = $"Assistant automation agent {Guid.NewGuid():N}",
+            Description = "Created by the assistant automation integration tests.",
+            Permissions = [NetptunePermissions.Tasks.Read, NetptunePermissions.Tasks.Update],
+        }, TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<ServiceAccountViewModel>>(
+            TestContext.Current.CancellationToken);
+
+        return result.Payload!.UserId;
     }
 
     private async Task<SeededBoard> CreateSecondBoard(HttpClient client, int projectId)

@@ -5,6 +5,14 @@ import { cn } from '@static/components/button/button.variants';
 
 export type FlowStepSize = 'default' | 'compact';
 
+export type FlowStepChange = 'added' | 'removed' | 'changed';
+
+const changeClasses: Record<FlowStepChange, string> = {
+  added: 'border-green-500/45 bg-green-500/6',
+  removed: 'border-warn/40 bg-warn/5 opacity-75',
+  changed: 'border-blue-500/45 bg-blue-500/6',
+};
+
 @Component({
   selector: 'app-flow-step',
   imports: [LucideDynamicIcon, NgTemplateOutlet],
@@ -57,19 +65,22 @@ export class FlowStepComponent {
   readonly selected = input(false);
   readonly interactive = input(true);
   readonly size = input<FlowStepSize>('default');
+  readonly change = input<FlowStepChange | null>(null);
 
   readonly selectStep = output();
 
   protected readonly titleClass = computed(() => {
     return cn(
       'text-foreground font-semibold',
-      this.size() === 'compact' ? 'text-sm' : 'text-[15px]'
+      this.size() === 'compact' ? 'text-sm' : 'text-[15px]',
+      this.change() === 'removed' && 'line-through'
     );
   });
 
   protected readonly stepClass = computed(() => {
     const compact = this.size() === 'compact';
     const interactive = this.interactive();
+    const change = this.change();
 
     return cn(
       'flex w-full flex-col rounded-[10px] border text-left',
@@ -79,7 +90,8 @@ export class FlowStepComponent {
       this.selected()
         ? 'border-primary/55 bg-primary/8'
         : 'border-border bg-card',
-      interactive && !this.selected() && 'hover:border-primary/35'
+      interactive && !this.selected() && 'hover:border-primary/35',
+      change && changeClasses[change]
     );
   });
 }

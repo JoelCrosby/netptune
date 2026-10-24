@@ -194,6 +194,12 @@ const INLINE_ROW_LIMIT = 3;
                         </span>
                       }
                     }
+
+                    @if (row.caution; as caution) {
+                      <span class="text-warn text-[11.5px] leading-normal">
+                        {{ caution }}
+                      </span>
+                    }
                   </span>
                 </div>
               }

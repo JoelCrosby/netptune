@@ -11,7 +11,14 @@ import { marked } from 'marked';
 import { afterValues, beforeValues } from './ai-assistant-change-kind';
 
 export type AiFieldDiffKind =
-  'text' | 'markdown' | 'choice' | 'date' | 'set' | 'estimate' | 'relation';
+  | 'text'
+  | 'markdown'
+  | 'choice'
+  | 'date'
+  | 'set'
+  | 'estimate'
+  | 'relation'
+  | 'automation';
 
 const MARKDOWN_FIELDS = new Set(['description', 'body', 'comment']);
 
@@ -53,6 +60,8 @@ export const fieldDiffKind = (field: AiChangeField): AiFieldDiffKind => {
       return 'set';
     case AiChangeValueKind.task:
       return 'relation';
+    case AiChangeValueKind.automation:
+      return 'automation';
     default:
       return textDiffKind(field);
   }

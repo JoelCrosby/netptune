@@ -15,6 +15,7 @@ const scopesByEntityType: Record<string, readonly RefreshScope[]> = {
   sourceControl: ['sourceControl'],
   codeLinks: ['codeLinks'],
   activity: ['activity'],
+  automationRule: ['automations', 'activity'],
 };
 
 /**

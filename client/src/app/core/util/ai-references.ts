@@ -13,6 +13,7 @@ const ROUTES: Record<string, string> = {
   sprint: 'sprints',
   board: 'boards',
   page: 'pages',
+  automationRule: 'automations',
 };
 
 export const referenceKey = (type: string, id: string): string => {

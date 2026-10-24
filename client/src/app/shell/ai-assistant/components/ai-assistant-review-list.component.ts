@@ -22,6 +22,7 @@ import {
   groupTarget,
   groupTone,
   isApplied,
+  isSnapshotField,
   isValid,
   selectableIds,
 } from './ai-assistant-change-group';
@@ -345,7 +346,9 @@ export class AiAssistantReviewListComponent {
     }
 
     const names = group.changes.flatMap((change) => {
-      return change.fields.map((field) => fieldLabel(field.name));
+      return change.fields
+        .filter((field) => !isSnapshotField(field))
+        .map((field) => fieldLabel(field.name));
     });
 
     return [...new Set(names)].join(', ');

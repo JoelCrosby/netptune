@@ -2,6 +2,7 @@ import {
   AiChangeApplyStatus,
   AiChangeField,
   AiChangeValidationStatus,
+  AiChangeValueKind,
   AiProposedChange,
 } from '@core/models/ai-conversation';
 import { referenceRoute } from '@core/util/ai-references';
@@ -31,6 +32,7 @@ const ENTITY_LABELS: Record<string, string> = {
   comment: $localize`:Entity a proposed change targets:Comment`,
   relationType: $localize`:Entity a proposed change targets:Relation type`,
   page: $localize`:Entity a proposed change targets:Page`,
+  automationRule: $localize`:Entity a proposed change targets:Automation`,
 };
 
 const FIELD_LABELS: Record<string, string> = {
@@ -55,6 +57,12 @@ const FIELD_LABELS: Record<string, string> = {
   body: $localize`:Field of a proposed change, the text of a page:Body`,
   kind: $localize`:Field of a proposed change, whether a page is a document or a folder:Kind`,
   parent: $localize`:Field of a proposed change, the folder a page sits in:Location`,
+  enabled: $localize`:Field of a proposed change, whether an automation rule runs:State`,
+  scope: $localize`:Field of a proposed change, which tasks an automation rule applies to:Applies to`,
+  runsAs: $localize`:Field of a proposed change, the account an automation rule runs as:Runs as`,
+  trigger: $localize`:Field of a proposed change, what starts an automation rule:Trigger`,
+  actions: $localize`:Field of a proposed change, what an automation rule does:Actions`,
+  rule: $localize`:Field of a proposed change, an automation rule drawn as its steps:Rule`,
 };
 
 /** camelCase field names are internal; anything unmapped still has to read as prose. */
@@ -78,6 +86,10 @@ export const entityLabel = (entityType: string): string => {
 const DETAIL_FIELDS = new Set(['description', 'goal', 'comment', 'body']);
 
 const INLINE_VALUE_LIMIT = 80;
+
+export const isSnapshotField = (field: AiChangeField): boolean => {
+  return field.kind === AiChangeValueKind.automation;
+};
 
 export const isProseField = (field: AiChangeField): boolean => {
   if (DETAIL_FIELDS.has(field.name)) {

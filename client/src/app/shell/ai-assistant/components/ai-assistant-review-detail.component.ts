@@ -330,6 +330,16 @@ export class AiAssistantReviewDetailComponent {
     return editing?.changeId === change.id && editing.name === name;
   }
 
+  private caution(change: AiProposedChange): AiChangeNotice | null {
+    if (!change.validationMessage) return null;
+
+    return {
+      id: change.id,
+      title: $localize`:Heading above something to know before applying a change:Before you apply`,
+      message: change.validationMessage,
+    };
+  }
+
   private notice(change: AiProposedChange): AiChangeNotice | null {
     if (change.applyError) {
       return {
@@ -340,7 +350,7 @@ export class AiAssistantReviewDetailComponent {
     }
 
     if (isValid(change)) {
-      return null;
+      return this.caution(change);
     }
 
     return {

@@ -22,6 +22,7 @@ import {
   AutomationRuleListItem,
   AutomationRuleSummary,
 } from '@core/automations/automation.models';
+import { onWorkspaceRefresh } from '@core/util/reload-on-refresh';
 import { reloadToken } from '@core/util/signals';
 import {
   AutomationRuleCounts,
@@ -152,6 +153,8 @@ export class AutomationsViewComponent {
 
   constructor() {
     this.load();
+
+    onWorkspaceRefresh(['automations'], () => this.refresh());
   }
 
   onCreate() {

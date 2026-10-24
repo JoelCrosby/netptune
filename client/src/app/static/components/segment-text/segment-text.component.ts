@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, booleanAttribute, computed, input } from '@angular/core';
 import { StatusCategory } from '@core/models/status';
 import { TaskStatusPillComponent } from '@static/components/task-status-pill.component';
 
@@ -13,6 +13,7 @@ export type TextSegment =
 
 @Component({
   selector: 'app-segment-text',
+  host: { '[class]': 'hostClass()' },
   imports: [TaskStatusPillComponent],
   template: `
     @for (segment of segments(); track $index) {
@@ -30,4 +31,9 @@ export type TextSegment =
 })
 export class SegmentTextComponent {
   readonly segments = input.required<TextSegment[]>();
+  readonly struck = input(false, { transform: booleanAttribute });
+
+  protected readonly hostClass = computed(() => {
+    return this.struck() ? 'text-foreground/45 line-through' : '';
+  });
 }

@@ -29,6 +29,8 @@ public interface IAutomationRepository : IWorkspaceEntityRepository<AutomationRu
 
     Task<int> CancelPendingRuleActions(int ruleId, string actorUserId, CancellationToken cancellationToken = default);
 
+    Task<int> CountPendingRuleActions(int ruleId, CancellationToken cancellationToken = default);
+
     Task<Dictionary<int, int>> CancelPendingRuleActions(IReadOnlyCollection<int> ruleIds, CancellationToken cancellationToken = default);
 
     Task<int> CancelPendingTaskActions(int taskId, Guid currentEventId, string actorUserId, CancellationToken cancellationToken = default);

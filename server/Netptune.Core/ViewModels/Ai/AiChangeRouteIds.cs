@@ -1,3 +1,5 @@
+using System.Globalization;
+
 using Netptune.Core.Entities;
 
 namespace Netptune.Core.ViewModels.Ai;
@@ -9,6 +11,7 @@ public sealed class AiChangeRouteIds
     public const string Board = "board";
     public const string Sprint = "sprint";
     public const string Page = "page";
+    public const string AutomationRule = "automationRule";
 
     public IReadOnlyDictionary<int, string> Tasks { get; init; } = new Dictionary<int, string>();
 
@@ -36,6 +39,13 @@ public sealed class AiChangeRouteIds
         if (!entityId.HasValue)
         {
             return null;
+        }
+
+        var isAutomationRule = entityType == AutomationRule;
+
+        if (isAutomationRule)
+        {
+            return entityId.Value.ToString(CultureInfo.InvariantCulture);
         }
 
         var lookup = entityType switch

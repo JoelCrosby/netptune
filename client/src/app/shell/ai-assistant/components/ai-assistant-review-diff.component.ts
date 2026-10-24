@@ -17,6 +17,7 @@ import { TextDiffComponent } from '@static/components/text-diff/text-diff.compon
 import { fieldLabel, isProseField } from './ai-assistant-change-group';
 import { diffStat } from '@static/components/text-diff/text-diff';
 import { valueDiff } from './ai-assistant-change-kind';
+import { AiAssistantAutomationDiffComponent } from './ai-assistant-automation-diff.component';
 import { AiAssistantChoiceDiffComponent } from './ai-assistant-choice-diff.component';
 import { AiAssistantDateDiffComponent } from './ai-assistant-date-diff.component';
 import { AiDiffMode, lineOps } from './ai-assistant-diff';
@@ -40,6 +41,7 @@ type AiMarkdownView = 'rendered' | 'source';
     AiAssistantFieldEditorComponent,
     SegmentedControlComponent,
     TextDiffComponent,
+    AiAssistantAutomationDiffComponent,
     AiAssistantChoiceDiffComponent,
     AiAssistantDateDiffComponent,
     AiAssistantEstimateDiffComponent,
@@ -127,6 +129,9 @@ type AiMarkdownView = 'rendered' | 'source';
           }
           @case ('relation') {
             <app-ai-assistant-relation-diff [field]="field()" />
+          }
+          @case ('automation') {
+            <app-ai-assistant-automation-diff [field]="field()" />
           }
           @default {
             <app-ai-assistant-text-diff [field]="field()" [mode]="mode()" />
