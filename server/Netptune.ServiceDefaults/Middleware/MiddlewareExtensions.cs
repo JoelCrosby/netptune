@@ -10,9 +10,12 @@ public static class MiddlewareExtensions
         // problem+json. Every host calls this so one API surface reports errors one way.
         public IApplicationBuilder UseNetptuneRequestDefaults()
         {
-            app.UseMiddleware<CorrelationIdMiddleware>();
+            var localization = RequestLocalizationDefaults.Create();
 
-            return app.UseMiddleware<ServerErrorLoggingMiddleware>();
+            app.UseMiddleware<CorrelationIdMiddleware>();
+            app.UseMiddleware<ServerErrorLoggingMiddleware>();
+
+            return app.UseRequestLocalization(localization);
         }
     }
 }

@@ -18,4 +18,8 @@
     <PackageReference Include="StackExchange.Redis" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Netptune.Core\Netptune.Core.csproj" />
+  </ItemGroup>
+
 </Project>

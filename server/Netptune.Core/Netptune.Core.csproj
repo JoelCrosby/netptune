@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <NeutralLanguage>en-GB</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,6 +14,16 @@
     <PackageReference Include="Microsoft.Extensions.Http" />
     <PackageReference Include="Microsoft.Security.AntiSSRF" />
     <PackageReference Include="shortid" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Localization\AppText.resx">
+      <StronglyTypedLanguage>CSharp</StronglyTypedLanguage>
+      <StronglyTypedNamespace>Netptune.Core.Localization</StronglyTypedNamespace>
+      <StronglyTypedClassName>AppText</StronglyTypedClassName>
+      <PublicClass>true</PublicClass>
+      <StronglyTypedFileName>$(IntermediateOutputPath)AppText.Designer.cs</StronglyTypedFileName>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

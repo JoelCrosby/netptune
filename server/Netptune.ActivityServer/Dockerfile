@@ -6,7 +6,10 @@ ARG RUN_ID
 FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine AS base
 # Alpine ships no timezone database, and without it every TimeZoneInfo lookup silently
 # falls back to UTC - automations and reports would ignore the workspace time zone.
-RUN apk add --no-cache tzdata
+# It also ships no ICU, and the base image runs invariant: creating any culture throws,
+# so the localized resources (and the assistant's reply language) could never load.
+RUN apk add --no-cache tzdata icu-libs icu-data-full
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 WORKDIR /
 
 FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
