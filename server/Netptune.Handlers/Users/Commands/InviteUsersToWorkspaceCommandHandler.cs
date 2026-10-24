@@ -1,3 +1,5 @@
+using System.Globalization;
+
 using Flurl;
 
 using Mediator;
@@ -6,6 +8,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Users;
 using Netptune.Core.Extensions;
+using Netptune.Core.Localization;
 using Netptune.Core.Messaging;
 using Netptune.Core.Models.Messaging;
 using Netptune.Core.Relationships;
@@ -13,6 +16,7 @@ using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
+using Netptune.Core.Services.Localization;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Handlers.Users.Commands;
@@ -26,19 +30,22 @@ public sealed class InviteUsersToWorkspaceCommandHandler : IRequestHandler<Invit
     private readonly IEmailService Email;
     private readonly IHostingService Hosting;
     private readonly IActivityLogger Activity;
+    private readonly IUserLocaleReader LocaleReader;
 
     public InviteUsersToWorkspaceCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
         IEmailService email,
         IHostingService hosting,
-        IActivityLogger activity)
+        IActivityLogger activity,
+        IUserLocaleReader localeReader)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Email = email;
         Hosting = hosting;
         Activity = activity;
+        LocaleReader = localeReader;
     }
 
     public async ValueTask<ClientResponse<InviteUserResponse>> Handle(InviteUsersToWorkspaceCommand request, CancellationToken cancellationToken)
@@ -66,7 +73,9 @@ public sealed class InviteUsersToWorkspaceCommandHandler : IRequestHandler<Invit
 
         await UnitOfWork.CompleteAsync(cancellationToken);
 
-        await SendUserInviteEmails(invites, workspace);
+        var localesByEmail = await ReadLocalesByEmail(users, cancellationToken);
+
+        await SendUserInviteEmails(invites, workspace, localesByEmail);
 
         Activity.LogWith<UserMembershipActivityMeta>(options =>
         {
@@ -113,29 +122,39 @@ public sealed class InviteUsersToWorkspaceCommandHandler : IRequestHandler<Invit
         return [.. existing, .. newInvites];
     }
 
-    private Task SendUserInviteEmails(List<WorkspaceInvite> invites, Workspace workspace)
+    private async Task<Dictionary<string, string>> ReadLocalesByEmail(
+        List<AppUser> users,
+        CancellationToken cancellationToken)
+    {
+        var userIds = users.ConvertAll(user => user.Id);
+        var locales = await LocaleReader.GetLocales(userIds, cancellationToken);
+
+        return users
+            .Where(user => user.Email is not null)
+            .ToDictionary(user => user.Email!, user => locales[user.Id], StringComparer.OrdinalIgnoreCase);
+    }
+
+    private Task SendUserInviteEmails(
+        List<WorkspaceInvite> invites,
+        Workspace workspace,
+        Dictionary<string, string> localesByEmail)
     {
         if (invites.Count == 0) return Task.CompletedTask;
 
+        var inviterLocale = CultureInfo.CurrentUICulture.Name;
         var tasks = invites.Select(invite =>
         {
-            var uri = Hosting.ClientOrigin
+            var link = Hosting.ClientOrigin
                 .AppendPathSegments("auth", "register")
                 .SetQueryParam("code", invite.Code, true)
                 .SetQueryParam("refer", "invite");
+            var locale = localesByEmail.GetValueOrDefault(invite.Email) ?? inviterLocale;
 
-            return Email.Send(new SendEmailModel
-            {
-                SendTo = new SendTo { Address = invite.Email, DisplayName = invite.Email },
-                Name = "-name-",
-                Action = "Go to Workspace",
-                Link = uri,
-                Reason = "workspace invite",
-                Message = $"Hi you've been invited to join the {workspace.Name} workspace in Netptune.",
-                Subject = "Netptune workspace invitation.",
-                PreHeader = $"Hi you've been invited to join {workspace.Name} in Netptune.",
-                RawTextContent = $"Hi you've been invited to join the {workspace.Name} workspace in Netptune. Click the link below to start. \n\n {uri}",
-            });
+            using var culture = CultureScope.Use(locale);
+
+            var email = EmailMessages.WorkspaceInvite(invite.Email, workspace.Name, link);
+
+            return Email.Send(email);
         });
 
         return Task.WhenAll(tasks);

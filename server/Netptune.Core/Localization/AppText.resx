@@ -16,4 +16,92 @@
     <value>Workspace</value>
     <comment>The whole workspace, as opposed to one project, board or sprint</comment>
   </data>
+  <data name="EmailGreeting" xml:space="preserve">
+    <value>Hi {0},</value>
+    <comment>Opens an e-mail. {0} is the recipient's first name</comment>
+  </data>
+  <data name="EmailGreetingWithoutName" xml:space="preserve">
+    <value>Hi,</value>
+    <comment>Opens an e-mail to someone whose name is not known</comment>
+  </data>
+  <data name="EmailTagline" xml:space="preserve">
+    <value>Netptune task management</value>
+    <comment>Shown in every e-mail footer under the product name</comment>
+  </data>
+  <data name="PasswordResetEmailSubject" xml:space="preserve">
+    <value>Reset your password</value>
+    <comment>Subject of the password reset e-mail</comment>
+  </data>
+  <data name="PasswordResetEmailPreHeader" xml:space="preserve">
+    <value>Use the link inside to choose a new password.</value>
+    <comment>Preview text of the password reset e-mail</comment>
+  </data>
+  <data name="PasswordResetEmailAction" xml:space="preserve">
+    <value>Reset my password</value>
+    <comment>Button in the password reset e-mail</comment>
+  </data>
+  <data name="PasswordResetEmailMessage" xml:space="preserve">
+    <value>Click the following link to reset your password.</value>
+    <comment>Body of the password reset e-mail</comment>
+  </data>
+  <data name="PasswordResetEmailText" xml:space="preserve">
+    <value>Here is the password reset link that was requested for your account: {0}</value>
+    <comment>Plain-text version of the password reset e-mail. {0} is the link</comment>
+  </data>
+  <data name="PasswordResetEmailFooter" xml:space="preserve">
+    <value>You received this email because a password reset was requested for your account. If you didn't request this, you can safely delete this email.</value>
+    <comment>Footer explaining why the password reset e-mail was sent</comment>
+  </data>
+  <data name="WelcomeEmailSubject" xml:space="preserve">
+    <value>Welcome to Netptune</value>
+    <comment>Subject of the e-mail that confirms a new account's address</comment>
+  </data>
+  <data name="WelcomeEmailPreHeader" xml:space="preserve">
+    <value>Thanks for signing up</value>
+    <comment>Preview text of the welcome e-mail</comment>
+  </data>
+  <data name="WelcomeEmailAction" xml:space="preserve">
+    <value>Confirm email</value>
+    <comment>Button in the welcome e-mail</comment>
+  </data>
+  <data name="WelcomeEmailMessage" xml:space="preserve">
+    <value>Thanks for registering with Netptune.
+
+Please confirm your email address with the following link.</value>
+    <comment>Body of the welcome e-mail. The blank line starts a new paragraph</comment>
+  </data>
+  <data name="WelcomeEmailText" xml:space="preserve">
+    <value>Thanks for registering with Netptune. Please confirm your email address with the following link: {0}</value>
+    <comment>Plain-text version of the welcome e-mail. {0} is the link</comment>
+  </data>
+  <data name="WelcomeEmailFooter" xml:space="preserve">
+    <value>You received this email because this address was used to sign up for Netptune. If that wasn't you, you can safely delete this email.</value>
+    <comment>Footer explaining why the welcome e-mail was sent</comment>
+  </data>
+  <data name="InviteEmailSubject" xml:space="preserve">
+    <value>Netptune workspace invitation</value>
+    <comment>Subject of the workspace invitation e-mail</comment>
+  </data>
+  <data name="InviteEmailPreHeader" xml:space="preserve">
+    <value>You've been invited to join {0} in Netptune.</value>
+    <comment>Preview text of the invitation e-mail. {0} is the workspace name</comment>
+  </data>
+  <data name="InviteEmailAction" xml:space="preserve">
+    <value>Go to workspace</value>
+    <comment>Button in the invitation e-mail</comment>
+  </data>
+  <data name="InviteEmailMessage" xml:space="preserve">
+    <value>You've been invited to join the {0} workspace in Netptune.</value>
+    <comment>Body of the invitation e-mail. {0} is the workspace name</comment>
+  </data>
+  <data name="InviteEmailText" xml:space="preserve">
+    <value>You've been invited to join the {0} workspace in Netptune. Use the link below to get started.
+
+{1}</value>
+    <comment>Plain-text version of the invitation e-mail. {0} is the workspace name, {1} the link</comment>
+  </data>
+  <data name="InviteEmailFooter" xml:space="preserve">
+    <value>You received this email because someone invited this address to a Netptune workspace. If you weren't expecting it, you can safely ignore this email.</value>
+    <comment>Footer explaining why the invitation e-mail was sent</comment>
+  </data>
 </root>

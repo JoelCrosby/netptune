@@ -15,4 +15,71 @@
   <data name="Workspace" xml:space="preserve">
     <value>Arbeitsbereich</value>
   </data>
+  <data name="EmailGreeting" xml:space="preserve">
+    <value>Hallo {0},</value>
+  </data>
+  <data name="EmailGreetingWithoutName" xml:space="preserve">
+    <value>Hallo,</value>
+  </data>
+  <data name="EmailTagline" xml:space="preserve">
+    <value>Netptune Aufgabenverwaltung</value>
+  </data>
+  <data name="PasswordResetEmailSubject" xml:space="preserve">
+    <value>Passwort zurücksetzen</value>
+  </data>
+  <data name="PasswordResetEmailPreHeader" xml:space="preserve">
+    <value>Über den Link in dieser E-Mail können Sie ein neues Passwort festlegen.</value>
+  </data>
+  <data name="PasswordResetEmailAction" xml:space="preserve">
+    <value>Mein Passwort zurücksetzen</value>
+  </data>
+  <data name="PasswordResetEmailMessage" xml:space="preserve">
+    <value>Klicken Sie auf den folgenden Link, um Ihr Passwort zurückzusetzen.</value>
+  </data>
+  <data name="PasswordResetEmailText" xml:space="preserve">
+    <value>Hier ist der für Ihr Konto angeforderte Link zum Zurücksetzen des Passworts: {0}</value>
+  </data>
+  <data name="PasswordResetEmailFooter" xml:space="preserve">
+    <value>Sie erhalten diese E-Mail, weil für Ihr Konto eine Zurücksetzung des Passworts angefordert wurde. Wenn Sie dies nicht angefordert haben, können Sie diese E-Mail bedenkenlos löschen.</value>
+  </data>
+  <data name="WelcomeEmailSubject" xml:space="preserve">
+    <value>Willkommen bei Netptune</value>
+  </data>
+  <data name="WelcomeEmailPreHeader" xml:space="preserve">
+    <value>Danke für Ihre Registrierung</value>
+  </data>
+  <data name="WelcomeEmailAction" xml:space="preserve">
+    <value>E-Mail-Adresse bestätigen</value>
+  </data>
+  <data name="WelcomeEmailMessage" xml:space="preserve">
+    <value>Vielen Dank für Ihre Registrierung bei Netptune.
+
+Bitte bestätigen Sie Ihre E-Mail-Adresse über den folgenden Link.</value>
+  </data>
+  <data name="WelcomeEmailText" xml:space="preserve">
+    <value>Vielen Dank für Ihre Registrierung bei Netptune. Bitte bestätigen Sie Ihre E-Mail-Adresse über den folgenden Link: {0}</value>
+  </data>
+  <data name="WelcomeEmailFooter" xml:space="preserve">
+    <value>Sie erhalten diese E-Mail, weil mit dieser Adresse ein Netptune-Konto erstellt wurde. Wenn Sie das nicht waren, können Sie diese E-Mail bedenkenlos löschen.</value>
+  </data>
+  <data name="InviteEmailSubject" xml:space="preserve">
+    <value>Einladung zu einem Netptune-Arbeitsbereich</value>
+  </data>
+  <data name="InviteEmailPreHeader" xml:space="preserve">
+    <value>Sie wurden eingeladen, {0} in Netptune beizutreten.</value>
+  </data>
+  <data name="InviteEmailAction" xml:space="preserve">
+    <value>Zum Arbeitsbereich</value>
+  </data>
+  <data name="InviteEmailMessage" xml:space="preserve">
+    <value>Sie wurden eingeladen, dem Arbeitsbereich {0} in Netptune beizutreten.</value>
+  </data>
+  <data name="InviteEmailText" xml:space="preserve">
+    <value>Sie wurden eingeladen, dem Arbeitsbereich {0} in Netptune beizutreten. Über den folgenden Link geht es los.
+
+{1}</value>
+  </data>
+  <data name="InviteEmailFooter" xml:space="preserve">
+    <value>Sie erhalten diese E-Mail, weil jemand diese Adresse zu einem Netptune-Arbeitsbereich eingeladen hat. Wenn Sie damit nicht gerechnet haben, können Sie diese E-Mail ignorieren.</value>
+  </data>
 </root>

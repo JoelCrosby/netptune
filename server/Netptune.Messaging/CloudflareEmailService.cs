@@ -47,13 +47,6 @@ public class CloudflareEmailService : IEmailService
         return Task.CompletedTask;
     }
 
-    public Task Send(SendMultipleEmailModel model)
-    {
-        EventPublisher.Dispatch(model);
-
-        return Task.CompletedTask;
-    }
-
     public async Task EnqueueSend(SendEmailModel model)
     {
         var htmlContent = await EmailRenderer.Render(model);
@@ -68,38 +61,6 @@ public class CloudflareEmailService : IEmailService
         };
 
         await SendRequest(payload);
-    }
-
-    public async Task EnqueueSend(SendMultipleEmailModel model)
-    {
-        var htmlContent = await EmailRenderer.Render(new SendEmailModel
-        {
-            Message = model.Message,
-            Subject = model.Subject,
-            Reason = model.Reason,
-            Name = model.Name,
-            Action = model.Action,
-            RawTextContent = model.RawTextContent,
-            PreHeader = model.PreHeader,
-            Link = model.Link,
-            SendTo = model.SendTo.First(),
-        });
-
-        var tasks = model.SendTo.Select(recipient =>
-        {
-            var payload = new CloudflareEmailPayload
-            {
-                From = Options.DefaultFromAddress,
-                To = recipient.Address,
-                Subject = model.Subject,
-                Html = htmlContent,
-                Text = model.RawTextContent,
-            };
-
-            return SendRequest(payload);
-        });
-
-        await Task.WhenAll(tasks);
     }
 
     private async Task SendRequest(CloudflareEmailPayload payload)

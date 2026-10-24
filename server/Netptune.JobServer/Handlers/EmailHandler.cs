@@ -14,13 +14,3 @@ public class EmailHandler(IEmailService emailService) : IRequestHandler<SendEmai
         return Unit.Value;
     }
 }
-
-public class EmailMultipleHandler(IEmailService emailService) : IRequestHandler<SendMultipleEmailModel>
-{
-    public async ValueTask<Unit> Handle(SendMultipleEmailModel request, CancellationToken cancellationToken)
-    {
-        await emailService.EnqueueSend(request);
-
-        return Unit.Value;
-    }
-}

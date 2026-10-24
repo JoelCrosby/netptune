@@ -1,12 +1,16 @@
+using System.Globalization;
+
 using Flurl;
 
 using Mediator;
 
 using Netptune.Core.Extensions;
+using Netptune.Core.Localization;
 using Netptune.Core.Messaging;
 using Netptune.Core.Models.Messaging;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Localization;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Handlers.Users.Commands;
@@ -19,17 +23,20 @@ public sealed class ResendWorkspaceInviteCommandHandler : IRequestHandler<Resend
     private readonly IIdentityService Identity;
     private readonly IEmailService Email;
     private readonly IHostingService Hosting;
+    private readonly IUserLocaleReader LocaleReader;
 
     public ResendWorkspaceInviteCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
         IEmailService email,
-        IHostingService hosting)
+        IHostingService hosting,
+        IUserLocaleReader localeReader)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Email = email;
         Hosting = hosting;
+        LocaleReader = localeReader;
     }
 
     public async ValueTask<ClientResponse> Handle(ResendWorkspaceInviteCommand request, CancellationToken cancellationToken)
@@ -49,24 +56,31 @@ public sealed class ResendWorkspaceInviteCommandHandler : IRequestHandler<Resend
 
         await UnitOfWork.CompleteAsync(cancellationToken);
 
-        var uri = Hosting.ClientOrigin
+        var link = Hosting.ClientOrigin
             .AppendPathSegments("auth", "register")
             .SetQueryParam("code", invite.Code, true)
             .SetQueryParam("refer", "invite");
+        var locale = await ReadRecipientLocale(email, cancellationToken);
 
-        await Email.Send(new SendEmailModel
+        using (CultureScope.Use(locale))
         {
-            SendTo = new SendTo { Address = email, DisplayName = email },
-            Name = "-name-",
-            Action = "Go to Workspace",
-            Link = uri,
-            Reason = "workspace invite",
-            Message = $"Hi you've been invited to join the {workspace.Name} workspace in Netptune.",
-            Subject = "Netptune workspace invitation.",
-            PreHeader = $"Hi you've been invited to join {workspace.Name} in Netptune.",
-            RawTextContent = $"Hi you've been invited to join the {workspace.Name} workspace in Netptune. Click the link below to start. \n\n {uri}",
-        });
+            var message = EmailMessages.WorkspaceInvite(email, workspace.Name, link);
+
+            await Email.Send(message);
+        }
 
         return ClientResponse.Success;
+    }
+
+    private async Task<string> ReadRecipientLocale(string email, CancellationToken cancellationToken)
+    {
+        var user = await UnitOfWork.Users.GetByEmail(email, true, cancellationToken);
+
+        if (user is null)
+        {
+            return CultureInfo.CurrentUICulture.Name;
+        }
+
+        return await LocaleReader.GetLocale(user.Id, cancellationToken);
     }
 }

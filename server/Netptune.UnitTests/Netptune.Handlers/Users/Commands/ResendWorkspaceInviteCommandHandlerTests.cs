@@ -1,9 +1,12 @@
 using FluentAssertions;
 
+using Netptune.Core.Entities;
+
 using Netptune.Core.Messaging;
 using Netptune.Core.Models.Messaging;
 using Netptune.Core.Relationships;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Localization;
 using Netptune.Core.UnitOfWork;
 using Netptune.Handlers.Users.Commands;
 
@@ -21,10 +24,11 @@ public class ResendWorkspaceInviteCommandHandlerTests
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IEmailService Email = Substitute.For<IEmailService>();
     private readonly IHostingService Hosting = Substitute.For<IHostingService>();
+    private readonly IUserLocaleReader LocaleReader = Substitute.For<IUserLocaleReader>();
 
     public ResendWorkspaceInviteCommandHandlerTests()
     {
-        Handler = new(UnitOfWork, Identity, Email, Hosting);
+        Handler = new(UnitOfWork, Identity, Email, Hosting, LocaleReader);
     }
 
     [Fact]
@@ -134,6 +138,33 @@ public class ResendWorkspaceInviteCommandHandlerTests
             TestContext.Current.CancellationToken);
 
         await Email.Received(1).Send(Arg.Any<SendEmailModel>());
+    }
+
+    [Fact]
+    public async Task ResendInvite_ShouldWriteTheEmail_InTheRecipientsLanguage()
+    {
+        const string workspaceKey = "workspaceKey";
+        var workspace = AutoFixtures.Workspace;
+        var invite = new WorkspaceInvite { Email = "user@email.com", WorkspaceId = workspace.Id, Code = "code", ExpiresAt = DateTime.UtcNow.AddDays(7) };
+        var recipient = new AppUser { Id = "german-user", Email = "user@email.com" };
+        SendEmailModel? sent = null;
+
+        Identity.GetWorkspaceKey().Returns(workspaceKey);
+        Hosting.ClientOrigin.Returns("https://test.example.com");
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), Arg.Any<CancellationToken>()).Returns(workspace);
+        UnitOfWork.WorkspaceInvites.GetPendingByEmail(Arg.Any<string>(), workspace.Id, Arg.Any<CancellationToken>()).Returns(invite);
+        UnitOfWork.Users.GetByEmail(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<CancellationToken>()).Returns(recipient);
+        LocaleReader.GetLocale("german-user", Arg.Any<CancellationToken>()).Returns("de");
+        Email
+            .When(service => service.Send(Arg.Any<SendEmailModel>()))
+            .Do(call => sent = call.Arg<SendEmailModel>());
+
+        await Handler.Handle(
+            new ResendWorkspaceInviteCommand("user@email.com"),
+            TestContext.Current.CancellationToken);
+
+        sent!.Language.Should().Be("de");
+        sent.Subject.Should().Be("Einladung zu einem Netptune-Arbeitsbereich");
     }
 
     [Fact]

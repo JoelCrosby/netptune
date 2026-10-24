@@ -6,9 +6,5 @@ public interface IEmailService
 {
     Task Send(SendEmailModel model);
 
-    Task Send(SendMultipleEmailModel models);
-
     Task EnqueueSend(SendEmailModel model);
-
-    Task EnqueueSend(SendMultipleEmailModel model);
 }

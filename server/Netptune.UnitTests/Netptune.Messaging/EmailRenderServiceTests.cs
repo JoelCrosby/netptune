@@ -25,7 +25,10 @@ public class EmailRenderServiceTests
         Link = "https://netptune.co.uk/invite/abc123",
         Action = "Accept invite",
         RawTextContent = "Joel invited you to the netptune workspace.",
-        Reason = "You received this because someone invited you to a workspace.",
+        Greeting = "Hi Someone,",
+        Footer = "You received this because someone invited you to a workspace.",
+        Tagline = "Netptune task management",
+        Language = "fr",
     };
 
     [Fact]
@@ -38,6 +41,10 @@ public class EmailRenderServiceTests
         html.Should().Contain(Model.Message);
         html.Should().Contain(Model.Action);
         html.Should().Contain(Model.Link);
+        html.Should().Contain(Model.Greeting);
+        html.Should().Contain(Model.Footer);
+        html.Should().Contain(Model.Tagline);
+        html.Should().Contain("lang=\"fr\"");
     }
 
     [Fact]
@@ -51,7 +58,6 @@ public class EmailRenderServiceTests
             Subject = Model.Subject,
             Message = Model.Message,
             RawTextContent = Model.RawTextContent,
-            Reason = Model.Reason,
         };
 
         var html = await renderer.Render(minimal);

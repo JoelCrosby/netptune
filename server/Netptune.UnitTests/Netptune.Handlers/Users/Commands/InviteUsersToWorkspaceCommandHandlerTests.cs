@@ -6,6 +6,7 @@ using Netptune.Core.Models.Messaging;
 using Netptune.Core.Relationships;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
+using Netptune.Core.Services.Localization;
 using Netptune.Core.UnitOfWork;
 using Netptune.Handlers.Users.Commands;
 
@@ -24,10 +25,20 @@ public class InviteUsersToWorkspaceCommandHandlerTests
     private readonly IEmailService Email = Substitute.For<IEmailService>();
     private readonly IHostingService Hosting = Substitute.For<IHostingService>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+    private readonly IUserLocaleReader LocaleReader = Substitute.For<IUserLocaleReader>();
 
     public InviteUsersToWorkspaceCommandHandlerTests()
     {
-        Handler = new(UnitOfWork, Identity, Email, Hosting, Activity);
+        LocaleReader
+            .GetLocales(Arg.Any<IReadOnlyCollection<string>>(), Arg.Any<CancellationToken>())
+            .Returns(call => ReadLocales(call.Arg<IReadOnlyCollection<string>>()));
+
+        Handler = new(UnitOfWork, Identity, Email, Hosting, Activity, LocaleReader);
+    }
+
+    private static IReadOnlyDictionary<string, string> ReadLocales(IReadOnlyCollection<string> userIds)
+    {
+        return userIds.ToDictionary(userId => userId, userId => userId == "french-user" ? "fr" : "en-GB");
     }
 
     private void SetupValidWorkspace(string workspaceKey, Workspace workspace,
@@ -103,6 +114,32 @@ public class InviteUsersToWorkspaceCommandHandlerTests
             TestContext.Current.CancellationToken);
 
         await Email.Received(2).Send(Arg.Any<SendEmailModel>());
+    }
+
+    [Fact]
+    public async Task InviteUsersToWorkspace_ShouldWriteEachInvite_InTheRecipientsLanguage()
+    {
+        const string workspaceKey = "workspaceKey";
+        var workspace = AutoFixtures.Workspace;
+        var frenchUser = new AppUser { Id = "french-user", Email = "Claude@Email.com" };
+        var sent = new List<SendEmailModel>();
+
+        Email
+            .When(service => service.Send(Arg.Any<SendEmailModel>()))
+            .Do(call => sent.Add(call.Arg<SendEmailModel>()));
+        SetupValidWorkspace(workspaceKey, workspace, [frenchUser], []);
+
+        await Handler.Handle(
+            new InviteUsersToWorkspaceCommand(["claude@email.com", "newcomer@email.com"]),
+            TestContext.Current.CancellationToken);
+
+        var french = sent.Single(model => model.SendTo.Address == "claude@email.com");
+        var newcomer = sent.Single(model => model.SendTo.Address == "newcomer@email.com");
+
+        french.Language.Should().Be("fr");
+        french.Subject.Should().Be("Invitation à un espace de travail Netptune");
+        newcomer.Language.Should().Be("en-GB", "someone without an account gets the inviter's language");
+        newcomer.Subject.Should().Be("Netptune workspace invitation");
     }
 
     [Fact]

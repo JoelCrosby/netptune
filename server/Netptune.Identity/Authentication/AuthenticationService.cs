@@ -530,24 +530,14 @@ public class NetptuneAuthService : INetptuneAuthService
             .SetQueryParam("userId", user.Id, true)
             .SetQueryParam("code", Uri.EscapeDataString(resetCode), true);
 
-        var rawTextContent = $"Here is the password reset link that was requested for your account. {callbackUrl}";
-
-        await Email.Send(new SendEmailModel
+        var sendTo = new SendTo
         {
-            SendTo = new SendTo
-            {
-                Address = user.Email!,
-                DisplayName = $"{user.Firstname} {user.Lastname}",
-            },
-            Reason = "password reset",
-            Subject = "Reset Password",
-            RawTextContent = rawTextContent,
-            Action = "Reset my password",
-            Link = callbackUrl,
-            PreHeader = "Reset Password",
-            Name = user.Firstname,
-            Message = "Click the following link to reset your password.",
-        });
+            Address = user.Email!,
+            DisplayName = $"{user.Firstname} {user.Lastname}",
+        };
+        var email = EmailMessages.PasswordReset(sendTo, user.Firstname, callbackUrl);
+
+        await Email.Send(email);
 
         return ClientResponse.Success;
     }
@@ -646,24 +636,14 @@ public class NetptuneAuthService : INetptuneAuthService
             .SetQueryParam("userId", appUser.Id, true)
             .SetQueryParam("code", Uri.EscapeDataString(confirmEmailCode), true);
 
-        var rawTextContent = $"Thanks for registering with Netptune. Please confirm your email address with the following link. {callbackUrl}";
-
-        await Email.Send(new SendEmailModel
+        var sendTo = new SendTo
         {
-            SendTo = new SendTo
-            {
-                Address = appUser.Email!,
-                DisplayName = $"{appUser.Firstname} {appUser.Lastname}",
-            },
-            Reason = "email confirmation",
-            Subject = "Welcome To Netptune",
-            RawTextContent = rawTextContent,
-            Action = "Confirm Email",
-            Link = callbackUrl,
-            PreHeader = "Thanks for signing up",
-            Name = appUser.Firstname,
-            Message = "Thanks for registering with Netptune. \n\n Please confirm your email address with the following link.",
-        });
+            Address = appUser.Email!,
+            DisplayName = $"{appUser.Firstname} {appUser.Lastname}",
+        };
+        var email = EmailMessages.Welcome(sendTo, appUser.Firstname, callbackUrl);
+
+        await Email.Send(email);
     }
 
     private async Task LogNewlyRegisteredUserIn(AppUser appUser)

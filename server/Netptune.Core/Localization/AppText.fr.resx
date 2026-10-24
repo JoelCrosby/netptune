@@ -15,4 +15,71 @@
   <data name="Workspace" xml:space="preserve">
     <value>Espace de travail</value>
   </data>
+  <data name="EmailGreeting" xml:space="preserve">
+    <value>Bonjour {0},</value>
+  </data>
+  <data name="EmailGreetingWithoutName" xml:space="preserve">
+    <value>Bonjour,</value>
+  </data>
+  <data name="EmailTagline" xml:space="preserve">
+    <value>Netptune, la gestion des tâches</value>
+  </data>
+  <data name="PasswordResetEmailSubject" xml:space="preserve">
+    <value>Réinitialiser votre mot de passe</value>
+  </data>
+  <data name="PasswordResetEmailPreHeader" xml:space="preserve">
+    <value>Utilisez le lien ci-dessous pour choisir un nouveau mot de passe.</value>
+  </data>
+  <data name="PasswordResetEmailAction" xml:space="preserve">
+    <value>Réinitialiser mon mot de passe</value>
+  </data>
+  <data name="PasswordResetEmailMessage" xml:space="preserve">
+    <value>Cliquez sur le lien ci-dessous pour réinitialiser votre mot de passe.</value>
+  </data>
+  <data name="PasswordResetEmailText" xml:space="preserve">
+    <value>Voici le lien de réinitialisation du mot de passe demandé pour votre compte : {0}</value>
+  </data>
+  <data name="PasswordResetEmailFooter" xml:space="preserve">
+    <value>Vous recevez cet e-mail parce qu’une réinitialisation du mot de passe a été demandée pour votre compte. Si vous n’êtes pas à l’origine de cette demande, vous pouvez supprimer cet e-mail en toute sécurité.</value>
+  </data>
+  <data name="WelcomeEmailSubject" xml:space="preserve">
+    <value>Bienvenue sur Netptune</value>
+  </data>
+  <data name="WelcomeEmailPreHeader" xml:space="preserve">
+    <value>Merci de votre inscription</value>
+  </data>
+  <data name="WelcomeEmailAction" xml:space="preserve">
+    <value>Confirmer l’adresse e-mail</value>
+  </data>
+  <data name="WelcomeEmailMessage" xml:space="preserve">
+    <value>Merci de vous être inscrit sur Netptune.
+
+Veuillez confirmer votre adresse e-mail à l’aide du lien ci-dessous.</value>
+  </data>
+  <data name="WelcomeEmailText" xml:space="preserve">
+    <value>Merci de vous être inscrit sur Netptune. Veuillez confirmer votre adresse e-mail à l’aide du lien suivant : {0}</value>
+  </data>
+  <data name="WelcomeEmailFooter" xml:space="preserve">
+    <value>Vous recevez cet e-mail parce que cette adresse a été utilisée pour créer un compte Netptune. Si ce n’était pas vous, vous pouvez supprimer cet e-mail en toute sécurité.</value>
+  </data>
+  <data name="InviteEmailSubject" xml:space="preserve">
+    <value>Invitation à un espace de travail Netptune</value>
+  </data>
+  <data name="InviteEmailPreHeader" xml:space="preserve">
+    <value>Vous êtes invité à rejoindre {0} sur Netptune.</value>
+  </data>
+  <data name="InviteEmailAction" xml:space="preserve">
+    <value>Accéder à l’espace de travail</value>
+  </data>
+  <data name="InviteEmailMessage" xml:space="preserve">
+    <value>Vous êtes invité à rejoindre l’espace de travail {0} sur Netptune.</value>
+  </data>
+  <data name="InviteEmailText" xml:space="preserve">
+    <value>Vous êtes invité à rejoindre l’espace de travail {0} sur Netptune. Utilisez le lien ci-dessous pour commencer.
+
+{1}</value>
+  </data>
+  <data name="InviteEmailFooter" xml:space="preserve">
+    <value>Vous recevez cet e-mail parce que quelqu’un a invité cette adresse dans un espace de travail Netptune. Si vous ne vous y attendiez pas, vous pouvez ignorer cet e-mail.</value>
+  </data>
 </root>
