@@ -27,7 +27,7 @@ spec:
       containers:
         - command:
             - "/bin/sh"
-          image: "docker.io/valkey/valkey:9.0"
+          image: "docker.io/valkey/valkey:9.1"
           name: "cache"
           envFrom:
             - secretRef:

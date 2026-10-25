@@ -33,7 +33,8 @@ traefik:
   # reasons rather than address-header reasons. The current ranges are at
   # https://www.cloudflare.com/ips, and the list must be reviewed whenever they change.
   service:
-    type: LoadBalancer
+    spec:
+      type: LoadBalancer
 
   # Chart defaults are timeoutSeconds 2 on both probes with readiness failureThreshold 1,
   # so a single slow response pulled Traefik out of the Service endpoints and three killed
@@ -44,6 +45,15 @@ traefik:
   livenessProbe:
     failureThreshold: 5
     timeoutSeconds: 5
+
+  # Without requests the pod is BestEffort, first to be starved on a busy node, which is what turned
+  # the slow probes above into a restart loop.
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      memory: 256Mi
 
   # Two replicas, so losing one node or one pod doesn't take the origin down. The spread is soft
   # rather than required anti-affinity: the pool has two nodes, and a required rule would leave the

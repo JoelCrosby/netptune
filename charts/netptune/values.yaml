@@ -64,7 +64,7 @@ headlamp:
     hostname: "netptune-headlamp"
 
 oauth2Proxy:
-  image: "quay.io/oauth2-proxy/oauth2-proxy:v7.15.3"
+  image: "quay.io/oauth2-proxy/oauth2-proxy:v7.15.5"
 
 pgadmin:
   enabled: false
@@ -78,7 +78,7 @@ dbgate:
 
 aspire:
   enabled: true
-  image: "mcr.microsoft.com/dotnet/aspire-dashboard:13.6.0"
+  image: "mcr.microsoft.com/dotnet/aspire-dashboard:13.6.1"
   host: "aspire.netptune.co.uk"
   resources:
     requests:
@@ -145,7 +145,7 @@ parameters:
       # Holds one compressed pg_dump; the job fails once the emptyDir fills.
       scratchSizeLimit: "8Gi"
       pgImage: "docker.io/library/postgres:18"
-      awsCliImage: "docker.io/amazon/aws-cli:2.32.9"
+      awsCliImage: "docker.io/amazon/aws-cli:2.38.5"
       resources:
         requests:
           memory: "128Mi"

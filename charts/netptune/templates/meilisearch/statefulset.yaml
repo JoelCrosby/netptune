@@ -27,7 +27,7 @@ spec:
         runAsUser: 1000
       containers:
         - name: "meilisearch"
-          image: "getmeili/meilisearch:v1.54.3"
+          image: "getmeili/meilisearch:v1.55.0"
           envFrom:
             - secretRef:
                 name: "meilisearch-secrets"
@@ -36,6 +36,8 @@ spec:
               value: "production"
             - name: "MEILI_DB_PATH"
               value: "/meili_data/data"
+            - name: "MEILI_UPGRADE_DB"
+              value: "true"
           ports:
             - name: "http"
               protocol: "TCP"
