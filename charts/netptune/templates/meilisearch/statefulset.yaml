@@ -36,8 +36,6 @@ spec:
               value: "production"
             - name: "MEILI_DB_PATH"
               value: "/meili_data/data"
-            - name: "MEILI_UPGRADE_DB"
-              value: "true"
           ports:
             - name: "http"
               protocol: "TCP"
