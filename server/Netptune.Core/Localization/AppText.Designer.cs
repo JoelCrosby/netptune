@@ -1705,6 +1705,15 @@ namespace Netptune.Core.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You do not have permission to have the assistant review this..
+        /// </summary>
+        public static string AiErrorNoPermissionToReview {
+            get {
+                return ResourceManager.GetString("AiErrorNoPermissionToReview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You do not have permission to have the assistant write here..
         /// </summary>
         public static string AiErrorNoPermissionToWriteHere {
@@ -2245,6 +2254,123 @@ namespace Netptune.Core.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Another change to this review is in progress. Try again..
+        /// </summary>
+        public static string AiReviewBusy {
+            get {
+                return ResourceManager.GetString("AiReviewBusy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This suggestion has already been applied to the task, so it can&apos;t be reopened..
+        /// </summary>
+        public static string AiReviewCannotReopenApplied {
+            get {
+                return ResourceManager.GetString("AiReviewCannotReopenApplied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This part of the item cannot be changed from a review..
+        /// </summary>
+        public static string AiReviewFieldNotEditable {
+            get {
+                return ResourceManager.GetString("AiReviewFieldNotEditable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Someone has already decided this finding. Reload to see it..
+        /// </summary>
+        public static string AiReviewFindingAlreadyDecided {
+            get {
+                return ResourceManager.GetString("AiReviewFindingAlreadyDecided", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This workspace has no relation type for that kind of link..
+        /// </summary>
+        public static string AiReviewNoRelationType {
+            get {
+                return ResourceManager.GetString("AiReviewNoRelationType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A newer review has replaced this one. Reload to see it..
+        /// </summary>
+        public static string AiReviewNotCurrent {
+            get {
+                return ResourceManager.GetString("AiReviewNotCurrent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This finding has no suggestion to accept..
+        /// </summary>
+        public static string AiReviewNothingToAccept {
+            get {
+                return ResourceManager.GetString("AiReviewNothingToAccept", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The description changed since this review, so the suggestion no longer fits. Edit it by hand or run the review again..
+        /// </summary>
+        public static string AiReviewPassageChanged {
+            get {
+                return ResourceManager.GetString("AiReviewPassageChanged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The reason can be at most {0} characters..
+        /// </summary>
+        public static string AiReviewReasonTooLong {
+            get {
+                return ResourceManager.GetString("AiReviewReasonTooLong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The description changed after this suggestion was accepted, so it can&apos;t be reverted automatically..
+        /// </summary>
+        public static string AiReviewRevertChanged {
+            get {
+                return ResourceManager.GetString("AiReviewRevertChanged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Each new task needs a name of at most {0} characters and a description of at most {1}..
+        /// </summary>
+        public static string AiReviewSplitTaskTooLong {
+            get {
+                return ResourceManager.GetString("AiReviewSplitTaskTooLong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A suggestion can create at most {0} new tags..
+        /// </summary>
+        public static string AiReviewTooManyNewTags {
+            get {
+                return ResourceManager.GetString("AiReviewTooManyNewTags", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The assistant&apos;s review could not be read. Try again..
+        /// </summary>
+        public static string AiReviewUnreadable {
+            get {
+                return ResourceManager.GetString("AiReviewUnreadable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This workspace has reached its monthly assistant spend cap..
         /// </summary>
         public static string AiSpendCapReached {
@@ -2767,6 +2893,33 @@ namespace Netptune.Core.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Assistant review failed.
+        /// </summary>
+        public static string AuditAssistantReviewFailed {
+            get {
+                return ResourceManager.GetString("AuditAssistantReviewFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assistant review: {0} findings.
+        /// </summary>
+        public static string AuditAssistantReviewFindings {
+            get {
+                return ResourceManager.GetString("AuditAssistantReviewFindings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assistant review: 1 finding.
+        /// </summary>
+        public static string AuditAssistantReviewOneFinding {
+            get {
+                return ResourceManager.GetString("AuditAssistantReviewOneFinding", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to BoardSlug.
         /// </summary>
         public static string AuditExportHeaderBoard {
@@ -2862,6 +3015,33 @@ namespace Netptune.Core.Localization {
         public static string AuditExportHeaderWorkspace {
             get {
                 return ResourceManager.GetString("AuditExportHeaderWorkspace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Accepted review finding “{0}”.
+        /// </summary>
+        public static string AuditReviewFindingAccepted {
+            get {
+                return ResourceManager.GetString("AuditReviewFindingAccepted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dismissed review finding “{0}”.
+        /// </summary>
+        public static string AuditReviewFindingDismissed {
+            get {
+                return ResourceManager.GetString("AuditReviewFindingDismissed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reopened review finding “{0}”.
+        /// </summary>
+        public static string AuditReviewFindingReopened {
+            get {
+                return ResourceManager.GetString("AuditReviewFindingReopened", resourceCulture);
             }
         }
         

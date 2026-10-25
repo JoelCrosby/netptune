@@ -18,6 +18,7 @@ export const allRefreshScopes = [
   'codeLinks',
   'activity',
   'automations',
+  'aiReviews',
 ] as const;
 
 export type RefreshScope = (typeof allRefreshScopes)[number];

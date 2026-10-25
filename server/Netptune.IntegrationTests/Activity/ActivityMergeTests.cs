@@ -877,6 +877,68 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
     }
 
     [Fact]
+    public async Task HandleCanonicalEvent_ShouldKeepTheAgent_OnAnAssistantFieldChange()
+    {
+        const int entityId = 1416;
+        var transition = new FieldTransitionedPayload { Field = "description", OldValue = "a", NewValue = "b" };
+
+        await HandleCanonical(
+            entityId,
+            EventKeys.EntityFieldTransitioned,
+            transition,
+            fixture.ActorUserId,
+            EventOriginType.Assistant,
+            "claude-sonnet-5");
+
+        var entries = await Entries(entityId);
+        var entry = entries.Should().ContainSingle().Subject;
+
+        entry.Agent.Should().Be("claude-sonnet-5");
+    }
+
+    [Fact]
+    public async Task HandleCanonicalEvent_ShouldKeepTheAgent_OnADiscreteEntry()
+    {
+        const int entityId = 1417;
+        var created = new EntityCreatedPayload { Name = "Split task" };
+
+        await HandleCanonical(
+            entityId,
+            EventKeys.EntityCreated,
+            created,
+            fixture.ActorUserId,
+            EventOriginType.Assistant,
+            "claude-sonnet-5");
+
+        var entries = await Entries(entityId);
+        var entry = entries.Should().ContainSingle().Subject;
+
+        entry.ActivityType.Should().Be(ActivityType.Create);
+        entry.Agent.Should().Be("claude-sonnet-5");
+    }
+
+    [Fact]
+    public async Task HandleCanonicalEvent_ShouldKeepHumanAndAssistantEditsApart_WithinTheWindow()
+    {
+        const int entityId = 1418;
+        var human = new FieldTransitionedPayload { Field = "description", OldValue = "a", NewValue = "b" };
+        var assistant = new FieldTransitionedPayload { Field = "description", OldValue = "b", NewValue = "c" };
+
+        await HandleCanonical(entityId, human);
+        await HandleCanonical(
+            entityId,
+            EventKeys.EntityFieldTransitioned,
+            assistant,
+            fixture.ActorUserId,
+            EventOriginType.Assistant,
+            "claude-sonnet-5");
+
+        var entries = await Entries(entityId);
+
+        entries.Select(entry => entry.Agent).Should().BeEquivalentTo([string.Empty, "claude-sonnet-5"]);
+    }
+
+    [Fact]
     public async Task HandleCanonicalEvent_ShouldStillSkipOtherEventsWithoutAnActor()
     {
         const int entityId = 1411;
@@ -982,7 +1044,8 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
         string eventKey,
         object transition,
         string? actorUserId,
-        EventOriginType originType = EventOriginType.User)
+        EventOriginType originType = EventOriginType.User,
+        string? agent = null)
     {
         var eventId = Guid.NewGuid();
         var occurredAt = DateTime.UtcNow;
@@ -1002,6 +1065,7 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
                 SubjectId = entityId.ToString(),
                 ActorUserId = actorUserId,
                 OriginType = originType,
+                Agent = agent,
                 OccurredAt = occurredAt,
                 RecordedAt = occurredAt,
                 RetentionClass = EventRetentionClasses.Permanent,
@@ -1020,6 +1084,7 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
             EventRecordId = eventRecordId,
             EventKey = eventKey,
             OriginType = originType,
+            Agent = agent,
             SchemaVersion = 1,
             WorkspaceId = fixture.WorkspaceId,
             SubjectType = EventEntityTypes.From(EntityType.Task),

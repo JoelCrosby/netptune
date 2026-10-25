@@ -41,6 +41,10 @@ public sealed class WorkspaceAiCredentialEntityMap : KeyedEntityMap<WorkspaceAiC
             .HasMaxLength(128);
 
         builder
+            .Property(credential => credential.ReviewModel)
+            .HasMaxLength(128);
+
+        builder
             .Property(credential => credential.CreatedAt)
             .IsRequired();
 

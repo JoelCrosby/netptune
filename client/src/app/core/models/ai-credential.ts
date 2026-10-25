@@ -9,6 +9,7 @@ export interface AiCredential {
   label: string;
   secretHint: string;
   model?: string | null;
+  reviewModel?: string | null;
   createdAt: string;
   lastUsedAt?: string | null;
 }
@@ -18,6 +19,12 @@ export interface SaveAiCredentialRequest {
   label: string;
   secret: string;
   model?: string | null;
+  reviewModel?: string | null;
+}
+
+export interface UpdateAiCredentialModelsRequest {
+  model: string | null;
+  reviewModel: string | null;
 }
 
 export type AiCredentialScope = 'user' | 'workspace';

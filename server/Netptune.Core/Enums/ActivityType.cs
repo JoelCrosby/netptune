@@ -54,4 +54,8 @@ public enum ActivityType
     ChecksFailed = 46,
     Enable = 47,
     Disable = 48,
+    RunReview = 49,
+    AcceptReviewFinding = 50,
+    DismissReviewFinding = 51,
+    ReopenReviewFinding = 52,
 }

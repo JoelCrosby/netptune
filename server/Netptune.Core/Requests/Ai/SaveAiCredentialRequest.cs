@@ -11,4 +11,6 @@ public sealed record SaveAiCredentialRequest
     public required string Secret { get; init; }
 
     public string? Model { get; init; }
+
+    public string? ReviewModel { get; init; }
 }

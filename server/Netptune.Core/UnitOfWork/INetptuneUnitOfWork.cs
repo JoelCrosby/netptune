@@ -95,6 +95,8 @@ public interface INetptuneUnitOfWork : IUnitOfWork
 
     IAiChangeSetRepository AiChangeSets { get; }
 
+    IAiReviewRepository AiReviews { get; }
+
     IPageRepository Pages { get; }
 
     IPageFavouriteRepository PageFavourites { get; }

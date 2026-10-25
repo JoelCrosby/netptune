@@ -19,6 +19,8 @@ public sealed record UserAiCredential : KeyedEntity<Guid>
 
     public string? Model { get; set; }
 
+    public string? ReviewModel { get; set; }
+
     public DateTime CreatedAt { get; init; }
 
     public DateTime? LastUsedAt { get; set; }

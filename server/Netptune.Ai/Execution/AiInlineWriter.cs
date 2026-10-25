@@ -181,9 +181,7 @@ public sealed class AiInlineWriter : IAiInlineWriter
             yield break;
         }
 
-        var isOwnerOrAdmin = membership.Role is WorkspaceRole.Owner or WorkspaceRole.Admin;
-        var hasEveryPermission = target.RequiredPermissions.All(membership.Permissions.Contains);
-        var isPermitted = isOwnerOrAdmin || hasEveryPermission;
+        var isPermitted = membership.Allows(target.RequiredPermissions);
 
         if (!isPermitted)
         {

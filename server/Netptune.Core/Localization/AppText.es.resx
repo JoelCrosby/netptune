@@ -1837,4 +1837,64 @@ Confirma tu dirección de correo electrónico con el siguiente enlace.</value>
   <data name="AiSpendCapReachedDuringTurn" xml:space="preserve">
     <value>El asistente se detuvo porque esta respuesta alcanzó el límite mensual de gasto del espacio de trabajo.</value>
   </data>
+  <data name="AiErrorNoPermissionToReview" xml:space="preserve">
+    <value>No tienes permiso para que el asistente revise esto.</value>
+  </data>
+  <data name="AiReviewUnreadable" xml:space="preserve">
+    <value>No se pudo leer la revisión del asistente. Inténtalo de nuevo.</value>
+  </data>
+  <data name="AiReviewFieldNotEditable" xml:space="preserve">
+    <value>Esta parte del elemento no se puede cambiar desde una revisión.</value>
+  </data>
+  <data name="AiReviewNotCurrent" xml:space="preserve">
+    <value>Una revisión más reciente ha sustituido a esta. Recarga para verla.</value>
+  </data>
+  <data name="AiReviewFindingAlreadyDecided" xml:space="preserve">
+    <value>Alguien ya ha decidido sobre este hallazgo. Recarga para verlo.</value>
+  </data>
+  <data name="AiReviewBusy" xml:space="preserve">
+    <value>Hay otro cambio en curso en esta revisión. Inténtalo de nuevo.</value>
+  </data>
+  <data name="AiReviewPassageChanged" xml:space="preserve">
+    <value>La descripción ha cambiado desde esta revisión, así que la sugerencia ya no encaja. Edítala a mano o vuelve a ejecutar la revisión.</value>
+  </data>
+  <data name="AiReviewNothingToAccept" xml:space="preserve">
+    <value>Este hallazgo no tiene ninguna sugerencia que aceptar.</value>
+  </data>
+  <data name="AiReviewReasonTooLong" xml:space="preserve">
+    <value>El motivo puede tener como máximo {0} caracteres.</value>
+  </data>
+  <data name="AiReviewRevertChanged" xml:space="preserve">
+    <value>La descripción cambió después de aceptar esta sugerencia, así que no se puede deshacer automáticamente.</value>
+  </data>
+  <data name="AiReviewNoRelationType" xml:space="preserve">
+    <value>Este espacio de trabajo no tiene ningún tipo de relación para ese tipo de vínculo.</value>
+  </data>
+  <data name="AiReviewSplitTaskTooLong" xml:space="preserve">
+    <value>Cada tarea nueva necesita un nombre de {0} caracteres como máximo y una descripción de {1} como máximo.</value>
+  </data>
+  <data name="AiReviewTooManyNewTags" xml:space="preserve">
+    <value>Una sugerencia puede crear como máximo {0} etiquetas nuevas.</value>
+  </data>
+  <data name="AiReviewCannotReopenApplied" xml:space="preserve">
+    <value>Esta sugerencia ya se ha aplicado a la tarea, así que no se puede reabrir.</value>
+  </data>
+  <data name="AuditAssistantReviewFailed" xml:space="preserve">
+    <value>La revisión del asistente ha fallado</value>
+  </data>
+  <data name="AuditAssistantReviewOneFinding" xml:space="preserve">
+    <value>Revisión del asistente: 1 hallazgo</value>
+  </data>
+  <data name="AuditAssistantReviewFindings" xml:space="preserve">
+    <value>Revisión del asistente: {0} hallazgos</value>
+  </data>
+  <data name="AuditReviewFindingAccepted" xml:space="preserve">
+    <value>Hallazgo de revisión “{0}” aceptado</value>
+  </data>
+  <data name="AuditReviewFindingDismissed" xml:space="preserve">
+    <value>Hallazgo de revisión “{0}” descartado</value>
+  </data>
+  <data name="AuditReviewFindingReopened" xml:space="preserve">
+    <value>Hallazgo de revisión “{0}” reabierto</value>
+  </data>
 </root>

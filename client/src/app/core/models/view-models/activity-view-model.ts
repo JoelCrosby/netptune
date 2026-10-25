@@ -68,4 +68,8 @@ export enum ActivityType {
   checksFailed = 46,
   enable = 47,
   disable = 48,
+  runReview = 49,
+  acceptReviewFinding = 50,
+  dismissReviewFinding = 51,
+  reopenReviewFinding = 52,
 }

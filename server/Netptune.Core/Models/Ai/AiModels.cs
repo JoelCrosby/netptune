@@ -12,6 +12,8 @@ public sealed record AiModelOption
 
     public bool IsDefault { get; init; }
 
+    public bool IsReviewDefault { get; init; }
+
     public IReadOnlyList<AiEffort> Efforts { get; init; } = [];
 }
 
@@ -27,6 +29,9 @@ public static class AiModels
     public const string AnthropicTitleModel = "claude-haiku-4-5";
     public const string OpenAiTitleModel = "gpt-5.6-luna";
 
+    public const string AnthropicReviewModel = "claude-sonnet-5";
+    public const string OpenAiReviewModel = "gpt-5.6-terra";
+
     public static readonly IReadOnlyList<AiModelOption> Catalog =
     [
         new()
@@ -40,8 +45,9 @@ public static class AiModels
         new()
         {
             Provider = AiProvider.Anthropic,
-            Id = "claude-sonnet-5",
+            Id = AnthropicReviewModel,
             Label = "Claude Sonnet 5",
+            IsReviewDefault = true,
             Efforts = AllEfforts,
         },
         new()
@@ -61,8 +67,9 @@ public static class AiModels
         new()
         {
             Provider = AiProvider.OpenAi,
-            Id = "gpt-5.6-terra",
+            Id = OpenAiReviewModel,
             Label = "GPT-5.6 Terra",
+            IsReviewDefault = true,
             Efforts = OpenAiEfforts,
         },
         new()
@@ -81,6 +88,22 @@ public static class AiModels
             AiProvider.OpenAi => OpenAiTitleModel,
             _ => AnthropicTitleModel,
         };
+    }
+
+    public static string ReviewModelFor(AiProvider provider)
+    {
+        return provider switch
+        {
+            AiProvider.OpenAi => OpenAiReviewModel,
+            _ => AnthropicReviewModel,
+        };
+    }
+
+    public static string ResolveReviewModel(AiProvider provider, string? savedModel)
+    {
+        var isSavedModelSupported = IsSupported(provider, savedModel);
+
+        return isSavedModelSupported ? savedModel! : ReviewModelFor(provider);
     }
 
     public static bool IsSupported(AiProvider provider, string? model)

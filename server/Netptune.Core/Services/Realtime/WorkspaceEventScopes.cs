@@ -25,4 +25,6 @@ public static class WorkspaceEventScopes
     public const string CodeLinks = "codeLinks";
 
     public const string Activity = "activity";
+
+    public const string AiReview = "aiReview";
 }

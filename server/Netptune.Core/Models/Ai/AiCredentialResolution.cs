@@ -13,6 +13,8 @@ public sealed record AiResolvedCredential
 
     public string? Model { get; init; }
 
+    public string? ReviewModel { get; init; }
+
     public required byte[] Secret { get; init; }
 }
 
@@ -32,6 +34,7 @@ public static class AiCredentialResolution
                 Provider = credential.Provider,
                 Source = AiCredentialSource.Workspace,
                 Model = credential.Model,
+                ReviewModel = credential.ReviewModel,
                 Secret = credential.Secret,
             };
         }
@@ -44,6 +47,7 @@ public static class AiCredentialResolution
                 Provider = credential.Provider,
                 Source = AiCredentialSource.User,
                 Model = credential.Model,
+                ReviewModel = credential.ReviewModel,
                 Secret = credential.Secret,
             };
         }

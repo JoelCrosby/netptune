@@ -39,6 +39,7 @@ public sealed class GetAiCredentialsQueryHandler : IRequestHandler<GetAiCredenti
             Label = credential.Label,
             SecretHint = credential.SecretHint,
             Model = credential.Model,
+            ReviewModel = credential.ReviewModel,
             CreatedAt = credential.CreatedAt,
             LastUsedAt = credential.LastUsedAt,
         };

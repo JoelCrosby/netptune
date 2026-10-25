@@ -334,3 +334,48 @@ public sealed record SourceControlActivityPayload
 
     public string? ActorAvatarUrl { get; init; }
 }
+
+public sealed record AssistantReviewCompletedPayload
+{
+    public int RunId { get; init; }
+
+    public required string Outcome { get; init; }
+
+    public string? ErrorCode { get; init; }
+
+    public int FindingCount { get; init; }
+
+    public required string Model { get; init; }
+
+    public required string ReviewedFingerprint { get; init; }
+
+    public DateTime? SubjectUpdatedAt { get; init; }
+}
+
+public sealed record AssistantReviewFindingDecidedPayload
+{
+    public int RunId { get; init; }
+
+    public long FindingId { get; init; }
+
+    public required string Category { get; init; }
+
+    public required string Title { get; init; }
+
+    public string? Reason { get; init; }
+
+    public bool Edited { get; init; }
+
+    public bool Reverted { get; init; }
+
+    public List<AssistantReviewAppliedEntity> Changes { get; init; } = [];
+}
+
+public sealed record AssistantReviewAppliedEntity
+{
+    public required string Kind { get; init; }
+
+    public required string EntityType { get; init; }
+
+    public int EntityId { get; init; }
+}

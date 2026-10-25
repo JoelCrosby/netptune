@@ -79,6 +79,9 @@ public class DataContext : IdentityDbContext<AppUser>, IDataProtectionKeyContext
     public DbSet<AiUsageRecord> AiUsageRecords { get; set; } = null!;
     public DbSet<AiToolInvocation> AiToolInvocations { get; set; } = null!;
     public DbSet<AiChangeSet> AiChangeSets { get; set; } = null!;
+    public DbSet<AiReviewRun> AiReviewRuns { get; set; } = null!;
+    public DbSet<AiReviewFinding> AiReviewFindings { get; set; } = null!;
+    public DbSet<AiReviewFindingReference> AiReviewFindingReferences { get; set; } = null!;
     public DbSet<AiProposedChange> AiProposedChanges { get; set; } = null!;
     public DbSet<AiWebDocument> AiWebDocuments { get; set; } = null!;
     public DbSet<WorkspaceSearchCredential> WorkspaceSearchCredentials { get; set; } = null!;

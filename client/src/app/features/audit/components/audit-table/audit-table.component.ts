@@ -211,6 +211,7 @@ export class AuditTableComponent {
       case ActivityType.pullRequestMerged:
       case ActivityType.checksPassed:
       case ActivityType.enable:
+      case ActivityType.acceptReviewFinding:
         return 'bg-green-500/10 text-green-600 dark:text-green-400';
       case ActivityType.delete:
       case ActivityType.remove:
@@ -230,6 +231,7 @@ export class AuditTableComponent {
       case ActivityType.roleChanged:
         return 'bg-sky-500/10 text-sky-600 dark:text-sky-400';
       case ActivityType.exportRequested:
+      case ActivityType.runReview:
         return 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400';
       default:
         return 'bg-amber-500/10 text-amber-600 dark:text-amber-400';

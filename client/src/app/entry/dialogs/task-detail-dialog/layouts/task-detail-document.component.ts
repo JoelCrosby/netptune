@@ -27,6 +27,9 @@ import { TaskDetailPropertyChipsComponent } from '../shared/task-detail-property
 import { TaskDetailTagRowComponent } from '../shared/task-detail-tag-row.component';
 import { EYEBROW, META_CHIP } from '../task-detail-styles';
 import { TaskDetailService } from '../task-detail.service';
+import { TaskDetailReviewComponent } from '../task-detail-review.component';
+import { TaskDetailReviewService } from '../shared/task-detail-review.service';
+import { TaskDetailReviewOriginComponent } from '../shared/task-detail-review-origin.component';
 import {
   TabGroupComponent,
   type TabItem,
@@ -54,8 +57,10 @@ import {
     TaskDetailCommentsComponent,
     TaskDetailComposerComponent,
     TaskDetailActivityFeedComponent,
+    TaskDetailReviewComponent,
+    TaskDetailReviewOriginComponent,
   ],
-  providers: [TaskDetailCommentsService],
+  providers: [TaskDetailCommentsService, TaskDetailReviewService],
   host: { class: 'flex h-full min-h-0 flex-col' },
   template: `
     @if (task(); as task) {
@@ -124,6 +129,8 @@ import {
             <app-task-detail-flags />
           }
 
+          <app-task-detail-review-origin />
+
           <app-task-detail-description textClass="text-[16px]/[28px]" />
 
           <div class="bg-foreground/8 h-px" aria-hidden="true"></div>
@@ -133,6 +140,7 @@ import {
             [tabs]="
               tabItems(
                 comments.count(),
+                review.openCount(),
                 filesSection()?.count() ?? null,
                 relations.count(),
                 task.placements.length,
@@ -146,6 +154,9 @@ import {
             <div [class.hidden]="activeTab() !== 'comments'">
               <app-task-detail-comments density="comfortable" />
             </div>
+          }
+          @if (showReview() && activeTab() === 'review') {
+            <app-task-detail-review />
           }
           @if (readFiles()) {
             <div [class.hidden]="activeTab() !== 'files'">
@@ -191,6 +202,7 @@ import {
 export class TaskDetailDocumentComponent {
   readonly taskDetail = inject(TaskDetailService);
   readonly comments = inject(TaskDetailCommentsService);
+  readonly review = inject(TaskDetailReviewService);
 
   protected readonly filesSection = viewChild(TaskDetailFilesComponent);
   protected readonly pagesSection = viewChild(TaskDetailPagesComponent);
@@ -238,10 +250,16 @@ export class TaskDetailDocumentComponent {
     history: $localize`:Tab showing what has happened to a task:History`,
     pages: $localize`:Tab listing the pages that mention a task:Pages`,
     code: $localize`:Tab listing the branches, commits and pull requests linked to a task:Code`,
+    review: $localize`:Tab showing the assistant's review of a task:Review`,
   };
+
+  readonly showReview = computed(() => {
+    return this.taskDetail.canAskAssistant() || this.review.hasReview();
+  });
 
   tabItems(
     comments: number,
+    openFindings: number,
     files: number | null,
     links: number,
     boards: number,
@@ -255,6 +273,14 @@ export class TaskDetailDocumentComponent {
         value: 'comments',
         label: this.labels.comments,
         count: comments,
+      });
+    }
+
+    if (this.showReview()) {
+      tabs.push({
+        value: 'review',
+        label: this.labels.review,
+        count: openFindings,
       });
     }
 

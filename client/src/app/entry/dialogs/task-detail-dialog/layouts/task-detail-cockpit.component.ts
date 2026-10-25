@@ -24,6 +24,9 @@ import { TaskDetailPropertyChipsComponent } from '../shared/task-detail-property
 import { TaskDetailTagRowComponent } from '../shared/task-detail-tag-row.component';
 import { TaskDetailTimestampsComponent } from '../shared/task-detail-timestamps.component';
 import { TaskDetailRailService } from '../task-detail-rail';
+import { TaskDetailReviewComponent } from '../task-detail-review.component';
+import { TaskDetailReviewService } from '../shared/task-detail-review.service';
+import { TaskDetailReviewOriginComponent } from '../shared/task-detail-review-origin.component';
 import { TaskDetailService } from '../task-detail.service';
 import {
   TabGroupComponent,
@@ -57,8 +60,10 @@ import { DialogSectionComponent } from '@static/components/dialog/dialog-section
     TaskDetailComposerComponent,
     TaskDetailActivityFeedComponent,
     TaskDetailTimestampsComponent,
+    TaskDetailReviewComponent,
+    TaskDetailReviewOriginComponent,
   ],
-  providers: [TaskDetailCommentsService],
+  providers: [TaskDetailCommentsService, TaskDetailReviewService],
   host: { class: 'flex h-full min-h-0 flex-col' },
   template: `
     @if (task(); as task) {
@@ -88,6 +93,8 @@ import { DialogSectionComponent } from '@static/components/dialog/dialog-section
         @if (readFlags()) {
           <app-task-detail-flags />
         }
+
+        <app-task-detail-review-origin />
       </div>
 
       <app-dialog-columns bodyClass="px-7 pt-5.5 pb-6">
@@ -167,7 +174,7 @@ import { DialogSectionComponent } from '@static/components/dialog/dialog-section
               class="border-foreground/8 flex h-[52px] shrink-0 items-center gap-2 border-b px-4">
               <app-tab-group
                 variant="island"
-                [tabs]="railTabItems(comments.count())"
+                [tabs]="railTabItems(comments.count(), review.openCount())"
                 [(value)]="railTab" />
             </div>
 
@@ -175,6 +182,8 @@ import { DialogSectionComponent } from '@static/components/dialog/dialog-section
               class="custom-scroll min-h-0 flex-1 overflow-y-auto px-4 py-3.5">
               @if (readComments() && railTab() === 'comments') {
                 <app-task-detail-comments />
+              } @else if (railTab() === 'review') {
+                <app-task-detail-review />
               } @else {
                 <app-task-detail-activity-feed
                   [enabled]="railTab() === 'history'" />
@@ -200,6 +209,7 @@ export class TaskDetailCockpitComponent {
   readonly taskDetail = inject(TaskDetailService);
   readonly comments = inject(TaskDetailCommentsService);
   readonly rail = inject(TaskDetailRailService);
+  readonly review = inject(TaskDetailReviewService);
 
   protected readonly filesSection = viewChild(TaskDetailFilesComponent);
   protected readonly pagesSection = viewChild(TaskDetailPagesComponent);
@@ -219,7 +229,7 @@ export class TaskDetailCockpitComponent {
       return isHiddenCodeTab ? 'boards' : tab;
     },
   });
-  readonly railTab = linkedSignal(() => {
+  readonly railTab = linkedSignal<string>(() => {
     return this.readComments() ? 'comments' : 'history';
   });
 
@@ -237,7 +247,7 @@ export class TaskDetailCockpitComponent {
   readonly readPages = hasPermission(PERMISSIONS.pages.read);
   readonly readSourceControl = hasPermission(PERMISSIONS.sourceControl.read);
   readonly showRail = computed(
-    () => this.readComments() || this.readActivity()
+    () => this.readComments() || this.readActivity() || this.showReview()
   );
 
   private readonly labels = {
@@ -248,6 +258,7 @@ export class TaskDetailCockpitComponent {
     code: $localize`:Tab listing the branches, commits and pull requests linked to a task:Code`,
     comments: $localize`:Section heading for a task's comments:Comments`,
     history: $localize`:Tab showing what has happened to a task:History`,
+    review: $localize`:Tab showing the assistant's review of a task:Review`,
   };
 
   tabItems(
@@ -277,7 +288,11 @@ export class TaskDetailCockpitComponent {
     return tabs;
   }
 
-  railTabItems(comments: number): TabItem[] {
+  readonly showReview = computed(() => {
+    return this.taskDetail.canAskAssistant() || this.review.hasReview();
+  });
+
+  railTabItems(comments: number, openFindings: number): TabItem[] {
     const tabs: TabItem[] = [];
 
     if (this.readComments()) {
@@ -290,6 +305,14 @@ export class TaskDetailCockpitComponent {
 
     if (this.readActivity()) {
       tabs.push({ value: 'history', label: this.labels.history, count: null });
+    }
+
+    if (this.showReview()) {
+      tabs.push({
+        value: 'review',
+        label: this.labels.review,
+        count: openFindings,
+      });
     }
 
     return tabs;

@@ -16,6 +16,7 @@ const scopesByEntityType: Record<string, readonly RefreshScope[]> = {
   codeLinks: ['codeLinks'],
   activity: ['activity'],
   automationRule: ['automations', 'activity'],
+  aiReview: ['aiReviews', 'activity'],
 };
 
 /**

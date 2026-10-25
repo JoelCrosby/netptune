@@ -2,6 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Ai.Execution;
+using Netptune.Ai.Execution.Reviews;
 using Netptune.Ai.Execution.Handlers;
 using Netptune.Ai.Providers;
 using Netptune.Ai.Tools;
@@ -143,6 +144,9 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiImportMappingAdvisor, AiImportMappingAdvisor>();
         services.AddScoped<IAiPageTransformer, AiPageTransformer>();
         services.AddScoped<IAiInlineWriter, AiInlineWriter>();
+        services.AddScoped<IAiReviewer, AiReviewer>();
+        services.AddScoped<IAiReviewSubject, TaskReviewSubject>();
+        services.AddScoped<TaskReviewSuggestions>();
         services.AddScoped<IAiSpendService, AiSpendService>();
         services.AddScoped<IAiConversationService, AiConversationService>();
         services.AddScoped<IAiChangeSetApplier, AiChangeSetApplier>();

@@ -17,6 +17,10 @@ public static class ActivityNotificationPolicy
         ActivityType.ChecksFailed,
         ActivityType.Enable,
         ActivityType.Disable,
+        ActivityType.RunReview,
+        ActivityType.AcceptReviewFinding,
+        ActivityType.DismissReviewFinding,
+        ActivityType.ReopenReviewFinding,
     ];
 
     public static bool IsNotifiable(ActivityType activityType)

@@ -89,6 +89,8 @@ public class WorkspaceRepository : AuditableRepository<DataContext, Workspace, i
         await Context.ServiceAccounts.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
         await Context.AppUsers.Where(x => serviceAccountUserIds.Contains(x.Id)).ExecuteDeleteAsync(cancellationToken);
 
+        await Context.AiReviewRuns.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+
         await Context.Workspaces.Where(x => x.Id == workspaceId).ExecuteDeleteAsync(cancellationToken);
     }
 

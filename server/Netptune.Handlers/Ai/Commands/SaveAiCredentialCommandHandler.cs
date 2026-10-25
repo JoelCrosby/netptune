@@ -51,6 +51,7 @@ public sealed class SaveAiCredentialCommandHandler
         credential.Secret = Protector.Protect(validated.Secret);
         credential.SecretHint = Protector.CreateHint(validated.Secret);
         credential.Model = validated.Model;
+        credential.ReviewModel = validated.ReviewModel;
         credential.LastUsedAt = null;
 
         await UnitOfWork.CompleteAsync(cancellationToken);
@@ -62,6 +63,7 @@ public sealed class SaveAiCredentialCommandHandler
             Label = credential.Label,
             SecretHint = credential.SecretHint,
             Model = credential.Model,
+            ReviewModel = credential.ReviewModel,
             CreatedAt = credential.CreatedAt,
             LastUsedAt = credential.LastUsedAt,
         });

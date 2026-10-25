@@ -16,8 +16,11 @@ using Netptune.Core.Requests;
 using Netptune.Core.Requests.Ai;
 using Netptune.Core.Requests.Pages;
 using Netptune.Core.Services.Ai;
+using Netptune.Core.Services.Realtime;
 using Netptune.Handlers.Ai.Commands;
 using Netptune.Handlers.Ai.Queries;
+using Netptune.Handlers.AiReviews.Commands;
+using Netptune.Handlers.AiReviews.Queries;
 using Netptune.Handlers.Pages.Commands;
 
 namespace Netptune.App.Endpoints;
@@ -49,6 +52,9 @@ public static class AiEndpoints
         group.MapDelete("/credentials/{credentialId:guid}", HandleDeleteCredential)
             .RequireAuthorization(NetptunePermissions.Assistant.Use);
 
+        group.MapPatch("/credentials/{credentialId:guid}", HandleUpdateCredentialModels)
+            .RequireAuthorization(NetptunePermissions.Assistant.Use);
+
         group.MapGet("/credentials/availability", HandleGetCredentialAvailability)
             .RequireAuthorization(NetptunePermissions.Assistant.Use);
 
@@ -59,6 +65,9 @@ public static class AiEndpoints
             .RequireAuthorization(NetptunePermissions.Workspace.Update);
 
         group.MapDelete("/workspace-credentials/{credentialId:guid}", HandleDeleteWorkspaceCredential)
+            .RequireAuthorization(NetptunePermissions.Workspace.Update);
+
+        group.MapPatch("/workspace-credentials/{credentialId:guid}", HandleUpdateWorkspaceCredentialModels)
             .RequireAuthorization(NetptunePermissions.Workspace.Update);
 
         group.MapGet("/workspace-search-credential", HandleGetWorkspaceSearchCredential)
@@ -156,7 +165,111 @@ public static class AiEndpoints
             .RequireAuthorization(NetptunePermissions.Pages.Read, NetptunePermissions.Assistant.Use)
             .RequireRateLimiting(RateLimiterConfiguration.AiPolicyName);
 
+        group
+            .MapPost("/reviews/{runId:int}/findings/{findingId:long}/decide", HandleDecideReviewFinding)
+            .Broadcasts(WorkspaceEventScopes.AiReview, WorkspaceEventScopes.Task, WorkspaceEventScopes.Tag);
+
+        MapTaskReviewEndpoints(builder);
+
         return group;
+    }
+
+    private static void MapTaskReviewEndpoints(RouteGroupBuilder builder)
+    {
+        var tasks = builder.MapGroup("tasks")
+            .WithTags("AI assistant")
+            .RequireAuthorization();
+
+        tasks
+            .MapPost("/{taskId:int}/reviews", HandleRunTaskReview)
+            .RequireAuthorization(NetptunePermissions.Tasks.Read, NetptunePermissions.Assistant.Use)
+            .RequireRateLimiting(RateLimiterConfiguration.AiPolicyName);
+
+        tasks.MapGet("/{taskId:int}/reviews/latest", HandleGetLatestTaskReview)
+            .RequireAuthorization(NetptunePermissions.Tasks.Read);
+
+        tasks.MapGet("/{taskId:int}/reviews", HandleGetTaskReviewHistory)
+            .RequireAuthorization(NetptunePermissions.Tasks.Read);
+
+        tasks.MapGet("/{taskId:int}/reviews/{runId:int}", HandleGetTaskReviewRun)
+            .RequireAuthorization(NetptunePermissions.Tasks.Read);
+    }
+
+    // Not tied to RequestAborted, like a conversation turn: the review is paid for once it starts, so it
+    // finishes and is stored even when the dialog closes, bounded by the reviewer's own timeout.
+    private static async Task HandleRunTaskReview(
+        int taskId,
+        HttpContext context,
+        IAiReviewer reviewer,
+        IBoardEventService boardEventService)
+    {
+        StartEventStream(context);
+
+        await context.Response.Body.FlushAsync(context.RequestAborted);
+
+        var subject = new AiReviewSubject(EntityType.Task, taskId);
+        var clientConnected = true;
+
+        await foreach (var reviewEvent in reviewer.Review(subject, CancellationToken.None))
+        {
+            var hasStoredRun = reviewEvent.RunId.HasValue;
+
+            if (hasStoredRun)
+            {
+                await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.AiReview);
+            }
+
+            if (!clientConnected)
+            {
+                continue;
+            }
+
+            clientConnected = await TryWriteEvent(context, reviewEvent);
+        }
+    }
+
+    private static async Task<IResult> HandleDecideReviewFinding(
+        int runId,
+        long findingId,
+        DecideAiReviewFindingRequest request,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var command = new DecideAiReviewFindingCommand(runId, findingId, request);
+        var result = await mediator.Send(command, cancellationToken);
+
+        return result.ToResult();
+    }
+
+    private static async Task<IResult> HandleGetLatestTaskReview(
+        int taskId,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetLatestAiReviewQuery(taskId), cancellationToken);
+
+        return result.ToResult();
+    }
+
+    private static async Task<IResult> HandleGetTaskReviewHistory(
+        int taskId,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetAiReviewHistoryQuery(taskId), cancellationToken);
+
+        return result.ToResult();
+    }
+
+    private static async Task<IResult> HandleGetTaskReviewRun(
+        int taskId,
+        int runId,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetAiReviewRunQuery(taskId, runId), cancellationToken);
+
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleTransformPageText(
@@ -184,6 +297,29 @@ public static class AiEndpoints
         var result = await mediator.Send(new SaveAiCredentialCommand(request), cancellationToken);
 
         return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
+    }
+
+    private static async Task<IResult> HandleUpdateCredentialModels(
+        Guid credentialId,
+        UpdateAiCredentialModelsRequest request,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new UpdateAiCredentialModelsCommand(credentialId, request), cancellationToken);
+
+        return result.ToResult();
+    }
+
+    private static async Task<IResult> HandleUpdateWorkspaceCredentialModels(
+        Guid credentialId,
+        UpdateAiCredentialModelsRequest request,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var command = new UpdateWorkspaceAiCredentialModelsCommand(credentialId, request);
+        var result = await mediator.Send(command, cancellationToken);
+
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleDeleteCredential(

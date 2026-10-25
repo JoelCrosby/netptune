@@ -1837,4 +1837,64 @@ Bitte bestätige deine E-Mail-Adresse über den folgenden Link.</value>
   <data name="AiSpendCapReachedDuringTurn" xml:space="preserve">
     <value>Der Assistent hat angehalten, weil diese Antwort das monatliche Ausgabenlimit des Arbeitsbereichs erreicht hat.</value>
   </data>
+  <data name="AiErrorNoPermissionToReview" xml:space="preserve">
+    <value>Du hast keine Berechtigung, dies vom Assistenten prüfen zu lassen.</value>
+  </data>
+  <data name="AiReviewUnreadable" xml:space="preserve">
+    <value>Die Prüfung des Assistenten konnte nicht gelesen werden. Versuche es erneut.</value>
+  </data>
+  <data name="AiReviewFieldNotEditable" xml:space="preserve">
+    <value>Dieser Teil des Elements kann nicht über eine Prüfung geändert werden.</value>
+  </data>
+  <data name="AiReviewNotCurrent" xml:space="preserve">
+    <value>Eine neuere Prüfung hat diese ersetzt. Lade neu, um sie zu sehen.</value>
+  </data>
+  <data name="AiReviewFindingAlreadyDecided" xml:space="preserve">
+    <value>Über diesen Befund wurde bereits entschieden. Lade neu, um ihn zu sehen.</value>
+  </data>
+  <data name="AiReviewBusy" xml:space="preserve">
+    <value>Eine andere Änderung an dieser Prüfung läuft gerade. Versuche es erneut.</value>
+  </data>
+  <data name="AiReviewPassageChanged" xml:space="preserve">
+    <value>Die Beschreibung hat sich seit dieser Prüfung geändert, daher passt der Vorschlag nicht mehr. Bearbeite sie von Hand oder führe die Prüfung erneut aus.</value>
+  </data>
+  <data name="AiReviewNothingToAccept" xml:space="preserve">
+    <value>Dieser Befund hat keinen Vorschlag zum Übernehmen.</value>
+  </data>
+  <data name="AiReviewReasonTooLong" xml:space="preserve">
+    <value>Die Begründung darf höchstens {0} Zeichen lang sein.</value>
+  </data>
+  <data name="AiReviewRevertChanged" xml:space="preserve">
+    <value>Die Beschreibung hat sich nach dem Übernehmen dieses Vorschlags geändert, daher kann er nicht automatisch rückgängig gemacht werden.</value>
+  </data>
+  <data name="AiReviewNoRelationType" xml:space="preserve">
+    <value>Dieser Arbeitsbereich hat keinen Beziehungstyp für diese Art von Verknüpfung.</value>
+  </data>
+  <data name="AiReviewSplitTaskTooLong" xml:space="preserve">
+    <value>Jede neue Aufgabe braucht einen Namen mit höchstens {0} Zeichen und eine Beschreibung mit höchstens {1} Zeichen.</value>
+  </data>
+  <data name="AiReviewTooManyNewTags" xml:space="preserve">
+    <value>Ein Vorschlag kann höchstens {0} neue Tags anlegen.</value>
+  </data>
+  <data name="AiReviewCannotReopenApplied" xml:space="preserve">
+    <value>Dieser Vorschlag wurde bereits auf die Aufgabe angewendet und kann daher nicht wieder geöffnet werden.</value>
+  </data>
+  <data name="AuditAssistantReviewFailed" xml:space="preserve">
+    <value>Prüfung durch den Assistenten fehlgeschlagen</value>
+  </data>
+  <data name="AuditAssistantReviewOneFinding" xml:space="preserve">
+    <value>Prüfung durch den Assistenten: 1 Befund</value>
+  </data>
+  <data name="AuditAssistantReviewFindings" xml:space="preserve">
+    <value>Prüfung durch den Assistenten: {0} Befunde</value>
+  </data>
+  <data name="AuditReviewFindingAccepted" xml:space="preserve">
+    <value>Befund “{0}” der Prüfung übernommen</value>
+  </data>
+  <data name="AuditReviewFindingDismissed" xml:space="preserve">
+    <value>Befund “{0}” der Prüfung verworfen</value>
+  </data>
+  <data name="AuditReviewFindingReopened" xml:space="preserve">
+    <value>Befund “{0}” der Prüfung wieder geöffnet</value>
+  </data>
 </root>

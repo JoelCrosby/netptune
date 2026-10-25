@@ -19,6 +19,8 @@ public sealed record WorkspaceAiCredential : KeyedEntity<Guid>
 
     public string? Model { get; set; }
 
+    public string? ReviewModel { get; set; }
+
     public string? CreatedByUserId { get; set; }
 
     public DateTime CreatedAt { get; init; }

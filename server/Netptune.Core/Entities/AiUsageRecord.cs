@@ -47,4 +47,6 @@ public static class AiUsagePurposes
     public const string TaskDescriptionWrite = "task_description_write";
 
     public const string PageWrite = "page_write";
+
+    public const string TaskReview = "task_review";
 }

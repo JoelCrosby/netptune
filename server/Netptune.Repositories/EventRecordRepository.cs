@@ -10,6 +10,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Events.Tasks;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Audit;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
@@ -446,6 +447,10 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
             ActivityType.ChecksPassed => ApplyCanonicalActivityFilter(query, EventKeys.SourceControlChecksPassed, legacyActivityType),
             ActivityType.ChecksFailed => ApplyCanonicalActivityFilter(query, EventKeys.SourceControlChecksFailed, legacyActivityType),
             ActivityType.Disable => ApplyCanonicalActivityFilter(query, EventKeys.AutomationRuleAutoDisabled, legacyActivityType),
+            ActivityType.RunReview => ApplyCanonicalActivityFilter(query, EventKeys.AssistantReviewCompleted, legacyActivityType),
+            ActivityType.AcceptReviewFinding => ApplyCanonicalActivityFilter(query, EventKeys.AssistantReviewFindingAccepted, legacyActivityType),
+            ActivityType.DismissReviewFinding => ApplyCanonicalActivityFilter(query, EventKeys.AssistantReviewFindingDismissed, legacyActivityType),
+            ActivityType.ReopenReviewFinding => ApplyCanonicalActivityFilter(query, EventKeys.AssistantReviewFindingReopened, legacyActivityType),
             _ => ApplyLegacyActivityFilter(query, legacyActivityType),
         };
     }
@@ -647,6 +652,10 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
             EventKeys.CommentUpdated => "Comment edited",
             EventKeys.CommentDeleted => "Comment deleted",
             EventKeys.AssistantConversationDeleted => FormatAssistantConversationDeletion(payload),
+            EventKeys.AssistantReviewCompleted => FormatReviewCompletion(payload),
+            EventKeys.AssistantReviewFindingAccepted => FormatReviewDecision(payload, AppText.AuditReviewFindingAccepted),
+            EventKeys.AssistantReviewFindingDismissed => FormatReviewDecision(payload, AppText.AuditReviewFindingDismissed),
+            EventKeys.AssistantReviewFindingReopened => FormatReviewDecision(payload, AppText.AuditReviewFindingReopened),
             EventKeys.SourceControlConnected => FormatSourceControlConnection(payload, "Connected"),
             EventKeys.SourceControlDisconnected => FormatSourceControlConnection(payload, "Disconnected"),
             EventKeys.SourceControlPullRequestOpened => FormatSourceControlActivity(payload, "Opened pull request #"),
@@ -734,6 +743,30 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
         return owner is null
             ? $"Deleted assistant conversation \"{title}\""
             : $"Deleted {owner}'s assistant conversation \"{title}\"";
+    }
+
+    private static string FormatReviewCompletion(JsonElement payload)
+    {
+        var outcome = GetPayloadValue(payload, "outcome");
+        var findingCount = GetPayloadValue(payload, "findingCount") ?? "0";
+        var hasFailed = outcome == "failed";
+        var hasOneFinding = findingCount == "1";
+
+        if (hasFailed)
+        {
+            return AppText.AuditAssistantReviewFailed;
+        }
+
+        return hasOneFinding
+            ? AppText.AuditAssistantReviewOneFinding
+            : Localized.Format(AppText.AuditAssistantReviewFindings, findingCount);
+    }
+
+    private static string FormatReviewDecision(JsonElement payload, string format)
+    {
+        var title = FormatValue(GetPayloadValue(payload, "title"));
+
+        return Localized.Format(format, title);
     }
 
     private static string FormatSourceControlConnection(JsonElement payload, string verb)

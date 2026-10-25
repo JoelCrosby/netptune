@@ -2444,4 +2444,84 @@ Please confirm your email address with the following link.</value>
     <value>The assistant stopped because this reply reached the workspace's monthly spend cap.</value>
     <comment>Shown when the assistant stops mid-reply because the workspace spent its monthly budget</comment>
   </data>
+  <data name="AiErrorNoPermissionToReview" xml:space="preserve">
+    <value>You do not have permission to have the assistant review this.</value>
+    <comment>Shown on the Review tab when the user may not run an assistant review</comment>
+  </data>
+  <data name="AiReviewUnreadable" xml:space="preserve">
+    <value>The assistant's review could not be read. Try again.</value>
+    <comment>Shown on the Review tab when the model's reply was not a usable review</comment>
+  </data>
+  <data name="AiReviewFieldNotEditable" xml:space="preserve">
+    <value>This part of the item cannot be changed from a review.</value>
+    <comment>Shown when a review suggestion targets a field that reviews may not edit</comment>
+  </data>
+  <data name="AiReviewNotCurrent" xml:space="preserve">
+    <value>A newer review has replaced this one. Reload to see it.</value>
+    <comment>Shown when someone decides a finding on a review that a newer run has replaced</comment>
+  </data>
+  <data name="AiReviewFindingAlreadyDecided" xml:space="preserve">
+    <value>Someone has already decided this finding. Reload to see it.</value>
+    <comment>Shown when a review finding was accepted or dismissed by someone else first</comment>
+  </data>
+  <data name="AiReviewBusy" xml:space="preserve">
+    <value>Another change to this review is in progress. Try again.</value>
+    <comment>Shown when two decisions on the same review collide</comment>
+  </data>
+  <data name="AiReviewPassageChanged" xml:space="preserve">
+    <value>The description changed since this review, so the suggestion no longer fits. Edit it by hand or run the review again.</value>
+    <comment>Shown when accepting a review suggestion whose passage is no longer in the description</comment>
+  </data>
+  <data name="AiReviewNothingToAccept" xml:space="preserve">
+    <value>This finding has no suggestion to accept.</value>
+    <comment>Shown when accepting a review finding that has no suggestion</comment>
+  </data>
+  <data name="AiReviewReasonTooLong" xml:space="preserve">
+    <value>The reason can be at most {0} characters.</value>
+    <comment>Shown when a dismissal reason is too long. {0} is the character limit</comment>
+  </data>
+  <data name="AiReviewRevertChanged" xml:space="preserve">
+    <value>The description changed after this suggestion was accepted, so it can't be reverted automatically.</value>
+    <comment>Shown when reverting an accepted review suggestion whose text was edited since</comment>
+  </data>
+  <data name="AiReviewNoRelationType" xml:space="preserve">
+    <value>This workspace has no relation type for that kind of link.</value>
+    <comment>Shown when accepting a review suggestion to link two tasks and the workspace has no matching relation type</comment>
+  </data>
+  <data name="AiReviewSplitTaskTooLong" xml:space="preserve">
+    <value>Each new task needs a name of at most {0} characters and a description of at most {1}.</value>
+    <comment>Shown when a task to be created from a suggested split has a name or description that is too long. {0} and {1} are character limits</comment>
+  </data>
+  <data name="AiReviewTooManyNewTags" xml:space="preserve">
+    <value>A suggestion can create at most {0} new tags.</value>
+    <comment>Shown when accepting a review suggestion would create too many new tags. {0} is the limit</comment>
+  </data>
+  <data name="AiReviewCannotReopenApplied" xml:space="preserve">
+    <value>This suggestion has already been applied to the task, so it can't be reopened.</value>
+    <comment>Shown when reopening a review finding whose split, link or metadata suggestion was already applied</comment>
+  </data>
+  <data name="AuditAssistantReviewFailed" xml:space="preserve">
+    <value>Assistant review failed</value>
+    <comment>Audit log summary of an assistant review of a task that failed</comment>
+  </data>
+  <data name="AuditAssistantReviewOneFinding" xml:space="preserve">
+    <value>Assistant review: 1 finding</value>
+    <comment>Audit log summary of an assistant review of a task that raised one finding</comment>
+  </data>
+  <data name="AuditAssistantReviewFindings" xml:space="preserve">
+    <value>Assistant review: {0} findings</value>
+    <comment>Audit log summary of an assistant review of a task. {0} is how many findings it raised</comment>
+  </data>
+  <data name="AuditReviewFindingAccepted" xml:space="preserve">
+    <value>Accepted review finding “{0}”</value>
+    <comment>Audit log summary of accepting a review finding. {0} is the finding's title</comment>
+  </data>
+  <data name="AuditReviewFindingDismissed" xml:space="preserve">
+    <value>Dismissed review finding “{0}”</value>
+    <comment>Audit log summary of dismissing a review finding. {0} is the finding's title</comment>
+  </data>
+  <data name="AuditReviewFindingReopened" xml:space="preserve">
+    <value>Reopened review finding “{0}”</value>
+    <comment>Audit log summary of reopening a review finding. {0} is the finding's title</comment>
+  </data>
 </root>

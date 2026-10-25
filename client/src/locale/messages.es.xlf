@@ -247,11 +247,21 @@
         <target>En blanco</target>
       </segment>
     </unit>
+    <unit id="5347377480606625842">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:323</note>
+        <note category="description">Label for the model a connection uses to review tasks</note>
+      </notes>
+      <segment state="translated">
+        <source>Model for task reviews</source>
+        <target>Modelo para revisiones de tareas</target>
+      </segment>
+    </unit>
     <unit id="3817498941817715969">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:609</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:247</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:239</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:257</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:251</note>
         <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:82</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:110,112</note>
         <note category="location">src/app/features/pages/editor/page-reference.controller.ts:224</note>
@@ -298,7 +308,7 @@
     </unit>
     <unit id="5276810742763015515">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:87,89</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:102,104</note>
         <note category="description">Label for when a key was stored</note>
       </notes>
       <segment state="translated">
@@ -710,7 +720,7 @@
     </unit>
     <unit id="5322873861888163184">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:121,123</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:128,130</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:52,55</note>
         <note category="description">Button that puts this task on another board</note>
       </notes>
@@ -1002,6 +1012,16 @@
       <segment state="translated">
         <source>Export Tasks</source>
         <target>Exportar las tareas</target>
+      </segment>
+    </unit>
+    <unit id="7881366349140707719">
+      <notes>
+        <note category="location">src/app/core/util/ai-review-copy.ts:13</note>
+        <note category="description">Review finding category for a task with no way to tell it is done</note>
+      </notes>
+      <segment state="translated">
+        <source>Testability</source>
+        <target>Comprobabilidad</target>
       </segment>
     </unit>
     <unit id="7884294193521928458">
@@ -1621,6 +1641,16 @@
         <target>Proveedor de búsqueda eliminado.</target>
       </segment>
     </unit>
+    <unit id="3781268880187367400">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:138,143</note>
+        <note category="description">Title of the notice shown when the latest review of a task failed</note>
+      </notes>
+      <segment state="translated">
+        <source>The latest review failed</source>
+        <target>La última revisión falló</target>
+      </segment>
+    </unit>
     <unit id="3781527988196646385">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:426</note>
@@ -1679,6 +1709,16 @@
       <segment state="translated">
         <source> or </source>
         <target> o </target>
+      </segment>
+    </unit>
+    <unit id="322229249598827754">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:414</note>
+        <note category="description">Shown in place of a person&apos;s name when it is not known</note>
+      </notes>
+      <segment state="translated">
+        <source>someone</source>
+        <target>alguien</target>
       </segment>
     </unit>
     <unit id="3222861994325757867">
@@ -1773,7 +1813,7 @@
     </unit>
     <unit id="7546969606032903393">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:142,144</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:317</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-model-menu.component.ts:15,17</note>
         <note category="description">Accessible label for the assistant model selector</note>
       </notes>
@@ -1870,6 +1910,16 @@
       <segment state="translated">
         <source>Edit Service Accounts</source>
         <target>Editar las cuentas de servicio</target>
+      </segment>
+    </unit>
+    <unit id="3666189403972009429">
+      <notes>
+        <note category="location">src/app/static/pipes/activity.pipe.ts:130</note>
+        <note category="description">How many findings an assistant review raised, in the activity feed. COUNT is a number</note>
+      </notes>
+      <segment state="translated">
+        <source>(<ph id="0" equiv="COUNT" disp="count"/> findings)</source>
+        <target>(<ph id="0" equiv="COUNT" disp="count"/> hallazgos)</target>
       </segment>
     </unit>
     <unit id="2838129566011107043">
@@ -1975,8 +2025,9 @@
     </unit>
     <unit id="2387777488304902858">
       <notes>
+        <note category="location">src/app/core/services/ai-reviews.service.ts:26</note>
         <note category="location">src/app/core/services/ai-writer.service.ts:20</note>
-        <note category="description">Shown in an editor when the inline assistant request fails before any reply</note>
+        <note category="description">Shown on the Review tab when the review request fails before any reply</note>
       </notes>
       <segment state="translated">
         <source>The assistant could not be reached. Try again.</source>
@@ -2283,6 +2334,7 @@
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:337,340</note>
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:201,204</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:161</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:218,221</note>
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:80,82</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:540</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:271</note>
@@ -2294,8 +2346,8 @@
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:821</note>
         <note category="location">src/app/features/pages/dialogs/query-picker-dialog.component.ts:53,58</note>
         <note category="location">src/app/features/pages/dialogs/sprint-picker-dialog.component.ts:54,59</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:214,217</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:348</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:219,222</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:426</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:184,187</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:342</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-spend-cap-dialog.component.ts:80,83</note>
@@ -2817,14 +2869,14 @@
         <target>¿Seguro que quieres eliminar este grupo?</target>
       </segment>
     </unit>
-    <unit id="1714934102960875806">
+    <unit id="9200818513059635204">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:136,138</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:316</note>
         <note category="description">Label for the model a connection uses</note>
       </notes>
       <segment state="translated">
-        <source> Model for assistant chat </source>
-        <target> Modelo para el chat del asistente </target>
+        <source>Model for assistant chat</source>
+        <target>Modelo para el chat del asistente</target>
       </segment>
     </unit>
     <unit id="1718381178086769880">
@@ -2947,6 +2999,15 @@
         <target>Tareas creadas</target>
       </segment>
     </unit>
+    <unit id="5494881644226080803">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:273,275</note>
+      </notes>
+      <segment state="translated">
+        <source>{VAR_PLURAL, plural, =1 {Show 1 decided finding} other {Show <ph id="0" equiv="INTERPOLATION"/> decided findings}}</source>
+        <target>{VAR_PLURAL, plural, =1 {Mostrar 1 hallazgo decidido} other {Mostrar <ph id="0" equiv="INTERPOLATION"/> hallazgos decididos}}</target>
+      </segment>
+    </unit>
     <unit id="5495168454905214621">
       <notes>
         <note category="location">src/app/features/data-transfer/services/export-wizard.service.ts:84</note>
@@ -2955,6 +3016,16 @@
       <segment state="initial">
         <source>Choose at least one field to export.</source>
         <target>Elige al menos un campo para exportar.</target>
+      </segment>
+    </unit>
+    <unit id="5496646832940054917">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:309</note>
+        <note category="description">Review model option that uses the built-in default. MODEL is its name</note>
+      </notes>
+      <segment state="initial">
+        <source>Default (<ph id="0" equiv="MODEL" disp="option.label"/>)</source>
+        <target>Predeterminado (<ph id="0" equiv="MODEL" disp="name"/>)</target>
       </segment>
     </unit>
     <unit id="5497627646066282315">
@@ -2996,6 +3067,16 @@
       <segment state="translated">
         <source>Password Changed</source>
         <target>Contraseña cambiada</target>
+      </segment>
+    </unit>
+    <unit id="6949815097015527714">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:255,259</note>
+        <note category="description">Shown when the latest review of a task left nothing open</note>
+      </notes>
+      <segment state="translated">
+        <source> Nothing is left open in this review. </source>
+        <target>No queda nada abierto en esta revisión.</target>
       </segment>
     </unit>
     <unit id="7951945431416072019">
@@ -3101,8 +3182,8 @@
     </unit>
     <unit id="3118592863000722717">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:264</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:280</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:274</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:296</note>
         <note category="description">Label for the input that replaces a stored key</note>
       </notes>
       <segment state="translated">
@@ -3153,7 +3234,7 @@
     </unit>
     <unit id="3128883254519772741">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:190,194</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:195,199</note>
         <note category="description">Explains who a personal connection serves</note>
       </notes>
       <segment state="initial">
@@ -3633,6 +3714,16 @@
         <target>Eliminar la tarea</target>
       </segment>
     </unit>
+    <unit id="1615286370389385433">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:430</note>
+        <note category="description">Who dismissed a review finding. NAME is a person</note>
+      </notes>
+      <segment state="translated">
+        <source>Dismissed by <ph id="0" equiv="NAME" disp="person"/></source>
+        <target>Descartado por <ph id="0" equiv="NAME" disp="person"/></target>
+      </segment>
+    </unit>
     <unit id="6669247952835732315">
       <notes>
         <note category="location">src/app/core/services/user-commands.service.ts:25</note>
@@ -3985,6 +4076,16 @@
         <target>Se perderán sus mensajes y los cambios que aún no se hayan aplicado.</target>
       </segment>
     </unit>
+    <unit id="958878170701195111">
+      <notes>
+        <note category="location">src/app/static/pipes/activity.pipe.ts:125</note>
+        <note category="description">Shown after an assistant review in the activity feed when it failed</note>
+      </notes>
+      <segment state="translated">
+        <source>(failed)</source>
+        <target>(fallida)</target>
+      </segment>
+    </unit>
     <unit id="960978123005616777">
       <notes>
         <note category="location">src/app/features/workspaces/components/workspace-list-item.component.ts:249</note>
@@ -4283,8 +4384,8 @@
     </unit>
     <unit id="6746571899700014633">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:86,88</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:95,97</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:91,93</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:100,102</note>
         <note category="description">Opens the full list of a task&apos;s fields</note>
       </notes>
       <segment state="initial">
@@ -4383,6 +4484,16 @@
       <segment state="initial">
         <source> Problem </source>
         <target>Problema</target>
+      </segment>
+    </unit>
+    <unit id="242059098779495199">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:235,238</note>
+        <note category="description">Button that previews and applies a review suggestion</note>
+      </notes>
+      <segment state="translated">
+        <source>Review suggestion</source>
+        <target>Revisar la sugerencia</target>
       </segment>
     </unit>
     <unit id="2426850352402316192">
@@ -5171,6 +5282,7 @@
     </unit>
     <unit id="7819314041543176992">
       <notes>
+        <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:334,337</note>
         <note category="location">src/app/entry/dialogs/board-group-dialog/board-group-dialog.component.ts:69,71</note>
         <note category="location">src/app/entry/dialogs/create-relation-type-dialog/create-relation-type-dialog.component.ts:102,104</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:384,387</note>
@@ -5239,6 +5351,7 @@
     <unit id="3768927257183755959">
       <notes>
         <note category="location">src/app/entry/dialogs/board-group-dialog/board-group-dialog.component.ts:91</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:292</note>
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:78,82</note>
         <note category="location">src/app/static/components/comments-list/comments-list.component.ts:161,163</note>
         <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:100,104</note>
@@ -5354,6 +5467,7 @@
       <notes>
         <note category="location">src/app/core/automations/automation-copy.ts:70</note>
         <note category="location">src/app/core/tasks/task-columns.ts:124</note>
+        <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:314,316</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:39</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:112,114</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-priority-field.component.ts:44</note>
@@ -5410,6 +5524,16 @@
       <segment state="translated">
         <source>Sprint</source>
         <target>Sprint</target>
+      </segment>
+    </unit>
+    <unit id="5502687224269585359">
+      <notes>
+        <note category="location">src/app/core/util/ai-review-copy.ts:30</note>
+        <note category="description">Readiness of a task whose review has open findings</note>
+      </notes>
+      <segment state="translated">
+        <source>Needs work</source>
+        <target>Necesita trabajo</target>
       </segment>
     </unit>
     <unit id="5503213672777720666">
@@ -5570,6 +5694,7 @@
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:154,161</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:169,174</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:239,244</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:273,278</note>
         <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:88,90</note>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:74,79</note>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:112,117</note>
@@ -6071,7 +6196,7 @@
         <note category="location">src/app/core/automations/automation-copy.ts:66</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:432</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:66,67</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:226</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:236</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:104,107</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:153,156</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:48,50</note>
@@ -6163,7 +6288,7 @@
     </unit>
     <unit id="6351721389687055644">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:256</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:266</note>
         <note category="description">Title of the dialog that manages a stored provider key</note>
       </notes>
       <segment state="translated">
@@ -6214,7 +6339,7 @@
     </unit>
     <unit id="8550125178086238714">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:345</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:423</note>
         <note category="description">Title of the remove API key confirmation</note>
       </notes>
       <segment state="translated">
@@ -6292,6 +6417,16 @@
       <segment state="initial">
         <source>Delete this export?</source>
         <target>¿Eliminar esta exportación?</target>
+      </segment>
+    </unit>
+    <unit id="6014538670324558918">
+      <notes>
+        <note category="location">src/app/core/util/ai-review-copy.ts:43</note>
+        <note category="description">Why a stored review failed</note>
+      </notes>
+      <segment state="translated">
+        <source>The assistant ran out of time.</source>
+        <target>El asistente se quedó sin tiempo.</target>
       </segment>
     </unit>
     <unit id="6016227634594385356">
@@ -6740,9 +6875,10 @@
     </unit>
     <unit id="5060728196587678675">
       <notes>
+        <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:479</note>
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:342</note>
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:395</note>
-        <note category="description">Title of the dialog for linking tasks together</note>
+        <note category="description">Button that links two tasks as a review suggests</note>
       </notes>
       <segment state="initial">
         <source>Link tasks</source>
@@ -7199,7 +7335,7 @@
     </unit>
     <unit id="630746867351715318">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:98,100</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:113,115</note>
         <note category="description">Label for when a key was last used</note>
       </notes>
       <segment state="translated">
@@ -7317,8 +7453,8 @@
     <unit id="3807699453257291879">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:612</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:249</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:234</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:259</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:246</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:91</note>
         <note category="description">Name of the comments permission group</note>
       </notes>
@@ -7397,6 +7533,16 @@
         <target>Eliminar el comentario</target>
       </segment>
     </unit>
+    <unit id="9143715926734840668">
+      <notes>
+        <note category="location">src/app/core/transforms/activity-type.ts:182</note>
+        <note category="description">Activity entry for reopening a finding from an assistant review</note>
+      </notes>
+      <segment state="translated">
+        <source>Reopened review finding</source>
+        <target>Reabrió un hallazgo de revisión</target>
+      </segment>
+    </unit>
     <unit id="9144010706398835239">
       <notes>
         <note category="location">src/app/features/pages/util/page-templates.ts:69</note>
@@ -7431,8 +7577,8 @@
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:627</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:434</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:246</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:235</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:256</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:247</note>
         <note category="description">Name of the files permission group</note>
       </notes>
       <segment state="translated">
@@ -7887,6 +8033,16 @@
         <target>Diseño de diferencias</target>
       </segment>
     </unit>
+    <unit id="4168406902354683639">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:358,362</note>
+        <note category="description">Toggles the list of past reviews of a task</note>
+      </notes>
+      <segment state="translated">
+        <source>Review history</source>
+        <target>Historial de revisiones</target>
+      </segment>
+    </unit>
     <unit id="1603950823783231568">
       <notes>
         <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:107,108</note>
@@ -7959,6 +8115,16 @@
       <segment state="translated">
         <source>Workspace details</source>
         <target>Detalles del espacio de trabajo</target>
+      </segment>
+    </unit>
+    <unit id="4334698187230567378">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:101,106</note>
+        <note category="description">Button that runs the assistant review on a task</note>
+      </notes>
+      <segment state="translated">
+        <source>Run review</source>
+        <target>Ejecutar revisión</target>
       </segment>
     </unit>
     <unit id="4335364905733983652">
@@ -8206,6 +8372,16 @@
         <target>Borrar todos los filtros</target>
       </segment>
     </unit>
+    <unit id="7806521940380109233">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:406</note>
+        <note category="description">Shown after a connection&apos;s models are saved</note>
+      </notes>
+      <segment state="translated">
+        <source>Models saved.</source>
+        <target>Modelos guardados.</target>
+      </segment>
+    </unit>
     <unit id="7808756054397155068">
       <notes>
         <note category="location">src/app/features/storage/components/storage-filters.component.ts:76,78</note>
@@ -8378,7 +8554,7 @@
     </unit>
     <unit id="5988988986257041887">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:364</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:442</note>
         <note category="description">Shown after an API key is removed</note>
       </notes>
       <segment state="translated">
@@ -8395,6 +8571,16 @@
       <segment state="translated">
         <source><ph id="0" equiv="COUNT" disp="count"/> columns</source>
         <target><ph id="0" equiv="COUNT" disp="count"/> columnas</target>
+      </segment>
+    </unit>
+    <unit id="3302832028736051011">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:151,156</note>
+        <note category="description">Suggests reviewing a task again after it changed</note>
+      </notes>
+      <segment state="translated">
+        <source> Run the review again to check the latest version. </source>
+        <target>Vuelve a ejecutar la revisión para comprobar la última versión.</target>
       </segment>
     </unit>
     <unit id="3304972143698843178">
@@ -8900,7 +9086,7 @@
     </unit>
     <unit id="4671562292257026998">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:267</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:277</note>
         <note category="description">Label for the API key input</note>
       </notes>
       <segment state="translated">
@@ -9528,6 +9714,16 @@
         <target><ph id="0" equiv="NAME" disp="displayName"/> en <ph id="1" equiv="COUNT" disp="count"/></target>
       </segment>
     </unit>
+    <unit id="1496984288894458427">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review-history.component.ts:42,46</note>
+        <note category="description">Returns from a past review to the list of reviews</note>
+      </notes>
+      <segment state="translated">
+        <source> Back to review history </source>
+        <target>Volver al historial de revisiones</target>
+      </segment>
+    </unit>
     <unit id="5907476126990913307">
       <notes>
         <note category="location">src/app/features/auth/components/register/register.component.ts:207</note>
@@ -10059,6 +10255,16 @@
         <target>Confirmar la contraseña nueva</target>
       </segment>
     </unit>
+    <unit id="8656280640649379164">
+      <notes>
+        <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:147,149</note>
+        <note category="description">Accessible label of the diff layout switch</note>
+      </notes>
+      <segment state="translated">
+        <source>Preview layout</source>
+        <target>Diseño de la vista previa</target>
+      </segment>
+    </unit>
     <unit id="auth.login.legalNote">
       <notes>
         <note category="location">src/app/features/auth/components/login/login.component.ts:143,147</note>
@@ -10294,8 +10500,9 @@
     </unit>
     <unit id="4767390997683770016">
       <notes>
+        <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:359</note>
         <note category="location">src/app/features/automations/models/automation-query-builder.ts:317</note>
-        <note category="description">Placeholder for the value of a tag condition</note>
+        <note category="description">Accessible label of the name of a tag a review suggests creating</note>
       </notes>
       <segment state="translated">
         <source>Tag name</source>
@@ -10425,6 +10632,16 @@
         <target>Traducción</target>
       </segment>
     </unit>
+    <unit id="6872977770287171710">
+      <notes>
+        <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:164,167</note>
+        <note category="description">Explains what accepting a suggested split of a task does</note>
+      </notes>
+      <segment state="translated">
+        <source> Each task you keep is created in the same project and linked as a child of this one. </source>
+        <target>Cada tarea que conserves se crea en el mismo proyecto y se vincula como hija de esta.</target>
+      </segment>
+    </unit>
     <unit id="8070396816726827304">
       <notes>
         <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:138,139</note>
@@ -10479,6 +10696,16 @@
       <segment state="initial">
         <source>Add a tag</source>
         <target>Añadir una etiqueta</target>
+      </segment>
+    </unit>
+    <unit id="8414062594969817013">
+      <notes>
+        <note category="location">src/app/core/util/ai-review-copy.ts:44</note>
+        <note category="description">Why a stored review failed</note>
+      </notes>
+      <segment state="translated">
+        <source>The assistant provider returned an error.</source>
+        <target>El proveedor del asistente devolvió un error.</target>
       </segment>
     </unit>
     <unit id="329406837759048287">
@@ -10640,6 +10867,16 @@
       <segment state="translated">
         <source>Load new version</source>
         <target>Cargar la nueva versión</target>
+      </segment>
+    </unit>
+    <unit id="1502230119431698806">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review-origin.component.ts:22,35</note>
+        <note category="description">Shown on a task created from a suggested split. TASK is the task it came from, NAME who accepted the suggestion, TIME is relative</note>
+      </notes>
+      <segment state="initial">
+        <source> Created from a review of <pc id="0" equivStart="START_TAG_BUTTON" equivEnd="CLOSE_TAG_BUTTON" type="other" dispStart="&lt;button app-text-link type=&quot;button&quot; (click)=&quot;openParent()&quot;&gt;" dispEnd="&lt;/button&gt;"> <ph id="1" equiv="TASK" disp="{{ origin.parentSystemId ?? &apos;&apos; // i18n(ph=&quot;TASK&quot;) }}"/> </pc> · accepted by <ph id="2" equiv="NAME" disp="{{ origin.acceptedByDisplayName ?? &apos;&apos; // i18n(ph=&quot;NAME&quot;) }}"/> <ph id="3" equiv="TIME" disp="{{ origin.acceptedAt | fromNow // i18n(ph=&quot;TIME&quot;) }}"/> </source>
+        <target>Creada a partir de una revisión de <pc id="0" equivStart="START_TAG_BUTTON" equivEnd="CLOSE_TAG_BUTTON" type="other" dispStart="&lt;button type=&quot;button&quot; class=&quot;text-primary cursor-pointer font-medium&quot; (click)=&quot;openParent()&quot;&gt;" dispEnd="&lt;/button&gt;"> <ph id="1" equiv="TASK" disp="{{ origin.parentSystemId ?? &apos;&apos; // i18n(ph=&quot;TASK&quot;) }}"/> </pc> · aceptada por <ph id="2" equiv="NAME" disp="{{ origin.acceptedByDisplayName ?? &apos;&apos; // i18n(ph=&quot;NAME&quot;) }}"/> <ph id="3" equiv="TIME" disp="{{ origin.acceptedAt | fromNow // i18n(ph=&quot;TIME&quot;) }}"/></target>
       </segment>
     </unit>
     <unit id="1509364563909331398">
@@ -10926,8 +11163,9 @@
     </unit>
     <unit id="1277352310505180239">
       <notes>
+        <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:358</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:38,39</note>
-        <note category="description">Label of the task name field</note>
+        <note category="description">Accessible label of the name of a task a review suggests creating</note>
       </notes>
       <segment state="translated">
         <source>Task name</source>
@@ -11297,6 +11535,16 @@
         <target>No son miembros del espacio de trabajo</target>
       </segment>
     </unit>
+    <unit id="4753691295121065763">
+      <notes>
+        <note category="location">src/app/core/services/ai-reviews.service.ts:28</note>
+        <note category="description">Shown on the Review tab when the review stream ends early</note>
+      </notes>
+      <segment state="translated">
+        <source>The review stopped before finishing. Reload to see whether it was saved.</source>
+        <target>La revisión se detuvo antes de terminar. Recarga para ver si se guardó.</target>
+      </segment>
+    </unit>
     <unit id="4754052462239552170">
       <notes>
         <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:431</note>
@@ -11411,9 +11659,10 @@
     </unit>
     <unit id="1746074439662851135">
       <notes>
+        <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:365</note>
         <note category="location">src/app/features/pages/dialogs/page-version-dialog.component.ts:116</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:207</note>
-        <note category="description">Names the side by side diff layout</note>
+        <note category="description">Diff layout showing before and after side by side</note>
       </notes>
       <segment state="translated">
         <source>Side by side</source>
@@ -11653,6 +11902,16 @@
         <target>contiene el texto</target>
       </segment>
     </unit>
+    <unit id="1798092421818152413">
+      <notes>
+        <note category="location">src/app/core/util/ai-review-copy.ts:32</note>
+        <note category="description">Readiness of a task that changed after its review</note>
+      </notes>
+      <segment state="translated">
+        <source>Changed since review</source>
+        <target>Cambiada desde la revisión</target>
+      </segment>
+    </unit>
     <unit id="231459167716648305">
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:94,96</note>
@@ -11710,8 +11969,9 @@
     </unit>
     <unit id="6423210280939340786">
       <notes>
+        <note category="location">src/app/core/util/ai-review-copy.ts:31</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:633</note>
-        <note category="description">An export that finished and can be downloaded</note>
+        <note category="description">Readiness of a task whose review has no open findings</note>
       </notes>
       <segment>
         <source>Ready</source>
@@ -11746,6 +12006,16 @@
       <segment state="translated">
         <source>Low</source>
         <target>Baja</target>
+      </segment>
+    </unit>
+    <unit id="5978744955989658521">
+      <notes>
+        <note category="location">src/app/core/util/ai-review-copy.ts:8</note>
+        <note category="description">Review finding category for something required that is missing</note>
+      </notes>
+      <segment state="translated">
+        <source>Gap</source>
+        <target>Carencia</target>
       </segment>
     </unit>
     <unit id="5979951160895696674">
@@ -12005,6 +12275,16 @@
         <target> Notifica </target>
       </segment>
     </unit>
+    <unit id="9113187979371406732">
+      <notes>
+        <note category="location">src/app/static/pipes/activity.pipe.ts:129</note>
+        <note category="description">How many findings an assistant review raised, in the activity feed</note>
+      </notes>
+      <segment state="translated">
+        <source>(1 finding)</source>
+        <target>(1 hallazgo)</target>
+      </segment>
+    </unit>
     <unit id="9114014874327219131">
       <notes>
         <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:91,95</note>
@@ -12143,6 +12423,16 @@
       <segment>
         <source>Time zone</source>
         <target>Zona horaria</target>
+      </segment>
+    </unit>
+    <unit id="3541398472508734323">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:323,324</note>
+        <note category="description">Heading shown when a task has never been reviewed</note>
+      </notes>
+      <segment state="translated">
+        <source>No review yet</source>
+        <target>Aún no hay revisión</target>
       </segment>
     </unit>
     <unit id="3542436707982684146">
@@ -12534,7 +12824,7 @@
     </unit>
     <unit id="8668810212312203956">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:259</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:269</note>
         <note category="description">Title of the dialog that adds a provider key</note>
       </notes>
       <segment state="translated">
@@ -12582,6 +12872,16 @@
         <target>Describe la página y el asistente redacta un primer borrador para que lo revises.</target>
       </segment>
     </unit>
+    <unit id="522216059460923087">
+      <notes>
+        <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:457</note>
+        <note category="description">Describes a suggested link that marks this task as a duplicate of another</note>
+      </notes>
+      <segment state="translated">
+        <source>Mark this task as a duplicate of</source>
+        <target>Marcar esta tarea como duplicada de</target>
+      </segment>
+    </unit>
     <unit id="5223235322022344945">
       <notes>
         <note category="location">src/app/features/data-transfer/components/import-steps/import-source-step.component.ts:146</note>
@@ -12610,6 +12910,16 @@
       <segment state="translated">
         <source>Automation rules could not be loaded.</source>
         <target>No se pudieron cargar las reglas de automatización.</target>
+      </segment>
+    </unit>
+    <unit id="8099387244046531917">
+      <notes>
+        <note category="location">src/app/core/transforms/activity-type.ts:176</note>
+        <note category="description">Activity entry for running an assistant review of a task</note>
+      </notes>
+      <segment state="translated">
+        <source>Ran an assistant review</source>
+        <target>Ejecutó una revisión del asistente</target>
       </segment>
     </unit>
     <unit id="6676914867306973161">
@@ -12913,11 +13223,12 @@
     </unit>
     <unit id="5590086849807274701">
       <notes>
+        <note category="location">src/app/core/util/ai-review-copy.ts:11</note>
         <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:201</note>
         <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:105</note>
         <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:21</note>
         <note category="location">src/app/features/sprints/components/sprint-burndown-card.component.ts:27</note>
-        <note category="description">Label shown in the interface</note>
+        <note category="description">Review finding category for a task that is too large or bundles unrelated work</note>
       </notes>
       <segment state="translated">
         <source>Scope</source>
@@ -13301,6 +13612,16 @@
       <segment state="translated">
         <source>Set estimate</source>
         <target>Establecer estimación</target>
+      </segment>
+    </unit>
+    <unit id="4961096773221862359">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:111,113</note>
+        <note category="description">Shown while the assistant reviews a task</note>
+      </notes>
+      <segment state="translated">
+        <source>Reviewing…</source>
+        <target>Revisando…</target>
       </segment>
     </unit>
     <unit id="4965562695253171955">
@@ -14011,6 +14332,16 @@
         <target>Código en línea</target>
       </segment>
     </unit>
+    <unit id="6186101642106373118">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:97,100</note>
+        <note category="description">Button that runs the assistant review on a task again</note>
+      </notes>
+      <segment state="translated">
+        <source>Run again</source>
+        <target>Ejecutar de nuevo</target>
+      </segment>
+    </unit>
     <unit id="6188987311144157990">
       <notes>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:223,229</note>
@@ -14049,6 +14380,16 @@
       <segment state="translated">
         <source>Change</source>
         <target>Cambiar</target>
+      </segment>
+    </unit>
+    <unit id="5832578477121087371">
+      <notes>
+        <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:458</note>
+        <note category="description">Describes a suggested link that relates this task to another</note>
+      </notes>
+      <segment state="translated">
+        <source>Link this task as related to</source>
+        <target>Vincular esta tarea como relacionada con</target>
       </segment>
     </unit>
     <unit id="5832711343712261211">
@@ -14611,7 +14952,7 @@
     </unit>
     <unit id="8805582001022257690">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:111,113</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:116,118</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:156,158</note>
         <note category="description">Button that asks the assistant about this task</note>
       </notes>
@@ -14652,7 +14993,7 @@
     </unit>
     <unit id="8372007266188249803">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:105,107</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:120,122</note>
         <note category="description">Shown when a key is unused</note>
       </notes>
       <segment state="translated">
@@ -14794,6 +15135,7 @@
     <unit id="1845447508284521819">
       <notes>
         <note category="location">src/app/core/automations/automation-copy.ts:71</note>
+        <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:285,287</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:154,158</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-estimate-field.component.ts:40</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:169,171</note>
@@ -15179,7 +15521,7 @@
     </unit>
     <unit id="6168573387818230011">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:327</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:386</note>
         <note category="description">Shown after an API key is stored</note>
       </notes>
       <segment state="translated">
@@ -15485,8 +15827,8 @@
     <unit id="7565716024468232322">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:433</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:245</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:236</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:255</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:248</note>
         <note category="location">src/app/features/pages/components/page-rail.component.ts:277</note>
         <note category="description">Tab listing the tasks this one links to</note>
       </notes>
@@ -16373,7 +16715,7 @@
     </unit>
     <unit id="3208980041287937682">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:79,83</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:94,98</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:109,111</note>
         <note category="description">Shown when a provider key is stored</note>
       </notes>
@@ -17172,6 +17514,16 @@
         <target> <ph id="0" equiv="OVER_BY" disp="{{ overBy() | number // i18n(ph=&quot;OVER_BY&quot;) }}"/> caracteres por encima del límite de <ph id="1" equiv="MAX_LENGTH" disp="{{ max() | number // i18n(ph=&quot;MAX_LENGTH&quot;) }}"/> caracteres </target>
       </segment>
     </unit>
+    <unit id="8443799750170942573">
+      <notes>
+        <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:130,133</note>
+        <note category="description">Explains why a review suggestion can no longer be applied</note>
+      </notes>
+      <segment state="translated">
+        <source> The passage this suggestion replaces is no longer in the description. Edit the description by hand or run the review again. </source>
+        <target>El fragmento que sustituye esta sugerencia ya no está en la descripción. Edita la descripción a mano o vuelve a ejecutar la revisión.</target>
+      </segment>
+    </unit>
     <unit id="8451136300262007554">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:255,257</note>
@@ -17357,6 +17709,16 @@
         <target>No se pudo actualizar la automatización</target>
       </segment>
     </unit>
+    <unit id="7223172032104127584">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review-history.component.ts:131</note>
+        <note category="description">Counts of a past review&apos;s findings by state. OPEN, ACCEPTED and DISMISSED are numbers, MODEL is the assistant model</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="OPEN" disp="run.openCount"/> open · <ph id="1" equiv="ACCEPTED" disp="run.acceptedCount"/> accepted · <ph id="2" equiv="DISMISSED" disp="run.dismissedCount"/> dismissed · <ph id="3" equiv="MODEL" disp="run.model"/></source>
+        <target><ph id="0" equiv="OPEN" disp="run.openCount"/> abiertos · <ph id="1" equiv="ACCEPTED" disp="run.acceptedCount"/> aceptados · <ph id="2" equiv="DISMISSED" disp="run.dismissedCount"/> descartados · <ph id="3" equiv="MODEL" disp="run.model"/></target>
+      </segment>
+    </unit>
     <unit id="7223592009379733387">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:537</note>
@@ -17377,6 +17739,16 @@
       <segment state="translated">
         <source>Automation deleted</source>
         <target>Automatización eliminada</target>
+      </segment>
+    </unit>
+    <unit id="2848440553351270305">
+      <notes>
+        <note category="location">src/app/core/transforms/activity-type.ts:180</note>
+        <note category="description">Activity entry for dismissing a finding from an assistant review</note>
+      </notes>
+      <segment state="translated">
+        <source>Dismissed review finding</source>
+        <target>Descartó un hallazgo de revisión</target>
       </segment>
     </unit>
     <unit id="8090709239931434520">
@@ -17412,7 +17784,7 @@
     </unit>
     <unit id="3477141043479115606">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:272</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:282</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:287</note>
         <note category="description">Placeholder shown when a key is already stored</note>
       </notes>
@@ -17478,7 +17850,7 @@
     </unit>
     <unit id="4282587102956396340">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:76,78</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:91,93</note>
         <note category="description">Label for the state of a stored connection</note>
       </notes>
       <segment state="translated">
@@ -18000,6 +18372,16 @@
       <segment state="translated">
         <source>Create Sprint</source>
         <target>Crear sprint</target>
+      </segment>
+    </unit>
+    <unit id="6838818500770436132">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review-history.component.ts:72,74</note>
+        <note category="description">Accessible label of the list of past reviews of a task</note>
+      </notes>
+      <segment state="translated">
+        <source>Past reviews</source>
+        <target>Revisiones anteriores</target>
       </segment>
     </unit>
     <unit id="6839573905580765842">
@@ -18597,6 +18979,16 @@
         <target>Mover las tareas</target>
       </segment>
     </unit>
+    <unit id="1044799198424557089">
+      <notes>
+        <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:97,101</note>
+        <note category="description">Title of the dialog that previews a review suggestion</note>
+      </notes>
+      <segment state="translated">
+        <source> Accept suggestion </source>
+        <target>Aceptar la sugerencia</target>
+      </segment>
+    </unit>
     <unit id="6473034184907916283">
       <notes>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:68,72</note>
@@ -18777,8 +19169,8 @@
     <unit id="7107218117130409950">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:605</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:244</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:237</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:254</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:249</note>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:64</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:71,72</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:88</note>
@@ -18955,7 +19347,7 @@
     </unit>
     <unit id="3423740992676752364">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:242</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:247</note>
         <note category="description">Shown when saving an API key fails</note>
       </notes>
       <segment state="translated">
@@ -19451,6 +19843,16 @@
       <segment state="translated">
         <source> Choose where to move <ph id="0" equiv="TASK_NAME" disp="{{ data.task.name // i18n(ph=&quot;TASK_NAME&quot;) }}"/>. Its duration will be preserved. </source>
         <target> Elige a dónde mover <ph id="0" equiv="TASK_NAME" disp="{{ data.task.name // i18n(ph=&quot;TASK_NAME&quot;) }}"/>. Se conservará su duración. </target>
+      </segment>
+    </unit>
+    <unit id="7077514990546083477">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:325,327</note>
+        <note category="description">Explains what an assistant review of a task does</note>
+      </notes>
+      <segment state="translated">
+        <source>A review checks this task for gaps, unstated assumptions, ambiguity, scope, overlap and testability.</source>
+        <target>Una revisión comprueba esta tarea en busca de carencias, suposiciones no explícitas, ambigüedad, alcance, solapamientos y comprobabilidad.</target>
       </segment>
     </unit>
     <unit id="8630022383790162651">
@@ -20085,6 +20487,16 @@
         <target> Leído </target>
       </segment>
     </unit>
+    <unit id="7794941552856585194">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review-history.component.ts:63,67</note>
+        <note category="description">Shown for a past review with no findings</note>
+      </notes>
+      <segment state="translated">
+        <source> This review had no findings. </source>
+        <target>Esta revisión no tuvo hallazgos.</target>
+      </segment>
+    </unit>
     <unit id="7795403436492031020">
       <notes>
         <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:109,112</note>
@@ -20311,6 +20723,16 @@
         <target> No hay cuentas externas vinculadas. </target>
       </segment>
     </unit>
+    <unit id="3922324539528568972">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:429</note>
+        <note category="description">Who accepted a review finding. NAME is a person</note>
+      </notes>
+      <segment state="translated">
+        <source>Accepted by <ph id="0" equiv="NAME" disp="person"/></source>
+        <target>Aceptado por <ph id="0" equiv="NAME" disp="person"/></target>
+      </segment>
+    </unit>
     <unit id="3929281485914893910">
       <notes>
         <note category="location">src/app/shared/components/query-builder/query-explanation.ts:15</note>
@@ -20329,6 +20751,16 @@
       <segment state="translated">
         <source>Change profile picture</source>
         <target>Cambiar foto de perfil</target>
+      </segment>
+    </unit>
+    <unit id="5910708990424618705">
+      <notes>
+        <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:214,219</note>
+        <note category="description">Shown when everything a review suggests adding is already on the task</note>
+      </notes>
+      <segment state="translated">
+        <source> Everything this suggests is already on the task. </source>
+        <target>Todo lo que se sugiere ya está en la tarea.</target>
       </segment>
     </unit>
     <unit id="5911214550882917183">
@@ -20768,6 +21200,16 @@
         <target>Sin personas asignadas</target>
       </segment>
     </unit>
+    <unit id="3184497726738943173">
+      <notes>
+        <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:271,274</note>
+        <note category="description">Explains why new tags from a review cannot be chosen</note>
+      </notes>
+      <segment state="translated">
+        <source> You don&apos;t have permission to create tags, so only existing tags can be added. </source>
+        <target>No tienes permiso para crear etiquetas, así que solo se pueden añadir etiquetas existentes.</target>
+      </segment>
+    </unit>
     <unit id="3184561342911921232">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-privacy-card.component.ts:21,24</note>
@@ -21132,6 +21574,16 @@
         <target>Crea una clave en console.anthropic.com</target>
       </segment>
     </unit>
+    <unit id="7088061432353123225">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:71,83</note>
+        <note category="description">When a task was last reviewed, who ran it and which model. TIME is relative, like 2 hours ago</note>
+      </notes>
+      <segment state="translated">
+        <source> Reviewed <ph id="0" equiv="TIME" disp="{{ current.run.createdAt | fromNow // i18n(ph=&quot;TIME&quot;) }}"/> by <ph id="1" equiv="NAME" disp="{{ current.run.runByDisplayName ?? unknownPerson // i18n(ph=&quot;NAME&quot;) }}"/> · <ph id="2" equiv="MODEL" disp="{{ current.run.model // i18n(ph=&quot;MODEL&quot;) }}"/> </source>
+        <target>Revisada <ph id="0" equiv="TIME" disp="{{ current.run.createdAt | fromNow // i18n(ph=&quot;TIME&quot;) }}"/> por <ph id="1" equiv="NAME" disp="{{ current.run.runByDisplayName ?? unknownPerson // i18n(ph=&quot;NAME&quot;) }}"/> · <ph id="2" equiv="MODEL" disp="{{ current.run.model // i18n(ph=&quot;MODEL&quot;) }}"/></target>
+      </segment>
+    </unit>
     <unit id="7091571651222742304">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:604</note>
@@ -21207,6 +21659,16 @@
       <segment state="initial">
         <source>This import could not be reopened.</source>
         <target>No se pudo volver a abrir esta importación.</target>
+      </segment>
+    </unit>
+    <unit id="5653953951613429910">
+      <notes>
+        <note category="location">src/app/core/util/ai-review-copy.ts:9</note>
+        <note category="description">Review finding category for something the task relies on without stating it</note>
+      </notes>
+      <segment state="translated">
+        <source>Assumption</source>
+        <target>Suposición</target>
       </segment>
     </unit>
     <unit id="565444447916223977">
@@ -21343,12 +21805,22 @@
     </unit>
     <unit id="3959473004188974816">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:370</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:448</note>
         <note category="description">Shown when removing an API key fails</note>
       </notes>
       <segment state="translated">
         <source>The key could not be removed.</source>
         <target>No se pudo eliminar la clave.</target>
+      </segment>
+    </unit>
+    <unit id="6714898331688025692">
+      <notes>
+        <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:477</note>
+        <note category="description">Button that creates the tasks a review suggests. COUNT is how many</note>
+      </notes>
+      <segment state="translated">
+        <source>Create <ph id="0" equiv="COUNT" disp="this.keptSplitTasks().length"/> tasks</source>
+        <target>Crear <ph id="0" equiv="COUNT" disp="this.keptSplitTasks().length"/> tareas</target>
       </segment>
     </unit>
     <unit id="6715882737092090306">
@@ -21664,7 +22136,7 @@
     </unit>
     <unit id="5313896736024470177">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:67,69</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:82,84</note>
         <note category="description">Label for the masked API key in the connection dialog</note>
       </notes>
       <segment state="translated">
@@ -21750,6 +22222,16 @@
       <segment state="initial">
         <source>Use system theme</source>
         <target>Usar el tema del sistema</target>
+      </segment>
+    </unit>
+    <unit id="5334657244931183621">
+      <notes>
+        <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:113,116</note>
+        <note category="description">Label above the editable text a review suggestion will write</note>
+      </notes>
+      <segment state="translated">
+        <source>Suggested text</source>
+        <target>Texto sugerido</target>
       </segment>
     </unit>
     <unit id="1375158393289637367">
@@ -21875,6 +22357,16 @@
         <target>Pide al asistente que escriba…</target>
       </segment>
     </unit>
+    <unit id="3856056944030832391">
+      <notes>
+        <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:223,225</note>
+        <note category="description">Heading above the tags a review suggests adding</note>
+      </notes>
+      <segment state="translated">
+        <source> Tags to add </source>
+        <target>Etiquetas para añadir</target>
+      </segment>
+    </unit>
     <unit id="3857877369981030045">
       <notes>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:145,146</note>
@@ -21934,6 +22426,16 @@
       <segment state="translated">
         <source>Retry the request to load sprint velocity.</source>
         <target>Reintenta la solicitud para cargar la velocidad del sprint.</target>
+      </segment>
+    </unit>
+    <unit id="4428127191260559300">
+      <notes>
+        <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:357</note>
+        <note category="description">Accessible label of the checkbox that keeps an item a review suggests</note>
+      </notes>
+      <segment state="translated">
+        <source>Keep</source>
+        <target>Conservar</target>
       </segment>
     </unit>
     <unit id="442898940461496743">
@@ -22126,6 +22628,16 @@
       <segment state="translated">
         <source>Current workload</source>
         <target>Carga de trabajo actual</target>
+      </segment>
+    </unit>
+    <unit id="7828808805120058354">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:300,303</note>
+        <note category="description">Button that undoes an accepted review suggestion</note>
+      </notes>
+      <segment state="translated">
+        <source>Revert</source>
+        <target>Revertir</target>
       </segment>
     </unit>
     <unit id="7831424791501412228">
@@ -22411,6 +22923,16 @@
         <target>Informes</target>
       </segment>
     </unit>
+    <unit id="1869257260438265373">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:119,122</note>
+        <note category="description">How much of the review has arrived so far. COUNT is a number of characters</note>
+      </notes>
+      <segment state="translated">
+        <source> <ph id="0" equiv="COUNT" disp="{{ review.progress() // i18n(ph=&quot;COUNT&quot;) }}"/> characters </source>
+        <target><ph id="0" equiv="COUNT" disp="{{ review.progress() // i18n(ph=&quot;COUNT&quot;) }}"/> caracteres</target>
+      </segment>
+    </unit>
     <unit id="1874095910893592675">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:450</note>
@@ -22419,6 +22941,16 @@
       <segment state="translated">
         <source><ph id="0" equiv="BLOCKED" disp="blocked"/> changes</source>
         <target><ph id="0" equiv="BLOCKED" disp="blocked"/> cambios</target>
+      </segment>
+    </unit>
+    <unit id="8395806891690676108">
+      <notes>
+        <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:125,128</note>
+        <note category="description">Title of the notice shown when a review suggestion no longer fits the description</note>
+      </notes>
+      <segment state="translated">
+        <source>The description changed since this review</source>
+        <target>La descripción ha cambiado desde esta revisión</target>
       </segment>
     </unit>
     <unit id="8395914283364907947">
@@ -22595,7 +23127,7 @@
     </unit>
     <unit id="7508570474100827037">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:128,132</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:143,147</note>
         <note category="description">Explains how stored keys behave</note>
       </notes>
       <segment state="translated">
@@ -22809,16 +23341,6 @@
         <target>Semana</target>
       </segment>
     </unit>
-    <unit id="5148150062211212405">
-      <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:178,182</note>
-        <note category="description">Explains that saving a model needs the key again</note>
-      </notes>
-      <segment state="translated">
-        <source> The model is saved with the key, so enter the key again to change it. </source>
-        <target> El modelo se guarda junto con la clave, así que vuelve a introducir la clave para cambiarlo. </target>
-      </segment>
-    </unit>
     <unit id="4776806173794348537">
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:83,85</note>
@@ -22899,7 +23421,7 @@
     </unit>
     <unit id="6406732480689038024">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:206,209</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:211,214</note>
         <note category="description">Button that removes a stored API key</note>
       </notes>
       <segment state="translated">
@@ -22955,6 +23477,16 @@
       <segment state="initial">
         <source>Ahead of pace</source>
         <target>Por delante del ritmo</target>
+      </segment>
+    </unit>
+    <unit id="620676588182511034">
+      <notes>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:324</note>
+        <note category="description">Accessible label for the task review model selector</note>
+      </notes>
+      <segment state="translated">
+        <source>Task review model</source>
+        <target>Modelo de revisión de tareas</target>
       </segment>
     </unit>
     <unit id="6211708336148649092">
@@ -23523,7 +24055,7 @@
     </unit>
     <unit id="4368459498761840040">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:185,188</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:190,193</note>
         <note category="description">Explains who a workspace connection serves</note>
       </notes>
       <segment state="translated">
@@ -23758,6 +24290,16 @@
         <target> Informado por <ph id="0" equiv="NAME" disp="{{ task.ownerUsername // i18n(ph=&quot;NAME&quot;) }}"/> </target>
       </segment>
     </unit>
+    <unit id="6722197117273372334">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:310,313</note>
+        <note category="description">Button that reopens a decided review finding</note>
+      </notes>
+      <segment state="translated">
+        <source>Reopen</source>
+        <target>Reabrir</target>
+      </segment>
+    </unit>
     <unit id="6722861709318164496">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:130</note>
@@ -23904,8 +24446,9 @@
     </unit>
     <unit id="7305438510733628954">
       <notes>
+        <note category="location">src/app/core/services/ai-reviews.service.ts:27</note>
         <note category="location">src/app/core/services/ai-writer.service.ts:21</note>
-        <note category="description">Shown in an editor when inline assistant requests are being sent too quickly</note>
+        <note category="description">Shown on the Review tab when reviews are being requested too quickly</note>
       </notes>
       <segment state="translated">
         <source>Too many assistant requests. Try again in a minute.</source>
@@ -24035,6 +24578,16 @@
         <target>Cada credencial se limita a un subconjunto de estos permisos de la cuenta.</target>
       </segment>
     </unit>
+    <unit id="4777027777592183077">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:201,203</note>
+        <note category="description">Placeholder of the optional reason for dismissing a review finding</note>
+      </notes>
+      <segment state="translated">
+        <source>Why doesn&apos;t this apply? (optional)</source>
+        <target>¿Por qué no aplica? (opcional)</target>
+      </segment>
+    </unit>
     <unit id="4777350418733054176">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:93,100</note>
@@ -24136,6 +24689,16 @@
       <segment state="translated">
         <source>Following your setting for everywhere</source>
         <target>Sigue tu ajuste para todas partes</target>
+      </segment>
+    </unit>
+    <unit id="1889728802878726523">
+      <notes>
+        <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:255,257</note>
+        <note category="description">Marks a tag a review suggests that does not exist yet</note>
+      </notes>
+      <segment state="translated">
+        <source> New tag </source>
+        <target>Etiqueta nueva</target>
       </segment>
     </unit>
     <unit id="5559344982885709649">
@@ -24340,10 +24903,12 @@
     </unit>
     <unit id="7430680760319628492">
       <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:261</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:253</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:32</note>
         <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:103,104</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:263</note>
-        <note category="description">Heading of the export review step</note>
+        <note category="description">Tab showing the assistant&apos;s review of a task</note>
       </notes>
       <segment state="translated">
         <source>Review</source>
@@ -24585,6 +25150,16 @@
       <segment state="translated">
         <source>Clear</source>
         <target>Borrar</target>
+      </segment>
+    </unit>
+    <unit id="6460163696346705349">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:335,337</note>
+        <note category="description">Heading above other reviews that mention this task</note>
+      </notes>
+      <segment state="translated">
+        <source> Mentioned in other reviews </source>
+        <target>Mencionada en otras revisiones</target>
       </segment>
     </unit>
     <unit id="646405368100193319">
@@ -24908,6 +25483,26 @@
       <segment state="initial">
         <source>Filter workspaces</source>
         <target>Filtrar espacios de trabajo</target>
+      </segment>
+    </unit>
+    <unit id="2754728570357204295">
+      <notes>
+        <note category="location">src/app/core/util/ai-review-copy.ts:29</note>
+        <note category="description">Readiness of a task that has never been reviewed</note>
+      </notes>
+      <segment state="translated">
+        <source>Not reviewed</source>
+        <target>Sin revisar</target>
+      </segment>
+    </unit>
+    <unit id="2756114886316695221">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:149,151</note>
+        <note category="description">Title of the notice shown when a task changed after it was reviewed</note>
+      </notes>
+      <segment state="translated">
+        <source>This task changed since the review</source>
+        <target>Esta tarea ha cambiado desde la revisión</target>
       </segment>
     </unit>
     <unit id="2757762976030115752">
@@ -25234,6 +25829,16 @@
       <segment state="translated">
         <source>These changes were discarded.</source>
         <target>Estos cambios se han descartado.</target>
+      </segment>
+    </unit>
+    <unit id="5002553274691461927">
+      <notes>
+        <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:481</note>
+        <note category="description">Button that applies the fields a review suggests</note>
+      </notes>
+      <segment state="translated">
+        <source>Apply to task</source>
+        <target>Aplicar a la tarea</target>
       </segment>
     </unit>
     <unit id="5003828556155869391">
@@ -25880,8 +26485,7 @@
       <notes>
         <note category="location">src/app/features/queries/components/query-display-menu.component.ts:61,64</note>
         <note category="location">src/app/features/queries/components/query-display-menu.component.ts:163</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:156,159</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:294</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:256</note>
         <note category="description">Option leaving a query on its default sort</note>
       </notes>
       <segment state="translated">
@@ -26218,6 +26822,16 @@
       <segment state="translated">
         <source>Service account could not be created</source>
         <target>No se ha podido crear la cuenta de servicio</target>
+      </segment>
+    </unit>
+    <unit id="1740696103363669091">
+      <notes>
+        <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:483</note>
+        <note category="description">Button that applies a review suggestion to the task</note>
+      </notes>
+      <segment state="translated">
+        <source>Apply to description</source>
+        <target>Aplicar a la descripción</target>
       </segment>
     </unit>
     <unit id="5367814144868464481">
@@ -26778,6 +27392,16 @@
         <target>Añadir una clave</target>
       </segment>
     </unit>
+    <unit id="5871471524884342116">
+      <notes>
+        <note category="location">src/app/core/transforms/activity-type.ts:178</note>
+        <note category="description">Activity entry for accepting a finding from an assistant review</note>
+      </notes>
+      <segment state="translated">
+        <source>Accepted review finding</source>
+        <target>Aceptó un hallazgo de revisión</target>
+      </segment>
+    </unit>
     <unit id="5872175735754226507">
       <notes>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:116</note>
@@ -26977,6 +27601,16 @@
       <segment state="translated">
         <source>Comments on the task will appear here</source>
         <target>Los comentarios sobre la tarea aparecerán aquí</target>
+      </segment>
+    </unit>
+    <unit id="8964586579102299165">
+      <notes>
+        <note category="location">src/app/core/util/ai-review-copy.ts:10</note>
+        <note category="description">Review finding category for wording that can be read more than one way</note>
+      </notes>
+      <segment state="translated">
+        <source>Ambiguity</source>
+        <target>Ambigüedad</target>
       </segment>
     </unit>
     <unit id="8966831176355460987">
@@ -27345,8 +27979,8 @@
     </unit>
     <unit id="8186013988289067040">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:248</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:240</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:258</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:252</note>
         <note category="description">Tab listing the branches, commits and pull requests linked to a task</note>
       </notes>
       <segment state="translated">
@@ -27377,7 +28011,7 @@
     </unit>
     <unit id="7203070746919732368">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:346</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:424</note>
         <note category="description">Explains what removing an API key does</note>
       </notes>
       <segment state="translated">
@@ -27833,8 +28467,8 @@
     </unit>
     <unit id="186236568870281953">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:250</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:238</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:260</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:250</note>
         <note category="location">src/app/features/pages/components/page-rail.component.ts:282</note>
         <note category="description">Tab showing what has happened to a task</note>
       </notes>
@@ -28110,7 +28744,7 @@
     <unit id="2467702290618186989">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:279,281</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:131,133</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:138,140</note>
         <note category="description">Button that links this task to another</note>
       </notes>
       <segment state="initial">
@@ -28436,6 +29070,16 @@
       <segment state="translated">
         <source>Size</source>
         <target>Tamaño</target>
+      </segment>
+    </unit>
+    <unit id="5740206434555920246">
+      <notes>
+        <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:143,146</note>
+        <note category="description">Heading above the before and after preview of a review suggestion</note>
+      </notes>
+      <segment state="translated">
+        <source> Preview </source>
+        <target>Vista previa</target>
       </segment>
     </unit>
     <unit id="57403663622654391">
@@ -29098,6 +29742,26 @@
         <target>Elige el archivo que produce esta exportación.</target>
       </segment>
     </unit>
+    <unit id="842098238223236649">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:269,272</note>
+        <note category="description">Hides review findings that were accepted or dismissed</note>
+      </notes>
+      <segment state="translated">
+        <source>Hide decided findings</source>
+        <target>Ocultar hallazgos decididos</target>
+      </segment>
+    </unit>
+    <unit id="8422030921170191950">
+      <notes>
+        <note category="location">src/app/core/util/ai-review-copy.ts:12</note>
+        <note category="description">Review finding category for a task that overlaps another one</note>
+      </notes>
+      <segment state="translated">
+        <source>Overlap</source>
+        <target>Solapamiento</target>
+      </segment>
+    </unit>
     <unit id="8426796922329733141">
       <notes>
         <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:58,60</note>
@@ -29216,6 +29880,16 @@
       <segment state="translated">
         <source> Ctrl K </source>
         <target>Ctrl K</target>
+      </segment>
+    </unit>
+    <unit id="4175304775527800235">
+      <notes>
+        <note category="location">src/app/core/util/ai-review-copy.ts:45</note>
+        <note category="description">Why a stored review failed</note>
+      </notes>
+      <segment state="translated">
+        <source>The assistant&apos;s reply could not be read.</source>
+        <target>No se pudo leer la respuesta del asistente.</target>
       </segment>
     </unit>
     <unit id="4176159076663605915">
@@ -29850,7 +30524,7 @@
     </unit>
     <unit id="5380791860391761311">
       <notes>
-        <note category="location">src/app/static/components/value-swap/value-swap.component.ts:24</note>
+        <note category="location">src/app/static/components/value-swap/value-swap.component.ts:32</note>
         <note category="description">Read by screen readers between an old value and the value replacing it</note>
       </notes>
       <segment state="initial">
@@ -30224,6 +30898,16 @@
         <target>Contraer el menú <ph id="0" equiv="SECTION" disp="section"/></target>
       </segment>
     </unit>
+    <unit id="3504265772843656006">
+      <notes>
+        <note category="location">src/app/core/util/ai-review-copy.ts:51</note>
+        <note category="description">Why a stored review failed, when the reason is unknown</note>
+      </notes>
+      <segment state="translated">
+        <source>The review failed.</source>
+        <target>La revisión falló.</target>
+      </segment>
+    </unit>
     <unit id="3504813719002568781">
       <notes>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:328,330</note>
@@ -30586,6 +31270,8 @@
     <unit id="1536087519743707362">
       <notes>
         <note category="location">src/app/core/util/assistant-inline-prompt.ts:14</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:210,213</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:245,248</note>
         <note category="location">src/app/static/components/anchored-popup/anchored-popup-card.component.ts:31,32</note>
         <note category="location">src/app/static/components/banner/banner.component.ts:36,37</note>
         <note category="location">src/app/static/components/snackbar/snackbar.component.ts:61,62</note>
@@ -31009,8 +31695,9 @@
     </unit>
     <unit id="450937500922433442">
       <notes>
+        <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:369</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:721</note>
-        <note category="description">Diff layout highlighting changed words</note>
+        <note category="description">Diff layout showing changes in one column</note>
       </notes>
       <segment state="translated">
         <source>Inline</source>
@@ -31223,7 +31910,7 @@
       <notes>
         <note category="location">src/app/core/services/task-commands.service.ts:226</note>
         <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:70,71</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:347</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:425</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:341</note>
         <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:82,85</note>
         <note category="location">src/app/static/components/branding-preview/branding-preview.component.ts:46,49</note>
@@ -31361,6 +32048,16 @@
       <segment>
         <source>Exports</source>
         <target>Exportaciones</target>
+      </segment>
+    </unit>
+    <unit id="1899499061278057968">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review.service.ts:151</note>
+        <note category="description">Shown when someone without permission accepts, dismisses or reopens a review finding</note>
+      </notes>
+      <segment state="translated">
+        <source>You don&apos;t have permission to make this change.</source>
+        <target>No tienes permiso para hacer este cambio.</target>
       </segment>
     </unit>
     <unit id="1899871388582691778">
@@ -31568,7 +32265,7 @@
     </unit>
     <unit id="4442108733606169287">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:283</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:299</note>
         <note category="description">Button that stores an API key</note>
       </notes>
       <segment state="translated">

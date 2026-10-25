@@ -1,11 +1,18 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { Component, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   AiCredential,
   AiCredentialScope,
   AiProvider,
   SaveAiCredentialRequest,
+  UpdateAiCredentialModelsRequest,
 } from '@core/models/ai-credential';
 import { AiModelOption } from '@core/models/ai-model';
 import { aiModelResource } from '@core/resources/ai-model.resource';
@@ -34,6 +41,14 @@ export interface AssistantConnectionDialogData {
   label: string;
   hint: string;
   credential: AiCredential | null;
+}
+
+interface ModelPicker {
+  id: 'chat' | 'review';
+  heading: string;
+  ariaLabel: string;
+  defaultLabel: string;
+  selected: WritableSignal<string>;
 }
 
 @Component({
@@ -129,55 +144,45 @@ export interface AssistantConnectionDialogData {
         </span>
       </label>
 
-      <div class="flex flex-col gap-1.5">
-        <span
-          class="text-muted text-xs"
-          i18n="Label for the model a connection uses">
-          Model for assistant chat
-        </span>
-        <app-dropdown-button
-          #modelMenu
-          [label]="modelLabel()"
-          i18n-ariaLabel="Accessible label for the assistant model selector"
-          ariaLabel="Assistant model"
-          buttonClass="h-9 w-full justify-between">
-          <button
-            app-menu-item
-            type="button"
-            role="menuitemradio"
-            [attr.aria-checked]="model() === ''"
-            (click)="model.set(''); modelMenu.close()">
-            <span class="flex h-4 w-4 items-center justify-center">
-              @if (model() === '') {
-                <svg lucideCheck class="h-4 w-4"></svg>
-              }
-            </span>
-            <span i18n="Model option that defers to the server default"
-              >Default</span
-            >
-          </button>
-          @for (option of models(); track option.id) {
+      @for (picker of pickers(); track picker.id) {
+        <div class="flex flex-col gap-1.5">
+          <span class="text-muted text-xs">{{ picker.heading }}</span>
+          <app-dropdown-button
+            #modelMenu
+            [label]="modelLabel(picker.selected(), picker.defaultLabel)"
+            [ariaLabel]="picker.ariaLabel"
+            buttonClass="h-9 w-full justify-between">
             <button
               app-menu-item
               type="button"
               role="menuitemradio"
-              [attr.aria-checked]="model() === option.id"
-              (click)="model.set(option.id); modelMenu.close()">
+              [attr.aria-checked]="picker.selected() === ''"
+              (click)="picker.selected.set(''); modelMenu.close()">
               <span class="flex h-4 w-4 items-center justify-center">
-                @if (model() === option.id) {
+                @if (picker.selected() === '') {
                   <svg lucideCheck class="h-4 w-4"></svg>
                 }
               </span>
-              <span>{{ option.label }}</span>
+              <span>{{ picker.defaultLabel }}</span>
             </button>
-          }
-        </app-dropdown-button>
-        <span
-          class="text-muted text-xs"
-          i18n="Explains that saving a model needs the key again">
-          The model is saved with the key, so enter the key again to change it.
-        </span>
-      </div>
+            @for (option of models(); track option.id) {
+              <button
+                app-menu-item
+                type="button"
+                role="menuitemradio"
+                [attr.aria-checked]="picker.selected() === option.id"
+                (click)="picker.selected.set(option.id); modelMenu.close()">
+                <span class="flex h-4 w-4 items-center justify-center">
+                  @if (picker.selected() === option.id) {
+                    <svg lucideCheck class="h-4 w-4"></svg>
+                  }
+                </span>
+                <span>{{ option.label }}</span>
+              </button>
+            }
+          </app-dropdown-button>
+        </div>
+      }
 
       <app-callout [icon]="infoIcon" color="primary">
         @if (isWorkspace) {
@@ -244,6 +249,11 @@ export class AssistantConnectionDialogComponent {
 
   protected readonly busy = this.request.pending;
   protected readonly model = signal(this.data.credential?.model ?? '');
+  protected readonly reviewModel = signal(
+    this.data.credential?.reviewModel ?? ''
+  );
+
+  private readonly defaultLabel = $localize`:Model option that defers to the server default:Default`;
 
   protected readonly models = computed<AiModelOption[]>(() => {
     return this.catalog
@@ -276,6 +286,12 @@ export class AssistantConnectionDialogComponent {
   });
 
   protected readonly saveLabel = computed(() => {
+    const isModelsOnly = this.credential() && !this.secret().trim();
+
+    if (isModelsOnly) {
+      return $localize`:Button that saves a connection's model choices:Save`;
+    }
+
     if (this.credential()) {
       return $localize`:Button that replaces a stored API key:Replace key`;
     }
@@ -283,22 +299,55 @@ export class AssistantConnectionDialogComponent {
     return $localize`:Button that stores an API key:Save key`;
   });
 
-  protected readonly modelLabel = computed(() => {
-    const selected = this.model();
-    const option = this.models().find((item) => item.id === selected);
+  private readonly reviewDefaultLabel = computed(() => {
+    const option = this.models().find((item) => item.isReviewDefault);
 
-    if (option) {
-      return option.label;
+    if (!option) {
+      return this.defaultLabel;
     }
 
-    return $localize`:Model option that defers to the server default:Default`;
+    return $localize`:Review model option that uses the built-in default. MODEL is its name:Default (${option.label}:MODEL:)`;
+  });
+
+  protected readonly pickers = computed<ModelPicker[]>(() => {
+    return [
+      {
+        id: 'chat',
+        heading: $localize`:Label for the model a connection uses:Model for assistant chat`,
+        ariaLabel: $localize`:Accessible label for the assistant model selector:Assistant model`,
+        defaultLabel: this.defaultLabel,
+        selected: this.model,
+      },
+      {
+        id: 'review',
+        heading: $localize`:Label for the model a connection uses to review tasks:Model for task reviews`,
+        ariaLabel: $localize`:Accessible label for the task review model selector:Task review model`,
+        defaultLabel: this.reviewDefaultLabel(),
+        selected: this.reviewModel,
+      },
+    ];
+  });
+
+  protected readonly modelsChanged = computed(() => {
+    const stored = this.credential();
+    const chatChanged = this.model() !== (stored?.model ?? '');
+    const reviewChanged = this.reviewModel() !== (stored?.reviewModel ?? '');
+
+    return chatChanged || reviewChanged;
   });
 
   protected readonly canSave = computed(() => {
     const hasSecret = this.secret().trim().length > 0;
+    const canSaveModelsOnly = !!this.credential() && this.modelsChanged();
 
-    return hasSecret && !this.busy();
+    return (hasSecret || canSaveModelsOnly) && !this.busy();
   });
+
+  protected modelLabel(selected: string, defaultLabel: string): string {
+    const option = this.models().find((item) => item.id === selected);
+
+    return option?.label ?? defaultLabel;
+  }
 
   protected toDate(value: string): Date {
     return new Date(value);
@@ -306,17 +355,27 @@ export class AssistantConnectionDialogComponent {
 
   protected save() {
     const secret = this.secret().trim();
+    const stored = this.credential();
+    const models = {
+      model: this.model().trim() || null,
+      reviewModel: this.reviewModel().trim() || null,
+    };
+
+    if (!secret && stored) {
+      this.saveModels(stored, models);
+
+      return;
+    }
 
     if (!secret) {
       return;
     }
 
-    const model = this.model().trim();
     const request: SaveAiCredentialRequest = {
       provider: this.data.provider,
       label: this.data.label,
       secret,
-      model: model.length > 0 ? model : null,
+      ...models,
     };
 
     this.request.run(
@@ -331,6 +390,25 @@ export class AssistantConnectionDialogComponent {
         onError: (message) => this.snackbar.open(message),
       }
     );
+  }
+
+  private saveModels(
+    stored: AiCredential,
+    request: UpdateAiCredentialModelsRequest
+  ) {
+    const update = this.service
+      .updateModels(stored.id, request, this.data.scope)
+      .pipe(requireSuccess());
+
+    this.request.run(update, {
+      onSuccess: () => {
+        this.snackbar.success(
+          $localize`:Shown after a connection's models are saved:Models saved.`
+        );
+        this.dialogRef.close(true);
+      },
+      onError: (message) => this.snackbar.open(message),
+    });
   }
 
   protected remove() {

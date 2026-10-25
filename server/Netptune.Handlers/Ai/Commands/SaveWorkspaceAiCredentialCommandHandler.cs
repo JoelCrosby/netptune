@@ -55,6 +55,7 @@ public sealed class SaveWorkspaceAiCredentialCommandHandler
         credential.Secret = Protector.Protect(validated.Secret);
         credential.SecretHint = Protector.CreateHint(validated.Secret);
         credential.Model = validated.Model;
+        credential.ReviewModel = validated.ReviewModel;
         credential.CreatedByUserId = Identity.GetCurrentUserId();
         credential.LastUsedAt = null;
 
@@ -67,6 +68,7 @@ public sealed class SaveWorkspaceAiCredentialCommandHandler
             Label = credential.Label,
             SecretHint = credential.SecretHint,
             Model = credential.Model,
+            ReviewModel = credential.ReviewModel,
             CreatedAt = credential.CreatedAt,
             LastUsedAt = credential.LastUsedAt,
         });

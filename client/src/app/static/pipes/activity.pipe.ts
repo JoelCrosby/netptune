@@ -116,6 +116,25 @@ const getMeta = (value: ActivityViewModel) => {
       const total = meta?.checksTotal ?? 0;
       return `${meta?.reference ?? ''} (${failed} of ${total} failed)`;
     }
+    case ActivityType.runReview: {
+      const meta = value.meta as { outcome?: string; findingCount?: number };
+      const isFailed = meta?.outcome === 'failed';
+      const count = meta?.findingCount ?? 0;
+
+      if (isFailed) {
+        return $localize`:Shown after an assistant review in the activity feed when it failed:(failed)`;
+      }
+
+      return count === 1
+        ? $localize`:How many findings an assistant review raised, in the activity feed:(1 finding)`
+        : $localize`:How many findings an assistant review raised, in the activity feed. COUNT is a number:(${count}:COUNT: findings)`;
+    }
+    case ActivityType.acceptReviewFinding:
+    case ActivityType.dismissReviewFinding:
+    case ActivityType.reopenReviewFinding: {
+      const meta = value.meta as { title?: string };
+      return meta?.title ? `"${meta.title}"` : '';
+    }
     default:
       return '';
   }

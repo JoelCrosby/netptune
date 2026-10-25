@@ -172,6 +172,14 @@ export const activityTypeToString = (value: ActivityType): string => {
       return 'Enabled';
     case ActivityType.disable:
       return 'Disabled';
+    case ActivityType.runReview:
+      return $localize`:Activity entry for running an assistant review of a task:Ran an assistant review`;
+    case ActivityType.acceptReviewFinding:
+      return $localize`:Activity entry for accepting a finding from an assistant review:Accepted review finding`;
+    case ActivityType.dismissReviewFinding:
+      return $localize`:Activity entry for dismissing a finding from an assistant review:Dismissed review finding`;
+    case ActivityType.reopenReviewFinding:
+      return $localize`:Activity entry for reopening a finding from an assistant review:Reopened review finding`;
     default:
       return '[UNKNOWN ACTIVITY TYPE]';
   }

@@ -4,6 +4,7 @@ import {
   AiCredential,
   AiCredentialScope,
   SaveAiCredentialRequest,
+  UpdateAiCredentialModelsRequest,
 } from '@core/models/ai-credential';
 import { ClientResponse } from '@core/models/client-response';
 import { aiCredentialUrl } from '@core/resources/ai-credential.resource';
@@ -15,6 +16,17 @@ export class AiCredentialsService {
   save(request: SaveAiCredentialRequest, scope: AiCredentialScope = 'user') {
     return this.http.put<ClientResponse<AiCredential>>(
       aiCredentialUrl(scope),
+      request
+    );
+  }
+
+  updateModels(
+    credentialId: string,
+    request: UpdateAiCredentialModelsRequest,
+    scope: AiCredentialScope = 'user'
+  ) {
+    return this.http.patch<ClientResponse>(
+      `${aiCredentialUrl(scope)}/${credentialId}`,
       request
     );
   }

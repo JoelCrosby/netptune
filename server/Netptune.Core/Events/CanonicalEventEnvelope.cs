@@ -32,6 +32,8 @@ public sealed record CanonicalEventEnvelope : IEventMessage
 
     public EventOriginType OriginType { get; init; }
 
+    public string? Agent { get; init; }
+
     public Guid? CorrelationId { get; init; }
 
     public Guid? CausationEventId { get; init; }

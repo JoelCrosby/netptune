@@ -43,6 +43,10 @@ public static class EventKeys
     public const string TaskRelationChanged = "relation.changed";
     public const string EntityActivityRecorded = "entity.activity-recorded";
     public const string AssistantConversationDeleted = "assistant.conversation-deleted";
+    public const string AssistantReviewCompleted = "assistant.review-completed";
+    public const string AssistantReviewFindingAccepted = "assistant.review-finding-accepted";
+    public const string AssistantReviewFindingDismissed = "assistant.review-finding-dismissed";
+    public const string AssistantReviewFindingReopened = "assistant.review-finding-reopened";
     public const string AutomationRuleAutoDisabled = "automation.rule-auto-disabled";
     public const string SourceControlConnected = "source-control.connected";
     public const string SourceControlDisconnected = "source-control.disconnected";
@@ -127,6 +131,10 @@ public static class EventKeys
             or CommentUpdated
             or CommentDeleted
             or FlagResolutionRecorded
+            or AssistantReviewCompleted
+            or AssistantReviewFindingAccepted
+            or AssistantReviewFindingDismissed
+            or AssistantReviewFindingReopened
             or SourceControlPullRequestOpened
             or SourceControlPullRequestMerged
             or SourceControlPullRequestClosed
@@ -157,6 +165,10 @@ public static class EventKeys
             FlagResolutionRecorded => ActivityType.Modify,
             AssistantConversationDeleted => ActivityType.Delete,
             AutomationRuleAutoDisabled => ActivityType.Disable,
+            AssistantReviewCompleted => ActivityType.RunReview,
+            AssistantReviewFindingAccepted => ActivityType.AcceptReviewFinding,
+            AssistantReviewFindingDismissed => ActivityType.DismissReviewFinding,
+            AssistantReviewFindingReopened => ActivityType.ReopenReviewFinding,
             SourceControlConnected => ActivityType.Create,
             SourceControlDisconnected => ActivityType.Delete,
             SourceControlPullRequestOpened => ActivityType.PullRequestOpened,
@@ -274,6 +286,10 @@ public static class EventDefinitionRegistry
             [(EventKeys.FlagResolutionRecorded, 1)] = typeof(FlagResolutionPayload),
             [(EventKeys.AssistantConversationDeleted, 1)] = typeof(AssistantConversationDeletedPayload),
             [(EventKeys.AutomationRuleAutoDisabled, 1)] = typeof(AutomationRuleActivityMeta),
+            [(EventKeys.AssistantReviewCompleted, 1)] = typeof(AssistantReviewCompletedPayload),
+            [(EventKeys.AssistantReviewFindingAccepted, 1)] = typeof(AssistantReviewFindingDecidedPayload),
+            [(EventKeys.AssistantReviewFindingDismissed, 1)] = typeof(AssistantReviewFindingDecidedPayload),
+            [(EventKeys.AssistantReviewFindingReopened, 1)] = typeof(AssistantReviewFindingDecidedPayload),
             [(EventKeys.SourceControlConnected, 1)] = typeof(SourceControlConnectionEventPayload),
             [(EventKeys.SourceControlDisconnected, 1)] = typeof(SourceControlConnectionEventPayload),
             [(EventKeys.SourceControlPullRequestOpened, 1)] = typeof(SourceControlActivityPayload),

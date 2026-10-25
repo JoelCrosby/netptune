@@ -1837,4 +1837,64 @@ Veuillez confirmer votre adresse e-mail à l’aide du lien ci-dessous.</value>
   <data name="AiSpendCapReachedDuringTurn" xml:space="preserve">
     <value>L’assistant s’est arrêté, car cette réponse a atteint le plafond mensuel de dépenses de l’espace de travail.</value>
   </data>
+  <data name="AiErrorNoPermissionToReview" xml:space="preserve">
+    <value>Vous n’avez pas l’autorisation de faire relire ceci par l’assistant.</value>
+  </data>
+  <data name="AiReviewUnreadable" xml:space="preserve">
+    <value>La relecture de l’assistant n’a pas pu être lue. Réessayez.</value>
+  </data>
+  <data name="AiReviewFieldNotEditable" xml:space="preserve">
+    <value>Cette partie de l’élément ne peut pas être modifiée depuis une relecture.</value>
+  </data>
+  <data name="AiReviewNotCurrent" xml:space="preserve">
+    <value>Une relecture plus récente a remplacé celle-ci. Rechargez pour la voir.</value>
+  </data>
+  <data name="AiReviewFindingAlreadyDecided" xml:space="preserve">
+    <value>Quelqu’un a déjà statué sur ce point. Rechargez pour le voir.</value>
+  </data>
+  <data name="AiReviewBusy" xml:space="preserve">
+    <value>Une autre modification de cette relecture est en cours. Réessayez.</value>
+  </data>
+  <data name="AiReviewPassageChanged" xml:space="preserve">
+    <value>La description a changé depuis cette relecture, la suggestion ne s’applique donc plus. Modifiez-la à la main ou relancez la relecture.</value>
+  </data>
+  <data name="AiReviewNothingToAccept" xml:space="preserve">
+    <value>Ce point n’a aucune suggestion à accepter.</value>
+  </data>
+  <data name="AiReviewReasonTooLong" xml:space="preserve">
+    <value>Le motif peut contenir au maximum {0} caractères.</value>
+  </data>
+  <data name="AiReviewRevertChanged" xml:space="preserve">
+    <value>La description a changé après l’acceptation de cette suggestion, elle ne peut donc pas être annulée automatiquement.</value>
+  </data>
+  <data name="AiReviewNoRelationType" xml:space="preserve">
+    <value>Cet espace de travail n’a aucun type de relation pour ce genre de lien.</value>
+  </data>
+  <data name="AiReviewSplitTaskTooLong" xml:space="preserve">
+    <value>Chaque nouvelle tâche doit avoir un nom de {0} caractères au maximum et une description de {1} caractères au maximum.</value>
+  </data>
+  <data name="AiReviewTooManyNewTags" xml:space="preserve">
+    <value>Une suggestion peut créer au maximum {0} nouvelles étiquettes.</value>
+  </data>
+  <data name="AiReviewCannotReopenApplied" xml:space="preserve">
+    <value>Cette suggestion a déjà été appliquée à la tâche, elle ne peut donc pas être rouverte.</value>
+  </data>
+  <data name="AuditAssistantReviewFailed" xml:space="preserve">
+    <value>Échec de la relecture de l’assistant</value>
+  </data>
+  <data name="AuditAssistantReviewOneFinding" xml:space="preserve">
+    <value>Relecture de l’assistant : 1 point</value>
+  </data>
+  <data name="AuditAssistantReviewFindings" xml:space="preserve">
+    <value>Relecture de l’assistant : {0} points</value>
+  </data>
+  <data name="AuditReviewFindingAccepted" xml:space="preserve">
+    <value>Point de relecture “{0}” accepté</value>
+  </data>
+  <data name="AuditReviewFindingDismissed" xml:space="preserve">
+    <value>Point de relecture “{0}” écarté</value>
+  </data>
+  <data name="AuditReviewFindingReopened" xml:space="preserve">
+    <value>Point de relecture “{0}” rouvert</value>
+  </data>
 </root>
