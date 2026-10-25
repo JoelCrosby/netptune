@@ -243,14 +243,14 @@ public sealed class AnthropicChatProvider : IAiChatProvider
                 })
                 .ToList();
 
-            return new MessageParam { Role = Role.User, Content = resultBlocks };
+            return new UserMessageParam { Content = resultBlocks };
         }
 
         var isAssistant = message.Role == AiMessageRole.Assistant;
 
         if (!isAssistant)
         {
-            return new MessageParam { Role = Role.User, Content = message.PromptText };
+            return new UserMessageParam { Content = message.PromptText };
         }
 
         var blocks = new List<ContentBlockParam>();
@@ -271,7 +271,7 @@ public sealed class AnthropicChatProvider : IAiChatProvider
             });
         }
 
-        return new MessageParam { Role = Role.Assistant, Content = blocks };
+        return new AssistantMessageParam { Content = blocks };
     }
 
     private static Dictionary<string, JsonElement> CreateInputMap(JsonDocument arguments)

@@ -73,7 +73,7 @@ public class AiEffortMappingTests
         {
             Model = AiModels.AnthropicTitleModel,
             MaxTokens = 16,
-            Messages = [new MessageParam { Role = Role.User, Content = "hello" }],
+            Messages = [new UserMessageParam { Content = "hello" }],
             OutputConfig = null,
         };
 
