@@ -189,10 +189,10 @@ export class EditorComponent
       case 'document':
         return cn('flex-col', this.hostClass());
       case 'flat':
-        return cn('-mx-1 max-h-[600px] rounded-lg px-1', this.hostClass());
+        return cn('-mx-1 rounded-lg px-1', this.hostClass());
       default:
         return cn(
-          'bg-form-field-background mb-4 border-foreground/30 mt-2 max-h-[600px] rounded-sm border-2 px-4 py-1',
+          'bg-form-field-background mb-4 border-foreground/30 mt-2 rounded-sm border-2 px-4 py-1',
           this.hostClass()
         );
     }

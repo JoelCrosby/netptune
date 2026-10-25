@@ -21,13 +21,12 @@ import { PageWidthService } from '@core/services/page-width.service';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
 import {
   APPEARANCE_PAGE_WIDTH,
-  APPEARANCE_TASK_DETAIL_LAYOUT,
   APPEARANCE_THEME,
 } from '@core/models/user-preferences';
 import { CreateTaskDialogComponent } from '@entry/dialogs/create-task-dialog/create-task-dialog.component';
 import {
-  DEFAULT_TASK_DETAIL_LAYOUT,
   TaskDetailLayout,
+  TaskDetailLayoutService,
 } from '@entry/dialogs/task-detail-dialog/task-detail-layout';
 import { CurrentContextService } from '@core/services/current-context.service';
 import { PageKind } from '@core/models/pages';
@@ -49,6 +48,7 @@ export class GlobalCommandsService implements OnDestroy {
   private theme = inject(ThemeService);
   private pageWidth = inject(PageWidthService);
   private preferences = inject(UserPreferencesService);
+  private taskLayout = inject(TaskDetailLayoutService);
   private authenticated = inject(SessionService).isAuthenticated;
   private keyboard = inject(KeyboardService);
   private currentTask = inject(CurrentContextService).task;
@@ -430,10 +430,8 @@ export class GlobalCommandsService implements OnDestroy {
       group: 'settings',
       icon: 'panels-top-left',
       keywords: ['task layout', 'cockpit', 'task detail', 'appearance'],
-      available: () => this.taskDetailLayoutIs('document'),
-      execute: () => {
-        this.updatePreference(APPEARANCE_TASK_DETAIL_LAYOUT, 'cockpit');
-      },
+      available: () => this.canSwitchTaskLayoutTo('cockpit'),
+      execute: () => this.taskLayout.switchTo('cockpit'),
     },
     {
       id: 'settings.taskLayout.document',
@@ -441,10 +439,8 @@ export class GlobalCommandsService implements OnDestroy {
       group: 'settings',
       icon: 'file-text',
       keywords: ['task layout', 'document', 'task detail', 'appearance'],
-      available: () => this.taskDetailLayoutIs('cockpit'),
-      execute: () => {
-        this.updatePreference(APPEARANCE_TASK_DETAIL_LAYOUT, 'document');
-      },
+      available: () => this.canSwitchTaskLayoutTo('document'),
+      execute: () => this.taskLayout.switchTo('document'),
     },
     {
       id: 'actions.assistant',
@@ -514,14 +510,10 @@ export class GlobalCommandsService implements OnDestroy {
     return source !== undefined && source !== 'default';
   }
 
-  private taskDetailLayoutIs(layout: TaskDetailLayout): boolean {
-    if (!this.authenticated()) return false;
+  private canSwitchTaskLayoutTo(layout: TaskDetailLayout): boolean {
+    const isOtherLayout = this.taskLayout.otherLayout() === layout;
 
-    const value = this.preferences.effectiveValueFor(
-      APPEARANCE_TASK_DETAIL_LAYOUT
-    );
-
-    return (value ?? DEFAULT_TASK_DETAIL_LAYOUT) === layout;
+    return this.taskLayout.canSwitch() && isOtherLayout;
   }
 
   private setTheme(theme: Theme) {

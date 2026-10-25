@@ -26,8 +26,10 @@ import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-
 import {
   LucideEllipsis,
   LucideExternalLink,
+  LucideFileText,
   LucidePanelRightClose,
   LucidePanelRightOpen,
+  LucidePanelsTopLeft,
   LucidePin,
   LucideSparkles,
   LucideTrash2,
@@ -39,6 +41,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
 import { HEADER_ICON_BUTTON } from '../task-detail-styles';
+import { TaskDetailLayoutService } from '../task-detail-layout';
 import { TaskDetailService } from '../task-detail.service';
 import { DividerComponent } from '@static/components/divider/divider.component';
 
@@ -56,8 +59,10 @@ import { DividerComponent } from '@static/components/divider/divider.component';
     TooltipDirective,
     LucideEllipsis,
     LucideExternalLink,
+    LucideFileText,
     LucidePanelRightClose,
     LucidePanelRightOpen,
+    LucidePanelsTopLeft,
     LucideSparkles,
     LucideTrash2,
     LucideX,
@@ -111,6 +116,21 @@ import { DividerComponent } from '@static/components/divider/divider.component';
               <svg lucidePanelRightOpen class="h-4 w-4"></svg>
             } @else {
               <svg lucidePanelRightClose class="h-4 w-4"></svg>
+            }
+          </button>
+        }
+
+        @if (layout.canSwitch()) {
+          <button
+            type="button"
+            [class]="iconButtonClass"
+            [attr.aria-label]="switchLayoutLabel()"
+            [appTooltip]="switchLayoutLabel()"
+            (click)="layout.toggle()">
+            @if (layout.otherLayout() === 'cockpit') {
+              <svg lucidePanelsTopLeft class="h-4 w-4"></svg>
+            } @else {
+              <svg lucideFileText class="h-4 w-4"></svg>
             }
           </button>
         }
@@ -199,6 +219,7 @@ export class TaskDetailChromeComponent {
   readonly dialogRef = inject(DialogRef, { optional: true });
 
   protected readonly taskDetail = inject(TaskDetailService);
+  protected readonly layout = inject(TaskDetailLayoutService);
   private readonly pinCommands = inject(PinCommandsService);
   private readonly boardView = inject(BoardViewService);
   private readonly pinsRef = pinnedTasksResource();
@@ -224,6 +245,14 @@ export class TaskDetailChromeComponent {
 
   readonly hasOverflowActions = computed(() => {
     return this.canDeleteTask() || this.canAskAssistant();
+  });
+
+  readonly switchLayoutLabel = computed(() => {
+    if (this.layout.otherLayout() === 'cockpit') {
+      return $localize`:Accessible label for the button that switches the open task to the cockpit layout:Switch to cockpit layout`;
+    }
+
+    return $localize`:Accessible label for the button that switches the open task to the document layout:Switch to document layout`;
   });
 
   readonly breadcrumb = computed(() => {

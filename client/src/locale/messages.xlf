@@ -4662,7 +4662,7 @@
     </unit>
     <unit id="7480444655465895778">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:451</note>
+        <note category="location">src/app/shell/global-commands.service.ts:447</note>
         <note category="description">Command palette action that opens the AI assistant</note>
       </notes>
       <segment>
@@ -4785,7 +4785,7 @@
         <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:68,70</note>
         <note category="location">src/app/entry/dialogs/status-dialog/status-dialog.component.ts:86,88</note>
         <note category="location">src/app/entry/dialogs/tag-dialog/tag-dialog.component.ts:49,51</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:184,185</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:204,205</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:115,117</note>
         <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:254,259</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:88,90</note>
@@ -4893,6 +4893,15 @@
       </notes>
       <segment>
         <source> Bulk edit tasks </source>
+      </segment>
+    </unit>
+    <unit id="6753797320809380334">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:255</note>
+        <note category="description">Accessible label for the button that switches the open task to the document layout</note>
+      </notes>
+      <segment>
+        <source>Switch to document layout</source>
       </segment>
     </unit>
     <unit id="6755348258793821260">
@@ -5557,7 +5566,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:161,164</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:40,41</note>
-        <note category="location">src/app/shell/global-commands.service.ts:460</note>
+        <note category="location">src/app/shell/global-commands.service.ts:456</note>
         <note category="description">Title of the create-task dialog</note>
       </notes>
       <segment>
@@ -13522,7 +13531,7 @@
     <unit id="8805582001022257690">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:116,118</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:156,158</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:176,178</note>
         <note category="description">Button that asks the assistant about this task</note>
       </notes>
       <segment>
@@ -13795,7 +13804,7 @@
     <unit id="4510676848705799339">
       <notes>
         <note category="location">src/app/core/automations/automation-copy.ts:84</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:166,168</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:186,188</note>
         <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:182,185</note>
         <note category="description">Name of an automation action</note>
       </notes>
@@ -16870,7 +16879,7 @@
         <note category="location">src/app/features/pages/components/page-tree.component.ts:80,82</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:91,93</note>
         <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:210</note>
-        <note category="location">src/app/shell/global-commands.service.ts:470</note>
+        <note category="location">src/app/shell/global-commands.service.ts:466</note>
         <note category="description">Menu item that creates a page</note>
       </notes>
       <segment>
@@ -18353,7 +18362,7 @@
     </unit>
     <unit id="3875186816345392442">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:214</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:235</note>
         <note category="description">Accessible label for the toggle that shows or hides the comments and history beside a task</note>
       </notes>
       <segment>
@@ -18846,7 +18855,7 @@
     </unit>
     <unit id="117068237894470695">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:143,145</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:163,165</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:169,171</note>
         <note category="description">Accessible label for the button that opens the task&apos;s other actions</note>
       </notes>
@@ -20629,7 +20638,7 @@
     </unit>
     <unit id="4810719754522561546">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:213</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:234</note>
         <note category="description">Accessible label for the control that opens the pin scope menu</note>
       </notes>
       <segment>
@@ -22853,6 +22862,15 @@
         <source>Use an IANA timezone, for example Europe/London.</source>
       </segment>
     </unit>
+    <unit id="8925868438353175805">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:252</note>
+        <note category="description">Accessible label for the button that switches the open task to the cockpit layout</note>
+      </notes>
+      <segment>
+        <source>Switch to cockpit layout</source>
+      </segment>
+    </unit>
     <unit id="8927455770711141149">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:57</note>
@@ -23466,8 +23484,8 @@
     </unit>
     <unit id="6827887873610296004">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:124,126</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:128,129</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:144,146</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:148,149</note>
         <note category="location">src/app/shared/components/pinned-task-row/pinned-task-row.component.ts:83,85</note>
         <note category="location">src/app/shared/components/pinned-task-row/pinned-task-row.component.ts:87,88</note>
         <note category="description">Tooltip on the link that opens the task&apos;s own page</note>
@@ -25763,7 +25781,7 @@
     </unit>
     <unit id="4475093671158329161">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:251</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:280</note>
         <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:95,99</note>
         <note category="description">Label on the control that pins a task</note>
       </notes>
@@ -26321,7 +26339,7 @@
     </unit>
     <unit id="5743757503664322992">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:248</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:277</note>
         <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:32,33</note>
         <note category="location">src/app/features/pins/views/pinned-view/pinned-view.component.ts:65,67</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:253</note>
@@ -26792,7 +26810,7 @@
     </unit>
     <unit id="3335455471343847900">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:440</note>
+        <note category="location">src/app/shell/global-commands.service.ts:438</note>
         <note category="description">Command palette action that switches the task detail view to the document layout</note>
       </notes>
       <segment>
