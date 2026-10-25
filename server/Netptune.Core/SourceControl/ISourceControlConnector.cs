@@ -7,7 +7,7 @@ public interface ISourceControlConnector
 {
     ScmConnectStart BeginConnect(ScmConnectRequest request);
 
-    ValueTask<ClientResponse<ScmConnectResult>> CompleteConnect(ScmConnectCallback callback, CancellationToken cancellationToken);
+    ValueTask<ClientResponse<ScmConnectOutcome>> CompleteConnect(ScmConnectCallback callback, CancellationToken cancellationToken);
 
     ValueTask<ScmAccessToken> GetAccessToken(ScmConnection connection, CancellationToken cancellationToken);
 

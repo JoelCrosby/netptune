@@ -421,6 +421,15 @@
         <source>Page deleted</source>
       </segment>
     </unit>
+    <unit id="3360963251792340684">
+      <notes>
+        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:62,64</note>
+        <note category="description">Heading of the page that asks which source control account to connect</note>
+      </notes>
+      <segment>
+        <source>Choose an account</source>
+      </segment>
+    </unit>
     <unit id="3365632461151309436">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/edit-api-credential-scopes-dialog.component.ts:68,71</note>
@@ -530,7 +539,7 @@
     </unit>
     <unit id="8195124744855652290">
       <notes>
-        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:97</note>
+        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:212</note>
         <note category="description">Fallback when completing a source control connection fails</note>
       </notes>
       <segment>
@@ -2741,7 +2750,7 @@
     <unit id="5497627646066282315">
       <notes>
         <note category="location">src/app/app.routes.ts:29</note>
-        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:35,40</note>
+        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:120,125</note>
         <note category="description">Page title while a source control connection completes</note>
       </notes>
       <segment>
@@ -2952,7 +2961,7 @@
     </unit>
     <unit id="8841695786041482472">
       <notes>
-        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:64</note>
+        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:153</note>
         <note category="description">Shown when the source control callback has no matching connection request</note>
       </notes>
       <segment>
@@ -6673,6 +6682,7 @@
     <unit id="813263746069473514">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:166</note>
+        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:94,100</note>
         <note category="description">Button that connects web search</note>
       </notes>
       <segment>
@@ -14118,7 +14128,7 @@
     </unit>
     <unit id="615701940674255230">
       <notes>
-        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:87</note>
+        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:240</note>
         <note category="description">Shown after a source control account is connected</note>
       </notes>
       <segment>
@@ -14145,7 +14155,7 @@
     </unit>
     <unit id="6158676915815199876">
       <notes>
-        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:88</note>
+        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:241</note>
         <note category="description">Shown after a source control account is connected without its name</note>
       </notes>
       <segment>
@@ -14648,6 +14658,15 @@
       </notes>
       <segment>
         <source>Runs on the whole workspace</source>
+      </segment>
+    </unit>
+    <unit id="6020595830263217366">
+      <notes>
+        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:110,116</note>
+        <note category="description">Button that installs the source control app on an account not listed</note>
+      </notes>
+      <segment>
+        <source>Install on another account</source>
       </segment>
     </unit>
     <unit id="6027936776709447988">
@@ -15667,7 +15686,7 @@
     </unit>
     <unit id="3523968380696217863">
       <notes>
-        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:53</note>
+        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:142</note>
         <note category="description">Button that returns to the source control settings</note>
       </notes>
       <segment>
@@ -19582,6 +19601,15 @@
         <source> Create Project </source>
       </segment>
     </unit>
+    <unit id="5650224570797146244">
+      <notes>
+        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:67,71</note>
+        <note category="description">Explains the choice between an account that already has the app and installing it somewhere new</note>
+      </notes>
+      <segment>
+        <source>The app is already installed on these accounts. Connect one to this workspace, or install the app on another account.</source>
+      </segment>
+    </unit>
     <unit id="5652735137625845954">
       <notes>
         <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:195</note>
@@ -21620,7 +21648,7 @@
     </unit>
     <unit id="9090750822522914978">
       <notes>
-        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:26,28</note>
+        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:50,52</note>
         <note category="description">Shown when a source control connection cannot be completed</note>
       </notes>
       <segment>
@@ -27358,7 +27386,7 @@
     </unit>
     <unit id="8788669123164389474">
       <notes>
-        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:54</note>
+        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:143</note>
         <note category="description">Button that goes to the list of the user&apos;s workspaces</note>
       </notes>
       <segment>

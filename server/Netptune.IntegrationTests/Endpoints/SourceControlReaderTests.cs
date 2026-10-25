@@ -114,14 +114,15 @@ public sealed class SourceControlReaderTests
                 Parameters = new Dictionary<string, string> { ["account"] = account },
             },
             token);
-        var connection = await connect.Content.ReadFromJsonAsync<ClientResponse<SourceControlConnectionViewModel>>(token);
+        var completion = await connect.Content.ReadFromJsonAsync<ClientResponse<SourceControlConnectCompletionViewModel>>(token);
+        var connection = completion.Payload!.Connection!;
 
         using var scope = Fixture.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<DataContext>();
 
         var repos = await context.SourceControlRepos
             .AsNoTracking()
-            .Where(repo => repo.ConnectionId == connection.Payload!.Id)
+            .Where(repo => repo.ConnectionId == connection.Id)
             .OrderBy(repo => repo.FullName)
             .Select(repo => new { repo.Id, repo.FullName, repo.WorkspaceId })
             .ToListAsync(token);

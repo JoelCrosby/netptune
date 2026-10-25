@@ -3,8 +3,8 @@ import { Service, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import {
   ScmRepoSyncResult,
+  SourceControlConnectCompletion,
   SourceControlConnectStart,
-  SourceControlConnection,
   SourceControlIdentity,
   SourceControlProvider,
   SourceControlRepo,
@@ -25,7 +25,7 @@ export class SourceControlService {
     provider: SourceControlProvider,
     parameters: Record<string, string>
   ) {
-    return this.http.post<ClientResponse<SourceControlConnection>>(
+    return this.http.post<ClientResponse<SourceControlConnectCompletion>>(
       'api/source-control/connections/complete',
       { provider, parameters }
     );

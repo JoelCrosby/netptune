@@ -5,6 +5,7 @@ using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests.SourceControl;
 using Netptune.Core.Services.Realtime;
+using Netptune.Core.ViewModels.SourceControl;
 using Netptune.Handlers.SourceControl.Commands;
 using Netptune.Handlers.SourceControl.Queries;
 
@@ -29,7 +30,9 @@ public static class SourceControlEndpoints
 
         group.MapPost("/connections/complete", HandleCompleteConnect)
             .RequireAuthorization(NetptunePermissions.SourceControl.Manage)
-            .Broadcasts(WorkspaceEventScopes.SourceControl);
+            .BroadcastsWhen<SourceControlConnectCompletionViewModel>(
+                completion => completion.Connection is not null,
+                WorkspaceEventScopes.SourceControl);
 
         group.MapDelete("/connections/{connectionId:int}", HandleDisconnect)
             .RequireAuthorization(NetptunePermissions.SourceControl.Manage)

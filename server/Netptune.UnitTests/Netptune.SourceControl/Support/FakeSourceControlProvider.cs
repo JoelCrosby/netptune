@@ -44,11 +44,11 @@ public sealed class FakeSourceControlProvider : ISourceControlProvider
             return new ScmConnectStart("https://fake.example/connect");
         }
 
-        public ValueTask<ClientResponse<ScmConnectResult>> CompleteConnect(
+        public ValueTask<ClientResponse<ScmConnectOutcome>> CompleteConnect(
             ScmConnectCallback callback,
             CancellationToken cancellationToken)
         {
-            var response = ClientResponse<ScmConnectResult>.Failed("Not supported by the fake provider.");
+            var response = ClientResponse<ScmConnectOutcome>.Failed("Not supported by the fake provider.");
 
             return ValueTask.FromResult(response);
         }

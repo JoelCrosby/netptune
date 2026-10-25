@@ -17,10 +17,10 @@ using Netptune.Core.ViewModels.SourceControl;
 namespace Netptune.Handlers.SourceControl.Commands;
 
 public sealed record CompleteSourceControlConnectCommand(CompleteSourceControlConnectRequest Request)
-    : IRequest<ClientResponse<SourceControlConnectionViewModel>>;
+    : IRequest<ClientResponse<SourceControlConnectCompletionViewModel>>;
 
 public sealed class CompleteSourceControlConnectCommandHandler
-    : IRequestHandler<CompleteSourceControlConnectCommand, ClientResponse<SourceControlConnectionViewModel>>
+    : IRequestHandler<CompleteSourceControlConnectCommand, ClientResponse<SourceControlConnectCompletionViewModel>>
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
@@ -45,7 +45,7 @@ public sealed class CompleteSourceControlConnectCommandHandler
         Logger = logger;
     }
 
-    public async ValueTask<ClientResponse<SourceControlConnectionViewModel>> Handle(
+    public async ValueTask<ClientResponse<SourceControlConnectCompletionViewModel>> Handle(
         CompleteSourceControlConnectCommand command,
         CancellationToken cancellationToken)
     {
@@ -56,7 +56,7 @@ public sealed class CompleteSourceControlConnectCommandHandler
         {
             var message = Localized.Format(AppText.ErrorNotEnabledNetptuneInstance, request.Provider);
 
-            return ClientResponse<SourceControlConnectionViewModel>.Failed(message);
+            return ClientResponse<SourceControlConnectCompletionViewModel>.Failed(message);
         }
 
         var workspaceId = await Identity.GetWorkspaceId();
@@ -69,11 +69,21 @@ public sealed class CompleteSourceControlConnectCommandHandler
             Parameters = request.Parameters,
         };
 
-        var connected = await CompleteWithProvider(request.Provider, callback, cancellationToken);
+        var completed = await CompleteWithProvider(request.Provider, callback, cancellationToken);
 
-        if (!connected.IsSuccess)
+        if (!completed.IsSuccess)
         {
-            return ClientResponse<SourceControlConnectionViewModel>.Failed(connected.Message);
+            return ClientResponse<SourceControlConnectCompletionViewModel>.Failed(completed.Message);
+        }
+
+        var outcome = completed.Payload!;
+
+        if (outcome.Choice is not null)
+        {
+            var choice = await ToChoiceViewModel(request.Provider, workspaceId, outcome.Choice, cancellationToken);
+            var choiceCompletion = new SourceControlConnectCompletionViewModel { Choice = choice };
+
+            return ClientResponse<SourceControlConnectCompletionViewModel>.Success(choiceCompletion);
         }
 
         var connection = await UnitOfWork.Transaction(async () =>
@@ -82,7 +92,7 @@ public sealed class CompleteSourceControlConnectCommandHandler
                 request.Provider,
                 workspaceId,
                 userId,
-                connected.Payload!,
+                outcome.Connection!,
                 cancellationToken);
 
             // Saved first so a new connection has the id the audit event refers to.
@@ -101,11 +111,45 @@ public sealed class CompleteSourceControlConnectCommandHandler
         var linkedRepos = await UnitOfWork.SourceControlRepos.GetLinkedForWorkspace(workspaceId, cancellationToken);
         var linkedCount = linkedRepos.Count(repo => repo.ConnectionId == connection.Id);
         var viewModel = SourceControlConnectionMapper.ToViewModel(connection, Registry, linkedCount);
+        var completion = new SourceControlConnectCompletionViewModel { Connection = viewModel };
 
-        return ClientResponse<SourceControlConnectionViewModel>.Success(viewModel);
+        return ClientResponse<SourceControlConnectCompletionViewModel>.Success(completion);
     }
 
-    private async Task<ClientResponse<ScmConnectResult>> CompleteWithProvider(
+    private async Task<SourceControlConnectChoiceViewModel> ToChoiceViewModel(
+        SourceControlProvider provider,
+        int workspaceId,
+        ScmConnectChoice choice,
+        CancellationToken cancellationToken)
+    {
+        var workspaceConnections = await UnitOfWork.SourceControlConnections.GetForWorkspace(
+            workspaceId,
+            cancellationToken);
+
+        var connectedAccountIds = workspaceConnections
+            .Where(connection => connection.Provider == provider)
+            .Select(connection => connection.ExternalAccountId)
+            .ToHashSet();
+
+        var candidates = choice.Candidates
+            .Where(candidate => !connectedAccountIds.Contains(candidate.ExternalAccountId))
+            .Select(candidate => new SourceControlConnectCandidateViewModel
+            {
+                AccountLogin = candidate.Account.Login,
+                AccountType = candidate.Account.AccountType,
+                AccountAvatarUrl = candidate.Account.AvatarUrl,
+                CallbackParameters = new Dictionary<string, string>(candidate.CallbackParameters),
+            })
+            .ToList();
+
+        return new SourceControlConnectChoiceViewModel
+        {
+            Candidates = candidates,
+            InstallUrl = choice.InstallUrl,
+        };
+    }
+
+    private async Task<ClientResponse<ScmConnectOutcome>> CompleteWithProvider(
         SourceControlProvider providerKind,
         ScmConnectCallback callback,
         CancellationToken cancellationToken)
@@ -124,7 +168,7 @@ public sealed class CompleteSourceControlConnectCommandHandler
 
             var message = Localized.Format(AppText.ErrorCouldNotCompleteConnectionTryAgainShortly, providerKind);
 
-            return ClientResponse<ScmConnectResult>.Failed(message);
+            return ClientResponse<ScmConnectOutcome>.Failed(message);
         }
     }
 

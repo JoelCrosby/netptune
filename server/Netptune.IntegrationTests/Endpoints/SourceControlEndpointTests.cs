@@ -111,6 +111,41 @@ public sealed class SourceControlEndpointTests
     }
 
     [Fact]
+    public async Task Connect_ShouldOfferOnlyTheAccountsTheWorkspaceHasNotConnected()
+    {
+        var connected = UniqueAccount();
+        var offered = UniqueAccount();
+
+        await Connect(connected);
+
+        var request = new CompleteSourceControlConnectRequest
+        {
+            Provider = SourceControlProvider.GitLab,
+            Parameters = new Dictionary<string, string>
+            {
+                [TestSourceControlProvider.ChooseParameter] = $"{connected},{offered}",
+            },
+        };
+
+        var response = await Client.PostAsJsonAsync(
+            "api/source-control/connections/complete",
+            request,
+            TestContext.Current.CancellationToken);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<SourceControlConnectCompletionViewModel>>(
+            TestContext.Current.CancellationToken);
+
+        var choice = result.Payload!.Choice!;
+        var candidate = choice.Candidates.Should().ContainSingle().Subject;
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, result.Message);
+        result.Payload.Connection.Should().BeNull();
+        choice.InstallUrl.Should().Be(TestSourceControlProvider.InstallUrl);
+        candidate.AccountLogin.Should().Be(offered);
+        candidate.CallbackParameters.Should().Contain("account", offered);
+    }
+
+    [Fact]
     public async Task LinkingARepo_ShouldCountTowardsTheConnection()
     {
         var connection = await Connect(UniqueAccount());
@@ -423,12 +458,12 @@ public sealed class SourceControlEndpointTests
     private async Task<SourceControlConnectionViewModel> Connect(string account, HttpClient? client = null)
     {
         var response = await PostComplete(account, client: client);
-        var result = await response.Content.ReadFromJsonAsync<ClientResponse<SourceControlConnectionViewModel>>(
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<SourceControlConnectCompletionViewModel>>(
             TestContext.Current.CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK, result.Message);
 
-        return result.Payload!;
+        return result.Payload!.Connection!;
     }
 
     private async Task<List<SourceControlConnectionViewModel>> GetConnections()

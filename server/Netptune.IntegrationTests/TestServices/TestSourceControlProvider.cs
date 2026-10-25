@@ -17,6 +17,10 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
 {
     public const string DeniedCode = "denied";
 
+    public const string ChooseParameter = "choose";
+
+    public const string InstallUrl = "https://scm.test/install";
+
     public SourceControlProvider Provider => SourceControlProvider.GitLab;
 
     public const string HeadSha = "1111111111111111111111111111111111111111";
@@ -307,16 +311,26 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
             return new ScmConnectStart($"https://scm.test/connect?workspace={request.WorkspaceId}");
         }
 
-        public ValueTask<ClientResponse<ScmConnectResult>> CompleteConnect(
+        public ValueTask<ClientResponse<ScmConnectOutcome>> CompleteConnect(
             ScmConnectCallback callback,
             CancellationToken cancellationToken)
         {
+            var choose = callback.Parameters.GetValueOrDefault(ChooseParameter);
+
+            if (choose is not null)
+            {
+                var choice = CreateChoice(choose.Split(','));
+                var offered = ClientResponse<ScmConnectOutcome>.Success(ScmConnectOutcome.Choose(choice));
+
+                return ValueTask.FromResult(offered);
+            }
+
             var account = callback.Parameters.GetValueOrDefault("account");
             var isDenied = callback.Parameters.GetValueOrDefault("code") == DeniedCode;
 
             if (account is null || isDenied)
             {
-                var denied = ClientResponse<ScmConnectResult>.Failed("The test provider denied the connection.");
+                var denied = ClientResponse<ScmConnectOutcome>.Failed("The test provider denied the connection.");
 
                 return ValueTask.FromResult(denied);
             }
@@ -324,12 +338,37 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
             var result = new ScmConnectResult
             {
                 ExternalAccountId = account,
-                Account = new ScmAccount { ExternalId = account, Login = account, AccountType = ScmAccountType.Group },
+                Account = ToAccount(account),
                 CredentialKind = ScmCredentialKind.PersonalAccessToken,
                 GrantedCapabilities = Granted,
             };
 
-            return ValueTask.FromResult(ClientResponse<ScmConnectResult>.Success(result));
+            var connected = ClientResponse<ScmConnectOutcome>.Success(ScmConnectOutcome.Connected(result));
+
+            return ValueTask.FromResult(connected);
+        }
+
+        private static ScmConnectChoice CreateChoice(IEnumerable<string> accounts)
+        {
+            var candidates = accounts
+                .Select(account => new ScmConnectCandidate
+                {
+                    ExternalAccountId = account,
+                    Account = ToAccount(account),
+                    CallbackParameters = new Dictionary<string, string> { ["account"] = account },
+                })
+                .ToList();
+
+            return new ScmConnectChoice
+            {
+                Candidates = candidates,
+                InstallUrl = InstallUrl,
+            };
+        }
+
+        private static ScmAccount ToAccount(string account)
+        {
+            return new ScmAccount { ExternalId = account, Login = account, AccountType = ScmAccountType.Group };
         }
 
         public ValueTask<ScmAccessToken> GetAccessToken(ScmConnection connection, CancellationToken cancellationToken)

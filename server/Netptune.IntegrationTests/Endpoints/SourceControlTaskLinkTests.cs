@@ -1049,10 +1049,10 @@ public sealed class SourceControlTaskLinkTests
             },
             TestContext.Current.CancellationToken);
 
-        var connection = await connect.Content.ReadFromJsonAsync<ClientResponse<SourceControlConnectionViewModel>>(
+        var completion = await connect.Content.ReadFromJsonAsync<ClientResponse<SourceControlConnectCompletionViewModel>>(
             TestContext.Current.CancellationToken);
 
-        var repos = await GetRepos(connection.Payload!.Id);
+        var repos = await GetRepos(completion.Payload!.Connection!.Id);
         var repo = repos.First();
 
         var linked = await client.PutAsJsonAsync(

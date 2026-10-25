@@ -55,11 +55,18 @@ internal sealed record GitHubInstallationDto
     public DateTimeOffset? SuspendedAt { get; init; }
 }
 
+internal sealed record GitHubUserInstallationsDto
+{
+    public List<GitHubInstallationDto> Installations { get; init; } = [];
+}
+
 internal sealed record GitHubOrganisationMembershipDto
 {
     public string? State { get; init; }
 
     public string? Role { get; init; }
+
+    public GitHubAccountDto Organization { get; init; } = new();
 }
 
 internal sealed record GitHubAccessTokenDto

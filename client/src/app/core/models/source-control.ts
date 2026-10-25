@@ -136,6 +136,23 @@ export interface SourceControlConnectStart {
   redirectUrl: string;
 }
 
+export interface SourceControlConnectCandidate {
+  accountLogin: string;
+  accountType: ScmAccountType;
+  accountAvatarUrl: string | null;
+  callbackParameters: Record<string, string>;
+}
+
+export interface SourceControlConnectChoice {
+  candidates: SourceControlConnectCandidate[];
+  installUrl: string;
+}
+
+export interface SourceControlConnectCompletion {
+  connection: SourceControlConnection | null;
+  choice: SourceControlConnectChoice | null;
+}
+
 export interface ScmRepoSyncResult {
   added: number;
   refreshed: number;

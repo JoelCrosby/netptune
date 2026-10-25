@@ -249,7 +249,7 @@ public sealed class SourceControlWebhookEndpointTests
             request,
             TestContext.Current.CancellationToken);
 
-        var result = await response.Content.ReadFromJsonAsync<ClientResponse<SourceControlConnectionViewModel>>(
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<SourceControlConnectCompletionViewModel>>(
             TestContext.Current.CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK, result.Message);

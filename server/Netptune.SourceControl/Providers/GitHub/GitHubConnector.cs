@@ -58,18 +58,25 @@ internal sealed class GitHubConnector : ISourceControlConnector
         Clock = clock;
     }
 
+    // Starts with user authorisation rather than the install page, because GitHub sends an account that
+    // already has the App installed to its settings page and never redirects back.
     public ScmConnectStart BeginConnect(ScmConnectRequest request)
     {
-        var state = new ScmConnectState(SourceControlProvider.GitHub, request.WorkspaceId, request.UserId);
-        var protectedState = StateProtector.Protect(state);
-        var webBaseUrl = Options.WebBaseUrl.TrimEnd('/');
-        var appSlug = Uri.EscapeDataString(Options.AppSlug);
-        var escapedState = Uri.EscapeDataString(protectedState);
+        var state = new ScmConnectState
+        {
+            Provider = SourceControlProvider.GitHub,
+            WorkspaceId = request.WorkspaceId,
+            UserId = request.UserId,
+        };
 
-        return new ScmConnectStart($"{webBaseUrl}/apps/{appSlug}/installations/new?state={escapedState}");
+        var webBaseUrl = Options.WebBaseUrl.TrimEnd('/');
+        var clientId = Uri.EscapeDataString(Options.ClientId);
+        var escapedState = Uri.EscapeDataString(StateProtector.Protect(state));
+
+        return new ScmConnectStart($"{webBaseUrl}/login/oauth/authorize?client_id={clientId}&state={escapedState}");
     }
 
-    public async ValueTask<ClientResponse<ScmConnectResult>> CompleteConnect(
+    public async ValueTask<ClientResponse<ScmConnectOutcome>> CompleteConnect(
         ScmConnectCallback callback,
         CancellationToken cancellationToken)
     {
@@ -79,68 +86,51 @@ internal sealed class GitHubConnector : ISourceControlConnector
 
         if (isAwaitingApproval)
         {
-            return ClientResponse<ScmConnectResult>.Failed(AwaitingApproval);
+            return ClientResponse<ScmConnectOutcome>.Failed(AwaitingApproval);
         }
 
         var stateResult = ValidateState(callback);
 
         if (!stateResult.IsSuccess)
         {
-            return ClientResponse<ScmConnectResult>.Failed(stateResult.Message);
+            return ClientResponse<ScmConnectOutcome>.Failed(stateResult.Message);
+        }
+
+        var state = stateResult.Payload!;
+        var userToken = await ResolveUserToken(state, parameters, cancellationToken);
+
+        if (userToken is null)
+        {
+            return ClientResponse<ScmConnectOutcome>.Failed(NotAuthorised);
         }
 
         var installationIdValue = parameters.GetValueOrDefault("installation_id");
+
+        if (installationIdValue is null)
+        {
+            var choice = await CreateChoice(state, userToken, cancellationToken);
+
+            return ClientResponse<ScmConnectOutcome>.Success(ScmConnectOutcome.Choose(choice));
+        }
+
         var hasInstallationId = long.TryParse(
             installationIdValue,
             CultureInfo.InvariantCulture,
             out var installationId);
 
-        var code = parameters.GetValueOrDefault("code");
-
-        if (!hasInstallationId || string.IsNullOrWhiteSpace(code))
+        if (!hasInstallationId)
         {
-            return ClientResponse<ScmConnectResult>.Failed(MissingInstallation);
+            return ClientResponse<ScmConnectOutcome>.Failed(MissingInstallation);
         }
 
-        var userToken = await ExchangeCode(code, cancellationToken);
+        var connected = await ConnectInstallation(installationId, userToken, cancellationToken);
 
-        if (userToken is null)
+        if (!connected.IsSuccess)
         {
-            return ClientResponse<ScmConnectResult>.Failed(NotAuthorised);
+            return ClientResponse<ScmConnectOutcome>.Failed(connected.Message);
         }
 
-        var installation = await GetInstallation(installationId, cancellationToken);
-
-        if (installation is null)
-        {
-            return ClientResponse<ScmConnectResult>.Failed(InstallationNotFound);
-        }
-
-        // GitHub's setup URL accepts any installation_id in the query string, and any member who can
-        // read one of its repositories can see an installation, so only its account's owners may attach it.
-        var administersAccount = await UserAdministersAccount(userToken, installation.Account, cancellationToken);
-
-        if (!administersAccount)
-        {
-            return ClientResponse<ScmConnectResult>.Failed(NotInstallationAdmin);
-        }
-
-        var isSuspended = installation.SuspendedAt is not null;
-
-        if (isSuspended)
-        {
-            return ClientResponse<ScmConnectResult>.Failed(InstallationSuspended);
-        }
-
-        var result = new ScmConnectResult
-        {
-            ExternalAccountId = GitHubMapper.ToExternalId(installation.Id),
-            Account = ToAccount(installation.Account),
-            CredentialKind = ScmCredentialKind.AppInstallation,
-            GrantedCapabilities = GitHubPermissions.ToCapabilities(installation.Permissions),
-        };
-
-        return ClientResponse<ScmConnectResult>.Success(result);
+        return ClientResponse<ScmConnectOutcome>.Success(ScmConnectOutcome.Connected(connected.Payload!));
     }
 
     public async ValueTask<ScmAccessToken> GetAccessToken(ScmConnection connection, CancellationToken cancellationToken)
@@ -208,20 +198,20 @@ internal sealed class GitHubConnector : ISourceControlConnector
         return GitHubPermissions.ToCapabilities(installation.Permissions);
     }
 
-    private ClientResponse ValidateState(ScmConnectCallback callback)
+    private ClientResponse<ScmConnectState> ValidateState(ScmConnectCallback callback)
     {
         var protectedState = callback.Parameters.GetValueOrDefault("state");
 
         if (string.IsNullOrWhiteSpace(protectedState))
         {
-            return ClientResponse.Failed(MissingState);
+            return ClientResponse<ScmConnectState>.Failed(MissingState);
         }
 
         var state = StateProtector.Unprotect(protectedState);
 
         if (state is null)
         {
-            return ClientResponse.Failed(ExpiredState);
+            return ClientResponse<ScmConnectState>.Failed(ExpiredState);
         }
 
         var isGitHub = state.Provider == SourceControlProvider.GitHub;
@@ -231,10 +221,144 @@ internal sealed class GitHubConnector : ISourceControlConnector
 
         if (!belongsToCaller)
         {
-            return ClientResponse.Failed(ForeignState);
+            return ClientResponse<ScmConnectState>.Failed(ForeignState);
         }
 
-        return ClientResponse.Success;
+        return ClientResponse<ScmConnectState>.Success(state);
+    }
+
+    private async Task<string?> ResolveUserToken(
+        ScmConnectState state,
+        IReadOnlyDictionary<string, string> parameters,
+        CancellationToken cancellationToken)
+    {
+        if (state.UserAccessToken is not null)
+        {
+            return state.UserAccessToken;
+        }
+
+        var code = parameters.GetValueOrDefault("code");
+
+        if (string.IsNullOrWhiteSpace(code))
+        {
+            return null;
+        }
+
+        var userToken = await ExchangeCode(code, cancellationToken);
+
+        return userToken;
+    }
+
+    private async Task<ClientResponse<ScmConnectResult>> ConnectInstallation(
+        long installationId,
+        string userToken,
+        CancellationToken cancellationToken)
+    {
+        var installation = await GetInstallation(installationId, cancellationToken);
+
+        if (installation is null)
+        {
+            return ClientResponse<ScmConnectResult>.Failed(InstallationNotFound);
+        }
+
+        // GitHub's setup URL accepts any installation_id in the query string, and any member who can
+        // read one of its repositories can see an installation, so only its account's owners may attach it.
+        var administersAccount = await UserAdministersAccount(userToken, installation.Account, cancellationToken);
+
+        if (!administersAccount)
+        {
+            return ClientResponse<ScmConnectResult>.Failed(NotInstallationAdmin);
+        }
+
+        var isSuspended = installation.SuspendedAt is not null;
+
+        if (isSuspended)
+        {
+            return ClientResponse<ScmConnectResult>.Failed(InstallationSuspended);
+        }
+
+        var result = new ScmConnectResult
+        {
+            ExternalAccountId = GitHubMapper.ToExternalId(installation.Id),
+            Account = ToAccount(installation.Account),
+            CredentialKind = ScmCredentialKind.AppInstallation,
+            GrantedCapabilities = GitHubPermissions.ToCapabilities(installation.Permissions),
+        };
+
+        return ClientResponse<ScmConnectResult>.Success(result);
+    }
+
+    private async Task<ScmConnectChoice> CreateChoice(
+        ScmConnectState state,
+        string userToken,
+        CancellationToken cancellationToken)
+    {
+        var installations = await ListAsUser<GitHubUserInstallationsDto, GitHubInstallationDto>(
+            userToken,
+            "/user/installations?per_page=100",
+            page => page.Installations,
+            cancellationToken);
+
+        var administeredAccountIds = await GetAdministeredAccountIds(userToken, cancellationToken);
+        var authorisedState = StateProtector.Protect(state with { UserAccessToken = userToken });
+
+        var candidates = installations
+            .Where(installation => installation.SuspendedAt is null)
+            .Where(installation => administeredAccountIds.Contains(installation.Account.Id))
+            .Select(installation => ToCandidate(installation, authorisedState))
+            .ToList();
+
+        // The token stays out of the install URL; GitHub returns a fresh code after an install.
+        var installState = StateProtector.Protect(state with { UserAccessToken = null });
+
+        return new ScmConnectChoice
+        {
+            Candidates = candidates,
+            InstallUrl = CreateInstallUrl(installState),
+        };
+    }
+
+    private async Task<HashSet<long>> GetAdministeredAccountIds(string userToken, CancellationToken cancellationToken)
+    {
+        var memberships = await ListAsUser<List<GitHubOrganisationMembershipDto>, GitHubOrganisationMembershipDto>(
+            userToken,
+            "/user/memberships/orgs?state=active&per_page=100",
+            page => page,
+            cancellationToken);
+
+        var administeredOrganisationIds = memberships
+            .Where(IsActiveAdmin)
+            .Select(membership => membership.Organization.Id);
+
+        var user = await SendAsUser<GitHubAccountDto>(userToken, "/user", cancellationToken);
+        long[] ownAccountIds = user is null ? [] : [user.Id];
+
+        return [.. administeredOrganisationIds, .. ownAccountIds];
+    }
+
+    private static ScmConnectCandidate ToCandidate(GitHubInstallationDto installation, string authorisedState)
+    {
+        var installationId = GitHubMapper.ToExternalId(installation.Id);
+
+        return new ScmConnectCandidate
+        {
+            ExternalAccountId = installationId,
+            Account = ToAccount(installation.Account),
+            CallbackParameters = new Dictionary<string, string>
+            {
+                ["installation_id"] = installationId,
+                ["state"] = authorisedState,
+            },
+        };
+    }
+
+    private string CreateInstallUrl(string protectedState)
+    {
+        var webBaseUrl = Options.WebBaseUrl.TrimEnd('/');
+        var appSlug = Uri.EscapeDataString(Options.AppSlug);
+        var escapedState = Uri.EscapeDataString(protectedState);
+
+        return $"{webBaseUrl}/apps/{appSlug}/installations/new?state={escapedState}";
     }
 
     private async Task<string?> ExchangeCode(string code, CancellationToken cancellationToken)
@@ -287,16 +411,59 @@ internal sealed class GitHubConnector : ISourceControlConnector
     {
         var url = $"/user/memberships/orgs/{Uri.EscapeDataString(organisation)}";
         var membership = await SendAsUser<GitHubOrganisationMembershipDto>(userToken, url, cancellationToken);
+        var isActiveAdmin = membership is not null && IsActiveAdmin(membership);
 
-        var isActive = membership?.State == "active";
-        var isAdmin = membership?.Role == "admin";
+        return isActiveAdmin;
+    }
+
+    private static bool IsActiveAdmin(GitHubOrganisationMembershipDto membership)
+    {
+        var isActive = membership.State == "active";
+        var isAdmin = membership.Role == "admin";
 
         return isActive && isAdmin;
     }
 
+    private async Task<List<TItem>> ListAsUser<TPage, TItem>(
+        string userToken,
+        string firstPageUrl,
+        Func<TPage, IEnumerable<TItem>> readItems,
+        CancellationToken cancellationToken)
+        where TPage : class
+    {
+        var items = new List<TItem>();
+        string? url = firstPageUrl;
+
+        while (url is not null)
+        {
+            var response = await SendAsUserForResponse<TPage>(userToken, url, cancellationToken);
+
+            if (response?.Payload is null)
+            {
+                break;
+            }
+
+            items.AddRange(readItems(response.Payload));
+            url = response.NextPageUrl;
+        }
+
+        return items;
+    }
+
+    private async Task<T?> SendAsUser<T>(string userToken, string url, CancellationToken cancellationToken)
+        where T : class
+    {
+        var response = await SendAsUserForResponse<T>(userToken, url, cancellationToken);
+
+        return response?.Payload;
+    }
+
     // A 403 here means the user (or the app's Members permission) can't read the membership, which
     // is a refusal to connect rather than a provider failure.
-    private async Task<T?> SendAsUser<T>(string userToken, string url, CancellationToken cancellationToken)
+    private async Task<GitHubResponse<T>?> SendAsUserForResponse<T>(
+        string userToken,
+        string url,
+        CancellationToken cancellationToken)
         where T : class
     {
         var request = new GitHubRequest
@@ -310,7 +477,7 @@ internal sealed class GitHubConnector : ISourceControlConnector
         {
             var response = await Api.Send<T>(request, cancellationToken);
 
-            return response.Payload;
+            return response;
         }
         catch (ScmProviderException exception) when (exception.StatusCode == (int)HttpStatusCode.Forbidden)
         {
