@@ -359,6 +359,36 @@ public class EventMessagingTests(NatsEventsFixture fixture) : IClassFixture<Nats
     }
 
     [Fact]
+    public async Task EnsureCanonicalCreated_ShouldBoundOnlyTheLegacyStreamByAge_WhenBothAlreadyExistUnbounded()
+    {
+        await using var provider = BuildProvider();
+
+        var jetStream = provider.GetRequiredService<INatsJSContext>();
+
+        await jetStream.CreateOrUpdateStreamAsync(new StreamConfig
+        {
+            Name = MessageKeys.Queue,
+            Subjects = [.. MessageKeys.Subjects.Legacy],
+            Storage = StreamConfigStorage.File,
+        }, CancellationToken);
+
+        await jetStream.CreateOrUpdateStreamAsync(new StreamConfig
+        {
+            Name = MessageKeys.CanonicalQueue,
+            Subjects = [MessageKeys.Subjects.Canonical],
+            Storage = StreamConfigStorage.File,
+        }, CancellationToken);
+
+        await provider.GetRequiredService<EventStream>().EnsureCanonicalCreated(CancellationToken);
+
+        var legacy = await jetStream.GetStreamAsync(MessageKeys.Queue, cancellationToken: CancellationToken);
+        var canonical = await jetStream.GetStreamAsync(MessageKeys.CanonicalQueue, cancellationToken: CancellationToken);
+
+        legacy.Info.Config.MaxAge.Should().Be(TimeSpan.FromDays(7));
+        canonical.Info.Config.MaxAge.Should().Be(TimeSpan.Zero);
+    }
+
+    [Fact]
     public async Task JobsConsumer_ShouldTakeItsThreeSubjects_AndNothingElse()
     {
         await using var provider = BuildJobServerProvider();

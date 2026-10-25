@@ -7,6 +7,8 @@ namespace Netptune.Events;
 
 public sealed class EventStream
 {
+    private static readonly TimeSpan LegacyMaxAge = TimeSpan.FromDays(7);
+
     private readonly INatsJSContext JetStream;
     private readonly SemaphoreSlim Gate = new(1, 1);
 
@@ -86,6 +88,7 @@ public sealed class EventStream
             Name = MessageKeys.Queue,
             Subjects = [.. MessageKeys.Subjects.Legacy],
             Storage = StreamConfigStorage.File,
+            MaxAge = LegacyMaxAge,
         }, cancellationToken);
 
         Created = true;
