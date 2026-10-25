@@ -1,4 +1,12 @@
-import { Component, computed, input } from '@angular/core';
+import {
+  Component,
+  computed,
+  DestroyRef,
+  ElementRef,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
 import { cn } from '../button/button.variants';
 
 // The body of a two-column dialog: a scrolling main column, an optional band pinned
@@ -20,10 +28,26 @@ import { cn } from '../button/button.variants';
   `,
 })
 export class DialogColumnsComponent {
+  private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
+
   // Spacing for the main column; the default is the task dialogs' reading width.
   readonly bodyClass = input('flex flex-col gap-[18px] px-7 pt-6 pb-5');
+
+  private readonly measuredWidth = signal<number | null>(null);
+
+  readonly width = this.measuredWidth.asReadonly();
 
   protected readonly mainClass = computed(() => {
     return cn('custom-scroll min-h-0 flex-1 overflow-y-auto', this.bodyClass());
   });
+
+  constructor() {
+    const resizes = new ResizeObserver(([entry]) => {
+      this.measuredWidth.set(entry.contentRect.width);
+    });
+
+    resizes.observe(this.element.nativeElement);
+
+    inject(DestroyRef).onDestroy(() => resizes.disconnect());
+  }
 }

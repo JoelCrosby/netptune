@@ -3,6 +3,7 @@ import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { SkeletonComponent } from '@static/components/skeleton/skeleton.component';
 import { TaskDetailLayoutService } from './task-detail-layout';
+import { TaskDetailRailService } from './task-detail-rail';
 import { DialogColumnsComponent } from '@static/components/dialog/dialog-columns.component';
 import { DialogRailComponent } from '@static/components/dialog/dialog-rail.component';
 import { DialogSectionComponent } from '@static/components/dialog/dialog-section.component';
@@ -110,7 +111,7 @@ import { DialogSectionComponent } from '@static/components/dialog/dialog-section
         </app-dialog-section>
 
         @if (showRail()) {
-          <app-dialog-rail class="w-[372px]">
+          <app-dialog-rail [width]="rail.size.width()">
             <div
               class="border-foreground/8 flex h-[52px] shrink-0 items-center gap-2 border-b px-4">
               <app-skeleton class="h-7 w-24 rounded-md" />
@@ -149,6 +150,7 @@ import { DialogSectionComponent } from '@static/components/dialog/dialog-section
 })
 export class TaskDetailSkeletonComponent {
   private readonly layout = inject(TaskDetailLayoutService);
+  protected readonly rail = inject(TaskDetailRailService);
 
   protected readonly isDocument = computed(() => {
     return this.layout.layout() === 'document';

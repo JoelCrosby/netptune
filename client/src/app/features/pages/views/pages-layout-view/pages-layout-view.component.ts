@@ -1,14 +1,10 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { persistedWidth } from '@core/settings/persisted-width';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PanelBodyComponent } from '@static/components/panel-body.component';
 import { ResizeHandleComponent } from '@static/components/resize-handle.component';
 import { PageTreeComponent } from '../../components/page-tree.component';
-import {
-  MAX_PAGE_SIDEBAR_WIDTH,
-  MIN_PAGE_SIDEBAR_WIDTH,
-  PageSidebarService,
-} from '../../services/page-sidebar.service';
 import { PageTreeStore } from '../../services/page-tree.store';
 
 @Component({
@@ -54,8 +50,12 @@ import { PageTreeStore } from '../../services/page-tree.store';
   `,
 })
 export class PagesLayoutViewComponent {
-  protected readonly sidebar = inject(PageSidebarService);
-  protected readonly minWidth = MIN_PAGE_SIDEBAR_WIDTH;
+  protected readonly sidebar = persistedWidth('pages.sidebarWidth', {
+    min: MIN_SIDEBAR_WIDTH,
+    max: MAX_SIDEBAR_WIDTH,
+    fallback: 272,
+  });
+  protected readonly minWidth = MIN_SIDEBAR_WIDTH;
 
   private readonly viewportWidth = signal(window.innerWidth);
 
@@ -63,8 +63,8 @@ export class PagesLayoutViewComponent {
     const viewportShare = Math.round(this.viewportWidth() * maxViewportShare);
 
     return Math.max(
-      MIN_PAGE_SIDEBAR_WIDTH,
-      Math.min(MAX_PAGE_SIDEBAR_WIDTH, viewportShare)
+      MIN_SIDEBAR_WIDTH,
+      Math.min(MAX_SIDEBAR_WIDTH, viewportShare)
     );
   });
 
@@ -77,4 +77,6 @@ export class PagesLayoutViewComponent {
   }
 }
 
+const MIN_SIDEBAR_WIDTH = 200;
+const MAX_SIDEBAR_WIDTH = 520;
 const maxViewportShare = 0.35;

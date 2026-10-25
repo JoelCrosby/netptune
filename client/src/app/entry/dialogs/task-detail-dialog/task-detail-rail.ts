@@ -2,6 +2,10 @@ import { computed, inject, linkedSignal, Service } from '@angular/core';
 import { APPEARANCE_TASK_DETAIL_RAIL_COLLAPSED } from '@core/models/user-preferences';
 import { SessionService } from '@core/services/session.service';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
+import { persistedWidth } from '@core/settings/persisted-width';
+
+export const MIN_TASK_DETAIL_RAIL_WIDTH = 300;
+export const MAX_TASK_DETAIL_RAIL_WIDTH = 960;
 
 @Service()
 export class TaskDetailRailService {
@@ -17,6 +21,11 @@ export class TaskDetailRailService {
   });
 
   readonly collapsed = linkedSignal(() => this.saved());
+  readonly size = persistedWidth('taskDetail.railWidth', {
+    min: MIN_TASK_DETAIL_RAIL_WIDTH,
+    max: MAX_TASK_DETAIL_RAIL_WIDTH,
+    fallback: 372,
+  });
 
   constructor() {
     this.preferences.ensureLoaded();

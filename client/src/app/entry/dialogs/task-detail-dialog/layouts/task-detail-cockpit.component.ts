@@ -23,7 +23,11 @@ import { TaskDetailComposerComponent } from '../shared/task-detail-composer.comp
 import { TaskDetailPropertyChipsComponent } from '../shared/task-detail-property-chips.component';
 import { TaskDetailTagRowComponent } from '../shared/task-detail-tag-row.component';
 import { TaskDetailTimestampsComponent } from '../shared/task-detail-timestamps.component';
-import { TaskDetailRailService } from '../task-detail-rail';
+import {
+  MAX_TASK_DETAIL_RAIL_WIDTH,
+  MIN_TASK_DETAIL_RAIL_WIDTH,
+  TaskDetailRailService,
+} from '../task-detail-rail';
 import { TaskDetailReviewComponent } from '../task-detail-review.component';
 import { TaskDetailReviewService } from '../shared/task-detail-review.service';
 import { TaskDetailReviewOriginComponent } from '../shared/task-detail-review-origin.component';
@@ -169,7 +173,19 @@ import { DialogSectionComponent } from '@static/components/dialog/dialog-section
         </app-dialog-section>
 
         @if (showRail()) {
-          <app-dialog-rail class="w-[372px]" [collapsed]="rail.collapsed()">
+          <app-dialog-rail
+            resizable
+            i18n-resizeLabel="
+              Accessible name of the handle that resizes the task comments and
+              review sidebar
+            "
+            resizeLabel="Resize sidebar"
+            [width]="rail.size.width()"
+            [minWidth]="minRailWidth"
+            [maxWidth]="maxRailWidth"
+            [collapsed]="rail.collapsed()"
+            (widthChange)="rail.size.setWidth($event)"
+            (resizingChange)="rail.size.setResizing($event)">
             <div
               class="border-foreground/8 flex h-[52px] shrink-0 items-center gap-2 border-b px-4">
               <app-tab-group
@@ -210,6 +226,9 @@ export class TaskDetailCockpitComponent {
   readonly comments = inject(TaskDetailCommentsService);
   readonly rail = inject(TaskDetailRailService);
   readonly review = inject(TaskDetailReviewService);
+
+  protected readonly minRailWidth = MIN_TASK_DETAIL_RAIL_WIDTH;
+  protected readonly maxRailWidth = MAX_TASK_DETAIL_RAIL_WIDTH;
 
   protected readonly filesSection = viewChild(TaskDetailFilesComponent);
   protected readonly pagesSection = viewChild(TaskDetailPagesComponent);
