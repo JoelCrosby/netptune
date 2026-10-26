@@ -264,6 +264,51 @@ public sealed class StatusesEndpointTests
     }
 
     [Fact]
+    public async Task Create_ShouldReuseTheKey_WhenTheStatusWithThatKeyWasDeleted()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var deleted = await CreateStatus();
+        var deleteResponse = await Client.DeleteAsync($"api/statuses/{deleted.Id}", cancellationToken);
+
+        deleteResponse.EnsureSuccessStatusCode();
+
+        var response = await Client.PostAsJsonAsync("api/statuses", NewStatusRequest(deleted.Name), cancellationToken);
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<StatusViewModel>>(cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        result.Payload!.Id.Should().NotBe(deleted.Id);
+        result.Payload.Key.Should().Be(deleted.Key);
+    }
+
+    [Fact]
+    public async Task Create_ShouldFail_WhenKeyAlreadyExists()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var existing = await CreateStatus();
+
+        var response = await Client.PostAsJsonAsync("api/statuses", NewStatusRequest(existing.Name), cancellationToken);
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<StatusViewModel>>(cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        result.IsSuccess.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Create_ShouldCreateOneStatus_WhenTheSameNameIsSentConcurrently()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var request = NewStatusRequest($"Status {Guid.NewGuid():N}");
+        var requests = Enumerable.Range(0, 8)
+            .Select(_ => Client.PostAsJsonAsync("api/statuses", request, cancellationToken));
+
+        var responses = await Task.WhenAll(requests);
+        var statusCodes = responses.Select(response => response.StatusCode).ToList();
+
+        statusCodes.Should().ContainSingle(code => code == HttpStatusCode.OK);
+        statusCodes.Should().OnlyContain(code => code == HttpStatusCode.OK || code == HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
     public async Task GetUsage_ShouldReturnUnusedStatus_WhenStatusIsNew()
     {
         var status = await CreateStatus();
@@ -319,11 +364,7 @@ public sealed class StatusesEndpointTests
 
     private async Task<StatusViewModel> CreateStatus()
     {
-        var response = await Client.PostAsJsonAsync("api/statuses", new CreateStatusRequest
-        {
-            Name = $"Status {Guid.NewGuid():N}",
-            Category = StatusCategory.Todo,
-        });
+        var response = await Client.PostAsJsonAsync("api/statuses", NewStatusRequest($"Status {Guid.NewGuid():N}"));
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<StatusViewModel>>();
 
@@ -331,5 +372,14 @@ public sealed class StatusesEndpointTests
         result.IsSuccess.Should().BeTrue();
 
         return result.Payload!;
+    }
+
+    private static CreateStatusRequest NewStatusRequest(string name)
+    {
+        return new CreateStatusRequest
+        {
+            Name = name,
+            Category = StatusCategory.Todo,
+        };
     }
 }

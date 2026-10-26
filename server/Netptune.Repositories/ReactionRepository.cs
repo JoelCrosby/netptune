@@ -7,6 +7,9 @@ using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
+using Netptune.Repositories.Sql;
+
+using Npgsql;
 
 namespace Netptune.Repositories;
 
@@ -17,11 +20,21 @@ public class ReactionRepository : WorkspaceEntityRepository<DataContext, Reactio
     {
     }
 
-    public Task<bool> HasUserReaction(int commentId, string userId, string value, CancellationToken cancellationToken = default)
+    public async Task<bool> TryAdd(Reaction reaction, CancellationToken cancellationToken = default)
     {
-        return Entities
-            .AsNoTracking()
-            .AnyAsync(UserReaction(commentId, userId, value), cancellationToken);
+        ArgumentException.ThrowIfNullOrWhiteSpace(reaction.OwnerId);
+
+        var parameters = new object[]
+        {
+            new NpgsqlParameter("comment_id", reaction.CommentId),
+            new NpgsqlParameter("workspace_id", reaction.WorkspaceId),
+            new NpgsqlParameter("owner_id", reaction.OwnerId),
+            new NpgsqlParameter("value", reaction.Value),
+        };
+
+        var inserted = await Context.Database.ExecuteSqlRawAsync(SqlScripts.InsertReaction, parameters, cancellationToken);
+
+        return inserted == 1;
     }
 
     // Deleted through the query rather than the change tracker — the comment the caller has already
@@ -37,6 +50,6 @@ public class ReactionRepository : WorkspaceEntityRepository<DataContext, Reactio
     {
         return reaction => reaction.CommentId == commentId
                            && reaction.Value == value
-                           && (reaction.OwnerId ?? reaction.CreatedByUserId) == userId;
+                           && reaction.OwnerId == userId;
     }
 }

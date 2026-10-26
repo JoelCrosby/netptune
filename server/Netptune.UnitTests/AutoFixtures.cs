@@ -29,7 +29,6 @@ public static class AutoFixtures
         .Without(p => p.ProjectTaskAppUsers)
         .Without(p => p.WorkspaceUsers)
         .Without(p => p.ProjectUsers)
-        .Without(p => p.Tasks)
         .Without(p => p.Workspaces)
         .Without(p => p.ProjectTaskAppUsers)
         .Without(p => p.RefreshTokens)

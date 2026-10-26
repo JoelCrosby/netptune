@@ -243,6 +243,42 @@ public sealed class CommentsEndpointTests
         result.Payload!.Reactions.Should().BeEmpty();
     }
 
+    [Fact]
+    public async Task AddReaction_ShouldStoreOneReaction_WhenTheSameValueIsSentConcurrently()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var commentId = await CreateComment("Comment reacted to concurrently");
+        var request = new CommentReactionRequest { Value = ReactionValues.ThumbsUp };
+        var requests = Enumerable.Range(0, 12)
+            .Select(_ => Client.PostAsJsonAsync($"api/comments/{commentId}/reactions", request, cancellationToken));
+
+        var responses = await Task.WhenAll(requests);
+
+        responses.Should().OnlyContain(response => response.StatusCode == HttpStatusCode.OK);
+
+        var reactionCount = await CountReactions(commentId);
+
+        reactionCount.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task AddReaction_ShouldStoreTheReactionAgain_WhenItWasRemoved()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var commentId = await CreateComment("Comment to react to again");
+        var request = new CommentReactionRequest { Value = ReactionValues.Eyes };
+        var value = Uri.EscapeDataString(request.Value);
+
+        await Client.PostAsJsonAsync($"api/comments/{commentId}/reactions", request, cancellationToken);
+        await Client.DeleteAsync($"api/comments/{commentId}/reactions?value={value}", cancellationToken);
+
+        var response = await Client.PostAsJsonAsync($"api/comments/{commentId}/reactions", request, cancellationToken);
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<CommentViewModel>>(cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        result.Payload!.Reactions.Should().ContainSingle(reaction => reaction.Value == ReactionValues.Eyes);
+    }
+
     private async Task<int> CreateComment(string body)
     {
         var response = await Client.PostAsJsonAsync("api/comments/task", new AddCommentRequest
@@ -253,6 +289,16 @@ public sealed class CommentsEndpointTests
         var created = await response.Content.ReadFromJsonAsync<ClientResponse<CommentViewModel>>();
 
         return created.Payload!.Id;
+    }
+
+    private async Task<int> CountReactions(int commentId)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        return await context.Reactions.CountAsync(
+            reaction => reaction.CommentId == commentId,
+            TestContext.Current.CancellationToken);
     }
 
     private async Task<Netptune.Core.Entities.EventRecord?> GetCommentEvent(string eventKey, int commentId)

@@ -1,7 +1,9 @@
 using Mediator;
 
+using Netptune.Core.Constants;
 using Netptune.Core.Encoding;
 using Netptune.Core.Enums;
+using Netptune.Core.Exceptions;
 using Netptune.Core.Localization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
@@ -56,7 +58,19 @@ public sealed class UpdateStatusCommandHandler : IRequestHandler<UpdateStatusCom
         status.Color = request.Request.Color?.Trim();
         status.Category = request.Request.Category;
 
-        await UnitOfWork.CompleteAsync(cancellationToken);
+        try
+        {
+            await UnitOfWork.Transaction(async () =>
+            {
+                await UnitOfWork.CompleteAsync(cancellationToken);
+            });
+        }
+        catch (UniqueConstraintException exception) when (exception.ConstraintName == DatabaseConstraints.LiveStatusKey)
+        {
+            UnitOfWork.Detach([status]);
+
+            return ClientResponse<StatusViewModel>.Failed(AppText.ErrorStatusNameShouldUnique);
+        }
 
         var result = await UnitOfWork.Statuses.GetViewModel(status.Id, cancellationToken);
 

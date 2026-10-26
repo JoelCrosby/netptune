@@ -90,9 +90,6 @@ public class AppUser : IdentityUser, IKeyedEntity<string>
     public ICollection<ProjectUser> ProjectUsers { get; init; } = new HashSet<ProjectUser>();
 
     [JsonIgnore]
-    public ICollection<ProjectTask> Tasks { get; init; } = new HashSet<ProjectTask>();
-
-    [JsonIgnore]
     public ICollection<Workspace> Workspaces { get; init; } = new HashSet<Workspace>();
 
     [JsonIgnore]

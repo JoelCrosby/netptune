@@ -137,7 +137,7 @@ public sealed class ArchiveRepository(DataContext context) : IArchiveRepository
     public IAsyncEnumerable<Reaction> ReadReactions(int workspaceId, CancellationToken cancellationToken = default)
     {
         return Live(context.Reactions, workspaceId)
-            .Include(reaction => reaction.CreatedByUser)
+            .Include(reaction => reaction.Owner)
             .OrderBy(reaction => reaction.Id)
             .AsAsyncEnumerable();
     }

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
+using Netptune.Core.Constants;
 using Netptune.Core.Entities;
 using Netptune.Entities.EntityMaps.BaseMaps;
 
@@ -42,7 +43,9 @@ public sealed class RelationTypeEntityMap : WorkspaceEntityMap<RelationType, int
 
         builder
             .HasIndex(relationType => new { relationType.WorkspaceId, relationType.Key })
-            .IsUnique();
+            .IsUnique()
+            .HasFilter("NOT is_deleted")
+            .HasDatabaseName(DatabaseConstraints.LiveRelationTypeKey);
 
         builder
             .HasIndex(relationType => new { relationType.WorkspaceId, relationType.IsDeleted, relationType.SortOrder, relationType.Id })

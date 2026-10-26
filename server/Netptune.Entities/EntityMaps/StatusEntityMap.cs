@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
+using Netptune.Core.Constants;
 using Netptune.Core.Entities;
 using Netptune.Entities.EntityMaps.BaseMaps;
 
@@ -42,7 +43,9 @@ public sealed class StatusEntityMap : WorkspaceEntityMap<Status, int>
 
         builder
             .HasIndex(status => new { status.WorkspaceId, status.EntityType, status.Key })
-            .IsUnique();
+            .IsUnique()
+            .HasFilter("NOT is_deleted")
+            .HasDatabaseName(DatabaseConstraints.LiveStatusKey);
 
         builder
             .HasIndex(status => new { status.WorkspaceId, status.EntityType, status.IsDeleted, status.SortOrder, status.Id })

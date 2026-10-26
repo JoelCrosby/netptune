@@ -119,7 +119,7 @@ public class CommentRepository : WorkspaceEntityRepository<DataContext, Comment,
             Reactions = x.Reactions.Select(r => new ReactionViewModel
             {
                 Value = r.Value,
-                UserId = r.OwnerId ?? r.CreatedByUserId!,
+                UserId = r.OwnerId!,
             }).ToList(),
             Mentions = x.Mentions.Select(m => new CommentMentionViewModel
             {

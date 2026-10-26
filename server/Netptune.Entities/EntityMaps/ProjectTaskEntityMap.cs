@@ -119,9 +119,5 @@ public class ProjectTaskEntityMap : WorkspaceEntityMap<ProjectTask, int>
         builder
             .Property(task => task.OwnerId)
             .IsRequired(false);
-
-        builder
-            .HasIndex(task => task.Name)
-            .IsTsVectorExpressionIndex("english");
     }
 }

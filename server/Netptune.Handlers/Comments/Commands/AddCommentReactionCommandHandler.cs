@@ -42,21 +42,15 @@ public sealed class AddCommentReactionCommandHandler : IRequestHandler<AddCommen
         }
 
         var userId = Identity.GetCurrentUserId();
-        var hasReacted = await UnitOfWork.Reactions.HasUserReaction(comment.Id, userId, value, cancellationToken);
-
-        if (!hasReacted)
+        var reaction = new Reaction
         {
-            var reaction = new Reaction
-            {
-                CommentId = comment.Id,
-                Value = value,
-                OwnerId = userId,
-                WorkspaceId = comment.WorkspaceId,
-            };
+            CommentId = comment.Id,
+            Value = value,
+            OwnerId = userId,
+            WorkspaceId = comment.WorkspaceId,
+        };
 
-            await UnitOfWork.Reactions.AddAsync(reaction, cancellationToken);
-            await UnitOfWork.CompleteAsync(cancellationToken);
-        }
+        await UnitOfWork.Reactions.TryAdd(reaction, cancellationToken);
 
         var result = await UnitOfWork.Comments.GetCommentViewModel(comment.Id, cancellationToken);
 

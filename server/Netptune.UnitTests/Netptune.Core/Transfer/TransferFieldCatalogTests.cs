@@ -3,6 +3,7 @@ using System.Reflection;
 using FluentAssertions;
 
 using Netptune.Core.Constants;
+using Netptune.Core.Entities;
 using Netptune.Transfer;
 using Netptune.Transfer.Catalog;
 
@@ -149,6 +150,25 @@ public class TransferFieldCatalogTests
 
         declared.Should().Contain(catalogued,
             "every task field needs a constant so the export record source cannot silently skip it");
+    }
+
+    [Fact]
+    public void ReactionRecord_ShouldReferenceTheReactingUser_WhenTheCreatorDiffers()
+    {
+        var owner = new AppUser { Id = "owner", Email = "owner@example.com" };
+        var reaction = new Reaction
+        {
+            Id = 1,
+            CommentId = 2,
+            Value = ReactionValues.ThumbsUp,
+            OwnerId = owner.Id,
+            Owner = owner,
+            CreatedByUser = new AppUser { Id = "creator", Email = "creator@example.com" },
+        };
+
+        var record = ArchiveCatalog.Reaction.ToRecord(reaction);
+
+        record.Values["reaction.author"].Should().Be(EntityRefBuilder.ForUser(owner));
     }
 
     private static string Normalize(string value)

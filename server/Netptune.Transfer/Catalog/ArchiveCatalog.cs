@@ -234,7 +234,7 @@ public static class ArchiveCatalog
         [
             ArchiveField.Text<Reaction>(TransferRecordTypes.Reaction, "value", "Value", reaction => reaction.Value),
             ArchiveField.Text<Reaction>(TransferRecordTypes.Reaction, "comment_id", "Comment id", reaction => reaction.CommentId, TransferValueType.Integer),
-            ArchiveField.Reference<Reaction>(TransferRecordTypes.Reaction, "author", "Author", EntityRefTypes.User, reaction => AuthorRef(reaction.CreatedByUser)),
+            ArchiveField.Reference<Reaction>(TransferRecordTypes.Reaction, "author", "Author", EntityRefTypes.User, reaction => AuthorRef(reaction.Owner)),
         ],
     };
 

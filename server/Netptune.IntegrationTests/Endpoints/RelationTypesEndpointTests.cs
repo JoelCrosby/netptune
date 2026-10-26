@@ -285,6 +285,41 @@ public sealed class RelationTypesEndpointTests
     }
 
     [Fact]
+    public async Task Create_ShouldReuseTheKey_WhenTheRelationTypeWithThatKeyWasDeleted()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var client = await CreateClient();
+        var deleted = await CreateRelationType();
+        var deleteResponse = await client.DeleteAsync($"api/relation-types/{deleted.Id}", cancellationToken);
+
+        deleteResponse.EnsureSuccessStatusCode();
+
+        var request = NewRelationTypeRequest(deleted.Name);
+        var response = await client.PostAsJsonAsync("api/relation-types", request, cancellationToken);
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<RelationTypeViewModel>>(cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        result.Payload!.Id.Should().NotBe(deleted.Id);
+        result.Payload.Key.Should().Be(deleted.Key);
+    }
+
+    [Fact]
+    public async Task Create_ShouldCreateOneRelationType_WhenTheSameNameIsSentConcurrently()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var client = await CreateClient();
+        var request = NewRelationTypeRequest($"Relation {Guid.NewGuid():N}");
+        var requests = Enumerable.Range(0, 8)
+            .Select(_ => client.PostAsJsonAsync("api/relation-types", request, cancellationToken));
+
+        var responses = await Task.WhenAll(requests);
+        var statusCodes = responses.Select(response => response.StatusCode).ToList();
+
+        statusCodes.Should().ContainSingle(code => code == HttpStatusCode.OK);
+        statusCodes.Should().OnlyContain(code => code == HttpStatusCode.OK || code == HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
     public async Task GetUsage_ShouldReturnUnusedRelationType_WhenRelationTypeIsNew()
     {
         var client = await CreateClient();
@@ -427,14 +462,9 @@ public sealed class RelationTypesEndpointTests
     private async Task<RelationTypeViewModel> CreateRelationType()
     {
         var client = await CreateClient();
-        var name = $"Relation {Guid.NewGuid():N}";
+        var request = NewRelationTypeRequest($"Relation {Guid.NewGuid():N}");
 
-        var response = await client.PostAsJsonAsync("api/relation-types", new CreateRelationTypeRequest
-        {
-            Name = name,
-            InverseName = $"Inverse {name}",
-            Category = RelationCategory.Dependency,
-        });
+        var response = await client.PostAsJsonAsync("api/relation-types", request);
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<RelationTypeViewModel>>();
 
@@ -442,5 +472,15 @@ public sealed class RelationTypesEndpointTests
         result.IsSuccess.Should().BeTrue();
 
         return result.Payload!;
+    }
+
+    private static CreateRelationTypeRequest NewRelationTypeRequest(string name)
+    {
+        return new CreateRelationTypeRequest
+        {
+            Name = name,
+            InverseName = $"Inverse {name}",
+            Category = RelationCategory.Dependency,
+        };
     }
 }

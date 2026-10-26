@@ -1,7 +1,9 @@
 using Mediator;
 
+using Netptune.Core.Constants;
 using Netptune.Core.Encoding;
 using Netptune.Core.Enums;
+using Netptune.Core.Exceptions;
 using Netptune.Core.Localization;
 using Netptune.Core.Relations;
 using Netptune.Core.Requests;
@@ -61,7 +63,19 @@ public sealed class UpdateRelationTypeCommandHandler : IRequestHandler<UpdateRel
         relationType.Description = request.Request.Description?.Trim();
         relationType.Color = request.Request.Color?.Trim();
 
-        await UnitOfWork.CompleteAsync(cancellationToken);
+        try
+        {
+            await UnitOfWork.Transaction(async () =>
+            {
+                await UnitOfWork.CompleteAsync(cancellationToken);
+            });
+        }
+        catch (UniqueConstraintException exception) when (exception.ConstraintName == DatabaseConstraints.LiveRelationTypeKey)
+        {
+            UnitOfWork.Detach([relationType]);
+
+            return ClientResponse<RelationTypeViewModel>.Failed(AppText.ErrorRelationTypeNameShouldUnique);
+        }
 
         var result = await UnitOfWork.RelationTypes.GetViewModel(relationType.Id, cancellationToken);
 

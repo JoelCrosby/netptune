@@ -29,43 +29,26 @@ public class AddCommentReactionCommandHandlerTests
     }
 
     [Fact]
-    public async Task Add_ShouldPersistReaction_WhenUserHasNotReactedWithThatValue()
+    public async Task Add_ShouldAddTheCurrentUsersReaction_WhenValueIsSupported()
     {
         var comment = NewComment();
         var updated = new CommentViewModel { Id = comment.Id };
 
         UnitOfWork.Comments.GetCommentForUpdate(comment.Id, comment.WorkspaceId, TestContext.Current.CancellationToken).Returns(comment);
-        UnitOfWork.Reactions.HasUserReaction(comment.Id, "user-id", ReactionValues.ThumbsUp, TestContext.Current.CancellationToken).Returns(false);
+        UnitOfWork.Reactions.TryAdd(Arg.Any<Reaction>(), TestContext.Current.CancellationToken).Returns(true);
         UnitOfWork.Comments.GetCommentViewModel(comment.Id, TestContext.Current.CancellationToken).Returns(updated);
 
         var result = await Handler.Handle(NewCommand(comment.Id, $" {ReactionValues.ThumbsUp} "), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
         result.Payload.Should().BeSameAs(updated);
-        await UnitOfWork.Reactions.Received(1).AddAsync(
+        await UnitOfWork.Reactions.Received(1).TryAdd(
             Arg.Is<Reaction>(reaction =>
                 reaction.CommentId == comment.Id &&
                 reaction.Value == ReactionValues.ThumbsUp &&
                 reaction.OwnerId == "user-id" &&
                 reaction.WorkspaceId == comment.WorkspaceId),
             TestContext.Current.CancellationToken);
-        await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
-    }
-
-    [Fact]
-    public async Task Add_ShouldNotDuplicate_WhenUserAlreadyReactedWithThatValue()
-    {
-        var comment = NewComment();
-        var updated = new CommentViewModel { Id = comment.Id };
-
-        UnitOfWork.Comments.GetCommentForUpdate(comment.Id, comment.WorkspaceId, TestContext.Current.CancellationToken).Returns(comment);
-        UnitOfWork.Reactions.HasUserReaction(comment.Id, "user-id", ReactionValues.ThumbsUp, TestContext.Current.CancellationToken).Returns(true);
-        UnitOfWork.Comments.GetCommentViewModel(comment.Id, TestContext.Current.CancellationToken).Returns(updated);
-
-        var result = await Handler.Handle(NewCommand(comment.Id, ReactionValues.ThumbsUp), TestContext.Current.CancellationToken);
-
-        result.IsSuccess.Should().BeTrue();
-        await UnitOfWork.Reactions.DidNotReceive().AddAsync(Arg.Any<Reaction>(), Arg.Any<CancellationToken>());
         await UnitOfWork.DidNotReceive().CompleteAsync(Arg.Any<CancellationToken>());
     }
 
@@ -76,7 +59,7 @@ public class AddCommentReactionCommandHandlerTests
 
         result.IsSuccess.Should().BeFalse();
         result.Message.Should().Be("Reaction is not supported.");
-        await UnitOfWork.Reactions.DidNotReceive().AddAsync(Arg.Any<Reaction>(), Arg.Any<CancellationToken>());
+        await UnitOfWork.Reactions.DidNotReceive().TryAdd(Arg.Any<Reaction>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -87,7 +70,7 @@ public class AddCommentReactionCommandHandlerTests
         var result = await Handler.Handle(NewCommand(42, ReactionValues.Heart), TestContext.Current.CancellationToken);
 
         result.IsNotFound.Should().BeTrue();
-        await UnitOfWork.Reactions.DidNotReceive().AddAsync(Arg.Any<Reaction>(), Arg.Any<CancellationToken>());
+        await UnitOfWork.Reactions.DidNotReceive().TryAdd(Arg.Any<Reaction>(), Arg.Any<CancellationToken>());
     }
 
     private static AddCommentReactionCommand NewCommand(int commentId, string value)
