@@ -24,8 +24,10 @@ public class WorkspaceRepository : AuditableRepository<DataContext, Workspace, i
     {
     }
 
-    public async Task DeleteWorkspacePermanent(int workspaceId, CancellationToken cancellationToken = default)
+    public async Task<DeletedWorkspaceReferences> DeleteWorkspacePermanent(int workspaceId, CancellationToken cancellationToken = default)
     {
+        var references = await GetDeletedWorkspaceReferences(workspaceId, cancellationToken);
+
         // ExecuteDeleteAsync runs on the context's own connection, so these all take part in the
         // caller's transaction — either the whole workspace goes or none of it does.
         var taskIds = Context.ProjectTasks
@@ -47,8 +49,26 @@ public class WorkspaceRepository : AuditableRepository<DataContext, Workspace, i
 
         // Notifications and activity entries both point at activity logs, so they go first.
         await Context.Notifications.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+        await Context.NotificationSubscriptions.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
         await Context.ActivityEntries.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
         await Context.EventRecords.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+        await Context.EventStreamHeads.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+
+        await Context.AiReviewRuns.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+
+        // Conversations cascade to their messages, tool invocations, change sets and proposed changes.
+        await Context.AiConversations.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+
+        await Context.AiWebDocuments.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+        await Context.AiUsageRecords.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+        await Context.WorkspaceAiCredentials.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+        await Context.WorkspaceSearchCredentials.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+
+        await Context.TaskViews.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+        await Context.ExportJobs.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+        await Context.ExportDefinitions.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+        await Context.ImportSessions.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+        await Context.ImportDefinitions.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
 
         // Runs and actions belong to a rule; flags can reference one too.
         await Context.AutomationRuns.Where(x => automationRuleIds.Contains(x.AutomationRuleId)).ExecuteDeleteAsync(cancellationToken);
@@ -61,12 +81,21 @@ public class WorkspaceRepository : AuditableRepository<DataContext, Workspace, i
         await Context.CommentMentions.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
         await Context.Comments.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
 
+        // Connections cascade to their repos, and repos to their check runs, project links and task code links.
+        await Context.SourceControlConnections.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+
         // Everything joined to a task, then the tasks themselves.
         await Context.ProjectTaskRelations.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
         await Context.ProjectTaskTags.Where(x => taskIds.Contains(x.ProjectTaskId)).ExecuteDeleteAsync(cancellationToken);
         await Context.ProjectTaskInBoardGroups.Where(x => taskIds.Contains(x.ProjectTaskId)).ExecuteDeleteAsync(cancellationToken);
         await Context.ProjectTaskAppUsers.Where(x => taskIds.Contains(x.ProjectTaskId)).ExecuteDeleteAsync(cancellationToken);
+        await Context.TaskPins.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+        await Context.TaskFiles.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+        await Context.WorkspaceFiles.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
         await Context.ProjectTasks.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+
+        // Pages cascade to their versions, links, tags, favourites and visits, and block their project's delete.
+        await Context.Pages.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
 
         // Board groups reference a status; boards and sprints reference a project.
         await Context.BoardGroups.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
@@ -86,12 +115,75 @@ public class WorkspaceRepository : AuditableRepository<DataContext, Workspace, i
         await Context.WorkspaceInvites.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
         await Context.WorkspaceAppUsers.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
 
+        // Last before the workspace: any remaining row that names a service-account user blocks its delete.
         await Context.ServiceAccounts.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
         await Context.AppUsers.Where(x => serviceAccountUserIds.Contains(x.Id)).ExecuteDeleteAsync(cancellationToken);
 
-        await Context.AiReviewRuns.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
-
         await Context.Workspaces.Where(x => x.Id == workspaceId).ExecuteDeleteAsync(cancellationToken);
+
+        return references;
+    }
+
+    private async Task<DeletedWorkspaceReferences> GetDeletedWorkspaceReferences(int workspaceId, CancellationToken cancellationToken)
+    {
+        var memberUserIds = await Context.WorkspaceAppUsers
+            .Where(member => member.WorkspaceId == workspaceId)
+            .Select(member => member.UserId)
+            .ToListAsync(cancellationToken);
+
+        var taskIds = await Context.ProjectTasks
+            .Where(task => task.WorkspaceId == workspaceId)
+            .Select(task => task.Id)
+            .ToListAsync(cancellationToken);
+
+        var projectIds = await Context.Projects
+            .Where(project => project.WorkspaceId == workspaceId)
+            .Select(project => project.Id)
+            .ToListAsync(cancellationToken);
+
+        var boardIds = await Context.Boards
+            .Where(board => board.WorkspaceId == workspaceId)
+            .Select(board => board.Id)
+            .ToListAsync(cancellationToken);
+
+        var sprintIds = await Context.Sprints
+            .Where(sprint => sprint.WorkspaceId == workspaceId)
+            .Select(sprint => sprint.Id)
+            .ToListAsync(cancellationToken);
+
+        var pageIds = await Context.Pages
+            .Where(page => page.WorkspaceId == workspaceId)
+            .Select(page => page.Id)
+            .ToListAsync(cancellationToken);
+
+        var fileKeys = Context.WorkspaceFiles
+            .Where(file => file.WorkspaceId == workspaceId)
+            .Select(file => file.StorageKey);
+
+        var exportKeys = Context.ExportJobs
+            .Where(job => job.WorkspaceId == workspaceId && job.StorageKey != null)
+            .Select(job => job.StorageKey!);
+
+        var importKeys = Context.ImportSessions
+            .Where(session => session.WorkspaceId == workspaceId)
+            .Select(session => session.StorageKey);
+
+        var storageKeys = await fileKeys
+            .Concat(exportKeys)
+            .Concat(importKeys)
+            .Distinct()
+            .ToListAsync(cancellationToken);
+
+        return new DeletedWorkspaceReferences
+        {
+            MemberUserIds = memberUserIds,
+            TaskIds = taskIds,
+            ProjectIds = projectIds,
+            BoardIds = boardIds,
+            SprintIds = sprintIds,
+            PageIds = pageIds,
+            StorageKeys = storageKeys,
+        };
     }
 
     public async Task<int?> GetIdBySlug(string slug, CancellationToken cancellationToken = default)

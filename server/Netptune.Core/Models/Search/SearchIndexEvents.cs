@@ -44,9 +44,19 @@ public static class SearchIndexEvents
         return Dispatch(publisher, SearchIndexOperation.Index, SearchIndexEntityTypes.Project, projectIds, workspaceSlug);
     }
 
+    public static Task RemoveProjects(this IEventPublisher publisher, IReadOnlyList<int> projectIds, string workspaceSlug)
+    {
+        return Dispatch(publisher, SearchIndexOperation.Delete, SearchIndexEntityTypes.Project, projectIds, workspaceSlug);
+    }
+
     public static Task IndexBoards(this IEventPublisher publisher, IReadOnlyList<int> boardIds, string workspaceSlug)
     {
         return Dispatch(publisher, SearchIndexOperation.Index, SearchIndexEntityTypes.Board, boardIds, workspaceSlug);
+    }
+
+    public static Task RemoveBoards(this IEventPublisher publisher, IReadOnlyList<int> boardIds, string workspaceSlug)
+    {
+        return Dispatch(publisher, SearchIndexOperation.Delete, SearchIndexEntityTypes.Board, boardIds, workspaceSlug);
     }
 
     public static Task IndexPages(this IEventPublisher publisher, IReadOnlyList<int> pageIds, string workspaceSlug)

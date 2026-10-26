@@ -18,6 +18,8 @@ namespace Netptune.Storage;
 
 public class S3StorageService : IStorageService
 {
+    private const int MaxKeysPerDeleteRequest = 1000;
+
     private readonly ILogger<S3StorageService> Logger;
     private readonly IAmazonS3 S3Client;
     private readonly S3StorageOptions Options;
@@ -116,6 +118,27 @@ public class S3StorageService : IStorageService
     public async Task DeleteFileAsync(string key, CancellationToken cancellationToken = default)
     {
         await S3Client.DeleteObjectAsync(Options.BucketName, key, cancellationToken);
+    }
+
+    public async Task DeleteFilesAsync(IReadOnlyCollection<string> keys, CancellationToken cancellationToken = default)
+    {
+        var requests = keys
+            .Chunk(MaxKeysPerDeleteRequest)
+            .Select(chunk => DeleteObjects(chunk, cancellationToken));
+
+        await Task.WhenAll(requests);
+    }
+
+    private async Task DeleteObjects(string[] keys, CancellationToken cancellationToken)
+    {
+        var request = new DeleteObjectsRequest
+        {
+            BucketName = Options.BucketName,
+            Objects = keys.Select(key => new KeyVersion { Key = key }).ToList(),
+            Quiet = true,
+        };
+
+        await S3Client.DeleteObjectsAsync(request, cancellationToken);
     }
 
     public async Task<bool> ExistsAsync(string key, CancellationToken cancellationToken = default)

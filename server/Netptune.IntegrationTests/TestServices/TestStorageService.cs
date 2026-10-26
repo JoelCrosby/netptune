@@ -47,6 +47,16 @@ public class TestStorageService : IStorageService
         return Task.CompletedTask;
     }
 
+    public Task DeleteFilesAsync(IReadOnlyCollection<string> keys, CancellationToken cancellationToken = default)
+    {
+        foreach (var key in keys)
+        {
+            Objects.Remove(key);
+        }
+
+        return Task.CompletedTask;
+    }
+
     public Task<bool> ExistsAsync(string key, CancellationToken cancellationToken = default)
     {
         return Task.FromResult(Objects.ContainsKey(key));

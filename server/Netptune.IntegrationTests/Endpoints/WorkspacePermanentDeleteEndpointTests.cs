@@ -9,16 +9,17 @@ using Microsoft.Extensions.DependencyInjection;
 using Netptune.Core.Colors;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services;
+using Netptune.Core.Storage;
 using Netptune.Core.ViewModels.Workspace;
 using Netptune.Entities.Contexts;
+
+using Npgsql;
 
 using Xunit;
 
 namespace Netptune.IntegrationTests.Endpoints;
 
-// Permanent workspace deletion has to clear every row pointing at the workspace before the
-// workspace row itself can go — all of those foreign keys are Restrict. These run against real
-// Postgres, which is the only thing that actually enforces that.
 [Collection(WorkspaceMutationCollection.Name)]
 public sealed class WorkspacePermanentDeleteEndpointTests
 {
@@ -32,27 +33,36 @@ public sealed class WorkspacePermanentDeleteEndpointTests
     }
 
     [Fact]
-    public async Task DeletePermanent_ShouldRemoveTheWorkspace_AndEverythingHangingOffIt()
+    public async Task DeletePermanent_ShouldRemoveEveryWorkspaceRow_WhenEveryWorkspaceTableHasData()
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
         var slug = "permanent-delete-test";
-
         var workspace = await CreateWorkspace(slug);
+        var seeded = await SeedEveryWorkspaceTable(workspace.Id);
 
-        // A freshly created workspace is not empty: WorkspaceFactory seeds statuses, relation types,
-        // a default project and an owner membership row. All of those hold the workspace down.
-        var workspaceId = workspace.Id;
+        await UploadStoredFiles(seeded.StorageKeys);
 
-        await AssertWorkspaceRowsExist(workspaceId);
+        var rowsBeforeDelete = await CountWorkspaceRows(workspace.Id);
+        var emptyBeforeDelete = rowsBeforeDelete.Where(table => table.Count == 0).Select(table => table.Table);
 
-        var response = await Client.DeleteAsync($"api/workspaces/permanent/{slug}");
+        emptyBeforeDelete.Should().BeEmpty(
+            "every workspace-scoped table needs a seeded row, or a missed delete would go unnoticed");
+
+        var response = await Client.DeleteAsync($"api/workspaces/permanent/{slug}", cancellationToken);
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse>(cancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-
-        var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
-
         result.IsSuccess.Should().BeTrue();
 
-        await AssertWorkspaceFullyGone(workspaceId);
+        var rowsAfterDelete = await CountWorkspaceRows(workspace.Id);
+        var populatedAfterDelete = rowsAfterDelete.Where(table => table.Count > 0).Select(table => table.Table);
+        var remains = await GetRemains(workspace.Id, seeded.ServiceAccountUserId);
+        var remainingStoredFiles = await GetRemainingStoredFiles(seeded.StorageKeys);
+
+        populatedAfterDelete.Should().BeEmpty();
+        remains.Workspace.Should().BeFalse();
+        remains.ServiceAccountUser.Should().BeFalse();
+        remainingStoredFiles.Should().BeEmpty();
     }
 
     private async Task<WorkspaceViewModel> CreateWorkspace(string slug)
@@ -74,39 +84,95 @@ public sealed class WorkspacePermanentDeleteEndpointTests
         return result.Payload!;
     }
 
-    private async Task AssertWorkspaceRowsExist(int workspaceId)
+    private async Task<SeededWorkspace> SeedEveryWorkspaceTable(int workspaceId)
     {
         using var scope = Fixture.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<DataContext>();
 
-        (await context.Statuses.CountAsync(x => x.WorkspaceId == workspaceId)).Should().BePositive();
-        (await context.RelationTypes.CountAsync(x => x.WorkspaceId == workspaceId)).Should().BePositive();
-        (await context.Projects.CountAsync(x => x.WorkspaceId == workspaceId)).Should().BePositive();
-        (await context.WorkspaceAppUsers.CountAsync(x => x.WorkspaceId == workspaceId)).Should().BePositive();
+        return await WorkspaceRowSeeder.Seed(context, workspaceId, TestContext.Current.CancellationToken);
     }
 
-    private async Task AssertWorkspaceFullyGone(int workspaceId)
+    private async Task UploadStoredFiles(IReadOnlyList<string> storageKeys)
+    {
+        var storage = Fixture.Services.GetRequiredService<IStorageService>();
+
+        foreach (var key in storageKeys)
+        {
+            using var content = new MemoryStream([1]);
+            var uploadOptions = new StorageUploadOptions { Name = key, Key = key };
+
+            await storage.UploadFileAsync(content, uploadOptions, TestContext.Current.CancellationToken);
+        }
+    }
+
+    private async Task<List<string>> GetRemainingStoredFiles(IReadOnlyList<string> storageKeys)
+    {
+        var storage = Fixture.Services.GetRequiredService<IStorageService>();
+        var remaining = new List<string>();
+
+        foreach (var key in storageKeys)
+        {
+            var exists = await storage.ExistsAsync(key, TestContext.Current.CancellationToken);
+
+            if (exists)
+            {
+                remaining.Add(key);
+            }
+        }
+
+        return remaining;
+    }
+
+    private async Task<List<TableRowCount>> CountWorkspaceRows(int workspaceId)
     {
         using var scope = Fixture.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var tableCounts = GetWorkspaceScopedTables(context).Select(table =>
+            $"SELECT '{table.Name}' AS \"Table\", count(*)::int AS \"Count\" " +
+            $"FROM {table.Name} WHERE {table.WorkspaceIdColumn} = @workspace_id");
+        var sql = string.Join(" UNION ALL ", tableCounts);
+        var workspaceIdParameter = new NpgsqlParameter("workspace_id", workspaceId);
 
-        (await context.Workspaces.AnyAsync(x => x.Id == workspaceId)).Should().BeFalse();
+        return await context.Database
+            .SqlQueryRaw<TableRowCount>(sql, workspaceIdParameter)
+            .ToListAsync(TestContext.Current.CancellationToken);
+    }
 
-        (await context.Statuses.AnyAsync(x => x.WorkspaceId == workspaceId)).Should().BeFalse();
-        (await context.RelationTypes.AnyAsync(x => x.WorkspaceId == workspaceId)).Should().BeFalse();
-        (await context.Sprints.AnyAsync(x => x.WorkspaceId == workspaceId)).Should().BeFalse();
-        (await context.Flags.AnyAsync(x => x.WorkspaceId == workspaceId)).Should().BeFalse();
-        (await context.AutomationRules.AnyAsync(x => x.WorkspaceId == workspaceId)).Should().BeFalse();
-        (await context.EventRecords.AnyAsync(x => x.WorkspaceId == workspaceId)).Should().BeFalse();
-        (await context.ActivityEntries.AnyAsync(x => x.WorkspaceId == workspaceId)).Should().BeFalse();
-        (await context.Projects.AnyAsync(x => x.WorkspaceId == workspaceId)).Should().BeFalse();
-        (await context.ProjectTasks.AnyAsync(x => x.WorkspaceId == workspaceId)).Should().BeFalse();
-        (await context.Boards.AnyAsync(x => x.WorkspaceId == workspaceId)).Should().BeFalse();
-        (await context.BoardGroups.AnyAsync(x => x.WorkspaceId == workspaceId)).Should().BeFalse();
-        (await context.Tags.AnyAsync(x => x.WorkspaceId == workspaceId)).Should().BeFalse();
-        (await context.Comments.AnyAsync(x => x.WorkspaceId == workspaceId)).Should().BeFalse();
-        (await context.WorkspaceAppUsers.AnyAsync(x => x.WorkspaceId == workspaceId)).Should().BeFalse();
-        (await context.WorkspaceInvites.AnyAsync(x => x.WorkspaceId == workspaceId)).Should().BeFalse();
-        (await context.ProjectTaskRelations.AnyAsync(x => x.WorkspaceId == workspaceId)).Should().BeFalse();
+    private static List<WorkspaceScopedTable> GetWorkspaceScopedTables(DataContext context)
+    {
+        return context.Model.GetEntityTypes()
+            .Select(entityType => (EntityType: entityType, WorkspaceId: entityType.FindProperty("WorkspaceId")))
+            .Where(entry => entry.WorkspaceId is not null && entry.EntityType.GetTableName() is not null)
+            .Select(entry => new WorkspaceScopedTable(
+                entry.EntityType.GetTableName()!,
+                entry.WorkspaceId!.GetColumnName()))
+            .Distinct()
+            .OrderBy(table => table.Name)
+            .ToList();
+    }
+
+    private async Task<Remains> GetRemains(int workspaceId, string serviceAccountUserId)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var cancellationToken = TestContext.Current.CancellationToken;
+
+        var workspaceRemains = await context.Workspaces.AnyAsync(x => x.Id == workspaceId, cancellationToken);
+        var serviceAccountUserRemains = await context.AppUsers.AnyAsync(
+            user => user.Id == serviceAccountUserId,
+            cancellationToken);
+
+        return new Remains(workspaceRemains, serviceAccountUserRemains);
+    }
+
+    private sealed record WorkspaceScopedTable(string Name, string WorkspaceIdColumn);
+
+    private sealed record Remains(bool Workspace, bool ServiceAccountUser);
+
+    private sealed class TableRowCount
+    {
+        public string Table { get; init; } = null!;
+
+        public int Count { get; init; }
     }
 }

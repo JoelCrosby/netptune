@@ -20,7 +20,7 @@ public interface IWorkspaceRepository : IRepository<Workspace, int>
 
     Task<bool> Exists(string slug, CancellationToken cancellationToken = default);
 
-    Task DeleteWorkspacePermanent(int workspaceId, CancellationToken cancellationToken = default);
+    Task<DeletedWorkspaceReferences> DeleteWorkspacePermanent(int workspaceId, CancellationToken cancellationToken = default);
 
     Task<WorkspaceStorageUsageViewModel?> GetStorageUsage(int workspaceId, CancellationToken cancellationToken = default);
 

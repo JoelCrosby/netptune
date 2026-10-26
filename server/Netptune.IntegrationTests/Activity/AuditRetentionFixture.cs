@@ -145,6 +145,11 @@ public sealed class CountingStorageService : IStorageService
         return Task.CompletedTask;
     }
 
+    public Task DeleteFilesAsync(IReadOnlyCollection<string> keys, CancellationToken cancellationToken = default)
+    {
+        return Task.CompletedTask;
+    }
+
     public Task<bool> ExistsAsync(string key, CancellationToken cancellationToken = default)
     {
         return Task.FromResult(Uploads.Contains(key));

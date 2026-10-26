@@ -14,5 +14,7 @@ public interface IStorageService
 
     Task DeleteFileAsync(string key, CancellationToken cancellationToken = default);
 
+    Task DeleteFilesAsync(IReadOnlyCollection<string> keys, CancellationToken cancellationToken = default);
+
     Task<bool> ExistsAsync(string key, CancellationToken cancellationToken = default);
 }
