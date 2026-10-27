@@ -31,7 +31,7 @@ public sealed class ListWorkspaceFilesTool : IAiTool
     public AiToolKind Kind => AiToolKind.Read;
 
     public IReadOnlySet<string> RequiredPermissions { get; } =
-        new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Files.Read };
+        new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Storage.Read };
 
     public JsonDocument InputSchema { get; } = AiToolSchema.Object(
         """
@@ -79,7 +79,7 @@ public sealed class ListWorkspaceFilesTool : IAiTool
             taskName = file.TaskName,
         });
 
-        var hasMore = page * pageSize < result.Payload.TotalCount;
+        var hasMore = AiToolSchema.HasMore(page, pageSize, result.Payload.TotalCount);
         var summary = new
         {
             totalCount = result.Payload.TotalCount,

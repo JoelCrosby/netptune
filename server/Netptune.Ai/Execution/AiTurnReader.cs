@@ -23,7 +23,7 @@ public static class AiTurnReader
 
         while (true)
         {
-            var step = await ReadNext(turn);
+            var step = await ReadNext(turn, cancellationToken);
 
             if (step.Event is null)
             {
@@ -68,7 +68,9 @@ public static class AiTurnReader
 
     private sealed record TurnStep(AiStreamEvent? Event, string? Failure);
 
-    private static async Task<TurnStep> ReadNext(IAsyncEnumerator<AiStreamEvent> turn)
+    private static async Task<TurnStep> ReadNext(
+        IAsyncEnumerator<AiStreamEvent> turn,
+        CancellationToken cancellationToken)
     {
         try
         {
@@ -76,9 +78,14 @@ public static class AiTurnReader
 
             return new TurnStep(moved ? turn.Current : null, null);
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
             return new TurnStep(null, null);
+        }
+        catch (OperationCanceledException)
+        {
+            // Nobody stopped the turn and it has not run out of time, so a client inside it gave up waiting.
+            return new TurnStep(null, AppText.AiErrorProviderStoppedResponding);
         }
         catch (Exception exception)
         {

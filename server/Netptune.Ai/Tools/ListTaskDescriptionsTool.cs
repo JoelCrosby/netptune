@@ -83,7 +83,7 @@ public sealed class ListTaskDescriptionsTool : IAiTool
             };
         });
 
-        var hasMore = page * pageSize < tasks.TotalCount;
+        var hasMore = AiToolSchema.HasMore(page, pageSize, tasks.TotalCount);
         var fitted = AiResultBudget.Fit(rows);
         var listing = new JsonObject
         {

@@ -63,6 +63,9 @@ const FIELD_LABELS: Record<string, string> = {
   trigger: $localize`:Field of a proposed change, what starts an automation rule:Trigger`,
   actions: $localize`:Field of a proposed change, what an automation rule does:Actions`,
   rule: $localize`:Field of a proposed change, an automation rule drawn as its steps:Rule`,
+  projectsUsingIt: $localize`:Field of a proposed deletion, the projects that still use what is deleted:Used by projects`,
+  boardGroupsUsingIt: $localize`:Field of a proposed deletion, the board groups that still use what is deleted:Used by board groups`,
+  automationRulesUsingIt: $localize`:Field of a proposed deletion, the automation rules that still use what is deleted:Used by automation rules`,
 };
 
 /** camelCase field names are internal; anything unmapped still has to read as prose. */

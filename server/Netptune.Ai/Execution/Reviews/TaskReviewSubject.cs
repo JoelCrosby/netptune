@@ -83,7 +83,7 @@ public sealed class TaskReviewSubject : IAiReviewSubject
             request.WorkspaceId,
             cancellationToken);
         var comments = await UnitOfWork.Comments.GetCommentViewModelsForTask(task.Id, cancellationToken);
-        var similarTasks = await FindSimilarTasks(task, relations, cancellationToken);
+        var similarTasks = await FindSimilarTasks(request.WorkspaceId, task, relations, cancellationToken);
         var workspaceTags = await UnitOfWork.Tags.GetTagsInWorkspace(request.WorkspaceId, true, cancellationToken);
         var tagNames = workspaceTags.Select(tag => tag.Name).Take(MaxWorkspaceTags).ToList();
         var recentComments = comments.OrderBy(comment => comment.CreatedAt).TakeLast(MaxComments).ToList();
@@ -189,6 +189,7 @@ public sealed class TaskReviewSubject : IAiReviewSubject
     }
 
     private async Task<List<TaskViewModel>> FindSimilarTasks(
+        int workspaceId,
         TaskViewModel task,
         List<TaskRelationViewModel> relations,
         CancellationToken cancellationToken)
@@ -207,7 +208,9 @@ public sealed class TaskReviewSubject : IAiReviewSubject
             return [];
         }
 
-        var candidates = await UnitOfWork.Tasks.GetTaskViewModels(candidateIds, cancellationToken);
+        // The search index drops a deleted task a little after the database does, so its hits are re-read
+        // as live tasks of this workspace before they are offered as related.
+        var candidates = await UnitOfWork.Tasks.GetLiveTaskViewModels(candidateIds, workspaceId, cancellationToken);
         var rankById = candidateIds.Select((id, rank) => (id, rank)).ToDictionary(pair => pair.id, pair => pair.rank);
 
         return candidates.OrderBy(candidate => rankById[candidate.Id]).ToList();
@@ -230,9 +233,9 @@ public sealed class TaskReviewSubject : IAiReviewSubject
         builder.AppendLine("<task>");
         builder.AppendLine($"Key: {task.SystemId}");
         builder.AppendLine($"Name: {AiReviewPrompt.Neutralise(task.Name)}");
-        builder.AppendLine($"Status: {task.StatusName}");
-        builder.AppendLine($"Project: {task.ProjectName ?? "none"}");
-        builder.AppendLine($"Sprint: {task.SprintName ?? "none"}");
+        builder.AppendLine($"Status: {AiReviewPrompt.Neutralise(task.StatusName)}");
+        builder.AppendLine($"Project: {AiReviewPrompt.Neutralise(task.ProjectName ?? "none")}");
+        builder.AppendLine($"Sprint: {AiReviewPrompt.Neutralise(task.SprintName ?? "none")}");
         builder.AppendLine($"Tags: {AiReviewPrompt.Neutralise(tags)}");
         builder.AppendLine($"Assignees: {assignees}");
         builder.AppendLine($"Estimate: {estimate}");
@@ -255,8 +258,10 @@ public sealed class TaskReviewSubject : IAiReviewSubject
         {
             var related = relation.RelatedTask;
             var relatedName = AiReviewPrompt.Neutralise(related.Name);
+            var label = AiReviewPrompt.Neutralise(relation.Label);
+            var relatedStatus = AiReviewPrompt.Neutralise(related.StatusName);
 
-            builder.AppendLine($"- {relation.Label} {related.SystemId} \"{relatedName}\" ({related.StatusName})");
+            builder.AppendLine($"- {label} {related.SystemId} \"{relatedName}\" ({relatedStatus})");
         }
 
         builder.AppendLine("</relations>");
@@ -283,8 +288,9 @@ public sealed class TaskReviewSubject : IAiReviewSubject
             var summary = AiReviewPrompt.Truncate(similar.Description ?? string.Empty, MaxSimilarDescriptionLength);
             var similarName = AiReviewPrompt.Neutralise(similar.Name);
             var similarSummary = AiReviewPrompt.Neutralise(summary);
+            var similarStatus = AiReviewPrompt.Neutralise(similar.StatusName);
 
-            builder.AppendLine($"- {similar.SystemId} \"{similarName}\" ({similar.StatusName}): {similarSummary}");
+            builder.AppendLine($"- {similar.SystemId} \"{similarName}\" ({similarStatus}): {similarSummary}");
         }
 
         builder.AppendLine("</similar-tasks>");

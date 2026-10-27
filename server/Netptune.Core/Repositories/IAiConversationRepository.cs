@@ -33,6 +33,10 @@ public interface IAiConversationRepository : IRepository<AiConversation, Guid>
 
     Task<int> GetNextSequence(Guid conversationId, CancellationToken cancellationToken = default);
 
+    Task<bool> TryClaimTurn(Guid conversationId, DateTime claimedUntil, CancellationToken cancellationToken = default);
+
+    Task ReleaseTurn(Guid conversationId, CancellationToken cancellationToken = default);
+
     Task AddMessage(AiMessage message, CancellationToken cancellationToken = default);
 
     Task<int> RemoveMessagesFrom(Guid conversationId, int sequence, CancellationToken cancellationToken = default);

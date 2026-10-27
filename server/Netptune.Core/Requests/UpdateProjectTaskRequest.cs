@@ -32,6 +32,14 @@ public record UpdateProjectTaskRequest
 
     public decimal? EstimateValue { get; set; }
 
+    // A null priority or estimate means "leave it alone", so taking one away has to be asked for. Server
+    // callers only: an undo that puts back a task that had none.
+    [JsonIgnore]
+    public bool ClearPriority { get; init; }
+
+    [JsonIgnore]
+    public bool ClearEstimate { get; init; }
+
     public DateOnly? StartDate
     {
         get => startDate;

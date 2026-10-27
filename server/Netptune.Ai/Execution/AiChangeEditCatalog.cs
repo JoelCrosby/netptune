@@ -11,6 +11,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Localization;
 using Netptune.Core.Models;
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.Ai;
@@ -27,8 +28,6 @@ namespace Netptune.Ai.Execution;
 public sealed partial class AiChangeEditCatalog : IAiChangeEditCatalog
 {
     private const int MaximumTextLength = 8000;
-    private const decimal SmallestTShirtSize = 1;
-    private const decimal LargestTShirtSize = 5;
     private const string DateFormat = "yyyy-MM-dd";
     private const string ClearKey = "clear";
     private static string MissingTaskMessage => AppText.AiChangeErrorTaskChangeMovesNoLongerWorkspace;
@@ -153,7 +152,7 @@ public sealed partial class AiChangeEditCatalog : IAiChangeEditCatalog
 
     private static FieldEditOutcome ResolvePriority(FieldEditRequest request)
     {
-        var isParsed = Enum.TryParse<TaskPriority>(request.Edit.Value, true, out var priority);
+        var isParsed = AiToolSchema.TryParseEnum<TaskPriority>(request.Edit.Value, out var priority);
         var isKnown = isParsed && Enum.IsDefined(priority);
 
         if (!isKnown)
@@ -184,7 +183,7 @@ public sealed partial class AiChangeEditCatalog : IAiChangeEditCatalog
             });
         }
 
-        var isParsed = Enum.TryParse<EstimateType>(request.Edit.Value, true, out var type);
+        var isParsed = AiToolSchema.TryParseEnum<EstimateType>(request.Edit.Value, out var type);
         var isKnown = isParsed && Enum.IsDefined(type);
 
         if (!isKnown)
@@ -200,7 +199,7 @@ public sealed partial class AiChangeEditCatalog : IAiChangeEditCatalog
         }
 
         var isTShirt = type == EstimateType.TShirt;
-        var isTShirtSize = value.Value is >= SmallestTShirtSize and <= LargestTShirtSize && value.Value % 1 == 0;
+        var isTShirtSize = ProjectTaskEstimate.IsTShirtSize(value.Value);
 
         if (isTShirt && !isTShirtSize)
         {

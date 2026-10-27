@@ -17,8 +17,6 @@ public sealed class CreateTaskTool : IAiTool
 {
     public const string ChangeName = "propose_create_task";
 
-    private const int MemberLookupTake = 200;
-
     private readonly IMediator Mediator;
     private readonly IAiChangeSetBuilder ChangeSet;
 
@@ -59,7 +57,7 @@ public sealed class CreateTaskTool : IAiTool
           "projectId": { "type": "integer", "description": "The project the task belongs to." },
           "projectRef": { "type": "string", "description": "Handle of a project proposed earlier in this change set, instead of projectId." },
           "description": { "type": "string", "description": "Optional task description." },
-          "statusId": { "type": "integer", "description": "Status id, from list_records. Defaults to the project's first status." },
+          "statusId": { "type": "integer", "description": "Status id, from list_records. Defaults to the project's default status. A board group with a status of its own sets the task's status instead." },
           "assigneeId": { "type": "string", "description": "Workspace user id to assign, from list_records members." },
           "sprintId": { "type": "integer", "description": "Sprint to put the task in, from list_records. Must belong to the same project." },
           "sprintRef": { "type": "string", "description": "Handle of a sprint proposed earlier in this change set, instead of sprintId." },
@@ -143,7 +141,8 @@ public sealed class CreateTaskTool : IAiTool
         });
 
         return AiToolExecution.Success(
-            $"Proposed creating task \"{name}\" as {refKey}. Nothing has been applied yet — the user must review and apply the change.");
+            $"Proposed creating task \"{name}\" as {refKey}. "
+            + "Nothing has been applied yet — the user must review and apply the change.");
     }
 
     private async Task<string?> AddTagField(
@@ -159,7 +158,7 @@ public sealed class CreateTaskTool : IAiTool
             return null;
         }
 
-        var unknownError = await AiTagVocabulary.FindUnknown(Mediator, ChangeSet, tags, cancellationToken);
+        var unknownError = await AiTagVocabulary.FindUnknown(Mediator, ChangeSet, tags, null, cancellationToken);
 
         if (unknownError is not null)
         {
@@ -175,11 +174,15 @@ public sealed class CreateTaskTool : IAiTool
         return null;
     }
 
-    private sealed record TaskPlacement(List<AiChangeField> Fields, string? Error)
+    private sealed record TaskPlacement
     {
+        public List<AiChangeField> Fields { get; init; } = [];
+
+        public string? Error { get; init; }
+
         public static TaskPlacement Failed(string error)
         {
-            return new TaskPlacement([], error);
+            return new TaskPlacement { Error = error };
         }
     }
 
@@ -213,10 +216,8 @@ public sealed class CreateTaskTool : IAiTool
 
         if (hasAssignee)
         {
-            var filter = new AssigneeFilter { Page = 1, PageSize = MemberLookupTake };
-            var result = await Mediator.Send(new GetAssigneesQuery(filter), cancellationToken);
-            var member = result.Payload?.Items.FirstOrDefault(item =>
-                string.Equals(item.Id, assigneeId, StringComparison.Ordinal));
+            var found = await Mediator.Send(new GetAssigneesByIdQuery([assigneeId!]), cancellationToken);
+            var member = found.FirstOrDefault();
 
             if (member is null)
             {
@@ -228,6 +229,13 @@ public sealed class CreateTaskTool : IAiTool
                 AiChangeValueKind.User,
                 [],
                 [AiChangeFields.User(member.Id, member.DisplayName, member.PictureUrl)]));
+        }
+
+        var sprintConflict = AiPendingReference.Conflict(arguments, "sprintId", "sprintRef");
+
+        if (sprintConflict is not null)
+        {
+            return TaskPlacement.Failed(sprintConflict);
         }
 
         var sprintRef = AiPendingReference.Read(arguments, "sprintRef");
@@ -258,7 +266,8 @@ public sealed class CreateTaskTool : IAiTool
             {
                 return TaskPlacement.Failed(
                     "A task in a project proposed in this change set cannot join an existing sprint. "
-                    + "Propose the sprint with propose_sprint_change (action create) and pass its handle as sprintRef.");
+                    + "Propose the sprint with propose_sprint_change (action create) "
+                    + "and pass its handle as sprintRef.");
             }
 
             var sprint = await AiSprintLookup.Find(Mediator, sprintId.Value, cancellationToken);
@@ -296,7 +305,7 @@ public sealed class CreateTaskTool : IAiTool
             return TaskPlacement.Failed(scheduleError);
         }
 
-        return new TaskPlacement(fields, null);
+        return new TaskPlacement { Fields = fields };
     }
 
     private async Task<string?> AddBoardGroupField(
@@ -364,6 +373,26 @@ public sealed class CreateTaskTool : IAiTool
 
         fields.Add(AiChangeFields.BoardGroup(existing.Id, $"{existing.BoardName} · {existing.Name}"));
 
+        var groupStatus = await AiBoardLookup.FindGroupStatus(Mediator, existing.Id, null, cancellationToken);
+
+        if (groupStatus is null)
+        {
+            return null;
+        }
+
+        var requestedStatusId = AiToolSchema.GetInt(arguments, "statusId");
+
+        if (requestedStatusId.HasValue)
+        {
+            return requestedStatusId == groupStatus.Id ? null : AiBoardLookup.StatusConflict(existing, groupStatus);
+        }
+
+        fields.Add(AiChangeFields.Values(
+            "status",
+            AiChangeValueKind.Status,
+            [],
+            [AiChangeFields.Status(groupStatus.Id, groupStatus.Name, groupStatus.Color)]));
+
         return null;
     }
 
@@ -371,7 +400,7 @@ public sealed class CreateTaskTool : IAiTool
     {
         var priority = AiToolSchema.GetString(arguments, "priority");
         var hasPriority = !string.IsNullOrWhiteSpace(priority);
-        var isPriorityKnown = !hasPriority || Enum.TryParse<TaskPriority>(priority, true, out _);
+        var isPriorityKnown = !hasPriority || AiToolSchema.TryParseEnum<TaskPriority>(priority, out _);
 
         if (!isPriorityKnown)
         {
@@ -383,7 +412,7 @@ public sealed class CreateTaskTool : IAiTool
         var estimateType = AiToolSchema.GetString(arguments, "estimateType");
         var estimateValue = AiToolSchema.GetDecimal(arguments, "estimateValue");
         var hasEstimateType = !string.IsNullOrWhiteSpace(estimateType);
-        var isEstimateKnown = !hasEstimateType || Enum.TryParse<EstimateType>(estimateType, true, out _);
+        var isEstimateKnown = !hasEstimateType || AiToolSchema.TryParseEnum<EstimateType>(estimateType, out _);
 
         if (!isEstimateKnown)
         {
@@ -395,6 +424,16 @@ public sealed class CreateTaskTool : IAiTool
         if (!isEstimatePaired)
         {
             return "An estimate needs both estimateType and estimateValue.";
+        }
+
+        var isTShirt = hasEstimateType
+            && AiToolSchema.TryParseEnum<EstimateType>(estimateType, out var unit)
+            && unit == EstimateType.TShirt;
+        var isOutOfTShirtRange = isTShirt && !ProjectTaskEstimate.IsTShirtSize(estimateValue!.Value);
+
+        if (isOutOfTShirtRange)
+        {
+            return "T-shirt estimates run from 1 (XS) to 5 (XL).";
         }
 
         if (estimateValue.HasValue)
@@ -432,7 +471,11 @@ public sealed class CreateTaskTool : IAiTool
         return null;
     }
 
-    private static string? AddDateField(List<AiChangeField> fields, JsonElement arguments, string name, out DateOnly? date)
+    private static string? AddDateField(
+        List<AiChangeField> fields,
+        JsonElement arguments,
+        string name,
+        out DateOnly? date)
     {
         date = null;
 

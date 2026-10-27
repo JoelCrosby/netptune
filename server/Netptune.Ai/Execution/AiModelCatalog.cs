@@ -119,7 +119,11 @@ public sealed class AiModelCatalog : IAiModelCatalog
         }
     }
 
-    private sealed record ProviderEfforts(AiProvider Provider, IReadOnlyDictionary<string, IReadOnlyList<AiEffort>> Efforts);
+    private sealed record ProviderEfforts(
+        AiProvider Provider,
+        IReadOnlyDictionary<string, IReadOnlyList<AiEffort>> Efforts);
 
-    private sealed record CachedEfforts(IReadOnlyDictionary<string, IReadOnlyList<AiEffort>> Efforts, DateTime ExpiresAt);
+    private sealed record CachedEfforts(
+        IReadOnlyDictionary<string, IReadOnlyList<AiEffort>> Efforts,
+        DateTime ExpiresAt);
 }

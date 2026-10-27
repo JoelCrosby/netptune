@@ -31,8 +31,9 @@ public sealed class AutomationChangeTool : IAiTool
     public string Description =>
         "Propose creating or changing an automation rule, or turning one on or off. Call list_automations with "
         + "includeReference first for how rules are written, and read a rule with ruleId before updating it. "
-        + "create takes a whole rule: name, trigger, actions and optionally a scope; executionUserId defaults to the "
-        + "first enabled automation service account. A new rule is created disabled; pass isEnabled true only when "
+        + "create takes a whole rule: name, trigger, actions and optionally a scope; executionUserId defaults to an "
+        + "enabled automation service account that holds the permissions the actions need, or failing that the "
+        + "first enabled one. A new rule is created disabled; pass isEnabled true only when "
         + "the user asked for it to be live. update replaces only the sections it is given: name, isEnabled, "
         + "executionUserId, the scope (any of projectId, boardId or sprintId replaces all three, so pass null for "
         + "none), trigger as a whole or actions as a whole list. set_enabled turns a rule on or off. Changing "

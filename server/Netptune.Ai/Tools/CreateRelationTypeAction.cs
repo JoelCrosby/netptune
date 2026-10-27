@@ -40,7 +40,7 @@ public sealed class CreateRelationTypeAction : IAiToolAction
         }
 
         var rawCategory = AiToolSchema.GetString(arguments, "category");
-        var isKnownCategory = Enum.TryParse<RelationCategory>(rawCategory, true, out var category);
+        var isKnownCategory = AiToolSchema.TryParseEnum<RelationCategory>(rawCategory, out var category);
 
         if (!isKnownCategory)
         {
@@ -65,7 +65,9 @@ public sealed class CreateRelationTypeAction : IAiToolAction
         var clash = relationTypes.FirstOrDefault(relationType => relationType.Key == key);
         var isNamedLikeExisting = AiRelationTypeLookup.Exists(relationTypes, name!);
 
-        if (clash is not null || isNamedLikeExisting)
+        var isTaken = clash is not null || isNamedLikeExisting;
+
+        if (isTaken)
         {
             return AiToolExecution.Failed(
                 $"A relation type named “{clash?.Name ?? name}” already exists — link with it directly. "

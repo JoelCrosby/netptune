@@ -147,6 +147,8 @@ public sealed class TaskReviewSuggestions
 
             if (!created.IsSuccess)
             {
+                await RemoveCreated(createdIds);
+
                 return AiReviewApplication.Failed(created.Message);
             }
 
@@ -164,9 +166,21 @@ public sealed class TaskReviewSuggestions
         {
             IsSuccess = true,
             AppliedChange = JsonSerializer.SerializeToDocument(appliedChange, JsonOptions.Default),
-            Changes = createdIds.Select(id => AppliedEntity("taskCreated", EntityType.Task, id)).ToList(),
+            Changes = createdIds.Select(id => AppliedEntity(AppliedKinds.TaskCreated, EntityType.Task, id)).ToList(),
             Created = createdIds.Select(id => new AiReviewCreatedEntity(EntityType.Task, id)).ToList(),
         };
+    }
+
+    // Each task is created in its own transaction, so a split that fails part way takes back the ones
+    // it made. The finding stays open, and accepting it again would otherwise make them a second time.
+    private async Task RemoveCreated(List<int> createdIds)
+    {
+        if (createdIds.Count == 0)
+        {
+            return;
+        }
+
+        await Mediator.Send(new DeleteTasksCommand(createdIds), CancellationToken.None);
     }
 
     private static bool IsValidSplitTask(AiReviewSplitTask split)
@@ -218,7 +232,7 @@ public sealed class TaskReviewSuggestions
         {
             IsSuccess = true,
             AppliedChange = JsonSerializer.SerializeToDocument(appliedChange, JsonOptions.Default),
-            Changes = [AppliedEntity("relationCreated", EntityType.Task, suggestion.TaskId)],
+            Changes = [AppliedEntity(AppliedKinds.RelationCreated, EntityType.Task, suggestion.TaskId)],
         };
     }
 
@@ -229,7 +243,8 @@ public sealed class TaskReviewSuggestions
     {
         var suggestion = request.Suggestion.Deserialize<AiReviewMetadataSuggestion>(JsonOptions.Default);
         var chosenTags = ChosenTags(request, suggestion);
-        var tags = await EnsureTags(request.WorkspaceId, chosenTags, cancellationToken);
+        var canCreateTags = MetadataPermissions(request).Contains(NetptunePermissions.Tags.Create);
+        var tags = await EnsureTags(request.WorkspaceId, chosenTags, canCreateTags, cancellationToken);
 
         if (!tags.IsSuccess)
         {
@@ -275,13 +290,13 @@ public sealed class TaskReviewSuggestions
         };
 
         var createdTags = tags.CreatedIds.Select(id => new AiReviewCreatedEntity(EntityType.Tag, id)).ToList();
-        var tagChanges = tags.CreatedIds.Select(id => AppliedEntity("tagCreated", EntityType.Tag, id));
+        var tagChanges = tags.CreatedIds.Select(id => AppliedEntity(AppliedKinds.TagCreated, EntityType.Tag, id));
 
         return new AiReviewApplication
         {
             IsSuccess = true,
             AppliedChange = JsonSerializer.SerializeToDocument(appliedChange, JsonOptions.Default),
-            Changes = [AppliedEntity("taskUpdated", EntityType.Task, task.Id), .. tagChanges],
+            Changes = [AppliedEntity(AppliedKinds.TaskUpdated, EntityType.Task, task.Id), .. tagChanges],
             Created = createdTags,
         };
     }
@@ -289,6 +304,7 @@ public sealed class TaskReviewSuggestions
     private async Task<TagResolution> EnsureTags(
         int workspaceId,
         List<string> names,
+        bool canCreateTags,
         CancellationToken cancellationToken)
     {
         if (names.Count == 0)
@@ -302,6 +318,18 @@ public sealed class TaskReviewSuggestions
             .ToDictionary(group => group.Key, group => group.First().Name, StringComparer.OrdinalIgnoreCase);
         var existingNames = names.Where(existingByName.ContainsKey).Select(name => existingByName[name]).ToList();
         var newNames = names.Where(name => !existingByName.ContainsKey(name)).ToList();
+
+        // The permission check counted these tags as existing ones. One deleted since then cannot be made
+        // again on that check alone.
+        var createsUncheckedTags = newNames.Count > 0 && !canCreateTags;
+
+        if (createsUncheckedTags)
+        {
+            var message = Localized.Format(AppText.AiReviewTagsNoLongerExist, string.Join(", ", newNames));
+
+            return new TagResolution { IsSuccess = false, Message = message };
+        }
+
         var hasTooManyNewTags = newNames.Count > AiReviewValidator.MaxNewTags;
 
         if (hasTooManyNewTags)
@@ -371,6 +399,17 @@ public sealed class TaskReviewSuggestions
             EntityType = EventEntityTypes.From(entityType),
             EntityId = entityId,
         };
+    }
+
+    private static class AppliedKinds
+    {
+        public const string TaskCreated = "taskCreated";
+
+        public const string RelationCreated = "relationCreated";
+
+        public const string TagCreated = "tagCreated";
+
+        public const string TaskUpdated = "taskUpdated";
     }
 
     private sealed record TagResolution

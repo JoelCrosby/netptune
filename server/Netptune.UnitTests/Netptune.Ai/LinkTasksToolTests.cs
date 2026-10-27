@@ -143,6 +143,42 @@ public class LinkTasksToolTests
     }
 
     [Fact]
+    public async Task Execute_ShouldLinkTwoPendingTasks_ThatShareAName()
+    {
+        GivenPendingTask("ref:1", "Draft the brief");
+        GivenPendingTask("ref:2", "Draft the brief");
+
+        var result = await Execute("""{"taskRef":"ref:1","relatedTaskRef":"ref:2","relationType":"relates to"}""");
+
+        result.IsError.Should().BeFalse(result.Content);
+        ChangeSet.Changes.Last().Summary.Should().Contain("Draft the brief").And.NotContain("Create task");
+    }
+
+    [Fact]
+    public async Task Execute_ShouldFail_WhenAPendingTaskIsLinkedToItself()
+    {
+        GivenPendingTask("ref:1", "Draft the brief");
+
+        var result = await Execute("""{"taskRef":"ref:1","relatedTaskRef":"ref:1","relationType":"relates to"}""");
+
+        result.IsError.Should().BeTrue();
+    }
+
+    private void GivenPendingTask(string refKey, string name)
+    {
+        ChangeSet.Add(new AiChangeDraft
+        {
+            ToolName = "propose_create_task",
+            EntityType = "task",
+            RefKey = refKey,
+            Summary = $"Create task “{name}” in Netptune",
+            Fields = [new AiChangeField { Name = "name", After = name }],
+            Payload = JsonDocument.Parse("{}"),
+            ValidationStatus = AiChangeValidationStatus.Valid,
+        });
+    }
+
+    [Fact]
     public async Task Execute_ShouldFail_WithTheRuleTheLinkWouldBreak()
     {
         const string rule = "This would create a circular \"Blocks\" chain.";

@@ -67,10 +67,7 @@ public sealed class DeleteWorkspaceAiConversationsCommandHandler
 
         await UnitOfWork.CompleteAsync(cancellationToken);
 
-        foreach (var conversation in conversations)
-        {
-            Turns.Stop(conversation.Id);
-        }
+        await Task.WhenAll(conversations.Select(conversation => Turns.Stop(conversation.Id)));
 
         return ClientResponse.Success;
     }

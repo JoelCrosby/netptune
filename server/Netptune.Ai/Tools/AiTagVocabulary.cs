@@ -13,6 +13,7 @@ public static class AiTagVocabulary
         IMediator mediator,
         IAiChangeSetBuilder changeSet,
         IReadOnlyCollection<string> requested,
+        IReadOnlySet<string>? knownExistingNames,
         CancellationToken cancellationToken)
     {
         var proposedNames = CreateTagAction.ProposedNames(changeSet).ToHashSet(StringComparer.OrdinalIgnoreCase);
@@ -23,8 +24,7 @@ public static class AiTagVocabulary
             return null;
         }
 
-        var existing = await mediator.Send(new GetTagsByNameQuery(notProposed), cancellationToken);
-        var existingNames = existing.Select(tag => tag.Name).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var existingNames = knownExistingNames ?? await ReadExistingNames(mediator, notProposed, cancellationToken);
         var unknown = notProposed.Where(name => !existingNames.Contains(name)).ToList();
 
         if (unknown.Count == 0)
@@ -57,5 +57,15 @@ public static class AiTagVocabulary
             .Select(item => item.GetString()!)
             .Where(item => !string.IsNullOrWhiteSpace(item))
             .ToList();
+    }
+
+    public static async Task<IReadOnlySet<string>> ReadExistingNames(
+        IMediator mediator,
+        IReadOnlyCollection<string> names,
+        CancellationToken cancellationToken)
+    {
+        var existing = await mediator.Send(new GetTagsByNameQuery(names), cancellationToken);
+
+        return existing.Select(tag => tag.Name).ToHashSet(StringComparer.OrdinalIgnoreCase);
     }
 }

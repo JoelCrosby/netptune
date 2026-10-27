@@ -5,12 +5,12 @@ using System.Text.RegularExpressions;
 using Mediator;
 
 using Netptune.Core.Authorization;
-using Netptune.Core.Services.Ai;
-using Netptune.Core.ViewModels.Comments;
-using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services.Ai;
+using Netptune.Core.ViewModels.Comments;
+using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Handlers.Comments.Queries;
 using Netptune.Handlers.Tasks.Queries;
 
@@ -181,7 +181,7 @@ public sealed class FindInTasksTool : IAiTool
             return AiToolExecution.Failed(AiTextMatcher.TimeoutMessage);
         }
 
-        var hasMore = page * pageSize < found.TotalCount;
+        var hasMore = AiToolSchema.HasMore(page, pageSize, found.TotalCount);
         var fitted = AiResultBudget.Fit(rows);
         var listing = new JsonObject
         {
@@ -296,5 +296,4 @@ public sealed class FindInTasksTool : IAiTool
     }
 
     private sealed record TextSource(string In, int? CommentId, string Text);
-
 }

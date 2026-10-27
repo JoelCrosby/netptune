@@ -80,7 +80,7 @@ public sealed class UpdateCommentChangeHandler : IAiChangeHandler, IAiChangeUndo
 
         if (!snapshot.HasValue)
         {
-            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
         }
 
         var previousBody = AiChangePayload.ReadString(snapshot.Value, "comment");
@@ -88,14 +88,14 @@ public sealed class UpdateCommentChangeHandler : IAiChangeHandler, IAiChangeUndo
 
         if (!hasPreviousBody)
         {
-            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
         }
 
         var target = await FindTarget(change.Payload.RootElement, cancellationToken);
 
         if (target is null)
         {
-            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorCommentNoLongerExists);
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorCommentNoLongerExists);
         }
 
         var appliedBody = AiChangePayload.ReadString(change.Payload.RootElement, "comment");
@@ -103,17 +103,17 @@ public sealed class UpdateCommentChangeHandler : IAiChangeHandler, IAiChangeUndo
 
         if (editedSince)
         {
-            return AiChangeUndoResult.Failure(change, ChangedSinceMessage);
+            return AiChangePayload.Failure(change, ChangedSinceMessage);
         }
 
         var error = await Save(target, previousBody!, cancellationToken);
 
         if (error is not null)
         {
-            return AiChangeUndoResult.Failure(change, error);
+            return AiChangePayload.Failure(change, error);
         }
 
-        return AiChangeUndoResult.Undone(change, target.Id);
+        return AiChangePayload.Applied(change, target.Id);
     }
 
     private async Task<CommentViewModel?> FindTarget(JsonElement payload, CancellationToken cancellationToken)

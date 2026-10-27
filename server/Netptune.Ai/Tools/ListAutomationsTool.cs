@@ -13,6 +13,7 @@ namespace Netptune.Ai.Tools;
 public sealed class ListAutomationsTool : IAiTool
 {
     private const int DefaultPageSize = 25;
+    private const int MaximumPageSize = 100;
 
     private readonly IMediator Mediator;
 
@@ -29,7 +30,8 @@ public sealed class ListAutomationsTool : IAiTool
         + "Pass ruleId to read one rule in full, with every trigger, condition and action setting; read a rule "
         + "this way before proposing a change to it. Pass includeReference once before writing or changing any "
         + "rule: it returns how triggers, conditions and actions are written, alongside the rule when ruleId is "
-        + "also given and on its own otherwise.";
+        + "also given and on its own otherwise. Rules come a page at a time; ask for the next page until "
+        + "hasMore is false before concluding that no rule explains something.";
 
     public AiToolKind Kind => AiToolKind.Read;
 
@@ -42,7 +44,9 @@ public sealed class ListAutomationsTool : IAiTool
           "search": { "type": "string", "description": "Optional name fragment to filter rules by." },
           "isEnabled": { "type": "boolean", "description": "Restrict to enabled or disabled rules." },
           "ruleId": { "type": "integer", "description": "Read this one rule in full instead of listing." },
-          "includeReference": { "type": "boolean", "description": "Return the rule-writing reference." }
+          "includeReference": { "type": "boolean", "description": "Return the rule-writing reference." },
+          "page": { "type": "integer", "description": "Which page of rules to return, starting at 1." },
+          "pageSize": { "type": "integer", "description": "How many rules to return per page, up to 100. Defaults to 25." }
         }
         """);
 
@@ -63,12 +67,15 @@ public sealed class ListAutomationsTool : IAiTool
             return AiToolExecution.Success(reference.ToJsonString());
         }
 
+        var requestedPageSize = AiToolSchema.GetInt(arguments, "pageSize") ?? DefaultPageSize;
+        var pageSize = Math.Clamp(requestedPageSize, 1, MaximumPageSize);
+        var page = Math.Max(AiToolSchema.GetInt(arguments, "page") ?? 1, 1);
         var filter = new AutomationRuleFilter
         {
             Search = AiToolSchema.GetString(arguments, "search"),
             IsEnabled = AiToolSchema.GetBool(arguments, "isEnabled"),
-            Page = 1,
-            PageSize = DefaultPageSize,
+            Page = page,
+            PageSize = pageSize,
         };
 
         var result = await Mediator.Send(new GetAutomationRulesPagedQuery(filter), cancellationToken);
@@ -100,7 +107,16 @@ public sealed class ListAutomationsTool : IAiTool
                 },
         });
 
-        return AiToolExecution.Success(JsonSerializer.Serialize(rules));
+        var totalCount = result.Payload.TotalCount;
+        var listing = new
+        {
+            totalCount,
+            page,
+            hasMore = AiToolSchema.HasMore(page, pageSize, totalCount),
+            rules,
+        };
+
+        return AiToolExecution.Success(JsonSerializer.Serialize(listing));
     }
 
     private async Task<AiToolExecution> ReadRule(int ruleId, bool includeReference, CancellationToken cancellationToken)

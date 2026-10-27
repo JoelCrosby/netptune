@@ -43,6 +43,9 @@ public sealed record AiTaskSnapshot
     public int? BoardGroupId { get; init; }
 
     public List<AiTaskPlacementSnapshot> Placements { get; init; } = [];
+
+    // The task as the change left it. Absent on snapshots taken before it was recorded.
+    public AiTaskSnapshot? Applied { get; init; }
 }
 
 public sealed record AiTaskPlacementSnapshot
@@ -50,6 +53,25 @@ public sealed record AiTaskPlacementSnapshot
     public int BoardId { get; init; }
 
     public int BoardGroupId { get; init; }
+}
+
+[Flags]
+internal enum AiTaskFacets
+{
+    None = 0,
+    Name = 1,
+    Description = 2,
+    Status = 4,
+    Assignees = 8,
+    Tags = 16,
+    Priority = 32,
+    Estimate = 64,
+    StartDate = 128,
+    DueDate = 256,
+    Sprint = 512,
+    Placements = 1024,
+    Fields = Name | Description | Status | Assignees | Tags | Priority | Estimate | StartDate | DueDate,
+    All = Fields | Sprint | Placements,
 }
 
 public static class AiTaskUndo
@@ -76,7 +98,130 @@ public static class AiTaskUndo
             return null;
         }
 
-        var snapshot = new AiTaskSnapshot
+        return JsonSerializer.SerializeToDocument(ToSnapshot(task), SerializerOptions);
+    }
+
+    public static async Task<JsonDocument?> CaptureApplied(
+        IMediator mediator,
+        AiChangeApplyContext context,
+        CancellationToken cancellationToken)
+    {
+        var before = Read(context.Change.UndoPayload);
+
+        if (before is null)
+        {
+            return context.Change.UndoPayload;
+        }
+
+        var task = await mediator.Send(new GetTaskQuery(before.TaskId), cancellationToken);
+
+        if (task is null)
+        {
+            return context.Change.UndoPayload;
+        }
+
+        var snapshot = before with { Applied = ToSnapshot(task) };
+
+        return JsonSerializer.SerializeToDocument(snapshot, SerializerOptions);
+    }
+
+    public static async Task<AiAppliedChangeResult> Restore(
+        IMediator mediator,
+        AiChangeUndoContext context,
+        CancellationToken cancellationToken)
+    {
+        var change = context.Change;
+        var snapshot = Read(change.UndoPayload);
+
+        if (snapshot is null)
+        {
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
+        }
+
+        var current = await mediator.Send(new GetTaskQuery(snapshot.TaskId), cancellationToken);
+
+        if (current is null)
+        {
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorTaskCouldNotRestored);
+        }
+
+        var applied = snapshot.Applied;
+        var touched = applied is null ? AiTaskFacets.All : Differences(snapshot, applied);
+
+        if (applied is not null)
+        {
+            var changedSince = Differences(applied, ToSnapshot(current)) & touched;
+
+            if (changedSince != AiTaskFacets.None)
+            {
+                return AiChangePayload.Failure(change, AppText.AiChangeErrorTaskChangedSinceChangeAppliedLeftNow);
+            }
+        }
+
+        var placementError = await RestoreSprintAndPlacements(mediator, snapshot, current, touched, cancellationToken);
+
+        if (placementError is not null)
+        {
+            return AiChangePayload.Failure(change, placementError);
+        }
+
+        var request = CreateRestoreRequest(snapshot, touched);
+
+        if (request is not null)
+        {
+            var response = await mediator.Send(new UpdateTaskCommand(request), cancellationToken);
+
+            if (!response.IsSuccess)
+            {
+                var fieldError = response.Message ?? AppText.AiChangeErrorTaskCouldNotRestored;
+
+                return AiChangePayload.Failure(change, fieldError);
+            }
+        }
+
+        return AiChangePayload.Applied(change, snapshot.TaskId);
+    }
+
+    private static AiTaskFacets Differences(AiTaskSnapshot left, AiTaskSnapshot right)
+    {
+        var facets = AiTaskFacets.None;
+
+        facets |= Differs(left.Name != right.Name, AiTaskFacets.Name);
+        facets |= Differs(left.Description != right.Description, AiTaskFacets.Description);
+        facets |= Differs(left.StatusId != right.StatusId, AiTaskFacets.Status);
+        facets |= Differs(!SameSet(left.AssigneeIds, right.AssigneeIds), AiTaskFacets.Assignees);
+        facets |= Differs(!SameSet(left.Tags, right.Tags), AiTaskFacets.Tags);
+        facets |= Differs(left.Priority != right.Priority, AiTaskFacets.Priority);
+
+        var estimateDiffers = left.EstimateType != right.EstimateType || left.EstimateValue != right.EstimateValue;
+
+        facets |= Differs(estimateDiffers, AiTaskFacets.Estimate);
+        facets |= Differs(left.StartDate != right.StartDate, AiTaskFacets.StartDate);
+        facets |= Differs(left.DueDate != right.DueDate, AiTaskFacets.DueDate);
+        facets |= Differs(left.SprintId != right.SprintId, AiTaskFacets.Sprint);
+        facets |= Differs(!SamePlacements(left.Placements, right.Placements), AiTaskFacets.Placements);
+
+        return facets;
+    }
+
+    private static AiTaskFacets Differs(bool differs, AiTaskFacets facet)
+    {
+        return differs ? facet : AiTaskFacets.None;
+    }
+
+    private static bool SameSet(List<string> left, List<string> right)
+    {
+        return left.ToHashSet(StringComparer.Ordinal).SetEquals(right);
+    }
+
+    private static bool SamePlacements(List<AiTaskPlacementSnapshot> left, List<AiTaskPlacementSnapshot> right)
+    {
+        return left.ToHashSet().SetEquals(right);
+    }
+
+    private static AiTaskSnapshot ToSnapshot(TaskViewModel task)
+    {
+        return new AiTaskSnapshot
         {
             TaskId = task.Id,
             Name = task.Name,
@@ -97,67 +242,72 @@ public static class AiTaskUndo
                 BoardGroupId = placement.BoardGroupId,
             }),
         };
-
-        return JsonSerializer.SerializeToDocument(snapshot, SerializerOptions);
     }
 
-    public static async Task<AiAppliedChangeResult> Restore(
+    // Moving a task between board groups can set its status from the group, so the fields go back
+    // after the placements, or the move would overwrite the status just restored.
+    private static async Task<string?> RestoreSprintAndPlacements(
         IMediator mediator,
-        AiChangeUndoContext context,
+        AiTaskSnapshot snapshot,
+        TaskViewModel current,
+        AiTaskFacets touched,
         CancellationToken cancellationToken)
     {
-        var change = context.Change;
-        var snapshot = Read(change.UndoPayload);
-
-        if (snapshot is null)
+        if (touched.HasFlag(AiTaskFacets.Sprint))
         {
-            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
+            var sprintError = await RestoreSprint(mediator, snapshot, current.SprintId, cancellationToken);
+
+            if (sprintError is not null)
+            {
+                return sprintError;
+            }
         }
 
+        if (touched.HasFlag(AiTaskFacets.Placements))
+        {
+            return await RestorePlacements(mediator, snapshot, current, cancellationToken);
+        }
+
+        return null;
+    }
+
+    private static UpdateProjectTaskRequest? CreateRestoreRequest(AiTaskSnapshot snapshot, AiTaskFacets touched)
+    {
+        var restoresFields = (touched & AiTaskFacets.Fields) != AiTaskFacets.None;
+
+        if (!restoresFields)
+        {
+            return null;
+        }
+
+        var restoresPriority = touched.HasFlag(AiTaskFacets.Priority);
+        var restoresEstimate = touched.HasFlag(AiTaskFacets.Estimate);
         var request = new UpdateProjectTaskRequest
         {
             Id = snapshot.TaskId,
-            Name = snapshot.Name,
-            Description = snapshot.Description ?? string.Empty,
-            StatusId = snapshot.StatusId,
-            AssigneeIds = snapshot.AssigneeIds,
-            Tags = snapshot.Tags,
-            Priority = snapshot.Priority,
-            EstimateType = snapshot.EstimateType,
-            EstimateValue = snapshot.EstimateValue,
-            StartDate = snapshot.StartDate,
-            DueDate = snapshot.DueDate,
+            Name = touched.HasFlag(AiTaskFacets.Name) ? snapshot.Name : null,
+            Description = touched.HasFlag(AiTaskFacets.Description) ? snapshot.Description ?? string.Empty : null,
+            StatusId = touched.HasFlag(AiTaskFacets.Status) ? snapshot.StatusId : null,
+            AssigneeIds = touched.HasFlag(AiTaskFacets.Assignees) ? snapshot.AssigneeIds : null,
+            Tags = touched.HasFlag(AiTaskFacets.Tags) ? snapshot.Tags : null,
+            Priority = restoresPriority ? snapshot.Priority : null,
+            ClearPriority = restoresPriority && snapshot.Priority is null,
+            EstimateType = restoresEstimate ? snapshot.EstimateType : null,
+            EstimateValue = restoresEstimate ? snapshot.EstimateValue : null,
+            ClearEstimate = restoresEstimate && snapshot.EstimateType is null && snapshot.EstimateValue is null,
         };
 
-        var response = await mediator.Send(new UpdateTaskCommand(request), cancellationToken);
-
-        if (!response.IsSuccess)
+        if (touched.HasFlag(AiTaskFacets.StartDate))
         {
-            return AiChangeUndoResult.Failure(change, response.Message ?? AppText.AiChangeErrorTaskCouldNotRestored);
+            request.StartDate = snapshot.StartDate;
         }
 
-        var current = await mediator.Send(new GetTaskQuery(snapshot.TaskId), cancellationToken);
-
-        if (current is null)
+        if (touched.HasFlag(AiTaskFacets.DueDate))
         {
-            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorTaskCouldNotReadBackAfterRestoring);
+            request.DueDate = snapshot.DueDate;
         }
 
-        var sprintError = await RestoreSprint(mediator, snapshot, current.SprintId, cancellationToken);
-
-        if (sprintError is not null)
-        {
-            return AiChangeUndoResult.Failure(change, sprintError);
-        }
-
-        var groupError = await RestorePlacements(mediator, snapshot, current, cancellationToken);
-
-        if (groupError is not null)
-        {
-            return AiChangeUndoResult.Failure(change, groupError);
-        }
-
-        return AiChangeUndoResult.Undone(change, snapshot.TaskId);
+        return request;
     }
 
     private static async Task<string?> RestoreSprint(

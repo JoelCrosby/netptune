@@ -53,12 +53,17 @@ public sealed class AssignTaskChangeHandler : IAiChangeHandler, IAiChangeUndoHan
 
     public IReadOnlySet<string> UndoPermissions { get; } = new HashSet<string>(StringComparer.Ordinal)
     {
-        NetptunePermissions.Tasks.Update,
+        NetptunePermissions.Tasks.Reassign,
     };
 
     public Task<JsonDocument?> Capture(AiChangeApplyContext context, CancellationToken cancellationToken)
     {
         return AiTaskUndo.Capture(Mediator, AiChangePayload.ResolveTaskId(context), cancellationToken);
+    }
+
+    public Task<JsonDocument?> CaptureApplied(AiChangeApplyContext context, CancellationToken cancellationToken)
+    {
+        return AiTaskUndo.CaptureApplied(Mediator, context, cancellationToken);
     }
 
     public Task<AiAppliedChangeResult> Revert(AiChangeUndoContext context, CancellationToken cancellationToken)

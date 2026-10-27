@@ -295,6 +295,37 @@ public class UpdateTaskCommandHandlerTests
     }
 
     [Fact]
+    public async Task Update_ShouldClearPriorityAndEstimate_WhenAskedTo()
+    {
+        var request = new UpdateProjectTaskRequest { Id = 42, ClearPriority = true, ClearEstimate = true };
+        var task = BuildTask(TaskPriority.High, EstimateType.StoryPoints, 5);
+        var viewModel = new TaskViewModel { Id = task.Id, Name = task.Name };
+
+        SetupHandlerDependencies(request, task, viewModel);
+
+        await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
+
+        task.Priority.Should().BeNull();
+        task.EstimateType.Should().BeNull();
+        task.EstimateValue.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Update_ShouldKeepPriorityAndEstimate_WhenTheyAreLeftOut()
+    {
+        var request = new UpdateProjectTaskRequest { Id = 42 };
+        var task = BuildTask(TaskPriority.High, EstimateType.StoryPoints, 5);
+        var viewModel = new TaskViewModel { Id = task.Id, Name = task.Name };
+
+        SetupHandlerDependencies(request, task, viewModel);
+
+        await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
+
+        task.Priority.Should().Be(TaskPriority.High);
+        task.EstimateValue.Should().Be(5);
+    }
+
+    [Fact]
     public async Task Update_ShouldClearDueDate_WhenFieldIsExplicitlyNull()
     {
         var request = new UpdateProjectTaskRequest { Id = 42, Name = "Task", DueDate = null };

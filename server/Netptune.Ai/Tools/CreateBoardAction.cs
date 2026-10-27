@@ -3,6 +3,7 @@ using System.Text.Json;
 using Mediator;
 
 using Netptune.Core.Authorization;
+using Netptune.Core.Encoding;
 using Netptune.Core.Enums;
 using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
@@ -29,7 +30,7 @@ public sealed class CreateBoardAction : IAiToolAction
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
         var name = AiToolSchema.GetString(arguments, "name")?.Trim();
-        var identifier = AiToolSchema.GetString(arguments, "identifier")?.Trim();
+        var identifier = AiToolSchema.GetString(arguments, "identifier")?.Trim().ToUrlSlug();
         var hasName = !string.IsNullOrWhiteSpace(name);
         var hasIdentifier = !string.IsNullOrWhiteSpace(identifier);
 

@@ -52,8 +52,6 @@ public static class AiAutomationJson
         return element.Deserialize<AutomationRuleRequest>(Options)!;
     }
 
-    // Shapes a request the way the rule will read back once saved, so a proposal can be compared with the
-    // rule it is about to replace or has replaced.
     public static AutomationRuleRequest Normalize(
         AutomationRuleRequest request,
         IAutomationActionRegistry actionRegistry)

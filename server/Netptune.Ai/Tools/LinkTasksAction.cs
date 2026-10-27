@@ -51,7 +51,9 @@ public sealed class LinkTasksAction : IAiToolAction
             return AiToolExecution.Failed(related.Error);
         }
 
-        var isSameTask = stated.Label == related.Label;
+        var isSameExistingTask = stated.TaskId.HasValue && stated.TaskId == related.TaskId;
+        var isSamePendingTask = stated.RefKey is not null && stated.RefKey == related.RefKey;
+        var isSameTask = isSameExistingTask || isSamePendingTask;
 
         if (isSameTask)
         {
@@ -98,7 +100,8 @@ public sealed class LinkTasksAction : IAiToolAction
         });
 
         return AiToolExecution.Success(
-            $"Proposed linking {source.Label} to {target.Label}. Nothing has been applied yet — the user must review and apply the change.");
+            $"Proposed linking {source.Label} to {target.Label}. "
+            + "Nothing has been applied yet — the user must review and apply the change.");
     }
 
     private async Task<string?> FindViolation(
@@ -114,7 +117,10 @@ public sealed class LinkTasksAction : IAiToolAction
             return null;
         }
 
-        var query = new FindTaskRelationViolationQuery(relation.RelationTypeId!.Value, source.TaskId!.Value, target.TaskId!.Value);
+        var query = new FindTaskRelationViolationQuery(
+            relation.RelationTypeId!.Value,
+            source.TaskId!.Value,
+            target.TaskId!.Value);
 
         return await Mediator.Send(query, cancellationToken);
     }
@@ -202,11 +208,21 @@ public sealed class LinkTasksAction : IAiToolAction
         };
     }
 
-    private sealed record LinkEnd(int? TaskId, string? SystemId, string? RefKey, string Label, string? Error)
+    private sealed record LinkEnd
     {
+        public int? TaskId { get; init; }
+
+        public string? SystemId { get; init; }
+
+        public string? RefKey { get; init; }
+
+        public string Label { get; init; } = string.Empty;
+
+        public string? Error { get; init; }
+
         public static LinkEnd Failed(string error)
         {
-            return new LinkEnd(null, null, null, string.Empty, error);
+            return new LinkEnd { Error = error };
         }
     }
 
@@ -227,7 +243,7 @@ public sealed class LinkTasksAction : IAiToolAction
                 return LinkEnd.Failed(AiPendingReference.Missing(taskRef, "task"));
             }
 
-            return new LinkEnd(null, null, taskRef, pending.Summary, null);
+            return new LinkEnd { RefKey = taskRef, Label = AiPendingReference.ProposedName(pending) };
         }
 
         var taskId = AiToolSchema.GetInt(arguments, idName);
@@ -244,6 +260,6 @@ public sealed class LinkTasksAction : IAiToolAction
             return LinkEnd.Failed($"Task {taskId} was not found in this workspace.");
         }
 
-        return new LinkEnd(task.Id, task.SystemId, null, $"{task.SystemId} · {task.Name}", null);
+        return new LinkEnd { TaskId = task.Id, SystemId = task.SystemId, Label = $"{task.SystemId} · {task.Name}" };
     }
 }

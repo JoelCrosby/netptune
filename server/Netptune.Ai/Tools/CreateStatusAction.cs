@@ -39,7 +39,7 @@ public sealed class CreateStatusAction : IAiToolAction
         }
 
         var rawCategory = AiToolSchema.GetString(arguments, "category");
-        var isKnownCategory = Enum.TryParse<StatusCategory>(rawCategory, true, out var category);
+        var isKnownCategory = AiToolSchema.TryParseEnum<StatusCategory>(rawCategory, out var category);
 
         if (!isKnownCategory)
         {

@@ -51,6 +51,8 @@ public sealed class DeleteRelationTypeAction : IAiToolAction
 
         var fields = new List<AiChangeField> { AiChangeFields.Text("relationType", usage.Name, null) };
 
+        AiUsageFields.Add(fields, usage);
+
         AiToolSchema.AddOptionalField(fields, "reason", AiToolSchema.GetString(arguments, "reason"));
 
         ChangeSet.Add(new AiChangeDraft
@@ -66,6 +68,7 @@ public sealed class DeleteRelationTypeAction : IAiToolAction
 
         return AiToolExecution.Success(
             $"Proposed deleting relation type {usage.Id}. "
-            + "Nothing has been deleted yet — the user must review and apply the change.");
+            + "Nothing has been deleted yet — the user must review and apply the change."
+            + AiUsageFields.Describe(usage));
     }
 }

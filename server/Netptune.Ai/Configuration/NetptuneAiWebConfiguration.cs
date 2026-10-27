@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Ai.Tools;
 using Netptune.Ai.Web;
+using Netptune.Core.Models.Web;
 using Netptune.Core.Services.Ai;
 
 namespace Netptune.Ai.Configuration;
@@ -24,6 +25,7 @@ public static class NetptuneAiWebConfiguration
             })
             .ConfigurePrimaryHttpMessageHandler(CreateGuardedHandler);
 
+        services.AddScoped<AiWebFetchAllowance>();
         services.AddScoped<IAiTool, WebFetchTool>();
         services.AddScoped<IAiTool, ReadWebDocumentTool>();
 
@@ -37,7 +39,9 @@ public static class NetptuneAiWebConfiguration
             {
                 client.Timeout = TimeSpan.FromSeconds(options.TimeoutSeconds);
                 client.DefaultRequestHeaders.Add("User-Agent", UserAgent);
-            });
+                client.MaxResponseContentBufferSize = options.MaxResponseBytes;
+            })
+            .ConfigurePrimaryHttpMessageHandler(CreateGuardedHandler);
 
         services.AddScoped<IAiTool, WebSearchTool>();
 

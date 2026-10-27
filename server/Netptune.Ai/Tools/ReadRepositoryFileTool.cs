@@ -111,7 +111,9 @@ public sealed class ReadRepositoryFileTool : IAiTool
             url = content.WebUrl,
         };
 
-        return AiToolExecution.Success(JsonSerializer.Serialize(read, AiRepositoryRead.JsonOptions), isCutOff);
+        var serialized = JsonSerializer.Serialize(read, AiRepositoryRead.JsonOptions);
+
+        return AiToolExecution.Success(serialized, isCutOff);
     }
 
     private static string[] SplitLines(string text)
@@ -131,6 +133,17 @@ public sealed class ReadRepositoryFileTool : IAiTool
         {
             var line = $"{lineNumber}: {lines[lineNumber - 1].TrimEnd('\r')}\n";
             var exceedsBudget = builder.Length + line.Length > MaxContentCharacters;
+            var isFirstLine = lineNumber == startLine;
+
+            // A single line longer than the budget (minified code, a one-line JSON file) would otherwise
+            // never fit, and the reader would be sent back to the same line forever.
+            if (exceedsBudget && isFirstLine)
+            {
+                builder.Append(line[..MaxContentCharacters]).Append("… (line shortened)\n");
+                lastLineRead = lineNumber;
+
+                break;
+            }
 
             if (exceedsBudget)
             {

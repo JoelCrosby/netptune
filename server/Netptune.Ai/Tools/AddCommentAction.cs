@@ -64,12 +64,14 @@ public sealed class AddCommentAction : IAiToolAction
             return AiToolExecution.Failed($"Task {taskId} was not found in this workspace.");
         }
 
+        var taskName = task?.Name ?? AiPendingReference.ProposedName(pending!);
+
         ChangeSet.Add(new AiChangeDraft
         {
             ToolName = ChangeName,
             EntityType = "task",
             EntityId = task?.Id,
-            Summary = Localized.Format(AppText.AiSummaryAddComment, task?.Name ?? pending!.Summary),
+            Summary = Localized.Format(AppText.AiSummaryAddComment, taskName),
             Fields = [new AiChangeField { Name = "comment", After = comment }],
             Payload = JsonDocument.Parse(arguments.GetRawText()),
             ValidationStatus = AiChangeValidationStatus.Valid,

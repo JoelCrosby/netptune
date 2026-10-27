@@ -21,16 +21,20 @@ internal sealed record AiSprintTarget
     public string? ProjectName { get; init; }
 }
 
-internal sealed record AiSprintTargetResult(AiSprintTarget? Sprint, string? Error)
+internal sealed record AiSprintTargetResult
 {
+    public AiSprintTarget? Sprint { get; init; }
+
+    public string? Error { get; init; }
+
     public static AiSprintTargetResult Found(AiSprintTarget sprint)
     {
-        return new AiSprintTargetResult(sprint, null);
+        return new AiSprintTargetResult { Sprint = sprint };
     }
 
     public static AiSprintTargetResult Failed(string error)
     {
-        return new AiSprintTargetResult(null, error);
+        return new AiSprintTargetResult { Error = error };
     }
 }
 
@@ -42,6 +46,13 @@ internal static class AiSprintTargetLookup
         JsonElement arguments,
         CancellationToken cancellationToken)
     {
+        var conflict = AiPendingReference.Conflict(arguments, "sprintId", "sprintRef");
+
+        if (conflict is not null)
+        {
+            return AiSprintTargetResult.Failed(conflict);
+        }
+
         var sprintRef = AiPendingReference.Read(arguments, "sprintRef");
 
         if (sprintRef is not null)

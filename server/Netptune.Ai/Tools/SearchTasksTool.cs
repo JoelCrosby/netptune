@@ -136,7 +136,7 @@ public sealed class SearchTasksTool : IAiTool
             .OrderBy(task => rankById.GetValueOrDefault(task.Id, int.MaxValue))
             .ToList();
 
-        var pageOfTasks = matched.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+        var pageOfTasks = matched.Skip(AiToolSchema.Skip(page, pageSize)).Take(pageSize).ToList();
         var moreInIndex = candidates.EstimatedTotalHits > candidates.TaskIds.Count;
 
         return Render("relevance", matched.Count, page, pageOfTasks, moreInIndex);

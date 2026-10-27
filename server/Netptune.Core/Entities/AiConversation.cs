@@ -23,6 +23,8 @@ public sealed record AiConversation : WorkspaceEntity<Guid>
 
     public int MessageCount { get; set; }
 
+    public DateTime? TurnClaimedUntil { get; set; }
+
     [JsonIgnore]
     public AppUser User { get; init; } = null!;
 

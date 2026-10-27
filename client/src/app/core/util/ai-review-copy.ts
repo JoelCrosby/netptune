@@ -43,6 +43,7 @@ const errorMessages: Record<string, string> = {
   timed_out: $localize`:Why a stored review failed:The assistant ran out of time.`,
   provider_error: $localize`:Why a stored review failed:The assistant provider returned an error.`,
   unreadable_reply: $localize`:Why a stored review failed:The assistant's reply could not be read.`,
+  output_limit: $localize`:Why a stored review failed:The assistant's reply grew too long and was cut off.`,
 };
 
 export const aiReviewErrorMessage = (

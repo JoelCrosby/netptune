@@ -75,14 +75,14 @@ public sealed class MovePageChangeHandler : IAiChangeHandler, IAiChangeUndoHandl
 
         if (snapshot is null)
         {
-            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
         }
 
         var movedAgain = await WasMovedSinceApply(change, snapshot.PageId, cancellationToken);
 
         if (movedAgain)
         {
-            return AiChangeUndoResult.Failure(change, MovedSinceMessage);
+            return AiChangePayload.Failure(change, MovedSinceMessage);
         }
 
         var request = new MovePageRequest { ParentId = snapshot.ParentId, SortOrder = snapshot.SortOrder };
@@ -90,13 +90,16 @@ public sealed class MovePageChangeHandler : IAiChangeHandler, IAiChangeUndoHandl
 
         if (!response.IsSuccess)
         {
-            return AiChangeUndoResult.Failure(change, response.Message ?? AppText.AiChangeErrorPageCouldNotMovedBack);
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorPageCouldNotMovedBack);
         }
 
-        return AiChangeUndoResult.Undone(change, snapshot.PageId);
+        return AiChangePayload.Applied(change, snapshot.PageId);
     }
 
-    private async Task<bool> WasMovedSinceApply(AiProposedChange change, int pageId, CancellationToken cancellationToken)
+    private async Task<bool> WasMovedSinceApply(
+        AiProposedChange change,
+        int pageId,
+        CancellationToken cancellationToken)
     {
         var payload = change.Payload.RootElement;
         var hasKnownParent = AiChangePayload.ReadString(payload, "parentRef") is null;

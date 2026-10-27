@@ -15,7 +15,7 @@ public sealed class AnthropicModelEffortSource : IAiModelEffortSource
         string apiKey,
         CancellationToken cancellationToken)
     {
-        var client = new AnthropicClient { ApiKey = apiKey, Timeout = RequestTimeout, MaxRetries = 0 };
+        using var client = new AnthropicClient { ApiKey = apiKey, Timeout = RequestTimeout, MaxRetries = 0 };
         var page = await client.Models.List(new ModelListParams { Limit = 1000 }, cancellationToken);
         var efforts = new Dictionary<string, IReadOnlyList<AiEffort>>();
 

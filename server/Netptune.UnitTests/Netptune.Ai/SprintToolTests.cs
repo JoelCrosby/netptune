@@ -29,6 +29,7 @@ public class SprintToolTests
     private const int ProjectId = 3;
 
     private readonly IMediator Mediator = Substitute.For<IMediator>();
+    private readonly List<TaskViewModel> KnownTasks = [];
     private readonly AiChangeSetBuilder ChangeSet = new();
 
     [Fact]
@@ -97,6 +98,26 @@ public class SprintToolTests
         change.EntityId.Should().Be(SprintId);
         change.Fields.Select(field => field.Name).Should().BeEquivalentTo(["goal", "endDate"]);
         change.Fields.Single(field => field.Name == "endDate").Before.Should().Be("2026-07-14");
+    }
+
+    [Fact]
+    public async Task UpdateSprint_ShouldCarryOnlyTheShownFieldsInThePayload()
+    {
+        GivenSprint(CreateSprint());
+
+        var tool = new UpdateSprintAction(Mediator, ChangeSet);
+        var json = $$"""{"sprintId":{{SprintId}},"name":" Sprint 5 ","goal":"","endDate":"2026-07-21"}""";
+        var arguments = Arguments(json);
+        var result = await tool.Execute(arguments, TestContext.Current.CancellationToken);
+
+        result.IsError.Should().BeFalse();
+
+        var payload = ChangeSet.Changes.Single().Payload.RootElement;
+
+        payload.GetProperty("sprintId").GetInt32().Should().Be(SprintId);
+        payload.GetProperty("name").GetString().Should().Be("Sprint 5");
+        payload.GetProperty("endDate").GetString().Should().Be("2026-07-21");
+        payload.TryGetProperty("goal", out _).Should().BeFalse();
     }
 
     [Fact]
@@ -627,9 +648,14 @@ public class SprintToolTests
 
     private void GivenTask(TaskViewModel task)
     {
+        KnownTasks.Add(task);
+
         Mediator
             .Send(Arg.Is<GetTaskQuery>(query => query.Id == task.Id), Arg.Any<CancellationToken>())
             .Returns(task);
+        Mediator
+            .Send(Arg.Any<GetTasksByIdQuery>(), Arg.Any<CancellationToken>())
+            .Returns(call => KnownTasks.Where(known => call.Arg<GetTasksByIdQuery>().Ids.Contains(known.Id)).ToList());
     }
 
     private static SprintDetailViewModel CreateSprint(SprintStatus status = SprintStatus.Planning)

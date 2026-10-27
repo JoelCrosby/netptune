@@ -5,10 +5,12 @@ using System.Text.Json;
 using Microsoft.Extensions.Options;
 
 using Netptune.Ai.Configuration;
+using Netptune.Ai.Web;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
+using Netptune.Core.Repositories;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.UnitOfWork;
@@ -24,6 +26,10 @@ public sealed class AiConversationService : IAiConversationService
 
     private const string StubbedToolResult =
         "[Result omitted to make room in the context window. Call the tool again if you still need it.]";
+
+    private static readonly TimeSpan TurnClaimMargin = TimeSpan.FromMinutes(2);
+
+    private const string EmptyReplyText = "[No reply: this turn was stopped or failed before any text was written.]";
 
     private const int CompactionTargetPercent = 70;
     private const int MaxRecalledQuestions = 5;
@@ -42,6 +48,7 @@ public sealed class AiConversationService : IAiConversationService
     private readonly IAiSpendService Spend;
     private readonly IAiToolRegistry Tools;
     private readonly IAiModelCatalog Models;
+    private readonly AiWebFetchAllowance WebAllowance;
     private readonly AiOptions Options;
 
     public AiConversationService(
@@ -58,8 +65,15 @@ public sealed class AiConversationService : IAiConversationService
         IAiSpendService spend,
         IAiToolRegistry tools,
         IAiModelCatalog models,
+        AiWebFetchAllowance webAllowance,
         IOptions<AiOptions> options)
     {
+        UnitOfWork = unitOfWork;
+        Identity = identity;
+        Protector = protector;
+        Runner = runner;
+        ProviderFactory = providerFactory;
+        PromptBuilder = promptBuilder;
         ChangeSetBuilder = changeSetBuilder;
         Questions = questions;
         Titles = titles;
@@ -67,12 +81,7 @@ public sealed class AiConversationService : IAiConversationService
         Spend = spend;
         Tools = tools;
         Models = models;
-        UnitOfWork = unitOfWork;
-        Identity = identity;
-        Protector = protector;
-        Runner = runner;
-        ProviderFactory = providerFactory;
-        PromptBuilder = promptBuilder;
+        WebAllowance = webAllowance;
         Options = options.Value;
     }
 
@@ -123,7 +132,11 @@ public sealed class AiConversationService : IAiConversationService
         }
 
         var existing = request.ConversationId.HasValue
-            ? await UnitOfWork.AiConversations.GetOwned(request.ConversationId.Value, userId, workspaceId, cancellationToken)
+            ? await UnitOfWork.AiConversations.GetOwned(
+                request.ConversationId.Value,
+                userId,
+                workspaceId,
+                cancellationToken)
             : null;
 
         var conversationMissing = request.ConversationId.HasValue && existing is null;
@@ -134,6 +147,19 @@ public sealed class AiConversationService : IAiConversationService
 
             yield break;
         }
+
+        var turnClaimedUntil = DateTime.UtcNow.Add(Options.TurnTimeout).Add(TurnClaimMargin);
+        var isTurnClaimed = existing is null
+            || await UnitOfWork.AiConversations.TryClaimTurn(existing.Id, turnClaimedUntil, cancellationToken);
+
+        if (!isTurnClaimed)
+        {
+            yield return AiStreamEvent.Failed(AppText.AiErrorTurnAlreadyRunning);
+
+            yield break;
+        }
+
+        await using var turnClaim = new TurnClaim(UnitOfWork.AiConversations, existing?.Id);
 
         var trimmedModel = request.Model?.Trim();
         var requestedModel = string.IsNullOrWhiteSpace(trimmedModel) ? null : trimmedModel;
@@ -156,7 +182,17 @@ public sealed class AiConversationService : IAiConversationService
             text,
             cancellationToken);
 
-        var switchesModel = existing is not null && AiModels.IsSupported(provider, requestedModel);
+        if (existing is null)
+        {
+            conversation.TurnClaimedUntil = turnClaimedUntil;
+            turnClaim.ConversationId = conversation.Id;
+        }
+
+        // A key only works with its own provider, so a request that lands on another provider moves the
+        // conversation there even without naming a model.
+        var switchesProvider = existing is not null && existing.Provider != provider;
+        var isRequestedModelSupported = AiModels.IsSupported(provider, requestedModel);
+        var switchesModel = existing is not null && (switchesProvider || isRequestedModelSupported);
 
         if (switchesModel)
         {
@@ -239,6 +275,11 @@ public sealed class AiConversationService : IAiConversationService
             cancellationToken);
 
         history.Add(userMessage);
+
+        foreach (var message in history.Where(message => message.Role == AiMessageRole.User))
+        {
+            WebAllowance.AllowFromUserText(message.Text);
+        }
 
         var apiKey = Protector.Unprotect(credential.Secret);
         var language = AiLanguage.Describe(request.Locale);
@@ -421,7 +462,7 @@ public sealed class AiConversationService : IAiConversationService
             lines.Add($"change: {change.ToolName}");
         }
 
-        lines.Add($"summary: {change.Summary}");
+        lines.Add($"summary: {Neutralise(change.Summary)}");
 
         AddContextLine(lines, "entity", Describe(change.EntityType, change.EntityId));
 
@@ -481,8 +522,7 @@ public sealed class AiConversationService : IAiConversationService
         var isLong = trimmed.Length > MaxSelectionLength;
         var text = isLong ? trimmed[..MaxSelectionLength] : trimmed;
 
-        // Any closing tag, so selected text can end neither this block nor the <viewing> one around it.
-        var safe = text.Replace("</", "<\u200B/", StringComparison.Ordinal);
+        var safe = Neutralise(text);
         var truncation = isLong ? "\n(the selection was longer; only its start is shown)" : string.Empty;
 
         lines.Add($"selected on the page:\n<selection>\n{safe}\n</selection>{truncation}");
@@ -510,7 +550,13 @@ public sealed class AiConversationService : IAiConversationService
             return;
         }
 
-        lines.Add($"{name}: {value}");
+        lines.Add($"{name}: {Neutralise(value!)}");
+    }
+
+    // Workspace text goes inside tagged blocks, and any closing tag in it could end the block early.
+    private static string Neutralise(string text)
+    {
+        return text.Replace("</", "<\u200B/", StringComparison.Ordinal);
     }
 
     private async Task<List<AiResolvedCredential>> ResolveCredentials(
@@ -532,7 +578,9 @@ public sealed class AiConversationService : IAiConversationService
 
         if (isWorkspaceKey)
         {
-            var workspaceCredential = await UnitOfWork.WorkspaceAiCredentials.GetAsync(credential.Id, cancellationToken: cancellationToken);
+            var workspaceCredential = await UnitOfWork.WorkspaceAiCredentials.GetAsync(
+                credential.Id,
+                cancellationToken: cancellationToken);
 
             if (workspaceCredential is not null)
             {
@@ -542,7 +590,9 @@ public sealed class AiConversationService : IAiConversationService
             return;
         }
 
-        var userCredential = await UnitOfWork.AiCredentials.GetAsync(credential.Id, cancellationToken: cancellationToken);
+        var userCredential = await UnitOfWork.AiCredentials.GetAsync(
+            credential.Id,
+            cancellationToken: cancellationToken);
 
         if (userCredential is not null)
         {
@@ -678,7 +728,7 @@ public sealed class AiConversationService : IAiConversationService
             .Select((content, index) => content.ToChatMessage(messages[index].Role))
             .ToList();
 
-        var history = DropUnansweredToolCalls(replayed);
+        var history = FillEmptyReplies(DropUnansweredToolCalls(replayed));
         var compacted = Compact(history, Options.MaxHistoryCharacters);
         var pending = FindPendingQuestion(messages, contents);
 
@@ -780,6 +830,20 @@ public sealed class AiConversationService : IAiConversationService
         }
 
         return replayable;
+    }
+
+    // A turn stopped or failed before any text is still stored, and providers refuse an assistant message
+    // with nothing in it, which would break every later turn of the conversation.
+    private static List<AiChatMessage> FillEmptyReplies(List<AiChatMessage> history)
+    {
+        return history.ConvertAll(message =>
+        {
+            var isEmptyReply = message.Role == AiMessageRole.Assistant
+                && string.IsNullOrWhiteSpace(message.Text)
+                && message.ToolCalls.Count == 0;
+
+            return isEmptyReply ? message with { Text = EmptyReplyText } : message;
+        });
     }
 
     private static bool IsAnswered(List<AiChatMessage> history, int index)
@@ -1101,7 +1165,10 @@ public sealed class AiConversationService : IAiConversationService
         return changeSet.Id;
     }
 
-    private async Task<string?> Rewind(AiConversation conversation, string replacement, CancellationToken cancellationToken)
+    private async Task<string?> Rewind(
+        AiConversation conversation,
+        string replacement,
+        CancellationToken cancellationToken)
     {
         var messages = await UnitOfWork.AiConversations.GetMessages(conversation.Id, cancellationToken);
         var lastUserMessage = messages.LastOrDefault(message => message.Role == AiMessageRole.User);
@@ -1111,7 +1178,8 @@ public sealed class AiConversationService : IAiConversationService
             return null;
         }
 
-        var original = AiMessageContent.FromJsonDocument(lastUserMessage.Content).ToChatMessage(AiMessageRole.User).Text ?? string.Empty;
+        var lastUserContent = AiMessageContent.FromJsonDocument(lastUserMessage.Content);
+        var original = lastUserContent.ToChatMessage(AiMessageRole.User).Text ?? string.Empty;
         var hasReplacement = replacement.Length > 0;
         var text = hasReplacement ? replacement : original;
 
@@ -1122,6 +1190,10 @@ public sealed class AiConversationService : IAiConversationService
 
         await DiscardPendingChangeSet(conversation, cancellationToken);
 
+        var rewound = messages.Where(message => message.Sequence >= lastUserMessage.Sequence).ToList();
+
+        await KeepBilledUsage(conversation, rewound, cancellationToken);
+
         var removed = await UnitOfWork.AiConversations.RemoveMessagesFrom(
             conversation.Id,
             lastUserMessage.Sequence,
@@ -1130,6 +1202,39 @@ public sealed class AiConversationService : IAiConversationService
         conversation.MessageCount = Math.Max(0, conversation.MessageCount - removed);
 
         return text;
+    }
+
+    // Spend is read from the messages, so the turns a retry throws away move their usage to the ledger
+    // first. The provider was paid for them all the same.
+    private Task KeepBilledUsage(
+        AiConversation conversation,
+        List<AiMessage> rewound,
+        CancellationToken cancellationToken)
+    {
+        var records = rewound
+            .Where(message => message.InputTokens + message.OutputTokens
+                + message.CacheReadTokens + message.CacheCreationTokens > 0)
+            .Select(message => new AiUsageRecord
+            {
+                WorkspaceId = conversation.WorkspaceId,
+                UserId = conversation.UserId,
+                Provider = message.Provider,
+                Model = message.Model,
+                Purpose = AiUsagePurposes.ConversationRetry,
+                InputTokens = message.InputTokens,
+                OutputTokens = message.OutputTokens,
+                CacheReadTokens = message.CacheReadTokens,
+                CacheCreationTokens = message.CacheCreationTokens,
+                CreatedAt = message.CreatedAt,
+            })
+            .ToList();
+
+        if (records.Count == 0)
+        {
+            return Task.CompletedTask;
+        }
+
+        return UnitOfWork.AiUsageRecords.AddRangeAsync(records, cancellationToken);
     }
 
     private async Task DiscardPendingChangeSet(AiConversation conversation, CancellationToken cancellationToken)
@@ -1146,5 +1251,26 @@ public sealed class AiConversationService : IAiConversationService
         }
 
         pending.Status = AiChangeSetStatus.Discarded;
+    }
+
+    private sealed class TurnClaim : IAsyncDisposable
+    {
+        private readonly IAiConversationRepository Conversations;
+
+        public TurnClaim(IAiConversationRepository conversations, Guid? conversationId)
+        {
+            Conversations = conversations;
+            ConversationId = conversationId;
+        }
+
+        public Guid? ConversationId { get; set; }
+
+        public async ValueTask DisposeAsync()
+        {
+            if (ConversationId.HasValue)
+            {
+                await Conversations.ReleaseTurn(ConversationId.Value, CancellationToken.None);
+            }
+        }
     }
 }

@@ -46,6 +46,8 @@ public static class AiReviewErrorCodes
     public const string ProviderError = "provider_error";
 
     public const string UnreadableReply = "unreadable_reply";
+
+    public const string OutputLimit = "output_limit";
 }
 
 public sealed record AiReviewLoadRequest

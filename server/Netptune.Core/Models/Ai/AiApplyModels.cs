@@ -27,6 +27,8 @@ public sealed record AiApplyResult
     public AiChangeSetStatus Status { get; init; }
 
     public List<AiAppliedChangeResult> Results { get; init; } = [];
+
+    public List<string> ChangedScopes { get; init; } = [];
 }
 
 public sealed record AiApplyProgress

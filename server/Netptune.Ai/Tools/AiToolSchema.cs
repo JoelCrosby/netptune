@@ -114,6 +114,19 @@ public static class AiToolSchema
         return parsed ? date : null;
     }
 
+    // A model can ask for any page number, so the arithmetic runs in long rather than wrapping round.
+    public static int Skip(int page, int pageSize)
+    {
+        var skip = (long)(page - 1) * pageSize;
+
+        return (int)Math.Clamp(skip, 0, int.MaxValue);
+    }
+
+    public static bool HasMore(int page, int pageSize, long totalCount)
+    {
+        return (long)page * pageSize < totalCount;
+    }
+
     public static TEnum? GetEnum<TEnum>(JsonElement arguments, string name)
         where TEnum : struct, Enum
     {
@@ -124,9 +137,24 @@ public static class AiToolSchema
             return null;
         }
 
-        var parsed = Enum.TryParse<TEnum>(value, true, out var result);
+        var parsed = TryParseEnum<TEnum>(value, out var result);
 
         return parsed ? result : null;
+    }
+
+    // Enum.TryParse also takes numbers and comma lists, so "99" would become an undefined value, and "1" or
+    // "High, Low" a silent guess at what the model meant. Only a single defined name is accepted.
+    public static bool TryParseEnum<TEnum>(string? raw, out TEnum value)
+        where TEnum : struct, Enum
+    {
+        value = default;
+
+        var trimmed = raw?.Trim();
+        var isName = !string.IsNullOrEmpty(trimmed)
+            && char.IsLetter(trimmed[0])
+            && trimmed.All(char.IsLetterOrDigit);
+
+        return isName && Enum.TryParse(trimmed, true, out value) && Enum.IsDefined(value);
     }
 
     public static bool? GetBool(JsonElement arguments, string name)

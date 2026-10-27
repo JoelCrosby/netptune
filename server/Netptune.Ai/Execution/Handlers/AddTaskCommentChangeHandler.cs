@@ -79,16 +79,16 @@ public sealed class AddTaskCommentChangeHandler : IAiChangeHandler, IAiChangeUnd
 
         if (!commentId.HasValue)
         {
-            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorPostedCommentCouldNotResolved);
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorPostedCommentCouldNotResolved);
         }
 
         var response = await Mediator.Send(new DeleteCommentCommand(commentId.Value), cancellationToken);
 
         if (!response.IsSuccess)
         {
-            return AiChangeUndoResult.Failure(change, response.Message ?? AppText.AiChangeErrorCommentCouldNotRemoved);
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorCommentCouldNotRemoved);
         }
 
-        return AiChangeUndoResult.Undone(change, commentId);
+        return AiChangePayload.Applied(change, commentId);
     }
 }

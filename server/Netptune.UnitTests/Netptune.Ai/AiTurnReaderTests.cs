@@ -75,6 +75,20 @@ public class AiTurnReaderTests
             .Which.Message.Should().Be("The assistant could not reach the provider.");
     }
 
+    [Fact]
+    public async Task Read_ShouldReportAFailure_WhenSomethingInsideTheTurnGivesUpWaiting()
+    {
+        using var timeout = new CancellationTokenSource();
+        using var turn = CancellationTokenSource.CreateLinkedTokenSource(timeout.Token);
+
+        var events = await Drain(Throws(new TaskCanceledException("network timeout")), timeout, turn);
+
+        events.Should().ContainSingle()
+            .Which.Type.Should().Be(
+                AiStreamEventType.Error,
+                "a quiet stop would leave the user staring at an unfinished reply");
+    }
+
     [Theory]
     [InlineData(90, "after 90 seconds")]
     [InlineData(900, "after 15 minutes")]

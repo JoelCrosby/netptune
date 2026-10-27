@@ -33,6 +33,27 @@ public abstract class UnitOfWork<TContext, TDbConnectionFactory> : IUnitOfWork
         }
     }
 
+    public void DiscardUnsavedChanges()
+    {
+        var unsaved = Context.ChangeTracker
+            .Entries()
+            .Where(entry => entry.State is EntityState.Added or EntityState.Modified or EntityState.Deleted)
+            .ToList();
+
+        foreach (var entry in unsaved)
+        {
+            if (entry.State == EntityState.Added)
+            {
+                entry.State = EntityState.Detached;
+
+                continue;
+            }
+
+            entry.CurrentValues.SetValues(entry.OriginalValues);
+            entry.State = EntityState.Unchanged;
+        }
+    }
+
     public async Task Transaction(Func<Task> callback, bool disableChangeDetection = false)
     {
         var strategy = Context.Database.CreateExecutionStrategy();

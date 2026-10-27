@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.Extensions.Options;
 
 using Netptune.Ai.Configuration;
+using Netptune.Core.Models.Web;
 using Netptune.Core.Services.Ai;
 
 namespace Netptune.Ai.Web;
@@ -32,7 +33,25 @@ public sealed class WebContentFetcher : IWebContentFetcher
         Options = options.Value.Web;
     }
 
+    // HttpClient.Timeout stops covering a response once its headers arrive, so the body has to sit under
+    // a deadline of its own or a server that trickles bytes holds the tool open.
     public async Task<WebFetchResult> Fetch(string url, CancellationToken cancellationToken)
+    {
+        using var deadline = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+
+        deadline.CancelAfter(TimeSpan.FromSeconds(Options.TimeoutSeconds));
+
+        try
+        {
+            return await FetchWithin(url, deadline.Token);
+        }
+        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+        {
+            return WebFetchResult.Failed($"{url} did not finish loading within {Options.TimeoutSeconds} seconds.");
+        }
+    }
+
+    private async Task<WebFetchResult> FetchWithin(string url, CancellationToken cancellationToken)
     {
         var isAbsolute = Uri.TryCreate(url, UriKind.Absolute, out var uri);
 
@@ -52,42 +71,40 @@ public sealed class WebContentFetcher : IWebContentFetcher
 
         if (!message.IsSuccessStatusCode)
         {
-            return WebFetchResult.Failed($"{response.FinalUrl} returned {(int)message.StatusCode} {message.StatusCode}.");
+            var status = $"{(int)message.StatusCode} {message.StatusCode}";
+
+            return WebFetchResult.Failed($"{response.FinalUrl} returned {status}.");
         }
 
         var contentType = message.Content.Headers.ContentType?.MediaType;
-        var isReadable = contentType is not null && ReadableContentTypes.Contains(contentType, StringComparer.OrdinalIgnoreCase);
+        var isReadable = contentType is not null
+            && ReadableContentTypes.Contains(contentType, StringComparer.OrdinalIgnoreCase);
 
         if (!isReadable)
         {
-            return WebFetchResult.Failed($"{response.FinalUrl} is {contentType ?? "an unknown type"}, which cannot be read as text.");
+            var described = contentType ?? "an unknown type";
+
+            return WebFetchResult.Failed($"{response.FinalUrl} is {described}, which cannot be read as text.");
         }
 
         var body = await ReadCapped(message, cancellationToken);
         var isHtml = contentType!.Contains("html", StringComparison.OrdinalIgnoreCase);
-
-        if (!isHtml)
-        {
-            return new WebFetchResult
-            {
-                IsSuccess = true,
-                FinalUrl = response.FinalUrl,
-                ContentType = contentType,
-                Content = Cap(body),
-            };
-        }
-
-        var readable = await WebReadableText.Parse(body, cancellationToken);
+        var readable = isHtml ? await WebReadableText.Parse(body.Text, cancellationToken) : null;
+        var text = readable?.Text ?? body.Text;
+        var isOverLength = text.Length > Options.MaxDocumentCharacters;
 
         return new WebFetchResult
         {
             IsSuccess = true,
             FinalUrl = response.FinalUrl,
-            Title = readable.Title,
+            Title = readable?.Title,
             ContentType = contentType,
-            Content = Cap(readable.Text),
+            Content = isOverLength ? text[..Options.MaxDocumentCharacters] : text,
+            IsTruncated = body.IsCut || isOverLength,
         };
     }
+
+    private sealed record ResponseBody(string Text, bool IsCut);
 
     private sealed record FetchResponse
     {
@@ -151,14 +168,15 @@ public sealed class WebContentFetcher : IWebContentFetcher
         return location.IsAbsoluteUri ? location : new Uri(current, location);
     }
 
-    private async Task<string> ReadCapped(HttpResponseMessage message, CancellationToken cancellationToken)
+    private async Task<ResponseBody> ReadCapped(HttpResponseMessage message, CancellationToken cancellationToken)
     {
         await using var stream = await message.Content.ReadAsStreamAsync(cancellationToken);
 
         var buffer = new byte[8192];
         var written = new MemoryStream();
+        var isCut = false;
 
-        while (written.Length < Options.MaxResponseBytes)
+        while (true)
         {
             var read = await stream.ReadAsync(buffer, cancellationToken);
 
@@ -170,20 +188,34 @@ public sealed class WebContentFetcher : IWebContentFetcher
             var allowed = (int)Math.Min(read, Options.MaxResponseBytes - written.Length);
 
             written.Write(buffer, 0, allowed);
+
+            if (allowed < read)
+            {
+                isCut = true;
+
+                break;
+            }
         }
 
-        return Encoding.UTF8.GetString(written.ToArray());
+        var encoding = ReadEncoding(message.Content.Headers.ContentType?.CharSet);
+
+        return new ResponseBody(encoding.GetString(written.ToArray()), isCut);
     }
 
-    private string Cap(string content)
+    private static Encoding ReadEncoding(string? charset)
     {
-        var isWithinLimit = content.Length <= Options.MaxDocumentCharacters;
-
-        if (isWithinLimit)
+        if (string.IsNullOrWhiteSpace(charset))
         {
-            return content;
+            return Encoding.UTF8;
         }
 
-        return content[..Options.MaxDocumentCharacters];
+        try
+        {
+            return Encoding.GetEncoding(charset.Trim('"'));
+        }
+        catch (ArgumentException)
+        {
+            return Encoding.UTF8;
+        }
     }
 }

@@ -2,11 +2,11 @@ using System.Net;
 
 using FluentAssertions;
 
-using Netptune.Ai.Web;
+using Netptune.Core.Models.Web;
 
 using Xunit;
 
-namespace Netptune.UnitTests.Netptune.Ai;
+namespace Netptune.UnitTests.Netptune.Core.Models.Web;
 
 public class WebEgressGuardTests
 {
@@ -24,6 +24,10 @@ public class WebEgressGuardTests
     [InlineData("fd00::1")]
     [InlineData("fe80::1")]
     [InlineData("::ffff:127.0.0.1")]
+    [InlineData("64:ff9b::a9fe:a9fe")]
+    [InlineData("64:ff9b::a00:1")]
+    [InlineData("2002:a9fe:a9fe::1")]
+    [InlineData("2002:7f00:1::1")]
     public void CheckAddress_ShouldBlock_PrivateAndLocalAddresses(string value)
     {
         var verdict = WebEgressGuard.CheckAddress(IPAddress.Parse(value));
@@ -36,6 +40,8 @@ public class WebEgressGuardTests
     [InlineData("8.8.8.8")]
     [InlineData("93.184.216.34")]
     [InlineData("2606:2800:220:1:248:1893:25c8:1946")]
+    [InlineData("64:ff9b::808:808")]
+    [InlineData("2002:808:808::1")]
     public void CheckAddress_ShouldAllow_PublicAddresses(string value)
     {
         var verdict = WebEgressGuard.CheckAddress(IPAddress.Parse(value));

@@ -46,9 +46,18 @@ public static class AiReviewPrompt
         + "on how ready the item is. title is a short phrase; explanation says why it matters; quote is the passage "
         + "the finding is about, copied exactly, or null.";
 
+    private const string NeutralisedTagClose = "<\u200B/";
+
     public static string Neutralise(string value)
     {
-        return value.Replace("</", "<​/", StringComparison.Ordinal);
+        return value.Replace("</", NeutralisedTagClose, StringComparison.Ordinal);
+    }
+
+    // The model copies passages back as it saw them, zero-width spaces and all, so they are taken out
+    // again before being matched against or written into the real text.
+    public static string? Restore(string? value)
+    {
+        return value?.Replace(NeutralisedTagClose, "</", StringComparison.Ordinal);
     }
 
     public static string Truncate(string value, int maxLength)

@@ -152,10 +152,6 @@ Please confirm your email address with the following link.</value>
     <value>The task could not be restored.</value>
     <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
   </data>
-  <data name="AiChangeErrorTaskCouldNotReadBackAfterRestoring" xml:space="preserve">
-    <value>The task could not be read back after restoring it.</value>
-    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
-  </data>
   <data name="AiChangeErrorTaskCouldNotPutBackSprint" xml:space="preserve">
     <value>The task could not be put back in its sprint.</value>
     <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
@@ -312,10 +308,6 @@ Please confirm your email address with the following link.</value>
     <value>The task could not be created.</value>
     <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
   </data>
-  <data name="AiChangeErrorTaskCreatedButTagsCouldNotSet" xml:space="preserve">
-    <value>The task was created but its tags could not be set.</value>
-    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
-  </data>
   <data name="AiChangeErrorCreatedTaskCouldNotResolved" xml:space="preserve">
     <value>The created task could not be resolved.</value>
     <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
@@ -446,10 +438,6 @@ Please confirm your email address with the following link.</value>
   </data>
   <data name="AiChangeErrorGroupOrderMissingChange" xml:space="preserve">
     <value>The group order is missing from this change.</value>
-    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
-  </data>
-  <data name="AiChangeErrorGroupsBoardChangedSinceOrderProposed" xml:space="preserve">
-    <value>The groups on this board have changed since the order was proposed.</value>
     <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
   </data>
   <data name="AiChangeErrorGroupsCouldNotReordered" xml:space="preserve">
@@ -2523,5 +2511,61 @@ Please confirm your email address with the following link.</value>
   <data name="AuditReviewFindingReopened" xml:space="preserve">
     <value>Reopened review finding “{0}”</value>
     <comment>Audit log summary of reopening a review finding. {0} is the finding's title</comment>
+  </data>
+  <data name="ErrorEndpointMustBePublic" xml:space="preserve">
+    <value>Endpoint must be a public address, not a private or local one.</value>
+    <comment>Error shown when a web search endpoint points at a private network address or local host name</comment>
+  </data>
+  <data name="AiChangeErrorChangeSetBusy" xml:space="preserve">
+    <value>These changes are already being applied, retried or undone. Wait for that to finish and try again.</value>
+    <comment>Error shown when an assistant change set is applied, retried or undone while another request is already working on it</comment>
+  </data>
+  <data name="AiChangeErrorTaskChangedSinceChangeAppliedLeftNow" xml:space="preserve">
+    <value>The task has been changed since this change was applied, so it was left as it is now.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorChangeFailedUnexpectedly" xml:space="preserve">
+    <value>Something went wrong while applying this change, so it was not applied.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="AiChangeErrorUndoFailedUnexpectedly" xml:space="preserve">
+    <value>Something went wrong while undoing this change, so it was left in place.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change</comment>
+  </data>
+  <data name="ErrorBoardGroupOrderMustListEveryGroup" xml:space="preserve">
+    <value>The new order must list every group on the board exactly once.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="AiReviewTagsNoLongerExist" xml:space="preserve">
+    <value>These tags no longer exist, so they could not be added: {0}.</value>
+    <comment>Shown when accepting a review suggestion names tags that were deleted after the review. {0} is the list of tag names</comment>
+  </data>
+  <data name="AiErrorTurnAlreadyRunning" xml:space="preserve">
+    <value>The assistant is still replying in this conversation. Wait for it to finish, or stop it, then try again.</value>
+    <comment>Shown when a message is sent to an assistant conversation that is still working on the previous one</comment>
+  </data>
+  <data name="AiErrorReplyHitOutputLimit" xml:space="preserve">
+    <value>The reply was cut off because it reached the longest reply the assistant can give. Ask for something shorter, or split the request up.</value>
+    <comment>Shown when an assistant reply stops because it used up the output token limit</comment>
+  </data>
+  <data name="AiErrorProviderStoppedResponding" xml:space="preserve">
+    <value>The provider stopped responding. Try again.</value>
+    <comment>Shown when the AI provider's connection goes quiet for too long during a reply</comment>
+  </data>
+  <data name="AiReviewHitOutputLimit" xml:space="preserve">
+    <value>The review was cut off because the assistant's reply grew too long. Try again.</value>
+    <comment>Shown when an assistant task review stops because it used up the output token limit</comment>
+  </data>
+  <data name="AiChangeErrorNotStatusCategory" xml:space="preserve">
+    <value>“{0}” is not a status category.</value>
+    <comment>Shown when the assistant cannot apply, undo or edit a change. {0} is the value entered</comment>
+  </data>
+  <data name="AiErrorInlineWriteTimedOut" xml:space="preserve">
+    <value>The assistant ran out of time. Try again, or ask for something shorter.</value>
+    <comment>Shown when an inline assistant write in a task description or page takes too long</comment>
+  </data>
+  <data name="AiReviewSubjectNotSupported" xml:space="preserve">
+    <value>This kind of item cannot be reviewed by the assistant.</value>
+    <comment>Shown when an assistant review is asked for on something the review feature does not cover</comment>
   </data>
 </root>

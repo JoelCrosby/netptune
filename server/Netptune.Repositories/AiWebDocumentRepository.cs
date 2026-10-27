@@ -16,7 +16,9 @@ public class AiWebDocumentRepository(DataContext context, IDbConnectionFactory c
         return Entities
             .AsNoTracking()
             .FirstOrDefaultAsync(
-                document => document.Id == id && document.WorkspaceId == workspaceId,
+                document => document.Id == id
+                    && document.WorkspaceId == workspaceId
+                    && document.ExpiresAt > DateTime.UtcNow,
                 cancellationToken);
     }
 

@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Ai.Tools;
 using Netptune.Core.Enums;
 using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
@@ -29,7 +30,7 @@ public sealed class CreateStatusChangeHandler : IAiChangeHandler
         var name = AiChangePayload.ReadString(payload, "name");
         var rawCategory = AiChangePayload.ReadString(payload, "category");
         var hasName = !string.IsNullOrWhiteSpace(name);
-        var isKnownCategory = Enum.TryParse<StatusCategory>(rawCategory, true, out var category);
+        var isKnownCategory = AiToolSchema.TryParseEnum<StatusCategory>(rawCategory, out var category);
 
         if (!hasName || !isKnownCategory)
         {

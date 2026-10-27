@@ -208,7 +208,7 @@ public sealed class UpdatePageDetailsAction : IAiToolAction
             return new TagsResult(requested, null, null);
         }
 
-        var unknownError = await AiTagVocabulary.FindUnknown(Mediator, ChangeSet, requested, cancellationToken);
+        var unknownError = await AiTagVocabulary.FindUnknown(Mediator, ChangeSet, requested, null, cancellationToken);
 
         if (unknownError is not null)
         {

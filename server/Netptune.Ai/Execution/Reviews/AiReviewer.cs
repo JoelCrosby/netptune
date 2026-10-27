@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 
+using Netptune.Ai.Providers;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
@@ -15,8 +16,7 @@ namespace Netptune.Ai.Execution.Reviews;
 
 public sealed class AiReviewer : IAiReviewer
 {
-    private const int MaximumOutputTokens = 6_000;
-    private const int EstimatedCharactersPerToken = 4;
+    private const int MaximumOutputTokens = 32_000;
     private const int ProgressEveryCharacters = 200;
 
     private static readonly TimeSpan Timeout = TimeSpan.FromMinutes(3);
@@ -55,7 +55,7 @@ public sealed class AiReviewer : IAiReviewer
 
         if (!hasSource)
         {
-            yield return AiReviewStreamEvent.Failed(AppText.AiErrorNoPermissionToReview);
+            yield return AiReviewStreamEvent.Failed(AppText.AiReviewSubjectNotSupported);
 
             yield break;
         }
@@ -176,7 +176,7 @@ public sealed class AiReviewer : IAiReviewer
         }
         finally
         {
-            await BookUsage(origin, credential, chatRequest, outcome);
+            await BookUsage(origin, credential, chatRequest, outcome, cancellation.IsCancellationRequested);
         }
 
         var run = new RunRecord
@@ -195,7 +195,7 @@ public sealed class AiReviewer : IAiReviewer
         if (failureCode is not null)
         {
             var failedRun = await StoreFailedRun(run, failureCode);
-            var message = outcome.Failure ?? AppText.AiReviewUnreadable;
+            var message = DescribeFailure(failureCode, outcome);
 
             yield return AiReviewStreamEvent.Failed(message, failedRun.Id);
 
@@ -233,9 +233,28 @@ public sealed class AiReviewer : IAiReviewer
             return AiReviewErrorCodes.ProviderError;
         }
 
-        var isEmpty = string.IsNullOrWhiteSpace(outcome.Turn!.Text);
+        var hitOutputLimit = AiFinishReasons.IsOutputLimit(outcome.Turn!.FinishReason);
+
+        if (hitOutputLimit)
+        {
+            return AiReviewErrorCodes.OutputLimit;
+        }
+
+        var isEmpty = string.IsNullOrWhiteSpace(outcome.Turn.Text);
 
         return isEmpty ? AiReviewErrorCodes.UnreadableReply : null;
+    }
+
+    private static string DescribeFailure(string failureCode, ReviewOutcome outcome)
+    {
+        if (outcome.Failure is not null)
+        {
+            return outcome.Failure;
+        }
+
+        var hitOutputLimit = failureCode == AiReviewErrorCodes.OutputLimit;
+
+        return hitOutputLimit ? AppText.AiReviewHitOutputLimit : AppText.AiReviewUnreadable;
     }
 
     private async Task<AiReviewRun> StoreFailedRun(RunRecord record, string errorCode)
@@ -381,37 +400,23 @@ public sealed class AiReviewer : IAiReviewer
         AiUsageOrigin origin,
         AiResolvedCredential credential,
         AiChatRequest request,
-        ReviewOutcome outcome)
+        ReviewOutcome outcome,
+        bool wasInterrupted)
     {
-        var wasBilled = outcome.Turn is not null || outcome.Characters > 0;
+        // A call stopped or timed out was still sent and paid for, even if the model was thinking and had
+        // not written anything yet.
+        var wasBilled = outcome.Turn is not null || outcome.Characters > 0 || wasInterrupted;
 
         if (!wasBilled)
         {
             return;
         }
 
-        var usage = outcome.Turn?.Usage ?? EstimateUsage(request, outcome.Characters);
+        var usage = outcome.Turn?.Usage ?? AiUsageEstimate.For(request, outcome.Characters);
 
         await AiUsageRecorder.Record(UnitOfWork, origin, credential, request.Model, usage, CancellationToken.None);
         await AiHandlerCredentials.MarkUsed(UnitOfWork, credential, CancellationToken.None);
         await UnitOfWork.CompleteAsync(CancellationToken.None);
-    }
-
-    // Providers report usage only with the finished reply, so a reply cut short is booked from its length.
-    private static AiUsage EstimateUsage(AiChatRequest request, int streamedCharacters)
-    {
-        var promptCharacters = request.SystemPrompt.Length + request.Messages.Sum(message => message.PromptText.Length);
-
-        return new AiUsage
-        {
-            InputTokens = TokensFor(promptCharacters),
-            OutputTokens = TokensFor(streamedCharacters),
-        };
-    }
-
-    private static int TokensFor(int characters)
-    {
-        return (characters + EstimatedCharactersPerToken - 1) / EstimatedCharactersPerToken;
     }
 
     private static async IAsyncEnumerable<AiStreamEvent> StreamReply(

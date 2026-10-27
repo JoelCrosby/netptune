@@ -108,6 +108,17 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
             result.EstimateType = req.EstimateType ?? result.EstimateType;
             result.EstimateValue = req.EstimateValue ?? result.EstimateValue;
 
+            if (req.ClearPriority)
+            {
+                result.Priority = null;
+            }
+
+            if (req.ClearEstimate)
+            {
+                result.EstimateType = null;
+                result.EstimateValue = null;
+            }
+
             if (req.StartDateSpecified)
             {
                 result.StartDate = req.StartDate;

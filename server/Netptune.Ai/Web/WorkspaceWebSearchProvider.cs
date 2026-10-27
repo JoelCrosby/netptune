@@ -36,8 +36,6 @@ public sealed class WorkspaceWebSearchProvider : IWebSearchProvider
         Options = options.Value.Web;
     }
 
-    public bool IsConfigured => true;
-
     public async Task<WebSearchResult> Search(string query, int take, CancellationToken cancellationToken)
     {
         var workspaceId = await Identity.GetWorkspaceId();
@@ -56,10 +54,11 @@ public sealed class WorkspaceWebSearchProvider : IWebSearchProvider
             return WebSearchResult.Failed($"Search provider {stored.Provider} is not supported.");
         }
 
+        var apiKey = stored.Secret is null ? null : Protector.Unprotect(stored.Secret);
         var credential = new WebSearchCredential
         {
             Provider = stored.Provider,
-            ApiKey = stored.Secret is null ? null : Protector.Unprotect(stored.Secret),
+            ApiKey = apiKey,
             EngineId = stored.EngineId,
             Endpoint = stored.Endpoint,
         };

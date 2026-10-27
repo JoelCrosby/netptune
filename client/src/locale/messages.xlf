@@ -166,6 +166,15 @@
         <source>Save Scopes</source>
       </segment>
     </unit>
+    <unit id="8108345608551575938">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:68</note>
+        <note category="description">Field of a proposed deletion, the automation rules that still use what is deleted</note>
+      </notes>
+      <segment>
+        <source>Used by automation rules</source>
+      </segment>
+    </unit>
     <unit id="810888510148304696">
       <notes>
         <note category="location">src/app/core/services/ai-effort.service.ts:62</note>
@@ -10352,6 +10361,15 @@
         <source>No headings yet</source>
       </segment>
     </unit>
+    <unit id="2409067150743120530">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:66</note>
+        <note category="description">Field of a proposed deletion, the projects that still use what is deleted</note>
+      </notes>
+      <segment>
+        <source>Used by projects</source>
+      </segment>
+    </unit>
     <unit id="2409078062655081027">
       <notes>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:192,194</note>
@@ -19104,6 +19122,15 @@
         <source>is any of</source>
       </segment>
     </unit>
+    <unit id="2198766149366659339">
+      <notes>
+        <note category="location">src/app/core/util/ai-review-copy.ts:46</note>
+        <note category="description">Why a stored review failed</note>
+      </notes>
+      <segment>
+        <source>The assistant&apos;s reply grew too long and was cut off.</source>
+      </segment>
+    </unit>
     <unit id="2501989539336327542">
       <notes>
         <note category="location">src/app/static/components/image-upload/image-upload.component.ts:80,83</note>
@@ -23577,6 +23604,15 @@
         <source>Subheading</source>
       </segment>
     </unit>
+    <unit id="6786213560065674282">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:67</note>
+        <note category="description">Field of a proposed deletion, the board groups that still use what is deleted</note>
+      </notes>
+      <segment>
+        <source>Used by board groups</source>
+      </segment>
+    </unit>
     <unit id="6787085006953793000">
       <notes>
         <note category="location">src/app/static/components/save-status/save-status.component.ts:67</note>
@@ -23663,7 +23699,7 @@
     <unit id="4021752662928002901">
       <notes>
         <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:126</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:267</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:270</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:43</note>
         <note category="description">Counts records an import would update</note>
       </notes>
@@ -24870,7 +24906,7 @@
         <note category="location">src/app/features/sprints/components/sprint-overview.component.ts:189</note>
         <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:44</note>
         <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:123</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:250</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:253</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:675</note>
         <note category="description">Heading above the newly created tasks leaving a sprint</note>
       </notes>
@@ -27974,7 +28010,7 @@
     </unit>
     <unit id="3504265772843656006">
       <notes>
-        <note category="location">src/app/core/util/ai-review-copy.ts:51</note>
+        <note category="location">src/app/core/util/ai-review-copy.ts:52</note>
         <note category="description">Why a stored review failed, when the reason is unknown</note>
       </notes>
       <segment>

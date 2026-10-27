@@ -45,6 +45,21 @@ public class RepositoryToolsTests
     }
 
     [Fact]
+    public async Task ReadFile_ShouldShortenALineLongerThanTheBudget_RatherThanPointBackAtIt()
+    {
+        GivenFile(new string('x', 40_000) + "\nsecond line\n");
+
+        var tool = new ReadRepositoryFileTool(Reader, Identity);
+        var result = await Execute(tool, """{"repository":"acme/api","path":"bundle.min.js"}""");
+        using var content = JsonDocument.Parse(result.Content);
+        var root = content.RootElement;
+
+        root.GetProperty("content").GetString().Should().Contain("line shortened");
+        root.GetProperty("endLine").GetInt32().Should().Be(1);
+        root.GetProperty("continueFromLine").GetInt32().Should().Be(2);
+    }
+
+    [Fact]
     public async Task ReadFile_ShouldSayWhereToContinueWhenALongFileIsCutOff()
     {
         var longLine = new string('x', 1_000);

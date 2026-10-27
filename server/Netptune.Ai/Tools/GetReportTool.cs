@@ -124,6 +124,14 @@ public sealed class GetReportTool : IAiTool
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
         var report = AiToolSchema.GetString(arguments, "kind");
+        var rawUnit = AiToolSchema.GetString(arguments, "unit");
+        var hasUnknownUnit = !string.IsNullOrWhiteSpace(rawUnit)
+            && AiToolSchema.GetEnum<ReportingUnit>(arguments, "unit") is null;
+
+        if (hasUnknownUnit)
+        {
+            return AiToolExecution.Failed($"unit must be one of: {string.Join(", ", Enum.GetNames<ReportingUnit>())}.");
+        }
 
         return report switch
         {
@@ -164,6 +172,7 @@ public sealed class GetReportTool : IAiTool
             historyStart = report.HistoryStart,
             hasEarlierHistory,
             throughput = report.Throughput,
+            unit = filter.Unit.ToString(),
             unitNote = DescribeUnit(filter.Unit),
             cycleTime = FlowCycleTime,
             medianCycleTimeHours = report.MedianCycleTimeHours,

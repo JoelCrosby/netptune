@@ -63,6 +63,30 @@ public class GetTaskToolTests
     }
 
     [Fact]
+    public async Task Execute_ShouldFitALongThreadIntoTheBudget_AndSayHowManyWereLeftOut()
+    {
+        GivenTask();
+
+        var comments = Enumerable.Range(1, 50)
+            .Select(id => new CommentViewModel { Id = id, Body = new string('x', 10_000), UserDisplayName = "Joel" })
+            .ToList();
+
+        Mediator
+            .Send(Arg.Any<GetCommentsForTaskQuery>(), Arg.Any<CancellationToken>())
+            .Returns(comments);
+
+        var result = await Execute($$"""{"systemId":"{{SystemId}}","include":["comments"]}""");
+
+        using var content = JsonDocument.Parse(result.Content);
+        var root = content.RootElement;
+
+        result.Content.Length.Should().BeLessThan(32_000);
+        root.GetProperty("commentsOmitted").GetInt32().Should().BePositive();
+        root.GetProperty("comments").EnumerateArray().First().GetProperty("body").GetString()
+            .Should().EndWith("(comment shortened)");
+    }
+
+    [Fact]
     public async Task Execute_ShouldFail_WhenAnIncludeIsUnknown()
     {
         var result = await Execute($$"""{"systemId":"{{SystemId}}","include":["history"]}""");

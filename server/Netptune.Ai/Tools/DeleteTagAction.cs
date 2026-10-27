@@ -67,7 +67,7 @@ public sealed class DeleteTagAction : IAiToolAction
         });
 
         return AiToolExecution.Success(
-            $"Proposed deleting tag {tag.Id}. "
+            $"Proposed deleting tag {tag.Id}. It also comes off every page that uses it. "
             + "Nothing has been deleted yet — the user must review and apply the change.");
     }
 }

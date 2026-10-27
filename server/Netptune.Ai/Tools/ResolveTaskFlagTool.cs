@@ -60,7 +60,7 @@ public sealed class ResolveTaskFlagTool : IAiTool
         }
 
         var raw = AiToolSchema.GetString(arguments, "resolution");
-        var isParsed = Enum.TryParse<FlagResolutionType>(raw, true, out var resolution);
+        var isParsed = AiToolSchema.TryParseEnum<FlagResolutionType>(raw, out var resolution);
 
         if (!isParsed)
         {

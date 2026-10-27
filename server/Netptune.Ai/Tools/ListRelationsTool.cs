@@ -106,16 +106,18 @@ public sealed class ListRelationsTool : IAiTool
             relations.AddRange(summaries);
         }
 
+        var fitted = AiResultBudget.Fit(relations);
         var summary = new
         {
             totalCount,
-            returnedCount = relations.Count,
-            relations,
+            returnedCount = fitted.Rows.Count,
+            omittedForSize = fitted.Omitted > 0 ? fitted.Omitted : (int?)null,
+            relations = fitted.Rows,
         };
 
         var content = JsonSerializer.Serialize(summary);
 
-        return AiToolExecution.Success(content);
+        return AiToolExecution.Success(content, fitted.Omitted > 0);
     }
 
     private sealed record RelationTypeSelection
@@ -137,7 +139,9 @@ public sealed class ListRelationsTool : IAiTool
 
             if (byId is null)
             {
-                return new RelationTypeSelection { Error = $"Relation type {relationTypeId} is not in this workspace." };
+                var missing = $"Relation type {relationTypeId} is not in this workspace.";
+
+                return new RelationTypeSelection { Error = missing };
             }
 
             return new RelationTypeSelection { RelationTypes = [byId] };
@@ -151,10 +155,7 @@ public sealed class ListRelationsTool : IAiTool
             return new RelationTypeSelection { RelationTypes = relationTypes };
         }
 
-        var byName = relationTypes.FirstOrDefault(relationType =>
-            string.Equals(relationType.Name, name, StringComparison.OrdinalIgnoreCase)
-            || string.Equals(relationType.Key, name, StringComparison.OrdinalIgnoreCase)
-            || string.Equals(relationType.InverseName, name, StringComparison.OrdinalIgnoreCase));
+        var byName = AiRelationTypeLookup.Match(relationTypes, name!)?.RelationType;
 
         if (byName is null)
         {

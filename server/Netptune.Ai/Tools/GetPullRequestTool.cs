@@ -8,6 +8,7 @@ namespace Netptune.Ai.Tools;
 
 public sealed class GetPullRequestTool : IAiTool
 {
+    private const int MaxBodyCharacters = 6_000;
     private const int MaxPatchCharacters = 3_000;
 
     private readonly ISourceControlReader Reader;
@@ -78,13 +79,15 @@ public sealed class GetPullRequestTool : IAiTool
             patch = Shorten(file.Patch),
         });
 
-        var fittedFiles = AiResultBudget.Fit(files, AiRepositoryRead.JsonOptions);
+        var body = ShortenBody(pullRequest.Body);
+        var filesBudget = AiResultBudget.Characters - (body?.Length ?? 0);
+        var fittedFiles = AiResultBudget.Fit(files, AiRepositoryRead.JsonOptions, filesBudget);
 
         var detail = new
         {
             number = pullRequest.Number,
             title = pullRequest.Title,
-            body = pullRequest.Body,
+            body,
             state = pullRequest.State.ToString(),
             author = pullRequest.Author.Username,
             sourceBranch = pullRequest.SourceBranch,
@@ -95,7 +98,16 @@ public sealed class GetPullRequestTool : IAiTool
             filesOmitted = fittedFiles.Omitted > 0 ? fittedFiles.Omitted : (int?)null,
         };
 
-        return AiToolExecution.Success(JsonSerializer.Serialize(detail, AiRepositoryRead.JsonOptions), fittedFiles.Omitted > 0);
+        var content = JsonSerializer.Serialize(detail, AiRepositoryRead.JsonOptions);
+
+        return AiToolExecution.Success(content, fittedFiles.Omitted > 0);
+    }
+
+    private static string? ShortenBody(string? body)
+    {
+        var isLong = body is not null && body.Length > MaxBodyCharacters;
+
+        return isLong ? $"{body![..MaxBodyCharacters]}\n… (description shortened)" : body;
     }
 
     private static string? Shorten(string? patch)

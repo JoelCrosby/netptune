@@ -7,6 +7,13 @@ namespace Netptune.Ai.Execution;
 public sealed class AiCancellationRegistry : IAiCancellationRegistry
 {
     private readonly ConcurrentDictionary<Guid, CancellationTokenSource> Running = new();
+    private readonly IAiStopSignal Signal;
+
+    public AiCancellationRegistry(IAiStopSignal signal)
+    {
+        Signal = signal;
+        Signal.Subscribe(CancelLocal);
+    }
 
     public IDisposable Register(Guid operationId, CancellationTokenSource source)
     {
@@ -15,36 +22,34 @@ public sealed class AiCancellationRegistry : IAiCancellationRegistry
         return new Registration(this, operationId, source);
     }
 
-    public bool Stop(Guid operationId)
+    public Task Stop(Guid operationId)
+    {
+        CancelLocal(operationId);
+
+        return Signal.Publish(operationId);
+    }
+
+    private void CancelLocal(Guid operationId)
     {
         var found = Running.TryGetValue(operationId, out var source);
 
         if (!found || source is null)
         {
-            return false;
+            return;
         }
 
         try
         {
             source.Cancel();
-
-            return true;
         }
         catch (ObjectDisposedException)
         {
-            return false;
         }
     }
 
     private void Release(Guid operationId, CancellationTokenSource source)
     {
-        var current = Running.TryGetValue(operationId, out var running) ? running : null;
-        var isCurrent = ReferenceEquals(current, source);
-
-        if (isCurrent)
-        {
-            Running.TryRemove(operationId, out _);
-        }
+        Running.TryRemove(new KeyValuePair<Guid, CancellationTokenSource>(operationId, source));
     }
 
     private sealed class Registration : IDisposable

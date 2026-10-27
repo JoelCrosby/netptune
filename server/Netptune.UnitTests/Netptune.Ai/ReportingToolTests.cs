@@ -75,6 +75,21 @@ public class ReportingToolTests
         captured.Filter.StartsAtHistory.Should().BeTrue();
     }
 
+    [Theory]
+    [InlineData("flow")]
+    [InlineData("velocity")]
+    public async Task Execute_ShouldRefuseAUnitItDoesNotKnow_RatherThanCountTasks(string kind)
+    {
+        var tool = new GetReportTool(Mediator);
+
+        var arguments = Arguments($$"""{"kind":"{{kind}}","unit":"StoryPoint"}""");
+        var result = await tool.Execute(arguments, TestContext.Current.CancellationToken);
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("unit");
+        await Mediator.DidNotReceive().Send(Arg.Any<GetFlowReportQuery>(), Arg.Any<CancellationToken>());
+    }
+
     [Fact]
     public async Task FlowReport_ShouldNameTheWindowAndWhereHistoryBegins()
     {

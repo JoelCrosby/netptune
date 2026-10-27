@@ -194,7 +194,6 @@ public class AiConversationRepository(DataContext context, IDbConnectionFactory 
             .AsNoTracking()
             .Where(message =>
                 message.Conversation.WorkspaceId == workspaceId &&
-                !message.Conversation.IsDeleted &&
                 message.CreatedAt >= fromUtc);
     }
 
@@ -287,6 +286,32 @@ public class AiConversationRepository(DataContext context, IDbConnectionFactory 
             .Where(invocation => invocation.ConversationId == conversationId)
             .OrderBy(invocation => invocation.Id)
             .ToListAsync(cancellationToken);
+    }
+
+    public async Task<bool> TryClaimTurn(
+        Guid conversationId,
+        DateTime claimedUntil,
+        CancellationToken cancellationToken = default)
+    {
+        var now = DateTime.UtcNow;
+        var claimed = await Entities
+            .Where(conversation =>
+                conversation.Id == conversationId &&
+                (conversation.TurnClaimedUntil == null || conversation.TurnClaimedUntil < now))
+            .ExecuteUpdateAsync(
+                setters => setters.SetProperty(conversation => conversation.TurnClaimedUntil, claimedUntil),
+                cancellationToken);
+
+        return claimed == 1;
+    }
+
+    public Task ReleaseTurn(Guid conversationId, CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .Where(conversation => conversation.Id == conversationId)
+            .ExecuteUpdateAsync(
+                setters => setters.SetProperty(conversation => conversation.TurnClaimedUntil, (DateTime?)null),
+                cancellationToken);
     }
 
     public async Task<int> GetNextSequence(Guid conversationId, CancellationToken cancellationToken = default)

@@ -15,5 +15,9 @@ public interface IAiChangeSetRepository : IRepository<AiChangeSet, Guid>
 
     Task<List<AiProposedChange>> GetChanges(Guid changeSetId, CancellationToken cancellationToken = default);
 
+    Task<bool> TryClaim(Guid changeSetId, string userId, int workspaceId, DateTime claimedUntil, CancellationToken cancellationToken = default);
+
+    Task Release(Guid changeSetId, CancellationToken cancellationToken = default);
+
     Task<List<AiProposedChange>> GetChanges(List<Guid> changeSetIds, CancellationToken cancellationToken = default);
 }

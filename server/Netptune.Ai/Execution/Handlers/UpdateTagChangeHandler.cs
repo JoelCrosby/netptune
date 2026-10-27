@@ -108,7 +108,7 @@ public sealed class UpdateTagChangeHandler : IAiChangeHandler, IAiChangeUndoHand
 
         if (!snapshot.HasValue)
         {
-            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
         }
 
         var tagId = AiChangePayload.ReadInt(snapshot.Value, "tagId");
@@ -117,7 +117,7 @@ public sealed class UpdateTagChangeHandler : IAiChangeHandler, IAiChangeUndoHand
 
         if (!tagId.HasValue || !hasPreviousName)
         {
-            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
         }
 
         var tags = await ReadTags(cancellationToken);
@@ -125,7 +125,7 @@ public sealed class UpdateTagChangeHandler : IAiChangeHandler, IAiChangeUndoHand
 
         if (tag is null)
         {
-            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorTagNoLongerWorkspace);
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorTagNoLongerWorkspace);
         }
 
         var appliedName = AiChangePayload.ReadString(change.Payload.RootElement, "name")?.Trim();
@@ -133,7 +133,7 @@ public sealed class UpdateTagChangeHandler : IAiChangeHandler, IAiChangeUndoHand
 
         if (renamedSince)
         {
-            return AiChangeUndoResult.Failure(change, ChangedSinceMessage);
+            return AiChangePayload.Failure(change, ChangedSinceMessage);
         }
 
         var clash = FindClash(tags, tag.Id, previousName!);
@@ -142,17 +142,17 @@ public sealed class UpdateTagChangeHandler : IAiChangeHandler, IAiChangeUndoHand
         {
             var clashError = Localized.Format(AppText.AiChangeErrorAnotherTagNowNamed, clash.Name);
 
-            return AiChangeUndoResult.Failure(change, clashError);
+            return AiChangePayload.Failure(change, clashError);
         }
 
         var error = await Rename(tag.Name, previousName!, cancellationToken);
 
         if (error is not null)
         {
-            return AiChangeUndoResult.Failure(change, error);
+            return AiChangePayload.Failure(change, error);
         }
 
-        return AiChangeUndoResult.Undone(change, tag.Id);
+        return AiChangePayload.Applied(change, tag.Id);
     }
 
     private async Task<List<TagViewModel>> ReadTags(CancellationToken cancellationToken)

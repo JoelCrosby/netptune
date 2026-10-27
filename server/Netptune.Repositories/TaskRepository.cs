@@ -335,6 +335,25 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .ToListAsync(cancellationToken);
     }
 
+    public Task<List<TaskViewModel>> GetLiveTaskViewModels(
+        IEnumerable<int> taskIds,
+        int workspaceId,
+        CancellationToken cancellationToken = default)
+    {
+        var idList = taskIds.ToList();
+
+        if (idList.Count == 0)
+        {
+            return Task.FromResult(new List<TaskViewModel>());
+        }
+
+        return Entities
+            .Where(x => idList.Contains(x.Id) && x.WorkspaceId == workspaceId && !x.IsDeleted)
+            .AsNoTracking()
+            .Select(TaskToViewModel())
+            .ToListAsync(cancellationToken);
+    }
+
     public Task<List<TaskSearchReference>> GetTaskSearchReferences(
         IEnumerable<int> taskIds,
         string workspaceKey,

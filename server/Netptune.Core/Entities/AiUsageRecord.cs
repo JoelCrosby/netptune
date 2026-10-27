@@ -49,4 +49,6 @@ public static class AiUsagePurposes
     public const string PageWrite = "page_write";
 
     public const string TaskReview = "task_review";
+
+    public const string ConversationRetry = "conversation_retry";
 }

@@ -7,8 +7,6 @@ namespace Netptune.Ai.Tools;
 
 internal static class AiSprintLookup
 {
-    public const string DateFormat = "yyyy-MM-dd";
-
     public static async Task<SprintDetailViewModel?> Find(
         IMediator mediator,
         int sprintId,

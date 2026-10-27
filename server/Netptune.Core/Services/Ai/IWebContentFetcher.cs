@@ -14,6 +14,8 @@ public sealed record WebFetchResult
 
     public string Content { get; init; } = string.Empty;
 
+    public bool IsTruncated { get; init; }
+
     public static WebFetchResult Failed(string error)
     {
         return new WebFetchResult { IsSuccess = false, Error = error };
@@ -50,7 +52,5 @@ public interface IWebContentFetcher
 
 public interface IWebSearchProvider
 {
-    bool IsConfigured { get; }
-
     Task<WebSearchResult> Search(string query, int take, CancellationToken cancellationToken);
 }

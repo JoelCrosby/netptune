@@ -13,6 +13,8 @@ namespace Netptune.Ai.Execution;
 
 public sealed class AiChangeSetApplier : IAiChangeSetApplier
 {
+    private static readonly TimeSpan ClaimLease = TimeSpan.FromMinutes(15);
+
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IAiToolRegistry Tools;
@@ -39,6 +41,28 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         HandlersByToolName = handlers.ToDictionary(handler => handler.ToolName, StringComparer.Ordinal);
     }
 
+    public Task<AiApplyResult?> Apply(
+        Guid changeSetId,
+        ApplyAiChangeSetRequest request,
+        Func<AiApplyProgress, Task>? onProgress,
+        CancellationToken cancellationToken)
+    {
+        return WithClaim(
+            changeSetId,
+            () => ApplyClaimed(changeSetId, request, onProgress, cancellationToken),
+            cancellationToken);
+    }
+
+    public Task<AiApplyResult?> Undo(Guid changeSetId, CancellationToken cancellationToken)
+    {
+        return WithClaim(changeSetId, () => UndoClaimed(changeSetId, cancellationToken), cancellationToken);
+    }
+
+    public Task<AiApplyResult?> RetryFailed(Guid changeSetId, CancellationToken cancellationToken)
+    {
+        return WithClaim(changeSetId, () => RetryClaimed(changeSetId, cancellationToken), cancellationToken);
+    }
+
     private async Task<string> ResolveAgentName(AiChangeSet changeSet, CancellationToken cancellationToken)
     {
         var conversation = await UnitOfWork.AiConversations.GetAsync(
@@ -49,7 +73,44 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         return conversation?.Model ?? "assistant";
     }
 
-    public async Task<AiApplyResult?> Apply(
+    private async Task<AiApplyResult?> WithClaim(
+        Guid changeSetId,
+        Func<Task<AiApplyResult?>> run,
+        CancellationToken cancellationToken)
+    {
+        var userId = Identity.GetCurrentUserId();
+        var workspaceId = await Identity.GetWorkspaceId();
+        var claimedUntil = DateTime.UtcNow.Add(ClaimLease);
+        var isClaimed = await UnitOfWork.AiChangeSets.TryClaim(
+            changeSetId,
+            userId,
+            workspaceId,
+            claimedUntil,
+            cancellationToken);
+
+        if (!isClaimed)
+        {
+            var changeSet = await UnitOfWork.AiChangeSets.GetOwned(changeSetId, userId, workspaceId, cancellationToken);
+
+            if (changeSet is null)
+            {
+                return null;
+            }
+
+            throw new InvalidOperationException(AppText.AiChangeErrorChangeSetBusy);
+        }
+
+        try
+        {
+            return await run();
+        }
+        finally
+        {
+            await UnitOfWork.AiChangeSets.Release(changeSetId, CancellationToken.None);
+        }
+    }
+
+    private async Task<AiApplyResult?> ApplyClaimed(
         Guid changeSetId,
         ApplyAiChangeSetRequest request,
         Func<AiApplyProgress, Task>? onProgress,
@@ -112,7 +173,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
 
         using (AiExecution.Begin(agent, changeSet.CorrelationId))
         {
-            await ApplyEach(ordered, results, resolvedRefs, onProgress, applyCancellation.Token);
+            await ApplyEach(changeSet, ordered, results, resolvedRefs, onProgress, applyCancellation.Token);
         }
 
         StopRemaining(ordered, results);
@@ -121,30 +182,20 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         changeSet.Status = ResolveStatus(results);
         changeSet.AppliedAt = DateTime.UtcNow;
 
-        // What already landed still has to be recorded when the caller stops the run, so the
-        // bookkeeping is not tied to the token that stopped it.
-        var bookkeeping = applyCancellation.IsCancellationRequested ? CancellationToken.None : cancellationToken;
-
-        try
-        {
-            await RecordOutcome(changeSet, ordered, results, bookkeeping);
-        }
-        catch (Exception exception) when (exception is not OperationCanceledException)
-        {
-            Logger.LogWarning(exception, "The applied change set could not be recorded in the conversation");
-        }
-
-        await UnitOfWork.CompleteAsync(bookkeeping);
+        await UnitOfWork.CompleteAsync(CancellationToken.None);
+        await RecordSafely(() => RecordOutcome(changeSet, ordered, results, CancellationToken.None), "applied");
 
         return new AiApplyResult
         {
             ChangeSetId = changeSet.Id,
             Status = changeSet.Status,
             Results = results,
+            ChangedScopes = AiChangeScopes.For(changes, results),
         };
     }
 
     private async Task ApplyEach(
+        AiChangeSet changeSet,
         List<AiProposedChange> ordered,
         List<AiAppliedChangeResult> results,
         Dictionary<string, int> resolvedRefs,
@@ -173,7 +224,40 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
 
             results.Add(result);
 
+            await RecordProgress(changeSet, result);
             await Report(onProgress, AiApplyProgress.ChangeCompleted(result, results.Count, ordered.Count));
+        }
+    }
+
+    // Each outcome is saved as it lands, so what already happened stays recorded when a later change
+    // fails or the run is stopped, and a second apply cannot run those changes again.
+    private async Task RecordProgress(AiChangeSet changeSet, AiAppliedChangeResult result)
+    {
+        var isFirstApplied = result.Status == AiChangeApplyStatus.Applied && !changeSet.AppliedAt.HasValue;
+
+        if (isFirstApplied)
+        {
+            changeSet.Status = AiChangeSetStatus.PartiallyApplied;
+            changeSet.AppliedAt = DateTime.UtcNow;
+        }
+
+        await UnitOfWork.CompleteAsync(CancellationToken.None);
+    }
+
+    // The transcript is saved on its own, so a message that cannot be written does not take the change
+    // statuses down with it.
+    private async Task RecordSafely(Func<Task> record, string outcome)
+    {
+        try
+        {
+            await record();
+            await UnitOfWork.CompleteAsync(CancellationToken.None);
+        }
+        catch (Exception exception) when (exception is not OperationCanceledException)
+        {
+            Logger.LogWarning(exception, "The {Outcome} change set could not be recorded in the conversation", outcome);
+
+            UnitOfWork.DiscardUnsavedChanges();
         }
     }
 
@@ -407,11 +491,13 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
             .FirstOrDefault(reference => !resolvedRefs.ContainsKey(reference));
     }
 
-    public static string StillReferencedMessage => AppText.AiChangeErrorKeptBecauseChangeDependsCouldNotUndone;
+    private static string StillReferencedMessage => AppText.AiChangeErrorKeptBecauseChangeDependsCouldNotUndone;
 
+    // A failed change that still produced an entity got part of the way, and running it again would make
+    // a second one.
     private static bool IsRetryable(AiProposedChange change)
     {
-        var hasFailed = change.ApplyStatus == AiChangeApplyStatus.Failed;
+        var hasFailed = change.ApplyStatus == AiChangeApplyStatus.Failed && !change.AppliedEntityId.HasValue;
 
         return hasFailed || IsSkippedForReference(change);
     }
@@ -537,6 +623,8 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
             change.ApplyError = outcome.Error;
             change.AppliedEntityId = outcome.AppliedEntityId;
 
+            await CaptureApplied(handler, applyContext, cancellationToken);
+
             var hasRef = change.RefKey is not null && outcome.AppliedEntityId.HasValue;
 
             if (hasRef)
@@ -548,15 +636,21 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         }
         catch (Exception exception) when (exception is not OperationCanceledException)
         {
+            Logger.LogWarning(exception, "The {Tool} change could not be applied", change.ToolName);
+
+            UnitOfWork.DiscardUnsavedChanges();
+
+            var error = AppText.AiChangeErrorChangeFailedUnexpectedly;
+
             change.ApplyStatus = AiChangeApplyStatus.Failed;
-            change.ApplyError = exception.Message;
+            change.ApplyError = error;
 
             return new AiAppliedChangeResult
             {
                 ChangeId = change.Id,
                 EntityType = change.EntityType,
                 Status = AiChangeApplyStatus.Failed,
-                Error = exception.Message,
+                Error = error,
             };
         }
     }
@@ -575,16 +669,14 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         AiChangeApplyContext context,
         CancellationToken cancellationToken)
     {
-        var isUndoable = handler is IAiChangeUndoHandler;
-
-        if (!isUndoable)
+        if (handler is not IAiChangeUndoHandler undoHandler)
         {
             return;
         }
 
         try
         {
-            context.Change.UndoPayload = await ((IAiChangeUndoHandler)handler).Capture(context, cancellationToken);
+            context.Change.UndoPayload = await undoHandler.Capture(context, cancellationToken);
         }
         catch (Exception exception) when (exception is not OperationCanceledException)
         {
@@ -592,7 +684,35 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         }
     }
 
-    public async Task<AiApplyResult?> Undo(Guid changeSetId, CancellationToken cancellationToken)
+    private async Task CaptureApplied(
+        IAiChangeHandler handler,
+        AiChangeApplyContext context,
+        CancellationToken cancellationToken)
+    {
+        if (handler is not IAiChangeUndoHandler undoHandler)
+        {
+            return;
+        }
+
+        var change = context.Change;
+        var hasSnapshot = change.ApplyStatus == AiChangeApplyStatus.Applied && change.UndoPayload is not null;
+
+        if (!hasSnapshot)
+        {
+            return;
+        }
+
+        try
+        {
+            change.UndoPayload = await undoHandler.CaptureApplied(context, cancellationToken);
+        }
+        catch (Exception exception) when (exception is not OperationCanceledException)
+        {
+            Logger.LogWarning(exception, "The applied state for {Tool} could not be captured", handler.ToolName);
+        }
+    }
+
+    private async Task<AiApplyResult?> UndoClaimed(Guid changeSetId, CancellationToken cancellationToken)
     {
         var userId = Identity.GetCurrentUserId();
         var workspaceId = await Identity.GetWorkspaceId();
@@ -653,14 +773,13 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
 
         using (AiExecution.Begin(agent, changeSet.CorrelationId))
         {
-            /* A change set is applied in dependency order, so it comes apart in reverse. */
             var stillReferenced = new HashSet<string>(StringComparer.Ordinal);
 
             foreach (var change in OrderByDependency(undoable).AsEnumerable().Reverse())
             {
                 var isStillReferenced = change.RefKey is not null && stillReferenced.Contains(change.RefKey);
                 var result = isStillReferenced
-                    ? AiChangeUndoResult.Failure(change, StillReferencedMessage)
+                    ? AiChangePayload.Failure(change, StillReferencedMessage)
                     : await UndoChange(change, cancellationToken);
                 var undoFailed = result.Status != AiChangeApplyStatus.Applied;
 
@@ -670,6 +789,8 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
                 }
 
                 results.Add(result);
+
+                await UnitOfWork.CompleteAsync(CancellationToken.None);
             }
         }
 
@@ -682,22 +803,15 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
             changeSet.UndoneAt = DateTime.UtcNow;
         }
 
-        try
-        {
-            await RecordUndo(changeSet, results, cancellationToken);
-        }
-        catch (Exception exception) when (exception is not OperationCanceledException)
-        {
-            Logger.LogWarning(exception, "The undone change set could not be recorded in the conversation");
-        }
-
-        await UnitOfWork.CompleteAsync(cancellationToken);
+        await UnitOfWork.CompleteAsync(CancellationToken.None);
+        await RecordSafely(() => RecordUndo(changeSet, results, CancellationToken.None), "undone");
 
         return new AiApplyResult
         {
             ChangeSetId = changeSet.Id,
             Status = changeSet.Status,
             Results = results,
+            ChangedScopes = AiChangeScopes.For(changes, results),
         };
     }
 
@@ -713,7 +827,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
             {
                 var error = Localized.Format(AppText.AiChangeErrorChangeCannotUndone, change.ToolName);
 
-                return AiChangeUndoResult.Failure(change, error);
+                return AiChangePayload.Failure(change, error);
             }
 
             var outcome = await handler.Revert(new AiChangeUndoContext { Change = change }, cancellationToken);
@@ -728,7 +842,11 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         }
         catch (Exception exception) when (exception is not OperationCanceledException)
         {
-            return AiChangeUndoResult.Failure(change, exception.Message);
+            Logger.LogWarning(exception, "The {Tool} change could not be undone", change.ToolName);
+
+            UnitOfWork.DiscardUnsavedChanges();
+
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorUndoFailedUnexpectedly);
         }
     }
 
@@ -759,7 +877,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         await AppendUserMessage(changeSet, summary, cancellationToken);
     }
 
-    public async Task<AiApplyResult?> RetryFailed(Guid changeSetId, CancellationToken cancellationToken)
+    private async Task<AiApplyResult?> RetryClaimed(Guid changeSetId, CancellationToken cancellationToken)
     {
         var userId = Identity.GetCurrentUserId();
         var workspaceId = await Identity.GetWorkspaceId();
@@ -834,27 +952,22 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
                     : SkipChange(change, blocker);
 
                 results.Add(result);
+
+                await UnitOfWork.CompleteAsync(CancellationToken.None);
             }
         }
 
         changeSet.Status = ResolveRetriedStatus(changes);
 
-        try
-        {
-            await RecordOutcome(changeSet, ordered, results, cancellationToken);
-        }
-        catch (Exception exception) when (exception is not OperationCanceledException)
-        {
-            Logger.LogWarning(exception, "The retried change set could not be recorded in the conversation");
-        }
-
-        await UnitOfWork.CompleteAsync(cancellationToken);
+        await UnitOfWork.CompleteAsync(CancellationToken.None);
+        await RecordSafely(() => RecordOutcome(changeSet, ordered, results, CancellationToken.None), "retried");
 
         return new AiApplyResult
         {
             ChangeSetId = changeSet.Id,
             Status = changeSet.Status,
             Results = results,
+            ChangedScopes = AiChangeScopes.For(changes, results),
         };
     }
 

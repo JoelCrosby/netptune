@@ -2,9 +2,15 @@ using FluentAssertions;
 
 using Netptune.Ai.Execution;
 using Netptune.Core.Constants;
+using Netptune.Core.Enums;
+using Netptune.Core.Models.Ai;
+using Netptune.Core.Services.Ai;
 using Netptune.Transfer;
 using Netptune.Transfer.Enums;
 using Netptune.Transfer.Mapping;
+using Netptune.Transfer.Services;
+
+using NSubstitute;
 
 using Xunit;
 
@@ -24,6 +30,53 @@ public class AiMappingProposalValidatorTests
                 binding.ColumnIndex == 0 &&
                 binding.Origin == ImportBindingOrigin.Assistant);
         result.DiscardedBindings.Should().Be(0);
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task Suggest_ShouldShareWorkspaceValues_OnlyWhenDataSamplingIsAllowed(bool allowDataSampling)
+    {
+        var provider = new RecordingChatProvider();
+        var factory = Substitute.For<IAiChatProviderFactory>();
+
+        factory.Resolve(Arg.Any<AiProvider>()).Returns(provider);
+
+        var request = new AiImportMappingRequest
+        {
+            ApiKey = "key",
+            RecordType = EntityRefTypes.Task,
+            AllowDataSampling = allowDataSampling,
+            Profile = new ImportSourceProfile
+            {
+                Kind = ImportSourceKind.Csv,
+                Columns =
+                [
+                    new ImportSourceColumn
+                    {
+                        Index = 0,
+                        Name = "Owner",
+                        InferredType = TransferValueType.Text,
+                        SampleValues = ["sam@example.com"],
+                    },
+                ],
+            },
+            HeuristicMapping = new ImportMappingModel { RecordType = EntityRefTypes.Task },
+            Vocabulary = new ImportSuggestionVocabulary
+            {
+                MemberEmails = ["alice@example.com"],
+                TagNames = ["Backend"],
+            },
+        };
+
+        await new AiImportMappingAdvisor(factory).Suggest(request, TestContext.Current.CancellationToken);
+
+        var prompt = provider.LastRequest!.Messages.Single().Text!;
+
+        prompt.Contains("alice@example.com").Should().Be(allowDataSampling);
+        prompt.Contains("Backend").Should().Be(allowDataSampling);
+        prompt.Contains("sam@example.com").Should().Be(allowDataSampling);
+        prompt.Should().Contain("Owner", "column names are always shared");
     }
 
     [Fact]
@@ -186,5 +239,26 @@ public class AiMappingProposalValidatorTests
                 new ImportSourceColumn { Index = 1, Name = "Notes", InferredType = TransferValueType.Text },
             ],
         };
+    }
+
+    private sealed class RecordingChatProvider : IAiChatProvider
+    {
+        public AiProvider Provider => AiProvider.Anthropic;
+
+        public string DefaultModel => "test-model";
+
+        public AiChatRequest? LastRequest { get; private set; }
+
+        public async IAsyncEnumerable<AiProviderStreamEvent> Stream(
+            AiChatRequest request,
+            string apiKey,
+            [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken)
+        {
+            LastRequest = request;
+
+            await Task.CompletedTask;
+
+            yield return AiProviderStreamEvent.Completed(new AiChatTurn { Text = "{}" });
+        }
     }
 }

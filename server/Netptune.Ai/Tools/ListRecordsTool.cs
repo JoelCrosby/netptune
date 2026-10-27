@@ -108,7 +108,6 @@ public sealed class ListRecordsTool : IAiTool
         var kind = AiToolSchema.GetString(arguments, "kind") ?? string.Empty;
         var isKnown = PermissionsByKind.TryGetValue(kind, out var permission);
 
-        // An unknown kind reads nothing, and Execute says which kinds there are.
         return isKnown
             ? new HashSet<string>(StringComparer.Ordinal) { permission! }
             : new HashSet<string>(StringComparer.Ordinal);
@@ -318,7 +317,7 @@ public sealed class ListRecordsTool : IAiTool
             .OrderBy(account => account.Name, StringComparer.OrdinalIgnoreCase)
             .ToList();
         var pageItems = matching
-            .Skip((query.Page - 1) * query.PageSize)
+            .Skip(AiToolSchema.Skip(query.Page, query.PageSize))
             .Take(query.PageSize)
             .ToList();
         var page = new PagedResponse<ServiceAccountViewModel>(pageItems, query.Page, query.PageSize, matching.Count);
@@ -354,7 +353,7 @@ public sealed class ListRecordsTool : IAiTool
         }
 
         var page = result.Payload!;
-        var hasMore = page.Page * page.PageSize < page.TotalCount;
+        var hasMore = AiToolSchema.HasMore(page.Page, page.PageSize, page.TotalCount);
         var fitted = AiResultBudget.Fit(page.Items.Select(toRecord));
         var listing = new JsonObject
         {

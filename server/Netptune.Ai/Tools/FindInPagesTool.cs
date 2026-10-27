@@ -132,7 +132,7 @@ public sealed class FindInPagesTool : IAiTool
             return AiToolExecution.Failed(AiTextMatcher.TimeoutMessage);
         }
 
-        var hasMore = page * pageSize < found.TotalCount;
+        var hasMore = AiToolSchema.HasMore(page, pageSize, found.TotalCount);
         var fitted = AiResultBudget.Fit(rows);
         var listing = new JsonObject
         {

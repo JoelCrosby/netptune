@@ -292,6 +292,24 @@ namespace Netptune.Core.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Something went wrong while applying this change, so it was not applied..
+        /// </summary>
+        public static string AiChangeErrorChangeFailedUnexpectedly {
+            get {
+                return ResourceManager.GetString("AiChangeErrorChangeFailedUnexpectedly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to These changes are already being applied, retried or undone. Wait for that to finish and try again..
+        /// </summary>
+        public static string AiChangeErrorChangeSetBusy {
+            get {
+                return ResourceManager.GetString("AiChangeErrorChangeSetBusy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The comment this change refers to could not be resolved..
         /// </summary>
         public static string AiChangeErrorCommentChangeRefersCouldNotResolved {
@@ -463,15 +481,6 @@ namespace Netptune.Core.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The groups on this board have changed since the order was proposed..
-        /// </summary>
-        public static string AiChangeErrorGroupsBoardChangedSinceOrderProposed {
-            get {
-                return ResourceManager.GetString("AiChangeErrorGroupsBoardChangedSinceOrderProposed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The groups could not be reordered..
         /// </summary>
         public static string AiChangeErrorGroupsCouldNotReordered {
@@ -612,6 +621,15 @@ namespace Netptune.Core.Localization {
         public static string AiChangeErrorNotPriority {
             get {
                 return ResourceManager.GetString("AiChangeErrorNotPriority", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to “{0}” is not a status category..
+        /// </summary>
+        public static string AiChangeErrorNotStatusCategory {
+            get {
+                return ResourceManager.GetString("AiChangeErrorNotStatusCategory", resourceCulture);
             }
         }
         
@@ -1390,6 +1408,15 @@ namespace Netptune.Core.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The task has been changed since this change was applied, so it was left as it is now..
+        /// </summary>
+        public static string AiChangeErrorTaskChangedSinceChangeAppliedLeftNow {
+            get {
+                return ResourceManager.GetString("AiChangeErrorTaskChangedSinceChangeAppliedLeftNow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The task this change moves is no longer in this workspace..
         /// </summary>
         public static string AiChangeErrorTaskChangeMovesNoLongerWorkspace {
@@ -1471,15 +1498,6 @@ namespace Netptune.Core.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The task could not be read back after restoring it..
-        /// </summary>
-        public static string AiChangeErrorTaskCouldNotReadBackAfterRestoring {
-            get {
-                return ResourceManager.GetString("AiChangeErrorTaskCouldNotReadBackAfterRestoring", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The task could not be reassigned..
         /// </summary>
         public static string AiChangeErrorTaskCouldNotReassigned {
@@ -1530,15 +1548,6 @@ namespace Netptune.Core.Localization {
         public static string AiChangeErrorTaskCouldNotUpdated {
             get {
                 return ResourceManager.GetString("AiChangeErrorTaskCouldNotUpdated", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The task was created but its tags could not be set..
-        /// </summary>
-        public static string AiChangeErrorTaskCreatedButTagsCouldNotSet {
-            get {
-                return ResourceManager.GetString("AiChangeErrorTaskCreatedButTagsCouldNotSet", resourceCulture);
             }
         }
         
@@ -1624,6 +1633,15 @@ namespace Netptune.Core.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Something went wrong while undoing this change, so it was left in place..
+        /// </summary>
+        public static string AiChangeErrorUndoFailedUnexpectedly {
+            get {
+                return ResourceManager.GetString("AiChangeErrorUndoFailedUnexpectedly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An undone change set cannot be applied again..
         /// </summary>
         public static string AiChangeErrorUndoneChangeSetCannotAppliedAgain {
@@ -1674,6 +1692,15 @@ namespace Netptune.Core.Localization {
         public static string AiErrorConversationNotFound {
             get {
                 return ResourceManager.GetString("AiErrorConversationNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The assistant ran out of time. Try again, or ask for something shorter..
+        /// </summary>
+        public static string AiErrorInlineWriteTimedOut {
+            get {
+                return ResourceManager.GetString("AiErrorInlineWriteTimedOut", resourceCulture);
             }
         }
         
@@ -1759,11 +1786,29 @@ namespace Netptune.Core.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The provider stopped responding. Try again..
+        /// </summary>
+        public static string AiErrorProviderStoppedResponding {
+            get {
+                return ResourceManager.GetString("AiErrorProviderStoppedResponding", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The assistant could not reach the provider..
         /// </summary>
         public static string AiErrorProviderUnreachable {
             get {
                 return ResourceManager.GetString("AiErrorProviderUnreachable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The reply was cut off because it reached the longest reply the assistant can give. Ask for something shorter, or split the request up..
+        /// </summary>
+        public static string AiErrorReplyHitOutputLimit {
+            get {
+                return ResourceManager.GetString("AiErrorReplyHitOutputLimit", resourceCulture);
             }
         }
         
@@ -1800,6 +1845,15 @@ namespace Netptune.Core.Localization {
         public static string AiErrorToolRoundsReached {
             get {
                 return ResourceManager.GetString("AiErrorToolRoundsReached", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The assistant is still replying in this conversation. Wait for it to finish, or stop it, then try again..
+        /// </summary>
+        public static string AiErrorTurnAlreadyRunning {
+            get {
+                return ResourceManager.GetString("AiErrorTurnAlreadyRunning", resourceCulture);
             }
         }
         
@@ -2290,6 +2344,15 @@ namespace Netptune.Core.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The review was cut off because the assistant&apos;s reply grew too long. Try again..
+        /// </summary>
+        public static string AiReviewHitOutputLimit {
+            get {
+                return ResourceManager.GetString("AiReviewHitOutputLimit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This workspace has no relation type for that kind of link..
         /// </summary>
         public static string AiReviewNoRelationType {
@@ -2349,6 +2412,24 @@ namespace Netptune.Core.Localization {
         public static string AiReviewSplitTaskTooLong {
             get {
                 return ResourceManager.GetString("AiReviewSplitTaskTooLong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This kind of item cannot be reviewed by the assistant..
+        /// </summary>
+        public static string AiReviewSubjectNotSupported {
+            get {
+                return ResourceManager.GetString("AiReviewSubjectNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to These tags no longer exist, so they could not be added: {0}..
+        /// </summary>
+        public static string AiReviewTagsNoLongerExist {
+            get {
+                return ResourceManager.GetString("AiReviewTagsNoLongerExist", resourceCulture);
             }
         }
         
@@ -3424,6 +3505,15 @@ namespace Netptune.Core.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The new order must list every group on the board exactly once..
+        /// </summary>
+        public static string ErrorBoardGroupOrderMustListEveryGroup {
+            get {
+                return ResourceManager.GetString("ErrorBoardGroupOrderMustListEveryGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Board &apos;{0}&apos; has no group to place the task in.
         /// </summary>
         public static string ErrorBoardNoGroupPlaceTask {
@@ -3654,6 +3744,15 @@ namespace Netptune.Core.Localization {
         public static string ErrorEndpointMustAbsoluteHttpHttpsURL {
             get {
                 return ResourceManager.GetString("ErrorEndpointMustAbsoluteHttpHttpsURL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Endpoint must be a public address, not a private or local one..
+        /// </summary>
+        public static string ErrorEndpointMustBePublic {
+            get {
+                return ResourceManager.GetString("ErrorEndpointMustBePublic", resourceCulture);
             }
         }
         

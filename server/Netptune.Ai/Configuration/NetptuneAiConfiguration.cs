@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 using Netptune.Ai.Execution;
 using Netptune.Ai.Execution.Reviews;
@@ -39,6 +40,7 @@ public static class NetptuneAiConfiguration
         services.AddSingleton<IAiChatProviderFactory, AiChatProviderFactory>();
         services.AddSingleton<IAiModelEffortSource, AnthropicModelEffortSource>();
         services.AddSingleton<IAiModelCatalog, AiModelCatalog>();
+        services.TryAddSingleton<IAiStopSignal, LocalAiStopSignal>();
         services.AddSingleton<IAiCancellationRegistry, AiCancellationRegistry>();
 
         services.AddScoped<IAiTool, ListRecordsTool>();

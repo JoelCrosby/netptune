@@ -76,7 +76,7 @@ public sealed class UpdateStatusAction : IAiToolAction
 
         if (hasCategory)
         {
-            var isKnownCategory = Enum.TryParse<StatusCategory>(rawCategory, true, out var category);
+            var isKnownCategory = AiToolSchema.TryParseEnum<StatusCategory>(rawCategory, out var category);
 
             if (!isKnownCategory)
             {

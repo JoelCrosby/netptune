@@ -42,7 +42,10 @@ public static class AiPageUndo
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     };
 
-    public static async Task<JsonDocument?> Capture(IMediator mediator, int? pageId, CancellationToken cancellationToken)
+    public static async Task<JsonDocument?> Capture(
+        IMediator mediator,
+        int? pageId,
+        CancellationToken cancellationToken)
     {
         if (!pageId.HasValue)
         {
@@ -69,7 +72,10 @@ public static class AiPageUndo
         return JsonSerializer.SerializeToDocument(snapshot, SerializerOptions);
     }
 
-    public static async Task<JsonDocument?> CaptureDetails(IMediator mediator, int? pageId, CancellationToken cancellationToken)
+    public static async Task<JsonDocument?> CaptureDetails(
+        IMediator mediator,
+        int? pageId,
+        CancellationToken cancellationToken)
     {
         if (!pageId.HasValue)
         {
@@ -103,21 +109,21 @@ public static class AiPageUndo
 
         if (snapshot is null)
         {
-            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
         }
 
         var current = await AiPageLookup.Read(mediator, snapshot.PageId, cancellationToken);
 
         if (current is null)
         {
-            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorPageNoLongerWorkspace);
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorPageNoLongerWorkspace);
         }
 
         var editedSinceApply = current.Revision != snapshot.Revision + 1;
 
         if (editedSinceApply)
         {
-            return AiChangeUndoResult.Failure(change, EditedSinceApplyMessage);
+            return AiChangePayload.Failure(change, EditedSinceApplyMessage);
         }
 
         var request = new SavePageRequest { Title = snapshot.Title, Body = snapshot.Body, Revision = current.Revision };
@@ -125,13 +131,16 @@ public static class AiPageUndo
 
         if (!response.IsSuccess)
         {
-            return AiChangeUndoResult.Failure(change, response.Message ?? AppText.AiChangeErrorPageCouldNotRestored);
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorPageCouldNotRestored);
         }
 
-        return AiChangeUndoResult.Undone(change, snapshot.PageId);
+        return AiChangePayload.Applied(change, snapshot.PageId);
     }
 
-    public static async Task<JsonDocument?> CapturePlacement(IMediator mediator, int? pageId, CancellationToken cancellationToken)
+    public static async Task<JsonDocument?> CapturePlacement(
+        IMediator mediator,
+        int? pageId,
+        CancellationToken cancellationToken)
     {
         if (!pageId.HasValue)
         {

@@ -2,6 +2,7 @@ using System.Text.Json;
 
 using Mediator;
 
+using Netptune.Ai.Tools;
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Localization;
@@ -47,6 +48,7 @@ public sealed class CreateTaskChangeHandler : IAiChangeHandler, IAiChangeUndoHan
             EstimateValue = AiChangePayload.ReadDecimal(payload, "estimateValue"),
             StartDate = AiChangePayload.ReadDate(payload, "startDate"),
             DueDate = AiChangePayload.ReadDate(payload, "dueDate"),
+            Tags = AiChangePayload.ReadStringArray(payload, "tags"),
         };
 
         var response = await Mediator.Send(new CreateTaskCommand(request), cancellationToken);
@@ -56,38 +58,14 @@ public sealed class CreateTaskChangeHandler : IAiChangeHandler, IAiChangeUndoHan
             return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorTaskCouldNotCreated);
         }
 
-        var taskId = response.Payload?.Id;
-        var tags = AiChangePayload.ReadStringArray(payload, "tags");
-        var hasTags = tags.Count > 0 && taskId.HasValue;
-
-        if (!hasTags)
-        {
-            return AiChangePayload.Applied(change, taskId);
-        }
-
-        var tagRequest = new UpdateProjectTaskRequest { Id = taskId!.Value, Tags = tags };
-        var tagResponse = await Mediator.Send(new UpdateTaskCommand(tagRequest), cancellationToken);
-
-        if (!tagResponse.IsSuccess)
-        {
-            return new AiAppliedChangeResult
-            {
-                ChangeId = change.Id,
-                EntityType = change.EntityType,
-                Status = AiChangeApplyStatus.Failed,
-                AppliedEntityId = taskId,
-                Error = AppText.AiChangeErrorTaskCreatedButTagsCouldNotSet,
-            };
-        }
-
-        return AiChangePayload.Applied(change, taskId);
+        return AiChangePayload.Applied(change, response.Payload?.Id);
     }
 
     private static TValue? ReadEnum<TValue>(JsonElement payload, string name)
         where TValue : struct, Enum
     {
         var raw = AiChangePayload.ReadString(payload, name);
-        var isParsed = Enum.TryParse<TValue>(raw, true, out var value);
+        var isParsed = AiToolSchema.TryParseEnum<TValue>(raw, out var value);
 
         return isParsed ? value : null;
     }
@@ -97,7 +75,6 @@ public sealed class CreateTaskChangeHandler : IAiChangeHandler, IAiChangeUndoHan
         NetptunePermissions.Tasks.Delete,
     };
 
-    // Nothing existed before, so the undo only needs the created task.
     public Task<JsonDocument?> Capture(AiChangeApplyContext context, CancellationToken cancellationToken)
     {
         return Task.FromResult<JsonDocument?>(null);
@@ -112,18 +89,18 @@ public sealed class CreateTaskChangeHandler : IAiChangeHandler, IAiChangeUndoHan
 
         if (!taskId.HasValue)
         {
-            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorCreatedTaskCouldNotResolved);
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorCreatedTaskCouldNotResolved);
         }
 
         var response = await Mediator.Send(new DeleteTaskCommand(taskId.Value), cancellationToken);
 
         if (!response.IsSuccess)
         {
-            return AiChangeUndoResult.Failure(
+            return AiChangePayload.Failure(
                 change,
                 response.Message ?? AppText.AiChangeErrorCreatedTaskCouldNotDeleted);
         }
 
-        return AiChangeUndoResult.Undone(change, taskId);
+        return AiChangePayload.Applied(change, taskId);
     }
 }

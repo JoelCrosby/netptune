@@ -1,5 +1,6 @@
 using System.Text.Json;
 
+using Netptune.Ai.Tools;
 using Netptune.Core.Encoding;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
@@ -56,7 +57,9 @@ public static class AiReviewValidator
         var title = Clean(finding.Title, MaxTitleLength);
         var hasTitle = title is not null;
 
-        if (!isAllowedCategory || !hasTitle)
+        var isUsable = isAllowedCategory && hasTitle;
+
+        if (!isUsable)
         {
             return null;
         }
@@ -245,7 +248,7 @@ public static class AiReviewValidator
     private static TaskPriority? ReadPriority(JsonElement suggestion)
     {
         var name = ReadString(suggestion, "priority");
-        var isKnown = Enum.TryParse<TaskPriority>(name, true, out var priority);
+        var isKnown = AiToolSchema.TryParseEnum<TaskPriority>(name, out var priority);
         var isSet = isKnown && priority != TaskPriority.None && Enum.IsDefined(priority);
 
         return isSet ? priority : null;
@@ -254,8 +257,8 @@ public static class AiReviewValidator
     private static JsonDocument? ValidateEdit(JsonElement suggestion, AiReviewContext context)
     {
         var field = ReadString(suggestion, "field") ?? string.Empty;
-        var find = ReadString(suggestion, "find");
-        var replace = ReadString(suggestion, "replace") ?? string.Empty;
+        var find = AiReviewPrompt.Restore(ReadString(suggestion, "find"));
+        var replace = AiReviewPrompt.Restore(ReadString(suggestion, "replace")) ?? string.Empty;
         var hasField = context.EditableFields.TryGetValue(field, out var currentText);
         var isWithinLimit = replace.Length <= MaxReplacementLength;
         var isAppend = string.IsNullOrEmpty(find);
@@ -280,7 +283,7 @@ public static class AiReviewValidator
 
     private static string? Clean(string? value, int maxLength)
     {
-        var trimmed = value?.Trim();
+        var trimmed = AiReviewPrompt.Restore(value)?.Trim();
 
         if (string.IsNullOrEmpty(trimmed))
         {

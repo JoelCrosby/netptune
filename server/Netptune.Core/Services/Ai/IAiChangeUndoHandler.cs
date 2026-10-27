@@ -18,5 +18,12 @@ public interface IAiChangeUndoHandler
 
     Task<JsonDocument?> Capture(AiChangeApplyContext context, CancellationToken cancellationToken);
 
+    // Runs once the change has landed, so the undo can tell what the change itself did from what other
+    // people have done since.
+    Task<JsonDocument?> CaptureApplied(AiChangeApplyContext context, CancellationToken cancellationToken)
+    {
+        return Task.FromResult(context.Change.UndoPayload);
+    }
+
     Task<AiAppliedChangeResult> Revert(AiChangeUndoContext context, CancellationToken cancellationToken);
 }

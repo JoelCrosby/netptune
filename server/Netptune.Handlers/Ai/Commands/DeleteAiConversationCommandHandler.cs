@@ -46,7 +46,7 @@ public sealed class DeleteAiConversationCommandHandler : IRequestHandler<DeleteA
 
         await UnitOfWork.CompleteAsync(cancellationToken);
 
-        Turns.Stop(command.ConversationId);
+        await Turns.Stop(command.ConversationId);
 
         return ClientResponse.Success;
     }

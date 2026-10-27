@@ -3,8 +3,14 @@ using System.Net.Http.Json;
 
 using FluentAssertions;
 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+
+using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Ai;
+using Netptune.Entities.Contexts;
 
 using Xunit;
 
@@ -73,6 +79,61 @@ public sealed class AiSpendEndpointTests
         var response = await client.PutAsJsonAsync("api/ai/admin/spend-cap", new { cap = 0m });
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task Spend_ShouldKeepCountingAConversation_AfterItIsDeleted()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var before = await GetSummary(client);
+
+        await SeedDeletedConversation(inputTokens: 1_000_000, outputTokens: 100_000);
+
+        var after = await GetSummary(client);
+
+        after.MonthToDate.Should().BeGreaterThan(
+            before.MonthToDate,
+            "the provider was paid whether or not the chat was kept");
+    }
+
+    private async Task SeedDeletedConversation(int inputTokens, int outputTokens)
+    {
+        using var scope = Fixture.CreateScope();
+
+        var db = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var workspace = await db.Workspaces.SingleAsync(item => item.Slug == "netptune", cancellationToken);
+        var userId = await db.WorkspaceAppUsers
+            .Where(member => member.WorkspaceId == workspace.Id)
+            .Select(member => member.UserId)
+            .FirstAsync(cancellationToken);
+        var conversation = new AiConversation
+        {
+            Id = Guid.NewGuid(),
+            WorkspaceId = workspace.Id,
+            UserId = userId,
+            Title = "Deleted",
+            Model = "claude-opus-5",
+            LastMessageAt = DateTime.UtcNow,
+        };
+
+        conversation.Delete(userId);
+        db.AiConversations.Add(conversation);
+
+        await db.SaveChangesAsync(cancellationToken);
+
+        db.AiMessages.Add(new AiMessage
+        {
+            ConversationId = conversation.Id,
+            Sequence = 1,
+            Role = AiMessageRole.Assistant,
+            Model = conversation.Model,
+            InputTokens = inputTokens,
+            OutputTokens = outputTokens,
+            CreatedAt = DateTime.UtcNow,
+        });
+
+        await db.SaveChangesAsync(cancellationToken);
     }
 
     private static async Task<AiSpendViewModel> GetSummary(HttpClient client)

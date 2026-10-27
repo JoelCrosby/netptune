@@ -37,44 +37,40 @@ public class BoardChangeHandlerTests
     }
 
     [Fact]
-    public async Task Reorder_ShouldSortTheGroupsIntoTheProposedOrder()
+    public async Task Reorder_ShouldSendTheWholeOrderInOneCommand()
     {
+        Mediator
+            .Send(Arg.Any<ReorderBoardGroupsCommand>(), Arg.Any<CancellationToken>())
+            .Returns(ClientResponse.Success);
+
         var payload = JsonSerializer.Serialize(new { boardId = BoardId, groupIds = new[] { DoneId, DoingId, BacklogId } });
         var handler = new ReorderBoardGroupsChangeHandler(Mediator);
         var context = CreateContext("propose_reorder_board_groups", "board", BoardId, payload);
         var result = await handler.Apply(context, TestContext.Current.CancellationToken);
 
         result.Status.Should().Be(AiChangeApplyStatus.Applied);
-
-        var ordered = CapturedUpdates().Select(request => (request.BoardGroupId, request.SortOrder));
-
-        ordered.Should().Equal((DoneId, 1D), (DoingId, 2D), (BacklogId, 3D));
+        await Mediator.Received(1).Send(
+            Arg.Is<ReorderBoardGroupsCommand>(command =>
+                command.BoardId == BoardId &&
+                command.GroupIds.SequenceEqual(new[] { DoneId, DoingId, BacklogId })),
+            Arg.Any<CancellationToken>());
+        CapturedUpdates().Should().BeEmpty();
     }
 
     [Fact]
-    public async Task Reorder_ShouldLeaveEveryOtherFieldAlone()
+    public async Task Reorder_ShouldFail_WhenTheReorderIsRefused()
     {
-        var payload = JsonSerializer.Serialize(new { boardId = BoardId, groupIds = new[] { DoneId, DoingId, BacklogId } });
-        var handler = new ReorderBoardGroupsChangeHandler(Mediator);
-        var context = CreateContext("propose_reorder_board_groups", "board", BoardId, payload);
+        Mediator
+            .Send(Arg.Any<ReorderBoardGroupsCommand>(), Arg.Any<CancellationToken>())
+            .Returns(ClientResponse.Failed("The new order must list every group on the board exactly once."));
 
-        await handler.Apply(context, TestContext.Current.CancellationToken);
-
-        CapturedUpdates().Should().OnlyContain(request => request.Name == null && request.StatusId == null && !request.ClearStatus);
-    }
-
-    [Fact]
-    public async Task Reorder_ShouldFail_WhenTheBoardNoLongerHasThoseGroups()
-    {
-        GivenBoardGroups(BacklogId, DoingId);
-
-        var payload = JsonSerializer.Serialize(new { boardId = BoardId, groupIds = new[] { DoneId, DoingId, BacklogId } });
+        var payload = JsonSerializer.Serialize(new { boardId = BoardId, groupIds = new[] { DoneId, DoingId } });
         var handler = new ReorderBoardGroupsChangeHandler(Mediator);
         var context = CreateContext("propose_reorder_board_groups", "board", BoardId, payload);
         var result = await handler.Apply(context, TestContext.Current.CancellationToken);
 
         result.Status.Should().Be(AiChangeApplyStatus.Failed);
-        CapturedUpdates().Should().BeEmpty();
+        result.Error.Should().Contain("every group");
     }
 
     [Fact]

@@ -395,6 +395,74 @@ public class AiConversationRunnerTests
         events.Should().NotContain(item => item.Type == AiStreamEventType.TurnUsage);
     }
 
+    [Fact]
+    public async Task Run_ShouldBookAnEstimate_WhenTheProviderBreaksOffBeforeReportingUsage()
+    {
+        var runner = CreateRunner([]);
+        var context = CreateContext(NetptunePermissions.Tasks.Read);
+
+        Provider.ReplyText = new string('x', 400);
+        Provider.BreaksOffAfterText = true;
+
+        var run = () => Drain(runner, context);
+
+        await run.Should().ThrowAsync<HttpRequestException>();
+
+        var turn = context.Turns.Should().ContainSingle().Subject;
+
+        turn.Usage.OutputTokens.Should().Be(100);
+        turn.Usage.InputTokens.Should().BePositive();
+    }
+
+    [Fact]
+    public async Task Run_ShouldNotBookAnEstimate_WhenTheProviderReportedUsage()
+    {
+        var runner = CreateRunner([]);
+        var context = CreateContext(NetptunePermissions.Tasks.Read);
+
+        Provider.Usage = new AiUsage { InputTokens = 10, OutputTokens = 2 };
+
+        await Drain(runner, context);
+
+        context.Turns.Should().ContainSingle().Which.Usage.OutputTokens.Should().Be(2);
+    }
+
+    [Theory]
+    [InlineData("max_tokens")]
+    [InlineData("MaxTokens")]
+    [InlineData("Length")]
+    public async Task Run_ShouldReportTheOutputLimit_WhenTheReplyWasCutOff(string finishReason)
+    {
+        var runner = CreateRunner([]);
+        var context = CreateContext(NetptunePermissions.Tasks.Read);
+
+        Provider.FinishReason = finishReason;
+
+        var events = await Drain(runner, context);
+
+        events[^1].Type.Should().Be(AiStreamEventType.Error);
+        events[^1].Message.Should().Be(AppText.AiErrorReplyHitOutputLimit);
+    }
+
+    [Fact]
+    public async Task Run_ShouldTellTheModelATimedOutToolTimedOut_AndCarryOn()
+    {
+        var tool = new StubTool("slow_tool", NetptunePermissions.Tasks.Read)
+        {
+            Failure = new TaskCanceledException("The request was canceled due to the configured HttpClient.Timeout"),
+        };
+
+        var runner = CreateRunner([tool]);
+        var context = CreateContext(NetptunePermissions.Tasks.Read);
+
+        Provider.CallToolOnce = "slow_tool";
+
+        var events = await Drain(runner, context);
+
+        context.Invocations.Should().ContainSingle().Which.Result.Should().Contain("timed out");
+        events[^1].Type.Should().Be(AiStreamEventType.TurnCompleted);
+    }
+
     private AiConversationRunner CreateRunner(
         IReadOnlyList<IAiTool> tools,
         int maxToolIterations = 12,
@@ -460,6 +528,10 @@ public class AiConversationRunnerTests
 
         public AiUsage Usage { get; set; } = new();
 
+        public bool BreaksOffAfterText { get; set; }
+
+        public string? FinishReason { get; set; }
+
         public async IAsyncEnumerable<AiProviderStreamEvent> Stream(
             AiChatRequest request,
             string apiKey,
@@ -472,12 +544,22 @@ public class AiConversationRunnerTests
 
             yield return AiProviderStreamEvent.Delta(ReplyText);
 
+            if (BreaksOffAfterText)
+            {
+                throw new HttpRequestException("The connection was reset.");
+            }
+
             var toolName = AlwaysCallTool ?? (RequestCount == 1 ? CallToolOnce : null);
             var hasToolCall = toolName is not null;
 
             if (!hasToolCall)
             {
-                yield return AiProviderStreamEvent.Completed(new AiChatTurn { Text = ReplyText, Usage = Usage });
+                yield return AiProviderStreamEvent.Completed(new AiChatTurn
+                {
+                    Text = ReplyText,
+                    Usage = Usage,
+                    FinishReason = FinishReason,
+                });
 
                 yield break;
             }
@@ -521,6 +603,8 @@ public class AiConversationRunnerTests
 
         public string Result { get; set; } = "ok";
 
+        public Exception? Failure { get; init; }
+
         public IReadOnlySet<string>? CallPermissions { get; set; }
 
         public bool WasExecuted { get; private set; }
@@ -540,6 +624,11 @@ public class AiConversationRunnerTests
         public Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
         {
             WasExecuted = true;
+
+            if (Failure is not null)
+            {
+                throw Failure;
+            }
 
             return Task.FromResult(AiToolExecution.Success(Result));
         }

@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Ai.Tools;
 using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
@@ -48,11 +49,13 @@ public sealed class UpdateStatusChangeHandler : IAiChangeHandler
 
         if (hasCategory)
         {
-            var isKnownCategory = Enum.TryParse(rawCategory, true, out category);
+            var isKnownCategory = AiToolSchema.TryParseEnum(rawCategory, out category);
 
             if (!isKnownCategory)
             {
-                return AiChangePayload.Failure(change, $"\"{rawCategory}\" is not a status category.");
+                var error = Localized.Format(AppText.AiChangeErrorNotStatusCategory, rawCategory);
+
+                return AiChangePayload.Failure(change, error);
             }
         }
 

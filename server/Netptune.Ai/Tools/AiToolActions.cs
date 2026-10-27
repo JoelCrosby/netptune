@@ -46,7 +46,6 @@ public sealed class AiToolActions
         return ActionsByName.Values.Any(action => action.RequiredPermissions.All(permissions.Contains));
     }
 
-    // An unknown action proposes nothing, and Execute says which actions there are.
     public IReadOnlySet<string> GetRequiredPermissions(JsonElement arguments)
     {
         var action = Find(arguments);

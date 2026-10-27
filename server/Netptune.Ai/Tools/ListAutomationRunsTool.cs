@@ -87,7 +87,7 @@ public sealed class ListAutomationRunsTool : IAiTool
                 }),
             });
 
-        var hasMore = page * pageSize < result.Payload.TotalCount;
+        var hasMore = AiToolSchema.HasMore(page, pageSize, result.Payload.TotalCount);
         var listing = new
         {
             totalCount = result.Payload.TotalCount,

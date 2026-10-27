@@ -79,7 +79,7 @@ public sealed class SetAutomationEnabledChangeHandler : IAiChangeHandler, IAiCha
 
         if (!snapshot.HasValue)
         {
-            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
         }
 
         var ruleId = AiChangePayload.ReadInt(snapshot.Value, "ruleId");
@@ -88,21 +88,21 @@ public sealed class SetAutomationEnabledChangeHandler : IAiChangeHandler, IAiCha
 
         if (!ruleId.HasValue || !wasEnabled.HasValue)
         {
-            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
         }
 
         var current = await AiAutomationRuleReader.ReadCurrent(Mediator, ruleId.Value, cancellationToken);
 
         if (current is null)
         {
-            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorRuleNoLongerWorkspace);
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorRuleNoLongerWorkspace);
         }
 
         var isUnchangedSinceApply = current.IsEnabled == appliedEnabled;
 
         if (!isUnchangedSinceApply)
         {
-            return AiChangeUndoResult.Failure(change, ChangedSinceMessage);
+            return AiChangePayload.Failure(change, ChangedSinceMessage);
         }
 
         var command = new SetAutomationRuleEnabledCommand(ruleId.Value, wasEnabled.Value);
@@ -110,9 +110,9 @@ public sealed class SetAutomationEnabledChangeHandler : IAiChangeHandler, IAiCha
 
         if (!response.IsSuccess)
         {
-            return AiChangeUndoResult.Failure(change, response.Message ?? AppText.AiChangeErrorRuleCouldNotTurnedBack);
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorRuleCouldNotTurnedBack);
         }
 
-        return AiChangeUndoResult.Undone(change, ruleId.Value);
+        return AiChangePayload.Applied(change, ruleId.Value);
     }
 }

@@ -27,6 +27,14 @@ public static class AiPendingReference
         return name?.After ?? draft.Summary;
     }
 
+    public static string? Conflict(JsonElement arguments, string idName, string refName)
+    {
+        var hasId = AiToolSchema.GetInt(arguments, idName).HasValue;
+        var hasRef = Read(arguments, refName) is not null;
+
+        return hasId && hasRef ? $"Pass {idName} or {refName}, not both." : null;
+    }
+
     public static string Missing(string refKey, string entityType)
     {
         return $"“{refKey}” does not match a {entityType} proposed in this change set.";

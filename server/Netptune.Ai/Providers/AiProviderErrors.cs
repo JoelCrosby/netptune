@@ -1,9 +1,9 @@
-using Netptune.Core.Localization;
-
 using System.ClientModel;
 using System.Text.Json;
 
 using Anthropic.Exceptions;
+
+using Netptune.Core.Localization;
 
 namespace Netptune.Ai.Providers;
 

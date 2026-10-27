@@ -7,15 +7,18 @@ using Mediator;
 using Netptune.Ai.Execution;
 using Netptune.Ai.Tools;
 using Netptune.Core.Authorization;
+using Netptune.Core.Entities;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.Boards;
 using Netptune.Core.ViewModels.Projects;
+using Netptune.Core.ViewModels.Statuses;
 using Netptune.Core.ViewModels.Tags;
 using Netptune.Handlers.BoardGroups.Queries;
 using Netptune.Handlers.Boards.Queries;
 using Netptune.Handlers.Projects.Queries;
+using Netptune.Handlers.Statuses.Queries;
 
 using NSubstitute;
 
@@ -96,6 +99,30 @@ public class CreateTaskToolTests
         result.IsError.Should().BeTrue();
         result.Content.Should().Contain("ref:nope");
         ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Execute_ShouldFail_WhenBothAProjectIdAndARefAreGiven()
+    {
+        var projectRef = await GivenProposedProject("Apollo");
+
+        var result = await Execute($$"""{"name":"Draft the brief","projectRef":"{{projectRef}}","projectId":7}""");
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("not both");
+        ChangeSet.Changes.Should().ContainSingle(change => change.EntityType == "project");
+    }
+
+    [Fact]
+    public async Task Execute_ShouldFail_WhenBothASprintIdAndARefAreGiven()
+    {
+        var projectRef = await GivenProposedProject("Apollo");
+
+        var result = await Execute(
+            $$"""{"name":"Draft the brief","projectRef":"{{projectRef}}","sprintRef":"ref:9","sprintId":9}""");
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("not both");
     }
 
     [Fact]
@@ -204,6 +231,77 @@ public class CreateTaskToolTests
         result.IsError.Should().BeTrue();
         result.Content.Should().Contain("its own project");
         ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Theory]
+    [InlineData(42)]
+    [InlineData(2.5)]
+    public async Task Execute_ShouldRefuseATShirtEstimate_OutsideXSToXL(decimal size)
+    {
+        var arguments = JsonSerializer.Serialize(
+            new { name = "Fix", projectId = ProjectId, estimateType = "TShirt", estimateValue = size });
+
+        var result = await Execute(arguments);
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("T-shirt");
+    }
+
+    [Fact]
+    public async Task Execute_ShouldRefuseANumericPriority()
+    {
+        var result = await Execute($$"""{"name":"Fix","projectId":{{ProjectId}},"priority":"99"}""");
+
+        result.IsError.Should().BeTrue();
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Execute_ShouldShowTheStatusTheBoardGroupGivesTheTask()
+    {
+        GivenGroupWithStatus(new StatusViewModel { Id = 4, Name = "Done", Key = "done" });
+
+        var result = await Execute($$"""{"name":"Fix","projectId":{{ProjectId}},"boardGroupId":9}""");
+
+        result.IsError.Should().BeFalse();
+        ChangeSet.Changes.Single().Fields
+            .Single(field => field.Name == "status")
+            .AfterValues!.Single().Display.Should().Be("Done");
+    }
+
+    [Fact]
+    public async Task Execute_ShouldRefuseAStatusTheBoardGroupWouldOverwrite()
+    {
+        GivenGroupWithStatus(new StatusViewModel { Id = 4, Name = "Done", Key = "done" });
+
+        var result = await Execute($$"""{"name":"Fix","projectId":{{ProjectId}},"boardGroupId":9,"statusId":2}""");
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("Done");
+    }
+
+    private void GivenGroupWithStatus(StatusViewModel status)
+    {
+        var group = new BoardGroupOptionViewModel
+        {
+            Id = 9,
+            Name = "Shipped",
+            BoardId = 4,
+            BoardName = "Netptune",
+            BoardIdentifier = "netptune",
+            ProjectId = ProjectId,
+            ProjectName = "Netptune",
+        };
+
+        Mediator
+            .Send(Arg.Any<GetBoardGroupOptionsQuery>(), Arg.Any<CancellationToken>())
+            .Returns([group]);
+        Mediator
+            .Send(Arg.Is<GetBoardGroupQuery>(query => query.Id == 9), Arg.Any<CancellationToken>())
+            .Returns(new BoardGroup { Id = 9, Name = "Shipped", StatusId = status.Id });
+        Mediator
+            .Send(Arg.Any<GetStatusesQuery>(), Arg.Any<CancellationToken>())
+            .Returns([status, new StatusViewModel { Id = 2, Name = "Doing", Key = "doing" }]);
     }
 
     [Fact]

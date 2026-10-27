@@ -6,6 +6,7 @@ using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Localization;
 using Netptune.Core.Services.Ai;
+using Netptune.Core.Tags;
 using Netptune.Handlers.Tags.Queries;
 
 namespace Netptune.Ai.Tools;
@@ -36,6 +37,17 @@ public sealed class CreateTagAction : IAiToolAction
         if (!hasName)
         {
             return AiToolExecution.Failed("A tag name is required.");
+        }
+
+        name = TagNames.Normalize(name!);
+
+        var isValidLength = name.Length is >= UpdateTagAction.NameMinLength and <= UpdateTagAction.NameMaxLength;
+
+        if (!isValidLength)
+        {
+            var range = $"{UpdateTagAction.NameMinLength} to {UpdateTagAction.NameMaxLength}";
+
+            return AiToolExecution.Failed($"A tag name must be {range} characters.");
         }
 
         var tags = await Mediator.Send(new GetTagsForWorkspaceQuery(), cancellationToken);

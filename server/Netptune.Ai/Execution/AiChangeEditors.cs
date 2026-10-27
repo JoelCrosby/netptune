@@ -34,7 +34,11 @@ internal static class AiChangeEditors
             UpdateTaskTool.UpdateChange => ForUpdatedTask(fieldName, payload),
             AiTaskChangeDrafts.AssignChange => ForNamedField(fieldName, "assignees", AiChangeEditorKind.Users),
             AiTaskChangeDrafts.TagsChange => ForNamedField(fieldName, "tags", AiChangeEditorKind.Tags),
-            AiTaskChangeDrafts.BoardGroupChange => ForMovedTask(fieldName, "boardGroup", AiChangeEditorKind.BoardGroup, payload),
+            AiTaskChangeDrafts.BoardGroupChange => ForMovedTask(
+                fieldName,
+                "boardGroup",
+                AiChangeEditorKind.BoardGroup,
+                payload),
             SetTaskSprintTool.MoveChange => ForMovedTask(fieldName, "sprint", AiChangeEditorKind.Sprint, payload),
             _ => ForText(fieldName, payload),
         };

@@ -24,7 +24,7 @@ public sealed class BoardChangeTool : IAiTool
 
     public string Description =>
         "Propose creating, updating or deleting a board. "
-        + "Deleting archives the board and its groups; its tasks stay in the project.";
+        + "Deleting removes the board, and there is no restoring it afterwards; its tasks stay in the project.";
 
     public AiToolKind Kind => AiToolKind.Write;
 

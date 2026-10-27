@@ -89,7 +89,7 @@ public sealed class UpdatePageDetailsChangeHandler : IAiChangeHandler, IAiChange
 
         if (snapshot is null)
         {
-            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
         }
 
         var payload = change.Payload.RootElement;
@@ -100,18 +100,20 @@ public sealed class UpdatePageDetailsChangeHandler : IAiChangeHandler, IAiChange
 
         if (current is null)
         {
-            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorPageNoLongerWorkspace);
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorPageNoLongerWorkspace);
         }
 
         var statusChangedSince = setStatus && current.Status != appliedStatus;
-        var appliedTagNames = AiChangePayload.ReadStringArray(payload, "tags").ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var appliedTagNames = AiChangePayload
+            .ReadStringArray(payload, "tags")
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
         var currentTagNames = current.Tags.Select(tag => tag.Name);
         var tagsChangedSince = setTags && !appliedTagNames.SetEquals(currentTagNames);
         var changedSinceApply = statusChangedSince || tagsChangedSince;
 
         if (changedSinceApply)
         {
-            return AiChangeUndoResult.Failure(change, ChangedSinceMessage);
+            return AiChangePayload.Failure(change, ChangedSinceMessage);
         }
 
         var request = new UpdatePageRequest
@@ -124,12 +126,12 @@ public sealed class UpdatePageDetailsChangeHandler : IAiChangeHandler, IAiChange
 
         if (!response.IsSuccess)
         {
-            return AiChangeUndoResult.Failure(
+            return AiChangePayload.Failure(
                 change,
                 response.Message ?? AppText.AiChangeErrorPageDetailsCouldNotRestored);
         }
 
-        return AiChangeUndoResult.Undone(change, snapshot.PageId);
+        return AiChangePayload.Applied(change, snapshot.PageId);
     }
 
     private static int? ResolvePageId(AiChangeApplyContext context)

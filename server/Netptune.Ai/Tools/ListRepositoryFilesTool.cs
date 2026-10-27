@@ -77,7 +77,9 @@ public sealed class ListRepositoryFilesTool : IAiTool
             incomplete = result.Payload.Tree.IsTruncated ? true : (bool?)null,
         };
 
-        return AiToolExecution.Success(JsonSerializer.Serialize(listing, AiRepositoryRead.JsonOptions), fitted.Omitted > 0);
+        var content = JsonSerializer.Serialize(listing, AiRepositoryRead.JsonOptions);
+
+        return AiToolExecution.Success(content, fitted.Omitted > 0);
     }
 
     private static string NormalizePrefix(string? path)

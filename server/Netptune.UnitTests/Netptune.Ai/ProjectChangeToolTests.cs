@@ -93,6 +93,22 @@ public class ProjectChangeToolTests
         result.Error.Should().Be("Nope");
     }
 
+    [Fact]
+    public async Task Update_ShouldLeaveABlankNameOutOfThePayload_SinceTheReviewDoesNotShowIt()
+    {
+        var result = await Execute($$"""{"action":"update","projectId":{{ApolloId}},"name":"","description":"New text"}""");
+
+        result.IsError.Should().BeFalse();
+
+        var change = ChangeSet.Changes.Single();
+        var payload = change.Payload.RootElement;
+
+        change.Fields.Select(field => field.Name).Should().Equal("description");
+        payload.GetProperty("projectId").GetInt32().Should().Be(ApolloId);
+        payload.GetProperty("description").GetString().Should().Be("New text");
+        payload.TryGetProperty("name", out _).Should().BeFalse();
+    }
+
     private async Task<AiToolExecution> Execute(string json)
     {
         var tool = new ProjectChangeTool(Mediator, ChangeSet);

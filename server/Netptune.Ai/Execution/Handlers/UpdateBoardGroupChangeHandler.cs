@@ -33,8 +33,6 @@ public sealed class UpdateBoardGroupChangeHandler : IAiChangeHandler
             return AiChangePayload.Failure(change, AppText.AiChangeErrorBoardGroupChangeRefersCouldNotResolved);
         }
 
-        // UpdateBoardGroupCommand takes the group by id without a workspace check of its own, so the
-        // caller has to make one — nothing outside an endpoint policy is standing in front of it here.
         var group = await Mediator.Send(new GetBoardGroupQuery(boardGroupId.Value), cancellationToken);
 
         if (group is null)

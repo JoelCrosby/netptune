@@ -115,10 +115,11 @@ public sealed class SetTaskSprintTool : IAiTool
         }
 
         var tasks = new List<TaskViewModel>();
+        var tasksById = await LoadTasks(taskIds, cancellationToken);
 
         foreach (var taskId in taskIds)
         {
-            var task = await Mediator.Send(new GetTaskQuery(taskId), cancellationToken);
+            var task = tasksById.GetValueOrDefault(taskId);
 
             if (task is null)
             {
@@ -143,6 +144,18 @@ public sealed class SetTaskSprintTool : IAiTool
         var drafts = tasks.ConvertAll(CreateRemoval);
 
         return Propose(drafts, $"taking {drafts.Count} task(s) out of their sprint");
+    }
+
+    private async Task<Dictionary<int, TaskViewModel>> LoadTasks(List<int> taskIds, CancellationToken cancellationToken)
+    {
+        if (taskIds.Count == 0)
+        {
+            return [];
+        }
+
+        var tasks = await Mediator.Send(new GetTasksByIdQuery(taskIds), cancellationToken);
+
+        return tasks.ToDictionary(task => task.Id);
     }
 
     private async Task<string?> FindCompletedSprintError(List<TaskViewModel> tasks, CancellationToken cancellationToken)
@@ -200,10 +213,11 @@ public sealed class SetTaskSprintTool : IAiTool
         }
 
         var tasks = new List<TaskViewModel>();
+        var tasksById = await LoadTasks(taskIds, cancellationToken);
 
         foreach (var taskId in taskIds)
         {
-            var task = await Mediator.Send(new GetTaskQuery(taskId), cancellationToken);
+            var task = tasksById.GetValueOrDefault(taskId);
 
             if (task is null)
             {

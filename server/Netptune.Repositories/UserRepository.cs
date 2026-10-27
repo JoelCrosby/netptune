@@ -86,6 +86,26 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
         };
     }
 
+    public Task<List<AssigneeViewModel>> GetWorkspaceAssignees(
+        int workspaceId,
+        IReadOnlyCollection<string> userIds,
+        CancellationToken cancellationToken = default)
+    {
+        return Context.WorkspaceAppUsers
+            .Where(workspaceUser => workspaceUser.WorkspaceId == workspaceId)
+            .Where(workspaceUser => userIds.Contains(workspaceUser.UserId))
+            .Select(workspaceUser => workspaceUser.User)
+            .Select(user => new AssigneeViewModel
+            {
+                Id = user.Id,
+                DisplayName = user.DisplayName,
+                PictureUrl = user.PictureUrl,
+                IsServiceAccount = user.UserType == AppUserType.ServiceAccount,
+            })
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<IPagedResult<AssigneeViewModel>> GetWorkspaceAssigneesPaged(
         int workspaceId,
         AssigneeFilter filter,

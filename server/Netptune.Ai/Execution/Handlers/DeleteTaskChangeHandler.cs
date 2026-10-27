@@ -62,16 +62,16 @@ public sealed class DeleteTaskChangeHandler : IAiChangeHandler, IAiChangeUndoHan
 
         if (!taskId.HasValue)
         {
-            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorDeletedTaskCouldNotResolved);
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorDeletedTaskCouldNotResolved);
         }
 
         var response = await Mediator.Send(new RestoreTasksCommand([taskId.Value]), cancellationToken);
 
         if (!response.IsSuccess)
         {
-            return AiChangeUndoResult.Failure(change, response.Message ?? AppText.AiChangeErrorTaskCouldNotRestored);
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorTaskCouldNotRestored);
         }
 
-        return AiChangeUndoResult.Undone(change, taskId);
+        return AiChangePayload.Applied(change, taskId);
     }
 }

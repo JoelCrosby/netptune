@@ -61,14 +61,14 @@ public sealed class CreateAutomationChangeHandler : IAiChangeHandler, IAiChangeU
 
         if (!ruleId.HasValue)
         {
-            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorCreatedRuleCouldNotResolved);
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorCreatedRuleCouldNotResolved);
         }
 
         var current = await AiAutomationRuleReader.ReadCurrent(Mediator, ruleId.Value, cancellationToken);
 
         if (current is null)
         {
-            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorRuleNoLongerWorkspace);
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorRuleNoLongerWorkspace);
         }
 
         var created = AiAutomationRuleReader.ReadRule(change.Payload.RootElement, "rule");
@@ -76,16 +76,16 @@ public sealed class CreateAutomationChangeHandler : IAiChangeHandler, IAiChangeU
 
         if (!isUnchanged)
         {
-            return AiChangeUndoResult.Failure(change, EditedSinceMessage);
+            return AiChangePayload.Failure(change, EditedSinceMessage);
         }
 
         var response = await Mediator.Send(new DeleteAutomationRuleCommand(ruleId.Value), cancellationToken);
 
         if (!response.IsSuccess)
         {
-            return AiChangeUndoResult.Failure(change, response.Message ?? AppText.AiChangeErrorRuleCouldNotDeleted);
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorRuleCouldNotDeleted);
         }
 
-        return AiChangeUndoResult.Undone(change, ruleId.Value);
+        return AiChangePayload.Applied(change, ruleId.Value);
     }
 }

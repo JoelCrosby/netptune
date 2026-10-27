@@ -118,9 +118,6 @@ Bitte bestätige deine E-Mail-Adresse über den folgenden Link.</value>
   <data name="AiChangeErrorTaskCouldNotRestored" xml:space="preserve">
     <value>Die Aufgabe konnte nicht wiederhergestellt werden.</value>
   </data>
-  <data name="AiChangeErrorTaskCouldNotReadBackAfterRestoring" xml:space="preserve">
-    <value>Die Aufgabe konnte nach dem Wiederherstellen nicht erneut gelesen werden.</value>
-  </data>
   <data name="AiChangeErrorTaskCouldNotPutBackSprint" xml:space="preserve">
     <value>Die Aufgabe konnte nicht in ihren Sprint zurückgelegt werden.</value>
   </data>
@@ -238,9 +235,6 @@ Bitte bestätige deine E-Mail-Adresse über den folgenden Link.</value>
   <data name="AiChangeErrorTaskCouldNotCreated" xml:space="preserve">
     <value>Die Aufgabe konnte nicht erstellt werden.</value>
   </data>
-  <data name="AiChangeErrorTaskCreatedButTagsCouldNotSet" xml:space="preserve">
-    <value>Die Aufgabe wurde erstellt, aber ihre Tags konnten nicht gesetzt werden.</value>
-  </data>
   <data name="AiChangeErrorCreatedTaskCouldNotResolved" xml:space="preserve">
     <value>Die erstellte Aufgabe konnte nicht gefunden werden.</value>
   </data>
@@ -339,9 +333,6 @@ Bitte bestätige deine E-Mail-Adresse über den folgenden Link.</value>
   </data>
   <data name="AiChangeErrorGroupOrderMissingChange" xml:space="preserve">
     <value>In dieser Änderung fehlt die Reihenfolge der Gruppen.</value>
-  </data>
-  <data name="AiChangeErrorGroupsBoardChangedSinceOrderProposed" xml:space="preserve">
-    <value>Die Gruppen auf diesem Board haben sich geändert, seit die Reihenfolge vorgeschlagen wurde.</value>
   </data>
   <data name="AiChangeErrorGroupsCouldNotReordered" xml:space="preserve">
     <value>Die Gruppen konnten nicht neu angeordnet werden.</value>
@@ -1896,5 +1887,47 @@ Bitte bestätige deine E-Mail-Adresse über den folgenden Link.</value>
   </data>
   <data name="AuditReviewFindingReopened" xml:space="preserve">
     <value>Befund “{0}” der Prüfung wieder geöffnet</value>
+  </data>
+  <data name="ErrorEndpointMustBePublic" xml:space="preserve">
+    <value>Der Endpunkt muss eine öffentliche Adresse sein, keine private oder lokale.</value>
+  </data>
+  <data name="AiChangeErrorChangeSetBusy" xml:space="preserve">
+    <value>Diese Änderungen werden bereits angewendet, erneut versucht oder rückgängig gemacht. Warte, bis der Vorgang abgeschlossen ist, und versuche es erneut.</value>
+  </data>
+  <data name="AiChangeErrorTaskChangedSinceChangeAppliedLeftNow" xml:space="preserve">
+    <value>Die Aufgabe wurde seit dem Anwenden dieser Änderung geändert und bleibt daher, wie sie jetzt ist.</value>
+  </data>
+  <data name="AiChangeErrorChangeFailedUnexpectedly" xml:space="preserve">
+    <value>Beim Anwenden dieser Änderung ist ein Fehler aufgetreten, daher wurde sie nicht angewendet.</value>
+  </data>
+  <data name="AiChangeErrorUndoFailedUnexpectedly" xml:space="preserve">
+    <value>Beim Rückgängigmachen dieser Änderung ist ein Fehler aufgetreten, daher wurde sie beibehalten.</value>
+  </data>
+  <data name="ErrorBoardGroupOrderMustListEveryGroup" xml:space="preserve">
+    <value>Die neue Reihenfolge muss jede Gruppe des Boards genau einmal enthalten.</value>
+  </data>
+  <data name="AiReviewTagsNoLongerExist" xml:space="preserve">
+    <value>Diese Tags gibt es nicht mehr, daher konnten sie nicht hinzugefügt werden: {0}.</value>
+  </data>
+  <data name="AiErrorTurnAlreadyRunning" xml:space="preserve">
+    <value>Der Assistent antwortet in dieser Unterhaltung noch. Warte, bis er fertig ist, oder stoppe ihn, und versuche es dann erneut.</value>
+  </data>
+  <data name="AiErrorReplyHitOutputLimit" xml:space="preserve">
+    <value>Die Antwort wurde abgeschnitten, weil sie die maximale Länge erreicht hat, die der Assistent ausgeben kann. Bitte um etwas Kürzeres oder teile die Anfrage auf.</value>
+  </data>
+  <data name="AiErrorProviderStoppedResponding" xml:space="preserve">
+    <value>Der Anbieter antwortet nicht mehr. Versuche es erneut.</value>
+  </data>
+  <data name="AiReviewHitOutputLimit" xml:space="preserve">
+    <value>Die Prüfung wurde abgebrochen, weil die Antwort des Assistenten zu lang wurde. Versuche es erneut.</value>
+  </data>
+  <data name="AiChangeErrorNotStatusCategory" xml:space="preserve">
+    <value>“{0}” ist keine Statuskategorie.</value>
+  </data>
+  <data name="AiErrorInlineWriteTimedOut" xml:space="preserve">
+    <value>Der Assistent hatte nicht genug Zeit. Versuche es erneut oder bitte um etwas Kürzeres.</value>
+  </data>
+  <data name="AiReviewSubjectNotSupported" xml:space="preserve">
+    <value>Diese Art von Element kann der Assistent nicht prüfen.</value>
   </data>
 </root>

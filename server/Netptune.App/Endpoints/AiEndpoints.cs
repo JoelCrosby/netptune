@@ -672,20 +672,12 @@ public static class AiEndpoints
         IBoardEventService boardEventService,
         HttpContext context)
     {
-        var applied = result.Results.Where(change => change.Status == AiChangeApplyStatus.Applied).ToList();
-
-        if (applied.Count == 0)
+        if (result.ChangedScopes.Count == 0)
         {
             return;
         }
 
-        var changedScopes = applied
-            .Select(change => change.EntityType)
-            .OfType<string>()
-            .Distinct(StringComparer.Ordinal)
-            .ToArray();
-
-        await boardEventService.BroadcastRequestAsync(context, changedScopes);
+        await boardEventService.BroadcastRequestAsync(context, [.. result.ChangedScopes]);
     }
 
     private static void StartEventStream(HttpContext context)

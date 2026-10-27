@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.Json;
 
 using Mediator;
@@ -70,13 +71,14 @@ public sealed class UpdateSprintAction : IAiToolAction
         }
 
         var fields = new List<AiChangeField>();
+        var payload = new Dictionary<string, object> { ["sprintId"] = sprint.Id };
         var name = AiToolSchema.GetString(arguments, "name")?.Trim();
         var goal = AiToolSchema.GetString(arguments, "goal");
 
-        AddChangedField(fields, "name", sprint.Name, name);
-        AddChangedField(fields, "goal", sprint.Goal, goal);
-        AddChangedDate(fields, "startDate", DateOnly.FromDateTime(sprint.StartDate), startDate);
-        AddChangedDate(fields, "endDate", DateOnly.FromDateTime(sprint.EndDate), endDate);
+        AddChangedField(fields, payload, "name", sprint.Name, name);
+        AddChangedField(fields, payload, "goal", sprint.Goal, goal);
+        AddChangedDate(fields, payload, "startDate", DateOnly.FromDateTime(sprint.StartDate), startDate);
+        AddChangedDate(fields, payload, "endDate", DateOnly.FromDateTime(sprint.EndDate), endDate);
 
         if (fields.Count == 0)
         {
@@ -92,12 +94,13 @@ public sealed class UpdateSprintAction : IAiToolAction
             EntityId = sprint.Id,
             Summary = Localized.Format(AppText.AiSummaryUpdateSprint, changedNames, sprint.Name),
             Fields = fields,
-            Payload = JsonDocument.Parse(arguments.GetRawText()),
+            Payload = JsonSerializer.SerializeToDocument(payload),
             ValidationStatus = AiChangeValidationStatus.Valid,
         });
 
         return AiToolExecution.Success(
-            $"Proposed updating sprint {sprint.Id}. Nothing has been applied yet — the user must review and apply the change.");
+            $"Proposed updating sprint {sprint.Id}. "
+            + "Nothing has been applied yet — the user must review and apply the change.");
     }
 
     private static DateOnly? ParseDate(string? raw)
@@ -109,6 +112,7 @@ public sealed class UpdateSprintAction : IAiToolAction
 
     private static void AddChangedDate(
         List<AiChangeField> fields,
+        Dictionary<string, object> payload,
         string name,
         DateOnly before,
         DateOnly? after)
@@ -121,10 +125,12 @@ public sealed class UpdateSprintAction : IAiToolAction
         }
 
         fields.Add(AiChangeFields.Date(name, before, after));
+        payload[name] = after!.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
     }
 
     private static void AddChangedField(
         List<AiChangeField> fields,
+        Dictionary<string, object> payload,
         string name,
         string? before,
         string? after)
@@ -144,5 +150,6 @@ public sealed class UpdateSprintAction : IAiToolAction
         }
 
         fields.Add(new AiChangeField { Name = name, Before = before, After = after });
+        payload[name] = after!;
     }
 }

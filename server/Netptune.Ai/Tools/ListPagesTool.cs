@@ -57,7 +57,7 @@ public sealed class ListPagesTool : IAiTool
         var requestedPageSize = AiToolSchema.GetInt(arguments, "pageSize") ?? DefaultPageSize;
         var pageSize = Math.Clamp(requestedPageSize, 1, MaximumPageSize);
         var page = Math.Max(AiToolSchema.GetInt(arguments, "page") ?? 1, 1);
-        var skipped = (page - 1) * pageSize;
+        var skipped = AiToolSchema.Skip(page, pageSize);
 
         var nodes = AiPageLookup.InTreeOrder(tree, folderId);
         var pageOfNodes = nodes.Skip(skipped).Take(pageSize).ToList();

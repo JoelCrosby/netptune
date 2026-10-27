@@ -112,7 +112,9 @@ public sealed class UpdatePageBodyAction : IAiToolAction
         var isRenamed = !string.Equals(title, page.Title, StringComparison.Ordinal);
         var isRewritten = !string.Equals(body, currentBody, StringComparison.Ordinal);
 
-        if (!isRenamed && !isRewritten)
+        var changesSomething = isRenamed || isRewritten;
+
+        if (!changesSomething)
         {
             return AiToolExecution.Failed("The proposed body and title match the page as it is.");
         }

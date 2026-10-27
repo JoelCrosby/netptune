@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Sockets;
 
-namespace Netptune.Ai.Web;
+namespace Netptune.Core.Models.Web;
 
 public sealed record WebEgressVerdict
 {
@@ -153,8 +153,37 @@ public static class WebEgressGuard
         }
 
         var octets = address.GetAddressBytes();
-        var isNat64OrTeredo = octets[0] == 0x20 && octets[1] == 0x01 && octets[2] == 0x00;
+        var isTeredoOrBenchmarking = octets[0] == 0x20 && octets[1] == 0x01 && octets[2] == 0x00;
 
-        return isNat64OrTeredo;
+        if (isTeredoOrBenchmarking)
+        {
+            return true;
+        }
+
+        var embedded = ReadEmbeddedIPv4(octets);
+
+        return embedded is not null && IsPrivate(embedded);
+    }
+
+    // NAT64 (64:ff9b::/96) and 6to4 (2002::/16) carry an IPv4 address that the gateway connects to,
+    // so the address inside decides whether the destination is private.
+    private static IPAddress? ReadEmbeddedIPv4(byte[] octets)
+    {
+        var isNat64 = octets[0] == 0x00 && octets[1] == 0x64 && octets[2] == 0xff && octets[3] == 0x9b
+            && octets[4..12].All(octet => octet == 0);
+
+        if (isNat64)
+        {
+            return new IPAddress(octets[12..16]);
+        }
+
+        var is6To4 = octets[0] == 0x20 && octets[1] == 0x02;
+
+        if (is6To4)
+        {
+            return new IPAddress(octets[2..6]);
+        }
+
+        return null;
     }
 }

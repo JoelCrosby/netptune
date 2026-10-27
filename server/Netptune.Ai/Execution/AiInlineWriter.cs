@@ -19,9 +19,6 @@ public sealed class AiInlineWriter : IAiInlineWriter
     public const int MaxPromptLength = 2000;
     private const int MaxSurroundingLength = 6000;
     private const int MaximumOutputTokens = 4096;
-    private const int EstimatedCharactersPerToken = 4;
-
-    private const string TimeoutMessage = "The assistant ran out of time. Try again, or ask for something shorter.";
 
     private static readonly TimeSpan Timeout = TimeSpan.FromMinutes(3);
 
@@ -84,7 +81,10 @@ public sealed class AiInlineWriter : IAiInlineWriter
         return Write(request, target, subject, cancellationToken);
     }
 
-    public IAsyncEnumerable<AiStreamEvent> WritePage(int pageId, InlineWriteRequest request, CancellationToken cancellationToken)
+    public IAsyncEnumerable<AiStreamEvent> WritePage(
+        int pageId,
+        InlineWriteRequest request,
+        CancellationToken cancellationToken)
     {
         Func<int, Task<InlineWriteSubject?>> subject = workspaceId => LoadPage(pageId, workspaceId, cancellationToken);
 
@@ -245,7 +245,12 @@ public sealed class AiInlineWriter : IAiInlineWriter
         using var cancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeout.Token);
 
         var run = StreamText(provider, chatRequest, apiKey, outcome, cancellation.Token);
-        var events = AiTurnReader.Read(run, Timeout, timeout.Token, cancellation.Token, TimeoutMessage);
+        var events = AiTurnReader.Read(
+            run,
+            Timeout,
+            timeout.Token,
+            cancellation.Token,
+            AppText.AiErrorInlineWriteTimedOut);
         var origin = new AiUsageOrigin(workspaceId, userId, subject.Purpose);
 
         // A writer who cancels or leaves stops this enumeration early, and only a finally block
@@ -259,7 +264,7 @@ public sealed class AiInlineWriter : IAiInlineWriter
         }
         finally
         {
-            await BookUsage(origin, credential, chatRequest, outcome);
+            await BookUsage(origin, credential, chatRequest, outcome, cancellation.IsCancellationRequested);
         }
 
         var turn = outcome.Turn;
@@ -283,10 +288,13 @@ public sealed class AiInlineWriter : IAiInlineWriter
         AiUsageOrigin origin,
         AiResolvedCredential credential,
         AiChatRequest request,
-        WriteOutcome outcome)
+        WriteOutcome outcome,
+        bool wasInterrupted)
     {
-        var usage = outcome.Turn?.Usage ?? EstimateUsage(request, outcome.StreamedCharacters);
-        var wasBilled = outcome.Turn is not null || outcome.StreamedCharacters > 0;
+        // A call stopped or timed out was still sent and paid for, even if the model had not written
+        // anything yet.
+        var usage = outcome.Turn?.Usage ?? AiUsageEstimate.For(request, outcome.StreamedCharacters);
+        var wasBilled = outcome.Turn is not null || outcome.StreamedCharacters > 0 || wasInterrupted;
 
         if (!wasBilled)
         {
@@ -296,23 +304,6 @@ public sealed class AiInlineWriter : IAiInlineWriter
         await AiUsageRecorder.Record(UnitOfWork, origin, credential, request.Model, usage, CancellationToken.None);
         await AiHandlerCredentials.MarkUsed(UnitOfWork, credential, CancellationToken.None);
         await UnitOfWork.CompleteAsync(CancellationToken.None);
-    }
-
-    // Providers report usage only with the finished reply, so a reply cut short is booked from its length.
-    private static AiUsage EstimateUsage(AiChatRequest request, int streamedCharacters)
-    {
-        var promptCharacters = request.SystemPrompt.Length + request.Messages.Sum(message => message.PromptText.Length);
-
-        return new AiUsage
-        {
-            InputTokens = TokensFor(promptCharacters),
-            OutputTokens = TokensFor(streamedCharacters),
-        };
-    }
-
-    private static int TokensFor(int characters)
-    {
-        return (characters + EstimatedCharactersPerToken - 1) / EstimatedCharactersPerToken;
     }
 
     private static async IAsyncEnumerable<AiStreamEvent> StreamText(

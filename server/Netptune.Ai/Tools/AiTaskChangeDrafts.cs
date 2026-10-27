@@ -5,10 +5,8 @@ using Mediator;
 
 using Netptune.Core.Enums;
 using Netptune.Core.Localization;
-using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.ProjectTasks;
-using Netptune.Core.ViewModels.Users;
 using Netptune.Handlers.Users.Queries;
 
 namespace Netptune.Ai.Tools;
@@ -22,18 +20,22 @@ internal sealed record AiTaskTarget
     public required string Name { get; init; }
 }
 
-internal sealed record AiTaskDraftResult(AiChangeDraft? Draft, string? Error)
+internal sealed record AiTaskDraftResult
 {
-    public static readonly AiTaskDraftResult Unchanged = new(null, null);
+    public AiChangeDraft? Draft { get; init; }
+
+    public string? Error { get; init; }
+
+    public static readonly AiTaskDraftResult Unchanged = new();
 
     public static AiTaskDraftResult Proposed(AiChangeDraft draft)
     {
-        return new AiTaskDraftResult(draft, null);
+        return new AiTaskDraftResult { Draft = draft };
     }
 
     public static AiTaskDraftResult Failed(string error)
     {
-        return new AiTaskDraftResult(null, error);
+        return new AiTaskDraftResult { Error = error };
     }
 }
 
@@ -43,15 +45,16 @@ internal static class AiTaskChangeDrafts
     public const string TagsChange = "propose_set_task_tags";
     public const string BoardGroupChange = "propose_move_task_to_board_group";
 
-    private const int MemberLookupPageSize = 200;
-
     public static async Task<AiTaskDraftResult> Assignees(
         IMediator mediator,
         TaskViewModel task,
         JsonElement arguments,
+        AiTaskLookups? lookups,
         CancellationToken cancellationToken)
     {
-        var assigneeIds = AiToolSchema.GetStringArray(arguments, "assigneeIds").Distinct(StringComparer.Ordinal).ToList();
+        var assigneeIds = AiToolSchema.GetStringArray(arguments, "assigneeIds")
+            .Distinct(StringComparer.Ordinal)
+            .ToList();
         var currentIds = task.Assignees.Select(assignee => assignee.Id).ToHashSet(StringComparer.Ordinal);
         var isUnchanged = currentIds.SetEquals(assigneeIds);
 
@@ -60,13 +63,9 @@ internal static class AiTaskChangeDrafts
             return AiTaskDraftResult.Unchanged;
         }
 
-        var members = await LoadMembers(mediator, cancellationToken);
-
-        if (members is null)
-        {
-            return AiTaskDraftResult.Failed("Workspace members could not be read.");
-        }
-
+        var members = lookups?.Members
+            ?? (await mediator.Send(new GetAssigneesByIdQuery(assigneeIds), cancellationToken))
+                .ToDictionary(member => member.Id, StringComparer.Ordinal);
         var unknownIds = assigneeIds.Where(id => !members.ContainsKey(id)).ToList();
 
         if (unknownIds.Count > 0)
@@ -106,6 +105,7 @@ internal static class AiTaskChangeDrafts
         IAiChangeSetBuilder changeSet,
         AiTaskTarget target,
         JsonElement arguments,
+        AiTaskLookups? lookups,
         CancellationToken cancellationToken)
     {
         var requested = AiTagVocabulary.ReadRequested(arguments);
@@ -119,7 +119,12 @@ internal static class AiTaskChangeDrafts
             return AiTaskDraftResult.Unchanged;
         }
 
-        var unknownError = await AiTagVocabulary.FindUnknown(mediator, changeSet, requested, cancellationToken);
+        var unknownError = await AiTagVocabulary.FindUnknown(
+            mediator,
+            changeSet,
+            requested,
+            lookups?.ExistingTagNames,
+            cancellationToken);
 
         if (unknownError is not null)
         {
@@ -156,6 +161,8 @@ internal static class AiTaskChangeDrafts
         IMediator mediator,
         TaskViewModel task,
         int boardGroupId,
+        int? requestedStatusId,
+        AiTaskLookups? lookups,
         CancellationToken cancellationToken)
     {
         var isUnchanged = task.BoardGroupId == boardGroupId;
@@ -165,7 +172,7 @@ internal static class AiTaskChangeDrafts
             return AiTaskDraftResult.Unchanged;
         }
 
-        var group = await AiBoardLookup.FindGroup(mediator, boardGroupId, cancellationToken);
+        var group = await AiBoardLookup.FindGroup(mediator, boardGroupId, lookups, cancellationToken);
 
         if (group is null)
         {
@@ -177,6 +184,27 @@ internal static class AiTaskChangeDrafts
         if (mismatch is not null)
         {
             return AiTaskDraftResult.Failed(mismatch);
+        }
+
+        var groupField = AiChangeFields.BoardGroup(group.Id, $"{group.BoardName} · {group.Name}");
+        var fields = new List<AiChangeField> { groupField };
+        var groupStatus = await AiBoardLookup.FindGroupStatus(mediator, group.Id, lookups, cancellationToken);
+        var changesStatus = groupStatus is not null && groupStatus.Id != task.StatusId;
+
+        var conflictsWithRequest = changesStatus && requestedStatusId.HasValue && requestedStatusId != groupStatus!.Id;
+
+        if (conflictsWithRequest)
+        {
+            return AiTaskDraftResult.Failed(AiBoardLookup.StatusConflict(group, groupStatus!));
+        }
+
+        if (changesStatus)
+        {
+            fields.Add(AiChangeFields.Values(
+                "status",
+                AiChangeValueKind.Status,
+                [AiChangeFields.Status(task.StatusId, task.StatusName, task.StatusColor)],
+                [AiChangeFields.Status(groupStatus!.Id, groupStatus.Name, groupStatus.Color)]));
         }
 
         var payload = new
@@ -193,7 +221,7 @@ internal static class AiTaskChangeDrafts
             EntityType = "task",
             EntityId = task.Id,
             Summary = Localized.Format(AppText.AiSummaryMoveTaskToBoardGroup, task.Name, group.Name, group.BoardName),
-            Fields = [AiChangeFields.BoardGroup(group.Id, $"{group.BoardName} · {group.Name}")],
+            Fields = fields,
             Payload = JsonSerializer.SerializeToDocument(payload),
             ValidationStatus = AiChangeValidationStatus.Valid,
         });
@@ -227,22 +255,5 @@ internal static class AiTaskChangeDrafts
             Payload = JsonSerializer.SerializeToDocument(payload),
             ValidationStatus = AiChangeValidationStatus.Valid,
         });
-    }
-
-    private static async Task<Dictionary<string, AssigneeViewModel>?> LoadMembers(
-        IMediator mediator,
-        CancellationToken cancellationToken)
-    {
-        var filter = new AssigneeFilter { Page = 1, PageSize = MemberLookupPageSize };
-        var result = await mediator.Send(new GetAssigneesQuery(filter), cancellationToken);
-
-        if (!result.IsSuccess)
-        {
-            return null;
-        }
-
-        var members = result.Payload?.Items ?? [];
-
-        return members.ToDictionary(member => member.Id, member => member, StringComparer.Ordinal);
     }
 }

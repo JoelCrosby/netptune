@@ -18,6 +18,7 @@ public sealed class GetTaskTool : IAiTool
     private const string IncludeComments = "comments";
     private const string IncludeRelations = "relations";
     private const string IncludeFiles = "files";
+    private const int MaxCommentCharacters = 4_000;
 
     private static readonly string[] KnownIncludes = [IncludeComments, IncludeRelations, IncludeFiles];
 
@@ -131,13 +132,6 @@ public sealed class GetTaskTool : IAiTool
             flags = task.Flags.Select(flag => new { id = flag.Id, name = flag.Name, description = flag.Description }),
         })!.AsObject();
 
-        var includesComments = includes.Contains(IncludeComments);
-
-        if (includesComments)
-        {
-            detail["comments"] = await ReadComments(systemId!, cancellationToken);
-        }
-
         var includesRelations = includes.Contains(IncludeRelations);
 
         if (includesRelations)
@@ -152,7 +146,26 @@ public sealed class GetTaskTool : IAiTool
             detail["files"] = await ReadFiles(systemId!, cancellationToken);
         }
 
-        return AiToolExecution.Success(detail.ToJsonString());
+        var includesComments = includes.Contains(IncludeComments);
+        var commentsOmitted = 0;
+
+        // Comments go last and take whatever room the rest of the task leaves, so a long thread cannot push
+        // the relations and files out of the result.
+        if (includesComments)
+        {
+            var budget = AiResultBudget.Characters - detail.ToJsonString(AiToolJson.Options).Length;
+            var comments = await ReadComments(systemId!, budget, cancellationToken);
+
+            detail["comments"] = comments.Rows;
+            commentsOmitted = comments.Omitted;
+
+            if (commentsOmitted > 0)
+            {
+                detail["commentsOmitted"] = commentsOmitted;
+            }
+        }
+
+        return AiToolExecution.Success(detail.ToJsonString(), commentsOmitted > 0);
     }
 
     private static List<string> ReadIncludes(JsonElement arguments)
@@ -163,7 +176,7 @@ public sealed class GetTaskTool : IAiTool
             .ToList();
     }
 
-    private async Task<JsonNode?> ReadComments(string systemId, CancellationToken cancellationToken)
+    private async Task<AiBudgetedRows> ReadComments(string systemId, int budget, CancellationToken cancellationToken)
     {
         var comments = await Mediator.Send(new GetCommentsForTaskQuery(systemId), cancellationToken);
         var currentUserId = Identity.GetCurrentUserId();
@@ -172,11 +185,18 @@ public sealed class GetTaskTool : IAiTool
             id = comment.Id,
             author = comment.UserDisplayName,
             isYours = comment.UserId == currentUserId,
-            body = comment.Body,
+            body = ShortenComment(comment.Body),
             createdAt = comment.CreatedAt,
         });
 
-        return JsonSerializer.SerializeToNode(summaries);
+        return AiResultBudget.Fit(summaries, budget: budget);
+    }
+
+    private static string? ShortenComment(string? body)
+    {
+        var isLong = body is not null && body.Length > MaxCommentCharacters;
+
+        return isLong ? $"{body![..MaxCommentCharacters]}\n… (comment shortened)" : body;
     }
 
     private async Task<JsonNode?> ReadRelations(string systemId, CancellationToken cancellationToken)

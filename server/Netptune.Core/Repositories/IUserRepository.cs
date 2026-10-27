@@ -18,10 +18,9 @@ public interface IUserRepository : IRepository<AppUser, string>
 
     Task<IPagedResult<WorkspaceUserViewModel>> GetWorkspaceUsersPaged(int workspaceId, WorkspaceUserFilter filter, CancellationToken cancellationToken = default);
 
-    Task<IPagedResult<AssigneeViewModel>> GetWorkspaceAssigneesPaged(
-        int workspaceId,
-        AssigneeFilter filter,
-        CancellationToken cancellationToken = default);
+    Task<IPagedResult<AssigneeViewModel>> GetWorkspaceAssigneesPaged(int workspaceId, AssigneeFilter filter, CancellationToken cancellationToken = default);
+
+    Task<List<AssigneeViewModel>> GetWorkspaceAssignees(int workspaceId, IReadOnlyCollection<string> userIds, CancellationToken cancellationToken = default);
 
     Task<IPagedResult<UserSelectOptionViewModel>> GetUserSelectOptionsPaged(int workspaceId, UserSelectFilter filter, CancellationToken cancellationToken = default);
 

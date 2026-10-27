@@ -167,7 +167,12 @@ public sealed class AiImportMappingAdvisor : IAiImportMappingAdvisor
                 $"- [{column.Index}] \"{column.Name}\" ({column.InferredType}, {column.DistinctCount} distinct){samples}");
         }
 
-        AppendVocabulary(builder, request.Vocabulary);
+        // A workspace that does not share example values does not share its own values either: member
+        // emails, tags and keys stay out of the prompt along with the sampled cells.
+        if (request.AllowDataSampling)
+        {
+            AppendVocabulary(builder, request.Vocabulary);
+        }
 
         builder.AppendLine();
         builder.AppendLine("Starting mapping:");

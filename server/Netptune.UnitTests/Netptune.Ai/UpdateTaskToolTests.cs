@@ -7,13 +7,18 @@ using Mediator;
 using Netptune.Ai.Execution;
 using Netptune.Ai.Tools;
 using Netptune.Core.Authorization;
+using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.Boards;
 using Netptune.Core.ViewModels.ProjectTasks;
+using Netptune.Core.ViewModels.Statuses;
 using Netptune.Core.ViewModels.Tags;
+using Netptune.Core.ViewModels.Users;
 using Netptune.Handlers.BoardGroups.Queries;
+using Netptune.Handlers.Statuses.Queries;
 using Netptune.Handlers.Tasks.Queries;
+using Netptune.Handlers.Users.Queries;
 
 using NSubstitute;
 
@@ -42,6 +47,24 @@ public class UpdateTaskToolTests
         field.Name.Should().Be("priority");
         field.Before.Should().Be(nameof(TaskPriority.Low));
         field.After.Should().Be(nameof(TaskPriority.High));
+    }
+
+    [Fact]
+    public async Task Execute_ShouldLeaveBlankTextFieldsOutOfThePayload_SinceTheReviewDoesNotShowThem()
+    {
+        GivenTask(CreateTask() with { Description = "Keep me" });
+
+        var result = await Execute($$"""{"taskId":{{TaskId}},"priority":"High","name":"  ","description":""}""");
+
+        result.IsError.Should().BeFalse();
+
+        var change = ChangeSet.Changes.Single();
+        var payload = change.Payload.RootElement;
+
+        change.Fields.Select(field => field.Name).Should().Equal("priority");
+        payload.TryGetProperty("name", out _).Should().BeFalse();
+        payload.TryGetProperty("description", out _).Should().BeFalse();
+        payload.GetProperty("priority").GetString().Should().Be("High");
     }
 
     [Fact]
@@ -468,6 +491,126 @@ public class UpdateTaskToolTests
         var element = JsonDocument.Parse(arguments).RootElement;
 
         return await tool.Execute(element, TestContext.Current.CancellationToken);
+    }
+
+    [Fact]
+    public async Task Execute_ShouldShowTheStatusABoardGroupWillGiveTheTask()
+    {
+        GivenTask(CreateTask());
+        GivenBoardGroup(CreateGroup(9, projectId: 3));
+        GivenGroupStatus(9, new StatusViewModel { Id = 4, Name = "Done", Key = "done" });
+
+        var result = await Execute($$"""{"taskId":{{TaskId}},"boardGroupId":9}""");
+
+        result.IsError.Should().BeFalse();
+
+        var fields = ChangeSet.Changes.Single().Fields;
+
+        fields.Select(field => field.Name).Should().Equal("boardGroup", "status");
+        fields[1].AfterValues!.Single().Display.Should().Be("Done");
+    }
+
+    [Fact]
+    public async Task Execute_ShouldRefuseAStatus_ThatTheBoardGroupWouldOverwrite()
+    {
+        GivenTask(CreateTask());
+        GivenBoardGroup(CreateGroup(9, projectId: 3));
+        GivenGroupStatus(9, new StatusViewModel { Id = 4, Name = "Done", Key = "done" });
+
+        var result = await Execute($$"""{"taskId":{{TaskId}},"boardGroupId":9,"statusId":2}""");
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("Done");
+    }
+
+    [Fact]
+    public async Task Execute_ShouldAssignAMember_LookedUpById()
+    {
+        GivenTask(CreateTask());
+
+        Mediator
+            .Send(Arg.Any<GetAssigneesByIdQuery>(), Arg.Any<CancellationToken>())
+            .Returns([new AssigneeViewModel { Id = "member-150", DisplayName = "Member 150" }]);
+
+        var result = await Execute($$"""{"taskId":{{TaskId}},"assigneeIds":["member-150"]}""");
+
+        result.IsError.Should().BeFalse();
+        ChangeSet.Changes.Single().Fields.Single().AfterValues!.Single().Display.Should().Be("Member 150");
+    }
+
+    [Fact]
+    public async Task Execute_ShouldRefuseAnAssigneeWhoIsNotAMember()
+    {
+        GivenTask(CreateTask());
+
+        Mediator
+            .Send(Arg.Any<GetAssigneesByIdQuery>(), Arg.Any<CancellationToken>())
+            .Returns(new List<AssigneeViewModel>());
+
+        var result = await Execute($$"""{"taskId":{{TaskId}},"assigneeIds":["stranger"]}""");
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("stranger");
+    }
+
+    [Theory]
+    [InlineData("99")]
+    [InlineData("1")]
+    [InlineData("High, Low")]
+    public async Task Execute_ShouldRefuseAPriority_ThatIsNotANamedLevel(string priority)
+    {
+        GivenTask(CreateTask());
+
+        var result = await Execute($$"""{"taskId":{{TaskId}},"priority":"{{priority}}"}""");
+
+        result.IsError.Should().BeTrue();
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Execute_ShouldReadMembersAndBoardGroupsOnce_ForAWholeBatch()
+    {
+        var tasks = Enumerable.Range(1, 3)
+            .Select(id => CreateTask() with { Id = id, SystemId = $"NPT-{id}" })
+            .ToArray();
+
+        GivenTasks(tasks);
+        GivenBoardGroup(CreateGroup(9, projectId: 3));
+        Mediator
+            .Send(Arg.Any<GetAssigneesByIdQuery>(), Arg.Any<CancellationToken>())
+            .Returns([new AssigneeViewModel { Id = "alice", DisplayName = "Alice" }]);
+
+        var updateJson = tasks.Select(task => $$"""{"taskId":{{task.Id}},"assigneeIds":["alice"],"boardGroupId":9}""");
+        var updates = string.Join(",", updateJson);
+        var result = await Execute($$"""{"updates":[{{updates}}]}""");
+
+        result.IsError.Should().BeFalse(result.Content);
+        await Mediator.Received(1).Send(Arg.Any<GetAssigneesByIdQuery>(), Arg.Any<CancellationToken>());
+        await Mediator.Received(1).Send(Arg.Any<GetBoardGroupOptionsQuery>(), Arg.Any<CancellationToken>());
+    }
+
+    private void GivenGroupStatus(int groupId, StatusViewModel status)
+    {
+        Mediator
+            .Send(Arg.Is<GetBoardGroupQuery>(query => query.Id == groupId), Arg.Any<CancellationToken>())
+            .Returns(new BoardGroup { Id = groupId, Name = "Group", StatusId = status.Id });
+        Mediator
+            .Send(Arg.Any<GetStatusesQuery>(), Arg.Any<CancellationToken>())
+            .Returns([status, new StatusViewModel { Id = 2, Name = "Doing", Key = "doing" }]);
+    }
+
+    private static BoardGroupOptionViewModel CreateGroup(int id, int projectId)
+    {
+        return new BoardGroupOptionViewModel
+        {
+            Id = id,
+            Name = "Shipped",
+            BoardId = 4,
+            BoardName = "Netptune",
+            BoardIdentifier = "netptune",
+            ProjectId = projectId,
+            ProjectName = "Netptune",
+        };
     }
 
     private void GivenTask(TaskViewModel task)

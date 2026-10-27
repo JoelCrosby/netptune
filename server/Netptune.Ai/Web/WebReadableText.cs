@@ -144,5 +144,4 @@ public static class WebReadableText
 
         return string.Join("\n", lines.Where(value => value.Length > 0));
     }
-
 }

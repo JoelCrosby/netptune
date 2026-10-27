@@ -69,6 +69,36 @@ public class AiChangeSetRepository(DataContext context, IDbConnectionFactory con
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<bool> TryClaim(
+        Guid changeSetId,
+        string userId,
+        int workspaceId,
+        DateTime claimedUntil,
+        CancellationToken cancellationToken = default)
+    {
+        var now = DateTime.UtcNow;
+        var claimed = await Entities
+            .Where(changeSet =>
+                changeSet.Id == changeSetId &&
+                changeSet.UserId == userId &&
+                changeSet.WorkspaceId == workspaceId &&
+                (changeSet.ClaimedUntil == null || changeSet.ClaimedUntil < now))
+            .ExecuteUpdateAsync(
+                setters => setters.SetProperty(changeSet => changeSet.ClaimedUntil, claimedUntil),
+                cancellationToken);
+
+        return claimed == 1;
+    }
+
+    public Task Release(Guid changeSetId, CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .Where(changeSet => changeSet.Id == changeSetId)
+            .ExecuteUpdateAsync(
+                setters => setters.SetProperty(changeSet => changeSet.ClaimedUntil, (DateTime?)null),
+                cancellationToken);
+    }
+
     public Task<List<AiProposedChange>> GetChanges(
         Guid changeSetId,
         CancellationToken cancellationToken = default)

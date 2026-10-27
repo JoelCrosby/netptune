@@ -19,16 +19,20 @@ internal sealed record AiPendingBoardGroup
     public string Label => $"{BoardName} · {Name}";
 }
 
-internal sealed record AiPendingBoardGroupResult(AiPendingBoardGroup? Group, string? Error)
+internal sealed record AiPendingBoardGroupResult
 {
+    public AiPendingBoardGroup? Group { get; init; }
+
+    public string? Error { get; init; }
+
     public static AiPendingBoardGroupResult Found(AiPendingBoardGroup group)
     {
-        return new AiPendingBoardGroupResult(group, null);
+        return new AiPendingBoardGroupResult { Group = group };
     }
 
     public static AiPendingBoardGroupResult Failed(string error)
     {
-        return new AiPendingBoardGroupResult(null, error);
+        return new AiPendingBoardGroupResult { Error = error };
     }
 }
 

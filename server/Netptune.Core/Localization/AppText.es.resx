@@ -118,9 +118,6 @@ Confirma tu dirección de correo electrónico con el siguiente enlace.</value>
   <data name="AiChangeErrorTaskCouldNotRestored" xml:space="preserve">
     <value>No se pudo restaurar la tarea.</value>
   </data>
-  <data name="AiChangeErrorTaskCouldNotReadBackAfterRestoring" xml:space="preserve">
-    <value>No se pudo volver a leer la tarea después de restaurarla.</value>
-  </data>
   <data name="AiChangeErrorTaskCouldNotPutBackSprint" xml:space="preserve">
     <value>No se pudo devolver la tarea a su sprint.</value>
   </data>
@@ -238,9 +235,6 @@ Confirma tu dirección de correo electrónico con el siguiente enlace.</value>
   <data name="AiChangeErrorTaskCouldNotCreated" xml:space="preserve">
     <value>No se pudo crear la tarea.</value>
   </data>
-  <data name="AiChangeErrorTaskCreatedButTagsCouldNotSet" xml:space="preserve">
-    <value>La tarea se creó, pero no se pudieron asignar sus etiquetas.</value>
-  </data>
   <data name="AiChangeErrorCreatedTaskCouldNotResolved" xml:space="preserve">
     <value>No se encontró la tarea creada.</value>
   </data>
@@ -339,9 +333,6 @@ Confirma tu dirección de correo electrónico con el siguiente enlace.</value>
   </data>
   <data name="AiChangeErrorGroupOrderMissingChange" xml:space="preserve">
     <value>Falta el orden de los grupos en este cambio.</value>
-  </data>
-  <data name="AiChangeErrorGroupsBoardChangedSinceOrderProposed" xml:space="preserve">
-    <value>Los grupos de este tablero han cambiado desde que se propuso el orden.</value>
   </data>
   <data name="AiChangeErrorGroupsCouldNotReordered" xml:space="preserve">
     <value>No se pudieron reordenar los grupos.</value>
@@ -1896,5 +1887,47 @@ Confirma tu dirección de correo electrónico con el siguiente enlace.</value>
   </data>
   <data name="AuditReviewFindingReopened" xml:space="preserve">
     <value>Hallazgo de revisión “{0}” reabierto</value>
+  </data>
+  <data name="ErrorEndpointMustBePublic" xml:space="preserve">
+    <value>El punto de conexión debe ser una dirección pública, no una privada o local.</value>
+  </data>
+  <data name="AiChangeErrorChangeSetBusy" xml:space="preserve">
+    <value>Estos cambios ya se están aplicando, reintentando o deshaciendo. Espera a que termine y vuelve a intentarlo.</value>
+  </data>
+  <data name="AiChangeErrorTaskChangedSinceChangeAppliedLeftNow" xml:space="preserve">
+    <value>La tarea ha cambiado desde que se aplicó este cambio, así que se ha dejado como está.</value>
+  </data>
+  <data name="AiChangeErrorChangeFailedUnexpectedly" xml:space="preserve">
+    <value>Algo salió mal al aplicar este cambio, así que no se ha aplicado.</value>
+  </data>
+  <data name="AiChangeErrorUndoFailedUnexpectedly" xml:space="preserve">
+    <value>Algo salió mal al deshacer este cambio, así que se ha mantenido.</value>
+  </data>
+  <data name="ErrorBoardGroupOrderMustListEveryGroup" xml:space="preserve">
+    <value>El nuevo orden debe incluir cada grupo del tablero exactamente una vez.</value>
+  </data>
+  <data name="AiReviewTagsNoLongerExist" xml:space="preserve">
+    <value>Estas etiquetas ya no existen, así que no se han podido añadir: {0}.</value>
+  </data>
+  <data name="AiErrorTurnAlreadyRunning" xml:space="preserve">
+    <value>El asistente todavía está respondiendo en esta conversación. Espera a que termine, o detenlo, y vuelve a intentarlo.</value>
+  </data>
+  <data name="AiErrorReplyHitOutputLimit" xml:space="preserve">
+    <value>La respuesta se ha cortado porque alcanzó la longitud máxima que puede dar el asistente. Pide algo más corto o divide la petición.</value>
+  </data>
+  <data name="AiErrorProviderStoppedResponding" xml:space="preserve">
+    <value>El proveedor ha dejado de responder. Vuelve a intentarlo.</value>
+  </data>
+  <data name="AiReviewHitOutputLimit" xml:space="preserve">
+    <value>La revisión se ha cortado porque la respuesta del asistente era demasiado larga. Vuelve a intentarlo.</value>
+  </data>
+  <data name="AiChangeErrorNotStatusCategory" xml:space="preserve">
+    <value>“{0}” no es una categoría de estado.</value>
+  </data>
+  <data name="AiErrorInlineWriteTimedOut" xml:space="preserve">
+    <value>El asistente se quedó sin tiempo. Vuelve a intentarlo o pide algo más corto.</value>
+  </data>
+  <data name="AiReviewSubjectNotSupported" xml:space="preserve">
+    <value>El asistente no puede revisar este tipo de elemento.</value>
   </data>
 </root>

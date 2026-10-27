@@ -171,6 +171,24 @@ public class AiReviewValidatorTests
         draft.Findings.Single().Suggestion.Should().BeNull();
     }
 
+    [Fact]
+    public void Validate_ShouldMatchAnEditThatQuotesATagCloseAsTheModelSawIt()
+    {
+        var html = "Render <div>totals</div> on the report.";
+        var context = Context() with
+        {
+            EditableFields = new Dictionary<string, string> { [TaskReviewSubject.DescriptionField] = html },
+        };
+        var seen = AiReviewPrompt.Neutralise("<div>totals</div>");
+        var reply = Reply(Finding("ambiguity", "Markup", Edit(seen, "<span>totals</span>")));
+
+        var draft = AiReviewValidator.Validate(reply, context, AllCategories);
+        var edit = draft.Findings.Single().Suggestion!.RootElement;
+
+        edit.GetProperty("find").GetString().Should().Be("<div>totals</div>");
+        edit.GetProperty("replace").GetString().Should().NotContain("\u200B");
+    }
+
     private static JsonElement Suggestion(object value)
     {
         return JsonSerializer.SerializeToElement(value);

@@ -51,6 +51,8 @@ public sealed class DeleteStatusAction : IAiToolAction
 
         var fields = new List<AiChangeField> { AiChangeFields.Text("status", usage.Name, null) };
 
+        AiUsageFields.Add(fields, usage);
+
         AiToolSchema.AddOptionalField(fields, "reason", AiToolSchema.GetString(arguments, "reason"));
 
         ChangeSet.Add(new AiChangeDraft
@@ -66,6 +68,7 @@ public sealed class DeleteStatusAction : IAiToolAction
 
         return AiToolExecution.Success(
             $"Proposed deleting status {usage.Id}. "
-            + "Nothing has been deleted yet — the user must review and apply the change.");
+            + "Nothing has been deleted yet — the user must review and apply the change."
+            + AiUsageFields.Describe(usage));
     }
 }

@@ -106,6 +106,29 @@ public class ListAutomationsToolTests
         result.Content.Should().Contain($"rule {RuleId}");
     }
 
+    [Fact]
+    public async Task Execute_ShouldPageTheRules_AndSayWhetherThereAreMore()
+    {
+        var page = new PagedResponse<AutomationRuleListItemViewModel>([], 2, 25, 60);
+
+        Mediator
+            .Send(Arg.Any<GetAutomationRulesPagedQuery>(), Arg.Any<CancellationToken>())
+            .Returns(ClientResponse<PagedResponse<AutomationRuleListItemViewModel>>.Success(page));
+
+        var tool = new ListAutomationsTool(Mediator);
+        var arguments = JsonDocument.Parse("""{"page":2}""").RootElement;
+        var result = await tool.Execute(arguments, TestContext.Current.CancellationToken);
+
+        using var content = JsonDocument.Parse(result.Content);
+        var root = content.RootElement;
+
+        root.GetProperty("totalCount").GetInt32().Should().Be(60);
+        root.GetProperty("hasMore").GetBoolean().Should().BeTrue();
+        await Mediator.Received(1).Send(
+            Arg.Is<GetAutomationRulesPagedQuery>(query => query.Filter.Page == 2 && query.Filter.PageSize == 25),
+            Arg.Any<CancellationToken>());
+    }
+
     private async Task<JsonElement> ExecuteForRule(bool includeReference = false)
     {
         var tool = new ListAutomationsTool(Mediator);

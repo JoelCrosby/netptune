@@ -97,7 +97,7 @@ public sealed class UpdateAutomationChangeHandler : IAiChangeHandler, IAiChangeU
 
         if (!snapshot.HasValue)
         {
-            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
         }
 
         var ruleId = AiChangePayload.ReadInt(snapshot.Value, "ruleId");
@@ -105,14 +105,14 @@ public sealed class UpdateAutomationChangeHandler : IAiChangeHandler, IAiChangeU
 
         if (!ruleId.HasValue || restored is null)
         {
-            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorNothingRecordedRestore);
         }
 
         var current = await AiAutomationRuleReader.ReadCurrent(Mediator, ruleId.Value, cancellationToken);
 
         if (current is null)
         {
-            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorRuleNoLongerWorkspace);
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorRuleNoLongerWorkspace);
         }
 
         var applied = AiAutomationRuleReader.ReadRule(change.Payload.RootElement, "rule");
@@ -120,16 +120,16 @@ public sealed class UpdateAutomationChangeHandler : IAiChangeHandler, IAiChangeU
 
         if (!isUnchangedSinceApply)
         {
-            return AiChangeUndoResult.Failure(change, EditedSinceMessage);
+            return AiChangePayload.Failure(change, EditedSinceMessage);
         }
 
         var response = await Mediator.Send(new UpdateAutomationRuleCommand(ruleId.Value, restored), cancellationToken);
 
         if (!response.IsSuccess)
         {
-            return AiChangeUndoResult.Failure(change, response.Message ?? AppText.AiChangeErrorRuleCouldNotRestored);
+            return AiChangePayload.Failure(change, response.Message ?? AppText.AiChangeErrorRuleCouldNotRestored);
         }
 
-        return AiChangeUndoResult.Undone(change, ruleId.Value);
+        return AiChangePayload.Applied(change, ruleId.Value);
     }
 }

@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Ai.Tools;
 using Netptune.Core.Enums;
 using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
@@ -35,7 +36,7 @@ public sealed class ResolveTaskFlagChangeHandler : IAiChangeHandler
         }
 
         var raw = AiChangePayload.ReadString(payload, "resolution");
-        var isParsed = Enum.TryParse<FlagResolutionType>(raw, true, out var resolution);
+        var isParsed = AiToolSchema.TryParseEnum<FlagResolutionType>(raw, out var resolution);
 
         if (!isParsed)
         {

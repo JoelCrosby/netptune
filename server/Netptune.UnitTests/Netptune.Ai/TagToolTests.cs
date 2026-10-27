@@ -56,6 +56,28 @@ public class TagToolTests
     }
 
     [Fact]
+    public async Task CreateTag_ShouldProposeTheNameTheTagWillBeSavedAs()
+    {
+        var tool = new TagChangeTool(Mediator, ChangeSet);
+        var result = await Execute(tool, """{"action":"create","name":"  backend  "}""");
+
+        result.IsError.Should().BeFalse();
+        ChangeSet.Changes.Single().Payload.RootElement.GetProperty("name").GetString().Should().Be("Backend");
+    }
+
+    [Theory]
+    [InlineData("x")]
+    [InlineData("a-name-far-longer-than-a-tag-is-allowed-to-be-a-name-far-longer-than-a-tag-is-allowed-to-be-a-name-far-longer-than-a-tag-is-allowed")]
+    public async Task CreateTag_ShouldRefuseANameOutsideTheAllowedLength(string name)
+    {
+        var tool = new TagChangeTool(Mediator, ChangeSet);
+        var result = await Execute(tool, $$"""{"action":"create","name":"{{name}}"}""");
+
+        result.IsError.Should().BeTrue();
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
     public async Task UpdateTag_ShouldFail_WhenAnotherTagHasTheName()
     {
         var tool = new TagChangeTool(Mediator, ChangeSet);

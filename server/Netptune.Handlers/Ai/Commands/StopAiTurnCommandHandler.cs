@@ -42,7 +42,7 @@ public sealed class StopAiTurnCommandHandler : IRequestHandler<StopAiTurnCommand
             return ClientResponse.NotFound;
         }
 
-        Turns.Stop(command.ConversationId);
+        await Turns.Stop(command.ConversationId);
 
         return ClientResponse.Success;
     }

@@ -19,6 +19,7 @@ internal static class AiRepositoryRead
     public static JsonSerializerOptions JsonOptions { get; } = new(JsonSerializerDefaults.Web)
     {
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+        Encoder = AiToolJson.Options.Encoder,
     };
 
     public static IReadOnlySet<string> Permissions { get; } =

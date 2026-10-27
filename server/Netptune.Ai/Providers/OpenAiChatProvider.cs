@@ -10,6 +10,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Services.Ai;
 
+using OpenAI;
 using OpenAI.Chat;
 
 using AiProviderKind = Netptune.Core.Enums.AiProvider;
@@ -18,6 +19,10 @@ namespace Netptune.Ai.Providers;
 
 public sealed class OpenAiChatProvider : IAiChatProvider
 {
+    // The client's default is to give up on a stream that goes quiet for 100 seconds, which a reasoning
+    // model at high effort can do while it thinks. The turn timeout already bounds the whole call.
+    private static readonly OpenAIClientOptions ClientOptions = new() { NetworkTimeout = TimeSpan.FromMinutes(30) };
+
     private readonly AiOptions Options;
 
     public OpenAiChatProvider(IOptions<AiOptions> options)
@@ -34,7 +39,7 @@ public sealed class OpenAiChatProvider : IAiChatProvider
         string apiKey,
         [EnumeratorCancellation] CancellationToken cancellationToken)
     {
-        var client = new ChatClient(request.Model, new ApiKeyCredential(apiKey));
+        var client = new ChatClient(request.Model, new ApiKeyCredential(apiKey), ClientOptions);
         var messages = CreateMessages(request);
         var options = CreateOptions(request);
         var text = new StringBuilder();
@@ -72,10 +77,13 @@ public sealed class OpenAiChatProvider : IAiChatProvider
 
             if (update.Usage is not null)
             {
+                var cachedTokens = update.Usage.InputTokenDetails?.CachedTokenCount ?? 0;
+
                 usage = new AiUsage
                 {
-                    InputTokens = update.Usage.InputTokenCount,
+                    InputTokens = update.Usage.InputTokenCount - cachedTokens,
                     OutputTokens = update.Usage.OutputTokenCount,
+                    CacheReadTokens = cachedTokens,
                 };
             }
         }
@@ -83,6 +91,7 @@ public sealed class OpenAiChatProvider : IAiChatProvider
         var toolCalls = pendingCalls.Values
             .OrderBy(call => call.Index)
             .Select(CreateToolCall)
+            .OfType<AiToolCall>()
             .ToList();
 
         yield return AiProviderStreamEvent.Completed(new AiChatTurn
@@ -134,17 +143,26 @@ public sealed class OpenAiChatProvider : IAiChatProvider
         }
     }
 
-    private static AiToolCall CreateToolCall(PendingToolCall call)
+    // A reply cut off by the output limit leaves its last call's arguments unfinished. That call is
+    // dropped, and the finish reason tells the runner why the reply stopped.
+    private static AiToolCall? CreateToolCall(PendingToolCall call)
     {
         var raw = call.Arguments.ToString();
         var json = string.IsNullOrWhiteSpace(raw) ? "{}" : raw;
 
-        return new AiToolCall
+        try
         {
-            Id = call.Id,
-            Name = call.Name,
-            Arguments = JsonDocument.Parse(json),
-        };
+            return new AiToolCall
+            {
+                Id = call.Id,
+                Name = call.Name,
+                Arguments = JsonDocument.Parse(json),
+            };
+        }
+        catch (JsonException)
+        {
+            return null;
+        }
     }
 
     private ChatCompletionOptions CreateOptions(AiChatRequest request)
@@ -225,8 +243,15 @@ public sealed class OpenAiChatProvider : IAiChatProvider
             call.Id,
             call.Name,
             BinaryData.FromString(call.Arguments.RootElement.GetRawText())));
+        var assistant = new AssistantChatMessage(calls);
+        var hasText = !string.IsNullOrWhiteSpace(message.Text);
 
-        return [new AssistantChatMessage(calls)];
+        if (hasText)
+        {
+            assistant.Content.Add(ChatMessageContentPart.CreateTextPart(message.Text));
+        }
+
+        return [assistant];
     }
 
     private sealed record PendingToolCall

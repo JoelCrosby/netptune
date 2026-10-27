@@ -5,6 +5,7 @@ using FluentAssertions;
 using Mediator;
 
 using Netptune.Ai.Tools;
+using Netptune.Core.Authorization;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.Automations;
@@ -43,6 +44,15 @@ public class PagedListToolTests
         await Mediator.Received(1).Send(
             Arg.Is<GetWorkspaceFilesQuery>(query => query.Filter.Page == 2 && query.Filter.PageSize == 10),
             Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public void ListWorkspaceFiles_ShouldRequireStorageRead_LikeTheStorageFilesRoute()
+    {
+        IAiTool tool = new ListWorkspaceFilesTool(Mediator);
+
+        tool.RequiredPermissions.Should().BeEquivalentTo([NetptunePermissions.Storage.Read]);
+        tool.IsAvailable(new HashSet<string> { NetptunePermissions.Files.Read }).Should().BeFalse();
     }
 
     [Fact]

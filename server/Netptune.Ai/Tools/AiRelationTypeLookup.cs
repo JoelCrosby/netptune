@@ -12,6 +12,12 @@ internal static class AiRelationTypeLookup
     public static AiRelationTypeMatch? Match(IReadOnlyList<RelationTypeViewModel> relationTypes, string name)
     {
         var wanted = Normalize(name);
+
+        // A name with no letters or digits normalises to nothing, which would match any type without one.
+        if (wanted.Length == 0)
+        {
+            return null;
+        }
         var isNamed = relationTypes.FirstOrDefault(relationType =>
             Normalize(relationType.Name) == wanted || Normalize(relationType.Key) == wanted);
 
@@ -36,7 +42,7 @@ internal static class AiRelationTypeLookup
     {
         var wanted = Normalize(name);
 
-        return relationTypes.Any(relationType =>
+        return wanted.Length > 0 && relationTypes.Any(relationType =>
             Normalize(relationType.Name) == wanted
             || Normalize(relationType.Key) == wanted
             || Normalize(relationType.InverseName) == wanted);

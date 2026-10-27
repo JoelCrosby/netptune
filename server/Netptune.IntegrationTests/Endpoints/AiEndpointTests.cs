@@ -512,6 +512,173 @@ public sealed class AiEndpointTests
     }
 
     [Fact]
+    public async Task SendMessage_ShouldRefuse_WhileAnotherTurnIsRunningInTheConversation()
+    {
+        var client = Fixture.CreateNetptuneClient();
+
+        await DeleteExistingCredentials(client);
+
+        var saved = await client.PutAsJsonAsync("api/ai/credentials", new
+        {
+            provider = AiProvider.Anthropic,
+            label = "Anthropic",
+            secret = "sk-ant-integration-secret-value",
+        });
+
+        saved.EnsureSuccessStatusCode();
+
+        var seed = await SeedPendingChangeSet([null]);
+
+        await ClaimTurn(seed.ConversationId, DateTime.UtcNow.AddMinutes(5));
+
+        try
+        {
+            var response = await client.PostAsJsonAsync(
+                "api/ai/conversations/messages",
+                new { text = "hello", conversationId = seed.ConversationId });
+
+            var body = await response.Content.ReadAsStringAsync();
+
+            body.Should().Contain(
+                "still replying",
+                "a second turn would race the first for the same message sequence");
+        }
+        finally
+        {
+            await RemoveSeed(seed.ConversationId);
+            await DeleteExistingCredentials(client);
+        }
+    }
+
+    [Fact]
+    public async Task SendMessage_ShouldMoveTheConversationToTheRequestedProvider_SoItsKeyGoesToTheRightApi()
+    {
+        var client = Fixture.CreateNetptuneClient();
+
+        await DeleteExistingCredentials(client);
+
+        var saved = await client.PutAsJsonAsync("api/ai/credentials", new
+        {
+            provider = AiProvider.OpenAi,
+            label = "OpenAI",
+            secret = "sk-openai-integration-secret-value",
+        });
+
+        saved.EnsureSuccessStatusCode();
+
+        var seed = await SeedPendingChangeSet([null]);
+
+        try
+        {
+            var response = await client.PostAsJsonAsync(
+                "api/ai/conversations/messages",
+                new { text = "hello", conversationId = seed.ConversationId, provider = AiProvider.OpenAi });
+
+            await response.Content.ReadAsStringAsync();
+
+            using var scope = Fixture.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+            var conversation = await context.AiConversations
+                .AsNoTracking()
+                .SingleAsync(item => item.Id == seed.ConversationId, TestContext.Current.CancellationToken);
+
+            conversation.Provider.Should().Be(AiProvider.OpenAi);
+        }
+        finally
+        {
+            await RemoveSeed(seed.ConversationId);
+            await DeleteExistingCredentials(client);
+        }
+    }
+
+    [Fact]
+    public async Task SendMessage_ShouldReplayAnEarlierEmptyReply_AsTextTheProviderAccepts()
+    {
+        var client = Fixture.CreateNetptuneClient();
+
+        await DeleteExistingCredentials(client);
+
+        var saved = await client.PutAsJsonAsync("api/ai/credentials", new
+        {
+            provider = AiProvider.Anthropic,
+            label = "Anthropic",
+            secret = "sk-ant-integration-secret-value",
+        });
+
+        saved.EnsureSuccessStatusCode();
+        ResetScript();
+
+        var seed = await SeedPendingChangeSet([null]);
+
+        await AddStoppedTurn(seed.ConversationId);
+
+        try
+        {
+            await SendTurn(client, new { text = "Try again", conversationId = seed.ConversationId });
+
+            var assistantMessages = ReadSentRequests().First().Messages
+                .Where(message => message.Role == AiMessageRole.Assistant)
+                .ToList();
+
+            assistantMessages.Should().NotBeEmpty();
+            assistantMessages.Should().OnlyContain(
+                message => !string.IsNullOrWhiteSpace(message.Text) || message.ToolCalls.Count > 0,
+                "the provider refuses an assistant turn with nothing in it");
+        }
+        finally
+        {
+            await RemoveSeed(seed.ConversationId);
+            await DeleteExistingCredentials(client);
+            ResetScript();
+        }
+    }
+
+    private async Task AddStoppedTurn(Guid conversationId)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var conversation = await context.AiConversations.SingleAsync(
+            item => item.Id == conversationId,
+            TestContext.Current.CancellationToken);
+
+        context.AiMessages.AddRange(
+            new AiMessage
+            {
+                ConversationId = conversationId,
+                Sequence = 1,
+                Role = AiMessageRole.User,
+                Model = conversation.Model,
+                Provider = conversation.Provider,
+                Content = new AiMessageContent { Text = "Plan the sprint" }.ToJsonDocument(),
+                CreatedAt = DateTime.UtcNow,
+            },
+            new AiMessage
+            {
+                ConversationId = conversationId,
+                Sequence = 2,
+                Role = AiMessageRole.Assistant,
+                Model = conversation.Model,
+                Provider = conversation.Provider,
+                Content = new AiMessageContent { Text = string.Empty }.ToJsonDocument(),
+                CreatedAt = DateTime.UtcNow,
+            });
+
+        await context.SaveChangesAsync(TestContext.Current.CancellationToken);
+    }
+
+    private async Task ClaimTurn(Guid conversationId, DateTime claimedUntil)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        await context.AiConversations
+            .Where(conversation => conversation.Id == conversationId)
+            .ExecuteUpdateAsync(
+                setters => setters.SetProperty(conversation => conversation.TurnClaimedUntil, claimedUntil),
+                TestContext.Current.CancellationToken);
+    }
+
+    [Fact]
     public async Task ApplyChangeSet_ShouldBroadcastAWorkspaceEvent_SoOtherClientsDoNotGoStale()
     {
         var client = Fixture.CreateNetptuneClient();

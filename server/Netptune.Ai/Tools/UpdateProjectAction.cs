@@ -44,10 +44,15 @@ public sealed class UpdateProjectAction : IAiToolAction
         }
 
         var fields = new List<AiChangeField>();
+        var payload = new Dictionary<string, object> { ["projectId"] = project.Id };
 
-        AddChangedField(fields, "name", project.Name, AiToolSchema.GetString(arguments, "name"));
-        AddChangedField(fields, "description", project.Description, AiToolSchema.GetString(arguments, "description"));
-        AddChangedField(fields, "repositoryUrl", project.RepositoryUrl, AiToolSchema.GetString(arguments, "repositoryUrl"));
+        var name = AiToolSchema.GetString(arguments, "name");
+        var description = AiToolSchema.GetString(arguments, "description");
+        var repositoryUrl = AiToolSchema.GetString(arguments, "repositoryUrl");
+
+        AddChangedField(fields, payload, "name", project.Name, name);
+        AddChangedField(fields, payload, "description", project.Description, description);
+        AddChangedField(fields, payload, "repositoryUrl", project.RepositoryUrl, repositoryUrl);
 
         if (fields.Count == 0)
         {
@@ -63,16 +68,18 @@ public sealed class UpdateProjectAction : IAiToolAction
             EntityId = project.Id,
             Summary = Localized.Format(AppText.AiSummaryUpdateProject, changedNames, project.Name),
             Fields = fields,
-            Payload = JsonDocument.Parse(arguments.GetRawText()),
+            Payload = JsonSerializer.SerializeToDocument(payload),
             ValidationStatus = AiChangeValidationStatus.Valid,
         });
 
         return AiToolExecution.Success(
-            $"Proposed updating project {project.Id}. Nothing has been applied yet — the user must review and apply the change.");
+            $"Proposed updating project {project.Id}. "
+            + "Nothing has been applied yet — the user must review and apply the change.");
     }
 
     private static void AddChangedField(
         List<AiChangeField> fields,
+        Dictionary<string, object> payload,
         string name,
         string? before,
         string? after)
@@ -92,5 +99,6 @@ public sealed class UpdateProjectAction : IAiToolAction
         }
 
         fields.Add(new AiChangeField { Name = name, Before = before, After = after });
+        payload[name] = after!;
     }
 }

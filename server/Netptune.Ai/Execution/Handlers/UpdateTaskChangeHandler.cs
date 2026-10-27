@@ -2,6 +2,7 @@ using System.Text.Json;
 
 using Mediator;
 
+using Netptune.Ai.Tools;
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Localization;
@@ -91,7 +92,7 @@ public sealed class UpdateTaskChangeHandler : IAiChangeHandler, IAiChangeUndoHan
     private static TaskPriority? ReadPriority(JsonElement payload)
     {
         var raw = AiChangePayload.ReadString(payload, "priority");
-        var isParsed = Enum.TryParse<TaskPriority>(raw, true, out var priority);
+        var isParsed = AiToolSchema.TryParseEnum<TaskPriority>(raw, out var priority);
 
         return isParsed ? priority : null;
     }
@@ -99,7 +100,7 @@ public sealed class UpdateTaskChangeHandler : IAiChangeHandler, IAiChangeUndoHan
     private static EstimateType? ReadEstimateType(JsonElement payload)
     {
         var raw = AiChangePayload.ReadString(payload, "estimateType");
-        var isParsed = Enum.TryParse<EstimateType>(raw, true, out var type);
+        var isParsed = AiToolSchema.TryParseEnum<EstimateType>(raw, out var type);
 
         return isParsed ? type : null;
     }
@@ -112,6 +113,11 @@ public sealed class UpdateTaskChangeHandler : IAiChangeHandler, IAiChangeUndoHan
     public Task<JsonDocument?> Capture(AiChangeApplyContext context, CancellationToken cancellationToken)
     {
         return AiTaskUndo.Capture(Mediator, AiChangePayload.ResolveTaskId(context), cancellationToken);
+    }
+
+    public Task<JsonDocument?> CaptureApplied(AiChangeApplyContext context, CancellationToken cancellationToken)
+    {
+        return AiTaskUndo.CaptureApplied(Mediator, context, cancellationToken);
     }
 
     public Task<AiAppliedChangeResult> Revert(AiChangeUndoContext context, CancellationToken cancellationToken)

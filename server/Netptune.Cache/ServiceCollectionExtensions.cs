@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Netptune.Cache.Redis;
 using Netptune.Core.Cache;
 using Netptune.Core.Cache.Common;
+using Netptune.Core.Services.Ai;
 using Netptune.Core.Services.Notifications;
 using Netptune.Core.Services.Realtime;
 using Netptune.Transfer.Services;
@@ -28,6 +29,7 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<INotificationEventPublisher, RedisNotificationEventPublisher>();
         services.TryAddSingleton<ITransferJobNotifier, RedisTransferJobNotifier>();
         services.TryAddSingleton<IWorkspaceEventPublisher, RedisWorkspaceEventPublisher>();
+        services.TryAddSingleton<IAiStopSignal, RedisAiStopSignal>();
 
         services.AddScoped<IUserCache, UserCache>();
         services.AddScoped<IWorkspaceUserCache, WorkspaceUserCache>();

@@ -47,20 +47,32 @@ public sealed class SprintTransitionAction : IAiToolAction
         Transition = transition;
     }
 
-    public string ChangeName => Transition switch
+    public string ChangeName
     {
-        Start => StartChange,
-        Complete => CompleteChange,
-        Cancel => CancelChange,
-        _ => DeleteChange,
-    };
+        get
+        {
+            return Transition switch
+            {
+                Start => StartChange,
+                Complete => CompleteChange,
+                Cancel => CancelChange,
+                _ => DeleteChange,
+            };
+        }
+    }
 
-    public IReadOnlySet<string> RequiredPermissions => Transition switch
+    public IReadOnlySet<string> RequiredPermissions
     {
-        Start => UpdatePermissions,
-        Complete or Cancel => ClosingPermissions,
-        _ => DeletePermissions,
-    };
+        get
+        {
+            return Transition switch
+            {
+                Start => UpdatePermissions,
+                Complete or Cancel => ClosingPermissions,
+                _ => DeletePermissions,
+            };
+        }
+    }
 
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
@@ -129,7 +141,6 @@ public sealed class SprintTransitionAction : IAiToolAction
                 $"Sprint “{sprint.Name}” is {Describe(sprint.Status)} — only active sprints can be completed.");
         }
 
-        // Everything not done leaves with completion, Backlog and Inactive tasks included. Archived tasks stay put.
         var unfinishedCount = sprint.Tasks.Count(task => task.StatusCategory != StatusCategory.Done);
         var fields = new List<AiChangeField>
         {
@@ -167,9 +178,9 @@ public sealed class SprintTransitionAction : IAiToolAction
             After = LocalizedEnum.Label(SprintStatus.Cancelled),
         };
 
-        var error = Localized.Format(AppText.AiSummaryCancelSprint, sprint.Name);
+        var summary = Localized.Format(AppText.AiSummaryCancelSprint, sprint.Name);
 
-        return Propose(CancelChange, sprint, error, [statusField]);
+        return Propose(CancelChange, sprint, summary, [statusField]);
     }
 
     private AiToolExecution ProposeDelete(SprintDetailViewModel sprint)

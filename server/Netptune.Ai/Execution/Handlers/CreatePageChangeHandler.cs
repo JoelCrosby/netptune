@@ -47,7 +47,13 @@ public sealed class CreatePageChangeHandler : IAiChangeHandler, IAiChangeUndoHan
             return AiChangePayload.Failure(change, AppText.AiChangeErrorPageDetailsMissingChange);
         }
 
-        var request = new CreatePageRequest { Kind = kind.GetValueOrDefault(), ParentId = parentId, Title = title, Body = body };
+        var request = new CreatePageRequest
+        {
+            Kind = kind.GetValueOrDefault(),
+            ParentId = parentId,
+            Title = title,
+            Body = body,
+        };
         var created = await Mediator.Send(new CreatePageCommand(request), cancellationToken);
         var page = created.Payload;
         var isCreated = created.IsSuccess && page is not null;
@@ -72,7 +78,7 @@ public sealed class CreatePageChangeHandler : IAiChangeHandler, IAiChangeUndoHan
 
         if (!pageId.HasValue)
         {
-            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorCreatedPageCouldNotResolved);
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorCreatedPageCouldNotResolved);
         }
 
         // Pages this change set created inside are undone first, so anything still inside was added since,
@@ -82,18 +88,18 @@ public sealed class CreatePageChangeHandler : IAiChangeHandler, IAiChangeUndoHan
 
         if (holdsOtherPages)
         {
-            return AiChangeUndoResult.Failure(change, HoldsOtherPagesMessage);
+            return AiChangePayload.Failure(change, HoldsOtherPagesMessage);
         }
 
         var response = await Mediator.Send(new ArchivePageCommand(pageId.Value), cancellationToken);
 
         if (!response.IsSuccess)
         {
-            return AiChangeUndoResult.Failure(
+            return AiChangePayload.Failure(
                 change,
                 response.Message ?? AppText.AiChangeErrorCreatedPageCouldNotArchived);
         }
 
-        return AiChangeUndoResult.Undone(change, pageId);
+        return AiChangePayload.Applied(change, pageId);
     }
 }

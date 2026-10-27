@@ -42,7 +42,7 @@ public sealed class StopAiChangeSetApplyCommandHandler : IRequestHandler<StopAiC
             return ClientResponse.NotFound;
         }
 
-        Cancellations.Stop(command.ChangeSetId);
+        await Cancellations.Stop(command.ChangeSetId);
 
         return ClientResponse.Success;
     }

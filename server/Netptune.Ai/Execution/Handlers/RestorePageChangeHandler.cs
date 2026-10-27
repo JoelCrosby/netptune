@@ -62,7 +62,7 @@ public sealed class RestorePageChangeHandler : IAiChangeHandler, IAiChangeUndoHa
 
         if (!pageId.HasValue)
         {
-            return AiChangeUndoResult.Failure(change, AppText.AiChangeErrorRestoredPageCouldNotResolved);
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorRestoredPageCouldNotResolved);
         }
 
         var response = await Mediator.Send(new ArchivePageCommand(pageId.Value), cancellationToken);
@@ -73,9 +73,9 @@ public sealed class RestorePageChangeHandler : IAiChangeHandler, IAiChangeUndoHa
                 ? ArchivePageChangeHandler.NotYourPageMessage
                 : response.Message ?? AppText.AiChangeErrorPageCouldNotArchivedAgain;
 
-            return AiChangeUndoResult.Failure(change, message);
+            return AiChangePayload.Failure(change, message);
         }
 
-        return AiChangeUndoResult.Undone(change, pageId);
+        return AiChangePayload.Applied(change, pageId);
     }
 }

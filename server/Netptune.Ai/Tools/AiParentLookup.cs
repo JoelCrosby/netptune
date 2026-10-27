@@ -16,16 +16,20 @@ internal sealed record AiParent
     public bool IsPending => Id is null;
 }
 
-internal sealed record AiParentResult(AiParent? Parent, string? Error)
+internal sealed record AiParentResult
 {
+    public AiParent? Parent { get; init; }
+
+    public string? Error { get; init; }
+
     public static AiParentResult Found(AiParent parent)
     {
-        return new AiParentResult(parent, null);
+        return new AiParentResult { Parent = parent };
     }
 
     public static AiParentResult Failed(string error)
     {
-        return new AiParentResult(null, error);
+        return new AiParentResult { Error = error };
     }
 }
 
@@ -37,6 +41,13 @@ internal static class AiParentLookup
         JsonElement arguments,
         CancellationToken cancellationToken)
     {
+        var conflict = AiPendingReference.Conflict(arguments, "projectId", "projectRef");
+
+        if (conflict is not null)
+        {
+            return AiParentResult.Failed(conflict);
+        }
+
         var projectRef = AiPendingReference.Read(arguments, "projectRef");
 
         if (projectRef is not null)
@@ -75,6 +86,13 @@ internal static class AiParentLookup
         int? existingBoardId,
         string? existingBoardName)
     {
+        var conflict = AiPendingReference.Conflict(arguments, "boardId", "boardRef");
+
+        if (conflict is not null)
+        {
+            return AiParentResult.Failed(conflict);
+        }
+
         var boardRef = AiPendingReference.Read(arguments, "boardRef");
 
         if (boardRef is not null)

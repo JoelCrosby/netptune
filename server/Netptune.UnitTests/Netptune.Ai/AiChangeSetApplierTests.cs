@@ -12,6 +12,7 @@ using Netptune.Ai.Tools;
 using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Repositories;
@@ -46,7 +47,7 @@ public class AiChangeSetApplierTests
     private readonly IWorkspaceRepository Workspaces = Substitute.For<IWorkspaceRepository>();
     private readonly IAiConversationRepository Conversations = Substitute.For<IAiConversationRepository>();
     private readonly ITaskRepository Tasks = Substitute.For<ITaskRepository>();
-    private readonly AiCancellationRegistry Cancellations = new();
+    private readonly AiCancellationRegistry Cancellations = new(new LocalAiStopSignal());
 
     public AiChangeSetApplierTests()
     {
@@ -59,6 +60,10 @@ public class AiChangeSetApplierTests
         UnitOfWork.Workspaces.Returns(Workspaces);
         UnitOfWork.AiConversations.Returns(Conversations);
         UnitOfWork.Tasks.Returns(Tasks);
+
+        ChangeSets
+            .TryClaim(Arg.Any<Guid>(), UserId, WorkspaceId, Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+            .Returns(true);
 
         Tasks
             .GetTaskViewModels(Arg.Any<IEnumerable<int>>(), Arg.Any<CancellationToken>())
@@ -118,6 +123,51 @@ public class AiChangeSetApplierTests
         var result = await applier.Apply(Guid.NewGuid(), new ApplyAiChangeSetRequest(), null, TestContext.Current.CancellationToken);
 
         result.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Apply_ShouldThrow_WhenAnotherRequestHoldsTheChangeSet()
+    {
+        var changeSet = CreateChangeSet();
+        var change = CreateChange(changeSet.Id, "propose_create_task");
+
+        GivenChangeSet(changeSet, [change]);
+        GivenPermissions(NetptunePermissions.Tasks.Create);
+
+        ChangeSets
+            .TryClaim(changeSet.Id, UserId, WorkspaceId, Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+            .Returns(false);
+
+        var applier = CreateApplier();
+        var apply = () => applier.Apply(
+            changeSet.Id,
+            new ApplyAiChangeSetRequest(),
+            null,
+            TestContext.Current.CancellationToken);
+
+        await apply.Should().ThrowAsync<InvalidOperationException>();
+        await ChangeSets.DidNotReceive().GetChanges(changeSet.Id, Arg.Any<CancellationToken>());
+        await ChangeSets.DidNotReceive().Release(changeSet.Id, Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Apply_ShouldReleaseTheChangeSet_WhenItThrows()
+    {
+        var changeSet = CreateChangeSet();
+        var change = CreateChange(changeSet.Id, "propose_create_task");
+
+        GivenChangeSet(changeSet, [change]);
+        GivenPermissions(NetptunePermissions.Tasks.Read);
+
+        var applier = CreateApplier();
+        var apply = () => applier.Apply(
+            changeSet.Id,
+            new ApplyAiChangeSetRequest(),
+            null,
+            TestContext.Current.CancellationToken);
+
+        await apply.Should().ThrowAsync<UnauthorizedAccessException>();
+        await ChangeSets.Received(1).Release(changeSet.Id, Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -205,7 +255,7 @@ public class AiChangeSetApplierTests
             Identity,
             tools,
             new AiExecutionContext(),
-            new AiCancellationRegistry(),
+            new AiCancellationRegistry(new LocalAiStopSignal()),
             NullLogger<AiChangeSetApplier>.Instance,
             []);
 
@@ -526,7 +576,7 @@ public class AiChangeSetApplierTests
             .Send(Arg.Any<CreateTaskCommand>(), Arg.Any<CancellationToken>())
             .Returns(_ =>
             {
-                Cancellations.Stop(changeSet.Id);
+                Cancellations.Stop(changeSet.Id).GetAwaiter().GetResult();
 
                 return ClientResponse<TaskViewModel>.Success(new TaskViewModel { Id = 7 });
             });
@@ -545,6 +595,57 @@ public class AiChangeSetApplierTests
 
         second.ApplyError.Should().Contain("Stopped");
         result!.Status.Should().Be(AiChangeSetStatus.PartiallyApplied);
+    }
+
+    [Fact]
+    public async Task Apply_ShouldDiscardWhatAFailedChangeLeftBehind_AndKeepGoing()
+    {
+        var changeSet = CreateChangeSet();
+        var failing = CreateChange(changeSet.Id, "propose_create_task", id: 1, refKey: "ref:a");
+        var next = CreateChange(changeSet.Id, "propose_create_task", id: 2, refKey: "ref:b");
+
+        GivenChangeSet(changeSet, [failing, next]);
+        GivenPermissions(NetptunePermissions.Tasks.Create);
+
+        Mediator
+            .Send(Arg.Any<CreateTaskCommand>(), Arg.Any<CancellationToken>())
+            .Returns(
+                _ => throw new InvalidOperationException("duplicate key value violates unique constraint"),
+                _ => new ValueTask<ClientResponse<TaskViewModel>>(
+                    ClientResponse<TaskViewModel>.Success(new TaskViewModel { Id = 12 })));
+
+        var applier = CreateApplier();
+        var result = await applier.Apply(
+            changeSet.Id,
+            new ApplyAiChangeSetRequest(),
+            null,
+            TestContext.Current.CancellationToken);
+
+        UnitOfWork.Received(1).DiscardUnsavedChanges();
+        failing.ApplyStatus.Should().Be(AiChangeApplyStatus.Failed);
+        failing.ApplyError.Should().NotContain(
+            "unique constraint",
+            "a raw exception is no message for the user or the model");
+        next.ApplyStatus.Should().Be(AiChangeApplyStatus.Applied);
+        result!.Status.Should().Be(AiChangeSetStatus.PartiallyApplied);
+    }
+
+    [Fact]
+    public async Task Apply_ShouldSaveEachOutcome_AsItLands()
+    {
+        var changeSet = CreateChangeSet();
+        var first = CreateChange(changeSet.Id, "propose_create_task", id: 1, refKey: "ref:a");
+        var second = CreateChange(changeSet.Id, "propose_create_task", id: 2, refKey: "ref:b");
+
+        GivenChangeSet(changeSet, [first, second]);
+        GivenPermissions(NetptunePermissions.Tasks.Create);
+        GivenCreatedTask(12);
+
+        var applier = CreateApplier();
+
+        await applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), null, TestContext.Current.CancellationToken);
+
+        await UnitOfWork.Received(4).CompleteAsync(Arg.Any<CancellationToken>());
     }
 
     private void GivenCreatedTask(int taskId)
@@ -686,7 +787,7 @@ public class AiChangeSetApplierTests
         var kept = result!.Results.Single(item => item.ChangeId == prerequisite.Id);
 
         kept.Status.Should().Be(AiChangeApplyStatus.Failed);
-        kept.Error.Should().Be(AiChangeSetApplier.StillReferencedMessage);
+        kept.Error.Should().Be(AppText.AiChangeErrorKeptBecauseChangeDependsCouldNotUndone);
         prerequisite.UndoneAt.Should().BeNull();
         await Mediator.DidNotReceive().Send(
             Arg.Is<DeleteTaskCommand>(command => command.Id == 30),
@@ -719,6 +820,27 @@ public class AiChangeSetApplierTests
         failed.ApplyError.Should().BeNull();
         applied.AppliedEntityId.Should().Be(11, "a change that already landed must not run twice");
         changeSet.Status.Should().Be(AiChangeSetStatus.Applied);
+    }
+
+    [Fact]
+    public async Task RetryFailed_ShouldNotRerunAFailedChange_ThatAlreadyCreatedSomething()
+    {
+        var changeSet = CreateChangeSet();
+        var partial = CreateChange(changeSet.Id, "propose_create_task", id: 1);
+
+        partial.ApplyStatus = AiChangeApplyStatus.Failed;
+        partial.AppliedEntityId = 11;
+        changeSet.Status = AiChangeSetStatus.Pending;
+        changeSet.AppliedAt = DateTime.UtcNow;
+
+        GivenChangeSet(changeSet, [partial]);
+        GivenPermissions(NetptunePermissions.Tasks.Create);
+
+        var applier = CreateApplier();
+        var retry = async () => await applier.RetryFailed(changeSet.Id, TestContext.Current.CancellationToken);
+
+        await retry.Should().ThrowAsync<InvalidOperationException>();
+        await Mediator.DidNotReceive().Send(Arg.Any<CreateTaskCommand>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]

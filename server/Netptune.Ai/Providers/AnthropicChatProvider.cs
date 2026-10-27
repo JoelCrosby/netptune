@@ -34,10 +34,11 @@ public sealed class AnthropicChatProvider : IAiChatProvider
         string apiKey,
         [EnumeratorCancellation] CancellationToken cancellationToken)
     {
-        var client = new AnthropicClient { ApiKey = apiKey };
-        var parameters = CreateParameters(request);
+        using var client = new AnthropicClient { ApiKey = apiKey };
+        var parameters = AnthropicRequestBuilder.Create(request);
         var text = new StringBuilder();
         var pendingBlocks = new Dictionary<long, PendingToolBlock>();
+        var replayBlocks = new SortedDictionary<long, ReplayBlock>();
         var toolCalls = new List<AiToolCall>();
         var usage = new AiUsage();
         string? finishReason = null;
@@ -47,6 +48,7 @@ public sealed class AnthropicChatProvider : IAiChatProvider
             if (streamEvent.TryPickContentBlockStart(out var blockStart))
             {
                 TrackBlockStart(blockStart, pendingBlocks);
+                TrackReplayBlock(blockStart, replayBlocks);
 
                 continue;
             }
@@ -67,7 +69,11 @@ public sealed class AnthropicChatProvider : IAiChatProvider
                 if (delta.TryPickInputJson(out var jsonDelta))
                 {
                     AppendToolArguments(blockDelta.Index, jsonDelta.PartialJson, pendingBlocks);
+
+                    continue;
                 }
+
+                AppendThinking(blockDelta, replayBlocks);
 
                 continue;
             }
@@ -79,15 +85,114 @@ public sealed class AnthropicChatProvider : IAiChatProvider
             }
         }
 
-        toolCalls.AddRange(pendingBlocks.Values.OrderBy(block => block.Index).Select(CreateToolCall));
+        var completedCalls = pendingBlocks.Values
+            .OrderBy(block => block.Index)
+            .Select(CreateToolCall)
+            .OfType<AiToolCall>();
+
+        toolCalls.AddRange(completedCalls);
 
         yield return AiProviderStreamEvent.Completed(new AiChatTurn
         {
             Text = text.ToString(),
             ToolCalls = toolCalls,
+            ProviderPayload = CreateReplayPayload(replayBlocks),
             Usage = usage,
             FinishReason = finishReason,
         });
+    }
+
+    // The models think by default, and inside a tool loop the API expects each assistant turn back with
+    // its thinking blocks unchanged and in place. The block order is kept so the replay can restore it.
+    private static void TrackReplayBlock(
+        RawContentBlockStartEvent blockStart,
+        SortedDictionary<long, ReplayBlock> replayBlocks)
+    {
+        var block = blockStart.ContentBlock;
+
+        if (block.TryPickThinking(out var thinking))
+        {
+            replayBlocks[blockStart.Index] = new ReplayBlock
+            {
+                Type = AnthropicReplayBlockTypes.Thinking,
+                Thinking = new StringBuilder(thinking.Thinking),
+                Signature = new StringBuilder(thinking.Signature),
+            };
+
+            return;
+        }
+
+        if (block.TryPickRedactedThinking(out var redacted))
+        {
+            replayBlocks[blockStart.Index] = new ReplayBlock
+            {
+                Type = AnthropicReplayBlockTypes.RedactedThinking,
+                Data = redacted.Data,
+            };
+
+            return;
+        }
+
+        if (block.TryPickText(out _))
+        {
+            replayBlocks[blockStart.Index] = new ReplayBlock { Type = AnthropicReplayBlockTypes.Text };
+
+            return;
+        }
+
+        if (block.TryPickToolUse(out var toolUse))
+        {
+            replayBlocks[blockStart.Index] = new ReplayBlock
+            {
+                Type = AnthropicReplayBlockTypes.ToolUse,
+                ToolUseId = toolUse.ID,
+            };
+        }
+    }
+
+    private static void AppendThinking(
+        RawContentBlockDeltaEvent blockDelta,
+        SortedDictionary<long, ReplayBlock> replayBlocks)
+    {
+        var hasBlock = replayBlocks.TryGetValue(blockDelta.Index, out var block);
+
+        if (!hasBlock)
+        {
+            return;
+        }
+
+        if (blockDelta.Delta.TryPickThinking(out var thinkingDelta))
+        {
+            block!.Thinking?.Append(thinkingDelta.Thinking);
+
+            return;
+        }
+
+        if (blockDelta.Delta.TryPickSignature(out var signatureDelta))
+        {
+            block!.Signature?.Append(signatureDelta.Signature);
+        }
+    }
+
+    private static JsonDocument? CreateReplayPayload(SortedDictionary<long, ReplayBlock> replayBlocks)
+    {
+        var hasThinking = replayBlocks.Values.Any(block => block.Thinking is not null || block.Data is not null);
+
+        if (!hasThinking)
+        {
+            return null;
+        }
+
+        var blocks = replayBlocks.Values.Select(block => new AnthropicReplayBlock
+        {
+            Type = block.Type,
+            Thinking = block.Thinking?.ToString(),
+            Signature = block.Signature?.ToString(),
+            Data = block.Data,
+            ToolUseId = block.ToolUseId,
+        });
+
+        return new AnthropicReplay { Blocks = [.. blocks] }.ToDocument();
     }
 
     private static void TrackBlockStart(
@@ -125,17 +230,26 @@ public sealed class AnthropicChatProvider : IAiChatProvider
         block!.Arguments.Append(partialJson);
     }
 
-    private static AiToolCall CreateToolCall(PendingToolBlock block)
+    // A reply cut off by the output limit leaves its last call's arguments unfinished. That call is
+    // dropped, and the finish reason tells the runner why the reply stopped.
+    private static AiToolCall? CreateToolCall(PendingToolBlock block)
     {
         var raw = block.Arguments.ToString();
         var json = string.IsNullOrWhiteSpace(raw) ? "{}" : raw;
 
-        return new AiToolCall
+        try
         {
-            Id = block.Id,
-            Name = block.Name,
-            Arguments = JsonDocument.Parse(json),
-        };
+            return new AiToolCall
+            {
+                Id = block.Id,
+                Name = block.Name,
+                Arguments = JsonDocument.Parse(json),
+            };
+        }
+        catch (JsonException)
+        {
+            return null;
+        }
     }
 
     private static AiUsage CreateUsage(MessageDeltaUsage usage)
@@ -149,147 +263,17 @@ public sealed class AnthropicChatProvider : IAiChatProvider
         };
     }
 
-    private static MessageCreateParams CreateParameters(AiChatRequest request)
+    private sealed class ReplayBlock
     {
-        var system = new List<TextBlockParam>
-        {
-            new()
-            {
-                Text = request.SystemPrompt,
-                CacheControl = new CacheControlEphemeral(),
-            },
-        };
+        public required string Type { get; init; }
 
-        return new MessageCreateParams
-        {
-            Model = request.Model,
-            MaxTokens = request.MaxOutputTokens,
-            System = system,
-            Tools = request.Tools.Select(CreateTool).ToList(),
-            Messages = request.Messages.Select(CreateMessage).ToList(),
-            CacheControl = new CacheControlEphemeral(),
-            OutputConfig = CreateOutputConfig(request.Effort),
-        };
-    }
+        public StringBuilder? Thinking { get; init; }
 
-    private static OutputConfig? CreateOutputConfig(AiEffort? effort)
-    {
-        if (!effort.HasValue)
-        {
-            return null;
-        }
+        public StringBuilder? Signature { get; init; }
 
-        return new OutputConfig { Effort = CreateEffort(effort.Value) };
-    }
+        public string? Data { get; init; }
 
-    private static Effort CreateEffort(AiEffort effort)
-    {
-        return effort switch
-        {
-            AiEffort.Low => Effort.Low,
-            AiEffort.Medium => Effort.Medium,
-            AiEffort.XHigh => Effort.Xhigh,
-            AiEffort.Max => Effort.Max,
-            _ => Effort.High,
-        };
-    }
-
-    private static ToolUnion CreateTool(AiToolDefinition definition)
-    {
-        var schema = definition.InputSchema.RootElement;
-        var properties = new Dictionary<string, JsonElement>();
-        var hasProperties = schema.TryGetProperty("properties", out var propertiesElement);
-
-        if (hasProperties)
-        {
-            foreach (var property in propertiesElement.EnumerateObject())
-            {
-                properties[property.Name] = property.Value;
-            }
-        }
-
-        var required = new List<string>();
-        var hasRequired = schema.TryGetProperty("required", out var requiredElement);
-
-        if (hasRequired)
-        {
-            required.AddRange(requiredElement.EnumerateArray().Select(item => item.GetString()!));
-        }
-
-        return new Tool
-        {
-            Name = definition.Name,
-            Description = definition.Description,
-            InputSchema = new()
-            {
-                Properties = properties,
-                Required = required,
-            },
-        };
-    }
-
-    private static MessageParam CreateMessage(AiChatMessage message)
-    {
-        var isToolResult = message.ToolResults.Count > 0;
-
-        if (isToolResult)
-        {
-            var resultBlocks = message.ToolResults
-                .Select(result => (ContentBlockParam)new ToolResultBlockParam
-                {
-                    ToolUseID = result.ToolCallId,
-                    Content = result.Content,
-                    IsError = result.IsError,
-                })
-                .ToList();
-
-            return new UserMessageParam { Content = resultBlocks };
-        }
-
-        var isAssistant = message.Role == AiMessageRole.Assistant;
-
-        if (!isAssistant)
-        {
-            return new UserMessageParam { Content = message.PromptText };
-        }
-
-        var blocks = new List<ContentBlockParam>();
-        var hasText = !string.IsNullOrWhiteSpace(message.Text);
-
-        if (hasText)
-        {
-            blocks.Add(new TextBlockParam { Text = message.Text! });
-        }
-
-        foreach (var call in message.ToolCalls)
-        {
-            blocks.Add(new ToolUseBlockParam
-            {
-                ID = call.Id,
-                Name = call.Name,
-                Input = CreateInputMap(call.Arguments),
-            });
-        }
-
-        return new AssistantMessageParam { Content = blocks };
-    }
-
-    private static Dictionary<string, JsonElement> CreateInputMap(JsonDocument arguments)
-    {
-        var map = new Dictionary<string, JsonElement>();
-        var isObject = arguments.RootElement.ValueKind == JsonValueKind.Object;
-
-        if (!isObject)
-        {
-            return map;
-        }
-
-        foreach (var property in arguments.RootElement.EnumerateObject())
-        {
-            map[property.Name] = property.Value.Clone();
-        }
-
-        return map;
+        public string? ToolUseId { get; init; }
     }
 
     private sealed record PendingToolBlock

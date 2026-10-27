@@ -11,8 +11,10 @@ using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Statuses;
+using Netptune.Handlers.BoardGroups.Queries;
 using Netptune.Handlers.Statuses.Queries;
 using Netptune.Handlers.Tasks.Queries;
+using Netptune.Handlers.Users.Queries;
 
 namespace Netptune.Ai.Tools;
 
@@ -20,11 +22,11 @@ public sealed class UpdateTaskTool : IAiTool
 {
     public const string UpdateChange = "propose_update_task";
 
-    private const decimal SmallestTShirtSize = 1;
-    private const decimal LargestTShirtSize = 5;
     private const int MaximumBatchSize = 50;
 
     private static readonly string[] ClearableFields = ["startDate", "dueDate"];
+
+    private static readonly string[] TextFields = ["name", "description"];
 
     private static readonly string[] FieldArguments =
     [
@@ -111,7 +113,7 @@ public sealed class UpdateTaskTool : IAiTool
             "items": { "type": "string" },
             "description": "The complete set of tag names, existing or proposed with propose_tag_change. An empty array clears them."
           },
-          "boardGroupId": { "type": "integer", "description": "Board group (the column on a board) to move the task into." },
+          "boardGroupId": { "type": "integer", "description": "Board group (the column on a board) to move the task into. A group with a status of its own sets the task's status too." },
           "boardGroupRef": { "type": "string", "description": "Handle of a board group proposed earlier in this change set, instead of boardGroupId." },
           "updates": {
             "type": "array",
@@ -193,7 +195,7 @@ public sealed class UpdateTaskTool : IAiTool
 
         if (updates is null)
         {
-            return await ExecuteUpdate(arguments, new UpdateLookups(), cancellationToken);
+            return await ExecuteUpdate(arguments, new AiTaskLookups(), cancellationToken);
         }
 
         var targetsTopLevelTask = HasArgument(arguments, "taskId") || HasArgument(arguments, "taskRef");
@@ -297,7 +299,7 @@ public sealed class UpdateTaskTool : IAiTool
         return taskRef ?? taskId?.ToString();
     }
 
-    private async Task<UpdateLookups> PreloadLookups(List<JsonElement> updates, CancellationToken cancellationToken)
+    private async Task<AiTaskLookups> PreloadLookups(List<JsonElement> updates, CancellationToken cancellationToken)
     {
         var taskIds = updates
             .Select(update => AiToolSchema.GetInt(update, "taskId"))
@@ -306,13 +308,38 @@ public sealed class UpdateTaskTool : IAiTool
             .ToList();
 
         var tasks = await Mediator.Send(new GetTasksByIdQuery(taskIds), cancellationToken);
+        var assigneeIds = updates
+            .SelectMany(update => AiToolSchema.GetStringArray(update, "assigneeIds"))
+            .Distinct(StringComparer.Ordinal)
+            .ToList();
+        var tagNames = updates
+            .SelectMany(AiTagVocabulary.ReadRequested)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        var movesBoardGroups = updates.Any(update => HasArgument(update, "boardGroupId"));
 
-        return new UpdateLookups { Tasks = tasks.ToDictionary(task => task.Id) };
+        var members = assigneeIds.Count == 0
+            ? []
+            : await Mediator.Send(new GetAssigneesByIdQuery(assigneeIds), cancellationToken);
+        var existingTagNames = tagNames.Count == 0
+            ? new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            : await AiTagVocabulary.ReadExistingNames(Mediator, tagNames, cancellationToken);
+        var boardGroups = movesBoardGroups
+            ? await Mediator.Send(new GetBoardGroupOptionsQuery(), cancellationToken)
+            : null;
+
+        return new AiTaskLookups
+        {
+            Tasks = tasks.ToDictionary(task => task.Id),
+            Members = members.ToDictionary(member => member.Id, StringComparer.Ordinal),
+            ExistingTagNames = existingTagNames.ToHashSet(StringComparer.OrdinalIgnoreCase),
+            BoardGroups = boardGroups,
+        };
     }
 
     private async Task<AiToolExecution> ExecuteUpdate(
         JsonElement arguments,
-        UpdateLookups lookups,
+        AiTaskLookups lookups,
         CancellationToken cancellationToken)
     {
         var target = await ResolveTarget(arguments, lookups, cancellationToken);
@@ -331,10 +358,10 @@ public sealed class UpdateTaskTool : IAiTool
             var fieldResult = await ProposeFields(task, arguments, lookups, cancellationToken);
             var changesAssignees = HasArgument(arguments, "assigneeIds");
             var assigneeResult = changesAssignees
-                ? await AiTaskChangeDrafts.Assignees(Mediator, task, arguments, cancellationToken)
+                ? await AiTaskChangeDrafts.Assignees(Mediator, task, arguments, lookups, cancellationToken)
                 : AiTaskDraftResult.Unchanged;
 
-            var boardGroupResult = await ProposeBoardGroup(task, arguments, cancellationToken);
+            var boardGroupResult = await ProposeBoardGroup(task, arguments, lookups, cancellationToken);
 
             var taskError = fieldResult.Error ?? assigneeResult.Error ?? boardGroupResult.Error;
 
@@ -352,7 +379,13 @@ public sealed class UpdateTaskTool : IAiTool
 
         if (changesTags)
         {
-            var tagResult = await AiTaskChangeDrafts.Tags(Mediator, ChangeSet, resolved, arguments, cancellationToken);
+            var tagResult = await AiTaskChangeDrafts.Tags(
+                Mediator,
+                ChangeSet,
+                resolved,
+                arguments,
+                lookups,
+                cancellationToken);
 
             if (tagResult.Error is not null)
             {
@@ -373,21 +406,15 @@ public sealed class UpdateTaskTool : IAiTool
         }
 
         return AiToolExecution.Success(
-            $"Proposed updating “{resolved.Name}”. Nothing has been applied yet — the user must review and apply the change.");
+            $"Proposed updating “{resolved.Name}”. "
+            + "Nothing has been applied yet — the user must review and apply the change.");
     }
 
     private sealed record TargetResult(AiTaskTarget? Target, string? Error);
 
-    private sealed class UpdateLookups
-    {
-        public Dictionary<int, TaskViewModel>? Tasks { get; init; }
-
-        public List<StatusViewModel>? Statuses { get; set; }
-    }
-
     private async Task<TargetResult> ResolveTarget(
         JsonElement arguments,
-        UpdateLookups lookups,
+        AiTaskLookups lookups,
         CancellationToken cancellationToken)
     {
         var taskRef = AiPendingReference.Read(arguments, "taskRef");
@@ -445,7 +472,7 @@ public sealed class UpdateTaskTool : IAiTool
     private async Task<AiTaskDraftResult> ProposeFields(
         TaskViewModel task,
         JsonElement arguments,
-        UpdateLookups lookups,
+        AiTaskLookups lookups,
         CancellationToken cancellationToken)
     {
         var cleared = ReadCleared(arguments);
@@ -504,7 +531,7 @@ public sealed class UpdateTaskTool : IAiTool
             EntityId = task.Id,
             Summary = Localized.Format(AppText.AiSummaryUpdateNamed, changedNames, task.Name),
             Fields = fields,
-            Payload = CreateFieldPayload(task, arguments),
+            Payload = CreateFieldPayload(task, arguments, fields),
             ValidationStatus = AiChangeValidationStatus.Valid,
         });
     }
@@ -512,6 +539,7 @@ public sealed class UpdateTaskTool : IAiTool
     private async Task<AiTaskDraftResult> ProposeBoardGroup(
         TaskViewModel task,
         JsonElement arguments,
+        AiTaskLookups lookups,
         CancellationToken cancellationToken)
     {
         var boardGroupId = AiToolSchema.GetInt(arguments, "boardGroupId");
@@ -520,7 +548,13 @@ public sealed class UpdateTaskTool : IAiTool
         if (boardGroupRef is null)
         {
             return boardGroupId.HasValue
-                ? await AiTaskChangeDrafts.BoardGroup(Mediator, task, boardGroupId.Value, cancellationToken)
+                ? await AiTaskChangeDrafts.BoardGroup(
+                    Mediator,
+                    task,
+                    boardGroupId.Value,
+                    AiToolSchema.GetInt(arguments, "statusId"),
+                    lookups,
+                    cancellationToken)
                 : AiTaskDraftResult.Unchanged;
         }
 
@@ -544,10 +578,18 @@ public sealed class UpdateTaskTool : IAiTool
         return HasArgument(arguments, "boardGroupId") || HasArgument(arguments, "boardGroupRef");
     }
 
-    private static JsonDocument CreateFieldPayload(TaskViewModel task, JsonElement arguments)
+    // A blank name or description is left out of the review, so it must stay out of what gets applied too.
+    private static JsonDocument CreateFieldPayload(
+        TaskViewModel task,
+        JsonElement arguments,
+        List<AiChangeField> fields)
     {
         var payload = new JsonObject { ["taskId"] = task.Id };
-        var fieldArguments = arguments.EnumerateObject().Where(property => FieldArguments.Contains(property.Name));
+        var shown = fields.Select(field => field.Name).ToHashSet(StringComparer.Ordinal);
+        var fieldArguments = arguments
+            .EnumerateObject()
+            .Where(property => FieldArguments.Contains(property.Name))
+            .Where(property => !TextFields.Contains(property.Name) || shown.Contains(property.Name));
 
         foreach (var property in fieldArguments)
         {
@@ -702,7 +744,7 @@ public sealed class UpdateTaskTool : IAiTool
             return null;
         }
 
-        var isParsed = Enum.TryParse<TaskPriority>(raw, true, out var priority);
+        var isParsed = AiToolSchema.TryParseEnum<TaskPriority>(raw, out var priority);
 
         if (!isParsed)
         {
@@ -727,7 +769,7 @@ public sealed class UpdateTaskTool : IAiTool
             return null;
         }
 
-        var isParsed = !hasType || Enum.TryParse<EstimateType>(rawType, true, out _);
+        var isParsed = !hasType || AiToolSchema.TryParseEnum<EstimateType>(rawType, out _);
 
         if (!isParsed)
         {
@@ -749,9 +791,11 @@ public sealed class UpdateTaskTool : IAiTool
         }
 
         var isTShirt = type.Value == EstimateType.TShirt;
-        var isOutOfRange = resolved.Value < SmallestTShirtSize || resolved.Value > LargestTShirtSize;
+        var isTShirtSize = ProjectTaskEstimate.IsTShirtSize(resolved.Value);
 
-        if (isTShirt && isOutOfRange)
+        var isOutOfTShirtRange = isTShirt && !isTShirtSize;
+
+        if (isOutOfTShirtRange)
         {
             return "T-shirt estimates run from 1 (XS) to 5 (XL).";
         }
@@ -779,7 +823,7 @@ public sealed class UpdateTaskTool : IAiTool
         List<AiChangeField> fields,
         TaskViewModel task,
         JsonElement arguments,
-        UpdateLookups lookups,
+        AiTaskLookups lookups,
         CancellationToken cancellationToken)
     {
         var statusId = AiToolSchema.GetInt(arguments, "statusId");

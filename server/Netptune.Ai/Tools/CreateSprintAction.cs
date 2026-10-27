@@ -38,7 +38,9 @@ public sealed class CreateSprintAction : IAiToolAction
         var startDate = ReadDate(arguments, "startDate");
         var endDate = ReadDate(arguments, "endDate");
 
-        if (startDate is null || endDate is null)
+        var hasDates = startDate is not null && endDate is not null;
+
+        if (!hasDates)
         {
             return AiToolExecution.Failed("A startDate and endDate as YYYY-MM-DD are required.");
         }

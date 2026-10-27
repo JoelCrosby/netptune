@@ -3,6 +3,7 @@ using Mediator;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Localization;
+using Netptune.Core.Models.Web;
 using Netptune.Core.Requests.Ai;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -148,7 +149,14 @@ public sealed class SaveWorkspaceSearchCredentialCommandHandler
         var isAbsolute = Uri.TryCreate(endpoint, UriKind.Absolute, out var uri);
         var isHttp = isAbsolute && (uri!.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
 
-        return isHttp ? null : AppText.ErrorEndpointMustAbsoluteHttpHttpsURL;
+        if (!isHttp)
+        {
+            return AppText.ErrorEndpointMustAbsoluteHttpHttpsURL;
+        }
+
+        var egress = WebEgressGuard.CheckUrl(uri!);
+
+        return egress.IsAllowed ? null : AppText.ErrorEndpointMustBePublic;
     }
 
     private static WorkspaceSearchCredentialViewModel ToViewModel(WorkspaceSearchCredential credential)

@@ -303,6 +303,19 @@ public class BoardToolTests
     }
 
     [Fact]
+    public async Task CreateBoardGroup_ShouldFail_WhenBothABoardIdAndARefAreGiven()
+    {
+        GivenPendingBoard("board-1");
+
+        var tool = new CreateBoardGroupAction(Mediator, ChangeSet);
+        var result = await Execute(tool, $$"""{"boardRef":"board-1","boardId":{{BoardId}},"name":"Todo"}""");
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("not both");
+        ChangeSet.Changes.Should().NotContain(change => change.ToolName == "propose_create_board_group");
+    }
+
+    [Fact]
     public async Task CreateBoardGroup_ShouldPropose_WhenTheNameIsNewToTheBoard()
     {
         var tool = new CreateBoardGroupAction(Mediator, ChangeSet);

@@ -67,7 +67,9 @@ public sealed class RestorePageVersionAction : IAiToolAction
         var isRenamed = !string.Equals(version.Title, page.Title, StringComparison.Ordinal);
         var isRewritten = !isFolder && !string.Equals(restoredBody, currentBody, StringComparison.Ordinal);
 
-        if (!isRenamed && !isRewritten)
+        var changesSomething = isRenamed || isRewritten;
+
+        if (!changesSomething)
         {
             return AiToolExecution.Failed($"Version {version.Id} has the same title and body as the page now.");
         }

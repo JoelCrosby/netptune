@@ -3,6 +3,8 @@ using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Options;
 
 using Netptune.Ai.Configuration;
+using Netptune.Ai.Providers;
+using Netptune.Ai.Tools;
 using Netptune.Core.Enums;
 using Netptune.Core.Localization;
 using Netptune.Core.Models.Ai;
@@ -61,17 +63,35 @@ public sealed class AiConversationRunner : IAiConversationRunner
             };
 
             AiChatTurn? turn = null;
+            var streamedCharacters = 0;
 
-            await foreach (var providerEvent in provider.Stream(request, context.ApiKey, cancellationToken))
+            // Usage only arrives with a finished reply. A call stopped, timed out or broken off part way was
+            // still paid for, and only a finally block runs once the caller has stopped listening.
+            try
             {
-                if (providerEvent.TextDelta is not null)
+                await foreach (var providerEvent in provider.Stream(request, context.ApiKey, cancellationToken))
                 {
-                    yield return AiStreamEvent.Delta(providerEvent.TextDelta);
-                }
+                    if (providerEvent.TextDelta is not null)
+                    {
+                        streamedCharacters += providerEvent.TextDelta.Length;
 
-                if (providerEvent.CompletedTurn is not null)
+                        yield return AiStreamEvent.Delta(providerEvent.TextDelta);
+                    }
+
+                    if (providerEvent.CompletedTurn is not null)
+                    {
+                        turn = providerEvent.CompletedTurn;
+                    }
+                }
+            }
+            finally
+            {
+                var wasCutShort = turn is null
+                    && (streamedCharacters > 0 || cancellationToken.IsCancellationRequested);
+
+                if (wasCutShort)
                 {
-                    turn = providerEvent.CompletedTurn;
+                    context.Turns.Add(new AiChatTurn { Usage = AiUsageEstimate.For(request, streamedCharacters) });
                 }
             }
 
@@ -95,6 +115,14 @@ public sealed class AiConversationRunner : IAiConversationRunner
             }
 
             var hasToolCalls = turn.ToolCalls.Count > 0;
+            var hitOutputLimit = AiFinishReasons.IsOutputLimit(turn.FinishReason);
+
+            if (!hasToolCalls && hitOutputLimit)
+            {
+                yield return AiStreamEvent.Failed(AppText.AiErrorReplyHitOutputLimit);
+
+                yield break;
+            }
 
             if (!hasToolCalls)
             {
@@ -233,6 +261,10 @@ public sealed class AiConversationRunner : IAiConversationRunner
 
             return Truncate(execution);
         }
+        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+        {
+            return AiToolExecution.Failed($"Tool {call.Name} timed out.");
+        }
         catch (Exception exception) when (exception is not OperationCanceledException)
         {
             return AiToolExecution.Failed($"Tool {call.Name} failed: {exception.Message}");
@@ -248,14 +280,15 @@ public sealed class AiConversationRunner : IAiConversationRunner
 
     private AiToolExecution Truncate(AiToolExecution execution)
     {
-        var isWithinLimit = execution.Content.Length <= Options.MaxToolResultCharacters;
+        var content = AiToolJson.Relax(execution.Content);
+        var isWithinLimit = content.Length <= Options.MaxToolResultCharacters;
 
         if (isWithinLimit)
         {
-            return execution;
+            return execution with { Content = content };
         }
 
-        var trimmed = execution.Content[..Options.MaxToolResultCharacters];
+        var trimmed = content[..Options.MaxToolResultCharacters];
 
         return execution with
         {

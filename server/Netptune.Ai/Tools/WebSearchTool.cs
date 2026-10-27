@@ -1,5 +1,6 @@
 using System.Text.Json;
 
+using Netptune.Ai.Web;
 using Netptune.Core.Authorization;
 using Netptune.Core.Services.Ai;
 
@@ -10,10 +11,12 @@ public sealed class WebSearchTool : IAiTool
     private const int DefaultTake = 5;
 
     private readonly IWebSearchProvider Provider;
+    private readonly AiWebFetchAllowance Allowance;
 
-    public WebSearchTool(IWebSearchProvider provider)
+    public WebSearchTool(IWebSearchProvider provider, AiWebFetchAllowance allowance)
     {
         Provider = provider;
+        Allowance = allowance;
     }
 
     public string Name => "web_search";
@@ -52,6 +55,11 @@ public sealed class WebSearchTool : IAiTool
         if (!result.IsSuccess)
         {
             return AiToolExecution.Failed(result.Error ?? "The search failed.");
+        }
+
+        foreach (var hit in result.Hits)
+        {
+            Allowance.AllowSearchResult(hit.Url);
         }
 
         var summary = new
