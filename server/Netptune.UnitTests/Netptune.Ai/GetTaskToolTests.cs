@@ -43,6 +43,22 @@ public class GetTaskToolTests
     }
 
     [Fact]
+    public async Task Execute_ShouldListEveryBoardTheTaskIsOn()
+    {
+        GivenTask();
+
+        var result = await Execute($$"""{"systemId":"{{SystemId}}"}""");
+
+        result.IsError.Should().BeFalse();
+
+        using var content = JsonDocument.Parse(result.Content);
+        var placements = content.RootElement.GetProperty("placements").EnumerateArray().ToList();
+
+        placements.Select(placement => placement.GetProperty("boardId").GetInt32()).Should().Equal(4, 5);
+        placements.Select(placement => placement.GetProperty("boardGroupId").GetInt32()).Should().Equal(9, 11);
+    }
+
+    [Fact]
     public async Task Execute_ShouldReadCommentsAlongsideTheTask_WhenIncluded()
     {
         GivenTask();
@@ -122,6 +138,25 @@ public class GetTaskToolTests
             Id = 42,
             SystemId = SystemId,
             Name = "Fix the login page",
+            Placements =
+            [
+                new BoardPlacementViewModel
+                {
+                    BoardId = 4,
+                    BoardName = "Netptune",
+                    BoardIdentifier = "netptune",
+                    BoardGroupId = 9,
+                    BoardGroupName = "Shipped",
+                },
+                new BoardPlacementViewModel
+                {
+                    BoardId = 5,
+                    BoardName = "Slash Commands",
+                    BoardIdentifier = "slash-commands",
+                    BoardGroupId = 11,
+                    BoardGroupName = "Todo",
+                },
+            ],
         };
 
         Mediator

@@ -200,6 +200,7 @@ public sealed class SearchTasksTool : IAiTool
         var columns = task.Placements.Select(placement => new
         {
             board = placement.BoardName,
+            boardId = placement.BoardId,
             column = placement.BoardGroupName,
             boardGroupId = placement.BoardGroupId,
         });

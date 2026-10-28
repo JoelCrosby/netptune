@@ -3,6 +3,8 @@ using System.Text.Json.Nodes;
 
 using Mediator;
 
+using Netptune.Ai.Execution.Handlers;
+
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Localization;
@@ -47,6 +49,7 @@ public sealed class UpdateTaskTool : IAiTool
         [AiTaskChangeDrafts.AssignChange] = NetptunePermissions.Tasks.Reassign,
         [AiTaskChangeDrafts.TagsChange] = NetptunePermissions.Tags.Assign,
         [AiTaskChangeDrafts.BoardGroupChange] = NetptunePermissions.Tasks.Move,
+        [AiTaskChangeDrafts.BoardRemovalChange] = NetptunePermissions.Tasks.Move,
     };
 
     private readonly IMediator Mediator;
@@ -62,7 +65,7 @@ public sealed class UpdateTaskTool : IAiTool
 
     public string Description =>
         "Propose changing an existing task: name, description, status, priority, dates, estimate, "
-        + "assignees, tags or board group. Send only what should change. "
+        + "assignees, tags, board group or the boards it is on. Send only what should change. "
         + "A task proposed earlier in this change set can take tags here by taskRef; set the rest when proposing it. "
         + "To change many tasks in one call, send updates instead: an array of up to 50 objects, each taking the same "
         + "fields as a single update. Each task is proposed or refused on its own, and the result says which.";
@@ -113,8 +116,13 @@ public sealed class UpdateTaskTool : IAiTool
             "items": { "type": "string" },
             "description": "The complete set of tag names, existing or proposed with propose_tag_change. An empty array clears them."
           },
-          "boardGroupId": { "type": "integer", "description": "Board group (the column on a board) to move the task into. A group with a status of its own sets the task's status too." },
+          "boardGroupId": { "type": "integer", "description": "Board group (the column on a board) to move the task into. A group with a status of its own sets the task's status too. A group on a board the task is not on yet adds it to that board and leaves it on its other boards; name those in removeFromBoardIds to move it off them." },
           "boardGroupRef": { "type": "string", "description": "Handle of a board group proposed earlier in this change set, instead of boardGroupId." },
+          "removeFromBoardIds": {
+            "type": "array",
+            "items": { "type": "integer" },
+            "description": "Boards to take the task off, from the boardId of its placements in get_task. Send with boardGroupId to move a task to another board rather than add it there."
+          },
           "updates": {
             "type": "array",
             "items": { "type": "object" },
@@ -362,8 +370,9 @@ public sealed class UpdateTaskTool : IAiTool
                 : AiTaskDraftResult.Unchanged;
 
             var boardGroupResult = await ProposeBoardGroup(task, arguments, lookups, cancellationToken);
+            var removalResult = ProposeBoardRemovals(task, arguments, boardGroupResult.Draft);
 
-            var taskError = fieldResult.Error ?? assigneeResult.Error ?? boardGroupResult.Error;
+            var taskError = fieldResult.Error ?? assigneeResult.Error ?? boardGroupResult.Error ?? removalResult.Error;
 
             if (taskError is not null)
             {
@@ -373,6 +382,7 @@ public sealed class UpdateTaskTool : IAiTool
             AddDraft(drafts, fieldResult);
             AddDraft(drafts, assigneeResult);
             AddDraft(drafts, boardGroupResult);
+            drafts.AddRange(removalResult.Drafts);
         }
 
         var changesTags = HasArgument(arguments, "tags");
@@ -573,9 +583,57 @@ public sealed class UpdateTaskTool : IAiTool
         return AiTaskChangeDrafts.PendingBoardGroup(task, pending.Group!);
     }
 
+    private sealed record BoardRemovalResult(List<AiChangeDraft> Drafts, string? Error);
+
+    private static BoardRemovalResult ProposeBoardRemovals(
+        TaskViewModel task,
+        JsonElement arguments,
+        AiChangeDraft? move)
+    {
+        var boardIds = AiToolSchema.GetIntArray(arguments, "removeFromBoardIds").Distinct().ToList();
+
+        if (boardIds.Count == 0)
+        {
+            return new BoardRemovalResult([], null);
+        }
+
+        var missingBoardIds = boardIds
+            .Where(boardId => task.Placements.All(placement => placement.BoardId != boardId))
+            .ToList();
+
+        if (missingBoardIds.Count > 0)
+        {
+            return new BoardRemovalResult(
+                [],
+                $"“{task.Name}” is not on these boards: {string.Join(", ", missingBoardIds)}. "
+                + "Use the boardId of its placements from get_task.");
+        }
+
+        var targetBoardId = move is null ? null : AiChangePayload.ReadInt(move.Payload.RootElement, "boardId");
+        var targetPlacement = task.Placements.FirstOrDefault(placement => placement.BoardId == targetBoardId);
+        var removesTargetBoard = targetPlacement is not null && boardIds.Contains(targetPlacement.BoardId);
+
+        if (removesTargetBoard)
+        {
+            return new BoardRemovalResult(
+                [],
+                $"The task is moving onto “{targetPlacement!.BoardName}”, "
+                + "so that board cannot also be in removeFromBoardIds.");
+        }
+
+        var drafts = task.Placements
+            .Where(placement => boardIds.Contains(placement.BoardId))
+            .Select(placement => AiTaskChangeDrafts.BoardRemoval(task, placement))
+            .ToList();
+
+        return new BoardRemovalResult(drafts, null);
+    }
+
     private static bool ChangesBoardGroup(JsonElement arguments)
     {
-        return HasArgument(arguments, "boardGroupId") || HasArgument(arguments, "boardGroupRef");
+        return HasArgument(arguments, "boardGroupId")
+            || HasArgument(arguments, "boardGroupRef")
+            || HasArgument(arguments, "removeFromBoardIds");
     }
 
     // A blank name or description is left out of the review, so it must stay out of what gets applied too.

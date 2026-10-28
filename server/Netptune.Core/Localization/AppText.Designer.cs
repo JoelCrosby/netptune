@@ -1399,6 +1399,15 @@ namespace Netptune.Core.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The task or board this change refers to could not be resolved..
+        /// </summary>
+        public static string AiChangeErrorTaskBoardChangeRefersCouldNotResolved {
+            get {
+                return ResourceManager.GetString("AiChangeErrorTaskBoardChangeRefersCouldNotResolved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The task or board group this change refers to could not be resolved..
         /// </summary>
         public static string AiChangeErrorTaskBoardGroupChangeRefersCouldNotResolved {
@@ -1503,6 +1512,15 @@ namespace Netptune.Core.Localization {
         public static string AiChangeErrorTaskCouldNotReassigned {
             get {
                 return ResourceManager.GetString("AiChangeErrorTaskCouldNotReassigned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The task could not be removed from the board..
+        /// </summary>
+        public static string AiChangeErrorTaskCouldNotRemovedBoard {
+            get {
+                return ResourceManager.GetString("AiChangeErrorTaskCouldNotRemovedBoard", resourceCulture);
             }
         }
         
@@ -2781,6 +2799,15 @@ namespace Netptune.Core.Localization {
         public static string AiSummaryMoveTaskToSprint {
             get {
                 return ResourceManager.GetString("AiSummaryMoveTaskToSprint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Take “{0}” off {1}.
+        /// </summary>
+        public static string AiSummaryRemoveTaskFromBoard {
+            get {
+                return ResourceManager.GetString("AiSummaryRemoveTaskFromBoard", resourceCulture);
             }
         }
         

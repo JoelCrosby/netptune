@@ -807,6 +807,54 @@ public sealed class AiEndpointTests
     }
 
     [Fact]
+    public async Task ApplyChangeSet_ShouldMoveATaskOffItsBoard_AndUndoShouldPutItBack()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var placed = await CreatePlacedTask(client);
+        var target = await CreateSecondBoard(client, placed.ProjectId);
+        var sourceBoardId = await ReadBoardId(placed.GroupId);
+        var move = new AiProposedChangeSeed
+        {
+            ToolName = "propose_move_task_to_board_group",
+            EntityType = "task",
+            Summary = "Move the task to the second board",
+            Payload = JsonDocument.Parse($$"""{"taskId":{{placed.TaskId}},"boardGroupId":{{target.GroupId}},"boardIdentifier":"{{target.Identifier}}"}"""),
+        };
+        var removal = new AiProposedChangeSeed
+        {
+            ToolName = "propose_remove_task_from_board",
+            EntityType = "task",
+            Summary = "Take the task off its first board",
+            Payload = JsonDocument.Parse($$"""{"taskId":{{placed.TaskId}},"boardId":{{sourceBoardId}}}"""),
+        };
+
+        var seed = await SeedPendingChangeSet([move, removal]);
+
+        try
+        {
+            var result = await ApplyChangeSet(client, seed.ChangeSetId, TestContext.Current.CancellationToken);
+
+            result.Results.Should().OnlyContain(outcome => outcome.Status == AiChangeApplyStatus.Applied);
+
+            var movedGroupIds = await ReadPlacementGroupIds(placed.TaskId);
+
+            movedGroupIds.Should().Equal([target.GroupId], "the task leaves the board it was moved off");
+
+            var undo = await client.PostAsync($"api/ai/change-sets/{seed.ChangeSetId}/undo", null, TestContext.Current.CancellationToken);
+
+            var undoneGroupIds = await ReadPlacementGroupIds(placed.TaskId);
+
+            undo.StatusCode.Should().Be(HttpStatusCode.OK, await undo.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
+            undoneGroupIds.Should().Equal([placed.GroupId], "undo puts the task back where it started, on one board");
+        }
+        finally
+        {
+            await RemoveSeed(seed.ConversationId);
+            await RemoveBoard(target.BoardId);
+        }
+    }
+
+    [Fact]
     public async Task ApplyChangeSet_ShouldCreateAFolderAndAPageInsideIt_ByHandle()
     {
         var client = Fixture.CreateNetptuneClient();
@@ -1143,6 +1191,17 @@ public sealed class AiEndpointTests
             .FirstAsync(TestContext.Current.CancellationToken);
 
         return new SeededBoard(board.Id, board.Identifier, groupId);
+    }
+
+    private async Task<int> ReadBoardId(int groupId)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        return await context.BoardGroups
+            .Where(item => item.Id == groupId)
+            .Select(item => item.BoardId)
+            .FirstAsync(TestContext.Current.CancellationToken);
     }
 
     private async Task<List<int>> ReadPlacementGroupIds(int taskId)

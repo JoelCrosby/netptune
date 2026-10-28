@@ -319,6 +319,9 @@ Confirma tu dirección de correo electrónico con el siguiente enlace.</value>
   <data name="AiChangeErrorTaskBoardGroupChangeRefersCouldNotResolved" xml:space="preserve">
     <value>No se encontró la tarea o el grupo del tablero al que se refiere este cambio.</value>
   </data>
+  <data name="AiChangeErrorTaskBoardChangeRefersCouldNotResolved" xml:space="preserve">
+    <value>No se encontró la tarea o el tablero al que se refiere este cambio.</value>
+  </data>
   <data name="AiChangeErrorTaskCouldNotMoved" xml:space="preserve">
     <value>No se pudo mover la tarea.</value>
   </data>
@@ -330,6 +333,9 @@ Confirma tu dirección de correo electrónico con el siguiente enlace.</value>
   </data>
   <data name="AiChangeErrorTaskCouldNotRemovedSprint" xml:space="preserve">
     <value>No se pudo quitar la tarea del sprint.</value>
+  </data>
+  <data name="AiChangeErrorTaskCouldNotRemovedBoard" xml:space="preserve">
+    <value>No se pudo quitar la tarea del tablero.</value>
   </data>
   <data name="AiChangeErrorGroupOrderMissingChange" xml:space="preserve">
     <value>Falta el orden de los grupos en este cambio.</value>
@@ -570,6 +576,9 @@ Confirma tu dirección de correo electrónico con el siguiente enlace.</value>
   </data>
   <data name="AiSummaryRemoveTaskFromSprint" xml:space="preserve">
     <value>Sacar “{0}” de {1}</value>
+  </data>
+  <data name="AiSummaryRemoveTaskFromBoard" xml:space="preserve">
+    <value>Quitar “{0}” de {1}</value>
   </data>
   <data name="AiSummaryStartSprint" xml:space="preserve">
     <value>Iniciar el sprint “{0}”</value>

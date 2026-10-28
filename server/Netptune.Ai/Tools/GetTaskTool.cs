@@ -127,7 +127,13 @@ public sealed class GetTaskTool : IAiTool
             projectName = task.ProjectName,
             sprintId = task.SprintId,
             sprintName = task.SprintName,
-            boardGroupId = task.BoardGroupId,
+            placements = task.Placements.Select(placement => new
+            {
+                boardId = placement.BoardId,
+                board = placement.BoardName,
+                boardGroupId = placement.BoardGroupId,
+                column = placement.BoardGroupName,
+            }),
             hasComments = task.HasComments,
             flags = task.Flags.Select(flag => new { id = flag.Id, name = flag.Name, description = flag.Description }),
         })!.AsObject();

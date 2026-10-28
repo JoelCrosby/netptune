@@ -363,6 +363,98 @@ public class UpdateTaskToolTests
         tool.GetRequiredPermissions(arguments).Should().Contain(NetptunePermissions.Tasks.Move);
     }
 
+    [Fact]
+    public void GetRequiredPermissions_ShouldDemandMove_ForABoardRemoval()
+    {
+        var tool = new UpdateTaskTool(Mediator, ChangeSet);
+        var arguments = JsonDocument.Parse("""{"taskId":42,"removeFromBoardIds":[5]}""").RootElement;
+
+        tool.GetRequiredPermissions(arguments).Should().Contain(NetptunePermissions.Tasks.Move);
+    }
+
+    [Fact]
+    public async Task Execute_ShouldMoveATaskToAnotherBoard_WhenItIsTakenOffTheBoardItWasOn()
+    {
+        GivenTask(CreateTask() with { BoardGroupId = 11, Placements = [CreatePlacement(5, "Legacy", 11, "Todo")] });
+        GivenBoardGroup(CreateGroup(9, projectId: 3));
+
+        var result = await Execute($$"""{"taskId":{{TaskId}},"boardGroupId":9,"removeFromBoardIds":[5]}""");
+
+        result.IsError.Should().BeFalse();
+        ChangeSet.Changes.Select(change => change.ToolName)
+            .Should().Equal("propose_move_task_to_board_group", "propose_remove_task_from_board");
+
+        var removal = ChangeSet.Changes[1];
+
+        removal.Payload.RootElement.GetProperty("boardId").GetInt32().Should().Be(5);
+        removal.Fields.Single().BeforeValues!.Single().Display.Should().Be("Legacy · Todo");
+        removal.Fields.Single().AfterValues.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Execute_ShouldTakeATaskOffABoard_WithoutMovingIt()
+    {
+        GivenTask(CreateTask() with { Placements = [CreatePlacement(5, "Legacy", 11, "Todo")] });
+
+        var result = await Execute($$"""{"taskId":{{TaskId}},"removeFromBoardIds":[5]}""");
+
+        result.IsError.Should().BeFalse();
+        ChangeSet.Changes.Single().ToolName.Should().Be("propose_remove_task_from_board");
+    }
+
+    [Fact]
+    public async Task Execute_ShouldRefuseABoardRemoval_ForABoardTheTaskIsNotOn()
+    {
+        GivenTask(CreateTask() with { Placements = [CreatePlacement(5, "Legacy", 11, "Todo")] });
+
+        var result = await Execute($$"""{"taskId":{{TaskId}},"removeFromBoardIds":[8]}""");
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("is not on these boards: 8");
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Execute_ShouldRefuseTakingATaskOffTheBoardItIsMovingOnto()
+    {
+        GivenTask(CreateTask() with { BoardGroupId = 10, Placements = [CreatePlacement(4, "Netptune", 10, "Todo")] });
+        GivenBoardGroup(CreateGroup(9, projectId: 3));
+
+        var result = await Execute($$"""{"taskId":{{TaskId}},"boardGroupId":9,"removeFromBoardIds":[4]}""");
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("Netptune");
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Execute_ShouldProposeNoMove_WhenTheTaskIsAlreadyInTheGroupOnAnotherOfItsBoards()
+    {
+        GivenTask(CreateTask() with
+        {
+            BoardGroupId = 11,
+            Placements = [CreatePlacement(5, "Legacy", 11, "Todo"), CreatePlacement(4, "Netptune", 9, "Shipped")],
+        });
+        GivenBoardGroup(CreateGroup(9, projectId: 3));
+
+        var result = await Execute($$"""{"taskId":{{TaskId}},"boardGroupId":9}""");
+
+        result.IsError.Should().BeTrue();
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    private static BoardPlacementViewModel CreatePlacement(int boardId, string boardName, int groupId, string groupName)
+    {
+        return new BoardPlacementViewModel
+        {
+            BoardId = boardId,
+            BoardName = boardName,
+            BoardIdentifier = boardName.ToLowerInvariant(),
+            BoardGroupId = groupId,
+            BoardGroupName = groupName,
+        };
+    }
+
     private string ProposePendingBoardGroup(string boardPayload)
     {
         var boardRef = ChangeSet.CreateRefKey();

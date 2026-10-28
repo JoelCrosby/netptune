@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
@@ -44,6 +45,7 @@ internal static class AiTaskChangeDrafts
     public const string AssignChange = "propose_assign_task";
     public const string TagsChange = "propose_set_task_tags";
     public const string BoardGroupChange = "propose_move_task_to_board_group";
+    public const string BoardRemovalChange = "propose_remove_task_from_board";
 
     public static async Task<AiTaskDraftResult> Assignees(
         IMediator mediator,
@@ -165,7 +167,8 @@ internal static class AiTaskChangeDrafts
         AiTaskLookups? lookups,
         CancellationToken cancellationToken)
     {
-        var isUnchanged = task.BoardGroupId == boardGroupId;
+        var isUnchanged = task.BoardGroupId == boardGroupId
+            || task.Placements.Any(placement => placement.BoardGroupId == boardGroupId);
 
         if (isUnchanged)
         {
@@ -212,6 +215,7 @@ internal static class AiTaskChangeDrafts
             taskId = task.Id,
             projectId = task.ProjectId,
             boardGroupId = group.Id,
+            boardId = group.BoardId,
             boardIdentifier = group.BoardIdentifier,
         };
 
@@ -225,6 +229,32 @@ internal static class AiTaskChangeDrafts
             Payload = JsonSerializer.SerializeToDocument(payload),
             ValidationStatus = AiChangeValidationStatus.Valid,
         });
+    }
+
+    public static AiChangeDraft BoardRemoval(TaskViewModel task, BoardPlacementViewModel placement)
+    {
+        var payload = new
+        {
+            taskId = task.Id,
+            boardId = placement.BoardId,
+        };
+
+        var current = new AiChangeValue
+        {
+            Id = placement.BoardGroupId.ToString(CultureInfo.InvariantCulture),
+            Display = $"{placement.BoardName} · {placement.BoardGroupName}",
+        };
+
+        return new AiChangeDraft
+        {
+            ToolName = BoardRemovalChange,
+            EntityType = "task",
+            EntityId = task.Id,
+            Summary = Localized.Format(AppText.AiSummaryRemoveTaskFromBoard, task.Name, placement.BoardName),
+            Fields = [AiChangeFields.Values("boardGroup", AiChangeValueKind.Text, [current], [])],
+            Payload = JsonSerializer.SerializeToDocument(payload),
+            ValidationStatus = AiChangeValidationStatus.Valid,
+        };
     }
 
     // A task can only sit on boards in its own project, and an existing task can never be in a project

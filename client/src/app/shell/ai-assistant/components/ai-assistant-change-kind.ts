@@ -24,6 +24,7 @@ const KINDS: Record<string, AiChangeKind> = {
   propose_delete_board: 'delete',
   propose_delete_board_group: 'delete',
   propose_remove_task_from_sprint: 'delete',
+  propose_remove_task_from_board: 'delete',
   propose_archive_page: 'delete',
   propose_delete_page: 'delete',
   propose_delete_tag: 'delete',
@@ -102,6 +103,7 @@ const ACTIONS: Record<string, string> = {
   propose_reorder_board_groups: MOVE,
   propose_add_tasks_to_sprint: MOVE,
   propose_remove_task_from_sprint: MOVE,
+  propose_remove_task_from_board: MOVE,
   propose_move_page: MOVE,
 };
 

@@ -96,6 +96,7 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiChangeHandler, CreateStatusChangeHandler>();
         services.AddScoped<IAiChangeHandler, UpdateStatusChangeHandler>();
         services.AddScoped<IAiChangeHandler, MoveTaskToBoardGroupChangeHandler>();
+        services.AddScoped<IAiChangeHandler, RemoveTaskFromBoardChangeHandler>();
         services.AddScoped<IAiChangeHandler, LinkTasksChangeHandler>();
         services.AddScoped<IAiChangeHandler, CreateSprintChangeHandler>();
         services.AddScoped<IAiChangeHandler, UpdateSprintChangeHandler>();
