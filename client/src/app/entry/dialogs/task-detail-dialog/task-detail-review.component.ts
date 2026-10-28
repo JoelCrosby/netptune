@@ -63,8 +63,8 @@ const characterCount = numberFormat();
   ],
   host: { class: 'flex min-h-full flex-col gap-3' },
   template: `
-    <div class="flex flex-wrap items-center gap-2">
-      @if (current(); as current) {
+    @if (current(); as current) {
+      <div class="flex flex-wrap items-center gap-2">
         <app-badge [color]="readinessColor()">{{ readinessLabel() }}</app-badge>
         <span class="text-muted text-xs">
           <span
@@ -86,28 +86,22 @@ const characterCount = numberFormat();
             }}
           </span>
         </span>
-      }
 
-      @if (canRun()) {
-        <button
-          class="ml-auto"
-          app-stroked-button
-          type="button"
-          [disabled]="review.running()"
-          (click)="review.run()">
-          <svg lucideSparkles class="h-3.5 w-3.5"></svg>
-          @if (current()) {
+        @if (canRun()) {
+          <button
+            class="ml-auto"
+            app-stroked-button
+            type="button"
+            [disabled]="review.running()"
+            (click)="review.run()">
+            <svg lucideSparkles class="h-3.5 w-3.5"></svg>
             <span i18n="Button that runs the assistant review on a task again"
               >Run again</span
             >
-          } @else {
-            <span i18n="Button that runs the assistant review on a task"
-              >Run review</span
-            >
-          }
-        </button>
-      }
-    </div>
+          </button>
+        }
+      </div>
+    }
 
     @if (review.running()) {
       <div class="flex min-h-40 flex-1 items-center justify-center">
@@ -329,6 +323,18 @@ const characterCount = numberFormat();
           i18n-description="Explains what an assistant review of a task does"
           description="A review checks this task for gaps, unstated assumptions, ambiguity, scope, overlap and testability.">
           <svg emptyStateIcon lucideSparkles></svg>
+          @if (canRun()) {
+            <button
+              emptyStateAction
+              app-stroked-button
+              type="button"
+              (click)="review.run()">
+              <svg lucideSparkles class="h-3.5 w-3.5"></svg>
+              <span i18n="Button that runs the assistant review on a task"
+                >Run review</span
+              >
+            </button>
+          }
         </app-empty-state>
       }
 

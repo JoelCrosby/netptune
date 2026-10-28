@@ -1281,7 +1281,7 @@
     </unit>
     <unit id="3386323988375703429">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:281</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:283</note>
         <note category="description">Header of the work log of a reply the user stopped</note>
       </notes>
       <segment state="translated">
@@ -1663,7 +1663,7 @@
     </unit>
     <unit id="3781268880187367400">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:137,142</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:131,136</note>
         <note category="description">Title of the notice shown when the latest review of a task failed</note>
       </notes>
       <segment state="translated">
@@ -1733,7 +1733,7 @@
     </unit>
     <unit id="322229249598827754">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:441</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:447</note>
         <note category="description">Shown in place of a person&apos;s name when it is not known</note>
       </notes>
       <segment state="translated">
@@ -2354,7 +2354,7 @@
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:337,340</note>
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:201,204</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:161</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:218,221</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:212,215</note>
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:80,82</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:540</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:271</note>
@@ -3021,7 +3021,7 @@
     </unit>
     <unit id="5494881644226080803">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:276,278</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:270,272</note>
       </notes>
       <segment state="translated">
         <source>{VAR_PLURAL, plural, =1 {Show 1 decided finding} other {Show <ph id="0" equiv="INTERPOLATION"/> decided findings}}</source>
@@ -3091,7 +3091,7 @@
     </unit>
     <unit id="6949815097015527714">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:257,261</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:251,255</note>
         <note category="description">Shown when the latest review of a task left nothing open</note>
       </notes>
       <segment state="translated">
@@ -3736,7 +3736,7 @@
     </unit>
     <unit id="1615286370389385433">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:457</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:463</note>
         <note category="description">Who dismissed a review finding. NAME is a person</note>
       </notes>
       <segment state="translated">
@@ -4508,7 +4508,7 @@
     </unit>
     <unit id="242059098779495199">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:237,240</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:231,234</note>
         <note category="description">Button that previews and applies a review suggestion</note>
       </notes>
       <segment state="translated">
@@ -4725,7 +4725,7 @@
     </unit>
     <unit id="2334258665364702698">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:241</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:243</note>
         <note category="description">Assistant progress while a tool runs, naming the tool</note>
       </notes>
       <segment state="translated">
@@ -4879,7 +4879,7 @@
     <unit id="4043049091728011235">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:637</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:341</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:343</note>
         <note category="description">An export a member stopped</note>
       </notes>
       <segment>
@@ -5087,7 +5087,7 @@
     </unit>
     <unit id="7445388612819913138">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:438</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:444</note>
         <note category="description">Task review progress, for example &quot;8s · 1,400 chars&quot;</note>
       </notes>
       <segment state="translated">
@@ -5734,7 +5734,7 @@
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:154,161</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:169,174</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:239,244</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:276,281</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:270,275</note>
         <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:88,90</note>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:74,79</note>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:112,117</note>
@@ -7418,7 +7418,7 @@
     </unit>
     <unit id="239908996088771686">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:271</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:273</note>
         <note category="description">Assistant progress while a reply is being prepared, for example &quot;8s · 12.4k tok&quot;</note>
       </notes>
       <segment state="initial">
@@ -8076,7 +8076,7 @@
     </unit>
     <unit id="4168406902354683639">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:363,367</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:369,373</note>
         <note category="description">Toggles the list of past reviews of a task</note>
       </notes>
       <segment state="translated">
@@ -8160,7 +8160,7 @@
     </unit>
     <unit id="4334698187230567378">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:105,110</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:334,338</note>
         <note category="description">Button that runs the assistant review on a task</note>
       </notes>
       <segment state="translated">
@@ -8616,7 +8616,7 @@
     </unit>
     <unit id="3302832028736051011">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:150,154</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:144,148</note>
         <note category="description">Suggests reviewing a task again after it changed</note>
       </notes>
       <segment state="translated">
@@ -8741,7 +8741,7 @@
     </unit>
     <unit id="2565426175330768428">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:427</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:433</note>
         <note category="description">Shown while the assistant reviews a task, before it starts writing</note>
       </notes>
       <segment state="translated">
@@ -12488,7 +12488,7 @@
     </unit>
     <unit id="3541398472508734323">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:328,329</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:322,323</note>
         <note category="description">Heading shown when a task has never been reviewed</note>
       </notes>
       <segment state="translated">
@@ -12985,7 +12985,7 @@
     </unit>
     <unit id="6676914867306973161">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:285</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:287</note>
         <note category="description">Shown above a finished reply, saying how long the assistant worked on it</note>
       </notes>
       <segment state="translated">
@@ -14385,7 +14385,7 @@
     </unit>
     <unit id="6186101642106373118">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:101,104</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:99,104</note>
         <note category="description">Button that runs the assistant review on a task again</note>
       </notes>
       <segment state="translated">
@@ -15265,7 +15265,7 @@
     </unit>
     <unit id="5239250186261980893">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:426</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:432</note>
         <note category="description">Shown while the assistant writes out the findings of a task review</note>
       </notes>
       <segment state="translated">
@@ -19626,7 +19626,7 @@
     </unit>
     <unit id="6511066179052107110">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:291</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:293</note>
         <note category="description">Number of tools the assistant used, plural</note>
       </notes>
       <segment state="translated">
@@ -19918,7 +19918,7 @@
     </unit>
     <unit id="7077514990546083477">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:330,332</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:324,326</note>
         <note category="description">Explains what an assistant review of a task does</note>
       </notes>
       <segment state="translated">
@@ -20520,7 +20520,7 @@
     </unit>
     <unit id="2003333127264395537">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:337</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:339</note>
         <note category="description">Shown beside a tool the assistant is still running</note>
       </notes>
       <segment state="translated">
@@ -20796,7 +20796,7 @@
     </unit>
     <unit id="3922324539528568972">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:456</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:462</note>
         <note category="description">Who accepted a review finding. NAME is a person</note>
       </notes>
       <segment state="translated">
@@ -22723,7 +22723,7 @@
     </unit>
     <unit id="7828808805120058354">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:305,307</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:299,301</note>
         <note category="description">Button that undoes an accepted review suggestion</note>
       </notes>
       <segment state="translated">
@@ -24373,7 +24373,7 @@
     </unit>
     <unit id="6722197117273372334">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:315,317</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:309,311</note>
         <note category="description">Button that reopens a decided review finding</note>
       </notes>
       <segment state="translated">
@@ -24661,7 +24661,7 @@
     </unit>
     <unit id="4777027777592183077">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:200,202</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:194,196</note>
         <note category="description">Placeholder of the optional reason for dismissing a review finding</note>
       </notes>
       <segment state="translated">
@@ -24884,7 +24884,7 @@
     </unit>
     <unit id="2903576963657594650">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:248</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:250</note>
         <note category="description">Shown while the assistant writes out its reply</note>
       </notes>
       <segment state="translated">
@@ -25235,7 +25235,7 @@
     </unit>
     <unit id="6460163696346705349">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:340,342</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:346,348</note>
         <note category="description">Heading above other reviews that mention this task</note>
       </notes>
       <segment state="translated">
@@ -25588,7 +25588,7 @@
     </unit>
     <unit id="2756114886316695221">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:148,150</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:142,144</note>
         <note category="description">Title of the notice shown when a task changed after it was reviewed</note>
       </notes>
       <segment state="translated">
@@ -28291,7 +28291,7 @@
     </unit>
     <unit id="8348832067364561502">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:297</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:299</note>
         <note category="description">Header of the work log of a finished reply, for example &quot;Worked for 15s · 3 tool calls&quot;</note>
       </notes>
       <segment state="translated">
@@ -29512,7 +29512,7 @@
     </unit>
     <unit id="2653693004959110818">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:290</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:292</note>
         <note category="description">Number of tools the assistant used, singular</note>
       </notes>
       <segment state="translated">
@@ -29824,7 +29824,7 @@
     <unit id="6631196071533020937">
       <notes>
         <note category="location">src/app/core/util/assistant-inline-prompt.ts:12</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:245</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:247</note>
         <note category="description">Shown while the assistant is preparing its reply</note>
       </notes>
       <segment state="initial">
@@ -29855,7 +29855,7 @@
     </unit>
     <unit id="842098238223236649">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:271,275</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:265,269</note>
         <note category="description">Hides review findings that were accepted or dismissed</note>
       </notes>
       <segment state="translated">
@@ -31381,8 +31381,8 @@
     <unit id="1536087519743707362">
       <notes>
         <note category="location">src/app/core/util/assistant-inline-prompt.ts:14</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:210,213</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:247,249</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:204,207</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:241,243</note>
         <note category="location">src/app/static/components/anchored-popup/anchored-popup-card.component.ts:31,32</note>
         <note category="location">src/app/static/components/banner/banner.component.ts:36,37</note>
         <note category="location">src/app/static/components/snackbar/snackbar.component.ts:61,62</note>
