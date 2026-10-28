@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { booleanAttribute, Component, input } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { Selected } from '@core/models/selected';
 import { AssigneeViewModel } from '@core/models/view-models/board-view';
@@ -6,6 +6,7 @@ import { FilterSeparatorComponent } from '@static/components/filter-separator/fi
 import { TagFilterContainerComponent } from '@shared/components/tag-filter/tag-filter-container.component';
 import { TaskListAssigneesComponent } from './task-list-assignees.component';
 import { TaskListFlagsComponent } from './task-list-flags.component';
+import { TaskListProjectSprintComponent } from './task-list-project-sprint.component';
 import { TaskListSearchComponent } from './task-list-search.component';
 import { TaskSelectionActionsComponent } from '@shared/components/task-selection-actions/task-selection-actions.component';
 import { TaskListStatusComponent } from './task-list-status.component';
@@ -17,6 +18,7 @@ import { PERMISSIONS } from '@app/core/auth/permissions';
     FilterSeparatorComponent,
     TaskListFlagsComponent,
     TaskListAssigneesComponent,
+    TaskListProjectSprintComponent,
     TaskListSearchComponent,
     TaskSelectionActionsComponent,
     TaskListStatusComponent,
@@ -27,6 +29,12 @@ import { PERMISSIONS } from '@app/core/auth/permissions';
     <div class="flex flex-row flex-wrap items-center gap-3">
       <app-task-list-search />
       <app-filter-separator />
+
+      @if (showProjectSprint()) {
+        <app-task-list-project-sprint />
+        <app-filter-separator />
+      }
+
       <app-task-list-assignees [assigneeOptions]="assigneeOptions()" />
 
       @if (readFlags()) {
@@ -50,6 +58,7 @@ import { PERMISSIONS } from '@app/core/auth/permissions';
 })
 export class TaskListFiltersComponent {
   readonly assigneeOptions = input<Selected<AssigneeViewModel>[] | null>(null);
+  readonly showProjectSprint = input(false, { transform: booleanAttribute });
 
   readStatus = hasPermission(PERMISSIONS.statuses.read);
 

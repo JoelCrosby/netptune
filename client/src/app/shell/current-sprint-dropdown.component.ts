@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { CurrentRouteService } from '@core/router/current-route.service';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { SprintFilterService } from '@core/services/sprint-filter.service';
+import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import {
   currentSprintsResource,
   sprintResource,
@@ -70,7 +71,7 @@ import { MenuSeparatorComponent } from '@static/components/dropdown-menu/menu-se
             app-menu-item
             type="button"
             class="min-w-72"
-            (click)="onSprintSelected(sprint.id, sprintMenu)">
+            (click)="onSprintSelected(sprint, sprintMenu)">
             <svg
               lucideCheck
               class="h-4 w-4 shrink-0"
@@ -173,9 +174,9 @@ export class CurrentSprintDropdownComponent {
       : $localize`:Sprint dropdown label showing how many sprints are active. COUNT is never 1:${count}:COUNT: active sprints`;
   });
 
-  onSprintSelected(sprintId: number, menu: DropdownMenuComponent) {
+  onSprintSelected(sprint: SprintViewModel, menu: DropdownMenuComponent) {
     menu.close();
-    this.sprintFilter.set(sprintId);
+    this.sprintFilter.set(sprint);
   }
 
   onSprintOpened(identifier: string, menu: DropdownMenuComponent) {

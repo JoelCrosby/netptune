@@ -9,7 +9,7 @@ import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { ScheduledTask } from '@core/models/scheduled-task';
 import { DialogService } from '@core/services/dialog.service';
-import { projectSprintRoute } from '@core/router/project-sprint-route';
+import { SprintFilterService } from '@core/services/sprint-filter.service';
 import {
   queryParamSignal,
   queryParamsRoute,
@@ -61,7 +61,10 @@ import {
         title="Calendar" />
 
       <app-page-body>
-        <section app-panel surface="card" class="mb-4 flex min-h-0 flex-1 flex-col max-md:mb-3">
+        <section
+          app-panel
+          surface="card"
+          class="mb-4 flex min-h-0 flex-1 flex-col max-md:mb-3">
           <app-calendar-toolbar
             [monthLabel]="range().label"
             [projectId]="projectId()"
@@ -134,7 +137,7 @@ export class CalendarViewComponent {
   private readonly planningMonth = viewChild(CalendarPlanningMonthComponent);
 
   private readonly queryParams = queryParamsRoute();
-  private readonly projectSprint = projectSprintRoute();
+  private readonly sprintFilter = inject(SprintFilterService);
 
   readonly projectsResource = projectResource();
   readonly projects = this.projectsResource.value;
@@ -145,8 +148,8 @@ export class CalendarViewComponent {
 
   readonly month = queryParamSignal('month', validCalendarMonth);
   readonly range = computed(() => calendarMonthRange(this.month()));
-  readonly projectId = this.projectSprint.projectId;
-  readonly sprintId = this.projectSprint.sprintId;
+  readonly projectId = this.sprintFilter.projectId;
+  readonly sprintId = this.sprintFilter.sprintId;
   protected readonly filterRoute = taskFilterRoute();
   readonly taskFilters = this.filterRoute.filters;
   readonly query = computed(() => {
@@ -193,12 +196,13 @@ export class CalendarViewComponent {
   }
 
   setProject(projectId: number | null): void {
-    this.projectSprint.setProject(projectId);
+    this.sprintFilter.setProject(projectId ?? undefined, this.sprints());
   }
 
   setSprint(sprintId: number | null): void {
     const sprint = this.sprints().find((item) => item.id === sprintId);
-    this.projectSprint.setSprint(sprintId, sprint?.projectId);
+
+    this.sprintFilter.set(sprint);
   }
 
   refresh(): void {

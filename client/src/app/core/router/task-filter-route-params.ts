@@ -4,6 +4,7 @@ export interface TaskFilterRouteParams {
   term?: string | null;
   tags?: string[];
   users?: string[];
+  projectId?: number;
   sprintId?: number;
   statuses?: number[];
   hasFlags?: boolean;
@@ -14,6 +15,7 @@ export interface TaskFilterRouteQueryParams extends Params {
   term?: string;
   tags?: string[];
   users?: string[];
+  projectId?: number;
   sprintId?: number;
   statusIds?: string[];
   hasFlags?: boolean;
@@ -31,7 +33,8 @@ export function parseTaskFilterRouteParams(
     term: normalizeTerm(paramMap.get('term')),
     tags: uniqueNonEmptyValues(paramMap.getAll('tags')),
     users: uniqueNonEmptyValues(paramMap.getAll('users')),
-    sprintId: getSprintId(paramMap.get('sprintId')),
+    projectId: getId(paramMap.get('projectId')),
+    sprintId: getId(paramMap.get('sprintId')),
     statuses: parseStatusIds(paramMap.getAll('statusIds')),
     hasFlags: paramMap.get('hasFlags') === 'true' ? true : undefined,
     hasTags: parseBoolean(paramMap.get('hasTags')),
@@ -58,6 +61,10 @@ export function buildTaskFilterRouteParams(
 
   if (users.length) {
     queryParams['users'] = users;
+  }
+
+  if (params.projectId !== undefined) {
+    queryParams['projectId'] = params.projectId;
   }
 
   if (params.sprintId !== undefined) {
@@ -110,10 +117,10 @@ function uniqueNonEmptyValues(values: string[]): string[] {
   );
 }
 
-function getSprintId(value: string | null): number | undefined {
+function getId(value: string | null): number | undefined {
   if (!value) return undefined;
 
-  const sprintId = Number(value);
+  const id = Number(value);
 
-  return Number.isFinite(sprintId) ? sprintId : undefined;
+  return Number.isFinite(id) ? id : undefined;
 }

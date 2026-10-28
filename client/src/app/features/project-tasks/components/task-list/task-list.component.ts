@@ -98,6 +98,7 @@ export class TaskListComponent {
   readonly filtersActive = computed(() => {
     return (
       this.filterRoute.hasFilters() ||
+      this.sprintFilter.projectId() !== undefined ||
       this.sprintFilter.sprintId() !== undefined
     );
   });

@@ -43,7 +43,7 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
           (actionClick)="showAddModal()"
           [count]="count()"
           [overflowActions]="secondaryActions()">
-          <app-task-list-filters pageHeaderFilters />
+          <app-task-list-filters pageHeaderFilters showProjectSprint />
         </app-page-header>
       } @else {
         <app-page-header
@@ -54,7 +54,7 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
           filtersLabel="Filter tasks"
           [count]="count()"
           [overflowActions]="secondaryActions()">
-          <app-task-list-filters pageHeaderFilters />
+          <app-task-list-filters pageHeaderFilters showProjectSprint />
         </app-page-header>
       }
 

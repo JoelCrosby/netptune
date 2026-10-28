@@ -4,7 +4,7 @@ import { PERMISSIONS } from '@core/auth/permissions';
 import { DialogService } from '@core/services/dialog.service';
 import { projectResource } from '@core/resources/project.resource';
 import { sprintResource } from '@core/resources/sprint.resource';
-import { projectSprintRoute } from '@core/router/project-sprint-route';
+import { SprintFilterService } from '@core/services/sprint-filter.service';
 import {
   queryParamSignal,
   queryParamsRoute,
@@ -156,7 +156,7 @@ export class RoadmapViewComponent {
   );
 
   private readonly queryParams = queryParamsRoute();
-  private readonly projectSprint = projectSprintRoute();
+  private readonly sprintFilter = inject(SprintFilterService);
 
   readonly projectsResource = projectResource();
   readonly projects = this.projectsResource.value;
@@ -168,8 +168,8 @@ export class RoadmapViewComponent {
   readonly unscheduledReload = reloadToken();
   readonly from = queryParamSignal('from', (value) => value ?? defaultFrom);
   readonly to = queryParamSignal('to', (value) => value ?? defaultTo);
-  readonly projectId = this.projectSprint.projectId;
-  readonly sprintId = this.projectSprint.sprintId;
+  readonly projectId = this.sprintFilter.projectId;
+  readonly sprintId = this.sprintFilter.sprintId;
   protected readonly filterRoute = taskFilterRoute();
   readonly taskFilters = this.filterRoute.filters;
   readonly includeUnscheduled = queryParamSignal(
@@ -231,12 +231,13 @@ export class RoadmapViewComponent {
   }
 
   setProject(projectId: number | null): void {
-    this.projectSprint.setProject(projectId);
+    this.sprintFilter.setProject(projectId ?? undefined, this.sprintOptions());
   }
 
   setSprint(sprintId: number | null): void {
     const sprint = this.sprintOptions().find((item) => item.id === sprintId);
-    this.projectSprint.setSprint(sprintId, sprint?.projectId);
+
+    this.sprintFilter.set(sprint);
   }
 
   setUnscheduled(includeUnscheduled: boolean): void {

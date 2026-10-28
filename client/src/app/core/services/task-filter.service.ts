@@ -14,6 +14,7 @@ const FILTER_PARAMS = [
   'tags',
   'users',
   'statusIds',
+  'projectId',
   'sprintId',
   'hasTags',
   'hasFlags',
@@ -59,6 +60,7 @@ export class TaskFilterService {
       statuses: [],
       hasTags: undefined,
       hasFlags: undefined,
+      projectId: held.projectId,
       sprintId: held.sprintId,
     });
   }
@@ -112,6 +114,7 @@ export class TaskFilterService {
       !!filters.statuses?.length ||
       filters.hasTags !== undefined ||
       filters.hasFlags === true ||
+      filters.projectId !== undefined ||
       filters.sprintId !== undefined
     );
   }
@@ -122,6 +125,7 @@ export class TaskFilterService {
       tags: null,
       users: null,
       statusIds: null,
+      projectId: null,
       sprintId: null,
       hasTags: null,
       hasFlags: null,

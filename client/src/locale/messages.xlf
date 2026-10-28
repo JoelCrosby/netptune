@@ -2427,7 +2427,7 @@
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:798</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:820</note>
         <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:195</note>
-        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:167</note>
+        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:168</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:249</note>
         <note category="location">src/app/features/queries/views/queries-view/queries-view.component.ts:159</note>
         <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:230</note>
@@ -4519,6 +4519,7 @@
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:224</note>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:70</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:68,69</note>
+        <note category="location">src/app/features/project-tasks/components/task-list/task-list-project-sprint.component.ts:23</note>
         <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:27,30</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:85</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:371</note>
@@ -5033,6 +5034,7 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-sprint-field.component.ts:33</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:187,188</note>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:104</note>
+        <note category="location">src/app/features/project-tasks/components/task-list/task-list-project-sprint.component.ts:39</note>
         <note category="location">src/app/features/reporting/components/sprint-velocity-table.component.ts:53</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:140</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:377</note>
@@ -17781,6 +17783,7 @@
     <unit id="6425467213960794982">
       <notes>
         <note category="location">src/app/features/calendar/components/calendar-toolbar/calendar-toolbar.component.ts:50,52</note>
+        <note category="location">src/app/features/project-tasks/components/task-list/task-list-project-sprint.component.ts:24,26</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:86,88</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:134,136</note>
         <note category="description">Filter option including every project</note>
@@ -17828,6 +17831,7 @@
     <unit id="2148921956974186881">
       <notes>
         <note category="location">src/app/features/calendar/components/calendar-toolbar/calendar-toolbar.component.ts:86,88</note>
+        <note category="location">src/app/features/project-tasks/components/task-list/task-list-project-sprint.component.ts:40,42</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:98,100</note>
         <note category="description">Filter option including every sprint</note>
       </notes>
@@ -18130,7 +18134,7 @@
     </unit>
     <unit id="8302075849472999986">
       <notes>
-        <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:94,95</note>
+        <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:97,98</note>
         <note category="description">Shown when the calendar fails to load</note>
       </notes>
       <segment>
@@ -18139,7 +18143,7 @@
     </unit>
     <unit id="6412136724540655924">
       <notes>
-        <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:96,98</note>
+        <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:99,101</note>
         <note category="description">Advice when the calendar fails to load</note>
       </notes>
       <segment>
@@ -18148,7 +18152,7 @@
     </unit>
     <unit id="396253146311252179">
       <notes>
-        <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:106,112</note>
+        <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:109,115</note>
         <note category="description">Warning that the calendar result was truncated. The 2,000 limit is fixed by the server</note>
       </notes>
       <segment>
@@ -18231,7 +18235,7 @@
     </unit>
     <unit id="2135927702447694694">
       <notes>
-        <note category="location">src/app/shell/current-sprint-dropdown.component.ts:64,68</note>
+        <note category="location">src/app/shell/current-sprint-dropdown.component.ts:65,69</note>
         <note category="description">Heading above the list of currently active sprints</note>
       </notes>
       <segment>
@@ -27394,7 +27398,7 @@
     </unit>
     <unit id="8287890269428561193">
       <notes>
-        <note category="location">src/app/shell/current-sprint-dropdown.component.ts:105,109</note>
+        <note category="location">src/app/shell/current-sprint-dropdown.component.ts:106,110</note>
         <note category="description">Menu item that opens the sprint currently being filtered on. SPRINT_NAME is the sprint&apos;s name</note>
       </notes>
       <segment>
@@ -27413,7 +27417,7 @@
     </unit>
     <unit id="8781538086699105202">
       <notes>
-        <note category="location">src/app/shell/current-sprint-dropdown.component.ts:118,121</note>
+        <note category="location">src/app/shell/current-sprint-dropdown.component.ts:119,122</note>
         <note category="description">Menu item that clears the active sprint filter</note>
       </notes>
       <segment>
@@ -27467,7 +27471,7 @@
     </unit>
     <unit id="5927656988084674304">
       <notes>
-        <note category="location">src/app/shell/current-sprint-dropdown.component.ts:130,133</note>
+        <note category="location">src/app/shell/current-sprint-dropdown.component.ts:131,134</note>
         <note category="description">Menu item that navigates to the full sprint list</note>
       </notes>
       <segment>
@@ -27476,7 +27480,7 @@
     </unit>
     <unit id="6803062560459336775">
       <notes>
-        <note category="location">src/app/shell/current-sprint-dropdown.component.ts:172</note>
+        <note category="location">src/app/shell/current-sprint-dropdown.component.ts:173</note>
         <note category="description">Sprint dropdown label when exactly one sprint is active</note>
       </notes>
       <segment>
@@ -27485,7 +27489,7 @@
     </unit>
     <unit id="3861424003452635517">
       <notes>
-        <note category="location">src/app/shell/current-sprint-dropdown.component.ts:173</note>
+        <note category="location">src/app/shell/current-sprint-dropdown.component.ts:174</note>
         <note category="description">Sprint dropdown label showing how many sprints are active. COUNT is never 1</note>
       </notes>
       <segment>
@@ -29078,7 +29082,7 @@
     </unit>
     <unit id="1899499061278057968">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review.service.ts:157</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review.service.ts:182</note>
         <note category="description">Shown when someone without permission accepts, dismisses or reopens a review finding</note>
       </notes>
       <segment>
