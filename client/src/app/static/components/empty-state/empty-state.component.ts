@@ -1,8 +1,9 @@
 import { booleanAttribute, Component, input } from '@angular/core';
+import { SpinnerIconComponent } from '../spinner/spinner-icon.component';
 
 @Component({
   selector: 'app-empty-state',
-  imports: [],
+  imports: [SpinnerIconComponent],
   host: { class: 'block' },
   template: `
     <div
@@ -12,7 +13,8 @@ import { booleanAttribute, Component, input } from '@angular/core';
       [class.rounded-[14px]]="outlined()"
       [class.border]="outlined()"
       [class.border-dashed]="outlined()"
-      [class.px-5]="outlined()">
+      [class.px-5]="outlined()"
+      [attr.role]="busy() ? 'status' : null">
       <div class="text-muted" aria-hidden="true">
         <ng-content select="[emptyStateIcon]" />
       </div>
@@ -21,7 +23,13 @@ import { booleanAttribute, Component, input } from '@angular/core';
         {{ title() }}
       </h4>
 
-      @if (description()) {
+      @if (busy()) {
+        <p
+          class="font-avatar text-muted flex items-center gap-1.5 text-xs tabular-nums">
+          <app-spinner-icon class="h-3.5 w-3.5" />
+          <span aria-hidden="true">{{ description() }}</span>
+        </p>
+      } @else if (description()) {
         <p
           class="text-sm"
           [class]="
@@ -42,4 +50,5 @@ export class EmptyStateComponent {
   readonly description = input('');
   readonly compact = input(false, { transform: booleanAttribute });
   readonly outlined = input(false, { transform: booleanAttribute });
+  readonly busy = input(false, { transform: booleanAttribute });
 }

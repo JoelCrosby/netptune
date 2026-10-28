@@ -62,7 +62,9 @@ const stepSeconds = numberFormat({
             <app-spinner-icon class="h-3.5 w-3.5" />
             <span class="min-w-0 flex-1 truncate">{{ liveLabel() }}</span>
             @if (liveMeta(); as meta) {
-              <span class="font-avatar text-muted text-[10.5px] tabular-nums">
+              <span
+                class="font-avatar text-muted text-[10.5px] tabular-nums"
+                aria-hidden="true">
                 {{ meta }}
               </span>
             }

@@ -1663,7 +1663,7 @@
     </unit>
     <unit id="3781268880187367400">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:138,143</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:137,142</note>
         <note category="description">Title of the notice shown when the latest review of a task failed</note>
       </notes>
       <segment state="translated">
@@ -1733,7 +1733,7 @@
     </unit>
     <unit id="322229249598827754">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:414</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:441</note>
         <note category="description">Shown in place of a person&apos;s name when it is not known</note>
       </notes>
       <segment state="translated">
@@ -3021,7 +3021,7 @@
     </unit>
     <unit id="5494881644226080803">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:273,275</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:276,278</note>
       </notes>
       <segment state="translated">
         <source>{VAR_PLURAL, plural, =1 {Show 1 decided finding} other {Show <ph id="0" equiv="INTERPOLATION"/> decided findings}}</source>
@@ -3091,7 +3091,7 @@
     </unit>
     <unit id="6949815097015527714">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:255,259</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:257,261</note>
         <note category="description">Shown when the latest review of a task left nothing open</note>
       </notes>
       <segment state="translated">
@@ -3736,7 +3736,7 @@
     </unit>
     <unit id="1615286370389385433">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:430</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:457</note>
         <note category="description">Who dismissed a review finding. NAME is a person</note>
       </notes>
       <segment state="translated">
@@ -4508,7 +4508,7 @@
     </unit>
     <unit id="242059098779495199">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:235,238</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:237,240</note>
         <note category="description">Button that previews and applies a review suggestion</note>
       </notes>
       <segment state="translated">
@@ -5083,6 +5083,16 @@
       <segment state="translated">
         <source>After</source>
         <target>Après</target>
+      </segment>
+    </unit>
+    <unit id="7445388612819913138">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:438</note>
+        <note category="description">Task review progress, for example &quot;8s · 1,400 chars&quot;</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="elapsed" disp="elapsed"/> · <ph id="1" equiv="count" disp="count"/> chars</source>
+        <target><ph id="0" equiv="elapsed" disp="elapsed"/> · <ph id="1" equiv="count" disp="count"/> caract.</target>
       </segment>
     </unit>
     <unit id="7446913075218839308">
@@ -5724,7 +5734,7 @@
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:154,161</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:169,174</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:239,244</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:273,278</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:276,281</note>
         <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:88,90</note>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:74,79</note>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:112,117</note>
@@ -8066,7 +8076,7 @@
     </unit>
     <unit id="4168406902354683639">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:358,362</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:363,367</note>
         <note category="description">Toggles the list of past reviews of a task</note>
       </notes>
       <segment state="translated">
@@ -8150,7 +8160,7 @@
     </unit>
     <unit id="4334698187230567378">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:101,106</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:105,110</note>
         <note category="description">Button that runs the assistant review on a task</note>
       </notes>
       <segment state="translated">
@@ -8606,7 +8616,7 @@
     </unit>
     <unit id="3302832028736051011">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:151,156</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:150,154</note>
         <note category="description">Suggests reviewing a task again after it changed</note>
       </notes>
       <segment state="translated">
@@ -8727,6 +8737,16 @@
       <segment state="initial">
         <source>Password reset</source>
         <target>Réinitialisation du mot de passe</target>
+      </segment>
+    </unit>
+    <unit id="2565426175330768428">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:427</note>
+        <note category="description">Shown while the assistant reviews a task, before it starts writing</note>
+      </notes>
+      <segment state="translated">
+        <source>Reviewing the task…</source>
+        <target>Relecture de la tâche…</target>
       </segment>
     </unit>
     <unit id="2569933643470141357">
@@ -12468,7 +12488,7 @@
     </unit>
     <unit id="3541398472508734323">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:323,324</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:328,329</note>
         <note category="description">Heading shown when a task has never been reviewed</note>
       </notes>
       <segment state="translated">
@@ -13655,16 +13675,6 @@
         <target>Définir l&apos;estimation</target>
       </segment>
     </unit>
-    <unit id="4961096773221862359">
-      <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:111,113</note>
-        <note category="description">Shown while the assistant reviews a task</note>
-      </notes>
-      <segment state="translated">
-        <source>Reviewing…</source>
-        <target>Relecture en cours…</target>
-      </segment>
-    </unit>
     <unit id="4965562695253171955">
       <notes>
         <note category="location">src/app/static/components/filter-input/filter-input.component.ts:56,58</note>
@@ -14375,7 +14385,7 @@
     </unit>
     <unit id="6186101642106373118">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:97,100</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:101,104</note>
         <note category="description">Button that runs the assistant review on a task again</note>
       </notes>
       <segment state="translated">
@@ -15251,6 +15261,16 @@
       <segment state="translated">
         <source>Link could not be copied</source>
         <target>Le lien n’a pas pu être copié</target>
+      </segment>
+    </unit>
+    <unit id="5239250186261980893">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:426</note>
+        <note category="description">Shown while the assistant writes out the findings of a task review</note>
+      </notes>
+      <segment state="translated">
+        <source>Writing up the findings…</source>
+        <target>Rédaction des constats…</target>
       </segment>
     </unit>
     <unit id="2337485514607640701">
@@ -19898,7 +19918,7 @@
     </unit>
     <unit id="7077514990546083477">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:325,327</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:330,332</note>
         <note category="description">Explains what an assistant review of a task does</note>
       </notes>
       <segment state="translated">
@@ -20776,7 +20796,7 @@
     </unit>
     <unit id="3922324539528568972">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:429</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:456</note>
         <note category="description">Who accepted a review finding. NAME is a person</note>
       </notes>
       <segment state="translated">
@@ -21637,7 +21657,7 @@
     </unit>
     <unit id="7088061432353123225">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:71,83</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:75,87</note>
         <note category="description">When a task was last reviewed, who ran it and which model. TIME is relative, like 2 hours ago</note>
       </notes>
       <segment state="translated">
@@ -22703,7 +22723,7 @@
     </unit>
     <unit id="7828808805120058354">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:300,303</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:305,307</note>
         <note category="description">Button that undoes an accepted review suggestion</note>
       </notes>
       <segment state="translated">
@@ -22992,16 +23012,6 @@
       <segment state="translated">
         <source>Reports</source>
         <target>Rapports</target>
-      </segment>
-    </unit>
-    <unit id="1869257260438265373">
-      <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:119,122</note>
-        <note category="description">How much of the review has arrived so far. COUNT is a number of characters</note>
-      </notes>
-      <segment state="translated">
-        <source> <ph id="0" equiv="COUNT" disp="{{ review.progress() // i18n(ph=&quot;COUNT&quot;) }}"/> characters </source>
-        <target><ph id="0" equiv="COUNT" disp="{{ review.progress() // i18n(ph=&quot;COUNT&quot;) }}"/> caractères</target>
       </segment>
     </unit>
     <unit id="1874095910893592675">
@@ -24363,7 +24373,7 @@
     </unit>
     <unit id="6722197117273372334">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:310,313</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:315,317</note>
         <note category="description">Button that reopens a decided review finding</note>
       </notes>
       <segment state="translated">
@@ -24651,7 +24661,7 @@
     </unit>
     <unit id="4777027777592183077">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:201,203</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:200,202</note>
         <note category="description">Placeholder of the optional reason for dismissing a review finding</note>
       </notes>
       <segment state="translated">
@@ -25225,7 +25235,7 @@
     </unit>
     <unit id="6460163696346705349">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:335,337</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:340,342</note>
         <note category="description">Heading above other reviews that mention this task</note>
       </notes>
       <segment state="translated">
@@ -25578,7 +25588,7 @@
     </unit>
     <unit id="2756114886316695221">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:149,151</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:148,150</note>
         <note category="description">Title of the notice shown when a task changed after it was reviewed</note>
       </notes>
       <segment state="translated">
@@ -29845,7 +29855,7 @@
     </unit>
     <unit id="842098238223236649">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:269,272</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:271,275</note>
         <note category="description">Hides review findings that were accepted or dismissed</note>
       </notes>
       <segment state="translated">
@@ -31372,7 +31382,7 @@
       <notes>
         <note category="location">src/app/core/util/assistant-inline-prompt.ts:14</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:210,213</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:245,248</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:247,249</note>
         <note category="location">src/app/static/components/anchored-popup/anchored-popup-card.component.ts:31,32</note>
         <note category="location">src/app/static/components/banner/banner.component.ts:36,37</note>
         <note category="location">src/app/static/components/snackbar/snackbar.component.ts:61,62</note>
@@ -32153,7 +32163,7 @@
     </unit>
     <unit id="1899499061278057968">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review.service.ts:151</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review.service.ts:157</note>
         <note category="description">Shown when someone without permission accepts, dismisses or reopens a review finding</note>
       </notes>
       <segment state="translated">

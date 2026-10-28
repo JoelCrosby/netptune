@@ -10,6 +10,7 @@ import { RefreshScope } from '@core/models/refresh-scope';
 import { taskReviewResource } from '@core/resources/ai-review.resource';
 import { AiReviewsService } from '@core/services/ai-reviews.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
+import { elapsedClock } from '@core/util/elapsed-clock';
 import { refreshScopesForEntityTypes } from '@core/util/entity-refresh-scopes';
 import { getErrorMessage } from '@core/util/error-message';
 import { unwrapClientResponse } from '@core/util/rxjs-operators';
@@ -25,6 +26,8 @@ export class TaskDetailReviewService {
   private readonly workspaceRefresh = inject(WorkspaceRefreshService);
 
   private readonly resource = taskReviewResource(this.taskDetail.taskId);
+
+  private readonly clock = elapsedClock();
 
   readonly latest = computed(() => {
     return this.resource.hasValue() ? this.resource.value() : undefined;
@@ -55,6 +58,7 @@ export class TaskDetailReviewService {
 
   readonly running = signal(false);
   readonly progress = signal(0);
+  readonly elapsedMs = this.clock.elapsedMs;
   readonly runError = signal<string | null>(null);
   readonly decidingFindingId = signal<number | null>(null);
 
@@ -67,11 +71,13 @@ export class TaskDetailReviewService {
     this.running.set(true);
     this.progress.set(0);
     this.runError.set(null);
+    this.clock.start();
 
     const result = await this.reviews.runTaskReview(taskId, (characters) => {
       this.progress.set(characters);
     });
 
+    this.clock.stop();
     this.running.set(false);
     this.runError.set(result.failure);
     this.resource.reload();
