@@ -1,5 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { computed, inject, Injectable, signal } from '@angular/core';
+import {
+  computed,
+  effect,
+  inject,
+  Injectable,
+  linkedSignal,
+  signal,
+} from '@angular/core';
 import {
   AiReviewDecision,
   AiReviewFinding,
@@ -9,6 +16,7 @@ import {
 import { RefreshScope } from '@core/models/refresh-scope';
 import { taskReviewResource } from '@core/resources/ai-review.resource';
 import { AiReviewsService } from '@core/services/ai-reviews.service';
+import { TaskReviewRunsService } from '@core/services/task-review-runs.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import { elapsedClock } from '@core/util/elapsed-clock';
 import { refreshScopesForEntityTypes } from '@core/util/entity-refresh-scopes';
@@ -24,10 +32,13 @@ export class TaskDetailReviewService {
   private readonly reviews = inject(AiReviewsService);
   private readonly snackbar = inject(SnackbarService);
   private readonly workspaceRefresh = inject(WorkspaceRefreshService);
+  private readonly runs = inject(TaskReviewRunsService);
 
   private readonly resource = taskReviewResource(this.taskDetail.taskId);
 
   private readonly clock = elapsedClock();
+
+  private readonly activeRun = this.runs.forTask(this.taskDetail.taskId);
 
   readonly latest = computed(() => {
     return this.resource.hasValue() ? this.resource.value() : undefined;
@@ -56,31 +67,45 @@ export class TaskDetailReviewService {
     );
   });
 
-  readonly running = signal(false);
-  readonly progress = signal(0);
+  readonly running = computed(() => this.activeRun() !== null);
+  readonly progress = computed(() => this.activeRun()?.progress ?? 0);
   readonly elapsedMs = this.clock.elapsedMs;
-  readonly runError = signal<string | null>(null);
   readonly decidingFindingId = signal<number | null>(null);
+
+  readonly runError = linkedSignal<number | undefined, string | null>({
+    source: this.taskDetail.taskId,
+    computation: () => null,
+  });
+
+  private readonly startedAt = computed(() => {
+    return this.activeRun()?.startedAt ?? null;
+  });
+
+  constructor() {
+    effect(() => {
+      const startedAt = this.startedAt();
+
+      if (startedAt === null) {
+        this.clock.stop();
+      } else {
+        this.clock.start(startedAt);
+      }
+    });
+  }
 
   async run() {
     const taskId = this.taskDetail.taskId();
-    const isAlreadyRunning = this.running();
 
-    if (!taskId || isAlreadyRunning) return;
+    if (!taskId) return;
 
-    this.running.set(true);
-    this.progress.set(0);
     this.runError.set(null);
-    this.clock.start();
 
-    const result = await this.reviews.runTaskReview(taskId, (characters) => {
-      this.progress.set(characters);
-    });
+    const result = await this.runs.run(taskId);
+    const isSameTask = this.taskDetail.taskId() === taskId;
 
-    this.clock.stop();
-    this.running.set(false);
+    if (!result || !isSameTask) return;
+
     this.runError.set(result.failure);
-    this.resource.reload();
   }
 
   dismiss(finding: AiReviewFinding, reason: string) {
