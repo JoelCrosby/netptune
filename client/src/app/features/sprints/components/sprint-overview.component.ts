@@ -178,7 +178,7 @@ export class SprintOverviewComponent {
       {
         label: $localize`:Legend for finished sprint tasks that were archived:Complete & archived`,
         count: archivedDone,
-        color: 'faint',
+        color: 'primarySoft',
       },
       {
         label: $localize`:Legend for sprint tasks being worked on:In progress`,

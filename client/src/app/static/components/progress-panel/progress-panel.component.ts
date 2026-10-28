@@ -12,7 +12,8 @@ import {
 } from '../stat-strip/stat-strip.component';
 import { SignalTone, signalToneSoft } from '../tones';
 
-export type ProgressSegmentColor = 'primary' | 'faint' | 'info' | 'empty';
+export type ProgressSegmentColor =
+  'primary' | 'primarySoft' | 'faint' | 'info' | 'empty';
 
 export interface ProgressSegment {
   label: string;
@@ -36,6 +37,7 @@ const markerLabelMaxPercent = 88;
 
 const segmentBarClasses: Record<ProgressSegmentColor, string> = {
   primary: 'bg-primary',
+  primarySoft: 'bg-primary/60',
   faint: 'bg-foreground/25',
   info: 'bg-blue-500',
   empty: 'bg-transparent',
@@ -43,6 +45,7 @@ const segmentBarClasses: Record<ProgressSegmentColor, string> = {
 
 const segmentSwatchClasses: Record<ProgressSegmentColor, string> = {
   primary: 'bg-primary',
+  primarySoft: 'bg-primary/60',
   faint: 'bg-foreground/25',
   info: 'bg-blue-500',
   empty: 'bg-foreground/10 border border-foreground/25',
