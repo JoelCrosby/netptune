@@ -1930,6 +1930,12 @@ Veuillez confirmer votre adresse e-mail à l’aide du lien ci-dessous.</value>
   <data name="AiReviewHitOutputLimit" xml:space="preserve">
     <value>La relecture a été interrompue, car la réponse de l’assistant était trop longue. Réessayez.</value>
   </data>
+  <data name="AiReviewRefused" xml:space="preserve">
+    <value>L’assistant a refusé de relire cet élément. Réessayez, ou reformulez l’élément si le problème persiste.</value>
+  </data>
+  <data name="AiReviewEmptyReply" xml:space="preserve">
+    <value>L’assistant a répondu sans aucun texte de relecture. Réessayez.</value>
+  </data>
   <data name="AiChangeErrorNotStatusCategory" xml:space="preserve">
     <value>“{0}” n’est pas une catégorie de statut.</value>
   </data>

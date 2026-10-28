@@ -61,6 +61,14 @@ public sealed class AiReviewRunEntityMap : WorkspaceEntityMap<AiReviewRun, int>
             .HasMaxLength(64);
 
         builder
+            .Property(run => run.FailureDetail)
+            .HasMaxLength(1_000);
+
+        builder
+            .Property(run => run.RawReply)
+            .HasColumnType("text");
+
+        builder
             .HasIndex(run => new { run.SubjectType, run.SubjectId, run.CreatedAt })
             .IsDescending(false, false, true)
             .HasDatabaseName("ix_ai_review_runs_subject_created");

@@ -1930,6 +1930,12 @@ Bitte bestätige deine E-Mail-Adresse über den folgenden Link.</value>
   <data name="AiReviewHitOutputLimit" xml:space="preserve">
     <value>Die Prüfung wurde abgebrochen, weil die Antwort des Assistenten zu lang wurde. Versuche es erneut.</value>
   </data>
+  <data name="AiReviewRefused" xml:space="preserve">
+    <value>Der Assistent hat die Prüfung dieses Elements abgelehnt. Versuche es erneut oder formuliere das Element um, falls das weiterhin passiert.</value>
+  </data>
+  <data name="AiReviewEmptyReply" xml:space="preserve">
+    <value>Der Assistent hat ohne Prüfungstext geantwortet. Versuche es erneut.</value>
+  </data>
   <data name="AiChangeErrorNotStatusCategory" xml:space="preserve">
     <value>“{0}” ist keine Statuskategorie.</value>
   </data>

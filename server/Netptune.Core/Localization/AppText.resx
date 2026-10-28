@@ -2568,6 +2568,14 @@ Please confirm your email address with the following link.</value>
     <value>The review was cut off because the assistant's reply grew too long. Try again.</value>
     <comment>Shown when an assistant task review stops because it used up the output token limit</comment>
   </data>
+  <data name="AiReviewRefused" xml:space="preserve">
+    <value>The assistant declined to review this item. Try again, or reword the item if it keeps happening.</value>
+    <comment>Shown when an assistant task review stops because the model declined to review the item</comment>
+  </data>
+  <data name="AiReviewEmptyReply" xml:space="preserve">
+    <value>The assistant replied without any review text. Try again.</value>
+    <comment>Shown when an assistant task review finished but the model's reply had no text</comment>
+  </data>
   <data name="AiChangeErrorNotStatusCategory" xml:space="preserve">
     <value>“{0}” is not a status category.</value>
     <comment>Shown when the assistant cannot apply, undo or edit a change. {0} is the value entered</comment>

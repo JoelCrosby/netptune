@@ -96,8 +96,8 @@ public class AiReviewValidatorTests
         var fenced = AiReviewReply.Parse("Here you go:\n```json\n{\"summary\":\"Ready.\",\"findings\":[]}\n```");
         var prose = AiReviewReply.Parse("I could not review this task.");
 
-        fenced!.Summary.Should().Be("Ready.");
-        prose.Should().BeNull();
+        fenced.Reply!.Summary.Should().Be("Ready.");
+        prose.Reply.Should().BeNull();
     }
 
     [Fact]

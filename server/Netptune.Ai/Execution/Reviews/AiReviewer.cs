@@ -1,6 +1,8 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 
+using Microsoft.Extensions.Logging;
+
 using Netptune.Ai.Providers;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
@@ -18,6 +20,8 @@ public sealed class AiReviewer : IAiReviewer
 {
     private const int MaximumOutputTokens = 32_000;
     private const int ProgressEveryCharacters = 200;
+    private const int MaximumStoredReplyCharacters = 8_000;
+    private const int MaximumFailureDetailLength = 1_000;
 
     private static readonly TimeSpan Timeout = TimeSpan.FromMinutes(3);
 
@@ -28,6 +32,7 @@ public sealed class AiReviewer : IAiReviewer
     private readonly IAiChatProviderFactory ProviderFactory;
     private readonly IEventRecordWriter EventRecords;
     private readonly IReadOnlyDictionary<EntityType, IAiReviewSubject> Subjects;
+    private readonly ILogger<AiReviewer> Logger;
 
     public AiReviewer(
         INetptuneUnitOfWork unitOfWork,
@@ -36,7 +41,8 @@ public sealed class AiReviewer : IAiReviewer
         IAiSpendService spend,
         IAiChatProviderFactory providerFactory,
         IEventRecordWriter eventRecords,
-        IEnumerable<IAiReviewSubject> subjects)
+        IEnumerable<IAiReviewSubject> subjects,
+        ILogger<AiReviewer> logger)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
@@ -45,6 +51,7 @@ public sealed class AiReviewer : IAiReviewer
         ProviderFactory = providerFactory;
         EventRecords = eventRecords;
         Subjects = subjects.ToDictionary(subject => subject.Type);
+        Logger = logger;
     }
 
     public async IAsyncEnumerable<AiReviewStreamEvent> Review(
@@ -190,59 +197,73 @@ public sealed class AiReviewer : IAiReviewer
             StartedAt = startedAt,
         };
 
-        var failureCode = ResolveFailureCode(outcome, timeout.IsCancellationRequested);
+        var failure = ResolveFailure(outcome, timeout.IsCancellationRequested);
 
-        if (failureCode is not null)
+        if (failure is not null)
         {
-            var failedRun = await StoreFailedRun(run, failureCode);
-            var message = DescribeFailure(failureCode, outcome);
+            var failedRun = await StoreFailedRun(run, failure, outcome);
+            var message = DescribeFailure(failure.Code, outcome);
 
             yield return AiReviewStreamEvent.Failed(message, failedRun.Id);
 
             yield break;
         }
 
-        var reply = AiReviewReply.Parse(outcome.Turn!.Text);
+        var parsed = AiReviewReply.Parse(outcome.Turn!.Text);
 
-        if (reply is null)
+        if (parsed.Reply is null)
         {
-            var unreadableRun = await StoreFailedRun(run, AiReviewErrorCodes.UnreadableReply);
+            var unreadable = new ReviewFailure(AiReviewErrorCodes.UnreadableReply, parsed.Problem);
+            var unreadableRun = await StoreFailedRun(run, unreadable, outcome);
 
             yield return AiReviewStreamEvent.Failed(AppText.AiReviewUnreadable, unreadableRun.Id);
 
             yield break;
         }
 
-        var draft = AiReviewValidator.Validate(reply, context, source.Categories);
+        var draft = AiReviewValidator.Validate(parsed.Reply, context, source.Categories);
         var storedRun = await StoreSucceededRun(run, draft);
 
         yield return AiReviewStreamEvent.Completed(storedRun.Id);
     }
 
-    private static string? ResolveFailureCode(ReviewOutcome outcome, bool hasTimedOut)
+    private static ReviewFailure? ResolveFailure(ReviewOutcome outcome, bool hasTimedOut)
     {
         if (hasTimedOut)
         {
-            return AiReviewErrorCodes.TimedOut;
+            var timedOutDetail = $"No completed reply after {Timeout.TotalMinutes} minutes.";
+
+            return new ReviewFailure(AiReviewErrorCodes.TimedOut, timedOutDetail);
         }
 
-        var hasFailed = outcome.Failure is not null || outcome.Turn is null;
-
-        if (hasFailed)
+        if (outcome.Failure is not null)
         {
-            return AiReviewErrorCodes.ProviderError;
+            return new ReviewFailure(AiReviewErrorCodes.ProviderError, outcome.Failure);
         }
 
-        var hitOutputLimit = AiFinishReasons.IsOutputLimit(outcome.Turn!.FinishReason);
+        if (outcome.Turn is null)
+        {
+            return new ReviewFailure(AiReviewErrorCodes.ProviderError, "The stream ended without a completed turn.");
+        }
+
+        var finishReason = outcome.Turn.FinishReason;
+        var hitOutputLimit = AiFinishReasons.IsOutputLimit(finishReason);
 
         if (hitOutputLimit)
         {
-            return AiReviewErrorCodes.OutputLimit;
+            return new ReviewFailure(AiReviewErrorCodes.OutputLimit, null);
+        }
+
+        var wasRefused = AiFinishReasons.IsRefusal(finishReason);
+
+        if (wasRefused)
+        {
+            return new ReviewFailure(AiReviewErrorCodes.Refused, null);
         }
 
         var isEmpty = string.IsNullOrWhiteSpace(outcome.Turn.Text);
 
-        return isEmpty ? AiReviewErrorCodes.UnreadableReply : null;
+        return isEmpty ? new ReviewFailure(AiReviewErrorCodes.EmptyReply, null) : null;
     }
 
     private static string DescribeFailure(string failureCode, ReviewOutcome outcome)
@@ -252,23 +273,58 @@ public sealed class AiReviewer : IAiReviewer
             return outcome.Failure;
         }
 
-        var hitOutputLimit = failureCode == AiReviewErrorCodes.OutputLimit;
-
-        return hitOutputLimit ? AppText.AiReviewHitOutputLimit : AppText.AiReviewUnreadable;
+        return failureCode switch
+        {
+            AiReviewErrorCodes.OutputLimit => AppText.AiReviewHitOutputLimit,
+            AiReviewErrorCodes.Refused => AppText.AiReviewRefused,
+            AiReviewErrorCodes.EmptyReply => AppText.AiReviewEmptyReply,
+            _ => AppText.AiReviewUnreadable,
+        };
     }
 
-    private async Task<AiReviewRun> StoreFailedRun(RunRecord record, string errorCode)
+    private async Task<AiReviewRun> StoreFailedRun(RunRecord record, ReviewFailure failure, ReviewOutcome outcome)
     {
-        var run = CreateRun(record, AiReviewRunStatus.Failed, summary: null, errorCode);
+        var finishReason = outcome.Turn?.FinishReason;
+        var detail = DescribeFailureDetail(failure, finishReason);
+        var replyText = outcome.Turn?.Text;
+        var hasReplyText = !string.IsNullOrEmpty(replyText);
+        var rawReply = hasReplyText ? AiReviewPrompt.Truncate(replyText!, MaximumStoredReplyCharacters) : null;
+
+        var failureRecord = new FailureRecord
+        {
+            Code = failure.Code,
+            Detail = AiReviewPrompt.Truncate(detail, MaximumFailureDetailLength),
+            RawReply = rawReply,
+        };
+
+        var run = CreateRun(record, AiReviewRunStatus.Failed, summary: null, failureRecord);
 
         await StoreRun(record, run);
+
+        Logger.LogWarning(
+            "Assistant review run {RunId} for {SubjectType} {SubjectId} failed with {ErrorCode} using {Provider} {Model} after {Characters} characters: {FailureDetail}",
+            run.Id,
+            record.Subject.Type,
+            record.Subject.Id,
+            failure.Code,
+            record.Provider,
+            record.Model,
+            outcome.Characters,
+            failureRecord.Detail);
 
         return run;
     }
 
+    private static string DescribeFailureDetail(ReviewFailure failure, string? finishReason)
+    {
+        var finishReasonText = $"Finish reason: {finishReason ?? "none"}.";
+
+        return failure.Detail is null ? finishReasonText : $"{failure.Detail} {finishReasonText}";
+    }
+
     private async Task<AiReviewRun> StoreSucceededRun(RunRecord record, AiReviewDraft draft)
     {
-        var run = CreateRun(record, AiReviewRunStatus.Succeeded, draft.Summary, errorCode: null);
+        var run = CreateRun(record, AiReviewRunStatus.Succeeded, draft.Summary, failure: null);
         var findings = draft.Findings.Select((finding, index) => CreateFinding(record, finding, index + 1));
 
         foreach (var finding in findings)
@@ -319,7 +375,11 @@ public sealed class AiReviewer : IAiReviewer
         await EventRecords.Append(reviewEvent, CancellationToken.None);
     }
 
-    private static AiReviewRun CreateRun(RunRecord record, AiReviewRunStatus status, string? summary, string? errorCode)
+    private static AiReviewRun CreateRun(
+        RunRecord record,
+        AiReviewRunStatus status,
+        string? summary,
+        FailureRecord? failure)
     {
         return new AiReviewRun
         {
@@ -334,7 +394,9 @@ public sealed class AiReviewer : IAiReviewer
             Provider = record.Provider,
             Model = record.Model,
             Summary = summary,
-            ErrorCode = errorCode,
+            ErrorCode = failure?.Code,
+            FailureDetail = failure?.Detail,
+            RawReply = failure?.RawReply,
             StartedAt = record.StartedAt,
             CreatedByUserId = record.UserId,
             OwnerId = record.UserId,
@@ -459,6 +521,17 @@ public sealed class AiReviewer : IAiReviewer
         public required string Model { get; init; }
 
         public DateTime StartedAt { get; init; }
+    }
+
+    private sealed record ReviewFailure(string Code, string? Detail);
+
+    private sealed record FailureRecord
+    {
+        public required string Code { get; init; }
+
+        public required string Detail { get; init; }
+
+        public string? RawReply { get; init; }
     }
 
     private sealed class ReviewOutcome

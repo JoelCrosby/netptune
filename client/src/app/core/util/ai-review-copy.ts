@@ -44,6 +44,8 @@ const errorMessages: Record<string, string> = {
   provider_error: $localize`:Why a stored review failed:The assistant provider returned an error.`,
   unreadable_reply: $localize`:Why a stored review failed:The assistant's reply could not be read.`,
   output_limit: $localize`:Why a stored review failed:The assistant's reply grew too long and was cut off.`,
+  empty_reply: $localize`:Why a stored review failed:The assistant replied without any review text.`,
+  refused: $localize`:Why a stored review failed:The assistant declined to review this item.`,
 };
 
 export const aiReviewErrorMessage = (

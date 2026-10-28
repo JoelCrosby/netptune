@@ -2344,6 +2344,15 @@ namespace Netptune.Core.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The assistant replied without any review text. Try again..
+        /// </summary>
+        public static string AiReviewEmptyReply {
+            get {
+                return ResourceManager.GetString("AiReviewEmptyReply", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This part of the item cannot be changed from a review..
         /// </summary>
         public static string AiReviewFieldNotEditable {
@@ -2412,6 +2421,15 @@ namespace Netptune.Core.Localization {
         public static string AiReviewReasonTooLong {
             get {
                 return ResourceManager.GetString("AiReviewReasonTooLong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The assistant declined to review this item. Try again, or reword the item if it keeps happening..
+        /// </summary>
+        public static string AiReviewRefused {
+            get {
+                return ResourceManager.GetString("AiReviewRefused", resourceCulture);
             }
         }
         

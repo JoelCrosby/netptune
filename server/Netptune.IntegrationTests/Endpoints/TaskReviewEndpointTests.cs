@@ -129,6 +129,52 @@ public sealed class TaskReviewEndpointTests
             latest.Current.Should().BeNull();
             latest.LatestFailure!.ErrorCode.Should().Be(AiReviewErrorCodes.UnreadableReply);
             latest.Readiness.Should().Be(AiReviewReadiness.Unreviewed);
+
+            var stored = await GetRun(failed.GetProperty("runId").GetInt32());
+
+            stored.FailureDetail.Should().Contain("no complete JSON object");
+            stored.RawReply.Should().Be("I could not review this.");
+        }
+        finally
+        {
+            await DeleteCredentials(UserCredentials);
+            Script().Reset();
+        }
+    }
+
+    [Theory]
+    [InlineData("", "end_turn", AiReviewErrorCodes.EmptyReply, "The assistant replied without any review text. Try again.")]
+    [InlineData("I can't help with that.", "refusal", AiReviewErrorCodes.Refused, "The assistant declined to review this item.")]
+    public async Task Run_ShouldStoreWhyTheReplyHadNoReview(
+        string text,
+        string finishReason,
+        string errorCode,
+        string messageStart)
+    {
+        var task = await CreateTask();
+
+        await SaveCredential();
+
+        try
+        {
+            var turn = new AiChatTurn
+            {
+                Text = text,
+                FinishReason = finishReason,
+                Usage = new AiUsage { OutputTokens = 5 },
+            };
+
+            Script().Enqueue(turn);
+
+            var frames = await Run(task.Id);
+            var failed = frames.Last();
+
+            failed.GetProperty("message").GetString().Should().StartWith(messageStart);
+
+            var stored = await GetRun(failed.GetProperty("runId").GetInt32());
+
+            stored.ErrorCode.Should().Be(errorCode);
+            stored.FailureDetail.Should().Be($"Finish reason: {finishReason}.");
         }
         finally
         {
@@ -933,6 +979,17 @@ public sealed class TaskReviewEndpointTests
             .Where(task => task.Id == taskId)
             .Select(task => task.Description)
             .SingleAsync(CancellationToken);
+    }
+
+    private async Task<AiReviewRun> GetRun(int runId)
+    {
+        await using var scope = Fixture.Services.CreateAsyncScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        return await context.AiReviewRuns
+            .AsNoTracking()
+            .SingleAsync(run => run.Id == runId, CancellationToken);
     }
 
     private async Task<int> CountTasksNamed(string prefix)

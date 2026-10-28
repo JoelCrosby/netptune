@@ -1930,6 +1930,12 @@ Confirma tu dirección de correo electrónico con el siguiente enlace.</value>
   <data name="AiReviewHitOutputLimit" xml:space="preserve">
     <value>La revisión se ha cortado porque la respuesta del asistente era demasiado larga. Vuelve a intentarlo.</value>
   </data>
+  <data name="AiReviewRefused" xml:space="preserve">
+    <value>El asistente se negó a revisar este elemento. Vuelve a intentarlo o reformula el elemento si sigue ocurriendo.</value>
+  </data>
+  <data name="AiReviewEmptyReply" xml:space="preserve">
+    <value>El asistente respondió sin ningún texto de revisión. Vuelve a intentarlo.</value>
+  </data>
   <data name="AiChangeErrorNotStatusCategory" xml:space="preserve">
     <value>“{0}” no es una categoría de estado.</value>
   </data>

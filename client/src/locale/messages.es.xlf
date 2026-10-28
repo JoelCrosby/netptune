@@ -1358,6 +1358,16 @@
         <target>Publicar los comentarios</target>
       </segment>
     </unit>
+    <unit id="8820435528476775222">
+      <notes>
+        <note category="location">src/app/core/util/ai-review-copy.ts:48</note>
+        <note category="description">Why a stored review failed</note>
+      </notes>
+      <segment state="translated">
+        <source>The assistant declined to review this item.</source>
+        <target>El asistente se negó a revisar este elemento.</target>
+      </segment>
+    </unit>
     <unit id="8820848217522438872">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/service-account-permission-summary.component.ts:45,49</note>
@@ -2689,7 +2699,7 @@
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:225</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:281</note>
         <note category="location">src/app/shared/components/task-selection-actions/task-selection-actions.component.ts:32,34</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:44</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:45</note>
         <note category="description">Confirms a destructive action</note>
       </notes>
       <segment state="translated">
@@ -3565,7 +3575,7 @@
         <note category="location">src/app/core/services/task-archive.service.ts:39</note>
         <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:122</note>
         <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:137</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:52</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:53</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
@@ -7054,7 +7064,7 @@
         <note category="location">src/app/features/pages/components/page-meta-chips.component.ts:46,49</note>
         <note category="location">src/app/features/settings/settings.routes.ts:76</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:84,85</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:46</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:47</note>
         <note category="description">Button that adds or removes tags on a page</note>
       </notes>
       <segment state="translated">
@@ -7095,7 +7105,7 @@
     </unit>
     <unit id="2981219928115418649">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:48</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:49</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-relation-diff.component.ts:28,30</note>
         <note category="location">src/app/static/components/editor/editor-bubble-menu.component.ts:223</note>
         <note category="description">What a proposed change does</note>
@@ -9387,7 +9397,7 @@
     </unit>
     <unit id="4658982717700339898">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:49</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:50</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-relation-diff.component.ts:17,19</note>
         <note category="description">What a proposed change does</note>
       </notes>
@@ -10481,7 +10491,7 @@
         <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:69,70</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:32</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:54</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:47</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:48</note>
         <note category="description">Label of the comment field</note>
       </notes>
       <segment state="translated">
@@ -10952,7 +10962,7 @@
     </unit>
     <unit id="4826315192146469447">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:51</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:52</note>
         <note category="description">What a proposed change does</note>
         <note category="meaning">verb</note>
       </notes>
@@ -11141,6 +11151,16 @@
       <segment state="translated">
         <source>Chats</source>
         <target>Chats</target>
+      </segment>
+    </unit>
+    <unit id="8734283461831058770">
+      <notes>
+        <note category="location">src/app/core/util/ai-review-copy.ts:47</note>
+        <note category="description">Why a stored review failed</note>
+      </notes>
+      <segment state="translated">
+        <source>The assistant replied without any review text.</source>
+        <target>El asistente respondió sin ningún texto de revisión.</target>
       </segment>
     </unit>
     <unit id="8736025615104066664">
@@ -17091,7 +17111,7 @@
     <unit id="584754872792429089">
       <notes>
         <note category="location">src/app/features/sprints/components/sprint-backlog-group.component.ts:126</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:45</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:46</note>
         <note category="description">Column heading for the sprint assign action</note>
       </notes>
       <segment state="translated">
@@ -19969,7 +19989,7 @@
     <unit id="2354817630223808522">
       <notes>
         <note category="location">src/app/features/calendar/dialogs/calendar-move-task-dialog.component.ts:68,73</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:50</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:51</note>
         <note category="description">Button that moves the task to the chosen date</note>
       </notes>
       <segment state="translated">
@@ -26233,7 +26253,7 @@
       <notes>
         <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:126</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:270</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:43</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:44</note>
         <note category="description">Counts records an import would update</note>
       </notes>
       <segment state="translated">
@@ -27946,7 +27966,7 @@
       <notes>
         <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:122</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:95,100</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:42</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:43</note>
         <note category="description">Counts records an import would create</note>
       </notes>
       <segment state="translated">
@@ -31011,7 +31031,7 @@
     </unit>
     <unit id="3504265772843656006">
       <notes>
-        <note category="location">src/app/core/util/ai-review-copy.ts:52</note>
+        <note category="location">src/app/core/util/ai-review-copy.ts:54</note>
         <note category="description">Why a stored review failed, when the reason is unknown</note>
       </notes>
       <segment state="translated">

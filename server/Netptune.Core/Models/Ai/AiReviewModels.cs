@@ -47,6 +47,10 @@ public static class AiReviewErrorCodes
 
     public const string UnreadableReply = "unreadable_reply";
 
+    public const string EmptyReply = "empty_reply";
+
+    public const string Refused = "refused";
+
     public const string OutputLimit = "output_limit";
 }
 
