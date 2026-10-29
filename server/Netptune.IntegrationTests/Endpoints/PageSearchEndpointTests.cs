@@ -5,10 +5,12 @@ using FluentAssertions;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Requests;
 using Netptune.Core.Requests.Pages;
 using Netptune.Core.Requests.ServiceAccounts;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Pages;
+using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Search;
 using Netptune.Core.ViewModels.ServiceAccounts;
 using Netptune.IntegrationTests.TestServices;
@@ -48,6 +50,27 @@ public sealed class PageSearchEndpointTests
         hit.Url.Should().Be($"/netptune/pages/{page.Slug}");
         hit.Subtitle.Should().Be(folder.Title);
         hit.Metadata["snippet"]!.ToString().Should().Contain($"{term}keys");
+    }
+
+    [Fact]
+    public async Task Search_ShouldRankAPageMatchingItsTitle_AboveTasksSharingOneWord()
+    {
+        var term = UniqueTerm();
+        var query = $"{term} rollout plan";
+        var followUp = await CreateTask($"{term} follow-up");
+        var signOff = await CreateTask($"{term} sign-off");
+        var page = await Create(new CreatePageRequest { Kind = PageKind.Document, Title = query });
+
+        await ReindexAndWaitForPage(query, page.Id);
+
+        var url = $"api/search?q={Uri.EscapeDataString(query)}";
+        var result = await Client.GetFromJsonAsync<SearchResponse>(url, TestContext.Current.CancellationToken);
+        var taskIds = result!.Results.Where(item => item.Type == "task").Select(item => item.Id);
+        var topHit = result.Results.First();
+
+        taskIds.Should().Contain([followUp.Id, signOff.Id]);
+        topHit.Type.Should().Be("page");
+        topHit.Id.Should().Be(page.Id);
     }
 
     [Fact]
@@ -153,6 +176,19 @@ public sealed class PageSearchEndpointTests
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<PageViewModel>>(TestContext.Current.CancellationToken);
+
+        return result.Payload!;
+    }
+
+    private async Task<TaskViewModel> CreateTask(string name)
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var request = new AddProjectTaskRequest { Name = name, ProjectId = 1 };
+        var response = await Client.PostAsJsonAsync("api/tasks", request, cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>(cancellationToken);
 
         return result.Payload!;
     }

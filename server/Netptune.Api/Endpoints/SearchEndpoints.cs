@@ -19,6 +19,7 @@ public static class SearchEndpoints
                 "Searches tasks, projects, boards and other entities in the credential's workspace. "
                 + "Pages are included only when the credential holds pages.read. "
                 + "Supply types to restrict the search to particular entity types. "
+                + "Results from every type are ranked together by relevance, and limit applies to the combined list. "
                 + $"limit defaults to {SearchQueryHandler.DefaultLimit} and is capped at {SearchQueryHandler.MaximumLimit}.")
             .RequireAuthorization(NetptunePermissions.Projects.Read);
 

@@ -1,7 +1,10 @@
 using System.Diagnostics;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 using Meilisearch;
+
+using Microsoft.Extensions.Logging;
 
 using Netptune.Core.Models.Search;
 using Netptune.Core.Services.Search;
@@ -18,10 +21,12 @@ public sealed class MeilisearchService : IMeilisearchService
     private static readonly string[] AllIndexes = ["tasks", "projects", "boards", "sprints", PageSearchDocuments.IndexName];
 
     private readonly MeilisearchClient Client;
+    private readonly ILogger<MeilisearchService> Logger;
 
-    public MeilisearchService(MeilisearchClient client)
+    public MeilisearchService(MeilisearchClient client, ILogger<MeilisearchService> logger)
     {
         Client = client;
+        Logger = logger;
     }
 
     public async Task IndexDocumentsAsync<T>(string indexName, IEnumerable<T> docs, CancellationToken cancellationToken = default)
@@ -93,16 +98,20 @@ public sealed class MeilisearchService : IMeilisearchService
 
         var indexes = ResolveIndexes(query.Types, query.IncludePages);
         var filter = $"workspaceSlug = \"{EscapeFilterValue(query.WorkspaceSlug)}\"";
-        var meiliQuery = new MeiliSearchQuery { Filter = filter, Limit = query.Limit };
+        var federatedQuery = new FederatedMultiSearchQuery
+        {
+            Queries = indexes.Select(index => BuildIndexQuery(index, query.Q, filter)).ToList(),
+            FederationOptions = new MultiSearchFederationOptions { Limit = query.Limit },
+        };
 
-        var tasks = indexes.Select(idx => SearchIndexAsync(idx, query.Q, meiliQuery, cancellationToken));
-        var resultSets = await Task.WhenAll(tasks);
+        var hits = await FederatedSearchAsync(federatedQuery, cancellationToken);
+        var results = hits.Select(ToSearchResult).OfType<SearchResultViewModel>().ToList();
 
         sw.Stop();
 
         return new SearchResponse
         {
-            Results = resultSets.SelectMany(r => r).ToList(),
+            Results = results,
             ProcessingTimeMs = sw.ElapsedMilliseconds,
         };
     }
@@ -147,32 +156,65 @@ public sealed class MeilisearchService : IMeilisearchService
         return value.Replace("\\", "\\\\").Replace("\"", "\\\"");
     }
 
-    private async Task<IEnumerable<SearchResultViewModel>> SearchIndexAsync(string indexName, string q, MeiliSearchQuery meiliQuery, CancellationToken cancellationToken)
+    private async Task<IReadOnlyCollection<JsonElement>> FederatedSearchAsync(
+        FederatedMultiSearchQuery query,
+        CancellationToken cancellationToken)
     {
         try
         {
-            return indexName switch
-            {
-                "tasks" => await SearchTasksAsync(q, meiliQuery, cancellationToken),
-                "projects" => await SearchProjectsAsync(q, meiliQuery, cancellationToken),
-                "boards" => await SearchBoardsAsync(q, meiliQuery, cancellationToken),
-                "sprints" => await SearchSprintsAsync(q, meiliQuery, cancellationToken),
-                PageSearchDocuments.IndexName => await SearchPagesAsync(q, meiliQuery, cancellationToken),
-                _ => [],
-            };
+            var result = await Client.FederatedMultiSearchAsync<JsonElement>(query, cancellationToken);
+
+            return result.Hits;
         }
         catch (MeilisearchApiError ex) when (ex.Code == "index_not_found")
         {
+            Logger.LogWarning(ex, "Search returned no results because a Meilisearch index is missing");
+
             return [];
         }
     }
 
-    private async Task<IEnumerable<SearchResultViewModel>> SearchTasksAsync(string q, MeiliSearchQuery query, CancellationToken cancellationToken)
+    private static FederatedSearchQuery BuildIndexQuery(string indexName, string q, string filter)
     {
-        var index = Client.Index("tasks");
-        var result = await index.SearchAsync<TaskSearchDocument>(q, query, cancellationToken);
+        if (indexName != PageSearchDocuments.IndexName)
+        {
+            return new FederatedSearchQuery { IndexUid = indexName, Q = q, Filter = filter };
+        }
 
-        return result.Hits.Select(hit => new SearchResultViewModel
+        return new FederatedSearchQuery
+        {
+            IndexUid = indexName,
+            Q = q,
+            Filter = filter,
+            AttributesToRetrieve = ["pageId", "slug", "title", "path", "kind", "projectId", "workspaceSlug"],
+            AttributesToCrop = ["body"],
+            CropLength = PageSnippetWords,
+        };
+    }
+
+    private static SearchResultViewModel? ToSearchResult(JsonElement hit)
+    {
+        var indexName = hit.GetProperty("_federation").GetProperty("indexUid").GetString();
+
+        return indexName switch
+        {
+            "tasks" => ToTaskResult(ReadHit<TaskSearchDocument>(hit)),
+            "projects" => ToProjectResult(ReadHit<ProjectSearchDocument>(hit)),
+            "boards" => ToBoardResult(ReadHit<BoardSearchDocument>(hit)),
+            "sprints" => ToSprintResult(ReadHit<SprintSearchDocument>(hit)),
+            PageSearchDocuments.IndexName => ToPageResult(ReadHit<PageSearchHit>(hit)),
+            _ => null,
+        };
+    }
+
+    private static T ReadHit<T>(JsonElement hit)
+    {
+        return hit.Deserialize<T>(JsonSerializerOptions.Web)!;
+    }
+
+    private static SearchResultViewModel ToTaskResult(TaskSearchDocument hit)
+    {
+        return new SearchResultViewModel
         {
             Type = "task",
             Id = hit.TaskId,
@@ -186,15 +228,12 @@ public sealed class MeilisearchService : IMeilisearchService
                 ["projectId"] = hit.ProjectId,
                 ["projectScopeId"] = hit.ProjectScopeId,
             },
-        });
+        };
     }
 
-    private async Task<IEnumerable<SearchResultViewModel>> SearchProjectsAsync(string q, MeiliSearchQuery query, CancellationToken cancellationToken)
+    private static SearchResultViewModel ToProjectResult(ProjectSearchDocument hit)
     {
-        var index = Client.Index("projects");
-        var result = await index.SearchAsync<ProjectSearchDocument>(q, query, cancellationToken);
-
-        return result.Hits.Select(hit => new SearchResultViewModel
+        return new SearchResultViewModel
         {
             Type = "project",
             Id = hit.ProjectId,
@@ -202,15 +241,12 @@ public sealed class MeilisearchService : IMeilisearchService
             Subtitle = hit.Key,
             Url = $"/{hit.WorkspaceSlug}/projects/{hit.ProjectId}",
             Metadata = new Dictionary<string, object?> { ["key"] = hit.Key },
-        });
+        };
     }
 
-    private async Task<IEnumerable<SearchResultViewModel>> SearchBoardsAsync(string q, MeiliSearchQuery query, CancellationToken cancellationToken)
+    private static SearchResultViewModel ToBoardResult(BoardSearchDocument hit)
     {
-        var index = Client.Index("boards");
-        var result = await index.SearchAsync<BoardSearchDocument>(q, query, cancellationToken);
-
-        return result.Hits.Select(hit => new SearchResultViewModel
+        return new SearchResultViewModel
         {
             Type = "board",
             Id = hit.BoardId,
@@ -218,15 +254,12 @@ public sealed class MeilisearchService : IMeilisearchService
             Subtitle = "Board",
             Url = $"/{hit.WorkspaceSlug}/boards/{hit.Identifier}",
             Metadata = new Dictionary<string, object?> { ["projectId"] = hit.ProjectId },
-        });
+        };
     }
 
-    private async Task<IEnumerable<SearchResultViewModel>> SearchSprintsAsync(string q, MeiliSearchQuery query, CancellationToken cancellationToken)
+    private static SearchResultViewModel ToSprintResult(SprintSearchDocument hit)
     {
-        var index = Client.Index("sprints");
-        var result = await index.SearchAsync<SprintSearchDocument>(q, query, cancellationToken);
-
-        return result.Hits.Select(hit => new SearchResultViewModel
+        return new SearchResultViewModel
         {
             Type = "sprint",
             Id = hit.SprintId,
@@ -238,23 +271,12 @@ public sealed class MeilisearchService : IMeilisearchService
                 ["status"] = hit.Status,
                 ["projectId"] = hit.ProjectId,
             },
-        });
+        };
     }
 
-    private async Task<IEnumerable<SearchResultViewModel>> SearchPagesAsync(string q, MeiliSearchQuery query, CancellationToken cancellationToken)
+    private static SearchResultViewModel ToPageResult(PageSearchHit hit)
     {
-        var index = Client.Index(PageSearchDocuments.IndexName);
-        var pageQuery = new MeiliSearchQuery
-        {
-            Filter = query.Filter,
-            Limit = query.Limit,
-            AttributesToRetrieve = ["pageId", "slug", "title", "path", "kind", "projectId", "workspaceSlug"],
-            AttributesToCrop = ["body"],
-            CropLength = PageSnippetWords,
-        };
-        var result = await index.SearchAsync<PageSearchHit>(q, pageQuery, cancellationToken);
-
-        return result.Hits.Select(hit => new SearchResultViewModel
+        return new SearchResultViewModel
         {
             Type = "page",
             Id = hit.PageId,
@@ -269,7 +291,7 @@ public sealed class MeilisearchService : IMeilisearchService
                 ["projectId"] = hit.ProjectId,
                 ["snippet"] = hit.Formatted?.Body,
             },
-        });
+        };
     }
 
     private static IReadOnlyList<string> ResolveIndexes(string[]? types, bool includePages)
