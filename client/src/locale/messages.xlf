@@ -178,7 +178,7 @@
     <unit id="810888510148304696">
       <notes>
         <note category="location">src/app/core/services/ai-effort.service.ts:62</note>
-        <note category="location">src/app/core/services/ai-model-catalog.service.ts:31</note>
+        <note category="location">src/app/core/services/ai-model-catalog.service.ts:36</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-effort-menu.component.ts:29,31</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-model-menu.component.ts:29,31</note>
         <note category="description">Effort option that lets the server choose</note>
@@ -5798,7 +5798,7 @@
     </unit>
     <unit id="8552023238663754615">
       <notes>
-        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:213</note>
+        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:226</note>
         <note category="description">Tooltip on the icon marking a task that sits on more than one board</note>
       </notes>
       <segment>
@@ -6920,7 +6920,7 @@
     </unit>
     <unit id="8107440182294518448">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:66,69</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:67,70</note>
         <note category="description">Button that stops in-progress file uploads</note>
       </notes>
       <segment>
@@ -6929,7 +6929,7 @@
     </unit>
     <unit id="7765958911112446269">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:73,76</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:74,77</note>
         <note category="description">Shown while a task&apos;s files are loading</note>
       </notes>
       <segment>
@@ -6956,7 +6956,7 @@
     </unit>
     <unit id="5171192616638755303">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:101,103</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:102,104</note>
         <note category="description">Button that retries a failed file upload</note>
       </notes>
       <segment>
@@ -6965,7 +6965,7 @@
     </unit>
     <unit id="1789680955834451263">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:128,130</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:129,131</note>
         <note category="location">src/app/features/storage/components/storage-list.component.ts:189,191</note>
         <note category="description">Accessible label for the button that downloads an attached file</note>
       </notes>
@@ -6975,7 +6975,7 @@
     </unit>
     <unit id="6693349469471580292">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:139,141</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:140,142</note>
         <note category="location">src/app/features/storage/components/storage-list.component.ts:203,205</note>
         <note category="description">Accessible label for the button that deletes an attached file</note>
       </notes>
@@ -6994,7 +6994,7 @@
     </unit>
     <unit id="8598917078690004028">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:148,151</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:149,152</note>
         <note category="description">Empty state when a task has no attached files</note>
       </notes>
       <segment>
@@ -11192,7 +11192,7 @@
     </unit>
     <unit id="9114014874327219131">
       <notes>
-        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:91,95</note>
+        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:93,97</note>
         <note category="description">Accessible label for the board card selection checkbox</note>
       </notes>
       <segment>
@@ -12752,7 +12752,7 @@
     </unit>
     <unit id="8617231936234975611">
       <notes>
-        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:223</note>
+        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:236</note>
         <note category="description">Tooltip on a task pinned at more than one scope</note>
       </notes>
       <segment>
@@ -15481,7 +15481,7 @@
     </unit>
     <unit id="5849306790749182489">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:53,56</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:54,57</note>
         <note category="description">Section heading for files attached to a task</note>
       </notes>
       <segment>
@@ -16447,11 +16447,11 @@
     </unit>
     <unit id="2700504957203898501">
       <notes>
-        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:135,137</note>
-        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:139,143</note>
+        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:136,139</note>
+        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:140,144</note>
         <note category="location">src/app/static/components/task-name.component.ts:63,64</note>
         <note category="location">src/app/static/components/task-name.component.ts:65,68</note>
-        <note category="description">Accessible label for the icon marking a task that has comments</note>
+        <note category="description">Tooltip on the icon marking a task that has comments</note>
       </notes>
       <segment>
         <source>Has comments</source>
@@ -20603,15 +20603,6 @@
       </notes>
       <segment>
         <source>Completed tasks will show up here as they land.</source>
-      </segment>
-    </unit>
-    <unit id="2779111500617013409">
-      <notes>
-        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:154,158</note>
-        <note category="description">Accessible label for the icon marking a task that sits on more than one board</note>
-      </notes>
-      <segment>
-        <source>On several boards</source>
       </segment>
     </unit>
     <unit id="4257828580066254399">
@@ -26461,6 +26452,16 @@
       </notes>
       <segment>
         <source>Delete <ph id="0" equiv="COUNT" disp="count"/> Conversations</source>
+      </segment>
+    </unit>
+    <unit id="5540143944145538402">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:151,154</note>
+        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:155,160</note>
+        <note category="description">Tooltip on the icon marking a task that has files attached</note>
+      </notes>
+      <segment>
+        <source>Has files</source>
       </segment>
     </unit>
     <unit id="5547904534300795196">

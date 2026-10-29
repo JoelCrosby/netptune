@@ -65,6 +65,8 @@ public class BoardViewRowMap
 
     public bool Has_Comments { get; set; }
 
+    public bool Has_Files { get; set; }
+
     public int Flag_Count { get; set; }
 
     public int Board_Count { get; set; }

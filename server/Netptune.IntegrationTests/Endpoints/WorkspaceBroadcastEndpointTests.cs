@@ -6,6 +6,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Realtime;
+using Netptune.Core.ViewModels.Files;
 using Netptune.Core.ViewModels.Projects;
 
 using Xunit;
@@ -92,6 +93,46 @@ public sealed class WorkspaceBroadcastEndpointTests
                 EndDate = DateTime.UtcNow.Date.AddDays(14),
                 ProjectId = project.Payload!.Id,
             });
+        });
+
+        published.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task UploadTaskMedia_ShouldBroadcastATaskEvent()
+    {
+        var published = await Published(WorkspaceEventScopes.Task, async () =>
+        {
+            using var content = new MultipartFormDataContent();
+
+            content.Add(new ByteArrayContent([1, 2, 3]), "file", "broadcast.png");
+            content.Add(new StringContent("neo-1"), "taskSystemId");
+
+            return await Client.PostAsync("api/storage/media", content, TestContext.Current.CancellationToken);
+        });
+
+        published.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task DeleteWorkspaceFile_ShouldBroadcastATaskEvent()
+    {
+        using var content = new MultipartFormDataContent();
+
+        content.Add(new ByteArrayContent([10, 20, 30, 40]), "files", "broadcast.pdf");
+        content.First().Headers.ContentType = new("application/pdf");
+
+        var uploadResponse = await Client.PostAsync(
+            "api/tasks/neo-1/files",
+            content,
+            TestContext.Current.CancellationToken);
+        var uploaded = await uploadResponse.Content.ReadFromJsonAsync<ClientResponse<FileUploadResult>>(
+            TestContext.Current.CancellationToken);
+        var fileId = uploaded.Payload!.File!.Id;
+
+        var published = await Published(WorkspaceEventScopes.Task, () =>
+        {
+            return Client.DeleteAsync($"api/storage/files/{fileId}", TestContext.Current.CancellationToken);
         });
 
         published.Should().BeTrue();

@@ -60,6 +60,8 @@ public class BoardViewTask
 
     public bool HasComments { get; set; }
 
+    public bool HasFiles { get; set; }
+
     public int FlagCount { get; set; }
 
     public TaskPriority? Priority { get; set; }

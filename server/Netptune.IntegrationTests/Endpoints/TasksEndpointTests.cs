@@ -15,6 +15,7 @@ using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Activity;
 using Netptune.Core.ViewModels.Audit;
 using Netptune.Core.ViewModels.Boards;
+using Netptune.Core.ViewModels.Files;
 using Netptune.Core.ViewModels.Flags;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Statuses;
@@ -1248,6 +1249,46 @@ public sealed class TasksEndpointTests
         var card = view.Groups.SelectMany(group => group.Tasks).Single(item => item.Id == task.Id);
 
         card.BoardCount.Should().Be(2);
+    }
+
+    [Fact]
+    public async Task GetBoardView_ShouldReportWhetherTheCardHasFiles()
+    {
+        var task = await CreateTaskOnDefaultBoard();
+        var boardIdentifier = task.Placements[0].BoardIdentifier;
+
+        using var content = new MultipartFormDataContent();
+
+        content.Add(new ByteArrayContent([10, 20, 30, 40]), "files", "evidence.pdf");
+        content.First().Headers.ContentType = new("application/pdf");
+
+        var uploadResponse = await Client.PostAsync(
+            $"api/tasks/{task.SystemId}/files",
+            content,
+            TestContext.Current.CancellationToken);
+        var uploaded = await uploadResponse.Content.ReadFromJsonAsync<ClientResponse<FileUploadResult>>(
+            TestContext.Current.CancellationToken);
+
+        uploaded.Payload!.IsSuccess.Should().BeTrue();
+
+        var viewWithFile = await GetBoardView(boardIdentifier);
+        var cardsWithFile = viewWithFile.Groups.SelectMany(group => group.Tasks);
+        var cardWithFile = cardsWithFile.Single(item => item.Id == task.Id);
+
+        cardWithFile.HasFiles.Should().BeTrue();
+
+        var fileId = uploaded.Payload.File!.Id;
+        var deleteResponse = await Client.DeleteAsync(
+            $"api/tasks/{task.SystemId}/files/{fileId}",
+            TestContext.Current.CancellationToken);
+
+        deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
+        var viewWithoutFile = await GetBoardView(boardIdentifier);
+        var cardsWithoutFile = viewWithoutFile.Groups.SelectMany(group => group.Tasks);
+        var cardWithoutFile = cardsWithoutFile.Single(item => item.Id == task.Id);
+
+        cardWithoutFile.HasFiles.Should().BeFalse();
     }
 
     [Fact]

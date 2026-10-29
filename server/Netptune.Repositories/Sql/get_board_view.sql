@@ -114,6 +114,14 @@ SELECT lt.task_id
              AND c.entity_id = lt.task_id
              AND NOT c.is_deleted
        )                    AS has_comments
+     , EXISTS (
+           SELECT 1
+           FROM task_files tf
+                    INNER JOIN workspace_files wf on tf.workspace_file_id = wf.id
+           WHERE tf.project_task_id = lt.task_id
+             AND NOT wf.is_deleted
+             AND wf.status = 'ready'
+       )                    AS has_files
      , (
            SELECT COUNT(*)::integer
            FROM flags f

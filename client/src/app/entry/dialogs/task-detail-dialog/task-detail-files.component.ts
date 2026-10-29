@@ -18,6 +18,7 @@ import {
   TaskFileUploadService,
 } from '@core/services/task-file-upload.service';
 import { WorkspaceFilesService } from '@core/services/workspace-files.service';
+import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import {
   LucideDownload,
   LucideRotateCcw,
@@ -167,6 +168,7 @@ export class TaskDetailFilesComponent {
   private readonly filesResource = taskFilesResource(this.systemId);
   private readonly uploadService = inject(TaskFileUploadService);
   private readonly service = inject(WorkspaceFilesService);
+  private readonly workspaceRefresh = inject(WorkspaceRefreshService);
   private readonly mutationError = signal('');
 
   readonly maxUploadBytes = inject(CurrentWorkspaceService).maxUploadBytes;
@@ -250,6 +252,7 @@ export class TaskDetailFilesComponent {
           payload: response.payload?.filter((item) => item.id !== file.id),
         };
       });
+      this.workspaceRefresh.refresh(['tasks']);
     } catch {
       this.mutationError.set(`Could not delete ${file.originalName}.`);
     }

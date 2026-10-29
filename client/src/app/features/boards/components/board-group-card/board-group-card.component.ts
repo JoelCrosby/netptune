@@ -20,6 +20,7 @@ import {
   LucideFlag,
   LucideKanban,
   LucideMessageSquareText,
+  LucidePaperclip,
   LucidePin,
 } from '@lucide/angular';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
@@ -62,6 +63,7 @@ import { SelectionCheckboxComponent } from '@static/components/checkbox/selectio
     LucideFlag,
     LucideCheck,
     LucideMessageSquareText,
+    LucidePaperclip,
     LucideKanban,
     NgClass,
     TooltipDirective,
@@ -96,9 +98,8 @@ import { SelectionCheckboxComponent } from '@static/components/checkbox/selectio
         <svg
           lucidePin
           class="text-primary absolute top-2 right-2 z-10 h-3.5 w-3.5 fill-current"
-          role="img"
-          [attr.aria-label]="pinLabel()"
           [appTooltip]="pinLabel()"></svg>
+        <span class="sr-only">{{ pinLabel() }}</span>
       }
 
       <div class="mb-0 leading-[1.4rem] select-none" [class.pr-6]="pinned()">
@@ -129,14 +130,30 @@ import { SelectionCheckboxComponent } from '@static/components/checkbox/selectio
             <svg
               lucideMessageSquareText
               class="text-muted h-4 w-4"
-              i18n-aria-label="
-                Accessible label for the icon marking a task that has comments
-              "
-              aria-label="Has comments"
               i18n-appTooltip="
                 Tooltip on the icon marking a task that has comments
               "
               appTooltip="Has comments"></svg>
+            <span
+              class="sr-only"
+              i18n="Screen reader text marking a task that has comments"
+              >Has comments</span
+            >
+          }
+
+          @if (task().hasFiles) {
+            <svg
+              lucidePaperclip
+              class="text-muted h-4 w-4"
+              i18n-appTooltip="
+                Tooltip on the icon marking a task that has files attached
+              "
+              appTooltip="Has files"></svg>
+            <span
+              class="sr-only"
+              i18n="Screen reader text marking a task that has files attached"
+              >Has files</span
+            >
           }
 
           @if (readFlags()) {
@@ -147,12 +164,8 @@ import { SelectionCheckboxComponent } from '@static/components/checkbox/selectio
             <svg
               lucideKanban
               class="text-muted h-4 w-4"
-              i18n-aria-label="
-                Accessible label for the icon marking a task that sits on more
-                than one board
-              "
-              aria-label="On several boards"
               [appTooltip]="boardCountLabel()"></svg>
+            <span class="sr-only">{{ boardCountLabel() }}</span>
           }
 
           @if (task().statusCategory === statusCategory.done) {

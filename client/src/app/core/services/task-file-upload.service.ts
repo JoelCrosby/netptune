@@ -10,6 +10,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { WorkspaceFileViewModel } from '@core/models/view-models/workspace-file-view-model';
 import { catchError, from, map, mergeMap, of, Subscription } from 'rxjs';
 import { WorkspaceFilesService } from './workspace-files.service';
+import { WorkspaceRefreshService } from './workspace-refresh.service';
 
 export interface TaskFileUploadItem {
   id: number;
@@ -27,6 +28,7 @@ export interface UploadedTaskFile {
 @Injectable()
 export class TaskFileUploadService {
   private readonly workspaceFiles = inject(WorkspaceFilesService);
+  private readonly workspaceRefresh = inject(WorkspaceRefreshService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly uploadItems = signal<TaskFileUploadItem[]>([]);
   private readonly completedFiles = signal<UploadedTaskFile[]>([]);
@@ -125,6 +127,7 @@ export class TaskFileUploadService {
                 { systemId, file },
                 ...items,
               ]);
+              this.workspaceRefresh.refresh(['tasks']);
             }
           }
         },

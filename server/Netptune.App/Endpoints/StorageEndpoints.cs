@@ -2,9 +2,11 @@ using Mediator;
 
 using Microsoft.AspNetCore.Mvc;
 
+using Netptune.App.Configuration;
 using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
+using Netptune.Core.Services.Realtime;
 using Netptune.Core.Storage;
 using Netptune.Handlers.Storage.Commands;
 using Netptune.Handlers.Storage.Queries;
@@ -24,13 +26,15 @@ public static class StorageEndpoints
             .RequireAuthorization(NetptunePermissions.Storage.UploadProfilePicture);
         group.MapPost("/media", HandleUploadMedia)
             .WithMetadata(new RequestSizeLimitAttribute(UploadLimits.MaximumRequestBytes))
-            .RequireAuthorization(NetptunePermissions.Storage.UploadMedia);
+            .RequireAuthorization(NetptunePermissions.Storage.UploadMedia)
+            .Broadcasts(WorkspaceEventScopes.Task);
         group.MapGet("/usage", HandleGetUsage)
             .RequireAuthorization(NetptunePermissions.Storage.Read);
         group.MapGet("/files", HandleGetFiles)
             .RequireAuthorization(NetptunePermissions.Storage.Read);
         group.MapDelete("/files/{id:int}", HandleDeleteFile)
-            .RequireAuthorization(NetptunePermissions.Storage.Manage);
+            .RequireAuthorization(NetptunePermissions.Storage.Manage)
+            .Broadcasts(WorkspaceEventScopes.Task);
 
         return group;
     }
