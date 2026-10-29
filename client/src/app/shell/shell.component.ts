@@ -14,13 +14,13 @@ import {
   RouteConfigLoadEnd,
   RouteConfigLoadStart,
   Router,
-  RouterOutlet,
 } from '@angular/router';
 import { filter } from 'rxjs';
 import { Workspace } from '@core/models/workspace';
 import { LayoutService } from '@core/services/layout.service';
 import { ShellSidebarComponent } from './shell-sidebar.component';
 import { ShellService } from './shell.service';
+import { WorkspaceOutletComponent } from './workspace-outlet.component';
 import { ShellNavbarComponent } from './shell-navbar.component';
 import { AiAssistantComponent } from './ai-assistant/ai-assistant.component';
 import { AiAssistantPanelComponent } from './ai-assistant/ai-assistant-panel.component';
@@ -42,7 +42,7 @@ const DRAWER_ANIMATION_MS = 200;
   providers: [ShellService, GlobalCommandsService, CommandShortcutService],
   imports: [
     CdkTrapFocus,
-    RouterOutlet,
+    WorkspaceOutletComponent,
     ShellSidebarComponent,
     ShellNavbarComponent,
     CommandPaletteComponent,
@@ -179,7 +179,7 @@ const DRAWER_ANIMATION_MS = 200;
             aria-hidden="true"
             class="bg-background/80 pointer-events-none absolute inset-0 -z-10"></div>
         }
-        <router-outlet />
+        <app-workspace-outlet />
       </main>
 
       @if (dock.isPresent()) {

@@ -1,8 +1,17 @@
-import { assertInInjectionContext, computed, inject } from '@angular/core';
+import {
+  assertInInjectionContext,
+  computed,
+  inject,
+  InjectionToken,
+} from '@angular/core';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { RefreshScope } from '@core/models/refresh-scope';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import { onChange } from '@core/util/signals';
+
+export const REBUILT_ON_WORKSPACE_SWITCH = new InjectionToken<boolean>(
+  'REBUILT_ON_WORKSPACE_SWITCH'
+);
 
 export interface ReloadableResource {
   reload(): boolean;
@@ -36,6 +45,12 @@ export function reloadOnRefresh(
  */
 export function reloadOnWorkspaceChange(resource: ReloadableResource): void {
   assertInInjectionContext(reloadOnWorkspaceChange);
+
+  const isRebuiltOnSwitch = inject(REBUILT_ON_WORKSPACE_SWITCH, {
+    optional: true,
+  });
+
+  if (isRebuiltOnSwitch) return;
 
   const workspaceIdentifier = inject(CurrentWorkspaceService).slug;
 

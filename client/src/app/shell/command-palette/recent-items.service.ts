@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Service, inject, signal } from '@angular/core';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { SessionService } from '@core/services/session.service';
+import { onChange } from '@core/util/signals';
 import { ClientResponse } from '@core/models/client-response';
-import { catchError, finalize, of, tap } from 'rxjs';
+import { Subscription, catchError, finalize, of, tap } from 'rxjs';
 
 export interface RecentItem {
   title: string;
@@ -30,13 +32,19 @@ export class RecentItemsService {
   readonly loaded = signal(false);
   readonly loading = signal(false);
 
+  private pendingLoad?: Subscription;
+
+  constructor() {
+    onChange(inject(CurrentWorkspaceService).id, () => this.invalidate());
+  }
+
   ensureLoaded() {
     if (!this.authenticated()) return;
     if (this.loaded() || this.loading()) return;
 
     this.loading.set(true);
 
-    this.http
+    this.pendingLoad = this.http
       .get<RecentItemsClientResponse>('api/command-palette/recent')
       .pipe(
         tap((response) => this.applyResponse(response)),
@@ -69,6 +77,7 @@ export class RecentItemsService {
   }
 
   invalidate() {
+    this.pendingLoad?.unsubscribe();
     this.loaded.set(false);
     this.items.set([]);
   }
