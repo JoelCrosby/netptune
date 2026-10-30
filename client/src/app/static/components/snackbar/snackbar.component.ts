@@ -8,15 +8,17 @@ import {
   LucideTriangleAlert,
   LucideX,
 } from '@lucide/angular';
+import { IconButtonComponent } from '../button/icon-button.component';
+import { signalToneSoft, toneClasses } from '../tones';
 import { SnackbarItem, SnackbarType } from './snackbar.models';
 import { SnackbarService } from './snackbar.service';
 
-const TYPE_STYLES: Record<SnackbarType, string> = {
-  default: 'bg-[var(--card)] text-[var(--foreground)] border-[var(--border)]',
-  success: 'bg-[#1a3a2a] text-green-300 border-green-800',
-  error: 'bg-[#3a1a1a] text-red-300 border-red-800',
-  warn: 'bg-[#3a2e1a] text-yellow-300 border-yellow-800',
-  info: 'bg-[#1a2a3a] text-blue-300 border-blue-800',
+const TYPE_TILES: Record<SnackbarType, string> = {
+  default: toneClasses.purple,
+  success: signalToneSoft.good,
+  error: signalToneSoft.bad,
+  warn: signalToneSoft.warn,
+  info: toneClasses.blue,
 };
 
 const TYPE_ICONS: Record<SnackbarType, LucideIconInput | null> = {
@@ -29,37 +31,46 @@ const TYPE_ICONS: Record<SnackbarType, LucideIconInput | null> = {
 
 @Component({
   selector: 'app-snackbar',
-  imports: [LucideDynamicIcon, LucideX],
+  imports: [IconButtonComponent, LucideDynamicIcon, LucideX],
   template: `
     <div
-      class="flex max-w-120 min-w-70 items-center gap-3 rounded-sm border px-4 py-3 text-sm leading-tight font-medium shadow-lg"
-      [class]="typeStyles()"
+      class="border-border bg-dialog-background flex items-center gap-3 rounded-xl border py-2 pr-2 pl-3 shadow-xl md:max-w-md md:min-w-80"
       role="status"
       aria-live="polite">
-      @if (icon()) {
-        <svg
-          [lucideIcon]="icon()!"
-          class="h-[1.1rem] w-[1.1rem] shrink-0 leading-none"></svg>
+      @if (icon(); as icon) {
+        <span
+          class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg"
+          [class]="tileClass()"
+          aria-hidden="true">
+          <svg [lucideIcon]="icon" class="h-3.5 w-3.5"></svg>
+        </span>
       }
 
-      <span class="flex-1">{{ item().message }}</span>
+      <span class="text-foreground flex-1 py-1 text-[13px] leading-snug">
+        {{ item().message }}
+      </span>
 
       @if (item().action) {
         <button
-          class="shrink-0 text-xs font-semibold tracking-wide uppercase opacity-80 transition-opacity hover:opacity-100"
+          type="button"
+          class="text-primary shrink-0 rounded-md px-1.5 py-1 text-[13px] font-medium hover:underline"
           (click)="actionClicked.emit(item())">
           {{ item().action }}
         </button>
       }
 
       <button
-        class="shrink-0 leading-none opacity-50 transition-opacity hover:opacity-100"
+        app-icon-button
+        type="button"
+        color="muted"
+        size="xs"
+        class="shrink-0 rounded-lg"
         i18n-aria-label="
           Accessible label for the button that dismisses a notification toast
         "
         aria-label="Dismiss"
         (click)="snackbarService.dismiss(item().id)">
-        <svg lucideX class="h-4 w-4 leading-none"></svg>
+        <svg lucideX class="h-3.5 w-3.5"></svg>
       </button>
     </div>
   `,
@@ -67,13 +78,13 @@ const TYPE_ICONS: Record<SnackbarType, LucideIconInput | null> = {
     `
       :host {
         display: block;
-        animation: snackbar-enter 0.2s ease;
+        animation: snackbar-enter 160ms ease-out;
       }
 
       @keyframes snackbar-enter {
         from {
           opacity: 0;
-          transform: translateY(-12px) scale(0.96);
+          transform: translateY(-12px) scale(0.98);
         }
         to {
           opacity: 1;
@@ -85,12 +96,18 @@ const TYPE_ICONS: Record<SnackbarType, LucideIconInput | null> = {
         @keyframes snackbar-enter {
           from {
             opacity: 0;
-            transform: translateY(12px) scale(0.96);
+            transform: translateY(12px) scale(0.98);
           }
           to {
             opacity: 1;
             transform: none;
           }
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        :host {
+          animation: none;
         }
       }
     `,
@@ -102,8 +119,8 @@ export class SnackbarComponent {
 
   readonly snackbarService = inject(SnackbarService);
 
-  typeStyles() {
-    return TYPE_STYLES[this.item().type];
+  tileClass() {
+    return TYPE_TILES[this.item().type];
   }
 
   icon() {
