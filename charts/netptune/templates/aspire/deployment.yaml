@@ -25,6 +25,9 @@ spec:
         app.kubernetes.io/component: "aspire-dashboard"
         app.kubernetes.io/instance: "{{ .Release.Name }}"
     spec:
+      securityContext:
+        fsGroup: 1654
+        runAsUser: 1654
       containers:
         - name: "aspire-dashboard"
           image: "{{ .Values.aspire.image }}"
@@ -42,6 +45,10 @@ spec:
               value: "Unsecured"
             - name: "Dashboard__ApplicationName"
               value: "Netptune"
+            - name: "Dashboard__Data__PersistenceMode"
+              value: "Resume"
+            - name: "Dashboard__Data__Directory"
+              value: "/observability/aspire-dashboard"
             - name: "Dashboard__Otlp__AuthMode"
               value: "ApiKey"
             - name: "Dashboard__TelemetryLimits__MaxLogCount"
@@ -63,6 +70,9 @@ spec:
             - name: "otlp-http"
               protocol: "TCP"
               containerPort: 18890
+          volumeMounts:
+            - name: "observability-data"
+              mountPath: "/observability"
           livenessProbe:
             httpGet:
               path: "/health"
@@ -79,4 +89,8 @@ spec:
             failureThreshold: 3
           resources:
 {{- toYaml .Values.aspire.resources | nindent 12 }}
+      volumes:
+        - name: "observability-data"
+          persistentVolumeClaim:
+            claimName: "observability-data"
 {{- end }}

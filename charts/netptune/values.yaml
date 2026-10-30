@@ -50,6 +50,8 @@ persistence:
     size: "40Gi"
   nats:
     size: "40Gi"
+  observability:
+    size: "40Gi"
 
 adminAccess:
   github_user: "JoelCrosby"
@@ -86,8 +88,7 @@ aspire:
       memory: "128Mi"
     limits:
       memory: "1Gi"
-  # Telemetry is held in memory only and is lost when the pod restarts.
-  # These caps bound how much memory the dashboard can consume.
+  # Telemetry is persisted to SQLite on the observability-data volume.
   telemetryLimits:
     maxLogCount: 10000
     maxTraceCount: 10000
