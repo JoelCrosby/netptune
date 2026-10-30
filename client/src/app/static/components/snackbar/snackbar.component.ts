@@ -73,11 +73,24 @@ const TYPE_ICONS: Record<SnackbarType, LucideIconInput | null> = {
       @keyframes snackbar-enter {
         from {
           opacity: 0;
-          transform: translateY(12px) scale(0.96);
+          transform: translateY(-12px) scale(0.96);
         }
         to {
           opacity: 1;
           transform: none;
+        }
+      }
+
+      @media (min-width: 48rem) {
+        @keyframes snackbar-enter {
+          from {
+            opacity: 0;
+            transform: translateY(12px) scale(0.96);
+          }
+          to {
+            opacity: 1;
+            transform: none;
+          }
         }
       }
     `,
