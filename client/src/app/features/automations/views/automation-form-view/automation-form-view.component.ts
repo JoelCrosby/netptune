@@ -196,7 +196,15 @@ type AutomationFlowStepKey = 'settings' | 'trigger' | 'conditions' | number;
                 type="button"
                 [disabled]="saving.pending()"
                 (click)="onSubmit()">
-                {{ isEdit() ? 'Save Automation' : 'Create Automation' }}
+                @if (isEdit()) {
+                  <span i18n="Button that saves changes to an automation">
+                    Save Automation
+                  </span>
+                } @else {
+                  <span i18n="Button that creates an automation">
+                    Create Automation
+                  </span>
+                }
               </button>
             </div>
           </header>
@@ -582,10 +590,7 @@ export class AutomationFormViewComponent {
 
   readonly conditionsSummary = computed(() => {
     const statuses = this.taskStatuses();
-    const segments = describeConditionsStepSummary(
-      this.triggerPreview(),
-      statuses
-    );
+    const segments = describeConditionsStepSummary(this.triggerPreview());
 
     return toTextSegments(segments, statuses);
   });
@@ -750,6 +755,7 @@ export class AutomationFormViewComponent {
       ownerId: null,
       clearOwner: false,
       assigneeIds: type === AutomationActionType.createTask ? [] : null,
+      appendAssignees: false,
       copyAssignees: false,
       linkRelationTypeId: null,
       relationOperation:
@@ -835,7 +841,11 @@ export class AutomationFormViewComponent {
 
     this.saving.run(save.pipe(takeUntilDestroyed(this.destroyRef)), {
       onSuccess: (rule) => {
-        this.snackbar.open(id ? 'Automation updated' : 'Automation created');
+        this.snackbar.open(
+          id
+            ? $localize`:Confirmation after saving an automation:Automation updated`
+            : $localize`:Confirmation after creating an automation:Automation created`
+        );
         void this.router.navigate(id ? ['../'] : ['../', rule.id], {
           relativeTo: this.route,
         });
@@ -920,6 +930,7 @@ export class AutomationFormViewComponent {
       ownerId: null,
       clearOwner: false,
       assigneeIds: null,
+      appendAssignees: false,
       addTags: [],
       removeTags: [],
       startDate: null,

@@ -180,10 +180,7 @@ export class AutomationRuleSummaryComponent {
 
   conditionsSummary(): TextSegment[] {
     const statuses = this.statuses();
-    const segments = describeAutomationConditionsSegments(
-      this.trigger(),
-      statuses
-    );
+    const segments = describeAutomationConditionsSegments(this.trigger());
 
     return toTextSegments(segments, statuses);
   }

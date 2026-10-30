@@ -154,20 +154,40 @@ import {
 
       <div class="flex flex-col gap-2">
         <app-checkbox
-          [checked]="isReplacingAssignees()"
-          (changed)="patch.emit({ assigneeIds: $event ? [] : null })">
-          <span i18n="Action that replaces the task assignees">
-            Replace assignees
+          [checked]="isUpdatingAssignees()"
+          (changed)="
+            patch.emit({
+              assigneeIds: $event ? [] : null,
+              appendAssignees: false,
+            })
+          ">
+          <span i18n="Action that changes the task assignees">
+            Update assignees
           </span>
         </app-checkbox>
-        @if (isReplacingAssignees()) {
+        @if (isUpdatingAssignees()) {
+          <app-form-select
+            i18n-label="Label of the assignee update mode field"
+            label="Mode"
+            [noMargin]="true"
+            [value]="isAppendingAssignees()"
+            (changed)="patch.emit({ appendAssignees: $event })">
+            <app-form-select-option [value]="false">
+              <span i18n="Option that replaces the task assignees">
+                Replace assignees
+              </span>
+            </app-form-select-option>
+            <app-form-select-option [value]="true">
+              <span
+                i18n="Option that adds users to the existing task assignees">
+                Add to assignees
+              </span>
+            </app-form-select-option>
+          </app-form-select>
           <app-form-select-tags
             i18n-label="Label of the assignees field"
             label="Assignees"
-            i18n-placeholder="
-              Placeholder text: Choose assignees; leave empty to unassign all
-            "
-            placeholder="Choose assignees; leave empty to unassign all"
+            [placeholder]="assigneesPlaceholder()"
             [value]="action().assigneeIds ?? []"
             (changed)="patch.emit({ assigneeIds: $event })">
             @for (user of users(); track user.id) {
@@ -422,8 +442,16 @@ export class AutomationTaskUpdateEditorComponent {
     () => this.action().clearDescription === true
   );
   readonly shouldClearOwner = computed(() => this.action().clearOwner === true);
-  readonly isReplacingAssignees = computed(
+  readonly isUpdatingAssignees = computed(
     () => this.action().assigneeIds !== null
+  );
+  readonly isAppendingAssignees = computed(
+    () => this.action().appendAssignees === true
+  );
+  readonly assigneesPlaceholder = computed(() =>
+    this.isAppendingAssignees()
+      ? $localize`:Placeholder of the assignees field when adding assignees:Choose assignees to add`
+      : $localize`:Placeholder of the assignees field when replacing assignees:Choose assignees; leave empty to unassign all`
   );
   readonly shouldClearEstimate = computed(
     () => this.action().clearEstimate === true

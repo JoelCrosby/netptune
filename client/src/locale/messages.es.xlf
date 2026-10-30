@@ -12,6 +12,16 @@
         <target>Espacios de trabajo</target>
       </segment>
     </unit>
+    <unit id="6097124224289190693">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:162</note>
+        <note category="description">Automation form validation error</note>
+      </notes>
+      <segment state="translated">
+        <source>Choose at least one workspace role to notify.</source>
+        <target>Elige al menos un rol del espacio de trabajo al que notificar.</target>
+      </segment>
+    </unit>
     <unit id="6097221033230214756">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:63</note>
@@ -219,7 +229,7 @@
     </unit>
     <unit id="6164922890839038809">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:286,293</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:294,301</note>
         <note category="description">How many automation actions are in use. USED is that count, LIMIT the maximum</note>
       </notes>
       <segment state="initial">
@@ -965,7 +975,7 @@
     </unit>
     <unit id="2289246811733951782">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:457</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:424</note>
         <note category="description">Automation trigger description</note>
       </notes>
       <segment state="translated">
@@ -1872,6 +1882,16 @@
         <target>Resolver marcas de tareas</target>
       </segment>
     </unit>
+    <unit id="9018167576424947945">
+      <notes>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:201,203</note>
+        <note category="description">Button that saves changes to an automation</note>
+      </notes>
+      <segment state="translated">
+        <source> Save Automation </source>
+        <target> Guardar automatización </target>
+      </segment>
+    </unit>
     <unit id="2122122363042197554">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:529</note>
@@ -1880,6 +1900,16 @@
       <segment state="translated">
         <source>View Service Accounts</source>
         <target>Ver las cuentas de servicio</target>
+      </segment>
+    </unit>
+    <unit id="2123849051857230107">
+      <notes>
+        <note category="location">src/app/core/automations/automation-copy.ts:743</note>
+        <note category="description">Notification recipients when no workspace roles are chosen</note>
+      </notes>
+      <segment state="translated">
+        <source>workspace roles</source>
+        <target>roles del espacio de trabajo</target>
       </segment>
     </unit>
     <unit id="2128755808672960949">
@@ -2215,6 +2245,16 @@
         <target>No se ha podido actualizar el permiso. Vuelve a intentarlo.</target>
       </segment>
     </unit>
+    <unit id="7727358814329370401">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:345</note>
+        <note category="description">Automation form validation error</note>
+      </notes>
+      <segment state="translated">
+        <source>Due-date lead time must be 0 to 365 days.</source>
+        <target>La antelación respecto a la fecha de vencimiento debe estar entre 0 y 365 días.</target>
+      </segment>
+    </unit>
     <unit id="7729368131710513135">
       <notes>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:237,239</note>
@@ -2263,6 +2303,16 @@
       <segment state="translated">
         <source>S</source>
         <target>S</target>
+      </segment>
+    </unit>
+    <unit id="3254123755159477718">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:263</note>
+        <note category="description">Automation form validation error</note>
+      </notes>
+      <segment state="translated">
+        <source>Complete each configured task date update.</source>
+        <target>Completa cada actualización de fecha configurada.</target>
       </segment>
     </unit>
     <unit id="3101405940446847368">
@@ -2367,7 +2417,7 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:212,215</note>
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:80,82</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:540</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:271</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:273</note>
         <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:133,136</note>
         <note category="location">src/app/features/boards/components/move-tasks-dialog/move-tasks-dialog.component.ts:76,79</note>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:102,105</note>
@@ -2680,7 +2730,7 @@
         <note category="location">src/app/core/services/task-commands.service.ts:243</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:160</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:539</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:270</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:272</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:798</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:820</note>
         <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:195</note>
@@ -2736,6 +2786,16 @@
       <segment state="translated">
         <source>Delete Board</source>
         <target>Eliminar el tablero</target>
+      </segment>
+    </unit>
+    <unit id="8878445523344517933">
+      <notes>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:847</note>
+        <note category="description">Confirmation after creating an automation</note>
+      </notes>
+      <segment state="translated">
+        <source>Automation created</source>
+        <target>Automatización creada</target>
       </segment>
     </unit>
     <unit id="5887960889618527515">
@@ -2819,6 +2879,16 @@
         <target> Creado <ph id="0" equiv="WHEN" disp="{{ task.createdAt | fromNow // i18n(ph=&quot;WHEN&quot;) }}"/> </target>
       </segment>
     </unit>
+    <unit id="2854533082304894851">
+      <notes>
+        <note category="location">src/app/core/automations/automation-copy.ts:906</note>
+        <note category="description">Task change in an automation summary</note>
+      </notes>
+      <segment state="translated">
+        <source>set the estimate</source>
+        <target>establecer la estimación</target>
+      </segment>
+    </unit>
     <unit id="2854805906147535167">
       <notes>
         <note category="location">src/app/features/queries/views/queries-view/queries-view.component.ts:157</note>
@@ -2887,6 +2957,16 @@
       <segment state="translated">
         <source>Tasks Re-assigned</source>
         <target>Tareas reasignadas</target>
+      </segment>
+    </unit>
+    <unit id="1713271461473302108">
+      <notes>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:172,173</note>
+        <note category="description">Label of the assignee update mode field</note>
+      </notes>
+      <segment state="translated">
+        <source>Mode</source>
+        <target>Modo</target>
       </segment>
     </unit>
     <unit id="171368812856780023">
@@ -3223,7 +3303,7 @@
     </unit>
     <unit id="3119596725788894513">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:213,214</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:221,222</note>
         <note category="description">Heading of the setup part of the rule</note>
       </notes>
       <segment state="initial">
@@ -3766,7 +3846,7 @@
     </unit>
     <unit id="1460148493925263836">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:615</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:620</note>
         <note category="description">Description of the automation settings step</note>
       </notes>
       <segment state="initial">
@@ -4273,7 +4353,7 @@
     </unit>
     <unit id="2952923210661330049">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:619</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:624</note>
         <note category="description">Description of the automation trigger step</note>
       </notes>
       <segment state="initial">
@@ -4643,7 +4723,7 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-rule-rail.component.ts:73,75</note>
         <note category="location">src/app/features/automations/components/automation-run-history.component.ts:478</note>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:237,238</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:245,246</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-automation-diff.component.ts:245</note>
         <note category="description">Heading of the conditions part of the rule</note>
       </notes>
@@ -5055,6 +5135,16 @@
         <target><ph id="0" equiv="ENTITY" disp="this.entityTypeLabel()"/> con el flujo de trabajo <ph id="1" equiv="TEMPLATE" disp="this.templateName()"/></target>
       </segment>
     </unit>
+    <unit id="743566291166416394">
+      <notes>
+        <note category="location">src/app/core/automations/automation-copy.ts:937</note>
+        <note category="description">Task change in an automation summary</note>
+      </notes>
+      <segment state="translated">
+        <source>add 1 assignee</source>
+        <target>añadir 1 persona asignada</target>
+      </segment>
+    </unit>
     <unit id="7436816029991922180">
       <notes>
         <note category="location">src/app/entry/components/setup-creation-summary/setup-creation-summary.component.ts:98</note>
@@ -5094,6 +5184,16 @@
       <segment state="translated">
         <source>After</source>
         <target>Después</target>
+      </segment>
+    </unit>
+    <unit id="6372679823212219573">
+      <notes>
+        <note category="location">src/app/core/automations/automation-copy.ts:938</note>
+        <note category="description">Task change in an automation summary. COUNT is greater than one</note>
+      </notes>
+      <segment state="translated">
+        <source>add <ph id="0" equiv="COUNT" disp="count"/> assignees</source>
+        <target>añadir <ph id="0" equiv="COUNT" disp="count"/> personas asignadas</target>
       </segment>
     </unit>
     <unit id="7445388612819913138">
@@ -5138,7 +5238,7 @@
     </unit>
     <unit id="3432932818049197043">
       <notes>
-        <note category="location">src/app/core/automations/automation-flow-copy.ts:143</note>
+        <note category="location">src/app/core/automations/automation-flow-copy.ts:142</note>
         <note category="description">Title of the conditions step. COUNT is greater than one</note>
       </notes>
       <segment state="translated">
@@ -5600,7 +5700,7 @@
     </unit>
     <unit id="5503995259826837262">
       <notes>
-        <note category="location">src/app/core/automations/automation-flow-copy.ts:72</note>
+        <note category="location">src/app/core/automations/automation-flow-copy.ts:71</note>
         <note category="description">Shown in place of the service account an automation runs as when none is chosen</note>
       </notes>
       <segment state="initial">
@@ -5651,7 +5751,7 @@
     <unit id="676130444518246482">
       <notes>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:49</note>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:240,242</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:260,262</note>
         <note category="description">Label of the estimate-unit field</note>
       </notes>
       <segment state="translated">
@@ -5678,7 +5778,7 @@
         <note category="location">src/app/core/tasks/task-columns.ts:137</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:64</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:106,108</note>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:166,168</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:189,190</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:394</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:314</note>
         <note category="description">Task field that an automation can watch for changes</note>
@@ -5686,6 +5786,16 @@
       <segment state="translated">
         <source>Assignees</source>
         <target>Personas asignadas</target>
+      </segment>
+    </unit>
+    <unit id="1719671700347902625">
+      <notes>
+        <note category="location">src/app/core/automations/automation-copy.ts:887</note>
+        <note category="description">Task change in an automation summary. DATE_UPDATE describes the new date</note>
+      </notes>
+      <segment state="translated">
+        <source>start date: <ph id="0" equiv="DATE_UPDATE" disp="describeDateUpdate(action.startDate)"/></source>
+        <target>fecha de inicio: <ph id="0" equiv="DATE_UPDATE" disp="describeDateUpdate(action.startDate)"/></target>
       </segment>
     </unit>
     <unit id="8851067750279637711">
@@ -5852,6 +5962,16 @@
       <segment state="translated">
         <source>Ok</source>
         <target>Aceptar</target>
+      </segment>
+    </unit>
+    <unit id="8721146433575989462">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:219</note>
+        <note category="description">Automation form validation error</note>
+      </notes>
+      <segment state="translated">
+        <source>Relation actions need a relation.</source>
+        <target>Las acciones de relación necesitan una relación.</target>
       </segment>
     </unit>
     <unit id="721238037037697089">
@@ -6277,6 +6397,16 @@
         <target> Límite en dólares estadounidenses </target>
       </segment>
     </unit>
+    <unit id="5332983460447314770">
+      <notes>
+        <note category="location">src/app/core/automations/automation-copy.ts:916</note>
+        <note category="description">Task change in an automation summary</note>
+      </notes>
+      <segment state="translated">
+        <source>move to a sprint</source>
+        <target>mover a un sprint</target>
+      </segment>
+    </unit>
     <unit id="533409430255690539">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:253,255</note>
@@ -6348,6 +6478,16 @@
         <target>Gestionar la clave de <ph id="0" equiv="provider" disp="this.data.label"/></target>
       </segment>
     </unit>
+    <unit id="6353207650879811696">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:198</note>
+        <note category="description">Automation form validation error</note>
+      </notes>
+      <segment state="translated">
+        <source>Complete each configured task date.</source>
+        <target>Completa cada fecha de tarea configurada.</target>
+      </segment>
+    </unit>
     <unit id="6353362142589022681">
       <notes>
         <note category="location">src/app/features/queries/models/task-query-copy.ts:9</note>
@@ -6407,6 +6547,16 @@
       <segment state="translated">
         <source>On <ph id="0" equiv="COUNT" disp="count"/> boards</source>
         <target>En <ph id="0" equiv="COUNT" disp="count"/> tableros</target>
+      </segment>
+    </unit>
+    <unit id="8554930606670469153">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:111</note>
+        <note category="description">Automation form validation error</note>
+      </notes>
+      <segment state="translated">
+        <source>Add at least one action.</source>
+        <target>Añade al menos una acción.</target>
       </segment>
     </unit>
     <unit id="9021131006692744653">
@@ -6727,7 +6877,7 @@
     </unit>
     <unit id="3960833224413056151">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:1027</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:1016</note>
         <note category="description">Short automation trigger label. FIELDS is a list of field names</note>
       </notes>
       <segment state="translated">
@@ -7323,6 +7473,16 @@
         <target>Configuración del flujo de trabajo</target>
       </segment>
     </unit>
+    <unit id="1649836839130371747">
+      <notes>
+        <note category="location">src/app/core/automations/automation-copy.ts:831</note>
+        <note category="description">Task change in an automation summary. STATUS is a status name</note>
+      </notes>
+      <segment state="translated">
+        <source>status to <ph id="0" equiv="STATUS" disp="status"/></source>
+        <target>estado a <ph id="0" equiv="STATUS" disp="status"/></target>
+      </segment>
+    </unit>
     <unit id="360719289424276870">
       <notes>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:75,77</note>
@@ -7859,6 +8019,16 @@
       <segment state="initial">
         <source>Go to Assistant Key Settings</source>
         <target>Ir a la configuración de la clave del asistente</target>
+      </segment>
+    </unit>
+    <unit id="390927307085402665">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:230</note>
+        <note category="description">Automation form validation error</note>
+      </notes>
+      <segment state="translated">
+        <source>Choose a task to link to.</source>
+        <target>Elige una tarea que vincular.</target>
       </segment>
     </unit>
     <unit id="3911323019910272488">
@@ -8477,7 +8647,7 @@
     </unit>
     <unit id="7476100456417725474">
       <notes>
-        <note category="location">src/app/core/automations/automation-flow-copy.ts:156</note>
+        <note category="location">src/app/core/automations/automation-flow-copy.ts:154</note>
         <note category="description">Summary of the conditions step when it has none</note>
       </notes>
       <segment state="initial">
@@ -8667,6 +8837,16 @@
       <segment state="translated">
         <source>Audit</source>
         <target>Auditoría</target>
+      </segment>
+    </unit>
+    <unit id="9124745300075448812">
+      <notes>
+        <note category="location">src/app/core/automations/automation-copy.ts:899</note>
+        <note category="description">Task change in an automation summary</note>
+      </notes>
+      <segment state="translated">
+        <source>clear the estimate</source>
+        <target>borrar la estimación</target>
       </segment>
     </unit>
     <unit id="9126383792072202008">
@@ -9379,12 +9559,22 @@
     </unit>
     <unit id="42047551574822775">
       <notes>
-        <note category="location">src/app/core/automations/automation-flow-copy.ts:101</note>
+        <note category="location">src/app/core/automations/automation-flow-copy.ts:100</note>
         <note category="description">Who an automation acts as and where it listens. ACCOUNT is a service account, BOARD a board name</note>
       </notes>
       <segment state="initial">
         <source>Runs as <ph id="0" equiv="ACCOUNT" disp="account"/> on the <ph id="1" equiv="BOARD" disp="name"/> board</source>
         <target>Se ejecuta como <ph id="0" equiv="ACCOUNT" disp="account"/> en el tablero <ph id="1" equiv="BOARD" disp="name"/></target>
+      </segment>
+    </unit>
+    <unit id="4650584184260812670">
+      <notes>
+        <note category="location">src/app/core/automations/automation-copy.ts:922</note>
+        <note category="description">Task change in an automation summary</note>
+      </notes>
+      <segment state="translated">
+        <source>move to a board group</source>
+        <target>mover a un grupo del tablero</target>
       </segment>
     </unit>
     <unit id="4655283754161670601">
@@ -9426,6 +9616,16 @@
       <segment state="translated">
         <source>Restored the version from <ph id="0" equiv="WHEN" disp="restoredFrom"/></source>
         <target>Se restauró la versión de <ph id="0" equiv="WHEN" disp="restoredFrom"/></target>
+      </segment>
+    </unit>
+    <unit id="6314049972479947514">
+      <notes>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:846</note>
+        <note category="description">Confirmation after saving an automation</note>
+      </notes>
+      <segment state="translated">
+        <source>Automation updated</source>
+        <target>Automatización actualizada</target>
       </segment>
     </unit>
     <unit id="6317126528752584322">
@@ -9470,7 +9670,7 @@
     </unit>
     <unit id="1289251122134818702">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:465</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:432</note>
         <note category="description">Automation trigger description</note>
       </notes>
       <segment state="translated">
@@ -10258,7 +10458,7 @@
     </unit>
     <unit id="2174353170206211338">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:617</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:622</note>
         <note category="description">Description of the automation conditions step</note>
       </notes>
       <segment state="initial">
@@ -10721,7 +10921,7 @@
     </unit>
     <unit id="8071193694806274835">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:1095</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:1086</note>
         <note category="description">Short automation action detail. COUNT is greater than one</note>
       </notes>
       <segment state="translated">
@@ -10853,7 +11053,7 @@
     </unit>
     <unit id="7998546634092617403">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:278,280</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:286,288</note>
         <note category="description">Button that adds another automation action</note>
       </notes>
       <segment state="translated">
@@ -10942,6 +11142,16 @@
         <target>Creada a partir de una revisión de <pc id="0" equivStart="START_TAG_BUTTON" equivEnd="CLOSE_TAG_BUTTON" type="other" dispStart="&lt;button type=&quot;button&quot; class=&quot;text-primary cursor-pointer font-medium&quot; (click)=&quot;openParent()&quot;&gt;" dispEnd="&lt;/button&gt;"> <ph id="1" equiv="TASK" disp="{{ origin.parentSystemId ?? &apos;&apos; // i18n(ph=&quot;TASK&quot;) }}"/> </pc> · aceptada por <ph id="2" equiv="NAME" disp="{{ origin.acceptedByDisplayName ?? &apos;&apos; // i18n(ph=&quot;NAME&quot;) }}"/> <ph id="3" equiv="TIME" disp="{{ origin.acceptedAt | fromNow // i18n(ph=&quot;TIME&quot;) }}"/></target>
       </segment>
     </unit>
+    <unit id="1505274466151243496">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:252</note>
+        <note category="description">Automation form validation error</note>
+      </notes>
+      <segment state="translated">
+        <source>Choose at least one assignee to add.</source>
+        <target>Elige al menos una persona que asignar.</target>
+      </segment>
+    </unit>
     <unit id="1509364563909331398">
       <notes>
         <note category="location">src/app/features/automations/components/automation-conditions-editor.component.ts:38,41</note>
@@ -11001,6 +11211,16 @@
       <segment state="translated">
         <source><ph id="0" equiv="COUNT" disp="count"/> filters</source>
         <target><ph id="0" equiv="COUNT" disp="count"/> filtros</target>
+      </segment>
+    </unit>
+    <unit id="7940271704378752815">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:361</note>
+        <note category="description">Automation form validation error</note>
+      </notes>
+      <segment state="translated">
+        <source>Sprint lead time must be 0 to 365 days.</source>
+        <target>La antelación respecto al fin del sprint debe estar entre 0 y 365 días.</target>
       </segment>
     </unit>
     <unit id="7943500979556068029">
@@ -11137,7 +11357,7 @@
     <unit id="4774743033649921775">
       <notes>
         <note category="location">src/app/features/automations/components/automation-rule-rail.component.ts:82,85</note>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:246,248</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:254,256</note>
         <note category="description">Marks the conditions section as not required</note>
       </notes>
       <segment state="initial">
@@ -11192,6 +11412,16 @@
       <segment state="initial">
         <source>{VAR_PLURAL, plural, =1 {Replaces the assignees on 1 selected task.} other {Replaces the assignees on <ph id="0" equiv="INTERPOLATION"/> selected tasks.}}</source>
         <target>{VAR_PLURAL, plural, =1 {Reemplaza las personas asignadas en 1 tarea seleccionada.} other {Reemplaza las personas asignadas en <ph id="0" equiv="INTERPOLATION"/> tareas seleccionadas.}}</target>
+      </segment>
+    </unit>
+    <unit id="8745519897141770821">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:328</note>
+        <note category="description">Automation form validation error</note>
+      </notes>
+      <segment state="translated">
+        <source>Choose at least one task field to watch.</source>
+        <target>Elige al menos un campo de tarea que vigilar.</target>
       </segment>
     </unit>
     <unit id="8748180536879356854">
@@ -11321,7 +11551,7 @@
     <unit id="5908963172898140460">
       <notes>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:126,128</note>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:186,188</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:206,208</note>
         <note category="description">Placeholder text: Choose tags to add</note>
       </notes>
       <segment state="translated">
@@ -11340,7 +11570,7 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:153,154</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:155,157</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:139,141</note>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:398</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:418</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:45</note>
         <note category="description">Task field that an automation can watch for changes</note>
       </notes>
@@ -11391,7 +11621,7 @@
     </unit>
     <unit id="7892912711626443915">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:209,211</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:217,219</note>
         <note category="description">Accessible label of the automation steps list</note>
       </notes>
       <segment state="initial">
@@ -11580,7 +11810,7 @@
     </unit>
     <unit id="5690056637770435279">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:318,326</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:326,334</note>
         <note category="description">Position of the open step in the automation. STEP is its number, TOTAL the number of steps</note>
       </notes>
       <segment state="initial">
@@ -11915,7 +12145,7 @@
     </unit>
     <unit id="6552202920426821264">
       <notes>
-        <note category="location">src/app/core/automations/automation-flow-copy.ts:167</note>
+        <note category="location">src/app/core/automations/automation-flow-copy.ts:165</note>
         <note category="description">Heading of a follow-on action in the rule</note>
       </notes>
       <segment state="translated">
@@ -11935,7 +12165,7 @@
     </unit>
     <unit id="6555318547274416232">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:254,255</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:274,275</note>
         <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:78</note>
         <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:163</note>
         <note category="description">Label of the value field</note>
@@ -11943,6 +12173,16 @@
       <segment state="translated">
         <source>Value</source>
         <target>Valor</target>
+      </segment>
+    </unit>
+    <unit id="6557362678930490616">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:407</note>
+        <note category="description">Automation form validation error</note>
+      </notes>
+      <segment state="translated">
+        <source>Condition groups can be nested up to 4 levels.</source>
+        <target>Los grupos de condiciones pueden anidarse hasta 4 niveles.</target>
       </segment>
     </unit>
     <unit id="7048712132697913811">
@@ -12248,7 +12488,7 @@
     </unit>
     <unit id="8233185078584262941">
       <notes>
-        <note category="location">src/app/core/automations/automation-flow-copy.ts:85</note>
+        <note category="location">src/app/core/automations/automation-flow-copy.ts:84</note>
         <note category="description">Where an automation listens. SPRINT is a sprint name</note>
       </notes>
       <segment state="initial">
@@ -12320,7 +12560,7 @@
     </unit>
     <unit id="8069987570423373735">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:1101</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:1092</note>
         <note category="description">Short automation action detail. COUNT is greater than one</note>
       </notes>
       <segment state="translated">
@@ -12506,6 +12746,16 @@
       <segment>
         <source>Time zone</source>
         <target>Zona horaria</target>
+      </segment>
+    </unit>
+    <unit id="4874557648100218053">
+      <notes>
+        <note category="location">src/app/core/automations/automation-copy.ts:875</note>
+        <note category="description">Task change in an automation summary. TAGS is a list of tag names</note>
+      </notes>
+      <segment state="initial">
+        <source>add tags <ph id="0" equiv="TAGS" disp="action.addTags.join(&apos;, &apos;)"/></source>
+        <target>añadir las etiquetas <ph id="0" equiv="TAGS" disp="joinNaturalList(action.addTags)"/></target>
       </segment>
     </unit>
     <unit id="3541398472508734323">
@@ -12719,6 +12969,16 @@
         <target>Todas las tareas vinculadas</target>
       </segment>
     </unit>
+    <unit id="6914859344028357867">
+      <notes>
+        <note category="location">src/app/core/automations/automation-copy.ts:853</note>
+        <note category="description">Task change in an automation summary</note>
+      </notes>
+      <segment state="translated">
+        <source>set the description</source>
+        <target>establecer la descripción</target>
+      </segment>
+    </unit>
     <unit id="6914923766677741984">
       <notes>
         <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:344</note>
@@ -12805,7 +13065,7 @@
         <note category="location">src/app/features/automations/components/automation-rule-rail.component.ts:61,63</note>
         <note category="location">src/app/features/automations/components/automation-rule-summary.component.ts:71,74</note>
         <note category="location">src/app/features/automations/components/automation-run-history.component.ts:438</note>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:225,226</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:233,234</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-automation-diff.component.ts:219</note>
         <note category="description">Heading of the trigger part of the rule</note>
       </notes>
@@ -12886,7 +13146,7 @@
     </unit>
     <unit id="8663691758840275478">
       <notes>
-        <note category="location">src/app/core/automations/automation-flow-copy.ts:166</note>
+        <note category="location">src/app/core/automations/automation-flow-copy.ts:164</note>
         <note category="location">src/app/features/automations/components/automation-rule-summary.component.ts:125,128</note>
         <note category="description">Heading of the first action in the rule</note>
       </notes>
@@ -13120,8 +13380,8 @@
     </unit>
     <unit id="7343642247493540451">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:604</note>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:668</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:609</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:673</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:63</note>
         <note category="description">Heading of the automation trigger step</note>
       </notes>
@@ -13336,6 +13596,16 @@
       <segment>
         <source>Download this export</source>
         <target>Descargar esta exportación</target>
+      </segment>
+    </unit>
+    <unit id="7047355952686823049">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:150</note>
+        <note category="description">Automation form validation error</note>
+      </notes>
+      <segment state="translated">
+        <source>Choose at least one user to notify.</source>
+        <target>Elige al menos un usuario al que notificar.</target>
       </segment>
     </unit>
     <unit id="7047572971445448461">
@@ -13564,6 +13834,16 @@
         <target> Borrar descripción </target>
       </segment>
     </unit>
+    <unit id="1758041683277838315">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:240</note>
+        <note category="description">Automation form validation error</note>
+      </notes>
+      <segment state="translated">
+        <source>Task update actions need at least one field update.</source>
+        <target>Las acciones de actualización de tarea necesitan al menos un cambio de campo.</target>
+      </segment>
+    </unit>
     <unit id="1263525353518630430">
       <notes>
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:127,129</note>
@@ -13606,8 +13886,8 @@
     </unit>
     <unit id="4936999816903178036">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:160,162</note>
-        <note category="description">Action that replaces the task assignees</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:177,179</note>
+        <note category="description">Option that replaces the task assignees</note>
       </notes>
       <segment state="translated">
         <source> Replace assignees </source>
@@ -13637,8 +13917,8 @@
     </unit>
     <unit id="2790722573443430248">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:170,172</note>
-        <note category="description">Placeholder text: Choose assignees; leave empty to unassign all</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:454</note>
+        <note category="description">Placeholder of the assignees field when replacing assignees</note>
       </notes>
       <segment state="translated">
         <source>Choose assignees; leave empty to unassign all</source>
@@ -13647,7 +13927,7 @@
     </unit>
     <unit id="8858497430333317910">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:184,185</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:204,205</note>
         <note category="description">Label of the add tags field</note>
       </notes>
       <segment state="translated">
@@ -13657,7 +13937,7 @@
     </unit>
     <unit id="6236311670364192011">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:198,199</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:218,219</note>
         <note category="description">Label of the remove tags field</note>
       </notes>
       <segment state="translated">
@@ -13678,7 +13958,7 @@
     </unit>
     <unit id="3474269564285715792">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:200,202</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:220,222</note>
         <note category="description">Placeholder text: Choose tags to remove</note>
       </notes>
       <segment state="translated">
@@ -13689,7 +13969,7 @@
     <unit id="8279959485865788028">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/pickers/task-estimate-picker.component.ts:98</note>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:234,236</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:254,256</note>
         <note category="description">Accessible label for the control that changes a task&apos;s estimate</note>
       </notes>
       <segment state="translated">
@@ -13761,7 +14041,7 @@
     </unit>
     <unit id="4993066231165110063">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:275,277</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:295,297</note>
         <note category="description">Action that removes the task estimate</note>
       </notes>
       <segment state="translated">
@@ -13782,7 +14062,7 @@
     </unit>
     <unit id="3003891067674753190">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:284,286</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:304,306</note>
         <note category="description">Label of the move to sprint field</note>
       </notes>
       <segment state="translated">
@@ -13802,7 +14082,7 @@
     </unit>
     <unit id="6096337112846411396">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:291,293</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:311,313</note>
         <note category="description">Option that leaves the task sprint unchanged</note>
       </notes>
       <segment state="translated">
@@ -13812,7 +14092,7 @@
     </unit>
     <unit id="1262014541474769532">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:309,312</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:329,332</note>
         <note category="description">Action that removes the task from its sprint</note>
       </notes>
       <segment state="translated">
@@ -13852,7 +14132,7 @@
     </unit>
     <unit id="8951751805390485436">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:316,318</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:336,338</note>
         <note category="description">Label of the move to board group field</note>
       </notes>
       <segment state="translated">
@@ -13862,7 +14142,7 @@
     </unit>
     <unit id="2431549921365856140">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:322,324</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:342,344</note>
         <note category="description">Option that leaves the board group unchanged</note>
       </notes>
       <segment state="translated">
@@ -13872,7 +14152,7 @@
     </unit>
     <unit id="8041787960786960687">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:347,349</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:367,369</note>
         <note category="description">Option that leaves the date unchanged</note>
       </notes>
       <segment state="translated">
@@ -13902,7 +14182,7 @@
     </unit>
     <unit id="1815539532540276970">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:351,353</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:371,373</note>
         <note category="description">Action that sets a specific date</note>
       </notes>
       <segment state="translated">
@@ -13912,7 +14192,7 @@
     </unit>
     <unit id="6295913046422808463">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:355,357</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:375,377</note>
         <note category="description">Date mode: a number of calendar days from the run date</note>
       </notes>
       <segment state="translated">
@@ -13953,7 +14233,7 @@
     </unit>
     <unit id="519136026111560472">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:360,362</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:380,382</note>
         <note category="description">Date mode: a number of working days from the run date</note>
       </notes>
       <segment state="translated">
@@ -13963,7 +14243,7 @@
     </unit>
     <unit id="1537678119914591602">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:364,365</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:384,385</note>
         <note category="description">Action that removes the date</note>
       </notes>
       <segment state="translated">
@@ -13973,7 +14253,7 @@
     </unit>
     <unit id="4817914611213853415">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:384,385</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:404,405</note>
         <note category="description">Label of the days from run date field</note>
       </notes>
       <segment state="translated">
@@ -14013,7 +14293,7 @@
     </unit>
     <unit id="6544864607379277800">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:386,388</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:406,408</note>
         <note category="description">Explains how to set a date before the run date</note>
       </notes>
       <segment state="translated">
@@ -14038,7 +14318,7 @@
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:129,133</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-date-field.component.ts:42</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-date-field.component.ts:43</note>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:397</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:417</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:43</note>
         <note category="description">Task field that an automation can watch for changes</note>
       </notes>
@@ -15034,6 +15314,16 @@
         <target> Preguntar al asistente </target>
       </segment>
     </unit>
+    <unit id="880590019506708092">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:367</note>
+        <note category="description">Automation form validation error. COUNT is greater than one</note>
+      </notes>
+      <segment state="translated">
+        <source>Choose at most <ph id="0" equiv="COUNT" disp="maxTargetBranches"/> target branches.</source>
+        <target>Elige como máximo <ph id="0" equiv="COUNT" disp="maxTargetBranches"/> ramas de destino.</target>
+      </segment>
+    </unit>
     <unit id="8808562628765178233">
       <notes>
         <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:116</note>
@@ -15560,6 +15850,16 @@
         <target>contiene</target>
       </segment>
     </unit>
+    <unit id="3266697432196813057">
+      <notes>
+        <note category="location">src/app/core/automations/automation-copy.ts:947</note>
+        <note category="description">Task change in an automation summary. COUNT is greater than one</note>
+      </notes>
+      <segment state="translated">
+        <source>replace the assignees with <ph id="0" equiv="COUNT" disp="count"/> users</source>
+        <target>sustituir las personas asignadas por <ph id="0" equiv="COUNT" disp="count"/> usuarios</target>
+      </segment>
+    </unit>
     <unit id="3268147477051436079">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-message.component.ts:80,84</note>
@@ -15950,6 +16250,16 @@
         <target>El usuario cuyo cambio ejecutó la regla</target>
       </segment>
     </unit>
+    <unit id="4497065029852292989">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:182</note>
+        <note category="description">Automation form validation error</note>
+      </notes>
+      <segment state="translated">
+        <source>Create task actions need a task name.</source>
+        <target>Las acciones de creación de tarea necesitan un nombre de tarea.</target>
+      </segment>
+    </unit>
     <unit id="4497346320249564712">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:45,47</note>
@@ -16231,8 +16541,7 @@
     </unit>
     <unit id="6019801849755519469">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:229</note>
-        <note category="location">src/app/core/automations/automation-copy.ts:510</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:494</note>
         <note category="description">Stands in for the watched fields when none are chosen</note>
       </notes>
       <segment state="translated">
@@ -16256,7 +16565,7 @@
     </unit>
     <unit id="8226595017058819046">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:424</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:391</note>
         <note category="description">Automation trigger description</note>
       </notes>
       <segment state="translated">
@@ -16266,7 +16575,7 @@
     </unit>
     <unit id="6020531299552383916">
       <notes>
-        <note category="location">src/app/core/automations/automation-flow-copy.ts:87</note>
+        <note category="location">src/app/core/automations/automation-flow-copy.ts:86</note>
         <note category="description">Where an automation listens when it covers every task</note>
       </notes>
       <segment state="initial">
@@ -16286,7 +16595,7 @@
     </unit>
     <unit id="6027936776709447988">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:426</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:393</note>
         <note category="description">Automation trigger description</note>
       </notes>
       <segment state="translated">
@@ -16296,7 +16605,7 @@
     </unit>
     <unit id="5739101849785781342">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:428</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:395</note>
         <note category="description">Automation trigger description</note>
       </notes>
       <segment state="translated">
@@ -16318,7 +16627,7 @@
     </unit>
     <unit id="6889806069691569993">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:432</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:399</note>
         <note category="description">Automation trigger description</note>
       </notes>
       <segment state="translated">
@@ -16338,7 +16647,7 @@
     </unit>
     <unit id="1868277924307510629">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:434</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:401</note>
         <note category="description">Automation trigger description</note>
       </notes>
       <segment state="translated">
@@ -16348,7 +16657,7 @@
     </unit>
     <unit id="862908943282518396">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:438</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:405</note>
         <note category="description">Automation trigger description</note>
       </notes>
       <segment state="translated">
@@ -16368,7 +16677,7 @@
     </unit>
     <unit id="7236209677089110597">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:440</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:407</note>
         <note category="description">Automation trigger description</note>
       </notes>
       <segment state="translated">
@@ -16378,7 +16687,7 @@
     </unit>
     <unit id="4087095748184770775">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:442</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:409</note>
         <note category="description">Automation trigger description</note>
       </notes>
       <segment state="translated">
@@ -16388,7 +16697,7 @@
     </unit>
     <unit id="5179287323267860080">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:473</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:440</note>
         <note category="description">Automation trigger description</note>
       </notes>
       <segment state="translated">
@@ -16407,7 +16716,7 @@
     </unit>
     <unit id="5667333682919111082">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:474</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:441</note>
         <note category="description">Automation trigger description. DAYS is a count greater than one</note>
       </notes>
       <segment state="translated">
@@ -16428,7 +16737,7 @@
     </unit>
     <unit id="714104267047738799">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:479</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:446</note>
         <note category="description">Automation trigger description</note>
       </notes>
       <segment state="translated">
@@ -16468,7 +16777,7 @@
     </unit>
     <unit id="5778963516993841383">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:480</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:447</note>
         <note category="description">Automation trigger description. DAYS is a count greater than one</note>
       </notes>
       <segment state="translated">
@@ -16478,7 +16787,7 @@
     </unit>
     <unit id="3038566315337282485">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:485</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:452</note>
         <note category="description">Automation trigger description</note>
       </notes>
       <segment state="translated">
@@ -16498,7 +16807,7 @@
     </unit>
     <unit id="5822400241112958496">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:489</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:456</note>
         <note category="description">Automation trigger description</note>
       </notes>
       <segment state="translated">
@@ -16508,7 +16817,7 @@
     </unit>
     <unit id="6861697904465799596">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:490</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:457</note>
         <note category="description">Automation trigger description. DAYS is a count greater than one</note>
       </notes>
       <segment state="translated">
@@ -16518,7 +16827,7 @@
     </unit>
     <unit id="2877169383275852601">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:495</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:462</note>
         <note category="description">Automation trigger description</note>
       </notes>
       <segment state="translated">
@@ -16568,7 +16877,7 @@
     </unit>
     <unit id="5434456505438295210">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:499</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:466</note>
         <note category="description">Automation trigger description</note>
       </notes>
       <segment state="translated">
@@ -16598,7 +16907,7 @@
     </unit>
     <unit id="7408548108482203185">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:500</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:467</note>
         <note category="description">Automation trigger description. DAYS is a count greater than one</note>
       </notes>
       <segment state="translated">
@@ -16618,21 +16927,21 @@
     </unit>
     <unit id="3975108382595868936">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:515</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:487</note>
         <note category="description">Automation trigger description. FIELDS is a list of field names and CONDITIONS a condition summary</note>
       </notes>
-      <segment state="translated">
-        <source>When a task&apos;s <ph id="0" equiv="FIELDS" disp="fieldText"/> changes, if <ph id="1" equiv="CONDITIONS" disp="describeConditionGroup(trigger.conditionGroup, statuses)"/></source>
+      <segment state="initial">
+        <source>When a task&apos;s <ph id="0" equiv="FIELDS" disp="watchedFieldsText(trigger)"/> changes, if <ph id="1" equiv="CONDITIONS" disp="conditions"/></source>
         <target>Cuando cambia <ph id="0" equiv="FIELDS" disp="fieldText"/> de una tarea, si <ph id="1" equiv="CONDITIONS" disp="describeConditionGroup(trigger.conditionGroup, statuses)"/></target>
       </segment>
     </unit>
     <unit id="4262977846085022165">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:518</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:480</note>
         <note category="description">Automation trigger description. FIELDS is a list of field names</note>
       </notes>
-      <segment state="translated">
-        <source>When a task&apos;s <ph id="0" equiv="FIELDS" disp="fieldText"/> changes</source>
+      <segment state="initial">
+        <source>When a task&apos;s <ph id="0" equiv="FIELDS" disp="watchedFieldsText(trigger)"/> changes</source>
         <target>Cuando cambia <ph id="0" equiv="FIELDS" disp="fieldText"/> de una tarea</target>
       </segment>
     </unit>
@@ -16658,7 +16967,7 @@
     </unit>
     <unit id="8864329926850607537">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:552</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:516</note>
         <note category="description">Automation condition summary. FIELD is a field name</note>
       </notes>
       <segment state="translated">
@@ -16708,7 +17017,7 @@
     </unit>
     <unit id="8017617826629641144">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:554</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:518</note>
         <note category="description">Automation condition summary. FIELD is a field name and VALUE the compared value</note>
       </notes>
       <segment state="translated">
@@ -16718,7 +17027,7 @@
     </unit>
     <unit id="1096849646848371561">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:556</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:520</note>
         <note category="description">Automation condition summary. FIELD is a field name and VALUE the compared value</note>
       </notes>
       <segment state="translated">
@@ -16728,7 +17037,7 @@
     </unit>
     <unit id="1778704429559578376">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:558</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:522</note>
         <note category="description">Automation condition summary. FIELD is a field name and VALUE the compared value</note>
       </notes>
       <segment state="translated">
@@ -16738,7 +17047,7 @@
     </unit>
     <unit id="8095810021112091561">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:560</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:524</note>
         <note category="description">Automation condition summary. FIELD is a field name</note>
       </notes>
       <segment state="translated">
@@ -16758,7 +17067,7 @@
     </unit>
     <unit id="3606812607516218575">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:562</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:526</note>
         <note category="description">Automation condition summary. FIELD is a field name</note>
       </notes>
       <segment state="translated">
@@ -16768,11 +17077,11 @@
     </unit>
     <unit id="1745473315403337470">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:564</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:528</note>
         <note category="description">Automation condition summary. SUBJECT is the compared value, or the field name when there is none</note>
       </notes>
-      <segment state="translated">
-        <source><ph id="0" equiv="SUBJECT" disp="value.trim() || field"/> is added</source>
+      <segment state="initial">
+        <source><ph id="0" equiv="SUBJECT" disp="conditionValue ?? field"/> is added</source>
         <target><ph id="0" equiv="SUBJECT" disp="value.trim() || field"/> se añade</target>
       </segment>
     </unit>
@@ -16798,11 +17107,11 @@
     </unit>
     <unit id="3206350855592091313">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:566</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:530</note>
         <note category="description">Automation condition summary. SUBJECT is the compared value, or the field name when there is none</note>
       </notes>
-      <segment state="translated">
-        <source><ph id="0" equiv="SUBJECT" disp="value.trim() || field"/> is removed</source>
+      <segment state="initial">
+        <source><ph id="0" equiv="SUBJECT" disp="conditionValue ?? field"/> is removed</source>
         <target><ph id="0" equiv="SUBJECT" disp="value.trim() || field"/> se elimina</target>
       </segment>
     </unit>
@@ -16850,7 +17159,7 @@
     </unit>
     <unit id="619731489205106073">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:594</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:543</note>
         <note category="description">Automation action summary. FLAG is the flag name</note>
       </notes>
       <segment state="translated">
@@ -16860,7 +17169,7 @@
     </unit>
     <unit id="910019488589763658">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:595</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:544</note>
         <note category="description">Automation action summary when the flag has no name</note>
       </notes>
       <segment state="translated">
@@ -16900,7 +17209,7 @@
     </unit>
     <unit id="7787043747271951847">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:600</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:552</note>
         <note category="description">Automation action summary. COMMENT is the comment text</note>
       </notes>
       <segment state="translated">
@@ -16910,7 +17219,7 @@
     </unit>
     <unit id="7802738260373305301">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:601</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:553</note>
         <note category="description">Automation action summary when the comment is empty</note>
       </notes>
       <segment state="translated">
@@ -16920,7 +17229,7 @@
     </unit>
     <unit id="5820916965989631010">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:734</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:690</note>
         <note category="description">Shown when no notification recipients have been chosen</note>
       </notes>
       <segment state="translated">
@@ -16930,7 +17239,7 @@
     </unit>
     <unit id="6250238304089497077">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:755</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:714</note>
         <note category="description">Shown when no workspace roles have been chosen</note>
       </notes>
       <segment state="translated">
@@ -16940,7 +17249,7 @@
     </unit>
     <unit id="7777581102835837419">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:761</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:720</note>
         <note category="description">Notification recipients. ROLE is a workspace role name</note>
       </notes>
       <segment state="translated">
@@ -16950,7 +17259,7 @@
     </unit>
     <unit id="94973602992075959">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:791</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:750</note>
         <note category="description">Notification recipients, exactly one chosen user</note>
       </notes>
       <segment state="translated">
@@ -16971,7 +17280,7 @@
     </unit>
     <unit id="2825872265156103296">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:792</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:751</note>
         <note category="description">Notification recipients. COUNT is a number greater than one</note>
       </notes>
       <segment state="translated">
@@ -17001,7 +17310,7 @@
     </unit>
     <unit id="1653304208405766934">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:806</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:765</note>
         <note category="description">Automation action summary</note>
       </notes>
       <segment state="translated">
@@ -17050,6 +17359,16 @@
         <target>No se pudo guardar ese cambio</target>
       </segment>
     </unit>
+    <unit id="5150702312194973502">
+      <notes>
+        <note category="location">src/app/core/automations/automation-copy.ts:572</note>
+        <note category="description">Automation action summary. AUDIENCE is who is notified</note>
+      </notes>
+      <segment state="translated">
+        <source>Notify <ph id="0" equiv="AUDIENCE" disp="audience"/></source>
+        <target>Notificar a <ph id="0" equiv="AUDIENCE" disp="audience"/></target>
+      </segment>
+    </unit>
     <unit id="5151267613413369127">
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-what-step.component.ts:65,66</note>
@@ -17062,7 +17381,7 @@
     </unit>
     <unit id="8815827077002938200">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:809</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:768</note>
         <note category="description">Automation action summary</note>
       </notes>
       <segment state="translated">
@@ -17092,7 +17411,7 @@
     </unit>
     <unit id="584050110232025320">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:815</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:774</note>
         <note category="description">Automation action summary. NAME is the task name</note>
       </notes>
       <segment state="translated">
@@ -17133,7 +17452,7 @@
     </unit>
     <unit id="8117726667015044486">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:816</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:775</note>
         <note category="description">Automation action summary when the new task has no name</note>
       </notes>
       <segment state="translated">
@@ -17143,7 +17462,7 @@
     </unit>
     <unit id="5295561279421276704">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:819</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:778</note>
         <note category="description">Automation action summary. ACTION is a create-task phrase such as &apos;Create task &quot;Fix bug&quot;&apos;</note>
       </notes>
       <segment state="translated">
@@ -17173,7 +17492,7 @@
     </unit>
     <unit id="9039374050327070348">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:827</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:786</note>
         <note category="description">Automation action summary</note>
       </notes>
       <segment state="translated">
@@ -17183,7 +17502,7 @@
     </unit>
     <unit id="8586111764993408865">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:838</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:797</note>
         <note category="description">Automation action summary</note>
       </notes>
       <segment state="translated">
@@ -17193,7 +17512,7 @@
     </unit>
     <unit id="1319649645409479349">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:839</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:798</note>
         <note category="description">Automation action summary. COUNT is greater than one</note>
       </notes>
       <segment state="translated">
@@ -17233,7 +17552,7 @@
     </unit>
     <unit id="5176622981716622911">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:844</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:803</note>
         <note category="description">Automation action summary</note>
       </notes>
       <segment state="translated">
@@ -17243,7 +17562,7 @@
     </unit>
     <unit id="7377803053765268941">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:845</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:804</note>
         <note category="description">Automation action summary. COUNT is greater than one</note>
       </notes>
       <segment state="translated">
@@ -17283,7 +17602,7 @@
     </unit>
     <unit id="2533649065343508753">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:849</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:808</note>
         <note category="description">Automation action summary</note>
       </notes>
       <segment state="translated">
@@ -17293,12 +17612,22 @@
     </unit>
     <unit id="2594181621331961568">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:850</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:809</note>
         <note category="description">Automation action summary. COUNT is greater than one</note>
       </notes>
       <segment state="translated">
         <source>Delete the task after <ph id="0" equiv="COUNT" disp="amount"/> minutes</source>
         <target>Eliminar la tarea después de <ph id="0" equiv="COUNT" disp="amount"/> minutos</target>
+      </segment>
+    </unit>
+    <unit id="2597818260577507250">
+      <notes>
+        <note category="location">src/app/core/automations/automation-copy.ts:881</note>
+        <note category="description">Task change in an automation summary. TAGS is a list of tag names</note>
+      </notes>
+      <segment state="initial">
+        <source>remove tags <ph id="0" equiv="TAGS" disp="action.removeTags.join(&apos;, &apos;)"/></source>
+        <target>quitar las etiquetas <ph id="0" equiv="TAGS" disp="joinNaturalList(action.removeTags)"/></target>
       </segment>
     </unit>
     <unit id="2598307855043548288">
@@ -17313,7 +17642,7 @@
     </unit>
     <unit id="2830756539061078536">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:861</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:820</note>
         <note category="description">Automation action summary when no fields are set</note>
       </notes>
       <segment state="translated">
@@ -17323,7 +17652,7 @@
     </unit>
     <unit id="5152378222182902818">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:947</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:957</note>
         <note category="description">Stands in for a date that has not been chosen yet</note>
       </notes>
       <segment state="translated">
@@ -17333,7 +17662,7 @@
     </unit>
     <unit id="6987640386287909114">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:950</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:960</note>
         <note category="description">Date offset in an automation summary. OFFSET is a number of days, which may be negative</note>
       </notes>
       <segment state="translated">
@@ -17349,6 +17678,16 @@
       <segment state="translated">
         <source>Nothing in <ph id="0" equiv="FOLDER" disp="folder"/> yet</source>
         <target>Todavía no hay nada en <ph id="0" equiv="FOLDER" disp="folder"/></target>
+      </segment>
+    </unit>
+    <unit id="6995352275393710245">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:138</note>
+        <note category="description">Automation form validation error</note>
+      </notes>
+      <segment state="translated">
+        <source>Notify actions need at least one recipient.</source>
+        <target>Las acciones de notificación necesitan al menos un destinatario.</target>
       </segment>
     </unit>
     <unit id="6997967012661620403">
@@ -17373,7 +17712,7 @@
     </unit>
     <unit id="6765436849411220761">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:952</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:962</note>
         <note category="description">Date offset in an automation summary. OFFSET is a number of working days, which may be negative</note>
       </notes>
       <segment state="translated">
@@ -17381,9 +17720,19 @@
         <target><ph id="0" equiv="OFFSET" disp="update.offset ?? 0"/> días laborables desde la fecha de ejecución</target>
       </segment>
     </unit>
+    <unit id="5178376193390466759">
+      <notes>
+        <note category="location">src/app/core/automations/automation-copy.ts:837</note>
+        <note category="description">Task change in an automation summary. PRIORITY is a priority name</note>
+      </notes>
+      <segment state="translated">
+        <source>priority to <ph id="0" equiv="PRIORITY" disp="taskPriorityLabels[action.priority]"/></source>
+        <target>prioridad a <ph id="0" equiv="PRIORITY" disp="taskPriorityLabels[action.priority]"/></target>
+      </segment>
+    </unit>
     <unit id="517843663917688276">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:954</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:964</note>
         <note category="description">Automation date update that empties the field</note>
       </notes>
       <segment state="translated">
@@ -17403,7 +17752,7 @@
     </unit>
     <unit id="3520292130575080377">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:1094</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:1085</note>
         <note category="description">Short automation action detail</note>
       </notes>
       <segment state="translated">
@@ -17433,7 +17782,7 @@
     </unit>
     <unit id="3527168416064159731">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:984</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:973</note>
         <note category="description">Stands in for a status that has not been chosen</note>
       </notes>
       <segment state="translated">
@@ -17468,12 +17817,22 @@
     <unit id="2650015568553587457">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:205,206</note>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:637</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:642</note>
         <note category="description">Shown when a single automation fails to load</note>
       </notes>
       <segment state="translated">
         <source>Automation could not be loaded</source>
         <target>No se pudo cargar la automatización</target>
+      </segment>
+    </unit>
+    <unit id="2650065913803359151">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:288</note>
+        <note category="description">Automation form validation error</note>
+      </notes>
+      <segment state="translated">
+        <source>Delete task action delay cannot exceed 365 days.</source>
+        <target>El retraso de la acción de eliminar tarea no puede superar los 365 días.</target>
       </segment>
     </unit>
     <unit id="3640373857486272611">
@@ -17648,6 +18007,16 @@
         <target><ph id="0" equiv="conversations" disp="spend.conversations"/> conversaciones · <ph id="1" equiv="tokens" disp="tokens"/> tokens. Netptune no cobra nada: esta es la factura de tu proveedor.</target>
       </segment>
     </unit>
+    <unit id="8455800317165170923">
+      <notes>
+        <note category="location">src/app/core/automations/automation-copy.ts:946</note>
+        <note category="description">Task change in an automation summary</note>
+      </notes>
+      <segment state="translated">
+        <source>replace the assignees with 1 user</source>
+        <target>sustituir las personas asignadas por 1 usuario</target>
+      </segment>
+    </unit>
     <unit id="4308396666254841731">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:464</note>
@@ -17728,6 +18097,16 @@
         <target> Historial de ejecuciones </target>
       </segment>
     </unit>
+    <unit id="6766517338141061862">
+      <notes>
+        <note category="location">src/app/core/automations/automation-copy.ts:912</note>
+        <note category="description">Task change in an automation summary</note>
+      </notes>
+      <segment state="translated">
+        <source>move to the backlog</source>
+        <target>mover al backlog</target>
+      </segment>
+    </unit>
     <unit id="1102717806459547726">
       <notes>
         <note category="location">src/app/features/automations/components/automation-run-history.component.ts:121</note>
@@ -17781,6 +18160,16 @@
         <target>{VAR_PLURAL, plural, =1 {tarea seleccionada} other {tareas seleccionadas}}</target>
       </segment>
     </unit>
+    <unit id="7399447739064801797">
+      <notes>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:212</note>
+        <note category="description">Confirmation after turning an automation off</note>
+      </notes>
+      <segment state="translated">
+        <source>Automation disabled</source>
+        <target>Automatización desactivada</target>
+      </segment>
+    </unit>
     <unit id="975709858305882846">
       <notes>
         <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:46</note>
@@ -17794,7 +18183,7 @@
     <unit id="976634642400414372">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:493</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:218</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:220</note>
         <note category="description">Error after failing to update an automation</note>
       </notes>
       <segment state="translated">
@@ -17815,7 +18204,7 @@
     <unit id="7223592009379733387">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:537</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:268</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:270</note>
         <note category="description">Title of the confirmation dialog for deleting an automation</note>
       </notes>
       <segment state="translated">
@@ -17826,7 +18215,7 @@
     <unit id="2841737509665294845">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:553</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:289</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:291</note>
         <note category="description">Confirmation after deleting an automation</note>
       </notes>
       <segment state="translated">
@@ -17867,7 +18256,7 @@
     <unit id="3476741388176301769">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:559</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:295</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:297</note>
         <note category="description">Error after failing to delete an automation</note>
       </notes>
       <segment state="translated">
@@ -17900,7 +18289,7 @@
     </unit>
     <unit id="4930506384627295710">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:600</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:605</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:474</note>
         <note category="location">src/app/workspace.routes.ts:147</note>
         <note category="description">Heading of the automation settings step</note>
@@ -17922,8 +18311,8 @@
     </unit>
     <unit id="2079395509894825886">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:602</note>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:670</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:607</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:675</note>
         <note category="description">Heading of the automation conditions step</note>
       </notes>
       <segment state="translated">
@@ -17933,7 +18322,7 @@
     </unit>
     <unit id="428134870314022743">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:845</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:855</note>
         <note category="description">Error after failing to save an automation</note>
       </notes>
       <segment state="translated">
@@ -18109,8 +18498,9 @@
     </unit>
     <unit id="378048253639190257">
       <notes>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:205,207</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:112,114</note>
-        <note category="description">Button that opens the create-automation form</note>
+        <note category="description">Button that creates an automation</note>
       </notes>
       <segment state="translated">
         <source> Create Automation </source>
@@ -18150,7 +18540,7 @@
     <unit id="6473284394312594965">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:527</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:256</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:258</note>
         <note category="description">Error after failing to clone an automation</note>
       </notes>
       <segment state="translated">
@@ -18497,6 +18887,16 @@
         <target> Salir del espacio de trabajo </target>
       </segment>
     </unit>
+    <unit id="1198874280513067132">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:353</note>
+        <note category="description">Automation form validation error</note>
+      </notes>
+      <segment state="translated">
+        <source>Inactive duration must be 1 to 365 days.</source>
+        <target>La duración de inactividad debe estar entre 1 y 365 días.</target>
+      </segment>
+    </unit>
     <unit id="1074599325149334297">
       <notes>
         <note category="location">src/app/static/components/editor/editor.component.ts:201</note>
@@ -18690,6 +19090,16 @@
       <segment state="translated">
         <source>Board Identifier</source>
         <target>Identificador del tablero</target>
+      </segment>
+    </unit>
+    <unit id="1611905710648746346">
+      <notes>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:213</note>
+        <note category="description">Confirmation after turning an automation on</note>
+      </notes>
+      <segment state="translated">
+        <source>Automation enabled</source>
+        <target>Automatización activada</target>
       </segment>
     </unit>
     <unit id="5810814854864452102">
@@ -19132,6 +19542,17 @@
         <target>Manual</target>
       </segment>
     </unit>
+    <unit id="223445078401835863">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:170</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:207</note>
+        <note category="description">Automation form validation error. VARIABLES is a list of variable names</note>
+      </notes>
+      <segment state="translated">
+        <source>Unknown message variables: <ph id="0" equiv="VARIABLES" disp="invalidMessageVariables.join(&apos;, &apos;)"/>.</source>
+        <target>Variables de mensaje desconocidas: <ph id="0" equiv="VARIABLES" disp="invalidMessageVariables.join(&apos;, &apos;)"/>.</target>
+      </segment>
+    </unit>
     <unit id="4207916966377787111">
       <notes>
         <note category="location">src/app/features/boards/util/board-task-sort.ts:32</note>
@@ -19288,7 +19709,7 @@
     </unit>
     <unit id="7850793503942027037">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:448</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:415</note>
         <note category="description">Automation trigger description</note>
       </notes>
       <segment state="translated">
@@ -19344,6 +19765,16 @@
       <segment state="translated">
         <source>Create your first board to organise and track work for a project.</source>
         <target>Crea tu primer tablero para organizar y seguir el trabajo de un proyecto.</target>
+      </segment>
+    </unit>
+    <unit id="7865645367843822079">
+      <notes>
+        <note category="location">src/app/core/automations/automation-copy.ts:261</note>
+        <note category="description">Shown when an automation has no conditions</note>
+      </notes>
+      <segment state="translated">
+        <source>Every matching task continues</source>
+        <target>Cada tarea coincidente continúa</target>
       </segment>
     </unit>
     <unit id="7868133837803962595">
@@ -19573,6 +20004,16 @@
       <segment state="translated">
         <source> Unassigned </source>
         <target>Sin asignar</target>
+      </segment>
+    </unit>
+    <unit id="8715541440621920625">
+      <notes>
+        <note category="location">src/app/core/automations/automation-copy.ts:819</note>
+        <note category="description">Automation action summary. UPDATES is a list of task changes</note>
+      </notes>
+      <segment state="translated">
+        <source>Update the task: <ph id="0" equiv="UPDATES" disp="joinNaturalList(updates)"/></source>
+        <target>Actualizar la tarea: <ph id="0" equiv="UPDATES" disp="joinNaturalList(updates)"/></target>
       </segment>
     </unit>
     <unit id="8715987800078163957">
@@ -19818,6 +20259,16 @@
         <target>Mes siguiente</target>
       </segment>
     </unit>
+    <unit id="3629648623241034127">
+      <notes>
+        <note category="location">src/app/core/automations/automation-copy.ts:863</note>
+        <note category="description">Task change in an automation summary</note>
+      </notes>
+      <segment state="translated">
+        <source>set the owner</source>
+        <target>establecer el propietario</target>
+      </segment>
+    </unit>
     <unit id="6153898823588732021">
       <notes>
         <note category="location">src/app/features/calendar/components/calendar-toolbar/calendar-toolbar.component.ts:151,152</note>
@@ -20055,6 +20506,16 @@
         <target>Permitir que los miembros usen el asistente</target>
       </segment>
     </unit>
+    <unit id="6501349384135486602">
+      <notes>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:453</note>
+        <note category="description">Placeholder of the assignees field when adding assignees</note>
+      </notes>
+      <segment state="translated">
+        <source>Choose assignees to add</source>
+        <target>Elige los asignados que añadir</target>
+      </segment>
+    </unit>
     <unit id="8302075849472999986">
       <notes>
         <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:97,98</note>
@@ -20087,7 +20548,7 @@
     </unit>
     <unit id="3963418309127517582">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:1105</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:1096</note>
         <note category="description">Short automation action detail</note>
       </notes>
       <segment state="translated">
@@ -20195,6 +20656,16 @@
       <segment>
         <source> Building a preview… </source>
         <target> Generando una vista previa… </target>
+      </segment>
+    </unit>
+    <unit id="3150641520485612968">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:277</note>
+        <note category="description">Automation form validation error</note>
+      </notes>
+      <segment state="translated">
+        <source>Delete task action delay must be a whole number of 0 or more.</source>
+        <target>El retraso de la acción de eliminar tarea debe ser un número entero igual o mayor que 0.</target>
       </segment>
     </unit>
     <unit id="3154294923374510663">
@@ -20457,6 +20928,16 @@
       <segment state="translated">
         <source>Dashboard</source>
         <target>Panel</target>
+      </segment>
+    </unit>
+    <unit id="8150823000382554673">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:126</note>
+        <note category="description">Automation form validation error</note>
+      </notes>
+      <segment state="translated">
+        <source>Add comment actions need a comment.</source>
+        <target>Las acciones de añadir comentario necesitan un comentario.</target>
       </segment>
     </unit>
     <unit id="8156602685712437139">
@@ -20758,7 +21239,7 @@
     </unit>
     <unit id="1557442310664697272">
       <notes>
-        <note category="location">src/app/core/automations/automation-flow-copy.ts:126</note>
+        <note category="location">src/app/core/automations/automation-flow-copy.ts:125</note>
         <note category="description">Summary of the fields a task-changed trigger watches. FIELDS lists them</note>
       </notes>
       <segment state="initial">
@@ -21849,7 +22330,7 @@
     </unit>
     <unit id="4660217943371401570">
       <notes>
-        <note category="location">src/app/core/automations/automation-flow-copy.ts:103</note>
+        <note category="location">src/app/core/automations/automation-flow-copy.ts:102</note>
         <note category="description">Who an automation acts as and where it listens. ACCOUNT is a service account, SPRINT a sprint name</note>
       </notes>
       <segment state="initial">
@@ -21966,6 +22447,16 @@
       <segment state="translated">
         <source>Flow metrics could not be loaded</source>
         <target>No se pudieron cargar las métricas de flujo</target>
+      </segment>
+    </unit>
+    <unit id="4676574090630208280">
+      <notes>
+        <note category="location">src/app/core/automations/automation-copy.ts:942</note>
+        <note category="description">Task change in an automation summary</note>
+      </notes>
+      <segment state="translated">
+        <source>unassign everyone</source>
+        <target>quitar todas las asignaciones</target>
       </segment>
     </unit>
     <unit id="5286842193626986274">
@@ -22393,6 +22884,16 @@
         <target>Comprometido</target>
       </segment>
     </unit>
+    <unit id="2873213581528127650">
+      <notes>
+        <note category="location">src/app/core/automations/automation-copy.ts:567</note>
+        <note category="description">Automation action summary. AUDIENCE is who is notified and MESSAGE the notification text</note>
+      </notes>
+      <segment state="translated">
+        <source>Notify <ph id="0" equiv="AUDIENCE" disp="audience"/>: &quot;<ph id="1" equiv="MESSAGE" disp="action.message"/>&quot;</source>
+        <target>Notificar a <ph id="0" equiv="AUDIENCE" disp="audience"/>: &quot;<ph id="1" equiv="MESSAGE" disp="action.message"/>&quot;</target>
+      </segment>
+    </unit>
     <unit id="1134043805497572295">
       <notes>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:250</note>
@@ -22405,7 +22906,7 @@
     </unit>
     <unit id="1137782839356247508">
       <notes>
-        <note category="location">src/app/core/automations/automation-flow-copy.ts:81</note>
+        <note category="location">src/app/core/automations/automation-flow-copy.ts:80</note>
         <note category="description">Where an automation listens. PROJECT is a project name</note>
       </notes>
       <segment state="initial">
@@ -22444,7 +22945,7 @@
     </unit>
     <unit id="7814526572383963997">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:1100</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:1091</note>
         <note category="description">Short automation action detail</note>
       </notes>
       <segment state="translated">
@@ -22727,7 +23228,7 @@
     </unit>
     <unit id="4019163318135272018">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:1106</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:1097</note>
         <note category="description">Short automation action detail. COUNT is greater than one</note>
       </notes>
       <segment state="translated">
@@ -23300,6 +23801,16 @@
         <target>Dividido</target>
       </segment>
     </unit>
+    <unit id="2161871078253886554">
+      <notes>
+        <note category="location">src/app/core/automations/automation-copy.ts:700</note>
+        <note category="description">Stands in for a user who is no longer in the workspace</note>
+      </notes>
+      <segment state="translated">
+        <source>Unknown user</source>
+        <target>Usuario desconocido</target>
+      </segment>
+    </unit>
     <unit id="216244952523508517">
       <notes>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:121,123</note>
@@ -23713,7 +24224,7 @@
     </unit>
     <unit id="8238024015587306442">
       <notes>
-        <note category="location">src/app/core/automations/automation-flow-copy.ts:83</note>
+        <note category="location">src/app/core/automations/automation-flow-copy.ts:82</note>
         <note category="description">Where an automation listens. BOARD is a board name</note>
       </notes>
       <segment state="initial">
@@ -25452,7 +25963,7 @@
     </unit>
     <unit id="2383349919647471040">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:464</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:431</note>
         <note category="description">Automation trigger description. BRANCHES is a comma-separated list of branch names</note>
       </notes>
       <segment state="translated">
@@ -25672,6 +26183,16 @@
         <target>Visibilidad y acceso</target>
       </segment>
     </unit>
+    <unit id="2050175311892050275">
+      <notes>
+        <note category="location">src/app/core/automations/automation-copy.ts:859</note>
+        <note category="description">Task change in an automation summary</note>
+      </notes>
+      <segment state="translated">
+        <source>clear the owner</source>
+        <target>quitar el propietario</target>
+      </segment>
+    </unit>
     <unit id="2052572547732747214">
       <notes>
         <note category="location">src/app/shell/global-commands.service.ts:306</note>
@@ -25700,6 +26221,16 @@
       <segment state="initial">
         <source>Go to Import &amp; Export</source>
         <target>Ir a importar y exportar</target>
+      </segment>
+    </unit>
+    <unit id="7063429306122513331">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:416</note>
+        <note category="description">Automation form validation error</note>
+      </notes>
+      <segment state="translated">
+        <source>Automations can have up to 50 conditions.</source>
+        <target>Las automatizaciones pueden tener hasta 50 condiciones.</target>
       </segment>
     </unit>
     <unit id="7068860286643870184">
@@ -26416,7 +26947,7 @@
     </unit>
     <unit id="3344679070695709751">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:1080</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:1071</note>
         <note category="description">Short automation action detail</note>
       </notes>
       <segment state="translated">
@@ -26710,12 +27241,22 @@
     </unit>
     <unit id="1015257014958643666">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:676</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:681</note>
         <note category="description">Name of an automation action step. NUMBER is its position</note>
       </notes>
       <segment state="initial">
         <source>Action <ph id="0" equiv="NUMBER" disp="position"/></source>
         <target>Acción <ph id="0" equiv="NUMBER" disp="position"/></target>
+      </segment>
+    </unit>
+    <unit id="1016724707793432659">
+      <notes>
+        <note category="location">src/app/core/automations/automation-copy.ts:978</note>
+        <note category="description">Stands in for a status that no longer exists. ID is its number</note>
+      </notes>
+      <segment state="translated">
+        <source>status #<ph id="0" equiv="ID" disp="statusId"/></source>
+        <target>estado n.º <ph id="0" equiv="ID" disp="statusId"/></target>
       </segment>
     </unit>
     <unit id="1017176843140426408">
@@ -26806,6 +27347,16 @@
       <segment state="translated">
         <source>Service account could not be updated</source>
         <target>No se ha podido actualizar la cuenta de servicio</target>
+      </segment>
+    </unit>
+    <unit id="2461923439010482218">
+      <notes>
+        <note category="location">src/app/core/automations/automation-copy.ts:849</note>
+        <note category="description">Task change in an automation summary</note>
+      </notes>
+      <segment state="translated">
+        <source>clear the description</source>
+        <target>borrar la descripción</target>
       </segment>
     </unit>
     <unit id="29108938894290964">
@@ -27968,6 +28519,16 @@
         <target>Crear</target>
       </segment>
     </unit>
+    <unit id="5442271885711412161">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:118</note>
+        <note category="description">Automation form validation error</note>
+      </notes>
+      <segment state="translated">
+        <source>Flag actions need a flag name.</source>
+        <target>Las acciones de marcado necesitan un nombre de marca.</target>
+      </segment>
+    </unit>
     <unit id="5443314129092514050">
       <notes>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:129</note>
@@ -28313,6 +28874,16 @@
         <target>Trabajó durante <ph id="0" equiv="duration" disp="duration"/> · <ph id="1" equiv="calls" disp="calls"/></target>
       </segment>
     </unit>
+    <unit id="8351348284027717620">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:423</note>
+        <note category="description">Automation form validation error</note>
+      </notes>
+      <segment state="translated">
+        <source>Complete each field condition before saving.</source>
+        <target>Completa cada condición de campo antes de guardar.</target>
+      </segment>
+    </unit>
     <unit id="8351943591470962982">
       <notes>
         <note category="location">src/app/features/auth/components/register/register.component.ts:112,114</note>
@@ -28646,7 +29217,7 @@
     </unit>
     <unit id="3410846701889928256">
       <notes>
-        <note category="location">src/app/core/automations/automation-flow-copy.ts:99</note>
+        <note category="location">src/app/core/automations/automation-flow-copy.ts:98</note>
         <note category="description">Who an automation acts as and where it listens. ACCOUNT is a service account, PROJECT a project name</note>
       </notes>
       <segment state="initial">
@@ -28719,7 +29290,7 @@
     </unit>
     <unit id="8273406842439818387">
       <notes>
-        <note category="location">src/app/core/automations/automation-flow-copy.ts:142</note>
+        <note category="location">src/app/core/automations/automation-flow-copy.ts:141</note>
         <note category="description">Title of the conditions step with one condition</note>
       </notes>
       <segment state="translated">
@@ -29635,6 +30206,16 @@
         <target>Archivar páginas propias</target>
       </segment>
     </unit>
+    <unit id="9075144064524859377">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:190</note>
+        <note category="description">Automation form validation error</note>
+      </notes>
+      <segment state="translated">
+        <source>Create task actions cannot copy and set assignees at the same time.</source>
+        <target>Las acciones de creación de tarea no pueden copiar y establecer las personas asignadas a la vez.</target>
+      </segment>
+    </unit>
     <unit id="1940273102394006005">
       <notes>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:114,117</note>
@@ -29652,6 +30233,16 @@
       <segment state="translated">
         <source> Monthly spend cap </source>
         <target> Límite de gasto mensual </target>
+      </segment>
+    </unit>
+    <unit id="8837180097116489811">
+      <notes>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:183,185</note>
+        <note category="description">Option that adds users to the existing task assignees</note>
+      </notes>
+      <segment state="translated">
+        <source> Add to assignees </source>
+        <target> Añadir a los asignados </target>
       </segment>
     </unit>
     <unit id="8839963009744223515">
@@ -29764,6 +30355,16 @@
         <target>Este espacio de trabajo aún no tiene estados.</target>
       </segment>
     </unit>
+    <unit id="3329689758676914315">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:100</note>
+        <note category="description">Automation form validation error</note>
+      </notes>
+      <segment state="translated">
+        <source>Choose an automation service account.</source>
+        <target>Elige una cuenta de servicio de automatización.</target>
+      </segment>
+    </unit>
     <unit id="6762559989986024448">
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:113</note>
@@ -29772,6 +30373,16 @@
       <segment>
         <source>Audit history</source>
         <target>Historial de auditoría</target>
+      </segment>
+    </unit>
+    <unit id="3330168009632608448">
+      <notes>
+        <note category="location">src/app/core/automations/automation-copy.ts:843</note>
+        <note category="description">Task change in an automation summary. NAME is the new task name</note>
+      </notes>
+      <segment state="translated">
+        <source>name to &quot;<ph id="0" equiv="NAME" disp="action.taskName"/>&quot;</source>
+        <target>nombre a &quot;<ph id="0" equiv="NAME" disp="action.taskName"/>&quot;</target>
       </segment>
     </unit>
     <unit id="3334152991864561474">
@@ -30132,7 +30743,7 @@
     </unit>
     <unit id="753929575723087450">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:1079</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:1070</note>
         <note category="description">Short automation action detail</note>
       </notes>
       <segment state="translated">
@@ -30220,6 +30831,16 @@
         <target>Buscar tareas…</target>
       </segment>
     </unit>
+    <unit id="2301916935238200801">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:337</note>
+        <note category="description">Automation form validation error</note>
+      </notes>
+      <segment state="translated">
+        <source>Unassigned duration must be 1 to 365 days.</source>
+        <target>La duración sin asignar debe estar entre 1 y 365 días.</target>
+      </segment>
+    </unit>
     <unit id="1169166453555057750">
       <notes>
         <note category="location">src/app/shell/command-palette/command-palette.component.ts:224</note>
@@ -30283,7 +30904,7 @@
     </unit>
     <unit id="6285103959017934199">
       <notes>
-        <note category="location">src/app/core/automations/automation-copy.ts:456</note>
+        <note category="location">src/app/core/automations/automation-copy.ts:423</note>
         <note category="description">Automation trigger description. BRANCHES is a comma-separated list of branch names</note>
       </notes>
       <segment state="translated">
@@ -30913,7 +31534,7 @@
     </unit>
     <unit id="6492831808763156510">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:666</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:671</note>
         <note category="location">src/app/features/settings/views/personal-assistant-settings-view/personal-assistant-settings-view.component.ts:45,48</note>
         <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:91,94</note>
         <note category="description">Name of the automation setup step</note>
@@ -31116,6 +31737,16 @@
       <segment state="translated">
         <source> Sign in </source>
         <target>Iniciar sesión</target>
+      </segment>
+    </unit>
+    <unit id="6663907652272929583">
+      <notes>
+        <note category="location">src/app/core/automations/automation-copy.ts:324</note>
+        <note category="description">Automation condition summary. CONDITIONS is a list of conditions none of which may match</note>
+      </notes>
+      <segment state="translated">
+        <source>none of (<ph id="0" equiv="CONDITIONS" disp="slot(0)"/>)</source>
+        <target>ninguna de (<ph id="0" equiv="CONDITIONS" disp="slot(0)"/>)</target>
       </segment>
     </unit>
     <unit id="4928107479724169960">
@@ -31476,6 +32107,16 @@
       <segment state="translated">
         <source>It may have been archived, or the link is out of date.</source>
         <target>Puede que se haya archivado o que el enlace esté desactualizado.</target>
+      </segment>
+    </unit>
+    <unit id="1144387549786578693">
+      <notes>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:165,167</note>
+        <note category="description">Action that changes the task assignees</note>
+      </notes>
+      <segment state="translated">
+        <source> Update assignees </source>
+        <target> Cambiar los asignados </target>
       </segment>
     </unit>
     <unit id="1146060538137839536">
@@ -31903,12 +32544,22 @@
     </unit>
     <unit id="9042757237576370096">
       <notes>
-        <note category="location">src/app/core/automations/automation-flow-copy.ts:105</note>
+        <note category="location">src/app/core/automations/automation-flow-copy.ts:104</note>
         <note category="description">Who an automation acts as when it covers every task. ACCOUNT is a service account</note>
       </notes>
       <segment state="initial">
         <source>Runs as <ph id="0" equiv="ACCOUNT" disp="account"/> on the whole workspace</source>
         <target>Se ejecuta como <ph id="0" equiv="ACCOUNT" disp="account"/> en todo el espacio de trabajo</target>
+      </segment>
+    </unit>
+    <unit id="6501182511573565639">
+      <notes>
+        <note category="location">src/app/core/automations/automation-copy.ts:893</note>
+        <note category="description">Task change in an automation summary. DATE_UPDATE describes the new date</note>
+      </notes>
+      <segment state="translated">
+        <source>due date: <ph id="0" equiv="DATE_UPDATE" disp="describeDateUpdate(action.dueDate)"/></source>
+        <target>fecha de vencimiento: <ph id="0" equiv="DATE_UPDATE" disp="describeDateUpdate(action.dueDate)"/></target>
       </segment>
     </unit>
     <unit id="6396952862144590894">
@@ -32330,7 +32981,7 @@
     </unit>
     <unit id="3992724065871693611">
       <notes>
-        <note category="location">src/app/core/automations/automation-flow-copy.ts:127</note>
+        <note category="location">src/app/core/automations/automation-flow-copy.ts:126</note>
         <note category="description">Summary of a task-changed trigger with no watched fields</note>
       </notes>
       <segment state="initial">
@@ -32391,7 +33042,7 @@
     </unit>
     <unit id="8488967339837812619">
       <notes>
-        <note category="location">src/app/core/automations/automation-flow-copy.ts:138</note>
+        <note category="location">src/app/core/automations/automation-flow-copy.ts:137</note>
         <note category="description">Title of the conditions step when it has none</note>
       </notes>
       <segment state="initial">
@@ -32529,6 +33180,16 @@
         <target>Esta acción usa un tipo de relación que ya no existe.</target>
       </segment>
     </unit>
+    <unit id="2084529408976136746">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:106</note>
+        <note category="description">Automation form validation error</note>
+      </notes>
+      <segment state="translated">
+        <source>Automation name is required.</source>
+        <target>El nombre de la automatización es obligatorio.</target>
+      </segment>
+    </unit>
     <unit id="2085611136494552870">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-date-field.component.ts:27,28</note>
@@ -32621,6 +33282,16 @@
       <segment state="translated">
         <source>Filter tasks</source>
         <target>Filtrar tareas</target>
+      </segment>
+    </unit>
+    <unit id="6107165812022500881">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:91</note>
+        <note category="description">Automation form validation error</note>
+      </notes>
+      <segment state="translated">
+        <source>Choose a single project, board or sprint scope.</source>
+        <target>Elige un único ámbito: proyecto, tablero o sprint.</target>
       </segment>
     </unit>
     <unit id="2034595166058554206">
@@ -32721,6 +33392,16 @@
       <segment state="translated">
         <source>Resize start date</source>
         <target>Ajustar la fecha de inicio</target>
+      </segment>
+    </unit>
+    <unit id="1982024417006368651">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:410</note>
+        <note category="description">Automation form validation error</note>
+      </notes>
+      <segment state="translated">
+        <source>Add at least one condition to each condition group.</source>
+        <target>Añade al menos una condición a cada grupo de condiciones.</target>
       </segment>
     </unit>
     <unit id="1982377256620089345">

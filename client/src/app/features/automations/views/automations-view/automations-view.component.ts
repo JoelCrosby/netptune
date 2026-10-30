@@ -208,7 +208,9 @@ export class AutomationsViewComponent {
       .subscribe({
         next: () => {
           this.snackbar.open(
-            rule.isEnabled ? 'Automation disabled' : 'Automation enabled'
+            rule.isEnabled
+              ? $localize`:Confirmation after turning an automation off:Automation disabled`
+              : $localize`:Confirmation after turning an automation on:Automation enabled`
           );
           this.refresh();
         },

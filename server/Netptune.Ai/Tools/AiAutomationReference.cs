@@ -76,7 +76,7 @@ public static class AiAutomationReference
             [AutomationActionType.FlagTask] = "Raises a flag on the task. flagName, optional flagDescription.",
             [AutomationActionType.UpdateTask] =
                 "Changes the task. At least one of statusId, priority, taskName, taskDescription or clearDescription, "
-                + "ownerId or clearOwner, assigneeIds (replaces the assignees), addTags, removeTags, startDate, "
+                + "ownerId or clearOwner, assigneeIds (replaces the assignees, or adds to them with appendAssignees), addTags, removeTags, startDate, "
                 + "dueDate, estimateType with estimateValue or clearEstimate, sprintId or clearSprint, boardGroupId.",
             [AutomationActionType.AddComment] = "Comments on the task. comment, which may use the variables below.",
             [AutomationActionType.DeleteTask] =

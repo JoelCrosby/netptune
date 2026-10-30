@@ -219,112 +219,47 @@ export function describeAutomationTriggerSegments(
   trigger: AutomationTrigger,
   statuses: Status[] = []
 ): AutomationCopySegment[] {
-  if (trigger.type !== AutomationTriggerType.taskChanged) {
+  const conditionGroup =
+    trigger.type === AutomationTriggerType.taskChanged
+      ? trigger.conditionGroup
+      : null;
+
+  if (!conditionGroup) {
     return textSegments(describeAutomationTrigger(trigger, statuses));
   }
 
-  const fields = trigger.fields?.length
-    ? trigger.fields.map((field) => taskChangeFieldLabels[field])
-    : [
-        $localize`:Stands in for the watched fields when none are chosen:selected fields`,
-      ];
-  const fieldText = joinNaturalList(fields.map(toLowerText), 'or');
-
-  if (trigger.conditionGroup) {
-    return [
-      ...textSegments(`When a task's ${fieldText} changes, if `),
-      ...describeConditionGroupSegments(trigger.conditionGroup, statuses),
-    ];
-  }
-
-  return textSegments(describeAutomationTrigger(trigger, statuses));
+  return fillSlots(describeTaskChangedWithConditions(trigger, slot(0)), [
+    describeConditionGroupSegments(conditionGroup),
+  ]);
 }
 
 export function describeAutomationActionSegments(
   action: AutomationAction,
   statuses: Status[] = []
 ): AutomationCopySegment[] {
-  const hasExpandedTaskUpdate =
-    action.type === AutomationActionType.updateTask &&
-    (action.taskName !== null ||
-      action.taskDescription !== null ||
-      !!action.clearDescription ||
-      action.ownerId !== null ||
-      !!action.clearOwner ||
-      action.assigneeIds !== null ||
-      !!action.addTags?.length ||
-      !!action.removeTags?.length ||
-      action.startDate !== null ||
-      action.dueDate !== null ||
-      action.estimateType !== null ||
-      action.estimateValue !== null ||
-      !!action.clearEstimate ||
-      action.sprintId !== null ||
-      !!action.clearSprint ||
-      action.boardGroupId !== null);
-
-  if (hasExpandedTaskUpdate) {
-    return textSegments(describeAutomationAction(action, statuses));
-  }
-
-  const hasStatusUpdate =
-    action.type === AutomationActionType.updateTask &&
-    isNotNullOrUndefined(action.statusId);
+  const statusId =
+    action.type === AutomationActionType.updateTask ? action.statusId : null;
+  const hasStatusUpdate = isNotNullOrUndefined(statusId);
 
   if (!hasStatusUpdate) {
     return textSegments(describeAutomationAction(action, statuses));
   }
 
-  const updates: AutomationCopySegment[][] = [
-    statusSentence('status to ', action.statusId),
-  ];
-
-  if (isNotNullOrUndefined(action.priority)) {
-    updates.push(
-      textSegments(`priority to ${taskPriorityLabels[action.priority]}`)
-    );
-  }
-
-  return [
-    ...textSegments("Update the task's "),
-    ...joinSegments(updates, ' and '),
-  ];
-}
-
-export function describeAutomationActionsSegments(
-  actions: AutomationAction[],
-  statuses: Status[] = []
-): AutomationCopySegment[] {
-  if (!actions.length) return textSegments('No actions configured');
-
-  return joinSegments(
-    actions.map((action) => describeAutomationActionSegments(action, statuses)),
-    ', then '
-  );
+  return fillSlots(describeUpdateTaskAction(action, slot(0)), [
+    [{ type: 'status', statusId }],
+  ]);
 }
 
 export function describeAutomationConditionsSegments(
-  trigger: AutomationTrigger,
-  statuses: Status[] = []
+  trigger: AutomationTrigger
 ): AutomationCopySegment[] {
   if (trigger.conditionGroup) {
-    return describeConditionGroupSegments(trigger.conditionGroup, statuses);
+    return describeConditionGroupSegments(trigger.conditionGroup);
   }
 
-  return textSegments('Every matching task continues');
-}
-
-export function describeAutomationRuleSegments(
-  trigger: AutomationTrigger,
-  actions: AutomationAction[],
-  statuses: Status[] = []
-): AutomationCopySegment[] {
-  return [
-    ...describeAutomationTriggerSegments(trigger, statuses),
-    ...textSegments(', '),
-    ...describeAutomationActionsSegments(actions, statuses),
-    ...textSegments('.'),
-  ];
+  return textSegments(
+    $localize`:Shown when an automation has no conditions:Every matching task continues`
+  );
 }
 
 export function countAutomationConditions(
@@ -339,74 +274,106 @@ export function countAutomationConditions(
 }
 
 function describeFieldConditionSegments(
-  condition: AutomationFieldCondition,
-  statuses: Status[]
+  condition: AutomationFieldCondition
 ): AutomationCopySegment[] {
-  const hasStatusValue =
-    condition.field === TaskChangeField.status &&
-    condition.value &&
-    Number.isInteger(Number(condition.value));
-  const hasSupportedOperator =
-    condition.operator === AutomationConditionOperator.equals ||
-    condition.operator === AutomationConditionOperator.notEquals;
+  const value = conditionValueSegments(condition);
+  const message = describeFieldConditionMessage(
+    condition,
+    value.length ? slot(0) : null
+  );
 
-  if (!hasStatusValue || !hasSupportedOperator) {
-    return textSegments(describeFieldCondition(condition, statuses));
+  return fillSlots(message, [value]);
+}
+
+function conditionValueSegments(
+  condition: AutomationFieldCondition
+): AutomationCopySegment[] {
+  if (!condition.value) return [];
+
+  const statusId = Number(condition.value);
+  const isStatusValue =
+    condition.field === TaskChangeField.status && Number.isInteger(statusId);
+
+  if (isStatusValue) {
+    return [{ type: 'status', statusId }];
   }
 
-  const operator =
-    condition.operator === AutomationConditionOperator.equals
-      ? 'equals'
-      : 'does not equal';
-
-  return statusSentence(`status ${operator} `, Number(condition.value));
+  return textSegments(quotedValue(condition.value));
 }
 
 function describeConditionGroupSegments(
-  group: AutomationConditionGroup,
-  statuses: Status[]
+  group: AutomationConditionGroup
 ): AutomationCopySegment[] {
   const members = [
-    ...group.conditions.map((condition) =>
-      describeFieldConditionSegments(condition, statuses)
-    ),
+    ...group.conditions.map(describeFieldConditionSegments),
     ...group.groups.map((nestedGroup) => [
       ...textSegments('('),
-      ...describeConditionGroupSegments(nestedGroup, statuses),
+      ...describeConditionGroupSegments(nestedGroup),
       ...textSegments(')'),
     ]),
   ];
-  const separator =
-    group.operator === AutomationConditionGroupOperator.all ? ' and ' : ' or ';
-  const segments = joinSegments(members, separator);
+  const conjunction =
+    group.operator === AutomationConditionGroupOperator.all ? 'and' : 'or';
+  const segments = joinSegmentList(members, conjunction);
 
-  return group.operator === AutomationConditionGroupOperator.none
-    ? [...textSegments('none of ('), ...segments, ...textSegments(')')]
-    : segments;
-}
-
-function statusSentence(
-  prefix: string,
-  statusId: number | null | undefined
-): AutomationCopySegment[] {
-  if (!isNotNullOrUndefined(statusId)) {
-    return textSegments(`${prefix}a selected status`);
+  if (group.operator !== AutomationConditionGroupOperator.none) {
+    return segments;
   }
 
-  return [...textSegments(prefix), { type: 'status', statusId }];
+  return fillSlots(
+    $localize`:Automation condition summary. CONDITIONS is a list of conditions none of which may match:none of (${slot(0)}:CONDITIONS:)`,
+    [segments]
+  );
+}
+
+function toConditionText(
+  segments: AutomationCopySegment[],
+  statuses: Status[]
+): string {
+  return segments
+    .map((segment) => {
+      if (segment.type === 'text') return segment.text;
+
+      return quotedValue(statusLabel(segment.statusId, statuses));
+    })
+    .join('');
+}
+
+function quotedValue(value: string): string {
+  return `“${value}”`;
+}
+
+function slot(index: number): string {
+  return `\uE000${index}\uE001`;
+}
+
+function fillSlots(
+  message: string,
+  slots: AutomationCopySegment[][]
+): AutomationCopySegment[] {
+  return message.split(/\uE000(\d+)\uE001/).flatMap((part, index) => {
+    const isSlot = index % 2 === 1;
+
+    if (isSlot) return slots[Number(part)] ?? [];
+
+    return part ? textSegments(part) : [];
+  });
+}
+
+function joinSegmentList(
+  groups: AutomationCopySegment[][],
+  conjunction: 'and' | 'or'
+): AutomationCopySegment[] {
+  const message = joinNaturalList(
+    groups.map((_, index) => slot(index)),
+    conjunction
+  );
+
+  return fillSlots(message, groups);
 }
 
 function textSegments(text: string): AutomationCopySegment[] {
   return [{ type: 'text', text }];
-}
-
-function joinSegments(
-  groups: AutomationCopySegment[][],
-  separator: string
-): AutomationCopySegment[] {
-  return groups.flatMap((group, index) =>
-    index === 0 ? group : [...textSegments(separator), ...group]
-  );
 }
 
 export function describeAutomationTrigger(
@@ -504,48 +471,45 @@ function describeTaskChangedTrigger(
   trigger: AutomationTrigger,
   statuses: Status[]
 ): string {
+  if (trigger.conditionGroup) {
+    const conditions = describeConditionGroup(trigger.conditionGroup, statuses);
+
+    return describeTaskChangedWithConditions(trigger, conditions);
+  }
+
+  return $localize`:Automation trigger description. FIELDS is a list of field names:When a task's ${watchedFieldsText(trigger)}:FIELDS: changes`;
+}
+
+function describeTaskChangedWithConditions(
+  trigger: AutomationTrigger,
+  conditions: string
+): string {
+  return $localize`:Automation trigger description. FIELDS is a list of field names and CONDITIONS a condition summary:When a task's ${watchedFieldsText(trigger)}:FIELDS: changes, if ${conditions}:CONDITIONS:`;
+}
+
+function watchedFieldsText(trigger: AutomationTrigger): string {
   const fields = trigger.fields?.length
     ? trigger.fields.map((field) => taskChangeFieldLabels[field])
     : [
         $localize`:Stands in for the watched fields when none are chosen:selected fields`,
       ];
-  const fieldText = joinNaturalList(fields.map(toLowerText), 'or');
 
-  if (trigger.conditionGroup) {
-    return $localize`:Automation trigger description. FIELDS is a list of field names and CONDITIONS a condition summary:When a task's ${fieldText}:FIELDS: changes, if ${describeConditionGroup(trigger.conditionGroup, statuses)}:CONDITIONS:`;
-  }
-
-  return $localize`:Automation trigger description. FIELDS is a list of field names:When a task's ${fieldText}:FIELDS: changes`;
+  return joinNaturalList(fields.map(toLowerText), 'or');
 }
 
 function describeConditionGroup(
   group: AutomationConditionGroup,
   statuses: Status[]
 ): string {
-  const members = [
-    ...group.conditions.map((condition) =>
-      describeFieldCondition(condition, statuses)
-    ),
-    ...group.groups.map(
-      (nestedGroup) => `(${describeConditionGroup(nestedGroup, statuses)})`
-    ),
-  ];
-  const conjunction =
-    group.operator === AutomationConditionGroupOperator.all ? 'and' : 'or';
-  const description = joinNaturalList(members, conjunction);
-
-  return group.operator === AutomationConditionGroupOperator.none
-    ? `none of (${description})`
-    : description;
+  return toConditionText(describeConditionGroupSegments(group), statuses);
 }
 
-function describeFieldCondition(
+function describeFieldConditionMessage(
   condition: AutomationFieldCondition,
-  statuses: Status[]
+  conditionValue: string | null
 ): string {
   const field = toLowerText(taskChangeFieldLabels[condition.field]);
-  const conditionValue = describeConditionValue(condition, statuses);
-  const value = conditionValue ? ` “${conditionValue}”` : '';
+  const value = conditionValue ? ` ${conditionValue}` : '';
 
   switch (condition.operator) {
     case AutomationConditionOperator.any:
@@ -561,25 +525,10 @@ function describeFieldCondition(
     case AutomationConditionOperator.isNotEmpty:
       return $localize`:Automation condition summary. FIELD is a field name:${field}:FIELD: is not empty`;
     case AutomationConditionOperator.added:
-      return $localize`:Automation condition summary. SUBJECT is the compared value, or the field name when there is none:${value.trim() || field}:SUBJECT: is added`;
+      return $localize`:Automation condition summary. SUBJECT is the compared value, or the field name when there is none:${conditionValue ?? field}:SUBJECT: is added`;
     case AutomationConditionOperator.removed:
-      return $localize`:Automation condition summary. SUBJECT is the compared value, or the field name when there is none:${value.trim() || field}:SUBJECT: is removed`;
+      return $localize`:Automation condition summary. SUBJECT is the compared value, or the field name when there is none:${conditionValue ?? field}:SUBJECT: is removed`;
   }
-}
-
-function describeConditionValue(
-  condition: AutomationFieldCondition,
-  statuses: Status[]
-): string | null {
-  if (!condition.value) return null;
-
-  if (condition.field !== TaskChangeField.status) return condition.value;
-
-  const statusId = Number(condition.value);
-
-  return Number.isInteger(statusId)
-    ? statusLabel(statusId, statuses)
-    : condition.value;
 }
 
 export function describeAutomationAction(
@@ -594,7 +543,10 @@ export function describeAutomationAction(
         ? $localize`:Automation action summary. FLAG is the flag name:Flag the task as "${action.flagName}:FLAG:"`
         : $localize`:Automation action summary when the flag has no name:Flag the task`;
     case AutomationActionType.updateTask:
-      return describeUpdateTaskAction(action, statuses);
+      return describeUpdateTaskAction(
+        action,
+        statusLabel(action.statusId, statuses)
+      );
     case AutomationActionType.addComment:
       return action.comment
         ? $localize`:Automation action summary. COMMENT is the comment text:Add comment: "${action.comment}:COMMENT:"`
@@ -612,8 +564,12 @@ function describeNotifyAction(action: AutomationAction): string {
   const audience = describeNotificationAudience(action);
 
   return action.message
-    ? `Notify ${audience}: "${action.message}"`
-    : `Notify ${audience}`;
+    ? $localize`:Automation action summary. AUDIENCE is who is notified and MESSAGE the notification text:Notify ${audience}:AUDIENCE:: "${action.message}:MESSAGE:"`
+    : describeNotifyVerb(audience);
+}
+
+function describeNotifyVerb(audience: string): string {
+  return $localize`:Automation action summary. AUDIENCE is who is notified:Notify ${audience}:AUDIENCE:`;
 }
 
 export interface NotificationRecipientPreview {
@@ -739,7 +695,10 @@ function previewChosenUsers(
   const names = chosenIds.map((id) => {
     const user = users.find((candidate) => candidate.id === id);
 
-    return user?.displayName ?? 'Unknown user';
+    return (
+      user?.displayName ??
+      $localize`:Stands in for a user who is no longer in the workspace:Unknown user`
+    );
   });
 
   return { text: joinNaturalList(names), isIncomplete: false };
@@ -781,7 +740,7 @@ export function describeNotificationAudience(action: AutomationAction): string {
 
       return roles.length
         ? joinNaturalList(roles.map((role) => workspaceRoleLabels[role]))
-        : 'workspace roles';
+        : $localize`:Notification recipients when no workspace roles are chosen:workspace roles`;
     }
 
     if (recipient === AutomationNotificationRecipient.specificUsers) {
@@ -852,89 +811,140 @@ function describeDeleteTaskAction(action: AutomationAction): string {
 
 function describeUpdateTaskAction(
   action: AutomationAction,
-  statuses: Status[]
+  status: string
 ): string {
-  const updates = describeTaskUpdates(action, statuses);
+  const updates = describeTaskUpdates(action, status);
 
   return updates.length
-    ? `Update the task's ${joinNaturalList(updates)}`
+    ? $localize`:Automation action summary. UPDATES is a list of task changes:Update the task: ${joinNaturalList(updates)}:UPDATES:`
     : $localize`:Automation action summary when no fields are set:Update the task`;
 }
 
 function describeTaskUpdates(
   action: AutomationAction,
-  statuses: Status[]
+  status: string
 ): string[] {
   const updates: string[] = [];
 
   if (isNotNullOrUndefined(action.statusId)) {
-    updates.push(`status to ${statusLabel(action.statusId, statuses)}`);
+    updates.push(
+      $localize`:Task change in an automation summary. STATUS is a status name:status to ${status}:STATUS:`
+    );
   }
 
   if (isNotNullOrUndefined(action.priority)) {
-    updates.push(`priority to ${taskPriorityLabels[action.priority]}`);
+    updates.push(
+      $localize`:Task change in an automation summary. PRIORITY is a priority name:priority to ${taskPriorityLabels[action.priority]}:PRIORITY:`
+    );
   }
 
   if (action.taskName) {
-    updates.push(`name to "${action.taskName}"`);
+    updates.push(
+      $localize`:Task change in an automation summary. NAME is the new task name:name to "${action.taskName}:NAME:"`
+    );
   }
 
   if (action.clearDescription) {
-    updates.push('clear the description');
+    updates.push(
+      $localize`:Task change in an automation summary:clear the description`
+    );
   } else if (action.taskDescription) {
-    updates.push('set the description');
+    updates.push(
+      $localize`:Task change in an automation summary:set the description`
+    );
   }
 
   if (action.clearOwner) {
-    updates.push('clear the owner');
+    updates.push(
+      $localize`:Task change in an automation summary:clear the owner`
+    );
   } else if (action.ownerId) {
-    updates.push(`owner to user ${action.ownerId}`);
+    updates.push(
+      $localize`:Task change in an automation summary:set the owner`
+    );
   }
 
   if (action.assigneeIds !== null && action.assigneeIds !== undefined) {
     updates.push(
-      action.assigneeIds.length
-        ? `replace assignees with ${action.assigneeIds.length} selected`
-        : 'unassign everyone'
+      describeAssigneeUpdate(action.assigneeIds, !!action.appendAssignees)
     );
   }
 
   if (action.addTags?.length) {
-    updates.push(`add tags ${action.addTags.join(', ')}`);
+    updates.push(
+      $localize`:Task change in an automation summary. TAGS is a list of tag names:add tags ${action.addTags.join(', ')}:TAGS:`
+    );
   }
 
   if (action.removeTags?.length) {
-    updates.push(`remove tags ${action.removeTags.join(', ')}`);
+    updates.push(
+      $localize`:Task change in an automation summary. TAGS is a list of tag names:remove tags ${action.removeTags.join(', ')}:TAGS:`
+    );
   }
 
   if (action.startDate) {
-    updates.push(`start date: ${describeDateUpdate(action.startDate)}`);
+    updates.push(
+      $localize`:Task change in an automation summary. DATE_UPDATE describes the new date:start date: ${describeDateUpdate(action.startDate)}:DATE_UPDATE:`
+    );
   }
 
   if (action.dueDate) {
-    updates.push(`due date: ${describeDateUpdate(action.dueDate)}`);
+    updates.push(
+      $localize`:Task change in an automation summary. DATE_UPDATE describes the new date:due date: ${describeDateUpdate(action.dueDate)}:DATE_UPDATE:`
+    );
   }
 
   if (action.clearEstimate) {
-    updates.push('clear the estimate');
+    updates.push(
+      $localize`:Task change in an automation summary:clear the estimate`
+    );
   } else if (
     isNotNullOrUndefined(action.estimateType) ||
     isNotNullOrUndefined(action.estimateValue)
   ) {
-    updates.push('set the estimate');
+    updates.push(
+      $localize`:Task change in an automation summary:set the estimate`
+    );
   }
 
   if (action.clearSprint) {
-    updates.push('move to the backlog');
+    updates.push(
+      $localize`:Task change in an automation summary:move to the backlog`
+    );
   } else if (isNotNullOrUndefined(action.sprintId)) {
-    updates.push(`move to sprint #${action.sprintId}`);
+    updates.push(
+      $localize`:Task change in an automation summary:move to a sprint`
+    );
   }
 
   if (isNotNullOrUndefined(action.boardGroupId)) {
-    updates.push(`move to board group #${action.boardGroupId}`);
+    updates.push(
+      $localize`:Task change in an automation summary:move to a board group`
+    );
   }
 
   return updates;
+}
+
+function describeAssigneeUpdate(
+  assigneeIds: string[],
+  append: boolean
+): string {
+  const count = assigneeIds.length;
+
+  if (append) {
+    return count === 1
+      ? $localize`:Task change in an automation summary:add 1 assignee`
+      : $localize`:Task change in an automation summary. COUNT is greater than one:add ${count}:COUNT: assignees`;
+  }
+
+  if (!count) {
+    return $localize`:Task change in an automation summary:unassign everyone`;
+  }
+
+  return count === 1
+    ? $localize`:Task change in an automation summary:replace the assignees with 1 user`
+    : $localize`:Task change in an automation summary. COUNT is greater than one:replace the assignees with ${count}:COUNT: users`;
 }
 
 function describeDateUpdate(
@@ -955,27 +965,6 @@ function describeDateUpdate(
   }
 }
 
-export function describeAutomationActions(
-  actions: AutomationAction[],
-  statuses: Status[] = []
-): string {
-  if (!actions.length) {
-    return $localize`:Shown when an automation has no actions:No actions configured`;
-  }
-
-  return actions
-    .map((action) => describeAutomationAction(action, statuses))
-    .join(', then ');
-}
-
-export function describeAutomationRule(
-  trigger: AutomationTrigger,
-  actions: AutomationAction[],
-  statuses: Status[] = []
-): string {
-  return $localize`:Whole automation rule summary. TRIGGER is the trigger sentence and ACTIONS the action sentence:${describeAutomationTrigger(trigger, statuses)}:TRIGGER:, ${describeAutomationActions(actions, statuses)}:ACTIONS:.`;
-}
-
 export function statusLabel(
   statusId: number | null | undefined,
   statuses: Status[] = []
@@ -986,7 +975,7 @@ export function statusLabel(
 
   return (
     statuses.find((status) => status.id === statusId)?.name ??
-    `status #${statusId}`
+    $localize`:Stands in for a status that no longer exists. ID is its number:status #${statusId}:ID:`
   );
 }
 
@@ -1051,7 +1040,7 @@ export function describeAutomationActionChip(
 
 function actionChipVerb(action: AutomationAction): string {
   if (action.type === AutomationActionType.notifyTaskAssignees) {
-    return `Notify ${describeNotificationAudience(action)}`;
+    return describeNotifyVerb(describeNotificationAudience(action));
   }
 
   return actionTypeLabels[action.type];
@@ -1067,7 +1056,9 @@ function actionChipDetail(
     case AutomationActionType.flagTask:
       return quoted(action.flagName);
     case AutomationActionType.updateTask:
-      return joinNaturalList(describeTaskUpdates(action, statuses));
+      return joinNaturalList(
+        describeTaskUpdates(action, statusLabel(action.statusId, statuses))
+      );
     case AutomationActionType.addComment:
       return quoted(action.comment);
     case AutomationActionType.deleteTask:

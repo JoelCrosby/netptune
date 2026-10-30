@@ -234,10 +234,10 @@ export class AiAssistantAutomationDiffComponent {
     const isChanged =
       before !== null &&
       conditionsKey(before.trigger) !== conditionsKey(after.trigger);
-    const summary = describeConditionsStepSummary(after.trigger, statuses);
+    const summary = describeConditionsStepSummary(after.trigger);
     const previous =
       isChanged && before
-        ? describeConditionsStepSummary(before.trigger, statuses)
+        ? describeConditionsStepSummary(before.trigger)
         : null;
 
     return {

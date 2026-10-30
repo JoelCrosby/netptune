@@ -40,6 +40,8 @@ public abstract record AutomationActionFields
 
     public List<string>? AssigneeIds { get; init; }
 
+    public bool AppendAssignees { get; init; }
+
     public List<string> AddTags { get; init; } = [];
 
     public List<string> RemoveTags { get; init; } = [];

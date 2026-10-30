@@ -1,4 +1,5 @@
 import slugify from '@sindresorhus/slugify';
+import { appLocale } from '@core/util/locale';
 
 export const toUrlSlug = (value: string) => slugify(value);
 
@@ -6,15 +7,16 @@ export function toLowerText(value: string): string {
   return value.toLowerCase();
 }
 
+const listFormats = {
+  and: new Intl.ListFormat(appLocale, { type: 'conjunction' }),
+  or: new Intl.ListFormat(appLocale, { type: 'disjunction' }),
+};
+
 export function joinNaturalList(
   values: string[],
   conjunction: 'and' | 'or' = 'and'
 ): string {
-  if (values.length === 0) return '';
-  if (values.length === 1) return values[0];
-  if (values.length === 2) return `${values[0]} ${conjunction} ${values[1]}`;
-
-  return `${values.slice(0, -1).join(', ')} ${conjunction} ${values.at(-1)}`;
+  return listFormats[conjunction].format(values);
 }
 
 export type TextKeys<T> = {

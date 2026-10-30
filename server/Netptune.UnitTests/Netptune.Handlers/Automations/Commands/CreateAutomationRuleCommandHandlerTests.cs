@@ -181,6 +181,35 @@ public class CreateAutomationRuleCommandHandlerTests
     }
 
     [Fact]
+    public async Task Handle_ShouldFail_WhenUpdateTaskActionAppendsNoAssignees()
+    {
+        var request = new AutomationRuleRequest
+        {
+            Name = "Append nobody",
+            Trigger = new AutomationTriggerRequest
+            {
+                Type = AutomationTriggerType.TaskChanged,
+                Fields = [TaskChangeField.Name],
+            },
+            Actions =
+            [
+                new AutomationActionRequest
+                {
+                    Type = AutomationActionType.UpdateTask,
+                    AssigneeIds = [],
+                    AppendAssignees = true,
+                },
+            ],
+        };
+
+        var result = await Handler.Handle(new CreateAutomationRuleCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Contain("require at least one assignee");
+        await Automations.DidNotReceive().AddAsync(Arg.Any<AutomationRule>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task Handle_ShouldRequireReassignPermission_WhenUpdateActionChangesAssignees()
     {
         ServiceAccounts.GetAutomationPrincipal("service-user", 123, Arg.Any<CancellationToken>())

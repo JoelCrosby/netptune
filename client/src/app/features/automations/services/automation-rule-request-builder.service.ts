@@ -88,29 +88,34 @@ function validateScope(draft: AutomationRuleDraft): string | null {
   const scopeCount = scopes.filter((scope) => scope !== null).length;
 
   if (scopeCount > 1) {
-    return 'Choose a single project, board or sprint scope.';
+    return $localize`:Automation form validation error:Choose a single project, board or sprint scope.`;
   }
 
   return null;
 }
 
 function validateExecutionUser(executionUserId: string | null): string | null {
-  return executionUserId ? null : 'Choose an automation service account.';
+  return executionUserId
+    ? null
+    : $localize`:Automation form validation error:Choose an automation service account.`;
 }
 
 function validateName(name: string): string | null {
-  return name.trim() ? null : 'Automation name is required.';
+  return name.trim()
+    ? null
+    : $localize`:Automation form validation error:Automation name is required.`;
 }
 
 function validateActions(actions: AutomationActionRequest[]): string | null {
-  if (!actions.length) return 'Add at least one action.';
+  if (!actions.length)
+    return $localize`:Automation form validation error:Add at least one action.`;
 
   const hasUnnamedFlag = actions.some((action) => {
     return action.type === AutomationActionType.flagTask && !action.flagName;
   });
 
   if (hasUnnamedFlag) {
-    return 'Flag actions need a flag name.';
+    return $localize`:Automation form validation error:Flag actions need a flag name.`;
   }
 
   const hasEmptyComment = actions.some((action) => {
@@ -118,7 +123,7 @@ function validateActions(actions: AutomationActionRequest[]): string | null {
   });
 
   if (hasEmptyComment) {
-    return 'Add comment actions need a comment.';
+    return $localize`:Automation form validation error:Add comment actions need a comment.`;
   }
 
   const notifyActions = actions.filter((action) => {
@@ -130,7 +135,7 @@ function validateActions(actions: AutomationActionRequest[]): string | null {
   });
 
   if (hasNoRecipients) {
-    return 'Notify actions need at least one recipient.';
+    return $localize`:Automation form validation error:Notify actions need at least one recipient.`;
   }
 
   const hasNoRecipientUsers = notifyActions.some((action) => {
@@ -142,7 +147,7 @@ function validateActions(actions: AutomationActionRequest[]): string | null {
   });
 
   if (hasNoRecipientUsers) {
-    return 'Choose at least one user to notify.';
+    return $localize`:Automation form validation error:Choose at least one user to notify.`;
   }
 
   const hasNoRecipientRoles = notifyActions.some((action) => {
@@ -154,7 +159,7 @@ function validateActions(actions: AutomationActionRequest[]): string | null {
   });
 
   if (hasNoRecipientRoles) {
-    return 'Choose at least one workspace role to notify.';
+    return $localize`:Automation form validation error:Choose at least one workspace role to notify.`;
   }
 
   const invalidMessageVariables = notifyActions
@@ -162,7 +167,7 @@ function validateActions(actions: AutomationActionRequest[]): string | null {
     .find((variables) => variables.length);
 
   if (invalidMessageVariables) {
-    return `Unknown message variables: ${invalidMessageVariables.join(', ')}.`;
+    return $localize`:Automation form validation error. VARIABLES is a list of variable names:Unknown message variables: ${invalidMessageVariables.join(', ')}:VARIABLES:.`;
   }
 
   const createTaskActions = actions.filter((action) => {
@@ -174,7 +179,7 @@ function validateActions(actions: AutomationActionRequest[]): string | null {
   });
 
   if (hasUnnamedCreateTask) {
-    return 'Create task actions need a task name.';
+    return $localize`:Automation form validation error:Create task actions need a task name.`;
   }
 
   const hasConflictingAssignees = createTaskActions.some((action) => {
@@ -182,7 +187,7 @@ function validateActions(actions: AutomationActionRequest[]): string | null {
   });
 
   if (hasConflictingAssignees) {
-    return 'Create task actions cannot copy and set assignees at the same time.';
+    return $localize`:Automation form validation error:Create task actions cannot copy and set assignees at the same time.`;
   }
 
   const invalidCreateTaskDate = createTaskActions.some((action) => {
@@ -190,7 +195,7 @@ function validateActions(actions: AutomationActionRequest[]): string | null {
   });
 
   if (invalidCreateTaskDate) {
-    return 'Complete each configured task date.';
+    return $localize`:Automation form validation error:Complete each configured task date.`;
   }
 
   const invalidCreateTaskVariables = createTaskActions
@@ -199,7 +204,7 @@ function validateActions(actions: AutomationActionRequest[]): string | null {
     .find((variables) => variables.length);
 
   if (invalidCreateTaskVariables) {
-    return `Unknown message variables: ${invalidCreateTaskVariables.join(', ')}.`;
+    return $localize`:Automation form validation error. VARIABLES is a list of variable names:Unknown message variables: ${invalidCreateTaskVariables.join(', ')}:VARIABLES:.`;
   }
 
   const relationActions = actions.filter((action) => {
@@ -211,7 +216,7 @@ function validateActions(actions: AutomationActionRequest[]): string | null {
   });
 
   if (hasNoRelationType) {
-    return 'Relation actions need a relation.';
+    return $localize`:Automation form validation error:Relation actions need a relation.`;
   }
 
   const hasNoRelatedTask = relationActions.some((action) => {
@@ -222,7 +227,7 @@ function validateActions(actions: AutomationActionRequest[]): string | null {
   });
 
   if (hasNoRelatedTask) {
-    return 'Choose a task to link to.';
+    return $localize`:Automation form validation error:Choose a task to link to.`;
   }
 
   const hasEmptyTaskUpdate = actions.some((action) => {
@@ -232,7 +237,19 @@ function validateActions(actions: AutomationActionRequest[]): string | null {
   });
 
   if (hasEmptyTaskUpdate) {
-    return 'Task update actions need at least one field update.';
+    return $localize`:Automation form validation error:Task update actions need at least one field update.`;
+  }
+
+  const hasNoAssigneesToAdd = actions.some((action) => {
+    return (
+      action.type === AutomationActionType.updateTask &&
+      !!action.appendAssignees &&
+      !action.assigneeIds?.length
+    );
+  });
+
+  if (hasNoAssigneesToAdd) {
+    return $localize`:Automation form validation error:Choose at least one assignee to add.`;
   }
 
   const invalidDateUpdate = actions.some((action) => {
@@ -243,7 +260,7 @@ function validateActions(actions: AutomationActionRequest[]): string | null {
   });
 
   if (invalidDateUpdate) {
-    return 'Complete each configured task date update.';
+    return $localize`:Automation form validation error:Complete each configured task date update.`;
   }
 
   const invalidDelay = actions.some((action) => {
@@ -257,7 +274,7 @@ function validateActions(actions: AutomationActionRequest[]): string | null {
   });
 
   if (invalidDelay) {
-    return 'Delete task action delay must be a whole number of 0 or more.';
+    return $localize`:Automation form validation error:Delete task action delay must be a whole number of 0 or more.`;
   }
 
   const excessiveDelay = actions.some((action) => {
@@ -268,7 +285,7 @@ function validateActions(actions: AutomationActionRequest[]): string | null {
   });
 
   if (excessiveDelay) {
-    return 'Delete task action delay cannot exceed 365 days.';
+    return $localize`:Automation form validation error:Delete task action delay cannot exceed 365 days.`;
   }
 
   return null;
@@ -308,7 +325,7 @@ function toDelayMultiplier(
 function validateTrigger(trigger: AutomationTrigger): string | null {
   if (trigger.type === AutomationTriggerType.taskChanged) {
     if (!trigger.fields?.length) {
-      return 'Choose at least one task field to watch.';
+      return $localize`:Automation form validation error:Choose at least one task field to watch.`;
     }
   }
 
@@ -317,7 +334,7 @@ function validateTrigger(trigger: AutomationTrigger): string | null {
     !isDurationInRange(trigger.durationDays, 1);
 
   if (hasInvalidUnassignedDuration) {
-    return 'Unassigned duration must be 1 to 365 days.';
+    return $localize`:Automation form validation error:Unassigned duration must be 1 to 365 days.`;
   }
 
   const hasInvalidDueDateLeadTime =
@@ -325,7 +342,7 @@ function validateTrigger(trigger: AutomationTrigger): string | null {
     !isDurationInRange(trigger.durationDays, 0);
 
   if (hasInvalidDueDateLeadTime) {
-    return 'Due-date lead time must be 0 to 365 days.';
+    return $localize`:Automation form validation error:Due-date lead time must be 0 to 365 days.`;
   }
 
   const hasInvalidInactiveDuration =
@@ -333,7 +350,7 @@ function validateTrigger(trigger: AutomationTrigger): string | null {
     !isDurationInRange(trigger.durationDays, 1);
 
   if (hasInvalidInactiveDuration) {
-    return 'Inactive duration must be 1 to 365 days.';
+    return $localize`:Automation form validation error:Inactive duration must be 1 to 365 days.`;
   }
 
   const hasInvalidSprintLeadTime =
@@ -341,13 +358,13 @@ function validateTrigger(trigger: AutomationTrigger): string | null {
     !isDurationInRange(trigger.durationDays, 0);
 
   if (hasInvalidSprintLeadTime) {
-    return 'Sprint lead time must be 0 to 365 days.';
+    return $localize`:Automation form validation error:Sprint lead time must be 0 to 365 days.`;
   }
 
   const targetBranches = trigger.targetBranches ?? [];
 
   if (targetBranches.length > maxTargetBranches) {
-    return `Choose at most ${maxTargetBranches} target branches.`;
+    return $localize`:Automation form validation error. COUNT is greater than one:Choose at most ${maxTargetBranches}:COUNT: target branches.`;
   }
 
   const invalidBranch = targetBranches.find(
@@ -386,22 +403,24 @@ function validateConditionGroup(
   depth = 1,
   count = { value: 0 }
 ): string | null {
-  if (depth > 4) return 'Condition groups can be nested up to 4 levels.';
+  if (depth > 4)
+    return $localize`:Automation form validation error:Condition groups can be nested up to 4 levels.`;
 
   if (!group.conditions.length && !group.groups.length) {
-    return 'Add at least one condition to each condition group.';
+    return $localize`:Automation form validation error:Add at least one condition to each condition group.`;
   }
 
   count.value += group.conditions.length;
 
-  if (count.value > 50) return 'Automations can have up to 50 conditions.';
+  if (count.value > 50)
+    return $localize`:Automation form validation error:Automations can have up to 50 conditions.`;
 
   const hasInvalidCondition = group.conditions.some((condition) =>
     isInvalidCondition(condition, supportsChangeOperators)
   );
 
   if (hasInvalidCondition) {
-    return 'Complete each field condition before saving.';
+    return $localize`:Automation form validation error:Complete each field condition before saving.`;
   }
 
   for (const nestedGroup of group.groups) {
@@ -472,6 +491,7 @@ type TaskUpdateFields = Required<
     | 'ownerId'
     | 'clearOwner'
     | 'assigneeIds'
+    | 'appendAssignees'
     | 'addTags'
     | 'removeTags'
     | 'startDate'
@@ -617,6 +637,7 @@ function toTaskUpdateFields(action: AutomationAction): TaskUpdateFields {
     ownerId: action.ownerId ?? null,
     clearOwner: !!action.clearOwner,
     assigneeIds: action.assigneeIds ?? null,
+    appendAssignees: !!action.appendAssignees,
     addTags: action.addTags ?? [],
     removeTags: action.removeTags ?? [],
     startDate: action.startDate ?? null,
@@ -679,6 +700,7 @@ function emptyTaskUpdateFields(): TaskUpdateFields {
     ownerId: null,
     clearOwner: false,
     assigneeIds: null,
+    appendAssignees: false,
     addTags: [],
     removeTags: [],
     startDate: null,

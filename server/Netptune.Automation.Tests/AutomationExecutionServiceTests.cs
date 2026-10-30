@@ -360,6 +360,52 @@ public sealed class AutomationExecutionServiceTests
     }
 
     [Fact]
+    public async Task ExecuteTaskChangedRules_appends_assignees_when_requested()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        var rule = await AutomationTestData.CreateTaskChangedRule(
+            scope.Db,
+            scenario,
+            [TaskChangeField.Name],
+            actionType: AutomationActionType.UpdateTask);
+
+        var action = await scope.Db.AutomationActions
+            .SingleAsync(
+                item => item.AutomationRuleId == rule.Id && !item.IsDeleted,
+                TestContext.Current.CancellationToken);
+        action.Config = JsonSerializer.SerializeToDocument(new
+        {
+            assigneeIds = new[] { scenario.Owner.Id },
+            appendAssignees = true,
+        }, JsonOptions.Default);
+        await scope.Db.SaveChangesAsync(TestContext.Current.CancellationToken);
+        scope.Db.ChangeTracker.Clear();
+
+        await scope.AutomationExecution.ExecuteEventRules(new TaskChangedMessage
+        {
+            EventId = Guid.NewGuid(),
+            TaskId = scenario.Task.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            ActorUserId = scenario.Owner.Id,
+            Changes =
+            [
+                TaskFieldChange.Create(TaskChangeField.Name, "Old name", "New name"),
+            ],
+        }, TestContext.Current.CancellationToken);
+
+        scope.Db.ChangeTracker.Clear();
+
+        var task = await scope.Db.ProjectTasks
+            .Include(item => item.ProjectTaskAppUsers)
+            .SingleAsync(item => item.Id == scenario.Task.Id, TestContext.Current.CancellationToken);
+
+        task.ProjectTaskAppUsers.Select(item => item.UserId)
+            .Should().BeEquivalentTo([scenario.Assignee.Id, scenario.Owner.Id]);
+    }
+
+    [Fact]
     public async Task ExecuteTaskChangedRules_applies_expanded_task_updates()
     {
         await using var scope = await Fixture.CreateScope();

@@ -153,7 +153,7 @@ internal sealed class UpdateTaskHandler : IActionExecutionHandler
         TaskMutationPipeline.Apply(task, new TaskMutationValues(status, contribution.Priority));
 
         ApplyScalarUpdates(task, contribution, finalStartDate, finalDueDate);
-        ApplyAssignees(task, contribution.AssigneeIds);
+        ApplyAssignees(task, contribution);
         ApplyTags(task, contribution, tags);
 
         var boardGroupChanged = await ApplyBoardGroup(task.Id, boardGroup, cancellationToken);
@@ -274,12 +274,17 @@ internal sealed class UpdateTaskHandler : IActionExecutionHandler
         }
     }
 
-    private static void ApplyAssignees(ProjectTask task, IReadOnlyCollection<string>? assigneeIds)
+    private static void ApplyAssignees(ProjectTask task, AutomationTaskUpdateContribution contribution)
     {
-        if (assigneeIds is null)
+        if (contribution.AssigneeIds is null)
         {
             return;
         }
+
+        var currentAssigneeIds = task.ProjectTaskAppUsers.Select(assignee => assignee.UserId);
+        var assigneeIds = contribution.AppendAssignees
+            ? currentAssigneeIds.Concat(contribution.AssigneeIds).ToList()
+            : contribution.AssigneeIds;
 
         task.ProjectTaskAppUsers = ProjectTaskAppUser.MergeUsersIds(
             task.Id,

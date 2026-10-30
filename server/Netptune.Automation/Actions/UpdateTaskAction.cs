@@ -112,6 +112,13 @@ internal sealed class UpdateTaskAction : IAutomationAction
             return "Update task action assignee IDs cannot be empty or duplicated.";
         }
 
+        var appendsNoAssignees = request.AppendAssignees && request.AssigneeIds is not { Count: > 0 };
+
+        if (appendsNoAssignees)
+        {
+            return "Update task actions that add assignees require at least one assignee.";
+        }
+
         var invalidTags = ContainsBlankOrDuplicate(request.AddTags)
             || ContainsBlankOrDuplicate(request.RemoveTags);
 
@@ -144,6 +151,7 @@ internal sealed class UpdateTaskAction : IAutomationAction
             ownerId = request.OwnerId,
             clearOwner = request.ClearOwner,
             assigneeIds = request.AssigneeIds,
+            appendAssignees = request.AppendAssignees,
             addTags = request.AddTags,
             removeTags = request.RemoveTags,
             startDate = request.StartDate,
@@ -172,6 +180,7 @@ internal sealed class UpdateTaskAction : IAutomationAction
             OwnerId = JsonUtils.ReadString(action.Config, "ownerId"),
             ClearOwner = JsonUtils.ReadObject<bool>(action.Config, "clearOwner"),
             AssigneeIds = JsonUtils.ReadObject<List<string>?>(action.Config, "assigneeIds"),
+            AppendAssignees = JsonUtils.ReadObject<bool>(action.Config, "appendAssignees"),
             AddTags = JsonUtils.ReadList<string>(action.Config, "addTags"),
             RemoveTags = JsonUtils.ReadList<string>(action.Config, "removeTags"),
             StartDate = JsonUtils.ReadObject<AutomationDateUpdate>(action.Config, "startDate"),
@@ -198,6 +207,7 @@ internal sealed class UpdateTaskAction : IAutomationAction
             OwnerId = JsonUtils.ReadString(action.Config, "ownerId"),
             ClearOwner = JsonUtils.ReadObject<bool>(action.Config, "clearOwner"),
             AssigneeIds = JsonUtils.ReadObject<List<string>?>(action.Config, "assigneeIds"),
+            AppendAssignees = JsonUtils.ReadObject<bool>(action.Config, "appendAssignees"),
             AddTags = JsonUtils.ReadList<string>(action.Config, "addTags"),
             RemoveTags = JsonUtils.ReadList<string>(action.Config, "removeTags"),
             StartDate = JsonUtils.ReadObject<AutomationDateUpdate>(action.Config, "startDate"),

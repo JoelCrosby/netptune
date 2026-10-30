@@ -128,7 +128,7 @@ export class AutomationRuleRailComponent {
 
   protected readonly conditionsSummary = computed(() => {
     const statuses = this.statuses();
-    const segments = describeConditionsStepSummary(this.trigger(), statuses);
+    const segments = describeConditionsStepSummary(this.trigger());
 
     return toTextSegments(segments, statuses);
   });

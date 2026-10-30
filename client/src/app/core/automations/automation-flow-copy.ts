@@ -1,5 +1,4 @@
 import { ServiceAccount } from '@core/models/service-account';
-import { Status } from '@core/models/status';
 import { joinNaturalList, toLowerText } from '@core/util/strings';
 import {
   AutomationCopySegment,
@@ -144,8 +143,7 @@ export function describeConditionsStepTitle(
 }
 
 export function describeConditionsStepSummary(
-  trigger: AutomationTrigger,
-  statuses: Status[]
+  trigger: AutomationTrigger
 ): AutomationCopySegment[] {
   const count = countAutomationConditions(trigger.conditionGroup);
 
@@ -158,7 +156,7 @@ export function describeConditionsStepSummary(
     ];
   }
 
-  return describeAutomationConditionsSegments(trigger, statuses);
+  return describeAutomationConditionsSegments(trigger);
 }
 
 export function automationActionKeyword(index: number): string {

@@ -185,6 +185,7 @@ export interface AutomationAction {
   ownerId?: string | null;
   clearOwner?: boolean;
   assigneeIds?: string[] | null;
+  appendAssignees?: boolean;
   addTags?: string[];
   removeTags?: string[];
   startDate?: AutomationDateUpdate | null;
@@ -325,6 +326,7 @@ export interface AutomationActionRequest {
   ownerId?: string | null;
   clearOwner?: boolean;
   assigneeIds?: string[] | null;
+  appendAssignees?: boolean;
   addTags?: string[];
   removeTags?: string[];
   startDate?: AutomationDateUpdate | null;
