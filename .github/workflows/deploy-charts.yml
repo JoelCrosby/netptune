@@ -574,6 +574,7 @@ jobs:
         run: |
           ef_version="$(grep -oP 'Include="Microsoft.EntityFrameworkCore.Design" Version="\K[^"]+' Directory.Packages.props)"
           dotnet tool install --global dotnet-ef --version "$ef_version"
+          dotnet restore Netptune.Entities/Netptune.Entities.csproj
           dotnet ef dbcontext script -p Netptune.Entities -s Netptune.Entities -o "$RUNNER_TEMP/schema.sql"
 
           # EF writes a byte order mark, which Postgres rejects as a syntax error.
