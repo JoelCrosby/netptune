@@ -561,6 +561,83 @@ jobs:
             exit 1
           fi
 
+      - name: Set up .NET
+        if: ${{ needs.changes.outputs.server == 'true' }}
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "10.x"
+
+      # The target schema comes from the EF model at this commit, the same DDL EnsureCreated runs.
+      - name: Generate database schema
+        if: ${{ needs.changes.outputs.server == 'true' }}
+        working-directory: server
+        run: |
+          ef_version="$(grep -oP 'Include="Microsoft.EntityFrameworkCore.Design" Version="\K[^"]+' Directory.Packages.props)"
+          dotnet tool install --global dotnet-ef --version "$ef_version"
+          dotnet ef dbcontext script -p Netptune.Entities -s Netptune.Entities -o "$RUNNER_TEMP/schema.sql"
+
+          # EF writes a byte order mark, which Postgres rejects as a syntax error.
+          sed -i '1s/^\xEF\xBB\xBF//' "$RUNNER_TEMP/schema.sql"
+
+      - name: Install Atlas
+        if: ${{ needs.changes.outputs.server == 'true' }}
+        env:
+          ATLAS_VERSION: "v1.3.0"
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/atlas" \
+            "https://release.ariga.io/atlas/atlas-community-linux-amd64-${ATLAS_VERSION}"
+          chmod +x "$RUNNER_TEMP/atlas"
+
+      # Only changes the previous release can keep running against are applied here. Old pods keep
+      # serving until the rollout finishes and a failed rollout rolls back the code but not the schema,
+      # so drops, type changes, required columns and new constraints on existing tables would break
+      # whichever code is running. scripts/check-schema-plan.sh lists what has to be applied by hand.
+      - name: Migrate database schema
+        if: ${{ needs.changes.outputs.server == 'true' }}
+        run: |
+          password="$(yq '.secrets.postgres.postgres_password' "$RUNNER_TEMP/secrets.prod.yaml")"
+          encoded="$(jq -rn --arg p "$password" '$p | @uri')"
+          echo "::add-mask::$password"
+          echo "::add-mask::$encoded"
+
+          kubectl --kubeconfig kubeconfig.yaml port-forward pod/postgres-statefulset-0 5433:5432 -n default >/dev/null 2>&1 &
+          port_forward=$!
+          trap 'kill "$port_forward"' EXIT
+
+          for _ in {1..30}; do
+            (echo > /dev/tcp/127.0.0.1/5433) 2>/dev/null && break
+            sleep 1
+          done
+
+          prod_url="postgres://postgres:${encoded}@127.0.0.1:5433/netptune?sslmode=disable&search_path=public"
+          dev_url="docker://postgres/18/dev?search_path=public"
+          schema="file://$RUNNER_TEMP/schema.sql"
+          plan="$RUNNER_TEMP/schema-plan.sql"
+
+          atlas schema diff --from "$prod_url" --to "$schema" --dev-url "$dev_url" > "$plan"
+
+          if grep -qx 'Schemas are synced, no changes to be made.' "$plan"; then
+            echo "Database schema is up to date"
+            exit 0
+          fi
+
+          {
+            echo "### Database schema changes"
+            echo '```sql'
+            cat "$plan"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          cat "$plan"
+
+          if ! unsafe="$(scripts/check-schema-plan.sh "$plan")"; then
+            echo "::error::The schema plan has changes the running release can't work against. Review them in the job summary and apply them by hand, then re-run this job. Drops, type changes and renames can go through scripts/atlas-migrate.ts --apply. Required columns on existing tables need a model default (HasDefaultValue) or hand-written SQL that backfills them, and SET NOT NULL or a new unique index needs the existing rows checked first."
+            echo "$unsafe"
+            exit 1
+          fi
+
+          atlas schema apply --url "$prod_url" --to "$schema" --dev-url "$dev_url" --auto-approve
+
       - name: Deploy
         run: |
           helm upgrade --install netptune-app charts/netptune/ \

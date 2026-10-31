@@ -1,42 +1,42 @@
-#!/usr/bin/env -S deno run --allow-run --allow-net --ext ts
+#!/usr/bin/env -S deno run --allow-run --allow-net --allow-read --allow-write --ext ts
 
 const PROD_PF_PORT = 5433;
 const PROD_POD = "postgres-statefulset-0";
 const PROD_NS = "default";
-const PROD_PASS = "postgresx";
+const PROD_SECRET = "postgres-secrets";
 const DB = "netptune";
+const DEV_URL = "docker://postgres/18/dev?search_path=public";
+const SERVER_DIR = new URL("../server/", import.meta.url).pathname;
 
 const apply = Deno.args.includes("--apply");
 
-async function run(cmd: string, args: string[]): Promise<string> {
-  const proc = new Deno.Command(cmd, { args, stdout: "piped", stderr: "piped" });
+async function run(cmd: string, args: string[], cwd?: string): Promise<string> {
+  const proc = new Deno.Command(cmd, { args, cwd, stdout: "piped", stderr: "piped" });
   const { code, stdout, stderr } = await proc.output();
   if (code !== 0) {
-    throw new Error(new TextDecoder().decode(stderr));
+    throw new Error(new TextDecoder().decode(stderr) || new TextDecoder().decode(stdout));
   }
   return new TextDecoder().decode(stdout).trim();
 }
 
-async function getLocalPostgresContainer(): Promise<string> {
-  const ps = await run("podman", ["ps", "--format", "{{.Names}}"]);
-  const container = ps.split("\n").find((n) => n.startsWith("postgres-"));
-  if (!container) throw new Error("No local postgres container found (is Aspire running?)");
-  return container;
+async function generateSchema(): Promise<string> {
+  const dir = await Deno.makeTempDir({ prefix: "netptune-schema-" });
+  const path = `${dir}/schema.sql`;
+
+  console.log("Generating schema from the EF model...");
+  await run("dotnet", ["ef", "dbcontext", "script", "-p", "Netptune.Entities", "-s", "Netptune.Entities", "-o", path], SERVER_DIR);
+
+  const sql = await Deno.readTextFile(path);
+  await Deno.writeTextFile(path, sql.replace(/^\uFEFF/, ""));
+
+  return path;
 }
 
-async function getLocalPassword(container: string): Promise<string> {
-  const raw = await run("podman", ["inspect", container]);
-  const [info] = JSON.parse(raw);
-  const envEntry = info.Config.Env.find((e: string) => e.startsWith("POSTGRES_PASSWORD="));
-  if (!envEntry) throw new Error("POSTGRES_PASSWORD not found in container env");
-  return envEntry.split("=").slice(1).join("=");
-}
-
-async function getLocalPort(container: string): Promise<number> {
-  const port = await run("podman", ["port", container, "5432/tcp"]);
-  const match = port.match(/:(\d+)$/);
-  if (!match) throw new Error(`Could not determine local postgres port from: ${port}`);
-  return Number(match[1]);
+async function getProdPassword(): Promise<string> {
+  const encoded = await run("kubectl", [
+    "get", "secret", PROD_SECRET, "-n", PROD_NS, "-o", "jsonpath={.data.POSTGRES_PASSWORD}",
+  ]);
+  return atob(encoded);
 }
 
 async function waitForPort(port: number, retries = 20): Promise<void> {
@@ -69,11 +69,10 @@ async function displayDiffWithBat(atlasArgs: string[]): Promise<number> {
   return atlasStatus.code || batStatus.code;
 }
 
-const localContainer = await getLocalPostgresContainer();
-const localPass = await getLocalPassword(localContainer);
-const localPort = await getLocalPort(localContainer);
-const localUrl = `postgres://postgres:${localPass}@localhost:${localPort}/${DB}?sslmode=disable`;
-const prodUrl = `postgres://postgres:${PROD_PASS}@localhost:${PROD_PF_PORT}/${DB}?sslmode=disable`;
+const schemaPath = await generateSchema();
+const schemaUrl = `file://${schemaPath}`;
+const prodPass = encodeURIComponent(await getProdPassword());
+const prodUrl = `postgres://postgres:${prodPass}@localhost:${PROD_PF_PORT}/${DB}?sslmode=disable&search_path=public`;
 
 console.log(`Port-forwarding ${PROD_POD} -> localhost:${PROD_PF_PORT}...`);
 const pf = new Deno.Command("kubectl", {
@@ -85,11 +84,11 @@ const pf = new Deno.Command("kubectl", {
 let exitCode = 1;
 try {
   await waitForPort(PROD_PF_PORT);
-  console.log("Diffing: local -> prod\n");
+  console.log("Diffing: EF model -> prod\n");
 
   const atlasArgs = apply
-    ? ["schema", "apply", "--url", prodUrl, "--to", localUrl, "--dev-url", "docker://postgres/16/dev", "--auto-approve"]
-    : ["schema", "diff", "--from", prodUrl, "--to", localUrl];
+    ? ["schema", "apply", "--url", prodUrl, "--to", schemaUrl, "--dev-url", DEV_URL]
+    : ["schema", "diff", "--from", prodUrl, "--to", schemaUrl, "--dev-url", DEV_URL];
 
   if (apply) {
     const atlas = new Deno.Command("atlas", { args: atlasArgs }).spawn();

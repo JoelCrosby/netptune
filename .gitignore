@@ -251,3 +251,6 @@ charts/*/charts/
 
 # Claude Code
 .claude/
+
+# Generated with `deno types > scripts/deno.d.ts` for the TypeScript native preview
+scripts/deno.d.ts

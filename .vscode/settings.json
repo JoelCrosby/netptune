@@ -75,5 +75,6 @@
   "js/ts.updateImportsOnFileMove.enabled": "always",
   "js/ts.experimental.useTsgo": true,
   "files.insertFinalNewline": true,
-  "css.validate": false
+  "css.validate": false,
+  "deno.enablePaths": ["scripts/atlas-migrate.ts"]
 }
