@@ -4,15 +4,27 @@ import { DialogCloseDirective } from '../../directives/dialog-close.directive';
 import { IconButtonComponent } from '../button/icon-button.component';
 import { cn } from '../button/button.variants';
 
-// The fixed top bar of a full-height dialog. Project `dialogHeaderActions` for
-// buttons that sit before the close button.
+export type DialogHeaderDivider = 'none' | 'bottom';
+
+// The fixed top bar of a full-height dialog. Project `dialogHeaderIcon` for a
+// tile before the heading and `dialogHeaderActions` for buttons that sit before
+// the close button.
 @Component({
   selector: 'app-dialog-header, [app-dialog-header]',
   imports: [DialogCloseDirective, IconButtonComponent, LucideX],
   host: { '[class]': 'hostClass()' },
   template: `
+    <ng-content select="[dialogHeaderIcon]" />
+
     @if (heading(); as heading) {
-      <h2 class="truncate text-[13px] font-semibold">{{ heading }}</h2>
+      @if (description(); as description) {
+        <div class="flex min-w-0 flex-col">
+          <h2 class="truncate text-[17px] font-bold">{{ heading }}</h2>
+          <p class="text-muted truncate text-[12.5px]">{{ description }}</p>
+        </div>
+      } @else {
+        <h2 class="truncate text-[13px] font-semibold">{{ heading }}</h2>
+      }
     }
 
     <ng-content />
@@ -36,12 +48,16 @@ import { cn } from '../button/button.variants';
 })
 export class DialogHeaderComponent {
   readonly heading = input('');
+  readonly description = input('');
+  readonly divider = input<DialogHeaderDivider>('bottom');
   readonly showCloseButton = input(false, { transform: booleanAttribute });
   readonly class = input('');
 
   protected readonly hostClass = computed(() => {
     return cn(
-      'border-foreground/8 flex h-[50px] shrink-0 items-center gap-2.5 border-b pr-3.5 pl-5',
+      'border-foreground/8 flex shrink-0 items-center gap-2.5 pr-3.5 pl-5',
+      this.description() ? 'gap-3 pt-4.5 pb-3.5' : 'h-[50px]',
+      this.divider() === 'bottom' && 'border-b',
       this.class()
     );
   });

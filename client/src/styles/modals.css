@@ -60,39 +60,37 @@
   overflow: hidden;
 }
 
-/* The create dialog wears the task detail dialog's panel so the two read as one
-   surface: same chromeless container, shadow and responsive behaviour. */
-.app-task-detail-dialog {
+.app-full-height-dialog {
   height: 740px;
   max-height: 92vh;
 }
 
-.app-task-detail-dialog app-dialog-container {
+.app-full-height-dialog app-dialog-container {
   padding: 0;
   overflow: hidden;
   box-shadow: 0 24px 48px -12px rgba(0, 0, 0, .5);
 }
 
-.app-task-detail-dialog app-dialog-container .dialog-inner {
+.app-full-height-dialog app-dialog-container .dialog-inner {
   padding-right: 0;
   height: 100%;
   overflow: hidden;
 }
 
 @media only screen and (max-width: 1200px) {
-  .app-task-detail-dialog {
+  .app-full-height-dialog {
     max-width: calc(100vw - 32px);
   }
 }
 
 @media only screen and (max-width: 767.98px) {
-  .app-task-detail-dialog {
+  .app-full-height-dialog {
     height: 100dvh !important;
     max-height: 100dvh;
     max-width: 100vw !important;
   }
 
-  .app-task-detail-dialog app-dialog-container {
+  .app-full-height-dialog app-dialog-container {
     border-radius: 0;
   }
 }

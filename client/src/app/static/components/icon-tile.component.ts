@@ -30,6 +30,7 @@ const raisedToneClasses: Record<Tone, string> = {
     'from-emerald-500/22 to-emerald-500/6 ring-emerald-500/12 text-emerald-700 dark:text-emerald-300',
   teal: 'from-teal-500/22 to-teal-500/6 ring-teal-500/12 text-teal-700 dark:text-teal-300',
   pink: 'from-pink-500/22 to-pink-500/6 ring-pink-500/12 text-pink-700 dark:text-pink-300',
+  red: 'from-red-500/20 to-red-500/5 ring-red-500/10 text-red-600 dark:text-red-300',
 };
 
 @Component({

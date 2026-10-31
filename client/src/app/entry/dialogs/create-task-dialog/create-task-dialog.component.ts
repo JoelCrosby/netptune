@@ -398,7 +398,7 @@ const documentContentTypes = new Set([
 export class CreateTaskDialogComponent {
   static readonly width = '1140px';
   static readonly height = '740px';
-  static readonly panelClass = 'app-task-detail-dialog';
+  static readonly panelClass = 'app-full-height-dialog';
 
   private taskCommands = inject(TaskCommandsService);
   private dialog = inject(DialogService);

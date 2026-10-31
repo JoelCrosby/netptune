@@ -11,8 +11,10 @@ import { TagFilterContainerComponent } from '@shared/components/tag-filter/tag-f
 import { NotificationSubscribeComponent } from '@shared/components/notification-subscribe/notification-subscribe.component';
 import { NotificationScope } from '@core/models/notification-subscription';
 import { BoardGroupHeaderSeperatorComponent } from './board-group-header-seperator.component';
-import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-menu.component';
-import { EntityType } from '@core/models/entity-type';
+import { BoardActivityDialogComponent } from '@boards/components/board-activity-dialog/board-activity-dialog.component';
+import { BoardViewModel } from '@core/models/view-models/board-view-model';
+import { TooltipDirective } from '@static/directives/tooltip.directive';
+import { LucideHistory } from '@lucide/angular';
 import { toolbarButtonVariants } from '@static/components/button/button.variants';
 import { PERMISSIONS } from '@app/core/auth/permissions';
 import { BoardViewService } from '@core/services/board-view.service';
@@ -32,7 +34,8 @@ import { UserPreferencesService } from '@core/services/user-preferences.service'
     BoardGroupHeaderSeperatorComponent,
     BoardGroupHiddenNoticeComponent,
     NotificationSubscribeComponent,
-    ActivityMenuComponent,
+    TooltipDirective,
+    LucideHistory,
   ],
   template: `
     <div class="flex flex-row items-center gap-2">
@@ -63,10 +66,16 @@ import { UserPreferencesService } from '@core/services/user-preferences.service'
         }
 
         @if (readActivity()) {
-          <app-activity-menu
-            [entityType]="boardEntityType"
-            [entityId]="board.id"
-            [buttonClass]="activityButtonClass" />
+          <button
+            type="button"
+            [class]="activityButtonClass"
+            i18n-appTooltip="Tooltip on the button that opens the activity feed"
+            appTooltip="Show activity"
+            i18n-aria-label="Accessible label for the activity feed icon"
+            aria-label="Show activity"
+            (click)="onActivityClicked(board)">
+            <svg lucideHistory class="h-4 w-4" aria-hidden="true"></svg>
+          </button>
         }
       }
 
@@ -84,7 +93,6 @@ export class BoardGroupHeaderComponent {
   protected readonly isPublicViewer = inject(SessionService).isPublicViewer;
 
   protected readonly notificationScope = NotificationScope;
-  protected readonly boardEntityType = EntityType.board;
   protected readonly activityButtonClass = toolbarButtonVariants({
     color: 'neutral',
   });
@@ -103,6 +111,16 @@ export class BoardGroupHeaderComponent {
   readStatus = hasPermission(PERMISSIONS.statuses.read);
 
   readTags = hasPermission(PERMISSIONS.tags.read);
+
+  onActivityClicked(board: BoardViewModel) {
+    this.dialog.open(BoardActivityDialogComponent, {
+      width: BoardActivityDialogComponent.width,
+      height: BoardActivityDialogComponent.height,
+      panelClass: BoardActivityDialogComponent.panelClass,
+      data: { boardId: board.id, boardName: board.name },
+      autoFocus: false,
+    });
+  }
 
   onManageGroupsClicked() {
     this.dialog.open(ManageBoardGroupsDialogComponent, {

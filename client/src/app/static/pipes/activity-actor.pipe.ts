@@ -19,28 +19,32 @@ interface ExternalActorMeta {
 
 // Code activity can come from someone with no account here, in which case the entry carries the
 // provider's username and avatar instead of a user.
+export const activityActor = (activity: ActivityViewModel): ActivityActor => {
+  if (activity.userUsername) {
+    return {
+      name: activity.userUsername,
+      pictureUrl: activity.userPictureUrl,
+      isServiceAccount: activity.userIsServiceAccount ?? false,
+    };
+  }
+
+  const meta = activity.meta as ExternalActorMeta | null;
+  const provider = meta?.provider
+    ? sourceControlProviderFromSlug(meta.provider)
+    : null;
+  const providerName =
+    provider === null ? null : sourceControlProviderNames[provider];
+
+  return {
+    name: meta?.actorLogin ?? providerName ?? '',
+    pictureUrl: meta?.actorAvatarUrl ?? null,
+    isServiceAccount: false,
+  };
+};
+
 @Pipe({ name: 'activityActor', pure: true })
 export class ActivityActorPipe implements PipeTransform {
   transform(activity: ActivityViewModel): ActivityActor {
-    if (activity.userUsername) {
-      return {
-        name: activity.userUsername,
-        pictureUrl: activity.userPictureUrl,
-        isServiceAccount: activity.userIsServiceAccount ?? false,
-      };
-    }
-
-    const meta = activity.meta as ExternalActorMeta | null;
-    const provider = meta?.provider
-      ? sourceControlProviderFromSlug(meta.provider)
-      : null;
-    const providerName =
-      provider === null ? null : sourceControlProviderNames[provider];
-
-    return {
-      name: meta?.actorLogin ?? providerName ?? '',
-      pictureUrl: meta?.actorAvatarUrl ?? null,
-      isServiceAccount: false,
-    };
+    return activityActor(activity);
   }
 }

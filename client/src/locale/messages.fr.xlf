@@ -52,6 +52,16 @@
         <target>Les relations n&apos;ont pas pu être chargées.</target>
       </segment>
     </unit>
+    <unit id="8048662681212165766">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:431</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they accepted a finding from an assistant review. FINDING is its title</note>
+      </notes>
+      <segment state="translated">
+        <source>accepted the review finding “<ph id="0" equiv="FINDING" disp="FIRST"/>”</source>
+        <target>a accepté le point de relecture « <ph id="0" equiv="FINDING" disp="FIRST"/> »</target>
+      </segment>
+    </unit>
     <unit id="8048771922869370314">
       <notes>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:253</note>
@@ -92,6 +102,26 @@
       <segment state="initial">
         <source>By</source>
         <target>Par</target>
+      </segment>
+    </unit>
+    <unit id="7703187061908079501">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-dialog.component.ts:110,119</note>
+        <note category="description">Button at the end of the board activity dialog that loads the next page of older entries</note>
+      </notes>
+      <segment state="translated">
+        <source> Load older activity </source>
+        <target> Charger l&apos;activité plus ancienne </target>
+      </segment>
+    </unit>
+    <unit id="7703284198794564632">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:485</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they moved a task to a board group. GROUP is the group&apos;s name</note>
+      </notes>
+      <segment state="translated">
+        <source>moved to <ph id="0" equiv="GROUP" disp="FIRST"/></source>
+        <target>a déplacé vers <ph id="0" equiv="GROUP" disp="FIRST"/></target>
       </segment>
     </unit>
     <unit id="771247888421689623">
@@ -553,6 +583,17 @@
       <segment state="initial">
         <source><ph id="0" equiv="DONE" disp="doneTaskCount"/> / <ph id="1" equiv="TOTAL" disp="taskCount"/> tasks</source>
         <target>terminé · <ph id="0" equiv="DONE" disp="doneTaskCount"/> sur <ph id="1" equiv="TOTAL" disp="taskCount"/> tâches</target>
+      </segment>
+    </unit>
+    <unit id="803434940127970079">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:211</note>
+        <note category="description">A task field listed in a merged activity timeline entry, as in updated name and priority</note>
+        <note category="meaning">activity field</note>
+      </notes>
+      <segment state="translated">
+        <source>priority</source>
+        <target>la priorité</target>
       </segment>
     </unit>
     <unit id="1204089050920081335">
@@ -1550,6 +1591,17 @@
         <target>Modifier les étiquettes</target>
       </segment>
     </unit>
+    <unit id="7216628137707269895">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:205</note>
+        <note category="description">A task field listed in a merged activity timeline entry, as in updated name and description</note>
+        <note category="meaning">activity field</note>
+      </notes>
+      <segment state="translated">
+        <source>description</source>
+        <target>la description</target>
+      </segment>
+    </unit>
     <unit id="7216658744747223519">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:390</note>
@@ -1679,6 +1731,16 @@
       <segment state="translated">
         <source>Page spaces</source>
         <target>Espaces de pages</target>
+      </segment>
+    </unit>
+    <unit id="526715278202678166">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:514</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they changed a task&apos;s due date</note>
+      </notes>
+      <segment state="translated">
+        <source>changed the due date</source>
+        <target>a modifié la date d&apos;échéance</target>
       </segment>
     </unit>
     <unit id="378112044291779678">
@@ -1861,6 +1923,16 @@
         <target>Voir les signalements de tâches</target>
       </segment>
     </unit>
+    <unit id="7545745913372577732">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:538</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they tagged a task</note>
+      </notes>
+      <segment state="translated">
+        <source>added a tag</source>
+        <target>a ajouté une étiquette</target>
+      </segment>
+    </unit>
     <unit id="7546969606032903393">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:317</note>
@@ -1984,12 +2056,22 @@
     </unit>
     <unit id="3666189403972009429">
       <notes>
-        <note category="location">src/app/static/pipes/activity.pipe.ts:130</note>
+        <note category="location">src/app/core/transforms/activity-detail.ts:96</note>
         <note category="description">How many findings an assistant review raised, in the activity feed. COUNT is a number</note>
       </notes>
       <segment state="translated">
         <source>(<ph id="0" equiv="COUNT" disp="count"/> findings)</source>
         <target>(<ph id="0" equiv="COUNT" disp="count"/> points)</target>
+      </segment>
+    </unit>
+    <unit id="3666455504940470204">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:394</note>
+        <note category="description">Activity timeline entry after the code host&apos;s name when some checks failed. REFERENCE is a branch or commit, FAILED and TOTAL are numbers</note>
+      </notes>
+      <segment state="translated">
+        <source>checks failed on <ph id="0" equiv="REFERENCE" disp="FIRST"/> (<ph id="1" equiv="FAILED" disp="failed"/> of <ph id="2" equiv="TOTAL" disp="total"/>)</source>
+        <target>signale des vérifications en échec sur <ph id="0" equiv="REFERENCE" disp="FIRST"/> (<ph id="1" equiv="FAILED" disp="failed"/> sur <ph id="2" equiv="TOTAL" disp="total"/>)</target>
       </segment>
     </unit>
     <unit id="2838129566011107043">
@@ -2255,6 +2337,16 @@
         <target>L&apos;autorisation n&apos;a pas pu être mise à jour. Veuillez réessayer.</target>
       </segment>
     </unit>
+    <unit id="7726694195614515835">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:301</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they linked this task to another. TASK is the other task&apos;s id and RELATION says how they relate, as in blocks</note>
+      </notes>
+      <segment state="translated">
+        <source>linked <ph id="0" equiv="TASK" disp="FIRST"/> (<ph id="1" equiv="RELATION" disp="label"/>)</source>
+        <target>a lié <ph id="0" equiv="TASK" disp="FIRST"/> (<ph id="1" equiv="RELATION" disp="label"/>)</target>
+      </segment>
+    </unit>
     <unit id="7727358814329370401">
       <notes>
         <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:345</note>
@@ -2395,6 +2487,16 @@
       <segment state="translated">
         <source>Still open</source>
         <target>Encore ouvertes</target>
+      </segment>
+    </unit>
+    <unit id="2152057543168934351">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-dialog.component.ts:178</note>
+        <note category="description">Subtitle of the board activity dialog when it holds one entry. BOARD is the board&apos;s name</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="BOARD" disp="name"/> · 1 event</source>
+        <target><ph id="0" equiv="BOARD" disp="name"/> · 1 événement</target>
       </segment>
     </unit>
     <unit id="2159130950882492111">
@@ -2818,6 +2920,16 @@
         <target>Automatisation créée</target>
       </segment>
     </unit>
+    <unit id="8878866936287105272">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-dialog.component.ts:76,78</note>
+        <note category="description">Explains that the board&apos;s activity feed is empty</note>
+      </notes>
+      <segment state="translated">
+        <source>Changes to the board and its tasks will appear here</source>
+        <target>Les modifications du tableau et de ses tâches apparaîtront ici</target>
+      </segment>
+    </unit>
     <unit id="5887960889618527515">
       <notes>
         <note category="location">src/app/core/services/board-group-commands.service.ts:104</note>
@@ -3189,6 +3301,16 @@
         <target>Profil mis à jour</target>
       </segment>
     </unit>
+    <unit id="7298863995505642106">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-dialog.component.ts:174</note>
+        <note category="description">Subtitle of the board activity dialog while older entries are still unloaded. BOARD is the board&apos;s name and COUNT is a number</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="BOARD" disp="name"/> · latest <ph id="1" equiv="COUNT" disp="count"/> events</source>
+        <target><ph id="0" equiv="BOARD" disp="name"/> · <ph id="1" equiv="COUNT" disp="count"/> derniers événements</target>
+      </segment>
+    </unit>
     <unit id="6949151938064817789">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:165</note>
@@ -3308,6 +3430,17 @@
       <segment state="translated">
         <source>Only someone who can pin at this scope may remove it</source>
         <target>Seule une personne pouvant épingler à cette portée peut le retirer</target>
+      </segment>
+    </unit>
+    <unit id="311040115859646678">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:203</note>
+        <note category="description">A task field listed in a merged activity timeline entry, as in updated name and priority</note>
+        <note category="meaning">activity field</note>
+      </notes>
+      <segment state="translated">
+        <source>name</source>
+        <target>le nom</target>
       </segment>
     </unit>
     <unit id="311157768509575825">
@@ -3670,6 +3803,17 @@
         <target>Supprimer l&apos;étiquette</target>
       </segment>
     </unit>
+    <unit id="8569655067637366747">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:213</note>
+        <note category="description">A task field listed in a merged activity timeline entry, as in updated name and estimate</note>
+        <note category="meaning">activity field</note>
+      </notes>
+      <segment state="translated">
+        <source>estimate</source>
+        <target>l&apos;estimation</target>
+      </segment>
+    </unit>
     <unit id="5921881664248618325">
       <notes>
         <note category="location">src/app/core/services/tag-commands.service.ts:81</note>
@@ -3802,6 +3946,26 @@
       <segment state="translated">
         <source> You lose access to this workspace&apos;s content and need to be re-invited to rejoin. </source>
         <target> Vous perdez l’accès au contenu de cet espace de travail et devrez être réinvité pour y revenir. </target>
+      </segment>
+    </unit>
+    <unit id="7193152316141960709">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:335</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they merged a pull request. PULL_REQUEST is its number and title</note>
+      </notes>
+      <segment state="translated">
+        <source>merged pull request <ph id="0" equiv="PULL_REQUEST" disp="FIRST"/></source>
+        <target>a fusionné la pull request <ph id="0" equiv="PULL_REQUEST" disp="FIRST"/></target>
+      </segment>
+    </unit>
+    <unit id="7196996838241523478">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:444</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they dismissed a finding from an assistant review</note>
+      </notes>
+      <segment state="translated">
+        <source>dismissed a review finding</source>
+        <target>a écarté un point de relecture</target>
       </segment>
     </unit>
     <unit id="7198631316779176054">
@@ -4125,6 +4289,16 @@
         <target>Voulez-vous vraiment quitter cet espace de travail ?</target>
       </segment>
     </unit>
+    <unit id="4854048028687013104">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:453</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they reopened a finding from an assistant review</note>
+      </notes>
+      <segment state="translated">
+        <source>reopened a review finding</source>
+        <target>a rouvert un point de relecture</target>
+      </segment>
+    </unit>
     <unit id="4854172748547351453">
       <notes>
         <note category="location">src/app/core/services/workspace-commands.service.ts:221</note>
@@ -4228,10 +4402,10 @@
     </unit>
     <unit id="958878170701195111">
       <notes>
+        <note category="location">src/app/core/transforms/activity-detail.ts:91</note>
         <note category="location">src/app/static/components/activity-log/activity-log.component.ts:64,67</note>
         <note category="location">src/app/static/components/step-trail/step-trail.component.ts:41,44</note>
-        <note category="location">src/app/static/pipes/activity.pipe.ts:125</note>
-        <note category="description">Marks a step in a list of steps that failed</note>
+        <note category="description">Shown after an assistant review in the activity feed when it failed</note>
       </notes>
       <segment state="translated">
         <source>(failed)</source>
@@ -4309,6 +4483,16 @@
       <segment state="translated">
         <source>Are you sure you want to mark this Workspace as private?</source>
         <target>Voulez-vous vraiment rendre cet espace de travail privé ?</target>
+      </segment>
+    </unit>
+    <unit id="4502580861822681559">
+      <notes>
+        <note category="location">src/app/core/util/dates.ts:114</note>
+        <note category="description">Compact age of a timeline entry in minutes, as in 5m. MINUTES is a number</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="MINUTES" disp="minutes"/>m</source>
+        <target><ph id="0" equiv="MINUTES" disp="minutes"/> min</target>
       </segment>
     </unit>
     <unit id="5832945231912845990">
@@ -4522,6 +4706,16 @@
       <segment state="initial">
         <source> Check Archive </source>
         <target> Vérifier l&apos;archive </target>
+      </segment>
+    </unit>
+    <unit id="7057362319385794943">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:489</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they moved a task to another board group</note>
+      </notes>
+      <segment state="translated">
+        <source>moved</source>
+        <target>a déplacé</target>
       </segment>
     </unit>
     <unit id="7058560051550513950">
@@ -4828,6 +5022,8 @@
       <notes>
         <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:56,59</note>
         <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:63,67</note>
+        <note category="location">src/app/features/boards/components/board-group-header/board-group-header.component.ts:73,74</note>
+        <note category="location">src/app/features/boards/components/board-group-header/board-group-header.component.ts:75,77</note>
         <note category="description">Tooltip on the button that opens the activity feed</note>
       </notes>
       <segment state="translated">
@@ -4838,6 +5034,7 @@
     <unit id="2080668244235875808">
       <notes>
         <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:119,120</note>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-dialog.component.ts:74,75</note>
         <note category="description">Heading of the empty activity feed</note>
       </notes>
       <segment state="translated">
@@ -5087,6 +5284,17 @@
       <segment state="translated">
         <source> Ready to create </source>
         <target>Prêt à créer</target>
+      </segment>
+    </unit>
+    <unit id="224349424172629810">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:221</note>
+        <note category="description">A task field listed in a merged activity timeline entry, as in updated name and sprint</note>
+        <note category="meaning">activity field</note>
+      </notes>
+      <segment state="translated">
+        <source>sprint</source>
+        <target>le sprint</target>
       </segment>
     </unit>
     <unit id="2244471832629453998">
@@ -5409,6 +5617,7 @@
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:58,59</note>
         <note category="location">src/app/features/automations/components/automation-run-history.component.ts:137,141</note>
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:49,50</note>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:682</note>
         <note category="location">src/app/features/boards/util/board-task-sort.ts:30</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:450</note>
         <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:144</note>
@@ -5443,6 +5652,16 @@
         <target> <ph id="0" equiv="INTERPOLATION" disp="{{ spentLabel() }}"/> ont été dépensés ce mois-ci. Une fois le plafond atteint, l&apos;assistant n&apos;accepte plus de nouveaux messages jusqu&apos;au mois suivant. </target>
       </segment>
     </unit>
+    <unit id="8592932355603567140">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:545</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they tagged a task. TAG is the tag&apos;s name</note>
+      </notes>
+      <segment state="translated">
+        <source>added the tag <ph id="0" equiv="TAG" disp="FIRST"/></source>
+        <target>a ajouté l&apos;étiquette <ph id="0" equiv="TAG" disp="FIRST"/></target>
+      </segment>
+    </unit>
     <unit id="8593484840932672988">
       <notes>
         <note category="location">src/app/entry/dialogs/board-group-dialog/board-group-dialog.component.ts:54,56</note>
@@ -5471,7 +5690,7 @@
         <note category="location">src/app/features/pages/dialogs/page-version-dialog.component.ts:76,78</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:74,75</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:443,446</note>
-        <note category="location">src/app/static/components/dialog/dialog-header.component.ts:31</note>
+        <note category="location">src/app/static/components/dialog/dialog-header.component.ts:43</note>
         <note category="description">Dismisses a dialog without saving</note>
       </notes>
       <segment state="translated">
@@ -5811,6 +6030,7 @@
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:64</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:106,108</note>
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:189,190</note>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:694</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:394</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:314</note>
         <note category="description">Task field that an automation can watch for changes</note>
@@ -6376,6 +6596,16 @@
       <segment state="translated">
         <source>Documents</source>
         <target>Documents</target>
+      </segment>
+    </unit>
+    <unit id="4733690367258997247">
+      <notes>
+        <note category="location">src/app/core/util/dates.ts:110</note>
+        <note category="description">Compact age of a timeline entry that happened less than a minute ago</note>
+      </notes>
+      <segment state="translated">
+        <source>just now</source>
+        <target>à l&apos;instant</target>
       </segment>
     </unit>
     <unit id="5018969756728532988">
@@ -7450,6 +7680,16 @@
         <target>Détails du projet</target>
       </segment>
     </unit>
+    <unit id="2570879316831026404">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:261</note>
+        <note category="description">Activity timeline entry after the person&apos;s name for several fields changed at once, the status among them. FIELDS is a list such as name and priority</note>
+      </notes>
+      <segment state="translated">
+        <source>updated <ph id="0" equiv="FIELDS" disp="list"/> and changed the status</source>
+        <target>a modifié <ph id="0" equiv="FIELDS" disp="list"/> et changé le statut</target>
+      </segment>
+    </unit>
     <unit id="2575054327998237831">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:498</note>
@@ -7553,6 +7793,17 @@
       <segment>
         <source>The export could not be downloaded.</source>
         <target>L&apos;export n&apos;a pas pu être téléchargé.</target>
+      </segment>
+    </unit>
+    <unit id="3612175537854776017">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:219</note>
+        <note category="description">A task field listed in a merged activity timeline entry, as in updated name and tags</note>
+        <note category="meaning">activity field</note>
+      </notes>
+      <segment state="translated">
+        <source>tags</source>
+        <target>les étiquettes</target>
       </segment>
     </unit>
     <unit id="5630056212347859555">
@@ -8194,6 +8445,7 @@
         <note category="location">src/app/core/automations/automation-copy.ts:73</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:59</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:125</note>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:690</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:91,92</note>
         <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:146,147</note>
         <note category="location">src/app/features/pages/components/page-meta-chips.component.ts:72</note>
@@ -9023,6 +9275,17 @@
         <target>Clé d&apos;événement</target>
       </segment>
     </unit>
+    <unit id="2656586998545560719">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:215</note>
+        <note category="description">A task field listed in a merged activity timeline entry, as in updated name and due date</note>
+        <note category="meaning">activity field</note>
+      </notes>
+      <segment state="translated">
+        <source>due date</source>
+        <target>la date d&apos;échéance</target>
+      </segment>
+    </unit>
     <unit id="265708342666497631">
       <notes>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:136</note>
@@ -9349,6 +9612,16 @@
         <target>Ajouter une réaction</target>
       </segment>
     </unit>
+    <unit id="9029168908672992601">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:591</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they edited a comment</note>
+      </notes>
+      <segment state="translated">
+        <source>edited a comment</source>
+        <target>a modifié un commentaire</target>
+      </segment>
+    </unit>
     <unit id="6411641707154636308">
       <notes>
         <note category="location">src/app/features/pins/components/pin-scope-menu.component.ts:151</note>
@@ -9554,6 +9827,16 @@
       <segment state="translated">
         <source>Query deleted</source>
         <target>Requête supprimée</target>
+      </segment>
+    </unit>
+    <unit id="1674961966403193763">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:340</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they closed a pull request. PULL_REQUEST is its number and title</note>
+      </notes>
+      <segment state="translated">
+        <source>closed pull request <ph id="0" equiv="PULL_REQUEST" disp="FIRST"/></source>
+        <target>a fermé la pull request <ph id="0" equiv="PULL_REQUEST" disp="FIRST"/></target>
       </segment>
     </unit>
     <unit id="1675061222954835186">
@@ -10200,6 +10483,16 @@
         <target>Enregistré</target>
       </segment>
     </unit>
+    <unit id="6335675486723988642">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:581</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they removed a file from a task. FILE is the file name</note>
+      </notes>
+      <segment state="translated">
+        <source>removed the attachment <ph id="0" equiv="FILE" disp="FIRST"/></source>
+        <target>a retiré la pièce jointe <ph id="0" equiv="FILE" disp="FIRST"/></target>
+      </segment>
+    </unit>
     <unit id="6335842502353691526">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:239</note>
@@ -10340,6 +10633,16 @@
       <segment state="translated">
         <source>You do not have permission to pin here</source>
         <target>Vous n’avez pas la permission d’épingler ici</target>
+      </segment>
+    </unit>
+    <unit id="3240772691701099823">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:369</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they pushed commits. COUNT is a number above one and BRANCH is the branch name</note>
+      </notes>
+      <segment state="translated">
+        <source>pushed <ph id="0" equiv="COUNT" disp="count"/> commits to <ph id="1" equiv="BRANCH" disp="FIRST"/></source>
+        <target>a poussé <ph id="0" equiv="COUNT" disp="count"/> commits sur <ph id="1" equiv="BRANCH" disp="FIRST"/></target>
       </segment>
     </unit>
     <unit id="3241357959735682038">
@@ -10895,6 +11198,16 @@
         <target>Description du signalement</target>
       </segment>
     </unit>
+    <unit id="7581539719940418794">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:539</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they removed a tag from a task</note>
+      </notes>
+      <segment state="translated">
+        <source>removed a tag</source>
+        <target>a retiré une étiquette</target>
+      </segment>
+    </unit>
     <unit id="1418101411356139094">
       <notes>
         <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:120,121</note>
@@ -11224,6 +11537,16 @@
         <target> Effacer les conditions </target>
       </segment>
     </unit>
+    <unit id="4820439278939512139">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:555</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they took a task off a board. BOARD is the board&apos;s name</note>
+      </notes>
+      <segment state="translated">
+        <source>removed it from <ph id="0" equiv="BOARD" disp="FIRST"/></source>
+        <target>l&apos;a retirée de <ph id="0" equiv="BOARD" disp="FIRST"/></target>
+      </segment>
+    </unit>
     <unit id="4820528532769775314">
       <notes>
         <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:38</note>
@@ -11300,6 +11623,7 @@
         <note category="location">src/app/core/util/pinned-task-filter.ts:40</note>
         <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:253</note>
         <note category="location">src/app/features/automations/components/automation-run-history.component.ts:302</note>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:678</note>
         <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:50</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:71</note>
         <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:64</note>
@@ -12672,7 +12996,7 @@
     </unit>
     <unit id="9113187979371406732">
       <notes>
-        <note category="location">src/app/static/pipes/activity.pipe.ts:129</note>
+        <note category="location">src/app/core/transforms/activity-detail.ts:95</note>
         <note category="description">How many findings an assistant review raised, in the activity feed</note>
       </notes>
       <segment state="translated">
@@ -12748,6 +13072,16 @@
       <segment state="translated">
         <source> Link tasks </source>
         <target> Lier des tâches </target>
+      </segment>
+    </unit>
+    <unit id="5677150749343951328">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:435</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they accepted a finding from an assistant review</note>
+      </notes>
+      <segment state="translated">
+        <source>accepted a review finding</source>
+        <target>a accepté un point de relecture</target>
       </segment>
     </unit>
     <unit id="139060283234317043">
@@ -12931,6 +13265,16 @@
         <target>Une seule colonne de lecture centrée ; tous les champs se trouvent derrière « Tous les champs ».</target>
       </segment>
     </unit>
+    <unit id="4093423666766180415">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-dialog.component.ts:181</note>
+        <note category="description">Subtitle of the board activity dialog. BOARD is the board&apos;s name and COUNT is a number</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="BOARD" disp="name"/> · <ph id="1" equiv="COUNT" disp="count"/> events</source>
+        <target><ph id="0" equiv="BOARD" disp="name"/> · <ph id="1" equiv="COUNT" disp="count"/> événements</target>
+      </segment>
+    </unit>
     <unit id="4094558053839852233">
       <notes>
         <note category="location">src/app/features/automations/components/automation-relation-editor.component.ts:87,88</note>
@@ -12939,6 +13283,16 @@
       <segment state="translated">
         <source>Find a task</source>
         <target>Rechercher une tâche</target>
+      </segment>
+    </unit>
+    <unit id="4097574258722168230">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:417</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when an assistant review they ran raised one finding</note>
+      </notes>
+      <segment state="translated">
+        <source>ran an assistant review that raised 1 finding</source>
+        <target>a lancé une relecture de l&apos;assistant, qui a relevé 1 point</target>
       </segment>
     </unit>
     <unit id="409843096950290609">
@@ -12999,6 +13353,16 @@
       <segment state="initial">
         <source>Check the spelling, or create a new workspace.</source>
         <target>Vérifiez l&apos;orthographe ou créez un nouvel espace de travail.</target>
+      </segment>
+    </unit>
+    <unit id="5329377036808589789">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:393</note>
+        <note category="description">Activity timeline entry after the code host&apos;s name when its checks passed. REFERENCE is a branch or commit</note>
+      </notes>
+      <segment state="translated">
+        <source>checks passed on <ph id="0" equiv="REFERENCE" disp="FIRST"/></source>
+        <target>signale des vérifications réussies sur <ph id="0" equiv="REFERENCE" disp="FIRST"/></target>
       </segment>
     </unit>
     <unit id="4206709627683312934">
@@ -14121,6 +14485,16 @@
         <target>étiquettes</target>
       </segment>
     </unit>
+    <unit id="4986639328380085356">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:522</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they assigned someone to a task. PERSON is that person&apos;s name</note>
+      </notes>
+      <segment state="translated">
+        <source>assigned <ph id="0" equiv="PERSON" disp="FIRST"/></source>
+        <target>a assigné <ph id="0" equiv="PERSON" disp="FIRST"/></target>
+      </segment>
+    </unit>
     <unit id="4993066231165110063">
       <notes>
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:295,297</note>
@@ -14180,6 +14554,16 @@
       <segment state="translated">
         <source> Move to backlog </source>
         <target>Déplacer vers le backlog</target>
+      </segment>
+    </unit>
+    <unit id="894073162382631591">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:574</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they removed a file from a task</note>
+      </notes>
+      <segment state="translated">
+        <source>removed an attachment</source>
+        <target>a retiré une pièce jointe</target>
       </segment>
     </unit>
     <unit id="8945480026995354798">
@@ -15840,6 +16224,16 @@
         <target>Réactiver</target>
       </segment>
     </unit>
+    <unit id="3695792553937943632">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:285</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they linked this task to another</note>
+      </notes>
+      <segment state="translated">
+        <source>linked a task</source>
+        <target>a lié une tâche</target>
+      </segment>
+    </unit>
     <unit id="3696187452155042483">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:21,22</note>
@@ -15919,6 +16313,16 @@
       <segment state="translated">
         <source>does not equal</source>
         <target>n&apos;est pas égal à</target>
+      </segment>
+    </unit>
+    <unit id="3261018859281870041">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:573</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they attached a file to a task</note>
+      </notes>
+      <segment state="translated">
+        <source>attached a file</source>
+        <target>a joint un fichier</target>
       </segment>
     </unit>
     <unit id="326106955650253946">
@@ -16007,6 +16411,7 @@
     <unit id="5873012413476626725">
       <notes>
         <note category="location">src/app/core/automations/automation-copy.ts:110</note>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:559</note>
         <note category="description">Operator used in an automation condition</note>
       </notes>
       <segment state="translated">
@@ -16302,6 +16707,16 @@
         <target>Liens</target>
       </segment>
     </unit>
+    <unit id="5133088355060537607">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-dialog.component.ts:60,63</note>
+        <note category="description">Accessible label for the board activity type filter</note>
+      </notes>
+      <segment state="translated">
+        <source>Filter activity by type</source>
+        <target>Filtrer l&apos;activité par type</target>
+      </segment>
+    </unit>
     <unit id="5134665652238990372">
       <notes>
         <note category="location">src/app/core/automations/automation-copy.ts:163</note>
@@ -16350,6 +16765,16 @@
       <segment state="translated">
         <source>Loading current sprint</source>
         <target>Chargement du sprint en cours</target>
+      </segment>
+    </unit>
+    <unit id="4498682414491138092">
+      <notes>
+        <note category="location">src/app/core/util/dates.ts:93</note>
+        <note category="description">Heading over the entries from yesterday in a timeline</note>
+      </notes>
+      <segment state="translated">
+        <source>Yesterday</source>
+        <target>Hier</target>
       </segment>
     </unit>
     <unit id="8103645859626358078">
@@ -16405,6 +16830,7 @@
     <unit id="5306473977542913614">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:616</note>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-dialog.component.ts:51,53</note>
         <note category="location">src/app/features/settings/views/personal-assistant-settings-view/personal-assistant-settings-view.component.ts:57,59</note>
         <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:109,112</note>
         <note category="description">Name of the activity permission group</note>
@@ -16937,6 +17363,16 @@
         <target>À surveiller</target>
       </segment>
     </unit>
+    <unit id="2891379900607030905">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:474</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they restored a deleted task</note>
+      </notes>
+      <segment state="translated">
+        <source>restored</source>
+        <target>a restauré</target>
+      </segment>
+    </unit>
     <unit id="2893417064141576408">
       <notes>
         <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:79,82</note>
@@ -17075,6 +17511,16 @@
       <segment state="translated">
         <source>Add at least one condition before this query can be saved.</source>
         <target>Ajoutez au moins une condition avant de pouvoir enregistrer cette requête.</target>
+      </segment>
+    </unit>
+    <unit id="8002436648282060749">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:518</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they changed a task&apos;s start date</note>
+      </notes>
+      <segment state="translated">
+        <source>changed the start date</source>
+        <target>a modifié la date de début</target>
       </segment>
     </unit>
     <unit id="8008785386100703750">
@@ -17501,6 +17947,17 @@
         <target>Créer la tâche « <ph id="0" equiv="NAME" disp="name"/> »</target>
       </segment>
     </unit>
+    <unit id="5845168339632458508">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:223</note>
+        <note category="description">The board group of a task, listed in a merged activity timeline entry, as in updated name and group</note>
+        <note category="meaning">activity field</note>
+      </notes>
+      <segment state="translated">
+        <source>group</source>
+        <target>le groupe</target>
+      </segment>
+    </unit>
     <unit id="5846098745343293658">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:818</note>
@@ -17509,6 +17966,16 @@
       <segment state="initial">
         <source>Delete this import?</source>
         <target>Supprimer cet import ?</target>
+      </segment>
+    </unit>
+    <unit id="5846332390771184932">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:386</note>
+        <note category="description">Activity timeline entry after the code host&apos;s name when its checks passed</note>
+      </notes>
+      <segment state="translated">
+        <source>checks passed</source>
+        <target>signale des vérifications réussies</target>
       </segment>
     </unit>
     <unit id="584754872792429089">
@@ -17540,6 +18007,17 @@
       <segment state="translated">
         <source>Create a task</source>
         <target>Créer une tâche</target>
+      </segment>
+    </unit>
+    <unit id="5293563719217972880">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:207</note>
+        <note category="description">A task field listed in a merged activity timeline entry, as in updated name and assignees</note>
+        <note category="meaning">activity field</note>
+      </notes>
+      <segment state="translated">
+        <source>assignees</source>
+        <target>les personnes assignées</target>
       </segment>
     </unit>
     <unit id="5295561279421276704">
@@ -17690,6 +18168,16 @@
       <segment state="translated">
         <source>Delete the task after 1 minute</source>
         <target>Supprimer la tâche après 1 minute</target>
+      </segment>
+    </unit>
+    <unit id="2593763089859685916">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:599</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they switched something on</note>
+      </notes>
+      <segment state="translated">
+        <source>enabled</source>
+        <target>a activé</target>
       </segment>
     </unit>
     <unit id="2594181621331961568">
@@ -18058,6 +18546,16 @@
         <target>Le passage que remplace cette suggestion n’est plus dans la description. Modifiez la description à la main ou relancez la relecture.</target>
       </segment>
     </unit>
+    <unit id="8444272719785117681">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:603</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they switched something off</note>
+      </notes>
+      <segment state="translated">
+        <source>disabled</source>
+        <target>a désactivé</target>
+      </segment>
+    </unit>
     <unit id="8451136300262007554">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:255,257</note>
@@ -18137,6 +18635,16 @@
       <segment>
         <source>Choose a file and a destination board.</source>
         <target>Choisissez un fichier et un tableau de destination.</target>
+      </segment>
+    </unit>
+    <unit id="5042643107387337360">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:527</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they took someone off a task. PERSON is that person&apos;s name</note>
+      </notes>
+      <segment state="translated">
+        <source>unassigned <ph id="0" equiv="PERSON" disp="FIRST"/></source>
+        <target>a désassigné <ph id="0" equiv="PERSON" disp="FIRST"/></target>
       </segment>
     </unit>
     <unit id="5044351709300326566">
@@ -18271,6 +18779,16 @@
       <segment state="translated">
         <source>Automation could not be updated</source>
         <target>L&apos;automatisation n&apos;a pas pu être mise à jour</target>
+      </segment>
+    </unit>
+    <unit id="979415550078360218">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:321</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they closed a pull request</note>
+      </notes>
+      <segment state="translated">
+        <source>closed a pull request</source>
+        <target>a fermé une pull request</target>
       </segment>
     </unit>
     <unit id="7223172032104127584">
@@ -19205,6 +19723,16 @@
         <target>La clôture ferme <ph id="0" equiv="SPRINT" disp="sprintName"/>. Rien n’est reporté.</target>
       </segment>
     </unit>
+    <unit id="5817627395439792837">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:786</note>
+        <note category="description">Follows the person in an activity entry and names the assistant that acted for them. AGENT is its name</note>
+      </notes>
+      <segment state="translated">
+        <source>via <ph id="0" equiv="AGENT" disp="activity.agent"/></source>
+        <target>via <ph id="0" equiv="AGENT" disp="activity.agent"/></target>
+      </segment>
+    </unit>
     <unit id="5254622645701859101">
       <notes>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:359</note>
@@ -19572,6 +20100,17 @@
       <segment state="translated">
         <source> Accept suggestion </source>
         <target>Accepter la suggestion</target>
+      </segment>
+    </unit>
+    <unit id="6470939722175548797">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:209</note>
+        <note category="description">A task field listed in a merged activity timeline entry, as in updated name and owner</note>
+        <note category="meaning">activity field</note>
+      </notes>
+      <segment state="translated">
+        <source>owner</source>
+        <target>le propriétaire</target>
       </segment>
     </unit>
     <unit id="6473034184907916283">
@@ -20057,6 +20596,16 @@
         <target>tâches</target>
       </segment>
     </unit>
+    <unit id="4239919027327086685">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:293</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they linked this task to another. TASK is the other task&apos;s id</note>
+      </notes>
+      <segment state="translated">
+        <source>linked <ph id="0" equiv="TASK" disp="FIRST"/></source>
+        <target>a lié <ph id="0" equiv="TASK" disp="FIRST"/></target>
+      </segment>
+    </unit>
     <unit id="8713562282465902356">
       <notes>
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:388</note>
@@ -20116,6 +20665,16 @@
       <segment state="translated">
         <source>Relation Type</source>
         <target>Type de relation</target>
+      </segment>
+    </unit>
+    <unit id="5109975316769294941">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:510</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they changed a task&apos;s estimate</note>
+      </notes>
+      <segment state="translated">
+        <source>changed the estimate</source>
+        <target>a modifié l&apos;estimation</target>
       </segment>
     </unit>
     <unit id="5111678686685775324">
@@ -20309,10 +20868,11 @@
     </unit>
     <unit id="6048892649018070225">
       <notes>
+        <note category="location">src/app/core/util/dates.ts:89</note>
         <note category="location">src/app/features/calendar/components/calendar-toolbar/calendar-toolbar.component.ts:124,127</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:181,184</note>
         <note category="location">src/app/static/components/date-picker/calendar.component.ts:292</note>
-        <note category="description">Button that jumps the calendar to today</note>
+        <note category="description">Heading over the entries from today in a timeline</note>
       </notes>
       <segment state="translated">
         <source>Today</source>
@@ -20700,6 +21260,16 @@
         <target>Vous vous en souvenez ?</target>
       </segment>
     </unit>
+    <unit id="1300505856664758899">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:587</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they commented on a task</note>
+      </notes>
+      <segment state="translated">
+        <source>commented</source>
+        <target>a commenté</target>
+      </segment>
+    </unit>
     <unit id="1301232718408636510">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-assigned-tasks.component.ts:34,36</note>
@@ -20965,6 +21535,16 @@
         <target>Conserve les <ph id="0" equiv="COUNT" disp="assigned.size"/> personnes déjà assignées dans la sélection</target>
       </segment>
     </unit>
+    <unit id="3443720919153564516">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:622</note>
+        <note category="description">Activity timeline entry after the person&apos;s name for a change the timeline has no wording for</note>
+      </notes>
+      <segment state="translated">
+        <source>made a change</source>
+        <target>a effectué une modification</target>
+      </segment>
+    </unit>
     <unit id="3445720584036648434">
       <notes>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:375</note>
@@ -21020,6 +21600,16 @@
       <segment state="translated">
         <source>Add comment actions need a comment.</source>
         <target>Les actions d&apos;ajout de commentaire nécessitent un commentaire.</target>
+      </segment>
+    </unit>
+    <unit id="8153028102163909425">
+      <notes>
+        <note category="location">src/app/core/util/dates.ts:119</note>
+        <note category="description">Compact age of a timeline entry in hours, as in 3h. HOURS is a number</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="HOURS" disp="hours"/>h</source>
+        <target><ph id="0" equiv="HOURS" disp="hours"/> h</target>
       </segment>
     </unit>
     <unit id="8156602685712437139">
@@ -21289,6 +21879,16 @@
         <target> Cliquez sur le logo ou déposez des images sur l&apos;aperçu. </target>
       </segment>
     </unit>
+    <unit id="1541259119100510260">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:362</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they pushed commits. COUNT is a number above one</note>
+      </notes>
+      <segment state="translated">
+        <source>pushed <ph id="0" equiv="COUNT" disp="count"/> commits</source>
+        <target>a poussé <ph id="0" equiv="COUNT" disp="count"/> commits</target>
+      </segment>
+    </unit>
     <unit id="1541678370896041349">
       <notes>
         <note category="location">src/app/features/pages/util/page-templates.ts:62</note>
@@ -21429,6 +22029,16 @@
       <segment state="translated">
         <source>State</source>
         <target>État</target>
+      </segment>
+    </unit>
+    <unit id="591388663994959692">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:632</note>
+        <note category="description">Follows an activity timeline entry that folds several edits together. COUNT is a number above one</note>
+      </notes>
+      <segment state="translated">
+        <source>· <ph id="0" equiv="COUNT" disp="count"/> edits</source>
+        <target>· <ph id="0" equiv="COUNT" disp="count"/> modifications</target>
       </segment>
     </unit>
     <unit id="5914287100798497400">
@@ -21768,6 +22378,16 @@
         <target>La réponse de l’assistant est devenue trop longue et a été interrompue.</target>
       </segment>
     </unit>
+    <unit id="2199712883577343143">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:449</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they reopened a finding from an assistant review. FINDING is its title</note>
+      </notes>
+      <segment state="translated">
+        <source>reopened the review finding “<ph id="0" equiv="FINDING" disp="FIRST"/>”</source>
+        <target>a rouvert le point de relecture « <ph id="0" equiv="FINDING" disp="FIRST"/> »</target>
+      </segment>
+    </unit>
     <unit id="2501989539336327542">
       <notes>
         <note category="location">src/app/static/components/image-upload/image-upload.component.ts:80,83</note>
@@ -21929,6 +22549,16 @@
         <target> Ajouter un arrière-plan </target>
       </segment>
     </unit>
+    <unit id="8052764268168560747">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:325</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they opened a pull request</note>
+      </notes>
+      <segment state="translated">
+        <source>opened a pull request</source>
+        <target>a ouvert une pull request</target>
+      </segment>
+    </unit>
     <unit id="8054034789307349890">
       <notes>
         <note category="location">src/app/shared/components/task-selection-actions/task-selection-actions.component.ts:40,46</note>
@@ -22018,6 +22648,16 @@
       <segment state="translated">
         <source>Folder layout</source>
         <target>Disposition du dossier</target>
+      </segment>
+    </unit>
+    <unit id="1059428081289395168">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:368</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they pushed one commit. BRANCH is the branch name</note>
+      </notes>
+      <segment state="translated">
+        <source>pushed 1 commit to <ph id="0" equiv="BRANCH" disp="FIRST"/></source>
+        <target>a poussé 1 commit sur <ph id="0" equiv="BRANCH" disp="FIRST"/></target>
       </segment>
     </unit>
     <unit id="2386184427978292327">
@@ -22511,6 +23151,16 @@
         <target>Chargement des métriques de flux</target>
       </segment>
     </unit>
+    <unit id="6717972564796562666">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:411</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when an assistant review they ran failed</note>
+      </notes>
+      <segment state="translated">
+        <source>ran an assistant review, which failed</source>
+        <target>a lancé une relecture de l&apos;assistant, qui a échoué</target>
+      </segment>
+    </unit>
     <unit id="6719888848788752658">
       <notes>
         <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:197</note>
@@ -22709,6 +23359,16 @@
       <segment state="translated">
         <source> Partial history </source>
         <target> Historique partiel </target>
+      </segment>
+    </unit>
+    <unit id="588230151780724018">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:470</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they deleted a task or board</note>
+      </notes>
+      <segment state="translated">
+        <source>deleted</source>
+        <target>a supprimé</target>
       </segment>
     </unit>
     <unit id="5883113481304818353">
@@ -22974,6 +23634,16 @@
       <segment state="translated">
         <source>Notify <ph id="0" equiv="AUDIENCE" disp="audience"/>: &quot;<ph id="1" equiv="MESSAGE" disp="action.message"/>&quot;</source>
         <target>Notifier <ph id="0" equiv="AUDIENCE" disp="audience"/> : &quot;<ph id="1" equiv="MESSAGE" disp="action.message"/>&quot;</target>
+      </segment>
+    </unit>
+    <unit id="2874160350204276776">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:494</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they renamed a task or board</note>
+      </notes>
+      <segment state="translated">
+        <source>renamed</source>
+        <target>a renommé</target>
       </segment>
     </unit>
     <unit id="1134043805497572295">
@@ -23398,6 +24068,16 @@
         <target>Les tâches terminées apparaîtront ici au fur et à mesure.</target>
       </segment>
     </unit>
+    <unit id="2779174231149333213">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:197</note>
+        <note category="description">Stands in for a person who has since been removed from the workspace, in the activity timeline</note>
+      </notes>
+      <segment state="translated">
+        <source>a removed user</source>
+        <target>un utilisateur supprimé</target>
+      </segment>
+    </unit>
     <unit id="4257828580066254399">
       <notes>
         <note category="location">src/app/features/reporting/components/workload-report.component.ts:47,48</note>
@@ -23781,6 +24461,16 @@
       <segment state="translated">
         <source>I understand that existing links to this workspace will break.</source>
         <target>Je comprends que les liens existants vers cet espace de travail seront rompus.</target>
+      </segment>
+    </unit>
+    <unit id="750267453443059013">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:418</note>
+        <note category="description">Activity timeline entry after the person&apos;s name for an assistant review they ran. COUNT is a number</note>
+      </notes>
+      <segment state="translated">
+        <source>ran an assistant review that raised <ph id="0" equiv="COUNT" disp="count"/> findings</source>
+        <target>a lancé une relecture de l&apos;assistant, qui a relevé <ph id="0" equiv="COUNT" disp="count"/> points</target>
       </segment>
     </unit>
     <unit id="7504275186513649991">
@@ -24692,6 +25382,7 @@
         <note category="location">src/app/core/auth/permission-items.ts:622</note>
         <note category="location">src/app/core/util/assistant-inline-prompt.ts:20</note>
         <note category="location">src/app/features/assistant/assistant.routes.ts:12</note>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:702</note>
         <note category="location">src/app/features/pages/editor/page-editor-commands.ts:20</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:87</note>
         <note category="location">src/app/features/settings/settings.routes.ts:172</note>
@@ -24987,6 +25678,16 @@
         <target>Aucun champ trouvé</target>
       </segment>
     </unit>
+    <unit id="4375008545178374235">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-dialog.component.ts:93,98</note>
+        <note category="description">Shown in the board activity dialog when the selected type filter hides every loaded entry</note>
+      </notes>
+      <segment state="translated">
+        <source>No activity matches this filter</source>
+        <target>Aucune activité ne correspond à ce filtre</target>
+      </segment>
+    </unit>
     <unit id="4378805774812012692">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:375,379</note>
@@ -25243,6 +25944,16 @@
       <segment state="initial">
         <source>Import Data</source>
         <target>Importer les données</target>
+      </segment>
+    </unit>
+    <unit id="7266541713615823497">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:686</note>
+        <note category="description">Activity timeline filter for changes to task fields, comments, files and links</note>
+      </notes>
+      <segment state="translated">
+        <source>Edits</source>
+        <target>Modifications</target>
       </segment>
     </unit>
     <unit id="7268651966500192698">
@@ -25537,6 +26248,16 @@
       <segment state="initial">
         <source> I agree to the terms of service and privacy policy </source>
         <target> J&apos;accepte les conditions d&apos;utilisation et la politique de confidentialité </target>
+      </segment>
+    </unit>
+    <unit id="4584368643492582099">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:466</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they changed a task or board</note>
+      </notes>
+      <segment state="translated">
+        <source>made changes</source>
+        <target>a effectué des modifications</target>
       </segment>
     </unit>
     <unit id="4585825587400520198">
@@ -26193,6 +26914,16 @@
         <target>Tout partager</target>
       </segment>
     </unit>
+    <unit id="2752246135868888302">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:294</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they removed a link to another task. TASK is the other task&apos;s id</note>
+      </notes>
+      <segment state="translated">
+        <source>unlinked <ph id="0" equiv="TASK" disp="FIRST"/></source>
+        <target>a délié <ph id="0" equiv="TASK" disp="FIRST"/></target>
+      </segment>
+    </unit>
     <unit id="2753541239022218962">
       <notes>
         <note category="location">src/app/features/settings/components/workspace-public-access/workspace-public-access.component.ts:66,69</note>
@@ -26556,6 +27287,16 @@
       <segment state="initial">
         <source>Relation types could not be loaded.</source>
         <target>Les types de relation n&apos;ont pas pu être chargés</target>
+      </segment>
+    </unit>
+    <unit id="5000218922526498212">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:387</note>
+        <note category="description">Activity timeline entry after the code host&apos;s name when some checks failed. FAILED and TOTAL are numbers</note>
+      </notes>
+      <segment state="translated">
+        <source>checks failed (<ph id="0" equiv="FAILED" disp="failed"/> of <ph id="1" equiv="TOTAL" disp="total"/>)</source>
+        <target>signale des vérifications en échec (<ph id="0" equiv="FAILED" disp="failed"/> sur <ph id="1" equiv="TOTAL" disp="total"/>)</target>
       </segment>
     </unit>
     <unit id="5000711107816438890">
@@ -27471,6 +28212,16 @@
         <target>effacer la description</target>
       </segment>
     </unit>
+    <unit id="2463581940082795449">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:266</note>
+        <note category="description">Activity timeline entry after the person&apos;s name for several fields changed at once, ending with a move to a new status. FIELDS is a list such as name and priority</note>
+      </notes>
+      <segment state="translated">
+        <source>updated <ph id="0" equiv="FIELDS" disp="list"/> and moved to <ph id="1" equiv="STATUS" disp="FIRST"/></source>
+        <target>a modifié <ph id="0" equiv="FIELDS" disp="list"/> et déplacé vers <ph id="1" equiv="STATUS" disp="FIRST"/></target>
+      </segment>
+    </unit>
     <unit id="29108938894290964">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:113</note>
@@ -27640,6 +28391,26 @@
       <segment state="translated">
         <source>Credential could not be created</source>
         <target>L&apos;identifiant n&apos;a pas pu être créé</target>
+      </segment>
+    </unit>
+    <unit id="2329189225567193595">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:506</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they changed a task&apos;s priority</note>
+      </notes>
+      <segment state="translated">
+        <source>changed the priority</source>
+        <target>a modifié la priorité</target>
+      </segment>
+    </unit>
+    <unit id="2329216581321975995">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:302</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they removed a link to another task. TASK is the other task&apos;s id and RELATION says how they related, as in blocks</note>
+      </notes>
+      <segment state="translated">
+        <source>unlinked <ph id="0" equiv="TASK" disp="FIRST"/> (<ph id="1" equiv="RELATION" disp="label"/>)</source>
+        <target>a délié <ph id="0" equiv="TASK" disp="FIRST"/> (<ph id="1" equiv="RELATION" disp="label"/>)</target>
       </segment>
     </unit>
     <unit id="6987126257530896673">
@@ -28118,6 +28889,16 @@
       <segment state="translated">
         <source>Queries</source>
         <target>Requêtes</target>
+      </segment>
+    </unit>
+    <unit id="6928679808877898416">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:286</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they removed a link between this task and another</note>
+      </notes>
+      <segment state="translated">
+        <source>unlinked a task</source>
+        <target>a délié une tâche</target>
       </segment>
     </unit>
     <unit id="7431603051236116456">
@@ -28789,6 +29570,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:277</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:252</note>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:706</note>
         <note category="description">Tab listing the branches, commits and pull requests linked to a task</note>
       </notes>
       <segment state="translated">
@@ -28917,6 +29699,16 @@
         <target>Enregistrer la mienne</target>
       </segment>
     </unit>
+    <unit id="7645672961231881025">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:546</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they removed a tag from a task. TAG is the tag&apos;s name</note>
+      </notes>
+      <segment state="translated">
+        <source>removed the tag <ph id="0" equiv="TAG" disp="FIRST"/></source>
+        <target>a retiré l&apos;étiquette <ph id="0" equiv="TAG" disp="FIRST"/></target>
+      </segment>
+    </unit>
     <unit id="7648635992567747657">
       <notes>
         <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:145,147</note>
@@ -28984,6 +29776,16 @@
       <segment state="translated">
         <source>Move incomplete tasks to backlog</source>
         <target>Déplacer les tâches inachevées vers le backlog</target>
+      </segment>
+    </unit>
+    <unit id="8340605781803467456">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:361</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they pushed one commit</note>
+      </notes>
+      <segment state="translated">
+        <source>pushed 1 commit</source>
+        <target>a poussé 1 commit</target>
       </segment>
     </unit>
     <unit id="8348832067364561502">
@@ -29347,6 +30149,16 @@
         <target>S’exécute en tant que <ph id="0" equiv="ACCOUNT" disp="account"/> sur le projet <ph id="1" equiv="PROJECT" disp="name"/></target>
       </segment>
     </unit>
+    <unit id="3411302376557713872">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:498</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they changed a description</note>
+      </notes>
+      <segment state="translated">
+        <source>changed the description</source>
+        <target>a modifié la description</target>
+      </segment>
+    </unit>
     <unit id="3411400869376562499">
       <notes>
         <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:47</note>
@@ -29628,6 +30440,16 @@
       <segment state="translated">
         <source>Your name, email address and picture.</source>
         <target>Votre nom, votre adresse e-mail et votre photo.</target>
+      </segment>
+    </unit>
+    <unit id="6595587557099432031">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:317</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they merged a pull request</note>
+      </notes>
+      <segment state="translated">
+        <source>merged a pull request</source>
+        <target>a fusionné une pull request</target>
       </segment>
     </unit>
     <unit id="6599752784987327249">
@@ -30138,6 +30960,16 @@
         <target>Filtrer par entité</target>
       </segment>
     </unit>
+    <unit id="5251151117970984677">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:802</note>
+        <note category="description">Toggle that lists the times an action repeated, in the activity timeline. COUNT is a number above one</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="COUNT" disp="count"/> times</source>
+        <target><ph id="0" equiv="COUNT" disp="count"/> fois</target>
+      </segment>
+    </unit>
     <unit id="8263303804952657732">
       <notes>
         <note category="location">src/app/features/users/components/user-list/user-list.component.ts:36,38</note>
@@ -30251,6 +31083,7 @@
     <unit id="6381490568322624964">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:86</note>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:698</note>
         <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:128</note>
         <note category="description">Shown on a linked branch that was deleted</note>
       </notes>
@@ -30457,6 +31290,16 @@
         <target>{VAR_PLURAL, plural, =1 {Réattribuer 1 tâche} other {Réattribuer <ph id="0" equiv="INTERPOLATION"/> tâches}}</target>
       </segment>
     </unit>
+    <unit id="512881793033435652">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:440</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they dismissed a finding from an assistant review. FINDING is its title</note>
+      </notes>
+      <segment state="translated">
+        <source>dismissed the review finding “<ph id="0" equiv="FINDING" disp="FIRST"/>”</source>
+        <target>a écarté le point de relecture « <ph id="0" equiv="FINDING" disp="FIRST"/> »</target>
+      </segment>
+    </unit>
     <unit id="3323062521847000288">
       <notes>
         <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:138,140</note>
@@ -30517,6 +31360,16 @@
         <target>Date de fin du rapport</target>
       </segment>
     </unit>
+    <unit id="3334908254318541410">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:781</note>
+        <note category="description">Stands in for the person behind an activity entry when they are unknown</note>
+      </notes>
+      <segment state="translated">
+        <source>Someone</source>
+        <target>Quelqu&apos;un</target>
+      </segment>
+    </unit>
     <unit id="3335455471343847900">
       <notes>
         <note category="location">src/app/shell/global-commands.service.ts:438</note>
@@ -30525,6 +31378,16 @@
       <segment state="initial">
         <source>Use Document Task Layout</source>
         <target>Utiliser la disposition document des tâches</target>
+      </segment>
+    </unit>
+    <unit id="3336081258669504751">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:253</note>
+        <note category="description">Activity timeline entry after the person&apos;s name for several fields changed at once. FIELDS is a list such as name and priority</note>
+      </notes>
+      <segment state="translated">
+        <source>updated <ph id="0" equiv="FIELDS" disp="list"/></source>
+        <target>a modifié <ph id="0" equiv="FIELDS" disp="list"/></target>
       </segment>
     </unit>
     <unit id="3339303141258670173">
@@ -30629,6 +31492,17 @@
       <segment state="translated">
         <source>Overlap</source>
         <target>Chevauchement</target>
+      </segment>
+    </unit>
+    <unit id="8425772170860106247">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:217</note>
+        <note category="description">A task field listed in a merged activity timeline entry, as in updated name and start date</note>
+        <note category="meaning">activity field</note>
+      </notes>
+      <segment state="translated">
+        <source>start date</source>
+        <target>la date de début</target>
       </segment>
     </unit>
     <unit id="8426796922329733141">
@@ -31736,6 +32610,16 @@
         <target> Réussies </target>
       </segment>
     </unit>
+    <unit id="2607661686124127135">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:580</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they attached a file to a task. FILE is the file name</note>
+      </notes>
+      <segment state="translated">
+        <source>attached <ph id="0" equiv="FILE" disp="FIRST"/></source>
+        <target>a joint <ph id="0" equiv="FILE" disp="FIRST"/></target>
+      </segment>
+    </unit>
     <unit id="2610280847967679840">
       <notes>
         <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:179,182</note>
@@ -31910,6 +32794,16 @@
       <segment state="translated">
         <source>Collapse</source>
         <target>Réduire</target>
+      </segment>
+    </unit>
+    <unit id="1358102618855795038">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:478</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they reordered tasks on a board</note>
+      </notes>
+      <segment state="translated">
+        <source>reordered</source>
+        <target>a réorganisé</target>
       </segment>
     </unit>
     <unit id="1359092845802014498">
@@ -32299,6 +33193,16 @@
       <segment state="translated">
         <source>Comment Actions</source>
         <target>Actions du commentaire</target>
+      </segment>
+    </unit>
+    <unit id="47594284251461137">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:502</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they changed a task&apos;s status</note>
+      </notes>
+      <segment state="translated">
+        <source>changed the status</source>
+        <target>a changé le statut</target>
       </segment>
     </unit>
     <unit id="8587947756059708753">
@@ -33131,6 +34035,16 @@
         <target>Aucun champ surveillé pour l’instant</target>
       </segment>
     </unit>
+    <unit id="3996463684190390375">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:345</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they opened a pull request. PULL_REQUEST is its number and title</note>
+      </notes>
+      <segment state="translated">
+        <source>opened pull request <ph id="0" equiv="PULL_REQUEST" disp="FIRST"/></source>
+        <target>a ouvert la pull request <ph id="0" equiv="PULL_REQUEST" disp="FIRST"/></target>
+      </segment>
+    </unit>
     <unit id="6441348058745652320">
       <notes>
         <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:283</note>
@@ -33302,6 +34216,16 @@
         <target>Changer de projet</target>
       </segment>
     </unit>
+    <unit id="5460881514602921001">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:462</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they created a task or board</note>
+      </notes>
+      <segment state="translated">
+        <source>created</source>
+        <target>a créé</target>
+      </segment>
+    </unit>
     <unit id="5463605367129349064">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/api-credential-row.component.ts:124,132</note>
@@ -33434,6 +34358,16 @@
       <segment state="translated">
         <source>Choose a single project, board or sprint scope.</source>
         <target>Choisissez une seule portée : projet, tableau ou sprint.</target>
+      </segment>
+    </unit>
+    <unit id="2030696111699023666">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:595</note>
+        <note category="description">Activity timeline entry after the person&apos;s name when they deleted a comment</note>
+      </notes>
+      <segment state="translated">
+        <source>deleted a comment</source>
+        <target>a supprimé un commentaire</target>
       </segment>
     </unit>
     <unit id="2034595166058554206">

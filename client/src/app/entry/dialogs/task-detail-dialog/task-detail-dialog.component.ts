@@ -46,7 +46,7 @@ export class TaskDetailDialogComponent {
 
   public static readonly width = '1140px';
   public static readonly height = '740px';
-  public static readonly panelClass = 'app-task-detail-dialog';
+  public static readonly panelClass = 'app-full-height-dialog';
 
   task = this.taskDetail.task;
 

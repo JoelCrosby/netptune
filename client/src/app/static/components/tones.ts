@@ -1,5 +1,5 @@
 export type Tone =
-  'neutral' | 'blue' | 'purple' | 'amber' | 'green' | 'teal' | 'pink';
+  'neutral' | 'blue' | 'purple' | 'amber' | 'green' | 'teal' | 'pink' | 'red';
 
 export const toneClasses: Record<Tone, string> = {
   neutral: 'bg-foreground/6 text-foreground/70',
@@ -9,6 +9,7 @@ export const toneClasses: Record<Tone, string> = {
   green: 'bg-emerald-500/12 text-emerald-700 dark:text-emerald-300',
   teal: 'bg-teal-500/12 text-teal-700 dark:text-teal-300',
   pink: 'bg-pink-500/12 text-pink-700 dark:text-pink-300',
+  red: 'bg-red-500/10 text-red-600 dark:text-red-300',
 };
 
 const accentTones: readonly Tone[] = [
