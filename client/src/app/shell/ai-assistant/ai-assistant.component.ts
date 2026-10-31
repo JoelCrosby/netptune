@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { AiPanelService } from '@core/services/ai-panel.service';
 import { animatedPresence } from '@core/util/animated-presence';
+import { onChange } from '@core/util/signals';
 import { AiAssistantPanelComponent } from './ai-assistant-panel.component';
 
 const NAVBAR_HEIGHT = '60px';
@@ -123,6 +124,31 @@ export class AiAssistantComponent implements OnDestroy {
       if (!isOpen && isAttached) {
         this.overlayRef.detach();
       }
+    });
+
+    onChange(this.panel.raiseRequests, () => this.raise());
+  }
+
+  // A popover stacks by when it was last shown, so showing it again lifts it above
+  // a dialog that opened after it. Hiding drops scroll offsets, so they are put back.
+  private raise() {
+    const host = this.overlayRef.hostElement;
+    const isShowing = host.matches(':popover-open');
+
+    if (!isShowing) {
+      return;
+    }
+
+    const viewports = [
+      ...host.querySelectorAll<HTMLElement>('[data-scroll-viewport]'),
+    ];
+    const offsets = viewports.map((viewport) => viewport.scrollTop);
+
+    host.hidePopover();
+    host.showPopover();
+
+    viewports.forEach((viewport, index) => {
+      viewport.scrollTop = offsets[index];
     });
   }
 

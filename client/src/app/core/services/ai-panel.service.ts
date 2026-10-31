@@ -1,4 +1,6 @@
+import { Dialog } from '@angular/cdk/dialog';
 import { Service, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { BrowserSettingsService } from '@core/settings/browser-settings.service';
 import { AiDisplayMode } from '@core/models/ai-display-mode';
@@ -22,6 +24,7 @@ export class AiPanelService {
   private readonly workspaceId = inject(CurrentWorkspaceService).slug;
   private readonly catalog = inject(AiModelCatalogService);
   private readonly layout = inject(LayoutService);
+  private readonly dialog = inject(Dialog);
 
   readonly isAvailable = inject(SessionService).isAssistantAvailable;
   readonly isOpen = signal(false);
@@ -34,16 +37,23 @@ export class AiPanelService {
   readonly isResizing = signal(false);
   readonly hasUnreadReply = signal(false);
 
+  private readonly overDialog = signal(false);
+  private readonly raises = signal(0);
+
+  readonly isOverDialog = this.overDialog.asReadonly();
+  readonly raiseRequests = this.raises.asReadonly();
+
   readonly isVisible = computed(() => {
     return this.isOpen() && this.isAvailable();
   });
 
-  // A phone has no room for a docked column, so docked mode shows as the overlay there
-  // without changing the stored preference, and docks again on a wider screen.
+  // A phone has no room for a docked column and a dialog's backdrop covers it, so docked
+  // mode shows as the overlay in those cases without changing the stored preference.
   private readonly displayMode = computed<AiDisplayMode>(() => {
-    const isNarrowDock = this.mode() === 'docked' && this.layout.isMobileView();
+    const isDocked = this.mode() === 'docked';
+    const mustFloat = this.layout.isMobileView() || this.overDialog();
 
-    return isNarrowDock ? 'overlay' : this.mode();
+    return isDocked && mustFloat ? 'overlay' : this.mode();
   });
 
   readonly isOverlayOpen = computed(() => {
@@ -55,6 +65,12 @@ export class AiPanelService {
   });
 
   private readonly transcriptViewers = signal(0);
+
+  constructor() {
+    this.dialog.afterAllClosed
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.overDialog.set(false));
+  }
 
   open() {
     if (!this.isAvailable()) {
@@ -69,6 +85,13 @@ export class AiPanelService {
       return;
     }
 
+    const hasOpenDialog = this.dialog.openDialogs.length > 0;
+
+    if (hasOpenDialog) {
+      this.overDialog.set(true);
+      this.raises.update((count) => count + 1);
+    }
+
     this.isOpen.set(true);
 
     void this.catalog.load();
@@ -76,6 +99,7 @@ export class AiPanelService {
 
   close() {
     this.isOpen.set(false);
+    this.overDialog.set(false);
   }
 
   toggle() {
@@ -91,11 +115,16 @@ export class AiPanelService {
       return;
     }
 
-    this.isOpen.update((value) => !value);
+    const hasOpenDialog = this.dialog.openDialogs.length > 0;
+    const isUnderDialog = hasOpenDialog && !this.overDialog();
 
-    if (this.isOpen()) {
-      void this.catalog.load();
+    if (this.isOpen() && !isUnderDialog) {
+      this.close();
+
+      return;
     }
+
+    this.open();
   }
 
   setMode(mode: AiDisplayMode) {

@@ -217,6 +217,7 @@ export class AiAssistantQuestionComponent {
 
   protected onKeydown(event: KeyboardEvent) {
     if (event.key === 'Escape') {
+      event.stopPropagation();
       this.isTyping.set(false);
 
       return;

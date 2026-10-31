@@ -307,14 +307,23 @@ export class AiAssistantPanelComponent {
     this.afterRender(() => this.composer().focus());
   }
 
-  // Escape that stops a reply stops there, so it does not also close a dialog
-  // the panel sits in.
+  // Escape that stops a reply, or closes the panel floating over a dialog, stops
+  // there so it does not also close the dialog.
   protected stopOnEscape(event: Event) {
     const isStreaming = this.assistant.isStreaming();
 
     if (isStreaming) {
       event.stopPropagation();
       this.assistant.stopTurn();
+
+      return;
+    }
+
+    const isOverDialog = this.isDrawer() && this.panel.isOverDialog();
+
+    if (isOverDialog) {
+      event.stopPropagation();
+      this.panel.close();
     }
   }
 
