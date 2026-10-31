@@ -41,6 +41,7 @@ import {
   LucideWorkflow,
 } from '@lucide/angular';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
+import { ScrollOverflowDirective } from '@static/directives/scroll-overflow.directive';
 import { PERMISSIONS } from '../core/auth/permissions';
 import { ShellMenuLinkListComponent } from './shell-menu-link-list.component';
 import {
@@ -58,37 +59,45 @@ const maxSprintLinks = 2;
   selector: 'app-shell-sidebar',
   template: `
     <div
-      class="border-side-bar-border bg-side-bar custom-scroll z-10 flex h-full flex-col justify-between overflow-y-auto border-r [transition:width_.2s_ease-in-out]">
+      class="border-side-bar-border bg-side-bar z-10 flex h-full flex-col overflow-hidden border-r [transition:width_.2s_ease-in-out]">
       <app-workspace-select
         idKey="id"
         labelKey="name"
-        (selectChange)="onWorkspaceChange($event)" />
+        (selectChange)="onWorkspaceChange($event)"
+        class="border-b border-transparent transition-colors"
+        [class.border-side-bar-border!]="linksScroll.overflowing()" />
 
-      <app-shell-menu-link-list>
-        @for (link of links(); track link.value) {
-          <app-shell-menu-link [link]="link" />
-        }
-      </app-shell-menu-link-list>
+      <div
+        class="custom-scroll flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto"
+        appScrollOverflow
+        #linksScroll="appScrollOverflow">
+        <app-shell-menu-link-list>
+          @for (link of links(); track link.value) {
+            <app-shell-menu-link [link]="link" />
+          }
+        </app-shell-menu-link-list>
 
-      <div class="flex-1"></div>
+        <div class="flex-1"></div>
 
-      <app-shell-menu-link-list>
-        @for (link of bottomLinks(); track link.value) {
-          <app-shell-menu-link [link]="link" />
-        }
+        <app-shell-menu-link-list>
+          @for (link of bottomLinks(); track link.value) {
+            <app-shell-menu-link [link]="link" />
+          }
 
-        @if (user(); as user) {
-          <app-shell-menu-link [link]="profileLink">
-            <app-avatar
-              class="app-menu-link-profile -ml-1"
-              [name]="user.displayName"
-              [imageUrl]="user.pictureUrl"
-              size="sm"
-              [border]="true"
-              [tooltip]="false" />
-          </app-shell-menu-link>
-        }
-      </app-shell-menu-link-list>
+          @if (user(); as user) {
+            <app-shell-menu-link [link]="profileLink">
+              <app-avatar
+                class="app-menu-link-profile -ml-1"
+                [name]="user.displayName"
+                [imageUrl]="user.pictureUrl"
+                size="sm"
+                [border]="true"
+                [tooltip]="false" />
+            </app-shell-menu-link>
+          }
+        </app-shell-menu-link-list>
+      </div>
+
       <app-shell-sidebar-collapse />
     </div>
   `,
@@ -98,6 +107,7 @@ const maxSprintLinks = 2;
     ShellMenuLinkComponent,
     ShellMenuLinkListComponent,
     ShellSidebarCollapseComponent,
+    ScrollOverflowDirective,
   ],
 })
 export class ShellSidebarComponent {
