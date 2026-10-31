@@ -9,6 +9,7 @@ import { refreshScopesForEntityTypes } from '@core/util/entity-refresh-scopes';
 export interface TaskReviewRun {
   startedAt: number;
   progress: number;
+  activity: string | null;
 }
 
 @Service()
@@ -31,14 +32,13 @@ export class TaskReviewRunsService {
 
     if (isAlreadyRunning) return null;
 
-    this.set(taskId, { startedAt: Date.now(), progress: 0 });
+    this.set(taskId, { startedAt: Date.now(), progress: 0, activity: null });
 
-    const result = await this.reviews.runTaskReview(taskId, (characters) => {
-      const current = this.runs().get(taskId);
-
-      if (!current) return;
-
-      this.set(taskId, { ...current, progress: characters });
+    const result = await this.reviews.runTaskReview(taskId, {
+      progress: (characters) => {
+        this.update(taskId, { progress: characters, activity: null });
+      },
+      tool: (label) => this.update(taskId, { activity: label }),
     });
 
     this.runs.update((runs) => {
@@ -52,6 +52,14 @@ export class TaskReviewRunsService {
     this.workspaceRefresh.refresh(refreshScopesForEntityTypes(['aiReview']));
 
     return result;
+  }
+
+  private update(taskId: number, change: Partial<TaskReviewRun>) {
+    const current = this.runs().get(taskId);
+
+    if (!current) return;
+
+    this.set(taskId, { ...current, ...change });
   }
 
   private set(taskId: number, run: TaskReviewRun) {

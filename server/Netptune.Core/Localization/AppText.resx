@@ -2452,6 +2452,18 @@ Please confirm your email address with the following link.</value>
     <value>The assistant's review could not be read. Try again.</value>
     <comment>Shown on the Review tab when the model's reply was not a usable review</comment>
   </data>
+  <data name="AiReviewToolRoundsReached" xml:space="preserve">
+    <value>The review stopped after {0} rounds of tool calls without finishing. Try again.</value>
+    <comment>Shown when an assistant task review uses up its tool-call rounds. {0} is the number of rounds</comment>
+  </data>
+  <data name="AiReviewToolBudgetReached" xml:space="preserve">
+    <value>The review stopped because what the assistant read reached its size limit. Try again.</value>
+    <comment>Shown when an assistant task review gathers more tool results than it is allowed</comment>
+  </data>
+  <data name="AiReviewSpendCapReached" xml:space="preserve">
+    <value>The review stopped because the workspace reached its monthly assistant spend cap.</value>
+    <comment>Shown when an assistant task review stops part way because the workspace spent its monthly budget</comment>
+  </data>
   <data name="AiReviewFieldNotEditable" xml:space="preserve">
     <value>This part of the item cannot be changed from a review.</value>
     <comment>Shown when a review suggestion targets a field that reviews may not edit</comment>

@@ -46,6 +46,14 @@ export enum AiReviewStreamEventType {
   progress = 0,
   completed = 1,
   failed = 2,
+  tool = 3,
+}
+
+export interface AiReviewToolCall {
+  name: string;
+  label: string;
+  isError: boolean;
+  truncated: boolean;
 }
 
 export interface AiReviewRun {
@@ -65,6 +73,7 @@ export interface AiReviewRun {
   openCount: number;
   acceptedCount: number;
   dismissedCount: number;
+  toolCalls?: AiReviewToolCall[] | null;
 }
 
 export interface AiReviewReference {
@@ -193,6 +202,7 @@ export interface AiReviewStreamEvent {
   characters?: number | null;
   runId?: number | null;
   message?: string | null;
+  tool?: string | null;
 }
 
 export interface DecideAiReviewFindingRequest {

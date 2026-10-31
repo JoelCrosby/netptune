@@ -2443,6 +2443,15 @@ namespace Netptune.Core.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The review stopped because the workspace reached its monthly assistant spend cap..
+        /// </summary>
+        public static string AiReviewSpendCapReached {
+            get {
+                return ResourceManager.GetString("AiReviewSpendCapReached", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Each new task needs a name of at most {0} characters and a description of at most {1}..
         /// </summary>
         public static string AiReviewSplitTaskTooLong {
@@ -2466,6 +2475,24 @@ namespace Netptune.Core.Localization {
         public static string AiReviewTagsNoLongerExist {
             get {
                 return ResourceManager.GetString("AiReviewTagsNoLongerExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The review stopped because what the assistant read reached its size limit. Try again..
+        /// </summary>
+        public static string AiReviewToolBudgetReached {
+            get {
+                return ResourceManager.GetString("AiReviewToolBudgetReached", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The review stopped after {0} rounds of tool calls without finishing. Try again..
+        /// </summary>
+        public static string AiReviewToolRoundsReached {
+            get {
+                return ResourceManager.GetString("AiReviewToolRoundsReached", resourceCulture);
             }
         }
         

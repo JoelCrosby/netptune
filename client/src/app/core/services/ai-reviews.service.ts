@@ -17,6 +17,11 @@ export interface AiReviewRunResult {
   failure: string | null;
 }
 
+export interface AiReviewRunListener {
+  progress: (characters: number) => void;
+  tool: (label: string) => void;
+}
+
 @Service()
 export class AiReviewsService {
   private readonly http = inject(HttpClient);
@@ -29,7 +34,7 @@ export class AiReviewsService {
 
   async runTaskReview(
     taskId: number,
-    onProgress: (characters: number) => void
+    listener: AiReviewRunListener
   ): Promise<AiReviewRunResult> {
     const url = `${environment.apiEndpoint}api/tasks/${taskId}/reviews`;
     const response = await fetch(url, {
@@ -52,7 +57,10 @@ export class AiReviewsService {
     const onEvent = (event: AiReviewStreamEvent) => {
       switch (event.type) {
         case AiReviewStreamEventType.progress:
-          onProgress(event.characters ?? 0);
+          listener.progress(event.characters ?? 0);
+          break;
+        case AiReviewStreamEventType.tool:
+          listener.tool(event.tool ?? '');
           break;
         case AiReviewStreamEventType.completed:
           result = { runId: event.runId ?? null, failure: null };

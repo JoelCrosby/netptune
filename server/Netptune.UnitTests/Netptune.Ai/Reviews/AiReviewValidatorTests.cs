@@ -189,6 +189,21 @@ public class AiReviewValidatorTests
         edit.GetProperty("replace").GetString().Should().NotContain("\u200B");
     }
 
+    [Fact]
+    public void ReferencedTaskKeys_ShouldListEveryRelatedAndLinkedTask_Once()
+    {
+        var link = Suggestion(new { kind = "link", systemId = "NETP-30", category = "duplicate" });
+        var overlap = Finding("overlap", "Duplicates another task", link) with
+        {
+            RelatedTasks = ["NETP-12", " netp-30 "],
+        };
+        var gap = Finding("gap", "Edits only", Edit(null, "More.")) with { RelatedTasks = ["NETP-44", ""] };
+
+        var keys = AiReviewValidator.ReferencedTaskKeys(Reply(overlap, gap));
+
+        keys.Should().Equal("NETP-12", "netp-30", "NETP-44");
+    }
+
     private static JsonElement Suggestion(object value)
     {
         return JsonSerializer.SerializeToElement(value);

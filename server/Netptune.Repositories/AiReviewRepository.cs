@@ -274,6 +274,7 @@ public class AiReviewRepository(DataContext context, IDbConnectionFactory connec
             OpenCount = run.Findings.Count(finding => finding.Status == AiReviewFindingStatus.Open),
             AcceptedCount = run.Findings.Count(finding => finding.Status == AiReviewFindingStatus.Accepted),
             DismissedCount = run.Findings.Count(finding => finding.Status == AiReviewFindingStatus.Dismissed),
+            ToolCalls = ReadToolCalls(run.ToolCalls),
             BaselineFingerprint = run.BaselineFingerprint,
         });
     }
@@ -414,6 +415,11 @@ public class AiReviewRepository(DataContext context, IDbConnectionFactory connec
     private static JsonElement? CloneOrNull(JsonDocument? document)
     {
         return document?.RootElement.Clone();
+    }
+
+    private static List<AiReviewToolCallViewModel>? ReadToolCalls(JsonDocument? document)
+    {
+        return document?.Deserialize<List<AiReviewToolCallViewModel>>(JsonSerializerOptions.Web);
     }
 
     private sealed record MentionRow

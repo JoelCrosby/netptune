@@ -1,8 +1,11 @@
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json;
 
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
+using Netptune.Ai.Configuration;
 using Netptune.Ai.Providers;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
@@ -12,6 +15,7 @@ using Netptune.Core.Models.Ai;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.UnitOfWork;
+using Netptune.Core.ViewModels.Ai;
 using Netptune.Handlers.Ai;
 
 namespace Netptune.Ai.Execution.Reviews;
@@ -23,15 +27,18 @@ public sealed class AiReviewer : IAiReviewer
     private const int MaximumStoredReplyCharacters = 8_000;
     private const int MaximumFailureDetailLength = 1_000;
 
-    private static readonly TimeSpan Timeout = TimeSpan.FromMinutes(3);
+    // Write tools would propose into a chat change set that a review never shows, and nobody is there to
+    // answer a question, so a review reads and its findings are its only way to suggest a change.
+    private static readonly IReadOnlySet<AiToolKind> ReviewToolKinds = new HashSet<AiToolKind> { AiToolKind.Read };
 
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IAiCredentialProtector Protector;
     private readonly IAiSpendService Spend;
-    private readonly IAiChatProviderFactory ProviderFactory;
+    private readonly IAiConversationRunner Runner;
     private readonly IEventRecordWriter EventRecords;
     private readonly IReadOnlyDictionary<EntityType, IAiReviewSubject> Subjects;
+    private readonly AiOptions Options;
     private readonly ILogger<AiReviewer> Logger;
 
     public AiReviewer(
@@ -39,18 +46,20 @@ public sealed class AiReviewer : IAiReviewer
         IIdentityService identity,
         IAiCredentialProtector protector,
         IAiSpendService spend,
-        IAiChatProviderFactory providerFactory,
+        IAiConversationRunner runner,
         IEventRecordWriter eventRecords,
         IEnumerable<IAiReviewSubject> subjects,
+        IOptions<AiOptions> options,
         ILogger<AiReviewer> logger)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Protector = protector;
         Spend = spend;
-        ProviderFactory = providerFactory;
+        Runner = runner;
         EventRecords = eventRecords;
         Subjects = subjects.ToDictionary(subject => subject.Type);
+        Options = options.Value;
         Logger = logger;
     }
 
@@ -119,10 +128,12 @@ public sealed class AiReviewer : IAiReviewer
             yield break;
         }
 
+        var permissions = membership.Permissions.ToHashSet(StringComparer.Ordinal);
         var loadRequest = new AiReviewLoadRequest
         {
             WorkspaceId = workspaceId,
             SubjectId = subject.Id,
+            Permissions = permissions,
         };
 
         var context = await source.Load(loadRequest, cancellationToken);
@@ -136,24 +147,34 @@ public sealed class AiReviewer : IAiReviewer
 
         var dismissed = await UnitOfWork.AiReviews.GetDismissals(subject, workspaceId, cancellationToken);
         var startedAt = DateTime.UtcNow;
-        var provider = ProviderFactory.Resolve(credential.Provider);
-        var apiKey = Protector.Unprotect(credential.Secret);
-        var chatRequest = new AiChatRequest
+        var model = AiModels.ResolveReviewModel(credential.Provider, credential.ReviewModel);
+        var prompt = new AiChatMessage { Role = AiMessageRole.User, Text = BuildPrompt(context, dismissed) };
+
+        // The web fetch allowance is deliberately left empty: anyone in the workspace can write the task, so
+        // nothing in it may decide which hosts the review can reach. Only web search results are fetchable.
+        var runContext = new AiRunContext
         {
-            Model = AiModels.ResolveReviewModel(credential.Provider, credential.ReviewModel),
+            Provider = credential.Provider,
+            Model = model,
+            ApiKey = Protector.Unprotect(credential.Secret),
             SystemPrompt = AiReviewPrompt.SystemPrompt,
-            Messages = [new AiChatMessage { Role = AiMessageRole.User, Text = BuildPrompt(context, dismissed) }],
-            Tools = [],
+            History = [prompt],
+            Permissions = permissions,
+            SpendRemaining = spend.Remaining,
+            ToolKinds = ReviewToolKinds,
+            CorrectsProposalClaims = false,
+            MaxToolIterations = Options.ReviewMaxToolIterations,
+            MaxTurnCharacters = Options.ReviewMaxTurnCharacters,
             MaxOutputTokens = MaximumOutputTokens,
         };
 
         var outcome = new ReviewOutcome();
 
-        using var timeout = new CancellationTokenSource(Timeout);
+        using var timeout = new CancellationTokenSource(Options.ReviewTimeout);
         using var cancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeout.Token);
 
-        var stream = StreamReply(provider, chatRequest, apiKey, outcome, cancellation.Token);
-        var events = AiTurnReader.Read(stream, Timeout, timeout.Token, cancellation.Token);
+        var run = Runner.Run(runContext, cancellation.Token);
+        var events = AiTurnReader.Read(run, Options.ReviewTimeout, timeout.Token, cancellation.Token);
         var origin = new AiUsageOrigin(workspaceId, userId, context.UsagePurpose);
         var reportedCharacters = 0;
 
@@ -162,13 +183,11 @@ public sealed class AiReviewer : IAiReviewer
         {
             await foreach (var streamEvent in events)
             {
-                var isFailure = streamEvent.Type == AiStreamEventType.Error;
+                var reviewEvent = Observe(streamEvent, runContext, outcome);
 
-                if (isFailure)
+                if (reviewEvent is not null)
                 {
-                    outcome.Failure = streamEvent.Message ?? AppText.AiErrorProviderUnreachable;
-
-                    continue;
+                    yield return reviewEvent;
                 }
 
                 var isDueProgress = outcome.Characters - reportedCharacters >= ProgressEveryCharacters;
@@ -183,25 +202,26 @@ public sealed class AiReviewer : IAiReviewer
         }
         finally
         {
-            await BookUsage(origin, credential, chatRequest, outcome, cancellation.IsCancellationRequested);
+            await BookUsage(origin, credential, model, runContext.Turns);
         }
 
-        var run = new RunRecord
+        var record = new RunRecord
         {
             Subject = subject,
             WorkspaceId = workspaceId,
             UserId = userId,
             Context = context,
             Provider = credential.Provider,
-            Model = chatRequest.Model,
+            Model = model,
             StartedAt = startedAt,
+            ToolCalls = DescribeToolCalls(runContext.Invocations),
         };
 
         var failure = ResolveFailure(outcome, timeout.IsCancellationRequested);
 
         if (failure is not null)
         {
-            var failedRun = await StoreFailedRun(run, failure, outcome);
+            var failedRun = await StoreFailedRun(record, failure, outcome);
             var message = DescribeFailure(failure.Code, outcome);
 
             yield return AiReviewStreamEvent.Failed(message, failedRun.Id);
@@ -214,31 +234,106 @@ public sealed class AiReviewer : IAiReviewer
         if (parsed.Reply is null)
         {
             var unreadable = new ReviewFailure(AiReviewErrorCodes.UnreadableReply, parsed.Problem);
-            var unreadableRun = await StoreFailedRun(run, unreadable, outcome);
+            var unreadableRun = await StoreFailedRun(record, unreadable, outcome);
 
             yield return AiReviewStreamEvent.Failed(AppText.AiReviewUnreadable, unreadableRun.Id);
 
             yield break;
         }
 
-        var draft = AiReviewValidator.Validate(parsed.Reply, context, source.Categories);
-        var storedRun = await StoreSucceededRun(run, draft);
+        var reviewContext = await WithToolFoundTasks(source, record, parsed.Reply, cancellationToken);
+        var draft = AiReviewValidator.Validate(parsed.Reply, reviewContext, source.Categories);
+        var storedRun = await StoreSucceededRun(record, draft);
 
         yield return AiReviewStreamEvent.Completed(storedRun.Id);
     }
 
-    private static ReviewFailure? ResolveFailure(ReviewOutcome outcome, bool hasTimedOut)
+    private static AiReviewStreamEvent? Observe(
+        AiStreamEvent streamEvent,
+        AiRunContext runContext,
+        ReviewOutcome outcome)
+    {
+        switch (streamEvent.Type)
+        {
+            case AiStreamEventType.TextDelta:
+                outcome.Characters += streamEvent.Text?.Length ?? 0;
+
+                return null;
+
+            case AiStreamEventType.ToolStarted:
+                return AiReviewStreamEvent.ToolStarted(streamEvent.ToolName ?? string.Empty);
+
+            case AiStreamEventType.TurnCompleted:
+                outcome.Turn = runContext.Turns.LastOrDefault();
+
+                return null;
+
+            case AiStreamEventType.Error:
+                outcome.Failure = streamEvent.Message ?? AppText.AiErrorProviderUnreachable;
+                outcome.FailureCode = streamEvent.Code;
+
+                return null;
+
+            default:
+                return null;
+        }
+    }
+
+    private static async Task<AiReviewContext> WithToolFoundTasks(
+        IAiReviewSubject source,
+        RunRecord record,
+        AiReviewReply reply,
+        CancellationToken cancellationToken)
+    {
+        var candidates = record.Context.CandidateTasks;
+        var unknownKeys = AiReviewValidator.ReferencedTaskKeys(reply)
+            .Where(systemId => !candidates.ContainsKey(systemId))
+            .ToList();
+
+        if (unknownKeys.Count == 0)
+        {
+            return record.Context;
+        }
+
+        var lookup = new AiReviewTaskLookup(record.WorkspaceId, record.Subject.Id, unknownKeys);
+        var found = await source.ResolveTasks(lookup, cancellationToken);
+        var merged = new Dictionary<string, int>(candidates, StringComparer.OrdinalIgnoreCase);
+
+        foreach (var (systemId, taskId) in found)
+        {
+            merged.TryAdd(systemId, taskId);
+        }
+
+        return record.Context with { CandidateTasks = merged };
+    }
+
+    private static List<AiReviewToolCallViewModel> DescribeToolCalls(List<AiToolInvocationRecord> invocations)
+    {
+        return invocations
+            .Select(invocation => new AiReviewToolCallViewModel
+            {
+                Name = invocation.ToolName,
+                Label = invocation.Label ?? invocation.ToolName,
+                IsError = invocation.IsError,
+                Truncated = invocation.Truncated,
+            })
+            .ToList();
+    }
+
+    private ReviewFailure? ResolveFailure(ReviewOutcome outcome, bool hasTimedOut)
     {
         if (hasTimedOut)
         {
-            var timedOutDetail = $"No completed reply after {Timeout.TotalMinutes} minutes.";
+            var timedOutDetail = $"No completed reply after {Options.ReviewTimeout.TotalMinutes} minutes.";
 
             return new ReviewFailure(AiReviewErrorCodes.TimedOut, timedOutDetail);
         }
 
         if (outcome.Failure is not null)
         {
-            return new ReviewFailure(AiReviewErrorCodes.ProviderError, outcome.Failure);
+            var failureCode = outcome.FailureCode ?? AiReviewErrorCodes.ProviderError;
+
+            return new ReviewFailure(failureCode, outcome.Failure);
         }
 
         if (outcome.Turn is null)
@@ -247,13 +342,6 @@ public sealed class AiReviewer : IAiReviewer
         }
 
         var finishReason = outcome.Turn.FinishReason;
-        var hitOutputLimit = AiFinishReasons.IsOutputLimit(finishReason);
-
-        if (hitOutputLimit)
-        {
-            return new ReviewFailure(AiReviewErrorCodes.OutputLimit, null);
-        }
-
         var wasRefused = AiFinishReasons.IsRefusal(finishReason);
 
         if (wasRefused)
@@ -266,19 +354,21 @@ public sealed class AiReviewer : IAiReviewer
         return isEmpty ? new ReviewFailure(AiReviewErrorCodes.EmptyReply, null) : null;
     }
 
-    private static string DescribeFailure(string failureCode, ReviewOutcome outcome)
+    private string DescribeFailure(string failureCode, ReviewOutcome outcome)
     {
-        if (outcome.Failure is not null)
-        {
-            return outcome.Failure;
-        }
+        var fallback = outcome.Failure ?? AppText.AiReviewUnreadable;
 
         return failureCode switch
         {
             AiReviewErrorCodes.OutputLimit => AppText.AiReviewHitOutputLimit,
             AiReviewErrorCodes.Refused => AppText.AiReviewRefused,
             AiReviewErrorCodes.EmptyReply => AppText.AiReviewEmptyReply,
-            _ => AppText.AiReviewUnreadable,
+            AiReviewErrorCodes.ToolRounds => Localized.Format(
+                AppText.AiReviewToolRoundsReached,
+                Options.ReviewMaxToolIterations),
+            AiReviewErrorCodes.ToolBudget => AppText.AiReviewToolBudgetReached,
+            AiReviewErrorCodes.SpendCap => AppText.AiReviewSpendCapReached,
+            _ => fallback,
         };
     }
 
@@ -302,7 +392,7 @@ public sealed class AiReviewer : IAiReviewer
         await StoreRun(record, run);
 
         Logger.LogWarning(
-            "Assistant review run {RunId} for {SubjectType} {SubjectId} failed with {ErrorCode} using {Provider} {Model} after {Characters} characters: {FailureDetail}",
+            "Assistant review run {RunId} for {SubjectType} {SubjectId} failed with {ErrorCode} using {Provider} {Model} after {Characters} characters and {ToolCalls} tool calls: {FailureDetail}",
             run.Id,
             record.Subject.Type,
             record.Subject.Id,
@@ -310,6 +400,7 @@ public sealed class AiReviewer : IAiReviewer
             record.Provider,
             record.Model,
             outcome.Characters,
+            record.ToolCalls.Count,
             failureRecord.Detail);
 
         return run;
@@ -397,6 +488,7 @@ public sealed class AiReviewer : IAiReviewer
             ErrorCode = failure?.Code,
             FailureDetail = failure?.Detail,
             RawReply = failure?.RawReply,
+            ToolCalls = JsonSerializer.SerializeToDocument(record.ToolCalls, JsonSerializerOptions.Web),
             StartedAt = record.StartedAt,
             CreatedByUserId = record.UserId,
             OwnerId = record.UserId,
@@ -461,49 +553,20 @@ public sealed class AiReviewer : IAiReviewer
     private async Task BookUsage(
         AiUsageOrigin origin,
         AiResolvedCredential credential,
-        AiChatRequest request,
-        ReviewOutcome outcome,
-        bool wasInterrupted)
+        string model,
+        List<AiChatTurn> turns)
     {
-        // A call stopped or timed out was still sent and paid for, even if the model was thinking and had
-        // not written anything yet.
-        var wasBilled = outcome.Turn is not null || outcome.Characters > 0 || wasInterrupted;
-
-        if (!wasBilled)
+        // The runner adds an estimate for a call stopped or cut off part way, which was still sent and paid for.
+        if (turns.Count == 0)
         {
             return;
         }
 
-        var usage = outcome.Turn?.Usage ?? AiUsageEstimate.For(request, outcome.Characters);
+        var usage = turns.Aggregate(new AiUsage(), (total, turn) => total.Add(turn.Usage));
 
-        await AiUsageRecorder.Record(UnitOfWork, origin, credential, request.Model, usage, CancellationToken.None);
+        await AiUsageRecorder.Record(UnitOfWork, origin, credential, model, usage, CancellationToken.None);
         await AiHandlerCredentials.MarkUsed(UnitOfWork, credential, CancellationToken.None);
         await UnitOfWork.CompleteAsync(CancellationToken.None);
-    }
-
-    private static async IAsyncEnumerable<AiStreamEvent> StreamReply(
-        IAiChatProvider provider,
-        AiChatRequest request,
-        string apiKey,
-        ReviewOutcome outcome,
-        [EnumeratorCancellation] CancellationToken cancellationToken)
-    {
-        await foreach (var providerEvent in provider.Stream(request, apiKey, cancellationToken))
-        {
-            if (providerEvent.CompletedTurn is not null)
-            {
-                outcome.Turn = providerEvent.CompletedTurn;
-
-                continue;
-            }
-
-            if (!string.IsNullOrEmpty(providerEvent.TextDelta))
-            {
-                outcome.Characters += providerEvent.TextDelta.Length;
-
-                yield return AiStreamEvent.Delta(providerEvent.TextDelta);
-            }
-        }
     }
 
     private sealed record RunRecord
@@ -521,6 +584,8 @@ public sealed class AiReviewer : IAiReviewer
         public required string Model { get; init; }
 
         public DateTime StartedAt { get; init; }
+
+        public required List<AiReviewToolCallViewModel> ToolCalls { get; init; }
     }
 
     private sealed record ReviewFailure(string Code, string? Detail);
@@ -541,5 +606,7 @@ public sealed class AiReviewer : IAiReviewer
         public int Characters { get; set; }
 
         public string? Failure { get; set; }
+
+        public string? FailureCode { get; set; }
     }
 }

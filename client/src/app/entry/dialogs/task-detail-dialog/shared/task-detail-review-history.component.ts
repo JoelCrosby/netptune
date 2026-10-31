@@ -8,6 +8,8 @@ import {
   aiReviewCategoryColors,
   aiReviewCategoryLabels,
   aiReviewErrorMessage,
+  aiReviewToolCallSummary,
+  aiReviewToolSteps,
 } from '@core/util/ai-review-copy';
 import { fromNow } from '@core/util/dates';
 import { CalloutComponent } from '@static/components/callout/callout.component';
@@ -17,6 +19,7 @@ import {
 } from '@static/components/entry-list/entry-list.component';
 import { LabelledCardComponent } from '@static/components/labelled-card/labelled-card.component';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
+import { StepTrailComponent } from '@static/components/step-trail/step-trail.component';
 import { TextLinkComponent } from '@static/components/text-link.component';
 import { TaskDetailService } from '../task-detail.service';
 
@@ -27,6 +30,7 @@ import { TaskDetailService } from '../task-detail.service';
     EntryListComponent,
     LabelledCardComponent,
     SpinnerComponent,
+    StepTrailComponent,
     TextLinkComponent,
   ],
   host: { class: 'flex flex-col gap-2' },
@@ -42,6 +46,12 @@ import { TaskDetailService } from '../task-detail.service';
           Back to review history
         </span>
       </button>
+
+      @if (selectedSteps().length) {
+        <app-step-trail
+          [summary]="selectedSummary()"
+          [steps]="selectedSteps()" />
+      }
 
       @if (selected.status === failed) {
         <app-callout color="warn">{{ errorMessage(selected) }}</app-callout>
@@ -101,6 +111,14 @@ export class TaskDetailReviewHistoryComponent {
     const runId = this.selectedRunId();
 
     return this.runs().find((run) => run.id === runId) ?? null;
+  });
+
+  readonly selectedSteps = computed(() => {
+    return aiReviewToolSteps(this.selectedRun()?.toolCalls ?? []);
+  });
+
+  readonly selectedSummary = computed(() => {
+    return aiReviewToolCallSummary(this.selectedRun()?.toolCalls ?? []);
   });
 
   private readonly runRequest = computed(() => {

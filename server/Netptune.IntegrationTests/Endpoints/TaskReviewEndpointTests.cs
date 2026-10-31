@@ -16,6 +16,9 @@ using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Requests.Ai;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services.Ai;
+using Netptune.Core.SourceControl;
+using Netptune.Core.SourceControl.Models;
 using Netptune.Core.Tags;
 using Netptune.Core.ViewModels.Ai;
 using Netptune.Core.ViewModels.ProjectTasks;
@@ -93,6 +96,153 @@ public sealed class TaskReviewEndpointTests
             var reviewEvents = await ReviewEvents(task.Id);
 
             reviewEvents.Should().ContainSingle();
+        }
+        finally
+        {
+            await DeleteCredentials(UserCredentials);
+            Script().Reset();
+        }
+    }
+
+    [Fact]
+    public async Task Run_ShouldOfferEveryReadTool_AndKeepWhatItCalled_AndTheTasksItFound()
+    {
+        var task = await CreateTask();
+        var overlapping = await CreateTask($"Quarterly invoice archive {Guid.NewGuid():N}");
+
+        await SaveCredential();
+
+        try
+        {
+            var lookup = new AiChatTurn
+            {
+                ToolCalls =
+                [
+                    new AiToolCall
+                    {
+                        Id = "call-1",
+                        Name = "get_task",
+                        Arguments = JsonDocument.Parse($$"""{"systemId":"{{overlapping.SystemId}}"}"""),
+                    },
+                ],
+                Usage = new AiUsage { InputTokens = 100, OutputTokens = 30 },
+            };
+
+            Script().Enqueue(lookup);
+            Script().Enqueue(new AiChatTurn
+            {
+                Text = OverlapReply(overlapping.SystemId),
+                Usage = new AiUsage { InputTokens = 200, OutputTokens = 40 },
+            });
+
+            var frames = await Run(task.Id);
+            var types = frames.Select(frame => frame.GetProperty("type").GetInt32()).ToList();
+
+            types.Should().Contain((int)AiReviewStreamEventType.Tool);
+            types.Last().Should().Be((int)AiReviewStreamEventType.Completed);
+
+            var offered = Script().Requests[0].Tools.Select(tool => tool.Name).ToList();
+
+            offered.Should().BeEquivalentTo(ReadToolNames());
+            offered.Should().Contain(["read_repository_file", "search_repository_code", "get_task", "web_search"]);
+            Script().Requests.Should().HaveCount(2);
+            Script().Requests[0].Messages.Single().Text.Should().NotContain(overlapping.SystemId);
+
+            var latest = await Latest(task.Id);
+            var toolCall = latest.Current!.Run.ToolCalls.Should().ContainSingle().Subject;
+            var finding = latest.Current.Findings.Should().ContainSingle().Subject;
+
+            toolCall.Name.Should().Be("get_task");
+            toolCall.IsError.Should().BeFalse();
+            finding.References.Should().ContainSingle().Which.EntityId.Should().Be(overlapping.Id);
+            finding.Suggestion!.Value.GetProperty("taskId").GetInt32().Should().Be(overlapping.Id);
+
+            var usage = await LatestReviewUsage();
+
+            usage.InputTokens.Should().Be(300);
+            usage.OutputTokens.Should().Be(70);
+        }
+        finally
+        {
+            await DeleteCredentials(UserCredentials);
+            Script().Reset();
+        }
+    }
+
+    [Fact]
+    public async Task Run_ShouldListTheLinkedCode_OnlyForThoseWhoCanReadSourceControl()
+    {
+        var task = await CreateTask();
+        var member = SeedData.Users.ElementAt(2);
+        var connectionId = await SeedPullRequestLink(task);
+
+        await SaveCredential(WorkspaceCredentials);
+
+        try
+        {
+            Script().Enqueue(new AiChatTurn { Text = EmptyReview });
+            await Run(task.Id);
+
+            var ownerRequest = Script().Requests.Last();
+
+            await using (await MemberPermissions.Revoke(Client, member.Id, NetptunePermissions.SourceControl.Read))
+            {
+                var memberClient = Fixture.CreateNetptuneClientAs(member.Email);
+
+                Script().Enqueue(new AiChatTurn { Text = EmptyReview });
+                await Run(task.Id, memberClient);
+            }
+
+            var memberRequest = Script().Requests.Last();
+            var memberTools = memberRequest.Tools.Select(tool => tool.Name);
+
+            ownerRequest.Messages.Single().Text.Should().Contain("- pull request acme/web 18 (Open): Fix the redirect");
+            memberRequest.Messages.Single().Text.Should().NotContain("Fix the redirect");
+            memberTools.Should().NotContain("read_repository_file").And.Contain("get_task");
+        }
+        finally
+        {
+            await DeleteCredentials(WorkspaceCredentials);
+            await RemoveSourceControl(connectionId);
+            Script().Reset();
+        }
+    }
+
+    [Fact]
+    public async Task Run_ShouldStoreAFailedRun_WithItsToolCalls_WhenItRunsOutOfToolRounds()
+    {
+        var task = await CreateTask();
+
+        await SaveCredential();
+
+        try
+        {
+            for (var round = 1; round <= 12; round++)
+            {
+                Script().Enqueue(new AiChatTurn
+                {
+                    ToolCalls =
+                    [
+                        new AiToolCall
+                        {
+                            Id = $"call-{round}",
+                            Name = "get_task",
+                            Arguments = JsonDocument.Parse($$"""{"systemId":"{{task.SystemId}}"}"""),
+                        },
+                    ],
+                });
+            }
+
+            var frames = await Run(task.Id);
+            var failed = frames.Last();
+
+            failed.GetProperty("type").GetInt32().Should().Be((int)AiReviewStreamEventType.Failed);
+            failed.GetProperty("message").GetString().Should().StartWith("The review stopped after 12 rounds");
+
+            var latest = await Latest(task.Id);
+
+            latest.LatestFailure!.ErrorCode.Should().Be(AiReviewErrorCodes.ToolRounds);
+            latest.LatestFailure.ToolCalls.Should().HaveCount(12);
         }
         finally
         {
@@ -836,6 +986,125 @@ public sealed class TaskReviewEndpointTests
         return $"```json\n{JsonSerializer.Serialize(reply)}\n```";
     }
 
+    private static string OverlapReply(string systemId)
+    {
+        var reply = new
+        {
+            summary = "Overlaps another task.",
+            findings = new object[]
+            {
+                new
+                {
+                    category = "overlap",
+                    title = "Same export as another task",
+                    explanation = $"{systemId} already covers CSV export.",
+                    quote = (string?)null,
+                    suggestion = new { kind = "link", systemId, category = "duplicate" },
+                    relatedTasks = new[] { systemId },
+                },
+            },
+        };
+
+        return JsonSerializer.Serialize(reply);
+    }
+
+    private List<string> ReadToolNames()
+    {
+        using var scope = Fixture.CreateScope();
+
+        return scope.ServiceProvider.GetServices<IAiTool>()
+            .Where(tool => tool.Kind == AiToolKind.Read && tool.IsAvailable(NetptunePermissions.All))
+            .Select(tool => tool.Name)
+            .ToList();
+    }
+
+    private async Task<int> SeedPullRequestLink(TaskViewModel task)
+    {
+        await using var scope = Fixture.Services.CreateAsyncScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var workspaceId = task.WorkspaceId!.Value;
+        var connection = new SourceControlConnection
+        {
+            WorkspaceId = workspaceId,
+            OwnerId = task.OwnerId,
+            CreatedByUserId = task.OwnerId,
+            ExternalAccountId = Guid.NewGuid().ToString("N"),
+            AccountLogin = "acme",
+        };
+
+        context.SourceControlConnections.Add(connection);
+
+        await context.SaveChangesAsync(CancellationToken);
+
+        var repo = new SourceControlRepo
+        {
+            WorkspaceId = workspaceId,
+            ConnectionId = connection.Id,
+            ExternalId = Guid.NewGuid().ToString("N"),
+            Owner = "acme",
+            Name = "web",
+            FullName = "acme/web",
+            DefaultBranch = "main",
+            WebUrl = "https://example.com/acme/web",
+            IsLinked = true,
+            SyncedAt = DateTime.UtcNow,
+        };
+
+        context.SourceControlRepos.Add(repo);
+
+        await context.SaveChangesAsync(CancellationToken);
+
+        context.TaskCodeLinks.Add(new TaskCodeLink
+        {
+            WorkspaceId = workspaceId,
+            TaskId = task.Id,
+            RepoId = repo.Id,
+            Kind = TaskCodeLinkKind.PullRequest,
+            ExternalRef = "18",
+            Title = "Fix the redirect",
+            WebUrl = "https://example.com/acme/web/pull/18",
+            PullRequestState = ScmPullRequestState.Open,
+            OccurredAt = DateTime.UtcNow,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow,
+        });
+
+        await context.SaveChangesAsync(CancellationToken);
+
+        return connection.Id;
+    }
+
+    private async Task RemoveSourceControl(int connectionId)
+    {
+        await using var scope = Fixture.Services.CreateAsyncScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        await context.TaskCodeLinks
+            .Where(link => link.Repo.ConnectionId == connectionId)
+            .ExecuteDeleteAsync(CancellationToken);
+        await context.SourceControlRepos
+            .Where(repo => repo.ConnectionId == connectionId)
+            .ExecuteDeleteAsync(CancellationToken);
+        await context.SourceControlConnections
+            .Where(connection => connection.Id == connectionId)
+            .ExecuteDeleteAsync(CancellationToken);
+    }
+
+    private async Task<AiUsageRecord> LatestReviewUsage()
+    {
+        await using var scope = Fixture.Services.CreateAsyncScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        return await context.AiUsageRecords
+            .AsNoTracking()
+            .Where(record => record.Purpose == AiUsagePurposes.TaskReview)
+            .OrderByDescending(record => record.Id)
+            .FirstAsync(CancellationToken);
+    }
+
     private static object SplitSuggestion()
     {
         return new
@@ -1041,9 +1310,10 @@ public sealed class TaskReviewEndpointTests
 
     private sealed record ReviewedFinding(int RunId, long FindingId);
 
-    private async Task<List<JsonElement>> Run(int taskId)
+    private async Task<List<JsonElement>> Run(int taskId, HttpClient? client = null)
     {
-        var response = await Client.PostAsync($"api/tasks/{taskId}/reviews", null, CancellationToken);
+        var sender = client ?? Client;
+        var response = await sender.PostAsync($"api/tasks/{taskId}/reviews", null, CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -1079,11 +1349,11 @@ public sealed class TaskReviewEndpointTests
             .ToListAsync(CancellationToken);
     }
 
-    private async Task<TaskViewModel> CreateTask()
+    private async Task<TaskViewModel> CreateTask(string? name = null)
     {
         var request = new AddProjectTaskRequest
         {
-            Name = $"Review target {Guid.NewGuid():N}",
+            Name = name ?? $"Review target {Guid.NewGuid():N}",
             Description = Description,
             ProjectId = 1,
         };

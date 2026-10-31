@@ -39,9 +39,23 @@ public sealed record AiRunContext
 
     public decimal? SpendRemaining { get; init; }
 
+    public IReadOnlySet<AiToolKind> ToolKinds { get; init; } = AllToolKinds;
+
+    // The correction is for chat replies that claim a proposal no tool made. Other callers write their own
+    // replies, where wording like "pending approval" means something else.
+    public bool CorrectsProposalClaims { get; init; } = true;
+
+    public int? MaxToolIterations { get; init; }
+
+    public int? MaxOutputTokens { get; init; }
+
+    public int? MaxTurnCharacters { get; init; }
+
     public List<AiChatTurn> Turns { get; } = [];
 
     public List<AiToolInvocationRecord> Invocations { get; } = [];
+
+    private static readonly IReadOnlySet<AiToolKind> AllToolKinds = Enum.GetValues<AiToolKind>().ToHashSet();
 }
 
 public interface IAiConversationRunner

@@ -71,6 +71,27 @@ public class AiToolRegistrationTests
     }
 
     [Fact]
+    public void TheRepositoryTools_ShouldBeReadTools_SoTaskReviewsOfferThem()
+    {
+        using var provider = CreateProvider();
+
+        string[] repositoryTools =
+        [
+            "list_repositories",
+            "list_repository_files",
+            "read_repository_file",
+            "search_repository_code",
+            "list_repository_commits",
+            "get_pull_request",
+        ];
+
+        var kindsByName = provider.GetServices<IAiTool>().ToDictionary(tool => tool.Name, tool => tool.Kind);
+        var repositoryKinds = repositoryTools.Select(name => kindsByName.GetValueOrDefault(name, AiToolKind.Write));
+
+        repositoryKinds.Should().OnlyContain(kind => kind == AiToolKind.Read, "a review only offers read tools");
+    }
+
+    [Fact]
     public void TheQuestionTool_ShouldBeTheOnlyOneThatEndsATurn()
     {
         using var provider = CreateProvider();

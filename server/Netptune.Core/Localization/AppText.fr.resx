@@ -1843,6 +1843,15 @@ Veuillez confirmer votre adresse e-mail à l’aide du lien ci-dessous.</value>
   <data name="AiReviewUnreadable" xml:space="preserve">
     <value>La relecture de l’assistant n’a pas pu être lue. Réessayez.</value>
   </data>
+  <data name="AiReviewToolRoundsReached" xml:space="preserve">
+    <value>La relecture s’est arrêtée après {0} séries d’appels d’outils sans aboutir. Réessayez.</value>
+  </data>
+  <data name="AiReviewToolBudgetReached" xml:space="preserve">
+    <value>La relecture s’est arrêtée car ce que l’assistant a lu a atteint sa taille maximale. Réessayez.</value>
+  </data>
+  <data name="AiReviewSpendCapReached" xml:space="preserve">
+    <value>La relecture s’est arrêtée car l’espace de travail a atteint son plafond mensuel de dépenses de l’assistant.</value>
+  </data>
   <data name="AiReviewFieldNotEditable" xml:space="preserve">
     <value>Cette partie de l’élément ne peut pas être modifiée depuis une relecture.</value>
   </data>

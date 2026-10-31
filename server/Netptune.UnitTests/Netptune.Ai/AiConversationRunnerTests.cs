@@ -75,6 +75,74 @@ public class AiConversationRunnerTests
     }
 
     [Fact]
+    public async Task Run_ShouldOnlyOfferToolsOfTheKindsTheContextAllows()
+    {
+        var read = new StubTool("read_tool", NetptunePermissions.Tasks.Read);
+        var write = new StubTool("propose_change", NetptunePermissions.Tasks.Read) { ToolKind = AiToolKind.Write };
+        var question = new StubTool("ask_question", NetptunePermissions.Tasks.Read) { ToolKind = AiToolKind.Question };
+        var runner = CreateRunner([read, write, question]);
+        var context = CreateContext(NetptunePermissions.Tasks.Read) with
+        {
+            ToolKinds = new HashSet<AiToolKind> { AiToolKind.Read },
+        };
+
+        await Drain(runner, context);
+
+        var offered = Provider.LastRequest!.Tools.Select(tool => tool.Name);
+
+        offered.Should().BeEquivalentTo("read_tool");
+    }
+
+    [Fact]
+    public async Task Run_ShouldRefuseACallToAToolOfAKindTheContextLeavesOut()
+    {
+        var write = new StubTool("propose_change", NetptunePermissions.Tasks.Read) { ToolKind = AiToolKind.Write };
+        var runner = CreateRunner([write]);
+        var context = CreateContext(NetptunePermissions.Tasks.Read) with
+        {
+            ToolKinds = new HashSet<AiToolKind> { AiToolKind.Read },
+        };
+
+        Provider.CallToolOnce = "propose_change";
+
+        await Drain(runner, context);
+
+        write.WasExecuted.Should().BeFalse();
+        context.Invocations.Should().ContainSingle().Which.IsError.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task Run_ShouldNotCorrectAClaim_WhenTheContextTurnsCorrectionOff()
+    {
+        var runner = CreateRunner([]);
+
+        Provider.ReplyText = """{"summary":"Ready once the rollout is pending approval from legal."}""";
+
+        var context = CreateContext(NetptunePermissions.Tasks.Read) with { CorrectsProposalClaims = false };
+        var events = await Drain(runner, context);
+
+        Provider.RequestCount.Should().Be(1);
+        events.Should().NotContain(item => item.Type == AiStreamEventType.ReplyReset);
+        events[^1].Type.Should().Be(AiStreamEventType.TurnCompleted);
+    }
+
+    [Fact]
+    public async Task Run_ShouldUseTheContextsToolRoundLimit_AndNameTheFailure()
+    {
+        var tool = new StubTool("allowed_tool", NetptunePermissions.Tasks.Read);
+        var runner = CreateRunner([tool], maxToolIterations: 10);
+
+        Provider.AlwaysCallTool = "allowed_tool";
+
+        var context = CreateContext(NetptunePermissions.Tasks.Read) with { MaxToolIterations = 2 };
+        var events = await Drain(runner, context);
+
+        events[^1].Code.Should().Be(AiRunFailureCodes.ToolRounds);
+        events[^1].Message.Should().Contain("2 rounds");
+        Provider.RequestCount.Should().Be(2);
+    }
+
+    [Fact]
     public async Task Run_ShouldLabelEachToolCallTheWayTheToolDescribesIt()
     {
         var tool = new StubTool("list_things", NetptunePermissions.Tasks.Read) { CallLabel = "list_things · tags" };
@@ -132,6 +200,25 @@ public class AiConversationRunnerTests
         lastEvent.Type.Should().Be(AiStreamEventType.Error);
         lastEvent.Message.Should().Contain("size limit");
         Provider.RequestCount.Should().Be(3, "the third round of 400 characters takes the turn past 1000");
+    }
+
+    [Fact]
+    public async Task Run_ShouldUseTheContextsTurnBudget_AndNameTheFailure()
+    {
+        var tool = new StubTool("allowed_tool", NetptunePermissions.Tasks.Read)
+        {
+            Result = new string('x', 400),
+        };
+
+        var runner = CreateRunner([tool], maxTurnCharacters: 400000);
+
+        Provider.AlwaysCallTool = "allowed_tool";
+
+        var context = CreateContext(NetptunePermissions.Tasks.Read) with { MaxTurnCharacters = 600 };
+        var events = await Drain(runner, context);
+
+        events[^1].Code.Should().Be(AiRunFailureCodes.ToolBudget);
+        Provider.RequestCount.Should().Be(2, "the second round of 400 characters takes the turn past 600");
     }
 
     [Fact]

@@ -69,6 +69,10 @@ public sealed class AiReviewRunEntityMap : WorkspaceEntityMap<AiReviewRun, int>
             .HasColumnType("text");
 
         builder
+            .Property(run => run.ToolCalls)
+            .HasColumnType("jsonb");
+
+        builder
             .HasIndex(run => new { run.SubjectType, run.SubjectId, run.CreatedAt })
             .IsDescending(false, false, true)
             .HasDatabaseName("ix_ai_review_runs_subject_created");

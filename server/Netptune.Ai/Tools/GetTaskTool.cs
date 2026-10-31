@@ -8,6 +8,7 @@ using Netptune.Core.Services;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Comments.Queries;
 using Netptune.Handlers.Relations.Queries;
+using Netptune.Handlers.SourceControl.Queries;
 using Netptune.Handlers.Storage.Queries;
 using Netptune.Handlers.Tasks.Queries;
 
@@ -18,9 +19,10 @@ public sealed class GetTaskTool : IAiTool
     private const string IncludeComments = "comments";
     private const string IncludeRelations = "relations";
     private const string IncludeFiles = "files";
+    private const string IncludeCode = "code";
     private const int MaxCommentCharacters = 4_000;
 
-    private static readonly string[] KnownIncludes = [IncludeComments, IncludeRelations, IncludeFiles];
+    private static readonly string[] KnownIncludes = [IncludeComments, IncludeRelations, IncludeFiles, IncludeCode];
 
     private readonly IMediator Mediator;
     private readonly IIdentityService Identity;
@@ -36,7 +38,8 @@ public sealed class GetTaskTool : IAiTool
     public string Description =>
         "Read one task in full by its systemId: description, assignees, tags, dates, estimate and flags. "
         + "Add include to read its 50 most recent comments (newest first), the tasks it is linked to and by which relation, "
-        + "or its attached files. File contents cannot be read — only what is attached. "
+        + "its attached files, or the branches, commits and pull requests linked to it from source control. "
+        + "File contents cannot be read — only what is attached; read linked code with the repository tools. "
         + "descriptionFormat is a format block for the description. "
         + AiTextFormatJson.Description;
 
@@ -51,7 +54,7 @@ public sealed class GetTaskTool : IAiTool
           "systemId": { "type": "string", "description": "The task system id, such as NPT-42." },
           "include": {
             "type": "array",
-            "items": { "type": "string", "enum": ["comments", "relations", "files"] },
+            "items": { "type": "string", "enum": ["comments", "relations", "files", "code"] },
             "description": "Extra detail to read alongside the task."
           }
         }
@@ -76,6 +79,13 @@ public sealed class GetTaskTool : IAiTool
             required.Add(NetptunePermissions.Files.Read);
         }
 
+        var includesCode = includes.Contains(IncludeCode);
+
+        if (includesCode)
+        {
+            required.Add(NetptunePermissions.SourceControl.Read);
+        }
+
         return required;
     }
 
@@ -95,7 +105,7 @@ public sealed class GetTaskTool : IAiTool
         if (unknownInclude is not null)
         {
             return AiToolExecution.Failed(
-                $"“{unknownInclude}” cannot be included. Use comments, relations or files.");
+                $"“{unknownInclude}” cannot be included. Use comments, relations, files or code.");
         }
 
         var task = await Mediator.Send(new GetTaskDetailQuery(systemId!), cancellationToken);
@@ -150,6 +160,13 @@ public sealed class GetTaskTool : IAiTool
         if (includesFiles)
         {
             detail["files"] = await ReadFiles(systemId!, cancellationToken);
+        }
+
+        var includesCode = includes.Contains(IncludeCode);
+
+        if (includesCode)
+        {
+            detail["code"] = await ReadCodeLinks(systemId!, cancellationToken);
         }
 
         var includesComments = includes.Contains(IncludeComments);
@@ -236,6 +253,29 @@ public sealed class GetTaskTool : IAiTool
             uploadedBy = file.UploadedByDisplayName,
             uploadedAt = file.CreatedAt,
         });
+
+        return JsonSerializer.SerializeToNode(summaries);
+    }
+
+    private async Task<JsonNode?> ReadCodeLinks(string systemId, CancellationToken cancellationToken)
+    {
+        var result = await Mediator.Send(new GetTaskCodeLinksQuery(systemId), cancellationToken);
+        var hasLinks = result.IsSuccess && result.Payload is not null;
+        var links = hasLinks ? result.Payload! : [];
+        var summaries = links
+            .Where(link => !link.IsRemoved)
+            .Select(link => new
+            {
+                kind = link.Kind.ToString(),
+                repository = link.RepoFullName,
+                @ref = link.ExternalRef,
+                title = link.Title,
+                pullRequestState = link.PullRequestState?.ToString(),
+                checks = link.Checks?.State.ToString(),
+                author = link.Author?.DisplayName ?? link.AuthorLogin,
+                occurredAt = link.OccurredAt,
+                url = link.WebUrl,
+            });
 
         return JsonSerializer.SerializeToNode(summaries);
     }

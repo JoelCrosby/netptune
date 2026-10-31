@@ -1843,6 +1843,15 @@ Confirma tu dirección de correo electrónico con el siguiente enlace.</value>
   <data name="AiReviewUnreadable" xml:space="preserve">
     <value>No se pudo leer la revisión del asistente. Inténtalo de nuevo.</value>
   </data>
+  <data name="AiReviewToolRoundsReached" xml:space="preserve">
+    <value>La revisión se detuvo tras {0} rondas de llamadas a herramientas sin terminar. Inténtalo de nuevo.</value>
+  </data>
+  <data name="AiReviewToolBudgetReached" xml:space="preserve">
+    <value>La revisión se detuvo porque lo que leyó el asistente alcanzó su límite de tamaño. Inténtalo de nuevo.</value>
+  </data>
+  <data name="AiReviewSpendCapReached" xml:space="preserve">
+    <value>La revisión se detuvo porque el espacio de trabajo alcanzó su límite mensual de gasto del asistente.</value>
+  </data>
   <data name="AiReviewFieldNotEditable" xml:space="preserve">
     <value>Esta parte del elemento no se puede cambiar desde una revisión.</value>
   </data>

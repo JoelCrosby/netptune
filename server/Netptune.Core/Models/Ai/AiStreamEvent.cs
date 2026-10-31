@@ -30,6 +30,8 @@ public sealed record AiStreamEvent
 
     public string? Message { get; init; }
 
+    public string? Code { get; init; }
+
     public Guid? ConversationId { get; init; }
 
     public Guid? ChangeSetId { get; init; }
@@ -132,8 +134,19 @@ public sealed record AiStreamEvent
         return new AiStreamEvent { Type = AiStreamEventType.Stopped };
     }
 
-    public static AiStreamEvent Failed(string message)
+    public static AiStreamEvent Failed(string message, string? code = null)
     {
-        return new AiStreamEvent { Type = AiStreamEventType.Error, Message = message };
+        return new AiStreamEvent { Type = AiStreamEventType.Error, Message = message, Code = code };
     }
+}
+
+public static class AiRunFailureCodes
+{
+    public const string OutputLimit = "output_limit";
+
+    public const string ToolRounds = "tool_rounds";
+
+    public const string ToolBudget = "tool_budget";
+
+    public const string SpendCap = "spend_cap";
 }

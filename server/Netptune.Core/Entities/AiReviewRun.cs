@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 using Netptune.Core.BaseEntities;
@@ -32,6 +33,8 @@ public sealed record AiReviewRun : WorkspaceEntity<int>
     public string? FailureDetail { get; init; }
 
     public string? RawReply { get; init; }
+
+    public JsonDocument? ToolCalls { get; init; }
 
     public DateTime StartedAt { get; init; }
 

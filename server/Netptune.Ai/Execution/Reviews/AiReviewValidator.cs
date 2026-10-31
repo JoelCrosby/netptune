@@ -47,6 +47,24 @@ public static class AiReviewValidator
         };
     }
 
+    public static List<string> ReferencedTaskKeys(AiReviewReply reply)
+    {
+        var findings = reply.Findings ?? [];
+        var relatedKeys = findings.SelectMany(finding => finding.RelatedTasks ?? []);
+        var linkKeys = findings
+            .Select(finding => finding.Suggestion)
+            .Where(suggestion => suggestion is { ValueKind: JsonValueKind.Object })
+            .Select(suggestion => ReadString(suggestion!.Value, "systemId"))
+            .OfType<string>();
+
+        return relatedKeys
+            .Concat(linkKeys)
+            .Select(systemId => systemId.Trim())
+            .Where(systemId => systemId.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
     private static AiReviewDraftFinding? ValidateFinding(
         AiReviewReplyFinding finding,
         AiReviewContext context,

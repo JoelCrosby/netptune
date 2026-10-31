@@ -40,15 +40,17 @@ public sealed class AiConversationRunner : IAiConversationRunner
         [EnumeratorCancellation] CancellationToken cancellationToken)
     {
         var provider = ProviderFactory.Resolve(context.Provider);
-        var availableTools = GetAvailableTools(context.Permissions);
+        var availableTools = GetAvailableTools(context);
         var definitions = availableTools.Select(CreateDefinition).ToList();
         var messages = new List<AiChatMessage>(context.History);
         var iteration = 0;
         var gatheredCharacters = 0;
         var hasCorrectedClaim = false;
         var spent = new AiUsage();
+        var maxToolIterations = context.MaxToolIterations ?? Options.MaxToolIterations;
+        var maxTurnCharacters = context.MaxTurnCharacters ?? Options.MaxTurnCharacters;
 
-        while (iteration < Options.MaxToolIterations)
+        while (iteration < maxToolIterations)
         {
             iteration += 1;
 
@@ -58,7 +60,7 @@ public sealed class AiConversationRunner : IAiConversationRunner
                 SystemPrompt = context.SystemPrompt,
                 Messages = messages,
                 Tools = definitions,
-                MaxOutputTokens = Options.MaxOutputTokens,
+                MaxOutputTokens = context.MaxOutputTokens ?? Options.MaxOutputTokens,
                 Effort = context.Effort,
             };
 
@@ -119,14 +121,15 @@ public sealed class AiConversationRunner : IAiConversationRunner
 
             if (!hasToolCalls && hitOutputLimit)
             {
-                yield return AiStreamEvent.Failed(AppText.AiErrorReplyHitOutputLimit);
+                yield return AiStreamEvent.Failed(AppText.AiErrorReplyHitOutputLimit, AiRunFailureCodes.OutputLimit);
 
                 yield break;
             }
 
             if (!hasToolCalls)
             {
-                var isUnbackedClaim = !hasCorrectedClaim
+                var isUnbackedClaim = context.CorrectsProposalClaims
+                    && !hasCorrectedClaim
                     && AiProposalClaim.IsUnbacked(turn.Text, ChangeSet.Changes.Count);
 
                 if (!isUnbackedClaim)
@@ -209,11 +212,11 @@ public sealed class AiConversationRunner : IAiConversationRunner
 
             gatheredCharacters += results.Sum(result => result.Content.Length);
 
-            var isOverTurnBudget = gatheredCharacters >= Options.MaxTurnCharacters;
+            var isOverTurnBudget = gatheredCharacters >= maxTurnCharacters;
 
             if (isOverTurnBudget)
             {
-                yield return AiStreamEvent.Failed(AppText.AiErrorTurnBudgetReached);
+                yield return AiStreamEvent.Failed(AppText.AiErrorTurnBudgetReached, AiRunFailureCodes.ToolBudget);
 
                 yield break;
             }
@@ -222,15 +225,15 @@ public sealed class AiConversationRunner : IAiConversationRunner
 
             if (isOverSpendCap)
             {
-                yield return AiStreamEvent.Failed(AppText.AiSpendCapReachedDuringTurn);
+                yield return AiStreamEvent.Failed(AppText.AiSpendCapReachedDuringTurn, AiRunFailureCodes.SpendCap);
 
                 yield break;
             }
         }
 
-        var roundsReached = Localized.Format(AppText.AiErrorToolRoundsReached, Options.MaxToolIterations);
+        var roundsReached = Localized.Format(AppText.AiErrorToolRoundsReached, maxToolIterations);
 
-        yield return AiStreamEvent.Failed(roundsReached);
+        yield return AiStreamEvent.Failed(roundsReached, AiRunFailureCodes.ToolRounds);
     }
 
     private async Task<AiToolExecution> ExecuteTool(
@@ -297,11 +300,18 @@ public sealed class AiConversationRunner : IAiConversationRunner
         };
     }
 
-    private IReadOnlyList<IAiTool> GetAvailableTools(IReadOnlySet<string> permissions)
+    private IReadOnlyList<IAiTool> GetAvailableTools(AiRunContext context)
     {
         return Tools.All
-            .Where(tool => tool.IsAvailable(permissions))
+            .Where(tool => IsOffered(tool, context))
             .ToList();
+    }
+
+    private static bool IsOffered(IAiTool tool, AiRunContext context)
+    {
+        var isAllowedKind = context.ToolKinds.Contains(tool.Kind);
+
+        return isAllowedKind && tool.IsAvailable(context.Permissions);
     }
 
     private static AiToolDefinition CreateDefinition(IAiTool tool)

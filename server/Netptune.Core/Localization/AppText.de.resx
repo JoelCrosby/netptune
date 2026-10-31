@@ -1843,6 +1843,15 @@ Bitte bestätige deine E-Mail-Adresse über den folgenden Link.</value>
   <data name="AiReviewUnreadable" xml:space="preserve">
     <value>Die Prüfung des Assistenten konnte nicht gelesen werden. Versuche es erneut.</value>
   </data>
+  <data name="AiReviewToolRoundsReached" xml:space="preserve">
+    <value>Die Prüfung wurde nach {0} Runden von Werkzeugaufrufen ohne Ergebnis beendet. Versuche es erneut.</value>
+  </data>
+  <data name="AiReviewToolBudgetReached" xml:space="preserve">
+    <value>Die Prüfung wurde beendet, weil das, was der Assistent gelesen hat, die Größenbegrenzung erreicht hat. Versuche es erneut.</value>
+  </data>
+  <data name="AiReviewSpendCapReached" xml:space="preserve">
+    <value>Die Prüfung wurde beendet, weil der Arbeitsbereich sein monatliches Ausgabenlimit für den Assistenten erreicht hat.</value>
+  </data>
   <data name="AiReviewFieldNotEditable" xml:space="preserve">
     <value>Dieser Teil des Elements kann nicht über eine Prüfung geändert werden.</value>
   </data>

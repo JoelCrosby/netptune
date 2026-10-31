@@ -15,6 +15,8 @@ using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Relations;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services;
+using Netptune.Core.SourceControl;
 using Netptune.Handlers.Search.Queries;
 using Netptune.Handlers.Tasks.Commands;
 
@@ -31,15 +33,22 @@ public sealed class TaskReviewSubject : IAiReviewSubject
     private const int SimilarTaskSearchLimit = 20;
     private const int MaxSimilarDescriptionLength = 400;
     private const int MaxWorkspaceTags = 200;
+    private const int MaxCodeLinks = 20;
 
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IMediator Mediator;
+    private readonly IIdentityService Identity;
     private readonly TaskReviewSuggestions Suggestions;
 
-    public TaskReviewSubject(INetptuneUnitOfWork unitOfWork, IMediator mediator, TaskReviewSuggestions suggestions)
+    public TaskReviewSubject(
+        INetptuneUnitOfWork unitOfWork,
+        IMediator mediator,
+        IIdentityService identity,
+        TaskReviewSuggestions suggestions)
     {
         UnitOfWork = unitOfWork;
         Mediator = mediator;
+        Identity = identity;
         Suggestions = suggestions;
     }
 
@@ -85,6 +94,7 @@ public sealed class TaskReviewSubject : IAiReviewSubject
         var comments = await UnitOfWork.Comments.GetCommentViewModelsForTask(task.Id, cancellationToken);
         var similarTasks = await FindSimilarTasks(request.WorkspaceId, task, relations, cancellationToken);
         var workspaceTags = await UnitOfWork.Tags.GetTagsInWorkspace(request.WorkspaceId, true, cancellationToken);
+        var codeLinks = await GetCodeLinks(request, task.Id, cancellationToken);
         var tagNames = workspaceTags.Select(tag => tag.Name).Take(MaxWorkspaceTags).ToList();
         var recentComments = comments.OrderBy(comment => comment.CreatedAt).TakeLast(MaxComments).ToList();
         var candidateTasks = similarTasks.ToDictionary(
@@ -92,9 +102,19 @@ public sealed class TaskReviewSubject : IAiReviewSubject
             similar => similar.Id,
             StringComparer.OrdinalIgnoreCase);
 
+        var material = new TaskReviewMaterial
+        {
+            Task = task,
+            Relations = relations,
+            Comments = recentComments,
+            SimilarTasks = similarTasks,
+            WorkspaceTags = tagNames,
+            CodeLinks = codeLinks,
+        };
+
         return new AiReviewContext
         {
-            Document = BuildDocument(task, relations, recentComments, similarTasks, tagNames),
+            Document = BuildDocument(material),
             Fingerprint = fingerprint,
             UpdatedAt = task.UpdatedAt?.UtcDateTime,
             UsagePurpose = AiUsagePurposes.TaskReview,
@@ -102,6 +122,38 @@ public sealed class TaskReviewSubject : IAiReviewSubject
             CandidateTasks = candidateTasks,
             WorkspaceTags = tagNames,
         };
+    }
+
+    public async Task<Dictionary<string, int>> ResolveTasks(
+        AiReviewTaskLookup lookup,
+        CancellationToken cancellationToken)
+    {
+        if (lookup.SystemIds.Count == 0)
+        {
+            return [];
+        }
+
+        var workspaceKey = Identity.GetWorkspaceKey();
+        var taskIds = await UnitOfWork.Tasks.GetTaskIdsBySystemIds(
+            lookup.SystemIds,
+            workspaceKey,
+            includeArchived: false,
+            cancellationToken);
+        var relations = await UnitOfWork.ProjectTaskRelations.GetRelationsForTask(
+            lookup.SubjectId,
+            lookup.WorkspaceId,
+            cancellationToken);
+        var knownTaskIds = relations
+            .Select(relation => relation.RelatedTask.Id)
+            .Append(lookup.SubjectId)
+            .ToHashSet();
+        var candidateIds = taskIds.Values.Where(taskId => !knownTaskIds.Contains(taskId)).ToList();
+        var liveTasks = await UnitOfWork.Tasks.GetLiveTaskViewModels(
+            candidateIds,
+            lookup.WorkspaceId,
+            cancellationToken);
+
+        return liveTasks.ToDictionary(task => task.SystemId, task => task.Id, StringComparer.OrdinalIgnoreCase);
     }
 
     public IReadOnlyList<string> PermissionsFor(AiReviewApplyRequest request)
@@ -188,6 +240,23 @@ public sealed class TaskReviewSubject : IAiReviewSubject
         return await UnitOfWork.Tasks.GetTaskViewModel(taskId, cancellationToken);
     }
 
+    private async Task<List<TaskCodeLink>> GetCodeLinks(
+        AiReviewLoadRequest request,
+        int taskId,
+        CancellationToken cancellationToken)
+    {
+        var canReadCode = request.Permissions.Contains(NetptunePermissions.SourceControl.Read);
+
+        if (!canReadCode)
+        {
+            return [];
+        }
+
+        var links = await UnitOfWork.TaskCodeLinks.GetForTask(taskId, request.WorkspaceId, cancellationToken);
+
+        return links.Where(link => !link.IsRemoved).Take(MaxCodeLinks).ToList();
+    }
+
     private async Task<List<TaskViewModel>> FindSimilarTasks(
         int workspaceId,
         TaskViewModel task,
@@ -216,13 +285,9 @@ public sealed class TaskReviewSubject : IAiReviewSubject
         return candidates.OrderBy(candidate => rankById[candidate.Id]).ToList();
     }
 
-    private static string BuildDocument(
-        TaskViewModel task,
-        List<TaskRelationViewModel> relations,
-        List<CommentViewModel> comments,
-        List<TaskViewModel> similarTasks,
-        List<string> workspaceTags)
+    private static string BuildDocument(TaskReviewMaterial material)
     {
+        var task = material.Task;
         var builder = new StringBuilder();
         var tags = task.Tags.Count > 0 ? string.Join(", ", task.Tags) : "none";
         var assigneeNames = task.Assignees.Select(assignee => AiReviewPrompt.Neutralise(assignee.DisplayName)).ToList();
@@ -254,7 +319,7 @@ public sealed class TaskReviewSubject : IAiReviewSubject
 
         builder.AppendLine("<relations>");
 
-        foreach (var relation in relations)
+        foreach (var relation in material.Relations)
         {
             var related = relation.RelatedTask;
             var relatedName = AiReviewPrompt.Neutralise(related.Name);
@@ -269,7 +334,7 @@ public sealed class TaskReviewSubject : IAiReviewSubject
 
         builder.AppendLine("<comments>");
 
-        foreach (var comment in comments)
+        foreach (var comment in material.Comments)
         {
             var body = AiReviewPrompt.Truncate(comment.Body, MaxCommentLength);
             var commentBody = AiReviewPrompt.Neutralise(body);
@@ -283,7 +348,7 @@ public sealed class TaskReviewSubject : IAiReviewSubject
 
         builder.AppendLine("<similar-tasks>");
 
-        foreach (var similar in similarTasks)
+        foreach (var similar in material.SimilarTasks)
         {
             var summary = AiReviewPrompt.Truncate(similar.Description ?? string.Empty, MaxSimilarDescriptionLength);
             var similarName = AiReviewPrompt.Neutralise(similar.Name);
@@ -295,10 +360,48 @@ public sealed class TaskReviewSubject : IAiReviewSubject
 
         builder.AppendLine("</similar-tasks>");
         builder.AppendLine();
+        builder.AppendLine("<code-links>");
+
+        foreach (var link in material.CodeLinks)
+        {
+            var title = AiReviewPrompt.Neutralise(link.Title);
+            var state = link.PullRequestState is null ? string.Empty : $" ({link.PullRequestState})";
+
+            builder.AppendLine($"- {DescribeKind(link.Kind)} {link.Repo.FullName} {link.ExternalRef}{state}: {title}");
+        }
+
+        builder.AppendLine("</code-links>");
+        builder.AppendLine();
         builder.AppendLine("<workspace-tags>");
-        builder.AppendLine(AiReviewPrompt.Neutralise(string.Join(", ", workspaceTags)));
+        builder.AppendLine(AiReviewPrompt.Neutralise(string.Join(", ", material.WorkspaceTags)));
         builder.Append("</workspace-tags>");
 
         return builder.ToString();
+    }
+
+    private static string DescribeKind(TaskCodeLinkKind kind)
+    {
+        return kind switch
+        {
+            TaskCodeLinkKind.Branch => "branch",
+            TaskCodeLinkKind.Commit => "commit",
+            TaskCodeLinkKind.PullRequest => "pull request",
+            _ => kind.ToString(),
+        };
+    }
+
+    private sealed record TaskReviewMaterial
+    {
+        public required TaskViewModel Task { get; init; }
+
+        public required List<TaskRelationViewModel> Relations { get; init; }
+
+        public required List<CommentViewModel> Comments { get; init; }
+
+        public required List<TaskViewModel> SimilarTasks { get; init; }
+
+        public required List<string> WorkspaceTags { get; init; }
+
+        public required List<TaskCodeLink> CodeLinks { get; init; }
     }
 }

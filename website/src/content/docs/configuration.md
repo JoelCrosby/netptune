@@ -83,6 +83,9 @@ The assistant runs on API keys supplied by users and workspace admins, so no pro
 | `Ai__GenerateTitles`          | `true`          | Names each new conversation with one extra call to a small model after the first reply.                                |
 | `Ai__MaxToolIterations`       | `40`            | Rounds of tool calls allowed in one reply before the assistant stops and says so. 1–100.                               |
 | `Ai__TurnTimeoutSeconds`      | `900`           | Time one reply may take before it stops and says so. 60–3600. The reply is still saved.                                |
+| `Ai__ReviewMaxToolIterations` | `12`            | Rounds of tool calls one task review may make before it is stored as failed. 1–100.                                    |
+| `Ai__ReviewTimeoutSeconds`    | `300`           | Time one task review may take before it is stored as failed. 60–3600.                                                  |
+| `Ai__ReviewMaxTurnCharacters` | `120000`        | Tool result characters one task review may gather before it is stored as failed. Bounds what a review costs.           |
 | `Ai__MaxOutputTokens`         | `16000`         | Output token ceiling per provider request.                                                                             |
 | `Ai__MaxToolResultCharacters` | `32000`         | Tool results longer than this are truncated before the model sees them.                                                |
 | `Ai__MaxTurnCharacters`       | `400000`        | Tool result characters one reply may gather before it stops and says so. Keeps a long reply inside the context window. |

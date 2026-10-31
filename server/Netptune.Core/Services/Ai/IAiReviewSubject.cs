@@ -20,6 +20,8 @@ public interface IAiReviewSubject
 
     Task<string?> GetFingerprint(int workspaceId, int subjectId, CancellationToken cancellationToken);
 
+    Task<Dictionary<string, int>> ResolveTasks(AiReviewTaskLookup lookup, CancellationToken cancellationToken);
+
     Task<string?> ReadField(int workspaceId, int targetId, string field, CancellationToken cancellationToken);
 
     Task<ClientResponse> WriteField(int targetId, string field, string value, CancellationToken cancellationToken);

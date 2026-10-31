@@ -25,6 +25,14 @@ public sealed class AiOptions
 
     public TimeSpan TurnTimeout => TimeSpan.FromSeconds(TurnTimeoutSeconds);
 
+    public int ReviewMaxToolIterations { get; set; } = 12;
+
+    public int ReviewTimeoutSeconds { get; set; } = 300;
+
+    public int ReviewMaxTurnCharacters { get; set; } = 120000;
+
+    public TimeSpan ReviewTimeout => TimeSpan.FromSeconds(ReviewTimeoutSeconds);
+
     public int MaxTurnCharacters { get; set; } = 400000;
 
     public int MaxOutputTokens { get; set; } = 16000;

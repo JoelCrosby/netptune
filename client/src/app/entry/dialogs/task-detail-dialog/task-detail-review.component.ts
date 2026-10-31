@@ -16,6 +16,8 @@ import {
   aiReviewErrorMessage,
   aiReviewReadinessColors,
   aiReviewReadinessLabels,
+  aiReviewToolCallSummary,
+  aiReviewToolSteps,
 } from '@core/util/ai-review-copy';
 import { DialogService } from '@core/services/dialog.service';
 import { formatElapsed } from '@core/util/duration';
@@ -34,6 +36,7 @@ import { EmptyStateComponent } from '@static/components/empty-state/empty-state.
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { IconTileComponent } from '@static/components/icon-tile.component';
 import { LabelledCardComponent } from '@static/components/labelled-card/labelled-card.component';
+import { StepTrailComponent } from '@static/components/step-trail/step-trail.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 import { TextLinkComponent } from '@static/components/text-link.component';
 import { FromNowPipe } from '@static/pipes/from-now.pipe';
@@ -56,6 +59,7 @@ const characterCount = numberFormat();
     LabelledCardComponent,
     LucideHistory,
     LucideSparkles,
+    StepTrailComponent,
     StrokedButtonComponent,
     TaskDetailReviewHistoryComponent,
     TaskScopeIdComponent,
@@ -149,6 +153,10 @@ const characterCount = numberFormat();
       @if (current(); as current) {
         @if (current.run.summary; as summary) {
           <p class="text-sm">{{ summary }}</p>
+        }
+
+        @if (toolSteps().length) {
+          <app-step-trail [summary]="toolSummary()" [steps]="toolSteps()" />
         }
 
         @for (finding of review.openFindings(); track finding.id) {
@@ -426,7 +434,12 @@ export class TaskDetailReviewComponent {
   );
 
   readonly liveLabel = computed(() => {
+    const activity = this.review.activity();
     const hasOutput = this.review.progress() > 0;
+
+    if (activity) {
+      return $localize`:Shown while a task review runs one of the assistant's tools. TOOL names the tool and what it reads, like read_repository_file · src/app.ts:Checking ${activity}:TOOL:…`;
+    }
 
     return hasOutput
       ? $localize`:Shown while the assistant writes out the findings of a task review:Writing up the findings…`
@@ -442,6 +455,14 @@ export class TaskDetailReviewComponent {
     const count = characterCount.format(characters);
 
     return $localize`:Task review progress, for example "8s · 1,400 chars":${elapsed}:elapsed: · ${count}:count: chars`;
+  });
+
+  readonly toolSteps = computed(() => {
+    return aiReviewToolSteps(this.current()?.run.toolCalls ?? []);
+  });
+
+  readonly toolSummary = computed(() => {
+    return aiReviewToolCallSummary(this.current()?.run.toolCalls ?? []);
   });
 
   readonly unknownPerson = $localize`:Shown in place of a person's name when it is not known:someone`;

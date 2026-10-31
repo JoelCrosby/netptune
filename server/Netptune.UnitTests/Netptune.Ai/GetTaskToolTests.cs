@@ -7,10 +7,15 @@ using Mediator;
 using Netptune.Ai.Tools;
 using Netptune.Core.Authorization;
 using Netptune.Core.Services;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Ai;
+using Netptune.Core.SourceControl;
+using Netptune.Core.SourceControl.Models;
 using Netptune.Core.ViewModels.Comments;
 using Netptune.Core.ViewModels.ProjectTasks;
+using Netptune.Core.ViewModels.SourceControl;
 using Netptune.Handlers.Comments.Queries;
+using Netptune.Handlers.SourceControl.Queries;
 using Netptune.Handlers.Tasks.Queries;
 
 using NSubstitute;
@@ -40,6 +45,48 @@ public class GetTaskToolTests
         content.RootElement.TryGetProperty("comments", out _).Should().BeFalse();
         content.RootElement.TryGetProperty("relations", out _).Should().BeFalse();
         content.RootElement.TryGetProperty("files", out _).Should().BeFalse();
+        content.RootElement.TryGetProperty("code", out _).Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Execute_ShouldReadTheLinkedCode_LeavingOutRemovedLinks_WhenIncluded()
+    {
+        GivenTask();
+
+        var pullRequest = new TaskCodeLinkViewModel
+        {
+            Kind = TaskCodeLinkKind.PullRequest,
+            ExternalRef = "18",
+            Title = "Fix the login redirect",
+            WebUrl = "https://github.com/acme/web/pull/18",
+            PullRequestState = ScmPullRequestState.Open,
+            RepoFullName = "acme/web",
+            RepoWebUrl = "https://github.com/acme/web",
+        };
+
+        var removedBranch = pullRequest with
+        {
+            Kind = TaskCodeLinkKind.Branch,
+            ExternalRef = "old-branch",
+            PullRequestState = null,
+            IsRemoved = true,
+        };
+
+        Mediator
+            .Send(Arg.Any<GetTaskCodeLinksQuery>(), Arg.Any<CancellationToken>())
+            .Returns(ClientResponse<List<TaskCodeLinkViewModel>>.Success([pullRequest, removedBranch]));
+
+        var result = await Execute($$"""{"systemId":"{{SystemId}}","include":["code"]}""");
+
+        result.IsError.Should().BeFalse();
+
+        using var content = JsonDocument.Parse(result.Content);
+        var link = content.RootElement.GetProperty("code").EnumerateArray().Should().ContainSingle().Subject;
+
+        link.GetProperty("kind").GetString().Should().Be("PullRequest");
+        link.GetProperty("repository").GetString().Should().Be("acme/web");
+        link.GetProperty("ref").GetString().Should().Be("18");
+        link.GetProperty("pullRequestState").GetString().Should().Be("Open");
     }
 
     [Fact]
@@ -116,11 +163,15 @@ public class GetTaskToolTests
         var tool = new GetTaskTool(Mediator, Identity);
         var plain = JsonDocument.Parse($$"""{"systemId":"{{SystemId}}"}""").RootElement;
         var withExtras = JsonDocument.Parse($$"""{"systemId":"{{SystemId}}","include":["comments","files"]}""").RootElement;
+        var withCode = JsonDocument.Parse($$"""{"systemId":"{{SystemId}}","include":["code"]}""").RootElement;
 
         tool.GetRequiredPermissions(plain).Should().BeEquivalentTo([NetptunePermissions.Tasks.Read]);
         tool.GetRequiredPermissions(withExtras)
             .Should()
             .BeEquivalentTo([NetptunePermissions.Tasks.Read, NetptunePermissions.Comments.Read, NetptunePermissions.Files.Read]);
+        tool.GetRequiredPermissions(withCode)
+            .Should()
+            .BeEquivalentTo([NetptunePermissions.Tasks.Read, NetptunePermissions.SourceControl.Read]);
     }
 
     private async Task<AiToolExecution> Execute(string arguments)

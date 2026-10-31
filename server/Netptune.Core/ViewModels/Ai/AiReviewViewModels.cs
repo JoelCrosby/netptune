@@ -47,8 +47,21 @@ public sealed record AiReviewRunViewModel
 
     public int DismissedCount { get; init; }
 
+    public List<AiReviewToolCallViewModel>? ToolCalls { get; init; }
+
     [JsonIgnore]
     public string BaselineFingerprint { get; init; } = string.Empty;
+}
+
+public sealed record AiReviewToolCallViewModel
+{
+    public required string Name { get; init; }
+
+    public required string Label { get; init; }
+
+    public bool IsError { get; init; }
+
+    public bool Truncated { get; init; }
 }
 
 public sealed record AiReviewReferenceViewModel

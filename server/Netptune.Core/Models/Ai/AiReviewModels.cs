@@ -11,6 +11,7 @@ public enum AiReviewStreamEventType
     Progress = 0,
     Completed = 1,
     Failed = 2,
+    Tool = 3,
 }
 
 public sealed record AiReviewStreamEvent
@@ -23,9 +24,16 @@ public sealed record AiReviewStreamEvent
 
     public string? Message { get; init; }
 
+    public string? Tool { get; init; }
+
     public static AiReviewStreamEvent Progress(int characters)
     {
         return new AiReviewStreamEvent { Type = AiReviewStreamEventType.Progress, Characters = characters };
+    }
+
+    public static AiReviewStreamEvent ToolStarted(string label)
+    {
+        return new AiReviewStreamEvent { Type = AiReviewStreamEventType.Tool, Tool = label };
     }
 
     public static AiReviewStreamEvent Completed(int runId)
@@ -51,7 +59,13 @@ public static class AiReviewErrorCodes
 
     public const string Refused = "refused";
 
-    public const string OutputLimit = "output_limit";
+    public const string OutputLimit = AiRunFailureCodes.OutputLimit;
+
+    public const string ToolRounds = AiRunFailureCodes.ToolRounds;
+
+    public const string ToolBudget = AiRunFailureCodes.ToolBudget;
+
+    public const string SpendCap = AiRunFailureCodes.SpendCap;
 }
 
 public sealed record AiReviewLoadRequest
@@ -59,7 +73,11 @@ public sealed record AiReviewLoadRequest
     public int WorkspaceId { get; init; }
 
     public int SubjectId { get; init; }
+
+    public required IReadOnlySet<string> Permissions { get; init; }
 }
+
+public sealed record AiReviewTaskLookup(int WorkspaceId, int SubjectId, IReadOnlyCollection<string> SystemIds);
 
 public sealed record AiReviewDismissal(AiReviewFindingCategory Category, string Title, string? Reason);
 
