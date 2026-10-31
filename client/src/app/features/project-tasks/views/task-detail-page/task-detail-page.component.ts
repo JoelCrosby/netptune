@@ -1,5 +1,6 @@
 import { Component, effect, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
+import { NavigationService } from '@core/services/navigation.service';
 import { TaskDetailCockpitComponent } from '@entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component';
 import { TaskDetailDocumentComponent } from '@entry/dialogs/task-detail-dialog/layouts/task-detail-document.component';
 import { TaskDetailLayoutService } from '@entry/dialogs/task-detail-dialog/task-detail-layout';
@@ -58,6 +59,7 @@ export class TaskDetailPageComponent {
   readonly layout = inject(TaskDetailLayoutService);
 
   private readonly taskDetail = inject(TaskDetailService);
+  private readonly navigation = inject(NavigationService);
 
   task = this.taskDetail.task;
   loading = this.taskDetail.loading;
@@ -69,6 +71,14 @@ export class TaskDetailPageComponent {
 
       if (systemId) {
         this.taskDetail.show(systemId);
+      }
+    });
+
+    effect(() => {
+      const name = this.task()?.name;
+
+      if (name) {
+        this.navigation.setPageTitle(name);
       }
     });
   }

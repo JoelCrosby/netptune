@@ -55,6 +55,10 @@ export class NavigationService {
       });
   }
 
+  setPageTitle(title: string) {
+    this.pageTitle.set(title);
+  }
+
   private applyTitle() {
     const workspace = this.currentWorkspace.workspace()?.name ?? BRAND_NAME;
     const page = this.pageTitle();
