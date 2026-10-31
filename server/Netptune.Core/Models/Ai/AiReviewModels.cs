@@ -8,17 +8,29 @@ namespace Netptune.Core.Models.Ai;
 
 public enum AiReviewStreamEventType
 {
-    Progress = 0,
     Completed = 1,
     Failed = 2,
     Tool = 3,
+    Stage = 4,
+    Note = 5,
+    Thinking = 6,
+    ToolFinished = 7,
+    Finding = 8,
+    Summary = 9,
+}
+
+public static class AiReviewStages
+{
+    public const string Preparing = "preparing";
+
+    public const string Investigating = "investigating";
+
+    public const string Writing = "writing";
 }
 
 public sealed record AiReviewStreamEvent
 {
     public AiReviewStreamEventType Type { get; init; }
-
-    public int? Characters { get; init; }
 
     public int? RunId { get; init; }
 
@@ -26,14 +38,59 @@ public sealed record AiReviewStreamEvent
 
     public string? Tool { get; init; }
 
-    public static AiReviewStreamEvent Progress(int characters)
-    {
-        return new AiReviewStreamEvent { Type = AiReviewStreamEventType.Progress, Characters = characters };
-    }
+    public string? Stage { get; init; }
+
+    public string? Text { get; init; }
+
+    public bool? IsNewBlock { get; init; }
+
+    public bool? IsError { get; init; }
+
+    public AiReviewFindingCategory? Category { get; init; }
 
     public static AiReviewStreamEvent ToolStarted(string label)
     {
         return new AiReviewStreamEvent { Type = AiReviewStreamEventType.Tool, Tool = label };
+    }
+
+    public static AiReviewStreamEvent ToolFinished(string label, bool isError)
+    {
+        return new AiReviewStreamEvent
+        {
+            Type = AiReviewStreamEventType.ToolFinished,
+            Tool = label,
+            IsError = isError,
+        };
+    }
+
+    public static AiReviewStreamEvent Staged(string stage)
+    {
+        return new AiReviewStreamEvent { Type = AiReviewStreamEventType.Stage, Stage = stage };
+    }
+
+    public static AiReviewStreamEvent Note(string text)
+    {
+        return new AiReviewStreamEvent { Type = AiReviewStreamEventType.Note, Text = text };
+    }
+
+    public static AiReviewStreamEvent Thinking(string text, bool isNewBlock)
+    {
+        return new AiReviewStreamEvent
+        {
+            Type = AiReviewStreamEventType.Thinking,
+            Text = text,
+            IsNewBlock = isNewBlock,
+        };
+    }
+
+    public static AiReviewStreamEvent Finding(AiReviewFindingCategory category, string title)
+    {
+        return new AiReviewStreamEvent { Type = AiReviewStreamEventType.Finding, Category = category, Text = title };
+    }
+
+    public static AiReviewStreamEvent Summary(string text)
+    {
+        return new AiReviewStreamEvent { Type = AiReviewStreamEventType.Summary, Text = text };
     }
 
     public static AiReviewStreamEvent Completed(int runId)

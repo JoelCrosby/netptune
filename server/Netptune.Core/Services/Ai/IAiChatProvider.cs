@@ -7,11 +7,18 @@ public sealed record AiProviderStreamEvent
 {
     public string? TextDelta { get; init; }
 
+    public string? ThinkingDelta { get; init; }
+
     public AiChatTurn? CompletedTurn { get; init; }
 
     public static AiProviderStreamEvent Delta(string text)
     {
         return new AiProviderStreamEvent { TextDelta = text };
+    }
+
+    public static AiProviderStreamEvent Thinking(string text)
+    {
+        return new AiProviderStreamEvent { ThinkingDelta = text };
     }
 
     public static AiProviderStreamEvent Completed(AiChatTurn turn)

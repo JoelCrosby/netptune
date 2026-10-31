@@ -68,8 +68,7 @@ export class TaskDetailReviewService {
   });
 
   readonly running = computed(() => this.activeRun() !== null);
-  readonly progress = computed(() => this.activeRun()?.progress ?? 0);
-  readonly activity = computed(() => this.activeRun()?.activity ?? null);
+  readonly liveRun = this.activeRun;
   readonly elapsedMs = this.clock.elapsedMs;
   readonly decidingFindingId = signal<number | null>(null);
 

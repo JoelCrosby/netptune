@@ -62,6 +62,8 @@ public sealed record AiReviewToolCallViewModel
     public bool IsError { get; init; }
 
     public bool Truncated { get; init; }
+
+    public string? Note { get; init; }
 }
 
 public sealed record AiReviewReferenceViewModel

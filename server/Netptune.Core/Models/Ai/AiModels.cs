@@ -15,6 +15,8 @@ public sealed record AiModelOption
     public bool IsReviewDefault { get; init; }
 
     public IReadOnlyList<AiEffort> Efforts { get; init; } = [];
+
+    public AiThinkingDisplay ThinkingDisplay { get; init; }
 }
 
 public static class AiModels
@@ -41,6 +43,7 @@ public static class AiModels
             Label = "Claude Opus 5",
             IsDefault = true,
             Efforts = AllEfforts,
+            ThinkingDisplay = AiThinkingDisplay.Summarized,
         },
         new()
         {
@@ -49,6 +52,7 @@ public static class AiModels
             Label = "Claude Sonnet 5",
             IsReviewDefault = true,
             Efforts = AllEfforts,
+            ThinkingDisplay = AiThinkingDisplay.Summarized,
         },
         new()
         {
@@ -126,6 +130,13 @@ public static class AiModels
         var option = Catalog.FirstOrDefault(item => item.Id == model);
 
         return option?.Efforts ?? [];
+    }
+
+    public static AiThinkingDisplay ThinkingDisplayFor(string model)
+    {
+        var option = Catalog.FirstOrDefault(item => item.Id == model);
+
+        return option?.ThinkingDisplay ?? AiThinkingDisplay.None;
     }
 
     public static AiEffort? ClampEffort(IReadOnlyList<AiEffort> supported, AiEffort desired)

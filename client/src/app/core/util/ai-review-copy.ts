@@ -131,5 +131,15 @@ export const aiReviewToolCallSummary = (calls: AiReviewToolCall[]): string => {
 export const aiReviewToolSteps = (
   calls: AiReviewToolCall[]
 ): StepTrailItem[] => {
-  return calls.map((call) => ({ label: call.label, failed: call.isError }));
+  // Calls made in one batch share the note written before them, so it shows once, above the first.
+  return calls.map((call, index) => {
+    const previousNote = index > 0 ? calls[index - 1].note : null;
+    const isNewNote = call.note !== previousNote;
+
+    return {
+      label: call.label,
+      failed: call.isError,
+      note: isNewNote ? call.note : null,
+    };
+  });
 };

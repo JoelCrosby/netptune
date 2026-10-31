@@ -17,10 +17,7 @@ export interface AiReviewRunResult {
   failure: string | null;
 }
 
-export interface AiReviewRunListener {
-  progress: (characters: number) => void;
-  tool: (label: string) => void;
-}
+export type AiReviewRunListener = (event: AiReviewStreamEvent) => void;
 
 @Service()
 export class AiReviewsService {
@@ -56,12 +53,6 @@ export class AiReviewsService {
 
     const onEvent = (event: AiReviewStreamEvent) => {
       switch (event.type) {
-        case AiReviewStreamEventType.progress:
-          listener.progress(event.characters ?? 0);
-          break;
-        case AiReviewStreamEventType.tool:
-          listener.tool(event.tool ?? '');
-          break;
         case AiReviewStreamEventType.completed:
           result = { runId: event.runId ?? null, failure: null };
           break;
@@ -71,6 +62,8 @@ export class AiReviewsService {
             failure: event.message ?? this.unreachable,
           };
           break;
+        default:
+          listener(event);
       }
     };
 

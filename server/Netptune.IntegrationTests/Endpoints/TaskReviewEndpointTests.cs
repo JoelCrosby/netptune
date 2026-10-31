@@ -170,6 +170,63 @@ public sealed class TaskReviewEndpointTests
     }
 
     [Fact]
+    public async Task Run_ShouldStreamWhatTheReviewerIsDoing_AndKeepTheNoteBeforeEachCall()
+    {
+        var task = await CreateTask();
+        var overlapping = await CreateTask($"Quarterly invoice archive {Guid.NewGuid():N}");
+
+        await SaveCredential();
+
+        try
+        {
+            Script().ThinkingText = "Weighing the scope.";
+            Script().Enqueue(new AiChatTurn
+            {
+                Text = "Checking the overlapping task.",
+                ToolCalls =
+                [
+                    new AiToolCall
+                    {
+                        Id = "call-1",
+                        Name = "get_task",
+                        Arguments = JsonDocument.Parse($$"""{"systemId":"{{overlapping.SystemId}}"}"""),
+                    },
+                ],
+            });
+            Script().Enqueue(new AiChatTurn { Text = OverlapReply(overlapping.SystemId) });
+
+            var frames = await Run(task.Id);
+            var described = frames.Select(DescribeFrame).ToList();
+            var label = described.Single(frame => frame.StartsWith("Tool:", StringComparison.Ordinal))["Tool:".Length..];
+
+            described.Should().ContainInOrder(
+                "Stage:preparing",
+                "Stage:investigating",
+                "Thinking:Weighing the scope.",
+                "Note:Checking the overlapping task.",
+                $"Tool:{label}",
+                $"ToolFinished:{label}",
+                "Stage:writing",
+                "Summary:Overlaps another task.",
+                "Finding:Same export as another task",
+                "Completed:");
+
+            Script().Requests.Should().AllSatisfy(request =>
+                request.ThinkingDisplay.Should().Be(AiThinkingDisplay.Summarized));
+
+            var latest = await Latest(task.Id);
+            var toolCall = latest.Current!.Run.ToolCalls.Should().ContainSingle().Subject;
+
+            toolCall.Note.Should().Be("Checking the overlapping task.");
+        }
+        finally
+        {
+            await DeleteCredentials(UserCredentials);
+            Script().Reset();
+        }
+    }
+
+    [Fact]
     public async Task Run_ShouldListTheLinkedCode_OnlyForThoseWhoCanReadSourceControl()
     {
         var task = await CreateTask();
@@ -984,6 +1041,23 @@ public sealed class TaskReviewEndpointTests
         };
 
         return $"```json\n{JsonSerializer.Serialize(reply)}\n```";
+    }
+
+    private static string DescribeFrame(JsonElement frame)
+    {
+        var type = (AiReviewStreamEventType)frame.GetProperty("type").GetInt32();
+        var field = type switch
+        {
+            AiReviewStreamEventType.Stage => "stage",
+            AiReviewStreamEventType.Tool or AiReviewStreamEventType.ToolFinished => "tool",
+            AiReviewStreamEventType.Note or AiReviewStreamEventType.Thinking => "text",
+            AiReviewStreamEventType.Summary or AiReviewStreamEventType.Finding => "text",
+            _ => null,
+        };
+
+        var detail = field is null ? string.Empty : frame.GetProperty(field).GetString();
+
+        return $"{type}:{detail}";
     }
 
     private static string OverlapReply(string systemId)

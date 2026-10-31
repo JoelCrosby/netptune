@@ -43,17 +43,25 @@ export enum AiReviewDecision {
 }
 
 export enum AiReviewStreamEventType {
-  progress = 0,
   completed = 1,
   failed = 2,
   tool = 3,
+  stage = 4,
+  note = 5,
+  thinking = 6,
+  toolFinished = 7,
+  finding = 8,
+  summary = 9,
 }
+
+export type AiReviewStage = 'preparing' | 'investigating' | 'writing';
 
 export interface AiReviewToolCall {
   name: string;
   label: string;
   isError: boolean;
   truncated: boolean;
+  note?: string | null;
 }
 
 export interface AiReviewRun {
@@ -199,10 +207,14 @@ export interface AiReviewLatest {
 
 export interface AiReviewStreamEvent {
   type: AiReviewStreamEventType;
-  characters?: number | null;
   runId?: number | null;
   message?: string | null;
   tool?: string | null;
+  stage?: AiReviewStage | null;
+  text?: string | null;
+  isNewBlock?: boolean | null;
+  isError?: boolean | null;
+  category?: AiReviewFindingCategory | null;
 }
 
 export interface DecideAiReviewFindingRequest {

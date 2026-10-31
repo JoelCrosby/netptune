@@ -29,7 +29,19 @@ internal static class AnthropicRequestBuilder
             Messages = request.Messages.Select(CreateMessage).ToList(),
             CacheControl = new CacheControlEphemeral(),
             OutputConfig = CreateOutputConfig(request.Effort),
+            Thinking = CreateThinking(request.ThinkingDisplay),
         };
+    }
+
+    // Left unset, the models think adaptively with their reasoning omitted from the stream.
+    private static ThinkingConfigParam? CreateThinking(AiThinkingDisplay display)
+    {
+        if (display == AiThinkingDisplay.None)
+        {
+            return null;
+        }
+
+        return new ThinkingConfigAdaptive { Display = Display.Summarized };
     }
 
     private static OutputConfig? CreateOutputConfig(AiEffort? effort)

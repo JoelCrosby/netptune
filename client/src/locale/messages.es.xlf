@@ -297,7 +297,7 @@
         <note category="location">src/app/features/pages/editor/page-reference.controller.ts:224</note>
         <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:74</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:94</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:212</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:222</note>
         <note category="location">src/app/workspace.routes.ts:99</note>
         <note category="description">Name of the pages permission group</note>
       </notes>
@@ -1693,7 +1693,7 @@
     </unit>
     <unit id="3781268880187367400">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:135,140</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:153,158</note>
         <note category="description">Title of the notice shown when the latest review of a task failed</note>
       </notes>
       <segment state="translated">
@@ -1763,7 +1763,7 @@
     </unit>
     <unit id="322229249598827754">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:468</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:533</note>
         <note category="description">Shown in place of a person&apos;s name when it is not known</note>
       </notes>
       <segment state="translated">
@@ -2095,7 +2095,7 @@
     </unit>
     <unit id="2387777488304902858">
       <notes>
-        <note category="location">src/app/core/services/ai-reviews.service.ts:31</note>
+        <note category="location">src/app/core/services/ai-reviews.service.ts:28</note>
         <note category="location">src/app/core/services/ai-writer.service.ts:20</note>
         <note category="description">Shown on the Review tab when the review request fails before any reply</note>
       </notes>
@@ -2424,7 +2424,7 @@
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:337,340</note>
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:201,204</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:161</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:220,223</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:238,241</note>
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:80,82</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:540</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:273</note>
@@ -2668,6 +2668,16 @@
       <segment state="translated">
         <source>This query could not be found</source>
         <target>No se ha encontrado esta consulta</target>
+      </segment>
+    </unit>
+    <unit id="3325929519262234553">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:486</note>
+        <note category="description">Label and count of the tool calls a running task review has made so far</note>
+      </notes>
+      <segment state="translated">
+        <source>Steps: <ph id="0" equiv="count" disp="steps"/></source>
+        <target>Pasos: <ph id="0" equiv="count" disp="steps"/></target>
       </segment>
     </unit>
     <unit id="1279691093154837242">
@@ -2989,6 +2999,16 @@
         <target>¿Seguro que quieres eliminar este grupo?</target>
       </segment>
     </unit>
+    <unit id="1280672475146280593">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:139,144</note>
+        <note category="description">Heading above the findings a running task review has written so far, before they are checked and saved</note>
+      </notes>
+      <segment state="translated">
+        <source>Drafted so far</source>
+        <target>Redactado hasta ahora</target>
+      </segment>
+    </unit>
     <unit id="9200818513059635204">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:316</note>
@@ -3121,7 +3141,7 @@
     </unit>
     <unit id="5494881644226080803">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:278,280</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:296,298</note>
       </notes>
       <segment state="translated">
         <source>{VAR_PLURAL, plural, =1 {Show 1 decided finding} other {Show <ph id="0" equiv="INTERPOLATION"/> decided findings}}</source>
@@ -3191,7 +3211,7 @@
     </unit>
     <unit id="6949815097015527714">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:259,263</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:277,281</note>
         <note category="description">Shown when the latest review of a task left nothing open</note>
       </notes>
       <segment state="translated">
@@ -3836,7 +3856,7 @@
     </unit>
     <unit id="1615286370389385433">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:484</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:549</note>
         <note category="description">Who dismissed a review finding. NAME is a person</note>
       </notes>
       <segment state="translated">
@@ -4208,7 +4228,8 @@
     </unit>
     <unit id="958878170701195111">
       <notes>
-        <note category="location">src/app/static/components/step-trail/step-trail.component.ts:36,40</note>
+        <note category="location">src/app/static/components/activity-log/activity-log.component.ts:64,67</note>
+        <note category="location">src/app/static/components/step-trail/step-trail.component.ts:41,44</note>
         <note category="location">src/app/static/pipes/activity.pipe.ts:125</note>
         <note category="description">Marks a step in a list of steps that failed</note>
       </notes>
@@ -4619,7 +4640,7 @@
     </unit>
     <unit id="242059098779495199">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:239,242</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:257,260</note>
         <note category="description">Button that previews and applies a review suggestion</note>
       </notes>
       <segment state="translated">
@@ -4906,7 +4927,7 @@
         <note category="location">src/app/features/notifications/views/notifications-view/notifications-view.component.ts:29,30</note>
         <note category="location">src/app/features/settings/settings.routes.ts:27</note>
         <note category="location">src/app/features/settings/views/personal-notification-settings-view/personal-notification-settings-view.component.ts:22,24</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:430</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:440</note>
         <note category="location">src/app/workspace.routes.ts:123</note>
         <note category="description">Name of the notifications permission group</note>
       </notes>
@@ -5080,7 +5101,7 @@
         <note category="location">src/app/features/pins/components/pin-scope-menu.component.ts:160</note>
         <note category="location">src/app/features/settings/components/preference-scope.ts:36</note>
         <note category="location">src/app/features/settings/settings.routes.ts:46</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:460</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:470</note>
         <note category="description">Name of the workspace permission group</note>
       </notes>
       <segment state="translated">
@@ -5215,16 +5236,6 @@
       <segment state="translated">
         <source>add <ph id="0" equiv="COUNT" disp="count"/> assignees</source>
         <target>añadir <ph id="0" equiv="COUNT" disp="count"/> personas asignadas</target>
-      </segment>
-    </unit>
-    <unit id="7445388612819913138">
-      <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:457</note>
-        <note category="description">Task review progress, for example &quot;8s · 1,400 chars&quot;</note>
-      </notes>
-      <segment state="translated">
-        <source><ph id="0" equiv="elapsed" disp="elapsed"/> · <ph id="1" equiv="count" disp="count"/> chars</source>
-        <target><ph id="0" equiv="elapsed" disp="elapsed"/> · <ph id="1" equiv="count" disp="count"/> caract.</target>
       </segment>
     </unit>
     <unit id="7446913075218839308">
@@ -5877,7 +5888,7 @@
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:154,161</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:169,174</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:239,244</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:278,283</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:296,301</note>
         <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:88,90</note>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:74,79</note>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:112,117</note>
@@ -6365,6 +6376,16 @@
       <segment state="translated">
         <source>Documents</source>
         <target>Documentos</target>
+      </segment>
+    </unit>
+    <unit id="5018969756728532988">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:494</note>
+        <note category="description">Label and count of the findings a running task review has written so far</note>
+      </notes>
+      <segment state="translated">
+        <source>Drafted: <ph id="0" equiv="count" disp="drafts"/></source>
+        <target>Redactados: <ph id="0" equiv="count" disp="drafts"/></target>
       </segment>
     </unit>
     <unit id="4737822868227557262">
@@ -8098,7 +8119,7 @@
         <note category="location">src/app/features/settings/settings.routes.ts:103</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:72,73</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:260</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:363</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:373</note>
         <note category="description">Section heading for links between tasks</note>
       </notes>
       <segment state="translated">
@@ -8180,7 +8201,7 @@
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:46</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:48</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:92</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:347</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:357</note>
         <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:53,54</note>
         <note category="description">Name of the tags permission group</note>
       </notes>
@@ -8289,7 +8310,7 @@
     </unit>
     <unit id="4168406902354683639">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:377,381</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:395,399</note>
         <note category="description">Toggles the list of past reviews of a task</note>
       </notes>
       <segment state="translated">
@@ -8373,7 +8394,7 @@
     </unit>
     <unit id="4334698187230567378">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:342,346</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:360,364</note>
         <note category="description">Button that runs the assistant review on a task</note>
       </notes>
       <segment state="translated">
@@ -8829,7 +8850,7 @@
     </unit>
     <unit id="3302832028736051011">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:148,152</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:166,170</note>
         <note category="description">Suggests reviewing a task again after it changed</note>
       </notes>
       <segment state="translated">
@@ -8964,7 +8985,7 @@
     </unit>
     <unit id="2565426175330768428">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:446</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:471</note>
         <note category="description">Shown while the assistant reviews a task, before it starts writing</note>
       </notes>
       <segment state="translated">
@@ -9548,7 +9569,7 @@
     <unit id="1678559204833619774">
       <notes>
         <note category="location">src/app/features/audit/views/audit-view/audit-view.component.ts:27,28</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:411</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:421</note>
         <note category="location">src/app/workspace.routes.ts:135</note>
         <note category="description">Page title for the workspace audit log</note>
       </notes>
@@ -11891,7 +11912,7 @@
     </unit>
     <unit id="4753691295121065763">
       <notes>
-        <note category="location">src/app/core/services/ai-reviews.service.ts:33</note>
+        <note category="location">src/app/core/services/ai-reviews.service.ts:30</note>
         <note category="description">Shown on the Review tab when the review stream ends early</note>
       </notes>
       <segment state="translated">
@@ -12508,7 +12529,7 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-notify-editor.component.ts:45</note>
         <note category="location">src/app/features/users/views/users-view/users-view.component.html:6</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:263</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:273</note>
         <note category="location">src/app/workspace.routes.ts:129</note>
         <note category="description">Label of the users field</note>
       </notes>
@@ -12811,7 +12832,7 @@
     </unit>
     <unit id="3541398472508734323">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:330,331</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:348,349</note>
         <note category="description">Heading shown when a task has never been reviewed</note>
       </notes>
       <segment state="translated">
@@ -13927,7 +13948,7 @@
     </unit>
     <unit id="2963979162586134182">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:441</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:468</note>
         <note category="description">Shown while a task review runs one of the assistant&apos;s tools. TOOL names the tool and what it reads, like read_repository_file · src/app.ts</note>
       </notes>
       <segment state="translated">
@@ -14748,7 +14769,7 @@
     </unit>
     <unit id="6186101642106373118">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:103,108</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:111,116</note>
         <note category="description">Button that runs the assistant review on a task again</note>
       </notes>
       <segment state="translated">
@@ -15638,7 +15659,7 @@
     </unit>
     <unit id="5239250186261980893">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:445</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:462</note>
         <note category="description">Shown while the assistant writes out the findings of a task review</note>
       </notes>
       <segment state="translated">
@@ -18351,7 +18372,7 @@
     <unit id="4930506384627295710">
       <notes>
         <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:605</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:474</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:484</note>
         <note category="location">src/app/workspace.routes.ts:147</note>
         <note category="description">Heading of the automation settings step</note>
       </notes>
@@ -18407,7 +18428,7 @@
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:61,62</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:70,74</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:95</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:271</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:281</note>
         <note category="location">src/app/workspace.routes.ts:75</note>
         <note category="description">Name of the automations permission group</note>
       </notes>
@@ -19003,7 +19024,7 @@
         <note category="location">src/app/core/auth/permission-items.ts:610</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:107,110</note>
         <note category="location">src/app/features/settings/settings.routes.ts:130</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:395</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:405</note>
         <note category="description">Name of the data permission group</note>
       </notes>
       <segment>
@@ -19033,7 +19054,7 @@
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:226</note>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:140</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:85</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:160</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:170</note>
         <note category="location">src/app/workspace.routes.ts:57</note>
         <note category="description">Name of the tasks permission group</note>
       </notes>
@@ -19749,7 +19770,7 @@
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:64</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:71,72</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:88</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:174</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:184</note>
         <note category="location">src/app/workspace.routes.ts:81</note>
         <note category="description">Name of the boards permission group</note>
       </notes>
@@ -20454,7 +20475,7 @@
     </unit>
     <unit id="7077514990546083477">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:332,334</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:350,352</note>
         <note category="description">Explains what an assistant review of a task does</note>
       </notes>
       <segment state="translated">
@@ -20548,7 +20569,7 @@
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:619</note>
         <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:61,64</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:226</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:236</note>
         <note category="location">src/app/workspace.routes.ts:111</note>
         <note category="description">Name of the calendar permission group</note>
       </notes>
@@ -20982,7 +21003,7 @@
     <unit id="6570363013146073520">
       <notes>
         <note category="location">src/app/features/dashboard/views/dashboard-view/dashboard-view.component.ts:41,43</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:152</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:162</note>
         <note category="location">src/app/workspace.routes.ts:46</note>
         <note category="description">Page title for the dashboard</note>
       </notes>
@@ -21362,7 +21383,7 @@
     </unit>
     <unit id="3922324539528568972">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:483</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:548</note>
         <note category="description">Who accepted a review finding. NAME is a person</note>
       </notes>
       <segment state="translated">
@@ -21554,7 +21575,7 @@
     <unit id="4915431133669985304">
       <notes>
         <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:32,35</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:107</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:117</note>
         <note category="location">src/app/workspace.routes.ts:153</note>
         <note category="description">Page title for the user profile</note>
       </notes>
@@ -21981,7 +22002,7 @@
         <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:44</note>
         <note category="location">src/app/features/project-tasks/project-tasks.routes.ts:13</note>
         <note category="location">src/app/features/project-tasks/views/archive-view/archive-view.component.ts:21,23</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:166</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:176</note>
         <note category="description">Heading of the archive file panel</note>
       </notes>
       <segment state="translated">
@@ -22223,7 +22244,7 @@
     </unit>
     <unit id="7088061432353123225">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:79,91</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:87,99</note>
         <note category="description">When a task was last reviewed, who ran it and which model. TIME is relative, like 2 hours ago</note>
       </notes>
       <segment state="translated">
@@ -22238,7 +22259,7 @@
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:58,59</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:67,71</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:86</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:205</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:215</note>
         <note category="location">src/app/workspace.routes.ts:51</note>
         <note category="description">Name of the projects permission group</note>
       </notes>
@@ -23105,6 +23126,16 @@
         <target>Reintenta la solicitud para cargar la velocidad del sprint.</target>
       </segment>
     </unit>
+    <unit id="4426738042466538780">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:129,133</note>
+        <note category="description">Label before the assistant&apos;s current reasoning while a task review runs</note>
+      </notes>
+      <segment state="translated">
+        <source>Thinking</source>
+        <target>Razonamiento</target>
+      </segment>
+    </unit>
     <unit id="4428127191260559300">
       <notes>
         <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:357</note>
@@ -23319,7 +23350,7 @@
     </unit>
     <unit id="7828808805120058354">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:307,309</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:325,327</note>
         <note category="description">Button that undoes an accepted review suggestion</note>
       </notes>
       <segment state="translated">
@@ -23591,7 +23622,7 @@
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:620</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:66,68</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:234</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:244</note>
         <note category="location">src/app/workspace.routes.ts:93</note>
         <note category="description">Name of the reports permission group</note>
       </notes>
@@ -24178,7 +24209,7 @@
     <unit id="6215048040341403789">
       <notes>
         <note category="location">src/app/features/roadmap/views/roadmap-view.component.ts:61,64</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:219</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:229</note>
         <note category="location">src/app/workspace.routes.ts:105</note>
         <note category="description">Page title for the roadmap</note>
       </notes>
@@ -24670,8 +24701,8 @@
         <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:42,45</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:154,157</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:160,162</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:379</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:443</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:389</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:453</note>
         <note category="location">src/app/workspace.routes.ts:117</note>
         <note category="description">Name of the assistant permission group</note>
       </notes>
@@ -24969,7 +25000,7 @@
     </unit>
     <unit id="6722197117273372334">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:317,319</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:335,337</note>
         <note category="description">Button that reopens a decided review finding</note>
       </notes>
       <segment state="translated">
@@ -25133,7 +25164,7 @@
     </unit>
     <unit id="7305438510733628954">
       <notes>
-        <note category="location">src/app/core/services/ai-reviews.service.ts:32</note>
+        <note category="location">src/app/core/services/ai-reviews.service.ts:29</note>
         <note category="location">src/app/core/services/ai-writer.service.ts:21</note>
         <note category="description">Shown on the Review tab when reviews are being requested too quickly</note>
       </notes>
@@ -25267,7 +25298,7 @@
     </unit>
     <unit id="4777027777592183077">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:202,204</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:220,222</note>
         <note category="description">Placeholder of the optional reason for dismissing a review finding</note>
       </notes>
       <segment state="translated">
@@ -25841,7 +25872,7 @@
     </unit>
     <unit id="6460163696346705349">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:354,356</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:372,374</note>
         <note category="description">Heading above other reviews that mention this task</note>
       </notes>
       <segment state="translated">
@@ -26194,7 +26225,7 @@
     </unit>
     <unit id="2756114886316695221">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:146,148</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:164,166</note>
         <note category="description">Title of the notice shown when a task changed after it was reviewed</note>
       </notes>
       <segment state="translated">
@@ -28080,7 +28111,7 @@
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:608</note>
         <note category="location">src/app/features/queries/views/queries-view/queries-view.component.ts:48,49</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:242</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:252</note>
         <note category="location">src/app/workspace.routes.ts:63</note>
         <note category="description">Name of the queries permission group</note>
       </notes>
@@ -28332,7 +28363,7 @@
         <note category="location">src/app/features/settings/settings.routes.ts:179</note>
         <note category="location">src/app/features/settings/settings.routes.ts:180</note>
         <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:53,55</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:387</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:397</note>
         <note category="description">Breadcrumb for the workspace source control settings</note>
       </notes>
       <segment state="initial">
@@ -29361,7 +29392,7 @@
         <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:101</note>
         <note category="location">src/app/features/sprints/sprints.routes.ts:22</note>
         <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:46</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:195</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:205</note>
         <note category="description">Heading above the backlog tasks leaving a sprint</note>
       </notes>
       <segment state="translated">
@@ -29675,7 +29706,7 @@
         <note category="location">src/app/core/auth/permission-items.ts:611</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:61,62</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:87</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:190</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:200</note>
         <note category="location">src/app/workspace.routes.ts:87</note>
         <note category="description">Name of the sprints permission group</note>
       </notes>
@@ -29873,7 +29904,7 @@
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:626</note>
         <note category="location">src/app/features/storage/views/storage-view.component.ts:22,25</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:403</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:413</note>
         <note category="location">src/app/workspace.routes.ts:141</note>
         <note category="description">Name of the storage permission group</note>
       </notes>
@@ -29917,7 +29948,7 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:277</note>
         <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:32,33</note>
         <note category="location">src/app/features/pins/views/pinned-view/pinned-view.component.ts:65,67</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:253</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:263</note>
         <note category="location">src/app/workspace.routes.ts:69</note>
         <note category="description">Label on the pin control when the task is already pinned</note>
       </notes>
@@ -30582,7 +30613,7 @@
     </unit>
     <unit id="842098238223236649">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:273,277</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:291,295</note>
         <note category="description">Hides review findings that were accepted or dismissed</note>
       </notes>
       <segment state="translated">
@@ -31450,6 +31481,16 @@
         <target>Ocultar las opciones de idioma</target>
       </segment>
     </unit>
+    <unit id="6376671137838846973">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:458</note>
+        <note category="description">Shown while a task review checks access and loads the task, before the assistant starts</note>
+      </notes>
+      <segment state="translated">
+        <source>Getting the task ready…</source>
+        <target>Preparando la tarea…</target>
+      </segment>
+    </unit>
     <unit id="6377449733744525500">
       <notes>
         <note category="location">src/app/core/services/pin-commands.service.ts:81</note>
@@ -31918,8 +31959,8 @@
         <note category="location">src/app/features/settings/settings.routes.ts:57</note>
         <note category="location">src/app/features/settings/views/personal-general-settings-view/personal-general-settings-view.component.ts:32,35</note>
         <note category="location">src/app/features/settings/views/workspace-general-settings-view/workspace-general-settings-view.component.ts:21,24</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:339</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:425</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:349</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:435</note>
         <note category="description">Breadcrumb for general personal settings</note>
       </notes>
       <segment state="translated">
@@ -31934,7 +31975,7 @@
         <note category="location">src/app/features/settings/settings.routes.ts:83</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:66,67</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:90</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:355</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:365</note>
         <note category="location">src/app/static/components/status-filter/status-filter.component.ts:42,43</note>
         <note category="description">Name of the statuses permission group</note>
       </notes>
@@ -31956,7 +31997,7 @@
     <unit id="788903633413068121">
       <notes>
         <note category="location">src/app/features/settings/settings.routes.ts:124</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:371</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:381</note>
         <note category="description">Breadcrumb for workspace service account settings</note>
       </notes>
       <segment state="translated">
@@ -32046,7 +32087,7 @@
     </unit>
     <unit id="4191696363237060749">
       <notes>
-        <note category="location">src/app/core/services/navigation.service.ts:68</note>
+        <note category="location">src/app/core/services/navigation.service.ts:72</note>
         <note category="description">Browser tab title. WORKSPACE is the name of the open workspace, PAGE is the name of the current page</note>
       </notes>
       <segment state="translated">
@@ -32138,8 +32179,8 @@
     <unit id="1536087519743707362">
       <notes>
         <note category="location">src/app/core/util/assistant-inline-prompt.ts:14</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:212,215</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:249,251</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:230,233</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:267,269</note>
         <note category="location">src/app/static/components/anchored-popup/anchored-popup-card.component.ts:31,32</note>
         <note category="location">src/app/static/components/banner/banner.component.ts:36,37</note>
         <note category="location">src/app/static/components/snackbar/snackbar.component.ts:72,73</note>
@@ -32940,7 +32981,7 @@
     </unit>
     <unit id="1899499061278057968">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review.service.ts:183</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review.service.ts:182</note>
         <note category="description">Shown when someone without permission accepts, dismisses or reopens a review finding</note>
       </notes>
       <segment state="translated">
@@ -33233,7 +33274,7 @@
     </unit>
     <unit id="2395695896327760676">
       <notes>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:435</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:445</note>
         <note category="description">Sidebar link to personal notification preference settings</note>
       </notes>
       <segment state="translated">

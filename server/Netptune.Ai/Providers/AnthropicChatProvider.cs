@@ -73,7 +73,21 @@ public sealed class AnthropicChatProvider : IAiChatProvider
                     continue;
                 }
 
-                AppendThinking(blockDelta, replayBlocks);
+                if (delta.TryPickThinking(out var thinkingDelta))
+                {
+                    AppendThinking(blockDelta.Index, thinkingDelta.Thinking, replayBlocks);
+
+                    var hasThinkingText = !string.IsNullOrEmpty(thinkingDelta.Thinking);
+
+                    if (hasThinkingText)
+                    {
+                        yield return AiProviderStreamEvent.Thinking(thinkingDelta.Thinking);
+                    }
+
+                    continue;
+                }
+
+                AppendSignature(blockDelta, replayBlocks);
 
                 continue;
             }
@@ -150,7 +164,19 @@ public sealed class AnthropicChatProvider : IAiChatProvider
         }
     }
 
-    private static void AppendThinking(
+    private static void AppendThinking(long index, string thinking, SortedDictionary<long, ReplayBlock> replayBlocks)
+    {
+        var hasBlock = replayBlocks.TryGetValue(index, out var block);
+
+        if (!hasBlock)
+        {
+            return;
+        }
+
+        block!.Thinking?.Append(thinking);
+    }
+
+    private static void AppendSignature(
         RawContentBlockDeltaEvent blockDelta,
         SortedDictionary<long, ReplayBlock> replayBlocks)
     {
@@ -158,13 +184,6 @@ public sealed class AnthropicChatProvider : IAiChatProvider
 
         if (!hasBlock)
         {
-            return;
-        }
-
-        if (blockDelta.Delta.TryPickThinking(out var thinkingDelta))
-        {
-            block!.Thinking?.Append(thinkingDelta.Thinking);
-
             return;
         }
 

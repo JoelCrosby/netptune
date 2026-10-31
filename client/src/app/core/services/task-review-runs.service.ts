@@ -4,20 +4,21 @@ import {
   AiReviewsService,
 } from '@core/services/ai-reviews.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
+import {
+  AiReviewLiveRun,
+  applyAiReviewEvent,
+  startAiReviewLiveRun,
+} from '@core/util/ai-review-live-run';
 import { refreshScopesForEntityTypes } from '@core/util/entity-refresh-scopes';
-
-export interface TaskReviewRun {
-  startedAt: number;
-  progress: number;
-  activity: string | null;
-}
 
 @Service()
 export class TaskReviewRunsService {
   private readonly reviews = inject(AiReviewsService);
   private readonly workspaceRefresh = inject(WorkspaceRefreshService);
 
-  private readonly runs = signal<ReadonlyMap<number, TaskReviewRun>>(new Map());
+  private readonly runs = signal<ReadonlyMap<number, AiReviewLiveRun>>(
+    new Map()
+  );
 
   forTask(taskId: Signal<number | undefined>) {
     return computed(() => {
@@ -32,13 +33,14 @@ export class TaskReviewRunsService {
 
     if (isAlreadyRunning) return null;
 
-    this.set(taskId, { startedAt: Date.now(), progress: 0, activity: null });
+    this.set(taskId, startAiReviewLiveRun());
 
-    const result = await this.reviews.runTaskReview(taskId, {
-      progress: (characters) => {
-        this.update(taskId, { progress: characters, activity: null });
-      },
-      tool: (label) => this.update(taskId, { activity: label }),
+    const result = await this.reviews.runTaskReview(taskId, (event) => {
+      const current = this.runs().get(taskId);
+
+      if (!current) return;
+
+      this.set(taskId, applyAiReviewEvent(current, event));
     });
 
     this.runs.update((runs) => {
@@ -54,15 +56,7 @@ export class TaskReviewRunsService {
     return result;
   }
 
-  private update(taskId: number, change: Partial<TaskReviewRun>) {
-    const current = this.runs().get(taskId);
-
-    if (!current) return;
-
-    this.set(taskId, { ...current, ...change });
-  }
-
-  private set(taskId: number, run: TaskReviewRun) {
+  private set(taskId: number, run: AiReviewLiveRun) {
     this.runs.update((runs) => new Map(runs).set(taskId, run));
   }
 }

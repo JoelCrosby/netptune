@@ -70,8 +70,8 @@ public static class AiReviewValidator
         AiReviewContext context,
         IReadOnlySet<AiReviewFindingCategory> allowedCategories)
     {
-        var isKnownCategory = CategoriesByName.TryGetValue(finding.Category ?? string.Empty, out var category);
-        var isAllowedCategory = isKnownCategory && allowedCategories.Contains(category);
+        var category = ParseCategory(finding.Category);
+        var isAllowedCategory = category.HasValue && allowedCategories.Contains(category.Value);
         var title = Clean(finding.Title, MaxTitleLength);
         var hasTitle = title is not null;
 
@@ -90,7 +90,7 @@ public static class AiReviewValidator
 
         return new AiReviewDraftFinding
         {
-            Category = category,
+            Category = category!.Value,
             Title = title!,
             Explanation = Clean(finding.Explanation, MaxExplanationLength) ?? string.Empty,
             Quote = Clean(finding.Quote, MaxQuoteLength),
@@ -299,7 +299,14 @@ public static class AiReviewValidator
         return JsonSerializer.SerializeToDocument(edit, JsonOptions.Default);
     }
 
-    private static string? Clean(string? value, int maxLength)
+    internal static AiReviewFindingCategory? ParseCategory(string? name)
+    {
+        var isKnown = CategoriesByName.TryGetValue(name ?? string.Empty, out var category);
+
+        return isKnown ? category : null;
+    }
+
+    internal static string? Clean(string? value, int maxLength)
     {
         var trimmed = AiReviewPrompt.Restore(value)?.Trim();
 

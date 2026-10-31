@@ -4,6 +4,7 @@ import { LucideChevronDown } from '@lucide/angular';
 export interface StepTrailItem {
   label: string;
   failed: boolean;
+  note?: string | null;
 }
 
 @Component({
@@ -27,15 +28,20 @@ export interface StepTrailItem {
     @if (expanded()) {
       <ol class="border-border ml-1.5 flex flex-col gap-1 border-l pl-3">
         @for (step of steps(); track $index) {
-          <li
-            class="font-avatar truncate text-[11.5px]"
-            [class]="step.failed ? 'text-warn' : 'text-muted'">
-            {{ step.label }}
-            @if (step.failed) {
-              <span i18n="Marks a step in a list of steps that failed"
-                >(failed)</span
-              >
+          <li class="flex min-w-0 flex-col gap-0.5">
+            @if (step.note) {
+              <span class="text-muted text-xs">{{ step.note }}</span>
             }
+            <span
+              class="font-avatar truncate text-[11.5px]"
+              [class]="step.failed ? 'text-warn' : 'text-muted'">
+              {{ step.label }}
+              @if (step.failed) {
+                <span i18n="Marks a step in a list of steps that failed"
+                  >(failed)</span
+                >
+              }
+            </span>
           </li>
         }
       </ol>

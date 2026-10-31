@@ -88,6 +88,30 @@ public class AnthropicRequestBuilderTests
         schema.GetProperty("required")[0].GetString().Should().Be("page");
     }
 
+    [Fact]
+    public void Create_ShouldAskForSummarizedThinking_WhenTheRequestShowsIt()
+    {
+        var request = CreateRequest([new AiChatMessage { Role = AiMessageRole.User, Text = "hi" }], []) with
+        {
+            ThinkingDisplay = AiThinkingDisplay.Summarized,
+        };
+
+        var thinking = AnthropicRequestBuilder.Create(request).Thinking;
+
+        using var json = JsonDocument.Parse(JsonSerializer.Serialize(thinking));
+
+        json.RootElement.GetProperty("type").GetString().Should().Be("adaptive");
+        json.RootElement.GetProperty("display").GetString().Should().Be("summarized");
+    }
+
+    [Fact]
+    public void Create_ShouldLeaveThinkingToTheModel_WhenTheRequestDoesNotShowIt()
+    {
+        var request = CreateRequest([new AiChatMessage { Role = AiMessageRole.User, Text = "hi" }], []);
+
+        AnthropicRequestBuilder.Create(request).Thinking.Should().BeNull();
+    }
+
     private static object LastMessage(AiChatMessage message)
     {
         var request = CreateRequest([new AiChatMessage { Role = AiMessageRole.User, Text = "hi" }, message], []);

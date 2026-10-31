@@ -34,9 +34,16 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
 import { CalloutComponent } from '@static/components/callout/callout.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
-import { IconTileComponent } from '@static/components/icon-tile.component';
 import { LabelledCardComponent } from '@static/components/labelled-card/labelled-card.component';
 import { StepTrailComponent } from '@static/components/step-trail/step-trail.component';
+import {
+  ActivityLogComponent,
+  ActivityLogItem,
+} from '@static/components/activity-log/activity-log.component';
+import {
+  BadgeListComponent,
+  BadgeListItem,
+} from '@static/components/badge-list/badge-list.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 import { TextLinkComponent } from '@static/components/text-link.component';
 import { FromNowPipe } from '@static/pipes/from-now.pipe';
@@ -44,18 +51,19 @@ import { TaskDetailReviewHistoryComponent } from './shared/task-detail-review-hi
 import { TaskDetailReviewService } from './shared/task-detail-review.service';
 import { TaskDetailService } from './task-detail.service';
 
-const characterCount = numberFormat();
+const countFormat = numberFormat();
 
 @Component({
   selector: 'app-task-detail-review',
   imports: [
+    ActivityLogComponent,
     BadgeComponent,
+    BadgeListComponent,
     CalloutComponent,
     EmptyStateComponent,
     FlatButtonComponent,
     FormInputComponent,
     FromNowPipe,
-    IconTileComponent,
     LabelledCardComponent,
     LucideHistory,
     LucideSparkles,
@@ -107,19 +115,29 @@ const characterCount = numberFormat();
       </div>
     }
 
-    @if (review.running()) {
-      <div class="flex min-h-40 flex-1 items-center justify-center">
-        <app-empty-state
-          compact
-          busy
-          [title]="liveLabel()"
-          [description]="liveMeta()">
-          <app-icon-tile
-            emptyStateIcon
-            size="large"
-            raised
-            [icon]="assistantIcon" />
-        </app-empty-state>
+    @if (review.liveRun(); as live) {
+      <div class="flex min-h-40 flex-1 flex-col gap-3">
+        <app-activity-log
+          [status]="liveLabel()"
+          [meta]="liveMeta()"
+          [items]="liveSteps()"
+          [current]="liveThinking()"
+          i18n-currentLabel="
+            Label before the assistant's current reasoning while a task review
+            runs
+          "
+          currentLabel="Thinking" />
+
+        @if (live.summary || liveDrafts().length) {
+          <app-badge-list
+            [items]="liveDrafts()"
+            [lead]="live.summary"
+            i18n-heading="
+              Heading above the findings a running task review has written so
+              far, before they are checked and saved
+            "
+            heading="Drafted so far" />
+        }
       </div>
     } @else {
       @if (review.runError(); as runError) {
@@ -403,8 +421,6 @@ export class TaskDetailReviewComponent {
   readonly dismissingFindingId = signal<number | null>(null);
   readonly dismissReason = signal('');
 
-  readonly assistantIcon = LucideSparkles;
-
   readonly current = this.review.current;
   readonly mentions = computed(() => this.review.latest()?.mentionedIn ?? []);
 
@@ -434,27 +450,76 @@ export class TaskDetailReviewComponent {
   );
 
   readonly liveLabel = computed(() => {
-    const activity = this.review.activity();
-    const hasOutput = this.review.progress() > 0;
+    const live = this.review.liveRun();
+    const runningSteps = live?.log.filter((item) => item.state === 'running');
+    const runningStep = runningSteps?.at(-1);
 
-    if (activity) {
+    if (live?.stage === 'preparing') {
+      return $localize`:Shown while a task review checks access and loads the task, before the assistant starts:Getting the task ready…`;
+    }
+
+    if (live?.stage === 'writing') {
+      return $localize`:Shown while the assistant writes out the findings of a task review:Writing up the findings…`;
+    }
+
+    if (runningStep) {
+      const activity = runningStep.text;
+
       return $localize`:Shown while a task review runs one of the assistant's tools. TOOL names the tool and what it reads, like read_repository_file · src/app.ts:Checking ${activity}:TOOL:…`;
     }
 
-    return hasOutput
-      ? $localize`:Shown while the assistant writes out the findings of a task review:Writing up the findings…`
-      : $localize`:Shown while the assistant reviews a task, before it starts writing:Reviewing the task…`;
+    return $localize`:Shown while the assistant reviews a task, before it starts writing:Reviewing the task…`;
   });
 
   readonly liveMeta = computed(() => {
+    const live = this.review.liveRun();
     const elapsed = formatElapsed(this.review.elapsedMs());
-    const characters = this.review.progress();
+    const stepCount =
+      live?.log.filter((item) => item.kind === 'step').length ?? 0;
+    const draftCount = live?.drafts.length ?? 0;
+    const parts = [elapsed];
 
-    if (characters === 0) return elapsed;
+    if (stepCount > 0) {
+      const steps = countFormat.format(stepCount);
 
-    const count = characterCount.format(characters);
+      parts.push(
+        $localize`:Label and count of the tool calls a running task review has made so far:Steps: ${steps}:count:`
+      );
+    }
 
-    return $localize`:Task review progress, for example "8s · 1,400 chars":${elapsed}:elapsed: · ${count}:count: chars`;
+    if (draftCount > 0) {
+      const drafts = countFormat.format(draftCount);
+
+      parts.push(
+        $localize`:Label and count of the findings a running task review has written so far:Drafted: ${drafts}:count:`
+      );
+    }
+
+    return parts.join(' · ');
+  });
+
+  readonly liveSteps = computed<ActivityLogItem[]>(() => {
+    const log = this.review.liveRun()?.log ?? [];
+
+    return log
+      .map((item) => ({ ...item, text: item.text.trim() }))
+      .filter((item) => item.text.length > 0);
+  });
+
+  readonly liveDrafts = computed<BadgeListItem[]>(() => {
+    const drafts = this.review.liveRun()?.drafts ?? [];
+
+    return drafts.map((draft) => ({
+      badge: aiReviewCategoryLabels[draft.category],
+      color: aiReviewCategoryColors[draft.category],
+      text: draft.title,
+    }));
+  });
+
+  readonly liveThinking = computed(() => {
+    const live = this.review.liveRun();
+
+    return live?.stage === 'investigating' ? live.thinking : '';
   });
 
   readonly toolSteps = computed(() => {

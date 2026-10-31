@@ -13,6 +13,8 @@ public sealed class TestAiChatScript
 
     public TimeSpan DelayBeforeCompletion { get; set; } = TimeSpan.Zero;
 
+    public string? ThinkingText { get; set; }
+
     public void Enqueue(AiChatTurn turn)
     {
         Turns.Enqueue(turn);
@@ -31,6 +33,7 @@ public sealed class TestAiChatScript
         Turns.Clear();
         SentRequests.Clear();
         DelayBeforeCompletion = TimeSpan.Zero;
+        ThinkingText = null;
     }
 
     public AiChatTurn Next()
@@ -62,6 +65,11 @@ public sealed class TestAiChatProvider : IAiChatProvider
         Script.Record(request);
 
         var turn = Script.Next();
+
+        if (Script.ThinkingText is not null)
+        {
+            yield return AiProviderStreamEvent.Thinking(Script.ThinkingText);
+        }
 
         if (!string.IsNullOrEmpty(turn.Text))
         {

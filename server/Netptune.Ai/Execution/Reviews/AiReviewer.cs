@@ -23,7 +23,6 @@ namespace Netptune.Ai.Execution.Reviews;
 public sealed class AiReviewer : IAiReviewer
 {
     private const int MaximumOutputTokens = 32_000;
-    private const int ProgressEveryCharacters = 200;
     private const int MaximumStoredReplyCharacters = 8_000;
     private const int MaximumFailureDetailLength = 1_000;
 
@@ -67,6 +66,8 @@ public sealed class AiReviewer : IAiReviewer
         AiReviewSubject subject,
         [EnumeratorCancellation] CancellationToken cancellationToken)
     {
+        yield return AiReviewStreamEvent.Staged(AiReviewStages.Preparing);
+
         var hasSource = Subjects.TryGetValue(subject.Type, out var source);
 
         if (!hasSource)
@@ -163,12 +164,14 @@ public sealed class AiReviewer : IAiReviewer
             SpendRemaining = spend.Remaining,
             ToolKinds = ReviewToolKinds,
             CorrectsProposalClaims = false,
+            ShowsThinking = true,
             MaxToolIterations = Options.ReviewMaxToolIterations,
             MaxTurnCharacters = Options.ReviewMaxTurnCharacters,
             MaxOutputTokens = MaximumOutputTokens,
         };
 
         var outcome = new ReviewOutcome();
+        var feed = new AiReviewProgressFeed(source.Categories, TimeProvider.System);
 
         using var timeout = new CancellationTokenSource(Options.ReviewTimeout);
         using var cancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeout.Token);
@@ -176,28 +179,25 @@ public sealed class AiReviewer : IAiReviewer
         var run = Runner.Run(runContext, cancellation.Token);
         var events = AiTurnReader.Read(run, Options.ReviewTimeout, timeout.Token, cancellation.Token);
         var origin = new AiUsageOrigin(workspaceId, userId, context.UsagePurpose);
-        var reportedCharacters = 0;
+
+        yield return AiReviewStreamEvent.Staged(AiReviewStages.Investigating);
 
         // Only a finally block still runs when the caller stops enumerating, and the tokens were spent either way.
         try
         {
             await foreach (var streamEvent in events)
             {
-                var reviewEvent = Observe(streamEvent, runContext, outcome);
+                Observe(streamEvent, runContext, outcome);
 
-                if (reviewEvent is not null)
+                foreach (var reviewEvent in feed.Observe(streamEvent))
                 {
                     yield return reviewEvent;
                 }
+            }
 
-                var isDueProgress = outcome.Characters - reportedCharacters >= ProgressEveryCharacters;
-
-                if (isDueProgress)
-                {
-                    reportedCharacters = outcome.Characters;
-
-                    yield return AiReviewStreamEvent.Progress(outcome.Characters);
-                }
+            foreach (var reviewEvent in feed.Complete())
+            {
+                yield return reviewEvent;
             }
         }
         finally
@@ -214,7 +214,7 @@ public sealed class AiReviewer : IAiReviewer
             Provider = credential.Provider,
             Model = model,
             StartedAt = startedAt,
-            ToolCalls = DescribeToolCalls(runContext.Invocations),
+            ToolCalls = DescribeToolCalls(runContext.Invocations, feed.CallNotes),
         };
 
         var failure = ResolveFailure(outcome, timeout.IsCancellationRequested);
@@ -248,34 +248,22 @@ public sealed class AiReviewer : IAiReviewer
         yield return AiReviewStreamEvent.Completed(storedRun.Id);
     }
 
-    private static AiReviewStreamEvent? Observe(
-        AiStreamEvent streamEvent,
-        AiRunContext runContext,
-        ReviewOutcome outcome)
+    private static void Observe(AiStreamEvent streamEvent, AiRunContext runContext, ReviewOutcome outcome)
     {
         switch (streamEvent.Type)
         {
             case AiStreamEventType.TextDelta:
                 outcome.Characters += streamEvent.Text?.Length ?? 0;
-
-                return null;
-
-            case AiStreamEventType.ToolStarted:
-                return AiReviewStreamEvent.ToolStarted(streamEvent.ToolName ?? string.Empty);
+                break;
 
             case AiStreamEventType.TurnCompleted:
                 outcome.Turn = runContext.Turns.LastOrDefault();
-
-                return null;
+                break;
 
             case AiStreamEventType.Error:
                 outcome.Failure = streamEvent.Message ?? AppText.AiErrorProviderUnreachable;
                 outcome.FailureCode = streamEvent.Code;
-
-                return null;
-
-            default:
-                return null;
+                break;
         }
     }
 
@@ -307,15 +295,18 @@ public sealed class AiReviewer : IAiReviewer
         return record.Context with { CandidateTasks = merged };
     }
 
-    private static List<AiReviewToolCallViewModel> DescribeToolCalls(List<AiToolInvocationRecord> invocations)
+    private static List<AiReviewToolCallViewModel> DescribeToolCalls(
+        List<AiToolInvocationRecord> invocations,
+        List<string?> notes)
     {
         return invocations
-            .Select(invocation => new AiReviewToolCallViewModel
+            .Select((invocation, index) => new AiReviewToolCallViewModel
             {
                 Name = invocation.ToolName,
                 Label = invocation.Label ?? invocation.ToolName,
                 IsError = invocation.IsError,
                 Truncated = invocation.Truncated,
+                Note = notes.ElementAtOrDefault(index),
             })
             .ToList();
     }

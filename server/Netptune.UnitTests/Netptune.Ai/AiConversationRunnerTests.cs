@@ -165,6 +165,84 @@ public class AiConversationRunnerTests
     }
 
     [Fact]
+    public async Task Run_ShouldStreamSummarizedThinking_WhenTheContextShowsItAndTheModelSupportsIt()
+    {
+        var runner = CreateRunner([]);
+        var context = CreateContext() with { Model = AiModels.AnthropicReviewModel, ShowsThinking = true };
+
+        Provider.ThinkingText = "Checking the scope.";
+
+        var events = await Drain(runner, context);
+        var thinking = events.Where(item => item.Type == AiStreamEventType.ThinkingDelta).Select(item => item.Text);
+
+        Provider.LastRequest!.ThinkingDisplay.Should().Be(AiThinkingDisplay.Summarized);
+        thinking.Should().Equal("Checking the scope.");
+    }
+
+    [Fact]
+    public async Task Run_ShouldNotStreamThinking_WhenTheContextDoesNotShowIt()
+    {
+        var runner = CreateRunner([]);
+        var context = CreateContext() with { Model = AiModels.AnthropicReviewModel };
+
+        Provider.ThinkingText = "Checking the scope.";
+
+        var events = await Drain(runner, context);
+
+        Provider.LastRequest!.ThinkingDisplay.Should().Be(AiThinkingDisplay.None);
+        events.Should().NotContain(item => item.Type == AiStreamEventType.ThinkingDelta);
+    }
+
+    [Fact]
+    public async Task Run_ShouldNotAskForThinking_WhenTheModelCannotShowIt()
+    {
+        var runner = CreateRunner([]);
+        var context = CreateContext() with { Model = AiModels.AnthropicTitleModel, ShowsThinking = true };
+
+        await Drain(runner, context);
+
+        Provider.LastRequest!.ThinkingDisplay.Should().Be(AiThinkingDisplay.None);
+    }
+
+    [Fact]
+    public async Task Run_ShouldSayWhetherAToolCallFailed_WhenItCompletes()
+    {
+        var tool = new StubTool("failing_tool", NetptunePermissions.Tasks.Read)
+        {
+            Failure = new InvalidOperationException("boom"),
+        };
+
+        var runner = CreateRunner([tool]);
+        var context = CreateContext(NetptunePermissions.Tasks.Read);
+
+        Provider.CallToolOnce = "failing_tool";
+
+        var events = await Drain(runner, context);
+
+        var completed = events.Should().ContainSingle(item => item.Type == AiStreamEventType.ToolCompleted).Subject;
+
+        completed.IsError.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task Run_ShouldMarkTheFirstToolCallOfEachTurn_WhenNoUsageIsReportedBetweenTurns()
+    {
+        var tool = new StubTool("allowed_tool", NetptunePermissions.Tasks.Read);
+        var runner = CreateRunner([tool], maxToolIterations: 2);
+        var context = CreateContext(NetptunePermissions.Tasks.Read);
+
+        Provider.AlwaysCallTool = "allowed_tool";
+        Provider.CallsPerTurn = 2;
+
+        var events = await Drain(runner, context);
+
+        var started = events.Where(item => item.Type == AiStreamEventType.ToolStarted).ToList();
+
+        events.Should().NotContain(item => item.Type == AiStreamEventType.TurnUsage);
+        started.Select(item => item.IsFirstInTurn).Should().Equal(true, false, true, false);
+    }
+
+    [Fact]
     public async Task Run_ShouldStopAndReportError_WhenToolIterationLimitIsReached()
     {
         var tool = new StubTool("allowed_tool", NetptunePermissions.Tasks.Read);
@@ -619,6 +697,10 @@ public class AiConversationRunnerTests
 
         public string? FinishReason { get; set; }
 
+        public string? ThinkingText { get; set; }
+
+        public int CallsPerTurn { get; set; } = 1;
+
         public async IAsyncEnumerable<AiProviderStreamEvent> Stream(
             AiChatRequest request,
             string apiKey,
@@ -628,6 +710,11 @@ public class AiConversationRunnerTests
             RequestCount += 1;
 
             await Task.CompletedTask;
+
+            if (ThinkingText is not null)
+            {
+                yield return AiProviderStreamEvent.Thinking(ThinkingText);
+            }
 
             yield return AiProviderStreamEvent.Delta(ReplyText);
 
@@ -655,16 +742,18 @@ public class AiConversationRunnerTests
             {
                 Text = ReplyText,
                 Usage = Usage,
-                ToolCalls =
-                [
-                    new AiToolCall
-                    {
-                        Id = $"call-{RequestCount}",
-                        Name = toolName!,
-                        Arguments = JsonDocument.Parse(ToolArguments),
-                    },
-                ],
+                ToolCalls = Enumerable.Range(1, CallsPerTurn).Select(call => CreateToolCall(toolName!, call)).ToList(),
             });
+        }
+
+        private AiToolCall CreateToolCall(string toolName, int call)
+        {
+            return new AiToolCall
+            {
+                Id = $"call-{RequestCount}-{call}",
+                Name = toolName,
+                Arguments = JsonDocument.Parse(ToolArguments),
+            };
         }
     }
 

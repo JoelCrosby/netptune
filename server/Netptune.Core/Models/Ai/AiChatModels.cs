@@ -93,6 +93,8 @@ public sealed record AiChatRequest
     public int MaxOutputTokens { get; init; } = 16000;
 
     public AiEffort? Effort { get; init; }
+
+    public AiThinkingDisplay ThinkingDisplay { get; init; }
 }
 
 public sealed record AiChatTurn

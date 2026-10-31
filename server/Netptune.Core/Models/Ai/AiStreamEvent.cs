@@ -18,6 +18,7 @@ public enum AiStreamEventType
     UsageUpdated = 11,
     TurnUsage = 12,
     QuestionAsked = 13,
+    ThinkingDelta = 14,
 }
 
 public sealed record AiStreamEvent
@@ -43,6 +44,10 @@ public sealed record AiStreamEvent
     public AiTokenUsageViewModel? Usage { get; init; }
 
     public AiQuestion? Question { get; init; }
+
+    public bool? IsError { get; init; }
+
+    public bool? IsFirstInTurn { get; init; }
 
     public static AiStreamEvent QuestionAsked(AiQuestion question)
     {
@@ -105,14 +110,24 @@ public sealed record AiStreamEvent
         return new AiStreamEvent { Type = AiStreamEventType.TextDelta, Text = text };
     }
 
-    public static AiStreamEvent ToolStarted(string toolName)
+    public static AiStreamEvent ToolStarted(string toolName, bool isFirstInTurn)
     {
-        return new AiStreamEvent { Type = AiStreamEventType.ToolStarted, ToolName = toolName };
+        return new AiStreamEvent
+        {
+            Type = AiStreamEventType.ToolStarted,
+            ToolName = toolName,
+            IsFirstInTurn = isFirstInTurn,
+        };
     }
 
-    public static AiStreamEvent ToolCompleted(string toolName)
+    public static AiStreamEvent Thinking(string text)
     {
-        return new AiStreamEvent { Type = AiStreamEventType.ToolCompleted, ToolName = toolName };
+        return new AiStreamEvent { Type = AiStreamEventType.ThinkingDelta, Text = text };
+    }
+
+    public static AiStreamEvent ToolCompleted(string toolName, bool isError)
+    {
+        return new AiStreamEvent { Type = AiStreamEventType.ToolCompleted, ToolName = toolName, IsError = isError };
     }
 
     public static AiStreamEvent ReplyReset()

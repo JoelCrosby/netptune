@@ -49,6 +49,9 @@ public sealed class AiConversationRunner : IAiConversationRunner
         var spent = new AiUsage();
         var maxToolIterations = context.MaxToolIterations ?? Options.MaxToolIterations;
         var maxTurnCharacters = context.MaxTurnCharacters ?? Options.MaxTurnCharacters;
+        var thinkingDisplay = context.ShowsThinking
+            ? AiModels.ThinkingDisplayFor(context.Model)
+            : AiThinkingDisplay.None;
 
         while (iteration < maxToolIterations)
         {
@@ -62,6 +65,7 @@ public sealed class AiConversationRunner : IAiConversationRunner
                 Tools = definitions,
                 MaxOutputTokens = context.MaxOutputTokens ?? Options.MaxOutputTokens,
                 Effort = context.Effort,
+                ThinkingDisplay = thinkingDisplay,
             };
 
             AiChatTurn? turn = null;
@@ -78,6 +82,13 @@ public sealed class AiConversationRunner : IAiConversationRunner
                         streamedCharacters += providerEvent.TextDelta.Length;
 
                         yield return AiStreamEvent.Delta(providerEvent.TextDelta);
+                    }
+
+                    var isShownThinking = context.ShowsThinking && providerEvent.ThinkingDelta is not null;
+
+                    if (isShownThinking)
+                    {
+                        yield return AiStreamEvent.Thinking(providerEvent.ThinkingDelta!);
                     }
 
                     if (providerEvent.CompletedTurn is not null)
@@ -169,11 +180,12 @@ public sealed class AiConversationRunner : IAiConversationRunner
 
             var results = new List<AiToolResult>();
 
-            foreach (var call in turn.ToolCalls)
+            foreach (var (position, call) in turn.ToolCalls.Index())
             {
                 var label = DescribeCall(call, availableTools);
+                var isFirstInTurn = position == 0;
 
-                yield return AiStreamEvent.ToolStarted(label);
+                yield return AiStreamEvent.ToolStarted(label, isFirstInTurn);
 
                 var result = await ExecuteTool(call, availableTools, context.Permissions, cancellationToken);
 
@@ -194,7 +206,7 @@ public sealed class AiConversationRunner : IAiConversationRunner
                     IsError = result.IsError,
                 });
 
-                yield return AiStreamEvent.ToolCompleted(label);
+                yield return AiStreamEvent.ToolCompleted(label, result.IsError);
             }
 
             messages.Add(new AiChatMessage { Role = AiMessageRole.Tool, ToolResults = results });
