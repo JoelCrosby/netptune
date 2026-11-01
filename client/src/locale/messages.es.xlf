@@ -378,7 +378,7 @@
     </unit>
     <unit id="5277739594710154939">
       <notes>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:60,63</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:62,65</note>
         <note category="description">Sits before the link to the login form</note>
       </notes>
       <segment state="initial">
@@ -4445,7 +4445,7 @@
     <unit id="965218006709575156">
       <notes>
         <note category="location">src/app/features/auth/components/login/login.component.ts:86,89</note>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:116,119</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:118,121</note>
         <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:117,120</note>
         <note category="description">Placeholder of the e-mail address field on auth forms</note>
       </notes>
@@ -7291,7 +7291,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/invite-dialog/invite-dialog.component.ts:93</note>
         <note category="location">src/app/features/auth/components/login/login.component.ts:179</note>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:235</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:252</note>
         <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:162</note>
         <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:121</note>
         <note category="description">Body of a dialog or validation message</note>
@@ -7315,7 +7315,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/invite-dialog/invite-dialog.component.ts:96</note>
         <note category="location">src/app/features/auth/components/login/login.component.ts:182</note>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:238</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:255</note>
         <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:165</note>
         <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:125</note>
         <note category="description">Body of a dialog or validation message</note>
@@ -10209,7 +10209,7 @@
     <unit id="1431416938026210429">
       <notes>
         <note category="location">src/app/features/auth/components/login/login.component.ts:96,99</note>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:126,128</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:128,130</note>
         <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:49,51</note>
         <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:153</note>
         <note category="description">Label of the password field on the login form</note>
@@ -10344,7 +10344,7 @@
     </unit>
     <unit id="5907476126990913307">
       <notes>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:207</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:224</note>
         <note category="description">Submit button on the account registration form</note>
       </notes>
       <segment state="initial">
@@ -10546,7 +10546,7 @@
     <unit id="3577237269587081090">
       <notes>
         <note category="location">src/app/features/auth/components/login/login.component.ts:186</note>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:242</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:259</note>
         <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:148</note>
         <note category="description">Validation error when the password field is empty</note>
       </notes>
@@ -10728,8 +10728,8 @@
     </unit>
     <unit id="5342432350421167093">
       <notes>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:95,98</note>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:223</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:97,100</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:240</note>
         <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:109</note>
         <note category="description">Label of the given-name field on the registration form</note>
       </notes>
@@ -10780,8 +10780,8 @@
     </unit>
     <unit id="3586674587150281199">
       <notes>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:103,106</note>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:230</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:105,108</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:247</note>
         <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:116</note>
         <note category="description">Label of the family-name field on the registration form</note>
       </notes>
@@ -10935,7 +10935,7 @@
     </unit>
     <unit id="auth.register.invited">
       <notes>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:85,91</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:87,93</note>
         <note category="description">Shown on the registration form when it was opened from a workspace invitation</note>
       </notes>
       <segment state="initial">
@@ -10945,7 +10945,7 @@
     </unit>
     <unit id="auth.register.inviteNote">
       <notes>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:173,177</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:190,194</note>
         <note category="description">Note in the footer of the registration card</note>
       </notes>
       <segment state="initial">
@@ -13455,6 +13455,16 @@
         <target>Páginas que necesitan revisión</target>
       </segment>
     </unit>
+    <unit id="6177550866644062465">
+      <notes>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:149,165</note>
+        <note category="description">Checkbox confirming the terms of service on the registration form</note>
+      </notes>
+      <segment state="initial">
+        <source> I agree to the <pc id="0" equivStart="START_LINK" equivEnd="CLOSE_LINK" type="link" dispStart="&lt;a app-text-link href=&quot;https://netptune.co.uk/terms&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot; &gt;" dispEnd="&lt;/a &gt;">terms of service</pc> and <pc id="1" equivStart="START_LINK_1" equivEnd="CLOSE_LINK" type="link" dispStart="&lt;a app-text-link href=&quot;https://netptune.co.uk/privacy&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot; &gt;" dispEnd="&lt;/a &gt;">privacy policy</pc></source>
+        <target> Acepto los <pc id="0" equivStart="START_LINK" equivEnd="CLOSE_LINK" type="link" dispStart="&lt;a href=&quot;https://netptune.co.uk/terms&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot; class=&quot;text-primary underline underline-offset-2&quot; &gt;" dispEnd="&lt;/a &gt;">términos del servicio</pc> y la <pc id="1" equivStart="START_LINK_1" equivEnd="CLOSE_LINK" type="link" dispStart="&lt;a href=&quot;https://netptune.co.uk/privacy&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot; class=&quot;text-primary underline underline-offset-2&quot; &gt;" dispEnd="&lt;/a &gt;">política de privacidad</pc></target>
+      </segment>
+    </unit>
     <unit id="6178346760391748598">
       <notes>
         <note category="location">src/app/core/services/page-commands.service.ts:243</note>
@@ -15058,7 +15068,7 @@
     </unit>
     <unit id="8316005860907344508">
       <notes>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:253</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:270</note>
         <note category="description">Validation error when the terms of service are not accepted</note>
       </notes>
       <segment state="initial">
@@ -18446,7 +18456,7 @@
       <notes>
         <note category="location">src/app/features/auth/components/auth-provider/auth-provider.component.ts:16,17</note>
         <note category="location">src/app/features/auth/components/login/login.component.ts:65,67</note>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:73,74</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:75,76</note>
         <note category="description">Label above the heading of the sign-in form</note>
       </notes>
       <segment state="initial">
@@ -20141,7 +20151,7 @@
     </unit>
     <unit id="2224947564116830026">
       <notes>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:75,77</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:77,79</note>
         <note category="description">Heading of the account registration form</note>
       </notes>
       <segment state="initial">
@@ -22335,7 +22345,7 @@
     </unit>
     <unit id="2195844952748654945">
       <notes>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:245</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:262</note>
         <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:154</note>
         <note category="description">Validation error when a new password is too short</note>
       </notes>
@@ -24946,7 +24956,7 @@
     </unit>
     <unit id="5241223076967248456">
       <notes>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:130,133</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:132,135</note>
         <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:92,95</note>
         <note category="description">Placeholder of the password field on the registration form</note>
       </notes>
@@ -26108,7 +26118,7 @@
     </unit>
     <unit id="1882417016002095967">
       <notes>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:204</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:221</note>
         <note category="description">Submit button on the registration form while the account is created</note>
       </notes>
       <segment state="initial">
@@ -26244,16 +26254,6 @@
       <segment state="translated">
         <source>Writing the reply…</source>
         <target>Redactando la respuesta…</target>
-      </segment>
-    </unit>
-    <unit id="2904079922768988996">
-      <notes>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:147,151</note>
-        <note category="description">Checkbox confirming the terms of service on the registration form</note>
-      </notes>
-      <segment state="initial">
-        <source> I agree to the terms of service and privacy policy </source>
-        <target> Acepto los términos del servicio y la política de privacidad </target>
       </segment>
     </unit>
     <unit id="4584368643492582099">
@@ -29816,7 +29816,7 @@
     </unit>
     <unit id="8351943591470962982">
       <notes>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:112,114</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:114,116</note>
         <note category="description">Label of the work e-mail field on the registration form</note>
       </notes>
       <segment state="initial">
@@ -32760,7 +32760,7 @@
     <unit id="6663783128602596673">
       <notes>
         <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:46,49</note>
-        <note category="location">src/app/features/auth/components/register/register.component.ts:67,71</note>
+        <note category="location">src/app/features/auth/components/register/register.component.ts:69,73</note>
         <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:49,51</note>
         <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:60,62</note>
         <note category="location">src/app/shell/shell-navbar.component.ts:75,82</note>

@@ -110,6 +110,10 @@ export default function Hero() {
               Meet the assistant
             </a>
           </div>
+
+          <p class="m-0 text-sm text-white/50">
+            Free to use. The assistant runs on your own Anthropic or OpenAI key.
+          </p>
         </div>
 
         <div class="relative h-110 min-w-0 sm:h-160">

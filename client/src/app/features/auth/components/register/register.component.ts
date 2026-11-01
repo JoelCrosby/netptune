@@ -22,6 +22,7 @@ import { CheckboxComponent } from '@static/components/checkbox/checkbox.componen
 import { CalloutComponent } from '@static/components/callout/callout.component';
 import { HeaderPromptComponent } from '@static/components/header-prompt.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { TextLinkComponent } from '@static/components/text-link.component';
 import { PanelBodyComponent } from '@static/components/panel-body.component';
 import { AuthFieldComponent } from '../auth-field/auth-field.component';
 import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.component';
@@ -51,6 +52,7 @@ const PASSWORD_MIN_LENGTH = 8;
     FormField,
     TurnstileComponent,
     TurnstileNoticeComponent,
+    TextLinkComponent,
   ],
   template: `
     <app-auth-shell>
@@ -144,7 +146,22 @@ const PASSWORD_MIN_LENGTH = 8;
             i18n="
               Checkbox confirming the terms of service on the registration form
             ">
-            I agree to the terms of service and privacy policy
+            I agree to the
+            <a
+              app-text-link
+              href="https://netptune.co.uk/terms"
+              target="_blank"
+              rel="noopener"
+              >terms of service</a
+            >
+            and
+            <a
+              app-text-link
+              href="https://netptune.co.uk/privacy"
+              target="_blank"
+              rel="noopener"
+              >privacy policy</a
+            >
           </ng-container>
         </app-checkbox>
 

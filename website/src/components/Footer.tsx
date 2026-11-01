@@ -1,5 +1,5 @@
 import { For } from 'solid-js';
-import { footerColumns } from '~/data/footer';
+import { footerColumns, legalLinks } from '~/data/footer';
 
 export default function Footer() {
   return (
@@ -39,7 +39,18 @@ export default function Footer() {
 
         <div class="flex flex-wrap justify-between gap-3 border-t border-purple-200/8 pt-6 text-[13px] text-white/40">
           <span>&copy; {new Date().getFullYear()} Netptune</span>
-          <span class="font-geist-mono">netptune.co.uk</span>
+          <div class="flex flex-wrap gap-5">
+            <For each={legalLinks}>
+              {(link) => (
+                <a href={link.href} class="transition-colors hover:text-white">
+                  {link.label}
+                </a>
+              )}
+            </For>
+            <a href="mailto:support@netptune.co.uk" class="transition-colors hover:text-white">
+              support@netptune.co.uk
+            </a>
+          </div>
         </div>
       </div>
     </footer>

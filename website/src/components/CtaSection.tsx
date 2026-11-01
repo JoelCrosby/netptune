@@ -8,8 +8,8 @@ export default function CtaSection() {
           Ready when your team is.
         </h2>
         <p class="m-0 max-w-130 text-[19px] leading-[1.55] text-white/62">
-          Create a workspace in a minute, invite your team, and let the assistant take care of the
-          busywork.
+          Create a workspace in a minute and invite your team. Add an Anthropic or OpenAI key
+          whenever you'd like the assistant to take care of the busywork.
         </p>
         <div class="flex flex-wrap justify-center gap-3 pt-2">
           <a

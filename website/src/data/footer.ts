@@ -1,4 +1,4 @@
-import type { FooterColumn } from '~/types/footer';
+import type { FooterColumn, FooterLink } from '~/types/footer';
 
 export const footerColumns: FooterColumn[] = [
   {
@@ -33,4 +33,9 @@ export const footerColumns: FooterColumn[] = [
       { label: 'API', href: '/docs/api' },
     ],
   },
+];
+
+export const legalLinks: FooterLink[] = [
+  { label: 'Terms', href: '/terms' },
+  { label: 'Privacy', href: '/privacy' },
 ];

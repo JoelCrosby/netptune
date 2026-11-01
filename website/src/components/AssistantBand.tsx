@@ -113,7 +113,8 @@ export default function AssistantBand() {
             </h2>
             <p class="m-0 max-w-125 text-lg leading-[1.6] text-pretty text-white/62">
               It suggests and you decide. It sees only what you can see, and nothing changes until
-              you've had a look — then you can still undo it.
+              you've had a look — then you can still undo it. It runs on your own Anthropic or
+              OpenAI key, so you pay the provider directly and Netptune adds nothing on top.
             </p>
             <a
               href="/assistant"
