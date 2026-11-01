@@ -9,8 +9,9 @@ import { EmptyStateComponent } from '@app/static/components/empty-state/empty-st
 import { TaskTableComponent } from '@app/static/components/task-table.component';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { TaskArchiveService } from '@core/services/task-archive.service';
+import { taskFilterRoute } from '@core/router/task-filter-route';
 import { taskColumns } from '@core/tasks/task-columns';
-import { reloadToken } from '@core/util/signals';
+import { onChange, reloadToken } from '@core/util/signals';
 import { LucideArchiveRestore } from '@lucide/angular';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
@@ -62,6 +63,7 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
       tableClass="md:min-w-[760px] table-fixed"
       [autoFill]="true"
       [columns]="columns"
+      [params]="filterRoute.requestParams"
       [menu]="menu"
       [reloadSignal]="reloadVersion"
       [selection]="true"
@@ -88,13 +90,23 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
       </ng-template>
 
       <ng-template appDatatableEmpty>
-        <app-empty-state
-          i18n-title="Heading of the empty archive list"
-          title="There are currently no deleted tasks."
-          i18n-description="Explains what the archive list will contain"
-          description="Deleted tasks show up here, where they can be restored.">
-          <svg emptyStateIcon size="38" lucideArchiveRestore></svg>
-        </app-empty-state>
+        @if (filtersActive()) {
+          <app-empty-state
+            i18n-title="
+              Heading of the archive list when no task matches the filters
+            "
+            title="No deleted tasks match these filters.">
+            <svg emptyStateIcon size="38" lucideArchiveRestore></svg>
+          </app-empty-state>
+        } @else {
+          <app-empty-state
+            i18n-title="Heading of the empty archive list"
+            title="There are currently no deleted tasks."
+            i18n-description="Explains what the archive list will contain"
+            description="Deleted tasks show up here, where they can be restored.">
+            <svg emptyStateIcon size="38" lucideArchiveRestore></svg>
+          </app-empty-state>
+        }
       </ng-template>
     </app-task-table>
   `,
@@ -109,6 +121,10 @@ export class ArchiveListComponent {
   readonly selectedCount = computed(() => this.selection().length);
 
   readonly reloadVersion = reloadToken();
+
+  protected readonly filterRoute = taskFilterRoute();
+
+  readonly filtersActive = this.filterRoute.isFiltered;
 
   private readonly deletedByColumn: DatatableColumn<TaskViewModel> = {
     id: 'deletedBy',
@@ -140,6 +156,10 @@ export class ArchiveListComponent {
     },
   ];
 
+  constructor() {
+    onChange(this.filterRoute.requestParams, () => this.clearSelection());
+  }
+
   restoreSelected() {
     this.restore(this.selection().map((task) => task.id));
   }
@@ -148,9 +168,13 @@ export class ArchiveListComponent {
     if (ids.length === 0) return;
 
     this.archiveService.restore(ids).subscribe(() => {
-      this.table()?.clearSelection();
-      this.selection.set([]);
+      this.clearSelection();
       this.reloadVersion.bump();
     });
+  }
+
+  private clearSelection() {
+    this.table()?.clearSelection();
+    this.selection.set([]);
   }
 }

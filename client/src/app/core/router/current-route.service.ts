@@ -21,6 +21,10 @@ export class CurrentRouteService {
     return /^\/[^/?#]+\/tasks(?:[?#].*)?$/.test(this.url());
   });
 
+  readonly isTaskArchiveRoute = computed(() => {
+    return /^\/[^/?#]+\/tasks\/archive(?:[?#].*)?$/.test(this.url());
+  });
+
   readonly isCalendarRoute = computed(() => {
     return /^\/[^/?#]+\/calendar(?:[?#].*)?$/.test(this.url());
   });
@@ -41,6 +45,7 @@ export class CurrentRouteService {
   readonly isTaskFilterableRoute = computed(() => {
     return (
       this.isSprintFilterableRoute() ||
+      this.isTaskArchiveRoute() ||
       this.isSprintBacklogRoute() ||
       this.isCalendarRoute() ||
       this.isRoadmapRoute()

@@ -936,6 +936,28 @@ public sealed class TasksEndpointTests
     }
 
     [Fact]
+    public async Task Archive_ShouldApplySearchAndFilters_WhenListingDeletedTasks()
+    {
+        var marker = Guid.NewGuid().ToString("N");
+        var inProgressStatus = await GetStatus("in-progress");
+        var completeStatus = await GetStatus("complete");
+        var inProgressId = await CreateAndDeleteTask($"Archive filter {marker} alpha", inProgressStatus.Id);
+        var completeId = await CreateAndDeleteTask($"Archive filter {marker} beta", completeStatus.Id);
+
+        var searched = await GetTaskPage($"api/tasks/archive?pageSize=100&search={marker}");
+
+        searched.Select(task => task.Id).Should().BeEquivalentTo([inProgressId, completeId]);
+
+        var narrowed = await GetTaskPage($"api/tasks/archive?pageSize=100&search={marker}%20alpha");
+
+        narrowed.Select(task => task.Id).Should().Equal(inProgressId);
+
+        var byStatus = await GetTaskPage($"api/tasks/archive?pageSize=100&search={marker}&statusIds={completeStatus.Id}");
+
+        byStatus.Select(task => task.Id).Should().Equal(completeId);
+    }
+
+    [Fact]
     public async Task MoveTaskInBoardGroup_ShouldReturnSuccess_WhenInputValid()
     {
         var request = new MoveTaskInGroupRequest
@@ -1116,6 +1138,29 @@ public sealed class TasksEndpointTests
     private Task<IReadOnlyList<TaskViewModel>> GetTasks()
     {
         return GetTaskPage("api/tasks?pageSize=100");
+    }
+
+    private async Task<int> CreateAndDeleteTask(string name, int statusId)
+    {
+        var request = new AddProjectTaskRequest
+        {
+            Name = name,
+            StatusId = statusId,
+            ProjectId = 1,
+        };
+
+        var createResponse = await Client.PostAsJsonAsync("api/tasks", request, TestContext.Current.CancellationToken);
+
+        createResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var created = await createResponse.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>(TestContext.Current.CancellationToken);
+        var taskId = created!.Payload!.Id;
+
+        var deleteResponse = await Client.DeleteAsync($"api/tasks/{taskId}", TestContext.Current.CancellationToken);
+
+        deleteResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        return taskId;
     }
 
     private Task<IReadOnlyList<TaskViewModel>> GetArchivedTasks()

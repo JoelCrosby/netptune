@@ -361,7 +361,18 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   // Null until rows first arrive, and holds the last count while a reload is in flight.
   readonly loadedCount = this.settledCount.asReadonly();
 
-  currentPage = signal(1);
+  private readonly resourceParamsKey = computed(() => {
+    const source = this.data();
+
+    if (isLocalDataSource(source)) return '';
+
+    return JSON.stringify(source.resource.params());
+  });
+
+  currentPage = linkedSignal({
+    source: this.resourceParamsKey,
+    computation: () => 1,
+  });
   pageSize = linkedSignal(() => this.defaultPageSize());
 
   localSource = computed(() => {

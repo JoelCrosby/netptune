@@ -802,7 +802,7 @@
     <unit id="5322873861888163184">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:132,134</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:52,55</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:58,61</note>
         <note category="description">Button that puts this task on another board</note>
       </notes>
       <segment state="translated">
@@ -1835,7 +1835,7 @@
     </unit>
     <unit id="3222861994325757867">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:41,44</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:47,50</note>
         <note category="description">Section heading for the boards a task appears on</note>
       </notes>
       <segment state="translated">
@@ -2133,6 +2133,16 @@
       <segment state="initial">
         <source>Conditions not matched, so the run stopped here</source>
         <target>Conditions non remplies, l’exécution s’est arrêtée ici</target>
+      </segment>
+    </unit>
+    <unit id="1625663112955094851">
+      <notes>
+        <note category="location">src/app/features/project-tasks/views/archive-view/archive-view.component.ts:24,27</note>
+        <note category="description">Accessible name of the archived task filter row</note>
+      </notes>
+      <segment state="translated">
+        <source>Filter archived tasks</source>
+        <target>Filtrer les tâches archivées</target>
       </segment>
     </unit>
     <unit id="162633507044660716">
@@ -2856,7 +2866,7 @@
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:798</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:820</note>
         <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:195</note>
-        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:168</note>
+        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:135</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:249</note>
         <note category="location">src/app/features/queries/views/queries-view/queries-view.component.ts:159</note>
         <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:230</note>
@@ -3828,7 +3838,7 @@
       <notes>
         <note category="location">src/app/core/services/task-archive.service.ts:39</note>
         <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:122</note>
-        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:137</note>
+        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:153</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:53</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
@@ -5683,7 +5693,7 @@
         <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:68,70</note>
         <note category="location">src/app/entry/dialogs/status-dialog/status-dialog.component.ts:86,88</note>
         <note category="location">src/app/entry/dialogs/tag-dialog/tag-dialog.component.ts:49,51</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:204,205</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:205,206</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:115,117</note>
         <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:254,259</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:88,90</note>
@@ -5806,7 +5816,7 @@
     </unit>
     <unit id="6753797320809380334">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:255</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:256</note>
         <note category="description">Accessible label for the button that switches the open task to the document layout</note>
       </notes>
       <segment state="translated">
@@ -7199,7 +7209,7 @@
     </unit>
     <unit id="2972165246341808110">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:104,108</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:120,124</note>
         <note category="description">Empty state when a task is not on any board</note>
       </notes>
       <segment state="translated">
@@ -14160,7 +14170,7 @@
     </unit>
     <unit id="2644471404446242567">
       <notes>
-        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:115</note>
+        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:131</note>
         <note category="description">Column heading for who deleted a task</note>
       </notes>
       <segment state="translated">
@@ -14867,7 +14877,7 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:57,60</note>
         <note category="location">src/app/features/notifications/components/notifications-filters/notifications-filters.component.ts:60,63</note>
-        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:40,43</note>
+        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:41,44</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:78,81</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:62,65</note>
         <note category="location">src/app/shared/components/task-selection-actions/task-selection-actions.component.ts:20,23</note>
@@ -15772,7 +15782,7 @@
     <unit id="8805582001022257690">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:116,118</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:176,178</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:177,179</note>
         <note category="description">Button that asks the assistant about this task</note>
       </notes>
       <segment state="translated">
@@ -16094,7 +16104,7 @@
     <unit id="4510676848705799339">
       <notes>
         <note category="location">src/app/core/automations/automation-copy.ts:84</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:186,188</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:187,189</note>
         <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:182,185</note>
         <note category="description">Name of an automation action</note>
       </notes>
@@ -21517,7 +21527,7 @@
     </unit>
     <unit id="3875186816345392442">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:235</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:236</note>
         <note category="description">Accessible label for the toggle that shows or hides the comments and history beside a task</note>
       </notes>
       <segment state="translated">
@@ -22113,7 +22123,7 @@
     </unit>
     <unit id="117068237894470695">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:163,165</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:164,166</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:169,171</note>
         <note category="description">Accessible label for the button that opens the task&apos;s other actions</note>
       </notes>
@@ -22258,7 +22268,7 @@
     </unit>
     <unit id="3565945316550033944">
       <notes>
-        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:49,52</note>
+        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:50,53</note>
         <note category="description">Button that restores the selected archived tasks</note>
       </notes>
       <segment state="translated">
@@ -22278,7 +22288,7 @@
     </unit>
     <unit id="4898753656326237317">
       <notes>
-        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:59,62</note>
+        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:60,63</note>
         <note category="description">Shown when the archived task list fails to load</note>
       </notes>
       <segment state="translated">
@@ -22298,7 +22308,7 @@
     </unit>
     <unit id="1258966902012251034">
       <notes>
-        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:85,88</note>
+        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:87,90</note>
         <note category="location">src/app/features/storage/components/storage-list.component.ts:150,153</note>
         <note category="description">Shown in place of a value that is not known</note>
       </notes>
@@ -22340,7 +22350,7 @@
     </unit>
     <unit id="2195929958481364265">
       <notes>
-        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:93,94</note>
+        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:104,105</note>
         <note category="description">Heading of the empty archive list</note>
       </notes>
       <segment state="translated">
@@ -22450,7 +22460,7 @@
     </unit>
     <unit id="5569798609793426852">
       <notes>
-        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:95,96</note>
+        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:106,107</note>
         <note category="description">Explains what the archive list will contain</note>
       </notes>
       <segment state="translated">
@@ -22591,7 +22601,7 @@
     </unit>
     <unit id="8762534944604959180">
       <notes>
-        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:39,42</note>
+        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:38,41</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:248,249</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:189,190</note>
         <note category="location">src/app/static/components/task-table.component.ts:98</note>
@@ -22605,7 +22615,7 @@
     <unit id="2630272244920413702">
       <notes>
         <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:146,148</note>
-        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:73,75</note>
+        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:72,74</note>
         <note category="description">Button that adds a task to this board group</note>
       </notes>
       <segment state="translated">
@@ -22631,7 +22641,7 @@
         <note category="location">src/app/features/pages/pages.routes.ts:13</note>
         <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:44</note>
         <note category="location">src/app/features/project-tasks/project-tasks.routes.ts:13</note>
-        <note category="location">src/app/features/project-tasks/views/archive-view/archive-view.component.ts:21,23</note>
+        <note category="location">src/app/features/project-tasks/views/archive-view/archive-view.component.ts:23</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:176</note>
         <note category="description">Heading of the archive file panel</note>
       </notes>
@@ -24209,7 +24219,7 @@
     </unit>
     <unit id="4810719754522561546">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:234</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:235</note>
         <note category="description">Accessible label for the control that opens the pin scope menu</note>
       </notes>
       <segment state="translated">
@@ -26725,7 +26735,7 @@
     </unit>
     <unit id="8925868438353175805">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:252</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:253</note>
         <note category="description">Accessible label for the button that switches the open task to the cockpit layout</note>
       </notes>
       <segment state="translated">
@@ -27453,8 +27463,8 @@
     </unit>
     <unit id="6827887873610296004">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:144,146</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:148,149</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:145,147</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:149,150</note>
         <note category="location">src/app/shared/components/pinned-task-row/pinned-task-row.component.ts:83,85</note>
         <note category="location">src/app/shared/components/pinned-task-row/pinned-task-row.component.ts:87,88</note>
         <note category="description">Tooltip on the link that opens the task&apos;s own page</note>
@@ -28777,8 +28787,8 @@
     </unit>
     <unit id="8513834699710731594">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:90,92</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:94,95</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:106,108</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:110,111</note>
         <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:166,171</note>
         <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:144</note>
         <note category="description">Tooltip on the button that takes a task off a board</note>
@@ -30130,7 +30140,7 @@
     </unit>
     <unit id="4475093671158329161">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:280</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:281</note>
         <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:95,99</note>
         <note category="description">Label on the control that pins a task</note>
       </notes>
@@ -30767,7 +30777,7 @@
     </unit>
     <unit id="5743757503664322992">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:277</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:278</note>
         <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:32,33</note>
         <note category="location">src/app/features/pins/views/pinned-view/pinned-view.component.ts:65,67</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:263</note>
@@ -31084,7 +31094,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:86</note>
         <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:698</note>
-        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:128</note>
+        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:144</note>
         <note category="description">Shown on a linked branch that was deleted</note>
       </notes>
       <segment state="translated">
@@ -34448,6 +34458,16 @@
       <segment state="translated">
         <source>Search fields</source>
         <target>Rechercher des champs</target>
+      </segment>
+    </unit>
+    <unit id="9195678748994196329">
+      <notes>
+        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:98,100</note>
+        <note category="description">Heading of the archive list when no task matches the filters</note>
+      </notes>
+      <segment state="translated">
+        <source>No deleted tasks match these filters.</source>
+        <target>Aucune tâche supprimée ne correspond à ces filtres.</target>
       </segment>
     </unit>
     <unit id="1978378776147370036">

@@ -1,6 +1,5 @@
 import { Component, computed, effect, inject, viewChild } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
-import { Params } from '@angular/router';
 import { PERMISSIONS } from '@app/core/auth/permissions';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
 import { DatatableEmptyDirective } from '@app/static/components/datatable/datatable-empty.directive';
@@ -12,7 +11,6 @@ import { EmptyStateComponent } from '@app/static/components/empty-state/empty-st
 import { TaskTableComponent } from '@app/static/components/task-table.component';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { DialogService } from '@core/services/dialog.service';
-import { SprintFilterService } from '@core/services/sprint-filter.service';
 import { TaskCommandsService } from '@core/services/task-commands.service';
 import { TaskSelectionService } from '@core/services/task-selection.service';
 import { taskColumns, taskNameCell } from '@core/tasks/task-columns';
@@ -20,6 +18,7 @@ import { CreateTaskDialogComponent } from '@entry/dialogs/create-task-dialog/cre
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
 import { LucideListChecks, LucidePlus, LucideTrash2 } from '@lucide/angular';
 import { taskFilterRoute } from '@core/router/task-filter-route';
+import { onChange } from '@core/util/signals';
 
 @Component({
   selector: 'app-task-list',
@@ -82,8 +81,6 @@ import { taskFilterRoute } from '@core/router/task-filter-route';
 export class TaskListComponent {
   private dialog = inject(DialogService);
 
-  private readonly sprintFilter = inject(SprintFilterService);
-
   private table = viewChild(TaskTableComponent<TaskViewModel>);
 
   readonly count = computed(() => this.table()?.loadedCount() ?? null);
@@ -95,43 +92,13 @@ export class TaskListComponent {
 
   private readonly filterRoute = taskFilterRoute();
 
-  readonly filtersActive = computed(() => {
-    return (
-      this.filterRoute.hasFilters() ||
-      this.sprintFilter.projectId() !== undefined ||
-      this.sprintFilter.sprintId() !== undefined
-    );
-  });
+  readonly filtersActive = this.filterRoute.isFiltered;
 
   canCreate = hasPermission(PERMISSIONS.tasks.create);
   canDelete = hasPermission(PERMISSIONS.tasks.delete);
   readFlags = hasPermission(PERMISSIONS.flags.read);
 
-  taskRequestParams = computed(() => {
-    const filters = this.filterRoute.filters();
-    const queryParams: Params = { ...filters };
-    const search = filters.term?.trim();
-
-    if (search) {
-      queryParams['search'] = search;
-    }
-
-    const sprintId = this.sprintFilter.sprintId();
-
-    if (sprintId !== undefined) {
-      queryParams['sprintId'] = sprintId;
-    }
-
-    if (filters.statuses?.length) {
-      queryParams['statusIds'] = filters.statuses;
-    }
-
-    if (filters.users?.length) {
-      queryParams['assignees'] = filters.users;
-    }
-
-    return queryParams;
-  });
+  taskRequestParams = this.filterRoute.requestParams;
 
   readonly columns = computed<DatatableColumn<TaskViewModel>[]>(() => {
     const readFlags = this.readFlags();
@@ -177,6 +144,8 @@ export class TaskListComponent {
 
   constructor() {
     this.taskSelection.clear();
+
+    onChange(this.taskRequestParams, () => this.taskSelection.clear());
 
     effect(() => {
       if (this.selection().length === 0) {
