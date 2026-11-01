@@ -1,5 +1,7 @@
 import { For } from 'solid-js';
 
+import HeroGlobe from './HeroGlobe';
+
 interface OrbitChip {
   label: string;
   dot: string;
@@ -32,8 +34,8 @@ function HeroPlanet() {
       <div class="hero-orbit-tilt">
         <OrbitRings half="back" />
         <div class="hero-planet">
-          <div class="hero-planet-surface" />
           <div class="hero-planet-shade" />
+          <HeroGlobe />
           <div class="hero-planet-rim" />
         </div>
         <OrbitRings half="front" />
