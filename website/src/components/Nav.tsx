@@ -1,4 +1,5 @@
 import { For, Show, createSignal } from 'solid-js';
+import { useLocation } from '@solidjs/router';
 import { Menu, X } from 'lucide-solid';
 
 const navLinks = [
@@ -10,6 +11,13 @@ const navLinks = [
 
 export default function Nav() {
   const [menuOpen, setMenuOpen] = createSignal(false);
+  const location = useLocation();
+
+  function isCurrentPage(href: string): boolean {
+    if (href.includes('#')) return false;
+
+    return location.pathname === href || location.pathname.startsWith(`${href}/`);
+  }
 
   return (
     <header class="sticky top-0 z-50 border-b border-purple-200/8 bg-[rgb(8_5_16/0.78)] font-geist backdrop-blur-[14px]">
@@ -22,7 +30,11 @@ export default function Nav() {
         <nav class="hidden items-center gap-7 text-sm md:flex">
           <For each={navLinks}>
             {(link) => (
-              <a href={link.href} class="text-white/62 transition-colors hover:text-white">
+              <a
+                href={link.href}
+                aria-current={isCurrentPage(link.href) ? 'page' : undefined}
+                class="text-white/62 transition-colors hover:text-white aria-[current=page]:text-white"
+              >
                 {link.label}
               </a>
             )}
@@ -63,7 +75,8 @@ export default function Nav() {
             {(link) => (
               <a
                 href={link.href}
-                class="block rounded-lg px-3 py-2.5 text-base text-white/75 transition-colors hover:bg-white/8 hover:text-white"
+                aria-current={isCurrentPage(link.href) ? 'page' : undefined}
+                class="block rounded-lg px-3 py-2.5 text-base text-white/75 transition-colors hover:bg-white/8 hover:text-white aria-[current=page]:text-white"
                 onClick={() => setMenuOpen(false)}
               >
                 {link.label}

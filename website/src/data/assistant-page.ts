@@ -1,5 +1,7 @@
-export interface AssistantShowcaseItem {
-  eyebrow: string;
+export type AssistantVerbLabel = 'Ask' | 'Approve' | 'Write' | 'Review' | 'Automate' | 'Research';
+
+export interface AssistantVerb {
+  label: AssistantVerbLabel;
   title: string;
   description: string;
   link: { href: string; label: string };
@@ -12,18 +14,23 @@ export interface AssistantTrustItem {
   description: string;
 }
 
-export const assistantPrompts: string[] = [
-  'What slipped last sprint?',
-  'Who has too much on this week?',
-  'Turn these notes into tasks',
-  'Write acceptance criteria for this',
-  'Is this task ready to start?',
-  'Tidy up the backlog tags',
+export interface AssistantPrompt {
+  text: string;
+  verb: AssistantVerbLabel;
+}
+
+export const assistantPrompts: AssistantPrompt[] = [
+  { text: 'What slipped last sprint?', verb: 'Ask' },
+  { text: 'Who has too much on this week?', verb: 'Ask' },
+  { text: 'Turn these notes into tasks', verb: 'Approve' },
+  { text: 'Write acceptance criteria for this', verb: 'Write' },
+  { text: 'Is this task ready to start?', verb: 'Review' },
+  { text: 'Tidy up the backlog tags', verb: 'Approve' },
 ];
 
-export const assistantShowcase: AssistantShowcaseItem[] = [
+export const assistantVerbs: AssistantVerb[] = [
   {
-    eyebrow: 'Ask',
+    label: 'Ask',
     title: 'Ask the way you would ask a teammate.',
     description:
       "Wondering how the sprint went, what's blocked, or what the onboarding page says? Just ask. The assistant looks it up across your workspace and gives you a straight answer, with the numbers when it matters.",
@@ -32,7 +39,7 @@ export const assistantShowcase: AssistantShowcaseItem[] = [
     alt: 'The Netptune assistant answering a question about a sprint',
   },
   {
-    eyebrow: 'Approve',
+    label: 'Approve',
     title: 'It suggests. You decide.',
     description:
       "Ask for a change and the assistant lays out exactly what it would do. Keep the bits you like, tweak the ones you don't, and apply. Changed your mind later? Undo it.",
@@ -41,7 +48,7 @@ export const assistantShowcase: AssistantShowcaseItem[] = [
     alt: "Reviewing the assistant's proposed changes before applying them",
   },
   {
-    eyebrow: 'Write',
+    label: 'Write',
     title: 'A writing partner right where you type.',
     description:
       'Type /ai in a task or a page and ask for a checklist, a summary or the next paragraph. It writes in place, and one undo takes it all back out.',
@@ -50,7 +57,7 @@ export const assistantShowcase: AssistantShowcaseItem[] = [
     alt: 'The assistant tightening a selected paragraph on a page',
   },
   {
-    eyebrow: 'Review',
+    label: 'Review',
     title: 'Catch the gaps before work starts.',
     description:
       'Ask for a review and the assistant reads the task like a fresh pair of eyes, pointing out missing details, fuzzy wording and work that overlaps. Take the suggestions you like and dismiss the rest.',
@@ -59,7 +66,7 @@ export const assistantShowcase: AssistantShowcaseItem[] = [
     alt: 'A task review with its verdict and a scope finding',
   },
   {
-    eyebrow: 'Automate',
+    label: 'Automate',
     title: 'Describe the rule. It drafts it.',
     description:
       "Say what should happen and when, in plain words. The assistant drafts the rule for you to check, and it stays switched off until you're happy with it.",
@@ -68,7 +75,7 @@ export const assistantShowcase: AssistantShowcaseItem[] = [
     alt: 'An automation rule drafted by the assistant, ready to review',
   },
   {
-    eyebrow: 'Research',
+    label: 'Research',
     title: 'It knows your code, and the web.',
     description:
       'Link a repository and the assistant can look through the code and pull requests behind a task. Connect web search and it can check the outside world too.',
