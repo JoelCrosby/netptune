@@ -18,6 +18,7 @@ import { pinnedTasksResource } from '@core/resources/task-pin.resource';
 import { BoardViewService } from '@core/services/board-view.service';
 import { PinCommandsService } from '@core/services/pin-commands.service';
 import { SessionService } from '@core/services/session.service';
+import { isModifiedClick } from '@core/util/modified-click';
 import {
   PinScopeMenuComponent,
   PinScopeTarget,
@@ -303,9 +304,9 @@ export class TaskDetailChromeComponent {
   /* A modified click is the browser's to handle: it opens a tab of its own and
      the dialog stays put. Only a plain click hands the task over to its page. */
   protected openFullPage(event: MouseEvent) {
-    if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
-      return;
-    }
+    const isModified = isModifiedClick(event);
+
+    if (isModified) return;
 
     this.dialogRef?.close();
   }

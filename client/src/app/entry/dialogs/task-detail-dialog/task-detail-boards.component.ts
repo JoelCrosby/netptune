@@ -1,3 +1,4 @@
+import { DialogRef } from '@angular/cdk/dialog';
 import { httpResource } from '@angular/common/http';
 import {
   Component,
@@ -7,27 +8,32 @@ import {
   input,
   viewChild,
 } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { hasPermission } from '@core/auth/has-permission';
 import { MAX_PAGE_SIZE } from '@core/models/pagination';
 import { BoardViewModel } from '@core/models/view-models/board-view-model';
 import { TaskCommandsService } from '@core/services/task-commands.service';
+import { isModifiedClick } from '@core/util/modified-click';
 import { reloadOnRefresh } from '@core/util/reload-on-refresh';
 import { LucideKanban, LucidePlus, LucideX } from '@lucide/angular';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
 import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { TextLinkComponent } from '@static/components/text-link.component';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
 import { TaskDetailService } from './task-detail.service';
 
 @Component({
   selector: 'app-task-detail-boards',
   imports: [
+    RouterLink,
     DropdownMenuComponent,
     MenuItemComponent,
     IconButtonComponent,
     StrokedButtonComponent,
+    TextLinkComponent,
     TooltipDirective,
     LucideKanban,
     LucidePlus,
@@ -73,9 +79,19 @@ import { TaskDetailService } from './task-detail.service';
           class="border-foreground/8 bg-foreground/[0.02] flex h-10 items-center gap-3 rounded-lg border px-3">
           <svg lucideKanban class="text-muted h-4 w-4 shrink-0"></svg>
 
-          <span class="flex-1 truncate text-[13px] font-medium">
+          <a
+            app-text-link
+            color="inherit"
+            class="flex-1 truncate text-[13px] font-medium"
+            [routerLink]="[
+              '/',
+              task()?.workspaceKey,
+              'boards',
+              placement.boardIdentifier,
+            ]"
+            (click)="onBoardClick($event)">
             {{ placement.boardName }}
-          </span>
+          </a>
 
           <span class="text-muted shrink-0 text-xs">
             {{ placement.boardGroupName }}
@@ -114,6 +130,7 @@ export class TaskDetailBoardsComponent {
   readonly el = inject(ElementRef);
 
   private readonly menu = viewChild.required(DropdownMenuComponent);
+  private readonly dialogRef = inject(DialogRef, { optional: true });
 
   private readonly taskDetail = inject(TaskDetailService);
   private readonly taskCommands = inject(TaskCommandsService);
@@ -155,6 +172,14 @@ export class TaskDetailBoardsComponent {
 
   openAddMenu(origin: HTMLElement) {
     this.menu().toggle(origin);
+  }
+
+  onBoardClick(event: MouseEvent) {
+    const isModified = isModifiedClick(event);
+
+    if (isModified) return;
+
+    this.dialogRef?.close();
   }
 
   addToBoard(boardId: number) {
