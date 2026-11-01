@@ -1,5 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { SelectionActionsComponent } from '@static/components/selection-actions/selection-actions.component';
 import { LucideSettings2, LucideTrash } from '@lucide/angular';
 import { DialogService } from '@core/services/dialog.service';
 import { BulkEditTasksDialogComponent } from '@entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component';
@@ -8,21 +9,15 @@ import { TaskSelectionService } from '@core/services/task-selection.service';
 
 @Component({
   selector: 'app-task-selection-actions',
-  imports: [StrokedButtonComponent, LucideSettings2, LucideTrash],
+  imports: [
+    LucideSettings2,
+    LucideTrash,
+    SelectionActionsComponent,
+    StrokedButtonComponent,
+  ],
   template: `
     @if (selectedCount() > 0) {
-      <div class="ml-auto flex flex-row items-center gap-4">
-        <span class="text-muted px-2 text-sm">
-          <span
-            i18n="
-              Count of selected rows above a table. COUNT is the number selected
-            ">
-            {{
-              selectedCount() // i18n(ph="COUNT")
-            }}
-            selected
-          </span>
-        </span>
+      <app-selection-actions [count]="selectedCount()">
         <button
           app-stroked-button
           color="warn"
@@ -40,7 +35,7 @@ import { TaskSelectionService } from '@core/services/task-selection.service';
             Bulk edit
           </span>
         </button>
-      </div>
+      </app-selection-actions>
     }
   `,
 })

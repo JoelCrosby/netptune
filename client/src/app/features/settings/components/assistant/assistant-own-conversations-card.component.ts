@@ -7,6 +7,7 @@ import { formatCost, formatTokens } from '@core/util/ai-usage';
 import { reloadToken } from '@core/util/signals';
 import { LucideMessagesSquare, LucideTrash2 } from '@lucide/angular';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { SelectionActionsComponent } from '@static/components/selection-actions/selection-actions.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableEmptyDirective } from '@static/components/datatable/datatable-empty.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
@@ -37,6 +38,7 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
     PanelComponent,
     PanelHeaderComponent,
     PrettyDatePipe,
+    SelectionActionsComponent,
     StrokedButtonComponent,
   ],
   host: { class: 'block' },
@@ -53,17 +55,9 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
         description="Your conversations with the assistant in this workspace." />
 
       @if (selectedCount() > 0) {
-        <div class="flex h-12 items-center justify-end gap-4 px-4">
-          <span
-            class="text-muted text-sm"
-            i18n="
-              Count of selected rows above a table. COUNT is the number selected
-            ">
-            {{
-              selectedCount() // i18n(ph="COUNT")
-            }}
-            selected
-          </span>
+        <app-selection-actions
+          class="h-12 justify-end px-4"
+          [count]="selectedCount()">
           <button
             app-stroked-button
             type="button"
@@ -75,7 +69,7 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
               Delete
             </span>
           </button>
-        </div>
+        </app-selection-actions>
       }
 
       <app-datatable

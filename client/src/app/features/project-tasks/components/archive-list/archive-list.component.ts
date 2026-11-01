@@ -14,7 +14,6 @@ import { taskColumns } from '@core/tasks/task-columns';
 import { onChange, reloadToken } from '@core/util/signals';
 import { LucideArchiveRestore } from '@lucide/angular';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
-import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 
 @Component({
   selector: 'app-archive-list',
@@ -24,36 +23,10 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
     DatatableEmptyDirective,
     EmptyStateComponent,
     LucideArchiveRestore,
-    StrokedButtonComponent,
     TaskTableComponent,
   ],
   host: { class: 'flex min-h-0 flex-1 flex-col' },
   template: `
-    @if (selectedCount() > 0) {
-      <div class="mb-3 flex h-10 shrink-0 items-center">
-        <div class="ml-auto flex flex-row items-center gap-4">
-          <span class="text-muted px-2 text-sm">
-            <span
-              i18n="
-                Count of selected rows above a table. COUNT is the number
-                selected
-              ">
-              {{
-                selectedCount() // i18n(ph="COUNT")
-              }}
-              selected
-            </span>
-          </span>
-          <button app-stroked-button type="button" (click)="restoreSelected()">
-            <svg lucideArchiveRestore class="h-4 w-4"></svg>
-            <span i18n="Button that restores the selected archived tasks">
-              Restore
-            </span>
-          </button>
-        </div>
-      </div>
-    }
-
     <app-task-table
       #table
       i18n-errorMessage="Shown when the archived task list fails to load"

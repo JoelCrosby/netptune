@@ -21,6 +21,7 @@ import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dial
 import { LucideMessagesSquare, LucideTrash2 } from '@lucide/angular';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { SelectionActionsComponent } from '@static/components/selection-actions/selection-actions.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableEmptyDirective } from '@static/components/datatable/datatable-empty.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
@@ -53,6 +54,7 @@ import { EMPTY, switchMap } from 'rxjs';
     PanelComponent,
     PanelHeaderComponent,
     PrettyDatePipe,
+    SelectionActionsComponent,
     StrokedButtonComponent,
   ],
   host: { class: 'block' },
@@ -68,18 +70,7 @@ import { EMPTY, switchMap } from 'rxjs';
         "
         description="What members asked the assistant. The record of what changed lives in the audit log.">
         @if (selectedCount() > 0) {
-          <div panelHeaderActions class="flex items-center gap-4">
-            <span
-              class="text-muted text-sm"
-              i18n="
-                Count of selected rows above a table. COUNT is the number
-                selected
-              ">
-              {{
-                selectedCount() // i18n(ph="COUNT")
-              }}
-              selected
-            </span>
+          <app-selection-actions panelHeaderActions [count]="selectedCount()">
             <button
               app-stroked-button
               type="button"
@@ -91,7 +82,7 @@ import { EMPTY, switchMap } from 'rxjs';
                 Delete
               </span>
             </button>
-          </div>
+          </app-selection-actions>
         }
       </app-panel-header>
 

@@ -8,6 +8,7 @@ import { IconButtonComponent } from '@static/components/button/icon-button.compo
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { SearchInputComponent } from '@static/components/search-input/search-input.component';
+import { SelectionActionsComponent } from '@static/components/selection-actions/selection-actions.component';
 import { UserSelectComponent } from '@static/components/user-select/user-select.component';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
 
@@ -19,6 +20,7 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
     IconButtonComponent,
     StrokedButtonComponent,
     SearchInputComponent,
+    SelectionActionsComponent,
     UserSelectComponent,
     LucideCheck,
     LucideTrash2,
@@ -54,15 +56,7 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
       }
 
       @if (selectedCount()) {
-        <div class="ml-auto flex items-center gap-2">
-          <span class="text-sm font-medium">
-            <span i18n="Count of selected rows. COUNT is the number selected">
-              {{
-                selectedCount() // i18n(ph="COUNT")
-              }}
-              selected
-            </span>
-          </span>
+        <app-selection-actions class="ml-auto" [count]="selectedCount()">
           <button
             app-stroked-button
             type="button"
@@ -82,7 +76,7 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
               Delete
             </span>
           </button>
-        </div>
+        </app-selection-actions>
       }
     </div>
   `,

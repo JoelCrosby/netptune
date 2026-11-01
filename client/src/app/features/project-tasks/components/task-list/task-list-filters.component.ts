@@ -52,16 +52,15 @@ import { PERMISSIONS } from '@app/core/auth/permissions';
         <app-task-list-status />
       }
 
-      @if (showSelectionActions()) {
+      <ng-content select="[selectionActions]">
         <app-task-selection-actions class="ml-auto" />
-      }
+      </ng-content>
     </div>
   `,
 })
 export class TaskListFiltersComponent {
   readonly assigneeOptions = input<Selected<AssigneeViewModel>[] | null>(null);
   readonly showProjectSprint = input(false, { transform: booleanAttribute });
-  readonly showSelectionActions = input(true, { transform: booleanAttribute });
 
   readStatus = hasPermission(PERMISSIONS.statuses.read);
 
