@@ -1,4 +1,4 @@
-import { ArrowRight, GitBranch } from 'lucide-solid';
+import { ArrowRight, Sparkles } from 'lucide-solid';
 import Button from './Button';
 
 function PlanetRing(props: { half: 'back' | 'front' }) {
@@ -39,8 +39,8 @@ export default function Hero() {
         </h1>
 
         <p class="mx-auto mb-10 max-w-2xl text-xl leading-relaxed text-slate-500 dark:text-white/55">
-          Plan work across boards, sprints, calendars, and roadmaps. Automate the handoffs, measure
-          delivery, and connect your tools through a scoped API—from one focused workspace.
+          Boards, sprints, a calendar, a roadmap, and pages for everything you write down. Plus an
+          assistant that does the legwork and asks before it changes a thing.
         </p>
 
         <div class="flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -48,24 +48,24 @@ export default function Hero() {
             Start using Netptune
             <ArrowRight size={16} />
           </Button>
-          <Button variant="outline" size="lg" href="https://github.com/JoelCrosby/netptune">
-            <GitBranch size={16} />
-            View source
+          <Button variant="outline" size="lg" href="/assistant">
+            <Sparkles size={16} />
+            Meet the assistant
           </Button>
         </div>
 
         <div class="bg-linear-to-brr mt-16 rounded-2xl from-brand/40 via-fuchsia-300/30 to-sky-300/30 p-px shadow-2xl shadow-brand/30 dark:from-violet-400/35 dark:via-fuchsia-500/20 dark:to-sky-500/20">
           <div class="overflow-hidden rounded-[calc(1rem-1px)] bg-white/80 p-2 backdrop-blur sm:p-3 dark:bg-white/5">
             <img
-              width={896}
-              height={513}
+              width={1600}
+              height={900}
               class="w-full rounded-xl border border-neutral-200 shadow-xl dark:hidden"
               src="/screenshot-light.webp"
               alt="Screenshot of the Netptune interface"
             />
             <img
-              width={896}
-              height={513}
+              width={1600}
+              height={900}
               class="hidden w-full rounded-xl border border-white/15 shadow-xl dark:block"
               src="/screenshot-dark.webp"
               alt="Screenshot of the Netptune interface"

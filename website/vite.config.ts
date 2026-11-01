@@ -7,7 +7,14 @@ export default defineConfig({
   plugins: [
     solidStart(),
     tailwindcss(),
-    nitro()
+    nitro({
+      routeRules: {
+        '/docs/kubernetes': { redirect: { to: '/docs', status: 301 } },
+        '/docs/docker-compose': { redirect: { to: '/docs', status: 301 } },
+        '/docs/configuration': { redirect: { to: '/docs', status: 301 } },
+        '/docs/external-services': { redirect: { to: '/docs', status: 301 } },
+      },
+    })
   ],
   build: {
     rollupOptions: {

@@ -2,33 +2,27 @@ import type { Comparison } from '~/types/comparison';
 
 export const comparisons: Comparison[] = [
   {
-    competitor: 'Open source',
-    headline: 'Read the implementation, not a promise.',
+    competitor: 'AI that asks first',
+    headline: 'Help when you want it, never behind your back.',
     description:
-      'The complete application is available under the MIT license, from the Angular client to the .NET services and Helm chart.',
+      "The assistant suggests and you decide. It sees only what you can see, and nothing changes until you've had a look.",
   },
   {
-    competitor: 'Infrastructure owned',
-    headline: 'Deploy it where your team already operates.',
+    competitor: 'Connected to your code',
+    headline: 'The task and the pull request, side by side.',
     description:
-      'Use the maintained Kubernetes chart and choose where the workloads, PostgreSQL database, search index, and object storage live.',
+      'No more pasting links between tools. Code lands on the right task by itself, checks and all.',
   },
   {
     competitor: 'Defaults included',
-    headline: 'Useful immediately, adaptable when needed.',
+    headline: 'Useful on day one, flexible on day one hundred.',
     description:
-      'Workspace templates, boards, sprints, reports, automations, search, and permissions work together without requiring a plugin marketplace.',
+      'Boards, sprints, pages, reports and automations already work together, with no plugin shopping required.',
   },
   {
-    competitor: 'Observable behavior',
-    headline: 'Trace what changed and what ran.',
+    competitor: 'Nothing hidden',
+    headline: 'See what changed and why.',
     description:
-      'Activity records, audit views, and automation run history provide a clear account of changes and background actions.',
-  },
-  {
-    competitor: 'Integration ready',
-    headline: 'Automate without sharing a human login.',
-    description:
-      'Scoped service accounts, revocable credentials, OpenAPI documentation, and an independently scalable API keep integrations explicit.',
+      'Activity history, automation runs and the assistant’s changes are all on the record, so surprises are easy to trace.',
   },
 ];

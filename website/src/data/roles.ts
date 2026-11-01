@@ -20,7 +20,7 @@ export const roles: Role[] = [
     dot: 'bg-brand',
     permissions: [
       'Create / delete projects & boards',
-      'Manage automations',
+      'Manage automations & the assistant',
       'Invite / remove members',
       'All member permissions',
     ],
@@ -32,8 +32,8 @@ export const roles: Role[] = [
     dot: 'bg-fuchsia-500',
     permissions: [
       'Create & edit tasks',
-      'Post comments',
-      'Set task due dates',
+      'Write and edit pages',
+      'Use the assistant',
       'All viewer permissions',
     ],
   },

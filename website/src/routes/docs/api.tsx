@@ -5,7 +5,7 @@ export default function ApiPage() {
   return (
     <MarkdownDoc
       source={source}
-      prev={{ href: '/docs/external-services', label: 'External Services' }}
+      prev={{ href: '/docs/automations', label: 'Automations' }}
     />
   );
 }

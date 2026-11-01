@@ -1,13 +1,13 @@
 import {
-  Braces,
   ChartNoAxesCombined,
-  ClipboardList,
   FileText,
+  GitPullRequest,
+  History,
   Kanban,
   LayoutTemplate,
+  ListFilter,
   MessageSquare,
   Workflow,
-  Zap,
 } from 'lucide-solid';
 import type { Feature } from '~/types/feature';
 
@@ -16,54 +16,54 @@ export const features: Feature[] = [
     icon: Kanban,
     title: 'Plan from every angle',
     description:
-      'Move between custom Kanban boards, a month calendar, and an editable roadmap without rebuilding the plan.',
-  },
-  {
-    icon: Zap,
-    title: 'Live by default',
-    description:
-      'Task and board changes stream over server-sent events, so every open workspace reflects the latest state.',
-  },
-  {
-    icon: ClipboardList,
-    title: 'History you can debug',
-    description:
-      'See who changed what and when across tasks, boards, members, workspaces, and authentication events.',
-  },
-  {
-    icon: MessageSquare,
-    title: 'Context beside the work',
-    description:
-      'Keep editable comments, mentions, decisions, and implementation notes attached to the task instead of losing them in another chat thread.',
+      'Flip between boards, a calendar and a roadmap without rebuilding the plan. Changes show up for everyone straight away.',
   },
   {
     icon: FileText,
-    title: 'Useful issue primitives',
+    title: 'Docs that live with the work',
     description:
-      'Start and due dates, files, tags, estimates, multiple assignees, parent-child relationships, and blocking dependencies are built in.',
+      'Pages keep your specs, notes and runbooks next to the tasks they describe, with templates and full version history.',
+  },
+  {
+    icon: GitPullRequest,
+    title: 'Code, connected',
+    description:
+      'Branches, commits and pull requests from GitHub land on the right task, along with whether the checks passed.',
+  },
+  {
+    icon: ListFilter,
+    title: 'Save the views you keep rebuilding',
+    description:
+      'Build a query once, save it, share it with the team, and pin it where you can find it again.',
   },
   {
     icon: Workflow,
-    title: 'Automate the repetitive path',
+    title: 'Hand off the busywork',
     description:
-      'Trigger on field changes, unassigned work, or approaching due dates, then chain notifications, comments, updates, flags, or safe delayed deletion.',
+      'Rules nudge people, tidy up stale work and move tasks along, so nobody has to remember to.',
   },
   {
     icon: ChartNoAxesCombined,
-    title: 'Reporting grounded in history',
+    title: 'Know how delivery is going',
     description:
-      'Track throughput, cycle time, sprint burndown, velocity, and current workload—computed from an append-only event history in task counts, story points, or hours, with the coverage date shown rather than reconstructed.',
+      'Throughput, cycle time, burndown, velocity and workload, counted in tasks, story points or hours.',
   },
   {
-    icon: Braces,
-    title: 'An API built for integrations',
+    icon: History,
+    title: 'See what changed, and who changed it',
     description:
-      'Connect internal tools through scoped service accounts, revocable credentials, and a documented API.',
+      'Every edit is in the history, including the ones the assistant helped with and the code that landed.',
+  },
+  {
+    icon: MessageSquare,
+    title: 'Keep the conversation on the task',
+    description:
+      'Comments, mentions, files, estimates and links between tasks all live in one place, not in another chat thread.',
   },
   {
     icon: LayoutTemplate,
-    title: 'Useful from the first workspace',
+    title: 'Start with a workflow, not a blank page',
     description:
-      'Start from software delivery, content, basic, or minimal templates with statuses, tags, relations, and boards ready to use.',
+      'Pick a template for software, content or general work and get statuses, tags and a board ready to go.',
   },
 ];

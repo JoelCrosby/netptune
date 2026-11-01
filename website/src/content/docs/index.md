@@ -1,82 +1,55 @@
 ---
-title: 'Self-Hosting Guide'
-description: 'The current architecture, dependencies, and supported deployment path for Netptune.'
+title: 'Getting started'
+description: 'Create an account, set up a workspace, and bring your team in.'
 ---
 
-Netptune is open source and can be run on your own infrastructure. The repository currently provides a Kubernetes Helm chart as its deployment definition. A supported Docker Compose stack is not included.
+Netptune is a workspace for planning and shipping work: boards, sprints, a calendar, a roadmap, pages, automations and reports, with an AI assistant alongside. This page covers the first few minutes.
 
-:::tip
+## Create an account
 
-For a production deployment, start with the [Kubernetes / Helm guide](/docs/kubernetes). The [Docker Compose page](/docs/docker-compose) explains the current status of single-machine deployments.
+[Create an account](https://app.netptune.co.uk/auth/register) with an email address and password, or sign in with GitHub, Google or Microsoft. Signing up through one of those providers needs an email address that the provider has verified.
 
-:::
+## Set up a workspace
 
-## Architecture
+A workspace holds everything for one team: its projects, boards, sprints, pages and members. You can belong to several and switch between them from the workspace menu.
 
-### Application services
+When you create a workspace, pick a template to start with a complete workflow instead of a blank slate:
 
-| Service  | Image                                  | Responsibility                                                                                 |
-| -------- | -------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| Client   | `ghcr.io/joelcrosby/netptune-client`   | Angular application served by Nginx. Nginx proxies `/api/` to the app service.                 |
-| App      | `ghcr.io/joelcrosby/netptune`          | ASP.NET Core API, authentication, business logic, file access, search, and server-sent events. |
-| API      | `ghcr.io/joelcrosby/netptune-api`      | API-key-only integration surface with OpenAPI documentation and independent scaling.           |
-| Jobs     | `ghcr.io/joelcrosby/netptune-jobs`     | Email delivery, search indexing, and automation processing.                                    |
-| Activity | `ghcr.io/joelcrosby/netptune-activity` | Activity event processing, merge windows, reporting events, and scheduled audit retention.     |
+| Template          | What you get                                                                  |
+| ----------------- | ----------------------------------------------------------------------------- |
+| Basic             | A flexible workflow for small teams and general project work.                 |
+| Software delivery | A delivery workflow with review, blockers, and engineering-focused tags.      |
+| Content workflow  | An editorial workflow from ideas and drafting through review and publication. |
+| Minimal           | Only the essentials: New, In Progress, and Done.                              |
 
-The chart can also deploy `ghcr.io/joelcrosby/netptune-website`, the SolidStart marketing and documentation site. It is separate from the Angular application.
+Each template sets up statuses, tags, task relations and a board. All of them can be changed afterwards.
 
-### Stateful dependencies
+## Invite your team
 
-| Dependency            | Current chart image          | Purpose                                                                       |
-| --------------------- | ---------------------------- | ----------------------------------------------------------------------------- |
-| PostgreSQL            | `postgres:18`                | Primary relational database.                                                  |
-| Valkey                | `valkey/valkey:9.0`          | Distributed cache and data-protection storage.                                |
-| NATS                  | `nats:2.14.3-alpine`         | JetStream-backed event delivery between the API, jobs, and activity services. |
-| Meilisearch           | `getmeili/meilisearch:v1.10` | Workspace search indexes.                                                     |
-| S3-compatible storage | External                     | Uploaded media and archived audit data.                                       |
+Invite people by email from the workspace's members page. Each member has a role:
 
-PostgreSQL, NATS, and Meilisearch use persistent volume claims in the chart. Valkey is currently deployed without a persistent volume.
+| Role   | Can                                                                  |
+| ------ | -------------------------------------------------------------------- |
+| Owner  | Everything, including deleting the workspace for good.               |
+| Admin  | Manage projects, boards, automations and membership.                 |
+| Member | Create and edit tasks, comment, and collaborate on boards and pages. |
+| Viewer | Read boards, tasks, comments and activity without changing anything. |
 
-### Required external services
+Owners and admins can fine-tune individual permissions on top of a role.
 
-- Cloudflare Email Sending for transactional email
-- Cloudflare Turnstile for login and registration challenges
-- S3-compatible object storage
-- GitHub, Google, and Microsoft OAuth credentials
+## Share a workspace publicly
 
-See [External Services](/docs/external-services) for the values expected by the current server.
+A workspace can be marked public, so anyone with the link can look without an account. You choose what visitors see: projects, tasks, boards, sprints, the calendar, reports, automations, pages and comments can each be shared or kept private. Members, activity, files and workspace settings always stay private, and only members can edit.
 
-### Optional operational services
+## Choose your language
 
-The chart also contains optional or administrative components:
+Netptune is available in English, French, German and Spanish. Switch language from your profile menu. E-mails and background notifications follow the language you picked.
 
-- Aspire Dashboard for OpenTelemetry data
-- Headlamp for Kubernetes administration
-- DbGate or pgAdmin for database administration
-- KEDA-based scaling for the activity consumer when explicitly enabled
-
-Headlamp, DbGate, and Aspire Dashboard are enabled in the current default values. Review and disable anything you do not intend to expose before installing the chart.
-
-## Container images
-
-Images are published to GitHub Container Registry by manually dispatched workflows on the default branch.
-
-| Component | Image                                  |
-| --------- | -------------------------------------- |
-| App       | `ghcr.io/joelcrosby/netptune`          |
-| API       | `ghcr.io/joelcrosby/netptune-api`      |
-| Client    | `ghcr.io/joelcrosby/netptune-client`   |
-| Jobs      | `ghcr.io/joelcrosby/netptune-jobs`     |
-| Activity  | `ghcr.io/joelcrosby/netptune-activity` |
-| Website   | `ghcr.io/joelcrosby/netptune-website`  |
-
-The workflows publish `latest`, branch, and full commit-SHA tags. Pin SHA tags for repeatable production deployments.
-
-## Choose a deployment path
+## Where next
 
 :::cards
 
-- [Kubernetes / Helm](/docs/kubernetes) — the deployment definition maintained in this repository.
-- [Docker Compose](/docs/docker-compose) — current limitations and the supported contributor workflow.
+- [AI Assistant](/docs/assistant) — ask questions about your work and approve every change it suggests.
+- [API](/docs/api) — connect other tools with scoped service accounts.
 
 :::

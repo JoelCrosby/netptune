@@ -1,12 +1,18 @@
 import { For, Match, Switch } from 'solid-js';
 import Section from './Section';
 import { featureHighlights } from '~/data/feature-highlights';
+import type { FeatureHighlight } from '~/types/feature-highlight';
 
-export default function FeatureHighlightsSection() {
+type FeatureHighlightsSectionProps = {
+  items?: FeatureHighlight[];
+  class?: string;
+};
+
+export default function FeatureHighlightsSection(props: FeatureHighlightsSectionProps) {
   return (
-    <Section class="bg-white dark:bg-black">
+    <Section class={props.class ?? 'bg-white dark:bg-black'}>
       <div class="space-y-24">
-        <For each={featureHighlights}>
+        <For each={props.items ?? featureHighlights}>
           {(h) => (
             <div
               class={`flex flex-col ${h.reversed ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center gap-12 lg:gap-16`}

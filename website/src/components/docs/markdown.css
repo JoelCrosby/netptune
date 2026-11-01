@@ -45,7 +45,7 @@
   }
 
   .docs-markdown table {
-    @apply my-6 w-full min-w-max overflow-hidden rounded-xl border border-slate-200 text-sm dark:border-white/10;
+    @apply my-6 w-full overflow-hidden rounded-xl border border-slate-200 text-sm dark:border-white/10;
   }
 
   .docs-markdown table thead {

@@ -22,8 +22,6 @@ GET /api/v1/projects
 Authorization: ApiKey ntp_<credential-id>_<secret>
 ```
 
-For a self-hosted installation, use the API host configured in the Kubernetes Gateway. Aspire exposes local launch profiles at `http://localhost:7500` and `https://localhost:7501`.
-
 ## Create a task
 
 ```http
@@ -75,28 +73,35 @@ Authorization: ApiKey ntp_<credential-id>_<secret>
 
 ## Available routes
 
-- `GET /api/v1/projects`
-- `GET /api/v1/assignees`
-- `GET /api/v1/statuses`
-- `GET /api/v1/sprints`
-- `GET /api/v1/sprints/{id}`
-- `POST /api/v1/sprints`
-- `PATCH /api/v1/sprints/{id}`
-- `DELETE /api/v1/sprints/{id}`
-- `POST /api/v1/sprints/{id}/tasks`
-- `DELETE /api/v1/sprints/{id}/tasks/{systemId}`
-- `GET /api/v1/tasks`
-- `GET /api/v1/tasks/{systemId}`
-- `POST /api/v1/tasks`
-- `POST /api/v1/tasks/bulk-update`
-- `PATCH /api/v1/tasks/{systemId}`
+All routes sit under `/api/v1`. The [interactive documentation](https://api.netptune.co.uk/docs) has the request and response shapes for each one.
+
+| Resource       | Routes                                                                                                                                                                                                                                                                                                             |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Workspace      | `GET /workspace`, `GET /assignees`, `GET /search`                                                                                                                                                                                                                                                                  |
+| Projects       | `GET /projects`, `GET /projects/{key}`, `POST /projects`, `PATCH /projects/{id}`, `DELETE /projects/{id}`                                                                                                                                                                                                          |
+| Tasks          | `GET /tasks`, `GET /tasks/{systemId}`, `POST /tasks`, `PATCH /tasks/{systemId}`, `DELETE /tasks/{systemId}`, `POST /tasks/bulk-update`, `POST /tasks/move`, `POST /tasks/reassign`, `GET /tasks/archived`, `POST /tasks/restore`, `GET /tasks/status-breakdown`                                                    |
+| Task details   | `GET`/`POST /tasks/{systemId}/comments`, `GET /tasks/{systemId}/flags`, `PUT /tasks/{systemId}/flags/{flagId}/resolution`, `GET`/`POST /tasks/{systemId}/relations`, `GET /tasks/{systemId}/tags`, `PUT`/`DELETE /tasks/{systemId}/tags/{tag}`                                                                     |
+| Comments       | `PATCH /comments/{id}`, `DELETE /comments/{id}`, `PUT`/`DELETE /comments/{id}/reactions/{value}`                                                                                                                                                                                                                   |
+| Sprints        | `GET /sprints`, `GET /sprints/{id}`, `POST /sprints`, `PATCH /sprints/{id}`, `DELETE /sprints/{id}`, `POST /sprints/{id}/tasks`, `DELETE /sprints/{id}/tasks/{systemId}`                                                                                                                                           |
+| Boards         | `GET /boards`, `GET /boards/{id}`, `GET /boards/{identifier}/view`, `POST /boards`, `PATCH /boards/{id}`, `DELETE /boards/{id}`                                                                                                                                                                                    |
+| Board groups   | `GET /board-groups`, `GET /board-groups/{id}`, `POST /board-groups`, `PATCH /board-groups/{id}`, `DELETE /board-groups/{id}`                                                                                                                                                                                       |
+| Statuses       | `GET /statuses`, `POST /statuses`, `PATCH /statuses/{id}`, `DELETE /statuses/{id}`, `POST /statuses/reorder`, `GET /statuses/{id}/usage`                                                                                                                                                                           |
+| Tags           | `GET /tags`, `POST /tags`, `PATCH /tags/{tag}`, `DELETE /tags/{tag}`                                                                                                                                                                                                                                               |
+| Relation types | `GET /relation-types`, `POST /relation-types`, `PATCH /relation-types/{id}`, `DELETE /relation-types/{id}`, `POST /relation-types/reorder`, `GET /relation-types/{id}/relations`, `GET /relation-types/{id}/usage`, `DELETE /task-relations/{id}`                                                                  |
+| Pages          | `GET /pages`, `GET /pages/{id}`, `GET /pages/by-slug/{slug}`, `GET /pages/{id}/children`, `POST /pages`, `PUT /pages/{id}/content`, `PATCH /pages/{id}`, `POST /pages/{id}/move`, `GET /pages/{id}/links`, `DELETE /pages/{id}`, `POST /pages/{id}/restore`, `GET /pages/archived`, `DELETE /pages/{id}/permanent` |
+| Page versions  | `GET /pages/{id}/versions`, `GET /pages/{id}/versions/{versionId}`, `POST /pages/{id}/versions/{versionId}/restore`                                                                                                                                                                                                |
+| Reports        | `GET /reports/flow`, `GET /reports/workload`, `GET /reports/velocity`, `GET /reports/sprints/{sprintId}/burndown`                                                                                                                                                                                                  |
+
+## Pages
+
+Page bodies are Markdown. Read a page before saving it and send back its `revision` with `PUT /pages/{id}/content`. If someone else saved in the meantime, the request returns `409` with the current page, so re-read, merge and retry rather than overwriting.
+
+`DELETE /pages/{id}` archives a page and everything inside it, and `POST /pages/{id}/restore` brings it back. `DELETE /pages/{id}/permanent` removes it for good.
 
 ## Permission model
 
-API credentials support member-read, project, status, sprint, and task scopes. Access is constrained twice: first by the service account's permissions and then by the credential's scopes. Revoking a credential takes effect without changing the owning users or other credentials.
+Every route needs a permission, such as `tasks.read` or `pages.update`. Access is constrained twice: first by the service account's permissions and then by the credential's scopes, which can only narrow them. Revoking a credential takes effect without changing the owning users or other credentials.
 
 Use `GET /api/v1/assignees` with `members.read` to resolve task assignee IDs without exposing email addresses. `POST /api/v1/tasks/bulk-update` updates multiple workspace-scoped tasks without a board identifier. Sprint membership is managed with `POST /api/v1/sprints/{id}/tasks` and `DELETE /api/v1/sprints/{id}/tasks/{systemId}`, both guarded by `sprints.manage_tasks`.
 
 When `tags` is supplied to `PATCH /api/v1/tasks/{systemId}`, it replaces the task's tags and requires `tags.assign` in addition to `tasks.update`. Every tag must already exist in the credential's workspace; an empty array clears the tags, while invalid or cross-workspace values return `400`.
-
-The API is deployed separately from the interactive application. It shares Netptune's PostgreSQL, Valkey, and NATS services but can be exposed and scaled independently.

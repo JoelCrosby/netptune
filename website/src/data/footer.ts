@@ -5,35 +5,32 @@ export const footerColumns: FooterColumn[] = [
     heading: 'Product',
     links: [
       { label: 'Features', href: '/#features' },
-      { label: 'Self-hosting', href: '/#self-host' },
-      { label: 'Hosted application', href: 'https://app.netptune.co.uk/auth/register' },
+      { label: 'AI assistant', href: '/assistant' },
+      { label: 'Create an account', href: 'https://app.netptune.co.uk/auth/register' },
+      { label: 'Sign in', href: 'https://app.netptune.co.uk/auth/login' },
     ],
   },
   {
-    heading: 'Resources',
+    heading: 'Assistant',
     links: [
-      { label: 'Documentation', href: '/docs' },
-      { label: 'AI assistant', href: '/docs/assistant' },
+      { label: 'Overview', href: '/docs/assistant' },
+      { label: 'Asking questions', href: '/docs/assistant/asking' },
+      { label: 'Proposals and review', href: '/docs/assistant/proposals' },
+      { label: 'Writing in place', href: '/docs/assistant/writing' },
+      { label: 'Task review', href: '/docs/assistant/task-review' },
+      { label: 'Access, privacy and cost', href: '/docs/assistant/access-and-cost' },
+    ],
+  },
+  {
+    heading: 'Docs',
+    links: [
+      { label: 'Getting started', href: '/docs' },
+      { label: 'Pages', href: '/docs/pages' },
+      { label: 'Source control', href: '/docs/source-control' },
+      { label: 'Queries', href: '/docs/queries' },
+      { label: 'Import & export', href: '/docs/import-export' },
+      { label: 'Automations', href: '/docs/automations' },
       { label: 'API', href: '/docs/api' },
-      { label: 'Docker Compose status', href: '/docs/docker-compose' },
-      { label: 'Kubernetes / Helm', href: '/docs/kubernetes' },
-    ],
-  },
-  {
-    heading: 'Community',
-    links: [
-      { label: 'GitHub', href: 'https://github.com/JoelCrosby/netptune' },
-      { label: 'Issues', href: 'https://github.com/JoelCrosby/netptune/issues' },
-      { label: 'Pull requests', href: 'https://github.com/JoelCrosby/netptune/pulls' },
-    ],
-  },
-  {
-    heading: 'Legal',
-    links: [
-      {
-        label: 'MIT License',
-        href: 'https://github.com/JoelCrosby/netptune/blob/main/LICENSE.txt',
-      },
     ],
   },
 ];

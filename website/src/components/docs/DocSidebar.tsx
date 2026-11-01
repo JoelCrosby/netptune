@@ -7,23 +7,29 @@ const sections = [
     items: [{ href: '/docs', label: 'Overview' }],
   },
   {
-    heading: 'Features',
-    items: [{ href: '/docs/assistant', label: 'AI Assistant' }],
+    heading: 'AI Assistant',
+    items: [
+      { href: '/docs/assistant', label: 'Overview' },
+      { href: '/docs/assistant/asking', label: 'Asking questions' },
+      { href: '/docs/assistant/proposals', label: 'Proposals and review' },
+      { href: '/docs/assistant/writing', label: 'Writing in tasks and pages' },
+      { href: '/docs/assistant/task-review', label: 'Task review' },
+      { href: '/docs/assistant/access-and-cost', label: 'Access, privacy and cost' },
+    ],
   },
   {
-    heading: 'Deployment',
+    heading: 'Features',
     items: [
-      { href: '/docs/docker-compose', label: 'Docker Compose' },
-      { href: '/docs/kubernetes', label: 'Kubernetes / Helm' },
+      { href: '/docs/pages', label: 'Pages' },
+      { href: '/docs/source-control', label: 'Source control' },
+      { href: '/docs/queries', label: 'Queries' },
+      { href: '/docs/import-export', label: 'Import & export' },
+      { href: '/docs/automations', label: 'Automations' },
     ],
   },
   {
     heading: 'Reference',
-    items: [
-      { href: '/docs/configuration', label: 'Configuration' },
-      { href: '/docs/external-services', label: 'External Services' },
-      { href: '/docs/api', label: 'API' },
-    ],
+    items: [{ href: '/docs/api', label: 'API' }],
   },
 ];
 

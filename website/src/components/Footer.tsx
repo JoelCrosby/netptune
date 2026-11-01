@@ -1,5 +1,4 @@
 import { For } from 'solid-js';
-import { GitBranch } from 'lucide-solid';
 import { footerColumns } from '~/data/footer';
 
 export default function Footer() {
@@ -18,8 +17,8 @@ export default function Footer() {
               <span class="text-[15px] font-semibold text-white">Netptune</span>
             </a>
             <p class="text-sm leading-relaxed text-slate-500 dark:text-white/35">
-              Open source project management built for developers who want control over their
-              workflow, infrastructure, and data.
+              One calm place for your team's plans, notes and progress, with an assistant that
+              lends a hand.
             </p>
           </div>
 
@@ -49,19 +48,10 @@ export default function Footer() {
           </For>
         </div>
 
-        <div class="flex flex-col items-center justify-between gap-4 border-t border-slate-800 pt-8 sm:flex-row dark:border-white/10">
+        <div class="border-t border-slate-800 pt-8 dark:border-white/10">
           <p class="text-sm text-slate-600 dark:text-white/25">
-            &copy; {new Date().getFullYear()} Netptune. MIT licensed.
+            &copy; {new Date().getFullYear()} Netptune
           </p>
-          <a
-            href="https://github.com/JoelCrosby/netptune"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="flex items-center gap-2 text-sm text-slate-500 transition-colors hover:text-slate-300 dark:text-white/35 dark:hover:text-white/70"
-          >
-            <GitBranch size={15} />
-            JoelCrosby/netptune
-          </a>
         </div>
       </div>
     </footer>

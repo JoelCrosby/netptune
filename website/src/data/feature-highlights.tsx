@@ -1,193 +1,156 @@
 import type { FeatureHighlight } from '~/types/feature-highlight';
 
+function Extra(props: { text: string }) {
+  return <p class="text-sm leading-relaxed text-slate-500 dark:text-white/55">{props.text}</p>;
+}
+
+function Screenshot(props: {
+  name: string;
+  alt: string;
+  width: number;
+  height: number;
+  class?: string;
+}) {
+  return (
+    <div class="min-w-0 flex-1">
+      <img
+        width={props.width}
+        height={props.height}
+        loading="lazy"
+        class={`rounded-lg border border-neutral-200 object-contain shadow-2xl shadow-brand/30 dark:hidden ${props.class ?? ''}`}
+        src={`/images/${props.name}-light.webp`}
+        alt={props.alt}
+      />
+      <img
+        width={props.width}
+        height={props.height}
+        loading="lazy"
+        class={`hidden rounded-lg border border-white/15 object-contain shadow-2xl shadow-brand/30 dark:block ${props.class ?? ''}`}
+        src={`/images/${props.name}-dark.webp`}
+        alt={props.alt}
+      />
+    </div>
+  );
+}
+
 export const featureHighlights: FeatureHighlight[] = [
   {
-    eyebrow: 'AI assistant',
-    title: 'Ask about your work. Approve what changes.',
+    eyebrow: 'Pages',
+    title: 'Write it down where the work lives.',
     description:
-      'Ask what slipped last sprint, who is overloaded, or which rule moved a task, and get an answer read from your workspace. Ask it to make a change and it writes a proposal instead — you review each row and apply the ones you want.',
-    reversed: true,
+      'Specs, runbooks, meeting notes and onboarding guides sit right next to the tasks they talk about. Start from a template, link to tasks and other pages with an @, and roll back to any earlier version.',
     extra: () => (
-      <div class="space-y-3">
-        <p class="text-sm leading-relaxed text-slate-500 dark:text-white/55">
-          It runs with your permissions and on your own Anthropic or OpenAI key, so it sees only
-          what you see and Netptune adds no charge of its own.
-        </p>
-        <a
-          href="/docs/assistant"
-          class="inline-block text-sm font-semibold text-brand underline decoration-violet-300 underline-offset-4 transition-colors hover:text-brand-dark dark:text-violet-300 dark:decoration-violet-500/50 dark:hover:text-fuchsia-300"
-        >
-          How the assistant works
-        </a>
-      </div>
+      <Extra text="Pages nobody has looked at in a while get flagged for a check-up, so your docs don't quietly go stale." />
     ),
     visual: () => (
-      <div class="min-w-0 flex-1">
-        <img
-          width={800}
-          height={450}
-          class="rounded-lg border border-neutral-200 object-contain shadow-2xl shadow-brand/30 dark:hidden"
-          src="/images/assistant-light.webp"
-          alt="The Netptune assistant proposing changes for review"
-        />
-        <img
-          width={800}
-          height={450}
-          class="hidden rounded-lg border border-white/15 object-contain shadow-2xl shadow-brand/30 dark:block"
-          src="/images/assistant-dark.webp"
-          alt="The Netptune assistant proposing changes for review"
-        />
-      </div>
+      <Screenshot
+        name="pages"
+        width={1600}
+        height={900}
+        alt="A Netptune page with its outline and the workspace page tree"
+      />
     ),
   },
   {
     eyebrow: 'Kanban boards',
-    title: 'The way your team works — visualized.',
+    title: 'The way your team works, on one board.',
     description:
-      "Drag tasks between columns, assign them to teammates, and watch the board update for everyone in real time. No refreshing. No confusion about who's doing what.",
+      "Drag tasks between columns, assign them to teammates, and watch the board update for everyone as it happens. No refreshing, and no wondering who's doing what.",
+    reversed: true,
     extra: () => (
-      <p class="text-sm leading-relaxed text-slate-500 dark:text-white/55">
-        Custom columns, drag-and-drop reordering, multiple boards per project. Structure your
-        workflow exactly how your team thinks.
-      </p>
+      <Extra text="Make your own columns, keep several boards per project, and put a task on more than one board when it belongs to both." />
     ),
     visual: () => (
-      <div class="min-w-0 flex-1">
-        <img
-          width={580}
-          height={290}
-          class="mt-6 rounded-lg border border-neutral-200 object-contain shadow-2xl shadow-brand/60 inset-ring-brand dark:hidden"
-          src="/images/kanban-boards-light.webp"
-          alt="Screenshot of the Netptune kanban boards"
-        />
-        <img
-          width={580}
-          height={290}
-          class="mt-6 hidden rounded-lg border border-white/15 object-contain shadow-2xl shadow-brand/60 inset-ring-brand dark:block"
-          src="/images/kanban-boards-dark.webp"
-          alt="Screenshot of the Netptune kanban boards"
-        />
-      </div>
+      <Screenshot
+        name="kanban-boards"
+        width={1352}
+        height={840}
+        alt="Screenshot of the Netptune kanban boards"
+      />
+    ),
+  },
+  {
+    eyebrow: 'GitHub',
+    title: 'See the code behind every task.',
+    description:
+      'Connect GitHub and put a task ID in a branch name, commit or pull request. It links itself to the right task, so you can see whether it is merged and whether the checks passed.',
+    extra: () => (
+      <Extra text="Merged a pull request? An automation can move the task along and let the team know." />
+    ),
+    visual: () => (
+      <Screenshot
+        name="code"
+        width={1600}
+        height={900}
+        alt="A task's Code tab listing its pull requests, checks and branch"
+      />
     ),
   },
   {
     eyebrow: 'Calendar',
     title: 'Make every deadline visible.',
     description:
-      'Plan scheduled work on a monthly calendar, inspect everything due on a selected day, and reschedule tasks without leaving the view.',
+      "See what's due on a monthly calendar, check everything due on a particular day, and move work to a new date without leaving the view.",
     reversed: true,
     extra: () => (
-      <p class="text-sm leading-relaxed text-slate-500 dark:text-white/55">
-        Filter the same schedule by project, sprint, status, priority, assignee, or tag, with an
-        unscheduled queue ready for planning.
-      </p>
+      <Extra text="Filter by project, sprint, person or tag, and plan the unscheduled work from a list right beside it." />
     ),
     visual: () => (
-      <div class="min-w-0 flex-1">
-        <img
-          width={1440}
-          height={900}
-          loading="lazy"
-          class="rounded-lg border border-neutral-200 object-contain shadow-2xl shadow-brand/30 dark:hidden"
-          src="/images/calendar-light.webp"
-          alt="Netptune calendar view showing scheduled tasks and the selected-day task table"
-        />
-        <img
-          width={1440}
-          height={900}
-          loading="lazy"
-          class="hidden rounded-lg border border-white/15 object-contain shadow-2xl shadow-brand/30 dark:block"
-          src="/images/calendar-dark.webp"
-          alt="Netptune calendar view in dark mode showing scheduled tasks and filters"
-        />
-      </div>
+      <Screenshot
+        name="calendar"
+        width={1600}
+        height={900}
+        alt="Netptune calendar view showing scheduled tasks"
+      />
     ),
   },
   {
     eyebrow: 'Roadmap',
     title: 'See the path from now to shipped.',
     description:
-      'Shape the longer view on an editable timeline, adjust task dates in place, and plan work directly from the unscheduled queue.',
+      'Lay out the bigger picture on a timeline, nudge dates as plans change, and pull unscheduled work in when there is room.',
     extra: () => (
-      <p class="text-sm leading-relaxed text-slate-500 dark:text-white/55">
-        Sprint windows and dependency lines keep blocked work, sequencing, and delivery dates in one
-        view.
-      </p>
+      <Extra text="Sprints and dependencies sit on the same timeline, so it's easy to spot what is waiting on what." />
     ),
     visual: () => (
-      <div class="min-w-0 flex-1">
-        <img
-          width={1440}
-          height={900}
-          loading="lazy"
-          class="rounded-lg border border-neutral-200 object-contain shadow-2xl shadow-brand/30 dark:hidden"
-          src="/images/roadmap-light.webp"
-          alt="Netptune roadmap showing tasks and sprints across an editable timeline"
-        />
-        <img
-          width={1440}
-          height={900}
-          loading="lazy"
-          class="hidden rounded-lg border border-white/15 object-contain shadow-2xl shadow-brand/30 dark:block"
-          src="/images/roadmap-dark.webp"
-          alt="Netptune roadmap in dark mode showing scheduled and unscheduled work"
-        />
-      </div>
+      <Screenshot
+        name="roadmap"
+        width={1600}
+        height={900}
+        alt="Netptune roadmap showing tasks and sprints on a timeline"
+      />
     ),
   },
   {
     eyebrow: 'Automations',
     title: 'Set the rules. Skip the busywork.',
     description:
-      'React to precise field changes, approaching due dates, or work left unassigned. Chain actions to notify assignees, add a comment, update fields, flag work, or delete stale tasks after a safety delay.',
+      'Nudge people when something is due, tidy up work nobody has picked up, or move a task along when its pull request merges. Rules run quietly in the background while you get on with things.',
     reversed: true,
     extra: () => (
-      <p class="text-sm leading-relaxed text-slate-500 dark:text-white/55">
-        Field conditions keep rules targeted, every run is recorded, and delayed deletion is
-        cancelled when the task moves on—with archived tasks still recoverable.
-      </p>
+      <Extra text="Every run is recorded, and the assistant can draft a rule for you from a sentence." />
     ),
     visual: () => (
-      <div class="min-w-0 flex-1">
-        <img
-          width={800}
-          height={429}
-          class="rounded-lg border border-neutral-200 object-contain shadow-2xl shadow-brand/30 dark:hidden"
-          src="/images/automations-light.webp"
-          alt="Screenshot of the Netptune automation rule builder"
-        />
-        <img
-          width={800}
-          height={429}
-          class="hidden rounded-lg border border-white/15 object-contain shadow-2xl shadow-brand/30 dark:block"
-          src="/images/automations-dark.webp"
-          alt="Screenshot of the Netptune automation rule builder"
-        />
-      </div>
+      <Screenshot
+        name="automations"
+        width={1600}
+        height={900}
+        alt="Screenshot of the Netptune automation rule builder"
+      />
     ),
   },
   {
     eyebrow: 'Sprints',
     title: 'Plan in time-boxes. Ship on schedule.',
     description:
-      'Group tasks into time-boxed sprints, start and complete them as a unit, and track progress with live task counts and status breakdowns.',
+      "Gather the work into a sprint, start it, and keep an eye on how it's going. When it ends, anything unfinished moves on with you.",
     visual: () => (
-      <div class="min-w-0 flex-1">
-        <img
-          width={800}
-          height={429}
-          class="rounded-lg border border-neutral-200 object-contain shadow-2xl shadow-brand/30 dark:hidden"
-          src="/images/sprints-light.webp"
-          alt="Screenshot of the Netptune sprint backlog"
-        />
-        <img
-          width={800}
-          height={429}
-          class="hidden rounded-lg border border-white/15 object-contain shadow-2xl shadow-brand/30 dark:block"
-          src="/images/sprints-dark.webp"
-          alt="Screenshot of the Netptune sprint backlog"
-        />
-      </div>
+      <Screenshot
+        name="sprints"
+        width={1600}
+        height={900}
+        alt="Screenshot of the Netptune sprint backlog"
+      />
     ),
   },
 ];

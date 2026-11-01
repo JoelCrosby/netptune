@@ -10,10 +10,10 @@ export default function FeatureGrid() {
           Batteries included
         </p>
         <h2 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-white">
-          The project primitives are already there.
+          All the little things, already sorted.
         </h2>
         <p class="mt-5 max-w-2xl text-lg leading-relaxed text-slate-500 dark:text-white/55">
-          Start with a complete workflow instead of assembling another collection of integrations.
+          No plugins to hunt down and nothing to stitch together. It's all here from day one.
         </p>
       </div>
 

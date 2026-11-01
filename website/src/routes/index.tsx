@@ -1,8 +1,8 @@
 import Nav from '~/components/Nav';
 import Hero from '~/components/Hero';
+import AssistantBand from '~/components/AssistantBand';
 import FeaturesSection from '~/components/FeaturesSection';
 import FeatureHighlightsSection from '~/components/FeatureHighlightsSection';
-import SelfHostSection from '~/components/SelfHostSection';
 import FeatureGrid from '~/components/FeatureGrid';
 import RolesSection from '~/components/RolesSection';
 import ComparisonSection from '~/components/ComparisonSection';
@@ -15,9 +15,9 @@ export default function Home() {
       <Nav />
       <main>
         <Hero />
+        <AssistantBand />
         <FeaturesSection />
         <FeatureHighlightsSection />
-        <SelfHostSection />
         <FeatureGrid />
         <RolesSection />
         <ComparisonSection />

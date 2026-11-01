@@ -7,14 +7,14 @@ export default function ComparisonSection() {
     <Section class="bg-slate-50 dark:bg-black">
       <div class="mb-14 text-center">
         <p class="mb-3 font-mono text-sm font-semibold tracking-wider text-brand uppercase">
-          Built in the open
+          Why Netptune
         </p>
         <h2 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-white">
-          Software you can understand and operate.
+          Everything in one place, nothing you didn't ask for.
         </h2>
         <p class="mx-auto mt-5 max-w-2xl text-slate-500 dark:text-white/55">
-          The application, infrastructure, and deployment definitions live in one public repository
-          under the MIT license.
+          The tools your team needs work together from day one, and you can always see what changed
+          and why.
         </p>
       </div>
 

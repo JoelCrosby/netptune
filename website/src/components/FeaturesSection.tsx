@@ -7,16 +7,16 @@ export default function FeaturesSection() {
     <Section id="features" class="bg-slate-50 dark:bg-black">
       <div class="mb-14 max-w-3xl">
         <p class="mb-3 font-mono text-sm font-semibold tracking-wider text-brand uppercase">
-          Developer experience
+          Everything in one place
         </p>
         <h2 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-white">
-          The structure software teams need.
+          The structure your team needs.
           <br />
           None of the process theatre.
         </h2>
         <p class="mt-5 max-w-2xl text-lg leading-relaxed text-slate-500 dark:text-white/55">
-          Netptune keeps planning close to the work: fast boards, explicit ownership, searchable
-          history, and automation that stays understandable.
+          Plans, docs, code and conversations stay close to the work, so you spend less time
+          hunting for things and more time getting them done.
         </p>
       </div>
 

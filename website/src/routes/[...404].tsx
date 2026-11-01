@@ -1,4 +1,5 @@
 import { ArrowLeft } from 'lucide-solid';
+import { HttpStatusCode } from '@solidjs/start';
 import Nav from '~/components/Nav';
 import Footer from '~/components/Footer';
 import Button from '~/components/Button';
@@ -6,6 +7,7 @@ import Button from '~/components/Button';
 export default function NotFound() {
   return (
     <div class="bg-white dark:bg-black">
+      <HttpStatusCode code={404} />
       <Nav />
       <main>
         <section class="relative overflow-hidden bg-white px-6 py-32 dark:bg-black">
