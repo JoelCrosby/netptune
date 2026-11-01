@@ -112,7 +112,7 @@ spec:
           extensionRef:
             group: traefik.io
             kind: Middleware
-            name: security-headers
+            name: website-security-headers
       backendRefs:
         - name: website-service
           port: 80

@@ -35,6 +35,21 @@ spec:
       Strict-Transport-Security: "max-age=31536000; includeSubDomains"
       Permissions-Policy: "camera=(), microphone=(), geolocation=()"
 ---
+# The website's inline scripts carry a per-request nonce, so it sets Content-Security-Policy itself.
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: website-security-headers
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "website"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+spec:
+  headers:
+    customResponseHeaders:
+      Strict-Transport-Security: "max-age=31536000; includeSubDomains"
+      Permissions-Policy: "camera=(), microphone=(), geolocation=()"
+---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:

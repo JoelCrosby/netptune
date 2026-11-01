@@ -26,6 +26,11 @@ spec:
           extensionRef:
             group: traefik.io
             kind: Middleware
+            name: website-security-headers
+        - type: ExtensionRef
+          extensionRef:
+            group: traefik.io
+            kind: Middleware
             name: body-size-limit
       backendRefs:
         - name: website-service

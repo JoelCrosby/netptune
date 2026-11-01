@@ -5,7 +5,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   plugins: [
-    solidStart(),
+    solidStart({ middleware: './src/middleware.ts' }),
     tailwindcss(),
     nitro({
       routeRules: {
