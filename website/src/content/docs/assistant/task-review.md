@@ -7,8 +7,6 @@ A review reads a task as a spec and points out what would trip someone up: missi
 
 ![A task review with its verdict, summary and a scope finding](/images/task-review-light.webp)
 
-![A task review with its verdict, summary and a scope finding](/images/task-review-dark.webp)
-
 ## Running a review
 
 Open a task and go to its **Review** tab, then choose **Run review**. Reviews only run when someone asks for one.

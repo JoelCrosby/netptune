@@ -7,8 +7,6 @@ Pages are your workspace's shared docs. Write specs, meeting notes, runbooks and
 
 ![A page with its outline and the workspace page tree](/images/pages-light.webp)
 
-![A page with its outline and the workspace page tree](/images/pages-dark.webp)
-
 ## Organising pages
 
 The Pages sidebar holds a tree of pages and folders. Drag to rearrange, filter by title, and star the pages you visit often to keep them under **Favourites**.

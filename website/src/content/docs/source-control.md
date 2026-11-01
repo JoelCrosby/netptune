@@ -7,8 +7,6 @@ Connect GitHub to Netptune and code finds its own way to the right task. Mention
 
 ![A task's Code tab showing its pull requests, checks and branch](/images/code-light.webp)
 
-![A task's Code tab showing its pull requests, checks and branch](/images/code-dark.webp)
-
 ## Connecting GitHub
 
 A workspace admin connects GitHub from the workspace's **Source Control** settings. Choose **Connect GitHub**, then pick the account or organisation to install the Netptune app on. A workspace can connect several accounts and organisations.

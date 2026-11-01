@@ -5,11 +5,13 @@ description: 'Every change the assistant suggests waits for you. Check it, adjus
 
 When you ask the assistant to change something, it does not act. It gathers what it needs, says what it intends to do, and leaves a set of proposed changes for you to review. Skip a change and it is never touched.
 
-The one exception is text you ask it to write straight into a task description or a page, covered in [Writing in tasks and pages](/docs/assistant/writing). That goes in while you watch, and a single undo takes it out.
+:::note{title="The one exception"}
+
+Text you ask it to write straight into a task description or a page goes in while you watch, and a single undo takes it out. See [Writing in tasks and pages](/docs/assistant/writing).
+
+:::
 
 ![Reviewing proposed changes before applying them](/images/assistant-proposals-light.webp)
-
-![Reviewing proposed changes before applying them](/images/assistant-proposals-dark.webp)
 
 ## Reviewing changes
 
@@ -56,7 +58,5 @@ Describe the rule you want ("when a pull request is merged, move the task to Don
 - Every rule change, from the assistant or anyone else, is recorded in the activity feed and audit log.
 
 ![An automation rule drafted by the assistant, ready to review](/images/assistant-automation-light.webp)
-
-![An automation rule drafted by the assistant, ready to review](/images/assistant-automation-dark.webp)
 
 See [Automations](/docs/automations) for the triggers and actions rules can use.

@@ -37,8 +37,6 @@ With a web search provider connected (Brave, Google or SearXNG, set up by an adm
 
 ![The assistant reading a web page and comparing it with a plan](/images/assistant-research-light.webp)
 
-![The assistant reading a web page and comparing it with a plan](/images/assistant-research-dark.webp)
-
 ## When it asks you something
 
 Where your answer genuinely changes what it would do, the assistant asks instead of guessing. The question arrives as a card of two to four options. Pick one and it carries on.

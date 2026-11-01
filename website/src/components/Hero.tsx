@@ -1,76 +1,117 @@
-import { ArrowRight, Sparkles } from 'lucide-solid';
-import Button from './Button';
+import { For } from 'solid-js';
 
-function PlanetRing(props: { half: 'back' | 'front' }) {
+interface OrbitChip {
+  label: string;
+  dot: string;
+  orbit: 'outer' | 'inner';
+  duration: number;
+  delay: number;
+}
+
+const orbitChips: OrbitChip[] = [
+  { label: 'NP-142 → Done', dot: '#86efac', orbit: 'outer', duration: 26, delay: 0 },
+  { label: 'PR #318 merged · ✓ checks', dot: '#c4b5fd', orbit: 'outer', duration: 26, delay: -8.7 },
+  { label: '✦ 3 changes to review', dot: '#f0abfc', orbit: 'outer', duration: 26, delay: -17.4 },
+  { label: 'Sprint 14 started', dot: '#7dd3fc', orbit: 'inner', duration: 19, delay: -4 },
+  { label: 'Release runbook edited', dot: '#fde68a', orbit: 'inner', duration: 19, delay: -13.5 },
+];
+
+function OrbitRings(props: { half: 'back' | 'front' }) {
   return (
-    <div class={`hero-ring hero-ring--${props.half}`}>
-      <div class="hero-ring-band" />
-      <div class="hero-ring-band hero-ring-band--inner" />
+    <>
+      <div class={`hero-orbit-ring hero-orbit-ring--outer hero-orbit-ring--${props.half}`} />
+      <div class={`hero-orbit-ring hero-orbit-ring--inner hero-orbit-ring--${props.half}`} />
+    </>
+  );
+}
+
+function HeroPlanet() {
+  return (
+    <div class="hero-orbit" aria-hidden="true">
+      <div class="hero-orbit-glow" />
+      <div class="hero-orbit-tilt">
+        <OrbitRings half="back" />
+        <div class="hero-planet">
+          <div class="hero-planet-surface" />
+          <div class="hero-planet-shade" />
+          <div class="hero-planet-rim" />
+        </div>
+        <OrbitRings half="front" />
+
+        <For each={orbitChips}>
+          {(chip, i) => (
+            <div
+              class={`hero-orbit-chip hero-orbit-chip--${chip.orbit}`}
+              style={{
+                '--orbit-duration': `${chip.duration}s`,
+                '--orbit-delay': `${chip.delay}s`,
+                '--orbit-rest': `${60 + i() * 9}%`,
+              }}
+            >
+              <div class="flex rotate-16 items-center gap-2 rounded-full border border-purple-200/20 bg-[rgb(22_14_40/0.82)] px-3.5 py-2 font-geist-mono text-[12.5px] whitespace-nowrap text-white shadow-[0_8px_30px_rgb(0_0_0/0.4)] backdrop-blur-sm">
+                <span
+                  class="size-1.75 rounded-full"
+                  style={{ background: chip.dot, 'box-shadow': `0 0 10px ${chip.dot}` }}
+                />
+                {chip.label}
+              </div>
+            </div>
+          )}
+        </For>
+      </div>
     </div>
   );
 }
 
 export default function Hero() {
   return (
-    <section class="relative overflow-hidden bg-white px-6 pt-24 pb-28 dark:bg-black">
-      <div class="hero-stars absolute inset-0" />
+    <section class="home-hero relative overflow-hidden px-6 text-white">
+      <div class="home-hero-stars" />
+      <div class="home-hero-grid" />
 
-      <div class="hero-planet-stage" aria-hidden="true">
-        <div class="hero-planet-glow" />
-        <PlanetRing half="back" />
-        <div class="hero-planet">
-          <div class="hero-planet-surface" />
-          <div class="hero-planet-shade" />
-          <div class="hero-planet-rim" />
-        </div>
-        <PlanetRing half="front" />
-      </div>
+      <div class="relative mx-auto grid max-w-310 items-center gap-6 pt-18 pb-24 lg:min-h-180 lg:grid-cols-2">
+        <div class="relative z-10 flex flex-col items-start gap-7">
+          <a
+            href="#assistant"
+            class="inline-flex items-center gap-2.5 rounded-full border border-purple-200/16 bg-purple-200/7 py-1.25 pr-3.5 pl-1.25 text-[13px] text-white/80 transition-colors hover:bg-purple-200/12 hover:text-white"
+          >
+            <span class="rounded-full bg-fuchsia-500 px-2 py-0.75 font-geist-mono text-[11px] font-medium text-white">
+              NEW
+            </span>
+            An assistant that asks before it changes a thing
+            <span class="text-purple-200">→</span>
+          </a>
 
-      <div class="absolute -top-40 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-brand/25 blur-[120px] dark:bg-brand/35" />
-      <div class="absolute top-48 -right-32 h-80 w-80 rounded-full bg-fuchsia-300/20 blur-[120px] dark:bg-fuchsia-700/15" />
+          <h1 class="m-0 font-geist text-[clamp(48px,6.6vw,92px)] leading-[0.98] font-bold tracking-[-0.045em] text-balance">
+            The project workspace{' '}
+            <span class="bg-[linear-gradient(100deg,#c4b5fd_0%,#a78bfa_30%,#e879f9_70%,#f0abfc_100%)] bg-clip-text text-transparent">
+              built for developers.
+            </span>
+          </h1>
 
-      <div class="relative mx-auto max-w-5xl text-center">
-        <h1 class="mb-6 text-5xl leading-[1.08] font-bold tracking-tight text-slate-900 [text-shadow:0_2px_40px_rgb(255_255_255/0.45)] sm:text-6xl lg:text-7xl dark:text-white dark:[text-shadow:0_2px_40px_rgb(0_0_0_/_0.55)]">
-          The project workspace
-          <br />
-          <span class="bg-gradient-to-r from-brand via-violet-500 to-fuchsia-500 bg-clip-text text-transparent dark:from-violet-400 dark:via-brand dark:to-fuchsia-400">
-            built for developers.
-          </span>
-        </h1>
+          <p class="m-0 max-w-130 text-[19px] leading-[1.55] text-pretty text-white/66">
+            Boards, sprints, a calendar, a roadmap, and pages for everything you write down. Plus an
+            assistant that does the legwork and asks before it changes a thing.
+          </p>
 
-        <p class="mx-auto mb-10 max-w-2xl text-xl leading-relaxed text-slate-500 dark:text-white/55">
-          Boards, sprints, a calendar, a roadmap, and pages for everything you write down. Plus an
-          assistant that does the legwork and asks before it changes a thing.
-        </p>
-
-        <div class="flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <Button variant="primary" size="lg" href="https://app.netptune.co.uk/auth/login">
-            Start using Netptune
-            <ArrowRight size={16} />
-          </Button>
-          <Button variant="outline" size="lg" href="/assistant">
-            <Sparkles size={16} />
-            Meet the assistant
-          </Button>
-        </div>
-
-        <div class="bg-linear-to-brr mt-16 rounded-2xl from-brand/40 via-fuchsia-300/30 to-sky-300/30 p-px shadow-2xl shadow-brand/30 dark:from-violet-400/35 dark:via-fuchsia-500/20 dark:to-sky-500/20">
-          <div class="overflow-hidden rounded-[calc(1rem-1px)] bg-white/80 p-2 backdrop-blur sm:p-3 dark:bg-white/5">
-            <img
-              width={1600}
-              height={900}
-              class="w-full rounded-xl border border-neutral-200 shadow-xl dark:hidden"
-              src="/screenshot-light.webp"
-              alt="Screenshot of the Netptune interface"
-            />
-            <img
-              width={1600}
-              height={900}
-              class="hidden w-full rounded-xl border border-white/15 shadow-xl dark:block"
-              src="/screenshot-dark.webp"
-              alt="Screenshot of the Netptune interface"
-            />
+          <div class="flex flex-wrap gap-3">
+            <a
+              href="https://app.netptune.co.uk/auth/login"
+              class="inline-flex items-center gap-2.5 rounded-full bg-white px-6 py-3.75 text-base font-semibold text-ink shadow-[0_10px_40px_rgb(167_139_250/0.35)] transition-colors hover:bg-purple-100"
+            >
+              Start using Netptune <span>→</span>
+            </a>
+            <a
+              href="/assistant"
+              class="inline-flex items-center gap-2.5 rounded-full border border-purple-200/28 px-6 py-3.75 text-base font-medium text-white transition-colors hover:bg-purple-200/8"
+            >
+              Meet the assistant
+            </a>
           </div>
+        </div>
+
+        <div class="relative h-110 min-w-0 sm:h-160">
+          <HeroPlanet />
         </div>
       </div>
     </section>

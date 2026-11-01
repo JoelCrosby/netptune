@@ -7,8 +7,6 @@ Some things are quicker to write in place than to ask about in a chat. In a task
 
 ![The assistant tightening a selected paragraph on a page](/images/assistant-writing-light.webp)
 
-![The assistant tightening a selected paragraph on a page](/images/assistant-writing-dark.webp)
-
 ## Ask in place
 
 Type `/ai` at the start of a word, or pick **Ask the assistant** from the `/` menu, then say what you want: a checklist, acceptance criteria, a summary of the notes above. Press Enter to send, Shift+Enter for a new line, or Esc to cancel and put everything back as it was.

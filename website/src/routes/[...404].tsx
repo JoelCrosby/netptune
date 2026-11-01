@@ -1,33 +1,31 @@
-import { ArrowLeft } from 'lucide-solid';
 import { HttpStatusCode } from '@solidjs/start';
 import Nav from '~/components/Nav';
 import Footer from '~/components/Footer';
-import Button from '~/components/Button';
 
 export default function NotFound() {
   return (
-    <div class="bg-white dark:bg-black">
+    <div class="bg-mist text-ink antialiased">
       <HttpStatusCode code={404} />
       <Nav />
       <main>
-        <section class="relative overflow-hidden bg-white px-6 py-32 dark:bg-black">
-          <div class="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-5%,rgba(103,58,183,0.08),transparent)] dark:bg-[radial-gradient(ellipse_80%_50%_at_50%_-5%,rgba(103,58,183,0.2),transparent)]" />
+        <section class="home-hero relative overflow-hidden px-6 text-white">
+          <div class="home-hero-stars" />
+          <div class="home-hero-grid" />
 
-          <div class="relative mx-auto max-w-2xl text-center">
-            <p class="mb-4 text-8xl font-bold text-brand">404</p>
-
-            <h1 class="mb-4 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl dark:text-white">
-              Page not found
+          <div class="relative mx-auto flex max-w-190 flex-col items-center gap-6 py-36 text-center">
+            <span class="font-geist-mono text-sm tracking-[0.08em] text-fuchsia-300">404</span>
+            <h1 class="m-0 text-[clamp(44px,6vw,80px)] leading-[0.98] font-bold tracking-[-0.045em] text-balance">
+              Lost in orbit.
             </h1>
-
-            <p class="mb-10 text-lg leading-relaxed text-slate-500 dark:text-white/55">
+            <p class="m-0 max-w-120 text-[19px] leading-[1.55] text-pretty text-white/66">
               The page you're looking for doesn't exist or has been moved.
             </p>
-
-            <Button variant="outline" size="lg" href="/">
-              <ArrowLeft size={16} />
-              Back to home
-            </Button>
+            <a
+              href="/"
+              class="mt-2 rounded-full border border-purple-200/28 px-6 py-3.75 text-base font-medium text-white transition-colors hover:bg-purple-200/8"
+            >
+              ← Back to home
+            </a>
           </div>
         </section>
       </main>

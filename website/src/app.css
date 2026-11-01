@@ -1,20 +1,20 @@
 @import 'tailwindcss';
-@import 'styles/planet.css';
-
-@custom-variant dark (&:where(.dark, .dark *));
+@import './styles/planet.css';
 
 @theme {
   --color-brand: #673ab7;
   --color-brand-dark: #512da8;
-  --color-brand-light: #ede7f6;
-  --color-dark: #0f172a;
-  --color-dark-surface: #1e293b;
+  --color-night: #08050f;
+  --color-ink: #140f22;
+  --color-ink-muted: #5b5370;
+  --color-ink-subtle: #7a7290;
+  --color-mist: #faf9fc;
+  --color-hairline: #e6e0ef;
 
-  --font-overpass:
-    'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-    'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-geist: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-geist-mono: 'Geist Mono', ui-monospace, monospace;
   --font-sans:
-    'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Geist', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
     'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
@@ -22,40 +22,13 @@
   html {
     scroll-behavior: smooth;
   }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply font-overpass;
-  }
 }
 
 html {
-  color-scheme: 'light';
-  @apply bg-white dark:bg-black;
-}
-
-.dark {
-  color-scheme: 'dark';
+  color-scheme: light;
+  @apply bg-night;
 }
 
 main {
   min-height: calc(100vh - 64px - 502px - 1px);
-}
-
-.hero-grid {
-  background-image:
-    linear-gradient(to right, rgb(103 58 183 / 0.07) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(103 58 183 / 0.07) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: linear-gradient(to bottom, black, transparent 82%);
-}
-
-.dark .hero-grid {
-  background-image:
-    linear-gradient(to right, rgb(255 255 255 / 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(255 255 255 / 0.035) 1px, transparent 1px);
 }

@@ -1,70 +1,116 @@
 import { For } from 'solid-js';
-import { ArrowRight, Sparkles } from 'lucide-solid';
 import Nav from '~/components/Nav';
 import Footer from '~/components/Footer';
-import Button from '~/components/Button';
-import Section from '~/components/Section';
-import FeatureHighlightsSection from '~/components/FeatureHighlightsSection';
 import CtaSection from '~/components/CtaSection';
 import {
   assistantHelpsWith,
   assistantPrompts,
   assistantShowcase,
   assistantTrust,
+  type AssistantShowcaseItem,
 } from '~/data/assistant-page';
 
 function AssistantHero() {
   return (
-    <section class="relative overflow-hidden bg-white px-6 pt-24 pb-16 dark:bg-black">
-      <div class="hero-stars absolute inset-0" />
-      <div class="absolute -top-40 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-brand/25 blur-[120px] dark:bg-brand/35" />
-      <div class="absolute top-40 -left-32 h-80 w-80 rounded-full bg-fuchsia-300/20 blur-[120px] dark:bg-fuchsia-700/15" />
+    <section class="home-hero relative overflow-hidden px-6 text-white">
+      <div class="home-hero-stars" />
+      <div class="home-hero-grid" />
 
-      <div class="relative mx-auto max-w-5xl text-center">
-        <p class="mb-6 inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-4 py-1.5 text-sm font-medium text-violet-700 dark:border-violet-500/25 dark:bg-violet-500/15 dark:text-violet-300">
-          <Sparkles size={14} />
-          The Netptune assistant
-        </p>
-        <h1 class="mb-6 text-4xl leading-[1.1] font-bold tracking-tight text-slate-900 sm:text-5xl lg:text-6xl dark:text-white">
-          Knows your work.
-          <br />
-          <span class="bg-gradient-to-r from-brand via-violet-500 to-fuchsia-500 bg-clip-text text-transparent dark:from-violet-400 dark:via-brand dark:to-fuchsia-400">
+      <div class="relative mx-auto flex max-w-310 flex-col items-center gap-7 pt-24 pb-28 text-center">
+        <span class="rounded-full border border-purple-200/16 bg-purple-200/7 px-3.5 py-1.5 font-geist-mono text-xs tracking-[0.08em] text-purple-200 uppercase">
+          ✦ The Netptune assistant
+        </span>
+
+        <h1 class="m-0 max-w-230 text-[clamp(44px,6vw,84px)] leading-[0.98] font-bold tracking-[-0.045em] text-balance">
+          Knows your work.{' '}
+          <span class="bg-[linear-gradient(100deg,#c4b5fd_0%,#a78bfa_30%,#e879f9_70%,#f0abfc_100%)] bg-clip-text text-transparent">
             Asks before it touches anything.
           </span>
         </h1>
-        <p class="mx-auto mb-10 max-w-2xl text-lg leading-relaxed text-slate-500 sm:text-xl dark:text-white/55">
-          Meet the Netptune assistant. Ask it questions, have it draft changes, tidy up the backlog
-          or write the boring bits. It does the legwork and you keep the final say.
+
+        <p class="m-0 max-w-150 text-[19px] leading-[1.55] text-pretty text-white/66">
+          Ask it questions, have it draft changes, tidy up the backlog or write the boring bits. It
+          does the legwork and you keep the final say.
         </p>
 
-        <div class="flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <Button variant="primary" size="lg" href="https://app.netptune.co.uk/auth/register">
-            Try it in Netptune
-            <ArrowRight size={16} />
-          </Button>
-          <Button variant="outline" size="lg" href="/docs/assistant">
+        <div class="flex flex-wrap justify-center gap-3">
+          <a
+            href="https://app.netptune.co.uk/auth/register"
+            class="inline-flex items-center gap-2.5 rounded-full bg-white px-6 py-3.75 text-base font-semibold text-ink shadow-[0_10px_40px_rgb(167_139_250/0.35)] transition-colors hover:bg-purple-100"
+          >
+            Try it in Netptune <span>→</span>
+          </a>
+          <a
+            href="/docs/assistant"
+            class="inline-flex items-center gap-2.5 rounded-full border border-purple-200/28 px-6 py-3.75 text-base font-medium text-white transition-colors hover:bg-purple-200/8"
+          >
             Read the guide
-          </Button>
+          </a>
+        </div>
+
+        <div class="flex max-w-215 flex-col items-center gap-4 pt-10">
+          <span class="font-geist-mono text-xs text-white/45">Things people ask it</span>
+          <div class="flex flex-wrap justify-center gap-2.5">
+            <For each={assistantPrompts}>
+              {(prompt) => (
+                <span class="rounded-full border border-purple-200/14 bg-white/5 px-4 py-2 text-sm text-white/75">
+                  “{prompt}”
+                </span>
+              )}
+            </For>
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-function PromptStrip() {
+function ShowcaseRow(props: { item: AssistantShowcaseItem; index: number }) {
   return (
-    <section class="bg-white px-6 pb-8 dark:bg-black">
-      <div class="mx-auto max-w-4xl text-center">
-        <p class="mb-5 text-sm text-slate-400 dark:text-white/40">Things people ask it</p>
-        <div class="flex flex-wrap justify-center gap-3">
-          <For each={assistantPrompts}>
-            {(prompt) => (
-              <span class="rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-white/65">
-                “{prompt}”
-              </span>
-            )}
-          </For>
+    <div class="grid items-center gap-10 lg:grid-cols-5 lg:gap-16">
+      <div
+        class="flex flex-col gap-4.5 lg:col-span-2"
+        classList={{ 'lg:order-last': props.index % 2 === 1 }}
+      >
+        <span class="font-geist-mono text-xs tracking-[0.08em] text-brand uppercase">
+          {String(props.index + 1).padStart(2, '0')} — {props.item.eyebrow}
+        </span>
+        <h2 class="m-0 text-[clamp(30px,3.4vw,44px)] leading-[1.05] font-bold tracking-[-0.035em] text-balance">
+          {props.item.title}
+        </h2>
+        <p class="m-0 text-base leading-[1.65] text-pretty text-ink-muted">
+          {props.item.description}
+        </p>
+        <a
+          href={props.item.link.href}
+          class="self-start text-sm font-semibold text-brand transition-colors hover:text-fuchsia-600"
+        >
+          {props.item.link.label} →
+        </a>
+      </div>
+
+      <div class="relative min-w-0 lg:col-span-3">
+        <div class="pointer-events-none absolute -inset-x-5 -inset-y-10 bg-[radial-gradient(ellipse_at_50%_50%,rgb(139_92_246/0.22),rgb(217_70_239/0.1)_45%,transparent_70%)] blur-[20px]" />
+        <div class="relative rounded-[20px] bg-linear-140 from-brand/35 via-fuchsia-300/25 to-sky-300/30 p-2.5 shadow-[0_40px_80px_-30px_rgb(80_40_160/0.45)]">
+          <img
+            src={props.item.image}
+            alt={props.item.alt}
+            width={1600}
+            height={900}
+            loading="lazy"
+            class="block w-full rounded-xl bg-white"
+          />
         </div>
+      </div>
+    </div>
+  );
+}
+
+function ShowcaseSection() {
+  return (
+    <section class="bg-mist px-6 py-30">
+      <div class="mx-auto flex max-w-310 flex-col gap-28">
+        <For each={assistantShowcase}>{(item, i) => <ShowcaseRow item={item} index={i()} />}</For>
       </div>
     </section>
   );
@@ -72,80 +118,76 @@ function PromptStrip() {
 
 function TrustSection() {
   return (
-    <Section class="bg-slate-50 dark:bg-black">
-      <div class="mb-12 text-center">
-        <p class="mb-3 font-mono text-sm font-semibold tracking-wider text-brand uppercase">
-          Peace of mind
-        </p>
-        <h2 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-white">
-          Helpful, not nosy.
-        </h2>
-      </div>
+    <section class="relative overflow-hidden bg-[#0d0819] bg-[image:radial-gradient(ellipse_50%_60%_at_85%_20%,rgb(217_70_239/0.22),transparent_70%),radial-gradient(ellipse_60%_70%_at_10%_90%,rgb(103_58_183/0.45),transparent_70%)] px-6 py-30 text-white">
+      <div class="relative mx-auto flex max-w-310 flex-col gap-14">
+        <div class="grid items-end gap-x-16 gap-y-6 lg:grid-cols-2">
+          <div class="flex flex-col gap-4.5">
+            <span class="font-geist-mono text-xs tracking-[0.08em] text-fuchsia-300 uppercase">
+              Peace of mind
+            </span>
+            <h2 class="m-0 text-[clamp(38px,4.6vw,64px)] leading-none font-bold tracking-[-0.04em] text-balance">
+              Helpful, not nosy.
+            </h2>
+          </div>
+          <a
+            href="/docs/assistant/access-and-cost"
+            class="self-start text-base font-semibold text-white transition-colors hover:text-fuchsia-300 lg:self-end lg:justify-self-end"
+          >
+            Read about access, privacy and cost →
+          </a>
+        </div>
 
-      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <For each={assistantTrust}>
-          {(item) => {
-            const Icon = item.icon;
-            return (
-              <div class="rounded-2xl border border-slate-200/80 bg-white p-6 dark:border-white/10 dark:bg-white/[0.04]">
-                <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-100 to-fuchsia-50 text-brand ring-1 ring-brand/10 dark:from-violet-500/20 dark:to-fuchsia-500/10 dark:ring-white/10">
-                  <Icon size={18} />
-                </div>
-                <h3 class="mb-2 font-semibold text-slate-900 dark:text-white">{item.title}</h3>
-                <p class="text-sm leading-relaxed text-slate-500 dark:text-white/55">
+        <div class="grid border-t border-purple-200/14 sm:grid-cols-2 lg:grid-cols-4">
+          <For each={assistantTrust}>
+            {(item, i) => (
+              <div class="flex flex-col gap-2.5 border-b border-purple-200/10 pt-7 pr-7 pb-8">
+                <span class="font-geist-mono text-xs text-fuchsia-300/80">
+                  {String(i() + 1).padStart(2, '0')}
+                </span>
+                <span class="text-[19px] font-semibold tracking-[-0.02em]">{item.title}</span>
+                <span class="text-[15px] leading-[1.55] text-pretty text-white/58">
                   {item.description}
-                </p>
+                </span>
               </div>
-            );
-          }}
-        </For>
+            )}
+          </For>
+        </div>
       </div>
-
-      <p class="mt-10 text-center text-sm text-slate-500 dark:text-white/50">
-        Curious about the details?{' '}
-        <a
-          href="/docs/assistant/access-and-cost"
-          class="font-semibold text-brand underline decoration-violet-300 underline-offset-4 hover:text-brand-dark dark:text-violet-300 dark:decoration-violet-500/50"
-        >
-          Read about access, privacy and cost
-        </a>
-      </p>
-    </Section>
+    </section>
   );
 }
 
 function HelpsWithSection() {
   return (
-    <Section class="bg-white dark:bg-black">
-      <div class="mx-auto max-w-3xl text-center">
-        <h2 class="mb-4 text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+    <section class="border-t border-hairline bg-[#f1edf7] px-6 py-27.5">
+      <div class="mx-auto flex max-w-215 flex-col items-center gap-6 text-center">
+        <h2 class="m-0 text-[clamp(32px,3.8vw,52px)] leading-none font-bold tracking-[-0.04em] text-balance">
           It can lend a hand with…
         </h2>
-        <p class="mb-8 text-slate-500 dark:text-white/55">
+        <p class="m-0 text-lg leading-[1.6] text-ink-muted">
           Pretty much everything in your workspace, as far as your role allows.
         </p>
-        <div class="flex flex-wrap justify-center gap-3">
+        <div class="flex flex-wrap justify-center gap-2.5 pt-2">
           <For each={assistantHelpsWith}>
             {(item) => (
-              <span class="rounded-full bg-gradient-to-r from-violet-100 to-fuchsia-50 px-4 py-2 text-sm font-medium text-violet-700 ring-1 ring-brand/10 dark:from-violet-500/20 dark:to-fuchsia-500/10 dark:text-violet-200 dark:ring-white/10">
+              <span class="rounded-full border border-ink/12 bg-white px-4 py-2.25 text-[15px] font-medium text-ink">
                 {item}
               </span>
             )}
           </For>
         </div>
       </div>
-    </Section>
+    </section>
   );
 }
 
 export default function AssistantPage() {
   return (
-    <div class="bg-white dark:bg-black">
+    <div class="bg-mist text-ink antialiased">
       <Nav />
       <main>
         <AssistantHero />
-        <PromptStrip />
-        <FeatureHighlightsSection items={assistantShowcase} />
+        <ShowcaseSection />
         <TrustSection />
         <HelpsWithSection />
         <CtaSection />

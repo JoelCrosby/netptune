@@ -22,7 +22,11 @@ When you create a workspace, pick a template to start with a complete workflow i
 | Content workflow  | An editorial workflow from ideas and drafting through review and publication. |
 | Minimal           | Only the essentials: New, In Progress, and Done.                              |
 
+:::tip
+
 Each template sets up statuses, tags, task relations and a board. All of them can be changed afterwards.
+
+:::
 
 ## Invite your team
 

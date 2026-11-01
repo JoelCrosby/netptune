@@ -7,8 +7,6 @@ An automation is a rule: **when** something happens, **if** the task matches you
 
 ![Editing an automation rule as a when, if, then flow](/images/automations-light.webp)
 
-![Editing an automation rule as a when, if, then flow](/images/automations-dark.webp)
-
 ## Triggers
 
 | Trigger                  | Runs when                                                             |

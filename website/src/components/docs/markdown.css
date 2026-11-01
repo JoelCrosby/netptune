@@ -2,156 +2,436 @@
 
 @layer components {
   .docs-markdown {
-    @apply leading-7 text-slate-600 dark:text-white/65;
+    counter-reset: docs-section;
+    font-size: 16.5px;
+    line-height: 1.75;
+    color: #4a4260;
   }
 
-  .docs-markdown h2 {
-    @apply mt-12 mb-4 text-xl font-semibold text-slate-900 dark:text-white;
-  }
-
-  .docs-markdown h3 {
-    @apply mt-8 mb-3 text-base font-semibold text-slate-900 dark:text-white;
+  .docs-markdown > p:first-child {
+    margin-bottom: 20px;
+    font-size: 19px;
+    line-height: 1.65;
+    color: #2e2740;
+    text-wrap: pretty;
   }
 
   .docs-markdown p {
-    @apply mb-4;
+    margin: 0 0 18px;
+  }
+
+  .docs-markdown strong {
+    @apply font-semibold text-ink;
+  }
+
+  .docs-markdown h2 {
+    margin: 56px 0 14px;
+    font-size: 30px;
+    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--color-ink);
+    scroll-margin-top: 136px;
+  }
+
+  /* the heading that introduces a set of cards is a signpost, not a numbered step */
+  .docs-markdown h2:not(:has(+ .docs-cards))::before {
+    counter-increment: docs-section;
+    content: counter(docs-section, decimal-leading-zero);
+    margin-right: 14px;
+    font-family: var(--font-geist-mono);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0;
+    color: #8b5cf6;
+  }
+
+  .docs-markdown h3 {
+    margin: 36px 0 10px;
+    font-size: 20px;
+    line-height: 1.3;
+    font-weight: 650;
+    letter-spacing: -0.015em;
+    color: var(--color-ink);
+    scroll-margin-top: 136px;
+  }
+
+  @media (min-width: 768px) {
+    .docs-markdown :is(h2, h3) {
+      scroll-margin-top: 96px;
+    }
   }
 
   .docs-markdown a {
-    @apply font-medium text-violet-700 underline decoration-violet-300 underline-offset-3 transition-colors hover:text-brand dark:text-violet-300 dark:decoration-violet-500/50 dark:hover:text-fuchsia-300;
+    font-weight: 500;
+    color: var(--color-brand);
+    border-bottom: 1.5px solid rgb(103 58 183 / 0.3);
+    transition:
+      color 150ms,
+      border-color 150ms;
   }
 
-  .docs-markdown > ul,
-  .docs-markdown > ol,
-  .docs-markdown :not(.docs-cards) > ul,
-  .docs-markdown :not(.docs-cards) > ol {
-    @apply mb-6 space-y-1.5 pl-6;
+  .docs-markdown a:hover {
+    color: var(--color-brand-dark);
+    border-bottom-color: var(--color-brand);
+  }
+
+  .docs-markdown ul,
+  .docs-markdown ol {
+    margin: 0 0 22px;
+    padding: 0;
   }
 
   .docs-markdown ul {
-    @apply list-disc;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    list-style: none;
+  }
+
+  .docs-markdown ul:not(.docs-definitions, .docs-cards-list) > li {
+    position: relative;
+    padding-left: 18px;
+  }
+
+  .docs-markdown ul:not(.docs-definitions, .docs-cards-list) > li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 11px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #d946ef;
   }
 
   .docs-markdown ol {
-    @apply list-decimal;
+    padding-left: 22px;
+    list-style: decimal;
+  }
+
+  .docs-markdown ol > li {
+    margin-bottom: 8px;
+    padding-left: 4px;
+  }
+
+  .docs-markdown ol > li::marker {
+    font-family: var(--font-geist-mono);
+    font-size: 13px;
+    color: #8b5cf6;
+  }
+
+  .docs-markdown li > ul,
+  .docs-markdown li > ol {
+    margin: 10px 0 0;
   }
 
   .docs-markdown code:not(pre code) {
-    @apply rounded-md bg-violet-50 px-1.5 py-0.5 font-mono text-[13px] text-violet-800 ring-1 ring-violet-200/70 dark:bg-violet-500/10 dark:text-violet-200 dark:ring-violet-500/20;
+    padding: 2px 6px;
+    border-radius: 6px;
+    background: #f3eefb;
+    border: 1px solid #e4d9f7;
+    font-family: var(--font-geist-mono);
+    font-size: 0.85em;
+    color: #4c2a8a;
   }
 
   .docs-markdown pre {
-    @apply my-6 overflow-x-auto rounded-xl border border-violet-300/25 bg-slate-950 p-5 text-sm leading-relaxed text-slate-300 shadow-lg shadow-brand/5 dark:border-violet-500/20 dark:bg-[#070707];
+    margin: 0 0 22px;
+    padding: 20px 22px;
+    overflow-x: auto;
+    border-radius: 16px;
+    background: var(--color-ink);
+    font-family: var(--font-geist-mono);
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: rgb(255 255 255 / 0.82);
+  }
+
+  .docs-markdown .docs-definitions {
+    gap: 0;
+    border-top: 1px solid var(--color-hairline);
+  }
+
+  .docs-markdown .docs-definitions > li {
+    display: grid;
+    gap: 4px 24px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--color-hairline);
+  }
+
+  @media (min-width: 640px) {
+    .docs-markdown .docs-definitions > li {
+      grid-template-columns: 220px minmax(0, 1fr);
+    }
+  }
+
+  .docs-markdown .docs-term {
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--color-ink);
+  }
+
+  .docs-markdown .docs-description {
+    font-size: 15.5px;
+    line-height: 1.6;
+  }
+
+  .docs-markdown .docs-table {
+    margin: 0 0 22px;
+    overflow-x: auto;
+    border-radius: 18px;
+    border: 1px solid #e9e3f2;
+    background: white;
   }
 
   .docs-markdown table {
-    @apply my-6 w-full overflow-hidden rounded-xl border border-slate-200 text-sm dark:border-white/10;
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
   }
 
-  .docs-markdown table thead {
-    @apply border-b border-violet-200/70 bg-violet-50/70 dark:border-violet-500/15 dark:bg-violet-500/[0.08];
+  .docs-markdown thead {
+    background: #f5f0fd;
+    border-bottom: 1px solid #e4d9f7;
   }
 
-  .docs-markdown table th {
-    @apply px-4 py-3 text-left text-xs font-semibold tracking-wide text-slate-500 uppercase dark:text-white/40;
+  .docs-markdown th {
+    padding: 12px 22px;
+    text-align: left;
+    font-family: var(--font-geist-mono);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-brand);
   }
 
-  .docs-markdown table td {
-    @apply border-b border-slate-100 px-4 py-3 align-top text-slate-600 last:border-0 dark:border-white/5 dark:text-white/65;
+  .docs-markdown td {
+    padding: 14px 22px;
+    vertical-align: top;
+    line-height: 1.55;
+    border-bottom: 1px solid #f0ebf6;
   }
 
-  .docs-markdown p:has(> img) {
-    @apply my-6;
+  .docs-markdown tbody tr:last-child td {
+    border-bottom: 0;
   }
 
-  .docs-markdown img {
-    @apply w-full rounded-xl border border-slate-200 shadow-lg shadow-brand/5 dark:border-white/10;
+  .docs-markdown td:first-child {
+    font-weight: 600;
+    color: var(--color-ink);
   }
 
-  /*
-   * A screenshot is written as a light and dark pair of plain markdown images,
-   * so the page stays readable as markdown and only one of the two is shown.
-   */
-  .docs-markdown img[src$='-dark.webp'] {
-    @apply hidden;
+  @media (min-width: 640px) {
+    .docs-markdown td:first-child {
+      white-space: nowrap;
+    }
   }
 
-  .dark .docs-markdown img[src$='-light.webp'] {
-    @apply hidden;
+  .docs-markdown .docs-figure {
+    margin: 28px 0;
   }
 
-  .dark .docs-markdown img[src$='-dark.webp'] {
-    @apply block;
+  .docs-markdown .docs-figure-frame {
+    display: block;
+    padding: 8px;
+    border-radius: 18px;
+    background: linear-gradient(
+      140deg,
+      rgb(103 58 183 / 0.35),
+      rgb(240 171 252 / 0.25) 50%,
+      rgb(125 211 252 / 0.3)
+    );
+    box-shadow: 0 30px 60px -30px rgb(80 40 160 / 0.45);
+  }
+
+  .docs-markdown .docs-figure img {
+    display: block;
+    width: 100%;
+    border-radius: 11px;
+  }
+
+  .docs-markdown .docs-figure-caption {
+    margin-top: 10px;
+    text-align: center;
+    font-family: var(--font-geist-mono);
+    font-size: 12px;
+    color: #8b83a0;
   }
 
   .docs-markdown .docs-admonition {
-    @apply my-6 rounded-xl border p-4 text-sm shadow-sm;
+    display: flex;
+    gap: 14px;
+    margin: 0 0 22px;
+    padding: 18px 20px;
+    border-radius: 16px;
+    border: 1px solid #e9e3f2;
+    background: white;
   }
 
-  .docs-markdown .docs-admonition::before {
-    @apply mb-1 block font-semibold capitalize;
-    content: attr(data-title);
+  .docs-markdown .docs-admonition-icon {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    background: var(--color-ink);
+    font-family: var(--font-geist-mono);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    color: white;
   }
 
-  .docs-markdown .docs-admonition:not([data-title])::before {
-    content: 'Note';
+  .docs-markdown .docs-admonition-body {
+    min-width: 0;
+    font-size: 15px;
+    line-height: 1.6;
   }
 
-  .docs-markdown .docs-admonition-tip:not([data-title])::before {
-    content: 'Tip';
+  .docs-markdown .docs-admonition-body > :last-child {
+    margin-bottom: 0;
   }
 
-  .docs-markdown .docs-admonition-warning:not([data-title])::before {
-    content: 'Warning';
+  .docs-markdown .docs-admonition-body p {
+    margin-bottom: 8px;
+  }
+
+  .docs-markdown .docs-admonition-title {
+    margin: 0 0 2px;
+    font-weight: 600;
+    color: var(--color-ink);
   }
 
   .docs-markdown .docs-admonition-tip {
-    @apply border-violet-200 bg-gradient-to-r from-violet-50 to-fuchsia-50/60 dark:border-violet-500/25 dark:from-violet-500/10 dark:to-fuchsia-500/[0.07];
+    border-color: #e4d9f7;
+    background: linear-gradient(120deg, #f5f0fd, #fbf3fd);
   }
 
-  .docs-markdown .docs-admonition-tip::before {
-    @apply text-violet-700 dark:text-violet-300;
+  .docs-markdown .docs-admonition-tip .docs-admonition-icon {
+    background: linear-gradient(135deg, #8b5cf6, #d946ef);
+    font-family: inherit;
+  }
+
+  .docs-markdown .docs-admonition-tip .docs-admonition-title {
+    color: var(--color-brand);
   }
 
   .docs-markdown .docs-admonition-warning {
-    @apply border-amber-200 bg-amber-50 dark:border-amber-500/25 dark:bg-amber-500/10;
+    border-color: #fde68a;
+    background: #fffbeb;
   }
 
-  .docs-markdown .docs-admonition-warning::before {
-    @apply text-amber-700 dark:text-amber-300;
+  .docs-markdown .docs-admonition-warning .docs-admonition-icon {
+    background: #d97706;
+  }
+
+  .docs-markdown .docs-admonition-warning .docs-admonition-title {
+    color: #b45309;
   }
 
   .docs-markdown .docs-admonition-danger {
-    @apply border-red-200 bg-red-50 dark:border-red-500/25 dark:bg-red-500/10;
+    border-color: #fecaca;
+    background: #fef2f2;
   }
 
-  .docs-markdown .docs-admonition-danger::before {
-    @apply text-red-700 dark:text-red-300;
+  .docs-markdown .docs-admonition-danger .docs-admonition-icon {
+    background: #dc2626;
   }
 
-  .docs-markdown .docs-admonition-note,
-  .docs-markdown .docs-admonition-info {
-    @apply border-slate-200 bg-gradient-to-r from-slate-50 to-violet-50/50 dark:border-white/10 dark:from-white/[0.06] dark:to-violet-500/[0.07];
+  .docs-markdown .docs-admonition-danger .docs-admonition-title {
+    color: #b91c1c;
   }
 
-  .docs-markdown .docs-admonition-note::before,
-  .docs-markdown .docs-admonition-info::before {
-    @apply text-brand dark:text-violet-300;
+  .docs-markdown .docs-cards-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: 14px;
   }
 
-  .docs-markdown .docs-admonition > :last-child {
-    @apply mb-0;
+  .docs-markdown .docs-cards-list > li {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 26px;
+    border-radius: 22px;
+    border: 1px solid #e9e3f2;
+    background: white;
+    transition:
+      border-color 150ms,
+      box-shadow 150ms;
   }
 
-  .docs-markdown .docs-cards > ul {
-    @apply grid list-none gap-4 p-0 sm:grid-cols-2;
+  .docs-markdown .docs-cards-list > li:hover {
+    border-color: #c4b5fd;
+    box-shadow: 0 14px 40px -18px rgb(103 58 183 / 0.4);
   }
 
-  .docs-markdown .docs-cards li {
-    @apply rounded-xl border border-slate-200 bg-gradient-to-b from-white to-slate-50/70 p-6 transition-all hover:-translate-y-0.5 hover:border-violet-300 hover:shadow-lg hover:shadow-brand/5 dark:border-white/10 dark:from-white/[0.07] dark:to-white/[0.025] dark:hover:border-violet-500/40;
+  .docs-markdown .docs-cards-list a {
+    border: 0;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.25;
+    color: var(--color-ink);
   }
 
-  .docs-markdown .docs-cards a {
-    @apply font-semibold no-underline;
+  .docs-markdown .docs-cards-list a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+
+  .docs-markdown .docs-card-description {
+    margin-top: auto;
+    font-size: 15px;
+    line-height: 1.5;
+    color: #6b6380;
+  }
+
+  .docs-markdown .docs-card-description::after {
+    content: ' →';
+  }
+
+  /* a pair of cards is a closing signpost, so it gets the bolder treatment */
+  .docs-markdown .docs-cards-list:not(:has(> li:nth-child(3))) > li {
+    min-height: 180px;
+    border: 0;
+    color: white;
+  }
+
+  .docs-markdown .docs-cards-list:not(:has(> li:nth-child(3))) > li:nth-child(1) {
+    background:
+      radial-gradient(circle 120px at calc(100% + 40px) -40px, rgb(139 92 246 / 0.55), transparent),
+      var(--color-ink);
+  }
+
+  .docs-markdown .docs-cards-list:not(:has(> li:nth-child(3))) > li:nth-child(2) {
+    background: linear-gradient(160deg, #673ab7, #8b5cf6 55%, #c026d3);
+  }
+
+  .docs-markdown .docs-cards-list:not(:has(> li:nth-child(3))) > li:hover {
+    box-shadow: 0 20px 50px -20px rgb(80 40 160 / 0.6);
+  }
+
+  .docs-markdown .docs-cards-list:not(:has(> li:nth-child(3))) a {
+    font-size: 24px;
+    letter-spacing: -0.03em;
+    color: white;
+  }
+
+  .docs-markdown .docs-cards-list:not(:has(> li:nth-child(3))) .docs-card-description {
+    color: rgb(255 255 255 / 0.72);
+  }
+
+  .docs-markdown .docs-cards-list:not(:has(> li:nth-child(3))) code {
+    border-color: rgb(255 255 255 / 0.2);
+    background: rgb(255 255 255 / 0.12);
+    color: white;
   }
 }

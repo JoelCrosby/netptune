@@ -1,33 +1,29 @@
-import Button from './Button';
-
 export default function CtaSection() {
   return (
-    <section class="relative overflow-hidden bg-dark px-6 py-24 dark:bg-black">
-      <div class="absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_50%_100%,rgba(103,58,183,0.35),transparent)]" />
-      <div class="absolute bottom-0 left-1/2 h-48 w-96 -translate-x-1/2 rounded-full bg-fuchsia-600/10 blur-[100px]" />
-      <div class="relative mx-auto max-w-3xl text-center">
-        <h2 class="mb-4 text-4xl leading-tight font-bold text-white sm:text-5xl">
-          Ready when
-          <br />
-          your team is.
+    <section class="relative overflow-hidden bg-night px-6 pt-35 pb-65 text-center font-geist text-white">
+      <div class="cta-stars" />
+      <div class="cta-horizon" />
+      <div class="relative mx-auto flex max-w-190 flex-col items-center gap-6">
+        <h2 class="m-0 font-geist text-[clamp(48px,6.4vw,96px)] leading-[0.95] font-bold tracking-[-0.05em]">
+          Ready when your team is.
         </h2>
-        <p class="mb-10 text-lg text-slate-400 dark:text-white/55">
+        <p class="m-0 max-w-130 text-[19px] leading-[1.55] text-white/62">
           Create a workspace in a minute, invite your team, and let the assistant take care of the
           busywork.
         </p>
-
-        <div class="flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <Button variant="primary" size="lg" href="https://app.netptune.co.uk/auth/register">
-            Create an account
-          </Button>
-          <Button
-            variant="outline"
-            size="lg"
+        <div class="flex flex-wrap justify-center gap-3 pt-2">
+          <a
+            href="https://app.netptune.co.uk/auth/register"
+            class="rounded-full bg-white px-6.5 py-3.75 text-base font-semibold text-ink transition-colors hover:bg-purple-100"
+          >
+            Create an account →
+          </a>
+          <a
             href="https://app.netptune.co.uk/auth/login"
-            class="border-slate-600 bg-transparent text-slate-300 hover:border-brand hover:text-neutral-600 dark:border-white/20 dark:text-white/70 dark:hover:border-brand dark:hover:text-white"
+            class="rounded-full border border-purple-200/28 px-6.5 py-3.75 text-base font-medium text-white transition-colors hover:bg-purple-200/8"
           >
             Sign in
-          </Button>
+          </a>
         </div>
       </div>
     </section>

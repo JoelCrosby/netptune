@@ -7,8 +7,6 @@ The assistant lives beside your work. Ask it what slipped last sprint, who is ov
 
 ![The Netptune assistant answering a question about a sprint](/images/assistant-light.webp)
 
-![The Netptune assistant answering a question about a sprint](/images/assistant-dark.webp)
-
 ## What it does
 
 :::cards
