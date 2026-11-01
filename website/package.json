@@ -12,25 +12,25 @@
     "prettier:check": "prettier --check src"
   },
   "dependencies": {
-    "@solidjs/router": "^1.0.0",
-    "@solidjs/start": "2.0.0",
-    "lucide-solid": "^1.31.0",
+    "@solidjs/router": "^1.0.1",
+    "@solidjs/start": "2.1.0",
+    "lucide-solid": "^1.65.0",
+    "nitro": "^3.0.261029-rc",
     "remark-directive": "^4.0.0",
     "remark-gfm": "^4.0.1",
-    "solid-js": "^1.9.14",
+    "solid-js": "^1.9.18",
     "solid-markdown": "^2.1.1",
-    "nitro": "^3.0.260610-beta",
-    "unist-util-visit": "^5.1.0",
-    "vite": "^8.2.1"
+    "unist-util-visit": "^5.2.0",
+    "vite": "^8.3.5"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
-    "@typescript-eslint/eslint-plugin": "^8.67.0",
-    "@typescript-eslint/parser": "^8.67.0",
-    "eslint": "^10.8.1",
+    "@typescript-eslint/eslint-plugin": "^8.72.1",
+    "@typescript-eslint/parser": "^8.72.1",
+    "eslint": "^10.14.0",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-solid": "^0.14.5",
-    "prettier": "^3.9.6",
+    "eslint-plugin-solid": "^0.18.1",
+    "prettier": "^3.9.10",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "tailwindcss": "^4.3.3"
   },
