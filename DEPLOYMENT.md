@@ -153,13 +153,31 @@ Swapping CDN means changing `trustedProxies.clientAddressHeader` to whatever tha
 (`True-Client-IP` for Akamai and Fastly) and recreating the equivalent header rule. No application
 code changes.
 
-### Why not an origin IP allowlist
+### Closing the origin
 
-Restricting the load balancer to Cloudflare's published ranges is the more usual advice, and
-`charts/traefik/values.yaml` documents how. It is not used here because the range list has to be
-refreshed by hand and a stale list refuses real traffic — it makes continued operation depend on a
-recurring manual task. It remains worth adding if you later want the origin closed for DDoS or
-WAF-bypass reasons, which the edge secret does not address.
+The edge secret decides which client address to believe, but it doesn't stop anyone reaching the
+origin and skipping the WAF. Traefik does that with Cloudflare's Authenticated Origin Pulls: it refuses
+any TLS connection that doesn't present a client certificate from the CA in
+`charts/traefik/files/origin-pull-ca.pem`.
+
+Traefik is deployed by hand, and enforcing before Cloudflare sends the certificate fails every request,
+so the order matters:
+
+1. Commit the CA that issued the certificate to `charts/traefik/files/origin-pull-ca.pem`. It is public.
+   The private keys never go in this repo.
+2. Upload the client certificate to Cloudflare and turn on Authenticated Origin Pulls. SSL/TLS mode must
+   be Full or Full (strict). Traefik ignores the certificate until step 3, so this step is safe by itself.
+3. Deploy Traefik (see the top of `charts/traefik/values.yaml`).
+4. Check the site still loads through Cloudflare, and that going direct now fails the handshake:
+   `curl -k --resolve app.netptune.co.uk:443:<lb-address> https://app.netptune.co.uk/`.
+
+If the site returns Cloudflare 5xx errors after step 3, run `helm rollback traefik -n traefik`.
+
+Don't turn Authenticated Origin Pulls off in Cloudflare, or let its certificate expire, while Traefik is
+enforcing it. Remove `tlsOptions` from the Traefik values and deploy first.
+
+An IP allowlist doesn't replace this. The Vultr CCM ignores `loadBalancerSourceRanges`, and an LB firewall
+leaves the NodePorts open on the nodes' public addresses.
 
 ## Local Development
 

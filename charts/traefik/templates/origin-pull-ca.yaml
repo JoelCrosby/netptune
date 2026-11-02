@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cloudflare-origin-pull-ca
+  namespace: {{ .Release.Namespace }}
+type: Opaque
+data:
+  ca.crt: {{ .Files.Get "files/origin-pull-ca.pem" | required "charts/traefik/files/origin-pull-ca.pem is missing. See \"Closing the origin\" in DEPLOYMENT.md." | b64enc }}
