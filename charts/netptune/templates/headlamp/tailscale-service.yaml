@@ -17,6 +17,8 @@ metadata:
 spec:
   type: "LoadBalancer"
   loadBalancerClass: "tailscale.com/tailscale"
+  # The tailscale proxy dials the ClusterIP. A NodePort would only publish this on the nodes' public addresses.
+  allocateLoadBalancerNodePorts: false
   selector:
     app.kubernetes.io/name: "netptune-app"
     app.kubernetes.io/component: "headlamp"
